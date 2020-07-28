@@ -14,6 +14,7 @@ func _ready():
 		var tileMC = tile.instance()
 		tileMC.position = Vector2((i % wid) * 200, floor(i / wid) * 200)
 		self.add_child(tileMC)
+		tileMC.tile_ID = i
 
 #Variables for zooming smoothly
 const ZOOM_FACTOR = 1.1
