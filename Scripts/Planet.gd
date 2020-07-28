@@ -16,7 +16,10 @@ func _ready():
 		self.add_child(tileMC)
 
 #var mouse_position = Vector2.ZERO
-const ZOOM_FACTOR = 1.3
+const ZOOM_FACTOR = 1.1
+var zooming = ""
+var progress = 0
+var mouse_position = Vector2.ZERO
 
 func _physics_process(delta):
 	var input_vector = Vector2.ZERO
@@ -28,16 +31,28 @@ func _physics_process(delta):
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction)
 	velocity = move_and_slide(velocity)
+	if zooming == "in":
+		_zoom_at_point(-ease(progress, 0.1) * (ZOOM_FACTOR - 1) + ZOOM_FACTOR)
+		progress += 0.03
+	if zooming == "out":
+		_zoom_at_point(ease(progress, 0.1) * (1 - 1 / ZOOM_FACTOR) + 1 / ZOOM_FACTOR)
+		progress += 0.03
+	if progress >= 1:
+		zooming = ""
+		progress = 0
 
 func _input(event):
 	if event is InputEventMouse:
 		if event.is_action_released("scroll_down"):
-			_zoom_at_point(1 / ZOOM_FACTOR, event.position)
+			zooming = "out"
+			progress = 0
 		elif event.is_action_released("scroll_up"):
-			_zoom_at_point(ZOOM_FACTOR, event.position)
+			zooming = "in"
+			progress = 0
+		mouse_position = event.position
 
 
-func _zoom_at_point(zoom_change, mouse_position):
+func _zoom_at_point(zoom_change):
 	scale = scale * zoom_change
 	var delta_x = (mouse_position.x - global_position.x) * (zoom_change - 1)
 	var delta_y = (mouse_position.y - global_position.y) * (zoom_change - 1)
