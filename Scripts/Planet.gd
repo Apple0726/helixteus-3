@@ -1,9 +1,9 @@
 extends KinematicBody2D
 onready var tile = preload("res://Scenes/Tile.tscn")
 
-var acceleration = 100
+var acceleration = 90
 var max_speed = 1000
-var friction = 100
+var friction = 150
 
 var velocity = Vector2.ZERO
 
