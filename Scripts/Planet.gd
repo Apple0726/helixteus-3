@@ -1,14 +1,10 @@
 extends KinematicBody2D
 onready var tile = preload("res://Scenes/Tile.tscn")
 
+#Variables for smoothly moving the tiles
 var acceleration = 90
 var max_speed = 1000
 var friction = 150
-
-#Variables for smoothly moving the tiles
-var acceleration = 100
-var max_speed = 1000
-var friction = 100
 var velocity = Vector2.ZERO
 
 func _ready():
