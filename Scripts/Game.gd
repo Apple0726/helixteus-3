@@ -7,6 +7,7 @@ func _ready():
 
 
 func _load_game():
+	#Loads planet scene
 	self.remove_child($Title)
 	var planet_tiles = planet_tiles_scene.instance()
 	self.add_child(planet_tiles)

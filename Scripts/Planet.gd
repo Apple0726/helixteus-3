@@ -1,26 +1,27 @@
 extends KinematicBody2D
 onready var tile = preload("res://Scenes/Tile.tscn")
 
+#Variables for smoothly moving the tiles
 var acceleration = 100
 var max_speed = 1000
 var friction = 100
-
 var velocity = Vector2.ZERO
 
 func _ready():
 	var wid = 10
-	
+	#Tile generation
 	for i in range(0, pow(wid, 2)):
 		var tileMC = tile.instance()
 		tileMC.position = Vector2((i % wid) * 200, floor(i / wid) * 200)
 		self.add_child(tileMC)
 
-#var mouse_position = Vector2.ZERO
+#Variables for zooming smoothly
 const ZOOM_FACTOR = 1.1
 var zooming = ""
 var progress = 0
 var mouse_position = Vector2.ZERO
 
+#Executed every tick
 func _physics_process(delta):
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_left") - Input.get_action_strength("ui_right")
@@ -41,7 +42,9 @@ func _physics_process(delta):
 		zooming = ""
 		progress = 0
 
+#Executed once the receives any kind of input
 func _input(event):
+	#if the input is from the mouse
 	if event is InputEventMouse:
 		if event.is_action_released("scroll_down"):
 			zooming = "out"
@@ -51,7 +54,7 @@ func _input(event):
 			progress = 0
 		mouse_position = event.position
 
-
+#Zooming code
 func _zoom_at_point(zoom_change):
 	scale = scale * zoom_change
 	var delta_x = (mouse_position.x - global_position.x) * (zoom_change - 1)
