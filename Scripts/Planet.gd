@@ -9,7 +9,9 @@ var friction = 150
 var velocity = Vector2.ZERO
 
 func _ready():
-	var wid = 10
+	#wid is number of tiles horizontally/vertically
+	#So total number of tiles is wid squared
+	var wid = 20
 	#Tile generation
 	for i in range(0, pow(wid, 2)):
 		var tileMC = tile.instance()
@@ -26,6 +28,7 @@ var mouse_position = Vector2.ZERO
 
 #Executed every tick
 func _physics_process(delta):
+	#Moving tiles code
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_left") - Input.get_action_strength("ui_right")
 	input_vector.y = Input.get_action_strength("ui_up") - Input.get_action_strength("ui_down")
@@ -35,6 +38,8 @@ func _physics_process(delta):
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction)
 	velocity = move_and_slide(velocity)
+	
+	#Zooming animation
 	if zooming == "in":
 		_zoom_at_point(-ease(progress, 0.1) * (ZOOM_FACTOR - 1) + ZOOM_FACTOR)
 		progress += 0.03
@@ -46,6 +51,8 @@ func _physics_process(delta):
 		progress = 0
 
 #Executed once the receives any kind of input
+var drag_initial_position = Vector2.ZERO
+var drag_delta = Vector2.ZERO
 func _input(event):
 	#if the input is from the mouse
 	if event is InputEventMouse:
@@ -55,6 +62,13 @@ func _input(event):
 		elif event.is_action_released("scroll_up"):
 			zooming = "in"
 			progress = 0
+		if Input.is_action_just_pressed("left_click"):
+			drag_initial_position = event.position
+			print("mouse")
+		if Input.is_action_pressed("left_click"):
+			drag_delta = event.position - drag_initial_position
+			move_and_collide(drag_delta)
+			drag_initial_position = event.position
 		mouse_position = event.position
 
 #Zooming code

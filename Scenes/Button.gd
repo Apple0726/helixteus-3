@@ -6,11 +6,6 @@ export var fade_duration = 0.1
 
 #export var btn_text = ""
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
 # Called when the node enters the scene tree for the first time.
 #func _ready():
 #	var font = $Label.get_font("font")
@@ -21,6 +16,7 @@ export var fade_duration = 0.1
 	#$TextureButton.rect_scale = 
 
 func _ready():
+	#Adds animation for making the rectangle whiter
 	var fade_in = Animation.new()
 	var anim_index = fade_in.add_track(Animation.TYPE_VALUE)
 	fade_in.track_set_path(anim_index, "ColorRect:color")
@@ -31,12 +27,10 @@ func _ready():
 
 func _on_TextureButton_mouse_entered():
 	$AnimationPlayer.play("FadeIn")
-	pass # Replace with function body.
 
 
 func _on_TextureButton_mouse_exited():
 	$AnimationPlayer.play_backwards("FadeIn")
-	pass # Replace with function body.
 
 
 func _on_TextureButton_pressed():

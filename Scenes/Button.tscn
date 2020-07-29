@@ -24,7 +24,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="VisualAidRect" type="ColorRect" parent="."]
 visible = false
 margin_left = -20.0
 margin_top = -20.0
