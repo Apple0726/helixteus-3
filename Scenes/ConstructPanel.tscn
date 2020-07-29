@@ -2,21 +2,21 @@
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/ConstructPanel.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/MineralExtractor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Icons/Energy.png" type="Texture" id=5]
 [ext_resource path="res://Icons/Time.png" type="Texture" id=6]
 [ext_resource path="res://Icons/Money.png" type="Texture" id=7]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=3]
-default_font = SubResource( 2 )
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=3]
 resource_name = "FadeIn"
 length = 0.1
 step = 0.05
@@ -53,20 +53,20 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color( 0.137255, 0.137255, 0.137255, 1 )
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=5]
 size = 50
 outline_size = 3
 outline_color = Color( 0.160784, 0.160784, 0.160784, 1 )
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="CanvasItemMaterial" id=5]
+[sub_resource type="CanvasItemMaterial" id=6]
 blend_mode = 1
 
-[sub_resource type="Gradient" id=6]
+[sub_resource type="Gradient" id=7]
 
-[sub_resource type="GradientTexture" id=7]
-gradient = SubResource( 6 )
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
 width = 100
 
 [sub_resource type="DynamicFont" id=9]
@@ -79,7 +79,7 @@ margin_right = 1280.0
 margin_bottom = 720.0
 rect_pivot_offset = Vector2( 640, 360 )
 mouse_filter = 2
-theme = SubResource( 3 )
+theme = SubResource( 2 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -87,7 +87,7 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/FadeIn = SubResource( 8 )
+anims/FadeIn = SubResource( 3 )
 
 [node name="Background" type="Panel" parent="."]
 margin_right = 1280.0
@@ -100,7 +100,7 @@ __meta__ = {
 [node name="TitleText" type="Label" parent="."]
 margin_right = 1280.0
 margin_bottom = 95.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Construct"
 align = 1
@@ -193,7 +193,7 @@ __meta__ = {
 }
 
 [node name="ResourcesLight" type="TextureRect" parent="Lights"]
-material = SubResource( 5 )
+material = SubResource( 6 )
 margin_left = 53.7375
 margin_top = 141.831
 margin_right = 153.738
@@ -202,7 +202,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 5.1 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -210,7 +210,7 @@ __meta__ = {
 
 [node name="StorageLight" type="TextureRect" parent="Lights"]
 visible = false
-material = SubResource( 5 )
+material = SubResource( 6 )
 margin_left = 454.065
 margin_top = 141.831
 margin_right = 554.065
@@ -219,7 +219,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 4.405 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -227,7 +227,7 @@ __meta__ = {
 
 [node name="ProductionLight" type="TextureRect" parent="Lights"]
 visible = false
-material = SubResource( 5 )
+material = SubResource( 6 )
 margin_left = 262.204
 margin_top = 141.831
 margin_right = 362.204
@@ -236,7 +236,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 5.168 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 8 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
