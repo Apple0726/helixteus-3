@@ -1,0 +1,227 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/ConstructPanel.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.247059, 0.247059, 0.247059, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.137255, 0.137255, 0.137255, 1 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 50
+outline_size = 3
+outline_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="CanvasItemMaterial" id=5]
+blend_mode = 1
+
+[sub_resource type="Gradient" id=6]
+
+[sub_resource type="GradientTexture" id=7]
+gradient = SubResource( 6 )
+width = 100
+
+[sub_resource type="Animation" id=8]
+resource_name = "FadeIn"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 20 ), Vector2( 0, 0 ) ]
+}
+
+[node name="ConstructPanel" type="Control"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 20.0
+margin_right = 1280.0
+margin_bottom = 740.0
+rect_pivot_offset = Vector2( 640, 360 )
+mouse_filter = 2
+theme = SubResource( 3 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TitleText" type="Label" parent="."]
+margin_left = 589.603
+margin_top = 24.0
+margin_right = 700.603
+margin_bottom = 87.0002
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Build"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResourcesButton" parent="Buttons" instance=ExtResource( 2 )]
+margin_left = 104.224
+margin_top = 132.065
+margin_right = 104.224
+margin_bottom = 132.065
+rect_scale = Vector2( 5.1, 1.72 )
+strength = 0.05
+fade_duration = 0.05
+
+[node name="ProductionButton" parent="Buttons" instance=ExtResource( 2 )]
+margin_left = 311.862
+margin_top = 132.065
+margin_right = 311.862
+margin_bottom = 132.065
+rect_scale = Vector2( 5.115, 1.72 )
+strength = 0.05
+fade_duration = 0.05
+
+[node name="Texts" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResourcesText" type="Label" parent="Texts"]
+margin_left = 32.0
+margin_top = 114.574
+margin_right = 177.0
+margin_bottom = 149.574
+text = "Resources"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductionText" type="Label" parent="Texts"]
+margin_left = 241.147
+margin_top = 114.574
+margin_right = 386.147
+margin_bottom = 149.574
+text = "Production"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lights" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResourcesLight" type="TextureRect" parent="Lights"]
+material = SubResource( 5 )
+margin_left = 53.7375
+margin_top = 141.831
+margin_right = 153.738
+margin_bottom = 181.831
+rect_rotation = 90.0
+rect_scale = Vector2( 0.1, 5.1 )
+rect_pivot_offset = Vector2( 50, 20 )
+texture = SubResource( 7 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductionLight" type="TextureRect" parent="Lights"]
+visible = false
+material = SubResource( 5 )
+margin_left = 262.204
+margin_top = 141.831
+margin_right = 362.204
+margin_bottom = 181.831
+rect_rotation = 90.0
+rect_scale = Vector2( 0.1, 5.168 )
+rect_pivot_offset = Vector2( 50, 20 )
+texture = SubResource( 7 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lines" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="Lines"]
+position = Vector2( 104, 96 )
+points = PoolVector2Array( -104, 1.52588e-05, 1176, 1.52588e-05 )
+width = 3.0
+default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="Line2D2" type="Line2D" parent="Lines"]
+position = Vector2( 104, 168 )
+points = PoolVector2Array( -104, 0, 1176, 0 )
+width = 3.0
+default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="Line2D3" type="Line2D" parent="Lines"]
+position = Vector2( -64, -40 )
+points = PoolVector2Array( 272, 136, 272, 208 )
+width = 3.0
+default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="Line2D4" type="Line2D" parent="Lines"]
+position = Vector2( 144, -40 )
+points = PoolVector2Array( 272, 136, 272, 208 )
+width = 3.0
+default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FadeIn = SubResource( 8 )
+[connection signal="mouse_entered" from="Background" to="." method="_on_Background_mouse_entered"]
+[connection signal="mouse_exited" from="Background" to="." method="_on_Background_mouse_exited"]
+[connection signal="button_pressed" from="Buttons/ResourcesButton" to="." method="_on_ResourcesButton_button_pressed"]
+[connection signal="button_pressed" from="Buttons/ProductionButton" to="." method="_on_ProductionButton_button_pressed"]

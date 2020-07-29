@@ -2,23 +2,7 @@
 
 [ext_resource path="res://Tiles/3.jpg" type="Texture" id=1]
 [ext_resource path="res://Scripts/Tile.gd" type="Script" id=2]
-
-[sub_resource type="Animation" id=1]
-resource_name = "TileFadeIn"
-length = 0.1
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("ColorRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.258824 ) ]
-}
+[ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=3]
 
 [node name="Tile" type="Node2D"]
 script = ExtResource( 2 )
@@ -26,28 +10,7 @@ script = ExtResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 
-[node name="TextureButton" type="TextureButton" parent="."]
-margin_left = -100.0
-margin_top = -100.0
-margin_right = 100.0
-margin_bottom = 100.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ColorRect" type="ColorRect" parent="."]
-margin_left = -100.0
-margin_top = -100.0
-margin_right = 100.0
-margin_bottom = 100.0
-mouse_filter = 2
-color = Color( 1, 1, 1, 0 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/TileFadeIn = SubResource( 1 )
-[connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
-[connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
-[connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
+[node name="Button" parent="." instance=ExtResource( 3 )]
+rect_scale = Vector2( 5, 5 )
+strength = 0.25
+fade_duration = 0.1
