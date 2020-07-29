@@ -1,6 +1,6 @@
 extends KinematicBody2D
-onready var tile = preload("res://Scenes/Tile.tscn")
-
+onready var tile_scene = preload("res://Scenes/Tile.tscn")
+var tiles:Array = []
 
 #Variables for smoothly moving the tiles
 var acceleration = 90
@@ -14,10 +14,11 @@ func _ready():
 	var wid = 20
 	#Tile generation
 	for i in range(0, pow(wid, 2)):
-		var tileMC = tile.instance()
-		tileMC.position = Vector2((i % wid) * 200, floor(i / wid) * 200)
-		self.add_child(tileMC)
-		tileMC.tile_ID = i
+		var tile = tile_scene.instance()
+		tile.position = Vector2((i % wid) * 200, floor(i / wid) * 200)
+		self.add_child(tile)
+		tile.tile_ID = i
+		tiles.append(tile)
 
 
 #Variables for zooming smoothly
@@ -50,9 +51,13 @@ func _physics_process(delta):
 		zooming = ""
 		progress = 0
 
-#Executed once the receives any kind of input
+#Dragging variables
+var dragged = false
+var drag_position = Vector2.ZERO
 var drag_initial_position = Vector2.ZERO
 var drag_delta = Vector2.ZERO
+
+#Executed once the receives any kind of input
 func _input(event):
 	#if the input is from the mouse
 	if event is InputEventMouse:
@@ -64,11 +69,13 @@ func _input(event):
 			progress = 0
 		if Input.is_action_just_pressed("left_click"):
 			drag_initial_position = event.position
-			print("mouse")
+			drag_position = event.position
 		if Input.is_action_pressed("left_click"):
-			drag_delta = event.position - drag_initial_position
+			drag_delta = event.position - drag_position
+			if (event.position - drag_initial_position).length() > 2:
+				dragged = true
 			move_and_collide(drag_delta)
-			drag_initial_position = event.position
+			drag_position = event.position
 		mouse_position = event.position
 
 #Zooming code

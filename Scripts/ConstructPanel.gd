@@ -1,13 +1,15 @@
 extends Control
-signal panel_ready
+
+signal construct_building_signal
 
 var mouse_in_panel = true
 var tab = "Resources"
 
 func _input(event):
-	#If panel is right clicked, remove panel
-	if mouse_in_panel and event is InputEventMouseButton and event.is_action_released("right_click"):
-		remove_panel()
+	if event is InputEventMouseButton:
+		#If panel is right clicked, remove panel
+		if mouse_in_panel and event.is_action_released("right_click"):
+			remove_panel()
 		
 func remove_panel():
 	#Only remove if the panel is actually there
@@ -63,6 +65,8 @@ func _on_MEButton_button_pressed():
 	$BuildingInformation/MoneyText.text = "100"
 	$BuildingInformation/EnergyText.text = "50"
 	$BuildingInformation/TimeText.text = "0:20"
+	if not is_connected("construct_building_signal", self.get_parent(), "construct_building"):
+		connect("construct_building_signal", self.get_parent(), "construct_building", ["ME"])
 	toggle_icons(true)
 
 #Make money/energy/etc. icons (in)visible
@@ -70,3 +74,8 @@ func toggle_icons(vis:bool):
 	$BuildingInformation/Energy.visible = vis
 	$BuildingInformation/Time.visible = vis
 	$BuildingInformation/Money.visible = vis
+
+
+func _on_MEButton_double_click():
+	remove_panel()
+	emit_signal("construct_building_signal")

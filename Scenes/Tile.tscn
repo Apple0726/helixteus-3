@@ -13,4 +13,6 @@ texture = ExtResource( 1 )
 [node name="Button" parent="." instance=ExtResource( 3 )]
 rect_scale = Vector2( 5, 5 )
 strength = 0.25
-fade_duration = 0.1
+[connection signal="button_out" from="Button" to="." method="_on_Button_button_out"]
+[connection signal="button_over" from="Button" to="." method="_on_Button_button_over"]
+[connection signal="button_pressed" from="Button" to="." method="_on_Button_button_pressed"]

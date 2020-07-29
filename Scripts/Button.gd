@@ -1,6 +1,11 @@
 extends Control
 
 signal button_pressed
+signal double_click
+signal button_over
+signal button_out
+var is_button_over = false
+export var double_click_enabled = false
 export var strength = 0.1
 export var fade_duration = 0.1
 
@@ -25,11 +30,20 @@ func _ready():
 	fade_in.length = fade_duration
 	$AnimationPlayer.add_animation("FadeIn", fade_in)
 
+func _input(event):
+	if event is InputEventMouseButton:
+		if double_click_enabled and is_button_over and event.doubleclick:
+			emit_signal("double_click")
+
 func _on_TextureButton_mouse_entered():
+	is_button_over = true
+	emit_signal("button_over")
 	$AnimationPlayer.play("FadeIn")
 
 
 func _on_TextureButton_mouse_exited():
+	is_button_over = false
+	emit_signal("button_out")
 	$AnimationPlayer.play_backwards("FadeIn")
 
 

@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Impress.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Title.gd" type="Script" id=2]
+[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 39
-font_data = ExtResource( 1 )
+use_filter = true
+font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 63
