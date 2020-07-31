@@ -60,14 +60,22 @@ func reset_lights():
 	$BuildingInformation/TimeText.text = ""
 
 func _on_MEButton_button_pressed():
-	$BuildingInformation/Name.text = "Mineral extractor"
-	$BuildingInformation/Description.text = "Extracts minerals from the planet surface, giving you a constant supply of minerals."
-	$BuildingInformation/MoneyText.text = "100"
-	$BuildingInformation/EnergyText.text = "50"
-	$BuildingInformation/TimeText.text = "0:20"
+	update_cost_info("ME")
 	if not is_connected("construct_building_signal", self.get_parent(), "construct_building"):
 		connect("construct_building_signal", self.get_parent(), "construct_building", ["ME"])
 	toggle_icons(true)
+
+func update_cost_info(bldg:String):
+	var game = self.get_parent()
+	var bldg_info = game.bldg_info[bldg]
+	$BuildingInformation/Name.text = bldg_info["name"]
+	$BuildingInformation/Description.text = bldg_info["desc"]
+	$BuildingInformation/MoneyText.text = String(bldg_info["money"])
+	$BuildingInformation/EnergyText.text = String(bldg_info["energy"])
+	$BuildingInformation/TimeText.text = String(bldg_info["time"])
+	game.constr_cost["money"] = bldg_info["money"]
+	game.constr_cost["energy"] = bldg_info["energy"]
+	game.constr_cost["time"] = bldg_info["time"]
 
 #Make money/energy/etc. icons (in)visible
 func toggle_icons(vis:bool):
