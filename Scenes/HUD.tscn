@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Icons/Money.png" type="Texture" id=2]
 [ext_resource path="res://Icons/Energy.png" type="Texture" id=3]
 [ext_resource path="res://Icons/Minerals.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/HUD.gd" type="Script" id=5]
+[ext_resource path="res://Icons/audio.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -21,6 +23,7 @@ border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
@@ -78,3 +81,12 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button" type="Button" parent="."]
+margin_left = 1224.0
+margin_right = 1789.0
+margin_bottom = 519.0
+rect_scale = Vector2( 0.09, 0.09 )
+icon = ExtResource( 6 )
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]

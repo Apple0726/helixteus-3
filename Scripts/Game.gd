@@ -29,7 +29,6 @@ func _ready():
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	$titlescreen.play()
-	print($titlescreen.get_stream_playback())
 	
 func popup(txt, dur):
 	$Popup.visible = true
