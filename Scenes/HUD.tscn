@@ -88,5 +88,8 @@ margin_right = 1789.0
 margin_bottom = 519.0
 rect_scale = Vector2( 0.09, 0.09 )
 icon = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
