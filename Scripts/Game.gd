@@ -28,6 +28,7 @@ var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals fro
 func _ready():
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
+	$titlescreen.play()
 
 func popup(txt, dur):
 	$Popup.visible = true
@@ -51,6 +52,12 @@ func set_constructing(bldg_type):
 
 func _load_game():
 	#Loads planet scene
+	
+	#Music fading
+	$AnimationPlayer.play("title song fade")
+	$ambient.play()
+	$AnimationPlayer.play("ambient fade in")
+	
 	self.remove_child($Title)
 	planet = planet_scene.instance()
 	HUD = HUD_scene.instance()
