@@ -16,8 +16,8 @@ one_shot = true
 [node name="Popup" parent="." instance=ExtResource( 3 )]
 visible = false
 margin_left = 640.0
-margin_top = 144.023
+margin_top = 100.808
 margin_right = 640.0
-margin_bottom = 144.023
+margin_bottom = 100.808
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
