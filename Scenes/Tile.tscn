@@ -38,16 +38,12 @@ margin_right = 0.471954
 margin_bottom = -63.7115
 
 [node name="BuildingInformation" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PanelBackground" type="Control" parent="BuildingInformation"]
-margin_right = 40.0
-margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

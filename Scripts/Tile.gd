@@ -3,13 +3,18 @@ extends Node2D
 onready var game = self.get_parent().get_parent()
 
 var tile_ID:int
+var is_constructing:bool = false
+
+#The building to be constructed
 var constructing:String = ""
+
 var bldg_str:String
 var bldg
 var bldg_to_construct
 var construction_date
 var construction_length
 var constr_progress:float = 0
+var bldg_info
 
 func _process(delta):
 	if bldg_str != "":
@@ -20,9 +25,21 @@ func _process(delta):
 		if constr_progress < 1:
 			$TimeLeft.visible = true
 		else:
+			if is_constructing:
+				is_constructing = false
+				construction_finished()
 			$TimeLeft.visible = false
+		match bldg_str:
+			"ME":
+				var prod = bldg_info["production"]
+				var cap = bldg_info["capacity"]
 	else:
 		$BuildingInformation.visible = false
+
+#Code that runs once a building has finished construction (runs only once, perfect for giving EXP etc.)
+func construction_finished():
+	bldg_info["collect_date"] = OS.get_system_time_msecs()
+
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
 	if not bldg_to_construct and not bldg:
@@ -55,6 +72,7 @@ func _on_Button_button_pressed():
 			$TimeLeft.visible = true
 			game.money -= game.constr_cost["money"]
 			game.energy -= game.constr_cost["energy"]
+			is_constructing = true
 			construction_date = OS.get_system_time_msecs()
 			construction_length = game.constr_cost["time"] * 1000
 		else:
@@ -75,6 +93,7 @@ func displayBldg():
 			bldg = ME_scene.instance()
 			$Icon.texture = ME_icon
 			self.add_child_below_node($Button, bldg)
+			bldg_info = {"production":game.bldg_info[bldg_str]["production"], "capacity":game.bldg_info[bldg_str]["capacity"]}
 
 #Converts time in milliseconds to string format
 func time_to_str (time):
