@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Icons/Money.png" type="Texture" id=2]
@@ -23,7 +23,6 @@ border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
