@@ -13,6 +13,7 @@ var constr_progress:float = 0
 
 func _process(delta):
 	if bldg_str != "":
+		$BuildingInformation.visible = true
 		constr_progress = (OS.get_system_time_msecs() - construction_date) / float(construction_length)
 		$TimeLeft/Bar.rect_scale.x = constr_progress
 		$TimeLeft/TimeString.text = time_to_str(construction_length - OS.get_system_time_msecs() + construction_date)
@@ -20,7 +21,8 @@ func _process(delta):
 			$TimeLeft.visible = true
 		else:
 			$TimeLeft.visible = false
-	
+	else:
+		$BuildingInformation.visible = false
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
 	if not bldg_to_construct and not bldg:
@@ -69,7 +71,9 @@ func displayBldg():
 	match bldg_str:
 		"ME":
 			var ME_scene = preload("res://Scenes/MineralExtractor.tscn")
+			var ME_icon = preload("res://Icons/Minerals.png")
 			bldg = ME_scene.instance()
+			$Icon.texture = ME_icon
 			self.add_child_below_node($Button, bldg)
 
 #Converts time in milliseconds to string format
@@ -84,5 +88,4 @@ func time_to_str (time):
 	var year_str = "" if years == 0 else String(years) + "y "
 	var day_str = "" if days == 0 else String(days) + "d "
 	var hour_str = "" if hours == 0 else String(hours) + ":"
-	
 	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)

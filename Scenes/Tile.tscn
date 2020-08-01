@@ -1,9 +1,23 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Tiles/3.jpg" type="Texture" id=1]
 [ext_resource path="res://Scripts/Tile.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/TimeLeft.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 22
+use_filter = true
+font_data = ExtResource( 5 )
 
 [node name="Tile" type="Node2D"]
 script = ExtResource( 2 )
@@ -15,16 +29,86 @@ texture = ExtResource( 1 )
 rect_scale = Vector2( 5, 5 )
 strength = 0.25
 
-[node name="TimeLeft" type="Control" parent="." instance=ExtResource( 4 )]
+[node name="TimeLeft" parent="." instance=ExtResource( 4 )]
 visible = false
 modulate = Color( 0, 0.74902, 0, 1 )
 margin_left = 0.471954
 margin_top = -63.7115
 margin_right = 0.471954
 margin_bottom = -63.7115
+
+[node name="BuildingInformation" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PanelBackground" type="Control" parent="BuildingInformation"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="Panel" parent="BuildingInformation/PanelBackground"]
+margin_left = -85.0
+margin_top = 35.0
+margin_right = 85.0
+margin_bottom = 85.0
+rect_pivot_offset = Vector2( 20, 20 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="BuildingInformation/PanelBackground"]
+points = PoolVector2Array( -35, 35, -35, 85 )
+width = 2.0
+default_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+
+[node name="Line2D2" type="Line2D" parent="BuildingInformation/PanelBackground"]
+points = PoolVector2Array( 85, 60, -35, 60 )
+width = 2.0
+default_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+
+[node name="CurrentBar" type="ColorRect" parent="BuildingInformation"]
+margin_left = -34.0
+margin_top = 37.0
+margin_right = 83.0
+margin_bottom = 59.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CapacityBar" type="ColorRect" parent="BuildingInformation"]
+margin_left = -34.0
+margin_top = 61.277
+margin_right = 83.0
+margin_bottom = 83.277
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResourceStocked" type="Label" parent="BuildingInformation"]
+margin_left = -27.4243
+margin_top = 58.9796
+margin_right = 86.5757
+margin_bottom = 83.9796
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "15"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="Sprite" parent="."]
+position = Vector2( -60, 60 )
+scale = Vector2( 0.16, 0.16 )
 [connection signal="button_out" from="Button" to="." method="_on_Button_button_out"]
 [connection signal="button_over" from="Button" to="." method="_on_Button_button_over"]
 [connection signal="button_pressed" from="Button" to="." method="_on_Button_button_pressed"]
