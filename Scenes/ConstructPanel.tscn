@@ -373,11 +373,10 @@ __meta__ = {
 
 [node name="Description" type="Label" parent="BuildingInformation"]
 margin_left = 936.0
-margin_top = 412.945
+margin_top = 443.945
 margin_right = 1257.0
-margin_bottom = 546.945
+margin_bottom = 577.945
 custom_fonts/font = SubResource( 9 )
-valign = 1
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
