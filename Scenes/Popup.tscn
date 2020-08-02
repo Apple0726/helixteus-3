@@ -3,7 +3,6 @@
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Popup.gd" type="Script" id=2]
 
-
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
@@ -26,6 +25,7 @@ __meta__ = {
 }
 
 [node name="Text" type="Label" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = -150.0
 margin_top = -17.5
 margin_right = 150.0
@@ -43,4 +43,8 @@ __meta__ = {
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="Timer2" type="Timer" parent="."]
+one_shot = true
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Timer2" to="." method="_on_Timer2_timeout"]
