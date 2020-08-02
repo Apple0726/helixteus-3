@@ -30,8 +30,8 @@ func _ready():
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	$titlescreen.play()
-	AudioServer.set_bus_mute(1,true)
-	AudioServer.set_bus_mute(1,true)
+	#noob
+	#AudioServer.set_bus_mute(1,true)
 	
 func popup(txt, dur):
 	$Popup.visible = true
