@@ -11,7 +11,7 @@ var velocity = Vector2.ZERO
 func _ready():
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid = 20
+	var wid = 50
 	#Tile generation
 	for i in range(0, pow(wid, 2)):
 		var tile = tile_scene.instance()

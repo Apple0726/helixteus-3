@@ -12,10 +12,10 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="DynamicFont" id=2]
-size = 22
+size = 23
 use_filter = true
 font_data = ExtResource( 5 )
 
@@ -29,6 +29,9 @@ texture = ExtResource( 1 )
 rect_scale = Vector2( 5, 5 )
 strength = 0.25
 
+[node name="Building" type="Sprite" parent="."]
+scale = Vector2( 0.4, 0.4 )
+
 [node name="TimeLeft" parent="." instance=ExtResource( 4 )]
 visible = false
 modulate = Color( 0, 0.74902, 0, 1 )
@@ -38,6 +41,8 @@ margin_right = 0.471954
 margin_bottom = -63.7115
 
 [node name="BuildingInformation" type="Control" parent="."]
+visible = false
+modulate = Color( 0, 0.592157, 0, 1 )
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -63,41 +68,44 @@ __meta__ = {
 [node name="Line2D" type="Line2D" parent="BuildingInformation/PanelBackground"]
 points = PoolVector2Array( -35, 35, -35, 85 )
 width = 2.0
-default_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="BuildingInformation/PanelBackground"]
-points = PoolVector2Array( 85, 60, -35, 60 )
+points = PoolVector2Array( 85, 50, -35, 50 )
 width = 2.0
-default_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="CurrentBar" type="ColorRect" parent="BuildingInformation"]
 margin_left = -34.0
 margin_top = 37.0
 margin_right = 83.0
-margin_bottom = 59.0
+margin_bottom = 49.0
+rect_scale = Vector2( 1e-05, 1 )
 mouse_filter = 2
+color = Color( 0.537255, 0.537255, 0.537255, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CapacityBar" type="ColorRect" parent="BuildingInformation"]
 margin_left = -34.0
-margin_top = 61.277
+margin_top = 51.0
 margin_right = 83.0
-margin_bottom = 83.277
+margin_bottom = 83.0
+rect_scale = Vector2( 1e-05, 1 )
 mouse_filter = 2
+color = Color( 0.537255, 0.537255, 0.537255, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ResourceStocked" type="Label" parent="BuildingInformation"]
-margin_left = -27.4243
-margin_top = 58.9796
-margin_right = 86.5757
-margin_bottom = 83.9796
+margin_left = -27.424
+margin_top = 54.263
+margin_right = 86.576
+margin_bottom = 79.2631
 custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "15"
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

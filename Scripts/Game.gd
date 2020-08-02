@@ -23,12 +23,15 @@ var energy = 200
 var constr_cost = {"money":0, "energy":0, "time":0}
 
 #Stores all building information
-var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":20, "production":0.12, "capacity":15}}
+var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":20, "production":0.12, "capacity":15},
+				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":25, "time":25, "production":0.15, "capacity":40}}
 
 func _ready():
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	$titlescreen.play()
+	AudioServer.set_bus_mute(1,true)
+	AudioServer.set_bus_mute(1,true)
 	
 func popup(txt, dur):
 	$Popup.visible = true
@@ -38,7 +41,7 @@ func popup(txt, dur):
 #Executed once a building has been double clicked in the construction panel
 func construct_building(bldg_type):
 	var more_info:Label = $planet_HUD/MoreInfo
-	more_info.text = "Press Esc to finish constructing"
+	more_info.text = "Right click to finish constructing"
 	var font = planet_HUD.get_font("font")
 	font.get_string_size(more_info.text)
 	more_info.rect_size.x = font.get_string_size(more_info.text).x + 30
@@ -47,6 +50,7 @@ func construct_building(bldg_type):
 	set_constructing(bldg_type)
 
 func set_constructing(bldg_type):
+	print(bldg_type)
 	for tile in planet.tiles:
 		tile.constructing = bldg_type
 
@@ -78,21 +82,30 @@ func _input(event):
 	if Input.is_action_just_released("fullscreen"):
 		OS.window_fullscreen = not OS.window_fullscreen
 		
-	#Press esc to cancel building
-	if Input.is_action_just_released("cancel"):
+	#Right click to cancel building
+	if Input.is_action_just_released("right_click"):
 		set_constructing("")
 		$planet_HUD/MoreInfo.visible = false
+		
+	#Sell all ores by pressing Shift C
+	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
+		money += minerals * 5
+		popup("You sold " + String(minerals) + " minerals for $" + String(minerals * 5) + "!", 2)
+		minerals = 0
+		
 
 func add_construct_panel():
-	construct_panel.visible = true
-	#Play panel fade in animation
-	get_node("construct_panel/AnimationPlayer").play("FadeIn")
+	if not Input.is_action_pressed("shift"):
+		construct_panel.visible = true
+		#Play panel fade in animation
+		get_node("construct_panel/AnimationPlayer").play("FadeIn")
 
 func remove_construct_panel():
-	#Play panel fade out animation
-	get_node("construct_panel/AnimationPlayer").play_backwards("FadeIn")
-	#A timer so that the panel will only be invisible once the fade out is finished
-	$Timer.start()
+	if not Input.is_action_pressed("shift"):
+		#Play panel fade out animation
+		get_node("construct_panel/AnimationPlayer").play_backwards("FadeIn")
+		#A timer so that the panel will only be invisible once the fade out is finished
+		$Timer.start()
 
 func _on_Timer_timeout():
 	construct_panel.visible = false

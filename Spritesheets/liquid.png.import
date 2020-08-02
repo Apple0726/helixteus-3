@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Mineral extractor.png-4f264a983ef40803cb709d386ef498b4.stex"
+path="res://.import/liquid.png-2044963abedf80f69272c60efcc1e75e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Buildings/Mineral extractor.png"
-dest_files=[ "res://.import/Mineral extractor.png-4f264a983ef40803cb709d386ef498b4.stex" ]
+source_file="res://Spritesheets/liquid.png"
+dest_files=[ "res://.import/liquid.png-2044963abedf80f69272c60efcc1e75e.stex" ]
 
 [params]
 

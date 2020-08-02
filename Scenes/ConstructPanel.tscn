@@ -1,12 +1,13 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=3]
-[ext_resource path="res://Scenes/MineralExtractor.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Buildings/MineralExtractor.png" type="Texture" id=4]
 [ext_resource path="res://Icons/Energy.png" type="Texture" id=5]
 [ext_resource path="res://Icons/Time.png" type="Texture" id=6]
 [ext_resource path="res://Icons/Money.png" type="Texture" id=7]
+[ext_resource path="res://Buildings/PowerPlant.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -269,13 +270,37 @@ __meta__ = {
 margin_right = 40.0
 margin_bottom = 40.0
 
-[node name="Sprite" parent="ResourcesBuildings/MineralExtractor" instance=ExtResource( 4 )]
+[node name="Sprite" type="Sprite" parent="ResourcesBuildings/MineralExtractor"]
 position = Vector2( 104, 272 )
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 4 )
 
 [node name="MEButton" parent="ResourcesBuildings/MineralExtractor" instance=ExtResource( 2 )]
 margin_left = 104.0
 margin_top = 272.0
 margin_right = 104.0
+margin_bottom = 272.0
+rect_scale = Vector2( 5.05, 5 )
+double_click_enabled = true
+strength = 0.05
+fade_duration = 0.05
+
+[node name="PowerPlant" type="Control" parent="ResourcesBuildings"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="ResourcesBuildings/PowerPlant"]
+position = Vector2( 312, 272 )
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 8 )
+
+[node name="PPButton" parent="ResourcesBuildings/PowerPlant" instance=ExtResource( 2 )]
+margin_left = 312.0
+margin_top = 272.0
+margin_right = 312.0
 margin_bottom = 272.0
 rect_scale = Vector2( 5.05, 5 )
 double_click_enabled = true
@@ -327,7 +352,7 @@ default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
 
 [node name="Line2D6" type="Line2D" parent="Lines"]
 position = Vector2( 648, -40 )
-points = PoolVector2Array( 272, 208, 272, 760 )
+points = PoolVector2Array( 272, 208, 272, 750 )
 width = 3.0
 default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
 
@@ -410,3 +435,5 @@ texture = ExtResource( 7 )
 [connection signal="button_pressed" from="Buttons/StorageButton" to="." method="_on_StorageButton_button_pressed"]
 [connection signal="button_pressed" from="ResourcesBuildings/MineralExtractor/MEButton" to="." method="_on_MEButton_button_pressed"]
 [connection signal="double_click" from="ResourcesBuildings/MineralExtractor/MEButton" to="." method="_on_MEButton_double_click"]
+[connection signal="button_pressed" from="ResourcesBuildings/PowerPlant/PPButton" to="." method="_on_PPButton_button_pressed"]
+[connection signal="double_click" from="ResourcesBuildings/PowerPlant/PPButton" to="." method="_on_PPButton_double_click"]

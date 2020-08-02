@@ -59,12 +59,6 @@ func reset_lights():
 	$BuildingInformation/EnergyText.text = ""
 	$BuildingInformation/TimeText.text = ""
 
-func _on_MEButton_button_pressed():
-	update_cost_info("ME")
-	if not is_connected("construct_building_signal", self.get_parent(), "construct_building"):
-		connect("construct_building_signal", self.get_parent(), "construct_building", ["ME"])
-	toggle_icons(true)
-
 func update_cost_info(bldg:String):
 	var game = self.get_parent()
 	var bldg_info = game.bldg_info[bldg]
@@ -83,7 +77,28 @@ func toggle_icons(vis:bool):
 	$BuildingInformation/Time.visible = vis
 	$BuildingInformation/Money.visible = vis
 
+func _on_MEButton_button_pressed():
+	update_cost_info("ME")
+	check_signal()
+	connect("construct_building_signal", self.get_parent(), "construct_building", ["ME"])
+	toggle_icons(true)
 
 func _on_MEButton_double_click():
+	$ResourcesBuildings/MineralExtractor/MEButton.reset_button()
+	remove_panel()
+	emit_signal("construct_building_signal")
+
+func _on_PPButton_button_pressed():
+	update_cost_info("PP")
+	check_signal()
+	connect("construct_building_signal", self.get_parent(), "construct_building", ["PP"])
+	toggle_icons(true)
+
+func check_signal():
+	if is_connected("construct_building_signal", self.get_parent(), "construct_building"):
+		disconnect("construct_building_signal", self.get_parent(), "construct_building")
+
+func _on_PPButton_double_click():
+	$ResourcesBuildings/PowerPlant/PPButton.reset_button()
 	remove_panel()
 	emit_signal("construct_building_signal")
