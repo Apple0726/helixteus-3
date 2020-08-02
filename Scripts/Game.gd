@@ -24,7 +24,7 @@ var constr_cost = {"money":0, "energy":0, "time":0}
 
 #Stores all building information
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":20, "production":0.12, "capacity":15},
-				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":25, "time":25, "production":0.15, "capacity":40}}
+				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":25, "production":0.2, "capacity":40}}
 
 func _ready():
 	construct_panel.name = "construct_panel"
@@ -76,6 +76,7 @@ func _load_game():
 	$HUD/ColorRect/EnergyText.text = String(energy)
 	self.add_child(construct_panel)
 	construct_panel.visible = false
+	self.move_child($FPS, self.get_child_count())
 
 func _input(event):
 	#Press F11 to toggle fullscreen
@@ -111,6 +112,10 @@ func _on_Timer_timeout():
 	construct_panel.visible = false
 
 func _process(delta):
+	if delta == 0:
+		$FPS.text = "0 FPS"
+	else:
+		$FPS.text = String(round(1 / delta)) + " FPS"
 	if HUD:
 		$HUD/ColorRect/MoneyText.text = String(money)
 		$HUD/ColorRect/MineralsText.text = String(minerals) + " / " + String(mineral_capacity)
