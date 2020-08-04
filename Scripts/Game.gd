@@ -34,15 +34,16 @@ var mineral_capacity = 50
 var energy = 200
 
 #Stores information of all objects discovered
-var system_data = [{"pos":Vector2.ZERO, "diff":1, "parent":0, "planets":[], "view":{"pos":Vector2(640, 360), "zoom":1.0}, "stars":[{"type":"G", "size":1, "temperature":5500, "pos":Vector2(0, 0)}]}]
+var system_data = [{"pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "planets":[], "view":{"pos":Vector2(640, 180), "zoom":0.3}, "stars":[{"type":"G", "size":1, "temperature":5500, "pos":Vector2(0, 0)}]}]
 var planet_data = []
+var tile_data = []
 
 #Stores information on the building(s) about to be constructed
 var constr_cost = {"money":0, "energy":0, "time":0}
 
 #Stores all building information
-var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":20, "production":0.12, "capacity":15},
-				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":25, "production":0.2, "capacity":40}}
+var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
+				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
 func _ready():
 	$titlescreen.play()
@@ -77,12 +78,15 @@ func _load_game():
 	
 	self.remove_child($Title)
 	
-	generate_system(0)
+	generate_planets(0)
+	#Home planet information
 	planet_data[2]["name"] = "Home Planet"
 	planet_data[2]["status"] = "conquered"
 	planet_data[2]["size"] = rand_range(12000, 13000)
 	planet_data[2]["angle"] = PI / 2
-	
+	planet_data[2]["tiles"] = []
+	planet_data[2]["discovered"] = false
+	generate_tiles(2)
 	
 	self.add_child(view)
 	add_planet()
@@ -155,6 +159,8 @@ func switch_view(new_view:String):
 	c_v = new_view
 
 func add_planet():
+	if not planet_data[c_p]["discovered"]:
+		generate_tiles(c_p)
 	view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 	planet_HUD = planet_HUD_scene.instance()
 	self.add_child(planet_HUD)
@@ -184,7 +190,7 @@ func _process(delta):
 	if tooltip.rect_position.y + tooltip.height > 720 - 4:
 		tooltip.rect_position.y = 720 - tooltip.height - 4
 
-func generate_system(id:int):
+func generate_planets(id:int):
 	randomize()
 	var combined_star_size = 0
 	for star in system_data[id]["stars"]:
@@ -201,11 +207,28 @@ func generate_system(id:int):
 		p_i["distance"] = (combined_star_size + pow(i, 2) / 3.0) * 1.2
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
+		p_i["tiles"] = []
+		p_i["discovered"] = false
 		var p_id = planet_data.size()
 		p_i["id"] = p_id
 		p_i["name"] = "Planet " + String(p_id)
 		system_data[id]["planets"].append(p_id)
 		planet_data.append(p_i)
+	system_data[id]["discovered"] = true
+
+func generate_tiles(id:int):
+	#wid is number of tiles horizontally/vertically
+	#So total number of tiles is wid squared
+	var wid:int = round(pow(planet_data[id]["size"], 0.6) / 28)
+	
+	for i in range(0, pow(wid, 2)):
+		planet_data[id]["tiles"].append(tile_data.size())
+		tile_data.append({	"is_constructing":false,
+							"bldg_str":"",
+							"construction_date":0,
+							"construction_length":0,
+							"bldg_info":{}})
+	planet_data[id]["discovered"] = true
 
 func show_tooltip(txt:String):
 	var txt2 = txt.split("\n")
@@ -218,3 +241,16 @@ func hide_tooltip():
 #Returns a random integer between low and high inclusive
 func rand_int(low:int, high:int):
 	return randi() % (high - low + 1) + low
+#Converts time in milliseconds to string format
+func time_to_str (time):
+	var seconds = floor(time / 1000)
+	var second_zero = "0" if seconds < 10 else ""
+	var minutes = floor(seconds / 60)
+	var minute_zero = "0" if minutes < 10 else ""
+	var hours = floor(minutes / 60)
+	var days = floor (hours / 24)
+	var years = floor (days / 365)
+	var year_str = "" if years == 0 else String(years) + "y "
+	var day_str = "" if days == 0 else String(days) + "d "
+	var hour_str = "" if hours == 0 else String(hours) + ":"
+	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)

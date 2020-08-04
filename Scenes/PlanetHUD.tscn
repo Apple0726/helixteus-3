@@ -5,7 +5,6 @@
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Graphics/Icons/StarSystemView.png" type="Texture" id=4]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 21
 use_filter = true
@@ -46,7 +45,6 @@ __meta__ = {
 margin_top = 352.0
 margin_right = 40.0
 margin_bottom = 392.0
-hint_tooltip = "Construct (C)"
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
 texture_normal = ExtResource( 1 )
@@ -58,7 +56,6 @@ __meta__ = {
 margin_top = 416.0
 margin_right = 64.0
 margin_bottom = 480.0
-hint_tooltip = "View star system (V)"
 shortcut_in_tooltip = false
 shortcut = SubResource( 6 )
 texture_normal = ExtResource( 4 )
@@ -79,5 +76,9 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="Construct" to="." method="_on_TextureButton_pressed"]
+[connection signal="mouse_entered" from="Construct" to="." method="_on_Construct_mouse_entered"]
+[connection signal="mouse_exited" from="Construct" to="." method="_on_Construct_mouse_exited"]
+[connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]
+[connection signal="mouse_entered" from="StarSystem" to="." method="_on_StarSystem_mouse_entered"]
+[connection signal="mouse_exited" from="StarSystem" to="." method="_on_StarSystem_mouse_exited"]
 [connection signal="pressed" from="StarSystem" to="." method="_on_StarSystem_pressed"]

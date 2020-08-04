@@ -4,74 +4,72 @@ var id:int
 
 onready var game = self.get_parent().get_parent().get_parent()
 onready var p_i = self.get_parent().p_i
+onready var tile = game.tile_data[id]
 
 #Mainly for construction_finished() function
-var is_constructing:bool = false
-
-var bldg_str:String = ""
-var bldg
-var bldg_to_construct:Sprite
-var construction_date
-var construction_length
-var constr_progress:float = 0
-var bldg_info
+#var is_constructing:bool
+#
+#var bldg_str:String
+#var bldg
+#var bldg_to_construct:Sprite
+#var construction_date
+#var construction_length
+#var constr_progress:float = 0
+#var bldg_info
 
 func _ready():
 	var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 	$Texture.texture = tile_texture
+	if tile.is_constructing:
+		$TimeLeft.visible = true
+	display_bldg(tile.bldg_str, 1)
+	display_icon()
 
 func _process(delta):
-	if bldg_str != "":
+	if tile.bldg_str != "":
 		$BuildingInformation.visible = true
-		constr_progress = (OS.get_system_time_msecs() - construction_date) / float(construction_length)
+		var constr_progress = (OS.get_system_time_msecs() - tile.construction_date) / float(tile.construction_length)
 		$TimeLeft/Bar.rect_scale.x = constr_progress
-		$TimeLeft/TimeString.text = time_to_str(construction_length - OS.get_system_time_msecs() + construction_date)
+		$TimeLeft/TimeString.text = game.time_to_str(tile.construction_length - OS.get_system_time_msecs() + tile.construction_date)
 		if constr_progress < 1:
 			$TimeLeft.visible = true
 		else:
-			if is_constructing:
-				is_constructing = false
+			if tile.is_constructing:
+				tile.is_constructing = false
 				construction_finished()
 			$TimeLeft.visible = false
-			match bldg_str:
+			match tile.bldg_str:
 				"ME", "PP":
 					#Number of seconds needed per mineral
-					var prod = 1 / bldg_info["production"]
-					var cap = bldg_info["capacity"]
-					var c_d = bldg_info["collect_date"]
+					var prod = 1 / tile.bldg_info["production"]
+					var cap = tile.bldg_info["capacity"]
+					var stored = tile.bldg_info["stored"]
+					var c_d = tile.bldg_info["collect_date"]
 					var c_t = OS.get_system_time_msecs()
-					if bldg_info["stored"] < cap:
+					if stored < cap:
 						$BuildingInformation/CurrentBar.rect_scale.x = (c_t - c_d) / (prod * 1000)
-						$BuildingInformation/CapacityBar.rect_scale.x = bldg_info["stored"] / float(cap)
+						$BuildingInformation/CapacityBar.rect_scale.x = stored / float(cap)
 						if c_t - c_d > prod * 1000:
-							bldg_info["stored"] += 1
-							bldg_info["collect_date"] += prod * 1000
+							tile.bldg_info["stored"] += 1
+							tile.bldg_info["collect_date"] += prod * 1000
 					else:
 						$BuildingInformation/CurrentBar.rect_scale.x = 0
 						$BuildingInformation/CapacityBar.rect_scale.x = 1
-		$BuildingInformation/ResourceStocked.text = String(bldg_info["stored"])
+					$BuildingInformation/ResourceStocked.text = String(stored)
 	else:
 		$BuildingInformation.visible = false
 
-#Code that runs once a building has finished construction (runs only once, perfect for giving EXP etc.)
 func construction_finished():
-	bldg_info["collect_date"] = OS.get_system_time_msecs()
+	pass
 
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
-	if bldg_str == "":
+	if tile.bldg_str == "":
 		var bldg_image
-		match self.get_parent().bldg_to_construct:
-			"ME":
-				bldg_image = preload("res://Graphics/Buildings/MineralExtractor.png")
-			"PP":
-				bldg_image = preload("res://Graphics/Buildings/PowerPlant.png")
-		$Building.texture = bldg_image
-		$Building.modulate.a = 0.5
-
+		display_bldg(self.get_parent().bldg_to_construct, 0.5)
 
 func _on_Button_button_out():
-	if bldg_str == "":
+	if tile.bldg_str == "":
 		$Building.texture = null
 
 func _input(event):
@@ -80,45 +78,47 @@ func _input(event):
 
 
 func _on_Button_button_pressed():
+	var planet = self.get_parent()
+	var view = planet.get_parent()
+	
 	#Checks whether we're dragging or not. We don't want the click event to happen while the player is dragging
-	if not self.get_parent().get_parent().dragged:
-		#Checks if we're actually constructing something when clicking a tile
-		if self.get_parent().bldg_to_construct != "":
-			#Checks if tile is empty
-			if bldg_str == "":
-				if enough_resources():
-					bldg_str = self.get_parent().bldg_to_construct
-					#self.get_parent().bldg_to_construct = ""
-					_on_Button_button_out()
-					displayBldg()
-					$TimeLeft.visible = true
-					game.money -= game.constr_cost["money"]
-					game.energy -= game.constr_cost["energy"]
-					is_constructing = true
-					construction_date = OS.get_system_time_msecs()
-					construction_length = game.constr_cost["time"] * 1000
-				else:
-					game.popup("Not enough resources", 1)
+	if not view.dragged:
+		#Checks if tile is empty
+		if tile.bldg_str == "":
+			if planet.bldg_to_construct != "" and enough_resources():
+				tile.bldg_str = planet.bldg_to_construct
+				_on_Button_button_out()
+				display_bldg(tile.bldg_str, 1)
+				display_icon()
+				$TimeLeft.visible = true
+				game.money -= game.constr_cost["money"]
+				game.energy -= game.constr_cost["energy"]
+				tile.is_constructing = true
+				tile.construction_date = OS.get_system_time_msecs()
+				tile.construction_length = game.constr_cost["time"] * 1000
+				add_bldg_info()
 			else:
-				match bldg_str:
-					"ME":
-						var mineral_space_available = game.mineral_capacity - game.minerals
-						var stored = bldg_info["stored"]
-						if mineral_space_available >= stored:
-							bldg_info["stored"] = 0
-							game.minerals += stored
-						else:
-							game.minerals = game.mineral_capacity
-							bldg_info["stored"] -= mineral_space_available
-						if stored == bldg_info["capacity"]:
-							bldg_info["collect_date"] = OS.get_system_time_msecs()
-					"PP":
-						var stored = bldg_info["stored"]
-						if stored == bldg_info["capacity"]:
-							bldg_info["collect_date"] = OS.get_system_time_msecs()
-						game.energy += stored
-						bldg_info["stored"] = 0
-	self.get_parent().get_parent().dragged = false
+				game.popup("Not enough resources", 1)
+		else:
+			match tile.bldg_str:
+				"ME":
+					var mineral_space_available = game.mineral_capacity - game.minerals
+					var stored = tile.bldg_info["stored"]
+					if mineral_space_available >= stored:
+						tile.bldg_info["stored"] = 0
+						game.minerals += stored
+					else:
+						game.minerals = game.mineral_capacity
+						tile.bldg_info["stored"] -= mineral_space_available
+					if stored == tile.bldg_info["capacity"]:
+						tile.bldg_info["collect_date"] = OS.get_system_time_msecs()
+				"PP":
+					var stored = tile.bldg_info["stored"]
+					if stored == tile.bldg_info["capacity"]:
+						tile.bldg_info["collect_date"] = OS.get_system_time_msecs()
+					game.energy += stored
+					tile.bldg_info["stored"] = 0
+	view.dragged = false
 
 func enough_resources():
 	var output = false
@@ -126,34 +126,31 @@ func enough_resources():
 		output = true
 	return output
 
-func displayBldg():
-	var bldg_image
-	var bldg_icon
-	match bldg_str:
-		"ME":
-			bldg_image = preload("res://Graphics/Buildings/MineralExtractor.png")
-			bldg_icon = preload("res://Graphics/Icons/Minerals.png")
-			bldg_info = {"stored":0, "production":game.bldg_info[bldg_str]["production"], "capacity":game.bldg_info[bldg_str]["capacity"]}
-			$BuildingInformation.modulate = Color(0, 0.68, 1, 1)
-		"PP":
-			bldg_image = preload("res://Graphics/Buildings/PowerPlant.png")
-			bldg_icon = preload("res://Graphics/Icons/Energy.png")
-			bldg_info = {"stored":0, "production":game.bldg_info[bldg_str]["production"], "capacity":game.bldg_info[bldg_str]["capacity"]}
-			$BuildingInformation.modulate = Color(0, 0.68, 0, 1)
-	$Building.texture = bldg_image
-	$Building.modulate.a = 1
-	$Icon.texture = bldg_icon
+func display_bldg(bldg_str:String, a:float):
+	if bldg_str != "":
+		var bldg_image
+		match bldg_str:
+			"ME":
+				bldg_image = preload("res://Graphics/Buildings/MineralExtractor.png")
+			"PP":
+				bldg_image = preload("res://Graphics/Buildings/PowerPlant.png")
+		$Building.texture = bldg_image
+		$Building.modulate.a = a
 
-#Converts time in milliseconds to string format
-func time_to_str (time):
-	var seconds = floor(time / 1000)
-	var second_zero = "0" if seconds < 10 else ""
-	var minutes = floor(seconds / 60)
-	var minute_zero = "0" if minutes < 10 else ""
-	var hours = floor(minutes / 60)
-	var days = floor (hours / 24)
-	var years = floor (days / 365)
-	var year_str = "" if years == 0 else String(years) + "y "
-	var day_str = "" if days == 0 else String(days) + "d "
-	var hour_str = "" if hours == 0 else String(hours) + ":"
-	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)
+func display_icon():
+	if tile.bldg_str != "":
+		var bldg_icon
+		match tile.bldg_str:
+			"ME":
+				bldg_icon = preload("res://Graphics/Icons/Minerals.png")
+				$BuildingInformation.modulate = Color(0, 0.68, 1, 1)
+			"PP":
+				bldg_icon = preload("res://Graphics/Icons/Energy.png")
+				$BuildingInformation.modulate = Color(0, 0.68, 0, 1)
+		$Icon.texture = bldg_icon
+
+func add_bldg_info():
+	if tile.bldg_str != "":
+		match tile.bldg_str:
+			"ME", "PP":
+				tile.bldg_info = {"collect_date":tile.construction_date + tile.construction_length, "stored":0, "production":game.bldg_info[tile.bldg_str]["production"], "capacity":game.bldg_info[tile.bldg_str]["capacity"]}
