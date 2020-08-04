@@ -1,5 +1,5 @@
 extends Control
-
+onready var game = self.get_parent()
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -18,6 +18,10 @@ func _ready():
 
 func _on_TextureButton_pressed():
 	if not get_node("../construct_panel").visible:
-		self.get_parent().add_construct_panel()
+		game.add_construct_panel()
 	else:
-		self.get_parent().remove_construct_panel()
+		game.remove_construct_panel()
+
+
+func _on_StarSystem_pressed():
+	game.switch_view("system")

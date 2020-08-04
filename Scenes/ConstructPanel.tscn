@@ -3,11 +3,11 @@
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=3]
-[ext_resource path="res://Buildings/MineralExtractor.png" type="Texture" id=4]
-[ext_resource path="res://Icons/Energy.png" type="Texture" id=5]
-[ext_resource path="res://Icons/Time.png" type="Texture" id=6]
-[ext_resource path="res://Icons/Money.png" type="Texture" id=7]
-[ext_resource path="res://Buildings/PowerPlant.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Buildings/MineralExtractor.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Icons/Energy.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Buildings/PowerPlant.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30

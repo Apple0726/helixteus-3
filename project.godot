@@ -18,7 +18,7 @@ _global_script_class_icons={
 config/name="Helixteus 3"
 run/main_scene="res://Scenes/Game.tscn"
 boot_splash/image="res://Splash screen.png"
-config/icon="res://Icons/HX3_mc.png"
+config/icon="res://Graphics/Icons/HX3_mc.png"
 
 [display]
 
@@ -96,6 +96,11 @@ cancel={
 shift={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777237,"unicode":0,"echo":false,"script":null)
+ ]
+}
+view_star_system={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":86,"unicode":0,"echo":false,"script":null)
  ]
 }
 

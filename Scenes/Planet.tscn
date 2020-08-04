@@ -2,5 +2,5 @@
 
 [ext_resource path="res://Scripts/Planet.gd" type="Script" id=1]
 
-[node name="Planet" type="KinematicBody2D"]
+[node name="Planet" type="Node2D"]
 script = ExtResource( 1 )
