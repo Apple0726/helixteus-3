@@ -12,13 +12,17 @@ const PLANET_SCALE_DIV = 400000.0
 const STAR_SCALE_DIV = 5.0
 
 func _ready():
-	for star_info in stars_info:
-		var star = Sprite.new()
-		star.texture = star_graphic
+	for i in range(0, stars_info.size()):
+		var star_info = stars_info[i]
+		var star = TextureButton.new()
+		star.texture_normal = star_graphic
 		self.add_child(star)
-		star.position = star_info["pos"]
-		star.scale.x = star_info["size"] / STAR_SCALE_DIV
-		star.scale.y = star_info["size"] / STAR_SCALE_DIV
+		star.rect_pivot_offset = Vector2(384, 384)
+		star.rect_scale.x = star_info["size"] / STAR_SCALE_DIV
+		star.rect_scale.y = star_info["size"] / STAR_SCALE_DIV
+		star.rect_position = star_info["pos"] - Vector2(384, 384)
+		star.connect("mouse_entered", self, "on_star_over", [i])
+		star.connect("mouse_exited", self, "on_btn_out")
 	
 	var orbit_scene = preload("res://Scenes/Orbit.tscn")
 	var planets_info = []
@@ -40,8 +44,8 @@ func _ready():
 		planet.add_child(planet_btn)
 		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i["id"]])
 		planet_glow.connect("mouse_entered", self, "on_planet_over", [p_i["id"]])
-		planet_btn.connect("mouse_exited", self, "on_planet_out")
-		planet_glow.connect("mouse_exited", self, "on_planet_out")
+		planet_btn.connect("mouse_exited", self, "on_btn_out")
+		planet_glow.connect("mouse_exited", self, "on_btn_out")
 		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"]])
 		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"]])
 		planet_btn.rect_position = Vector2(-320, -320)
@@ -63,9 +67,16 @@ func on_planet_over (id:int):
 	var p_i = game.planet_data[id]
 	game.show_tooltip(p_i["name"] + "\nDiameter: " + String(round(p_i["size"])) + " km")
 
-func on_planet_out ():
-	game.hide_tooltip()
-
 func on_planet_click (id:int):
-	game.c_p = id
-	game.switch_view("planet")
+	var view = self.get_parent()
+	if not view.dragged:
+		game.c_p = id
+		game.switch_view("planet")
+	view.dragged = false
+
+func on_star_over (id:int):
+	var star = stars_info[id]
+	game.show_tooltip("Class " + star["class"] + " " + star["type"] + " star\nTemperature: " + String(star["temperature"]) + " K\nRadius: " + String(star["size"]) + " solar radii\nMass: " + String(star["mass"]) + " solar masses\nLuminosity: " + String(star["luminosity"]) + " solar luminosity")
+
+func on_btn_out ():
+	game.hide_tooltip()

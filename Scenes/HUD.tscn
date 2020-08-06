@@ -7,7 +7,6 @@
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
 [ext_resource path="res://Graphics/Icons/audio.png" type="Texture" id=6]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 25
 use_filter = true
@@ -41,7 +40,7 @@ __meta__ = {
 
 [node name="Minerals" type="Sprite" parent="ColorRect"]
 position = Vector2( 216, 24 )
-scale = Vector2( 0.125, 0.125 )
+scale = Vector2( 0.14, 0.14 )
 texture = ExtResource( 4 )
 
 [node name="Money" type="Sprite" parent="ColorRect"]
@@ -50,7 +49,7 @@ texture = ExtResource( 2 )
 
 [node name="Energy" type="Sprite" parent="ColorRect"]
 position = Vector2( 456, 24 )
-scale = Vector2( 0.125, 0.125 )
+scale = Vector2( 0.14, 0.14 )
 texture = ExtResource( 3 )
 
 [node name="MoneyText" type="Label" parent="ColorRect"]

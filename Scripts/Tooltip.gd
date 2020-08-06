@@ -14,7 +14,7 @@ func show_text(txt_a:Array):
 		max_width = max(font.get_string_size(txt_a[i]).x, max_width)
 	
 	$Timer.start()
-	$Text.rect_size.y = height
 
 func _on_Timer_timeout():
 	$Text.rect_size.x = max_width
+	$Text.rect_size.y = height

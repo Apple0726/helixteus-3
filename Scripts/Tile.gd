@@ -25,7 +25,7 @@ func _ready():
 	display_bldg(tile.bldg_str, 1)
 	display_icon()
 
-func _process(delta):
+func _process(_delta):
 	if tile.bldg_str != "":
 		$BuildingInformation.visible = true
 		var constr_progress = (OS.get_system_time_msecs() - tile.construction_date) / float(tile.construction_length)
@@ -65,14 +65,13 @@ func construction_finished():
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
 	if tile.bldg_str == "":
-		var bldg_image
 		display_bldg(self.get_parent().bldg_to_construct, 0.5)
 
 func _on_Button_button_out():
 	if tile.bldg_str == "":
 		$Building.texture = null
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_just_released("right_click"):
 		_on_Button_button_out()
 
@@ -85,20 +84,21 @@ func _on_Button_button_pressed():
 	if not view.dragged:
 		#Checks if tile is empty
 		if tile.bldg_str == "":
-			if planet.bldg_to_construct != "" and enough_resources():
-				tile.bldg_str = planet.bldg_to_construct
-				_on_Button_button_out()
-				display_bldg(tile.bldg_str, 1)
-				display_icon()
-				$TimeLeft.visible = true
-				game.money -= game.constr_cost["money"]
-				game.energy -= game.constr_cost["energy"]
-				tile.is_constructing = true
-				tile.construction_date = OS.get_system_time_msecs()
-				tile.construction_length = game.constr_cost["time"] * 1000
-				add_bldg_info()
-			else:
-				game.popup("Not enough resources", 1)
+			if planet.bldg_to_construct != "":
+				if enough_resources():
+					tile.bldg_str = planet.bldg_to_construct
+					_on_Button_button_out()
+					display_bldg(tile.bldg_str, 1)
+					display_icon()
+					$TimeLeft.visible = true
+					game.money -= game.constr_cost["money"]
+					game.energy -= game.constr_cost["energy"]
+					tile.is_constructing = true
+					tile.construction_date = OS.get_system_time_msecs()
+					tile.construction_length = game.constr_cost["time"] * 1000
+					add_bldg_info()
+				else:
+					game.popup("Not enough resources", 1)
 		else:
 			match tile.bldg_str:
 				"ME":
