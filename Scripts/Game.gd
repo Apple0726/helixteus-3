@@ -9,6 +9,8 @@ onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
 
+const SYSTEM_SCALE_DIV = 40.0
+
 #Current view
 var c_v = "planet"
 
@@ -25,6 +27,7 @@ var HUD
 #planet_HUD shows the buttons and other things that only shows while viewing a planet surface (i.e. construct)
 var planet_HUD
 
+#The base node containing things that can be moved/zoomed in/out
 var view
 
 #Player resources
@@ -34,8 +37,8 @@ var mineral_capacity = 50
 var energy = 200
 
 #Stores information of all objects discovered
-var galaxy_data = [{"pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "system_num":150, "systems":[], "view":{"pos":Vector2(640, 360), "zoom":0.3}}]
-var system_data = [{"pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[], "view":{"pos":Vector2(640, 180), "zoom":0.3}, "stars":[{"type":"main-sequence", "class":"G", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var galaxy_data = [{"id":0, "name":"Milky Way", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "system_num":3000, "systems":[], "view":{"pos":Vector2(640, 360), "zoom":0.3}}]
+var system_data = [{"id":0, "name":"Solar system", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[], "view":{"pos":Vector2(640, 180), "zoom":0.3}, "stars":[{"type":"main-sequence", "class":"G", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
 
@@ -50,7 +53,7 @@ func _ready():
 	$titlescreen.play()
 	#noob
 	#AudioServer.set_bus_mute(1,true)
-	
+
 func popup(txt, dur):
 	$Popup.visible = true
 	self.move_child($Popup, self.get_child_count())
@@ -69,16 +72,16 @@ func construct_building(bldg_type):
 
 func _load_game():
 	#Loads planet scene
-	
+
 	#Music fading
 	$AnimationPlayer.play("title song fade")
 	$ambient.play()
 	$AnimationPlayer.play("ambient fade in")
-	
+
 	view = view_scene.instance()
-	
+
 	self.remove_child($Title)
-	
+
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = "Home Planet"
@@ -88,46 +91,24 @@ func _load_game():
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
 	generate_tiles(2)
-	
+
 	self.add_child(view)
 	add_planet()
-	
+
 	HUD = HUD_scene.instance()
 	self.add_child(HUD)
 	HUD.name = "HUD"
-	
+
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	construct_panel.visible = false
 	self.add_child(construct_panel)
-	
+
 	tooltip.visible = false
 	self.add_child(tooltip)
-	
+
 	self.move_child($FPS, self.get_child_count())
 
-var mouse_pos = Vector2.ZERO
-
-func _input(event):
-	if event is InputEventMouse:
-		mouse_pos = event.position
-	
-	#Press F11 to toggle fullscreen
-	if Input.is_action_just_released("fullscreen"):
-		OS.window_fullscreen = not OS.window_fullscreen
-		
-	#Right click to cancel building
-	if c_v == "planet":
-		if Input.is_action_just_released("right_click"):
-			view.obj.bldg_to_construct = ""
-			$planet_HUD/MoreInfo.visible = false
-		
-	#Sell all ores by pressing Shift C
-	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
-		money += minerals * 5
-		popup("You sold " + String(minerals) + " minerals for $" + String(minerals * 5) + "!", 2)
-		minerals = 0
-		
 
 func add_construct_panel():
 	if c_v == "planet" and not Input.is_action_pressed("shift"):
@@ -163,21 +144,19 @@ func switch_view(new_view:String):
 			add_galaxy()
 	c_v = new_view
 
-var change_view_btn
-
 func add_galaxy():
 	if not galaxy_data[c_g]["discovered"]:
-		generate_systems(c_g)
-	view.add_obj("System", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
+		var loading_scene = preload("res://Scenes/Loading.tscn")
+		var loading = loading_scene.instance()
+		loading.position = Vector2(640, 360)
+		self.add_child(loading)
+		loading.name = "Loading"
+		generate_system_part()
+	else:
+		view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 
 func add_system():
-	change_view_btn = TextureButton.new()
-	var change_view_icon = preload("res://Graphics/Icons/GalaxyView.png")
-	change_view_btn.texture_normal = change_view_icon
-	self.add_child(change_view_btn)
-	change_view_btn.rect_position = Vector2(-1, 720 - 63)
-	change_view_btn.connect("mouse_entered", self, "on_change_view_over", ["View the galaxy this system is in"])
-	change_view_btn.connect("mouse_exited", self, "hide_tooltip")
+	put_change_view_btn("View the galaxy this system is in (Z)", "res://Graphics/Icons/GalaxyView.png")
 	if not system_data[c_s]["discovered"]:
 		generate_planets(c_s)
 	view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
@@ -202,22 +181,87 @@ func remove_planet():
 	self.remove_child(planet_HUD)
 	planet_HUD = null
 
+func get_star_class (temp):
+	var cl = ""
+	if temp < 600:
+		cl = "Y" + String(floor(10 - (temp - 250) / 350 * 10))
+	elif temp < 1400:
+		cl = "T" + String(floor(10 - (temp - 600) / 800 * 10))
+	elif temp < 2400:
+		cl = "L" + String(floor(10 - (temp - 1400) / 1000 * 10))
+	elif temp < 3700:
+		cl = "M" + String(floor(10 - (temp - 2400) / 1300 * 10))
+	elif temp < 5200:
+		cl = "K" + String(floor(10 - (temp - 3700) / 1500 * 10))
+	elif temp < 6000:
+		cl = "G" + String(floor(10 - (temp - 5200) / 800 * 10))
+	elif temp < 7500:
+		cl = "F" + String(floor(10 - (temp - 6000) / 1500 * 10))
+	elif temp < 10000:
+		cl = "A" + String(floor(10 - (temp - 7500) / 2500 * 10))
+	elif temp < 30000:
+		cl = "B" + String(floor(10 - (temp - 10000) / 20000 * 10))
+	elif temp < 70000:
+		cl = "O" + String(floor(10 - (temp - 30000) / 40000 * 10))
+	elif temp < 120000:
+		cl = "Q" + String(floor(10 - (temp - 70000) / 50000 * 10))
+	elif temp < 210000:
+		cl = "R" + String(floor(10 - (temp - 120000) / 90000 * 10))
+	else:
+		cl = "Z"
+	return cl
+
+func generate_system_part():
+	var progress = generate_systems(c_g)
+	if progress == 1:
+		view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
+		self.remove_child($Loading)
+	else:
+		$Loading.update_bar(progress, "Generating galaxy... (" + String(galaxy_data[c_g]["systems"].size()) + " / " + String(galaxy_data[c_g]["system_num"]) + " systems)")
+		var wait_timer = Timer.new()
+		wait_timer.wait_time = 0.1
+		self.add_child(wait_timer)
+		wait_timer.connect("timeout", self, "on_timeout")
+		wait_timer.name = "WaitTimer"
+		wait_timer.one_shot = true
+		wait_timer.start()
+
+func on_timeout():
+	self.remove_child($WaitTimer)
+	generate_system_part()
+
+#Collision detection of systems, galaxies etc.
+var star_shapes = []
+var max_outer_radius = 0
+var min_dist_from_center = 0
+var max_dist_from_center = 0
+func sort_shapes (a, b):
+	if a["outer_radius"] < b["outer_radius"]:
+		return true
+	return false
+
 func generate_systems(id:int):
 	randomize()
-	var system_num = galaxy_data[id]["system_num"]
+	var total_sys_num = galaxy_data[id]["system_num"]
+	#Systems remaining to load
+	var system_num = total_sys_num - galaxy_data[id]["systems"].size()
+	
 	#For reference, globular clusters are tightly packed old stars (class G etc)
 	#Most of the stars in them are around the same temperature, but put some outliers
 	#They have low metallicity
+
+	#Open clusters are
 	
-	#Open clusters are 
-	for i in range(0, system_num):
+
+	var sys_num_to_load = min(500, system_num)
+	var progress = 1 - (system_num - sys_num_to_load) / float(total_sys_num)
+	
+	for _i in range(0, sys_num_to_load):
 		var s_i = {}
 		s_i["status"] = "unconquered"
 		s_i["parent"] = id
-		s_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
 		s_i["planets"] = []
 		s_i["discovered"] = false
-		s_i["pos"] = Vector2(rand_range(-2000, 2000), rand_range(-2000, 2000))
 		var num_stars = 1
 #		while randf() < 0.3 / float(num_stars):
 #			num_stars += 1
@@ -225,7 +269,7 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}
 			var a = 2.0
-			
+
 			#Solar masses
 			var mass = -log(1 - randf()) / a
 			var star_size = 1
@@ -233,92 +277,145 @@ func generate_systems(id:int):
 			#Temperature in K
 			var temp = 0
 			var inv_l = 0
+			if mass < 0.08:
+				inv_l = inverse_lerp(0, 0.08, mass)
+				star_size = lerp(0.001, 0.1, inv_l)
+				temp = lerp(250, 2400, inv_l)
 			if mass >= 0.08 and mass < 0.45:
 				inv_l = inverse_lerp(0.08, 0.45, mass)
 				star_size = lerp(0.1, 0.7, inv_l)
 				temp = lerp(2400, 3700, inv_l)
-				star_class = "M"
 			if mass >= 0.45 and mass < 0.8:
 				inv_l = inverse_lerp(0.45, 0.8, mass)
 				star_size = lerp(0.7, 0.96, inv_l)
 				temp = lerp(3700, 5200, inv_l)
-				star_class = "K"
 			if mass >= 0.8 and mass < 1.04:
 				inv_l = inverse_lerp(0.8, 1.04, mass)
 				star_size = lerp(0.96, 1.15, inv_l)
 				temp = lerp(5200, 6000, inv_l)
-				star_class = "G"
 			if mass >= 1.04 and mass < 1.4:
 				inv_l = inverse_lerp(1.04, 1.4, mass)
 				star_size = lerp(1.15, 1.4, inv_l)
 				temp = lerp(6000, 7500, inv_l)
-				star_class = "F"
 			if mass >= 1.4 and mass < 2.1:
 				inv_l = inverse_lerp(1.4, 2.1, mass)
 				star_size = lerp(1.4, 1.8, inv_l)
 				temp = lerp(7500, 10000, inv_l)
-				star_class = "A"
 			if mass >= 2.1 and mass < 16:
 				inv_l = inverse_lerp(2.1, 16, mass)
 				star_size = lerp(1.8, 6.6, inv_l)
 				temp = lerp(10000, 30000, inv_l)
-				star_class = "B"
 			if mass >= 16 and mass < 100:
 				inv_l = inverse_lerp(16, 100, mass)
 				star_size = lerp(6.6, 22, inv_l)
 				temp = lerp(30000, 70000, inv_l)
-				star_class = "O"
 			if mass >= 100 and mass < 1000:
 				inv_l = inverse_lerp(100, 1000, mass)
 				star_size = lerp(22, 80, inv_l)
 				temp = lerp(70000, 120000, inv_l)
-				star_class = "Q"#Green star
 			if mass >= 1000 and mass < 10000:
 				inv_l = inverse_lerp(1000, 10000, mass)
 				star_size = lerp(60, 200, inv_l)
 				temp = lerp(120000, 210000, inv_l)
-				star_class = "R"#Pink star
-			star_class += String(round(9 - lerp(0, 9, inv_l)))
 			if mass >= 10000:
-				star_class = "Z"#Black star
 				star_size = pow(mass, 1/3.0) * (200 / pow(10000, 1/3.0))
 				temp = 210000 * pow(1.45, mass / 10000.0 - 1)
 			
-			var star_type = "main-sequence"
+			var star_type = ""
+			if mass >= 0.08:
+				star_type = "main-sequence"
+			else:
+				star_type = "brown dwarf"
+			
+			if mass > 0.2 and mass < 1.3 and randf() < 0.02:
+				star_type = "white dwarf"
+				temp = rand_range(4000,10000)
+				if randf() < 0.05:
+					temp = rand_range(10000, 60000)
+				star_size = rand_range(0.006, 0.03)
+				mass = rand_range(0.4, 1.2)
 			var rand_f = randf()
-			if mass > 0.25 and rand_f < 0.2:
+			if mass > 0.25 and rand_f < 0.12:
 				star_type = "giant"
-				star_size *= max(rand_range(50000, 100000) / temp, rand_range(1.1, 1.4))
-			if rand_f < 0.015:
+				star_size *= max(rand_range(35000, 40000) / temp, rand_range(1.2, 1.4))
+			if rand_f < 0.01:
 				mass = rand_range(10, 50)
 				star_type = "supergiant"
-				star_size *= max(rand_range(100000, 150000) / temp, rand_range(1.4, 2.1))
-			if rand_f < 0.004:
+				star_size *= max(rand_range(60000, 70000) / temp, rand_range(1.7, 2.1))
+			if rand_f < 0.0015:
 				mass = rand_range(5, 30)
 				star_type = "hypergiant"
-				star_size *= max(rand_range(300000, 400000) / temp, rand_range(4.0, 7.0))
+				star_size *= max(rand_range(100000, 150000) / temp, rand_range(3.0, 4.0))
 				var tier = 1
-				while randf() < 0.3:
+				while randf() < 0.2:
 					tier += 1
 					star_type = "hypergiant " + get_roman_num(tier)
-					star_size *= 1.2
+					star_size *= 1.1
 			
+			star_class = get_star_class(temp)
 			#star["luminosity"] = pow(mass, rand_range(3, 4))
-			star["luminosity"] = 4 * PI * pow(star_size, 2) * 5.67 * pow(10, -8) * pow(temp, 4)
-			star["mass"] = mass
-			star["size"] = star_size
+			star["luminosity"] = clever_round(4 * PI * pow(star_size * pow10(6.957, 8), 2) * pow10(5.67, -8) * pow(temp, 4) / pow10(3.828, 26))
+			star["mass"] = clever_round(mass)
+			star["size"] = clever_round(star_size)
 			star["type"] = star_type
 			star["class"] = star_class
-			star["temperature"] = temp
+			star["temperature"] = clever_round(temp)
 			star["pos"] = Vector2.ZERO
 			stars.append(star)
-			
+		
+		var biggest_star_size = 0
 		var combined_star_size = 0
-		for star in system_data[i]["stars"]:
+		for star in stars:
+			if star["size"] > biggest_star_size:
+				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
 		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(2, 9)), 2)
 		s_i["planet_num"] = planet_num
-	galaxy_data[id]["discovered"] = true
+		s_i["view"] = {"pos":Vector2(640, 360), "zoom":0.5 / combined_star_size}
+		
+		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.3)
+		var circle
+		var pos
+		#Collision detection
+		var colliding = true
+		var N = star_shapes.size()
+		if N >= total_sys_num / 8:
+			star_shapes.sort_custom(self, "sort_shapes")
+			star_shapes = star_shapes.slice(int((N - 1) * 0.9), N - 1)
+			min_dist_from_center = star_shapes[0]["outer_radius"]
+		if min_dist_from_center == 0:
+			max_dist_from_center = 6000
+		else:
+			max_dist_from_center = min_dist_from_center * 1.5
+		var outer_radius
+		var radius_increase_counter = 0
+		while colliding:
+			colliding = false
+			var dist_from_center = rand_range(min_dist_from_center + radius, max_dist_from_center)
+			pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
+			outer_radius = radius + dist_from_center
+			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
+			for star_shape in star_shapes:
+				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
+					colliding = true
+					radius_increase_counter += 1
+					if radius_increase_counter > 5:
+						max_dist_from_center *= 1.2
+						radius_increase_counter = 0
+					break
+		if outer_radius > max_outer_radius:
+			max_outer_radius = outer_radius
+		s_i["pos"] = pos
+		star_shapes.append(circle)
+		var s_id = system_data.size()
+		s_i["id"] = s_id
+		s_i["stars"] = stars
+		s_i["name"] = "Star system " + String(s_id)
+		s_i["discovered"] = false
+		galaxy_data[id]["systems"].append(s_id)
+		system_data.append(s_i)
+	galaxy_data[id]["discovered"] = true if progress == 1 else false
+	return progress
 
 func generate_planets(id:int):
 	randomize()
@@ -344,13 +441,14 @@ func generate_planets(id:int):
 		p_i["name"] = "Planet " + String(p_id)
 		system_data[id]["planets"].append(p_id)
 		planet_data.append(p_i)
+	
 	system_data[id]["discovered"] = true
 
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
 	var wid:int = round(pow(planet_data[id]["size"], 0.6) / 28.0)
-	
+
 	for _i in range(0, pow(wid, 2)):
 		planet_data[id]["tiles"].append(tile_data.size())
 		tile_data.append({	"is_constructing":false,
@@ -369,8 +467,25 @@ func show_tooltip(txt:String):
 func hide_tooltip():
 	tooltip.visible = false
 
+var change_view_btn
+
+func put_change_view_btn (info_str, icon_str):
+	change_view_btn = TextureButton.new()
+	var change_view_icon = load(icon_str)
+	change_view_btn.texture_normal = change_view_icon
+	self.add_child(change_view_btn)
+	change_view_btn.rect_position = Vector2(-1, 720 - 63)
+	change_view_btn.connect("mouse_entered", self, "on_change_view_over", [info_str])
+	change_view_btn.connect("mouse_exited", self, "hide_tooltip")
+	change_view_btn.connect("pressed", self, "on_change_view_click")
+
 func on_change_view_over (view_str):
 	show_tooltip(view_str)
+
+func on_change_view_click ():
+	match c_v:
+		"system":
+			switch_view("galaxy")
 
 #Returns a random integer between low and high inclusive
 func rand_int(low:int, high:int):
@@ -389,6 +504,26 @@ func time_to_str (time):
 	var hour_str = "" if hours == 0 else String(hours) + ":"
 	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)
 
+func get_roman_num(num:int):
+	if num > 3999:
+		return String(num)
+	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
+	var num_str:String = String(num)
+
+	var res = ""
+	var n = num_str.length()
+	var c = 0;
+	while c < n:
+		res = strs[c][int(num_str[n - c - 1])] + res;
+		c += 1
+	return res;
+
+func clever_round (num, sd:int = 3):#sd: significant digits
+	return stepify(num, pow10(1, floor(log(num) / log(10)) - sd - 1))
+
+func pow10(n, e):
+	return n * pow(10, e)
+
 func _process(delta):
 	if delta != 0:
 		$FPS.text = String(round(1 / delta)) + " FPS"
@@ -402,16 +537,28 @@ func _process(delta):
 	if tooltip.rect_position.y + tooltip.height > 720 - 4:
 		tooltip.rect_position.y = 720 - tooltip.height - 4
 
-func get_roman_num(num:int):
-	if num > 3999:
-		return String(num)
-	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
-	var num_str:String = String(num)
-	
-	var res = ""
-	var n = num_str.length()
-	var c = 0;
-	while c < n:
-		res = strs[c][int(num_str[n - c - 1])] + res;
-		c += 1
-	return res;
+var mouse_pos = Vector2.ZERO
+
+func _input(event):
+	if event is InputEventMouse:
+		mouse_pos = event.position
+
+	#Press F11 to toggle fullscreen
+	if Input.is_action_just_released("fullscreen"):
+		OS.window_fullscreen = not OS.window_fullscreen
+
+	#Press Z to view galaxy the system is in, etc.
+	if Input.is_action_just_released("change_view"):
+		on_change_view_click()
+
+	#Right click to cancel building
+	if c_v == "planet":
+		if Input.is_action_just_released("right_click"):
+			view.obj.bldg_to_construct = ""
+			$planet_HUD/MoreInfo.visible = false
+
+	#Sell all ores by pressing Shift C
+	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
+		money += minerals * 5
+		popup("You sold " + String(minerals) + " minerals for $" + String(minerals * 5) + "!", 2)
+		minerals = 0

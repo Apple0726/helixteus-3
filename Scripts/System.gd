@@ -7,7 +7,7 @@ onready var planets_id = game.system_data[game.c_s]["planets"]
 
 var stars
 
-const DIST_MULT = 200.0
+const DIST_MULT = 150.0
 const PLANET_SCALE_DIV = 400000.0
 const STAR_SCALE_DIV = 5.0
 

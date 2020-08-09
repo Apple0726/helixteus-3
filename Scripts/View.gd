@@ -22,6 +22,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float):
 	self.add_child(obj)
 	self.position = pos
 	self.scale = Vector2(sc, sc)
+	dragged = false
 
 func remove_obj(obj_str:String):
 	match obj_str:
@@ -31,6 +32,9 @@ func remove_obj(obj_str:String):
 		"system":
 			game.system_data[game.c_s]["view"]["pos"] = self.position
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x
+		"galaxy":
+			game.galaxy_data[game.c_g]["view"]["pos"] = self.position
+			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 	self.remove_child(obj)
 	obj_scene = null
 	obj = null
