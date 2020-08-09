@@ -19,6 +19,9 @@ func _ready():
 		var star_texture = preload("res://Graphics/Stars/Star.png")
 		star_btn.texture_normal = star_texture
 		var w = int(star["class"][1]) / 10.0#weight for lerps
+		var Y9 = Color(25, 0, 0, 255) / 255.0
+		var Y0 = Color(66, 0, 0, 255) / 255.0
+		var T0 = Color(117, 0, 0, 255) / 255.0
 		var L0 = Color(189, 32, 23, 255) / 255.0
 		var M0 = Color(255, 181, 108, 255) / 255.0
 		var K0 = Color(255, 218, 181, 255) / 255.0
@@ -30,6 +33,12 @@ func _ready():
 		var Q0 = Color(134, 255, 117, 255) / 255.0
 		var R0 = Color(255, 151, 255, 255) / 255.0
 		match star["class"][0]:
+			"Y":
+				star_btn.modulate = lerp(Y0, Y9, w)
+			"T":
+				star_btn.modulate = lerp(T0, Y0, w)
+			"L":
+				star_btn.modulate = lerp(L0, T0, w)
 			"M":
 				star_btn.modulate = lerp(M0, L0, w)
 			"K":
@@ -57,8 +66,13 @@ func _ready():
 		star_btn.connect("pressed", self, "on_system_click", [s_i["id"]])
 		star_btn.rect_position = Vector2(-600 / 2, -600 / 2)
 		star_btn.rect_pivot_offset = Vector2(600 / 2, 600 / 2)
-		star_btn.rect_scale.x = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.3)
-		star_btn.rect_scale.y = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.3)
+		var radius
+		if star["size"] < 1:
+			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.4)
+		else:
+			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.3)
+		star_btn.rect_scale.x = radius
+		star_btn.rect_scale.y = radius
 		system.position = s_i["pos"]
 
 func on_system_over (id:int):

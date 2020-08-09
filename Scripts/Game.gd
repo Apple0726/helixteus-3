@@ -151,7 +151,7 @@ func add_galaxy():
 		loading.position = Vector2(640, 360)
 		self.add_child(loading)
 		loading.name = "Loading"
-		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 350.0)
+		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 		generate_system_part()
 	else:
 		view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
@@ -270,13 +270,27 @@ func generate_systems(id:int):
 		s_i["parent"] = id
 		s_i["planets"] = []
 		s_i["discovered"] = false
+		
+		#Checks whether the star is in globular cluster
+		var N = star_shapes.size()
+		if N >= total_sys_num / 8:
+			star_shapes.sort_custom(self, "sort_shapes")
+			star_shapes = star_shapes.slice(int((N - 1) * 0.9), N - 1)
+			min_dist_from_center = star_shapes[0]["outer_radius"]
+			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
+				gc_remaining -= 1
+				gc_stars_remaining = int(pow(total_sys_num, 0.5) * rand_range(1, 3))
+				gc_center = polar2cartesian(rand_range(min_dist_from_center * 1.25, min_dist_from_center * 1.5), rand_range(0, 2 * PI))
+				max_dist_from_center = 100
+			gc_offset += 1
+		
 		var num_stars = 1
 #		while randf() < 0.3 / float(num_stars):
 #			num_stars += 1
 		var stars = []
 		for _j in range(0, num_stars):
 			var star = {}
-			var a = 2.0
+			var a = 1.65 if gc_stars_remaining == 0 else 4.0
 
 			#Solar masses
 			var mass = -log(1 - randf()) / a
@@ -382,22 +396,14 @@ func generate_systems(id:int):
 		s_i["view"] = {"pos":Vector2(640, 360), "zoom":0.5 / combined_star_size}
 		
 		#Collision detection
-		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.3)
+		var radius
+		if biggest_star_size < 1:
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.4)
+		else:
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.3)
 		var circle
 		var pos
 		var colliding = true
-		var N = star_shapes.size()
-		if N >= total_sys_num / 8:
-			star_shapes.sort_custom(self, "sort_shapes")
-			star_shapes = star_shapes.slice(int((N - 1) * 0.9), N - 1)
-			min_dist_from_center = star_shapes[0]["outer_radius"]
-			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
-				gc_remaining -= 1
-				gc_stars_remaining = int(pow(total_sys_num, 0.5) * 2)
-				max_dist_from_center = 100
-				gc_center = polar2cartesian(rand_range(min_dist_from_center, min_dist_from_center * 1.5), rand_range(0, 2 * PI))
-				print(gc_stars_remaining)
-			gc_offset += 1
 		if gc_stars_remaining == 0:
 			gc_center = Vector2.ZERO
 			if min_dist_from_center == 0:
@@ -411,8 +417,8 @@ func generate_systems(id:int):
 			var dist_from_center = rand_range(0, max_dist_from_center)
 			if gc_stars_remaining == 0:
 				dist_from_center = rand_range(min_dist_from_center + radius, max_dist_from_center)
+			outer_radius = radius + dist_from_center
 			pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI)) + gc_center
-			outer_radius = radius + dist_from_center + gc_center.length()
 			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
 			for star_shape in star_shapes:
 				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
@@ -422,14 +428,30 @@ func generate_systems(id:int):
 						max_dist_from_center *= 1.2
 						radius_increase_counter = 0
 					break
+			if not colliding:
+				for gc_circle in gc_circles:
+					if pos.distance_to(gc_circle["pos"]) < radius + gc_circle["radius"]:
+						colliding = true
+						radius_increase_counter += 1
+						if radius_increase_counter > 5:
+							max_dist_from_center *= 1.2
+							radius_increase_counter = 0
+						break
 		if outer_radius > max_outer_radius:
 			max_outer_radius = outer_radius
 		if gc_stars_remaining > 0:
 			gc_stars_remaining -= 1
+			gc_circles.append(circle)
 			if gc_stars_remaining == 0:
-				pass
+				#Convert globular cluster to a single huge circle for collision detection purposes
+				gc_circles.sort_custom(self, "sort_shapes")
+				var big_radius = gc_circles[-1]["outer_radius"]
+				star_shapes = [{"pos":gc_center, "radius":big_radius, "outer_radius":gc_center.length() + big_radius}]
+				print(star_shapes[0]["outer_radius"])
+				gc_circles = []
+		else:
+			star_shapes.append(circle)
 		s_i["pos"] = pos
-		star_shapes.append(circle)
 		var s_id = system_data.size()
 		s_i["id"] = s_id
 		s_i["stars"] = stars
