@@ -37,7 +37,7 @@ var mineral_capacity = 50
 var energy = 200
 
 #Stores information of all objects discovered
-var galaxy_data = [{"id":0, "name":"Milky Way", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "system_num":1000, "systems":[], "view":{"pos":Vector2(640, 360), "zoom":0.3}}]
+var galaxy_data = [{"id":0, "name":"Milky Way", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "system_num":10000, "systems":[], "view":{"pos":Vector2(640, 360), "zoom":0.3}}]
 var system_data = [{"id":0, "name":"Solar system", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[], "view":{"pos":Vector2(640, 180), "zoom":0.3}, "stars":[{"type":"main-sequence", "class":"G", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
@@ -151,7 +151,7 @@ func add_galaxy():
 		loading.position = Vector2(640, 360)
 		self.add_child(loading)
 		loading.name = "Loading"
-		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
+		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 350.0)
 		generate_system_part()
 	else:
 		view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
@@ -242,6 +242,7 @@ var gc_remaining = 0
 var gc_stars_remaining = 0
 var gc_center = Vector2.ZERO
 var gc_offset = 0
+var gc_circles = []
 
 func sort_shapes (a, b):
 	if a["outer_radius"] < b["outer_radius"]:
@@ -390,14 +391,15 @@ func generate_systems(id:int):
 			star_shapes.sort_custom(self, "sort_shapes")
 			star_shapes = star_shapes.slice(int((N - 1) * 0.9), N - 1)
 			min_dist_from_center = star_shapes[0]["outer_radius"]
-			if gc_remaining > 0 and gc_offset > 4:
+			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
 				gc_remaining -= 1
-				gc_stars_remaining = total_sys_num / 10
+				gc_stars_remaining = int(pow(total_sys_num, 0.5) * 2)
 				max_dist_from_center = 100
 				gc_center = polar2cartesian(rand_range(min_dist_from_center, min_dist_from_center * 1.5), rand_range(0, 2 * PI))
-				print(gc_center)
+				print(gc_stars_remaining)
 			gc_offset += 1
-		if gc_stars_remaining > 0:
+		if gc_stars_remaining == 0:
+			gc_center = Vector2.ZERO
 			if min_dist_from_center == 0:
 				max_dist_from_center = 6000
 			else:
@@ -410,7 +412,7 @@ func generate_systems(id:int):
 			if gc_stars_remaining == 0:
 				dist_from_center = rand_range(min_dist_from_center + radius, max_dist_from_center)
 			pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI)) + gc_center
-			outer_radius = radius + dist_from_center
+			outer_radius = radius + dist_from_center + gc_center.length()
 			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
 			for star_shape in star_shapes:
 				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
@@ -424,6 +426,8 @@ func generate_systems(id:int):
 			max_outer_radius = outer_radius
 		if gc_stars_remaining > 0:
 			gc_stars_remaining -= 1
+			if gc_stars_remaining == 0:
+				pass
 		s_i["pos"] = pos
 		star_shapes.append(circle)
 		var s_id = system_data.size()
