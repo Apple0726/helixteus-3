@@ -72,7 +72,7 @@ func construct_building(bldg_type):
 
 func _load_game():
 	#Loads planet scene
-
+	$click.play()
 	#Music fading
 	$AnimationPlayer.play("title song fade")
 	$ambient.play()
@@ -483,6 +483,7 @@ func on_change_view_over (view_str):
 	show_tooltip(view_str)
 
 func on_change_view_click ():
+	$click.play()	
 	match c_v:
 		"system":
 			switch_view("galaxy")
