@@ -89,6 +89,7 @@ func _input(event):
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position
+		get_node("../FPS").text = String(to_local(mouse_position))
 
 #Zooming code
 func _zoom_at_point(zoom_change):
