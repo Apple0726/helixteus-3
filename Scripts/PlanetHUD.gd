@@ -1,11 +1,14 @@
 extends Control
 onready var game = self.get_parent()
+onready var click_sound = get_node("../click")
 
 func _on_StarSystem_pressed():
+	click_sound.play()	
 	game.switch_view("system")
 
 
 func _on_Construct_pressed():
+	click_sound.play()	
 	if not get_node("../construct_panel").visible:
 		game.add_construct_panel()
 	else:
