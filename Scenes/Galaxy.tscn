@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Scenes/Galaxy.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Galaxy.gd" type="Script" id=1]
+
 
 [sub_resource type="Environment" id=1]
 background_mode = 4

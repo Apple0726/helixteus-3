@@ -22,19 +22,23 @@ func add_obj(obj_str:String, pos:Vector2, sc:float):
 	self.add_child(obj)
 	self.position = pos
 	self.scale = Vector2(sc, sc)
+	self.position *= sc 
 	dragged = false
 
 func remove_obj(obj_str:String):
 	match obj_str:
 		"planet":
-			game.planet_data[game.c_p]["view"]["pos"] = self.position
+			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data[game.c_s]["view"]["pos"] = self.position
+			game.system_data[game.c_s]["view"]["pos"] = self.position / self.scale.x
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x
 		"galaxy":
-			game.galaxy_data[game.c_g]["view"]["pos"] = self.position
+			game.galaxy_data[game.c_g]["view"]["pos"] = self.position / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
+		"cluster":
+			game.cluster_data[game.c_c]["view"]["pos"] = self.position / self.scale.x
+			game.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 	self.remove_child(obj)
 	obj_scene = null
 	obj = null
@@ -89,12 +93,16 @@ func _input(event):
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position
-		get_node("../FPS").text = String(to_local(mouse_position))
+		#get_node("../FPS").text = String(to_local(mouse_position))
 
 #Zooming code
-func _zoom_at_point(zoom_change):
+func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	scale = scale * zoom_change
-	var delta_x = (mouse_position.x - global_position.x) * (zoom_change - 1)
-	var delta_y = (mouse_position.y - global_position.y) * (zoom_change - 1)
+	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
+	var delta_y = (center.y - global_position.y) * (zoom_change - 1)
 	global_position.x -= delta_x
 	global_position.y -= delta_y
+
+func _process(delta):
+	if not Input.is_action_pressed("left_click"):
+		dragged = false

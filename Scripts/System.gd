@@ -72,7 +72,6 @@ func on_planet_click (id:int):
 	if not view.dragged:
 		game.c_p = id
 		game.switch_view("planet")
-	view.dragged = false
 
 func on_star_over (id:int):
 	var star = stars_info[id]

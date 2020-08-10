@@ -71,7 +71,6 @@ playback_default_blend_time = 4096.0
 "anims/title song fade" = SubResource( 2 )
 
 [node name="FPS" type="Label" parent="."]
-modulate = Color( 0.301961, 0, 0, 1 )
 margin_right = 74.0
 margin_bottom = 14.0
 __meta__ = {

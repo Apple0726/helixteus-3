@@ -17,5 +17,5 @@ func _ready():
 	for i in range(0, p_i["tiles"].size()):
 		var tile = tile_scene.instance()
 		tile.id = i + start_ind
-		tile.position = Vector2((i % wid) * 200, floor(i / wid) * 200)
+		tile.position = Vector2((i % wid - wid / 2.0) * 200, floor(i / wid - wid / 2.0) * 200) + Vector2(100, 100)
 		self.add_child(tile)

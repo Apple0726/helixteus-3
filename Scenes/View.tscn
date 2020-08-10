@@ -2,6 +2,5 @@
 
 [ext_resource path="res://Scripts/View.gd" type="Script" id=1]
 
-
 [node name="View" type="KinematicBody2D"]
 script = ExtResource( 1 )
