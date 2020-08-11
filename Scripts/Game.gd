@@ -11,6 +11,8 @@ onready var tooltip:Control = tooltip_scene.instance()
 
 const SYSTEM_SCALE_DIV = 40.0
 const GALAXY_SCALE_DIV = 750.0
+const CLUSTER_SCALE_DIV = 1600.0
+const SC_SCALE_DIV = 400.0
 
 #Current view
 var c_v = "planet"
@@ -38,9 +40,11 @@ var mineral_capacity = 50
 var energy = 200
 
 #Stores information of all objects discovered
-var cluster_data = [{"id":0, "type":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":1000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
 var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[2], "view":{"pos":Vector2(640, -360), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[], "view":{"pos":Vector2(640, -360), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
 
@@ -139,6 +143,10 @@ func switch_view(new_view:String):
 			remove_galaxy()
 		"cluster":
 			remove_cluster()
+		"supercluster":
+			remove_supercluster()
+		"universe":
+			remove_universe()
 	match new_view:
 		"planet":
 			add_planet()
@@ -148,6 +156,10 @@ func switch_view(new_view:String):
 			add_galaxy()
 		"cluster":
 			add_cluster()
+		"supercluster":
+			add_supercluster()
+		"universe":
+			add_universe()
 	c_v = new_view
 
 func add_loading():
@@ -167,6 +179,24 @@ func add_obj(view_str):
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 		"cluster":
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
+		"supercluster":
+			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
+		"universe":
+			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
+
+func add_universe():
+	#put_change_view_btn("View the universe this supercluster is in (Z)", "res://Graphics/Icons/UniverseView.png")
+	if not universe_data[c_u]["discovered"]:
+		reset_collisions()
+		generate_superclusters(c_u)
+	add_obj("universe")
+
+func add_supercluster():
+	put_change_view_btn("View the universe this supercluster is in (Z)", "res://Graphics/Icons/UniverseView.png")
+	if not supercluster_data[c_sc]["discovered"]:
+		reset_collisions()
+		generate_clusters(c_sc)
+	add_obj("supercluster")
 
 func add_cluster():
 	if not cluster_data[c_c]["discovered"]:
@@ -174,16 +204,17 @@ func add_cluster():
 		reset_collisions()
 		generate_galaxy_part()
 	else:
+		put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
 		add_obj("cluster")
 
 func add_galaxy():
-	put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
 	if not galaxy_data[c_g]["discovered"]:
 		add_loading()
 		reset_collisions()
 		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 		generate_system_part()
 	else:
+		put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
 		add_obj("galaxy")
 
 func add_system():
@@ -200,8 +231,16 @@ func add_planet():
 	self.add_child(planet_HUD)
 	planet_HUD.name = "planet_HUD"
 
-func remove_cluster():
+func remove_universe():
 	#self.remove_child(change_view_btn)
+	view.remove_obj("universe")
+
+func remove_supercluster():
+	self.remove_child(change_view_btn)
+	view.remove_obj("supercluster")
+
+func remove_cluster():
+	self.remove_child(change_view_btn)
 	view.remove_obj("cluster")
 
 func remove_galaxy():
@@ -244,6 +283,7 @@ var max_dist_from_center = 0
 var gc_remaining = 0
 var gc_stars_remaining = 0
 var gc_center = Vector2.ZERO
+#To not put gc near galactic core
 var gc_offset = 0
 var gc_circles = []
 
@@ -263,11 +303,71 @@ func sort_shapes (a, b):
 		return true
 	return false
 
+func generate_superclusters(id:int):
+	randomize()
+	var total_sc_num = universe_data[id]["supercluster_num"]
+	max_dist_from_center = pow(total_sc_num, 0.5) * 300
+	for i in range(1, total_sc_num):
+		var sc_i = {}
+		sc_i["status"] = "unconquered"
+		sc_i["type"] = rand_int(0, 0)
+		sc_i["parent"] = id
+		sc_i["clusters"] = []
+		sc_i["cluster_num"] = rand_int(100, 1000)
+		sc_i["discovered"] = false
+		var colliding = true
+		var pos
+		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
+		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
+		sc_i["pos"] = pos
+		var sc_id = supercluster_data.size()
+		sc_i["id"] = sc_id
+		sc_i["name"] = "Supercluster " + String(sc_id)
+		sc_i["discovered"] = false
+		universe_data[id]["superclusters"].append(sc_id)
+		supercluster_data.append(sc_i)
+	if id != 0:
+		var view_zoom = 500.0 / max_dist_from_center
+		universe_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom, "sc_mult":1.0}
+	universe_data[id]["discovered"] = true
+
+func generate_clusters(id:int):
+	randomize()
+	var total_clust_num = supercluster_data[id]["cluster_num"]
+	max_dist_from_center = pow(total_clust_num, 0.5) * 500
+	for i in range(1, total_clust_num):
+		var c_i = {}
+		c_i["status"] = "unconquered"
+		c_i["type"] = rand_int(0, 0)
+		c_i["class"] = "group" if randf() < 0.5 else "cluster"
+		c_i["parent"] = id
+		c_i["galaxies"] = []
+		c_i["discovered"] = false
+		if c_i["class"] == "group":
+			c_i["galaxy_num"] = rand_int(10, 100)
+		else:
+			c_i["galaxy_num"] = rand_int(500, 5000)
+		var pos
+		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
+		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
+		c_i["pos"] = pos
+		var c_id = cluster_data.size()
+		c_i["id"] = c_id
+		c_i["name"] = "Galaxy " + c_i["class"] + " " + String(c_id)
+		c_i["discovered"] = false
+		supercluster_data[id]["clusters"].append(c_id)
+		cluster_data.append(c_i)
+	if id != 0:
+		var view_zoom = 500.0 / max_dist_from_center
+		supercluster_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom, "sc_mult":1.0}
+	supercluster_data[id]["discovered"] = true
+
 func generate_galaxy_part():
-	var progress = generate_galaxies(c_g)
+	var progress = generate_galaxies(c_c)
 	if progress == 1:
 		add_obj("cluster")
 		self.remove_child($Loading)
+		put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
 	else:
 		$Loading.update_bar(progress, "Generating cluster... (" + String(cluster_data[c_c]["galaxies"].size()) + " / " + String(cluster_data[c_c]["galaxy_num"]) + " galaxies)")
 		add_wait_timer("cluster")
@@ -333,7 +433,13 @@ func generate_galaxies(id:int):
 		else:
 			cluster_data[id]["galaxies"].append(g_id)
 			galaxy_data.append(g_i)
-	cluster_data[id]["discovered"] = true if progress == 1 else false
+	if progress == 1:
+		cluster_data[id]["discovered"] = true
+		if id != 0:
+			var view_zoom = 500.0 / max_outer_radius
+			cluster_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
+	else:
+		cluster_data[id]["discovered"] = false
 	return progress
 
 func generate_system_part():
@@ -341,6 +447,7 @@ func generate_system_part():
 	if progress == 1:
 		add_obj("galaxy")
 		self.remove_child($Loading)
+		put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
 	else:
 		$Loading.update_bar(progress, "Generating galaxy... (" + String(galaxy_data[c_g]["systems"].size()) + " / " + String(galaxy_data[c_g]["system_num"]) + " systems)")
 		add_wait_timer("galaxy")
@@ -566,7 +673,7 @@ func generate_systems(id:int):
 			system_data.append(s_i)
 	if progress == 1:
 		galaxy_data[id]["discovered"] = true
-		if c_g != 0:
+		if id != 0:
 			var view_zoom = 500.0 / max_outer_radius
 			galaxy_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	else:
@@ -600,8 +707,9 @@ func generate_planets(id:int):
 		system_data[id]["planets"].append(p_id)
 		planet_data.append(p_i)
 	
-	var view_zoom = 2 / max_distance
-	system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
+	if id != 0:
+		var view_zoom = 2 / max_distance
+		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	system_data[id]["discovered"] = true
 
 func generate_tiles(id:int):
@@ -651,6 +759,10 @@ func on_change_view_click ():
 			switch_view("galaxy")
 		"galaxy":
 			switch_view("cluster")
+		"cluster":
+			switch_view("supercluster")
+		"supercluster":
+			switch_view("universe")
 
 func get_star_class (temp):
 	var cl = ""
@@ -715,10 +827,13 @@ func get_roman_num(num:int):
 	return res;
 
 func clever_round (num, sd:int = 3):#sd: significant digits
-	return stepify(num, pow10(1, floor(log(num) / log(10)) - sd - 1))
+	return stepify(num, pow10(1, floor(log10(num)) - sd - 1))
 
 func pow10(n, e):
 	return n * pow(10, e)
+
+func log10(n):
+	return log(n) / log(10)
 
 func _process(delta):
 	if delta != 0:
