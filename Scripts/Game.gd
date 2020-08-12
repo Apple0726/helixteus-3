@@ -695,7 +695,7 @@ func generate_planets(id:int):
 		p_i["type"] = rand_int(3, 10)
 		p_i["size"] = 2000 + rand_range(0, 10000) * (i + 1)
 		p_i["angle"] = rand_range(0, 2 * PI)
-		p_i["distance"] = (combined_star_size + pow(i, 2) / 3.0) * 1.2
+		p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))*3.8114946867097))
 		max_distance = p_i["distance"]
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
