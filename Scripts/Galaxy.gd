@@ -75,12 +75,56 @@ func _ready():
 		star_btn.rect_scale.y = radius
 		system.position = s_i["pos"]
 
-func on_system_over (id:int):
-	var s_i = game.system_data[id]
-	game.show_tooltip(s_i["name"] + "\nPlanets: " + String(s_i["planet_num"]))
+#used for _draw() function
+var moused_over
+#stores the coords of a selected system
+var system_pos
+#distance from Solar System to selected system
+var system_distance
+#circumference of system orbit
+var orbit_length
+#angular velocity of the galaxy spinning
+const angular_velocity = 1.8
+#how many seconds to project into the future in terms of star position
+var orbit_seconds = 10
 
+var theta1
+var theta2
+var x1
+var y1
+var x2
+var y2
+var r
+func _draw():
+	if moused_over == true:
+		#from galaxy center to selected system (red)
+		draw_line(Vector2.ZERO, system_pos, Color(255, 0, 0), 1)
+		#from Solar System to selected system (green)
+		#draw_line(Vector2(-15000, -15000), system_pos, Color(0, 255, 0), 1)
+		
+		x1 = system_pos.x
+		y1 = system_pos.y
+		r = pow(pow(x1,2)+ pow(y1,2), 0.5)
+		theta1 = atan(-1) * (abs(y1)/abs(x1))
+		theta2 = theta1 + (deg2rad(angular_velocity - orbit_seconds))
+		x2 = cos(theta2) * r
+		y2 = sin(theta2) * r
+		draw_line(Vector2.ZERO, Vector2(x2, y2), Color(0, 0, 255), 1)
+		#system orbit (yellow)
+		draw_arc(Vector2.ZERO, (Vector2.ZERO - system_pos).length(), 0, 2*PI, 100, Color(1, 1, 0, 1), 1)
+		orbit_length = 2 * PI * system_pos.length()
+
+func on_system_over (id:int):
+	moused_over = true
+	var s_i = game.system_data[id]
+	system_pos = s_i['pos']
+	system_distance = (Vector2(-15000, -15000) - system_pos).length()
+	game.show_tooltip(s_i["name"] + "\nPlanets: " + String(s_i["planet_num"]) + '\nDistance: ' + String(system_distance))
+	update()
 func on_system_out ():
+	moused_over = false
 	game.hide_tooltip()
+	update()
 
 func on_system_click (id:int):
 	var view = self.get_parent()
