@@ -1,6 +1,6 @@
 extends AudioStreamPlayer
 
-var ambienttracks = ['ambient1','ambient2']
+var ambienttracks = ['ambient1','ambient2', 'ambient3']
 
 func _ready():
 	randomize()
