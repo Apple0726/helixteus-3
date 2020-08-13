@@ -9,7 +9,7 @@ onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
 
-const SYSTEM_SCALE_DIV = 40.0
+const SYSTEM_SCALE_DIV = 10.0
 const GALAXY_SCALE_DIV = 750.0
 const CLUSTER_SCALE_DIV = 1600.0
 const SC_SCALE_DIV = 400.0
@@ -40,7 +40,7 @@ var mineral_capacity = 50
 var energy = 200
 
 #Stores information of all objects discovered
-var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":1000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
 var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
@@ -559,24 +559,23 @@ func generate_systems(id:int):
 					temp = rand_range(10000, 60000)
 				star_size = rand_range(0.006, 0.03)
 				mass = rand_range(0.4, 1.2)
-			var rand_f = randf()
-			if mass > 0.25 and rand_f < 0.12:
+			if mass > 0.25 and randf() < 0.12:
 				star_type = "giant"
 				star_size *= max(rand_range(35000, 40000) / temp, rand_range(1.2, 1.4))
-			if mass >= 0.08:
-				if rand_f < 0.01:
+			if star_type == "main-sequence":
+				if randf() < 0.01:
 					mass = rand_range(10, 50)
 					star_type = "supergiant"
 					star_size *= max(rand_range(60000, 70000) / temp, rand_range(1.7, 2.1))
-				if rand_f < 0.0015:
+				if randf() < 0.0015:
 					mass = rand_range(5, 30)
 					star_type = "hypergiant"
-					star_size *= max(rand_range(100000, 150000) / temp, rand_range(3.0, 4.0))
+					star_size *= max(rand_range(150000, 200000) / temp, rand_range(3.0, 4.0))
 					var tier = 1
 					while randf() < 0.2:
 						tier += 1
 						star_type = "hypergiant " + get_roman_num(tier)
-						star_size *= 1.1
+						star_size *= 1.2
 			
 			star_class = get_star_class(temp)
 			#star["luminosity"] = pow(mass, rand_range(3, 4))
@@ -595,7 +594,9 @@ func generate_systems(id:int):
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
-		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(2, 9)), 2)
+		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(1, 9)), 2)
+		if planet_num > 30:
+			planet_num -= (planet_num - 30) / 2
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -609,9 +610,9 @@ func generate_systems(id:int):
 		#Collision detection
 		var radius
 		if biggest_star_size < 1:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.4)
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.8)
 		else:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.3)
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.6)
 		var circle
 		var pos
 		var colliding = true
@@ -695,7 +696,7 @@ func generate_planets(id:int):
 		p_i["type"] = rand_int(3, 10)
 		p_i["size"] = 2000 + rand_range(0, 10000) * (i + 1)
 		p_i["angle"] = rand_range(0, 2 * PI)
-		p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))*3.8114946867097))
+		p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		max_distance = p_i["distance"]
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
@@ -715,7 +716,7 @@ func generate_planets(id:int):
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid:int = round(pow(planet_data[id]["size"], 0.6) / 28.0)
+	var wid:int = min(round(pow(planet_data[id]["size"], 0.6) / 28.0), 50)
 
 	for _i in range(0, pow(wid, 2)):
 		planet_data[id]["tiles"].append(tile_data.size())
@@ -794,6 +795,50 @@ func get_star_class (temp):
 		cl = "Z"
 	return cl
 
+func get_star_modulate (star_class:String):
+	var w = int(star_class[1]) / 10.0#weight for lerps
+	var m
+	var Y9 = Color(25, 0, 0, 255) / 255.0
+	var Y0 = Color(66, 0, 0, 255) / 255.0
+	var T0 = Color(117, 0, 0, 255) / 255.0
+	var L0 = Color(189, 32, 23, 255) / 255.0
+	var M0 = Color(255, 181, 108, 255) / 255.0
+	var K0 = Color(255, 218, 181, 255) / 255.0
+	var G0 = Color(255, 237, 227, 255) / 255.0
+	var F0 = Color(249, 245, 255, 255) / 255.0
+	var A0 = Color(213, 224, 255, 255) / 255.0
+	var B0 = Color(162, 192, 255, 255) / 255.0
+	var O0 = Color(140, 177, 255, 255) / 255.0
+	var Q0 = Color(134, 255, 117, 255) / 255.0
+	var R0 = Color(255, 151, 255, 255) / 255.0
+	match star_class[0]:
+		"Y":
+			m = lerp(Y0, Y9, w)
+		"T":
+			m = lerp(T0, Y0, w)
+		"L":
+			m = lerp(L0, T0, w)
+		"M":
+			m = lerp(M0, L0, w)
+		"K":
+			m = lerp(K0, M0, w)
+		"G":
+			m = lerp(G0, K0, w)
+		"F":
+			m = lerp(F0, G0, w)
+		"A":
+			m = lerp(A0, F0, w)
+		"B":
+			m = lerp(B0, A0, w)
+		"O":
+			m = lerp(O0, B0, w)
+		"Q":
+			m = lerp(Q0, O0, w)
+		"R":
+			m = lerp(R0, Q0, w)
+		"Z":
+			m = Color(0.05, 0.05, 0.05, 1)
+	return m
 #Returns a random integer between low and high inclusive
 func rand_int(low:int, high:int):
 	return randi() % (high - low + 1) + low

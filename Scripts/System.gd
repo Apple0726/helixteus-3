@@ -2,27 +2,30 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 onready var stars_info = game.system_data[game.c_s]["stars"]
-onready var star_graphic = preload("res://Graphics/Stars/M.png")
+onready var star_graphic = preload("res://Graphics/Stars/Star.png")
 onready var planets_id = game.system_data[game.c_s]["planets"]
 
 var stars
 
 const DIST_MULT = 150.0
-const PLANET_SCALE_DIV = 400000.0
+const PLANET_SCALE_DIV = 1600000.0
 const STAR_SCALE_DIV = 5.0
 
 func _ready():
+	var combined_star_size = 0
 	for i in range(0, stars_info.size()):
 		var star_info = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = star_graphic
 		self.add_child(star)
-		star.rect_pivot_offset = Vector2(384, 384)
+		star.rect_pivot_offset = Vector2(300, 300)
+		combined_star_size += star_info["size"]
 		star.rect_scale.x = star_info["size"] / STAR_SCALE_DIV
 		star.rect_scale.y = star_info["size"] / STAR_SCALE_DIV
-		star.rect_position = star_info["pos"] - Vector2(384, 384)
+		star.rect_position = star_info["pos"] - Vector2(300, 300)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
+		star.modulate = game.get_star_modulate(star_info["class"])
 	
 	var orbit_scene = preload("res://Scenes/Orbit.tscn")
 	var planets_info = []
@@ -54,7 +57,7 @@ func _ready():
 		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
-		planet_glow.rect_scale *= planet_btn.rect_scale.x * 7 + p_i["ring"] / 2.5
+		planet_glow.rect_scale *= (planet_btn.rect_scale.x * 3 + pow(1.3, p_i["ring"])) * pow(combined_star_size / 5.0, 0.5)
 		match p_i["status"]:
 			"conquered":
 				planet_glow.modulate = Color(0, 1, 0, 1)
