@@ -28,9 +28,9 @@ func _ready():
 		star_btn.rect_pivot_offset = Vector2(600 / 2, 600 / 2)
 		var radius
 		if star["size"] < 1:
-			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.8)
+			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.7)
 		else:
-			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.6)
+			radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.4)
 		star_btn.rect_scale.x = radius
 		star_btn.rect_scale.y = radius
 		system.position = s_i["pos"]

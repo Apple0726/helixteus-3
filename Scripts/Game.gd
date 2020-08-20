@@ -5,9 +5,11 @@ onready var construct_panel_scene = preload("res://Scenes/ConstructPanel.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
+onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
+onready var dimension:Control = dimension_scene.instance()
 
 const SYSTEM_SCALE_DIV = 10.0
 const GALAXY_SCALE_DIV = 750.0
@@ -38,13 +40,15 @@ var money = 800
 var minerals = 15
 var mineral_capacity = 50
 var energy = 200
+#Dimension remnants
+var DRs = 0
 
 #Stores information of all objects discovered
-var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":800, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":10, "planets":[], "view":{"pos":Vector2(640, -360), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":200, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -360), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
 
@@ -62,12 +66,12 @@ func _ready():
 
 func popup(txt, dur):
 	$Popup.visible = true
-	self.move_child($Popup, self.get_child_count())
+	move_child($Popup, get_child_count())
 	$Popup.init_popup(txt, dur)
 
 #Executed once a building has been double clicked in the construction panel
 func construct_building(bldg_type):
-	var more_info:Label = $planet_HUD/MoreInfo
+	var more_info:Label = planet_HUD.get_node("MoreInfo")
 	more_info.text = "Right click to finish constructing"
 	var font = planet_HUD.get_font("font")
 	font.get_string_size(more_info.text)
@@ -86,7 +90,7 @@ func _load_game():
 
 	view = view_scene.instance()
 
-	self.remove_child($Title)
+	remove_child($Title)
 
 	generate_planets(0)
 	#Home planet information
@@ -97,23 +101,44 @@ func _load_game():
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
 	generate_tiles(2)
+	
+	for u_i in universe_data:
+		u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
+		u_i["mu_zero"] = pow10(1.257, -6)#H/m
+		u_i["planck"] = pow10(6.626, -34)#J.s
+		u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
+		u_i["charge"] = pow10(1.602, -19)#C
+		u_i["strong_force"] = 1.0
+		u_i["weak_force"] = 1.0
+		u_i["dark_matter"] = 1.0
+		u_i["difficulty"] = 1.0
+		u_i["multistar_systems"] = 1.0
+		u_i["rare_stars"] = 1.0
+		u_i["rare_materials"] = 1.0
+		u_i["time_speed"] = 1.0
+		u_i["radiation"] = 1.0
+		u_i["antimatter"] = 1.0
+		u_i["value"] = 1.0
 
-	self.add_child(view)
+	add_child(view)
 	add_planet()
 
 	HUD = HUD_scene.instance()
-	self.add_child(HUD)
+	add_child(HUD)
 	HUD.name = "HUD"
 
 	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	construct_panel.visible = false
-	self.add_child(construct_panel)
+	add_child(construct_panel)
+	
+	dimension.visible = false
+	add_child(dimension)
 
 	tooltip.visible = false
-	self.add_child(tooltip)
+	add_child(tooltip)
 
-	self.move_child($FPS, self.get_child_count())
+	move_child($FPS, get_child_count())
 
 
 func add_construct_panel():
@@ -147,6 +172,8 @@ func switch_view(new_view:String):
 			remove_supercluster()
 		"universe":
 			remove_universe()
+		"dimension":
+			remove_dimension()
 	match new_view:
 		"planet":
 			add_planet()
@@ -160,13 +187,15 @@ func switch_view(new_view:String):
 			add_supercluster()
 		"universe":
 			add_universe()
+		"dimension":
+			add_dimension()
 	c_v = new_view
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
 	var loading = loading_scene.instance()
 	loading.position = Vector2(640, 360)
-	self.add_child(loading)
+	add_child(loading)
 	loading.name = "Loading"
 
 func add_obj(view_str):
@@ -184,8 +213,12 @@ func add_obj(view_str):
 		"universe":
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
 
+func add_dimension():
+	remove_child(HUD)
+	dimension.visible = true
+
 func add_universe():
-	#put_change_view_btn("View the universe this supercluster is in (Z)", "res://Graphics/Icons/UniverseView.png")
+	put_change_view_btn("View discovered universes in this dimension (Z)", "res://Graphics/Icons/DimensionView.png")
 	if not universe_data[c_u]["discovered"]:
 		reset_collisions()
 		generate_superclusters(c_u)
@@ -228,45 +261,51 @@ func add_planet():
 		generate_tiles(c_p)
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
-	self.add_child(planet_HUD)
+	add_child(planet_HUD)
 	planet_HUD.name = "planet_HUD"
 
+func remove_dimension():
+	add_child(HUD)
+	move_child($FPS, get_child_count())
+	dimension.visible = false
+	view.dragged = true
+
 func remove_universe():
-	#self.remove_child(change_view_btn)
+	remove_child(change_view_btn)
 	view.remove_obj("universe")
 
 func remove_supercluster():
-	self.remove_child(change_view_btn)
+	remove_child(change_view_btn)
 	view.remove_obj("supercluster")
 
 func remove_cluster():
-	self.remove_child(change_view_btn)
+	remove_child(change_view_btn)
 	view.remove_obj("cluster")
 
 func remove_galaxy():
-	self.remove_child(change_view_btn)
+	remove_child(change_view_btn)
 	view.remove_obj("galaxy")
 
 func remove_system():
-	self.remove_child(change_view_btn)
+	remove_child(change_view_btn)
 	view.remove_obj("system")
 
 func remove_planet():
 	view.remove_obj("planet")
-	self.remove_child(planet_HUD)
+	remove_child(planet_HUD)
 	planet_HUD = null
 
 func add_wait_timer(view_str):
 	var wait_timer = Timer.new()
 	wait_timer.wait_time = 0.1
-	self.add_child(wait_timer)
+	add_child(wait_timer)
 	wait_timer.connect("timeout", self, "on_timeout", [view_str])
 	wait_timer.name = "WaitTimer"
 	wait_timer.one_shot = true
 	wait_timer.start()
 
 func on_timeout(view_str):
-	self.remove_child($WaitTimer)
+	remove_child($WaitTimer)
 	match view_str:
 		"galaxy":
 			generate_system_part()
@@ -366,7 +405,7 @@ func generate_galaxy_part():
 	var progress = generate_galaxies(c_c)
 	if progress == 1:
 		add_obj("cluster")
-		self.remove_child($Loading)
+		remove_child($Loading)
 		put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
 	else:
 		$Loading.update_bar(progress, "Generating cluster... (" + String(cluster_data[c_c]["galaxies"].size()) + " / " + String(cluster_data[c_c]["galaxy_num"]) + " galaxies)")
@@ -397,7 +436,7 @@ func generate_galaxies(id:int):
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.7), N - 1)
 			min_dist_from_center = obj_shapes[0]["outer_radius"]
 		
-		var radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
+		var radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.7)
 		var circle
 		var colliding = true
 		if min_dist_from_center == 0:
@@ -446,7 +485,7 @@ func generate_system_part():
 	var progress = generate_systems(c_g)
 	if progress == 1:
 		add_obj("galaxy")
-		self.remove_child($Loading)
+		remove_child($Loading)
 		put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
 	else:
 		$Loading.update_bar(progress, "Generating galaxy... (" + String(galaxy_data[c_g]["systems"].size()) + " / " + String(galaxy_data[c_g]["system_num"]) + " systems)")
@@ -559,18 +598,18 @@ func generate_systems(id:int):
 					temp = rand_range(10000, 60000)
 				star_size = rand_range(0.006, 0.03)
 				mass = rand_range(0.4, 1.2)
-			if mass > 0.25 and randf() < 0.12:
+			if mass > 0.25 and randf() < 0.08:
 				star_type = "giant"
-				star_size *= max(rand_range(35000, 40000) / temp, rand_range(1.2, 1.4))
+				star_size *= max(rand_range(80000, 90000) / temp, rand_range(1.2, 1.4))
 			if star_type == "main-sequence":
 				if randf() < 0.01:
 					mass = rand_range(10, 50)
 					star_type = "supergiant"
-					star_size *= max(rand_range(60000, 70000) / temp, rand_range(1.7, 2.1))
-				if randf() < 0.0015:
+					star_size *= max(rand_range(180000, 220000) / temp, rand_range(1.7, 2.1))
+				elif randf() < 0.0015:
 					mass = rand_range(5, 30)
 					star_type = "hypergiant"
-					star_size *= max(rand_range(150000, 200000) / temp, rand_range(3.0, 4.0))
+					star_size *= max(rand_range(350000, 400000) / temp, rand_range(3.0, 4.0))
 					var tier = 1
 					while randf() < 0.2:
 						tier += 1
@@ -594,7 +633,7 @@ func generate_systems(id:int):
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
-		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(1, 9)), 2)
+		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(2, 9)), 2)
 		if planet_num > 30:
 			planet_num -= (planet_num - 30) / 2
 		s_i["planet_num"] = planet_num
@@ -610,9 +649,9 @@ func generate_systems(id:int):
 		#Collision detection
 		var radius
 		if biggest_star_size < 1:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.8)
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.7)
 		else:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.6)
+			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.4)
 		var circle
 		var pos
 		var colliding = true
@@ -716,7 +755,7 @@ func generate_planets(id:int):
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid:int = min(round(pow(planet_data[id]["size"], 0.6) / 28.0), 50)
+	var wid:int = round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1
 
 	for _i in range(0, pow(wid, 2)):
 		planet_data[id]["tiles"].append(tile_data.size())
@@ -732,7 +771,7 @@ func generate_tiles(id:int):
 func show_tooltip(txt:String):
 	var txt2 = txt.split("\n")
 	tooltip.visible = true
-	self.move_child(tooltip, self.get_child_count())
+	move_child(tooltip, get_child_count())
 	tooltip.show_text(txt2)
 
 func hide_tooltip():
@@ -744,7 +783,7 @@ func put_change_view_btn (info_str, icon_str):
 	change_view_btn = TextureButton.new()
 	var change_view_icon = load(icon_str)
 	change_view_btn.texture_normal = change_view_icon
-	self.add_child(change_view_btn)
+	add_child(change_view_btn)
 	change_view_btn.rect_position = Vector2(-1, 720 - 63)
 	change_view_btn.connect("mouse_entered", self, "on_change_view_over", [info_str])
 	change_view_btn.connect("mouse_exited", self, "hide_tooltip")
@@ -764,6 +803,8 @@ func on_change_view_click ():
 			switch_view("supercluster")
 		"supercluster":
 			switch_view("universe")
+		"universe":
+			switch_view("dimension")
 
 func get_star_class (temp):
 	var cl = ""
@@ -871,8 +912,13 @@ func get_roman_num(num:int):
 		c += 1
 	return res;
 
-func clever_round (num, sd:int = 3):#sd: significant digits
-	return stepify(num, pow10(1, floor(log10(num)) - sd - 1))
+func e_notation(num:float):#e notation
+	var e = floor(log10(num))
+	var n = num * pow(10, -e)
+	return String(clever_round(n)) + "e" + String(e)
+
+func clever_round (num:float, sd:int = 4):#sd: significant digits
+	return stepify(num, pow(10, floor(log10(num)) - sd + 1))
 
 func pow10(n, e):
 	return n * pow(10, e)
@@ -883,7 +929,7 @@ func log10(n):
 func _process(delta):
 	if delta != 0:
 		$FPS.text = String(round(1 / delta)) + " FPS"
-	if HUD:
+	if HUD and has_node("HUD"):
 		$HUD/ColorRect/MoneyText.text = String(money)
 		$HUD/ColorRect/MineralsText.text = String(minerals) + " / " + String(mineral_capacity)
 		$HUD/ColorRect/EnergyText.text = String(energy)
@@ -913,7 +959,7 @@ func _input(event):
 			view.obj.bldg_to_construct = ""
 			$planet_HUD/MoreInfo.visible = false
 
-	#Sell all ores by pressing Shift C
+	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
 		money += minerals * 5
 		popup("You sold " + String(minerals) + " minerals for $" + String(minerals * 5) + "!", 2)

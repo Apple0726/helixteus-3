@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=2]
@@ -19,6 +19,12 @@ default_font = SubResource( 1 )
 bg_color = Color( 0, 0, 0, 1 )
 border_width_bottom = 3
 border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
+
+[sub_resource type="InputEventAction" id=4]
+action = "mute"
+
+[sub_resource type="ShortCut" id=5]
+shortcut = SubResource( 4 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -87,9 +93,13 @@ margin_left = 1224.0
 margin_right = 1789.0
 margin_bottom = 519.0
 rect_scale = Vector2( 0.09, 0.09 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 5 )
 icon = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]

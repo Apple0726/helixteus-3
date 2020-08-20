@@ -76,5 +76,17 @@ margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Version" type="Label" parent="."]
+margin_left = 944.0
+margin_top = 704.0
+margin_right = 1280.0
+margin_bottom = 718.0
+custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
+text = "Alpha v0.1: 20 Aug 2020"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

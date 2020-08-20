@@ -1,6 +1,7 @@
 extends Control
 
 signal construct_building_signal
+onready var game:Node2D = get_node("/root/Game")
 
 var mouse_in_panel = true
 var tab = "Resources"
@@ -99,6 +100,7 @@ func check_signal():
 		disconnect("construct_building_signal", self.get_parent(), "construct_building")
 
 func _on_PPButton_double_click():
-	$ResourcesBuildings/PowerPlant/PPButton.reset_button()
-	remove_panel()
-	emit_signal("construct_building_signal")
+	if game.has_node("construct_panel"):
+		$ResourcesBuildings/PowerPlant/PPButton.reset_button()
+		remove_panel()
+		emit_signal("construct_building_signal")

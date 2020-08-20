@@ -1,0 +1,198 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Scripts/Dimension.gd" type="Script" id=3]
+[ext_resource path="res://default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/Dimension/Physics.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Dimension/Philosophy.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Dimension/Engineering.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scenes/Dimension/DimensionalPower.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Dimension/Mathematics.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Dimension/Chemistry.tscn" type="PackedScene" id=11]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="Dimension" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 4 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 368.0 ],
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_top = 80.0
+margin_right = 320.0
+margin_bottom = 716.0
+rect_min_size = Vector2( 0, 640 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+
+[node name="DiscoveredUnivs" type="Panel" parent="."]
+margin_left = -16.0
+margin_top = 40.0
+margin_right = 330.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 40 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="DiscoveredUnivs"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -160.0
+margin_top = -20.0
+margin_right = 160.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 40 )
+text = "Discovered universes"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UnivInfo" type="Panel" parent="."]
+margin_left = 328.0
+margin_top = 40.0
+margin_right = 800.0
+margin_bottom = 720.0
+rect_min_size = Vector2( 0, 40 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UnivInfo"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 344.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 0, 40 )
+custom_fonts/font = SubResource( 1 )
+text = "ε"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_left = 328.0
+margin_top = 40.0
+margin_right = 1280.0
+margin_bottom = 720.0
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Mathematics" parent="GridContainer" instance=ExtResource( 10 )]
+margin_right = 314.0
+
+[node name="Physics" parent="GridContainer" instance=ExtResource( 6 )]
+margin_left = 318.0
+margin_right = 632.0
+
+[node name="Chemistry" parent="GridContainer" instance=ExtResource( 11 )]
+margin_left = 636.0
+margin_right = 950.0
+
+[node name="Philosophy" parent="GridContainer" instance=ExtResource( 7 )]
+margin_top = 342.0
+margin_right = 314.0
+margin_bottom = 680.0
+
+[node name="Engineering" parent="GridContainer" instance=ExtResource( 8 )]
+margin_left = 318.0
+margin_top = 342.0
+margin_right = 632.0
+margin_bottom = 680.0
+
+[node name="DimensionalPower" parent="GridContainer" instance=ExtResource( 9 )]
+margin_left = 636.0
+margin_top = 342.0
+margin_right = 950.0
+margin_bottom = 680.0
+
+[node name="TopInfo" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -680.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dimension #" type="Label" parent="TopInfo"]
+margin_left = 16.0
+margin_right = 1279.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 5
+custom_fonts/font = SubResource( 2 )
+text = "Dimension #1"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DRs" type="Label" parent="TopInfo"]
+margin_left = 2.0
+margin_top = 9.0
+margin_right = 1278.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Dimension remnants (DRs): 0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reset" type="Button" parent="TopInfo"]
+margin_left = 1129.0
+margin_right = 1264.0
+margin_bottom = 40.0
+grow_horizontal = 0
+text = "New dimension"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExpandUpgs" type="TextureButton" parent="."]
+visible = false
+margin_left = 768.0
+margin_top = 352.0
+margin_right = 832.0
+margin_bottom = 416.0
+rect_rotation = 180.0
+rect_pivot_offset = Vector2( 32, 32 )
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 80.0
+margin_top = -48.0
+margin_right = 192.0
+margin_bottom = -20.0
+text = "asdввф"
+[connection signal="pressed" from="ExpandUpgs" to="." method="_on_ExpandUpgs_pressed"]

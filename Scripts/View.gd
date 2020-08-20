@@ -26,7 +26,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	self.position = pos
 	self.scale = Vector2(sc, sc)
 	self.position *= sc
-	dragged = false
+	#dragged = false
 
 func remove_obj(obj_str:String):
 	match obj_str:

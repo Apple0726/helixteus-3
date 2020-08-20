@@ -22,7 +22,7 @@ func _ready():
 		galaxy_btn.rect_position = Vector2(-358 / 2, -199 / 2)
 		galaxy_btn.rect_pivot_offset = Vector2(358 / 2, 199 / 2)
 		galaxy_btn.rect_rotation = rad2deg(g_i["rotation"])
-		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.7)
 		galaxy_btn.rect_scale.x = radius
 		galaxy_btn.rect_scale.y = radius
 		galaxy.position = g_i["pos"]

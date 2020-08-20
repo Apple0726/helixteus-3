@@ -57,7 +57,8 @@ func _ready():
 		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
-		planet_glow.rect_scale *= (planet_btn.rect_scale.x * 3 + pow(1.3, p_i["ring"])) * pow(combined_star_size / 5.0, 0.5)
+		#planet_glow.rect_scale *= (planet_btn.rect_scale.x * 3 + pow(1.3, p_i["ring"])) * pow(combined_star_size / 5.0, 0.6)
+		planet_glow.rect_scale *= p_i["distance"] / 10.0
 		match p_i["status"]:
 			"conquered":
 				planet_glow.modulate = Color(0, 1, 0, 1)
