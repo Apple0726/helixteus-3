@@ -84,7 +84,7 @@ var system_distance
 #circumference of system orbit
 var orbit_length
 #angular velocity of the galaxy spinning
-const w = 1.8
+const w = 0.1
 #how many seconds to project into the future in terms of star position
 var t = 10
 
@@ -103,8 +103,18 @@ func _draw():
 		
 		var r = system_pos.length()
 		var th = system_pos.angle()
-		draw_line(Vector2.ZERO, polar2cartesian(r, th), Color(255, 0, 0), 1)
-		draw_line(Vector2.ZERO, polar2cartesian(r, th + w * t), Color(0, 0, 255), 1)
+		var start_pos = system_pos
+		var end_pos = polar2cartesian(rand_range(0, 20000), rand_range(0, 2 * PI))
+		var spd = 500 #Ship speed: spd pixels/sec
+		var dist_total = (end_pos - start_pos).length()
+		var dist_travelled = spd * t
+		var percentage = dist_travelled / dist_total
+		print(percentage)
+		
+		draw_line(start_pos, end_pos, Color(255, 0, 0, 1), 1)
+		draw_line(start_pos, lerp(start_pos, end_pos, percentage), Color(0, 255, 0, 1), 1)
+		
+		print(start_pos, end_pos)
 		#system orbit (yellow)
 		draw_arc(Vector2.ZERO, (Vector2.ZERO - system_pos).length(), 0, 2*PI, 100, Color(1, 1, 0, 1), 1)
 		orbit_length = 2 * PI * system_pos.length()
