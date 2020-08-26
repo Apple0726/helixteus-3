@@ -90,7 +90,7 @@ var system_distance
 #circumference of system orbit
 var orbit_length
 #angular velocity of the galaxy spinning
-const w = 0.02
+const w = 0.1
 #how many seconds to project into the future in terms of star position
 var t = 10
 
@@ -132,3 +132,6 @@ func on_system_click (id:int):
 		game.c_s = id
 		game.switch_view("system")
 	view.dragged = false
+
+func _process(delta):
+	rotation += w * delta
