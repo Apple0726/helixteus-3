@@ -78,15 +78,15 @@ func _ready():
 #used for _draw() function
 var moused_over
 #stores the coords of a selected system
-var system_pos
+var system_pos:Vector2
 #distance from Solar System to selected system
 var system_distance
 #circumference of system orbit
 var orbit_length
 #angular velocity of the galaxy spinning
-const angular_velocity = 1.8
+const w = 1.8
 #how many seconds to project into the future in terms of star position
-var orbit_seconds = 10
+var t = 10
 
 var theta
 var x1
@@ -97,17 +97,14 @@ var r
 func _draw():
 	if moused_over == true:
 		#from galaxy center to selected system (red)
-		draw_line(Vector2.ZERO, system_pos, Color(255, 0, 0), 1)
+		
 		#from Solar System to selected system (green)
 		#draw_line(Vector2(-15000, -15000), system_pos, Color(0, 255, 0), 1)
 		
-		x1 = system_pos.x
-		y1 = system_pos.y
-		r = pow(pow(x1,2)+ pow(y1,2), 0.5)
-		theta = angular_velocity * orbit_seconds
-		x2 = r*cos((angular_velocity*x1)+deg2rad(theta))
-		y2 = r*sin((angular_velocity*y1)+deg2rad(theta))
-		draw_line(Vector2.ZERO, Vector2(x2, y2), Color(0, 0, 255), 1)
+		var r = system_pos.length()
+		var th = system_pos.angle()
+		draw_line(Vector2.ZERO, polar2cartesian(r, th), Color(255, 0, 0), 1)
+		draw_line(Vector2.ZERO, polar2cartesian(r, th + w * t), Color(0, 0, 255), 1)
 		#system orbit (yellow)
 		draw_arc(Vector2.ZERO, (Vector2.ZERO - system_pos).length(), 0, 2*PI, 100, Color(1, 1, 0, 1), 1)
 		orbit_length = 2 * PI * system_pos.length()
