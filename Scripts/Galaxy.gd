@@ -75,10 +75,13 @@ func _ready():
 		star_btn.rect_scale.y = radius
 		system.position = s_i["pos"]
 
+var rotating = true
+func _input(event):
+	if Input.is_action_just_released("pause"):
+		rotating = not rotating
+
 func _process(delta):
-	if Input.is_action_pressed('pause'):
-		pass
-	else:
+	if rotating:
 		rotation += w * delta
 
 #used for _draw() function
