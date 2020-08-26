@@ -3,10 +3,10 @@ extends Node2D
 onready var view_scene = preload("res://Scenes/View.tscn")
 onready var construct_panel_scene = preload("res://Scenes/ConstructPanel.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
-onready var planet_HUD_scene = preload("res://Scenes/PlanetHUD.tscn")
+onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
-onready var planet_details_scene = preload("res://Scenes/PlanetDetails.tscn")
+onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
@@ -102,6 +102,8 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
+	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
+	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
 	generate_tiles(2)
 	
 	for u_i in universe_data:
@@ -772,8 +774,8 @@ func generate_planets(id:int):
 		p_i.mantle = make_planet_composition(temp, "mantle")
 		p_i.core = make_planet_composition(temp, "core")
 		p_i.crust_start_depth = rand_int(50, 450)
-		p_i.mantle_start_depth = round(rand_range(0.005, 0.03) * p_i.size * 1000)
-		p_i.core_start_depth = round(rand_range(0.85, 0.5) * p_i.size * 1000)
+		p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
+		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
 		p_i["surface"] = add_surface_materials(temp, p_i.crust)
 		planet_data.append(p_i)
 	
