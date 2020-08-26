@@ -14,7 +14,6 @@ glow_blend_mode = 0
 glow_bicubic_upscale = true
 
 [node name="Galaxy" type="Node2D"]
-rotation = 6.28319
 script = ExtResource( 1 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
