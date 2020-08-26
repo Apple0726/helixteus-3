@@ -1,0 +1,98 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
+[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Planets/mask.png" type="BitMap" id=4]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 1280, 720 )
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+focus_mode = 1
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Planet" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -320.0
+margin_right = 320.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 640, 640 )
+rect_scale = Vector2( 0.9, 0.9 )
+rect_pivot_offset = Vector2( 320, 320 )
+texture_normal = ExtResource( 3 )
+texture_click_mask = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Back" type="Button" parent="."]
+margin_top = 680.0
+margin_right = 128.0
+margin_bottom = 720.0
+text = "<- Back (Z)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="LineEdit" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -128.0
+margin_right = 128.0
+margin_bottom = 26.0
+text = "Planet"
+align = 1
+clear_button_enabled = true
+shortcut_keys_enabled = false
+placeholder_text = "Enter planet name"
+caret_blink = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -285.0
+margin_top = -50.6095
+margin_right = 285.0
+margin_bottom = -48.6095
+
+[node name="Diameter" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -288.0
+margin_top = -40.0001
+margin_right = 288.0
+margin_bottom = -16.0001
+text = "12000 km"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="mouse_entered" from="Planet" to="." method="_on_Planet_mouse_entered"]
+[connection signal="mouse_exited" from="Planet" to="." method="_on_Planet_mouse_exited"]
+[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
+[connection signal="focus_entered" from="Name" to="." method="_on_Name_focus_entered"]
+[connection signal="focus_exited" from="Name" to="." method="_on_Name_focus_exited"]

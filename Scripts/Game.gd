@@ -6,12 +6,14 @@ onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
+onready var planet_details_scene = preload("res://Scenes/PlanetDetails.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
 onready var dimension:Control = dimension_scene.instance()
+onready var planet_details:Control
 
-const SYSTEM_SCALE_DIV = 10.0
+const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
 const CLUSTER_SCALE_DIV = 1600.0
 const SC_SCALE_DIV = 400.0
@@ -44,11 +46,11 @@ var energy = 200
 var DRs = 0
 
 #Stores information of all objects discovered
-var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":800, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":200, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -360), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
 
@@ -162,6 +164,10 @@ func switch_view(new_view:String):
 	match c_v:
 		"planet":
 			remove_planet()
+		"planet_details":
+			remove_child(planet_details)
+			planet_details = null
+			add_child(HUD)
 		"system":
 			remove_system()
 		"galaxy":
@@ -177,6 +183,10 @@ func switch_view(new_view:String):
 	match new_view:
 		"planet":
 			add_planet()
+		"planet_details":
+			planet_details = planet_details_scene.instance()
+			add_child(planet_details)
+			remove_child(HUD)
 		"system":
 			add_system()
 		"galaxy":
@@ -600,16 +610,16 @@ func generate_systems(id:int):
 				mass = rand_range(0.4, 1.2)
 			if mass > 0.25 and randf() < 0.08:
 				star_type = "giant"
-				star_size *= max(rand_range(80000, 90000) / temp, rand_range(1.2, 1.4))
+				star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
 			if star_type == "main-sequence":
 				if randf() < 0.01:
 					mass = rand_range(10, 50)
 					star_type = "supergiant"
-					star_size *= max(rand_range(180000, 220000) / temp, rand_range(1.7, 2.1))
+					star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
 				elif randf() < 0.0015:
 					mass = rand_range(5, 30)
 					star_type = "hypergiant"
-					star_size *= max(rand_range(350000, 400000) / temp, rand_range(3.0, 4.0))
+					star_size *= max(rand_range(500000, 600000) / temp, rand_range(3.0, 4.0))
 					var tier = 1
 					while randf() < 0.2:
 						tier += 1
@@ -635,7 +645,7 @@ func generate_systems(id:int):
 			combined_star_size += star["size"]
 		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(2, 9)), 2)
 		if planet_num > 30:
-			planet_num -= (planet_num - 30) / 2
+			planet_num -= floor((planet_num - 30) / 2)
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -647,11 +657,7 @@ func generate_systems(id:int):
 		var starting_system = c_g == 0 and system_num == total_sys_num and i == 0
 		
 		#Collision detection
-		var radius
-		if biggest_star_size < 1:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.7)
-		else:
-			radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.4)
+		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var circle
 		var pos
 		var colliding = true
@@ -723,10 +729,19 @@ func generate_systems(id:int):
 func generate_planets(id:int):
 	randomize()
 	var combined_star_size = 0
+	var max_star_temp = 0
+	var max_star_size = 0
 	for star in system_data[id]["stars"]:
 		combined_star_size += star["size"]
+		if star.temperature > max_star_temp:
+			max_star_temp = star.temperature
+		if star.size > max_star_size:
+			max_star_size = star.size
 	var planet_num = system_data[id]["planet_num"]
 	var max_distance
+	var j = 0
+	while pow(1.3, j) * 240 < combined_star_size * 2.63:
+		j += 1
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -735,7 +750,10 @@ func generate_planets(id:int):
 		p_i["type"] = rand_int(3, 10)
 		p_i["size"] = 2000 + rand_range(0, 10000) * (i + 1)
 		p_i["angle"] = rand_range(0, 2 * PI)
-		p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
+		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
+		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
+		#1 solar radius = 2.63 px = 0.0046 AU
+		#569 px = 1 AU = 215.6 solar radii
 		max_distance = p_i["distance"]
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
@@ -745,10 +763,22 @@ func generate_planets(id:int):
 		p_i["id"] = p_id
 		p_i["name"] = "Planet " + String(p_id)
 		system_data[id]["planets"].append(p_id)
+		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
+		var dist_in_km = p_i.distance / 569.0 * pow10(1.5, 8)
+		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
+		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
+		p_i.temperature = temp# in K
+		p_i.crust = make_planet_composition(temp, "crust")
+		p_i.mantle = make_planet_composition(temp, "mantle")
+		p_i.core = make_planet_composition(temp, "core")
+		p_i.crust_start_depth = rand_int(50, 450)
+		p_i.mantle_start_depth = round(rand_range(0.005, 0.03) * p_i.size * 1000)
+		p_i.core_start_depth = round(rand_range(0.85, 0.5) * p_i.size * 1000)
+		p_i["surface"] = add_surface_materials(temp, p_i.crust)
 		planet_data.append(p_i)
 	
 	if id != 0:
-		var view_zoom = 2 / max_distance
+		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	system_data[id]["discovered"] = true
 
@@ -767,6 +797,124 @@ func generate_tiles(id:int):
 	var view_zoom = 3.0 / wid
 	planet_data[id]["view"] = {"pos":Vector2(640, 385) / view_zoom, "zoom":view_zoom}
 	planet_data[id]["discovered"] = true
+
+func make_planet_composition(temp:float, depth:String):
+	randomize()
+	var common_elements = {}
+	var uncommon_elements = {}
+	if temp > -100:
+		if depth == "crust":
+			common_elements["Si"] = rand_range(0.1, 0.5)
+			common_elements["O"] = common_elements["Si"] * rand_range(1.5, 2) * (1 - common_elements["Si"])
+			uncommon_elements = {	"Al":0.5,
+									"Fe":0.35,
+									"Ca":0.3,
+									"Na":0.25,
+									"Mg":0.2,
+									"K":0.2,
+									"Ti":0.05,
+									"H":0.02,
+									"P":0.02,
+									"U":0.02,
+									"Np":0.004,
+									"Pu":0.0003
+								}
+		elif depth == "mantle":
+			common_elements["Si"] = rand_range(0.15, 0.25)
+			common_elements["O"] = min(common_elements["Si"] * rand_range(2, 4), 0.99 - common_elements["Si"])
+			uncommon_elements = {	"Al":0.5,
+									"Fe":0.35,
+									"Ca":0.3,
+									"Na":0.25,
+									"U":0.25,
+									"Mg":0.2,
+									"K":0.2,
+									"Np":0.1,
+									"Ti":0.05,
+									"H":0.02,
+									"P":0.02,
+									"Pu":0.01
+								}
+		else:
+			common_elements["Fe"] = rand_range(0.5, 0.95)
+			common_elements["Ni"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			uncommon_elements = {	"Cr":0.3,
+									"Ta":0.2,
+									"W":0.2,
+									"Os":0.1,
+									"Ir":0.1,
+									"Ti":0.1,
+									"Co":0.1,
+									"Mn":0.1
+								}
+	else:
+		if depth == "crust" or depth == "mantle":
+			common_elements["N"] = randf()
+			common_elements["H"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			common_elements["O"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			common_elements["C"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			common_elements["He"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			uncommon_elements = {	"Al":0.5,
+									"Fe":0.35,
+									"Ca":0.3,
+									"Na":0.25,
+									"U":0.25,
+									"Mg":0.2,
+									"K":0.2,
+									"Np":0.1,
+									"Ti":0.05,
+									"H":0.02,
+									"P":0.02,
+									"Pu":0.01
+								}
+		else:
+			common_elements["Fe"] = rand_range(0.5, 0.95)
+			common_elements["Ni"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			uncommon_elements = {	"Cr":0.3,
+									"Ta":0.2,
+									"W":0.2,
+									"Os":0.1,
+									"Ir":0.1,
+									"Ti":0.1,
+									"Co":0.1,
+									"Mn":0.1
+								}
+	var remaining = 1 - get_sum_of_dict(common_elements)
+	var uncommon_element_count = 0
+	for u_el in uncommon_elements.keys():
+		if randf() < uncommon_elements[u_el]:
+			uncommon_element_count += 1
+			uncommon_elements[u_el] = 1
+	var ucr = [0, 1]#uncommon element ratios
+	for i in range(0, uncommon_element_count):
+		ucr.append(randf())
+	ucr.sort()
+	var result = {}
+	var index = 1
+	for u_el in uncommon_elements.keys():
+		if uncommon_elements[u_el] == 1:
+			result[u_el] = (ucr[index] - ucr[index - 1]) * remaining
+			index += 1
+	for c_el in common_elements.keys():
+		result[c_el] = common_elements[c_el]
+	return result
+
+func add_surface_materials(temp:float, crust_comp:Dictionary):
+	var mats = {	"coal":0.5,
+					"glass":0.1,
+					"sand":0.8,
+					"clay":0.2,
+					"soil":0.6,
+					"cellulose":0.6
+	}
+	mats.sand = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0
+	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
+	mats.glass = mats.sand * sand_glass_ratio
+	mats.sand *= (1 - sand_glass_ratio)
+	return mats
 
 func show_tooltip(txt:String):
 	var txt2 = txt.split("\n")
@@ -793,7 +941,7 @@ func on_change_view_over (view_str):
 	show_tooltip(view_str)
 
 func on_change_view_click ():
-	$click.play()	
+	$click.play()
 	match c_v:
 		"system":
 			switch_view("galaxy")
@@ -884,6 +1032,13 @@ func get_star_modulate (star_class:String):
 func rand_int(low:int, high:int):
 	return randi() % (high - low + 1) + low
 
+#Assumes that all values of dict are floats/integers
+func get_sum_of_dict(dict:Dictionary):
+	var sum = 0
+	for el in dict.values():
+		sum += el
+	return sum
+
 #Converts time in milliseconds to string format
 func time_to_str (time):
 	var seconds = floor(time / 1000)
@@ -918,7 +1073,7 @@ func e_notation(num:float):#e notation
 	return String(clever_round(n)) + "e" + String(e)
 
 func clever_round (num:float, sd:int = 4):#sd: significant digits
-	return stepify(num, pow(10, floor(log10(num)) - sd + 1))
+	return stepify(num, pow(10, floor(log10(abs(num))) - sd + 1))
 
 func pow10(n, e):
 	return n * pow(10, e)
@@ -951,14 +1106,17 @@ func _input(event):
 
 	#Press Z to view galaxy the system is in, etc.
 	if Input.is_action_just_released("change_view"):
-		on_change_view_click()
+		if c_v == "planet_details" and not planet_details.renaming:
+			switch_view("system")
+		elif not has_node("Loading"):
+			on_change_view_click()
 
 	#Right click to cancel building
 	if c_v == "planet":
 		if Input.is_action_just_released("right_click"):
 			view.obj.bldg_to_construct = ""
 			$planet_HUD/MoreInfo.visible = false
-
+	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
 		money += minerals * 5

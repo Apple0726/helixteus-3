@@ -7,9 +7,8 @@ onready var planets_id = game.system_data[game.c_s]["planets"]
 
 var stars
 
-const DIST_MULT = 150.0
-const PLANET_SCALE_DIV = 1600000.0
-const STAR_SCALE_DIV = 5.0
+const PLANET_SCALE_DIV = 6400000.0
+const STAR_SCALE_DIV = 300.0/2.63
 
 func _ready():
 	var combined_star_size = 0
@@ -20,8 +19,8 @@ func _ready():
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(300, 300)
 		combined_star_size += star_info["size"]
-		star.rect_scale.x = star_info["size"] / STAR_SCALE_DIV
-		star.rect_scale.y = star_info["size"] / STAR_SCALE_DIV
+		star.rect_scale.x = max(0.02, star_info["size"] / STAR_SCALE_DIV)
+		star.rect_scale.y = max(0.02, star_info["size"] / STAR_SCALE_DIV)
 		star.rect_position = star_info["pos"] - Vector2(300, 300)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
@@ -33,7 +32,7 @@ func _ready():
 		planets_info.append(game.planet_data[i])
 	for p_i in planets_info:
 		var orbit = orbit_scene.instance()
-		orbit.radius = p_i["distance"] * DIST_MULT
+		orbit.radius = p_i["distance"]
 		self.add_child(orbit)
 		var planet_btn = TextureButton.new()
 		var planet_glow = TextureButton.new()
@@ -57,25 +56,27 @@ func _ready():
 		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
-		#planet_glow.rect_scale *= (planet_btn.rect_scale.x * 3 + pow(1.3, p_i["ring"])) * pow(combined_star_size / 5.0, 0.6)
-		planet_glow.rect_scale *= p_i["distance"] / 10.0
+		planet_glow.rect_scale *= p_i["distance"] / 1200.0
 		match p_i["status"]:
 			"conquered":
 				planet_glow.modulate = Color(0, 1, 0, 1)
 			"unconquered":
 				planet_glow.modulate = Color(1, 0, 0, 1)
-		planet.position.x = cos(p_i["angle"]) * p_i["distance"] * DIST_MULT
-		planet.position.y = sin(p_i["angle"]) * p_i["distance"] * DIST_MULT
+		planet.position.x = cos(p_i["angle"]) * p_i["distance"]
+		planet.position.y = sin(p_i["angle"]) * p_i["distance"]
 
 func on_planet_over (id:int):
 	var p_i = game.planet_data[id]
-	game.show_tooltip(p_i["name"] + "\nDiameter: " + String(round(p_i["size"])) + " km")
+	game.show_tooltip(p_i["name"] + "\nDiameter: " + String(round(p_i["size"])) + " km\nDistance from star: " + String(game.clever_round(p_i.distance / 569.25, 3)) + " AU\nSurface temperature: " + String(game.clever_round(p_i.temperature - 273)) + " °C\nShift click to view more details")
 
 func on_planet_click (id:int):
 	var view = self.get_parent()
 	if not view.dragged:
 		game.c_p = id
-		game.switch_view("planet")
+		if Input.is_action_pressed("shift"):
+			game.switch_view("planet_details")
+		else:
+			game.switch_view("planet")
 
 func on_star_over (id:int):
 	var star = stars_info[id]
