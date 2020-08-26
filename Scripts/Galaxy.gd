@@ -75,6 +75,12 @@ func _ready():
 		star_btn.rect_scale.y = radius
 		system.position = s_i["pos"]
 
+func _process(delta):
+	if Input.is_action_pressed('pause'):
+		pass
+	else:
+		rotation += w * delta
+
 #used for _draw() function
 var moused_over
 #stores the coords of a selected system
@@ -86,26 +92,16 @@ var orbit_length
 #angular velocity of the galaxy spinning
 const w = 0.02
 #how many seconds to project into the future in terms of star position
-var t = 1
+var t = 10
 
-var theta
-var x1
-var y1
-var x2
-var y2
-var r
 func _draw():
 	if moused_over == true:
-		#from galaxy center to selected system (red)
-		
-		#from Solar System to selected system (green)
-		#draw_line(Vector2(-15000, -15000), system_pos, Color(0, 255, 0), 1)
 		
 		var r = system_pos.length()
 		var th = system_pos.angle()
 		var start_pos = Vector2(-15000, -15000)
 		var end_pos = system_pos
-		var end_pos_after_rotation = polar2cartesian(r, th + w * t)
+		var end_pos_after_rotation = polar2cartesian(r, th + w * t) #thank you apple for this op line
 		var spd = 1000 #Ship speed: spd pixels/sec
 		var dist_total = (end_pos_after_rotation - start_pos).length()
 		var dist_travelled = spd * t
@@ -117,7 +113,6 @@ func _draw():
 		
 		#system orbit (yellow)
 		draw_arc(Vector2.ZERO, (Vector2.ZERO - system_pos).length(), 0, 2*PI, 100, Color(1, 1, 0, 1), 1)
-		orbit_length = 2 * PI * system_pos.length()
 
 func on_system_over (id:int):
 	moused_over = true

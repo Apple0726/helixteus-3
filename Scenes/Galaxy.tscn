@@ -39,6 +39,7 @@ environment = SubResource( 1 )
 "anims/galaxy rotate" = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 scale = Vector2( 5, 5 )
 texture = ExtResource( 2 )
 
