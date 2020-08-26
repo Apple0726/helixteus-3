@@ -88,8 +88,7 @@ const angular_velocity = 1.8
 #how many seconds to project into the future in terms of star position
 var orbit_seconds = 10
 
-var theta1
-var theta2
+var theta
 var x1
 var y1
 var x2
@@ -105,10 +104,9 @@ func _draw():
 		x1 = system_pos.x
 		y1 = system_pos.y
 		r = pow(pow(x1,2)+ pow(y1,2), 0.5)
-		theta1 = atan(-1) * (abs(y1)/abs(x1))
-		theta2 = theta1 + (deg2rad(angular_velocity - orbit_seconds))
-		x2 = cos(theta2) * r
-		y2 = sin(theta2) * r
+		theta = angular_velocity * orbit_seconds
+		x2 = r*cos((angular_velocity*x1)+deg2rad(theta))
+		y2 = r*sin((angular_velocity*y1)+deg2rad(theta))
 		draw_line(Vector2.ZERO, Vector2(x2, y2), Color(0, 0, 255), 1)
 		#system orbit (yellow)
 		draw_arc(Vector2.ZERO, (Vector2.ZERO - system_pos).length(), 0, 2*PI, 100, Color(1, 1, 0, 1), 1)
