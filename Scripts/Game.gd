@@ -307,23 +307,6 @@ func remove_planet():
 	remove_child(planet_HUD)
 	planet_HUD = null
 
-func add_wait_timer(view_str):
-	var wait_timer = Timer.new()
-	wait_timer.wait_time = 0.1
-	add_child(wait_timer)
-	wait_timer.connect("timeout", self, "on_timeout", [view_str])
-	wait_timer.name = "WaitTimer"
-	wait_timer.one_shot = true
-	wait_timer.start()
-
-func on_timeout(view_str):
-	remove_child($WaitTimer)
-	match view_str:
-		"galaxy":
-			generate_system_part()
-		"cluster":
-			generate_galaxy_part()
-
 #Collision detection of systems, galaxies etc.
 var obj_shapes = []
 var max_outer_radius = 0
@@ -414,14 +397,14 @@ func generate_clusters(id:int):
 	supercluster_data[id]["discovered"] = true
 
 func generate_galaxy_part():
-	var progress = generate_galaxies(c_c)
-	if progress == 1:
-		add_obj("cluster")
-		remove_child($Loading)
-		put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
-	else:
+	var progress = 0.0
+	while progress != 1:
+		progress = generate_galaxies(c_c)
 		$Loading.update_bar(progress, "Generating cluster... (" + String(cluster_data[c_c]["galaxies"].size()) + " / " + String(cluster_data[c_c]["galaxy_num"]) + " galaxies)")
-		add_wait_timer("cluster")
+		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
+	add_obj("cluster")
+	remove_child($Loading)
+	put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
 
 func generate_galaxies(id:int):
 	randomize()
@@ -494,14 +477,17 @@ func generate_galaxies(id:int):
 	return progress
 
 func generate_system_part():
-	var progress = generate_systems(c_g)
-	if progress == 1:
-		add_obj("galaxy")
-		remove_child($Loading)
-		put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
-	else:
+	var progress = 0.0
+	while progress != 1:
+		progress = generate_systems(c_g)
 		$Loading.update_bar(progress, "Generating galaxy... (" + String(galaxy_data[c_g]["systems"].size()) + " / " + String(galaxy_data[c_g]["system_num"]) + " systems)")
-		add_wait_timer("galaxy")
+		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
+	add_obj("galaxy")
+	remove_child($Loading)
+	put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
+
+
+
 
 func generate_systems(id:int):
 	randomize()
