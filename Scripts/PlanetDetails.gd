@@ -115,6 +115,8 @@ func make_pie_chart(arr:Array, name:String):
 	pie.name = name
 	pie.get_node("Title").text = name
 	pie.objects = []
+	pie.other_str = "Trace elements"
+	pie.other_str_short = "Trace"
 	for obj in arr:
 		var directory = Directory.new();
 		var texture_exists = directory.file_exists("res://Graphics/Elements/" + obj.element + ".png")
@@ -135,7 +137,7 @@ func remove_pie_chart(name:String):
 func get_el_color(element:String):
 	match element:
 		"O":
-			return Color(0.8, 0, 0, 1)
+			return Color(1, 0.2, 0.2, 1)
 		"Si":
 			return Color(0.7, 0.7, 0.7, 1)
 		"Ca":
@@ -146,6 +148,8 @@ func get_el_color(element:String):
 			return Color(0.69, 0.69, 0.53, 1)
 		"Na":
 			return Color(0.92, 0.98, 1, 1)
+		"Ni":
+			return Color(0.9, 0.9, 0.9, 1)
 		"H", "Fe":
 			return Color(1, 1, 1, 1)
 		_:

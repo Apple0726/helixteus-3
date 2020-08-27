@@ -10,7 +10,7 @@ func show_text(txt_a:Array):
 	$Text.text = ""
 	for i in range(0, txt_a.size()):
 		$Text.text += txt_a[i] + ("\n" if i != txt_a.size() - 1 else "")
-		height += font.get_string_size(txt_a[i]).y
+		height += font.get_string_size(txt_a[i]).y + 3
 		max_width = max(font.get_string_size(txt_a[i]).x, max_width)
 	
 	$Timer.start()

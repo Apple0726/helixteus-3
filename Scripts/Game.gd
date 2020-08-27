@@ -486,9 +486,6 @@ func generate_system_part():
 	remove_child($Loading)
 	put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
 
-
-
-
 func generate_systems(id:int):
 	randomize()
 	var total_sys_num = galaxy_data[id]["system_num"]
@@ -808,8 +805,8 @@ func make_planet_composition(temp:float, depth:String):
 									"Pu":0.0003
 								}
 		elif depth == "mantle":
-			common_elements["Si"] = rand_range(0.15, 0.25)
-			common_elements["O"] = min(common_elements["Si"] * rand_range(2, 4), 0.99 - common_elements["Si"])
+			common_elements["O"] = rand_range(0.15, 0.19)
+			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
 			uncommon_elements = {	"Al":0.5,
 									"Fe":0.35,
 									"Ca":0.3,
@@ -873,7 +870,7 @@ func make_planet_composition(temp:float, depth:String):
 	var remaining = 1 - get_sum_of_dict(common_elements)
 	var uncommon_element_count = 0
 	for u_el in uncommon_elements.keys():
-		if randf() < uncommon_elements[u_el]:
+		if randf() < uncommon_elements[u_el] * 5.0:
 			uncommon_element_count += 1
 			uncommon_elements[u_el] = 1
 	var ucr = [0, 1]#uncommon element ratios
@@ -1077,8 +1074,8 @@ func _process(delta):
 		$HUD/ColorRect/MineralsText.text = String(minerals) + " / " + String(mineral_capacity)
 		$HUD/ColorRect/EnergyText.text = String(energy)
 	tooltip.rect_position = mouse_pos + Vector2(4, 4)
-	if tooltip.rect_position.x + tooltip.max_width > 1280 - 4:
-		tooltip.rect_position.x = 1280 - tooltip.max_width - 4
+	if tooltip.rect_position.x + tooltip.max_width > 1280 - 5:
+		tooltip.rect_position.x = 1280 - tooltip.max_width - 5
 	if tooltip.rect_position.y + tooltip.height > 720 - 4:
 		tooltip.rect_position.y = 720 - tooltip.height - 4
 
