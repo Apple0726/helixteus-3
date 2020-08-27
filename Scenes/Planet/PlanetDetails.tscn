@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Planets/Other/mask.png" type="BitMap" id=4]
+[ext_resource path="res://Scenes/PieGraph.tscn" type="PackedScene" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -12,8 +13,10 @@ rect_min_size = Vector2( 1280, 720 )
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
+"_edit_horizontal_guides_": [ 372.999 ],
 "_edit_lock_": true,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_edit_vertical_guides_": [ 1110.12 ]
 }
 
 [node name="ColorRect2" type="ColorRect" parent="."]
@@ -70,16 +73,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -285.0
-margin_top = -50.6095
-margin_right = 285.0
-margin_bottom = -48.6095
-
 [node name="Diameter" type="Label" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
@@ -94,6 +87,48 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Arrow" type="Node2D" parent="."]
+position = Vector2( 0, 10 )
+
+[node name="Line2D" type="Line2D" parent="Arrow"]
+points = PoolVector2Array( 355, 657, 925, 657 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D2" type="Line2D" parent="Arrow"]
+points = PoolVector2Array( 363, 648, 354, 657, 363, 666 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D3" type="Line2D" parent="Arrow"]
+points = PoolVector2Array( 916, 648, 925, 657, 916, 666 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -360.0
+margin_bottom = 360.0
+grow_vertical = 2
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 5 )]
+visible = false
+margin_bottom = 328.0
 [connection signal="mouse_entered" from="Planet" to="." method="_on_Planet_mouse_entered"]
 [connection signal="mouse_exited" from="Planet" to="." method="_on_Planet_mouse_exited"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]

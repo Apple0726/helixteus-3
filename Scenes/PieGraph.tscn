@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/PieGraph.gd" type="Script" id=2]
+
+[node name="PieGraph" type="VBoxContainer"]
+margin_right = 300.0
+margin_bottom = 318.0
+rect_min_size = Vector2( 300, 318 )
+rect_pivot_offset = Vector2( 150, 168 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
+margin_right = 300.0
+margin_bottom = 14.0
+text = "Composition"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pies" type="Control" parent="."]
+margin_top = 18.0
+margin_right = 300.0
+margin_bottom = 318.0
+rect_min_size = Vector2( 300, 300 )

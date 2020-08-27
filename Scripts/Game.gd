@@ -806,8 +806,8 @@ func make_planet_composition(temp:float, depth:String):
 	var uncommon_elements = {}
 	if temp > -100:
 		if depth == "crust":
-			common_elements["Si"] = rand_range(0.1, 0.5)
-			common_elements["O"] = common_elements["Si"] * rand_range(1.5, 2) * (1 - common_elements["Si"])
+			common_elements["O"] = rand_range(0.1, 0.19)
+			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
 			uncommon_elements = {	"Al":0.5,
 									"Fe":0.35,
 									"Ca":0.3,
@@ -891,7 +891,7 @@ func make_planet_composition(temp:float, depth:String):
 			uncommon_element_count += 1
 			uncommon_elements[u_el] = 1
 	var ucr = [0, 1]#uncommon element ratios
-	for i in range(0, uncommon_element_count):
+	for i in range(0, uncommon_element_count - 1):
 		ucr.append(randf())
 	ucr.sort()
 	var result = {}

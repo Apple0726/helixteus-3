@@ -1,7 +1,6 @@
 extends Node2D
 
 onready var game = self.get_parent().get_parent()
-onready var star_graphic = preload("res://Graphics/Stars/M.png")
 onready var systems_id = game.galaxy_data[game.c_g]["systems"]
 
 var stars
