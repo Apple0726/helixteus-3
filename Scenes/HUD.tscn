@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=2]
@@ -6,6 +6,9 @@
 [ext_resource path="res://Graphics/Icons/Minerals.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
 [ext_resource path="res://Graphics/Icons/audio.png" type="Texture" id=6]
+[ext_resource path="res://default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Graphics/Icons/rock_ressource.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Icons/Shop.png" type="Texture" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -17,8 +20,8 @@ default_font = SubResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0, 0, 0, 1 )
-border_width_bottom = 3
-border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 0.8, 1 )
 
 [sub_resource type="InputEventAction" id=4]
 action = "mute"
@@ -26,64 +29,26 @@ action = "mute"
 [sub_resource type="ShortCut" id=5]
 shortcut = SubResource( 4 )
 
+[sub_resource type="InputEventAction" id=6]
+action = "shop"
+
+[sub_resource type="ShortCut" id=7]
+shortcut = SubResource( 6 )
+
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 7 )
 script = ExtResource( 5 )
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="ColorRect" type="Panel" parent="."]
 margin_right = 1280.0
-margin_bottom = 50.0
+margin_bottom = 40.0
 theme = SubResource( 2 )
 custom_styles/panel = SubResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Minerals" type="Sprite" parent="ColorRect"]
-position = Vector2( 216, 24 )
-scale = Vector2( 0.14, 0.14 )
-texture = ExtResource( 4 )
-
-[node name="Money" type="Sprite" parent="ColorRect"]
-position = Vector2( 24, 24 )
-texture = ExtResource( 2 )
-
-[node name="Energy" type="Sprite" parent="ColorRect"]
-position = Vector2( 456, 24 )
-scale = Vector2( 0.14, 0.14 )
-texture = ExtResource( 3 )
-
-[node name="MoneyText" type="Label" parent="ColorRect"]
-margin_left = 48.0
-margin_right = 136.0
-margin_bottom = 48.0
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MineralsText" type="Label" parent="ColorRect"]
-margin_left = 240.0
-margin_right = 328.0
-margin_bottom = 48.0
-text = "100/100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EnergyText" type="Label" parent="ColorRect"]
-margin_left = 480.0
-margin_right = 568.0
-margin_bottom = 48.0
-text = "100"
-valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -99,7 +64,153 @@ icon = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Resources" type="HBoxContainer" parent="."]
+margin_top = 4.0
+margin_right = 1216.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 1216, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Money" type="Control" parent="Resources"]
+margin_right = 301.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Money"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 77.0
+margin_bottom = 28.0
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Resources/Money"]
+margin_left = 10.0
+margin_top = 3.0
+margin_right = 42.0
+margin_bottom = 35.0
+rect_scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stone" type="Control" parent="Resources"]
+margin_left = 305.0
+margin_right = 606.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Stone"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Resources/Stone"]
+margin_left = -2.0
+margin_top = -4.0
+margin_right = 254.0
+margin_bottom = 252.0
+rect_scale = Vector2( 0.14, 0.14 )
+texture = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Minerals" type="Control" parent="Resources"]
+margin_left = 610.0
+margin_right = 911.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Minerals"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 116.0
+margin_bottom = 28.0
+text = "100/100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Resources/Minerals"]
+margin_left = 4.0
+margin_right = 260.0
+margin_bottom = 256.0
+rect_scale = Vector2( 0.12, 0.12 )
+texture = ExtResource( 4 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Energy" type="Control" parent="Resources"]
+margin_left = 915.0
+margin_right = 1216.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Energy"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 284.0
+margin_bottom = 28.0
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Resources/Energy"]
+margin_left = 4.0
+margin_right = 260.0
+margin_bottom = 256.0
+rect_scale = Vector2( 0.12, 0.12 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+margin_left = 1216.0
+margin_top = 48.0
+margin_right = 1280.0
+margin_bottom = 720.0
+rect_min_size = Vector2( 64, 0 )
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton" type="TextureButton" parent="Buttons"]
+margin_top = 304.0
+margin_right = 64.0
+margin_bottom = 368.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 7 )
+texture_normal = ExtResource( 9 )
 [connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
+[connection signal="mouse_entered" from="Buttons/TextureButton" to="." method="_on_TextureButton_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/TextureButton" to="." method="_on_TextureButton_mouse_exited"]
+[connection signal="pressed" from="Buttons/TextureButton" to="." method="_on_TextureButton_pressed"]

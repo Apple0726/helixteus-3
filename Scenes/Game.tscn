@@ -39,10 +39,6 @@ script = ExtResource( 2 )
 
 [node name="Title" parent="." instance=ExtResource( 1 )]
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
-
 [node name="Popup" parent="." instance=ExtResource( 3 )]
 visible = false
 margin_left = 640.0
@@ -89,4 +85,3 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="start_game" from="Title" to="." method="_load_game"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -2,6 +2,7 @@ extends Node2D
 
 onready var view_scene = preload("res://Scenes/View.tscn")
 onready var construct_panel_scene = preload("res://Scenes/ConstructPanel.tscn")
+onready var shop_panel_scene = preload("res://Scenes/ShopPanel.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
@@ -9,6 +10,7 @@ onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
+onready var shop_panel:Control = shop_panel_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
 onready var dimension:Control = dimension_scene.instance()
 onready var planet_details:Control
@@ -31,7 +33,7 @@ var c_p = 2
 
 #HUD shows the player resources at the top
 var HUD
-#planet_HUD shows the buttons and other things that only shows while viewing a planet surface (i.e. construct)
+#planet_HUD shows the buttons and other things that only shows while viewing a planet surface (e.g. construct)
 var planet_HUD
 
 #The base node containing things that can be moved/zoomed in/out
@@ -62,6 +64,30 @@ var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals fro
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
 func _ready():
+	
+	HUD = HUD_scene.instance()
+	HUD.name = "HUD"
+
+	construct_panel.name = "construct_panel"
+	construct_panel.rect_scale = Vector2(0.8, 0.8)
+	shop_panel.rect_position = Vector2(106.5, 70)
+	construct_panel.visible = false
+	add_child(construct_panel)
+	
+	shop_panel.name = "shop_panel"
+	shop_panel.rect_position = Vector2(106.5, 70)
+	shop_panel.visible = false
+	add_child(shop_panel)
+	
+	dimension.visible = false
+	add_child(dimension)
+
+	tooltip.visible = false
+	add_child(tooltip)
+	
+	view = view_scene.instance()
+	add_child(view)
+
 	$titlescreen.play()
 	#noob
 	#AudioServer.set_bus_mute(1,true)
@@ -89,8 +115,6 @@ func _load_game():
 	$AnimationPlayer.play("title song fade")
 	$ambient.play()
 	$AnimationPlayer.play("ambient fade in")
-
-	view = view_scene.instance()
 
 	remove_child($Title)
 
@@ -124,42 +148,43 @@ func _load_game():
 		u_i["antimatter"] = 1.0
 		u_i["value"] = 1.0
 
-	add_child(view)
 	add_planet()
-
-	HUD = HUD_scene.instance()
 	add_child(HUD)
-	HUD.name = "HUD"
-
-	construct_panel.name = "construct_panel"
-	construct_panel.rect_scale = Vector2(0.8, 0.8)
-	construct_panel.visible = false
-	add_child(construct_panel)
-	
-	dimension.visible = false
-	add_child(dimension)
-
-	tooltip.visible = false
-	add_child(tooltip)
 
 	move_child($FPS, get_child_count())
 
+func fade_in_panel(panel:Control):
+	panel.visible = true
+	move_child(panel, get_child_count())
+	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(106.5, 60), 0.1)
+	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
+		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
+	panel.tween.start()
+
+func fade_out_panel(panel:Control):
+	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(106.5, 70), 0.1)
+	panel.tween.start()
+	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
+		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
+
+func on_fade_complete(panel:Control):
+	panel.visible = false
 
 func add_construct_panel():
 	if c_v == "planet" and not Input.is_action_pressed("shift"):
-		construct_panel.visible = true
-		#Play panel fade in animation
-		get_node("construct_panel/AnimationPlayer").play("FadeIn")
+		fade_in_panel(construct_panel)
+
+func add_shop_panel():
+	fade_in_panel(shop_panel)
 
 func remove_construct_panel():
 	if not Input.is_action_pressed("shift"):
-		#Play panel fade out animation
-		get_node("construct_panel/AnimationPlayer").play_backwards("FadeIn")
-		#A timer so that the panel will only be invisible once the fade out is finished
-		$Timer.start()
+		fade_out_panel(construct_panel)
 
-func _on_Timer_timeout():
-	construct_panel.visible = false
+func remove_shop_panel():
+	fade_out_panel(shop_panel)
 
 func switch_view(new_view:String):
 	hide_tooltip()
@@ -341,7 +366,7 @@ func generate_superclusters(id:int):
 	randomize()
 	var total_sc_num = universe_data[id]["supercluster_num"]
 	max_dist_from_center = pow(total_sc_num, 0.5) * 300
-	for i in range(1, total_sc_num):
+	for _i in range(1, total_sc_num):
 		var sc_i = {}
 		sc_i["status"] = "unconquered"
 		sc_i["type"] = rand_int(0, 0)
@@ -349,7 +374,6 @@ func generate_superclusters(id:int):
 		sc_i["clusters"] = []
 		sc_i["cluster_num"] = rand_int(100, 1000)
 		sc_i["discovered"] = false
-		var colliding = true
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
@@ -369,7 +393,7 @@ func generate_clusters(id:int):
 	randomize()
 	var total_clust_num = supercluster_data[id]["cluster_num"]
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
-	for i in range(1, total_clust_num):
+	for _i in range(1, total_clust_num):
 		var c_i = {}
 		c_i["status"] = "unconquered"
 		c_i["type"] = rand_int(0, 0)
@@ -770,7 +794,7 @@ func generate_planets(id:int):
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid:int = round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1
+	var wid = round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1
 
 	for _i in range(0, pow(wid, 2)):
 		planet_data[id]["tiles"].append(tile_data.size())
@@ -874,7 +898,7 @@ func make_planet_composition(temp:float, depth:String):
 			uncommon_element_count += 1
 			uncommon_elements[u_el] = 1
 	var ucr = [0, 1]#uncommon element ratios
-	for i in range(0, uncommon_element_count - 1):
+	for _i in range(0, uncommon_element_count - 1):
 		ucr.append(randf())
 	ucr.sort()
 	var result = {}
@@ -895,7 +919,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):
 					"soil":0.6,
 					"cellulose":0.6
 	}
-	mats.sand = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0
+	mats.sand = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
 	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
 	mats.glass = mats.sand * sand_glass_ratio
 	mats.sand *= (1 - sand_glass_ratio)
@@ -1069,10 +1093,6 @@ func log10(n):
 func _process(delta):
 	if delta != 0:
 		$FPS.text = String(round(1 / delta)) + " FPS"
-	if HUD and has_node("HUD"):
-		$HUD/ColorRect/MoneyText.text = String(money)
-		$HUD/ColorRect/MineralsText.text = String(minerals) + " / " + String(mineral_capacity)
-		$HUD/ColorRect/EnergyText.text = String(energy)
 	tooltip.rect_position = mouse_pos + Vector2(4, 4)
 	if tooltip.rect_position.x + tooltip.max_width > 1280 - 5:
 		tooltip.rect_position.x = 1280 - tooltip.max_width - 5

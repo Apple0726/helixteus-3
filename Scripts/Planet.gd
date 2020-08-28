@@ -12,7 +12,7 @@ func _ready():
 	
 	var tile_scene = preload("res://Scenes/Tile.tscn")
 	var start_ind:int = p_i["tiles"][0]
-	var wid:int = pow(p_i["tiles"].size(), 0.5)
+	var wid:int = round(pow(p_i["tiles"].size(), 0.5))
 	
 	for i in range(0, p_i["tiles"].size()):
 		var tile = tile_scene.instance()

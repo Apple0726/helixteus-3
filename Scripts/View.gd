@@ -116,7 +116,7 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	global_position.x -= delta_x
 	global_position.y -= delta_y
 
-func _process(delta):
+func _process(_delta):
 	if not Input.is_action_pressed("left_click"):
 		dragged = false
 

@@ -17,3 +17,24 @@ func _on_Button_mouse_entered():
 
 func _on_Button_mouse_exited():
 	game.hide_tooltip()
+
+func _process(delta):
+	$Resources/Money/Text.text = String(game.money)
+	$Resources/Minerals/Text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
+	$Resources/Energy/Text.text = String(game.energy)
+
+
+func _on_TextureButton_mouse_entered():
+	game.show_tooltip("Shop (P)")
+
+
+func _on_TextureButton_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_TextureButton_pressed():
+	click_sound.play()	
+	if not game.get_node("shop_panel").visible:
+		game.add_shop_panel()
+	else:
+		game.remove_shop_panel()

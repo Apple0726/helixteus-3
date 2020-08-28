@@ -5,6 +5,11 @@ onready var game:Node2D = get_node("/root/Game")
 
 var mouse_in_panel = true
 var tab = "Resources"
+var tween:Tween
+
+func _ready():
+	tween = Tween.new()
+	add_child(tween)
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -14,8 +19,8 @@ func _input(event):
 		
 func remove_panel():
 	#Only remove if the panel is actually there
-	if get_node("../construct_panel") != null:
-		self.get_parent().remove_construct_panel()
+	if game.construct_panel != null:
+		game.remove_construct_panel()
 
 #Check whether mouse is in the panel for right clicking
 func _on_Background_mouse_entered():
@@ -61,7 +66,6 @@ func reset_lights():
 	$BuildingInformation/TimeText.text = ""
 
 func update_cost_info(bldg:String):
-	var game = self.get_parent()
 	var bldg_info = game.bldg_info[bldg]
 	$BuildingInformation/Name.text = bldg_info["name"]
 	$BuildingInformation/Description.text = bldg_info["desc"]

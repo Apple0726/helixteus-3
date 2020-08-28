@@ -110,7 +110,6 @@ var pies:Array = []
 var texts:Array = []
 var pie_scene = preload("res://Scenes/PieGraph.tscn")
 func make_pie_chart(arr:Array, name:String):
-	var last_value = 100
 	var pie = pie_scene.instance()
 	pie.name = name
 	pie.get_node("Title").text = name
