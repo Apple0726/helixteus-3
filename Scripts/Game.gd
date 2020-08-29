@@ -46,6 +46,7 @@ var mineral_capacity = 50
 var energy = 200
 #Dimension remnants
 var DRs = 0
+var pickaxe
 
 #Stores information of all objects discovered
 var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
@@ -62,6 +63,8 @@ var constr_cost = {"money":0, "energy":0, "time":0}
 #Stores all building information
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
+
+var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "desc":"Use a stick to mine your very first rocks.", "money_cost":250}}
 
 func _ready():
 	
@@ -962,6 +965,12 @@ func on_change_view_click ():
 			switch_view("universe")
 		"universe":
 			switch_view("dimension")
+
+func YNPanel(text:String):
+	var YN = ConfirmationDialog.new()
+	$Confirms.add_child(YN)
+	YN.dialog_text = text
+	YN.popup_centered()
 
 func get_star_class (temp):
 	var cl = ""

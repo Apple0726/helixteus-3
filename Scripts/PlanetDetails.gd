@@ -23,7 +23,7 @@ func _ready():
 	crust_layer.get_node("Shadow").visible = false
 	crust_layer.get_node("Background").modulate = Color(0.4, 0.22, 0, 1)
 	crust_layer.rect_scale *= 0.65
-	crust_layer.rect_position = Vector2(664, 352)
+	crust_layer.rect_position = Vector2(654, 357)
 	crust_layer.get_node("Background").connect("mouse_entered", self, "on_crust_enter")
 	crust_layer.get_node("Background").connect("mouse_exited", self, "on_crust_exit")
 	crust_layer.get_node("Background").connect("pressed", self, "on_crust_press")
@@ -31,7 +31,7 @@ func _ready():
 	add_child(mantle_layer)
 	mantle_layer.rect_scale *= min(0.63, 0.65 - 0.65 * p_i.mantle_start_depth / (p_i.size * 500.0))
 	mantle_layer.get_node("Background").modulate = Color(1, 0.56, 0, 1)
-	mantle_layer.rect_position = Vector2(664, 352)
+	mantle_layer.rect_position = Vector2(654, 357)
 	mantle_layer.get_node("Background").connect("mouse_entered", self, "on_mantle_enter")
 	mantle_layer.get_node("Background").connect("mouse_exited", self, "on_mantle_exit")
 	mantle_layer.get_node("Background").connect("pressed", self, "on_mantle_press")
@@ -40,7 +40,7 @@ func _ready():
 	core_layer.get_node("Shadow").visible = false
 	core_layer.rect_scale *= 0.65 - 0.65 * p_i.core_start_depth / (p_i.size * 500.0)
 	core_layer.get_node("Background").modulate = Color(1, 0.93, 0.63, 1)
-	core_layer.rect_position = Vector2(664, 352)
+	core_layer.rect_position = Vector2(654, 357)
 	core_layer.get_node("Background").connect("mouse_entered", self, "on_core_enter")
 	core_layer.get_node("Background").connect("mouse_exited", self, "on_core_exit")
 	core_layer.get_node("Background").connect("pressed", self, "on_core_press")
