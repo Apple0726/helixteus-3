@@ -2,7 +2,7 @@ extends Node2D
 
 var id:int
 
-onready var game = self.get_parent().get_parent().get_parent()
+onready var game = get_node("/root/Game")
 onready var p_i = self.get_parent().p_i
 onready var tile = game.tile_data[id]
 
@@ -84,6 +84,7 @@ func _on_Button_button_pressed():
 	if not view.dragged:
 		#Checks if tile is empty
 		if tile.bldg_str == "":
+			#If we're trying to construct something
 			if planet.bldg_to_construct != "":
 				if enough_resources():
 					tile.bldg_str = planet.bldg_to_construct
@@ -99,6 +100,10 @@ func _on_Button_button_pressed():
 					add_bldg_info()
 				else:
 					game.popup("Not enough resources", 1)
+			elif game.about_to_mine:
+				game.get_node("Control/BottomInfo").visible = false
+				game.c_t = id
+				game.switch_view("mining")
 		else:
 			match tile.bldg_str:
 				"ME":

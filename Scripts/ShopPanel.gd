@@ -32,13 +32,14 @@ func _on_Pickaxes_pressed():
 	$Contents/Info.text = "Pickaxes allow you to manually mine a planet for various resources. Higher tier pickaxes mine faster and last longer."
 	set_btn_color($Tabs/Pickaxes)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = false
-	for pickaxe in game.pickaxe_info.keys():
-		var pickaxe_info = game.pickaxe_info[pickaxe]
-		var pickaxe_item = item_for_sale_scene.instance()
-		pickaxe_item.item_name = pickaxe
-		pickaxe_item.item_desc = pickaxe_info.desc
-		pickaxe_item.money_cost = pickaxe_info.money_cost
-		$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
+	if $Contents/HBoxContainer/Items/Pickaxes.get_child_count() == 0:
+		for pickaxe in game.pickaxe_info.keys():
+			var pickaxe_info = game.pickaxe_info[pickaxe]
+			var pickaxe_item = item_for_sale_scene.instance()
+			pickaxe_item.item_name = pickaxe
+			pickaxe_item.item_desc = pickaxe_info.desc
+			pickaxe_item.money_cost = pickaxe_info.money_cost
+			$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
 
 func set_btn_color(btn):
 	for other_btn in $Tabs.get_children():
@@ -100,5 +101,5 @@ func buy_pickaxe_confirm():
 
 func buy_pickaxe():
 	game.money -= item_money_cost
-	game.pickaxe = {"name":item_name, "durability":game.pickaxe_info[item_name].durability}
+	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}
 	game.popup("You bought a " + get_item_name(item_name).to_lower() + "!", 1.0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://panel_theme.tres" type="Theme" id=2]
@@ -13,6 +13,12 @@ font_data = ExtResource( 1 )
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="InputEventAction" id=3]
+action = "buy"
+
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
 
 [node name="ShopPanel" type="Control"]
 anchor_left = 0.5
@@ -203,7 +209,9 @@ margin_right = 299.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 theme = ExtResource( 5 )
-text = "Buy"
+shortcut_in_tooltip = false
+shortcut = SubResource( 4 )
+text = "Buy (B)"
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 margin_right = 202.0

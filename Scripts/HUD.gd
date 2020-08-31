@@ -25,7 +25,7 @@ func _process(delta):
 
 
 func _on_TextureButton_mouse_entered():
-	game.show_tooltip("Shop (P)")
+	game.show_tooltip("Shop (Q)")
 
 
 func _on_TextureButton_mouse_exited():
@@ -33,8 +33,5 @@ func _on_TextureButton_mouse_exited():
 
 
 func _on_TextureButton_pressed():
-	click_sound.play()	
-	if not game.get_node("shop_panel").visible:
-		game.add_shop_panel()
-	else:
-		game.remove_shop_panel()
+	click_sound.play()
+	game.toggle_shop_panel()

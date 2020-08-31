@@ -8,6 +8,7 @@ onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
+onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var shop_panel:Control = shop_panel_scene.instance()
@@ -30,6 +31,7 @@ var c_c = 0
 var c_g = 0
 var c_s = 0
 var c_p = 2
+var c_t = 0#For mining only
 
 #HUD shows the player resources at the top
 var HUD
@@ -46,7 +48,8 @@ var mineral_capacity = 50
 var energy = 200
 #Dimension remnants
 var DRs = 0
-var pickaxe
+#Stores information of the current pickaxe the player is holding
+var pickaxe = {"name":"stick", "speed":1.0, "durability":14}
 
 #Stores information of all objects discovered
 var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
@@ -57,6 +60,10 @@ var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000)
 var planet_data = []
 var tile_data = []
 
+#If true, clicking any tile initiates mining
+var about_to_mine = false
+var mining_HUD
+
 #Stores information on the building(s) about to be constructed
 var constr_cost = {"money":0, "energy":0, "time":0}
 
@@ -64,8 +71,11 @@ var constr_cost = {"money":0, "energy":0, "time":0}
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
-var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "desc":"Use a stick to mine your very first rocks.", "money_cost":250}}
+var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "desc":"Use a stick to mine your very first rocks.", "money_cost":150}}
 
+#Density is in g/cm^3
+var element = {	"Si":{"density":2.329},
+				"O":{"density":1.429}}
 func _ready():
 	
 	HUD = HUD_scene.instance()
@@ -100,16 +110,42 @@ func popup(txt, dur):
 	move_child($Popup, get_child_count())
 	$Popup.init_popup(txt, dur)
 
+var dialog:AcceptDialog
+
+func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
+	if dialog:
+		$Control.remove_child(dialog)
+	dialog = AcceptDialog.new()
+	$Control.add_child(dialog)
+	dialog.window_title = title
+	dialog.dialog_text = txt
+	dialog.popup_centered()
+	for i in range(0, len(other_buttons)):
+		dialog.add_button(other_buttons[i], false, other_functions[i])
+		dialog.connect("custom_action", self, "popup_action")
+	dialog.get_ok().text = ok_txt
+
+func popup_action(action:String):
+	call(action)
+	dialog.visible = false
+
+func open_shop_pickaxe():
+	if not shop_panel.visible:
+		add_shop_panel()
+	shop_panel._on_Pickaxes_pressed()
+
 #Executed once a building has been double clicked in the construction panel
 func construct_building(bldg_type):
-	var more_info:Label = planet_HUD.get_node("MoreInfo")
-	more_info.text = "Right click to finish constructing"
-	var font = planet_HUD.get_font("font")
-	font.get_string_size(more_info.text)
-	more_info.rect_size.x = font.get_string_size(more_info.text).x + 30
-	more_info.rect_position.x = (1280 - more_info.rect_size.x) / 2.0
-	more_info.visible = true
+	put_bottom_info("Right click to finish constructing")
 	view.obj.bldg_to_construct = bldg_type
+
+func put_bottom_info(txt:String):
+	var more_info = $Control/BottomInfo
+	more_info.text = txt
+	more_info.rect_size.x = 0#This "trick" lets us resize the label to fit the text
+	more_info.rect_position.x = -more_info.rect_size.x / 2.0
+	more_info.visible = true
+	move_child($Control, get_child_count())
 
 func _load_game():
 	#Loads planet scene
@@ -131,6 +167,13 @@ func _load_game():
 	planet_data[2]["discovered"] = false
 	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
 	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
+	planet_data[2].surface.coal.chance = 0.5
+	planet_data[2].surface.coal.amount = 100
+	planet_data[2].surface.soil.chance = 0.6
+	planet_data[2].surface.soil.amount = 60
+	planet_data[2].surface.cellulose.chance = 0.4
+	planet_data[2].surface.cellulose.amount = 10
+	
 	generate_tiles(2)
 	
 	for u_i in universe_data:
@@ -175,6 +218,12 @@ func fade_out_panel(panel:Control):
 func on_fade_complete(panel:Control):
 	panel.visible = false
 
+func toggle_shop_panel():
+	if not shop_panel.visible:
+		add_shop_panel()
+	else:
+		remove_shop_panel()
+
 func add_construct_panel():
 	if c_v == "planet" and not Input.is_action_pressed("shift"):
 		fade_in_panel(construct_panel)
@@ -210,6 +259,8 @@ func switch_view(new_view:String):
 			remove_universe()
 		"dimension":
 			remove_dimension()
+		"mining":
+			remove_mining()
 	match new_view:
 		"planet":
 			add_planet()
@@ -229,7 +280,17 @@ func switch_view(new_view:String):
 			add_universe()
 		"dimension":
 			add_dimension()
+		"mining":
+			add_mining()
 	c_v = new_view
+
+func add_mining():
+	mining_HUD = mining_HUD_scene.instance()
+	add_child(mining_HUD)
+
+func remove_mining():
+	remove_child(mining_HUD)
+	mining_HUD = null
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
@@ -303,6 +364,7 @@ func add_planet():
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
 	planet_HUD.name = "planet_HUD"
+	about_to_mine = false
 
 func remove_dimension():
 	add_child(HUD)
@@ -786,7 +848,7 @@ func generate_planets(id:int):
 		p_i.crust_start_depth = rand_int(50, 450)
 		p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
 		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
-		p_i["surface"] = add_surface_materials(temp, p_i.crust)
+		p_i.surface = add_surface_materials(temp, p_i.crust)
 		planet_data.append(p_i)
 	
 	if id != 0:
@@ -805,7 +867,8 @@ func generate_tiles(id:int):
 							"bldg_str":"",
 							"construction_date":0,
 							"construction_length":0,
-							"bldg_info":{}})
+							"bldg_info":{},
+							"depth":0})
 	var view_zoom = 3.0 / wid
 	planet_data[id]["view"] = {"pos":Vector2(640, 385) / view_zoom, "zoom":view_zoom}
 	planet_data[id]["discovered"] = true
@@ -914,18 +977,18 @@ func make_planet_composition(temp:float, depth:String):
 		result[c_el] = common_elements[c_el]
 	return result
 
-func add_surface_materials(temp:float, crust_comp:Dictionary):
-	var mats = {	"coal":0.5,
-					"glass":0.1,
-					"sand":0.8,
-					"clay":0.2,
-					"soil":0.6,
-					"cellulose":0.6
+func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
+	var mats = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
+					"glass":{"chance":0.1, "amount":1},
+					"sand":{"chance":0.8, "amount":50},
+					"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
+					"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
+					"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
 	}
-	mats.sand = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
+	mats.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
 	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
-	mats.glass = mats.sand * sand_glass_ratio
-	mats.sand *= (1 - sand_glass_ratio)
+	mats.glass.chance = mats.sand.chance * sand_glass_ratio
+	mats.sand.chance *= (1 - sand_glass_ratio)
 	return mats
 
 func show_tooltip(txt:String):
@@ -968,7 +1031,7 @@ func on_change_view_click ():
 
 func YNPanel(text:String):
 	var YN = ConfirmationDialog.new()
-	$Confirms.add_child(YN)
+	$Control.add_child(YN)
 	YN.dialog_text = text
 	YN.popup_centered()
 
@@ -1118,10 +1181,12 @@ func _input(event):
 	if Input.is_action_just_released("fullscreen"):
 		OS.window_fullscreen = not OS.window_fullscreen
 
-	#Press Z to view galaxy the system is in, etc.
+	#Press Z to view galaxy the system is in, etc. or go back
 	if Input.is_action_just_released("change_view"):
 		if c_v == "planet_details" and not planet_details.renaming:
 			switch_view("system")
+		elif c_v == "mining":
+			switch_view("planet")
 		elif not has_node("Loading"):
 			on_change_view_click()
 
@@ -1129,7 +1194,7 @@ func _input(event):
 	if c_v == "planet":
 		if Input.is_action_just_released("right_click"):
 			view.obj.bldg_to_construct = ""
-			$planet_HUD/MoreInfo.visible = false
+			$Control/BottomInfo.visible = false
 	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:

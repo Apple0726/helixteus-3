@@ -102,9 +102,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Stone" type="Control" parent="Resources"]
+[node name="Minerals" type="Control" parent="Resources"]
 margin_left = 305.0
 margin_right = 606.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Minerals"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 116.0
+margin_bottom = 28.0
+text = "100/100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Resources/Minerals"]
+margin_left = 4.0
+margin_right = 260.0
+margin_bottom = 256.0
+rect_scale = Vector2( 0.12, 0.12 )
+texture = ExtResource( 4 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stone" type="Control" parent="Resources"]
+margin_left = 610.0
+margin_right = 911.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -128,35 +157,6 @@ margin_right = 254.0
 margin_bottom = 252.0
 rect_scale = Vector2( 0.14, 0.14 )
 texture = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Minerals" type="Control" parent="Resources"]
-margin_left = 610.0
-margin_right = 911.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Minerals"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 116.0
-margin_bottom = 28.0
-text = "100/100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureRect" parent="Resources/Minerals"]
-margin_left = 4.0
-margin_right = 260.0
-margin_bottom = 256.0
-rect_scale = Vector2( 0.12, 0.12 )
-texture = ExtResource( 4 )
-stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

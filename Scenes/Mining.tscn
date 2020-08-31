@@ -1,0 +1,232 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Mining.gd" type="Script" id=2]
+[ext_resource path="res://Graphics/Materials/coal.png" type="Texture" id=3]
+[ext_resource path="res://default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Graphics/Pickaxes/stick.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Pickaxe swing"
+length = 0.266667
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pickaxe/Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -60.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pickaxe/Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 648, 176 ), Vector2( 504, 416 ), Vector2( 648, 176 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.133333 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "place_crumbles"
+} ]
+}
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 0.8, 1 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[node name="Mining" type="Control"]
+theme = ExtResource( 4 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+margin_left = 336.0
+margin_top = 288.0
+margin_right = 536.0
+margin_bottom = 488.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+margin_left = 336.0
+margin_top = 288.0
+margin_right = 536.0
+margin_bottom = 488.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Control"]
+margin_left = 336.0
+margin_top = 288.0
+margin_right = 536.0
+margin_bottom = 488.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar1" type="TextureProgress" parent="Control"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 436.0
+margin_top = 288.0
+margin_right = 536.0
+margin_bottom = 292.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar2" type="TextureProgress" parent="Control"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 536.0
+margin_top = 288.0
+margin_right = 636.0
+margin_bottom = 292.0
+rect_rotation = 90.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar3" type="TextureProgress" parent="Control"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 536.0
+margin_top = 488.0
+margin_right = 636.0
+margin_bottom = 492.0
+rect_rotation = 180.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar4" type="TextureProgress" parent="Control"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 336.0
+margin_top = 488.0
+margin_right = 436.0
+margin_bottom = 492.0
+rect_rotation = 270.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar5" type="TextureProgress" parent="Control"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 336.0
+margin_top = 288.0
+margin_right = 436.0
+margin_bottom = 292.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Back" type="Button" parent="."]
+margin_top = 680.0
+margin_right = 128.0
+margin_bottom = 720.0
+text = "<- Back (Z)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+"anims/Pickaxe swing" = SubResource( 1 )
+
+[node name="Pickaxe" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Pickaxe"]
+position = Vector2( 728, 392 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 5 )
+offset = Vector2( -256, -256 )
+
+[node name="Panel" type="PanelContainer" parent="."]
+margin_left = 820.0
+margin_top = 364.0
+margin_right = 931.0
+margin_bottom = 404.0
+grow_vertical = 2
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 113.0
+margin_bottom = 38.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+margin_right = 111.0
+margin_bottom = 36.0
+custom_constants/separation = 15
+
+[node name="TextureRect" type="TextureRect" parent="Panel/VBoxContainer/HBoxContainer"]
+margin_right = 36.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+texture = ExtResource( 3 )
+expand = true
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+margin_left = 51.0
+margin_top = 6.0
+margin_right = 111.0
+margin_bottom = 30.0
+text = "100 kg"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_down" from="Control/Button" to="." method="_on_Button_button_down"]
+[connection signal="button_up" from="Control/Button" to="." method="_on_Button_button_up"]
+[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
