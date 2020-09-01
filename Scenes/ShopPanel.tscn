@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/ShopPanel.gd" type="Script" id=3]
 [ext_resource path="res://default_theme.tres" type="Theme" id=5]
@@ -69,21 +69,21 @@ margin_right = 357.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 shortcut_in_tooltip = false
-text = "Speed-ups"
+text = "SPEED_UPS"
 
 [node name="Overclocks" type="Button" parent="Tabs"]
 margin_left = 355.0
 margin_right = 712.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
-text = "Overclocks"
+text = "OVERCLOCKS"
 
 [node name="Pickaxes" type="Button" parent="Tabs"]
 margin_left = 710.0
 margin_right = 1067.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
-text = "Pickaxes"
+text = "PICKAXES"
 
 [node name="Contents" type="VBoxContainer" parent="."]
 visible = false

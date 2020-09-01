@@ -3,6 +3,7 @@ extends Node2D
 onready var view_scene = preload("res://Scenes/View.tscn")
 onready var construct_panel_scene = preload("res://Scenes/ConstructPanel.tscn")
 onready var shop_panel_scene = preload("res://Scenes/ShopPanel.tscn")
+onready var inventory_scene = preload("res://Scenes/Inventory.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
@@ -12,9 +13,21 @@ onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
 
 onready var construct_panel:Control = construct_panel_scene.instance()
 onready var shop_panel:Control = shop_panel_scene.instance()
+onready var inventory:Control = inventory_scene.instance()
 onready var tooltip:Control = tooltip_scene.instance()
 onready var dimension:Control = dimension_scene.instance()
 onready var planet_details:Control
+
+#var tooltip_scene
+#var planet_HUD_scene
+#var mining_HUD_scene
+#var planet_details_scene
+#var construct_panel
+#var shop_panel
+#var inventory
+#var tooltip
+#var dimension
+#var planet_details
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -38,18 +51,30 @@ var HUD
 #planet_HUD shows the buttons and other things that only shows while viewing a planet surface (e.g. construct)
 var planet_HUD
 
+#Stores individual tile nodes
+var tiles = []
+var bldg_blueprints = []#ids of tiles where things will be constructed
+var panels = []#Mainly for removing panels in a specific order
+
 #The base node containing things that can be moved/zoomed in/out
 var view
 
 #Player resources
 var money = 800
-var minerals = 15
+var minerals = 0
 var mineral_capacity = 50
+var stone = 0
 var energy = 200
 #Dimension remnants
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
 var pickaxe = {"name":"stick", "speed":1.0, "durability":14}
+var mats = {	"coal":0,
+				"glass":0,
+				"sand":0,
+				"clay":0,
+				"soil":0,
+				"cellulose":0}
 
 #Stores information of all objects discovered
 var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
@@ -76,28 +101,38 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "desc":"Use a stick t
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
+
+#Display help when players see/do things for the first time. true: show help
+var help = {"mining":true}
+
+#Measures to not overwhelm beginners
+var show = {	"minerals":false,
+				"stone":false,
+				"mining_layer":false}
+
 func _ready():
-	
 	HUD = HUD_scene.instance()
 	HUD.name = "HUD"
 
-	construct_panel.name = "construct_panel"
 	construct_panel.rect_scale = Vector2(0.8, 0.8)
 	shop_panel.rect_position = Vector2(106.5, 70)
 	construct_panel.visible = false
 	add_child(construct_panel)
-	
-	shop_panel.name = "shop_panel"
+
 	shop_panel.rect_position = Vector2(106.5, 70)
 	shop_panel.visible = false
 	add_child(shop_panel)
-	
+
+	inventory.rect_position = Vector2(106.5, 70)
+	inventory.visible = false
+	add_child(inventory)
+
 	dimension.visible = false
 	add_child(dimension)
 
 	tooltip.visible = false
 	add_child(tooltip)
-	
+
 	view = view_scene.instance()
 	add_child(view)
 
@@ -131,12 +166,12 @@ func popup_action(action:String):
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
-		add_shop_panel()
+		fade_in_panel(shop_panel)
 	shop_panel._on_Pickaxes_pressed()
 
 #Executed once a building has been double clicked in the construction panel
 func construct_building(bldg_type):
-	put_bottom_info("Right click to finish constructing")
+	put_bottom_info(tr("STOP_CONSTRUCTION"))
 	view.obj.bldg_to_construct = bldg_type
 
 func put_bottom_info(txt:String):
@@ -148,6 +183,7 @@ func put_bottom_info(txt:String):
 	move_child($Control, get_child_count())
 
 func _load_game():
+	$Languages.visible = false
 	#Loads planet scene
 	$click.play()
 	#Music fading
@@ -159,12 +195,13 @@ func _load_game():
 
 	generate_planets(0)
 	#Home planet information
-	planet_data[2]["name"] = "Home Planet"
+	planet_data[2]["name"] = tr("HOME_PLANET")
 	planet_data[2]["status"] = "conquered"
 	planet_data[2]["size"] = rand_range(12000, 13000)
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
+	planet_data[2].crust_start_depth = rand_int(140, 160)
 	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
 	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
@@ -220,23 +257,26 @@ func on_fade_complete(panel:Control):
 
 func toggle_shop_panel():
 	if not shop_panel.visible:
-		add_shop_panel()
+		panels.push_front("shop")
+		fade_in_panel(shop_panel)
 	else:
-		remove_shop_panel()
+		fade_out_panel(shop_panel)
 
-func add_construct_panel():
-	if c_v == "planet" and not Input.is_action_pressed("shift"):
-		fade_in_panel(construct_panel)
+func toggle_inventory():
+	if not inventory.visible:
+		panels.push_front("inventory")
+		fade_in_panel(inventory)
+		inventory.refresh_values()
+	else:
+		fade_out_panel(inventory)
 
-func add_shop_panel():
-	fade_in_panel(shop_panel)
-
-func remove_construct_panel():
+func toggle_construct_panel():
 	if not Input.is_action_pressed("shift"):
-		fade_out_panel(construct_panel)
-
-func remove_shop_panel():
-	fade_out_panel(shop_panel)
+		if not construct_panel.visible:
+			panels.push_front("construct")
+			fade_in_panel(construct_panel)
+		else:
+			fade_out_panel(construct_panel)
 
 func switch_view(new_view:String):
 	hide_tooltip()
@@ -319,14 +359,14 @@ func add_dimension():
 	dimension.visible = true
 
 func add_universe():
-	put_change_view_btn("View discovered universes in this dimension (Z)", "res://Graphics/Icons/DimensionView.png")
+	put_change_view_btn(tr("VIEW_DIMENSION") + " (Z)", "res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u]["discovered"]:
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
 
 func add_supercluster():
-	put_change_view_btn("View the universe this supercluster is in (Z)", "res://Graphics/Icons/UniverseView.png")
+	put_change_view_btn(tr("VIEW_UNIVERSE") + " (Z)", "res://Graphics/Buttons/UniverseView.png")
 	if not supercluster_data[c_sc]["discovered"]:
 		reset_collisions()
 		generate_clusters(c_sc)
@@ -338,7 +378,7 @@ func add_cluster():
 		reset_collisions()
 		generate_galaxy_part()
 	else:
-		put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
+		put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 		add_obj("cluster")
 
 func add_galaxy():
@@ -348,11 +388,11 @@ func add_galaxy():
 		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 		generate_system_part()
 	else:
-		put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
+		put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 		add_obj("galaxy")
 
 func add_system():
-	put_change_view_btn("View the galaxy this system is in (Z)", "res://Graphics/Icons/GalaxyView.png")
+	put_change_view_btn(tr("VIEW_GALAXY") + " (Z)", "res://Graphics/Buttons/GalaxyView.png")
 	if not system_data[c_s]["discovered"]:
 		generate_planets(c_s)
 	add_obj("system")
@@ -489,11 +529,11 @@ func generate_galaxy_part():
 	var progress = 0.0
 	while progress != 1:
 		progress = generate_galaxies(c_c)
-		$Loading.update_bar(progress, "Generating cluster... (" + String(cluster_data[c_c]["galaxies"].size()) + " / " + String(cluster_data[c_c]["galaxy_num"]) + " galaxies)")
+		$Loading.update_bar(progress, tr("GENERATING_CLUSTER") % [String(cluster_data[c_c]["galaxies"].size()), String(cluster_data[c_c]["galaxy_num"])])
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
 	add_obj("cluster")
 	remove_child($Loading)
-	put_change_view_btn("View the supercluster this cluster is in (Z)", "res://Graphics/Icons/SuperclusterView.png")
+	put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 
 func generate_galaxies(id:int):
 	randomize()
@@ -569,11 +609,11 @@ func generate_system_part():
 	var progress = 0.0
 	while progress != 1:
 		progress = generate_systems(c_g)
-		$Loading.update_bar(progress, "Generating galaxy... (" + String(galaxy_data[c_g]["systems"].size()) + " / " + String(galaxy_data[c_g]["system_num"]) + " systems)")
+		$Loading.update_bar(progress, tr("GENERATING_GALAXY") % [String(galaxy_data[c_g]["systems"].size()), String(galaxy_data[c_g]["system_num"])])
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
 	add_obj("galaxy")
 	remove_child($Loading)
-	put_change_view_btn("View the cluster this galaxy is in (Z)", "res://Graphics/Icons/ClusterView.png")
+	put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 
 func generate_systems(id:int):
 	randomize()
@@ -624,47 +664,36 @@ func generate_systems(id:int):
 			var star_class = ""
 			#Temperature in K
 			var temp = 0
-			var inv_l = 0
 			if mass < 0.08:
-				inv_l = inverse_lerp(0, 0.08, mass)
-				star_size = lerp(0.001, 0.1, inv_l)
-				temp = lerp(250, 2400, inv_l)
+				star_size = range_lerp(mass, 0, 0.08, 0.001, 0.1)
+				temp = range_lerp(mass, 0, 0.08, 250, 2400)
 			if mass >= 0.08 and mass < 0.45:
-				inv_l = inverse_lerp(0.08, 0.45, mass)
-				star_size = lerp(0.1, 0.7, inv_l)
-				temp = lerp(2400, 3700, inv_l)
+				star_size = range_lerp(mass, 0.08, 0.45, 0.1, 0.7)
+				temp = range_lerp(mass, 0.08, 0.45, 2400, 3700)
 			if mass >= 0.45 and mass < 0.8:
-				inv_l = inverse_lerp(0.45, 0.8, mass)
-				star_size = lerp(0.7, 0.96, inv_l)
-				temp = lerp(3700, 5200, inv_l)
+				star_size = range_lerp(mass, 0.45, 0.8, 0.7, 0.96)
+				temp = range_lerp(mass, 0.45, 0.8, 3700, 5200)
 			if mass >= 0.8 and mass < 1.04:
-				inv_l = inverse_lerp(0.8, 1.04, mass)
-				star_size = lerp(0.96, 1.15, inv_l)
-				temp = lerp(5200, 6000, inv_l)
+				star_size = range_lerp(mass, 0.8, 1.04, 0.96, 1.15)
+				temp = range_lerp(mass, 0.8, 1.04, 5200, 6000)
 			if mass >= 1.04 and mass < 1.4:
-				inv_l = inverse_lerp(1.04, 1.4, mass)
-				star_size = lerp(1.15, 1.4, inv_l)
-				temp = lerp(6000, 7500, inv_l)
+				star_size = range_lerp(mass, 1.04, 1.4, 1.15, 1.4)
+				temp = range_lerp(mass, 1.04, 1.4, 6000, 7500)
 			if mass >= 1.4 and mass < 2.1:
-				inv_l = inverse_lerp(1.4, 2.1, mass)
-				star_size = lerp(1.4, 1.8, inv_l)
-				temp = lerp(7500, 10000, inv_l)
+				star_size = range_lerp(mass, 1.4, 2.1, 1.4, 1.8)
+				temp = range_lerp(mass, 1.4, 2.1, 7500, 10000)
 			if mass >= 2.1 and mass < 16:
-				inv_l = inverse_lerp(2.1, 16, mass)
-				star_size = lerp(1.8, 6.6, inv_l)
-				temp = lerp(10000, 30000, inv_l)
+				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6)
+				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
 			if mass >= 16 and mass < 100:
-				inv_l = inverse_lerp(16, 100, mass)
-				star_size = lerp(6.6, 22, inv_l)
-				temp = lerp(30000, 70000, inv_l)
+				star_size = range_lerp(mass, 16, 100, 6.6, 22)
+				temp = range_lerp(mass, 16, 100, 30000, 70000)
 			if mass >= 100 and mass < 1000:
-				inv_l = inverse_lerp(100, 1000, mass)
-				star_size = lerp(22, 80, inv_l)
-				temp = lerp(70000, 120000, inv_l)
+				star_size = range_lerp(mass, 100, 1000, 22, 60)
+				temp = range_lerp(mass, 100, 1000, 70000, 120000)
 			if mass >= 1000 and mass < 10000:
-				inv_l = inverse_lerp(1000, 10000, mass)
-				star_size = lerp(60, 200, inv_l)
-				temp = lerp(120000, 210000, inv_l)
+				star_size = range_lerp(mass, 1000, 10000, 60, 200)
+				temp = range_lerp(mass, 1000, 10000, 120000, 210000)
 			if mass >= 10000:
 				star_size = pow(mass, 1/3.0) * (200 / pow(10000, 1/3.0))
 				temp = 210000 * pow(1.45, mass / 10000.0 - 1)
@@ -752,6 +781,7 @@ func generate_systems(id:int):
 			pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI)) + gc_center
 			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
 			for star_shape in obj_shapes:
+				#if Geometry.is_point_in_circle(pos, star_shape.pos, radius + star_shape.radius):
 				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
 					colliding = true
 					radius_increase_counter += 1
@@ -761,6 +791,7 @@ func generate_systems(id:int):
 					break
 			if not colliding:
 				for gc_circle in gc_circles:
+					#if Geometry.is_point_in_circle(pos, gc_circle.pos, radius + gc_circle.radius):
 					if pos.distance_to(gc_circle["pos"]) < radius + gc_circle["radius"]:
 						colliding = true
 						radius_increase_counter += 1
@@ -835,7 +866,7 @@ func generate_planets(id:int):
 		p_i["discovered"] = false
 		var p_id = planet_data.size()
 		p_i["id"] = p_id
-		p_i["name"] = "Planet " + String(p_id)
+		p_i["name"] = tr("PLANET") + " " + String(p_id)
 		system_data[id]["planets"].append(p_id)
 		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
 		var dist_in_km = p_i.distance / 569.0 * pow10(1.5, 8)
@@ -859,7 +890,7 @@ func generate_planets(id:int):
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid = round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1
+	var wid = min(round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1, 60)
 
 	for _i in range(0, pow(wid, 2)):
 		planet_data[id]["tiles"].append(tile_data.size())
@@ -868,7 +899,8 @@ func generate_tiles(id:int):
 							"construction_date":0,
 							"construction_length":0,
 							"bldg_info":{},
-							"depth":0})
+							"depth":0,
+							"contents":[]})#To prevent "tile-scumming"
 	var view_zoom = 3.0 / wid
 	planet_data[id]["view"] = {"pos":Vector2(640, 385) / view_zoom, "zoom":view_zoom}
 	planet_data[id]["discovered"] = true
@@ -978,26 +1010,31 @@ func make_planet_composition(temp:float, depth:String):
 	return result
 
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
-	var mats = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
-					"glass":{"chance":0.1, "amount":1},
-					"sand":{"chance":0.8, "amount":50},
-					"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
-					"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
-					"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
+	var mat_info = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
+						"glass":{"chance":0.1, "amount":1},
+						"sand":{"chance":0.8, "amount":50},
+						"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
+						"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
+						"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
 	}
-	mats.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
+	mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
 	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
-	mats.glass.chance = mats.sand.chance * sand_glass_ratio
-	mats.sand.chance *= (1 - sand_glass_ratio)
-	return mats
+	mat_info.glass.chance = mat_info.sand.chance * sand_glass_ratio
+	mat_info.sand.chance *= (1 - sand_glass_ratio)
+	for mat in mat_info:
+		mat_info[mat].chance = clever_round(mat_info[mat].chance, 3)
+		mat_info[mat].amount = clever_round(mat_info[mat].amount, 3)
+	return mat_info
 
 func show_tooltip(txt:String):
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	var txt2 = txt.split("\n")
 	tooltip.visible = true
 	move_child(tooltip, get_child_count())
 	tooltip.show_text(txt2)
 
 func hide_tooltip():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	tooltip.visible = false
 
 var change_view_btn
@@ -1154,7 +1191,10 @@ func e_notation(num:float):#e notation
 	return String(clever_round(n)) + "e" + String(e)
 
 func clever_round (num:float, sd:int = 4):#sd: significant digits
-	return stepify(num, pow(10, floor(log10(abs(num))) - sd + 1))
+	var e = floor(log10(abs(num)))
+	if sd < e + 1:
+		return round(num)
+	return stepify(num, pow(10, e - sd + 1))
 
 func pow10(n, e):
 	return n * pow(10, e)
@@ -1174,6 +1214,7 @@ func _process(delta):
 var mouse_pos = Vector2.ZERO
 
 func _input(event):
+	OS.get_locale()
 	if event is InputEventMouse:
 		mouse_pos = event.position
 
@@ -1190,14 +1231,58 @@ func _input(event):
 		elif not has_node("Loading"):
 			on_change_view_click()
 
-	#Right click to cancel building
-	if c_v == "planet":
-		if Input.is_action_just_released("right_click"):
+	if Input.is_action_just_released("right_click"):
+		if c_v == "planet":
+			#Cancel building
 			view.obj.bldg_to_construct = ""
 			$Control/BottomInfo.visible = false
+			for id in bldg_blueprints:
+				tiles[id]._on_Button_button_out()
+		if len(panels) != 0:
+			match panels.pop_front():
+				"shop":
+					toggle_shop_panel()
+				"inventory":
+					toggle_inventory()
+				"construct":
+					toggle_construct_panel()
+			hide_tooltip()
 	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
 		money += minerals * 5
-		popup("You sold " + String(minerals) + " minerals for $" + String(minerals * 5) + "!", 2)
+		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
 		minerals = 0
+
+func _on_en_mouse_entered():
+	show_tooltip("English")
+
+func _on_en_mouse_exited():
+	hide_tooltip()
+
+func _on_fr_mouse_entered():
+	show_tooltip("Français")
+
+func _on_fr_mouse_exited():
+	hide_tooltip()
+
+func _on_it_mouse_entered():
+	show_tooltip("Italiano")
+
+func _on_it_mouse_exited():
+	hide_tooltip()
+
+func _on_en_pressed():
+	TranslationServer.set_locale("en")
+	$Title/Button.visible = false
+	$Title/Button.visible = true
+
+func _on_fr_pressed():
+	TranslationServer.set_locale("fr")
+	$Title/Button.visible = false
+	$Title/Button.visible = true
+
+func _on_it_pressed():
+	TranslationServer.set_locale("it")
+	$Title/Button.visible = false
+	$Title/Button.visible = true

@@ -1,10 +1,10 @@
 [gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/Dimension.gd" type="Script" id=3]
 [ext_resource path="res://default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Buttons/Arrow.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/Dimension/Physics.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Dimension/Philosophy.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Dimension/Engineering.tscn" type="PackedScene" id=8]
@@ -188,11 +188,4 @@ texture_normal = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Label" type="Label" parent="."]
-margin_left = 80.0
-margin_top = -48.0
-margin_right = 192.0
-margin_bottom = -20.0
-text = "asdввф"
 [connection signal="pressed" from="ExpandUpgs" to="." method="_on_ExpandUpgs_pressed"]

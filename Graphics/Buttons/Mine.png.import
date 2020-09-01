@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Mine.png-db65e4fd5bbe612a4340ec717627da91.stex"
+path="res://.import/Mine.png-1974f3bfeab66d34d60d2d5ce1886665.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/Mine.png"
-dest_files=[ "res://.import/Mine.png-db65e4fd5bbe612a4340ec717627da91.stex" ]
+source_file="res://Graphics/Buttons/Mine.png"
+dest_files=[ "res://.import/Mine.png-1974f3bfeab66d34d60d2d5ce1886665.stex" ]
 
 [params]
 

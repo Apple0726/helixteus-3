@@ -1,0 +1,112 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://panel_theme.tres" type="Theme" id=2]
+[ext_resource path="res://Scripts/Inventory.gd" type="Script" id=3]
+[ext_resource path="res://default_theme.tres" type="Theme" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[node name="Inventory" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -640.0
+margin_top = -360.0
+margin_right = 427.0
+margin_bottom = 240.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 2 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1067.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "INVENTORY"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+margin_top = 64.0
+margin_right = 1067.0
+margin_bottom = 104.0
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Materials" type="Button" parent="Tabs"]
+margin_right = 1067.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "MATERIALS"
+
+[node name="Contents" type="VBoxContainer" parent="."]
+margin_top = 104.0
+margin_right = 1067.0
+margin_bottom = 600.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Info" type="Label" parent="Contents"]
+margin_right = 1067.0
+margin_bottom = 36.0
+custom_styles/normal = SubResource( 2 )
+text = "Information"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Contents"]
+margin_top = 36.0
+margin_right = 1067.0
+margin_bottom = 496.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="Contents/Control"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -450.0
+margin_top = 15.0
+margin_right = 450.0
+margin_bottom = 15.0
+custom_constants/vseparation = 50
+columns = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+margin_right = 202.0
+margin_bottom = 76.0
+theme = ExtResource( 5 )
+[connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]

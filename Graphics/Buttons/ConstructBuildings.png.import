@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/DimensionView.png-b4895023e511e45a19ebe61f459f768b.stex"
+path="res://.import/ConstructBuildings.png-54f7de5a65157ee221226f77ce7e8d6d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/DimensionView.png"
-dest_files=[ "res://.import/DimensionView.png-b4895023e511e45a19ebe61f459f768b.stex" ]
+source_file="res://Graphics/Buttons/ConstructBuildings.png"
+dest_files=[ "res://.import/ConstructBuildings.png-54f7de5a65157ee221226f77ce7e8d6d.stex" ]
 
 [params]
 

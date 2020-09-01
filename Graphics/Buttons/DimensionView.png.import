@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Shop.png-62946129556434529069b96177301350.stex"
+path="res://.import/DimensionView.png-3fa20419800af44528ca1dc7be6bfff9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/Shop.png"
-dest_files=[ "res://.import/Shop.png-62946129556434529069b96177301350.stex" ]
+source_file="res://Graphics/Buttons/DimensionView.png"
+dest_files=[ "res://.import/DimensionView.png-3fa20419800af44528ca1dc7be6bfff9.stex" ]
 
 [params]
 

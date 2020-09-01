@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/audio.png-931542e501e189895571ec6ef84ff7f9.stex"
+path="res://.import/stone.png-3f69ad9315826f8bf0bbf10196ceded9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/audio.png"
-dest_files=[ "res://.import/audio.png-931542e501e189895571ec6ef84ff7f9.stex" ]
+source_file="res://Graphics/Icons/stone.png"
+dest_files=[ "res://.import/stone.png-3f69ad9315826f8bf0bbf10196ceded9.stex" ]
 
 [params]
 
@@ -31,4 +31,4 @@ process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true
-svg/scale=0.001
+svg/scale=1.0

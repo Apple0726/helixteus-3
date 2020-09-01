@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/UniverseView.png-a7c1218dc6794df5d6f7eb017fc8ea3d.stex"
+path="res://.import/en.png-c4128a15a938408df1951e2bdfe43d04.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/UniverseView.png"
-dest_files=[ "res://.import/UniverseView.png-a7c1218dc6794df5d6f7eb017fc8ea3d.stex" ]
+source_file="res://Graphics/Buttons/en.png"
+dest_files=[ "res://.import/en.png-c4128a15a938408df1951e2bdfe43d04.stex" ]
 
 [params]
 

@@ -32,7 +32,7 @@ func _ready():
 
 func on_system_over (id:int):
 	var s_i = game.system_data[id]
-	game.show_tooltip(s_i["name"] + "\nPlanets: " + String(s_i["planet_num"]))
+	game.show_tooltip(tr("SYSTEM_INFO") % [s_i.name, s_i.planet_num])
 
 func on_system_out ():
 	game.hide_tooltip()

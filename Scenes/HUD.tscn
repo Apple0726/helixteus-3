@@ -1,22 +1,14 @@
 [gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Icons/Energy.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/Minerals.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
-[ext_resource path="res://Graphics/Icons/audio.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Buttons/audio.png" type="Texture" id=6]
 [ext_resource path="res://default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Graphics/Icons/rock_ressource.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Icons/Shop.png" type="Texture" id=9]
-
-[sub_resource type="DynamicFont" id=1]
-size = 25
-use_filter = true
-font_data = ExtResource( 1 )
-
-[sub_resource type="Theme" id=2]
-default_font = SubResource( 1 )
+[ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Buttons/Shop.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Buttons/Inventory.png" type="Texture" id=10]
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0, 0, 0, 1 )
@@ -30,10 +22,16 @@ action = "mute"
 shortcut = SubResource( 4 )
 
 [sub_resource type="InputEventAction" id=6]
-action = "shop"
+action = "inventory"
 
 [sub_resource type="ShortCut" id=7]
 shortcut = SubResource( 6 )
+
+[sub_resource type="InputEventAction" id=8]
+action = "shop"
+
+[sub_resource type="ShortCut" id=9]
+shortcut = SubResource( 8 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -47,7 +45,6 @@ __meta__ = {
 [node name="ColorRect" type="Panel" parent="."]
 margin_right = 1280.0
 margin_bottom = 40.0
-theme = SubResource( 2 )
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -69,7 +66,6 @@ __meta__ = {
 margin_top = 4.0
 margin_right = 1216.0
 margin_bottom = 36.0
-rect_min_size = Vector2( 1216, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -195,22 +191,34 @@ margin_top = 48.0
 margin_right = 1280.0
 margin_bottom = 720.0
 rect_min_size = Vector2( 64, 0 )
+custom_constants/separation = 0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton" type="TextureButton" parent="Buttons"]
-margin_top = 304.0
+[node name="Inventory" type="TextureButton" parent="Buttons"]
+margin_top = 272.0
 margin_right = 64.0
-margin_bottom = 368.0
+margin_bottom = 336.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 7 )
+texture_normal = ExtResource( 10 )
+
+[node name="Shop" type="TextureButton" parent="Buttons"]
+margin_top = 336.0
+margin_right = 64.0
+margin_bottom = 400.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 9 )
 texture_normal = ExtResource( 9 )
 [connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
-[connection signal="mouse_entered" from="Buttons/TextureButton" to="." method="_on_TextureButton_mouse_entered"]
-[connection signal="mouse_exited" from="Buttons/TextureButton" to="." method="_on_TextureButton_mouse_exited"]
-[connection signal="pressed" from="Buttons/TextureButton" to="." method="_on_TextureButton_pressed"]
+[connection signal="mouse_entered" from="Buttons/Inventory" to="." method="_on_Inventory_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/Inventory" to="." method="_on_Inventory_mouse_exited"]
+[connection signal="pressed" from="Buttons/Inventory" to="." method="_on_Inventory_pressed"]
+[connection signal="mouse_entered" from="Buttons/Shop" to="." method="_on_Shop_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/Shop" to="." method="_on_Shop_mouse_exited"]
+[connection signal="pressed" from="Buttons/Shop" to="." method="_on_Shop_pressed"]

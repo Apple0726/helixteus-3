@@ -1,6 +1,7 @@
 extends Control
 
 onready var game = get_node("/root/Game")
+#Tween for fading in/out panel
 var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
@@ -13,7 +14,7 @@ func _on_Speedups_pressed():
 	tab = "speedups"
 	$Contents.visible = true
 	set_item_visibility("Speedups")
-	$Contents/Info.text = "Speed-up items instantly accelerate construction of a building. Higher-tier items affect multiple buildings."
+	$Contents/Info.text = tr("SPEED_UP_DESC")
 	set_btn_color($Tabs/Speedups)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
 
@@ -21,7 +22,7 @@ func _on_Overclocks_pressed():
 	tab = "overclocks"
 	$Contents.visible = true
 	set_item_visibility("Overclocks")
-	$Contents/Info.text = "Overclock items temporarily boost resource production of the affected buildings. Higher levels boost more and last longer, as well as affecting multiple buildings."
+	$Contents/Info.text = tr("OVERCLOCK_DESC")
 	set_btn_color($Tabs/Overclocks)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
 
@@ -29,7 +30,7 @@ func _on_Pickaxes_pressed():
 	tab = "pickaxes"
 	$Contents.visible = true
 	set_item_visibility("Pickaxes")
-	$Contents/Info.text = "Pickaxes allow you to manually mine a planet for various resources. Higher tier pickaxes mine faster and last longer."
+	$Contents/Info.text = tr("PICKAXE_DESC")
 	set_btn_color($Tabs/Pickaxes)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = false
 	if $Contents/HBoxContainer/Items/Pickaxes.get_child_count() == 0:
@@ -75,17 +76,17 @@ func set_item_info(name:String, desc:String, money_cost:float):
 func get_item_name(name:String):
 	match name:
 		"stick":
-			return "Stick"
+			return tr("STICK")
 
 func _on_Buy_pressed():
 	if game.money >= item_money_cost:
 		if tab == "pickaxes":
 			if game.pickaxe != null:
-				YNPanel("Replace your " + get_item_name(game.pickaxe.name).to_lower() + " with a " + get_item_name(item_name).to_lower() + "?")
+				YNPanel(tr("REPLACE_PICKAXE") % [get_item_name(game.pickaxe.name).to_lower(), get_item_name(item_name).to_lower()])
 			else:
 				buy_pickaxe()
 	else:
-		game.popup("You don't have enough money.")
+		game.popup(tr("NOT_ENOUGH_MONEY"))
 
 func YNPanel(text:String):
 	#var YN = ConfirmationDialog.new()
@@ -102,4 +103,4 @@ func buy_pickaxe_confirm():
 func buy_pickaxe():
 	game.money -= item_money_cost
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}
-	game.popup("You bought a " + get_item_name(item_name).to_lower() + "!", 1.0)
+	game.popup(tr("BUY_PICKAXE") % [get_item_name(item_name).to_lower()], 1.0)

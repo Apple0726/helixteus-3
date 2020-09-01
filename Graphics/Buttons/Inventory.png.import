@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ClusterView.png-894aae692bdfbc387fdfc02deef0b130.stex"
+path="res://.import/Inventory.png-c2674fe4b2eb56dee2fdf08257ce247a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/ClusterView.png"
-dest_files=[ "res://.import/ClusterView.png-894aae692bdfbc387fdfc02deef0b130.stex" ]
+source_file="res://Graphics/Buttons/Inventory.png"
+dest_files=[ "res://.import/Inventory.png-c2674fe4b2eb56dee2fdf08257ce247a.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/SuperclusterView.png-c4198b39d1ea6a3895e18adcadc1b20f.stex"
+path="res://.import/Arrow.png-4868f76de497a97dfe4abb364aa63f7a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/SuperclusterView.png"
-dest_files=[ "res://.import/SuperclusterView.png-c4198b39d1ea6a3895e18adcadc1b20f.stex" ]
+source_file="res://Graphics/Buttons/Arrow.png"
+dest_files=[ "res://.import/Arrow.png-4868f76de497a97dfe4abb364aa63f7a.stex" ]
 
 [params]
 

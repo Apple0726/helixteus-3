@@ -1,13 +1,78 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Mining.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Materials/coal.png" type="Texture" id=3]
 [ext_resource path="res://default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Graphics/Pickaxes/stick.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=6]
 
 [sub_resource type="Animation" id=1]
-resource_name = "Pickaxe swing"
+resource_name = "Help fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Help:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "hide_help"
+} ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Layer fade"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("LayerInfo:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -64.1282, -0.25, 0, 0, 30.6713, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("LayerInfo:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("LayerInfo:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -21,7 +86,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.133333, 0.266667 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ 0.0, -60.0, 0.0 ]
+"values": [ 0.0, -90.0, 0.0 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Pickaxe/Sprite:position")
@@ -46,11 +111,229 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
-"method": "place_crumbles"
+"method": "pickaxe_hit"
 } ]
 }
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="Animation" id=4]
+resource_name = "Help fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Help:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "hide_help"
+} ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "Layer fade"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("LayerInfo:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -64.1282, -0.25, 0, 0, 30.6713, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("LayerInfo:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("LayerInfo:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "Pickaxe swing"
+length = 0.266667
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pickaxe/Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -90.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pickaxe/Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 648, 176 ), Vector2( 504, 416 ), Vector2( 648, 176 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.133333 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "pickaxe_hit"
+} ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "Help fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Help:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "hide_help"
+} ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "Layer fade"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("LayerInfo:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -64.1282, -0.25, 0, 0, 30.6713, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("LayerInfo:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("LayerInfo:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "Pickaxe swing"
+length = 0.266667
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pickaxe/Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -90.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pickaxe/Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 648, 176 ), Vector2( 504, 416 ), Vector2( 648, 176 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.133333 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "pickaxe_hit"
+} ]
+}
+
+[sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -66,60 +349,58 @@ expand_margin_bottom = 5.0
 theme = ExtResource( 4 )
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_edit_vertical_guides_": [ 96.0 ]
 }
 
 [node name="ReferenceRect" type="ReferenceRect" parent="."]
-margin_left = 336.0
-margin_top = 288.0
-margin_right = 536.0
-margin_bottom = 488.0
+margin_left = 284.0
+margin_top = 284.0
+margin_right = 484.0
+margin_bottom = 484.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="Tile" type="Control" parent="."]
+margin_left = 284.0
+margin_top = 284.0
+margin_right = 484.0
+margin_bottom = 484.0
+rect_pivot_offset = Vector2( 100, 100 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
-margin_left = 336.0
-margin_top = 288.0
-margin_right = 536.0
-margin_bottom = 488.0
+[node name="TextureRect" type="TextureRect" parent="Tile"]
+margin_right = 200.0
+margin_bottom = 200.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Control"]
-margin_left = 336.0
-margin_top = 288.0
-margin_right = 536.0
-margin_bottom = 488.0
+[node name="Button" type="Button" parent="Tile"]
+margin_right = 200.0
+margin_bottom = 200.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar1" type="TextureProgress" parent="Control"]
+[node name="Bar1" type="TextureProgress" parent="Tile"]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = 436.0
-margin_top = 288.0
-margin_right = 536.0
-margin_bottom = 292.0
+margin_left = 100.0
+margin_right = 200.0
+margin_bottom = 4.0
 texture_progress = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar2" type="TextureProgress" parent="Control"]
+[node name="Bar2" type="TextureProgress" parent="Tile"]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = 536.0
-margin_top = 288.0
-margin_right = 636.0
-margin_bottom = 292.0
+margin_left = 200.0
+margin_right = 300.0
+margin_bottom = 4.0
 rect_rotation = 90.0
 rect_scale = Vector2( 2, 1 )
 texture_progress = ExtResource( 1 )
@@ -127,12 +408,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar3" type="TextureProgress" parent="Control"]
+[node name="Bar3" type="TextureProgress" parent="Tile"]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = 536.0
-margin_top = 488.0
-margin_right = 636.0
-margin_bottom = 492.0
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 300.0
+margin_bottom = 204.0
 rect_rotation = 180.0
 rect_scale = Vector2( 2, 1 )
 texture_progress = ExtResource( 1 )
@@ -140,12 +421,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar4" type="TextureProgress" parent="Control"]
+[node name="Bar4" type="TextureProgress" parent="Tile"]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = 336.0
-margin_top = 488.0
-margin_right = 436.0
-margin_bottom = 492.0
+margin_top = 200.0
+margin_right = 100.0
+margin_bottom = 204.0
 rect_rotation = 270.0
 rect_scale = Vector2( 2, 1 )
 texture_progress = ExtResource( 1 )
@@ -153,12 +433,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar5" type="TextureProgress" parent="Control"]
+[node name="Bar5" type="TextureProgress" parent="Tile"]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = 336.0
-margin_top = 288.0
-margin_right = 436.0
-margin_bottom = 292.0
+margin_right = 100.0
+margin_bottom = 4.0
 texture_progress = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -168,13 +446,24 @@ __meta__ = {
 margin_top = 680.0
 margin_right = 128.0
 margin_bottom = 720.0
-text = "<- Back (Z)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-"anims/Pickaxe swing" = SubResource( 1 )
+[node name="PickaxeAnim" type="AnimationPlayer" parent="."]
+"anims/Help fade" = SubResource( 1 )
+"anims/Layer fade" = SubResource( 2 )
+"anims/Pickaxe swing" = SubResource( 3 )
+
+[node name="HelpAnim" type="AnimationPlayer" parent="."]
+"anims/Help fade" = SubResource( 4 )
+"anims/Layer fade" = SubResource( 5 )
+"anims/Pickaxe swing" = SubResource( 6 )
+
+[node name="LayerAnim" type="AnimationPlayer" parent="."]
+"anims/Help fade" = SubResource( 7 )
+"anims/Layer fade" = SubResource( 8 )
+"anims/Pickaxe swing" = SubResource( 9 )
 
 [node name="Pickaxe" type="Node2D" parent="."]
 
@@ -185,12 +474,12 @@ texture = ExtResource( 5 )
 offset = Vector2( -256, -256 )
 
 [node name="Panel" type="PanelContainer" parent="."]
-margin_left = 820.0
+margin_left = 716.0
 margin_top = 364.0
-margin_right = 931.0
+margin_right = 831.0
 margin_bottom = 404.0
 grow_vertical = 2
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -227,6 +516,83 @@ align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="button_down" from="Control/Button" to="." method="_on_Button_button_down"]
-[connection signal="button_up" from="Control/Button" to="." method="_on_Button_button_up"]
+
+[node name="LayerInfo" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( -64.1282, 0 )
+
+[node name="Layer" type="Label" parent="LayerInfo"]
+margin_top = 116.0
+margin_right = 192.0
+margin_bottom = 140.0
+text = "Layer: surface"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Upper" type="Label" parent="LayerInfo"]
+margin_left = 112.0
+margin_top = 160.0
+margin_right = 304.0
+margin_bottom = 184.0
+text = "0 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lower" type="Label" parent="LayerInfo"]
+margin_left = 112.0
+margin_top = 616.0
+margin_right = 304.0
+margin_bottom = 640.0
+text = "500 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="LayerInfo"]
+position = Vector2( -20.0947, 0 )
+points = PoolVector2Array( 116, 172, 116, 628 )
+width = 5.0
+default_color = Color( 0.694118, 0.694118, 0.694118, 1 )
+
+[node name="Depth" type="Node2D" parent="LayerInfo"]
+position = Vector2( 92, 172 )
+
+[node name="Arrow" type="Polygon2D" parent="LayerInfo/Depth"]
+position = Vector2( -72, -184 )
+polygon = PoolVector2Array( 72, 184, 60, 172, 60, 196, 72, 184 )
+
+[node name="Label" type="Label" parent="LayerInfo/Depth"]
+margin_left = -88.0
+margin_top = -12.0
+margin_right = -20.0
+margin_bottom = 12.0
+custom_colors/font_color = Color( 0, 1, 0, 1 )
+text = "10 m"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Help" type="Node2D" parent="."]
+position = Vector2( 420, 496 )
+
+[node name="Sprite" type="Sprite" parent="Help"]
+position = Vector2( 24, 12 )
+rotation = -2.44513
+texture = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="Help"]
+margin_left = 48.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 40.0
+text = "Click and hold the tile to mine!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
+[connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]

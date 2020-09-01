@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/GalaxyView.png-26b7f1d4d35e74333b887de5dbc63ddc.stex"
+path="res://.import/GalaxyView.png-a0e82d197b644487f6f2c0ff10388a86.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/GalaxyView.png"
-dest_files=[ "res://.import/GalaxyView.png-26b7f1d4d35e74333b887de5dbc63ddc.stex" ]
+source_file="res://Graphics/Buttons/GalaxyView.png"
+dest_files=[ "res://.import/GalaxyView.png-a0e82d197b644487f6f2c0ff10388a86.stex" ]
 
 [params]
 

@@ -29,7 +29,7 @@ func _ready():
 
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
-	game.show_tooltip(g_i["name"] + "\nSystems: " + String(g_i["system_num"]))
+	game.show_tooltip(tr("GALAXY_INFO") % [g_i.name, g_i.system_num])
 
 func on_galaxy_out ():
 	game.hide_tooltip()

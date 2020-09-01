@@ -29,7 +29,7 @@ func _ready():
 
 func on_supercluster_over (id:int):
 	var sc_i = game.supercluster_data[id]
-	game.show_tooltip(sc_i["name"] + "\nClusters: " + String(sc_i["cluster_num"]))
+	game.show_tooltip(tr("SUPERCLUSTER_INFO") % [sc_i.name, sc_i.cluster_num])
 
 func on_supercluster_out ():
 	game.hide_tooltip()

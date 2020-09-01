@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/rock_ressource.png-11a5e46797a2e6120a053b95647e4405.stex"
+path="res://.import/audio.png-ecc5bfb68d7cebb64bba761871444af8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/rock_ressource.png"
-dest_files=[ "res://.import/rock_ressource.png-11a5e46797a2e6120a053b95647e4405.stex" ]
+source_file="res://Graphics/Buttons/audio.png"
+dest_files=[ "res://.import/audio.png-ecc5bfb68d7cebb64bba761871444af8.stex" ]
 
 [params]
 
@@ -31,4 +31,4 @@ process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true
-svg/scale=1.0
+svg/scale=0.001

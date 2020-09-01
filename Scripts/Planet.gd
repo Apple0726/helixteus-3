@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var game = self.get_parent().get_parent()
+onready var game = get_node("/root/Game")
 
 var bldg_to_construct:String = ""
 var id
@@ -18,4 +18,5 @@ func _ready():
 		var tile = tile_scene.instance()
 		tile.id = i + start_ind
 		tile.position = Vector2((i % wid - wid / 2.0) * 200, floor(i / wid - wid / 2.0) * 200) + Vector2(100, 100)
-		self.add_child(tile)
+		add_child(tile)
+		game.tiles.append(tile)

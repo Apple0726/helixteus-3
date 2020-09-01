@@ -3,8 +3,14 @@ extends Node2D
 var id:int
 
 onready var game = get_node("/root/Game")
-onready var p_i = self.get_parent().p_i
+onready var planet = get_parent()
+onready var p_i = get_parent().p_i
+onready var view = planet.get_parent()
 onready var tile = game.tile_data[id]
+onready var building_info = $BuildingInformation
+onready var time_left = $TimeLeft
+onready var time_left_bar = $TimeLeft/Bar
+onready var time_left_str = $TimeLeft/TimeString
 
 #Mainly for construction_finished() function
 #var is_constructing:bool
@@ -24,20 +30,22 @@ func _ready():
 		$TimeLeft.visible = true
 	display_bldg(tile.bldg_str, 1)
 	display_icon()
+	if tile.depth > 0:
+		$Hole.visible = true
 
 func _process(_delta):
 	if tile.bldg_str != "":
-		$BuildingInformation.visible = true
+		building_info.visible = true
 		var constr_progress = (OS.get_system_time_msecs() - tile.construction_date) / float(tile.construction_length)
-		$TimeLeft/Bar.rect_scale.x = constr_progress
-		$TimeLeft/TimeString.text = game.time_to_str(tile.construction_length - OS.get_system_time_msecs() + tile.construction_date)
+		time_left_bar.rect_scale.x = constr_progress
+		time_left_str.text = game.time_to_str(tile.construction_length - OS.get_system_time_msecs() + tile.construction_date)
 		if constr_progress < 1:
-			$TimeLeft.visible = true
+			time_left.visible = true
 		else:
 			if tile.is_constructing:
 				tile.is_constructing = false
 				construction_finished()
-			$TimeLeft.visible = false
+			time_left.visible = false
 			match tile.bldg_str:
 				"ME", "PP":
 					#Number of seconds needed per mineral
@@ -47,8 +55,8 @@ func _process(_delta):
 					var c_d = tile.bldg_info["collect_date"]
 					var c_t = OS.get_system_time_msecs()
 					if stored < cap:
-						$BuildingInformation/CurrentBar.rect_scale.x = (c_t - c_d) / (prod * 1000)
-						$BuildingInformation/CapacityBar.rect_scale.x = stored / float(cap)
+						$BuildingInformation/CurrentBar.rect_scale.x = min((c_t - c_d) / (prod * 1000), 1)
+						$BuildingInformation/CapacityBar.rect_scale.x = min(stored / float(cap), 1)
 						if c_t - c_d > prod * 1000:
 							tile.bldg_info["stored"] += 1
 							tile.bldg_info["collect_date"] += prod * 1000
@@ -57,7 +65,7 @@ func _process(_delta):
 						$BuildingInformation/CapacityBar.rect_scale.x = 1
 					$BuildingInformation/ResourceStocked.text = String(stored)
 	else:
-		$BuildingInformation.visible = false
+		building_info.visible = false
 
 func construction_finished():
 	pass
@@ -65,21 +73,15 @@ func construction_finished():
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
 	if tile.bldg_str == "":
-		display_bldg(self.get_parent().bldg_to_construct, 0.5)
+		game.bldg_blueprints.append(id)
+		display_bldg(planet.bldg_to_construct, 0.5)
 
 func _on_Button_button_out():
 	if tile.bldg_str == "":
+		game.bldg_blueprints.erase(id)
 		$Building.texture = null
 
-func _input(_event):
-	if Input.is_action_just_released("right_click"):
-		_on_Button_button_out()
-
-
 func _on_Button_button_pressed():
-	var planet = self.get_parent()
-	var view = planet.get_parent()
-	
 	#Checks whether we're dragging or not. We don't want the click event to happen while the player is dragging
 	if not view.dragged:
 		#Checks if tile is empty
@@ -91,6 +93,8 @@ func _on_Button_button_pressed():
 					_on_Button_button_out()
 					display_bldg(tile.bldg_str, 1)
 					display_icon()
+					if not game.show.minerals and tile.bldg_str == "ME":
+						game.show.minerals = true
 					$TimeLeft.visible = true
 					game.money -= game.constr_cost["money"]
 					game.energy -= game.constr_cost["energy"]

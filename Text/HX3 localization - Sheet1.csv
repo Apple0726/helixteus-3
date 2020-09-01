@@ -1,0 +1,46 @@
+,en,fr,it
+NEW_GAME,New game,Nouvelle partie,Nuova partita
+MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica
+BACK,Back,Retour,Indietro
+SHOP,Shop,Boutique,Negozio
+INVENTORY,Inventory,Inventaire,Inventario
+CONSTRUCT,Construct,Construire,Costruire
+VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare
+MINE,Mine,Miner,Minare
+START_MINE,Click a tile to mine,Cliquer une tuile à miner,
+NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Tu n'as pas de pioche pour miner! Achètes-une dans la boutique.,Non hai un piccone per minare! Comprarlo nel negozio.
+NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone
+BUY_ONE,Buy one,Acheter,Comprarne uno
+LATER,Later,Plus tard,Più tardi
+STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire
+HOME_PLANET,Home planet,,
+PLANET,Planet,Planète,Pianeta
+VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema
+VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizzare l'ammasso contenendo questa galassia
+VIEW_SUPERCLUSTER,View the supercluster this cluster is in,Voir le superamas contenant cet amas,Vlisualizzare il superammasso contenendo questo ammasso
+VIEW_UNIVERSE,View the universe this supercluster is in,Voir l'univers contenant ce superamas,Visualizzare l'universo contenendo questo superammasso
+VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizzare gli universi scoperti in questa dimensione
+GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie)
+GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi)
+MINERAL_SOLD,You sold %s minerals for $%s!,Tu as vendu %s minéraux pour $%s!,Hai venduto %s per $%s!
+PLANET_INFO,%s\nDiameter: %s km\nDistance from star: %s AU\nSurface temperature: %s °C\nShift click to view more details,%s\nDiamètre: %s km\nDistance de l'étoile: %s au\nTempérature de surface: %s °C\nMaj + clic pour voir plus de détails,%s\nDiametro: %s km\nDistanza dalla stella: %s au\nTemperature superficiale: %s °C\nShift + clic per vedere più dettagli
+SYSTEM_INFO,%s\nPlanets: %s,,
+GALAXY_INFO,%s\nSystems: %s,,
+CLUSTER_INFO,%s\nGalaxies: %s,,
+SUPERCLUSTER_INFO,%s\nClusters: %s,,
+UNIVERSE_INFO,,,
+DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD)
+DR,DRs,RD,RD
+NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione
+INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc."
+MATERIALS,Materials,Matériaux,Materiali
+SPEED_UPS,Speed-ups,Speed-ups,Speed-up
+OVERCLOCKS,Overclocks,Overclocks,Overclock
+PICKAXES,Pickaxes,Pioches,Picconi
+SPEED_UP_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.
+OVERCLOCK_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.
+PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.
+STICK,Stick,Bâton,Bastone
+NOT_ENOUGH_MONEY,You don't have enough money.,Tu n'as pas assez d'argent.,Non hai abbastanza soldi.
+REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?
+BUY_PICKAXE,You bought a %s!,Tu as acheté un(e) %s!,Hai comprato un(a) %s!

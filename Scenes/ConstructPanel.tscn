@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=3]
 [ext_resource path="res://Graphics/Buildings/MineralExtractor.png" type="Texture" id=4]
@@ -8,16 +7,10 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Buildings/PowerPlant.png" type="Texture" id=8]
+[ext_resource path="res://default_theme.tres" type="Theme" id=9]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
 
-[sub_resource type="DynamicFont" id=1]
-size = 30
-use_filter = true
-font_data = ExtResource( 1 )
-
-[sub_resource type="Theme" id=2]
-default_font = SubResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.247059, 0.247059, 0.247059, 1 )
 border_width_left = 3
 border_width_top = 3
@@ -25,26 +18,26 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color( 0.137255, 0.137255, 0.137255, 1 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=8]
 size = 50
 outline_size = 3
 outline_color = Color( 0.160784, 0.160784, 0.160784, 1 )
 use_filter = true
-font_data = ExtResource( 1 )
+font_data = ExtResource( 10 )
 
-[sub_resource type="CanvasItemMaterial" id=5]
+[sub_resource type="CanvasItemMaterial" id=3]
 blend_mode = 1
 
-[sub_resource type="Gradient" id=6]
+[sub_resource type="Gradient" id=4]
 
-[sub_resource type="GradientTexture" id=7]
-gradient = SubResource( 6 )
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
 width = 100
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=6]
 size = 21
 use_filter = true
-font_data = ExtResource( 1 )
+font_data = ExtResource( 10 )
 
 [node name="ConstructPanel" type="Control"]
 margin_top = 20.0
@@ -52,7 +45,7 @@ margin_right = 1280.0
 margin_bottom = 740.0
 rect_pivot_offset = Vector2( 640, 360 )
 mouse_filter = 2
-theme = SubResource( 2 )
+theme = ExtResource( 9 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -63,7 +56,7 @@ __meta__ = {
 margin_top = -8.0
 margin_right = 1280.0
 margin_bottom = 712.0
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 7 )
 __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
@@ -72,7 +65,7 @@ __meta__ = {
 [node name="TitleText" type="Label" parent="."]
 margin_right = 1280.0
 margin_bottom = 95.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Construct"
 align = 1
@@ -165,7 +158,7 @@ __meta__ = {
 }
 
 [node name="ResourcesLight" type="TextureRect" parent="Lights"]
-material = SubResource( 5 )
+material = SubResource( 3 )
 margin_left = 53.7375
 margin_top = 141.831
 margin_right = 153.738
@@ -174,7 +167,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 5.1 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 5 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -182,7 +175,7 @@ __meta__ = {
 
 [node name="StorageLight" type="TextureRect" parent="Lights"]
 visible = false
-material = SubResource( 5 )
+material = SubResource( 3 )
 margin_left = 454.065
 margin_top = 141.831
 margin_right = 554.065
@@ -191,7 +184,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 4.405 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 5 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -199,7 +192,7 @@ __meta__ = {
 
 [node name="ProductionLight" type="TextureRect" parent="Lights"]
 visible = false
-material = SubResource( 5 )
+material = SubResource( 3 )
 margin_left = 262.204
 margin_top = 141.831
 margin_right = 362.204
@@ -208,7 +201,7 @@ rect_rotation = 90.0
 rect_scale = Vector2( 0.1, 5.168 )
 rect_pivot_offset = Vector2( 50, 20 )
 mouse_filter = 2
-texture = SubResource( 7 )
+texture = SubResource( 5 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -345,7 +338,7 @@ margin_left = 936.0
 margin_top = 443.945
 margin_right = 1257.0
 margin_bottom = 577.945
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 6 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false

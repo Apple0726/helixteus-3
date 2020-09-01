@@ -23,9 +23,8 @@ func _ready():
 		univ.connect("pressed", self, "on_univ_press", [id])
 		univ.connect("double_click", self, "on_univ_double_click", [id])
 		#univ.position = Vector2(150, 150 + v_offset)
-	$TopInfo/DRs.text = "Dimension remnants (DRs): " + String(game.DRs)
-	var s = "s" if new_dim_DRs != 1 else ""
-	$TopInfo/Reset.text = "New dimension (+ " + String(new_dim_DRs) + " DR" + s + ")"
+	$TopInfo/DRs.text = tr("DR_TITLE") + ": %s" % [game.DRs]
+	$TopInfo/Reset.text = String(tr("NEW_DIMENSION") + " (+ %s " + tr("DR")) % [new_dim_DRs]
 	if new_dim_DRs == 0:
 		$TopInfo/Reset.disabled = true
 	if game.DRs == 0:

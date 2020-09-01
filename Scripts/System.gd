@@ -67,7 +67,7 @@ func _ready():
 
 func on_planet_over (id:int):
 	var p_i = game.planet_data[id]
-	game.show_tooltip(p_i["name"] + "\nDiameter: " + String(round(p_i["size"])) + " km\nDistance from star: " + String(game.clever_round(p_i.distance / 569.25, 3)) + " AU\nSurface temperature: " + String(game.clever_round(p_i.temperature - 273)) + " °C\nShift click to view more details")
+	game.show_tooltip(tr("PLANET_INFO") % [p_i["name"], round(p_i["size"]), game.clever_round(p_i.distance / 569.25, 3), game.clever_round(p_i.temperature - 273)])
 
 func on_planet_click (id:int):
 	var view = self.get_parent()

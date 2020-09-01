@@ -11,16 +11,10 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 
-func _input(event):
-	if event is InputEventMouseButton:
-		#If panel is right clicked, remove panel
-		if mouse_in_panel and event.is_action_released("right_click"):
-			remove_panel()
-		
 func remove_panel():
 	#Only remove if the panel is actually there
-	if game.construct_panel != null:
-		game.remove_construct_panel()
+	if game.construct_panel.visible:
+		game.toggle_construct_panel()
 
 #Check whether mouse is in the panel for right clicking
 func _on_Background_mouse_entered():
@@ -104,7 +98,6 @@ func check_signal():
 		disconnect("construct_building_signal", self.get_parent(), "construct_building")
 
 func _on_PPButton_double_click():
-	if game.has_node("construct_panel"):
-		$ResourcesBuildings/PowerPlant/PPButton.reset_button()
-		remove_panel()
-		emit_signal("construct_building_signal")
+	$ResourcesBuildings/PowerPlant/PPButton.reset_button()
+	remove_panel()
+	emit_signal("construct_building_signal")
