@@ -16,4 +16,4 @@ rect_pivot_offset = Vector2( 128, 128 )
 texture = ExtResource( 2 )
 
 [node name="Label" parent="." index="1"]
-text = "Dimensional Power"
+text = "DIMENSIONAL_POWER"

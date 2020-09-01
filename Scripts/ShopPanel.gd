@@ -7,6 +7,7 @@ var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 
 func _ready():
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy.text = tr("BUY") + " (B)"
 	tween = Tween.new()
 	add_child(tween)
 
@@ -38,7 +39,7 @@ func _on_Pickaxes_pressed():
 			var pickaxe_info = game.pickaxe_info[pickaxe]
 			var pickaxe_item = item_for_sale_scene.instance()
 			pickaxe_item.item_name = pickaxe
-			pickaxe_item.item_desc = pickaxe_info.desc
+			pickaxe_item.item_desc = tr(pickaxe.to_upper() + "_DESC")
 			pickaxe_item.money_cost = pickaxe_info.money_cost
 			$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
 
@@ -69,7 +70,7 @@ func set_item_info(name:String, desc:String, money_cost:float):
 	item_name = name
 	if tab == "pickaxes":
 		var pickaxe_info = game.pickaxe_info[name]
-		desc += "\n\nMining speed: " + String(pickaxe_info.speed) + "\nDurability: " + String(pickaxe_info.durability)
+		desc += ("\n\n" + tr("MINING_SPEED") + ": %s\n" + tr("DURABILITY") + ": %s") % [pickaxe_info.speed, pickaxe_info.durability]
 	$Contents/HBoxContainer/ItemInfo/Description.text = desc
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 

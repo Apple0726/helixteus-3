@@ -1,9 +1,10 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://panel_theme.tres" type="Theme" id=2]
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/ShopPanel.gd" type="Script" id=3]
-[ext_resource path="res://default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -211,7 +212,6 @@ size_flags_horizontal = 3
 theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
-text = "Buy (B)"
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 margin_right = 202.0

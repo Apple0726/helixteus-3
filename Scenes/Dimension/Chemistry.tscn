@@ -15,4 +15,4 @@ rect_pivot_offset = Vector2( 550, 375 )
 texture = ExtResource( 2 )
 
 [node name="Label" parent="." index="1"]
-text = "Chemistry"
+text = "CHEMISTRY"

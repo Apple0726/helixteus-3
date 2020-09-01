@@ -5,33 +5,33 @@
 [ext_resource path="res://Graphics/Icons/Minerals.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
 [ext_resource path="res://Graphics/Buttons/audio.png" type="Texture" id=6]
-[ext_resource path="res://default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Buttons/Shop.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Buttons/Inventory.png" type="Texture" id=10]
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
 
-[sub_resource type="InputEventAction" id=4]
+[sub_resource type="InputEventAction" id=2]
 action = "mute"
+
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
+
+[sub_resource type="InputEventAction" id=4]
+action = "inventory"
 
 [sub_resource type="ShortCut" id=5]
 shortcut = SubResource( 4 )
 
 [sub_resource type="InputEventAction" id=6]
-action = "inventory"
+action = "shop"
 
 [sub_resource type="ShortCut" id=7]
 shortcut = SubResource( 6 )
-
-[sub_resource type="InputEventAction" id=8]
-action = "shop"
-
-[sub_resource type="ShortCut" id=9]
-shortcut = SubResource( 8 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -45,7 +45,7 @@ __meta__ = {
 [node name="ColorRect" type="Panel" parent="."]
 margin_right = 1280.0
 margin_bottom = 40.0
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -56,7 +56,7 @@ margin_right = 1789.0
 margin_bottom = 519.0
 rect_scale = Vector2( 0.09, 0.09 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 5 )
+shortcut = SubResource( 3 )
 icon = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -87,16 +87,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Texture" type="TextureRect" parent="Resources/Money"]
+[node name="Texture" type="TextureButton" parent="Resources/Money"]
 margin_left = 10.0
 margin_top = 3.0
 margin_right = 42.0
 margin_bottom = 35.0
 rect_scale = Vector2( 0.8, 0.8 )
-texture = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_normal = ExtResource( 2 )
 
 [node name="Minerals" type="Control" parent="Resources"]
 margin_left = 305.0
@@ -116,16 +113,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Texture" type="TextureRect" parent="Resources/Minerals"]
+[node name="Texture" type="TextureButton" parent="Resources/Minerals"]
 margin_left = 4.0
 margin_right = 260.0
 margin_bottom = 256.0
 rect_scale = Vector2( 0.12, 0.12 )
-texture = ExtResource( 4 )
+texture_normal = ExtResource( 4 )
 stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stone" type="Control" parent="Resources"]
 margin_left = 610.0
@@ -146,13 +140,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Texture" type="TextureRect" parent="Resources/Stone"]
+[node name="Texture" type="TextureButton" parent="Resources/Stone"]
 margin_left = -2.0
 margin_top = -4.0
 margin_right = 254.0
 margin_bottom = 252.0
 rect_scale = Vector2( 0.14, 0.14 )
-texture = ExtResource( 8 )
+texture_normal = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -175,15 +169,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Texture" type="TextureRect" parent="Resources/Energy"]
+[node name="Texture" type="TextureButton" parent="Resources/Energy"]
 margin_left = 4.0
 margin_right = 260.0
 margin_bottom = 256.0
 rect_scale = Vector2( 0.12, 0.12 )
-texture = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_normal = ExtResource( 3 )
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 margin_left = 1216.0
@@ -202,7 +193,7 @@ margin_top = 272.0
 margin_right = 64.0
 margin_bottom = 336.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 7 )
+shortcut = SubResource( 5 )
 texture_normal = ExtResource( 10 )
 
 [node name="Shop" type="TextureButton" parent="Buttons"]
@@ -210,12 +201,20 @@ margin_top = 336.0
 margin_right = 64.0
 margin_bottom = 400.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 9 )
+shortcut = SubResource( 7 )
 texture_normal = ExtResource( 9 )
 [connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="Button" to="." method="_on_Button_toggled"]
+[connection signal="mouse_entered" from="Resources/Money/Texture" to="." method="_on_Money_mouse_entered"]
+[connection signal="mouse_exited" from="Resources/Money/Texture" to="." method="_on_Money_mouse_exited"]
+[connection signal="mouse_entered" from="Resources/Minerals/Texture" to="." method="_on_Minerals_mouse_entered"]
+[connection signal="mouse_exited" from="Resources/Minerals/Texture" to="." method="_on_Minerals_mouse_exited"]
+[connection signal="mouse_entered" from="Resources/Stone/Texture" to="." method="_on_Stone_mouse_entered"]
+[connection signal="mouse_exited" from="Resources/Stone/Texture" to="." method="_on_Stone_mouse_exited"]
+[connection signal="mouse_entered" from="Resources/Energy/Texture" to="." method="_on_Energy_mouse_entered"]
+[connection signal="mouse_exited" from="Resources/Energy/Texture" to="." method="_on_Energy_mouse_exited"]
 [connection signal="mouse_entered" from="Buttons/Inventory" to="." method="_on_Inventory_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/Inventory" to="." method="_on_Inventory_mouse_exited"]
 [connection signal="pressed" from="Buttons/Inventory" to="." method="_on_Inventory_pressed"]

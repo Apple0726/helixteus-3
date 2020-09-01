@@ -24,12 +24,14 @@ func _ready():
 		univ.connect("double_click", self, "on_univ_double_click", [id])
 		#univ.position = Vector2(150, 150 + v_offset)
 	$TopInfo/DRs.text = tr("DR_TITLE") + ": %s" % [game.DRs]
-	$TopInfo/Reset.text = String(tr("NEW_DIMENSION") + " (+ %s " + tr("DR")) % [new_dim_DRs]
+	$TopInfo/Reset.text = String(tr("NEW_DIMENSION") + " (+ %s " + tr("DR") + ")") % [new_dim_DRs]
 	if new_dim_DRs == 0:
 		$TopInfo/Reset.disabled = true
 	if game.DRs == 0:
 		for node in $GridContainer.get_children():
 			node.get_node("Invest").disabled = true
+	$TopInfo/DimensionN.text = tr("DIMENSION") + " #1"
+	$DiscoveredUnivs/Label.text = tr("DISCOVERED_UNIVERSES")
 
 func set_tween():
 	tween.interpolate_property($GridContainer, "margin_left", 320, 800, DUR, TWEEN_TYPE, TWEEN_EASE)

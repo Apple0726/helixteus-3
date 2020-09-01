@@ -19,7 +19,9 @@ func _ready():
 		tile.mining_progress = 0.0
 	progress = tile.mining_progress
 	$Help.visible = game.help.mining
+	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
+	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr("SURFACE")
 	update_info()
 
 func update_info():

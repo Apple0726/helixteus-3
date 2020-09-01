@@ -16,10 +16,8 @@ func _on_Button_pressed():
 	else:
 		AudioServer.set_bus_mute(1,false)
 
-
 func _on_Button_mouse_entered():
 	game.show_tooltip(tr("MUTE") + " (M)")
-
 
 func _on_Button_mouse_exited():
 	game.hide_tooltip()
@@ -36,23 +34,42 @@ func _on_Shop_pressed():
 	click_sound.play()
 	game.toggle_shop_panel()
 
-
 func _on_Shop_mouse_entered():
 	game.show_tooltip(tr("SHOP") + " (R)")
 
-
 func _on_Shop_mouse_exited():
 	game.hide_tooltip()
-
 
 func _on_Inventory_pressed():
 	click_sound.play()
 	game.toggle_inventory()
 
-
 func _on_Inventory_mouse_entered():
 	game.show_tooltip(tr("INVENTORY") + " (E)")
 
-
 func _on_Inventory_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Money_mouse_entered():
+	game.show_tooltip(tr("MONEY"))
+
+func _on_Money_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Minerals_mouse_entered():
+	game.show_tooltip(tr("MINERALS"))
+
+func _on_Minerals_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Stone_mouse_entered():
+	game.show_tooltip(tr("STONE"))
+
+func _on_Stone_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Energy_mouse_entered():
+	game.show_tooltip(tr("ENERGY"))
+
+func _on_Energy_mouse_exited():
 	game.hide_tooltip()

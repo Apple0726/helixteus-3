@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Planets/Other/mask.png" type="BitMap" id=4]
@@ -67,7 +67,7 @@ text = "Planet"
 align = 1
 clear_button_enabled = true
 shortcut_keys_enabled = false
-placeholder_text = "Enter planet name"
+placeholder_text = "ENTER_PLANET_NAME"
 caret_blink = true
 __meta__ = {
 "_edit_use_anchors_": false

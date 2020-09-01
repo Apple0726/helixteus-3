@@ -44,17 +44,17 @@ func hide_mat():
 func get_mat_str(mat:String):
 	match mat:
 		"coal":
-			return "Coal"
+			return tr("COAL")
 		"glass":
-			return "Glass"
+			return tr("GLASS")
 		"sand":
-			return "Sand"
+			return tr("SAND")
 		"clay":
-			return "Clay"
+			return tr("CLAY")
 		"soil":
-			return "Soil"
+			return tr("SOIL")
 		"cellulose":
-			return "Cellulose"
+			return tr("CELLULOSE")
 
 func set_btn_color(btn):
 	for other_btn in $Tabs.get_children():

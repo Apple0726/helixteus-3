@@ -44,40 +44,41 @@ func _ready():
 	core_layer.get_node("Background").connect("mouse_entered", self, "on_core_enter")
 	core_layer.get_node("Background").connect("mouse_exited", self, "on_core_exit")
 	core_layer.get_node("Background").connect("pressed", self, "on_core_press")
+	$Back.text = "<- " + tr("BACK") + " (Z)"
 
 var crust_always_visible = false
 var mantle_always_visible = false
 var core_always_visible = false
 
 func on_crust_enter():
-	var tooltip = "Crust\nDepths: " + String(p_i.crust_start_depth + 1) + " m - " + String(p_i.mantle_start_depth) + " m"
+	var tooltip = (tr("CRUST") + "\n" + tr("DEPTHS") + ": %s m - %s m") % [p_i.crust_start_depth + 1, p_i.mantle_start_depth]
 	if crust_always_visible:
 		tooltip += "\nClick to hide crust composition\nwhen not hovered over"
 	else:
 		tooltip += "\nClick to show crust composition\neven when not hovered over"
 	game.show_tooltip(tooltip)
 	if not crust_always_visible:
-		make_pie_chart(obj_to_array(p_i.crust), "Crust composition")
+		make_pie_chart(obj_to_array(p_i.crust), tr("CRUST_COMPOSITION"))
 
 func on_mantle_enter():
-	var tooltip = "Mantle\nDepths: " + String(floor(p_i.mantle_start_depth / 1000.0)) + " km - " + String(floor(p_i.core_start_depth / 1000.0)) + " km"
+	var tooltip = (tr("MANTLE") + "\n" + tr("DEPTHS") + ": %s km - %s km") % [floor(p_i.mantle_start_depth / 1000.0), floor(p_i.core_start_depth / 1000.0)]
 	if mantle_always_visible:
 		tooltip += "\nClick to hide mantle composition\nwhen not hovered over"
 	else:
 		tooltip += "\nClick to show mantle composition\neven when not hovered over"
 	game.show_tooltip(tooltip)
 	if not mantle_always_visible:
-		make_pie_chart(obj_to_array(p_i.mantle), "Mantle composition")
+		make_pie_chart(obj_to_array(p_i.mantle), tr("MANTLE_COMPOSITION"))
 	
 func on_core_enter():
-	var tooltip = "Core\nDepths: " + String(floor(p_i.core_start_depth / 1000.0)) + " km - " + String(floor(p_i.size / 2.0)) + " km"
+	var tooltip = (tr("CORE") + "\n" + tr("DEPTHS") + ": %s km - %s km") % [floor(p_i.core_start_depth / 1000.0), floor(p_i.size / 2.0)]
 	if core_always_visible:
 		tooltip += "\nClick to hide core composition\nwhen not hovered over"
 	else:
 		tooltip += "\nClick to show core composition\neven when not hovered over"
 	game.show_tooltip(tooltip)
 	if not core_always_visible:
-		make_pie_chart(obj_to_array(p_i.core), "Core composition")
+		make_pie_chart(obj_to_array(p_i.core), tr("CORE_COMPOSITION"))
 
 func on_crust_press():
 	crust_always_visible = not crust_always_visible
@@ -114,8 +115,8 @@ func make_pie_chart(arr:Array, name:String):
 	pie.name = name
 	pie.get_node("Title").text = name
 	pie.objects = []
-	pie.other_str = "Trace elements"
-	pie.other_str_short = "Trace"
+	pie.other_str = tr("TRACE_ELEMENTS")
+	pie.other_str_short = tr("TRACE")
 	for obj in arr:
 		var directory = Directory.new();
 		var texture_exists = directory.file_exists("res://Graphics/Elements/" + obj.element + ".png")
@@ -157,17 +158,17 @@ func get_el_color(element:String):
 func on_crust_exit():
 	game.hide_tooltip()
 	if not crust_always_visible:
-		remove_pie_chart("Crust composition")
+		remove_pie_chart(tr("CRUST_COMPOSITION"))
 
 func on_mantle_exit():
 	game.hide_tooltip()
 	if not mantle_always_visible:
-		remove_pie_chart("Mantle composition")
+		remove_pie_chart(tr("MANTLE_COMPOSITION"))
 
 func on_core_exit():
 	game.hide_tooltip()
 	if not core_always_visible:
-		remove_pie_chart("Core composition")
+		remove_pie_chart(tr("CORE_COMPOSITION"))
 
 func _on_Back_pressed():
 	p_i.name = $Name.text
@@ -183,7 +184,7 @@ func _on_Name_focus_entered():
 	renaming = true
 
 func _on_Planet_mouse_entered():
-	game.show_tooltip("Surface\nDepths: 0 m - " + String(p_i.crust_start_depth) + " m\nMaterials:\n" + get_surface_string(p_i.surface))
+	game.show_tooltip((tr("SURFACE") + "\n" + tr("DEPTHS") + ": 0 m - %s m\n" + tr("MATERIALS") + ":\n%s") % [p_i.crust_start_depth + 1, get_surface_string(p_i.surface)])
 
 func get_surface_string(mats:Dictionary):
 	var string = ""

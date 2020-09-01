@@ -80,7 +80,12 @@ func on_planet_click (id:int):
 
 func on_star_over (id:int):
 	var star = stars_info[id]
-	game.show_tooltip("Class " + star["class"] + " " + star["type"] + " star\nTemperature: " + String(star["temperature"]) + " K\nRadius: " + String(star["size"]) + " solar radii\nMass: " + String(star["mass"]) + " solar masses\nLuminosity: " + String(star["luminosity"]) + " solar luminosity")
+	var tooltip = tr("STAR_TITLE").format({"type":tr(star.type.to_upper()).to_lower(), "class":star.class})
+	tooltip += "\n%s\n%s\n%s\n%s" % [	tr("STAR_TEMPERATURE") % [star.temperature], 
+										tr("STAR_SIZE") % [star.size],
+										tr("STAR_MASS") % [star.mass],
+										tr("STAR_LUMINOSITY") % [star.luminosity]]
+	game.show_tooltip(tooltip)
 
 func on_btn_out ():
 	game.hide_tooltip()

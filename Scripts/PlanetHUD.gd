@@ -15,7 +15,7 @@ func _on_Mine_pressed():
 	click_sound.play()
 	if game.pickaxe != null:
 		game.about_to_mine = true
-		game.put_bottom_info("Click a tile to mine")
+		game.put_bottom_info(tr("START_MINE"))
 	else:
 		game.long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
 

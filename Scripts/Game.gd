@@ -11,12 +11,12 @@ onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
 
-onready var construct_panel:Control = construct_panel_scene.instance()
-onready var shop_panel:Control = shop_panel_scene.instance()
-onready var inventory:Control = inventory_scene.instance()
+var construct_panel:Control
+var shop_panel:Control
+var inventory:Control
 onready var tooltip:Control = tooltip_scene.instance()
-onready var dimension:Control = dimension_scene.instance()
-onready var planet_details:Control
+var dimension:Control
+var planet_details:Control
 
 #var tooltip_scene
 #var planet_HUD_scene
@@ -81,7 +81,7 @@ var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered
 var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
 var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main-sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
 
@@ -96,7 +96,7 @@ var constr_cost = {"money":0, "energy":0, "time":0}
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
-var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "desc":"Use a stick to mine your very first rocks.", "money_cost":150}}
+var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "money_cost":150}}
 
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
@@ -111,31 +111,12 @@ var show = {	"minerals":false,
 				"mining_layer":false}
 
 func _ready():
-	HUD = HUD_scene.instance()
-	HUD.name = "HUD"
-
-	construct_panel.rect_scale = Vector2(0.8, 0.8)
-	shop_panel.rect_position = Vector2(106.5, 70)
-	construct_panel.visible = false
-	add_child(construct_panel)
-
-	shop_panel.rect_position = Vector2(106.5, 70)
-	shop_panel.visible = false
-	add_child(shop_panel)
-
-	inventory.rect_position = Vector2(106.5, 70)
-	inventory.visible = false
-	add_child(inventory)
-
-	dimension.visible = false
-	add_child(dimension)
-
-	tooltip.visible = false
-	add_child(tooltip)
-
 	view = view_scene.instance()
 	add_child(view)
-
+	
+	tooltip.visible = false
+	add_child(tooltip)
+	
 	$titlescreen.play()
 	#noob
 	#AudioServer.set_bus_mute(1,true)
@@ -190,6 +171,28 @@ func _load_game():
 	$AnimationPlayer.play("title song fade")
 	$ambient.play()
 	$AnimationPlayer.play("ambient fade in")
+	
+	dimension = dimension_scene.instance()
+	inventory = inventory_scene.instance()
+	shop_panel = shop_panel_scene.instance()
+	construct_panel = construct_panel_scene.instance()
+	HUD = HUD_scene.instance()
+
+	construct_panel.rect_scale = Vector2(0.8, 0.8)
+	shop_panel.rect_position = Vector2(106.5, 70)
+	construct_panel.visible = false
+	add_child(construct_panel)
+
+	shop_panel.rect_position = Vector2(106.5, 70)
+	shop_panel.visible = false
+	add_child(shop_panel)
+
+	inventory.rect_position = Vector2(106.5, 70)
+	inventory.visible = false
+	add_child(inventory)
+
+	dimension.visible = false
+	add_child(dimension)
 
 	remove_child($Title)
 
@@ -210,6 +213,11 @@ func _load_game():
 	planet_data[2].surface.soil.amount = 60
 	planet_data[2].surface.cellulose.chance = 0.4
 	planet_data[2].surface.cellulose.amount = 10
+	
+	system_data[0].name = tr("SOLAR_SYSTEM")
+	galaxy_data[0].name = tr("MILKY_WAY")
+	cluster_data[0].name = tr("LOCAL_GROUP")
+	supercluster_data[0].name = tr("LANIAKEA")
 	
 	generate_tiles(2)
 	
@@ -261,6 +269,7 @@ func toggle_shop_panel():
 		fade_in_panel(shop_panel)
 	else:
 		fade_out_panel(shop_panel)
+		panels.erase("shop")
 
 func toggle_inventory():
 	if not inventory.visible:
@@ -269,6 +278,7 @@ func toggle_inventory():
 		inventory.refresh_values()
 	else:
 		fade_out_panel(inventory)
+		panels.erase("inventory")
 
 func toggle_construct_panel():
 	if not Input.is_action_pressed("shift"):
@@ -277,6 +287,7 @@ func toggle_construct_panel():
 			fade_in_panel(construct_panel)
 		else:
 			fade_out_panel(construct_panel)
+			panels.erase("construct")
 
 func switch_view(new_view:String):
 	hide_tooltip()
@@ -485,7 +496,7 @@ func generate_superclusters(id:int):
 		sc_i["pos"] = pos
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
-		sc_i["name"] = "Supercluster " + String(sc_id)
+		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
 		sc_i["discovered"] = false
 		universe_data[id]["superclusters"].append(sc_id)
 		supercluster_data.append(sc_i)
@@ -506,17 +517,18 @@ func generate_clusters(id:int):
 		c_i["parent"] = id
 		c_i["galaxies"] = []
 		c_i["discovered"] = false
+		var c_id = cluster_data.size()
 		if c_i["class"] == "group":
 			c_i["galaxy_num"] = rand_int(10, 100)
+			c_i.name = tr("GALAXY_GROUP") + " %s" % c_id
 		else:
 			c_i["galaxy_num"] = rand_int(500, 5000)
+			c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
-		var c_id = cluster_data.size()
 		c_i["id"] = c_id
-		c_i["name"] = "Galaxy " + c_i["class"] + " " + String(c_id)
 		c_i["discovered"] = false
 		supercluster_data[id]["clusters"].append(c_id)
 		cluster_data.append(c_i)
@@ -585,7 +597,7 @@ func generate_galaxies(id:int):
 		g_i["pos"] = pos
 		var g_id = galaxy_data.size()
 		g_i["id"] = g_id
-		g_i["name"] = "Galaxy " + String(g_id)
+		g_i["name"] = tr("GALAXY") + " %s" % g_id
 		g_i["discovered"] = false
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
@@ -700,12 +712,12 @@ func generate_systems(id:int):
 			
 			var star_type = ""
 			if mass >= 0.08:
-				star_type = "main-sequence"
+				star_type = "main_sequence"
 			else:
-				star_type = "brown dwarf"
+				star_type = "brown_dwarf"
 			
 			if mass > 0.2 and mass < 1.3 and randf() < 0.02:
-				star_type = "white dwarf"
+				star_type = "white_dwarf"
 				temp = rand_range(4000,10000)
 				if randf() < 0.05:
 					temp = rand_range(10000, 60000)
@@ -754,7 +766,7 @@ func generate_systems(id:int):
 		var s_id = system_data.size()
 		s_i["id"] = s_id
 		s_i["stars"] = stars
-		s_i["name"] = "Star system " + String(s_id)
+		s_i["name"] = tr("STAR_SYSTEM") + " %s" % s_id
 		s_i["discovered"] = false
 		
 		var starting_system = c_g == 0 and system_num == total_sys_num and i == 0
@@ -1239,7 +1251,7 @@ func _input(event):
 			for id in bldg_blueprints:
 				tiles[id]._on_Button_button_out()
 		if len(panels) != 0:
-			match panels.pop_front():
+			match panels[0]:
 				"shop":
 					toggle_shop_panel()
 				"inventory":
@@ -1255,34 +1267,57 @@ func _input(event):
 		minerals = 0
 
 func _on_en_mouse_entered():
+	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("English")
 
 func _on_en_mouse_exited():
 	hide_tooltip()
 
 func _on_fr_mouse_entered():
+	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Français")
 
 func _on_fr_mouse_exited():
 	hide_tooltip()
 
 func _on_it_mouse_entered():
+	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Italiano")
 
 func _on_it_mouse_exited():
 	hide_tooltip()
 
+var unicode:bool = false
+
+func _on_ru_mouse_entered():
+	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/unicode_font.tres")
+	show_tooltip("Русский")
+
+func _on_ru_mouse_exited():
+	if not unicode:
+		tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
+	hide_tooltip()
+
 func _on_en_pressed():
+	unicode = false
 	TranslationServer.set_locale("en")
-	$Title/Button.visible = false
-	$Title/Button.visible = true
+	change_language()
 
 func _on_fr_pressed():
+	unicode = false
 	TranslationServer.set_locale("fr")
-	$Title/Button.visible = false
-	$Title/Button.visible = true
+	change_language()
 
 func _on_it_pressed():
+	unicode = false
 	TranslationServer.set_locale("it")
+	change_language()
+
+func _on_ru_pressed():
+	unicode = true
+	TranslationServer.set_locale("ru")
+	change_language()
+
+func change_language():
 	$Title/Button.visible = false
 	$Title/Button.visible = true

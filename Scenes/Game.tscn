@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -6,12 +6,13 @@
 [ext_resource path="res://Audio/title1.ogg" type="AudioStream" id=4]
 [ext_resource path="res://Audio/ambient1.ogg" type="AudioStream" id=5]
 [ext_resource path="res://Scripts/ambient.gd" type="Script" id=6]
-[ext_resource path="res://default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Audio/click.ogg" type="AudioStream" id=8]
 [ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Buttons/it.png" type="Texture" id=10]
 [ext_resource path="res://Scripts/Title.gd" type="Script" id=11]
 [ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -25,7 +26,7 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 length = 5.0
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("ambient:volume_db")
@@ -38,7 +39,7 @@ tracks/0/keys = {
 "times": PoolRealArray( -0.1, 5 )
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 length = 4.0
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("titlescreen:volume_db")
@@ -51,7 +52,7 @@ tracks/0/keys = {
 "times": PoolRealArray( -0.1, 2.5, 4 )
 }
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -136,8 +137,8 @@ volume_db = 14.116
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_default_blend_time = 4096.0
-"anims/ambient fade in" = SubResource( 4 )
-"anims/title song fade" = SubResource( 5 )
+"anims/ambient fade in" = SubResource( 3 )
+"anims/title song fade" = SubResource( 4 )
 
 [node name="FPS" type="Label" parent="."]
 margin_right = 74.0
@@ -178,7 +179,7 @@ margin_left = -320.0
 margin_top = 330.0
 margin_right = 320.0
 margin_bottom = 356.0
-custom_styles/normal = SubResource( 3 )
+custom_styles/normal = SubResource( 5 )
 text = "dsf"
 align = 1
 valign = 1
@@ -189,7 +190,7 @@ __meta__ = {
 [node name="Languages" type="HBoxContainer" parent="."]
 margin_left = 8.0
 margin_top = 688.0
-margin_right = 264.0
+margin_right = 328.0
 margin_bottom = 720.0
 custom_constants/separation = 20
 __meta__ = {
@@ -221,6 +222,15 @@ rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 4
+
+[node name="ru" type="TextureButton" parent="Languages"]
+margin_left = 240.0
+margin_right = 300.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 13 )
+expand = true
+stretch_mode = 4
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="pressed" from="Title/Button" to="Title" method="_on_start_press"]
 [connection signal="mouse_entered" from="Languages/en" to="." method="_on_en_mouse_entered"]
@@ -232,3 +242,6 @@ stretch_mode = 4
 [connection signal="mouse_entered" from="Languages/it" to="." method="_on_it_mouse_entered"]
 [connection signal="mouse_exited" from="Languages/it" to="." method="_on_it_mouse_exited"]
 [connection signal="pressed" from="Languages/it" to="." method="_on_it_pressed"]
+[connection signal="mouse_entered" from="Languages/ru" to="." method="_on_ru_mouse_entered"]
+[connection signal="mouse_exited" from="Languages/ru" to="." method="_on_ru_mouse_exited"]
+[connection signal="pressed" from="Languages/ru" to="." method="_on_ru_pressed"]

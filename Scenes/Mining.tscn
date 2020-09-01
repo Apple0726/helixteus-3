@@ -3,9 +3,10 @@
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Mining.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Materials/coal.png" type="Texture" id=3]
-[ext_resource path="res://default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Graphics/Pickaxes/stick.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=6]
+
 
 [sub_resource type="Animation" id=1]
 resource_name = "Help fade"
@@ -518,8 +519,6 @@ __meta__ = {
 }
 
 [node name="LayerInfo" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-position = Vector2( -64.1282, 0 )
 
 [node name="Layer" type="Label" parent="LayerInfo"]
 margin_top = 116.0

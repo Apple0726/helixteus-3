@@ -12,7 +12,7 @@ func _input(event):
 
 func on_univ_over():
 	is_over = true
-	game.show_tooltip("Click to view universe details\nDouble click to enter this universe")
+	game.show_tooltip(tr("UNIVERSE_INFO"))
 
 func on_univ_out():
 	is_over = false

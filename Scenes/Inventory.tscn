@@ -1,9 +1,10 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://panel_theme.tres" type="Theme" id=2]
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/Inventory.gd" type="Script" id=3]
-[ext_resource path="res://default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
