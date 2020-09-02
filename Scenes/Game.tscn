@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Scripts/Title.gd" type="Script" id=11]
 [ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFont" id=14]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -62,6 +63,18 @@ expand_margin_left = 15.0
 expand_margin_right = 15.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -153,7 +166,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.2: "
+text = "Alpha v0.2: 2 Sep 2020"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -231,6 +244,17 @@ rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 4
+
+[node name="Tooltip" type="Label" parent="."]
+visible = false
+margin_right = 61.083
+margin_bottom = 26.0
+custom_styles/normal = SubResource( 6 )
+custom_fonts/font = ExtResource( 14 )
+text = "Tooltip"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="pressed" from="Title/Button" to="Title" method="_on_start_press"]
 [connection signal="mouse_entered" from="Languages/en" to="." method="_on_en_mouse_entered"]

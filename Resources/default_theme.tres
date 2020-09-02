@@ -1,7 +1,9 @@
-[gd_resource type="Theme" load_steps=31 format=2]
+[gd_resource type="Theme" load_steps=36 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Graphics/Buttons/CheckboxChecked.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Buttons/CheckboxUnchecked.png" type="Texture" id=4]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -14,6 +16,12 @@ bg_color = Color( 1, 1, 1, 0.156863 )
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 1, 1, 0.235294 )
+
+[sub_resource type="StyleBoxEmpty" id=29]
+
+[sub_resource type="StyleBoxEmpty" id=30]
+
+[sub_resource type="StyleBoxEmpty" id=31]
 
 [sub_resource type="StyleBoxFlat" id=6]
 content_margin_left = 8.0
@@ -206,18 +214,18 @@ CheckBox/colors/font_color_hover = Color( 1, 1, 1, 1 )
 CheckBox/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
 CheckBox/colors/font_color_pressed = Color( 1, 1, 1, 1 )
 CheckBox/constants/check_vadjust = 0
-CheckBox/constants/hseparation = 4
+CheckBox/constants/hseparation = 15
 CheckBox/fonts/font = null
-CheckBox/icons/checked = null
+CheckBox/icons/checked = ExtResource( 3 )
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_unchecked = null
-CheckBox/icons/unchecked = null
+CheckBox/icons/unchecked = ExtResource( 4 )
 CheckBox/styles/disabled = null
 CheckBox/styles/focus = null
-CheckBox/styles/hover = null
+CheckBox/styles/hover = SubResource( 29 )
 CheckBox/styles/hover_pressed = null
-CheckBox/styles/normal = null
-CheckBox/styles/pressed = null
+CheckBox/styles/normal = SubResource( 30 )
+CheckBox/styles/pressed = SubResource( 31 )
 CheckButton/colors/font_color = Color( 1, 1, 1, 1 )
 CheckButton/colors/font_color_disabled = Color( 0.32549, 0.32549, 0.32549, 1 )
 CheckButton/colors/font_color_hover = Color( 1, 1, 1, 1 )

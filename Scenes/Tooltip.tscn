@@ -27,11 +27,7 @@ margin_bottom = 14.0
 custom_styles/normal = SubResource( 1 )
 custom_fonts/font = ExtResource( 1 )
 text = "Tooltip"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.01
-one_shot = true
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

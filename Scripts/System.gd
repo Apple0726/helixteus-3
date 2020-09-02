@@ -1,24 +1,26 @@
 extends Node2D
 
-onready var game = self.get_parent().get_parent()
+onready var game = get_node("/root/Game")
 onready var stars_info = game.system_data[game.c_s]["stars"]
 onready var star_graphic = preload("res://Graphics/Stars/Star.png")
 onready var planets_id = game.system_data[game.c_s]["planets"]
+onready var view = get_parent()
 
 var stars
 
 const PLANET_SCALE_DIV = 6400000.0
 const STAR_SCALE_DIV = 300.0/2.63
+var glows = []
 
 func _ready():
-	var combined_star_size = 0
+	#var combined_star_size = 0
 	for i in range(0, stars_info.size()):
 		var star_info = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = star_graphic
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(300, 300)
-		combined_star_size += star_info["size"]
+		#combined_star_size += star_info["size"]
 		star.rect_scale.x = max(0.02, star_info["size"] / STAR_SCALE_DIV)
 		star.rect_scale.y = max(0.02, star_info["size"] / STAR_SCALE_DIV)
 		star.rect_position = star_info["pos"] - Vector2(300, 300)
@@ -64,13 +66,13 @@ func _ready():
 				planet_glow.modulate = Color(1, 0, 0, 1)
 		planet.position.x = cos(p_i["angle"]) * p_i["distance"]
 		planet.position.y = sin(p_i["angle"]) * p_i["distance"]
+		glows.append(planet_glow)
 
 func on_planet_over (id:int):
 	var p_i = game.planet_data[id]
 	game.show_tooltip(tr("PLANET_INFO") % [p_i["name"], round(p_i["size"]), game.clever_round(p_i.distance / 569.25, 3), game.clever_round(p_i.temperature - 273)])
 
 func on_planet_click (id:int):
-	var view = self.get_parent()
 	if not view.dragged:
 		game.c_p = id
 		if Input.is_action_pressed("shift"):
@@ -89,3 +91,11 @@ func on_star_over (id:int):
 
 func on_btn_out ():
 	game.hide_tooltip()
+
+func _process(_delta):
+	for glow in glows:
+		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.rect_scale.x) - 0.1, 0, 1)
+		if glow.modulate.a == 0:
+			glow.visible = false
+		else:
+			glow.visible = true

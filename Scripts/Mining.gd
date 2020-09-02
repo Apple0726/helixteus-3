@@ -2,7 +2,6 @@ extends Control
 
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
-onready var pickaxe = game.pickaxe
 onready var id:int = game.c_t
 onready var tile = game.tile_data[id]
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
@@ -36,6 +35,9 @@ func update_info():
 	$Tile/Bar3.value = (progress - 37.5) * 4
 	$Tile/Bar4.value = (progress - 62.5) * 4
 	$Tile/Bar5.value = (progress - 87.5) * 8
+	$Tile/Cracks.frame = min(floor(progress / 20), 4)
+	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxe_info[game.pickaxe.name].durability]	
+	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxe_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):
 	contents = []
@@ -106,12 +108,15 @@ func hide_help():
 
 var help_counter = 0
 func pickaxe_hit():
+	if not game.pickaxe:
+		return
 	if $Help.visible:
 		help_counter += 1
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += pickaxe.speed / total_mass * 3000
+	progress += game.pickaxe.speed / total_mass * 3000
+	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	if progress >= 100:
 		for content in contents:
@@ -130,6 +135,17 @@ func pickaxe_hit():
 		place_crumbles(15, 0.2, 2)
 		generate_rock(true)
 	update_info()
+	if game.pickaxe.durability == 0:
+		var curr_pick_info = game.pickaxe_info[game.pickaxe.name]
+		var pick_cost = curr_pick_info.money_cost
+		if $AutoReplace.pressed and game.money >= pick_cost:
+				game.money -= pick_cost
+				game.pickaxe.durability = curr_pick_info.durability
+				update_info()
+		else:
+			game.pickaxe = null
+			game.popup(tr("PICKAXE_BROKE"), 1.5)
+			$Pickaxe.visible = false
 
 func _process(_delta):
 	for cr in crumbles:
@@ -144,6 +160,11 @@ func _on_Button_button_down():
 	$PickaxeAnim.get_animation("Pickaxe swing").loop = true
 	$PickaxeAnim.play("Pickaxe swing")
 
-
 func _on_Button_button_up():
 	$PickaxeAnim.get_animation("Pickaxe swing").loop = false
+
+func _on_CheckBox_mouse_entered():
+	game.show_tooltip("AUTO_REPLACE_DESC")
+
+func _on_CheckBox_mouse_exited():
+	game.hide_tooltip()

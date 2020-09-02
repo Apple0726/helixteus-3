@@ -12,9 +12,6 @@ func show_text(txt_a:Array):
 		$Text.text += txt_a[i] + ("\n" if i != txt_a.size() - 1 else "")
 		height += font.get_string_size(txt_a[i]).y + 3
 		max_width = max(font.get_string_size(txt_a[i]).x, max_width)
-	
-	$Timer.start()
-
-func _on_Timer_timeout():
+	yield(get_tree().create_timer(0.01), "timeout")
 	$Text.rect_size.x = max_width
 	$Text.rect_size.y = height

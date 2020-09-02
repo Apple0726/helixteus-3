@@ -64,7 +64,6 @@ var item_money_cost = 0.0
 var item_name = ""
 
 func set_item_info(name:String, desc:String, money_cost:float):
-	var desc2 = desc
 	$Contents/HBoxContainer/ItemInfo/Name.text = get_item_name(name)
 	item_money_cost = money_cost
 	item_name = name
@@ -87,7 +86,7 @@ func _on_Buy_pressed():
 			else:
 				buy_pickaxe()
 	else:
-		game.popup(tr("NOT_ENOUGH_MONEY"))
+		game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 
 func YNPanel(text:String):
 	#var YN = ConfirmationDialog.new()
@@ -102,6 +101,8 @@ func buy_pickaxe_confirm():
 	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe")
 
 func buy_pickaxe():
+	if game.c_v == "mining":
+		game.mining_HUD.get_node("Pickaxe").visible = true
 	game.money -= item_money_cost
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}
 	game.popup(tr("BUY_PICKAXE") % [get_item_name(item_name).to_lower()], 1.0)

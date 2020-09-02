@@ -40,7 +40,7 @@ func on_cluster_click (id:int):
 		game.switch_view("cluster")
 
 var change_alpha = 0.05
-func _process(delta):
+func _process(_delta):
 	if modulate.a < 1:
 		modulate.a += change_alpha
 	if modulate.a <= 0:

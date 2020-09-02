@@ -29,7 +29,7 @@ func _on_Materials_pressed():
 		texture.expand = true
 		texture.connect("mouse_entered", self, "show_mat", [mat])
 		texture.connect("mouse_exited", self, "hide_mat")
-		texture.rect_min_size = Vector2(36, 36)
+		texture.rect_min_size = Vector2(48, 48)
 		label.text = String(game.mats[mat]) + " kg"
 		$Contents/Control/GridContainer.add_child(hbox)
 		hbox.add_child(texture)

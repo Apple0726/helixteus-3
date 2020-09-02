@@ -6,7 +6,6 @@ onready var shop_panel_scene = preload("res://Scenes/ShopPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Inventory.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
-onready var tooltip_scene = preload("res://Scenes/Tooltip.tscn")
 onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
@@ -14,20 +13,9 @@ onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
 var construct_panel:Control
 var shop_panel:Control
 var inventory:Control
-onready var tooltip:Control = tooltip_scene.instance()
 var dimension:Control
 var planet_details:Control
-
-#var tooltip_scene
-#var planet_HUD_scene
-#var mining_HUD_scene
-#var planet_details_scene
-#var construct_panel
-#var shop_panel
-#var inventory
-#var tooltip
-#var dimension
-#var planet_details
+onready var tooltip:Control = $Tooltip
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -35,7 +23,7 @@ const CLUSTER_SCALE_DIV = 1600.0
 const SC_SCALE_DIV = 400.0
 
 #Current view
-var c_v = "planet"
+var c_v = ""
 
 #id of the universe/supercluster/etc. you're viewing the object in
 var c_u = 0
@@ -68,7 +56,7 @@ var energy = 200
 #Dimension remnants
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
-var pickaxe = {"name":"stick", "speed":1.0, "durability":14}
+var pickaxe = {"name":"stick", "speed":1.0, "durability":70}
 var mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -96,7 +84,7 @@ var constr_cost = {"money":0, "energy":0, "time":0}
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
-var pickaxe_info = {"stick":{"speed":1.0, "durability":14, "money_cost":150}}
+var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "money_cost":150}}
 
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
@@ -113,9 +101,6 @@ var show = {	"minerals":false,
 func _ready():
 	view = view_scene.instance()
 	add_child(view)
-	
-	tooltip.visible = false
-	add_child(tooltip)
 	
 	$titlescreen.play()
 	#noob
@@ -164,6 +149,7 @@ func put_bottom_info(txt:String):
 	move_child($Control, get_child_count())
 
 func _load_game():
+	c_v = "planet"
 	$Languages.visible = false
 	#Loads planet scene
 	$click.play()
@@ -1039,15 +1025,24 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	return mat_info
 
 func show_tooltip(txt:String):
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-	var txt2 = txt.split("\n")
+	#Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	tooltip.visible = true
+	tooltip.modulate.a = 0
 	move_child(tooltip, get_child_count())
-	tooltip.show_text(txt2)
+	tooltip.text = txt#Yes, we need all 3 yields otherwise tooltip has weird rekt_sizes
+	yield(get_tree().create_timer(0), "timeout")
+	tooltip.rect_size = Vector2.ZERO
+	if tooltip.rect_size.x > 400:
+		tooltip.autowrap = true
+		yield(get_tree().create_timer(0), "timeout")
+		tooltip.rect_size.x = 400
+	yield(get_tree().create_timer(0), "timeout")
+	tooltip.modulate.a = 1
 
 func hide_tooltip():
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	tooltip.visible = false
+	tooltip.autowrap = false
 
 var change_view_btn
 
@@ -1214,19 +1209,31 @@ func pow10(n, e):
 func log10(n):
 	return log(n) / log(10)
 
+var quadrant_top_left:PoolVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector2(640, 360), Vector2(0, 360)]
+var quadrant_top_right:PoolVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]
+var quadrant_bottom_left:PoolVector2Array = [Vector2(0, 360), Vector2(640, 360), Vector2(640, 720), Vector2(0, 720)]
+var quadrant_bottom_right:PoolVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
+onready var fps_text = $FPS
+
 func _process(delta):
 	if delta != 0:
-		$FPS.text = String(round(1 / delta)) + " FPS"
-	tooltip.rect_position = mouse_pos + Vector2(4, 4)
-	if tooltip.rect_position.x + tooltip.max_width > 1280 - 5:
-		tooltip.rect_position.x = 1280 - tooltip.max_width - 5
-	if tooltip.rect_position.y + tooltip.height > 720 - 4:
-		tooltip.rect_position.y = 720 - tooltip.height - 4
+		fps_text.text = String(round(1 / delta)) + " FPS"
+	if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
+		tooltip.rect_position = mouse_pos + Vector2(4, 4)
+	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
+		tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 4, -4)
+	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+		tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
+	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
+		tooltip.rect_position = mouse_pos - tooltip.rect_size
+#	if tooltip.rect_position.x + tooltip.rect_size.x > 1280 - 5:
+#		tooltip.rect_position.x = 1280 - tooltip.rect_size.x - 5
+#	if tooltip.rect_position.y + tooltip.rect_size.y > 720 - 4:
+#		tooltip.rect_position.y = 720 - tooltip.rect_size.y - 4
 
 var mouse_pos = Vector2.ZERO
 
 func _input(event):
-	OS.get_locale()
 	if event is InputEventMouse:
 		mouse_pos = event.position
 
@@ -1267,21 +1274,21 @@ func _input(event):
 		minerals = 0
 
 func _on_en_mouse_entered():
-	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
+	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("English")
 
 func _on_en_mouse_exited():
 	hide_tooltip()
 
 func _on_fr_mouse_entered():
-	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
+	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Français")
 
 func _on_fr_mouse_exited():
 	hide_tooltip()
 
 func _on_it_mouse_entered():
-	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
+	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Italiano")
 
 func _on_it_mouse_exited():
@@ -1290,12 +1297,12 @@ func _on_it_mouse_exited():
 var unicode:bool = false
 
 func _on_ru_mouse_entered():
-	tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/unicode_font.tres")
+	tooltip["custom_fonts/font"] = load("Resources/unicode_font.tres")
 	show_tooltip("Русский")
 
 func _on_ru_mouse_exited():
 	if not unicode:
-		tooltip.get_node("Text")["custom_fonts/font"] = load("Resources/default_font.tres")
+		tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	hide_tooltip()
 
 func _on_en_pressed():
