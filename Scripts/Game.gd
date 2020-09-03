@@ -6,15 +6,19 @@ onready var shop_panel_scene = preload("res://Scenes/ShopPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Inventory.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
+onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
 onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
+onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
+onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
 var inventory:Control
 var dimension:Control
 var planet_details:Control
+var overlay:Control
 onready var tooltip:Control = $Tooltip
 
 const SYSTEM_SCALE_DIV = 100.0
@@ -38,6 +42,8 @@ var c_t = 0#For mining only
 var HUD
 #planet_HUD shows the buttons and other things that only shows while viewing a planet surface (e.g. construct)
 var planet_HUD
+#space_HUD shows things while viewing a system/galaxy/etc.
+var space_HUD
 
 #Stores individual tile nodes
 var tiles = []
@@ -64,6 +70,19 @@ var mats = {	"coal":0,
 				"soil":0,
 				"cellulose":0}
 
+var mets = {	"lead":0,
+				"copper":0,
+				"iron":0,
+				"aluminium":0,
+				"silver":0,
+				"gold":0,
+				"amethyst":0,
+				"emerald":0,
+				"quartz":0,
+				"topaz":0,
+				"ruby":0,
+				"sapphire":0}
+
 #Stores information of all objects discovered
 var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
@@ -80,11 +99,24 @@ var mining_HUD
 #Stores information on the building(s) about to be constructed
 var constr_cost = {"money":0, "energy":0, "time":0}
 
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":3, "rarity":1, "density":11.34},
+					"copper":{"min_depth":250, "max_depth":750, "amount":3, "rarity":1.3, "density":8.96},
+					"iron":{"min_depth":500, "max_depth":1000, "amount":3, "rarity":1.7, "density":7.87},
+					"aluminium":{"min_depth":750, "max_depth":1500, "amount":3, "rarity":2.3, "density":2.7},
+					"silver":{"min_depth":1000, "max_depth":1750, "amount":3, "rarity":2.9, "density":10.49},
+					"gold":{"min_depth":1250, "max_depth":2000, "amount":3, "rarity":4.5, "density":19.3}}
+
 #Stores all building information
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
 				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
 
-var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "money_cost":150}}
+var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
+					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300, "cellulose":30}},
+					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":10000, "stone":100}},
+					"lead_pickaxe":{"speed":2.5, "durability":700, "costs":{"money":85000, "lead":60}},
+					"copper_pickaxe":{"speed":3.3, "durability":1100, "costs":{"money":600000, "copper":60}},
+					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000, "iron":60}},
+					}
 
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
@@ -96,12 +128,22 @@ var help = {"mining":true}
 #Measures to not overwhelm beginners
 var show = {	"minerals":false,
 				"stone":false,
-				"mining_layer":false}
+				"mining_layer":false,
+				"glass":false,
+				"clay":false,
+				"aluminium":false,
+				"silver":false,
+				"gold":false,
+				"amethyst":false,
+				"emerald":false,
+				"quartz":false,
+				"topaz":false,
+				"ruby":false,
+				"sapphire":false}
 
 func _ready():
 	view = view_scene.instance()
 	add_child(view)
-	
 	$titlescreen.play()
 	#noob
 	#AudioServer.set_bus_mute(1,true)
@@ -190,7 +232,7 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
-	planet_data[2].crust_start_depth = rand_int(140, 160)
+	planet_data[2].crust_start_depth = rand_int(14, 16)
 	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
 	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
@@ -298,6 +340,7 @@ func switch_view(new_view:String):
 			remove_dimension()
 		"mining":
 			remove_mining()
+	c_v = new_view
 	match new_view:
 		"planet":
 			add_planet()
@@ -319,7 +362,6 @@ func switch_view(new_view:String):
 			add_dimension()
 		"mining":
 			add_mining()
-	c_v = new_view
 
 func add_mining():
 	mining_HUD = mining_HUD_scene.instance()
@@ -339,17 +381,46 @@ func add_loading():
 func add_obj(view_str):
 	match view_str:
 		"planet":
+			remove_space_HUD()
 			view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 		"system":
+			remove_space_HUD()
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 		"galaxy":
+			add_space_HUD()
+			put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
+			add_overlay()
 		"cluster":
+			remove_space_HUD()
+			put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 		"supercluster":
+			remove_space_HUD()
 			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
 		"universe":
+			remove_space_HUD()
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
+
+func add_space_HUD():
+	if not space_HUD or not is_a_parent_of(space_HUD):
+		space_HUD = space_HUD_scene.instance()
+		add_child(space_HUD)
+
+func add_overlay():
+	overlay = overlay_scene.instance()
+	overlay.visible = false
+	overlay.rect_position = Vector2(640, 720)
+	add_child(overlay)
+
+func remove_overlay():
+	remove_child(overlay)
+	overlay = null
+
+func remove_space_HUD():
+	if space_HUD and is_a_parent_of(space_HUD):
+		remove_child(space_HUD)
+	space_HUD = null
 
 func add_dimension():
 	remove_child(HUD)
@@ -375,7 +446,6 @@ func add_cluster():
 		reset_collisions()
 		generate_galaxy_part()
 	else:
-		put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 		add_obj("cluster")
 
 func add_galaxy():
@@ -400,7 +470,6 @@ func add_planet():
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
-	planet_HUD.name = "planet_HUD"
 	about_to_mine = false
 
 func remove_dimension():
@@ -422,6 +491,7 @@ func remove_cluster():
 	view.remove_obj("cluster")
 
 func remove_galaxy():
+	remove_overlay()
 	remove_child(change_view_btn)
 	view.remove_obj("galaxy")
 
@@ -531,7 +601,6 @@ func generate_galaxy_part():
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
 	add_obj("cluster")
 	remove_child($Loading)
-	put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 
 func generate_galaxies(id:int):
 	randomize()
@@ -611,7 +680,6 @@ func generate_system_part():
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
 	add_obj("galaxy")
 	remove_child($Loading)
-	put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 
 func generate_systems(id:int):
 	randomize()
@@ -744,7 +812,7 @@ func generate_systems(id:int):
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
-		var planet_num = max(round(pow(combined_star_size, 0.3) * rand_int(2, 9)), 2)
+		var planet_num = max(round(pow(combined_star_size, 0.25) * rand_int(5, 12)), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
 		s_i["planet_num"] = planet_num
@@ -1226,10 +1294,6 @@ func _process(delta):
 		tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
 	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
 		tooltip.rect_position = mouse_pos - tooltip.rect_size
-#	if tooltip.rect_position.x + tooltip.rect_size.x > 1280 - 5:
-#		tooltip.rect_position.x = 1280 - tooltip.rect_size.x - 5
-#	if tooltip.rect_position.y + tooltip.rect_size.y > 720 - 4:
-#		tooltip.rect_position.y = 720 - tooltip.rect_size.y - 4
 
 var mouse_pos = Vector2.ZERO
 
@@ -1266,6 +1330,11 @@ func _input(event):
 				"construct":
 					toggle_construct_panel()
 			hide_tooltip()
+	
+	if Input.is_action_just_released("toggle"):
+		if c_v == "galaxy":
+			view.obj.toggle_overlay()
+			overlay.get_node("Panel/CheckBox").pressed = not overlay.get_node("Panel/CheckBox").pressed
 	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:

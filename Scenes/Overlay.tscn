@@ -1,0 +1,109 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.202206, 0.404412, 1 )
+colors = PoolColorArray( 0, 0.765625, 1, 1, 0, 1, 0, 1, 0.968627, 1, 0, 1, 1, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+width = 500
+
+[node name="Overlay" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -384.0
+margin_top = -112.0
+margin_right = 384.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="Panel"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -352.0
+margin_top = 16.0
+margin_right = -145.0
+margin_bottom = 48.0
+text = "Number of planets"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+margin_left = 96.0
+margin_top = 56.0
+margin_right = 672.0
+margin_bottom = 72.0
+texture = SubResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Panel"]
+margin_left = 72.0
+margin_top = 80.0
+margin_right = 120.0
+margin_bottom = 104.0
+text = "2"
+align = 1
+
+[node name="Label2" type="Label" parent="Panel"]
+margin_left = 648.0
+margin_top = 80.0
+margin_right = 696.0
+margin_bottom = 104.0
+text = "30+"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="Panel"]
+margin_left = 528.0
+margin_top = 24.0
+margin_right = 708.0
+margin_bottom = 40.0
+focus_mode = 0
+min_value = 0.1
+max_value = 2.0
+step = 0.1
+value = 1.0
+scrollable = false
+tick_count = 20
+ticks_on_borders = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="Panel"]
+margin_left = 320.0
+margin_top = 16.0
+margin_right = 512.0
+margin_bottom = 44.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="item_selected" from="Panel/OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="mouse_entered" from="Panel/HSlider" to="." method="_on_HSlider_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/HSlider" to="." method="_on_HSlider_mouse_exited"]
+[connection signal="value_changed" from="Panel/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="mouse_entered" from="Panel/CheckBox" to="." method="_on_CheckBox_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/CheckBox" to="." method="_on_CheckBox_mouse_exited"]
+[connection signal="pressed" from="Panel/CheckBox" to="." method="_on_CheckBox_pressed"]

@@ -4,6 +4,9 @@ onready var game = self.get_parent()
 var obj_scene
 var obj
 
+#Whether the view should be moved when dragging
+var move_view = true
+
 #Variables for smoothly moving the tiles
 var acceleration = 90
 var max_speed = 1000
@@ -87,7 +90,7 @@ var drag_delta = Vector2.ZERO
 #Executed once the receives any kind of input
 func _input(event):
 	#if the input is from the mouse
-	if event is InputEventMouse:
+	if event is InputEventMouse and move_view:
 		if event.is_action_released("scroll_down"):
 			zooming = "out"
 			progress = 0

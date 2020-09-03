@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
+
+[sub_resource type="InputEventAction" id=1]
+action = "overlay"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[node name="SpaceHUD" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 64.0
+margin_bottom = 720.0
+custom_constants/separation = 0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Overlay" type="TextureButton" parent="VBoxContainer"]
+margin_top = 328.0
+margin_right = 64.0
+margin_bottom = 392.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 2 )
+texture_normal = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]

@@ -5,7 +5,6 @@
 [ext_resource path="res://Scripts/Inventory.gd" type="Script" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
@@ -60,10 +59,18 @@ __meta__ = {
 }
 
 [node name="Materials" type="Button" parent="Tabs"]
-margin_right = 1067.0
+margin_right = 534.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "MATERIALS"
+
+[node name="Metals" type="Button" parent="Tabs"]
+margin_left = 532.0
+margin_right = 1067.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "METALS"
+expand_icon = true
 
 [node name="Contents" type="VBoxContainer" parent="."]
 margin_top = 104.0
@@ -111,3 +118,4 @@ margin_right = 202.0
 margin_bottom = 76.0
 theme = ExtResource( 5 )
 [connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
+[connection signal="pressed" from="Tabs/Metals" to="." method="_on_Metals_pressed"]

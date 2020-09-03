@@ -9,8 +9,11 @@ var progress = 0#Mining tile progress
 var total_mass = 0
 var contents = []
 var tween:Tween
+var layer:String
+onready var met_info = game.met_info
 
 func _ready():
+	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 	$Back.text = "<- " + tr("BACK") + " (Z)"
 	$Tile/TextureRect.texture = tile_texture
 	generate_rock(false)
@@ -20,14 +23,36 @@ func _ready():
 	$Help.visible = game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
-	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr("SURFACE")
 	update_info()
 
 func update_info():
-	var upper_depth = 0
-	var lower_depth = p_i.crust_start_depth
-	$LayerInfo/Upper.text = String(upper_depth) + " m"
-	$LayerInfo/Lower.text = String(lower_depth) + " m"
+	var upper_depth
+	var lower_depth 
+	if tile.depth <= p_i.crust_start_depth:
+		layer = "surface"
+		upper_depth = 0
+		lower_depth = p_i.crust_start_depth
+		$LayerInfo/Upper.text = String(upper_depth) + " m"
+		$LayerInfo/Lower.text = String(lower_depth) + " m"
+	elif tile.depth <= p_i.mantle_start_depth:
+		layer = "crust"
+		upper_depth = p_i.crust_start_depth + 1
+		lower_depth = p_i.mantle_start_depth
+		$LayerInfo/Upper.text = String(upper_depth) + " m"
+		$LayerInfo/Lower.text = String(lower_depth) + " m"
+	elif tile.depth <= p_i.core_start_depth:
+		layer = "mantle"
+		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
+		lower_depth = floor(p_i.core_start_depth / 1000.0)
+		$LayerInfo/Upper.text = String(upper_depth) + " km"
+		$LayerInfo/Lower.text = String(lower_depth) + " km"
+	else:
+		layer = "core"
+		upper_depth = floor(p_i.core_start_depth / 1000.0)
+		lower_depth = floor(p_i.size / 2.0)
+		$LayerInfo/Upper.text = String(upper_depth) + " km"
+		$LayerInfo/Lower.text = String(lower_depth) + " km"
+	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr(layer.to_upper())
 	$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
 	$LayerInfo/Depth/Label.text = String(tile.depth) + " m"
 	$Tile/Bar1.value = progress * 8
@@ -51,32 +76,35 @@ func generate_rock(new:bool):
 		$Panel/VBoxContainer.remove_child(thing)
 	if tile.contents == [] or new:
 		total_mass = 0
-		var mat_volume = 0#in m^3
+		var other_volume = 0#in m^3
 		#We assume all materials have a density of 1.5g/cm^3 to simplify things
 		var rho = 1.5
 		for mat in p_i.surface.keys():
-			if randf() < p_i.surface[mat].chance:
+			if randf() < p_i.surface[mat].chance / max(1, 1 + (tile.depth - p_i.crust_start_depth) / float(p_i.crust_start_depth)):
 				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2), 3)
 				contents.append({"name":mat, "type":"Materials", "amount":amount})
-				mat_volume += amount / rho / 1000#                                 V Every km, rock density goes up by 0.01
-		var stone_amount = game.clever_round((1 - mat_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
+				other_volume += amount / rho / 1000
+		if layer != "surface":
+			for met in met_info:
+				if met_info[met].min_depth < tile.depth and tile.depth < met_info[met].max_depth:
+					if randf() < 0.25 / met_info[met].rarity:
+						var amount = game.clever_round(met_info[met].amount * rand_range(0.2, 3))
+						contents.append({"name":met, "type":"Metals", "amount":amount})
+						other_volume += amount / game.met_info[met].density / 1000
+		#   									                          	    V Every km, rock density goes up by 0.01
+		var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 		contents.push_front({"name":"stone", "type":"Icons", "amount":stone_amount})
 		tile.contents = contents
 	else:
 		contents = tile.contents
 	for obj in contents:
-		var hbox = HBoxContainer.new()
-		var texture = TextureRect.new()
-		var label = Label.new()
 		total_mass += obj.amount
-		hbox["custom_constants/separation"] = 15
-		texture.texture = load("res://Graphics/" + obj.type + "/" + obj.name + ".png")
-		texture.expand = true
-		texture.rect_min_size = Vector2(36, 36)
-		label.text = String(obj.amount) + " kg"
-		$Panel/VBoxContainer.add_child(hbox)
-		hbox.add_child(texture)
-		hbox.add_child(label)
+		var rsrc = game.rsrc_scene.instance()
+		var texture = rsrc.get_node("Texture")
+		texture.texture_normal = load("res://Graphics/" + obj.type + "/" + obj.name + ".png")
+		texture.rect_min_size = Vector2(42, 42)
+		rsrc.get_node("Text").text = String(obj.amount) + " kg"
+		$Panel/VBoxContainer.add_child(rsrc)
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
@@ -122,12 +150,15 @@ func pickaxe_hit():
 		for content in contents:
 			if content.type == "Materials":
 				game.mats[content.name] += content.amount
+			elif content.type == "Metals":
+				game.mets[content.name] += content.amount
 			else:
 				game[content.name] += content.amount
+			if game.show.has(content.name):
+				game.show[content.name] = true
 		progress -= 100
 		tile.depth += 1
-		if not game.show.stone:
-			game.show.stone = true
+		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
 			$LayerAnim.play("Layer fade")
