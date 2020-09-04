@@ -37,7 +37,7 @@ anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -352.0
 margin_top = 16.0
-margin_right = -145.0
+margin_right = -72.0
 margin_bottom = 48.0
 text = "Number of planets"
 align = 1
@@ -56,15 +56,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Panel"]
+[node name="LeftNum" type="Label" parent="Panel"]
 margin_left = 72.0
 margin_top = 80.0
 margin_right = 120.0
 margin_bottom = 104.0
 text = "2"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label2" type="Label" parent="Panel"]
+[node name="RightNum" type="Label" parent="Panel"]
 margin_left = 648.0
 margin_top = 80.0
 margin_right = 696.0
@@ -76,9 +79,9 @@ __meta__ = {
 }
 
 [node name="HSlider" type="HSlider" parent="Panel"]
-margin_left = 528.0
+margin_left = 552.0
 margin_top = 24.0
-margin_right = 708.0
+margin_right = 732.0
 margin_bottom = 40.0
 focus_mode = 0
 min_value = 0.1
@@ -93,9 +96,9 @@ __meta__ = {
 }
 
 [node name="CheckBox" type="CheckBox" parent="Panel"]
-margin_left = 320.0
+margin_left = 352.0
 margin_top = 16.0
-margin_right = 512.0
+margin_right = 544.0
 margin_bottom = 44.0
 __meta__ = {
 "_edit_use_anchors_": false

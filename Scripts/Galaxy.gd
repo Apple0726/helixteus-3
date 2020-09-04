@@ -43,7 +43,7 @@ func _ready():
 		star_btn.rect_scale *= radius
 		overlay.rect_scale *= 2
 		system.position = s_i["pos"]
-	if game.overlay and game.overlay.get_node("Panel/CheckBox").pressed:
+	if game.overlay_data.galaxy.visible:
 		toggle_overlay()
 
 func on_system_over (id:int):
@@ -72,6 +72,12 @@ func change_overlay(overlay:String, gradient:Gradient):
 			for overlay in overlays:
 				var offset = inverse_lerp(2, 30, game.system_data[overlay.id].planet_num)
 				overlay.circle.modulate = gradient.interpolate(offset)
+		"discovered":
+			for overlay in overlays:
+				if game.system_data[overlay.id].discovered:
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
 
 func change_circle_size(value):
 	for overlay in overlays:

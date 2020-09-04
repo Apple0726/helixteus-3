@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=9 format=2]
+[gd_resource type="Theme" load_steps=10 format=2]
 
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.6, 0.6, 0.6, 0.109804 )
@@ -62,9 +63,9 @@ shadow_size = 5
 
 [sub_resource type="DynamicFont" id=7]
 size = 20
-use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 2 )
 
 [resource]
 default_font = SubResource( 7 )

@@ -1,0 +1,74 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/BuySellPanel.gd" type="Script" id=3]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=4]
+
+[node name="BuySellPanel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -104.0
+margin_right = 320.0
+margin_bottom = 88.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -320.0
+margin_top = 16.0
+margin_right = 320.0
+margin_bottom = 40.0
+text = "Buy or sell"
+align = 1
+
+[node name="HSlider" type="HSlider" parent="."]
+margin_left = 64.0
+margin_top = 48.0
+margin_right = 576.0
+margin_bottom = 96.0
+focus_mode = 0
+step = 0.0
+scrollable = false
+ticks_on_borders = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Arrow" type="Sprite" parent="HSlider"]
+position = Vector2( 256, 72 )
+texture = ExtResource( 4 )
+
+[node name="Resource" parent="." instance=ExtResource( 2 )]
+margin_left = 72.0
+margin_top = 96.0
+margin_right = -494.0
+margin_bottom = -48.0
+
+[node name="Resource2" parent="." instance=ExtResource( 2 )]
+margin_left = 496.0
+margin_top = 96.0
+margin_right = -70.0
+margin_bottom = -48.0
+
+[node name="Buy" type="Button" parent="."]
+margin_left = 536.0
+margin_top = 152.0
+margin_right = 640.0
+margin_bottom = 192.0
+text = "BUY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="mouse_entered" from="HSlider" to="." method="_on_HSlider_mouse_entered"]
+[connection signal="mouse_exited" from="HSlider" to="." method="_on_HSlider_mouse_exited"]
+[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Buy" to="." method="_on_Button_pressed"]

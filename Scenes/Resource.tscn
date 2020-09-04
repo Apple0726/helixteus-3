@@ -16,13 +16,14 @@ margin_right = 48.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 48, 48 )
 expand = true
+stretch_mode = 5
 
 [node name="Text" type="Label" parent="."]
 margin_left = 63.0
 margin_top = 21.0
-margin_right = 70.0
+margin_right = 71.0
 margin_bottom = 35.0
-text = "a"
+text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -10,11 +10,13 @@ func refresh_overlay():
 	match game.c_v:
 		"galaxy":
 			$Panel/OptionButton.add_item(tr("NUMBER_OF_PLANETS"))
-			$Panel/OptionButton.selected = 0
-			send_overlay_info(0)
+			$Panel/OptionButton.add_item(tr("SYSTEM_ENTERED"))
+			$Panel/OptionButton.selected = game.overlay_data.galaxy.overlay
+			send_overlay_info(game.overlay_data.galaxy.overlay)
+			$Panel/CheckBox.pressed = game.overlay_data.galaxy.visible
 
 func _on_CheckBox_pressed():
-	#game.overlay_visible = $Panel/CheckBox.pressed
+	game.overlay_data.galaxy.visible = not game.overlay_data.galaxy.visible
 	game.view.obj.toggle_overlay()
 
 func _on_CheckBox_mouse_entered():
@@ -25,12 +27,22 @@ func _on_CheckBox_mouse_exited():
 
 
 func _on_OptionButton_item_selected(index):
+	match index:
+		0:
+			$Panel/LeftNum.text = "2"
+			$Panel/RightNum.text = "30+"
+		1:
+			$Panel/LeftNum.text = tr("YES")
+			$Panel/RightNum.text = tr("NO")
+	game.overlay_data.galaxy.overlay = index
 	send_overlay_info(index)
 
 func send_overlay_info(index):
 	match index:
 		0:
 			game.view.obj.change_overlay("planet_num", $Panel/TextureRect.texture.gradient)
+		1:
+			game.view.obj.change_overlay("discovered", $Panel/TextureRect.texture.gradient)
 
 func _on_HSlider_mouse_entered():
 	game.show_tooltip("CIRCLE_SIZE")

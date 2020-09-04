@@ -1,401 +1,205 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Scenes/Button.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=3]
-[ext_resource path="res://Graphics/Buildings/MineralExtractor.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Icons/Energy.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Icons/Money.png" type="Texture" id=7]
-[ext_resource path="res://Graphics/Buildings/PowerPlant.png" type="Texture" id=8]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=9]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 
-
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.247059, 0.247059, 0.247059, 1 )
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color( 0.137255, 0.137255, 0.137255, 1 )
-
-[sub_resource type="DynamicFont" id=8]
-size = 50
-outline_size = 3
-outline_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+[sub_resource type="DynamicFont" id=1]
+size = 30
 use_filter = true
-font_data = ExtResource( 10 )
+font_data = ExtResource( 1 )
 
-[sub_resource type="CanvasItemMaterial" id=3]
-blend_mode = 1
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="Gradient" id=4]
-
-[sub_resource type="GradientTexture" id=5]
-gradient = SubResource( 4 )
-width = 100
-
-[sub_resource type="DynamicFont" id=6]
-size = 21
-use_filter = true
-font_data = ExtResource( 10 )
-
-[node name="ConstructPanel" type="Control"]
-margin_top = 20.0
-margin_right = 1280.0
-margin_bottom = 740.0
-rect_pivot_offset = Vector2( 640, 360 )
-mouse_filter = 2
-theme = ExtResource( 9 )
+[node name="ShopPanel" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -640.0
+margin_top = -360.0
+margin_right = 427.0
+margin_bottom = 240.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 2 )
 script = ExtResource( 3 )
 __meta__ = {
-"_edit_use_anchors_": false,
-"_edit_vertical_guides_": [ 957.024 ]
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_use_anchors_": false
 }
 
 [node name="Background" type="Panel" parent="."]
-margin_top = -8.0
-margin_right = 1280.0
-margin_bottom = 712.0
-custom_styles/panel = SubResource( 7 )
+margin_right = 1064.0
+margin_bottom = 600.0
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="TitleText" type="Label" parent="."]
-margin_right = 1280.0
-margin_bottom = 95.0
-custom_fonts/font = SubResource( 8 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Construct"
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "CONSTRUCT"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Buttons" type="Control" parent="."]
-margin_right = 40.0
+[node name="Tabs" type="HBoxContainer" parent="."]
+margin_top = 64.0
+margin_right = 1064.0
+margin_bottom = 104.0
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Basic" type="Button" parent="Tabs"]
+margin_right = 533.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+size_flags_horizontal = 3
+shortcut_in_tooltip = false
+text = "BASIC"
 
-[node name="ResourcesButton" parent="Buttons" instance=ExtResource( 2 )]
-margin_left = 104.224
-margin_top = 132.065
-margin_right = 104.224
-margin_bottom = 132.065
-rect_scale = Vector2( 5.1, 1.72 )
-strength = 0.05
-fade_duration = 0.05
-
-[node name="ProductionButton" parent="Buttons" instance=ExtResource( 2 )]
-margin_left = 311.862
-margin_top = 132.065
-margin_right = 311.862
-margin_bottom = 132.065
-rect_scale = Vector2( 5.115, 1.72 )
-strength = 0.05
-fade_duration = 0.05
-
-[node name="StorageButton" parent="Buttons" instance=ExtResource( 2 )]
-margin_left = 504.202
-margin_top = 132.065
-margin_right = 504.202
-margin_bottom = 132.065
-rect_scale = Vector2( 4.343, 1.72 )
-strength = 0.05
-fade_duration = 0.05
-
-[node name="Texts" type="Control" parent="."]
-margin_right = 40.0
+[node name="Storage" type="Button" parent="Tabs"]
+margin_left = 531.0
+margin_right = 1064.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+size_flags_horizontal = 3
+text = "STORAGE"
 
-[node name="ResourcesText" type="Label" parent="Texts"]
-margin_top = 96.0
-margin_right = 208.0
-margin_bottom = 168.0
-text = "Resources"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ProductionText" type="Label" parent="Texts"]
-margin_left = 208.0
-margin_top = 96.0
-margin_right = 416.0
-margin_bottom = 168.0
-text = "Production"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StorageText" type="Label" parent="Texts"]
-margin_left = 416.0
-margin_top = 96.0
-margin_right = 592.0
-margin_bottom = 168.0
-text = "Storage"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Lights" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ResourcesLight" type="TextureRect" parent="Lights"]
-material = SubResource( 3 )
-margin_left = 53.7375
-margin_top = 141.831
-margin_right = 153.738
-margin_bottom = 181.831
-rect_rotation = 90.0
-rect_scale = Vector2( 0.1, 5.1 )
-rect_pivot_offset = Vector2( 50, 20 )
-mouse_filter = 2
-texture = SubResource( 5 )
-stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StorageLight" type="TextureRect" parent="Lights"]
+[node name="Production" type="Button" parent="Tabs"]
 visible = false
-material = SubResource( 3 )
-margin_left = 454.065
-margin_top = 141.831
-margin_right = 554.065
-margin_bottom = 181.831
-rect_rotation = 90.0
-rect_scale = Vector2( 0.1, 4.405 )
-rect_pivot_offset = Vector2( 50, 20 )
-mouse_filter = 2
-texture = SubResource( 5 )
-stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_left = 708.0
+margin_right = 1064.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "PRODUCTION"
 
-[node name="ProductionLight" type="TextureRect" parent="Lights"]
+[node name="Contents" type="VBoxContainer" parent="."]
 visible = false
-material = SubResource( 3 )
-margin_left = 262.204
-margin_top = 141.831
-margin_right = 362.204
-margin_bottom = 181.831
-rect_rotation = 90.0
-rect_scale = Vector2( 0.1, 5.168 )
-rect_pivot_offset = Vector2( 50, 20 )
-mouse_filter = 2
-texture = SubResource( 5 )
-stretch_mode = 1
+margin_top = 104.0
+margin_right = 1064.0
+margin_bottom = 600.0
+custom_constants/separation = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProductionBuildings" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StorageBuildings" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ResourcesBuildings" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MineralExtractor" type="Control" parent="ResourcesBuildings"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Sprite" type="Sprite" parent="ResourcesBuildings/MineralExtractor"]
-position = Vector2( 104, 272 )
-scale = Vector2( 0.4, 0.4 )
-texture = ExtResource( 4 )
-
-[node name="MEButton" parent="ResourcesBuildings/MineralExtractor" instance=ExtResource( 2 )]
-margin_left = 104.0
-margin_top = 272.0
-margin_right = 104.0
-margin_bottom = 272.0
-rect_scale = Vector2( 5.05, 5 )
-double_click_enabled = true
-strength = 0.05
-fade_duration = 0.05
-
-[node name="PowerPlant" type="Control" parent="ResourcesBuildings"]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="ResourcesBuildings/PowerPlant"]
-position = Vector2( 312, 272 )
-scale = Vector2( 0.4, 0.4 )
-texture = ExtResource( 8 )
-
-[node name="PPButton" parent="ResourcesBuildings/PowerPlant" instance=ExtResource( 2 )]
-margin_left = 312.0
-margin_top = 272.0
-margin_right = 312.0
-margin_bottom = 272.0
-rect_scale = Vector2( 5.05, 5 )
-double_click_enabled = true
-strength = 0.05
-fade_duration = 0.05
-
-[node name="Lines" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Line2D" type="Line2D" parent="Lines"]
-position = Vector2( 104, 96 )
-points = PoolVector2Array( -104, 1.52588e-05, 1176, 1.52588e-05 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D2" type="Line2D" parent="Lines"]
-position = Vector2( 104, 168 )
-points = PoolVector2Array( -104, 0, 1176, 0 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D7" type="Line2D" parent="Lines"]
-position = Vector2( 104, 168 )
-points = PoolVector2Array( 816, 56, 1176, 56 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D3" type="Line2D" parent="Lines"]
-position = Vector2( -64, -40 )
-points = PoolVector2Array( 272, 136, 272, 208 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D4" type="Line2D" parent="Lines"]
-position = Vector2( 144, -40 )
-points = PoolVector2Array( 272, 136, 272, 208 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D5" type="Line2D" parent="Lines"]
-position = Vector2( 320, -40 )
-points = PoolVector2Array( 272, 136, 272, 208 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="Line2D6" type="Line2D" parent="Lines"]
-position = Vector2( 648, -40 )
-points = PoolVector2Array( 272, 208, 272, 750 )
-width = 3.0
-default_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-
-[node name="BuildingInformation" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Name" type="Label" parent="BuildingInformation"]
-margin_left = 920.0
-margin_top = 168.0
-margin_right = 1280.0
-margin_bottom = 224.0
+[node name="Info" type="Label" parent="Contents"]
+margin_right = 1064.0
+margin_bottom = 36.0
+custom_styles/normal = SubResource( 2 )
+text = "Information"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Description" type="Label" parent="BuildingInformation"]
-margin_left = 936.0
-margin_top = 443.945
-margin_right = 1257.0
-margin_bottom = 577.945
-custom_fonts/font = SubResource( 6 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MoneyText" type="Label" parent="BuildingInformation"]
-margin_left = 984.0
-margin_top = 240.0
-margin_right = 1280.0
-margin_bottom = 296.0
-valign = 1
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents"]
+margin_top = 36.0
+margin_right = 1064.0
+margin_bottom = 496.0
+size_flags_vertical = 3
+custom_constants/separation = -2
+
+[node name="Items" type="Panel" parent="Contents/HBoxContainer"]
+margin_right = 759.0
+margin_bottom = 460.0
+size_flags_horizontal = 3
+
+[node name="Basic" type="GridContainer" parent="Contents/HBoxContainer/Items"]
+visible = false
+margin_right = 762.0
+margin_bottom = 457.0
+size_flags_horizontal = 3
+custom_constants/vseparation = -2
+custom_constants/hseparation = -2
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="EnergyText" type="Label" parent="BuildingInformation"]
-margin_left = 984.0
-margin_top = 304.0
-margin_right = 1280.0
-margin_bottom = 360.0
-valign = 1
+[node name="Storage" type="GridContainer" parent="Contents/HBoxContainer/Items"]
+visible = false
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 764.0
+margin_bottom = 459.0
+size_flags_horizontal = 3
+custom_constants/vseparation = -2
+custom_constants/hseparation = -2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeText" type="Label" parent="BuildingInformation"]
-margin_left = 984.0
-margin_top = 368.0
-margin_right = 1280.0
-margin_bottom = 424.0
-valign = 1
+[node name="Production" type="GridContainer" parent="Contents/HBoxContainer/Items"]
+visible = false
+margin_left = 382.0
+margin_right = 766.0
+margin_bottom = 461.0
+size_flags_horizontal = 3
+custom_constants/vseparation = -2
+custom_constants/hseparation = -2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Energy" type="Sprite" parent="BuildingInformation"]
+[node name="ItemInfo" type="Panel" parent="Contents/HBoxContainer"]
 visible = false
-position = Vector2( 957.247, 332.197 )
-scale = Vector2( 0.125, 0.125 )
-texture = ExtResource( 5 )
+margin_left = 757.0
+margin_right = 1064.0
+margin_bottom = 460.0
+rect_min_size = Vector2( 307, 0 )
 
-[node name="Time" type="Sprite" parent="BuildingInformation"]
-visible = false
-position = Vector2( 957.112, 396.375 )
-texture = ExtResource( 6 )
+[node name="Construct" type="Button" parent="Contents/HBoxContainer/ItemInfo"]
+margin_left = 3.0
+margin_top = 420.0
+margin_right = 307.0
+margin_bottom = 458.0
+size_flags_horizontal = 3
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Money" type="Sprite" parent="BuildingInformation"]
-visible = false
-position = Vector2( 957.227, 267.648 )
-texture = ExtResource( 7 )
-[connection signal="mouse_entered" from="Background" to="." method="_on_Background_mouse_entered"]
-[connection signal="mouse_exited" from="Background" to="." method="_on_Background_mouse_exited"]
-[connection signal="button_pressed" from="Buttons/ResourcesButton" to="." method="_on_ResourcesButton_button_pressed"]
-[connection signal="button_pressed" from="Buttons/ProductionButton" to="." method="_on_ProductionButton_button_pressed"]
-[connection signal="button_pressed" from="Buttons/StorageButton" to="." method="_on_StorageButton_button_pressed"]
-[connection signal="button_pressed" from="ResourcesBuildings/MineralExtractor/MEButton" to="." method="_on_MEButton_button_pressed"]
-[connection signal="double_click" from="ResourcesBuildings/MineralExtractor/MEButton" to="." method="_on_MEButton_double_click"]
-[connection signal="button_pressed" from="ResourcesBuildings/PowerPlant/PPButton" to="." method="_on_PPButton_button_pressed"]
-[connection signal="double_click" from="ResourcesBuildings/PowerPlant/PPButton" to="." method="_on_PPButton_double_click"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]
+margin_left = 17.0
+margin_right = 281.0
+margin_bottom = 396.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="Label" parent="Contents/HBoxContainer/ItemInfo/VBoxContainer"]
+margin_right = 264.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+text = "a"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Description" type="Label" parent="Contents/HBoxContainer/ItemInfo/VBoxContainer"]
+margin_top = 54.0
+margin_right = 264.0
+margin_bottom = 78.0
+text = "b"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Tabs/Basic" to="." method="_on_Basic_pressed"]
+[connection signal="pressed" from="Tabs/Storage" to="." method="_on_Storage_pressed"]
+[connection signal="pressed" from="Tabs/Production" to="." method="_on_Production_pressed"]
+[connection signal="pressed" from="Contents/HBoxContainer/ItemInfo/Construct" to="." method="_on_Buy_pressed"]

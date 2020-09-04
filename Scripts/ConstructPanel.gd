@@ -1,103 +1,117 @@
 extends Control
 
-signal construct_building_signal
-onready var game:Node2D = get_node("/root/Game")
-
-var mouse_in_panel = true
-var tab = "Resources"
+onready var game = get_node("/root/Game")
+#Tween for fading in/out panel
 var tween:Tween
+var tab:String = ""
+var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 
 func _ready():
+	$Contents/HBoxContainer/ItemInfo/Construct.text = tr("CONSTRUCT") + " (B)"
 	tween = Tween.new()
 	add_child(tween)
+	var item_container = $Contents/HBoxContainer/Items
+	for bldg in game.bldg_info.keys():
+		var bldg_info = game.bldg_info[bldg]
+		var bldg_btn = item_for_sale_scene.instance()
+		bldg_btn.item_name = bldg
+		bldg_btn.item_type = "Buildings"
+		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
+		bldg_btn.costs = bldg_info.costs
+		bldg_btn.parent = "construct_panel"
+		item_container.get_node(bldg_info.type).add_child(bldg_btn)
 
-func remove_panel():
-	#Only remove if the panel is actually there
-	if game.construct_panel.visible:
-		game.toggle_construct_panel()
+func _on_Basic_pressed():
+	tab = "basic"
+	$Contents.visible = true
+	set_item_visibility("Basic")
+	$Contents/Info.text = tr("BASIC_DESC")
+	set_btn_color($Tabs/Basic)
 
-#Check whether mouse is in the panel for right clicking
-func _on_Background_mouse_entered():
-	mouse_in_panel = true
+func _on_Storage_pressed():
+	tab = "storage"
+	$Contents.visible = true
+	set_item_visibility("Storage")
+	$Contents/Info.text = tr("STORAGE_DESC")
+	set_btn_color($Tabs/Storage)
 
-func _on_Background_mouse_exited():
-	mouse_in_panel = false
+func _on_Production_pressed():
+	tab = "production"
+	$Contents.visible = true
+	set_item_visibility("Production")
+	$Contents/Info.text = tr("PRODUCTION_DESC")
+	set_btn_color($Tabs/Production)
 
-#Clicking the various tabs
-func _on_ResourcesButton_button_pressed():
-	toggle_buildings(false)
-	tab = "Resources"
-	reset_lights()
-	toggle_buildings(true)
+func set_btn_color(btn):
+	for other_btn in $Tabs.get_children():
+		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
+		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
+		other_btn["custom_colors/font_color_pressed"] = Color(1, 1, 1, 1)
+	btn["custom_colors/font_color"] = Color(0, 1, 1, 1)
+	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
+	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
-func _on_ProductionButton_button_pressed():
-	toggle_buildings(false)
-	tab = "Production"
-	reset_lights()
-	toggle_buildings(true)
+func set_item_visibility(type:String):
+	for other_type in $Contents/HBoxContainer/Items.get_children():
+		other_type.visible = false
+	remove_costs()
+	$Contents/HBoxContainer/Items.get_node(type).visible = true
+	$Contents/HBoxContainer/ItemInfo.visible = false
+	item_name = ""
 
-func _on_StorageButton_button_pressed():
-	toggle_buildings(false)
-	tab = "Storage"
-	reset_lights()
-	toggle_buildings(true)
+func remove_costs():
+	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
+	for child in vbox.get_children():
+		if not child is Label:
+			vbox.remove_child(child)
 
-#Make buildings in current tab (in)visible
-func toggle_buildings(vis:bool):
-	for bldg in get_node(tab + "Buildings").get_children():
-		bldg.visible = vis
+var item_costs:Dictionary
+var item_name = ""
 
-#The light thing under each tab to highlight which tab you're on
-func reset_lights():
-	for light in $Lights.get_children():
-		light.visible = false
-	$Lights.get_node(tab + "Light").visible = true
-	toggle_icons(false)
-	$BuildingInformation/Name.text = ""
-	$BuildingInformation/Description.text = ""
-	$BuildingInformation/MoneyText.text = ""
-	$BuildingInformation/EnergyText.text = ""
-	$BuildingInformation/TimeText.text = ""
+func set_item_info(name:String, desc:String, costs:Dictionary):
+	remove_costs()
+	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
+	vbox.get_node("Name").text = get_item_name(name)
+	item_costs = costs
+	item_name = name
+	desc += "\n"
+	vbox.get_node("Description").text = desc
+	$Contents/HBoxContainer/ItemInfo.visible = true
+	for cost in costs:
+		var rsrc = game.rsrc_scene.instance()
+		var texture = rsrc.get_node("Texture")
+		if cost == "money":
+			texture.texture_normal = load("res://Graphics/Icons/Money.png")
+			rsrc.get_node("Text").text = String(costs[cost])
+		elif cost == "stone":
+			texture.texture_normal = load("res://Graphics/Icons/stone.png")
+			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
+		elif cost == "energy":
+			texture.texture_normal = load("res://Graphics/Icons/Energy.png")
+			rsrc.get_node("Text").text = String(costs[cost])
+		elif cost == "time":
+			texture.texture_normal = load("res://Graphics/Icons/Time.png")
+			rsrc.get_node("Text").text = game.time_to_str(costs[cost] * 1000.0)
+		elif game.mats.has(cost):
+			texture.texture_normal = load("res://Graphics/Materials/" + cost + ".png")
+			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
+		elif game.mets.has(cost):
+			texture.texture_normal = load("res://Graphics/Metals/" + cost + ".png")
+			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
+		texture.rect_min_size = Vector2(36, 36)
+		vbox.add_child(rsrc)
 
-func update_cost_info(bldg:String):
-	var bldg_info = game.bldg_info[bldg]
-	$BuildingInformation/Name.text = bldg_info["name"]
-	$BuildingInformation/Description.text = bldg_info["desc"]
-	$BuildingInformation/MoneyText.text = String(bldg_info["money"])
-	$BuildingInformation/EnergyText.text = String(bldg_info["energy"])
-	$BuildingInformation/TimeText.text = String(bldg_info["time"])
-	game.constr_cost["money"] = bldg_info["money"]
-	game.constr_cost["energy"] = bldg_info["energy"]
-	game.constr_cost["time"] = bldg_info["time"]
+func get_item_name(name:String):
+	match name:
+		"ME":
+			return tr("MINERAL_EXTRACTOR")
+		"PP":
+			return tr("POWER_PLANT")
 
-#Make money/energy/etc. icons (in)visible
-func toggle_icons(vis:bool):
-	$BuildingInformation/Energy.visible = vis
-	$BuildingInformation/Time.visible = vis
-	$BuildingInformation/Money.visible = vis
-
-func _on_MEButton_button_pressed():
-	update_cost_info("ME")
-	check_signal()
-	connect("construct_building_signal", self.get_parent(), "construct_building", ["ME"])
-	toggle_icons(true)
-
-func _on_MEButton_double_click():
-	$ResourcesBuildings/MineralExtractor/MEButton.reset_button()
-	remove_panel()
-	emit_signal("construct_building_signal")
-
-func _on_PPButton_button_pressed():
-	update_cost_info("PP")
-	check_signal()
-	connect("construct_building_signal", self.get_parent(), "construct_building", ["PP"])
-	toggle_icons(true)
-
-func check_signal():
-	if is_connected("construct_building_signal", self.get_parent(), "construct_building"):
-		disconnect("construct_building_signal", self.get_parent(), "construct_building")
-
-func _on_PPButton_double_click():
-	$ResourcesBuildings/PowerPlant/PPButton.reset_button()
-	remove_panel()
-	emit_signal("construct_building_signal")
+func _on_Buy_pressed():
+	if item_name == "":
+		return
+	game.toggle_construct_panel()
+	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
+	game.view.obj.bldg_to_construct = item_name
+	game.view.obj.constr_costs = item_costs

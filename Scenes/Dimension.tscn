@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Scenes/Dimension/DimensionalPower.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Dimension/Mathematics.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Dimension/Chemistry.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Scenes/Dimension/Biology.tscn" type="PackedScene" id=12]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -27,6 +28,7 @@ font_data = ExtResource( 2 )
 [node name="Dimension" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 theme = ExtResource( 4 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -94,43 +96,71 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="ScrollContainer2" type="ScrollContainer" parent="."]
 margin_left = 328.0
 margin_top = 40.0
 margin_right = 1280.0
 margin_bottom = 720.0
-columns = 3
+mouse_filter = 1
+scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Mathematics" parent="GridContainer" instance=ExtResource( 10 )]
-margin_right = 314.0
-
-[node name="Physics" parent="GridContainer" instance=ExtResource( 6 )]
-margin_left = 318.0
-margin_right = 632.0
-
-[node name="Chemistry" parent="GridContainer" instance=ExtResource( 11 )]
-margin_left = 636.0
-margin_right = 950.0
-
-[node name="Philosophy" parent="GridContainer" instance=ExtResource( 7 )]
-margin_top = 342.0
-margin_right = 314.0
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer2"]
+margin_right = 952.0
 margin_bottom = 680.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Engineering" parent="GridContainer" instance=ExtResource( 8 )]
-margin_left = 318.0
-margin_top = 342.0
-margin_right = 632.0
-margin_bottom = 680.0
+[node name="Mathematics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 10 )]
+margin_right = 235.0
 
-[node name="DimensionalPower" parent="GridContainer" instance=ExtResource( 9 )]
-margin_left = 636.0
+[node name="Physics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 6 )]
+margin_left = 239.0
+margin_right = 474.0
+mouse_filter = 0
+size_flags_vertical = 3
+
+[node name="Chemistry" parent="ScrollContainer2/GridContainer" instance=ExtResource( 11 )]
+margin_left = 478.0
+margin_right = 713.0
+mouse_filter = 0
+size_flags_vertical = 3
+
+[node name="Biology" parent="ScrollContainer2/GridContainer" instance=ExtResource( 12 )]
+margin_left = 717.0
+margin_right = 952.0
+mouse_filter = 0
+size_flags_vertical = 3
+
+[node name="Philosophy" parent="ScrollContainer2/GridContainer" instance=ExtResource( 7 )]
 margin_top = 342.0
-margin_right = 950.0
+margin_right = 235.0
 margin_bottom = 680.0
+mouse_filter = 0
+size_flags_vertical = 3
+
+[node name="Engineering" parent="ScrollContainer2/GridContainer" instance=ExtResource( 8 )]
+margin_left = 239.0
+margin_top = 342.0
+margin_right = 474.0
+margin_bottom = 680.0
+mouse_filter = 0
+size_flags_vertical = 3
+
+[node name="DimensionalPower" parent="ScrollContainer2/GridContainer" instance=ExtResource( 9 )]
+margin_left = 478.0
+margin_top = 342.0
+margin_right = 713.0
+margin_bottom = 680.0
+mouse_filter = 0
+size_flags_vertical = 3
 
 [node name="TopInfo" type="Control" parent="."]
 anchor_right = 1.0

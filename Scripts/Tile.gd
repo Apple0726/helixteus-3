@@ -88,7 +88,8 @@ func _on_Button_button_pressed():
 		if tile.bldg_str == "":
 			#If we're trying to construct something
 			if planet.bldg_to_construct != "":
-				if enough_resources():
+				if game.check_enough(planet.constr_costs):
+					game.deduct_resources(planet.constr_costs)
 					tile.bldg_str = planet.bldg_to_construct
 					_on_Button_button_out()
 					display_bldg(tile.bldg_str, 1)
@@ -96,11 +97,9 @@ func _on_Button_button_pressed():
 					if not game.show.minerals and tile.bldg_str == "ME":
 						game.show.minerals = true
 					$TimeLeft.visible = true
-					game.money -= game.constr_cost["money"]
-					game.energy -= game.constr_cost["energy"]
 					tile.is_constructing = true
 					tile.construction_date = OS.get_system_time_msecs()
-					tile.construction_length = game.constr_cost["time"] * 1000
+					tile.construction_length = planet.constr_costs["time"] * 1000
 					add_bldg_info()
 				else:
 					game.popup("Not enough resources", 1)
@@ -129,20 +128,9 @@ func _on_Button_button_pressed():
 					tile.bldg_info["stored"] = 0
 	view.dragged = false
 
-func enough_resources():
-	var output = false
-	if game.money >= game.constr_cost["money"] and game.energy >= game.constr_cost["energy"]:
-		output = true
-	return output
-
 func display_bldg(bldg_str:String, a:float):
 	if bldg_str != "":
-		var bldg_image
-		match bldg_str:
-			"ME":
-				bldg_image = preload("res://Graphics/Buildings/MineralExtractor.png")
-			"PP":
-				bldg_image = preload("res://Graphics/Buildings/PowerPlant.png")
+		var bldg_image = load("res://Graphics/Buildings/" + bldg_str + ".png")
 		$Building.texture = bldg_image
 		$Building.modulate.a = a
 

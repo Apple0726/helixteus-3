@@ -555,6 +555,7 @@ margin_top = 116.0
 margin_right = 192.0
 margin_bottom = 140.0
 mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 0, 1 )
 text = "Layer: surface"
 align = 1
 __meta__ = {
@@ -610,15 +611,15 @@ __meta__ = {
 position = Vector2( 420, 496 )
 
 [node name="Sprite" type="Sprite" parent="Help"]
-position = Vector2( 24, 12 )
+position = Vector2( 36, 32 )
 rotation = -2.44513
 texture = ExtResource( 6 )
 
 [node name="Label" type="Label" parent="Help"]
-margin_left = 48.0
-margin_top = 16.0
-margin_right = 88.0
-margin_bottom = 40.0
+margin_left = 76.0
+margin_top = 48.0
+margin_right = 343.0
+margin_bottom = 72.0
 text = "Click and hold the tile to mine!"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -684,6 +685,7 @@ volume_db = -10.0
 
 [node name="HitMetalSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
+volume_db = -10.0
 [connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
 [connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]

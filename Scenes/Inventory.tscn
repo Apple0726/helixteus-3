@@ -3,12 +3,13 @@
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/Inventory.gd" type="Script" id=3]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 4 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
@@ -32,7 +33,7 @@ __meta__ = {
 }
 
 [node name="Background" type="Panel" parent="."]
-margin_right = 1067.0
+margin_right = 1064.0
 margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -51,7 +52,7 @@ __meta__ = {
 
 [node name="Tabs" type="HBoxContainer" parent="."]
 margin_top = 64.0
-margin_right = 1067.0
+margin_right = 1064.0
 margin_bottom = 104.0
 custom_constants/separation = -2
 __meta__ = {
@@ -59,14 +60,14 @@ __meta__ = {
 }
 
 [node name="Materials" type="Button" parent="Tabs"]
-margin_right = 534.0
+margin_right = 533.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "MATERIALS"
 
 [node name="Metals" type="Button" parent="Tabs"]
-margin_left = 532.0
-margin_right = 1067.0
+margin_left = 531.0
+margin_right = 1064.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "METALS"
@@ -74,7 +75,7 @@ expand_icon = true
 
 [node name="Contents" type="VBoxContainer" parent="."]
 margin_top = 104.0
-margin_right = 1067.0
+margin_right = 1064.0
 margin_bottom = 600.0
 custom_constants/separation = 0
 __meta__ = {
@@ -82,7 +83,7 @@ __meta__ = {
 }
 
 [node name="Info" type="Label" parent="Contents"]
-margin_right = 1067.0
+margin_right = 1064.0
 margin_bottom = 36.0
 custom_styles/normal = SubResource( 2 )
 text = "Information"
@@ -95,7 +96,7 @@ __meta__ = {
 
 [node name="Control" type="Control" parent="Contents"]
 margin_top = 36.0
-margin_right = 1067.0
+margin_right = 1064.0
 margin_bottom = 496.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -112,10 +113,5 @@ columns = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
-margin_right = 202.0
-margin_bottom = 76.0
-theme = ExtResource( 5 )
 [connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
 [connection signal="pressed" from="Tabs/Metals" to="." method="_on_Metals_pressed"]

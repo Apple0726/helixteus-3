@@ -86,23 +86,27 @@ func generate_rock(new:bool):
 		#We assume all materials have a density of 1.5g/cm^3 to simplify things
 		var rho = 1.5
 		for mat in p_i.surface.keys():
-			if randf() < p_i.surface[mat].chance / max(1, 1 + (tile.depth - p_i.crust_start_depth) / float(p_i.crust_start_depth)):
-				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2), 3)
+			#Material quantity penalty the further you go from surface
+			var depth_limit_mult = max(1, 1 + (tile.depth / 2.0 - p_i.crust_start_depth) / float(p_i.crust_start_depth))
+			if randf() < p_i.surface[mat].chance / depth_limit_mult:
+				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult, 3)
+				if amount < 1:
+					continue
 				contents.append({"name":mat, "type":"Materials", "amount":amount})
 				other_volume += amount / rho / 1000
 		if layer != "surface":
 			if not tile.has("current_deposit"):
 				for met in met_info:
 					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth:
-						if randf() < 0.1 / met_info[met].rarity:
+						if randf() < 0.15 / met_info[met].rarity:
 							tile.current_deposit = {"met":met, "size":game.rand_int(4, 10), "progress":1}
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
 				var size = tile.current_deposit.size
 				var progress = tile.current_deposit.progress
 				var amount_multiplier = -abs(2.0/size * progress - 1) + 1
-				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.42) * amount_multiplier, 3)
-				for i in floor(amount / 2.0):
+				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier, 3)
+				for i in clamp(round(amount / 2.0), 1, 40):
 					var met_sprite = Sprite.new()
 					met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
 					met_sprite.centered = true
@@ -116,8 +120,6 @@ func generate_rock(new:bool):
 				contents.append({"name":met, "type":"Metals", "amount":amount})
 				other_volume += amount / game.met_info[met].density / 1000
 				tile.current_deposit.progress += 1
-				if tile.current_deposit.progress > size - 1:
-					tile.erase("current_deposit")
 			#   									                          	    V Every km, rock density goes up by 0.01
 		var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 		contents.push_front({"name":"stone", "type":"Icons", "amount":stone_amount})
@@ -166,9 +168,14 @@ func pickaxe_hit():
 	if not game.pickaxe:
 		return
 	if tile.has("current_deposit"):
+		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
+		$HitMetalSound.volume_db = -3 - (1 - amount_multiplier) * 10
+		$HitRockSound.volume_db = -10 - (amount_multiplier) * 10
 		$HitMetalSound.play()
+		$HitRockSound.play()
 	else:
+		$HitRockSound.volume_db = -10
 		$HitRockSound.pitch_scale = rand_range(0.8, 1.2)
 		$HitRockSound.play()
 	if $Help.visible:
@@ -192,6 +199,8 @@ func pickaxe_hit():
 			if game.show.has(content.name):
 				game.show[content.name] = true
 		progress -= 100
+		if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
+			tile.erase("current_deposit")
 		tile.depth += 1
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:

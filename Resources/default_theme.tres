@@ -1,9 +1,10 @@
-[gd_resource type="Theme" load_steps=36 format=2]
+[gd_resource type="Theme" load_steps=38 format=2]
 
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Graphics/Buttons/CheckboxChecked.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/CheckboxUnchecked.png" type="Texture" id=4]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -193,8 +194,14 @@ expand_margin_bottom = 2.0
 shadow_color = Color( 0.4, 0.501961, 0.8, 0.6 )
 shadow_size = 5
 
+[sub_resource type="DynamicFont" id=32]
+size = 20
+use_filter = true
+font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 5 )
+
 [resource]
-default_font = ExtResource( 1 )
+default_font = SubResource( 32 )
 Button/colors/font_color = Color( 0, 1, 1, 1 )
 Button/colors/font_color_disabled = Color( 0, 0.38, 0.38, 1 )
 Button/colors/font_color_hover = Color( 0, 1, 1, 1 )

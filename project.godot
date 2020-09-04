@@ -158,7 +158,7 @@ overlay={
 locale_filter=[ 1, [  ] ]
 translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation" )
 translation_remaps={
-"res://Resources/default_font.tres": PoolStringArray( "res://Resources/unicode_font.tres:ru" )
+
 }
 
 [memory]

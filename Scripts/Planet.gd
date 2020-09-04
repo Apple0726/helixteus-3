@@ -3,6 +3,7 @@ extends Node2D
 onready var game = get_node("/root/Game")
 
 var bldg_to_construct:String = ""
+var constr_costs = {}
 var id
 var p_i
 

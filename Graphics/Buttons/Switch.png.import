@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/PowerPlant.png-3e3ca97f6e0deaf80cc45742ccc20288.stex"
+path="res://.import/Switch.png-dc506b3ffca42992128f8a891fee8eed.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/PowerPlant.png"
-dest_files=[ "res://.import/PowerPlant.png-3e3ca97f6e0deaf80cc45742ccc20288.stex" ]
+source_file="res://Graphics/Buttons/Switch.png"
+dest_files=[ "res://.import/Switch.png-dc506b3ffca42992128f8a891fee8eed.stex" ]
 
 [params]
 

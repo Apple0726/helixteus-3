@@ -42,6 +42,7 @@ func _on_Pickaxes_pressed():
 			pickaxe_item.item_type = "Pickaxes"
 			pickaxe_item.item_desc = tr(pickaxe.to_upper() + "_DESC")
 			pickaxe_item.costs = pickaxe_info.costs
+			pickaxe_item.parent = "shop_panel"
 			$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
 
 func set_btn_color(btn):
@@ -58,9 +59,8 @@ func set_item_visibility(type:String):
 		other_type.visible = false
 	remove_costs()
 	$Contents/HBoxContainer/Items.get_node(type).visible = true
-	$Contents/HBoxContainer/ItemInfo/VBoxContainer/Name.text = ""
-	$Contents/HBoxContainer/ItemInfo/VBoxContainer/Description.text = ""
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = false
+	$Contents/HBoxContainer/ItemInfo.visible = false
+	item_name = ""
 
 func remove_costs():
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
@@ -82,7 +82,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary):
 		desc += ("\n\n" + tr("MINING_SPEED") + ": %s\n" + tr("DURABILITY") + ": %s") % [pickaxe_info.speed, pickaxe_info.durability]
 	desc += "\n"
 	vbox.get_node("Description").text = desc
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
+	$Contents/HBoxContainer/ItemInfo.visible = true
 	for cost in costs:
 		var rsrc = game.rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
@@ -98,7 +98,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary):
 		elif game.mets.has(cost):
 			texture.texture_normal = load("res://Graphics/Metals/" + cost + ".png")
 			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		texture.rect_min_size = Vector2(42, 42)
+		texture.rect_min_size = Vector2(36, 36)
 		vbox.add_child(rsrc)
 
 func get_item_name(name:String):
@@ -116,21 +116,10 @@ func get_item_name(name:String):
 		"iron_pickaxe":
 			return tr("IRON_PICKAXE")
 
-func check_enough():
-	var enough = true
-	for cost in item_costs:
-		if cost == "money" and game.money < item_costs[cost]:
-			enough = false
-		if cost == "stone" and game.stone < item_costs[cost]:
-			enough = false
-		if game.mats.has(cost) and game.mats[cost] < item_costs[cost]:
-			enough = false
-		if game.mets.has(cost) and game.mets[cost] < item_costs[cost]:
-			enough = false
-	return enough
-	
 func _on_Buy_pressed():
-	if check_enough():
+	if item_name == "":
+		return
+	if game.check_enough(item_costs):
 		if tab == "pickaxes":
 			if game.pickaxe != null:
 				YNPanel(tr("REPLACE_PICKAXE") % [get_item_name(game.pickaxe.name).to_lower(), get_item_name(item_name).to_lower()])
@@ -152,17 +141,9 @@ func buy_pickaxe_confirm():
 	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe")
 
 func buy_pickaxe():
-	if not check_enough():
+	if not game.check_enough():
 		return
-	for cost in item_costs:
-		if cost == "money":
-			game.money -= item_costs.money
-		if cost == "stone":
-			game.stone -= item_costs.stone
-		if game.mats.has(cost):
-			game.mats[cost] -= item_costs[cost]
-		if game.mets.has(cost):
-			game.mets[cost] -= item_costs[cost]
+	game.deduct_resources()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}

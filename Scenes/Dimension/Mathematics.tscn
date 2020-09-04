@@ -5,15 +5,9 @@
 
 [node name="Panel" instance=ExtResource( 2 )]
 
-[node name="TextureRect" parent="." index="0"]
-margin_left = -350.5
-margin_top = -103.0
-margin_right = 350.5
-margin_bottom = 103.0
-rect_rotation = -13.7
-rect_scale = Vector2( 0.4, 0.4 )
-rect_pivot_offset = Vector2( 355.5, 103 )
-texture = ExtResource( 1 )
-
-[node name="Label" parent="." index="1"]
+[node name="Label" parent="VBoxContainer" index="0"]
 text = "MATHS"
+
+[node name="TextureRect" parent="VBoxContainer" index="1"]
+rect_pivot_offset = Vector2( 0, 27 )
+texture = ExtResource( 1 )

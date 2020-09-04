@@ -10,8 +10,6 @@ const TWEEN_TYPE = Tween.TRANS_EXPO
 const TWEEN_EASE = Tween.EASE_OUT
 var new_dim_DRs = 0#DRs you will get once you renew dimensions
 
-var is_half_size = false
-
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
@@ -28,25 +26,19 @@ func _ready():
 	if new_dim_DRs == 0:
 		$TopInfo/Reset.disabled = true
 	if game.DRs == 0:
-		for node in $GridContainer.get_children():
-			node.get_node("Invest").disabled = true
+		for node in $ScrollContainer2/GridContainer.get_children():
+			node.get_node("VBoxContainer/HBoxContainer/Invest").disabled = true
 	$TopInfo/DimensionN.text = tr("DIMENSION") + " #1"
 	$DiscoveredUnivs/Label.text = tr("DISCOVERED_UNIVERSES")
 
 func set_tween():
-	tween.interpolate_property($GridContainer, "margin_left", 320, 800, DUR, TWEEN_TYPE, TWEEN_EASE)
-	for node in $GridContainer.get_children():
-		var tex = node.get_node("TextureRect")
-		tween.interpolate_property(tex, "rect_scale", tex.rect_scale, tex.rect_scale / 2.0, DUR, TWEEN_TYPE, TWEEN_EASE)
+	tween.interpolate_property($ScrollContainer2, "margin_left", 320, 800, DUR, TWEEN_TYPE, TWEEN_EASE)
 
 func set_rev_tween():
-	tween.interpolate_property($GridContainer, "margin_left", 800, 320, DUR, TWEEN_TYPE, TWEEN_EASE)
-	for node in $GridContainer.get_children():
-		var tex = node.get_node("TextureRect")
-		tween.interpolate_property(tex, "rect_scale", tex.rect_scale, tex.rect_scale * 2.0, DUR, TWEEN_TYPE, TWEEN_EASE)
+	tween.interpolate_property($ScrollContainer2, "margin_left", 800, 320, DUR, TWEEN_TYPE, TWEEN_EASE)
 		
 func on_univ_press(id:int):
-	if not tween.is_active() and not is_half_size:
+	if not tween.is_active():
 		set_tween()
 		tween.start()
 		tween.connect("tween_all_completed", self, "on_tween_complete")
@@ -61,9 +53,7 @@ func _on_ExpandUpgs_pressed():
 	$ExpandUpgs.visible = false
 	set_rev_tween()
 	tween.start()
-	is_half_size = false
 
 func on_tween_complete():
 	$ExpandUpgs.visible = true
-	is_half_size = true
 	tween.disconnect("tween_all_completed", self, "on_tween_complete")

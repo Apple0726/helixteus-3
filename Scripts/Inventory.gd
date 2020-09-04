@@ -4,8 +4,13 @@ onready var game = get_node("/root/Game")
 #Tween for fading in/out panel
 var tween:Tween
 var tab:String
+var buy_sell_scene = preload("res://Scenes/BuySellPanel.tscn")
+var buy_sell
 
 func _ready():
+	buy_sell = buy_sell_scene.instance()
+	buy_sell.visible = false
+	add_child(buy_sell)
 	tween = Tween.new()
 	add_child(tween)
 	_on_Materials_pressed()
@@ -29,6 +34,7 @@ func _on_Materials_pressed():
 		texture.texture_normal = load("res://Graphics/Materials/" + mat + ".png")
 		texture.connect("mouse_entered", self, "show_mat", [mat])
 		texture.connect("mouse_exited", self, "hide_mat")
+		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat])
 		rsrc.get_node("Text").text = String(game.clever_round(game.mats[mat], 3)) + " kg"
 		$Contents/Control/GridContainer.add_child(rsrc)
 
@@ -45,103 +51,73 @@ func _on_Metals_pressed():
 		texture.texture_normal = load("res://Graphics/Metals/" + met + ".png")
 		texture.connect("mouse_entered", self, "show_met", [met])
 		texture.connect("mouse_exited", self, "hide_met")
+		texture.connect("pressed", self, "show_buy_sell", ["Metals", met])
 		rsrc.get_node("Text").text = String(game.clever_round(game.mets[met], 3)) + " kg"
 		$Contents/Control/GridContainer.add_child(rsrc)
-#		var hbox:HBoxContainer = HBoxContainer.new()
-#		var texture:TextureButton = TextureButton.new()
-#		var label = Label.new()
-#		hbox["custom_constants/separation"] = 15
-#		hbox.set_h_size_flags(hbox.SIZE_EXPAND_FILL)
-#		texture.texture_normal = load("res://Graphics/Metals/" + met + ".png")
-#		texture.expand = true
-#		texture.connect("mouse_entered", self, "show_met", [met])
-#		texture.connect("mouse_exited", self, "hide_met")
-#		texture.rect_min_size = Vector2(48, 48)
-#		label.text = String(game.clever_round(game.mets[met], 3)) + " kg"
-#		$Contents/Control/GridContainer.add_child(hbox)
-#		hbox.add_child(texture)
-#		hbox.add_child(label)
+
+func show_buy_sell(type:String, obj:String):
+	if type == "Materials" and game.mats[obj] == 0:
+		return
+	if type == "Metals" and game.mets[obj] == 0:
+		return
+	buy_sell.visible = true
+	buy_sell.refresh(type, obj)
+	if not game.panels.has("buy_sell"):
+		game.panels.push_front("buy_sell")
 
 func show_mat(mat:String):
-	game.show_tooltip(get_mat_str(mat))
+	game.show_tooltip(get_mat_str(mat) + "\n" + get_mat_str(mat, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
 
 func hide_mat():
 	game.hide_tooltip()
 
 func show_met(met:String):
-	game.show_tooltip(get_met_str(met) + "\n" + get_met_desc(met))
+	game.show_tooltip(get_met_str(met) + "\n" + get_met_str(met, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
 
 func hide_met():
 	game.hide_tooltip()
 
-func get_mat_str(mat:String):
+func get_mat_str(mat:String, desc:String = ""):
 	match mat:
 		"coal":
-			return tr("COAL")
+			return tr("COAL" + desc)
 		"glass":
-			return tr("GLASS")
+			return tr("GLASS" + desc)
 		"sand":
-			return tr("SAND")
+			return tr("SAND" + desc)
 		"clay":
-			return tr("CLAY")
+			return tr("CLAY" + desc)
 		"soil":
-			return tr("SOIL")
+			return tr("SOIL" + desc)
 		"cellulose":
-			return tr("CELLULOSE")
+			return tr("CELLULOSE" + desc)
 
-func get_met_str(met:String):
+func get_met_str(met:String, desc:String = ""):
 	match met:
 		"lead":
-			return tr("LEAD")
+			return tr("LEAD" + desc)
 		"copper":
-			return tr("COPPER")
+			return tr("COPPER" + desc)
 		"iron":
-			return tr("IRON")
+			return tr("IRON" + desc)
 		"aluminium":
-			return tr("ALUMINIUM")
+			return tr("ALUMINIUM" + desc)
 		"silver":
-			return tr("SILVER")
+			return tr("SILVER" + desc)
 		"gold":
-			return tr("GOLD")
+			return tr("GOLD" + desc)
 		"amethyst":
-			return tr("AMETHYST")
+			return tr("AMETHYST" + desc)
 		"emerald":
-			return tr("EMERALD")
+			return tr("EMERALD" + desc)
 		"quartz":
-			return tr("QUARTZ")
+			return tr("QUARTZ" + desc)
 		"topaz":
-			return tr("TOPAZ")
+			return tr("TOPAZ" + desc)
 		"ruby":
-			return tr("RUBY")
+			return tr("RUBY" + desc)
 		"sapphire":
-			return tr("SAPPHIRE")
-
-func get_met_desc(met:String):
-	match met:
-		"lead":
-			return tr("LEAD_DESC")
-		"copper":
-			return tr("COPPER_DESC")
-		"iron":
-			return tr("IRON_DESC")
-		"aluminium":
-			return tr("ALUMINIUM_DESC")
-		"silver":
-			return tr("SILVER_DESC")
-		"gold":
-			return tr("GOLD_DESC")
-		"amethyst":
-			return tr("AMETHYST_DESC")
-		"emerald":
-			return tr("EMERALD_DESC")
-		"quartz":
-			return tr("QUARTZ_DESC")
-		"topaz":
-			return tr("TOPAZ_DESC")
-		"ruby":
-			return tr("RUBY_DESC")
-		"sapphire":
-			return tr("SAPPHIRE_DESC")
+			return tr("SAPPHIRE" + desc)
 
 func set_btn_color(btn):
 	for other_btn in $Tabs.get_children():

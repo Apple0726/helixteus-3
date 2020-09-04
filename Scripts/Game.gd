@@ -91,24 +91,28 @@ var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "r
 var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
+var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
 #If true, clicking any tile initiates mining
 var about_to_mine = false
 var mining_HUD
-
-#Stores information on the building(s) about to be constructed
-var constr_cost = {"money":0, "energy":0, "time":0}
-
-var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34},
-					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96},
-					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87},
-					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7},
-					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49},
-					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3}}
+var mat_info = {	"coal":{"value":10},#One kg of coal = $10
+					"glass":{"value":20},
+					"sand":{"value":4},
+					"clay":{"value":12},
+					"soil":{"value":8},
+					"cellulose":{"value":12},
+}
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
+					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
+					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
+					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
+					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
+					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300}}
 
 #Stores all building information
-var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
-				 "PP":{"name":"Power plant", "desc":"Generates energy from... something", "money":80, "energy":0, "time":5, "production":0.3, "capacity":40}}
+var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "costs":{"money":100, "energy":50, "time":5}, "production":0.12, "capacity":15},
+				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something", "costs":{"money":80, "time":5}, "production":0.3, "capacity":40}}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300, "cellulose":30}},
@@ -125,7 +129,7 @@ var element = {	"Si":{"density":2.329},
 #Display help when players see/do things for the first time. true: show help
 var help = {"mining":true}
 
-#Measures to not overwhelm beginners
+#Measures to not overwhelm beginners. false: not visible
 var show = {	"minerals":false,
 				"stone":false,
 				"mining_layer":false,
@@ -177,11 +181,6 @@ func open_shop_pickaxe():
 		fade_in_panel(shop_panel)
 	shop_panel._on_Pickaxes_pressed()
 
-#Executed once a building has been double clicked in the construction panel
-func construct_building(bldg_type):
-	put_bottom_info(tr("STOP_CONSTRUCTION"))
-	view.obj.bldg_to_construct = bldg_type
-
 func put_bottom_info(txt:String):
 	var more_info = $Control/BottomInfo
 	more_info.text = txt
@@ -206,8 +205,8 @@ func _load_game():
 	construct_panel = construct_panel_scene.instance()
 	HUD = HUD_scene.instance()
 
-	construct_panel.rect_scale = Vector2(0.8, 0.8)
-	shop_panel.rect_position = Vector2(106.5, 70)
+	
+	construct_panel.rect_position = Vector2(106.5, 70)
 	construct_panel.visible = false
 	add_child(construct_panel)
 
@@ -1076,21 +1075,21 @@ func make_planet_composition(temp:float, depth:String):
 	return result
 
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
-	var mat_info = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
-						"glass":{"chance":0.1, "amount":1},
-						"sand":{"chance":0.8, "amount":50},
-						"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
-						"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
-						"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
+	var surface_mat_info = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
+								"glass":{"chance":0.1, "amount":1},
+								"sand":{"chance":0.8, "amount":50},
+								"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
+								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
+								"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
 	}
-	mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
+	surface_mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
 	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
-	mat_info.glass.chance = mat_info.sand.chance * sand_glass_ratio
-	mat_info.sand.chance *= (1 - sand_glass_ratio)
-	for mat in mat_info:
-		mat_info[mat].chance = clever_round(mat_info[mat].chance, 3)
-		mat_info[mat].amount = clever_round(mat_info[mat].amount, 3)
-	return mat_info
+	surface_mat_info.glass.chance = surface_mat_info.sand.chance * sand_glass_ratio
+	surface_mat_info.sand.chance *= (1 - sand_glass_ratio)
+	for mat in surface_mat_info:
+		surface_mat_info[mat].chance = clever_round(surface_mat_info[mat].chance, 3)
+		surface_mat_info[mat].amount = clever_round(surface_mat_info[mat].amount, 3)
+	return surface_mat_info
 
 func show_tooltip(txt:String):
 	#Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
@@ -1232,6 +1231,35 @@ func get_sum_of_dict(dict:Dictionary):
 		sum += el
 	return sum
 
+#Checks if player has enough resources to buy/craft/build something
+func check_enough(costs):
+	var enough = true
+	for cost in costs:
+		if cost == "money" and money < costs[cost]:
+			enough = false
+		if cost == "stone" and stone < costs[cost]:
+			enough = false
+		if cost == "energy" and energy < costs[cost]:
+			enough = false
+		if mats.has(cost) and mats[cost] < costs[cost]:
+			enough = false
+		if mets.has(cost) and mets[cost] < costs[cost]:
+			enough = false
+	return enough
+
+func deduct_resources(costs):
+	for cost in costs:
+		if cost == "money":
+			money -= costs.money
+		if cost == "stone":
+			stone -= costs.stone
+		if cost == "energy":
+			stone -= costs.energy
+		if mats.has(cost):
+			mats[cost] -= costs[cost]
+		if mets.has(cost):
+			mets[cost] -= costs[cost]
+
 #Converts time in milliseconds to string format
 func time_to_str (time):
 	var seconds = floor(time / 1000)
@@ -1329,13 +1357,25 @@ func _input(event):
 					toggle_inventory()
 				"construct":
 					toggle_construct_panel()
+				"buy_sell":
+					inventory.buy_sell.visible = false
+					panels.pop_front()
 			hide_tooltip()
 	
+	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
 		if c_v == "galaxy":
-			view.obj.toggle_overlay()
+			overlay._on_CheckBox_pressed()
 			overlay.get_node("Panel/CheckBox").pressed = not overlay.get_node("Panel/CheckBox").pressed
 	
+	#B to buy/construct
+	if Input.is_action_just_released("buy"):
+		if len(panels) != 0:
+			match panels[0]:
+				"shop":
+					shop_panel._on_Buy_pressed()
+				"construct":
+					construct_panel._on_Buy_pressed()
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
 		money += minerals * 5
@@ -1343,54 +1383,42 @@ func _input(event):
 		minerals = 0
 
 func _on_en_mouse_entered():
-	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("English")
 
 func _on_en_mouse_exited():
 	hide_tooltip()
 
 func _on_fr_mouse_entered():
-	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Français")
 
 func _on_fr_mouse_exited():
 	hide_tooltip()
 
 func _on_it_mouse_entered():
-	tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	show_tooltip("Italiano")
 
 func _on_it_mouse_exited():
 	hide_tooltip()
 
-var unicode:bool = false
-
 func _on_ru_mouse_entered():
-	tooltip["custom_fonts/font"] = load("Resources/unicode_font.tres")
 	show_tooltip("Русский")
 
 func _on_ru_mouse_exited():
-	if not unicode:
-		tooltip["custom_fonts/font"] = load("Resources/default_font.tres")
 	hide_tooltip()
 
 func _on_en_pressed():
-	unicode = false
 	TranslationServer.set_locale("en")
 	change_language()
 
 func _on_fr_pressed():
-	unicode = false
 	TranslationServer.set_locale("fr")
 	change_language()
 
 func _on_it_pressed():
-	unicode = false
 	TranslationServer.set_locale("it")
 	change_language()
 
 func _on_ru_pressed():
-	unicode = true
 	TranslationServer.set_locale("ru")
 	change_language()
 

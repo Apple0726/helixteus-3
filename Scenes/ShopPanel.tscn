@@ -1,24 +1,20 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/ShopPanel.gd" type="Script" id=3]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 4 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
-
-[sub_resource type="InputEventAction" id=3]
-action = "buy"
-
-[sub_resource type="ShortCut" id=4]
-shortcut = SubResource( 3 )
 
 [node name="ShopPanel" type="Control"]
 anchor_left = 0.5
@@ -48,7 +44,7 @@ __meta__ = {
 margin_right = 1064.0
 margin_bottom = 64.0
 custom_fonts/font = SubResource( 1 )
-text = "Shop"
+text = "SHOP"
 align = 1
 valign = 1
 __meta__ = {
@@ -86,6 +82,7 @@ size_flags_horizontal = 3
 text = "PICKAXES"
 
 [node name="Contents" type="VBoxContainer" parent="."]
+visible = false
 margin_top = 104.0
 margin_right = 1064.0
 margin_bottom = 600.0
@@ -114,7 +111,7 @@ size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="Items" type="Panel" parent="Contents/HBoxContainer"]
-margin_right = 759.0
+margin_right = 1064.0
 margin_bottom = 460.0
 size_flags_horizontal = 3
 
@@ -156,6 +153,7 @@ __meta__ = {
 }
 
 [node name="ItemInfo" type="Panel" parent="Contents/HBoxContainer"]
+visible = false
 margin_left = 757.0
 margin_right = 1064.0
 margin_bottom = 460.0
@@ -186,7 +184,6 @@ margin_bottom = 38.0
 size_flags_horizontal = 3
 theme = ExtResource( 5 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 4 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]
 margin_left = 17.0

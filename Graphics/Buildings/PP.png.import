@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MineralExtractor.png-64c01ff06ac95dd78f62230fe862bbda.stex"
+path="res://.import/PP.png-4a798f7af51cb601fd12b297b095abc4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/MineralExtractor.png"
-dest_files=[ "res://.import/MineralExtractor.png-64c01ff06ac95dd78f62230fe862bbda.stex" ]
+source_file="res://Graphics/Buildings/PP.png"
+dest_files=[ "res://.import/PP.png-4a798f7af51cb601fd12b297b095abc4.stex" ]
 
 [params]
 

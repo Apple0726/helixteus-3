@@ -1,9 +1,4 @@
-[gd_resource type="DynamicFont" load_steps=2 format=2]
-
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[gd_resource type="DynamicFontData" format=2]
 
 [resource]
-size = 20
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 1 )
+font_path = "res://Text/Arimo-Regular.ttf"
