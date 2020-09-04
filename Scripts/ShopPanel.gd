@@ -116,7 +116,7 @@ func get_item_name(name:String):
 		"iron_pickaxe":
 			return tr("IRON_PICKAXE")
 
-func _on_Buy_pressed():
+func check_enough():
 	var enough = true
 	for cost in item_costs:
 		if cost == "money" and game.money < item_costs[cost]:
@@ -127,7 +127,10 @@ func _on_Buy_pressed():
 			enough = false
 		if game.mets.has(cost) and game.mets[cost] < item_costs[cost]:
 			enough = false
-	if enough:
+	return enough
+	
+func _on_Buy_pressed():
+	if check_enough():
 		if tab == "pickaxes":
 			if game.pickaxe != null:
 				YNPanel(tr("REPLACE_PICKAXE") % [get_item_name(game.pickaxe.name).to_lower(), get_item_name(item_name).to_lower()])
@@ -149,8 +152,18 @@ func buy_pickaxe_confirm():
 	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe")
 
 func buy_pickaxe():
+	if not check_enough():
+		return
+	for cost in item_costs:
+		if cost == "money":
+			game.money -= item_costs.money
+		if cost == "stone":
+			game.stone -= item_costs.stone
+		if game.mats.has(cost):
+			game.mats[cost] -= item_costs[cost]
+		if game.mets.has(cost):
+			game.mets[cost] -= item_costs[cost]
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
-	game.money -= item_costs.money
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}
 	game.popup(tr("BUY_PICKAXE") % [get_item_name(item_name).to_lower()], 1.0)

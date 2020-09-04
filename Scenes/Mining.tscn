@@ -1,11 +1,14 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Mining.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Materials/coal.png" type="Texture" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Audio/SFX/break_rock.ogg" type="AudioStream" id=5]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Spritesheets/cracks.png" type="Texture" id=7]
+[ext_resource path="res://Audio/SFX/mining_metal.ogg" type="AudioStream" id=8]
+[ext_resource path="res://Audio/SFX/mining_stone.ogg" type="AudioStream" id=9]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -551,6 +554,7 @@ position = Vector2( -64.1282, 0 )
 margin_top = 116.0
 margin_right = 192.0
 margin_bottom = 140.0
+mouse_filter = 1
 text = "Layer: surface"
 align = 1
 __meta__ = {
@@ -670,8 +674,20 @@ text = "AUTO_REPLACE"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MiningSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="HitRockSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+volume_db = -10.0
+
+[node name="HitMetalSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
 [connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
 [connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
+[connection signal="mouse_entered" from="LayerInfo/Layer" to="." method="_on_Layer_mouse_entered"]
+[connection signal="mouse_exited" from="LayerInfo/Layer" to="." method="_on_Layer_mouse_exited"]
 [connection signal="mouse_entered" from="AutoReplace" to="." method="_on_CheckBox_mouse_entered"]
 [connection signal="mouse_exited" from="AutoReplace" to="." method="_on_CheckBox_mouse_exited"]

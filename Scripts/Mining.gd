@@ -11,11 +11,13 @@ var contents = []
 var tween:Tween
 var layer:String
 onready var met_info = game.met_info
+var metal_sprites = []
 
 func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 	$Back.text = "<- " + tr("BACK") + " (Z)"
 	$Tile/TextureRect.texture = tile_texture
+	update_info()
 	generate_rock(false)
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
@@ -23,7 +25,6 @@ func _ready():
 	$Help.visible = game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
-	update_info()
 
 func update_info():
 	var upper_depth
@@ -65,15 +66,20 @@ func update_info():
 	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxe_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):
+	var tile_sprite = $Tile
+	var vbox = $Panel/VBoxContainer
 	contents = []
 	if tween:
 		remove_child(tween)
 	tween = Tween.new()
 	add_child(tween)
-	tween.interpolate_property($Tile, "rect_scale", Vector2(0.3, 0.3), Vector2(1, 1), 0.4, Tween.TRANS_CIRC, Tween.EASE_OUT)
+	tween.interpolate_property(tile_sprite, "rect_scale", Vector2(0.3, 0.3), Vector2(1, 1), 0.4, Tween.TRANS_CIRC, Tween.EASE_OUT)
 	tween.start()
-	for thing in $Panel/VBoxContainer.get_children():
-		$Panel/VBoxContainer.remove_child(thing)
+	for met_sprite in metal_sprites:
+		tile_sprite.remove_child(met_sprite)
+	metal_sprites = []
+	for thing in vbox.get_children():
+		vbox.remove_child(thing)
 	if tile.contents == [] or new:
 		total_mass = 0
 		var other_volume = 0#in m^3
@@ -85,13 +91,34 @@ func generate_rock(new:bool):
 				contents.append({"name":mat, "type":"Materials", "amount":amount})
 				other_volume += amount / rho / 1000
 		if layer != "surface":
-			for met in met_info:
-				if met_info[met].min_depth < tile.depth and tile.depth < met_info[met].max_depth:
-					if randf() < 0.25 / met_info[met].rarity:
-						var amount = game.clever_round(met_info[met].amount * rand_range(0.2, 3))
-						contents.append({"name":met, "type":"Metals", "amount":amount})
-						other_volume += amount / game.met_info[met].density / 1000
-		#   									                          	    V Every km, rock density goes up by 0.01
+			if not tile.has("current_deposit"):
+				for met in met_info:
+					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth:
+						if randf() < 0.1 / met_info[met].rarity:
+							tile.current_deposit = {"met":met, "size":game.rand_int(4, 10), "progress":1}
+			if tile.has("current_deposit"):
+				var met = tile.current_deposit.met
+				var size = tile.current_deposit.size
+				var progress = tile.current_deposit.progress
+				var amount_multiplier = -abs(2.0/size * progress - 1) + 1
+				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.42) * amount_multiplier, 3)
+				for i in floor(amount / 2.0):
+					var met_sprite = Sprite.new()
+					met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
+					met_sprite.centered = true
+					met_sprite.scale *= rand_range(0.15, 0.2)
+					var half_size_in_px = met_sprite.scale.x * 128
+					met_sprite.rotation = rand_range(0, 2 * PI)
+					met_sprite.position.x = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
+					met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
+					metal_sprites.append(met_sprite)
+					tile_sprite.add_child(met_sprite)
+				contents.append({"name":met, "type":"Metals", "amount":amount})
+				other_volume += amount / game.met_info[met].density / 1000
+				tile.current_deposit.progress += 1
+				if tile.current_deposit.progress > size - 1:
+					tile.erase("current_deposit")
+			#   									                          	    V Every km, rock density goes up by 0.01
 		var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 		contents.push_front({"name":"stone", "type":"Icons", "amount":stone_amount})
 		tile.contents = contents
@@ -104,7 +131,7 @@ func generate_rock(new:bool):
 		texture.texture_normal = load("res://Graphics/" + obj.type + "/" + obj.name + ".png")
 		texture.rect_min_size = Vector2(42, 42)
 		rsrc.get_node("Text").text = String(obj.amount) + " kg"
-		$Panel/VBoxContainer.add_child(rsrc)
+		vbox.add_child(rsrc)
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
@@ -138,6 +165,12 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe:
 		return
+	if tile.has("current_deposit"):
+		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
+		$HitMetalSound.play()
+	else:
+		$HitRockSound.pitch_scale = rand_range(0.8, 1.2)
+		$HitRockSound.play()
 	if $Help.visible:
 		help_counter += 1
 		if help_counter >= 10:
@@ -147,6 +180,8 @@ func pickaxe_hit():
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	if progress >= 100:
+		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
+		$MiningSound.play()
 		for content in contents:
 			if content.type == "Materials":
 				game.mats[content.name] += content.amount
@@ -195,7 +230,13 @@ func _on_Button_button_up():
 	$PickaxeAnim.get_animation("Pickaxe swing").loop = false
 
 func _on_CheckBox_mouse_entered():
-	game.show_tooltip("AUTO_REPLACE_DESC")
+	game.show_tooltip(tr("AUTO_REPLACE_DESC"))
 
 func _on_CheckBox_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Layer_mouse_entered():
+	game.show_tooltip(tr(layer.to_upper() + "_DESC"))
+
+func _on_Layer_mouse_exited():
 	game.hide_tooltip()

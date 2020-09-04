@@ -62,7 +62,7 @@ var energy = 200
 #Dimension remnants
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
-var pickaxe = {"name":"stick", "speed":1.0, "durability":70}
+var pickaxe = {"name":"iron_pickaxe", "speed":4.3, "durability":1600}
 var mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -99,12 +99,12 @@ var mining_HUD
 #Stores information on the building(s) about to be constructed
 var constr_cost = {"money":0, "energy":0, "time":0}
 
-var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":3, "rarity":1, "density":11.34},
-					"copper":{"min_depth":250, "max_depth":750, "amount":3, "rarity":1.3, "density":8.96},
-					"iron":{"min_depth":500, "max_depth":1000, "amount":3, "rarity":1.7, "density":7.87},
-					"aluminium":{"min_depth":750, "max_depth":1500, "amount":3, "rarity":2.3, "density":2.7},
-					"silver":{"min_depth":1000, "max_depth":1750, "amount":3, "rarity":2.9, "density":10.49},
-					"gold":{"min_depth":1250, "max_depth":2000, "amount":3, "rarity":4.5, "density":19.3}}
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34},
+					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96},
+					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87},
+					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7},
+					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49},
+					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3}}
 
 #Stores all building information
 var bldg_info = {"ME":{"name":"Mineral extractor", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "money":100, "energy":50, "time":5, "production":0.12, "capacity":15},
@@ -232,7 +232,7 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
-	planet_data[2].crust_start_depth = rand_int(14, 16)
+	planet_data[2].crust_start_depth = rand_int(4, 6)
 	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
 	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
