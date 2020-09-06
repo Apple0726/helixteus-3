@@ -4,7 +4,7 @@ onready var game = get_node("/root/Game")
 #Tween for fading in/out panel
 var tween:Tween
 var tab:String
-var buy_sell_scene = preload("res://Scenes/BuySellPanel.tscn")
+var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
 
 func _ready():
@@ -23,42 +23,37 @@ func refresh_values():
 
 func _on_Materials_pressed():
 	tab = "materials"
-	remove_everything()
 	$Contents/Info.text = tr("INV_MAT_DESC")
-	set_btn_color($Tabs/Materials)
-	for mat in game.mats:
-		if game.show.has(mat) and not game.show[mat]:
+	Helper.set_btn_color($Tabs/Materials)
+	var mat_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.mats)
+	for mat in mat_data:
+		if game.show.has(mat.name) and not game.show[mat.name]:
+			mat.rsrc.visible = false
 			continue
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
-		texture.texture_normal = load("res://Graphics/Materials/" + mat + ".png")
-		texture.connect("mouse_entered", self, "show_mat", [mat])
+		var texture = mat.rsrc.get_node("Texture")
+		texture.connect("mouse_entered", self, "show_mat", [mat.name])
 		texture.connect("mouse_exited", self, "hide_mat")
-		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat])
-		rsrc.get_node("Text").text = String(game.clever_round(game.mats[mat], 3)) + " kg"
-		$Contents/Control/GridContainer.add_child(rsrc)
+		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat.name])
 
 func _on_Metals_pressed():
 	tab = "metals"
-	remove_everything()
 	$Contents/Info.text = tr("INV_MET_DESC")
-	set_btn_color($Tabs/Metals)
-	for met in game.mets:
-		if game.show.has(met) and not game.show[met]:
+	Helper.set_btn_color($Tabs/Metals)
+	var met_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.mets)
+	for met in met_data:
+		if game.show.has(met.name) and not game.show[met.name]:
 			continue
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
-		texture.texture_normal = load("res://Graphics/Metals/" + met + ".png")
+		var texture = met.rsrc.get_node("Texture")
 		texture.connect("mouse_entered", self, "show_met", [met])
 		texture.connect("mouse_exited", self, "hide_met")
 		texture.connect("pressed", self, "show_buy_sell", ["Metals", met])
-		rsrc.get_node("Text").text = String(game.clever_round(game.mets[met], 3)) + " kg"
-		$Contents/Control/GridContainer.add_child(rsrc)
 
 func show_buy_sell(type:String, obj:String):
 	if type == "Materials" and game.mats[obj] == 0:
+		game.popup("NONE_TO_SELL", 1.5)
 		return
 	if type == "Metals" and game.mets[obj] == 0:
+		game.popup("NONE_TO_SELL", 1.5)
 		return
 	buy_sell.visible = true
 	buy_sell.refresh(type, obj)
@@ -118,16 +113,3 @@ func get_met_str(met:String, desc:String = ""):
 			return tr("RUBY" + desc)
 		"sapphire":
 			return tr("SAPPHIRE" + desc)
-
-func set_btn_color(btn):
-	for other_btn in $Tabs.get_children():
-		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_pressed"] = Color(1, 1, 1, 1)
-	btn["custom_colors/font_color"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
-
-func remove_everything():
-	for thing in $Contents/Control/GridContainer.get_children():
-		$Contents/Control/GridContainer.remove_child(thing)

@@ -1,25 +1,28 @@
 extends Node2D
 
-onready var view_scene = preload("res://Scenes/View.tscn")
-onready var construct_panel_scene = preload("res://Scenes/ConstructPanel.tscn")
-onready var shop_panel_scene = preload("res://Scenes/ShopPanel.tscn")
-onready var inventory_scene = preload("res://Scenes/Inventory.tscn")
+onready var view_scene = preload("res://Scenes/Views/View.tscn")
+onready var construct_panel_scene = preload("res://Scenes/Panels/ConstructPanel.tscn")
+onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
+onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
+onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
-onready var dimension_scene = preload("res://Scenes/Dimension.tscn")
+onready var dimension_scene = preload("res://Scenes/Views/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
-onready var mining_HUD_scene = preload("res://Scenes/Mining.tscn")
+onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
+var upgrade_panel:Control
 var inventory:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
 onready var tooltip:Control = $Tooltip
+onready var adv_tooltip:Control = $AdvTooltip
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -111,8 +114,8 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300}}
 
 #Stores all building information
-var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "costs":{"money":100, "energy":50, "time":5}, "production":0.12, "capacity":15},
-				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something", "costs":{"money":80, "time":5}, "production":0.3, "capacity":40}}
+var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "costs":Data.costs.ME, "path_1":Data.path_1.ME, "path_2":Data.path_2.ME, "base_metal_costs":Data.base_metal_costs.ME},
+				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something", "costs":Data.costs.PP, "path_1":Data.path_1.PP, "path_2":Data.path_2.PP, "base_metal_costs":Data.base_metal_costs.PP}}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300, "cellulose":30}},
@@ -152,43 +155,6 @@ func _ready():
 	#noob
 	#AudioServer.set_bus_mute(1,true)
 
-func popup(txt, dur):
-	$Popup.visible = true
-	move_child($Popup, get_child_count())
-	$Popup.init_popup(txt, dur)
-
-var dialog:AcceptDialog
-
-func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
-	if dialog:
-		$Control.remove_child(dialog)
-	dialog = AcceptDialog.new()
-	$Control.add_child(dialog)
-	dialog.window_title = title
-	dialog.dialog_text = txt
-	dialog.popup_centered()
-	for i in range(0, len(other_buttons)):
-		dialog.add_button(other_buttons[i], false, other_functions[i])
-		dialog.connect("custom_action", self, "popup_action")
-	dialog.get_ok().text = ok_txt
-
-func popup_action(action:String):
-	call(action)
-	dialog.visible = false
-
-func open_shop_pickaxe():
-	if not shop_panel.visible:
-		fade_in_panel(shop_panel)
-	shop_panel._on_Pickaxes_pressed()
-
-func put_bottom_info(txt:String):
-	var more_info = $Control/BottomInfo
-	more_info.text = txt
-	more_info.rect_size.x = 0#This "trick" lets us resize the label to fit the text
-	more_info.rect_position.x = -more_info.rect_size.x / 2.0
-	more_info.visible = true
-	move_child($Control, get_child_count())
-
 func _load_game():
 	c_v = "planet"
 	$Languages.visible = false
@@ -204,7 +170,7 @@ func _load_game():
 	shop_panel = shop_panel_scene.instance()
 	construct_panel = construct_panel_scene.instance()
 	HUD = HUD_scene.instance()
-
+	
 	
 	construct_panel.rect_position = Vector2(106.5, 70)
 	construct_panel.visible = false
@@ -271,6 +237,45 @@ func _load_game():
 
 	move_child($FPS, get_child_count())
 
+func popup(txt, dur):
+	$Popup.visible = true
+	move_child($Popup, get_child_count())
+	$Popup.init_popup(txt, dur)
+
+var dialog:AcceptDialog
+
+func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
+	if dialog:
+		$Control.remove_child(dialog)
+	dialog = AcceptDialog.new()
+	$Control.add_child(dialog)
+	dialog.window_title = title
+	dialog.dialog_text = txt
+	dialog.popup_centered()
+	for i in range(0, len(other_buttons)):
+		dialog.add_button(other_buttons[i], false, other_functions[i])
+		dialog.connect("custom_action", self, "popup_action")
+	dialog.get_ok().text = ok_txt
+
+func popup_action(action:String):
+	call(action)
+	dialog.visible = false
+
+func open_shop_pickaxe():
+	if not shop_panel.visible:
+		fade_in_panel(shop_panel)
+	shop_panel._on_Pickaxes_pressed()
+
+func put_bottom_info(txt:String):
+	var more_info = $Control/BottomInfo
+	more_info.text = txt
+	more_info.modulate.a = 0
+	more_info.visible = true
+	more_info.rect_size.x = 0#This "trick" lets us resize the label to fit the text
+	more_info.rect_position.x = -more_info.get_minimum_size().x / 2.0
+	more_info.modulate.a = 1
+	move_child($Control, get_child_count())
+
 func fade_in_panel(panel:Control):
 	panel.visible = true
 	move_child(panel, get_child_count())
@@ -289,6 +294,20 @@ func fade_out_panel(panel:Control):
 
 func on_fade_complete(panel:Control):
 	panel.visible = false
+
+func add_upgrade_panel(ids:Array):
+	if upgrade_panel and is_a_parent_of(upgrade_panel):
+		$Panels.remove_child(upgrade_panel)
+	upgrade_panel = upgrade_panel_scene.instance()
+	upgrade_panel.ids = ids
+	panels.push_front("upgrade")
+	$Panels.add_child(upgrade_panel)
+	move_child($Panels, get_child_count())
+
+func remove_upgrade_panel():
+	$Panels.remove_child(upgrade_panel)
+	panels.erase("upgrade")
+	upgrade_panel = null
 
 func toggle_shop_panel():
 	if not shop_panel.visible:
@@ -499,6 +518,7 @@ func remove_system():
 	view.remove_obj("system")
 
 func remove_planet():
+	$Control/BottomInfo.visible = false
 	view.remove_obj("planet")
 	remove_child(planet_HUD)
 	planet_HUD = null
@@ -965,7 +985,7 @@ func generate_tiles(id:int):
 							"construction_length":0,
 							"bldg_info":{},
 							"depth":0,
-							"contents":[]})#To prevent "tile-scumming"
+							"contents":{}})#To prevent "tile-scumming"
 	var view_zoom = 3.0 / wid
 	planet_data[id]["view"] = {"pos":Vector2(640, 385) / view_zoom, "zoom":view_zoom}
 	planet_data[id]["discovered"] = true
@@ -1092,12 +1112,9 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	return surface_mat_info
 
 func show_tooltip(txt:String):
-	#Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-	tooltip.visible = true
+	tooltip.text = txt
 	tooltip.modulate.a = 0
-	move_child(tooltip, get_child_count())
-	tooltip.text = txt#Yes, we need all 3 yields otherwise tooltip has weird rekt_sizes
-	yield(get_tree().create_timer(0), "timeout")
+	tooltip.visible = true
 	tooltip.rect_size = Vector2.ZERO
 	if tooltip.rect_size.x > 400:
 		tooltip.autowrap = true
@@ -1105,11 +1122,28 @@ func show_tooltip(txt:String):
 		tooltip.rect_size.x = 400
 	yield(get_tree().create_timer(0), "timeout")
 	tooltip.modulate.a = 1
+	move_child(tooltip, get_child_count())
 
 func hide_tooltip():
-	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	tooltip.visible = false
 	tooltip.autowrap = false
+
+func show_adv_tooltip(txt:String, img:Array):
+	adv_tooltip.text = ""
+	adv_tooltip.visible = true
+	var arr = txt.split("@i")#@i: where images are placed
+	var i = 0
+	for st in arr:
+		adv_tooltip.add_text(st)
+		if i != len(img):
+			adv_tooltip.add_image(img[i], 0, 17)
+		i += 1
+	yield(get_tree().create_timer(0), "timeout")
+	adv_tooltip.rect_size.y = adv_tooltip.get_content_height()
+	move_child(adv_tooltip, get_child_count())
+
+func hide_adv_tooltip():
+	adv_tooltip.visible = false
 
 var change_view_btn
 
@@ -1260,20 +1294,6 @@ func deduct_resources(costs):
 		if mets.has(cost):
 			mets[cost] -= costs[cost]
 
-#Converts time in milliseconds to string format
-func time_to_str (time):
-	var seconds = floor(time / 1000)
-	var second_zero = "0" if seconds < 10 else ""
-	var minutes = floor(seconds / 60)
-	var minute_zero = "0" if minutes < 10 else ""
-	var hours = floor(minutes / 60)
-	var days = floor (hours / 24)
-	var years = floor (days / 365)
-	var year_str = "" if years == 0 else String(years) + "y "
-	var day_str = "" if days == 0 else String(days) + "d "
-	var hour_str = "" if hours == 0 else String(hours) + ":"
-	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)
-
 func get_roman_num(num:int):
 	if num > 3999:
 		return String(num)
@@ -1316,12 +1336,16 @@ func _process(delta):
 		fps_text.text = String(round(1 / delta)) + " FPS"
 	if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
 		tooltip.rect_position = mouse_pos + Vector2(4, 4)
+		adv_tooltip.rect_position = mouse_pos + Vector2(4, 4)
 	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
 		tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 4, -4)
+		adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 4, -4)
 	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
 		tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
+		adv_tooltip.rect_position = mouse_pos - Vector2(-4, adv_tooltip.rect_size.y)
 	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
 		tooltip.rect_position = mouse_pos - tooltip.rect_size
+		adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
 
 var mouse_pos = Vector2.ZERO
 
@@ -1345,10 +1369,7 @@ func _input(event):
 	if Input.is_action_just_released("right_click"):
 		if c_v == "planet":
 			#Cancel building
-			view.obj.bldg_to_construct = ""
-			$Control/BottomInfo.visible = false
-			for id in bldg_blueprints:
-				tiles[id]._on_Button_button_out()
+			cancel_building()
 		if len(panels) != 0:
 			match panels[0]:
 				"shop":
@@ -1360,6 +1381,8 @@ func _input(event):
 				"buy_sell":
 					inventory.buy_sell.visible = false
 					panels.pop_front()
+				"upgrade":
+					remove_upgrade_panel()
 			hide_tooltip()
 	
 	#F3 to toggle overlay
@@ -1381,6 +1404,12 @@ func _input(event):
 		money += minerals * 5
 		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
 		minerals = 0
+
+func cancel_building():
+	view.obj.bldg_to_construct = ""
+	$Control/BottomInfo.visible = false
+	for id in bldg_blueprints:
+		tiles[id]._on_Button_button_out()
 
 func _on_en_mouse_entered():
 	show_tooltip("English")

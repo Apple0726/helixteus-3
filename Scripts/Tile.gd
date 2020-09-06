@@ -12,17 +12,6 @@ onready var time_left = $TimeLeft
 onready var time_left_bar = $TimeLeft/Bar
 onready var time_left_str = $TimeLeft/TimeString
 
-#Mainly for construction_finished() function
-#var is_constructing:bool
-#
-#var bldg_str:String
-#var bldg
-#var bldg_to_construct:Sprite
-#var construction_date
-#var construction_length
-#var constr_progress:float = 0
-#var bldg_info
-
 func _ready():
 	var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 	$Texture.texture = tile_texture
@@ -38,7 +27,7 @@ func _process(_delta):
 		building_info.visible = true
 		var constr_progress = (OS.get_system_time_msecs() - tile.construction_date) / float(tile.construction_length)
 		time_left_bar.rect_scale.x = constr_progress
-		time_left_str.text = game.time_to_str(tile.construction_length - OS.get_system_time_msecs() + tile.construction_date)
+		time_left_str.text = Helper.time_to_str(tile.construction_length - OS.get_system_time_msecs() + tile.construction_date)
 		if constr_progress < 1:
 			time_left.visible = true
 		else:
@@ -75,11 +64,25 @@ func _on_Button_button_over():
 	if tile.bldg_str == "":
 		game.bldg_blueprints.append(id)
 		display_bldg(planet.bldg_to_construct, 0.5)
+	else:
+		var tooltip:String = ""
+		var icons = []
+		match tile.bldg_str:
+			"ME":
+				tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
+				icons = [load("res://Graphics/Icons/Minerals.png"), load("res://Graphics/Icons/Minerals.png")]
+			"PP":
+				tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
+				icons = [load("res://Graphics/Icons/Energy.png"), load("res://Graphics/Icons/Energy.png")]
+		tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+		game.show_adv_tooltip(tooltip, icons)
+	planet.tile_over = id
 
 func _on_Button_button_out():
 	if tile.bldg_str == "":
 		game.bldg_blueprints.erase(id)
 		$Building.texture = null
+	game.hide_adv_tooltip()
 
 func _on_Button_button_pressed():
 	#Checks whether we're dragging or not. We don't want the click event to happen while the player is dragging
@@ -150,4 +153,4 @@ func add_bldg_info():
 	if tile.bldg_str != "":
 		match tile.bldg_str:
 			"ME", "PP":
-				tile.bldg_info = {"collect_date":tile.construction_date + tile.construction_length, "stored":0, "production":game.bldg_info[tile.bldg_str]["production"], "capacity":game.bldg_info[tile.bldg_str]["capacity"]}
+				tile.bldg_info = {"collect_date":tile.construction_date + tile.construction_length, "stored":0, "path_1":1, "path_2":1, "production":game.bldg_info[tile.bldg_str].path_1.value, "capacity":game.bldg_info[tile.bldg_str].path_2.value}

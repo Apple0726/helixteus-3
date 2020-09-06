@@ -23,7 +23,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale_mult = s_m
 	scale_dec_threshold = 5 * pow(10, -2 - floor(game.log10(s_m)))
 	scale_inc_threshold = 5 * pow(10, -1 - floor(game.log10(s_m)))
-	obj_scene = load("res://Scenes/" + obj_str + ".tscn")
+	obj_scene = load("res://Scenes/Views/" + obj_str + ".tscn")
 	obj = obj_scene.instance()
 	add_child(obj)
 	position = pos

@@ -20,36 +20,28 @@ func _ready():
 		bldg_btn.costs = bldg_info.costs
 		bldg_btn.parent = "construct_panel"
 		item_container.get_node(bldg_info.type).add_child(bldg_btn)
+	_on_Basic_pressed()
 
 func _on_Basic_pressed():
 	tab = "basic"
 	$Contents.visible = true
 	set_item_visibility("Basic")
 	$Contents/Info.text = tr("BASIC_DESC")
-	set_btn_color($Tabs/Basic)
+	Helper.set_btn_color($Tabs/Basic)
 
 func _on_Storage_pressed():
 	tab = "storage"
 	$Contents.visible = true
 	set_item_visibility("Storage")
 	$Contents/Info.text = tr("STORAGE_DESC")
-	set_btn_color($Tabs/Storage)
+	Helper.set_btn_color($Tabs/Storage)
 
 func _on_Production_pressed():
 	tab = "production"
 	$Contents.visible = true
 	set_item_visibility("Production")
 	$Contents/Info.text = tr("PRODUCTION_DESC")
-	set_btn_color($Tabs/Production)
-
-func set_btn_color(btn):
-	for other_btn in $Tabs.get_children():
-		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_pressed"] = Color(1, 1, 1, 1)
-	btn["custom_colors/font_color"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
+	Helper.set_btn_color($Tabs/Production)
 
 func set_item_visibility(type:String):
 	for other_type in $Contents/HBoxContainer/Items.get_children():
@@ -77,29 +69,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary):
 	desc += "\n"
 	vbox.get_node("Description").text = desc
 	$Contents/HBoxContainer/ItemInfo.visible = true
-	for cost in costs:
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
-		if cost == "money":
-			texture.texture_normal = load("res://Graphics/Icons/Money.png")
-			rsrc.get_node("Text").text = String(costs[cost])
-		elif cost == "stone":
-			texture.texture_normal = load("res://Graphics/Icons/stone.png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		elif cost == "energy":
-			texture.texture_normal = load("res://Graphics/Icons/Energy.png")
-			rsrc.get_node("Text").text = String(costs[cost])
-		elif cost == "time":
-			texture.texture_normal = load("res://Graphics/Icons/Time.png")
-			rsrc.get_node("Text").text = game.time_to_str(costs[cost] * 1000.0)
-		elif game.mats.has(cost):
-			texture.texture_normal = load("res://Graphics/Materials/" + cost + ".png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		elif game.mets.has(cost):
-			texture.texture_normal = load("res://Graphics/Metals/" + cost + ".png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		texture.rect_min_size = Vector2(36, 36)
-		vbox.add_child(rsrc)
+	Helper.put_rsrc(vbox, 36, costs, false)
 
 func get_item_name(name:String):
 	match name:

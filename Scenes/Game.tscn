@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Scripts/Title.gd" type="Script" id=11]
 [ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
 
 [sub_resource type="DynamicFont" id=1]
@@ -77,10 +78,21 @@ expand_margin_bottom = 4.0
 
 [sub_resource type="DynamicFont" id=7]
 size = 20
-use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 15 )
+font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -253,11 +265,39 @@ stretch_mode = 4
 
 [node name="Tooltip" type="Label" parent="."]
 visible = false
-margin_right = 61.083
-margin_bottom = 26.0
+margin_right = 88.0
+margin_bottom = 48.0
 custom_styles/normal = SubResource( 6 )
 custom_fonts/font = SubResource( 7 )
-text = "Tooltip"
+text = "Tooltip
+a
+a
+a"
+
+[node name="AdvTooltip" type="RichTextLabel" parent="."]
+visible = false
+margin_right = 320.0
+margin_bottom = 300.0
+mouse_filter = 2
+custom_styles/normal = SubResource( 8 )
+custom_fonts/normal_font = SubResource( 7 )
+text = "Tooltip
+a
+a
+a"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panels" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 640.0
+margin_top = 360.0
+margin_right = 640.0
+margin_bottom = 360.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,36 +1,36 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Scripts/Dimension.gd" type="Script" id=3]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Graphics/Buttons/Arrow.png" type="Texture" id=5]
-[ext_resource path="res://Scenes/Dimension/Physics.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Scenes/Dimension/Physics.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Dimension/DimensionalPower.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Dimension/Mathematics.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Dimension/Engineering.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Dimension/Philosophy.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Scenes/Dimension/Engineering.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Scenes/Dimension/DimensionalPower.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/Dimension/Mathematics.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Scenes/Dimension/Chemistry.tscn" type="PackedScene" id=11]
-[ext_resource path="res://Scenes/Dimension/Biology.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Scripts/Dimension.gd" type="Script" id=8]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=9]
+[ext_resource path="res://Graphics/Buttons/Arrow.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/Dimension/Biology.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Scenes/Dimension/Chemistry.tscn" type="PackedScene" id=12]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
 use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 1 )
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 25
 use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 2 )
+font_data = ExtResource( 1 )
 
 [node name="Dimension" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-theme = ExtResource( 4 )
-script = ExtResource( 3 )
+theme = ExtResource( 9 )
+script = ExtResource( 8 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 368.0 ],
 "_edit_use_anchors_": false
@@ -118,22 +118,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Mathematics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 10 )]
+[node name="Mathematics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 5 )]
 margin_right = 235.0
 
-[node name="Physics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 6 )]
+[node name="Physics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
 margin_left = 239.0
 margin_right = 474.0
 mouse_filter = 0
 size_flags_vertical = 3
 
-[node name="Chemistry" parent="ScrollContainer2/GridContainer" instance=ExtResource( 11 )]
+[node name="Chemistry" parent="ScrollContainer2/GridContainer" instance=ExtResource( 12 )]
 margin_left = 478.0
 margin_right = 713.0
 mouse_filter = 0
 size_flags_vertical = 3
 
-[node name="Biology" parent="ScrollContainer2/GridContainer" instance=ExtResource( 12 )]
+[node name="Biology" parent="ScrollContainer2/GridContainer" instance=ExtResource( 11 )]
 margin_left = 717.0
 margin_right = 952.0
 mouse_filter = 0
@@ -146,7 +146,7 @@ margin_bottom = 680.0
 mouse_filter = 0
 size_flags_vertical = 3
 
-[node name="Engineering" parent="ScrollContainer2/GridContainer" instance=ExtResource( 8 )]
+[node name="Engineering" parent="ScrollContainer2/GridContainer" instance=ExtResource( 6 )]
 margin_left = 239.0
 margin_top = 342.0
 margin_right = 474.0
@@ -154,7 +154,7 @@ margin_bottom = 680.0
 mouse_filter = 0
 size_flags_vertical = 3
 
-[node name="DimensionalPower" parent="ScrollContainer2/GridContainer" instance=ExtResource( 9 )]
+[node name="DimensionalPower" parent="ScrollContainer2/GridContainer" instance=ExtResource( 4 )]
 margin_left = 478.0
 margin_top = 342.0
 margin_right = 713.0
@@ -214,7 +214,7 @@ margin_right = 832.0
 margin_bottom = 416.0
 rect_rotation = 180.0
 rect_pivot_offset = Vector2( 32, 32 )
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

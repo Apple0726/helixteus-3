@@ -16,7 +16,7 @@ func _on_Speedups_pressed():
 	$Contents.visible = true
 	set_item_visibility("Speedups")
 	$Contents/Info.text = tr("SPEED_UP_DESC")
-	set_btn_color($Tabs/Speedups)
+	Helper.set_btn_color($Tabs/Speedups)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
 
 func _on_Overclocks_pressed():
@@ -24,7 +24,7 @@ func _on_Overclocks_pressed():
 	$Contents.visible = true
 	set_item_visibility("Overclocks")
 	$Contents/Info.text = tr("OVERCLOCK_DESC")
-	set_btn_color($Tabs/Overclocks)
+	Helper.set_btn_color($Tabs/Overclocks)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
 
 func _on_Pickaxes_pressed():
@@ -32,7 +32,7 @@ func _on_Pickaxes_pressed():
 	$Contents.visible = true
 	set_item_visibility("Pickaxes")
 	$Contents/Info.text = tr("PICKAXE_DESC")
-	set_btn_color($Tabs/Pickaxes)
+	Helper.set_btn_color($Tabs/Pickaxes)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = false
 	if $Contents/HBoxContainer/Items/Pickaxes.get_child_count() == 0:
 		for pickaxe in game.pickaxe_info.keys():
@@ -44,15 +44,6 @@ func _on_Pickaxes_pressed():
 			pickaxe_item.costs = pickaxe_info.costs
 			pickaxe_item.parent = "shop_panel"
 			$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
-
-func set_btn_color(btn):
-	for other_btn in $Tabs.get_children():
-		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_pressed"] = Color(1, 1, 1, 1)
-	btn["custom_colors/font_color"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
 func set_item_visibility(type:String):
 	for other_type in $Contents/HBoxContainer/Items.get_children():
@@ -83,23 +74,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary):
 	desc += "\n"
 	vbox.get_node("Description").text = desc
 	$Contents/HBoxContainer/ItemInfo.visible = true
-	for cost in costs:
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
-		if cost == "money":
-			texture.texture_normal = load("res://Graphics/Icons/Money.png")
-			rsrc.get_node("Text").text = String(costs[cost])
-		elif cost == "stone":
-			texture.texture_normal = load("res://Graphics/Icons/stone.png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		elif game.mats.has(cost):
-			texture.texture_normal = load("res://Graphics/Materials/" + cost + ".png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		elif game.mets.has(cost):
-			texture.texture_normal = load("res://Graphics/Metals/" + cost + ".png")
-			rsrc.get_node("Text").text = String(costs[cost]) + " kg"
-		texture.rect_min_size = Vector2(36, 36)
-		vbox.add_child(rsrc)
+	Helper.put_rsrc(vbox, 36, costs, false)
 
 func get_item_name(name:String):
 	match name:

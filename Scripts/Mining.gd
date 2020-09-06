@@ -17,11 +17,11 @@ func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 	$Back.text = "<- " + tr("BACK") + " (Z)"
 	$Tile/TextureRect.texture = tile_texture
-	update_info()
-	generate_rock(false)
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	progress = tile.mining_progress
+	update_info()
+	generate_rock(false)
 	$Help.visible = game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
@@ -68,7 +68,7 @@ func update_info():
 func generate_rock(new:bool):
 	var tile_sprite = $Tile
 	var vbox = $Panel/VBoxContainer
-	contents = []
+	contents = {}
 	if tween:
 		remove_child(tween)
 	tween = Tween.new()
@@ -78,9 +78,7 @@ func generate_rock(new:bool):
 	for met_sprite in metal_sprites:
 		tile_sprite.remove_child(met_sprite)
 	metal_sprites = []
-	for thing in vbox.get_children():
-		vbox.remove_child(thing)
-	if tile.contents == [] or new:
+	if tile.contents.empty() or new:
 		total_mass = 0
 		var other_volume = 0#in m^3
 		#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -92,7 +90,7 @@ func generate_rock(new:bool):
 				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult, 3)
 				if amount < 1:
 					continue
-				contents.append({"name":mat, "type":"Materials", "amount":amount})
+				contents[mat] = amount
 				other_volume += amount / rho / 1000
 		if layer != "surface":
 			if not tile.has("current_deposit"):
@@ -117,23 +115,18 @@ func generate_rock(new:bool):
 					met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
 					metal_sprites.append(met_sprite)
 					tile_sprite.add_child(met_sprite)
-				contents.append({"name":met, "type":"Metals", "amount":amount})
+				contents[met] = amount
 				other_volume += amount / game.met_info[met].density / 1000
 				tile.current_deposit.progress += 1
 			#   									                          	    V Every km, rock density goes up by 0.01
 		var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
-		contents.push_front({"name":"stone", "type":"Icons", "amount":stone_amount})
+		contents.stone = stone_amount
 		tile.contents = contents
 	else:
 		contents = tile.contents
-	for obj in contents:
-		total_mass += obj.amount
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
-		texture.texture_normal = load("res://Graphics/" + obj.type + "/" + obj.name + ".png")
-		texture.rect_min_size = Vector2(42, 42)
-		rsrc.get_node("Text").text = String(obj.amount) + " kg"
-		vbox.add_child(rsrc)
+	Helper.put_rsrc(vbox, 42, contents)
+	for mass in contents.values():
+		total_mass += mass
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
@@ -190,14 +183,15 @@ func pickaxe_hit():
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()
 		for content in contents:
-			if content.type == "Materials":
-				game.mats[content.name] += content.amount
-			elif content.type == "Metals":
-				game.mets[content.name] += content.amount
+			var amount = contents[content]
+			if game.mats.has(content):
+				game.mats[content] += amount
+			elif game.mets.has(content):
+				game.mets[content] += amount
 			else:
-				game[content.name] += content.amount
-			if game.show.has(content.name):
-				game.show[content.name] = true
+				game[content] += amount
+			if game.show.has(content):
+				game.show[content] = true
 		progress -= 100
 		if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 			tile.erase("current_deposit")

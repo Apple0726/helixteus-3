@@ -1,15 +1,15 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=2]
-[ext_resource path="res://Scripts/Inventory.gd" type="Script" id=3]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Scripts/Inventory.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 1 )
-fallback/0 = ExtResource( 4 )
+fallback/0 = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
@@ -25,8 +25,8 @@ margin_top = -360.0
 margin_right = 427.0
 margin_bottom = 240.0
 rect_pivot_offset = Vector2( 533, 300 )
-theme = ExtResource( 2 )
-script = ExtResource( 3 )
+theme = ExtResource( 3 )
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false

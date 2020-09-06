@@ -1,0 +1,166 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 0.8, 1 )
+shadow_color = Color( 0.4, 0.501961, 0.8, 1 )
+shadow_size = 4
+
+[node name="Control" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+theme = ExtResource( 1 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpgradePanel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -288.0
+margin_top = -104.0
+margin_right = 288.0
+margin_bottom = 152.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = -288.0
+margin_top = -104.0
+margin_right = 288.0
+margin_bottom = -64.0
+text = "UPGRADE"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Current" type="RichTextLabel" parent="."]
+margin_left = -256.0
+margin_top = 40.0
+margin_right = -32.0
+margin_bottom = 64.0
+bbcode_enabled = true
+bbcode_text = "[center]1 mineral/sec[/center]"
+text = "1 mineral/sec"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Next" type="RichTextLabel" parent="."]
+margin_left = 32.0
+margin_top = 40.0
+margin_right = 256.0
+margin_bottom = 62.0
+bbcode_enabled = true
+bbcode_text = "[center]1.3 mineral/sec[/center]"
+text = "1.3 mineral/sec"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CurrentLv" type="Label" parent="."]
+margin_left = -216.0
+margin_top = -16.0
+margin_right = -72.0
+margin_bottom = 8.0
+text = "Level 1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextLv" type="SpinBox" parent="."]
+margin_left = 72.0
+margin_top = -16.0
+margin_right = 214.0
+margin_bottom = 10.0
+value = 2.0
+allow_greater = true
+align = 1
+prefix = "LEVEL"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PathButtons" type="HBoxContainer" parent="."]
+margin_left = -288.0
+margin_top = -64.0
+margin_right = 288.0
+margin_bottom = -28.0
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Path1" type="Button" parent="PathButtons"]
+margin_right = 576.0
+margin_bottom = 36.0
+size_flags_horizontal = 3
+text = "PATH_1"
+
+[node name="Path2" type="Button" parent="PathButtons"]
+visible = false
+margin_left = 287.0
+margin_right = 576.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "PATH_2"
+
+[node name="Path3" type="Button" parent="PathButtons"]
+visible = false
+margin_left = 287.0
+margin_right = 576.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "PATH_3"
+
+[node name="Arrow" type="Sprite" parent="."]
+position = Vector2( 0, 54 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 2 )
+
+[node name="Upgrade" type="Button" parent="."]
+margin_left = 128.0
+margin_top = 112.0
+margin_right = 286.0
+margin_bottom = 152.0
+theme = ExtResource( 3 )
+text = "UPGRADE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = -272.0
+margin_top = 96.0
+margin_right = 120.0
+margin_bottom = 144.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Costs" type="GridContainer" parent="ScrollContainer"]
+columns = 3
+[connection signal="value_changed" from="NextLv" to="." method="_on_NextLv_value_changed"]
+[connection signal="pressed" from="PathButtons/Path1" to="UpgradePanel" method="_on_Path1_pressed"]
+[connection signal="pressed" from="PathButtons/Path2" to="UpgradePanel" method="_on_Path2_pressed"]
+[connection signal="pressed" from="PathButtons/Path3" to="UpgradePanel" method="_on_Path3_pressed"]
