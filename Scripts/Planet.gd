@@ -25,11 +25,11 @@ func _ready():
 
 func _input(event):
 	if tile_over != -1:
+		var tile = game.tile_data[tile_over]
 		if Input.is_action_just_released("duplicate"):
-			var tile = game.tile_data[tile_over]
 			if tile.bldg_str != "":
 				game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 				bldg_to_construct = tile.bldg_str
-				constr_costs = game.bldg_info[tile.bldg_str].costs
-		if Input.is_action_just_released("upgrade"):
+				constr_costs = Data.costs[tile.bldg_str]
+		if Input.is_action_just_released("upgrade") and tile.bldg_str != "":
 			game.add_upgrade_panel([tile_over])

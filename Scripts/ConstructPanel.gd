@@ -17,7 +17,7 @@ func _ready():
 		bldg_btn.item_name = bldg
 		bldg_btn.item_type = "Buildings"
 		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
-		bldg_btn.costs = bldg_info.costs
+		bldg_btn.costs = Data.costs[bldg]
 		bldg_btn.parent = "construct_panel"
 		item_container.get_node(bldg_info.type).add_child(bldg_btn)
 	_on_Basic_pressed()
@@ -54,7 +54,7 @@ func set_item_visibility(type:String):
 func remove_costs():
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	for child in vbox.get_children():
-		if not child is Label:
+		if not child is Label and not child is RichTextLabel:
 			vbox.remove_child(child)
 
 var item_costs:Dictionary
@@ -68,8 +68,11 @@ func set_item_info(name:String, desc:String, costs:Dictionary):
 	item_name = name
 	desc += "\n"
 	vbox.get_node("Description").text = desc
-	$Contents/HBoxContainer/ItemInfo.visible = true
+	var rtl = vbox.get_node("RTL")
+	rtl.text = ""
+	game.add_text_icons(rtl, (Data.path_1[name].desc + "\n" + Data.path_2[name].desc + "\n") % [Data.path_1[name].value, Data.path_2[name].value], [Data.icons[name], Data.icons[name]], 22)
 	Helper.put_rsrc(vbox, 36, costs, false)
+	$Contents/HBoxContainer/ItemInfo.visible = true
 
 func get_item_name(name:String):
 	match name:
@@ -79,7 +82,7 @@ func get_item_name(name:String):
 			return tr("POWER_PLANT")
 
 func _on_Buy_pressed():
-	if item_name == "":
+	if item_name == "" or game.c_v != "planet":
 		return
 	game.toggle_construct_panel()
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))

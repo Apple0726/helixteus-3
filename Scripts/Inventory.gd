@@ -42,11 +42,12 @@ func _on_Metals_pressed():
 	var met_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.mets)
 	for met in met_data:
 		if game.show.has(met.name) and not game.show[met.name]:
+			met.rsrc.visible = false
 			continue
 		var texture = met.rsrc.get_node("Texture")
-		texture.connect("mouse_entered", self, "show_met", [met])
+		texture.connect("mouse_entered", self, "show_met", [met.name])
 		texture.connect("mouse_exited", self, "hide_met")
-		texture.connect("pressed", self, "show_buy_sell", ["Metals", met])
+		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
 
 func show_buy_sell(type:String, obj:String):
 	if type == "Materials" and game.mats[obj] == 0:

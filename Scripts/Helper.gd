@@ -45,14 +45,14 @@ func put_rsrc(container, min_size, objs, remove:bool = true):
 	return data
 
 #Converts time in milliseconds to string format
-func time_to_str (time):
-	var seconds = floor(time / 1000)
+func time_to_str (time:float):
+	var seconds = int(floor(time / 1000)) % 60
 	var second_zero = "0" if seconds < 10 else ""
-	var minutes = floor(seconds / 60)
+	var minutes = int(floor(time / 60000)) % 60
 	var minute_zero = "0" if minutes < 10 else ""
-	var hours = floor(minutes / 60)
-	var days = floor (hours / 24)
-	var years = floor (days / 365)
+	var hours = int(floor(time / 3600000)) % 24
+	var days = int(floor (time / 86400000)) % 365
+	var years = int(floor (time / 31536000000))
 	var year_str = "" if years == 0 else String(years) + "y "
 	var day_str = "" if days == 0 else String(days) + "d "
 	var hour_str = "" if hours == 0 else String(hours) + ":"

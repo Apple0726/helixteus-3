@@ -65,7 +65,7 @@ var energy = 200
 #Dimension remnants
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
-var pickaxe = {"name":"iron_pickaxe", "speed":4.3, "durability":1600}
+var pickaxe = {"name":"stick", "speed":1.0, "durability":70}
 var mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -113,9 +113,9 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
 					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300}}
 
-#Stores all building information
-var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals.", "costs":Data.costs.ME, "path_1":Data.path_1.ME, "path_2":Data.path_2.ME, "base_metal_costs":Data.base_metal_costs.ME},
-				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something", "costs":Data.costs.PP, "path_1":Data.path_1.PP, "path_2":Data.path_2.PP, "base_metal_costs":Data.base_metal_costs.PP}}
+#Stores basic building information (more in Data.gd)
+var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals."},
+				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something"}}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300, "cellulose":30}},
@@ -197,7 +197,7 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
-	planet_data[2].crust_start_depth = rand_int(4, 6)
+	planet_data[2].crust_start_depth = rand_int(45, 55)
 	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
 	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
@@ -301,11 +301,13 @@ func add_upgrade_panel(ids:Array):
 	upgrade_panel = upgrade_panel_scene.instance()
 	upgrade_panel.ids = ids
 	panels.push_front("upgrade")
-	$Panels.add_child(upgrade_panel)
-	move_child($Panels, get_child_count())
+	if upgrade_panel:
+		$Panels.add_child(upgrade_panel)
+		move_child($Panels, get_child_count())
 
 func remove_upgrade_panel():
-	$Panels.remove_child(upgrade_panel)
+	if upgrade_panel:
+		$Panels.remove_child(upgrade_panel)
 	panels.erase("upgrade")
 	upgrade_panel = null
 
@@ -1128,22 +1130,26 @@ func hide_tooltip():
 	tooltip.visible = false
 	tooltip.autowrap = false
 
-func show_adv_tooltip(txt:String, img:Array):
+func show_adv_tooltip(txt:String, imgs:Array):
 	adv_tooltip.text = ""
 	adv_tooltip.visible = true
-	var arr = txt.split("@i")#@i: where images are placed
-	var i = 0
-	for st in arr:
-		adv_tooltip.add_text(st)
-		if i != len(img):
-			adv_tooltip.add_image(img[i], 0, 17)
-		i += 1
-	yield(get_tree().create_timer(0), "timeout")
-	adv_tooltip.rect_size.y = adv_tooltip.get_content_height()
+	add_text_icons(adv_tooltip, txt, imgs)
 	move_child(adv_tooltip, get_child_count())
 
 func hide_adv_tooltip():
 	adv_tooltip.visible = false
+
+func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17):
+	var arr = txt.split("@i")#@i: where images are placed
+	var i = 0
+	for st in arr:
+		RTL.append_bbcode(st)
+		if i != len(imgs):
+			RTL.add_image(imgs[i], 0, size)
+		i += 1
+	yield(get_tree().create_timer(0), "timeout")
+	RTL.rect_size.y = RTL.get_content_height()
+	RTL.rect_min_size.y = RTL.get_content_height()
 
 var change_view_btn
 
@@ -1288,7 +1294,7 @@ func deduct_resources(costs):
 		if cost == "stone":
 			stone -= costs.stone
 		if cost == "energy":
-			stone -= costs.energy
+			energy -= costs.energy
 		if mats.has(cost):
 			mats[cost] -= costs[cost]
 		if mets.has(cost):
@@ -1411,46 +1417,20 @@ func cancel_building():
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
-func _on_en_mouse_entered():
-	show_tooltip("English")
-
-func _on_en_mouse_exited():
-	hide_tooltip()
-
-func _on_fr_mouse_entered():
-	show_tooltip("Français")
-
-func _on_fr_mouse_exited():
-	hide_tooltip()
-
-func _on_it_mouse_entered():
-	show_tooltip("Italiano")
-
-func _on_it_mouse_exited():
-	hide_tooltip()
-
-func _on_ru_mouse_entered():
-	show_tooltip("Русский")
-
-func _on_ru_mouse_exited():
-	hide_tooltip()
-
-func _on_en_pressed():
-	TranslationServer.set_locale("en")
-	change_language()
-
-func _on_fr_pressed():
-	TranslationServer.set_locale("fr")
-	change_language()
-
-func _on_it_pressed():
-	TranslationServer.set_locale("it")
-	change_language()
-
-func _on_ru_pressed():
-	TranslationServer.set_locale("ru")
-	change_language()
-
 func change_language():
 	$Title/Button.visible = false
 	$Title/Button.visible = true
+	Data.reload()
+
+
+func _on_lg_pressed(extra_arg_0):
+	TranslationServer.set_locale(extra_arg_0)
+	change_language()
+
+
+func _on_lg_mouse_entered(extra_arg_0):
+	show_tooltip(extra_arg_0)
+
+
+func _on_lg_mouse_exited():
+	hide_tooltip()

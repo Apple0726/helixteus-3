@@ -8,6 +8,17 @@
 [ext_resource path="res://Graphics/Misc/Hole.png" type="Texture" id=6]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=7]
 
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.4, 0.501961, 0.8, 1 )
+corner_detail = 1
+
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
@@ -21,17 +32,6 @@ size = 23
 use_filter = true
 font_data = ExtResource( 5 )
 
-[sub_resource type="StyleBoxFlat" id=3]
-content_margin_left = 5.0
-content_margin_right = 5.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
-corner_detail = 1
-
 [node name="Tile" type="Node2D"]
 script = ExtResource( 2 )
 
@@ -44,6 +44,55 @@ strength = 0.25
 
 [node name="Building" type="Sprite" parent="."]
 scale = Vector2( 0.4, 0.4 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = -96.0
+margin_top = -88.0
+margin_right = 96.0
+margin_bottom = -62.0
+mouse_filter = 2
+theme = ExtResource( 7 )
+custom_constants/separation = -1
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+visible = false
+margin_left = 85.0
+margin_right = 106.0
+margin_bottom = 26.0
+mouse_filter = 1
+size_flags_vertical = 3
+custom_styles/normal = SubResource( 3 )
+text = "1"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="HBoxContainer"]
+visible = false
+margin_left = 85.0
+margin_right = 106.0
+margin_bottom = 26.0
+mouse_filter = 1
+size_flags_vertical = 3
+custom_styles/normal = SubResource( 3 )
+text = "2"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="HBoxContainer"]
+visible = false
+margin_left = 105.0
+margin_right = 126.0
+margin_bottom = 26.0
+mouse_filter = 1
+size_flags_vertical = 3
+custom_styles/normal = SubResource( 3 )
+text = "3"
+align = 1
+valign = 1
 
 [node name="TimeLeft" parent="." instance=ExtResource( 4 )]
 visible = false
@@ -129,49 +178,12 @@ scale = Vector2( 0.16, 0.16 )
 [node name="Hole" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 6 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-visible = false
-margin_left = -96.0
-margin_top = -88.0
-margin_right = 96.0
-margin_bottom = -62.0
-theme = ExtResource( 7 )
-custom_constants/separation = -1
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="HBoxContainer"]
-margin_left = 65.0
-margin_right = 86.0
-margin_bottom = 26.0
-size_flags_vertical = 3
-custom_styles/normal = SubResource( 3 )
-text = "1"
-align = 1
-valign = 1
-
-[node name="Label2" type="Label" parent="HBoxContainer"]
-margin_left = 85.0
-margin_right = 106.0
-margin_bottom = 26.0
-size_flags_vertical = 3
-custom_styles/normal = SubResource( 3 )
-text = "2"
-align = 1
-valign = 1
-
-[node name="Label3" type="Label" parent="HBoxContainer"]
-margin_left = 105.0
-margin_right = 126.0
-margin_bottom = 26.0
-size_flags_vertical = 3
-custom_styles/normal = SubResource( 3 )
-text = "3"
-align = 1
-valign = 1
 [connection signal="button_out" from="Button" to="." method="_on_Button_button_out"]
 [connection signal="button_over" from="Button" to="." method="_on_Button_button_over"]
 [connection signal="button_pressed" from="Button" to="." method="_on_Button_button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Label" to="." method="_on_Label_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Label" to="." method="_on_Label_mouse_exited"]
+[connection signal="mouse_entered" from="HBoxContainer/Label2" to="." method="_on_Label2_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Label2" to="." method="_on_Label_mouse_exited"]
+[connection signal="mouse_entered" from="HBoxContainer/Label3" to="." method="_on_Label3_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Label3" to="." method="_on_Label_mouse_exited"]

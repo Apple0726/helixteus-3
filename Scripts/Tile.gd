@@ -11,6 +11,9 @@ onready var building_info = $BuildingInformation
 onready var time_left = $TimeLeft
 onready var time_left_bar = $TimeLeft/Bar
 onready var time_left_str = $TimeLeft/TimeString
+onready var current_bar = $BuildingInformation/CurrentBar
+onready var capacity_bar = $BuildingInformation/CapacityBar
+onready var rsrc_stocked = $BuildingInformation/ResourceStocked
 
 func _ready():
 	var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
@@ -21,6 +24,18 @@ func _ready():
 	display_icon()
 	if tile.depth > 0:
 		$Hole.visible = true
+	update_lv_visibility()
+
+func update_lv_visibility():
+	if tile.bldg_str != "":
+		$HBoxContainer/Label.visible = true
+		$HBoxContainer/Label.text = String(tile.bldg_info.path_1)
+		if tile.bldg_info.has("path_2"):
+			$HBoxContainer/Label2.visible = true
+			$HBoxContainer/Label2.text = String(tile.bldg_info.path_2)
+		if tile.bldg_info.has("path_3"):
+			$HBoxContainer/Label3.visible = true
+			$HBoxContainer/Label3.text = String(tile.bldg_info.path_3)
 
 func _process(_delta):
 	if tile.bldg_str != "":
@@ -38,26 +53,26 @@ func _process(_delta):
 			match tile.bldg_str:
 				"ME", "PP":
 					#Number of seconds needed per mineral
-					var prod = 1 / tile.bldg_info["production"]
-					var cap = tile.bldg_info["capacity"]
+					var prod = 1 / tile.bldg_info["path_1_value"]
+					var cap = tile.bldg_info["path_2_value"]
 					var stored = tile.bldg_info["stored"]
 					var c_d = tile.bldg_info["collect_date"]
 					var c_t = OS.get_system_time_msecs()
 					if stored < cap:
-						$BuildingInformation/CurrentBar.rect_scale.x = min((c_t - c_d) / (prod * 1000), 1)
-						$BuildingInformation/CapacityBar.rect_scale.x = min(stored / float(cap), 1)
+						current_bar.rect_scale.x = min((c_t - c_d) / (prod * 1000), 1)
+						capacity_bar.rect_scale.x = min(stored / float(cap), 1)
 						if c_t - c_d > prod * 1000:
 							tile.bldg_info["stored"] += 1
 							tile.bldg_info["collect_date"] += prod * 1000
 					else:
-						$BuildingInformation/CurrentBar.rect_scale.x = 0
-						$BuildingInformation/CapacityBar.rect_scale.x = 1
-					$BuildingInformation/ResourceStocked.text = String(stored)
+						current_bar.rect_scale.x = 0
+						capacity_bar.rect_scale.x = 1
+					rsrc_stocked.text = String(stored)
 	else:
 		building_info.visible = false
 
 func construction_finished():
-	pass
+	update_lv_visibility()
 
 func _on_Button_button_over():
 	#Make sure there's nothing on the tile before putting graphics
@@ -69,10 +84,12 @@ func _on_Button_button_over():
 		var icons = []
 		match tile.bldg_str:
 			"ME":
-				tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
+				tooltip = "Extracts " + (Data.path_1[tile.bldg_str].desc + "\n" + Data.path_2[tile.bldg_str].desc) % [tile.bldg_info.path_1_value, tile.bldg_info.path_2_value]
+				#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
 				icons = [load("res://Graphics/Icons/Minerals.png"), load("res://Graphics/Icons/Minerals.png")]
 			"PP":
-				tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
+				tooltip = "Generates " + (Data.path_1[tile.bldg_str].desc + "\n" + Data.path_2[tile.bldg_str].desc) % [tile.bldg_info.path_1_value, tile.bldg_info.path_2_value]
+				#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
 				icons = [load("res://Graphics/Icons/Energy.png"), load("res://Graphics/Icons/Energy.png")]
 		tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
 		game.show_adv_tooltip(tooltip, icons)
@@ -121,11 +138,11 @@ func _on_Button_button_pressed():
 					else:
 						game.minerals = game.mineral_capacity
 						tile.bldg_info["stored"] -= mineral_space_available
-					if stored == tile.bldg_info["capacity"]:
+					if stored == tile.bldg_info["path_2_value"]:
 						tile.bldg_info["collect_date"] = OS.get_system_time_msecs()
 				"PP":
 					var stored = tile.bldg_info["stored"]
-					if stored == tile.bldg_info["capacity"]:
+					if stored == tile.bldg_info["path_2_value"]:
 						tile.bldg_info["collect_date"] = OS.get_system_time_msecs()
 					game.energy += stored
 					tile.bldg_info["stored"] = 0
@@ -139,18 +156,33 @@ func display_bldg(bldg_str:String, a:float):
 
 func display_icon():
 	if tile.bldg_str != "":
-		var bldg_icon
+		var bldg_icon = Data.icons[tile.bldg_str]
 		match tile.bldg_str:
 			"ME":
-				bldg_icon = preload("res://Graphics/Icons/Minerals.png")
 				$BuildingInformation.modulate = Color(0, 0.68, 1, 1)
 			"PP":
-				bldg_icon = preload("res://Graphics/Icons/Energy.png")
 				$BuildingInformation.modulate = Color(0, 0.68, 0, 1)
 		$Icon.texture = bldg_icon
 
 func add_bldg_info():
 	if tile.bldg_str != "":
+		$HBoxContainer/Label.visible = true
 		match tile.bldg_str:
 			"ME", "PP":
-				tile.bldg_info = {"collect_date":tile.construction_date + tile.construction_length, "stored":0, "path_1":1, "path_2":1, "production":game.bldg_info[tile.bldg_str].path_1.value, "capacity":game.bldg_info[tile.bldg_str].path_2.value}
+				tile.bldg_info = {"collect_date":tile.construction_date + tile.construction_length, "stored":0, "path_1":1, "path_2":1, "path_1_value":Data.path_1[tile.bldg_str].value, "path_2_value":Data.path_2[tile.bldg_str].value}
+
+
+func _on_Label_mouse_entered():
+	game.show_tooltip(tr("PATH_1") + " " + tr("LEVEL") + " " + String(tile.bldg_info.path_1))
+
+
+func _on_Label_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_Label2_mouse_entered():
+	game.show_tooltip(tr("PATH_2") + " " + tr("LEVEL") + " " + String(tile.bldg_info.path_2))
+
+
+func _on_Label3_mouse_entered():
+	game.show_tooltip(tr("PATH_3") + " " + tr("LEVEL") + " " + String(tile.bldg_info.path_3))

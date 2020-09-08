@@ -81,7 +81,6 @@ size_flags_horizontal = 3
 text = "PRODUCTION"
 
 [node name="Contents" type="VBoxContainer" parent="."]
-visible = false
 margin_top = 104.0
 margin_right = 1064.0
 margin_bottom = 600.0
@@ -152,7 +151,6 @@ __meta__ = {
 }
 
 [node name="ItemInfo" type="Panel" parent="Contents/HBoxContainer"]
-visible = false
 margin_left = 760.0
 margin_right = 1064.0
 margin_bottom = 460.0
@@ -199,6 +197,13 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="RTL" type="RichTextLabel" parent="Contents/HBoxContainer/ItemInfo/VBoxContainer"]
+margin_top = 82.0
+margin_right = 264.0
+margin_bottom = 82.0
+text = "b"
+scroll_active = false
 [connection signal="pressed" from="Tabs/Basic" to="." method="_on_Basic_pressed"]
 [connection signal="pressed" from="Tabs/Storage" to="." method="_on_Storage_pressed"]
 [connection signal="pressed" from="Tabs/Production" to="." method="_on_Production_pressed"]

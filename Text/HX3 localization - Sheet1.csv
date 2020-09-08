@@ -1,109 +1,176 @@
-,en,fr,it,ru
-NEW_GAME,New game,Nouvelle partie,Nuova partita,
-MONEY,Money,Argent,Soldi,Деньги
-MINERALS,Minerals,Minéraux,Minerali,
-STONE,Stone,Pierre,Pietra,
-ENERGY,Energy,Énergie,Energia,
-SCIENCE_POINTS,Science points,Points de science,Punti di scienza,
-MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,
-BACK,Back,Retour,Indietro,
-SHOP,Shop,Boutique,Negozio,Магазин
-INVENTORY,Inventory,Inventaire,Inventario,
-CONSTRUCT,Construct,Construire,Costruire,
-BUY,Buy,Acheter,Comprare,Покупать
-VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,
-MINE,Mine,Miner,Minare,
-START_MINE,Click a tile to mine,Cliquer une tuile à miner,,
-MINE_HELP,Click and hold the tile to mine!,Cliquer et maintenir la tuile pour miner!,,
-LAYER,Layer,Enveloppe,Strato,
-SURFACE,Surface,Surface,Superficie,
-CRUST,Crust,Croûte,Crosta,
-CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,
-MANTLE,Mantle,Manteau,Mantello,
-MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,
-CORE,Core,Noyau,Nucleo,
-CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,
-TRACE,Trace,Autres,Altri,
-TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,
-NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Tu n'as pas de pioche pour miner! Achètes-une dans la boutique.,Non hai un piccone per minare! Comprarlo nel negozio.,
-NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,
-BUY_ONE,Buy one,Acheter,Comprarne uno,
-LATER,Later,Plus tard,Più tardi,
-STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire,
-HOME_PLANET,Home planet,,,
-SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,
-MILKY_WAY,Milky Way,Voie lactée,Via Lattea,
-LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,
-LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,
-PLANET,Planet,Planète,Pianeta,
-PLANETS,Planets,Planètes,Pianeti,
-STAR_SYSTEM,System,Système stellaire,Sistema stellare,
-GALAXY,Galaxy,Galaxie,Galassia,
-GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,
-GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,
-SUPERCLUSTER,Supercluster,Superamas,Superammasso,
-UNIVERSE,Universe,Univers,Universo,
-DIMENSION,Dimension,Dimension,Dimensione,
-VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema,
-VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizzare l'ammasso contenendo questa galassia,
-VIEW_SUPERCLUSTER,View the supercluster this cluster is in,Voir le superamas contenant cet amas,Vlisualizzare il superammasso contenendo questo ammasso,
-VIEW_UNIVERSE,View the universe this supercluster is in,Voir l'univers contenant ce superamas,Visualizzare l'universo contenendo questo superammasso,
-VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizzare gli universi scoperti in questa dimensione,
-GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie),
-GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi),
-MINERAL_SOLD,You sold %s minerals for $%s!,Tu as vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,
-PLANET_INFO,%s\nDiameter: %s km\nDistance from star: %s AU\nSurface temperature: %s °C\nShift click to view more details,%s\nDiamètre: %s km\nDistance de l'étoile: %s au\nTempérature de surface: %s °C\nMaj + clic pour voir plus de détails,%s\nDiametro: %s km\nDistanza dalla stella: %s au\nTemperatura superficiale: %s °C\nShift + clic per vedere più dettagli,
-SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,
-GALAXY_INFO,%s\nSystems: %s,%s\nSystèmes: %s,%s\nSistemi: %s,
-CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,
-SUPERCLUSTER_INFO,%s\nClusters: %s,%s\nAmas: %s,%s\nAmmassi: %s,
-DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,
-UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nClic double pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,
-DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),
-DR,DRs,RD,RD,
-NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione,
-MATHS,Mathematics,Mathématiques,Matematica,
-PHYSICS,Physics,Physique,Fisica,
-CHEMISTRY,Chemistry,Chimie,Chimica,
-PHILOSOPHY,Philosophy,Philosophie,Filosofia,
-ENGINEERING,Engineering,Ingénierie,Ingegneria,
-DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,
-LV,Lv,Nv,Lv,
-INVEST,Invest,Investir,Investire,
-INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",
-MATERIALS,Materials,Matériaux,Materiali,
-SPEED_UPS,Speed-ups,Speed-ups,Speed-up,
-OVERCLOCKS,Overclocks,Overclocks,Overclock,
-PICKAXES,Pickaxes,Pioches,Picconi,
-SPEED_UP_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,
-OVERCLOCK_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,
-PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,
-STICK,Stick,Bâton,Bastone,
-STICK_DESC,Use a stick to mine your very first rocks.,Utiliser un bâton pour miner tes premières roches.,Usare un bastone per minare le prime rocce.,
-NOT_ENOUGH_MONEY,You don't have enough money.,Tu n'as pas assez d'argent.,Non hai abbastanza soldi.,
-REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?,
-BUY_PICKAXE,You bought a %s!,Tu as acheté un(e) %s!,Hai comprato un(a) %s!,
-PICKAXE_BROKE,Your pickaxe broke!,Ta pioche est cassée!,Il tuo piccone si è rotto!,
-AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,
-AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Si coché, le jeu va acheter la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,
-MINING_SPEED,Mining speed,Vitesse,Velocità,
-DURABILITY,Durability,Durabilité,Durabilità,
-COAL,Coal,Charbon,Carbone,
-GLASS,Glass,Verre,Vetro,
-SAND,Sand,Sable,Sabbia,
-CLAY,Clay,Argile,Argilla,
-SOIL,Soil,Terre,Terra,
-CELLULOSE,Cellulose,Cellulose,Cellulosa,
-ENTER_PLANET_NAME,Enter planet name,Entrer nom de planète,Inserire nome di pianeta,
-DEPTHS,Depths,Profondeurs,Profondità,
-MAIN_SEQUENCE,Main sequence,De la séquence principale,Di sequenza principale,
-GIANT,Giant,Géante,Gigante,
-SUPERGIANT,Supergiant,Supergéante,Supergigante,
-HYPERGIANT,Hypergiant,Hypergéante,Ipergigante,
-WHITE_DWARF,White dwarf,Naine blanche,Nana bianca,
-BROWN_DWARF,Brown dwarf,Naine brune,Nana bruna,
-STAR_TITLE,Class {class} {type} star,Étoile {type} de classe {class},Stella {type} di classe {class},
-STAR_TEMPERATURE,Temperature: %s K,Température: %s K,Temperatura: %s K,
-STAR_SIZE,Radius: %s solar radii,Rayon: %s rayons solaires,Raggio: %s raggi solari,
-STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari,
-STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosité solaire,Luminosità: %s luminosità solari,
+,en,fr,it,ru,de,es,ko
+NEW_GAME,New game,Nouvelle partie,Nuova partita,Новая игра,Neues Spiel,Nueva partida,새 게임
+MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈
+MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물
+STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌
+ENERGY,Energy,Énergie,Energia,,Energie,Energia,에너지
+SCIENCE_POINTS,Science points,Points de science,Punti di scienza,,Forschungs Punkte,Puntos de ciencia,과학 포인트
+MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stumm,(Des)Activar la musica,음악 켜기/끄기
+BACK,Back,Retour,Indietro,,Zurück,Atras,뒤로
+SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점
+INVENTORY,Inventory,Inventaire,Inventario,,Inventar,Inventario,소지품
+CONSTRUCT,Construct,Construire,Costruire,,Herstellen,Construir,건설하기
+BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기
+VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem bertrachten,Ver sistema estelar,항성계 보기
+MINE,Mine,Miner,Minare,,Mineralien,Minar,
+START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una losa para empezar,
+MINE_HELP,Click and hold the tile to mine!,Cliquez et maintez la tuile pour miner!,,,Eine Kachel anklickenhalten um Abzubauen!,Manten el click para minar!,
+LAYER,Layer,Couche,Strato,,Ebene,Capa,계층
+SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,
+CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각
+CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,,Krustenzusammensetzung,Composicion de la corteza,지각 구성
+MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀
+MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composicion del manto,맨틀 구성
+CORE,Core,Noyau,Nucleo,,Kern,Nucleo,핵
+CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composicion del nucleo,핵 구성
+TRACE,Trace,Autres,Altri,,Spuren,Buscar,
+TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Buscar elementos,
+NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,
+NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음
+BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기
+LATER,Later,Plus tard,Più tardi,,Später,Mas tarde,나중에
+STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire,,Rechtsklicken um die Konstruktion zu stoppen,Click derecho para dejar de construir,다 지었으면 오른쪽 클릭
+HOME_PLANET,Home planet,Planète originelle,,,Heimatplanet,Planeta hogar,
+SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,,Sonnensystem,Sistema solar,태양계
+MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Lactea,우리은하
+LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,
+LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercumulo de Laniakea,
+PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성
+PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성들
+STAR_SYSTEM,System,Système stellaire,Sistema stellare,,Sternensystem,Sistema estelar,항성계
+GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하
+GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,,Galaxiengruppe,Grupo galactico,
+GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,,Galaxienhaufen,Cluster galactico,
+SUPERCLUSTER,Supercluster,Superamas,Superammasso,,Supergalaxienhaufen,Supercumulo,
+UNIVERSE,Universe,Univers,Universo,,Universum,Universe,우주
+DIMENSION,Dimension,Dimension,Dimensione,,Dimensionen,Dimension,차원
+VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema,,Entdeckte Galaxien in diesem System Anzeigen,Ver la galaxia en donde se encuentra este sistema,
+VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizzare l'ammasso contenendo questa galassia,,Entdeckte Cluster in dieser GalaxieAnzeigen,Ver el cumulo en donde se encuentra esta galaxia,
+VIEW_SUPERCLUSTER,View the supercluster this cluster is in,Voir le superamas contenant cet amas,Vlisualizzare il superammasso contenendo questo ammasso,,Entdeckte Cluster in diesem Supercluster Anzeigen,Ver el supercumulo en donde se ubica este cumulo,
+VIEW_UNIVERSE,View the universe this supercluster is in,Voir l'univers contenant ce superamas,Visualizzare l'universo contenendo questo superammasso,,Entdeckte Supercluster in diesem Universen Anzeigen,Ver el universo en donde se ubica este supercumulo,
+VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizzare gli universi scoperti in questa dimensione,,Entdeckte Universen in dieser dimension Anzeigen,Ver universos descubiertos en esta dimension,
+GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie),,Generiere Cluster... (%s / %s Galaxien),Generando cumulo... (%s / %s galaxias),
+GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi),,Generiere Galaxie ... (%s / %s Systemen),Generando galaxia... (%s / %s sistemas solares) ,은하 로딩 중... (%s / %s 항성계)
+MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다
+PLANET_INFO,%s\nDiameter: %s km\nDistance from star: %s AU\nSurface temperature: %s °C\nShift click to view more details,%s\nDiamètre: %s km\nDistance de l'étoile: %s au\nTempérature de surface: %s °C\nMaj + clic pour voir plus de détails,%s\nDiametro: %s km\nDistanza dalla stella: %s au\nTemperatura superficiale: %s °C\nShift + clic per vedere più dettagli,,%s\nDurchmesser: %s km\nEntfernung zum Stern: %s AU\nOberflächen temperatur: %s °C\n Shift Klick für mehr details,&s\nDiametro: %s km\nDistancia de la estrella: %s AU\nTemperatura en la superficie: %s °C\nShift click para ver mas detalles,
+SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
+GALAXY_INFO,%s\nSystems: %s,%s\nSystèmes: %s,%s\nSistemi: %s,,%s\nSysteme: %s,%s\nSistemas solares: %s,
+CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,,%s\nGalaxien: %s,%s\nGalaxias: %s,
+SUPERCLUSTER_INFO,%s\nClusters: %s,%s\nAmas: %s,%s\nAmmassi: %s,,%s\nCluster: %s,%s\nCumulos: %s,
+DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들
+UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nDouble clic pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,,Anklicken für weiter details \n Doppelklick um das Universum zu betreten,Haz click para ver mas detalles\nDoble click para entrar a este universo,정보 보기: 클릭\n우주 들어가기: 더블 클릭
+DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),,Dimensionenreste (DR),Residuos dimensionales (RD),
+DR,DRs,RD,RD,,DR,RD,
+NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione,,Neue Dimension,Nueva dimension,새로운 차원
+MATHS,Mathematics,Mathématiques,Matematica,,Mathematik,Matematicas,수학
+PHYSICS,Physics,Physique,Fisica,,Physik,Fisica,물리학
+CHEMISTRY,Chemistry,Chimie,Chimica,,Chemie,Quimica,화학
+BIOLOGY,Biology,Biologie,Biologia,,,,생물학
+PHILOSOPHY,Philosophy,Philosophie,Filosofia,,Philosophie,Filosofia,철학
+ENGINEERING,Engineering,Ingénierie,Ingegneria,,Ingineurswesen,Ingenieria,공학
+DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,,Dimensionale Kräfte,Poder dimensional,차원력
+LV,Lv,Nv,Lv,,Lvl,Nvl,Lv
+INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자
+INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricacion, agricultura espacial y conversion de recursos.",
+MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료
+SPEED_UPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업
+OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Over-Clocks,오버크로크
+PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이
+SPEED_UP_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construccion de un edificio.,
+OVERCLOCK_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Over-Clocks temporalmente aumentan la produccion de recursos de los edificios seleccionados.,
+PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
+STICK,Stick,Bâton,Bastone,,Stock,Palo,
+STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,
+NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.
+REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?,,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?
+BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,,Du hjast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.
+PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,,Deine Spitzhacke ist Zerbrochen,Tu pico se rompio!,곡괭이가 부서졌습니다.
+AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,,Automatisches ersetzen,Reemplazar automaticamente,자동 교체
+AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Cocher pour racheter automatiquement la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,,Mit dieser Auswahl wird das Spiel automatisch die gleiche Spitzhacke erneut kaufen wenn das Geld ausreicht,"Chequear esta casilla hara que el juego automaticamente compre el pico que tenias cuando se rompa, si tienes dinero suficiente.",
+MINING_SPEED,Mining speed,Vitesse de minage,Velocità,,Abbaugeschwindigkeit,Velocidad de picado,
+DURABILITY,Durability,Durabilité,Durabilità,,Haltbarkeit,Durabilidad,내구성
+COAL,Coal,Charbon,Carbone,,Kohle,Carbon,석탄
+GLASS,Glass,Verre,Vetro,,Glas,Vidrio,유리
+SAND,Sand,Sable,Sabbia,,Sand,Arena,모래
+CLAY,Clay,Argile,Argilla,,Lehm,Arcilla,점토
+SOIL,Soil,Terre,Terra,,Erde,Tierra,흙
+CELLULOSE,Cellulose,Cellulose,Cellulosa,,Zellulose,Celulosa,셀룰로오스
+ENTER_PLANET_NAME,Enter planet name,Entrer nom de planète,Inserire nome di pianeta,,Planetenname eingeben,Introduce el nombre del planeta,행성 이름 입력하기
+DEPTHS,Depths,Profondeurs,Profondità,,Tiefe,Profundidades,깊이
+MAIN_SEQUENCE,Main sequence,De la séquence principale,Di sequenza principale,,Hauptsequenz,De la secuencia principal,
+GIANT,Giant,Géante,Gigante,,Gigant,Gigante,
+SUPERGIANT,Supergiant,Supergéante,Supergigante,,Supergigant,Supergigante,
+HYPERGIANT,Hypergiant,Hypergéante,Ipergigante,,Hypergigant,Hypergigante,
+WHITE_DWARF,White dwarf,Naine blanche,Nana bianca,,Weißer Zwerg,Enana blanca,
+BROWN_DWARF,Brown dwarf,Naine brune,Nana bruna,,Brauner Zwerg,Enana cafe,
+STAR_TITLE,Class {class} {type} star,Étoile {type} de classe {class},Stella {type} di classe {class},,{class} Klasse {type} Stern,Estrella {type} de clase {class},
+STAR_TEMPERATURE,Temperature: %s K,Température: %s K,Temperatura: %s K,,Temperatur: %s in Kelvin,Temperatura: %s K,온도: %s K
+STAR_SIZE,Radius: %s solar radii,Rayon: %s rayons solaires,Raggio: %s raggi solari,,Radius: %s Sonnen radien,Radio: %s radios solares,
+STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari,,Masse: %s Sonnenmassen,Masa: %s masas solares,
+STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosités solaires,Luminosità: %s luminosità solari,,Helligkeit: %s Sonnenhelligkeit,Luminosidad: %s luminosidades solares,
+METALS,Metals,Métaux,Metalli,,,Metales,금속
+INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,,Los metales son usados en la fabricacion y construccion de edificios de mayor nivel.,
+WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,,Pico de madera,
+WOODEN_PICKAXE_DESC,,,,,,,
+STONE_PICKAXE,Stone pickaxe,Pioche en pierre,,,,Pico de piedra,
+STONE_PICKAXE_DESC,,,,,,,
+LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,,,,Pico de plomo,
+LEAD_PICKAXE_DESC,,,,,,,
+COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,,,,Pico de cobre,
+COPPER_PICKAXE_DESC,,,,,,,
+IRON_PICKAXE,Iron pickaxe,Pioche en fer,,,,Pico de hierro,
+IRON_PICKAXE_DESC,,,,,,,
+SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,,"Es la parte mas superficial de un planeta, puedes encontrar materiales en esta capa.",
+CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,,La corteza es rica en minerales que son importantes en la progresion del juego.,
+BASIC,Basic,Base,Base,,,Basico,기본
+BASIC_DESC,Construct buildings that generate the most basic resources.,Les bâtiments qui produisent des ressources de base se trouvent ici.,Gli edifici che producono risorse di base si trovano qui.,,,Construye edificios que generan los recursos mas basicos.,
+STORAGE,Storage,Stockage,,,,Almacenamiento,보관
+STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,,,,Edificios que aumentan el almacenamiento de un recurso en particular se encuentran aca.,
+MINERAL_EXTRACTOR,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,,,Extractor de minerales,광물 추출기
+ME_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per una fornitura costante di minerali.,,,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",
+POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,,Planta de energia,발전소
+PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,,Genera energia de la nada.,
+PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,,Presiona F para mejorar,F 누르면 업그레이드
+PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,,Presiona Q para duplicar,Q 누르면 복제
+UPGRADE,Upgrade,Améliorer,Migliorare,,,Mejorar,업그레이드
+LEVEL,Level,Niveau,Livello,,,Nivel,레벨
+SECOND,Second,Seconde,Secondo,,,Segundo,초
+STORES,Stores,Stocke,,,,Almacena,
+PATH,Path,Voie,Via,,,Camino,
+CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
+COAL_DESC,,,,,,,
+SAND_DESC,,,,,,,
+CLAY_DESC,,,,,,,
+SOIL_DESC,,,,,,,
+CELLULOSE_DESC,,,,,,,
+LEAD_DESC,,,,,,,
+COPPER_DESC,,,,,,,
+IRON_DESC,,,,,,,
+MATHS_DESC,"Increases exponential growth of building upgrades, permanent upgrades and rare item tiers\nReduces exponential growth of costs",,,,,,
+PHYSICS_DESC,"Changes to planet/system/etc. generation\nCelestial bodies further from the center are more adversely modified (difficulty, rarer loot bonus etc.)\nAdds a new fundamental force at the 10th level\nIncreases exponential growth of all sciences related to physics",,,,,,
+CHEMISTRY_DESC,Each dimension remnant invested into chemistry adds a completely new atom (and its antimatter form) which unlocks exodimensional buildings and items. Caps at 50 DRs\nIncreases exponential growth of all sciences related to chemistry,,,,,,
+BIOLOGY_DESC,Plants grow faster and have higher yields\nReduces enemy strength\nIncreases exponential growth of all sciences related to biology,,,,,,
+PHILOSOPHY_DESC,Enemies and treasure chests drop better and rarer loot.\nMore enemy attack patterns,,,,,,
+ENGINEERING_DESC,"Reduces the initial cost of buildings, megastructures and gigastructures (minimum of 1 gram)\nIncreases pickaxe durability and speed, decreases cost\nMore lenient building restrictions",,,,,,
+DIMENSIONAL_POWER_DESC,Affects the average “universe value” property of universes\nDetermines the number of dimension remnants you get from renewing dimensions,,,,,,
+LEAD,Lead,Plomb,Piombo,,,,납
+COPPER,Copper,Cuivre,Rame,,,,동
+IRON,Iron,Fer,Ferro,,,,철
+ALUMINIUM,Aluminium,Aluminium,Alluminio,,,,알류미늄
+SILVER,Silver,Argent,Argento,,,,은
+GOLD,Gold,Or,Oro,,,,금
+AMETHYST,Amethyst,Améthyste,Ametista,,,,자수정
+EMERALD,Emerald,Émeraude,Smeraldo,,,,에메랄드
+QUARTZ,Quartz,Quartz,Quarzo,,,,석영
+TOPAZ,Topaz,Topaze,Topazio,,,,황옥
+RUBY,Ruby,Rubis,Rubino,,,,루비
+SAPPHIRE,Sapphire,Saphir,Zaffiro,,,,사파이어
+OVERLAY,Overlay,,,,,,오버레이
+OVERLAY_DESC,"Overlays let you see various properties at a glance, using color.",,,,,,오버레이는 다양한 형질들을 바로 볼 수 있게 하는 도구입니다.
+TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,,,표시하기/숨기기
+NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,,,행성 수
+SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,,,항성계 들어갔기
+YES,Yes,Oui,Sì,,,,네
+NO,No,Non,No,,,,아니요
+CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,,,원 크기
+SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,,,선택한 빌딩들이 모두 건설 중입니다.
