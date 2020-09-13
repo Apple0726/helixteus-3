@@ -125,6 +125,8 @@ func _on_ScrollContainer_resized():
 
 
 func _on_Upgrade_pressed():
+	if game.c_v != "planet":
+		return
 	update()
 	if game.check_enough(costs):
 		game.deduct_resources(costs)

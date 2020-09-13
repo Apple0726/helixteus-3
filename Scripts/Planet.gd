@@ -29,9 +29,13 @@ func _ready():
 				$TileMap.set_cell(i, j, 8)
 			else:
 				$TileMap.set_cell(i, j, p_i.type - 3)
-			var tile = game.tile_data[i % wid + j * wid + id_offset]
+			var id = i % wid + j * wid + id_offset
+			var tile = game.tile_data[id]
 			if tile.bldg_str == "rock":
 				$Rocks.set_cell(i, j, 0)
+			match tile.bldg_str:
+				"ME", "PP":
+					add_bldg(id, tile.bldg_str)
 	if p_i.has("lake_1"):
 		for i in wid:
 			for j in wid:
@@ -96,6 +100,7 @@ func show_tooltip(tile):
 	else:
 		if tile.bldg_str == "":
 			game.hide_tooltip()
+			game.hide_adv_tooltip()
 		else:
 			game.show_tooltip(tooltip)
 
@@ -122,8 +127,10 @@ func _input(event):
 				show_tooltip(game.tile_data[tile_over + id_offset])
 			prev_tile_over = tile_over
 		else:
+			if tile_over != -1:
+				game.hide_tooltip()
+				tile_over = -1
 			game.hide_adv_tooltip()
-			game.hide_tooltip()
 		if shadow:
 			shadow.visible = mouse_on_tiles
 			shadow.position.x = floor(mouse_pos.x / 200) * 200
@@ -142,7 +149,6 @@ func _input(event):
 					tile.bldg_str = bldg_to_construct
 					if not game.show.minerals and tile.bldg_str == "ME":
 						game.show.minerals = true
-					var bldg_pos = Vector2(floor(mouse_pos.x / 200) * 200, floor(mouse_pos.y / 200) * 200) + Vector2(100, 100)
 					tile.is_constructing = true
 					tile.construction_date = OS.get_system_time_msecs()
 					tile.construction_length = constr_costs.time * 1000
@@ -155,7 +161,7 @@ func _input(event):
 							tile.path_1_value = Data.path_1[tile.bldg_str].value
 							tile.path_2 = 1
 							tile.path_2_value = Data.path_2[tile.bldg_str].value
-					add_bldg(bldg_pos, tile_id + id_offset, bldg_to_construct)
+					add_bldg(tile_id + id_offset, bldg_to_construct)
 					add_time_bar(tile_id + id_offset)
 				else:
 					game.popup("Not enough resources", 1.2)
@@ -202,10 +208,15 @@ func add_time_bar(id:int):
 	time_bar.modulate = Color(0, 0.74, 0, 1)
 	time_bars.append({"node":time_bar, "id":id})
 
-func add_bldg(v:Vector2, id:int, st:String):
+func add_bldg(id:int, st:String):
 	var bldg = Sprite.new()
 	bldg.texture = load("res://Graphics/Buildings/" + st + ".png")
 	bldg.scale *= 0.4
+	var local_id = id - id_offset
+	var v = Vector2.ZERO
+	v.x = (local_id % wid) * 200
+	v.y = floor(local_id / wid) * 200
+	v += Vector2(100, 100)
 	bldg.position = v
 	add_child(bldg)
 	var tile = game.tile_data[id]
@@ -246,6 +257,8 @@ func add_bldg(v:Vector2, id:int, st:String):
 	hbox.rect_size.x = 200
 	hbox.rect_position = v - Vector2(100, 90)
 	add_child(hbox)
+	if tile.is_constructing:
+		add_time_bar(id)
 
 func on_path_enter(path:String, lv:String):
 	game.hide_adv_tooltip()
@@ -261,6 +274,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int):
 	rsrc.rect_position = v + Vector2(0, 70)
 	rsrc.get_node("Control").modulate = mod
 	rsrcs.append({"node":rsrc, "id":id})
+	update_rsrc(rsrc, game.tile_data[id])
 
 func _process(delta):
 	for time_bar_obj in time_bars:
@@ -279,26 +293,29 @@ func _process(delta):
 		if tile.is_constructing:
 			continue
 		var rsrc = rsrc_obj.node
-		match tile.bldg_str:
-			"ME", "PP":
-				#Number of seconds needed per mineral
-				var prod = 1 / tile.path_1_value
-				var cap = tile.path_2_value
-				var stored = tile.stored
-				var c_d = tile.collect_date
-				var c_t = OS.get_system_time_msecs()
-				var current_bar = rsrc.get_node("Control/CurrentBar")
-				var capacity_bar = rsrc.get_node("Control/CapacityBar")
-				if stored < cap:
-					current_bar.value = min((c_t - c_d) / (prod * 1000), 1)
-					capacity_bar.value = min(stored / float(cap), 1)
-					if c_t - c_d > prod * 1000:
-						tile.stored += 1
-						tile.collect_date += prod * 1000
-				else:
-					current_bar.value = 0
-					capacity_bar.value = 1
-				rsrc.get_node("Control/Label").text = String(stored)
+		update_rsrc(rsrc, tile)
+
+func update_rsrc(rsrc, tile):
+	match tile.bldg_str:
+		"ME", "PP":
+			#Number of seconds needed per mineral
+			var prod = 1 / tile.path_1_value
+			var cap = tile.path_2_value
+			var stored = tile.stored
+			var c_d = tile.collect_date
+			var c_t = OS.get_system_time_msecs()
+			var current_bar = rsrc.get_node("Control/CurrentBar")
+			var capacity_bar = rsrc.get_node("Control/CapacityBar")
+			if stored < cap:
+				current_bar.value = min((c_t - c_d) / (prod * 1000), 1)
+				capacity_bar.value = min(stored / float(cap), 1)
+				if c_t - c_d > prod * 1000:
+					tile.stored += 1
+					tile.collect_date += prod * 1000
+			else:
+				current_bar.value = 0
+				capacity_bar.value = 1
+			rsrc.get_node("Control/Label").text = String(stored)
 
 func construct(st:String, costs:Dictionary):
 	bldg_to_construct = st
