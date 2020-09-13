@@ -65,23 +65,19 @@ ui_focus_prev={
 }
 ui_left={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":65,"unicode":0,"echo":false,"script":null)
- ]
+"events": [  ]
 }
 ui_right={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"unicode":0,"echo":false,"script":null)
- ]
+"events": [  ]
 }
 ui_up={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":87,"unicode":0,"echo":false,"script":null)
- ]
+"events": [  ]
 }
 ui_down={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
- ]
+"events": [  ]
 }
 ui_page_up={
 "deadzone": 0.5,
@@ -197,8 +193,8 @@ upgrade={
 
 [locale]
 
-locale_filter=[ 0, [  ] ]
-translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation" )
+locale_filter=[ 1, [  ] ]
+translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation" )
 translation_remaps={
 
 }
