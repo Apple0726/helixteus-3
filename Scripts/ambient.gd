@@ -7,4 +7,3 @@ func _ready():
 	var randomtrack = randi() % ambienttracks.size()
 	var audiostream = load('res://Audio/' + ambienttracks[randomtrack] + '.ogg')
 	set_stream(audiostream)
-	play()

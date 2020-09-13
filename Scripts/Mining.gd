@@ -206,9 +206,9 @@ func pickaxe_hit():
 	update_info()
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxe_info[game.pickaxe.name]
-		var pick_cost = curr_pick_info.money_cost
-		if $AutoReplace.pressed and game.money >= pick_cost:
-				game.money -= pick_cost
+		var costs = curr_pick_info.costs
+		if $AutoReplace.pressed and game.check_enough(costs):
+				game.deduct_resources(costs)
 				game.pickaxe.durability = curr_pick_info.durability
 				update_info()
 		else:

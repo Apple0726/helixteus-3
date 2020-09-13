@@ -86,5 +86,4 @@ func _on_Buy_pressed():
 		return
 	game.toggle_construct_panel()
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
-	game.view.obj.bldg_to_construct = item_name
-	game.view.obj.constr_costs = item_costs
+	game.view.obj.construct(item_name, item_costs)

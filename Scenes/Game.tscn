@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -15,9 +15,6 @@
 [ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
-[ext_resource path="res://Graphics/Buttons/es.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Buttons/de.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Buttons/ko.png" type="Texture" id=18]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -39,7 +36,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( -21, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"points": PoolRealArray( -40, -0.25, 0, 0.25, 0, -2, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( -0.1, 5 )
 }
 
@@ -52,7 +49,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( -4, -0.25, 0, 0.25, 0, -40, -0.3, 11, 0.54, -25, -97, -0.33, 31, 0.29, -9 ),
+"points": PoolRealArray( -10, -0.25, 0, 0.25, 0, -40, -0.3, 11, 0.54, -25, -97, -0.33, 31, 0.29, -9 ),
 "times": PoolRealArray( -0.1, 2.5, 4 )
 }
 
@@ -156,12 +153,12 @@ margin_bottom = 144.023
 
 [node name="titlescreen" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
-volume_db = -4.0
+volume_db = -10.3919
 bus = "Music"
 
 [node name="ambient" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 5 )
-volume_db = -20.7503
+volume_db = -39.5243
 bus = "Music"
 script = ExtResource( 6 )
 
@@ -187,7 +184,8 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.3: 8 Sep 2020"
+text = "Alpha v0.4:"
+text = "Alpha v0.3:"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -224,7 +222,7 @@ __meta__ = {
 [node name="Languages" type="HBoxContainer" parent="."]
 margin_left = 8.0
 margin_top = 688.0
-margin_right = 548.0
+margin_right = 328.0
 margin_bottom = 720.0
 custom_constants/separation = 20
 __meta__ = {
@@ -248,45 +246,18 @@ texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 4
 
-[node name="es" type="TextureButton" parent="Languages"]
+[node name="it" type="TextureButton" parent="Languages"]
 margin_left = 160.0
 margin_right = 220.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
-expand = true
-stretch_mode = 4
-
-[node name="de" type="TextureButton" parent="Languages"]
-margin_left = 240.0
-margin_right = 300.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 17 )
-expand = true
-stretch_mode = 4
-
-[node name="it" type="TextureButton" parent="Languages"]
-margin_left = 320.0
-margin_right = 380.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 4
 
-[node name="ko" type="TextureButton" parent="Languages"]
-margin_left = 400.0
-margin_right = 460.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 18 )
-expand = true
-stretch_mode = 4
-
 [node name="ru" type="TextureButton" parent="Languages"]
-margin_left = 480.0
-margin_right = 540.0
+margin_left = 240.0
+margin_right = 300.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 13 )
@@ -333,24 +304,15 @@ __meta__ = {
 }
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="pressed" from="Title/Button" to="Title" method="_on_start_press"]
-[connection signal="mouse_entered" from="Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
-[connection signal="mouse_exited" from="Languages/en" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~95%)" ]]
-[connection signal="mouse_exited" from="Languages/fr" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~85%)" ]]
-[connection signal="mouse_exited" from="Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~75%)" ]]
-[connection signal="mouse_exited" from="Languages/de" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~75%)" ]]
-[connection signal="mouse_exited" from="Languages/it" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~40%)" ]]
-[connection signal="mouse_exited" from="Languages/ko" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
-[connection signal="mouse_entered" from="Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "Русский (4 lines)" ]]
-[connection signal="mouse_exited" from="Languages/ru" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
+[connection signal="mouse_entered" from="Languages/en" to="." method="_on_en_mouse_entered"]
+[connection signal="mouse_exited" from="Languages/en" to="." method="_on_en_mouse_exited"]
+[connection signal="pressed" from="Languages/en" to="." method="_on_en_pressed"]
+[connection signal="mouse_entered" from="Languages/fr" to="." method="_on_fr_mouse_entered"]
+[connection signal="mouse_exited" from="Languages/fr" to="." method="_on_fr_mouse_exited"]
+[connection signal="pressed" from="Languages/fr" to="." method="_on_fr_pressed"]
+[connection signal="mouse_entered" from="Languages/it" to="." method="_on_it_mouse_entered"]
+[connection signal="mouse_exited" from="Languages/it" to="." method="_on_it_mouse_exited"]
+[connection signal="pressed" from="Languages/it" to="." method="_on_it_pressed"]
+[connection signal="mouse_entered" from="Languages/ru" to="." method="_on_ru_mouse_entered"]
+[connection signal="mouse_exited" from="Languages/ru" to="." method="_on_ru_mouse_exited"]
+[connection signal="pressed" from="Languages/ru" to="." method="_on_ru_pressed"]

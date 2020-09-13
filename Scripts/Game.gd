@@ -197,9 +197,9 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
-	planet_data[2].crust_start_depth = rand_int(45, 55)
-	planet_data[2].mantle_start_depth = rand_int(25000, 30000)
-	planet_data[2].core_start_depth = rand_int(4000000, 4200000)
+	planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
+	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
+	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
 	planet_data[2].surface.coal.amount = 100
 	planet_data[2].surface.soil.chance = 0.6
@@ -263,6 +263,7 @@ func popup_action(action:String):
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
+		panels.push_front("shop")
 		fade_in_panel(shop_panel)
 	shop_panel._on_Pickaxes_pressed()
 
@@ -562,10 +563,10 @@ func generate_superclusters(id:int):
 	for _i in range(1, total_sc_num):
 		var sc_i = {}
 		sc_i["status"] = "unconquered"
-		sc_i["type"] = rand_int(0, 0)
+		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
 		sc_i["clusters"] = []
-		sc_i["cluster_num"] = rand_int(100, 1000)
+		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
 		sc_i["discovered"] = false
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
@@ -589,17 +590,17 @@ func generate_clusters(id:int):
 	for _i in range(1, total_clust_num):
 		var c_i = {}
 		c_i["status"] = "unconquered"
-		c_i["type"] = rand_int(0, 0)
+		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
 		c_i["galaxies"] = []
 		c_i["discovered"] = false
 		var c_id = cluster_data.size()
 		if c_i["class"] == "group":
-			c_i["galaxy_num"] = rand_int(10, 100)
+			c_i["galaxy_num"] = Helper.rand_int(10, 100)
 			c_i.name = tr("GALAXY_GROUP") + " %s" % c_id
 		else:
-			c_i["galaxy_num"] = rand_int(500, 5000)
+			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
 			c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
@@ -636,7 +637,7 @@ func generate_galaxies(id:int):
 		g_i["systems"] = []
 		g_i["discovered"] = false
 		g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-		g_i["type"] = rand_int(0, 5)
+		g_i["type"] = Helper.rand_int(0, 5)
 		g_i["rotation"] = rand_range(0, 2 * PI)
 		if randf() < 0.6: #Dwarf galaxy
 			g_i["system_num"] /= 10
@@ -833,7 +834,7 @@ func generate_systems(id:int):
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
-		var planet_num = max(round(pow(combined_star_size, 0.25) * rand_int(5, 12)), 2)
+		var planet_num = max(round(pow(combined_star_size, 0.25) * Helper.rand_int(5, 12)), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
 		s_i["planet_num"] = planet_num
@@ -939,7 +940,7 @@ func generate_planets(id:int):
 		var p_i = {}
 		p_i["status"] = "unconquered"
 		p_i["ring"] = i
-		p_i["type"] = rand_int(3, 10)
+		p_i["type"] = Helper.rand_int(3, 10)
 		p_i["size"] = 2000 + rand_range(0, 10000) * (i + 1)
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
@@ -963,7 +964,7 @@ func generate_planets(id:int):
 		p_i.crust = make_planet_composition(temp, "crust")
 		p_i.mantle = make_planet_composition(temp, "mantle")
 		p_i.core = make_planet_composition(temp, "core")
-		p_i.crust_start_depth = rand_int(50, 450)
+		p_i.crust_start_depth = Helper.rand_int(50, 450)
 		p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
 		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
 		p_i.surface = add_surface_materials(temp, p_i.crust)
@@ -977,10 +978,12 @@ func generate_planets(id:int):
 func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid = min(round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1, 60)
-
+#	var wid = min(round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1, 60)
+	var wid = 100
+	
+	planet_data[id].tile_id_start = tile_data.size()
+	planet_data[id].tile_num = pow(wid, 2)
 	for _i in range(0, pow(wid, 2)):
-		planet_data[id]["tiles"].append(tile_data.size())
 		tile_data.append({	"is_constructing":false,
 							"bldg_str":"",
 							"construction_date":0,
@@ -989,7 +992,7 @@ func generate_tiles(id:int):
 							"depth":0,
 							"contents":{}})#To prevent "tile-scumming"
 	var view_zoom = 3.0 / wid
-	planet_data[id]["view"] = {"pos":Vector2(640, 385) / view_zoom, "zoom":view_zoom}
+	planet_data[id]["view"] = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 	planet_data[id]["discovered"] = true
 
 func make_planet_composition(temp:float, depth:String):
@@ -1260,9 +1263,6 @@ func get_star_modulate (star_class:String):
 		"Z":
 			m = Color(0.05, 0.05, 0.05, 1)
 	return m
-#Returns a random integer between low and high inclusive
-func rand_int(low:int, high:int):
-	return randi() % (high - low + 1) + low
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
@@ -1373,9 +1373,6 @@ func _input(event):
 			on_change_view_click()
 
 	if Input.is_action_just_released("right_click"):
-		if c_v == "planet":
-			#Cancel building
-			cancel_building()
 		if len(panels) != 0:
 			match panels[0]:
 				"shop":

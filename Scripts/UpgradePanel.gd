@@ -18,9 +18,9 @@ onready var cost_icons = $UpgradePanel/VBoxContainer/HBoxContainer3/ScrollContai
 onready var upgrade_btn = $UpgradePanel/VBoxContainer/HBoxContainer3/Upgrade
 
 func _ready():
-	if game.tile_data[ids[0]].bldg_info.has("path_2"):
+	if game.tile_data[ids[0]].has("path_2"):
 		path2.visible = true
-	if game.tile_data[ids[0]].bldg_info.has("path_3"):
+	if game.tile_data[ids[0]].has("path_3"):
 		path3.visible = true
 	_on_Path1_pressed()
 	path1.text = tr("PATH") + " 1"
@@ -31,6 +31,15 @@ func _ready():
 func geo_seq(q:float, start_n:int, end_n:int):
 	return pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q)
 
+func get_min_lv():
+	var min_lv = INF
+	for id in ids:
+		var tile = game.tile_data[id]
+		var lv_curr = tile[path_str]
+		if lv_curr < min_lv:
+			min_lv = lv_curr
+	return min_lv
+
 func update():
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "time":0.0}
 	var same_lv = true
@@ -38,16 +47,16 @@ func update():
 	var first_tile = game.tile_data[ids[0]]
 	bldg = first_tile.bldg_str
 	var first_tile_bldg_info = Data[path_str][bldg]
-	var min_lv = INF
+	var min_lv = get_min_lv()
 	var lv_to = next_lv.value
+	if lv_to < min_lv + 1:
+		lv_to = min_lv + 1
 	var all_tiles_constructing = true
 	for id in ids:
 		var tile = game.tile_data[id]
-		var lv_curr = tile.bldg_info[path_str]
-		if lv_curr != first_tile.bldg_info[path_str]:
+		var lv_curr = tile[path_str]
+		if lv_curr != first_tile[path_str]:
 			same_lv = false
-		if lv_curr < min_lv:
-			min_lv = lv_curr
 		if tile.is_constructing:
 			continue
 		all_tiles_constructing = false
@@ -65,7 +74,7 @@ func update():
 		if lv_to >= 30:
 			costs.iron += round(base_metal_costs.iron * geo_seq(1.2, max(0, lv_curr - 30), min(lv_to, 40) - 30))
 	if same_lv:
-		current_lv.text = tr("LEVEL") + " %s" % [first_tile.bldg_info[path_str]]
+		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
 		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, min_lv)],  [Data.icons[bldg]], 20)
 	else:
@@ -123,18 +132,19 @@ func _on_Upgrade_pressed():
 			if game.tile_data[id].is_constructing:
 				continue
 			var curr_time = OS.get_system_time_msecs()
-			if game.tile_data[id].bldg_info.has("collect_date"):
-				var prod = 1000 / game.tile_data[id].bldg_info.path_1_value
+			if game.tile_data[id].has("collect_date"):
+				var prod = 1000 / game.tile_data[id].path_1_value
 				var prod_ratio
 				if path_str == "path_1":
-					prod_ratio = bldg_value(Data[path_str][bldg].value, next_lv.value) / game.tile_data[id].bldg_info.path_1_value
+					prod_ratio = bldg_value(Data[path_str][bldg].value, next_lv.value) / game.tile_data[id].path_1_value
 				else:
 					prod_ratio = 1.0
-				var coll_date = game.tile_data[id].bldg_info.collect_date
-				game.tile_data[id].bldg_info.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + costs.time * 1000.0
-			game.tile_data[id].bldg_info[path_str] = next_lv.value
-			game.tile_data[id].bldg_info[path_str + "_value"] = bldg_value(Data[path_str][bldg].value, next_lv.value)
+				var coll_date = game.tile_data[id].collect_date
+				game.tile_data[id].collect_date = curr_time - (curr_time - coll_date) / prod_ratio + costs.time * 1000.0
+			game.tile_data[id][path_str] = next_lv.value
+			game.tile_data[id][path_str + "_value"] = bldg_value(Data[path_str][bldg].value, next_lv.value)
 			game.tile_data[id].construction_date = curr_time
 			game.tile_data[id].construction_length = costs.time * 1000.0
 			game.tile_data[id].is_constructing = true
+			game.view.obj.add_time_bar(id)
 		game.remove_upgrade_panel()

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.309804, 0.309804, 0.309804, 1 )
@@ -45,12 +46,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar" type="ColorRect" parent="."]
+[node name="Bar" type="TextureProgress" parent="."]
 margin_left = -80.0
 margin_top = -16.0
 margin_right = 80.0
 margin_bottom = -6.0
 mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+max_value = 1.0
+step = 0.0
+texture_progress = ExtResource( 2 )
+nine_patch_stretch = true

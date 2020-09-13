@@ -57,3 +57,7 @@ func time_to_str (time:float):
 	var day_str = "" if days == 0 else String(days) + "d "
 	var hour_str = "" if hours == 0 else String(hours) + ":"
 	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)
+
+#Returns a random integer between low and high inclusive
+func rand_int(low:int, high:int):
+	return randi() % (high - low + 1) + low
