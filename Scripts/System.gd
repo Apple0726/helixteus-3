@@ -70,7 +70,8 @@ func _ready():
 
 func on_planet_over (id:int):
 	var p_i = game.planet_data[id]
-	game.show_tooltip(tr("PLANET_INFO") % [p_i["name"], round(p_i["size"]), game.clever_round(p_i.distance / 569.25, 3), game.clever_round(p_i.temperature - 273)])
+	game.show_tooltip("%s\n%s: %s km\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
+	#game.show_tooltip(tr("PLANET_INFO") % [p_i["name"], round(p_i["size"]), game.clever_round(p_i.distance / 569.25, 3), game.clever_round(p_i.temperature - 273)])
 
 func on_planet_click (id:int):
 	if not view.dragged:

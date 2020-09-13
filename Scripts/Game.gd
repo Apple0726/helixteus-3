@@ -197,6 +197,11 @@ func _load_game():
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
+	planet_data[2].pressure = 1
+	planet_data[2].lake_1 = "Water"
+	planet_data[2].lake_2 = "Ammonia"
+	planet_data[2].liq_seed = 4
+	planet_data[2].liq_period = 100
 	planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
 	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
 	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
@@ -961,6 +966,7 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
+		p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 2)))# in bars
 		p_i.crust = make_planet_composition(temp, "crust")
 		p_i.mantle = make_planet_composition(temp, "mantle")
 		p_i.core = make_planet_composition(temp, "core")
@@ -968,6 +974,13 @@ func generate_planets(id:int):
 		p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
 		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
 		p_i.surface = add_surface_materials(temp, p_i.crust)
+		p_i.liq_seed = randi()
+		p_i.liq_period = rand_range(30, 100)
+		if p_i.temperature <= 1000:
+			if randf() < 0.5:
+				p_i.lake_1 = "Water"
+			if randf() < 0.5:
+				p_i.lake_2 = "Ammonia"
 		planet_data.append(p_i)
 	
 	if id != 0:
@@ -976,23 +989,58 @@ func generate_planets(id:int):
 	system_data[id]["discovered"] = true
 
 func generate_tiles(id:int):
+	var p_i = planet_data[id]
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-#	var wid = min(round(pow(planet_data[id]["size"] / 10000.0, 0.4) * 8.0) + 1, 60)
-	var wid = 100
-	
-	planet_data[id].tile_id_start = tile_data.size()
-	planet_data[id].tile_num = pow(wid, 2)
+	var wid:int = min(round(pow(p_i["size"] / 3000.0, 0.7) * 8.0), 250)
+	var id_offset = tile_data.size()
+	p_i.tile_id_start = id_offset
+	p_i.tile_num = pow(wid, 2)
 	for _i in range(0, pow(wid, 2)):
 		tile_data.append({	"is_constructing":false,
 							"bldg_str":"",
-							"construction_date":0,
-							"construction_length":0,
-							"bldg_info":{},
 							"depth":0,
 							"contents":{}})#To prevent "tile-scumming"
 	var view_zoom = 3.0 / wid
-	planet_data[id]["view"] = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
+	p_i["view"] = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
+	var noise = OpenSimplexNoise.new()
+	noise.seed = p_i.liq_seed
+	noise.octaves = 1
+	noise.period = p_i.liq_period#Higher period = bigger lakes
+	var lake_1_phase = "G"
+	var lake_2_phase = "G"
+	if p_i.has("lake_1"):
+		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
+		var phase_1 = phase_1_scene.instance()
+		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
+	if p_i.has("lake_2"):
+		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
+		var phase_2 = phase_2_scene.instance()
+		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
+	for i in wid:
+		for j in wid:
+			var level = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
+			if level > 0.5:
+				if lake_1_phase == "L":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "liquid_" + p_i.lake_1 + "_1"
+				elif lake_1_phase == "S":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "solid_"+ p_i.lake_1 + "_1"
+				elif lake_1_phase == "SF":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "superfluid_"+ p_i.lake_1 + "_1"
+			if level < -0.5:
+				if lake_2_phase == "L":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "liquid_" + p_i.lake_2 + "_2"
+				elif lake_2_phase == "S":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "solid_"+ p_i.lake_2 + "_2"
+				elif lake_2_phase == "SF":
+					tile_data[i % wid + j * wid + id_offset].bldg_str = "superfluid_"+ p_i.lake_2 + "_2"
+			var rand_rock = rand_range(-0.7, 0.7)
+			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
+				tile_data[i % wid + j * wid + id_offset].bldg_str = "rock"
+	if lake_1_phase == "G":
+		p_i.erase("lake_1")
+	if lake_2_phase == "G":
+		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
 
 func make_planet_composition(temp:float, depth:String):
@@ -1315,21 +1363,18 @@ func get_roman_num(num:int):
 	return res;
 
 func e_notation(num:float):#e notation
-	var e = floor(log10(num))
+	var e = floor(Helper.log10(num))
 	var n = num * pow(10, -e)
 	return String(clever_round(n)) + "e" + String(e)
 
 func clever_round (num:float, sd:int = 4):#sd: significant digits
-	var e = floor(log10(abs(num)))
+	var e = floor(Helper.log10(abs(num)))
 	if sd < e + 1:
 		return round(num)
 	return stepify(num, pow(10, e - sd + 1))
 
 func pow10(n, e):
 	return n * pow(10, e)
-
-func log10(n):
-	return log(n) / log(10)
 
 var quadrant_top_left:PoolVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector2(640, 360), Vector2(0, 360)]
 var quadrant_top_right:PoolVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]
@@ -1392,7 +1437,7 @@ func _input(event):
 	if Input.is_action_just_released("toggle"):
 		if c_v == "galaxy":
 			overlay._on_CheckBox_pressed()
-			overlay.get_node("Panel/CheckBox").pressed = not overlay.get_node("Panel/CheckBox").pressed
+			overlay.get_node("Panel/HBoxContainer/CheckBox").pressed = not overlay.get_node("Panel/HBoxContainer/CheckBox").pressed
 	
 	#B to buy/construct
 	if Input.is_action_just_released("buy"):

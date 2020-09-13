@@ -61,3 +61,17 @@ func time_to_str (time:float):
 #Returns a random integer between low and high inclusive
 func rand_int(low:int, high:int):
 	return randi() % (high - low + 1) + low
+
+func log10(n):
+	return log(n) / log(10)
+
+func get_state(T:float, P:float, node):
+	var v = Vector2(T / 750.0 * 832, -floor(log(P) / log(10)) * 576 / 12.0 + 290)
+	if Geometry.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
+		return "SF"
+	elif Geometry.is_point_in_polygon(v, node.get_node("Liquid").polygon):
+		return "L"
+	elif Geometry.is_point_in_polygon(v, node.get_node("Gas").polygon):
+		return "G"
+	else:
+		return "S"

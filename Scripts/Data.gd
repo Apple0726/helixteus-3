@@ -30,3 +30,5 @@ func reload():
 	path_1.PP.desc = "@i %s/" + tr("SECOND")
 	path_2.ME.desc = tr("STORES") + " @i %s"
 	path_2.PP.desc = tr("STORES") + " @i %s"
+
+var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}

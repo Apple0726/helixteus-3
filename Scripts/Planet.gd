@@ -15,37 +15,91 @@ onready var wid:int = round(pow(p_i.tile_num, 0.5))
 onready var planet_bounds:PoolVector2Array = [Vector2.ZERO, Vector2(0, wid * 200), Vector2(wid * 200, wid * 200), Vector2(wid * 200, 0)]
 
 func _ready():
-	var noise = OpenSimplexNoise.new()
-	noise.seed = randi()
-	noise.octaves = 1
-	noise.period = rand_range(30, 100)
+	if p_i.has("lake_1"):
+		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
+		var phase_1 = phase_1_scene.instance()
+		$Lakes1.modulate = phase_1.colors[Helper.get_state(p_i.temperature, p_i.pressure, phase_1)]
+	if p_i.has("lake_2"):
+		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
+		var phase_2 = phase_2_scene.instance()
+		$Lakes2.modulate = phase_2.colors[Helper.get_state(p_i.temperature, p_i.pressure, phase_2)]
 	for i in wid:
 		for j in wid:
-			$TileMap.set_cell(i, j, p_i.type - 3)
-			var water = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
-			if water > 0.5:
-				$Water.set_cell(i, j, 2)
-	$Water.update_bitmask_region()
+			if p_i.temperature > 1000:
+				$TileMap.set_cell(i, j, 8)
+			else:
+				$TileMap.set_cell(i, j, p_i.type - 3)
+			var tile = game.tile_data[i % wid + j * wid + id_offset]
+			if tile.bldg_str == "rock":
+				$Rocks.set_cell(i, j, 0)
+	if p_i.has("lake_1"):
+		for i in wid:
+			for j in wid:
+				var tile = game.tile_data[i % wid + j * wid + id_offset]
+				var lake = tile.bldg_str.split("_")
+				if len(lake) == 3 and lake[2] != "1":
+					continue
+				if lake[0] == "liquid":
+					$Lakes1.set_cell(i, j, 0)
+				elif lake[0] == "solid":
+					$Lakes1.set_cell(i, j, 1)
+				elif lake[0] == "superfluid":
+					$Lakes1.set_cell(i, j, 2)
+	if p_i.has("lake_2"):
+		for i in wid:
+			for j in wid:
+				var tile = game.tile_data[i % wid + j * wid + id_offset]
+				var lake = tile.bldg_str.split("_")
+				if len(lake) == 3 and lake[2] != "2":
+					continue
+				if lake[0] == "liquid":
+					$Lakes2.set_cell(i, j, 0)
+				elif lake[0] == "solid":
+					$Lakes2.set_cell(i, j, 1)
+				elif lake[0] == "superfluid":
+					$Lakes2.set_cell(i, j, 2)
+	$Lakes1.update_bitmask_region()
+	$Lakes2.update_bitmask_region()
 
 func show_tooltip(tile):
+	var strs = tile.bldg_str.split("_")
 	var tooltip:String = ""
 	var icons = []
-	match tile.bldg_str:
+	var adv = false
+	match strs[0]:
 		"ME":
 			tooltip = "Extracts " + (Data.path_1[tile.bldg_str].desc + "\n" + Data.path_2[tile.bldg_str].desc) % [tile.path_1_value, tile.path_2_value]
 			#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
 			icons = [load("res://Graphics/Icons/Minerals.png"), load("res://Graphics/Icons/Minerals.png")]
+			tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+			adv = true
 		"PP":
 			tooltip = "Generates " + (Data.path_1[tile.bldg_str].desc + "\n" + Data.path_2[tile.bldg_str].desc) % [tile.path_1_value, tile.path_2_value]
 			#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
 			icons = [load("res://Graphics/Icons/Energy.png"), load("res://Graphics/Icons/Energy.png")]
-	tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
-	if tile.bldg_str == "":
-		game.hide_adv_tooltip()
+			tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+			adv = true
+		"liquid":
+			tooltip = tr("LIQUID") + " " + tr(strs[1].to_upper())
+		"solid":
+			tooltip = tr("SOLID") + " " + tr(strs[1].to_upper())
+		"superfluid":
+			tooltip = tr("SUPERFLUID") + " " + tr(strs[1].to_upper())
+		"rock":
+			tooltip = tr("BOULDER_DESC")
+	if adv:
+		if tile.bldg_str == "":
+			game.hide_adv_tooltip()
+		else:
+			if not game.get_node("Tooltip").visible:
+				game.show_adv_tooltip(tooltip, icons)
 	else:
-		if not game.get_node("Tooltip").visible:
-			game.show_adv_tooltip(tooltip, icons)
+		if tile.bldg_str == "":
+			game.hide_tooltip()
+		else:
+			game.show_tooltip(tooltip)
 
+var prev_tile_over = -1
 func _input(event):
 	if tile_over != -1:
 		var tile = game.tile_data[tile_over]
@@ -63,7 +117,13 @@ func _input(event):
 		$WhiteRect.position.y = floor(mouse_pos.y / 200) * 200
 		if mouse_on_tiles:
 			tile_over = int(mouse_pos.x / 200) % wid + floor(mouse_pos.y / 200) * wid
-			show_tooltip(game.tile_data[tile_over])
+			if tile_over != prev_tile_over:
+				game.hide_tooltip()
+				show_tooltip(game.tile_data[tile_over + id_offset])
+			prev_tile_over = tile_over
+		else:
+			game.hide_adv_tooltip()
+			game.hide_tooltip()
 		if shadow:
 			shadow.visible = mouse_on_tiles
 			shadow.position.x = floor(mouse_pos.x / 200) * 200

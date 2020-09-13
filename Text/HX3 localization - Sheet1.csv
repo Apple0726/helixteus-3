@@ -52,7 +52,11 @@ VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers déc
 GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie),,Generiere Cluster... (%s / %s Galaxien),Generando cumulo... (%s / %s galaxias),
 GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi),,Generiere Galaxie ... (%s / %s Systemen),Generando galaxia... (%s / %s sistemas solares) ,은하 로딩 중... (%s / %s 항성계)
 MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다
-PLANET_INFO,%s\nDiameter: %s km\nDistance from star: %s AU\nSurface temperature: %s °C\nShift click to view more details,%s\nDiamètre: %s km\nDistance de l'étoile: %s au\nTempérature de surface: %s °C\nMaj + clic pour voir plus de détails,%s\nDiametro: %s km\nDistanza dalla stella: %s au\nTemperatura superficiale: %s °C\nShift + clic per vedere più dettagli,,%s\nDurchmesser: %s km\nEntfernung zum Stern: %s AU\nOberflächen temperatur: %s °C\n Shift Klick für mehr details,&s\nDiametro: %s km\nDistancia de la estrella: %s AU\nTemperatura en la superficie: %s °C\nShift click para ver mas detalles,
+DIAMETER,Diameter,Diamètre,Diametro,,Durchmesser,Diametro,
+DISTANCE_FROM_STAR,Distance from star,Distance de l'étoile,Distanza dalla stella,,Entfernung zum Stem,Distancia de la estrella,
+SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächen temperatur,Temperatura en la superficie,
+ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,,,
+MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver mas detalles,
 SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
 GALAXY_INFO,%s\nSystems: %s,%s\nSystèmes: %s,%s\nSistemi: %s,,%s\nSysteme: %s,%s\nSistemas solares: %s,
 CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,,%s\nGalaxien: %s,%s\nGalaxias: %s,
@@ -110,15 +114,15 @@ STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari
 STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosités solaires,Luminosità: %s luminosità solari,,Helligkeit: %s Sonnenhelligkeit,Luminosidad: %s luminosidades solares,
 METALS,Metals,Métaux,Metalli,,,Metales,금속
 INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,,Los metales son usados en la fabricacion y construccion de edificios de mayor nivel.,
-WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,,Pico de madera,
+WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,,Pico de madera,나무 곡괭이
 WOODEN_PICKAXE_DESC,,,,,,,
-STONE_PICKAXE,Stone pickaxe,Pioche en pierre,,,,Pico de piedra,
+STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,,Pico de piedra,돌 곡괭이
 STONE_PICKAXE_DESC,,,,,,,
-LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,,,,Pico de plomo,
+LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,,Pico de plomo,납 곡괭이
 LEAD_PICKAXE_DESC,,,,,,,
-COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,,,,Pico de cobre,
+COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,,Pico de cobre,동 곡괭이
 COPPER_PICKAXE_DESC,,,,,,,
-IRON_PICKAXE,Iron pickaxe,Pioche en fer,,,,Pico de hierro,
+IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,,Pico de hierro,철 곡괭이
 IRON_PICKAXE_DESC,,,,,,,
 SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,,"Es la parte mas superficial de un planeta, puedes encontrar materiales en esta capa.",
 CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,,La corteza es rica en minerales que son importantes en la progresion del juego.,
@@ -174,3 +178,8 @@ YES,Yes,Oui,Sì,,,,네
 NO,No,Non,No,,,,아니요
 CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,,,원 크기
 SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,,,선택한 빌딩들이 모두 건설 중입니다.
+WATER,Water,Eau,Acqua,,,,물
+AMMONIA,Ammonia,Ammoniac,Ammoniaca,,,,암모니아
+LIQUID,Liquid,Liquide,Liquido/a,,,,액체
+SOLID,Solid,Solide,Solido/a,,,,고체
+BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,,,

@@ -16,7 +16,10 @@ var metal_sprites = []
 func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 	$Back.text = "<- " + tr("BACK") + " (Z)"
-	$Tile/TextureRect.texture = tile_texture
+	if p_i.temperature > 1000:
+		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
+	else:
+		$Tile/TextureRect.texture = tile_texture
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	progress = tile.mining_progress
@@ -145,7 +148,10 @@ var crumbles = []
 func place_crumbles(num:int, sc:float, v:float):
 	for i in num:
 		var crumble = Sprite.new()
-		crumble.texture = tile_texture
+		if p_i.temperature > 1000:
+			crumble.texture = load("res://Resources/Lava.tres")
+		else:
+			crumble.texture = tile_texture
 		crumble.scale *= sc
 		crumble.centered = true
 		add_child(crumble)
