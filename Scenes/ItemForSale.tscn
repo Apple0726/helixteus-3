@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/ItemForSale.gd" type="Script" id=2]
 
 [node name="ItemForSale" type="Control"]
@@ -17,7 +18,7 @@ __meta__ = {
 
 [node name="ItemTexture" type="TextureRect" parent="."]
 margin_right = 192.0
-margin_bottom = 232.0
+margin_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 expand = true
@@ -32,4 +33,15 @@ margin_bottom = 230.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="SmallButton" type="Button" parent="."]
+margin_top = 200.0
+margin_right = 192.0
+margin_bottom = 230.0
+theme = ExtResource( 1 )
+text = "BUY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="SmallButton" to="." method="_on_SmallButton_pressed"]

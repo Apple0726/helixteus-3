@@ -59,14 +59,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Items" type="Button" parent="Tabs"]
+margin_right = 356.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "ITEMS"
+
 [node name="Materials" type="Button" parent="Tabs"]
-margin_right = 533.0
+margin_left = 354.0
+margin_right = 710.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "MATERIALS"
 
 [node name="Metals" type="Button" parent="Tabs"]
-margin_left = 531.0
+margin_left = 708.0
 margin_right = 1064.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
@@ -102,6 +109,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Contents/Control"]
+visible = false
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -450.0
@@ -113,5 +121,20 @@ columns = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Inventory" type="GridContainer" parent="Contents/Control"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -450.0
+margin_top = 15.0
+margin_right = 450.0
+margin_bottom = 15.0
+custom_constants/vseparation = -2
+custom_constants/hseparation = -2
+columns = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Tabs/Items" to="." method="_on_Items_pressed"]
 [connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
 [connection signal="pressed" from="Tabs/Metals" to="." method="_on_Metals_pressed"]

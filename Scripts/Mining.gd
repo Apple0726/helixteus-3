@@ -28,6 +28,7 @@ func _ready():
 	$Help.visible = game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
+	$AutoReplace.pressed = game.auto_replace
 
 func update_info():
 	var upper_depth
@@ -104,8 +105,8 @@ func generate_rock(new:bool):
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
 				var size = tile.current_deposit.size
-				var progress = tile.current_deposit.progress
-				var amount_multiplier = -abs(2.0/size * progress - 1) + 1
+				var progress2 = tile.current_deposit.progress
+				var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier, 3)
 				for i in clamp(round(amount / 2.0), 1, 40):
 					var met_sprite = Sprite.new()
@@ -192,7 +193,17 @@ func pickaxe_hit():
 			var amount = contents[content]
 			if game.mats.has(content):
 				game.mats[content] += amount
+				if not game.show.plant_button and content == "soil":
+					game.show.plant_button = true
+				if not game.show.materials:
+					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
+					game.inventory.get_node("Tabs/Materials").visible = true
+					game.show.materials = true
 			elif game.mets.has(content):
+				if not game.show.metals:
+					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
+					game.inventory.get_node("Tabs/Metals").visible = true
+					game.show.metals = true
 				game.mets[content] += amount
 			else:
 				game[content] += amount
@@ -249,3 +260,7 @@ func _on_Layer_mouse_entered():
 
 func _on_Layer_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_AutoReplace_pressed():
+	game.auto_replace = $AutoReplace.pressed

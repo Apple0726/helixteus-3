@@ -6,6 +6,9 @@ var bldg:String#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
+const C = Vector2(640, 360)
+const W = Vector2(576 / 2, 250 / 2)
+var polygon:PoolVector2Array = [C - W, C + Vector2(576 / 2, -250 / 2), C + W, C  + Vector2(-576 / 2, 250 / 2)]
 
 onready var path1 = $UpgradePanel/VBoxContainer/PathButtons/Path1
 onready var path2 = $UpgradePanel/VBoxContainer/PathButtons/Path2
@@ -26,7 +29,6 @@ func _ready():
 	path1.text = tr("PATH") + " 1"
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
-	update()
 
 func geo_seq(q:float, start_n:int, end_n:int):
 	return pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q)
@@ -43,14 +45,10 @@ func get_min_lv():
 func update():
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "time":0.0}
 	var same_lv = true
-	path_str = "path_%s" % [path_selected]
 	var first_tile = game.tile_data[ids[0]]
-	bldg = first_tile.bldg_str
+	bldg = first_tile.tile_str
 	var first_tile_bldg_info = Data[path_str][bldg]
-	var min_lv = get_min_lv()
 	var lv_to = next_lv.value
-	if lv_to < min_lv + 1:
-		lv_to = min_lv + 1
 	var all_tiles_constructing = true
 	for id in ids:
 		var tile = game.tile_data[id]
@@ -60,23 +58,34 @@ func update():
 		if tile.is_constructing:
 			continue
 		all_tiles_constructing = false
-		#var bldg_info = game.bldg_info[game.tile_data[id].bldg_str]
-		var base_costs = Data.costs[tile.bldg_str]
-		var base_metal_costs = Data[path_str][tile.bldg_str].metal_costs
+		var base_costs = Data.costs[tile.tile_str]
+		var base_metal_costs = Data[path_str][tile.tile_str].metal_costs
 		costs.money += round(base_costs.money * geo_seq(1.25, lv_curr, lv_to))
 		costs.time += round(base_costs.time * geo_seq(1.25, lv_curr, lv_to))
 		if base_costs.has("energy"):
 			costs.energy += round(base_costs.energy * geo_seq(1.2, lv_curr, lv_to))
 		if lv_to >= 10:
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
 			costs.lead += round(base_metal_costs.lead * geo_seq(1.2, max(0, lv_curr - 10), min(lv_to, 20) - 10))
 		if lv_to >= 20:
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
 			costs.copper += round(base_metal_costs.copper * geo_seq(1.2, max(0, lv_curr - 20), min(lv_to, 30) - 20))
 		if lv_to >= 30:
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
 			costs.iron += round(base_metal_costs.iron * geo_seq(1.2, max(0, lv_curr - 30), min(lv_to, 40) - 30))
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, min_lv)],  [Data.icons[bldg]], 20)
+		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, first_tile[path_str])],  [Data.icons[bldg]], 20)
 	else:
 		current_lv.text = tr("VARYING_LEVELS")
 		current.text = tr("VARIES")
@@ -84,38 +93,39 @@ func update():
 		game.popup(tr("SELECTED_BLDGS_UNDER_CONSTR"), 2)
 		game.remove_upgrade_panel()
 		return
-	next_lv.min_value = min_lv
 	next.text = ""
 	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, lv_to)], [Data.icons[bldg]], 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
-	if lv_to == min_lv:
-		upgrade_btn.visible = false
-	else:
-		upgrade_btn.visible = true
 	
 func bldg_value(base_value, lv):
 	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 2) * pow(1.2, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1
+	path_str = "path_%s" % [path_selected]
+	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path1)
 	update()
 
 func _on_Path2_pressed():
 	path_selected = 2
+	path_str = "path_%s" % [path_selected]
+	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path2)
 	update()
 
 func _on_Path3_pressed():
 	path_selected = 3
+	path_str = "path_%s" % [path_selected]
+	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path3)
 	update()
 
 
-func _on_NextLv_value_changed(value):
+func _on_NextLv_value_changed(_value):
 	update()
 
 
@@ -135,7 +145,6 @@ func _on_Upgrade_pressed():
 				continue
 			var curr_time = OS.get_system_time_msecs()
 			if game.tile_data[id].has("collect_date"):
-				var prod = 1000 / game.tile_data[id].path_1_value
 				var prod_ratio
 				if path_str == "path_1":
 					prod_ratio = bldg_value(Data[path_str][bldg].value, next_lv.value) / game.tile_data[id].path_1_value

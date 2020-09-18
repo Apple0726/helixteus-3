@@ -5,9 +5,9 @@ onready var game = get_node("/root/Game")
 var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
+var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 
 func _ready():
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy.text = tr("BUY") + " (B)"
 	tween = Tween.new()
 	add_child(tween)
 
@@ -38,8 +38,9 @@ func _on_Pickaxes_pressed():
 		for pickaxe in game.pickaxe_info.keys():
 			var pickaxe_info = game.pickaxe_info[pickaxe]
 			var pickaxe_item = item_for_sale_scene.instance()
+			pickaxe_item.get_node("SmallButton").text = tr("BUY")
 			pickaxe_item.item_name = pickaxe
-			pickaxe_item.item_type = "Pickaxes"
+			pickaxe_item.item_dir = "Pickaxes"
 			pickaxe_item.item_desc = tr(pickaxe.to_upper() + "_DESC")
 			pickaxe_item.costs = pickaxe_info.costs
 			pickaxe_item.parent = "shop_panel"
@@ -62,7 +63,7 @@ func remove_costs():
 var item_costs:Dictionary
 var item_name = ""
 
-func set_item_info(name:String, desc:String, costs:Dictionary):
+func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	vbox.get_node("Name").text = get_item_name(name)
@@ -92,20 +93,23 @@ func get_item_name(name:String):
 			return tr("IRON_PICKAXE")
 
 func _on_Buy_pressed():
-	if item_name == "":
+	get_item(item_name, item_costs, null, null)
+
+func get_item(name, costs, _type, _dir):
+	if name == "":
 		return
-	if game.check_enough(item_costs):
+	item_name = name
+	item_costs = costs
+	if game.check_enough(costs):
 		if tab == "pickaxes":
 			if game.pickaxe != null:
-				YNPanel(tr("REPLACE_PICKAXE") % [get_item_name(game.pickaxe.name).to_lower(), get_item_name(item_name).to_lower()])
+				YNPanel(tr("REPLACE_PICKAXE") % [get_item_name(game.pickaxe.name).to_lower(), get_item_name(name).to_lower()])
 			else:
 				buy_pickaxe()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func YNPanel(text:String):
-	#var YN = ConfirmationDialog.new()
-	#$Confirms.add_child(YN)
 	$ConfirmationDialog.dialog_text = text
 	$ConfirmationDialog.popup_centered()
 	if not $ConfirmationDialog.is_connected("confirmed", self, "buy_pickaxe"):
@@ -116,9 +120,9 @@ func buy_pickaxe_confirm():
 	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe")
 
 func buy_pickaxe():
-	if not game.check_enough():
+	if not game.check_enough(item_costs):
 		return
-	game.deduct_resources()
+	game.deduct_resources(item_costs)
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}

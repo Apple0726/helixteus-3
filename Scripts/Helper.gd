@@ -13,7 +13,7 @@ func set_btn_color(btn):
 	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
 	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
-func put_rsrc(container, min_size, objs, remove:bool = true):
+func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
 	if remove:
 		for child in container.get_children():
 			container.remove_child(child)
@@ -21,24 +21,63 @@ func put_rsrc(container, min_size, objs, remove:bool = true):
 	for obj in objs:
 		var rsrc = rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
+		var text = ""
+		var color = Color(1.0, 1.0, 1.0, 1.0)
 		if obj == "money":
 			texture.texture_normal = load("res://Graphics/Icons/Money.png")
-			rsrc.get_node("Text").text = String(objs[obj])
+			if show_available:
+				text = String(game.money) + "/" + String(objs[obj])
+				if game.money >= objs[obj]:
+					color = Color(0.0, 1.0, 0.0, 1.0)
+				else:
+					color = Color(1.0, 0.0, 0.0, 1.0)
+			else:
+				text = String(objs[obj])
 		elif obj == "stone":
 			texture.texture_normal = load("res://Graphics/Icons/stone.png")
-			rsrc.get_node("Text").text = String(objs[obj]) + " kg"
+			if show_available:
+				text = String(game.stone) + "/" + String(objs[obj]) + " kg"
+				if game.stone >= objs[obj]:
+					color = Color(0.0, 1.0, 0.0, 1.0)
+				else:
+					color = Color(1.0, 0.0, 0.0, 1.0)
+			else:
+				text = String(objs[obj]) + " kg"
 		elif obj == "energy":
 			texture.texture_normal = load("res://Graphics/Icons/Energy.png")
-			rsrc.get_node("Text").text = String(objs[obj])
+			if show_available:
+				text = String(game.energy) + "/" + String(objs[obj])
+				if game.energy >= objs[obj]:
+					color = Color(0.0, 1.0, 0.0, 1.0)
+				else:
+					color = Color(1.0, 0.0, 0.0, 1.0)
+			else:
+				text = String(objs[obj])
 		elif obj == "time":
 			texture.texture_normal = load("res://Graphics/Icons/Time.png")
-			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
+			text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
 			texture.texture_normal = load("res://Graphics/Materials/" + obj + ".png")
-			rsrc.get_node("Text").text = String(objs[obj]) + " kg"
+			if show_available:
+				text = String(game.mats[obj]) + "/" + String(objs[obj]) + " kg"
+				if game.mats[obj] >= objs[obj]:
+					color = Color(0.0, 1.0, 0.0, 1.0)
+				else:
+					color = Color(1.0, 0.0, 0.0, 1.0)
+			else:
+				text = String(objs[obj]) + " kg"
 		elif game.mets.has(obj):
 			texture.texture_normal = load("res://Graphics/Metals/" + obj + ".png")
-			rsrc.get_node("Text").text = String(objs[obj]) + " kg"
+			if show_available:
+				text = String(game.mets[obj]) + "/" + String(objs[obj]) + " kg"
+				if game.mets[obj] >= objs[obj]:
+					color = Color(0.0, 1.0, 0.0, 1.0)
+				else:
+					color = Color(1.0, 0.0, 0.0, 1.0)
+			else:
+				text = String(objs[obj]) + " kg"
+		rsrc.get_node("Text").text = text
+		rsrc.get_node("Text")["custom_colors/font_color"] = color
 		texture.rect_min_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})
@@ -75,3 +114,28 @@ func get_state(T:float, P:float, node):
 		return "G"
 	else:
 		return "S"
+
+func set_visibility(node):
+	for other_node in node.get_parent_control().get_children():
+		other_node.visible = false
+	node.visible = true
+
+func get_item_name (name:String):
+	match name:
+		"lead_seeds":
+			return tr("LEAD_SEEDS")
+		"fertilizer":
+			return tr("FERTILIZER")
+
+func get_plant_name(name:String):
+	match name:
+		"lead_seeds":
+			return tr("PLANT_TITLE").format({"metal":tr("LEAD")})
+
+func get_plant_produce(name:String):
+	match name:
+		"lead_seeds":
+			return "lead"
+
+func get_wid(size:float):
+	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 250)

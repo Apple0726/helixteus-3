@@ -4,15 +4,15 @@ MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈
 MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물
 STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌
 ENERGY,Energy,Énergie,Energia,,Energie,Energia,에너지
-SCIENCE_POINTS,Science points,Points de science,Punti di scienza,,Forschungs Punkte,Puntos de ciencia,과학 포인트
-MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stumm,(Des)Activar la musica,음악 켜기/끄기
+SCIENCE_POINTS,Science points,Points de science,Punti di scienza,,Forschungspunkte,Puntos de ciencia,과학 포인트
+MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stummschalten,(Des)Activar la musica,음악 켜기/끄기
 BACK,Back,Retour,Indietro,,Zurück,Atras,뒤로
 SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점
 INVENTORY,Inventory,Inventaire,Inventario,,Inventar,Inventario,소지품
-CONSTRUCT,Construct,Construire,Costruire,,Herstellen,Construir,건설하기
+CONSTRUCT,Construct,Construire,Costruire,,Bauen,Construir,건설하기
 BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기
 VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem bertrachten,Ver sistema estelar,항성계 보기
-MINE,Mine,Miner,Minare,,Mineralien,Minar,
+MINE,Mine,Miner,Minare,,abbauen,Minar,
 START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una losa para empezar,
 MINE_HELP,Click and hold the tile to mine!,Cliquez et maintez la tuile pour miner!,,,Eine Kachel anklickenhalten um Abzubauen!,Manten el click para minar!,
 LAYER,Layer,Couche,Strato,,Ebene,Capa,계층
@@ -37,7 +37,7 @@ LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,
 LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercumulo de Laniakea,
 PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성
 PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성들
-STAR_SYSTEM,System,Système stellaire,Sistema stellare,,Sternensystem,Sistema estelar,항성계
+STAR_SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계
 GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하
 GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,,Galaxiengruppe,Grupo galactico,
 GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,,Galaxienhaufen,Cluster galactico,
@@ -54,8 +54,8 @@ GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la gala
 MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다
 DIAMETER,Diameter,Diamètre,Diametro,,Durchmesser,Diametro,
 DISTANCE_FROM_STAR,Distance from star,Distance de l'étoile,Distanza dalla stella,,Entfernung zum Stem,Distancia de la estrella,
-SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächen temperatur,Temperatura en la superficie,
-ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,,,
+SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächentemperatur,Temperatura en la superficie,
+ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,,
 MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver mas detalles,
 SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
 GALAXY_INFO,%s\nSystems: %s,%s\nSystèmes: %s,%s\nSistemi: %s,,%s\nSysteme: %s,%s\nSistemas solares: %s,
@@ -69,7 +69,7 @@ NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione,,Neue Dimension,
 MATHS,Mathematics,Mathématiques,Matematica,,Mathematik,Matematicas,수학
 PHYSICS,Physics,Physique,Fisica,,Physik,Fisica,물리학
 CHEMISTRY,Chemistry,Chimie,Chimica,,Chemie,Quimica,화학
-BIOLOGY,Biology,Biologie,Biologia,,,,생물학
+BIOLOGY,Biology,Biologie,Biologia,,Biologie,,생물학
 PHILOSOPHY,Philosophy,Philosophie,Filosofia,,Philosophie,Filosofia,철학
 ENGINEERING,Engineering,Ingénierie,Ingegneria,,Ingineurswesen,Ingenieria,공학
 DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,,Dimensionale Kräfte,Poder dimensional,차원력
@@ -112,36 +112,36 @@ STAR_TEMPERATURE,Temperature: %s K,Température: %s K,Temperatura: %s K,,Tempera
 STAR_SIZE,Radius: %s solar radii,Rayon: %s rayons solaires,Raggio: %s raggi solari,,Radius: %s Sonnen radien,Radio: %s radios solares,
 STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari,,Masse: %s Sonnenmassen,Masa: %s masas solares,
 STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosités solaires,Luminosità: %s luminosità solari,,Helligkeit: %s Sonnenhelligkeit,Luminosidad: %s luminosidades solares,
-METALS,Metals,Métaux,Metalli,,,Metales,금속
-INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,,Los metales son usados en la fabricacion y construccion de edificios de mayor nivel.,
-WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,,Pico de madera,나무 곡괭이
+METALS,Metals,Métaux,Metalli,,Metalle,Metales,금속
+INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,Metalle werden zum Herstellen von Items und Bauen von einigen Gebäuden benötigt.,Los metales son usados en la fabricacion y construccion de edificios de mayor nivel.,
+WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,Holzspitzhacke,Pico de madera,나무 곡괭이
 WOODEN_PICKAXE_DESC,,,,,,,
-STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,,Pico de piedra,돌 곡괭이
+STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,Steinspitzhacke,Pico de piedra,돌 곡괭이
 STONE_PICKAXE_DESC,,,,,,,
-LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,,Pico de plomo,납 곡괭이
+LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,Bleispitzhacke,Pico de plomo,납 곡괭이
 LEAD_PICKAXE_DESC,,,,,,,
-COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,,Pico de cobre,동 곡괭이
+COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,Kupferspitzhacke,Pico de cobre,동 곡괭이
 COPPER_PICKAXE_DESC,,,,,,,
-IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,,Pico de hierro,철 곡괭이
+IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,Eisenspitzhacke,Pico de hierro,철 곡괭이
 IRON_PICKAXE_DESC,,,,,,,
-SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,,"Es la parte mas superficial de un planeta, puedes encontrar materiales en esta capa.",
-CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,,La corteza es rica en minerales que son importantes en la progresion del juego.,
-BASIC,Basic,Base,Base,,,Basico,기본
-BASIC_DESC,Construct buildings that generate the most basic resources.,Les bâtiments qui produisent des ressources de base se trouvent ici.,Gli edifici che producono risorse di base si trovano qui.,,,Construye edificios que generan los recursos mas basicos.,
-STORAGE,Storage,Stockage,,,,Almacenamiento,보관
-STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,,,,Edificios que aumentan el almacenamiento de un recurso en particular se encuentran aca.,
-MINERAL_EXTRACTOR,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,,,Extractor de minerales,광물 추출기
-ME_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per una fornitura costante di minerali.,,,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",
-POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,,Planta de energia,발전소
-PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,,Genera energia de la nada.,
-PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,,Presiona F para mejorar,F 누르면 업그레이드
-PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,,Presiona Q para duplicar,Q 누르면 복제
-UPGRADE,Upgrade,Améliorer,Migliorare,,,Mejorar,업그레이드
-LEVEL,Level,Niveau,Livello,,,Nivel,레벨
-SECOND,Second,Seconde,Secondo,,,Segundo,초
-STORES,Stores,Stocke,,,,Almacena,
-PATH,Path,Voie,Via,,,Camino,
-CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
+SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,"Die oberste Schicht eines Planete, in welcher Metalle abgebaut werden können.","Es la parte mas superficial de un planeta, puedes encontrar materiales en esta capa.",
+CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,Die Kruste ist reich an Metallen welche für den Spielfortschritt wichtig sind.,La corteza es rica en minerales que son importantes en la progresion del juego.,
+BASIC,Basic,Base,Base,,Basis,Basico,기본
+BASIC_DESC,Construct buildings that generate the most basic resources.,Les bâtiments qui produisent des ressources de base se trouvent ici.,Gli edifici che producono risorse di base si trovano qui.,,Basisgebäude bauen,Construye edificios que generan los recursos mas basicos.,
+STORAGE,Storage,Stockage,,,Lager,Almacenamiento,보관
+STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,,,Gebäude welche die Lagerkapazität von bestimmten Ressourcen erhöhen können hier gefunden werden.,Edificios que aumentan el almacenamiento de un recurso en particular se encuentran aca.,
+MINERAL_EXTRACTOR,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,,Mineralienextraktor,Extractor de minerales,광물 추출기
+ME_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per una fornitura costante di minerali.,,Extrahiert Mineralien aus der Planetenoberfläche um eine stetige Versorgung zu ermöglichen.,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",
+POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,Kraftwerk,Planta de energia,발전소
+PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,Generiert Energie,Genera energia de la nada.,
+PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,"Drücke ""F"" zum upgraden",Presiona F para mejorar,F 누르면 업그레이드
+PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,"Drücke ""Q"" zum duplizieren",Presiona Q para duplicar,Q 누르면 복제
+UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
+LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
+SECOND,Second,Seconde,Secondo,,Sekunde,Segundo,초
+STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
+PATH,Path,Voie,Via,,Pfad,Camino,
+CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
 COAL_DESC,,,,,,,
 SAND_DESC,,,,,,,
 CLAY_DESC,,,,,,,
@@ -157,29 +157,70 @@ BIOLOGY_DESC,Plants grow faster and have higher yields\nReduces enemy strength\n
 PHILOSOPHY_DESC,Enemies and treasure chests drop better and rarer loot.\nMore enemy attack patterns,,,,,,
 ENGINEERING_DESC,"Reduces the initial cost of buildings, megastructures and gigastructures (minimum of 1 gram)\nIncreases pickaxe durability and speed, decreases cost\nMore lenient building restrictions",,,,,,
 DIMENSIONAL_POWER_DESC,Affects the average “universe value” property of universes\nDetermines the number of dimension remnants you get from renewing dimensions,,,,,,
-LEAD,Lead,Plomb,Piombo,,,,납
-COPPER,Copper,Cuivre,Rame,,,,동
-IRON,Iron,Fer,Ferro,,,,철
-ALUMINIUM,Aluminium,Aluminium,Alluminio,,,,알류미늄
-SILVER,Silver,Argent,Argento,,,,은
-GOLD,Gold,Or,Oro,,,,금
-AMETHYST,Amethyst,Améthyste,Ametista,,,,자수정
-EMERALD,Emerald,Émeraude,Smeraldo,,,,에메랄드
-QUARTZ,Quartz,Quartz,Quarzo,,,,석영
-TOPAZ,Topaz,Topaze,Topazio,,,,황옥
-RUBY,Ruby,Rubis,Rubino,,,,루비
-SAPPHIRE,Sapphire,Saphir,Zaffiro,,,,사파이어
+LEAD,Lead,Plomb,Piombo,,Blei,,납
+COPPER,Copper,Cuivre,Rame,,Kupfer,,동
+IRON,Iron,Fer,Ferro,,Eisen,,철
+ALUMINIUM,Aluminium,Aluminium,Alluminio,,Aluminium,,알류미늄
+SILVER,Silver,Argent,Argento,,Silber,,은
+GOLD,Gold,Or,Oro,,Gold,,금
+AMETHYST,Amethyst,Améthyste,Ametista,,Amethyst,,자수정
+EMERALD,Emerald,Émeraude,Smeraldo,,Smaragd,,에메랄드
+QUARTZ,Quartz,Quartz,Quarzo,,Quarz,,석영
+TOPAZ,Topaz,Topaze,Topazio,,Topas,,황옥
+RUBY,Ruby,Rubis,Rubino,,Rubin,,루비
+SAPPHIRE,Sapphire,Saphir,Zaffiro,,Saphir,,사파이어
 OVERLAY,Overlay,,,,,,오버레이
 OVERLAY_DESC,"Overlays let you see various properties at a glance, using color.",,,,,,오버레이는 다양한 형질들을 바로 볼 수 있게 하는 도구입니다.
-TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,,,표시하기/숨기기
-NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,,,행성 수
-SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,,,항성계 들어갔기
-YES,Yes,Oui,Sì,,,,네
-NO,No,Non,No,,,,아니요
-CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,,,원 크기
-SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,,,선택한 빌딩들이 모두 건설 중입니다.
-WATER,Water,Eau,Acqua,,,,물
-AMMONIA,Ammonia,Ammoniac,Ammoniaca,,,,암모니아
-LIQUID,Liquid,Liquide,Liquido/a,,,,액체
-SOLID,Solid,Solide,Solido/a,,,,고체
-BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,,,
+TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,Umschalten,,표시하기/숨기기
+NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,Menge der Planeten,,행성 수
+SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,System betreten,,항성계 들어갔기
+YES,Yes,Oui,Sì,,Ja,,네
+NO,No,Non,No,,Nein,,아니요
+CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,Ausgewählter Bereich,,원 크기
+SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,Alle ausgewählten Gebäude sind in Bau.,,선택한 빌딩들이 모두 건설 중입니다.
+WATER,Water,Eau,Acqua,,Wasser,,물
+AMMONIA,Ammonia,Ammoniac,Ammoniaca,,Ammoniak,,암모니아
+LIQUID,Liquid,Liquide,Liquido/a,,Flüssigkeit,,액체
+SOLID,Solid,Solide,Solido/a,,Feststoff,,고체
+SUPERCRITICAL,Supercritical,Supercritique,Supercritico/a,,,,초임계유체
+BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,"Ein großer Stein. Benötigt zum Abbauen Energie,Zeit und einige Ressourcen.",,
+LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},,{state} {contents}
+SEEDS,Seeds,Graines,Semi,,Pflanzensamen,,씨앗
+AGRICULTURE,Agriculture,Agriculture,Agricoltura,,농업,,
+CRAFT_AGRIC_DESC,Farm metals!,,,,,,
+CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,,제작
+GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,,
+GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,,
+INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,Alle einmal nutzbaren Items gibt es hier.,,일회용 아이템들은 여기 있습니다.
+PLACE_SOIL,Place soil,,,,Erde Platzieren,,
+PLACE_SOIL_INFO,Click a tile to place soil (10 kg per tile),,,,Klicke auf ein Tile um 10 kg Erde zu platzieren,,
+NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,,자원이 부족합니다.
+NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,,흙이 부족합니다.
+PLANT_TITLE,{metal} plant,Plante en {metal},Pianta di {metal},,{metal} pflanzen,,{metal} 식물
+PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다)
+CLICK_TO_USE,Click to use,Cliquez pour utiliser,Cliccare per usare,,,,클릭: 아이템 쓰기
+SHIFT_CLICK_TO_USE_ALL,Shift click to use all,Maj + clic pour tout utiliser,Shift + click per usare tutto,,,,Shift 클릭: 이 아이템 모두 쓰기
+X_TO_THROW_ONE,Press X to throw one,Appuyer sur X pour jeter,Premere X per buttare,,,,X: 하나 버리기
+SHIFT_X_TO_THROW_STACK,Press Shift X to throw this stack,Appuyez sur Maj X pour jeter cette pile,Premere Shift X per buttare questa pila,,,,Shift X: 이 스택 버리기
+PLANT_SEED_INFO,Click on a tile with dirt to plant the seeds,Cliquez une tuile avec de la terre pour planter les graines,,,,,씨앗 심을라면 흙 있는 타일을 클릭하세요
+YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à ton inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,,
+YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,,
+NOT_ADJACENT_TO_LAKE,Not adjacent to a %s lake,Non adjacent à un lac de %s,Non è adiacente a un lago di %s,,,,%s 호수 옆에만 심을수 있습니다.
+LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,,납 씨앗
+SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,,@i %s kg를 자랍니다 
+FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,,비료
+FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,,비료는 식물의 성장을 1시간 가속화합니다.
+NOT_ENOUGH_INV_SPACE,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,,
+HIDE_HELP,Press F7 to not show this tooltip again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,,
+HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,,단축키 정보 숨길려면 F7 누르세요
+EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,,추출 속도: %s
+GENERATES_X,Generates %s,Produit %s,Produce %s,,,,발전 속도: %s
+ITEMS,Items,Objets,Oggetti,,,,아이템
+SALE_SUCCESS,Sale successful,Vendu avec succès,Vendita riuscita,,,,판매 성공
+PURCHASE_SUCCESS,Purchase successful,Acheté avec succès,Acquista riuscita,,,,구매 성공
+SELL,Sell,Vendre,Vendere,,,,팔기
+PURCHASE_SALE_IMPOSSIBLE,Purchase/sale impossible,Achat/vente impossible,Acquista/vendita impossibile,,,,구매/판매 불가
+CANT_BUY,Can't buy,Achat impossible,Acquista impossibile,,,,구매 불가
+CANT_SELL,Can't sell,Vente impossible,Vendita impossibile,,,,판매 불가
+CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Cliccare per raccogliere,,,,클릭하면 수확
+CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,,제작 성공

@@ -184,6 +184,7 @@ margin_bottom = 38.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 shortcut_in_tooltip = false
+text = "BUY"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]
 margin_left = 17.0

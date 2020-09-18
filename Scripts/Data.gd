@@ -28,7 +28,7 @@ var icons = {	"ME":load("res://Graphics/Icons/Minerals.png"),
 func reload():
 	path_1.ME.desc = "@i %s/" + tr("SECOND")
 	path_1.PP.desc = "@i %s/" + tr("SECOND")
-	path_2.ME.desc = tr("STORES") + " @i %s"
-	path_2.PP.desc = tr("STORES") + " @i %s"
+	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
+	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
 
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}

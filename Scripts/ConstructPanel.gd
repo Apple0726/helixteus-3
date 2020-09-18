@@ -5,17 +5,17 @@ onready var game = get_node("/root/Game")
 var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-
+var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 func _ready():
-	$Contents/HBoxContainer/ItemInfo/Construct.text = tr("CONSTRUCT") + " (B)"
 	tween = Tween.new()
 	add_child(tween)
 	var item_container = $Contents/HBoxContainer/Items
 	for bldg in game.bldg_info.keys():
 		var bldg_info = game.bldg_info[bldg]
 		var bldg_btn = item_for_sale_scene.instance()
+		bldg_btn.get_node("SmallButton").text = tr("CONSTRUCT")
 		bldg_btn.item_name = bldg
-		bldg_btn.item_type = "Buildings"
+		bldg_btn.item_dir = "Buildings"
 		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
 		bldg_btn.costs = Data.costs[bldg]
 		bldg_btn.parent = "construct_panel"
@@ -60,7 +60,7 @@ func remove_costs():
 var item_costs:Dictionary
 var item_name = ""
 
-func set_item_info(name:String, desc:String, costs:Dictionary):
+func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	vbox.get_node("Name").text = get_item_name(name)
@@ -82,8 +82,11 @@ func get_item_name(name:String):
 			return tr("POWER_PLANT")
 
 func _on_Buy_pressed():
-	if item_name == "" or game.c_v != "planet":
+	get_item(item_name, item_costs, null, null)
+
+func get_item(name, costs, _type, _dir):
+	if name == "" or game.c_v != "planet":
 		return
 	game.toggle_construct_panel()
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
-	game.view.obj.construct(item_name, item_costs)
+	game.view.obj.construct(name, costs)

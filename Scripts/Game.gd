@@ -4,6 +4,7 @@ onready var view_scene = preload("res://Scenes/Views/View.tscn")
 onready var construct_panel_scene = preload("res://Scenes/Panels/ConstructPanel.tscn")
 onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
+onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
@@ -17,6 +18,7 @@ onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var construct_panel:Control
 var shop_panel:Control
 var upgrade_panel:Control
+var craft_panel:Control
 var inventory:Control
 var dimension:Control
 var planet_details:Control
@@ -66,6 +68,15 @@ var energy = 200
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
 var pickaxe = {"name":"stick", "speed":1.0, "durability":70}
+var auto_replace = false
+
+#Your inventory
+var items = [null, null, null, null, null, null, null, null, null, null]
+#Number of items per stack
+var stack_size = 16
+#Stores data of the item that you clicked in your inventory
+var item_to_use = {"name":"", "type":"", "num":0}
+
 var mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -96,14 +107,13 @@ var planet_data = []
 var tile_data = []
 var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
-#If true, clicking any tile initiates mining
-var about_to_mine = false
+
 var mining_HUD
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":20},
 					"sand":{"value":4},
 					"clay":{"value":12},
-					"soil":{"value":8},
+					"soil":{"value":6},
 					"cellulose":{"value":12},
 }
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
@@ -118,24 +128,35 @@ var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extra
 				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something"}}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
-					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300, "cellulose":30}},
-					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":10000, "stone":100}},
-					"lead_pickaxe":{"speed":2.5, "durability":700, "costs":{"money":85000, "lead":60}},
-					"copper_pickaxe":{"speed":3.3, "durability":1100, "costs":{"money":600000, "copper":60}},
-					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000, "iron":60}},
+					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300}},
+					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":10000}},
+					"lead_pickaxe":{"speed":2.5, "durability":700, "costs":{"money":85000}},
+					"copper_pickaxe":{"speed":3.3, "durability":1100, "costs":{"money":600000}},
+					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000}},
 					}
+
+var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":2*3600000, "lake":"water", "produce":50},
+						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
 
 #Display help when players see/do things for the first time. true: show help
-var help = {"mining":true}
+var help = {"mining":true,
+			"plant_something_here":true,
+			"inventory_shortcuts":true}
+
+#Holds information of the tooltip that can be hidden by the player by pressing F7
+var help_str:String
 
 #Measures to not overwhelm beginners. false: not visible
 var show = {	"minerals":false,
 				"stone":false,
 				"mining_layer":false,
+				"plant_button":false,
+				"materials":false,
+				"metals":false,
 				"glass":false,
 				"clay":false,
 				"aluminium":false,
@@ -169,6 +190,7 @@ func _load_game():
 	inventory = inventory_scene.instance()
 	shop_panel = shop_panel_scene.instance()
 	construct_panel = construct_panel_scene.instance()
+	craft_panel = craft_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	
@@ -179,6 +201,10 @@ func _load_game():
 	shop_panel.rect_position = Vector2(106.5, 70)
 	shop_panel.visible = false
 	add_child(shop_panel)
+
+	craft_panel.rect_position = Vector2(106.5, 70)
+	craft_panel.visible = false
+	add_child(craft_panel)
 
 	inventory.rect_position = Vector2(106.5, 70)
 	inventory.visible = false
@@ -198,8 +224,7 @@ func _load_game():
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
 	planet_data[2].pressure = 1
-	planet_data[2].lake_1 = "Water"
-	planet_data[2].lake_2 = "Ammonia"
+	planet_data[2].lake_1 = "water"
 	planet_data[2].liq_seed = 4
 	planet_data[2].liq_period = 100
 	planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
@@ -253,14 +278,24 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	if dialog:
 		$Control.remove_child(dialog)
 	dialog = AcceptDialog.new()
+	dialog.popup_exclusive = true
+	$PopupBackground.visible = true
+	move_child($PopupBackground, get_child_count())
 	$Control.add_child(dialog)
 	dialog.window_title = title
 	dialog.dialog_text = txt
 	dialog.popup_centered()
 	for i in range(0, len(other_buttons)):
+# warning-ignore:return_value_discarded
 		dialog.add_button(other_buttons[i], false, other_functions[i])
+# warning-ignore:return_value_discarded
 		dialog.connect("custom_action", self, "popup_action")
+# warning-ignore:return_value_discarded
+	dialog.connect("popup_hide", self, "popup_close")
 	dialog.get_ok().text = ok_txt
+
+func popup_close():
+	$PopupBackground.visible = false
 
 func popup_action(action:String):
 	call(action)
@@ -268,12 +303,13 @@ func popup_action(action:String):
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
-		panels.push_front("shop")
+		panels.push_front(shop_panel)
 		fade_in_panel(shop_panel)
 	shop_panel._on_Pickaxes_pressed()
 
 func put_bottom_info(txt:String):
 	var more_info = $Control/BottomInfo
+	more_info.visible = false
 	more_info.text = txt
 	more_info.modulate.a = 0
 	more_info.visible = true
@@ -306,7 +342,7 @@ func add_upgrade_panel(ids:Array):
 		$Panels.remove_child(upgrade_panel)
 	upgrade_panel = upgrade_panel_scene.instance()
 	upgrade_panel.ids = ids
-	panels.push_front("upgrade")
+	panels.push_front(upgrade_panel)
 	if upgrade_panel:
 		$Panels.add_child(upgrade_panel)
 		move_child($Panels, get_child_count())
@@ -314,35 +350,44 @@ func add_upgrade_panel(ids:Array):
 func remove_upgrade_panel():
 	if upgrade_panel:
 		$Panels.remove_child(upgrade_panel)
-	panels.erase("upgrade")
+	panels.erase(upgrade_panel)
 	upgrade_panel = null
 
 func toggle_shop_panel():
 	if not shop_panel.visible:
-		panels.push_front("shop")
+		panels.push_front(shop_panel)
 		fade_in_panel(shop_panel)
 	else:
 		fade_out_panel(shop_panel)
-		panels.erase("shop")
+		panels.erase(shop_panel)
 
 func toggle_inventory():
 	if not inventory.visible:
-		panels.push_front("inventory")
+		panels.push_front(inventory)
 		fade_in_panel(inventory)
 		inventory.refresh_values()
 	else:
 		fade_out_panel(inventory)
-		panels.erase("inventory")
+		panels.erase(inventory)
 
 func toggle_construct_panel():
 	if not Input.is_action_pressed("shift"):
 		if not construct_panel.visible:
-			panels.push_front("construct")
+			panels.push_front(construct_panel)
 			fade_in_panel(construct_panel)
 		else:
 			fade_out_panel(construct_panel)
-			panels.erase("construct")
+			panels.erase(construct_panel)
 
+func toggle_craft_panel():
+	if not craft_panel.visible:
+		panels.push_front(craft_panel)
+		craft_panel.refresh_values()
+		fade_in_panel(craft_panel)
+	else:
+		fade_out_panel(craft_panel)
+		panels.erase(craft_panel)
+	
 func switch_view(new_view:String):
 	hide_tooltip()
 	match c_v:
@@ -496,7 +541,6 @@ func add_planet():
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
-	about_to_mine = false
 
 func remove_dimension():
 	add_child(HUD)
@@ -750,7 +794,6 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
-
 			#Solar masses
 			var mass = -log(1 - randf()) / a
 			var star_size = 1
@@ -975,12 +1018,12 @@ func generate_planets(id:int):
 		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
-		p_i.liq_period = rand_range(30, 100)
+		p_i.liq_period = rand_range(60, 200)
 		if p_i.temperature <= 1000:
 			if randf() < 0.5:
-				p_i.lake_1 = "Water"
+				p_i.lake_1 = "water"
 			if randf() < 0.5:
-				p_i.lake_2 = "Ammonia"
+				p_i.lake_2 = "ammonia"
 		planet_data.append(p_i)
 	
 	if id != 0:
@@ -992,13 +1035,14 @@ func generate_tiles(id:int):
 	var p_i = planet_data[id]
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-	var wid:int = min(round(pow(p_i["size"] / 3000.0, 0.7) * 8.0), 250)
+# warning-ignore:narrowing_conversion
+	var wid:int = Helper.get_wid(p_i.size)
 	var id_offset = tile_data.size()
 	p_i.tile_id_start = id_offset
 	p_i.tile_num = pow(wid, 2)
 	for _i in range(0, pow(wid, 2)):
 		tile_data.append({	"is_constructing":false,
-							"bldg_str":"",
+							"tile_str":"",
 							"depth":0,
 							"contents":{}})#To prevent "tile-scumming"
 	var view_zoom = 3.0 / wid
@@ -1022,21 +1066,28 @@ func generate_tiles(id:int):
 			var level = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
 			if level > 0.5:
 				if lake_1_phase == "L":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "liquid_" + p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "liquid_" + p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 				elif lake_1_phase == "S":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "solid_"+ p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "solid_"+ p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 				elif lake_1_phase == "SF":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "superfluid_"+ p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "supercritical_"+ p_i.lake_1 + "_1"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 			if level < -0.5:
 				if lake_2_phase == "L":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "liquid_" + p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "liquid_" + p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 				elif lake_2_phase == "S":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "solid_"+ p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "solid_"+ p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 				elif lake_2_phase == "SF":
-					tile_data[i % wid + j * wid + id_offset].bldg_str = "superfluid_"+ p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].tile_str = "supercritical_"+ p_i.lake_2 + "_2"
+					tile_data[i % wid + j * wid + id_offset].type = "lake"
 			var rand_rock = rand_range(-0.7, 0.7)
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
-				tile_data[i % wid + j * wid + id_offset].bldg_str = "rock"
+				tile_data[i % wid + j * wid + id_offset].type = "obstacle"
+				tile_data[i % wid + j * wid + id_offset].tile_str = "rock"
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1165,6 +1216,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	return surface_mat_info
 
 func show_tooltip(txt:String):
+	hide_tooltip()
 	tooltip.text = txt
 	tooltip.modulate.a = 0
 	tooltip.visible = true
@@ -1194,6 +1246,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17):
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
 	for st in arr:
+# warning-ignore:return_value_discarded
 		RTL.append_bbcode(st)
 		if i != len(imgs):
 			RTL.add_image(imgs[i], 0, size)
@@ -1236,6 +1289,45 @@ func YNPanel(text:String):
 	$Control.add_child(YN)
 	YN.dialog_text = text
 	YN.popup_centered()
+
+func add_items(item:String, type:String, dir:String, num:int = 1):
+	var cycles = 0
+	while num > 0 and cycles < 2:
+		var i:int = 0
+		for st in items:
+			if num <= 0:
+				break
+			if st != null and st.name == item and st.num != stack_size or st == null:
+				if st == null:
+					items[i] = {"name":item, "num":0, "type":type, "directory":dir}
+				var sum = items[i].num + num
+				var diff = stack_size - items[i].num
+				items[i].num = min(stack_size, sum)
+				num = max(num - diff, 0)
+			i += 1
+		cycles += 1
+	return num
+
+func remove_items(item:String, num:int = 1):
+	while num > 0:
+		for st in items:
+			if st != null and st.name == item:
+				var diff = st.num - num
+				st.num = max(0, diff)
+				if st.num == 0:
+					items[items.find(st)] = null
+				if diff == 0:
+					return get_item_num(item)
+# warning-ignore:narrowing_conversion
+				num -= min(abs(diff), num)
+	return get_item_num(item)
+
+func get_item_num(item:String):
+	var n = 0
+	for st in items:
+		if st and st.name == item:
+			n += st.num
+	return n
 
 func get_star_class (temp):
 	var cl = ""
@@ -1348,6 +1440,19 @@ func deduct_resources(costs):
 		if mets.has(cost):
 			mets[cost] -= costs[cost]
 
+func add_resources(costs):
+	for cost in costs:
+		if cost == "money":
+			money += costs.money
+		if cost == "stone":
+			stone += costs.stone
+		if cost == "energy":
+			energy += costs.energy
+		if mats.has(cost):
+			mats[cost] += costs[cost]
+		if mets.has(cost):
+			mets[cost] += costs[cost]
+
 func get_roman_num(num:int):
 	if num > 3999:
 		return String(num)
@@ -1385,24 +1490,27 @@ onready var fps_text = $FPS
 func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
-	if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-		tooltip.rect_position = mouse_pos + Vector2(4, 4)
-		adv_tooltip.rect_position = mouse_pos + Vector2(4, 4)
-	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-		tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 4, -4)
-		adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 4, -4)
-	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-		tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
-		adv_tooltip.rect_position = mouse_pos - Vector2(-4, adv_tooltip.rect_size.y)
-	elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-		tooltip.rect_position = mouse_pos - tooltip.rect_size
-		adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
 
 var mouse_pos = Vector2.ZERO
+onready var item_cursor = $ItemCursor
 
 func _input(event):
-	if event is InputEventMouse:
+	if event is InputEventMouseMotion:
 		mouse_pos = event.position
+		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
+			tooltip.rect_position = mouse_pos + Vector2(4, 4)
+			adv_tooltip.rect_position = mouse_pos + Vector2(4, 4)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
+			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 4, -4)
+			adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 4, -4)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+			tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
+			adv_tooltip.rect_position = mouse_pos - Vector2(-4, adv_tooltip.rect_size.y)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
+			tooltip.rect_position = mouse_pos - tooltip.rect_size
+			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
+		if item_cursor.visible:
+			item_cursor.position = mouse_pos
 
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
@@ -1420,16 +1528,18 @@ func _input(event):
 	if Input.is_action_just_released("right_click"):
 		if len(panels) != 0:
 			match panels[0]:
-				"shop":
+				shop_panel:
 					toggle_shop_panel()
-				"inventory":
+				inventory:
 					toggle_inventory()
-				"construct":
+				construct_panel:
 					toggle_construct_panel()
-				"buy_sell":
+				craft_panel:
+					toggle_craft_panel()
+				inventory.buy_sell:
 					inventory.buy_sell.visible = false
 					panels.pop_front()
-				"upgrade":
+				upgrade_panel:
 					remove_upgrade_panel()
 			hide_tooltip()
 	
@@ -1439,20 +1549,36 @@ func _input(event):
 			overlay._on_CheckBox_pressed()
 			overlay.get_node("Panel/HBoxContainer/CheckBox").pressed = not overlay.get_node("Panel/HBoxContainer/CheckBox").pressed
 	
-	#B to buy/construct
-	if Input.is_action_just_released("buy"):
-		if len(panels) != 0:
-			match panels[0]:
-				"shop":
-					shop_panel._on_Buy_pressed()
-				"construct":
-					construct_panel._on_Buy_pressed()
+	#F7 to hide help
+	if Input.is_action_just_released("hide_help"):
+		help[help_str] = false
+		hide_tooltip()
+	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
 		money += minerals * 5
 		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
 		minerals = 0
 
+func show_item_cursor(texture):
+	item_cursor.visible = true
+	item_cursor.get_node("Sprite").texture = texture
+	update_item_cursor()
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+func update_item_cursor():
+	if item_to_use.num == 0:
+		item_cursor.visible = false
+		item_to_use = {"name":"", "type":"", "num":0}
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	else:
+		item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
+	move_child(item_cursor, get_child_count())
+
+func hide_item_cursor():
+	item_cursor.visible = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 func cancel_building():
 	view.obj.bldg_to_construct = ""
 	$Control/BottomInfo.visible = false
@@ -1464,15 +1590,12 @@ func change_language():
 	$Title/Button.visible = true
 	Data.reload()
 
-
 func _on_lg_pressed(extra_arg_0):
 	TranslationServer.set_locale(extra_arg_0)
 	change_language()
 
-
 func _on_lg_mouse_entered(extra_arg_0):
 	show_tooltip(extra_arg_0)
-
 
 func _on_lg_mouse_exited():
 	hide_tooltip()

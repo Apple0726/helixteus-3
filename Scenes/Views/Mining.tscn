@@ -693,3 +693,4 @@ volume_db = -10.0
 [connection signal="mouse_exited" from="LayerInfo/Layer" to="." method="_on_Layer_mouse_exited"]
 [connection signal="mouse_entered" from="AutoReplace" to="." method="_on_CheckBox_mouse_entered"]
 [connection signal="mouse_exited" from="AutoReplace" to="." method="_on_CheckBox_mouse_exited"]
+[connection signal="pressed" from="AutoReplace" to="." method="_on_AutoReplace_pressed"]

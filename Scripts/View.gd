@@ -14,7 +14,7 @@ var friction = 150
 var velocity = Vector2.ZERO
 
 #Variables for zooming smoothly
-const ZOOM_FACTOR = 1.1
+var zoom_factor = 1.1
 var zooming = ""
 var progress = 0
 var mouse_position = Vector2.ZERO
@@ -72,10 +72,10 @@ func _physics_process(_delta):
 	
 	#Zooming animation
 	if zooming == "in":
-		_zoom_at_point(-ease(progress, 0.1) * (ZOOM_FACTOR - 1) + ZOOM_FACTOR)
+		_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)
 		progress += 0.03
 	if zooming == "out":
-		_zoom_at_point(ease(progress, 0.1) * (1 - 1 / ZOOM_FACTOR) + 1 / ZOOM_FACTOR)
+		_zoom_at_point(ease(progress, 0.1) * (1 - 1 / zoom_factor) + 1 / zoom_factor)
 		progress += 0.03
 	if progress >= 1:
 		zooming = ""
@@ -89,16 +89,23 @@ var drag_delta = Vector2.ZERO
 
 #Executed once the receives any kind of input
 func _input(event):
-	#if the input is from the mouse
+	if event.is_action_released("scroll_down"):
+		if event is InputEventMouse:
+			zoom_factor = 1.1
+		else:
+			zoom_factor = 1.2
+		zooming = "out"
+		progress = 0
+		check_change_scale()
+	elif event.is_action_released("scroll_up"):
+		if event is InputEventMouse:
+			zoom_factor = 1.1
+		else:
+			zoom_factor = 1.2
+		zooming = "in"
+		progress = 0
+		check_change_scale()
 	if event is InputEventMouse and move_view:
-		if event.is_action_released("scroll_down"):
-			zooming = "out"
-			progress = 0
-			check_change_scale()
-		elif event.is_action_released("scroll_up"):
-			zooming = "in"
-			progress = 0
-			check_change_scale()
 		if Input.is_action_just_pressed("left_click"):
 			drag_initial_position = event.position
 			drag_position = event.position

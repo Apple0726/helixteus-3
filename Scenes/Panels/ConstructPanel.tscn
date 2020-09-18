@@ -24,6 +24,7 @@ margin_top = -360.0
 margin_right = 427.0
 margin_bottom = 240.0
 rect_pivot_offset = Vector2( 533, 300 )
+mouse_filter = 1
 theme = ExtResource( 4 )
 script = ExtResource( 2 )
 __meta__ = {
@@ -164,6 +165,7 @@ margin_bottom = 458.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 shortcut_in_tooltip = false
+text = "CONSTRUCT"
 __meta__ = {
 "_edit_use_anchors_": false
 }
