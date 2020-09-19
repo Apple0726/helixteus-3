@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -18,6 +18,9 @@
 [ext_resource path="res://Graphics/Buttons/es.png" type="Texture" id=16]
 [ext_resource path="res://Graphics/Buttons/de.png" type="Texture" id=17]
 [ext_resource path="res://Graphics/Buttons/ko.png" type="Texture" id=18]
+[ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
+[ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
+[ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -196,7 +199,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.5: 18 Sep 2020"
+text = "Alpha v0.6:"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -369,6 +372,17 @@ color = Color( 0, 0, 0, 0.564706 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PlantingSounds" type="Node" parent="."]
+
+[node name="1" type="AudioStreamPlayer" parent="PlantingSounds"]
+stream = ExtResource( 21 )
+
+[node name="2" type="AudioStreamPlayer" parent="PlantingSounds"]
+stream = ExtResource( 20 )
+
+[node name="3" type="AudioStreamPlayer" parent="PlantingSounds"]
+stream = ExtResource( 19 )
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="pressed" from="Title/Button" to="Title" method="_on_start_press"]
 [connection signal="mouse_entered" from="Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]

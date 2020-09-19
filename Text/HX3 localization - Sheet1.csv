@@ -187,7 +187,7 @@ BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of res
 LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},,{state} {contents}
 SEEDS,Seeds,Graines,Semi,,Pflanzensamen,,씨앗
 AGRICULTURE,Agriculture,Agriculture,Agricoltura,,농업,,
-CRAFT_AGRIC_DESC,Farm metals!,,,,,,
+CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,,
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,,
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,,
@@ -215,6 +215,7 @@ HIDE_HELP,Press F7 to not show this tooltip again,Appuyez sur F7 pour ne plus af
 HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,,단축키 정보 숨길려면 F7 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,,추출 속도: %s
 GENERATES_X,Generates %s,Produit %s,Produce %s,,,,발전 속도: %s
+PRODUCES_X,Produces %s,Produit %s,Produce %s,,,,생산 속도: %s
 ITEMS,Items,Objets,Oggetti,,,,아이템
 SALE_SUCCESS,Sale successful,Vendu avec succès,Vendita riuscita,,,,판매 성공
 PURCHASE_SUCCESS,Purchase successful,Acheté avec succès,Acquista riuscita,,,,구매 성공
@@ -224,3 +225,6 @@ CANT_BUY,Can't buy,Achat impossible,Acquista impossibile,,,,구매 불가
 CANT_SELL,Can't sell,Vente impossible,Vendita impossibile,,,,판매 불가
 CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Cliccare per raccogliere,,,,클릭하면 수확
 CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,,제작 성공
+SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,,
+SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,,
+SA_DESC,Allows you to farm metals.,,,,,,

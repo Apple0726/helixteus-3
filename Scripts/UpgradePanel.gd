@@ -157,5 +157,7 @@ func _on_Upgrade_pressed():
 			game.tile_data[id].construction_date = curr_time
 			game.tile_data[id].construction_length = costs.time * 1000.0
 			game.tile_data[id].is_constructing = true
-			game.view.obj.add_time_bar(id)
+			game.view.obj.add_time_bar(id, "bldg")
 		game.remove_upgrade_panel()
+	else:
+		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)

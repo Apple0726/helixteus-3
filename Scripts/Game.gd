@@ -12,6 +12,7 @@ onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
 onready var dimension_scene = preload("res://Scenes/Views/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
+onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 
@@ -31,18 +32,6 @@ const GALAXY_SCALE_DIV = 750.0
 const CLUSTER_SCALE_DIV = 1600.0
 const SC_SCALE_DIV = 400.0
 
-#Current view
-var c_v = ""
-
-#id of the universe/supercluster/etc. you're viewing the object in
-var c_u = 0
-var c_sc = 0
-var c_c = 0
-var c_g = 0
-var c_s = 0
-var c_p = 2
-var c_t = 0#For mining only
-
 #HUD shows the player resources at the top
 var HUD
 #planet_HUD shows the buttons and other things that only shows while viewing a planet surface (e.g. construct)
@@ -58,25 +47,39 @@ var panels = []#Mainly for removing panels in a specific order
 #The base node containing things that can be moved/zoomed in/out
 var view
 
+
+############ Save data ############
+
+#Current view
+var c_v = ""
+
+#id of the universe/supercluster/etc. you're viewing the object in
+var c_u = 0
+var c_sc = 0
+var c_c = 0
+var c_g = 0
+var c_s = 0
+var c_p = 2
+var c_t = 0#For mining only
+
 #Player resources
-var money = 800
+var money = 8000
 var minerals = 0
 var mineral_capacity = 50
 var stone = 0
-var energy = 200
+var energy = 2000
+var SP = 0
 #Dimension remnants
 var DRs = 0
 #Stores information of the current pickaxe the player is holding
-var pickaxe = {"name":"stick", "speed":1.0, "durability":70}
+var pickaxe = {"name":"stick", "speed":10.0, "durability":70}
 var auto_replace = false
 
+var science_unlocked = {"SA":false}
 #Your inventory
 var items = [null, null, null, null, null, null, null, null, null, null]
 #Number of items per stack
 var stack_size = 16
-#Stores data of the item that you clicked in your inventory
-var item_to_use = {"name":"", "type":"", "num":0}
-
 var mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -105,10 +108,44 @@ var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "r
 var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data = []
 var tile_data = []
+
+#Display help when players see/do things for the first time. true: show help
+var help = {"mining":true,
+			"plant_something_here":true,
+			"inventory_shortcuts":true}
+
+#Measures to not overwhelm beginners. false: not visible
+var show = {	"minerals":false,
+				"stone":false,
+				"SP":false,
+				"mining_layer":false,
+				"plant_button":false,
+				"materials":true,
+				"metals":false,
+				"glass":false,
+				"clay":false,
+				"aluminium":false,
+				"silver":false,
+				"gold":false,
+				"amethyst":false,
+				"emerald":false,
+				"quartz":false,
+				"topaz":false,
+				"ruby":false,
+				"sapphire":false}
+
+############ End save data ############
+
+
 var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
+#Stores data of the item that you clicked in your inventory
+var item_to_use = {"name":"", "type":"", "num":0}
 
 var mining_HUD
+var science_tree
+var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
+
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":20},
 					"sand":{"value":4},
@@ -122,10 +159,6 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
 					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
 					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300}}
-
-#Stores basic building information (more in Data.gd)
-var bldg_info = {"ME":{"name":"Mineral extractor", "type":"Basic", "desc":"Extracts minerals from the planet surface, giving you a constant supply of minerals."},
-				 "PP":{"name":"Power plant", "type":"Basic", "desc":"Generates energy from... something"}}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300}},
@@ -142,32 +175,8 @@ var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
 
-#Display help when players see/do things for the first time. true: show help
-var help = {"mining":true,
-			"plant_something_here":true,
-			"inventory_shortcuts":true}
-
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
-
-#Measures to not overwhelm beginners. false: not visible
-var show = {	"minerals":false,
-				"stone":false,
-				"mining_layer":false,
-				"plant_button":false,
-				"materials":false,
-				"metals":false,
-				"glass":false,
-				"clay":false,
-				"aluminium":false,
-				"silver":false,
-				"gold":false,
-				"amethyst":false,
-				"emerald":false,
-				"quartz":false,
-				"topaz":false,
-				"ruby":false,
-				"sapphire":false}
 
 func _ready():
 	view = view_scene.instance()
@@ -411,6 +420,8 @@ func switch_view(new_view:String):
 			remove_dimension()
 		"mining":
 			remove_mining()
+		"science_tree":
+			remove_science_tree()
 	c_v = new_view
 	match new_view:
 		"planet":
@@ -433,6 +444,11 @@ func switch_view(new_view:String):
 			add_dimension()
 		"mining":
 			add_mining()
+		"science_tree":
+			add_science_tree()
+
+func add_science_tree():
+	add_obj("science_tree")
 
 func add_mining():
 	mining_HUD = mining_HUD_scene.instance()
@@ -441,6 +457,9 @@ func add_mining():
 func remove_mining():
 	remove_child(mining_HUD)
 	mining_HUD = null
+
+func remove_science_tree():
+	view.remove_obj("science_tree")
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
@@ -472,6 +491,24 @@ func add_obj(view_str):
 		"universe":
 			remove_space_HUD()
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
+		"science_tree":
+			remove_space_HUD()
+			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
+			var back_btn = Button.new()
+			back_btn.name = "ScienceBackBtn"
+			back_btn.text = "<- " + tr("BACK") + " (Z)"
+			back_btn.theme = load("res://Resources/default_theme.tres")
+			back_btn.margin_left = -640
+			back_btn.margin_top = 320
+			back_btn.margin_right = -512
+			back_btn.margin_bottom = 360
+			add_child(back_btn)
+			back_btn.rect_position = Vector2(0, 680)
+			back_btn.connect("pressed", self, "on_science_back_pressed")
+
+func on_science_back_pressed():
+	switch_view("planet")
+	remove_child(get_node("ScienceBackBtn"))
 
 func add_space_HUD():
 	if not space_HUD or not is_a_parent_of(space_HUD):
@@ -1234,6 +1271,7 @@ func hide_tooltip():
 	tooltip.autowrap = false
 
 func show_adv_tooltip(txt:String, imgs:Array):
+	adv_tooltip.visible = false
 	adv_tooltip.text = ""
 	adv_tooltip.visible = true
 	add_text_icons(adv_tooltip, txt, imgs)
@@ -1425,6 +1463,8 @@ func check_enough(costs):
 			enough = false
 		if mets.has(cost) and mets[cost] < costs[cost]:
 			enough = false
+		if not enough:
+			break
 	return enough
 
 func deduct_resources(costs):
@@ -1522,6 +1562,8 @@ func _input(event):
 			switch_view("system")
 		elif c_v == "mining":
 			switch_view("planet")
+		elif c_v == "science_tree":
+			on_science_back_pressed()
 		elif not has_node("Loading"):
 			on_change_view_click()
 

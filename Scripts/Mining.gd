@@ -28,6 +28,9 @@ func _ready():
 	$Help.visible = game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
+	if $LayerInfo.visible:
+		$LayerAnim.play("Layer fade")
+		$LayerAnim.seek(1, true)
 	$AutoReplace.pressed = game.auto_replace
 
 func update_info():

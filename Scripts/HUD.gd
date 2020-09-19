@@ -7,8 +7,10 @@ onready var minerals_text = $Resources/Minerals/Text
 onready var stone_text = $Resources/Stone/Text
 onready var soil_text = $Resources/Soil/Text
 onready var energy_text = $Resources/Energy/Text
+onready var SP_text = $Resources/SP/Text
 onready var minerals = $Resources/Minerals
 onready var stone = $Resources/Stone
+onready var SP = $Resources/SP
 onready var craft = $Buttons/Craft
 var on_button = false
 
@@ -25,8 +27,10 @@ func _process(_delta):
 	stone_text.text = String(game.stone) + " kg"
 	soil_text.text = String(game.mats.soil) + " kg"
 	energy_text.text = String(game.energy)
+	SP_text.text = String(game.SP)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
+	SP.visible = game.show.SP
 	craft.visible = game.show.materials
 
 func _on_Shop_pressed():
@@ -57,20 +61,18 @@ func _on_Craft_pressed():
 	click_sound.play()
 	game.toggle_craft_panel()
 
-func _on_Money_mouse_entered():
-	game.show_tooltip(tr("MONEY"))
-
-func _on_Minerals_mouse_entered():
-	game.show_tooltip(tr("MINERALS"))
-
-func _on_Stone_mouse_entered():
-	game.show_tooltip(tr("STONE"))
-
 func _on_mouse_exited():
 	on_button = false
 	game.hide_tooltip()
 
-func _on_Energy_mouse_entered():
-	game.show_tooltip(tr("ENERGY"))
+func _on_Texture_mouse_entered(extra_arg_0):
+	game.show_tooltip(tr(extra_arg_0))
 
 
+func _on_ScienceTree_mouse_entered():
+	game.show_tooltip(tr("SCIENCE_TREE") + " (I)")
+
+
+func _on_ScienceTree_pressed():
+	click_sound.play()
+	game.switch_view("science_tree")

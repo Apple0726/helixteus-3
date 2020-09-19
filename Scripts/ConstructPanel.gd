@@ -6,12 +6,19 @@ var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
+
+#Stores basic building information (more in Data.gd)
+var bldg_infos = {"ME":{"type":"Basic"},
+				 "PP":{"type":"Basic"},
+				 "RL":{"type":"Basic"},
+				}
+
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
 	var item_container = $Contents/HBoxContainer/Items
-	for bldg in game.bldg_info.keys():
-		var bldg_info = game.bldg_info[bldg]
+	for bldg in bldg_infos:
+		var bldg_info = bldg_infos[bldg]
 		var bldg_btn = item_for_sale_scene.instance()
 		bldg_btn.get_node("SmallButton").text = tr("CONSTRUCT")
 		bldg_btn.item_name = bldg
@@ -70,7 +77,12 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	vbox.get_node("Description").text = desc
 	var rtl = vbox.get_node("RTL")
 	rtl.text = ""
-	game.add_text_icons(rtl, (Data.path_1[name].desc + "\n" + Data.path_2[name].desc + "\n") % [Data.path_1[name].value, Data.path_2[name].value], [Data.icons[name], Data.icons[name]], 22)
+	var txt = (Data.path_1[name].desc + "\n") % [Data.path_1[name].value]
+	var icons = [Data.icons[name]]
+	if Data.path_2.has(name):
+		txt += (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
+		icons.append(Data.icons[name])
+	game.add_text_icons(rtl, txt, icons, 22)
 	Helper.put_rsrc(vbox, 36, costs, false)
 	$Contents/HBoxContainer/ItemInfo.visible = true
 
@@ -80,6 +92,8 @@ func get_item_name(name:String):
 			return tr("MINERAL_EXTRACTOR")
 		"PP":
 			return tr("POWER_PLANT")
+		"RL":
+			return tr("RESEARCH_LAB")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)

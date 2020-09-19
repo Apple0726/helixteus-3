@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/ScienceButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/ScienceTree.gd" type="Script" id=2]
+
+[node name="ScienceTree" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="SA" parent="." instance=ExtResource( 1 )]
+margin_left = 128.0
+margin_top = 320.0
+margin_right = 128.0
+margin_bottom = 320.0
+science = "SA"

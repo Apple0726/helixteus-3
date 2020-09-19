@@ -89,16 +89,17 @@ func show_tooltip(tile):
 			match strs[0]:
 				"ME":
 					tooltip = tr("EXTRACTS_X") % [(Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value, tile.path_2_value]]
-					#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
-					icons = [load("res://Graphics/Icons/Minerals.png"), load("res://Graphics/Icons/Minerals.png")]
-					tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+					icons = [Data.icons.ME, Data.icons.ME]
 					adv = true
 				"PP":
 					tooltip = tr("GENERATES_X") % [(Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value, tile.path_2_value]]
-					#tooltip = "Produces @i%s per second\nStores @i%s" % [tile.bldg_info.production, tile.bldg_info.capacity]
-					icons = [load("res://Graphics/Icons/Energy.png"), load("res://Graphics/Icons/Energy.png")]
-					tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+					icons = [Data.icons.PP, Data.icons.PP]
 					adv = true
+				"RL":
+					tooltip = tr("PRODUCES_X") % [(Data.path_1[tile.tile_str].desc) % [tile.path_1_value]]
+					icons = [Data.icons.RL]
+					adv = true
+			tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
 		elif tile.type == "plant":
 			if tile.tile_str == "":
 				if game.help.plant_something_here:
@@ -183,6 +184,12 @@ func _input(event):
 		var mouse_pos = to_local(event.position)
 		if not Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 			return
+		if len(game.panels) > 0:
+			var i = 0
+			while not game.panels[i].polygon:
+				i += 1
+			if Geometry.is_point_in_polygon(event.position, game.panels[i].polygon):
+				return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = x_pos % wid + y_pos * wid
@@ -201,12 +208,17 @@ func _input(event):
 					match bldg_to_construct:
 						"ME", "PP":
 							tile.collect_date = tile.construction_date + tile.construction_length
-							tile.collect_date = tile.construction_date + tile.construction_length
 							tile.stored = 0
 							tile.path_1 = 1
 							tile.path_1_value = Data.path_1[tile.tile_str].value
 							tile.path_2 = 1
 							tile.path_2_value = Data.path_2[tile.tile_str].value
+						"RL":
+							game.show.SP = true
+							tile.collect_date = tile.construction_date + tile.construction_length
+							tile.stored = 0
+							tile.path_1 = 1
+							tile.path_1_value = Data.path_1[tile.tile_str].value
 					add_bldg(tile_id + id_offset, bldg_to_construct)
 					add_time_bar(tile_id + id_offset, "bldg")
 				else:
@@ -243,6 +255,7 @@ func _input(event):
 						tile.is_growing = true
 						add_plant(tile_id + id_offset, game.item_to_use.name)
 						game.update_item_cursor()
+						$PlantingSounds.get_node(String(Helper.rand_int(1,3))).play()
 					else:
 						game.popup(tr("NOT_ADJACENT_TO_LAKE") % [game.craft_agric_info[game.item_to_use.name].lake], 2)
 			else:#When clicking a planted crop
@@ -273,6 +286,9 @@ func _input(event):
 					if stored == tile.path_2_value:
 						tile.collect_date = OS.get_system_time_msecs()
 					game.energy += stored
+					tile.stored = 0
+				"RL":
+					game.SP += tile.stored
 					tile.stored = 0
 	if Input.is_action_just_released("right_click"):
 		game.get_node("Control/BottomInfo").visible = false
@@ -306,6 +322,7 @@ var time_bars = []
 var rsrcs = []
 var bldgs = []#Tiles with a bldg
 var plant_sprites = {}
+var hboxes = {}
 
 func add_time_bar(id2:int, type:String):
 	var local_id = id2 - id_offset
@@ -356,13 +373,16 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.icons.ME, id2)
 		"PP":
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.PP, id2)
+		"RL":
+			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
 	hbox["custom_constants/separation"] = -1
 	var path_1 = Label.new()
+	path_1.name = "Path1"
 	path_1.text = String(tile.path_1)
-	path_1.connect("mouse_entered", self, "on_path_enter", ["1", String(tile.path_1)])
+	path_1.connect("mouse_entered", self, "on_path_enter", ["1", tile])
 	path_1.connect("mouse_exited", self, "on_path_exit")
 	path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
 	hbox.add_child(path_1)
@@ -370,16 +390,18 @@ func add_bldg(id2:int, st:String):
 	path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
 	if tile.has("path_2"):
 		var path_2 = Label.new()
+		path_2.name = "Path2"
 		path_2.text = String(tile.path_2)
-		path_2.connect("mouse_entered", self, "on_path_enter", ["2", String(tile.path_2)])
+		path_2.connect("mouse_entered", self, "on_path_enter", ["2", tile])
 		path_2.connect("mouse_exited", self, "on_path_exit")
 		path_2["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
 		path_2.mouse_filter = path_2.MOUSE_FILTER_PASS
 		hbox.add_child(path_2)
 	if tile.has("path_3"):
 		var path_3 = Label.new()
+		path_3.name = "Path3"
 		path_3.text = String(tile.path_3)
-		path_3.connect("mouse_entered", self, "on_path_enter", ["3", String(tile.path_3)])
+		path_3.connect("mouse_entered", self, "on_path_enter", ["3", tile])
 		path_3.connect("mouse_exited", self, "on_path_exit")
 		path_3["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
 		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
@@ -387,12 +409,13 @@ func add_bldg(id2:int, st:String):
 	hbox.rect_size.x = 200
 	hbox.rect_position = v - Vector2(100, 90)
 	add_child(hbox)
+	hboxes[String(id2)] = hbox
 	if tile.is_constructing:
 		add_time_bar(id2, "bldg")
 
-func on_path_enter(path:String, lv:String):
+func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()
-	game.show_tooltip(tr("PATH") + " " + path + " " + tr("LEVEL") + " " + lv)
+	game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), tile["path_" + path]])
 
 func on_path_exit():
 	game.hide_tooltip()
@@ -420,6 +443,11 @@ func _process(_delta):
 		if progress > 1:
 			if tile.is_constructing:
 				tile.is_constructing = false
+				hboxes[String(id2)].get_node("Path1").text = String(tile.path_1)
+				if tile.has("path_2"):
+					hboxes[String(id2)].get_node("Path2").text = String(tile.path_2)
+				if tile.has("path_3"):
+					hboxes[String(id2)].get_node("Path3").text = String(tile.path_3)
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
 	for rsrc_obj in rsrcs:
@@ -450,8 +478,20 @@ func update_rsrc(rsrc, tile):
 				current_bar.value = 0
 				capacity_bar.value = 1
 			rsrc.get_node("Control/Label").text = String(stored)
+		"RL":
+			var prod = 1 / tile.path_1_value
+			var stored = tile.stored
+			var c_d = tile.collect_date
+			var c_t = OS.get_system_time_msecs()
+			var current_bar = rsrc.get_node("Control/CurrentBar")
+			current_bar.value = min((c_t - c_d) / (prod * 1000), 1)
+			if c_t - c_d > prod * 1000:
+				tile.stored += 1
+				tile.collect_date += prod * 1000
+			rsrc.get_node("Control/Label").text = String(stored)
 
 func construct(st:String, costs:Dictionary):
+	finish_construct()
 	bldg_to_construct = st
 	constr_costs = costs
 	shadow = Sprite.new()

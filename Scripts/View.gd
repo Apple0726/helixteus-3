@@ -53,6 +53,9 @@ func remove_obj(obj_str:String):
 			game.universe_data[game.c_u]["view"]["pos"] = self.position / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
 			game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
+		"science_tree":
+			game.science_tree_view.pos = position / scale.x
+			game.science_tree_view.zoom = scale.x
 	self.remove_child(obj)
 	obj_scene = null
 	obj = null
