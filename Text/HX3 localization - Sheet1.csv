@@ -78,10 +78,14 @@ INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자
 INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricacion, agricultura espacial y conversion de recursos.",
 MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료
 SPEED_UPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업
-OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Over-Clocks,오버크로크
+SPEED_UP_DESC,Accelerates by %s,Accélère de %s,Accelera di %s,,,,%s 가속화
+SPEED_UP,Speed-up,Speed-up,Speed-up,,,,스피드업
+OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Over-Clocks,오버클럭
+OVERCLOCK,Overclock,Overclock,Overclock,,,,오버클럭
+OVERCLOCK_DESC,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,,생산 승수: %s\n기간: %s
 PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이
-SPEED_UP_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construccion de un edificio.,
-OVERCLOCK_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Over-Clocks temporalmente aumentan la produccion de recursos de los edificios seleccionados.,
+SPEED_UP_INFO,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construccion de un edificio.,
+OVERCLOCK_INFO,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Over-Clocks temporalmente aumentan la produccion de recursos de los edificios seleccionados.,
 PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
 STICK,Stick,Bâton,Bastone,,Stock,Palo,
 STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,
@@ -173,7 +177,7 @@ OVERLAY,Overlay,,,,,,오버레이
 OVERLAY_DESC,"Overlays let you see various properties at a glance, using color.",,,,,,오버레이는 다양한 형질들을 바로 볼 수 있게 하는 도구입니다.
 TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,Umschalten,,표시하기/숨기기
 NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,Menge der Planeten,,행성 수
-SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,System betreten,,항성계 들어갔기
+SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,System betreten,,항성계 들어갔음
 YES,Yes,Oui,Sì,,Ja,,네
 NO,No,Non,No,,Nein,,아니요
 CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,Ausgewählter Bereich,,원 크기
@@ -196,12 +200,15 @@ PLACE_SOIL,Place soil,,,,Erde Platzieren,,
 PLACE_SOIL_INFO,Click a tile to place soil (10 kg per tile),,,,Klicke auf ein Tile um 10 kg Erde zu platzieren,,
 NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,,자원이 부족합니다.
 NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,,흙이 부족합니다.
+NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,,과학 포인트가 부족합니다.
 PLANT_TITLE,{metal} plant,Plante en {metal},Pianta di {metal},,{metal} pflanzen,,{metal} 식물
 PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다)
 CLICK_TO_USE,Click to use,Cliquez pour utiliser,Cliccare per usare,,,,클릭: 아이템 쓰기
 SHIFT_CLICK_TO_USE_ALL,Shift click to use all,Maj + clic pour tout utiliser,Shift + click per usare tutto,,,,Shift 클릭: 이 아이템 모두 쓰기
 X_TO_THROW_ONE,Press X to throw one,Appuyer sur X pour jeter,Premere X per buttare,,,,X: 하나 버리기
 SHIFT_X_TO_THROW_STACK,Press Shift X to throw this stack,Appuyez sur Maj X pour jeter cette pile,Premere Shift X per buttare questa pila,,,,Shift X: 이 스택 버리기
+H_FOR_HOTBAR,Press H to add/remove from hotbar,,,,,,
+H_FOR_HOTBAR_REMOVE,Press H to remove from hotbar,,,,,,
 PLANT_SEED_INFO,Click on a tile with dirt to plant the seeds,Cliquez une tuile avec de la terre pour planter les graines,,,,,씨앗 심을라면 흙 있는 타일을 클릭하세요
 YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à ton inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,,
 YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,,
@@ -210,7 +217,8 @@ LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,,납 씨앗
 SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,,@i %s kg를 자랍니다 
 FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,,비료
 FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,,비료는 식물의 성장을 1시간 가속화합니다.
-NOT_ENOUGH_INV_SPACE,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,,
+NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,,
+NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,,
 HIDE_HELP,Press F7 to not show this tooltip again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,,
 HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,,단축키 정보 숨길려면 F7 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,,추출 속도: %s
@@ -228,3 +236,11 @@ CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,,
 SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,,
 SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,,
 SA_DESC,Allows you to farm metals.,,,,,,
+RESEARCH_SUCCESS,Research done,Recherche faite,Ricerca fatta,,,,연구 완료
+USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,,가속화할 빌딩을 클릭하세요
+USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,,오버클럭할 빌딩을 클릭하세요
+RESEARCH_LAB,Research lab,Labo de recherche,Laboratorio di ricerca,,,,연구 실험실
+RL_DESC,Does research on its own,Fait de la recherche en autonomie,Fa ricerca da solo,,,,자기 혼자서 조사합니다
+MINERAL_SILO,Mineral silo,,,,,,광물 사일로
+MS_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de minéraux,,,,,광물 저장 용량을 올립니다
+REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s per sbloccare,,,,

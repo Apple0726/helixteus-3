@@ -91,6 +91,7 @@ func _on_TextureButton_pressed():
 			is_selling = false
 		else:
 			game.popup(tr("CANT_BUY"), 1.2)
+			return
 	else:
 		if type == "Materials" and game.mats[obj] != 0:
 			is_selling = true
@@ -98,4 +99,5 @@ func _on_TextureButton_pressed():
 			is_selling = true
 		else:
 			game.popup(tr("CANT_SELL"), 1.2)
+			return
 	refresh()

@@ -128,25 +128,24 @@ __meta__ = {
 
 [node name="Storage" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 visible = false
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 764.0
-margin_bottom = 459.0
+margin_right = 762.0
+margin_bottom = 457.0
 size_flags_horizontal = 3
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Production" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 visible = false
-margin_left = 382.0
-margin_right = 766.0
-margin_bottom = 461.0
+margin_right = 762.0
+margin_bottom = 457.0
 size_flags_horizontal = 3
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -158,6 +157,7 @@ margin_bottom = 460.0
 rect_min_size = Vector2( 304, 0 )
 
 [node name="Construct" type="Button" parent="Contents/HBoxContainer/ItemInfo"]
+visible = false
 margin_left = 3.0
 margin_top = 420.0
 margin_right = 307.0

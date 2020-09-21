@@ -11,6 +11,7 @@ var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), V
 var bldg_infos = {"ME":{"type":"Basic"},
 				 "PP":{"type":"Basic"},
 				 "RL":{"type":"Basic"},
+				 "MS":{"type":"Storage"},
 				}
 
 func _ready():
@@ -83,7 +84,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 		txt += (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
 		icons.append(Data.icons[name])
 	game.add_text_icons(rtl, txt, icons, 22)
-	Helper.put_rsrc(vbox, 36, costs, false)
+	Helper.put_rsrc(vbox, 36, costs, false, true)
 	$Contents/HBoxContainer/ItemInfo.visible = true
 
 func get_item_name(name:String):
@@ -94,6 +95,8 @@ func get_item_name(name:String):
 			return tr("POWER_PLANT")
 		"RL":
 			return tr("RESEARCH_LAB")
+		"MS":
+			return tr("MINERAL_SILO")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -101,6 +104,7 @@ func _on_Buy_pressed():
 func get_item(name, costs, _type, _dir):
 	if name == "" or game.c_v != "planet":
 		return
+	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_construct_panel()
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 	game.view.obj.construct(name, costs)

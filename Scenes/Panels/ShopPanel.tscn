@@ -129,25 +129,24 @@ __meta__ = {
 
 [node name="Overclocks" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 visible = false
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 764.0
-margin_bottom = 459.0
+margin_right = 762.0
+margin_bottom = 457.0
 size_flags_horizontal = 3
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Speedups" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 visible = false
-margin_left = 382.0
-margin_right = 766.0
-margin_bottom = 461.0
+margin_right = 762.0
+margin_bottom = 457.0
 size_flags_horizontal = 3
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -173,8 +172,12 @@ __meta__ = {
 margin_right = 146.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 146, 30 )
+min_value = 1.0
+max_value = 2.0
+value = 1.0
+rounded = true
+allow_greater = true
 align = 2
-editable = false
 prefix = "x "
 
 [node name="Buy" type="Button" parent="Contents/HBoxContainer/ItemInfo/HBoxContainer"]
@@ -223,4 +226,5 @@ theme = ExtResource( 3 )
 [connection signal="pressed" from="Tabs/Speedups" to="." method="_on_Speedups_pressed"]
 [connection signal="pressed" from="Tabs/Overclocks" to="." method="_on_Overclocks_pressed"]
 [connection signal="pressed" from="Tabs/Pickaxes" to="." method="_on_Pickaxes_pressed"]
+[connection signal="value_changed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount" to="." method="_on_BuyAmount_value_changed"]
 [connection signal="pressed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy" to="." method="_on_Buy_pressed"]

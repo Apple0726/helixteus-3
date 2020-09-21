@@ -5,6 +5,8 @@ onready var game = get_node("/root/Game")
 #A place to put frequently used functions
 
 func set_btn_color(btn):
+	if not btn.get_parent_control():
+		return
 	for other_btn in btn.get_parent_control().get_children():
 		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
 		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
@@ -121,11 +123,27 @@ func set_visibility(node):
 	node.visible = true
 
 func get_item_name (name:String):
+	if name.substr(0, 7) == "speedup":
+		return tr("SPEED_UP") + " " + game.get_roman_num(int(name.substr(7, 1)))
+	if name.substr(0, 9) == "overclock":
+		return tr("OVERCLOCK") + " " + game.get_roman_num(int(name.substr(9, 1)))
 	match name:
 		"lead_seeds":
 			return tr("LEAD_SEEDS")
 		"fertilizer":
 			return tr("FERTILIZER")
+		"stick":
+			return tr("STICK")
+		"wooden_pickaxe":
+			return tr("WOODEN_PICKAXE")
+		"stone_pickaxe":
+			return tr("STONE_PICKAXE")
+		"lead_pickaxe":
+			return tr("LEAD_PICKAXE")
+		"copper_pickaxe":
+			return tr("COPPER_PICKAXE")
+		"iron_pickaxe":
+			return tr("IRON_PICKAXE")
 
 func get_plant_name(name:String):
 	match name:
@@ -139,3 +157,21 @@ func get_plant_produce(name:String):
 
 func get_wid(size:float):
 	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 250)
+
+func get_dir_from_name(name:String):
+	if name.substr(0, 7) == "speedup":
+		return "Items/Speedups"
+	if name.substr(0, 9) == "overclock":
+		return "Items/Overclocks"
+	match name:
+		"lead_seeds", "fertilizer":
+			return "Agriculture"
+
+func get_type_from_name(name:String):
+	if name.substr(0, 7) == "speedup":
+		return "speedup_info"
+	if name.substr(0, 9) == "overclock":
+		return "overclock_info"
+	match name:
+		"lead_seeds", "fertilizer":
+			return "craft_agric_info"

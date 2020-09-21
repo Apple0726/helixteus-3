@@ -270,7 +270,6 @@ void fragment() {
 	float value = rand(coord);
 	COLOR = vec4(vec3(value), 1.0);
 }"
-custom_defines = ""
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = SubResource( 5 )

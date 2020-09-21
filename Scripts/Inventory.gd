@@ -47,7 +47,7 @@ func _on_Items_pressed():
 			slot.get_node("TextureRect").texture = load("res://Graphics/" + item.directory  + "/" + item.name + ".png")
 			slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [item.name, item.num, i])
 			slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name, item.type])
+			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name, item.type, item.directory])
 		inventory_grid.add_child(slot)
 		i += 1
 
@@ -57,7 +57,7 @@ func on_slot_over (name:String, num:int, slot:int):
 	item_stack = num
 	if game.help.inventory_shortcuts:
 		game.help_str = "inventory_shortcuts"
-		game.show_tooltip(Helper.get_item_name(name) + "\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK")] + "\n" + tr("HIDE_SHORTCUTS"))
+		game.show_tooltip(Helper.get_item_name(name) + "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS"))
 	else:
 		game.show_tooltip(Helper.get_item_name(name))
 
@@ -65,9 +65,10 @@ func on_slot_out():
 	item_hovered = ""
 	game.hide_tooltip()
 
-func on_slot_press(name:String, type:String):
+func on_slot_press(name:String, type:String, dir:String):
 	game.hide_tooltip()
-	game.toggle_inventory()
+	if visible:
+		game.toggle_inventory()
 	var num:int
 	if Input.is_action_pressed("shift"):
 		num = game.get_item_num(name)
@@ -82,7 +83,13 @@ func on_slot_press(name:String, type:String):
 			game.item_to_use.type = "seeds"
 		elif game.craft_agric_info[name].has("speed_up_time"):
 			game.item_to_use.type = "fertilizer"
-		texture = load("res://Graphics/Agriculture/" + name + ".png")
+	elif type == "speedup_info":
+		game.put_bottom_info(tr("USE_SPEEDUP_INFO"))
+		game.item_to_use.type = "speedup"
+	elif type == "overclock_info":
+		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"))
+		game.item_to_use.type = "overclock"
+	texture = load("res://Graphics/" + dir + "/" + name + ".png")
 	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():
@@ -191,12 +198,19 @@ func get_met_str(met:String, desc:String = ""):
 			return tr("SAPPHIRE" + desc)
 
 func _input(event):
-	if Input.is_action_just_released("throw") and item_hovered != "":
-		if Input.is_action_pressed("shift"):
-			game.remove_items(item_hovered, item_stack)
-		else:
-			game.remove_items(item_hovered)
-		_on_Items_pressed()
-		if not game.items[item_slot]:
-			item_hovered = ""
-			game.hide_tooltip()
+	if item_hovered != "":
+		if Input.is_action_just_released("throw"):
+			if Input.is_action_pressed("shift"):
+				game.remove_items(item_hovered, item_stack)
+			else:
+				game.remove_items(item_hovered)
+			_on_Items_pressed()
+			if not game.items[item_slot]:
+				item_hovered = ""
+				game.hide_tooltip()
+		if Input.is_action_just_released("hotbar"):
+			if game.hotbar.find(item_hovered) == -1:
+				game.hotbar.append(item_hovered)
+			else:
+				game.hotbar.erase(item_hovered)
+			game.HUD.update_hotbar()

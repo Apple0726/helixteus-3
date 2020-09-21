@@ -85,7 +85,10 @@ func update():
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, first_tile[path_str])],  [Data.icons[bldg]], 20)
+		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str])
+		if first_tile_bldg_info.is_value_integer:
+			curr_value = round(curr_value)
+		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value],  [Data.icons[bldg]], 20)
 	else:
 		current_lv.text = tr("VARYING_LEVELS")
 		current.text = tr("VARIES")
@@ -94,7 +97,10 @@ func update():
 		game.remove_upgrade_panel()
 		return
 	next.text = ""
-	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [bldg_value(first_tile_bldg_info.value, lv_to)], [Data.icons[bldg]], 20)
+	var next_value = bldg_value(first_tile_bldg_info.value, lv_to)
+	if first_tile_bldg_info.is_value_integer:
+		next_value = round(next_value)
+	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], [Data.icons[bldg]], 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
 	for icon in icons:
 		if costs[icon.name] == 0:
@@ -138,25 +144,34 @@ func _on_Upgrade_pressed():
 	if game.c_v != "planet":
 		return
 	update()
+	var bldg_info = Data[path_str][bldg]
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		for id in ids:
-			if game.tile_data[id].is_constructing:
+			var tile = game.tile_data[id]
+			if tile.is_constructing:
 				continue
 			var curr_time = OS.get_system_time_msecs()
-			if game.tile_data[id].has("collect_date"):
+			var new_value = bldg_value(bldg_info.value, next_lv.value)
+			if bldg_info.is_value_integer:
+				new_value = round(new_value)
+			if tile.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
-					prod_ratio = bldg_value(Data[path_str][bldg].value, next_lv.value) / game.tile_data[id].path_1_value
+					prod_ratio = new_value / game.tile_data[id].path_1_value
 				else:
 					prod_ratio = 1.0
-				var coll_date = game.tile_data[id].collect_date
-				game.tile_data[id].collect_date = curr_time - (curr_time - coll_date) / prod_ratio + costs.time * 1000.0
-			game.tile_data[id][path_str] = next_lv.value
-			game.tile_data[id][path_str + "_value"] = bldg_value(Data[path_str][bldg].value, next_lv.value)
-			game.tile_data[id].construction_date = curr_time
-			game.tile_data[id].construction_length = costs.time * 1000.0
-			game.tile_data[id].is_constructing = true
+				var coll_date = tile.collect_date
+				tile.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + costs.time * 1000.0
+				if tile.has("overclock_mult"):
+					tile.overclock_date += costs.time * 1000.0
+			elif tile.tile_str == "MS":
+				tile.mineral_cap_upgrade = new_value - tile.path_1_value
+			tile[path_str] = next_lv.value
+			tile[path_str + "_value"] = new_value
+			tile.construction_date = curr_time
+			tile.construction_length = costs.time * 1000.0
+			tile.is_constructing = true
 			game.view.obj.add_time_bar(id, "bldg")
 		game.remove_upgrade_panel()
 	else:

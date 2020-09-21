@@ -51,88 +51,100 @@ var view
 ############ Save data ############
 
 #Current view
-var c_v = ""
-
-#id of the universe/supercluster/etc. you're viewing the object in
-var c_u = 0
-var c_sc = 0
-var c_c = 0
-var c_g = 0
-var c_s = 0
-var c_p = 2
-var c_t = 0#For mining only
+var c_v:String = ""
 
 #Player resources
-var money = 8000
-var minerals = 0
-var mineral_capacity = 50
-var stone = 0
-var energy = 2000
-var SP = 0
+var money:float = 8000
+var minerals:float = 0
+var mineral_capacity:float = 50
+var stone:float = 0
+var energy:float = 2000
+var SP:float = 0
 #Dimension remnants
-var DRs = 0
-#Stores information of the current pickaxe the player is holding
-var pickaxe = {"name":"stick", "speed":10.0, "durability":70}
-var auto_replace = false
+var DRs:float = 0
+var xp:float = 0
+var xp_to_lv:float = 10
 
-var science_unlocked = {"SA":false}
-#Your inventory
-var items = [null, null, null, null, null, null, null, null, null, null]
+#id of the universe/supercluster/etc. you're viewing the object in
+var c_u:int = 0
+var c_sc:int = 0
+var c_c:int = 0
+var c_g:int = 0
+var c_s:int = 0
+var c_p:int = 2
+var c_t:int = 0#For mining only
+
+var lv:int = 5
 #Number of items per stack
-var stack_size = 16
-var mats = {	"coal":0,
-				"glass":0,
-				"sand":0,
-				"clay":0,
-				"soil":0,
-				"cellulose":0}
+var stack_size:int = 16
 
-var mets = {	"lead":0,
-				"copper":0,
-				"iron":0,
-				"aluminium":0,
-				"silver":0,
-				"gold":0,
-				"amethyst":0,
-				"emerald":0,
-				"quartz":0,
-				"topaz":0,
-				"ruby":0,
-				"sapphire":0}
+var auto_replace:bool = false
 
-#Stores information of all objects discovered
-var universe_data = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var supercluster_data = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var cluster_data = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
-var planet_data = []
-var tile_data = []
+#Stores information of the current pickaxe the player is holding
+var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":70}
+
+var science_unlocked:Dictionary = {"SA":false}
+
+var mats:Dictionary = {	"coal":0,
+						"glass":0,
+						"sand":0,
+						"clay":0,
+						"soil":0,
+						"cellulose":0}
+
+var mets:Dictionary = {	"lead":0,
+						"copper":0,
+						"iron":0,
+						"aluminium":0,
+						"silver":0,
+						"gold":0,
+						"amethyst":0,
+						"emerald":0,
+						"quartz":0,
+						"topaz":0,
+						"ruby":0,
+						"sapphire":0}
 
 #Display help when players see/do things for the first time. true: show help
-var help = {"mining":true,
+var help:Dictionary = {"mining":true,
 			"plant_something_here":true,
-			"inventory_shortcuts":true}
+			"inventory_shortcuts":true,
+			"hotbar_shortcuts":true,
+}
 
 #Measures to not overwhelm beginners. false: not visible
-var show = {	"minerals":false,
-				"stone":false,
-				"SP":false,
-				"mining_layer":false,
-				"plant_button":false,
-				"materials":true,
-				"metals":false,
-				"glass":false,
-				"clay":false,
-				"aluminium":false,
-				"silver":false,
-				"gold":false,
-				"amethyst":false,
-				"emerald":false,
-				"quartz":false,
-				"topaz":false,
-				"ruby":false,
-				"sapphire":false}
+var show:Dictionary = {	"minerals":false,
+						"stone":false,
+						"SP":false,
+						"mining_layer":false,
+						"plant_button":false,
+						"materials":false,
+						"metals":false,
+						"glass":false,
+						"clay":false,
+						"aluminium":false,
+						"silver":false,
+						"gold":false,
+						"amethyst":false,
+						"emerald":false,
+						"quartz":false,
+						"topaz":false,
+						"ruby":false,
+						"sapphire":false}
+
+#Stores information of all objects discovered
+var universe_data:Array = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var supercluster_data:Array = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var cluster_data:Array = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+var galaxy_data:Array = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var system_data:Array = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var planet_data:Array = []
+var tile_data:Array = []
+
+#Your inventory
+var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
+
+var hotbar:Array = []
 
 ############ End save data ############
 
@@ -168,6 +180,12 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}
 					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000}},
 					}
 
+var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
+						"speedup2":{"costs":{"money":3000}, "time":15*60000},}
+
+var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
+						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000}}
+
 var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":2*3600000, "lake":"water", "produce":50},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
@@ -181,12 +199,22 @@ var help_str:String
 func _ready():
 	view = view_scene.instance()
 	add_child(view)
-	$titlescreen.play()
 	#noob
 	#AudioServer.set_bus_mute(1,true)
+	
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		if config.get_value("audio", "mute", false):
+			AudioServer.set_bus_mute(1,true)
+		else:
+			$titlescreen.play()
+		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
+	config.save("user://settings.cfg")
+#	var dir = Directory.new()
+#	dir.remove("user://Save1/main.hx3")
 
 func _load_game():
-	c_v = "planet"
 	$Languages.visible = false
 	#Loads planet scene
 	$click.play()
@@ -201,7 +229,6 @@ func _load_game():
 	construct_panel = construct_panel_scene.instance()
 	craft_panel = craft_panel_scene.instance()
 	HUD = HUD_scene.instance()
-	
 	
 	construct_panel.rect_position = Vector2(106.5, 70)
 	construct_panel.visible = false
@@ -221,59 +248,102 @@ func _load_game():
 
 	dimension.visible = false
 	add_child(dimension)
+	var save_game = File.new()
+	if save_game.file_exists("user://Save1/main.hx3"):
+		save_game.open("user://Save1/main.hx3", File.READ)
+		c_v = save_game.get_var()
+		money = save_game.get_float()
+		minerals = save_game.get_float()
+		mineral_capacity = save_game.get_float()
+		energy = save_game.get_float()
+		SP = save_game.get_float()
+		DRs = save_game.get_float()
+		xp = save_game.get_float()
+		xp_to_lv = save_game.get_float()
+		c_u = save_game.get_64()
+		c_sc = save_game.get_64()
+		c_c = save_game.get_64()
+		c_g = save_game.get_64()
+		c_s = save_game.get_64()
+		c_p = save_game.get_64()
+		c_t = save_game.get_64()
+		lv = save_game.get_64()
+		stack_size = save_game.get_64()
+		auto_replace = save_game.get_8()
+		pickaxe = save_game.get_var()
+		science_unlocked = save_game.get_var()
+		mats = save_game.get_var()
+		mets = save_game.get_var()
+		help = save_game.get_var()
+		show = save_game.get_var()
+#		universe_data = save_game.get_var()
+#		supercluster_data = save_game.get_var()
+#		cluster_data = save_game.get_var()
+#		galaxy_data = save_game.get_var()
+#		system_data = save_game.get_var()
+#		planet_data = save_game.get_var()
+#		tile_data = save_game.get_var()
+		items = save_game.get_var()
+		hotbar = save_game.get_var()
+		save_game.close()
+		add_child(HUD)
+		switch_view(c_v, true)
+	else:
+		var dir = Directory.new()
+		dir.make_dir("user://Save1")
+		generate_planets(0)
+		#Home planet information
+		planet_data[2]["name"] = tr("HOME_PLANET")
+		planet_data[2]["status"] = "conquered"
+		planet_data[2]["size"] = rand_range(12000, 13000)
+		planet_data[2]["angle"] = PI / 2
+		planet_data[2]["tiles"] = []
+		planet_data[2]["discovered"] = false
+		planet_data[2].pressure = 1
+		planet_data[2].lake_1 = "water"
+		planet_data[2].liq_seed = 4
+		planet_data[2].liq_period = 100
+		planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
+		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
+		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
+		planet_data[2].surface.coal.chance = 0.5
+		planet_data[2].surface.coal.amount = 100
+		planet_data[2].surface.soil.chance = 0.6
+		planet_data[2].surface.soil.amount = 60
+		planet_data[2].surface.cellulose.chance = 0.4
+		planet_data[2].surface.cellulose.amount = 10
+		
+		system_data[0].name = tr("SOLAR_SYSTEM")
+		galaxy_data[0].name = tr("MILKY_WAY")
+		cluster_data[0].name = tr("LOCAL_GROUP")
+		supercluster_data[0].name = tr("LANIAKEA")
+		
+		generate_tiles(2)
+		
+		for u_i in universe_data:
+			u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
+			u_i["mu_zero"] = pow10(1.257, -6)#H/m
+			u_i["planck"] = pow10(6.626, -34)#J.s
+			u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
+			u_i["charge"] = pow10(1.602, -19)#C
+			u_i["strong_force"] = 1.0
+			u_i["weak_force"] = 1.0
+			u_i["dark_matter"] = 1.0
+			u_i["difficulty"] = 1.0
+			u_i["multistar_systems"] = 1.0
+			u_i["rare_stars"] = 1.0
+			u_i["rare_materials"] = 1.0
+			u_i["time_speed"] = 1.0
+			u_i["radiation"] = 1.0
+			u_i["antimatter"] = 1.0
+			u_i["value"] = 1.0
+		c_v = "planet"
+		add_planet()
+		add_child(HUD)
+
 
 	remove_child($Title)
-
-	generate_planets(0)
-	#Home planet information
-	planet_data[2]["name"] = tr("HOME_PLANET")
-	planet_data[2]["status"] = "conquered"
-	planet_data[2]["size"] = rand_range(12000, 13000)
-	planet_data[2]["angle"] = PI / 2
-	planet_data[2]["tiles"] = []
-	planet_data[2]["discovered"] = false
-	planet_data[2].pressure = 1
-	planet_data[2].lake_1 = "water"
-	planet_data[2].liq_seed = 4
-	planet_data[2].liq_period = 100
-	planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
-	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
-	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
-	planet_data[2].surface.coal.chance = 0.5
-	planet_data[2].surface.coal.amount = 100
-	planet_data[2].surface.soil.chance = 0.6
-	planet_data[2].surface.soil.amount = 60
-	planet_data[2].surface.cellulose.chance = 0.4
-	planet_data[2].surface.cellulose.amount = 10
 	
-	system_data[0].name = tr("SOLAR_SYSTEM")
-	galaxy_data[0].name = tr("MILKY_WAY")
-	cluster_data[0].name = tr("LOCAL_GROUP")
-	supercluster_data[0].name = tr("LANIAKEA")
-	
-	generate_tiles(2)
-	
-	for u_i in universe_data:
-		u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
-		u_i["mu_zero"] = pow10(1.257, -6)#H/m
-		u_i["planck"] = pow10(6.626, -34)#J.s
-		u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
-		u_i["charge"] = pow10(1.602, -19)#C
-		u_i["strong_force"] = 1.0
-		u_i["weak_force"] = 1.0
-		u_i["dark_matter"] = 1.0
-		u_i["difficulty"] = 1.0
-		u_i["multistar_systems"] = 1.0
-		u_i["rare_stars"] = 1.0
-		u_i["rare_materials"] = 1.0
-		u_i["time_speed"] = 1.0
-		u_i["radiation"] = 1.0
-		u_i["antimatter"] = 1.0
-		u_i["value"] = 1.0
-
-	add_planet()
-	add_child(HUD)
-
 	move_child($FPS, get_child_count())
 
 func popup(txt, dur):
@@ -344,6 +414,7 @@ func fade_out_panel(panel:Control):
 		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
 
 func on_fade_complete(panel:Control):
+	hide_tooltip()
 	panel.visible = false
 
 func add_upgrade_panel(ids:Array):
@@ -397,32 +468,34 @@ func toggle_craft_panel():
 		fade_out_panel(craft_panel)
 		panels.erase(craft_panel)
 	
-func switch_view(new_view:String):
+func switch_view(new_view:String, first_time:bool = false):
 	hide_tooltip()
-	match c_v:
-		"planet":
-			remove_planet()
-		"planet_details":
-			remove_child(planet_details)
-			planet_details = null
-			add_child(HUD)
-		"system":
-			remove_system()
-		"galaxy":
-			remove_galaxy()
-		"cluster":
-			remove_cluster()
-		"supercluster":
-			remove_supercluster()
-		"universe":
-			remove_universe()
-		"dimension":
-			remove_dimension()
-		"mining":
-			remove_mining()
-		"science_tree":
-			remove_science_tree()
-	c_v = new_view
+	hide_adv_tooltip()
+	if not first_time:
+		match c_v:
+			"planet":
+				remove_planet()
+			"planet_details":
+				remove_child(planet_details)
+				planet_details = null
+				add_child(HUD)
+			"system":
+				remove_system()
+			"galaxy":
+				remove_galaxy()
+			"cluster":
+				remove_cluster()
+			"supercluster":
+				remove_supercluster()
+			"universe":
+				remove_universe()
+			"dimension":
+				remove_dimension()
+			"mining":
+				remove_mining()
+			"science_tree":
+				remove_science_tree()
+		c_v = new_view
 	match new_view:
 		"planet":
 			add_planet()
@@ -448,17 +521,21 @@ func switch_view(new_view:String):
 			add_science_tree()
 
 func add_science_tree():
+	HUD.get_node("Hotbar").visible = false
 	add_obj("science_tree")
 
 func add_mining():
+	HUD.get_node("Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instance()
 	add_child(mining_HUD)
 
 func remove_mining():
+	HUD.get_node("Hotbar").visible = true
 	remove_child(mining_HUD)
 	mining_HUD = null
 
 func remove_science_tree():
+	HUD.get_node("Hotbar").visible = true
 	view.remove_obj("science_tree")
 
 func add_loading():
@@ -563,7 +640,6 @@ func add_galaxy():
 		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 		generate_system_part()
 	else:
-		put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 		add_obj("galaxy")
 
 func add_system():
@@ -915,11 +991,13 @@ func generate_systems(id:int):
 		
 		var biggest_star_size = 0
 		var combined_star_size = 0
+		var combined_star_mass = 0
 		for star in stars:
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
 			combined_star_size += star["size"]
-		var planet_num = max(round(pow(combined_star_size, 0.25) * Helper.rand_int(5, 12)), 2)
+			combined_star_mass += star.mass
+		var planet_num = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12)), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
 		s_i["planet_num"] = planet_num
@@ -1568,6 +1646,8 @@ func _input(event):
 			on_change_view_click()
 
 	if Input.is_action_just_released("right_click"):
+		item_to_use.num = 0
+		update_item_cursor()
 		if len(panels) != 0:
 			match panels[0]:
 				shop_panel:
@@ -1601,20 +1681,78 @@ func _input(event):
 		money += minerals * 5
 		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
 		minerals = 0
+	if len(hotbar) > 0 and Input.is_action_just_released("hotbar_1"):
+		var name = hotbar[0]
+		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	if len(hotbar) > 1 and Input.is_action_just_released("hotbar_2"):
+		var name = hotbar[1]
+		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	if len(hotbar) > 2 and Input.is_action_just_released("hotbar_3"):
+		var name = hotbar[2]
+		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	if len(hotbar) > 3 and Input.is_action_just_released("hotbar_4"):
+		var name = hotbar[3]
+		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	if len(hotbar) > 4 and Input.is_action_just_released("hotbar_5"):
+		var name = hotbar[4]
+		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	
+	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
+		var save_game = File.new()
+		save_game.open("user://Save1/main.hx3", File.WRITE)
+		save_game.store_var(c_v)
+		save_game.store_float(money)
+		save_game.store_float(minerals)
+		save_game.store_float(mineral_capacity)
+		save_game.store_float(energy)
+		save_game.store_float(SP)
+		save_game.store_float(DRs)
+		save_game.store_float(xp)
+		save_game.store_float(xp_to_lv)
+		save_game.store_64(c_u)
+		save_game.store_64(c_sc)
+		save_game.store_64(c_c)
+		save_game.store_64(c_g)
+		save_game.store_64(c_s)
+		save_game.store_64(c_p)
+		save_game.store_64(c_t)
+		save_game.store_64(lv)
+		save_game.store_64(stack_size)
+		save_game.store_8(auto_replace)
+		save_game.store_var(pickaxe)
+		save_game.store_var(science_unlocked)
+		save_game.store_var(mats)
+		save_game.store_var(mets)
+		save_game.store_var(help)
+		save_game.store_var(show)
+#		save_game.store_var(universe_data)
+#		save_game.store_var(supercluster_data)
+#		save_game.store_var(cluster_data)
+#		save_game.store_var(galaxy_data)
+#		save_game.store_var(system_data)
+#		save_game.store_var(planet_data)
+#		save_game.store_var(tile_data)
+		save_game.store_var(items)
+		save_game.store_var(hotbar)
+		save_game.close()
+		popup(tr("GAME_SAVED"), 1.2)
 
 func show_item_cursor(texture):
-	item_cursor.visible = true
 	item_cursor.get_node("Sprite").texture = texture
 	update_item_cursor()
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	item_cursor.position = mouse_pos
+	item_cursor.visible = true
 
 func update_item_cursor():
 	if item_to_use.num == 0:
 		item_cursor.visible = false
 		item_to_use = {"name":"", "type":"", "num":0}
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		$Control/BottomInfo.visible = false
 	else:
 		item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
+	HUD.update_hotbar()
 	move_child(item_cursor, get_child_count())
 
 func hide_item_cursor():
@@ -1630,6 +1768,11 @@ func cancel_building():
 func change_language():
 	$Title/Button.visible = false
 	$Title/Button.visible = true
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		config.set_value("interface", "language", TranslationServer.get_locale())
+	config.save("user://settings.cfg")
 	Data.reload()
 
 func _on_lg_pressed(extra_arg_0):

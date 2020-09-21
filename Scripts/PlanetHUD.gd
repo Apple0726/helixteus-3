@@ -8,6 +8,8 @@ func _ready():
 
 func _on_StarSystem_pressed():
 	click_sound.play()
+	if game.lv < 5:
+		return
 	game.switch_view("system")
 
 
@@ -35,7 +37,7 @@ func _on_Construct_mouse_entered():
 
 func _on_StarSystem_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("VIEW_STAR_SYSTEM") + " (V)")
+	game.show_tooltip(tr("VIEW_STAR_SYSTEM") + " (V)" + "\n" + tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"])
 
 func _on_Mine_mouse_entered():
 	on_button = true

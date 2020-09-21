@@ -85,7 +85,7 @@ func get_item(name, costs, type, dir):
 			for rsrc in item_costs:
 				refund[rsrc] = item_costs[rsrc] * items_left
 			game.add_resources(refund)
-			game.popup(tr("NOT_ENOUGH_INV_SPACE"), 2.0)
+			game.popup(tr("NOT_ENOUGH_INV_SPACE_CRAFT"), 2.0)
 		else:
 			game.popup(tr("CRAFT_SUCCESS"), 1.5)
 	else:
