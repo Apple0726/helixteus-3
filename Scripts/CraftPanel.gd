@@ -100,7 +100,7 @@ func _on_CraftAmount_value_changed(value):
 	for cost in item_costs:
 		item_total_costs[cost] = item_costs[cost] * value
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
+	Helper.put_rsrc(vbox, 32, item_total_costs, false, true)
 
 func get_item_desc(item:String):
 	var output = ""

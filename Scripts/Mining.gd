@@ -103,8 +103,8 @@ func generate_rock(new:bool):
 			if not tile.has("current_deposit"):
 				for met in met_info:
 					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth:
-						if randf() < 0.15 / met_info[met].rarity:
-							tile.current_deposit = {"met":met, "size":game.rand_int(4, 10), "progress":1}
+						if randf() < 0.25 / met_info[met].rarity:
+							tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
 				var size = tile.current_deposit.size
@@ -228,11 +228,11 @@ func pickaxe_hit():
 		var curr_pick_info = game.pickaxe_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
 		if $AutoReplace.pressed and game.check_enough(costs):
-				game.deduct_resources(costs)
-				game.pickaxe.durability = curr_pick_info.durability
-				update_info()
+			game.deduct_resources(costs)
+			game.pickaxe.durability = curr_pick_info.durability
+			update_info()
 		else:
-			game.pickaxe = null
+			game.pickaxe.clear()
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
 

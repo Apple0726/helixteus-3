@@ -170,6 +170,7 @@ func _on_Upgrade_pressed():
 			tile[path_str] = next_lv.value
 			tile[path_str + "_value"] = new_value
 			tile.construction_date = curr_time
+			tile.XP = round(costs.money / 100.0)
 			tile.construction_length = costs.time * 1000.0
 			tile.is_constructing = true
 			game.view.obj.add_time_bar(id, "bldg")

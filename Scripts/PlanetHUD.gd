@@ -19,7 +19,7 @@ func _on_Construct_pressed():
 
 func _on_Mine_pressed():
 	click_sound.play()
-	if game.pickaxe != null:
+	if not game.pickaxe.empty():
 		game.view.obj.about_to_mine = true
 		game.cancel_building()
 		game.put_bottom_info(tr("START_MINE"))

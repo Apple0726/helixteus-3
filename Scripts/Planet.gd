@@ -115,7 +115,9 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value]
 					icons = [Data.icons.MS]
 					adv = true
-			tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE")
+			if game.help.tile_shortcuts:
+				game.help_str = "tile_shortcuts"
+				tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE") + "\n" + tr("HIDE_SHORTCUTS")
 		elif tile.type == "plant":
 			if tile.tile_str == "":
 				if game.help.plant_something_here:
@@ -136,7 +138,9 @@ func show_tooltip(tile):
 		elif tile.type == "obstacle":
 			match strs[0]:
 				"rock":
-					tooltip = tr("BOULDER_DESC")
+					if game.help.boulder_desc:
+						tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
+						game.help_str = "boulder_desc"
 	if adv:
 		if tile.tile_str == "":
 			game.hide_adv_tooltip()
@@ -222,7 +226,7 @@ func _input(event):
 					tile.construction_date = curr_time
 					tile.construction_length = constr_costs.time * 1000
 					tile.type = "bldg"
-					tile.XP = round(constr_costs.money / 100)
+					tile.XP = round(constr_costs.money / 100.0)
 					match bldg_to_construct:
 						"ME", "PP":
 							tile.collect_date = tile.construction_date + tile.construction_length

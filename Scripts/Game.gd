@@ -54,11 +54,11 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 8000
+var money:float = 800
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:float = 0
-var energy:float = 2000
+var energy:float = 200
 var SP:float = 0
 #Dimension remnants
 var DRs:float = 0
@@ -74,14 +74,14 @@ var c_s:int = 0
 var c_p:int = 2
 var c_t:int = 0#For mining only
 
-var lv:int = 5
+var lv:int = 1
 #Number of items per stack
 var stack_size:int = 16
 
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":70}
+var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
 var science_unlocked:Dictionary = {"SA":false}
 
@@ -108,6 +108,8 @@ var mets:Dictionary = {	"lead":0,
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {"mining":true,
 			"plant_something_here":true,
+			"boulder_desc":true,
+			"tile_shortcuts":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
 }
@@ -147,7 +149,13 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "director
 var hotbar:Array = []
 
 ############ End save data ############
-
+var save_u = false
+var save_sc = false
+var save_c = false
+var save_g = false
+var save_s = false
+var save_p = false
+var save_t = false
 
 var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
@@ -174,7 +182,7 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300}},
-					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":10000}},
+					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":9000}},
 					"lead_pickaxe":{"speed":2.5, "durability":700, "costs":{"money":85000}},
 					"copper_pickaxe":{"speed":3.3, "durability":1100, "costs":{"money":600000}},
 					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000}},
@@ -211,8 +219,8 @@ func _ready():
 			$titlescreen.play()
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 	config.save("user://settings.cfg")
-#	var dir = Directory.new()
-#	dir.remove("user://Save1/main.hx3")
+	var dir = Directory.new()
+	dir.remove("user://Save1/main.hx3")
 
 func _load_game():
 	$Languages.visible = false
@@ -303,7 +311,7 @@ func _load_game():
 		planet_data[2].lake_1 = "water"
 		planet_data[2].liq_seed = 4
 		planet_data[2].liq_period = 100
-		planet_data[2].crust_start_depth = Helper.rand_int(45, 55)
+		planet_data[2].crust_start_depth = Helper.rand_int(35, 40)
 		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
 		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
 		planet_data[2].surface.coal.chance = 0.5
@@ -1352,13 +1360,16 @@ func show_adv_tooltip(txt:String, imgs:Array):
 	adv_tooltip.visible = false
 	adv_tooltip.text = ""
 	adv_tooltip.visible = true
-	add_text_icons(adv_tooltip, txt, imgs)
+	adv_tooltip.modulate.a = 0
+	add_text_icons(adv_tooltip, txt, imgs, 17, true)
 	move_child(adv_tooltip, get_child_count())
+	yield(get_tree().create_timer(0.02), "timeout")
+	adv_tooltip.modulate.a = 1
 
 func hide_adv_tooltip():
 	adv_tooltip.visible = false
 
-func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17):
+func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, tooltip:bool = false):
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
 	for st in arr:
@@ -1367,9 +1378,18 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17):
 		if i != len(imgs):
 			RTL.add_image(imgs[i], 0, size)
 		i += 1
+	if tooltip:
+		var arr2 = txt.split("\n")
+		var max_width = 0
+		for st in arr2:
+			var width = RTL.get_font("Font").get_string_size(st).x * 1.37
+			if width > max_width:
+				max_width = width
+		RTL.rect_min_size.x = max_width + 20
+		RTL.rect_size.x = max_width + 20
 	yield(get_tree().create_timer(0), "timeout")
-	RTL.rect_size.y = RTL.get_content_height()
 	RTL.rect_min_size.y = RTL.get_content_height()
+	RTL.rect_size.y = RTL.get_content_height()
 
 var change_view_btn
 
@@ -1675,6 +1695,7 @@ func _input(event):
 	if Input.is_action_just_released("hide_help"):
 		help[help_str] = false
 		hide_tooltip()
+		hide_adv_tooltip()
 	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
@@ -1697,34 +1718,34 @@ func _input(event):
 		var name = hotbar[4]
 		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
 	
-	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
-		var save_game = File.new()
-		save_game.open("user://Save1/main.hx3", File.WRITE)
-		save_game.store_var(c_v)
-		save_game.store_float(money)
-		save_game.store_float(minerals)
-		save_game.store_float(mineral_capacity)
-		save_game.store_float(energy)
-		save_game.store_float(SP)
-		save_game.store_float(DRs)
-		save_game.store_float(xp)
-		save_game.store_float(xp_to_lv)
-		save_game.store_64(c_u)
-		save_game.store_64(c_sc)
-		save_game.store_64(c_c)
-		save_game.store_64(c_g)
-		save_game.store_64(c_s)
-		save_game.store_64(c_p)
-		save_game.store_64(c_t)
-		save_game.store_64(lv)
-		save_game.store_64(stack_size)
-		save_game.store_8(auto_replace)
-		save_game.store_var(pickaxe)
-		save_game.store_var(science_unlocked)
-		save_game.store_var(mats)
-		save_game.store_var(mets)
-		save_game.store_var(help)
-		save_game.store_var(show)
+#	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
+#		var save_game = File.new()
+#		save_game.open("user://Save1/main.hx3", File.WRITE)
+#		save_game.store_var(c_v)
+#		save_game.store_float(money)
+#		save_game.store_float(minerals)
+#		save_game.store_float(mineral_capacity)
+#		save_game.store_float(energy)
+#		save_game.store_float(SP)
+#		save_game.store_float(DRs)
+#		save_game.store_float(xp)
+#		save_game.store_float(xp_to_lv)
+#		save_game.store_64(c_u)
+#		save_game.store_64(c_sc)
+#		save_game.store_64(c_c)
+#		save_game.store_64(c_g)
+#		save_game.store_64(c_s)
+#		save_game.store_64(c_p)
+#		save_game.store_64(c_t)
+#		save_game.store_64(lv)
+#		save_game.store_64(stack_size)
+#		save_game.store_8(auto_replace)
+#		save_game.store_var(pickaxe)
+#		save_game.store_var(science_unlocked)
+#		save_game.store_var(mats)
+#		save_game.store_var(mets)
+#		save_game.store_var(help)
+#		save_game.store_var(show)
 #		save_game.store_var(universe_data)
 #		save_game.store_var(supercluster_data)
 #		save_game.store_var(cluster_data)
@@ -1732,10 +1753,10 @@ func _input(event):
 #		save_game.store_var(system_data)
 #		save_game.store_var(planet_data)
 #		save_game.store_var(tile_data)
-		save_game.store_var(items)
-		save_game.store_var(hotbar)
-		save_game.close()
-		popup(tr("GAME_SAVED"), 1.2)
+#		save_game.store_var(items)
+#		save_game.store_var(hotbar)
+#		save_game.close()
+#		popup(tr("GAME_SAVED"), 1.2)
 
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite").texture = texture

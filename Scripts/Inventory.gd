@@ -134,9 +134,9 @@ func show_buy_sell(type:String, obj:String):
 			return
 		buy_sell.is_selling = true
 	else:
-		if type == "Materials" and game.mats[obj] == 0:
+		if type == "Materials" and game.mats[obj] <= 0:
 			buy_sell.is_selling = false
-		if type == "Metals" and game.mets[obj] == 0:
+		if type == "Metals" and game.mets[obj] <= 0:
 			buy_sell.is_selling = false
 	buy_sell.visible = true
 	buy_sell.refresh(type, obj)

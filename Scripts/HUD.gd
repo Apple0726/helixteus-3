@@ -109,13 +109,17 @@ func update_hotbar():
 		$Hotbar.add_child(slot)
 		i += 1
 
+var slot_over = -1
 func on_slot_over(i:int):
+	slot_over = i
 	on_button = true
 	game.help_str = "hotbar_shortcuts"
 	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.hotbar_shortcuts else ""
-	game.show_tooltip(Helper.get_item_name(game.hotbar[i]) + " (%s)" % [i + 1] + txt)
+	var num = " (%s)" % [i + 1] if i < 5 else ""
+	game.show_tooltip(Helper.get_item_name(game.hotbar[i]) + num + txt)
 
 func on_slot_out():
+	slot_over = -1
 	on_button = false
 	game.hide_tooltip()
 
@@ -132,3 +136,10 @@ func _on_Label_mouse_entered():
 func _on_Label_mouse_exited():
 	on_button = false
 	game.hide_tooltip()
+
+func _input(event):
+	if Input.is_action_just_released("hotbar") and slot_over != -1:
+		game.hotbar.remove(slot_over)
+		game.hide_tooltip()
+		slot_over = -1
+		update_hotbar()

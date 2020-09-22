@@ -121,7 +121,7 @@ func get_item(name, costs, _type, _dir):
 	item_costs = costs
 	if game.check_enough(costs):
 		if tab == "pickaxes":
-			if game.pickaxe != null:
+			if not game.pickaxe.empty():
 				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(name).to_lower()])
 			else:
 				buy_pickaxe()

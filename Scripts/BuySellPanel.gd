@@ -70,8 +70,12 @@ func _on_Button_pressed():
 	if is_selling:
 		if type == "Materials":
 			game.mats[obj] -= rounded_value
+			if game.mats[obj] < 0:
+				game.mats[obj] = 0
 		elif type == "Metals":
 			game.mets[obj] -= rounded_value
+			if game.mets[obj] < 0:
+				game.mets[obj] = 0
 		game.money += money_value
 		game.popup(tr("SALE_SUCCESS"), 1.5)
 	else:
