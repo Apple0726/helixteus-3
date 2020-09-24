@@ -678,14 +678,17 @@ __meta__ = {
 
 [node name="MiningSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 5 )
+bus = "SFX"
 
 [node name="HitRockSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 volume_db = -10.0
+bus = "SFX"
 
 [node name="HitMetalSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
 volume_db = -10.0
+bus = "SFX"
 [connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
 [connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
