@@ -42,7 +42,9 @@ func _ready():
 			var id2 = i % wid + j * wid + id_offset
 			var tile = game.tile_data[id2]
 			if tile.tile_str == "rock":
-				$Rocks.set_cell(i, j, 0)
+				$Obstacles.set_cell(i, j, 0)
+			elif tile.tile_str == "cave":
+				$Obstacles.set_cell(i, j, 1)
 			if tile.has("type"):
 				match tile.type:
 					"plant":
@@ -141,6 +143,11 @@ func show_tooltip(tile):
 					if game.help.boulder_desc:
 						tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
 						game.help_str = "boulder_desc"
+				"cave":
+					tooltip = tr("CAVE")
+					if game.help.cave_desc:
+						tooltip += "\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP")]
+						game.help_str = "cave_desc"
 	if adv:
 		if tile.tile_str == "":
 			game.hide_adv_tooltip()

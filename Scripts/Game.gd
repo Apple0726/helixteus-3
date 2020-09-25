@@ -109,6 +109,7 @@ var mets:Dictionary = {	"lead":0,
 var help:Dictionary = {"mining":true,
 			"plant_something_here":true,
 			"boulder_desc":true,
+			"cave_desc":true,
 			"tile_shortcuts":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
@@ -303,7 +304,7 @@ func _load_game():
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
 		planet_data[2]["status"] = "conquered"
-		planet_data[2]["size"] = rand_range(12000, 13000)
+		planet_data[2]["size"] = rand_range(12000, 12100)
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
 		planet_data[2]["discovered"] = false
@@ -327,6 +328,8 @@ func _load_game():
 		supercluster_data[0].name = tr("LANIAKEA")
 		
 		generate_tiles(2)
+		tile_data[42].type = "obstacle"
+		tile_data[42].tile_str = "cave"
 		
 		for u_i in universe_data:
 			u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
@@ -979,7 +982,7 @@ func generate_systems(id:int):
 				elif randf() < 0.0015:
 					mass = rand_range(5, 30)
 					star_type = "hypergiant"
-					star_size *= max(rand_range(500000, 600000) / temp, rand_range(3.0, 4.0))
+					star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
 					var tier = 1
 					while randf() < 0.2:
 						tier += 1
@@ -1187,34 +1190,39 @@ func generate_tiles(id:int):
 	for i in wid:
 		for j in wid:
 			var level = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
+			var t_id = i % wid + j * wid + id_offset
 			if level > 0.5:
 				if lake_1_phase == "L":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "liquid_" + p_i.lake_1 + "_1"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "liquid_" + p_i.lake_1 + "_1"
+					tile_data[t_id].type = "lake"
 				elif lake_1_phase == "S":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "solid_"+ p_i.lake_1 + "_1"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "solid_"+ p_i.lake_1 + "_1"
+					tile_data[t_id].type = "lake"
 				elif lake_1_phase == "SF":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "supercritical_"+ p_i.lake_1 + "_1"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_1 + "_1"
+					tile_data[t_id].type = "lake"
 			if level < -0.5:
 				if lake_2_phase == "L":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "liquid_" + p_i.lake_2 + "_2"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "liquid_" + p_i.lake_2 + "_2"
+					tile_data[t_id].type = "lake"
 				elif lake_2_phase == "S":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "solid_"+ p_i.lake_2 + "_2"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "solid_"+ p_i.lake_2 + "_2"
+					tile_data[t_id].type = "lake"
 				elif lake_2_phase == "SF":
-					tile_data[i % wid + j * wid + id_offset].tile_str = "supercritical_"+ p_i.lake_2 + "_2"
-					tile_data[i % wid + j * wid + id_offset].type = "lake"
+					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_2 + "_2"
+					tile_data[t_id].type = "lake"
 			var rand_rock = rand_range(-0.7, 0.7)
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
-				tile_data[i % wid + j * wid + id_offset].type = "obstacle"
-				tile_data[i % wid + j * wid + id_offset].tile_str = "rock"
+				tile_data[t_id].type = "obstacle"
+				tile_data[t_id].tile_str = "rock"
+			if id != 0 and not tile_data[t_id].has("type") and randf() < 0.003:
+				tile_data[t_id].type = "obstacle"
+				tile_data[t_id].tile_str = "cave"
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
+		
 	planet_data[id]["discovered"] = true
 
 func make_planet_composition(temp:float, depth:String):
