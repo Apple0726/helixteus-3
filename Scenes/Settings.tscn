@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
+[ext_resource path="res://Audio/ambient3.ogg" type="AudioStream" id=2]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 38
+use_filter = true
+font_data = ExtResource( 3 )
+
+[node name="Panel" type="Panel"]
+margin_left = 192.0
+margin_top = 72.0
+margin_right = 1088.0
+margin_bottom = 648.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Main audio" type="HSlider" parent="."]
+margin_left = 64.0
+margin_top = 56.0
+margin_right = 384.0
+margin_bottom = 120.0
+min_value = -40.0
+max_value = 0.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Main audio"]
+margin_right = 320.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 1 )
+text = "Main audio"
+align = 1
+
+[node name="Music" type="HSlider" parent="."]
+margin_left = 64.0
+margin_top = 120.0
+margin_right = 384.0
+margin_bottom = 184.0
+min_value = -40.0
+max_value = 0.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Music"]
+margin_right = 320.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 2 )
+text = "Music"
+align = 1
+
+[node name="Sound Effects" type="HSlider" parent="."]
+margin_left = 64.0
+margin_top = 184.0
+margin_right = 384.0
+margin_bottom = 248.0
+min_value = -40.0
+max_value = 0.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Sound Effects"]
+margin_right = 320.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 3 )
+text = "Sound effects"
+align = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+autoplay = true
+
+[node name="Label" type="Label" parent="."]
+margin_right = 896.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 4 )
+text = "Settings"
+align = 1
+[connection signal="value_changed" from="Main audio" to="." method="_on_Main_audio_value_changed"]
+[connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
+[connection signal="value_changed" from="Sound Effects" to="." method="_on_Sound_Effects_value_changed"]
