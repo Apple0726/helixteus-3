@@ -6,6 +6,7 @@ onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
+onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
@@ -21,6 +22,7 @@ var shop_panel:Control
 var upgrade_panel:Control
 var craft_panel:Control
 var inventory:Control
+var settings:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
@@ -234,26 +236,26 @@ func _load_game():
 	
 	dimension = dimension_scene.instance()
 	inventory = inventory_scene.instance()
+	settings = settings_scene.instance()
 	shop_panel = shop_panel_scene.instance()
 	construct_panel = construct_panel_scene.instance()
 	craft_panel = craft_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
-	construct_panel.rect_position = Vector2(106.5, 70)
 	construct_panel.visible = false
-	add_child(construct_panel)
+	$Panels.add_child(construct_panel)
 
-	shop_panel.rect_position = Vector2(106.5, 70)
 	shop_panel.visible = false
-	add_child(shop_panel)
+	$Panels.add_child(shop_panel)
 
-	craft_panel.rect_position = Vector2(106.5, 70)
 	craft_panel.visible = false
-	add_child(craft_panel)
+	$Panels.add_child(craft_panel)
 
-	inventory.rect_position = Vector2(106.5, 70)
 	inventory.visible = false
-	add_child(inventory)
+	$Panels.add_child(inventory)
+
+	settings.visible = false
+	$Panels.add_child(settings)
 
 	dimension.visible = false
 	add_child(dimension)
@@ -352,7 +354,6 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 
-
 	remove_child($Title)
 	
 	move_child($FPS, get_child_count())
@@ -410,16 +411,19 @@ func put_bottom_info(txt:String):
 
 func fade_in_panel(panel:Control):
 	panel.visible = true
-	move_child(panel, get_child_count())
+	move_child($Panels, get_child_count())
+	$Panels.move_child(panel, $Panels.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
-	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(106.5, 60), 0.1)
+	var s = panel.rect_size
+	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 10), Vector2(-s.x / 2.0, -s.y / 2.0), 0.1)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
 	panel.tween.start()
 
 func fade_out_panel(panel:Control):
+	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
-	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(106.5, 70), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
@@ -444,41 +448,14 @@ func remove_upgrade_panel():
 	panels.erase(upgrade_panel)
 	upgrade_panel = null
 
-func toggle_shop_panel():
-	if not shop_panel.visible:
-		panels.push_front(shop_panel)
-		fade_in_panel(shop_panel)
+func toggle_panel(panel):
+	if not panel.visible:
+		panels.push_front(panel)
+		fade_in_panel(panel)
 	else:
-		fade_out_panel(shop_panel)
-		panels.erase(shop_panel)
+		fade_out_panel(panel)
+		panels.erase(panel)
 
-func toggle_inventory():
-	if not inventory.visible:
-		panels.push_front(inventory)
-		fade_in_panel(inventory)
-		inventory.refresh_values()
-	else:
-		fade_out_panel(inventory)
-		panels.erase(inventory)
-
-func toggle_construct_panel():
-	if not Input.is_action_pressed("shift"):
-		if not construct_panel.visible:
-			panels.push_front(construct_panel)
-			fade_in_panel(construct_panel)
-		else:
-			fade_out_panel(construct_panel)
-			panels.erase(construct_panel)
-
-func toggle_craft_panel():
-	if not craft_panel.visible:
-		panels.push_front(craft_panel)
-		craft_panel.refresh_values()
-		fade_in_panel(craft_panel)
-	else:
-		fade_out_panel(craft_panel)
-		panels.erase(craft_panel)
-	
 func switch_view(new_view:String, first_time:bool = false):
 	hide_tooltip()
 	hide_adv_tooltip()
@@ -1215,14 +1192,13 @@ func generate_tiles(id:int):
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "rock"
-			if id != 0 and not tile_data[t_id].has("type") and randf() < 0.003:
+			if id != 2 and not tile_data[t_id].has("type") and randf() < 0.003:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "cave"
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
-		
 	planet_data[id]["discovered"] = true
 
 func make_planet_composition(temp:float, depth:String):
@@ -1677,20 +1653,13 @@ func _input(event):
 		item_to_use.num = 0
 		update_item_cursor()
 		if len(panels) != 0:
-			match panels[0]:
-				shop_panel:
-					toggle_shop_panel()
-				inventory:
-					toggle_inventory()
-				construct_panel:
-					toggle_construct_panel()
-				craft_panel:
-					toggle_craft_panel()
-				inventory.buy_sell:
-					inventory.buy_sell.visible = false
-					panels.pop_front()
-				upgrade_panel:
-					remove_upgrade_panel()
+			if panels[0] == inventory.buy_sell:
+				inventory.buy_sell.visible = false
+				panels.pop_front()
+			elif panels[0] == upgrade_panel:
+				remove_upgrade_panel()
+			else:
+				toggle_panel(panels[0])
 			hide_tooltip()
 	
 	#F3 to toggle overlay

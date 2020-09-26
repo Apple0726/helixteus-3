@@ -118,11 +118,12 @@ func make_pie_chart(arr:Array, name:String):
 	pie.other_str = tr("TRACE_ELEMENTS")
 	pie.other_str_short = tr("TRACE")
 	for obj in arr:
-		var directory = Directory.new();
-		var texture_exists = directory.file_exists("res://Graphics/Elements/" + obj.element + ".png")
+		var directory = Directory.new()
+		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
+		var texture_exists = directory.file_exists(dir_str)
 		var texture
 		if texture_exists:
-			texture = load("res://Graphics/Elements/" + obj.element + ".png")
+			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
 		var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"

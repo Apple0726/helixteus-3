@@ -20,15 +20,16 @@ var on_button = false
 
 func _on_Button_pressed():
 	click_sound.play()
-	if AudioServer.is_bus_mute(1) == false:
-		AudioServer.set_bus_mute(1,true)
-	else:
-		AudioServer.set_bus_mute(1,false)
-	var config = ConfigFile.new()
-	var err = config.load("user://settings.cfg")
-	if err == OK:
-		config.set_value("audio", "mute", not config.get_value("audio", "mute"))
-	config.save("user://settings.cfg")
+	game.toggle_panel(game.settings)
+#	if AudioServer.is_bus_mute(1) == false:
+#		AudioServer.set_bus_mute(1,true)
+#	else:
+#		AudioServer.set_bus_mute(1,false)
+#	var config = ConfigFile.new()
+#	var err = config.load("user://settings.cfg")
+#	if err == OK:
+#		config.set_value("audio", "mute", not config.get_value("audio", "mute"))
+#	config.save("user://settings.cfg")
 
 func _process(_delta):
 	money_text.text = String(game.money)
@@ -51,11 +52,11 @@ func _process(_delta):
 
 func _on_Shop_pressed():
 	click_sound.play()
-	game.toggle_shop_panel()
+	game.toggle_panel(game.shop_panel)
 
 func _on_Button_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("MUTE") + " (M)")
+	game.show_tooltip(tr("SETTINGS") + " (P)")
 
 func _on_Shop_mouse_entered():
 	on_button = true
@@ -71,11 +72,11 @@ func _on_Craft_mouse_entered():
 
 func _on_Inventory_pressed():
 	click_sound.play()
-	game.toggle_inventory()
+	game.toggle_panel(game.inventory)
 
 func _on_Craft_pressed():
 	click_sound.play()
-	game.toggle_craft_panel()
+	game.toggle_panel(game.craft_panel)
 
 func _on_mouse_exited():
 	on_button = false

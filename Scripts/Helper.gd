@@ -1,7 +1,8 @@
 extends Node
 
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
-onready var game = get_node("/root/Game")
+#onready var game = get_node("/root/Game")
+var game
 #A place to put frequently used functions
 
 func set_btn_color(btn):

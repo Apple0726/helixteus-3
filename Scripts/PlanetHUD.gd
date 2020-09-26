@@ -15,7 +15,8 @@ func _on_StarSystem_pressed():
 
 func _on_Construct_pressed():
 	click_sound.play()
-	game.toggle_construct_panel()
+	if not Input.is_action_pressed("shift"):
+		game.toggle_panel(game.construct_panel)
 
 func _on_Mine_pressed():
 	click_sound.play()
