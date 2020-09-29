@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
-[ext_resource path="res://Audio/ambient3.ogg" type="AudioStream" id=2]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="DynamicFont" id=1]
@@ -88,10 +87,6 @@ margin_bottom = 24.0
 custom_fonts/font = SubResource( 3 )
 text = "Sound effects"
 align = 1
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 2 )
-autoplay = true
 
 [node name="Label" type="Label" parent="."]
 margin_right = 896.0
