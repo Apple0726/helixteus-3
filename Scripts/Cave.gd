@@ -21,8 +21,13 @@ onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
 var minimap_zoom = 0.02
 var minimap_center = Vector2(1150, 128)
 var curr_slot = 0
-var inventory = [{"name":"attack", "cooldown":0.2}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
+var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
 var inventory_ready = [true, true, true, true, true]
+var difficulty = 1
+var atk = 5.0
+var def = 5.0
+var HP = 20.0
+var total_HP = 20.0
 
 func _ready():
 	minimap_rover.position = minimap_center
@@ -48,15 +53,21 @@ func _ready():
 				minimap_cave.set_cell(i, j, 0)
 				astar_node.add_point(get_tile_index(Vector2(i, j)), Vector3(i, j, 0.0))
 				tile_indexes.append(get_tile_index(Vector2(i, j)))
-				if randf() < 0.03:
+				if randf() < 0.02:
 					var HX = HX1_scene.instance()
 					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
+					HX.HP = round(10 * difficulty * rand_range(1, 1.4))
+					HX.atk = round(4 * difficulty * rand_range(1, 1.2))
+					HX.def = round(4 * difficulty * rand_range(1, 1.2))
+					HX.total_HP = HX.HP
+					HX.cave_ref = self
+					HX.add_to_group("enemies")
 					add_child(HX)
 					var enemy_icon = Sprite.new()
 					enemy_icon.scale *= 0.07
 					enemy_icon.texture = enemy_icon_scene
 					MM.add_child(enemy_icon)
-					enemy_icon.position = HX.position * minimap_zoom
+					HX.MM_icon = enemy_icon
 			else:
 				cave.set_cell(i, j, 9)
 	for i in range(-1, cave_size + 1):
@@ -126,6 +137,12 @@ func _ready():
 		if texture_exists:
 			slot.get_node("TextureRect").texture = load(dir_str)
 	set_border(curr_slot)
+	$UI2/HP.max_value = total_HP
+	update_health_bar(total_HP)
+
+func update_health_bar(_HP):
+	HP = _HP
+	$UI2/HP.value = HP
 
 var attacking = false
 var mouse_pos = Vector2.ZERO
@@ -170,15 +187,33 @@ func on_timeout(slot, timer):
 func _process(delta):
 	if attacking and inventory_ready[curr_slot]:
 		attack()
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy.MM_icon.position = enemy.position * minimap_zoom
 
 func attack():
-	var laser = load("res://Scenes/Cave/Projectile.tscn").instance()
-	laser.texture = load("res://Graphics/Cave/Projectiles/laser.png")
-	laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
-	laser.velocity = (mouse_pos - rover.position).normalized() * 50.0
-	laser.position = rover.position
-	add_child(laser)
+	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), inventory[curr_slot].damage * atk)
 	cooldown()
+
+func hit_player(damage:float):
+	update_health_bar(HP - damage / def)
+
+#Basic projectile that has a fixed velocity and disappears once hitting something
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float):
+	var proj = load("res://Scenes/Cave/Projectile.tscn").instance()
+	proj.texture = texture
+	proj.rotation = rot
+	proj.velocity = polar2cartesian(spd, rot)
+	proj.position = pos
+	proj.damage = damage
+	proj.enemy = enemy
+	if enemy:
+		proj.collision_layer = 16
+		proj.collision_mask = 1 + 2
+	else:
+		proj.collision_layer = 8
+		proj.collision_mask = 1 + 4
+	proj.cave_ref = self
+	add_child(proj)
 
 var slots = []
 func set_border(i:int):
@@ -235,7 +270,7 @@ func _physics_process(delta):
 
 func _on_Exit_body_entered(body):
 	if body is KinematicBody2D:
-		print("A")
+		print("exit")
 
 
 func _on_Hole_body_entered(body):
