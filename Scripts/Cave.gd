@@ -1,10 +1,11 @@
 extends Node2D
 
-onready var astar_node = AStar.new()
+onready var astar_node = AStar2D.new()
 var tiles
 var tile_indexes = []
 var cave_size = 60
 onready var cave = $TileMap
+onready var cave_wall = $Walls
 onready var minimap_cave = $UI/Minimap/TileMap
 onready var minimap_rover = $UI/Rover
 onready var MM_hole = $UI/Minimap/Hole
@@ -28,6 +29,7 @@ var atk = 5.0
 var def = 5.0
 var HP = 20.0
 var total_HP = 20.0
+var rooms = []
 
 func _ready():
 	minimap_rover.position = minimap_center
@@ -51,33 +53,37 @@ func _ready():
 					camera.position.y = j * 200
 				cave.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, 0)
-				astar_node.add_point(get_tile_index(Vector2(i, j)), Vector3(i, j, 0.0))
+				astar_node.add_point(get_tile_index(Vector2(i, j)), Vector2(i, j))
 				tile_indexes.append(get_tile_index(Vector2(i, j)))
 				if randf() < 0.02:
 					var HX = HX1_scene.instance()
 					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
-					HX.HP = round(10 * difficulty * rand_range(1, 1.4))
-					HX.atk = round(4 * difficulty * rand_range(1, 1.2))
-					HX.def = round(4 * difficulty * rand_range(1, 1.2))
-					HX.total_HP = HX.HP
-					HX.cave_ref = self
+					var HX_node = HX.get_node("HX")
+					HX_node.HP = round(10 * difficulty * rand_range(1, 1.4))
+					HX_node.atk = round(4 * difficulty * rand_range(1, 1.2))
+					HX_node.def = round(4 * difficulty * rand_range(1, 1.2))
+					HX_node.total_HP = HX_node.HP
+					HX_node.cave_ref = self
+					HX_node.a_n = astar_node
+					HX_node.cave_tm = cave
 					HX.add_to_group("enemies")
 					add_child(HX)
 					var enemy_icon = Sprite.new()
 					enemy_icon.scale *= 0.07
 					enemy_icon.texture = enemy_icon_scene
 					MM.add_child(enemy_icon)
-					HX.MM_icon = enemy_icon
+					HX_node.MM_icon = enemy_icon
 			else:
-				cave.set_cell(i, j, 9)
+				cave_wall.set_cell(i, j, 0)
 	for i in range(-1, cave_size + 1):
-		cave.set_cell(i, -1, 9)
+		cave_wall.set_cell(i, -1, 0)
 	for i in range(-1, cave_size + 1):
-		cave.set_cell(i, cave_size, 9)
+		cave_wall.set_cell(i, cave_size, 0)
 	for i in range(-1, cave_size + 1):
-		cave.set_cell(-1, i, 9)
+		cave_wall.set_cell(-1, i, 0)
 	for i in range(-1, cave_size + 1):
-		cave.set_cell(cave_size, i, 9)
+		cave_wall.set_cell(cave_size, i, 0)
+	cave_wall.update_bitmask_region()
 	tiles = cave.get_used_cells_by_id(0)
 	for tile in tiles:#tile is a Vector2D
 		var tile_index = get_tile_index(tile)
@@ -93,7 +99,7 @@ func _ready():
 				continue
 			if cave.get_cellv(neighbor_tile) == 0:
 				astar_node.connect_points(tile_index, neighbor_tile_index, false)
-	var rooms = []
+	
 	var tiles_remaining = astar_node.get_points()
 	while tiles_remaining != []:
 		var room = get_connected_tiles(tiles_remaining[0])
@@ -101,6 +107,13 @@ func _ready():
 			tiles_remaining.erase(tile_index)
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		var id = get_tile_index(cave.world_to_map(enemy.position))
+		var i = 0
+		for room in rooms:
+			if id in room.tiles:
+				enemy.get_node("HX").room = i
+			i += 1
 	var spawn_edge_tiles = []
 	for tile_id in rooms[0].tiles:
 		var top = tile_id / cave_size == 0
@@ -184,11 +197,11 @@ func on_timeout(slot, timer):
 	inventory_ready[slot] = true
 	remove_child(timer)
 
-func _process(delta):
+func _process(_delta):
 	if attacking and inventory_ready[curr_slot]:
 		attack()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		enemy.MM_icon.position = enemy.position * minimap_zoom
+		enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom
 
 func attack():
 	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), inventory[curr_slot].damage * atk)
