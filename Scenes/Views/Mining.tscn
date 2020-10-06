@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -9,36 +9,37 @@
 [ext_resource path="res://Audio/SFX/mining_stone.ogg" type="AudioStream" id=7]
 [ext_resource path="res://Graphics/Materials/coal.png" type="Texture" id=8]
 [ext_resource path="res://Audio/SFX/mining_metal.ogg" type="AudioStream" id=9]
+[ext_resource path="res://Scenes/SquareBar.tscn" type="PackedScene" id=10]
 
-[sub_resource type="AtlasTexture" id=1]
+[sub_resource type="AtlasTexture" id=54]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=2]
+[sub_resource type="AtlasTexture" id=55]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 200, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=3]
+[sub_resource type="AtlasTexture" id=56]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 400, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=57]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 600, 0, 200, 200 )
 
-[sub_resource type="SpriteFrames" id=5]
+[sub_resource type="SpriteFrames" id=58]
 animations = [ {
-"frames": [ null, SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ],
+"frames": [ null, SubResource( 54 ), SubResource( 55 ), SubResource( 56 ), SubResource( 57 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 } ]
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=59]
 resource_name = "Help fade"
 length = 0.5
 tracks/0/type = "value"
@@ -68,7 +69,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=60]
 resource_name = "Layer fade"
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
@@ -103,7 +104,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=61]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -146,7 +147,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=62]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -175,7 +176,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=63]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -209,7 +210,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=64]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -252,7 +253,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=65]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -281,7 +282,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=66]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -315,7 +316,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=67]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -358,7 +359,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="StyleBoxFlat" id=15]
+[sub_resource type="StyleBoxFlat" id=53]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -413,63 +414,9 @@ __meta__ = {
 
 [node name="Cracks" type="AnimatedSprite" parent="Tile"]
 position = Vector2( 100, 100 )
-frames = SubResource( 5 )
+frames = SubResource( 58 )
 
-[node name="Bar1" type="TextureProgress" parent="Tile"]
-modulate = Color( 0, 1, 0, 1 )
-margin_left = 100.0
-margin_right = 200.0
-margin_bottom = 4.0
-texture_progress = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar2" type="TextureProgress" parent="Tile"]
-modulate = Color( 0, 1, 0, 1 )
-margin_left = 200.0
-margin_right = 300.0
-margin_bottom = 4.0
-rect_rotation = 90.0
-rect_scale = Vector2( 2, 1 )
-texture_progress = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar3" type="TextureProgress" parent="Tile"]
-modulate = Color( 0, 1, 0, 1 )
-margin_left = 200.0
-margin_top = 200.0
-margin_right = 300.0
-margin_bottom = 204.0
-rect_rotation = 180.0
-rect_scale = Vector2( 2, 1 )
-texture_progress = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar4" type="TextureProgress" parent="Tile"]
-modulate = Color( 0, 1, 0, 1 )
-margin_top = 200.0
-margin_right = 100.0
-margin_bottom = 204.0
-rect_rotation = 270.0
-rect_scale = Vector2( 2, 1 )
-texture_progress = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar5" type="TextureProgress" parent="Tile"]
-modulate = Color( 0, 1, 0, 1 )
-margin_right = 100.0
-margin_bottom = 4.0
-texture_progress = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="SquareBar" parent="Tile" instance=ExtResource( 10 )]
 
 [node name="Back" type="Button" parent="."]
 margin_top = 682.0
@@ -480,19 +427,19 @@ __meta__ = {
 }
 
 [node name="PickaxeAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 6 )
-"anims/Layer fade" = SubResource( 7 )
-"anims/Pickaxe swing" = SubResource( 8 )
+"anims/Help fade" = SubResource( 59 )
+"anims/Layer fade" = SubResource( 60 )
+"anims/Pickaxe swing" = SubResource( 61 )
 
 [node name="HelpAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 9 )
-"anims/Layer fade" = SubResource( 10 )
-"anims/Pickaxe swing" = SubResource( 11 )
+"anims/Help fade" = SubResource( 62 )
+"anims/Layer fade" = SubResource( 63 )
+"anims/Pickaxe swing" = SubResource( 64 )
 
 [node name="LayerAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 12 )
-"anims/Layer fade" = SubResource( 13 )
-"anims/Pickaxe swing" = SubResource( 14 )
+"anims/Help fade" = SubResource( 65 )
+"anims/Layer fade" = SubResource( 66 )
+"anims/Pickaxe swing" = SubResource( 67 )
 
 [node name="Pickaxe" type="Node2D" parent="."]
 
@@ -507,7 +454,7 @@ margin_top = 364.0
 margin_right = 831.0
 margin_bottom = 404.0
 grow_vertical = 2
-custom_styles/panel = SubResource( 15 )
+custom_styles/panel = SubResource( 53 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

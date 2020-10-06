@@ -67,20 +67,32 @@ func on_time_out():
 			cave_ref.add_proj(true, pr.position, 15.0, rot, load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)
 
 var move_path_v = []
-func move_HX(pursuing:bool = false):
-	if AI_enabled and state == States.IDLE:
+func move_HX():
+	var second_condition = true
+	if not sees_player:
+		second_condition = state == States.IDLE
+	if AI_enabled and second_condition:
 		move_timer.stop()
 		move_path_v = []
 		var target_tile
 		var curr_tile = cave_ref.get_tile_index(cave_tm.world_to_map(pr.position))
 		var room_tiles = cave_ref.rooms[room].tiles
 		var n = len(room_tiles)
-		if pursuing:
+		if sees_player:
 			target_tile = cave_ref.get_tile_index(cave_tm.world_to_map(cave_ref.rover.position))
 		else:
 			target_tile = room_tiles[Helper.rand_int(0, n-1)]
-		move_path_v = a_n.get_point_path(curr_tile, target_tile)
-		state = States.MOVE
+		var i = 0
+		while cave_ref.HX_tiles.has(target_tile) and i < 100:#If the tile is occupied by a HX
+			var target_neighbours = a_n.get_point_connections(target_tile)
+			var m = len(target_neighbours)
+			target_tile = target_neighbours[Helper.rand_int(0, m-1)]
+			i += 1
+		if target_tile != curr_tile:
+			cave_ref.HX_tiles.erase(curr_tile)
+			cave_ref.HX_tiles.append(target_tile)
+			move_path_v = a_n.get_point_path(curr_tile, target_tile)
+			state = States.MOVE
 		
 func _process(delta):
 	if state == States.MOVE:
@@ -95,9 +107,10 @@ func _process(delta):
 	if ray.enabled:
 		ray.cast_to = (cave_ref.rover.position - pr.position).normalized() * ray_length
 		if ray.get_collider() is KinematicBody2D:
-			sees_player = true
-			move_HX(true)
-			move_speed = 500.0
+			if not sees_player:
+				sees_player = true
+				move_HX()
+				move_speed = 500.0
 		else:
 			sees_player = false
 			move_speed = 200.0

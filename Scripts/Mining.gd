@@ -63,11 +63,7 @@ func update_info():
 	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr(layer.to_upper())
 	$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
 	$LayerInfo/Depth/Label.text = String(tile.depth) + " m"
-	$Tile/Bar1.value = progress * 8
-	$Tile/Bar2.value = (progress - 12.5) * 4
-	$Tile/Bar3.value = (progress - 37.5) * 4
-	$Tile/Bar4.value = (progress - 62.5) * 4
-	$Tile/Bar5.value = (progress - 87.5) * 8
+	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxe_info[game.pickaxe.name].durability]	
 	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxe_info[game.pickaxe.name].durability) * 100

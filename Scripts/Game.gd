@@ -76,7 +76,7 @@ var c_s:int = 0
 var c_p:int = 2
 var c_t:int = 0#For mining only
 
-var lv:int = 1
+var lv:int = 5
 #Number of items per stack
 var stack_size:int = 16
 

@@ -105,6 +105,6 @@ func get_item(name, costs, _type, _dir):
 	if name == "" or game.c_v != "planet":
 		return
 	yield(get_tree().create_timer(0.01), "timeout")
-	game.toggle_construct_panel()
+	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 	game.view.obj.construct(name, costs)

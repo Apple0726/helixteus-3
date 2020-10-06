@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/SquareBar.gd" type="Script" id=2]
+
+[node name="SquareBar" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar1" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 100.0
+margin_right = 200.0
+margin_bottom = 4.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar2" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 200.0
+margin_right = 300.0
+margin_bottom = 4.0
+rect_rotation = 90.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar3" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 300.0
+margin_bottom = 204.0
+rect_rotation = 180.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar4" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_top = 200.0
+margin_right = 100.0
+margin_bottom = 204.0
+rect_rotation = 270.0
+rect_scale = Vector2( 2, 1 )
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar5" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_right = 100.0
+margin_bottom = 4.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

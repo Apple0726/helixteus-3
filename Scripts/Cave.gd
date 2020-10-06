@@ -1,9 +1,12 @@
 extends Node2D
 
 onready var astar_node = AStar2D.new()
-var tiles
-var tile_indexes = []
-var cave_size = 60
+
+var tiles:PoolVector2Array
+var cave_size:int = 60
+#onready var game = get_node("/root/Game")
+#onready var p_i = game.planet_data[game.c_p]
+
 onready var cave = $TileMap
 onready var cave_wall = $Walls
 onready var minimap_cave = $UI/Minimap/TileMap
@@ -16,20 +19,32 @@ onready var camera = $Camera2D
 onready var exit = $Exit
 onready var hole = $Hole
 onready var hbox = $UI2/HBoxContainer
+onready var ray = $Rover/RayCast2D
+onready var mining_laser = $Rover/MiningLaser
+onready var mining_p = $MiningParticles
+onready var tile_highlight = $TileHighlight
 onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
+
 var minimap_zoom = 0.02
 var minimap_center = Vector2(1150, 128)
 var curr_slot = 0
-var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
-var inventory_ready = [true, true, true, true, true]
 var difficulty = 1
+
+#Rover stats
 var atk = 5.0
 var def = 5.0
 var HP = 20.0
 var total_HP = 20.0
+var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
+var inventory_ready = [true, true, true, true, true]#For cooldowns
+var i_w_w = {}#inventory_with_weight
+var weight = 0.0
+var weight_cap = 1000.0
+
 var rooms = []
+var HX_tiles = []#Tile ids occupied by HX
 
 func _ready():
 	minimap_rover.position = minimap_center
@@ -53,9 +68,9 @@ func _ready():
 					camera.position.y = j * 200
 				cave.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, 0)
-				astar_node.add_point(get_tile_index(Vector2(i, j)), Vector2(i, j))
-				tile_indexes.append(get_tile_index(Vector2(i, j)))
-				if randf() < 0.02:
+				var tile_id = get_tile_index(Vector2(i, j))
+				astar_node.add_point(tile_id, Vector2(i, j))
+				if randf() < 0.005:
 					var HX = HX1_scene.instance()
 					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
 					var HX_node = HX.get_node("HX")
@@ -68,6 +83,7 @@ func _ready():
 					HX_node.cave_tm = cave
 					HX.add_to_group("enemies")
 					add_child(HX)
+					HX_tiles.append(tile_id)
 					var enemy_icon = Sprite.new()
 					enemy_icon.scale *= 0.07
 					enemy_icon.texture = enemy_icon_scene
@@ -75,31 +91,18 @@ func _ready():
 					HX_node.MM_icon = enemy_icon
 			else:
 				cave_wall.set_cell(i, j, 0)
+	for i in range(-1, cave_size + 1):#Add unpassable tiles at the cave borders
+		cave_wall.set_cell(i, -1, 1)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(i, -1, 0)
+		cave_wall.set_cell(i, cave_size, 1)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(i, cave_size, 0)
+		cave_wall.set_cell(-1, i, 1)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(-1, i, 0)
-	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(cave_size, i, 0)
+		cave_wall.set_cell(cave_size, i, 1)
 	cave_wall.update_bitmask_region()
 	tiles = cave.get_used_cells_by_id(0)
 	for tile in tiles:#tile is a Vector2D
-		var tile_index = get_tile_index(tile)
-		var neighbor_tiles = PoolVector2Array([
-			tile + Vector2.RIGHT,
-			tile + Vector2.LEFT,
-			tile + Vector2.DOWN,
-			tile + Vector2.UP,
-		])
-		for neighbor_tile in neighbor_tiles:
-			var neighbor_tile_index = get_tile_index(neighbor_tile)
-			if not astar_node.has_point(neighbor_tile_index):
-				continue
-			if cave.get_cellv(neighbor_tile) == 0:
-				astar_node.connect_points(tile_index, neighbor_tile_index, false)
-	
+		connect_points(tile)
 	var tiles_remaining = astar_node.get_points()
 	while tiles_remaining != []:
 		var room = get_connected_tiles(tiles_remaining[0])
@@ -150,41 +153,108 @@ func _ready():
 		if texture_exists:
 			slot.get_node("TextureRect").texture = load(dir_str)
 	set_border(curr_slot)
-	$UI2/HP.max_value = total_HP
+	$UI2/HP/Bar.max_value = total_HP
+	$UI2/Inventory/Bar.value = weight
+	$UI2/Inventory/Bar.max_value = weight_cap
 	update_health_bar(total_HP)
+
+func connect_points(tile:Vector2, bidir:bool = false):
+	var tile_index = get_tile_index(tile)
+	var neighbor_tiles = PoolVector2Array([
+		tile + Vector2.RIGHT,
+		tile + Vector2.LEFT,
+		tile + Vector2.DOWN,
+		tile + Vector2.UP,
+		tile + Vector2.UP + Vector2.RIGHT,
+		tile + Vector2.RIGHT + Vector2.DOWN,
+		tile + Vector2.DOWN + Vector2.LEFT,
+		tile + Vector2.LEFT + Vector2.UP,
+	])
+	for neighbor_tile in neighbor_tiles:
+		var neighbor_tile_index = get_tile_index(neighbor_tile)
+		if not astar_node.has_point(neighbor_tile_index):
+			continue
+		if cave.get_cellv(neighbor_tile) == 0:
+			astar_node.connect_points(tile_index, neighbor_tile_index, bidir)
 
 func update_health_bar(_HP):
 	HP = _HP
-	$UI2/HP.value = HP
+	$UI2/HP/Bar.value = HP
 
-var attacking = false
 var mouse_pos = Vector2.ZERO
+var tile_highlighted:int = -1
+
+func update_ray():
+	ray.enabled = inventory[curr_slot].name == "mining"
+	if ray.enabled:
+		var laser_reach = 250.0
+		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
+		var coll = ray.get_collider()
+		var holding_left_click = Input.is_action_pressed("left_click")
+		if coll is TileMap:
+			var pos = ray.get_collision_point() + ray.cast_to / 200.0
+			laser_reach = rover.position.distance_to(pos)
+			tile_highlighted = get_tile_index(cave_wall.world_to_map(pos))
+			if tile_highlighted != -1 and cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0:
+				tile_highlight.visible = true
+				tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
+				tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
+				mining_p.emitting = holding_left_click
+				if holding_left_click:
+					mining_p.position = pos
+			else:
+				mining_p.emitting = false
+		else:
+			tile_highlighted = -1
+			tile_highlight.visible = false
+			mining_p.emitting = false
+		mining_laser.visible = holding_left_click
+		if holding_left_click:
+			mining_laser.region_rect.end = Vector2(laser_reach, 16)
+			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
+	else:
+		mining_laser.visible = false
+		mining_p.emitting = false
+		tile_highlight.visible = false
+
+var global_mouse_pos = Vector2.ZERO
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		mouse_pos = event.position + camera.position - Vector2(640, 360)
-	if event.is_action_released("scroll_up"):
-		curr_slot -= 1
-		if curr_slot < 0:
-			curr_slot = len(inventory) - 1
-		if inventory[curr_slot].name != "attack":
-			attacking = false
-		set_border(curr_slot)
-	if event.is_action_released("scroll_down"):
-		curr_slot += 1
-		if curr_slot >= len(inventory):
+		global_mouse_pos = event.position
+		mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
+		update_ray()
+	else:
+		if event.is_action_released("scroll_up"):
+			curr_slot -= 1
+			if curr_slot < 0:
+				curr_slot = len(inventory) - 1
+			set_border(curr_slot)
+		if event.is_action_released("scroll_down"):
+			curr_slot += 1
+			if curr_slot >= len(inventory):
+				curr_slot = 0
+			set_border(curr_slot)
+		if Input.is_action_just_released("map"):
+			$UI/Minimap.visible = not $UI/Minimap.visible
+			$UI/Rover.visible = not $UI/Rover.visible
+			$UI/MinimapBG.visible = not $UI/MinimapBG.visible
+		elif Input.is_action_just_released("hotbar_1") and curr_slot != 0:
 			curr_slot = 0
-		if inventory[curr_slot].name != "attack":
-			attacking = false
-		set_border(curr_slot)
-	if Input.is_action_pressed("left_click"):
-		if inventory[curr_slot].name == "attack":
-			if not attacking and inventory_ready[curr_slot]:
-				attacking = true
-				attack()
-	if Input.is_action_just_released("left_click"):
-		if inventory[curr_slot].name == "attack":
-			attacking = false
+			set_border(curr_slot)
+		elif Input.is_action_just_released("hotbar_2") and curr_slot != 1:
+			curr_slot = 1
+			set_border(curr_slot)
+		elif Input.is_action_just_released("hotbar_3") and curr_slot != 2:
+			curr_slot = 2
+			set_border(curr_slot)
+		elif Input.is_action_just_released("hotbar_4") and curr_slot != 3:
+			curr_slot = 3
+			set_border(curr_slot)
+		elif Input.is_action_just_released("hotbar_5") and curr_slot != 4:
+			curr_slot = 4
+			set_border(curr_slot)
+		update_ray()
 
 func cooldown():
 	inventory_ready[curr_slot] = false
@@ -198,14 +268,76 @@ func on_timeout(slot, timer):
 	remove_child(timer)
 
 func _process(_delta):
-	if attacking and inventory_ready[curr_slot]:
-		attack()
+	if Input.is_action_pressed("left_click") and inventory_ready[curr_slot]:
+		if inventory[curr_slot].name == "attack":
+			attack()
+		elif inventory[curr_slot].name == "mining" and tile_highlighted != -1:
+			hit_rock()
+			update_ray()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom
 
 func attack():
 	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), inventory[curr_slot].damage * atk)
 	cooldown()
+
+var tiles_mined = {}
+var sq_bar_scene = load("res://Scenes/SquareBar.tscn")
+
+func hit_rock():
+	var st = String(tile_highlighted)
+	if not tiles_mined.has(st):
+		tiles_mined[st] = {}
+		var tile = tiles_mined[st]
+		tile.progress = 0
+		var sq_bar = sq_bar_scene.instance()
+		add_child(sq_bar)
+		sq_bar.rect_position = cave.map_to_world(get_tile_pos(tile_highlighted))
+		tile.bar = sq_bar
+	if st != "-1":
+		var sq_bar = tiles_mined[st].bar
+		tiles_mined[st].progress += 1
+		sq_bar.set_progress(tiles_mined[st].progress)
+		if tiles_mined[st].progress >= 100:
+			var map_pos = cave_wall.world_to_map(tile_highlight.position)
+			var rsrc = {"stone":Helper.rand_int(200, 250)}
+			var wall_type = cave_wall.get_cellv(map_pos)
+#			for mat in p_i.surface.keys():
+#				if randf() < p_i.surface[mat].chance / 2.5:
+#					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.25), 3)
+#					if amount < 1:
+#						continue
+#					rsrc[mat] = amount
+			for r in rsrc:
+				weight += rsrc[r]
+				if weight > weight_cap:
+					weight = weight_cap
+					break
+			$UI2/Inventory/Bar.value = weight
+			cave_wall.set_cellv(map_pos, -1)
+			minimap_cave.set_cellv(map_pos, 0)
+			cave_wall.update_bitmask_region()
+			$UI2/Panel.visible = true
+			var vbox = $UI2/Panel/VBoxContainer
+			Helper.put_rsrc(vbox, 32, rsrc)
+			var d = get_tree().create_timer(1.0 * vbox.get_child_count())
+			d.connect("timeout", self, "timeout")
+			astar_node.add_point(tile_highlighted, Vector2(map_pos.x, map_pos.y))
+			connect_points(map_pos, true)
+			remove_child(tiles_mined[st].bar)
+			tiles_mined.erase(st)
+			cave.set_cellv(map_pos, 0)
+			tile_highlighted = -1
+
+func timeout():
+	var tween = Tween.new()
+	add_child(tween)
+	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	$UI2/Panel.visible = false
+	$UI2/Panel.modulate.a = 1
+	remove_child(tween)
 
 func hit_player(damage:float):
 	update_health_bar(HP - damage / def)
@@ -218,6 +350,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.velocity = polar2cartesian(spd, rot)
 	proj.position = pos
 	proj.damage = damage
+	proj.enemy = enemy
 	proj.enemy = enemy
 	if enemy:
 		proj.collision_layer = 16
@@ -262,6 +395,7 @@ func get_tile_index(pt:Vector2):
 	return pt.x + cave_size * pt.y
 
 func get_tile_pos(id:int):
+# warning-ignore:integer_division
 	return Vector2(id % cave_size, id / cave_size)
 
 var velocity = Vector2.ZERO
@@ -269,6 +403,8 @@ var max_speed = 1000
 var acceleration = 8000
 var friction = 8000
 func _physics_process(delta):
+	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
+	update_ray()
 	var input_vector = Vector2.ZERO
 	input_vector.x = - Input.get_action_strength("ui_left") + Input.get_action_strength("ui_right")
 	input_vector.y = - Input.get_action_strength("ui_up") + Input.get_action_strength("ui_down")
