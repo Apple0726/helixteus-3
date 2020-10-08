@@ -346,6 +346,9 @@ func _input(event):
 					"RL":
 						game.SP += tile.stored
 						tile.stored = 0
+		elif tile.type == "obstacle":
+			if tile.tile_str == "cave":
+				game.switch_view("cave")
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
 		finish_construct()

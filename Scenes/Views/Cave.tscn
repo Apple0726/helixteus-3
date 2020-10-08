@@ -625,7 +625,7 @@ height = 151.187
 [sub_resource type="CircleShape2D" id=51]
 radius = 72.2066
 
-[sub_resource type="ParticlesMaterial" id=54]
+[sub_resource type="ParticlesMaterial" id=52]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -636,10 +636,10 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
 
-[sub_resource type="CircleShape2D" id=52]
+[sub_resource type="CircleShape2D" id=53]
 radius = 43.091
 
-[sub_resource type="StyleBoxFlat" id=53]
+[sub_resource type="StyleBoxFlat" id=54]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -653,6 +653,9 @@ expand_margin_bottom = 5.0
 
 [node name="Cave" type="Node2D"]
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 416.0 ]
+}
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
@@ -704,7 +707,7 @@ emitting = false
 amount = 25
 lifetime = 0.2
 local_coords = false
-process_material = SubResource( 54 )
+process_material = SubResource( 52 )
 
 [node name="Rover" type="KinematicBody2D" parent="."]
 collision_layer = 2
@@ -722,7 +725,7 @@ region_rect = Rect2( 0, 0, 300, 16 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 52 )
+shape = SubResource( 53 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
@@ -871,8 +874,9 @@ margin_left = 1108.0
 margin_top = 392.0
 margin_right = 1172.0
 margin_bottom = 438.0
+grow_vertical = 2
 theme = ExtResource( 3 )
-custom_styles/panel = SubResource( 53 )
+custom_styles/panel = SubResource( 54 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -883,5 +887,10 @@ margin_top = 2.0
 margin_right = 62.0
 margin_bottom = 44.0
 alignment = 1
+
+[node name="Timer" type="Timer" parent="UI2/Panel"]
+
+[node name="Tween" type="Tween" parent="UI2/Panel"]
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
+[connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]

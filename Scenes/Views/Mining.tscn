@@ -11,35 +11,35 @@
 [ext_resource path="res://Audio/SFX/mining_metal.ogg" type="AudioStream" id=9]
 [ext_resource path="res://Scenes/SquareBar.tscn" type="PackedScene" id=10]
 
-[sub_resource type="AtlasTexture" id=54]
+[sub_resource type="AtlasTexture" id=1]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=55]
+[sub_resource type="AtlasTexture" id=2]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 200, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=56]
+[sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 400, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=57]
+[sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 600, 0, 200, 200 )
 
-[sub_resource type="SpriteFrames" id=58]
+[sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ null, SubResource( 54 ), SubResource( 55 ), SubResource( 56 ), SubResource( 57 ) ],
+"frames": [ null, SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 } ]
 
-[sub_resource type="Animation" id=59]
+[sub_resource type="Animation" id=6]
 resource_name = "Help fade"
 length = 0.5
 tracks/0/type = "value"
@@ -69,7 +69,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=60]
+[sub_resource type="Animation" id=7]
 resource_name = "Layer fade"
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
@@ -104,7 +104,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=61]
+[sub_resource type="Animation" id=8]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -147,7 +147,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=62]
+[sub_resource type="Animation" id=9]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -176,7 +176,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=63]
+[sub_resource type="Animation" id=10]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -210,7 +210,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=64]
+[sub_resource type="Animation" id=11]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -253,7 +253,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=65]
+[sub_resource type="Animation" id=12]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -282,7 +282,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=66]
+[sub_resource type="Animation" id=13]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -316,7 +316,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=67]
+[sub_resource type="Animation" id=14]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -359,7 +359,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="StyleBoxFlat" id=53]
+[sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -414,7 +414,7 @@ __meta__ = {
 
 [node name="Cracks" type="AnimatedSprite" parent="Tile"]
 position = Vector2( 100, 100 )
-frames = SubResource( 58 )
+frames = SubResource( 5 )
 
 [node name="SquareBar" parent="Tile" instance=ExtResource( 10 )]
 
@@ -427,19 +427,19 @@ __meta__ = {
 }
 
 [node name="PickaxeAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 59 )
-"anims/Layer fade" = SubResource( 60 )
-"anims/Pickaxe swing" = SubResource( 61 )
+"anims/Help fade" = SubResource( 6 )
+"anims/Layer fade" = SubResource( 7 )
+"anims/Pickaxe swing" = SubResource( 8 )
 
 [node name="HelpAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 62 )
-"anims/Layer fade" = SubResource( 63 )
-"anims/Pickaxe swing" = SubResource( 64 )
+"anims/Help fade" = SubResource( 9 )
+"anims/Layer fade" = SubResource( 10 )
+"anims/Pickaxe swing" = SubResource( 11 )
 
 [node name="LayerAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 65 )
-"anims/Layer fade" = SubResource( 66 )
-"anims/Pickaxe swing" = SubResource( 67 )
+"anims/Help fade" = SubResource( 12 )
+"anims/Layer fade" = SubResource( 13 )
+"anims/Pickaxe swing" = SubResource( 14 )
 
 [node name="Pickaxe" type="Node2D" parent="."]
 
@@ -454,7 +454,7 @@ margin_top = 364.0
 margin_right = 831.0
 margin_bottom = 404.0
 grow_vertical = 2
-custom_styles/panel = SubResource( 53 )
+custom_styles/panel = SubResource( 15 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

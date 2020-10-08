@@ -1,8 +1,8 @@
 extends Node
 
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
-#onready var game = get_node("/root/Game")
-var game
+onready var game = get_node("/root/Game")
+#var game
 #A place to put frequently used functions
 
 func set_btn_color(btn):
@@ -16,71 +16,51 @@ func set_btn_color(btn):
 	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
 	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
+#put_rsrc helper function
+func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost, rsrc_available, mass_str:String = ""):
+	texture.texture_normal = load("res://Graphics/" + path + ".png")
+	var text:String
+	var color:Color = Color(1.0, 1.0, 1.0, 1.0)
+	if show_available:
+		text = "%s/%s" % [rsrc_available, rsrc_cost] + mass_str
+		if rsrc_available >= rsrc_cost:
+			color = Color(0.0, 1.0, 0.0, 1.0)
+		else:
+			color = Color(1.0, 0.0, 0.0, 1.0)
+	else:
+		text = String(rsrc_cost) + mass_str
+	text_node.text = text
+	text_node["custom_colors/font_color"] = color
+
 func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
 	if remove:
 		for child in container.get_children():
 			container.remove_child(child)
 	var data = []
+	var mass_str = ""
 	for obj in objs:
 		var rsrc = rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
-		var text = ""
-		var color = Color(1.0, 1.0, 1.0, 1.0)
 		if obj == "money":
-			texture.texture_normal = load("res://Graphics/Icons/Money.png")
-			if show_available:
-				text = String(game.money) + "/" + String(objs[obj])
-				if game.money >= objs[obj]:
-					color = Color(0.0, 1.0, 0.0, 1.0)
-				else:
-					color = Color(1.0, 0.0, 0.0, 1.0)
-			else:
-				text = String(objs[obj])
+			format_text(rsrc.get_node("Text"), texture, "Icons/Money", show_available, objs[obj], game.money)
 		elif obj == "stone":
-			texture.texture_normal = load("res://Graphics/Icons/stone.png")
-			if show_available:
-				text = String(game.stone) + "/" + String(objs[obj]) + " kg"
-				if game.stone >= objs[obj]:
-					color = Color(0.0, 1.0, 0.0, 1.0)
-				else:
-					color = Color(1.0, 0.0, 0.0, 1.0)
-			else:
-				text = String(objs[obj]) + " kg"
+			format_text(rsrc.get_node("Text"), texture, "Icons/Stone", show_available, objs[obj], game.stone, " kg")
+		elif obj == "minerals":
+			format_text(rsrc.get_node("Text"), texture, "Icons/Minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
-			texture.texture_normal = load("res://Graphics/Icons/Energy.png")
-			if show_available:
-				text = String(game.energy) + "/" + String(objs[obj])
-				if game.energy >= objs[obj]:
-					color = Color(0.0, 1.0, 0.0, 1.0)
-				else:
-					color = Color(1.0, 0.0, 0.0, 1.0)
-			else:
-				text = String(objs[obj])
+			format_text(rsrc.get_node("Text"), texture, "Icons/Energy", show_available, objs[obj], game.energy)
 		elif obj == "time":
 			texture.texture_normal = load("res://Graphics/Icons/Time.png")
-			text = time_to_str(objs[obj] * 1000.0)
+			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
-			texture.texture_normal = load("res://Graphics/Materials/" + obj + ".png")
-			if show_available:
-				text = String(game.mats[obj]) + "/" + String(objs[obj]) + " kg"
-				if game.mats[obj] >= objs[obj]:
-					color = Color(0.0, 1.0, 0.0, 1.0)
-				else:
-					color = Color(1.0, 0.0, 0.0, 1.0)
-			else:
-				text = String(objs[obj]) + " kg"
+			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
 		elif game.mets.has(obj):
-			texture.texture_normal = load("res://Graphics/Metals/" + obj + ".png")
-			if show_available:
-				text = String(game.mets[obj]) + "/" + String(objs[obj]) + " kg"
-				if game.mets[obj] >= objs[obj]:
-					color = Color(0.0, 1.0, 0.0, 1.0)
-				else:
-					color = Color(1.0, 0.0, 0.0, 1.0)
-			else:
-				text = String(objs[obj]) + " kg"
-		rsrc.get_node("Text").text = text
-		rsrc.get_node("Text")["custom_colors/font_color"] = color
+			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
+		else:
+			for item_group_info in game.item_groups:
+				if item_group_info.dict.has(obj):
+					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
+					
 		texture.rect_min_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})

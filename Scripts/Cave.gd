@@ -4,8 +4,8 @@ onready var astar_node = AStar2D.new()
 
 var tiles:PoolVector2Array
 var cave_size:int = 60
-#onready var game = get_node("/root/Game")
-#onready var p_i = game.planet_data[game.c_p]
+onready var game = get_node("/root/Game")
+onready var p_i = game.planet_data[game.c_p]
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -25,7 +25,9 @@ onready var mining_p = $MiningParticles
 onready var tile_highlight = $TileHighlight
 onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
+onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
+onready var chest_scene = preload("res://Scenes/Cave/Chest.tscn")
 
 var minimap_zoom = 0.02
 var minimap_center = Vector2(1150, 128)
@@ -41,23 +43,27 @@ var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"minin
 var inventory_ready = [true, true, true, true, true]#For cooldowns
 var i_w_w = {}#inventory_with_weight
 var weight = 0.0
-var weight_cap = 1000.0
+var weight_cap = 1500.0
 
 var rooms = []
 var HX_tiles = []#Tile ids occupied by HX
+var deposits = {}#Random metal/material deposits
+var chests = {}#Random chests and their contents
 
 func _ready():
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= minimap_zoom * 3
 	var noise = OpenSimplexNoise.new()
-	noise.seed = 0
+	noise.seed = 1
 	noise.octaves = 1
 	noise.period = 65
 	var rover_placed = false
+	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
 			var level = noise.get_noise_2d(i / float(cave_size) * 512, j / float(cave_size) * 512)
+			var tile_id = get_tile_index(Vector2(i, j))
 			if level > 0:
 				var edge = i == 0 or j == 0 or i == cave_size - 1 or j == cave_size - 1
 				if not rover_placed and edge and randf() < 0.01:
@@ -68,7 +74,6 @@ func _ready():
 					camera.position.y = j * 200
 				cave.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, 0)
-				var tile_id = get_tile_index(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if randf() < 0.005:
 					var HX = HX1_scene.instance()
@@ -91,7 +96,16 @@ func _ready():
 					HX_node.MM_icon = enemy_icon
 			else:
 				cave_wall.set_cell(i, j, 0)
-	for i in range(-1, cave_size + 1):#Add unpassable tiles at the cave borders
+				if randf() < 0.02:
+					var deposit = deposit_scene.instance()
+					deposit.dir = "Metals"
+					deposit.rsrc_name = "lead"
+					deposit.amount = Helper.rand_int(2, 15)
+					add_child(deposit)
+					deposit.position = cave_wall.map_to_world(Vector2(i, j))
+					deposits[String(tile_id)] = deposit
+	#Add unpassable tiles at the cave borders
+	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, -1, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, cave_size, 1)
@@ -104,12 +118,14 @@ func _ready():
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
 	var tiles_remaining = astar_node.get_points()
+	#Create rooms for logic that uses the size of rooms
 	while tiles_remaining != []:
 		var room = get_connected_tiles(tiles_remaining[0])
 		for tile_index in room:
 			tiles_remaining.erase(tile_index)
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
+	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		var id = get_tile_index(cave.world_to_map(enemy.position))
 		var i = 0
@@ -117,20 +133,52 @@ func _ready():
 			if id in room.tiles:
 				enemy.get_node("HX").room = i
 			i += 1
+	#Generate treasure chests. Smaller rooms have higher chances of having one
+	for room in rooms:
+		var n = room.size
+		for tile in room.tiles:
+			var rand = randf()
+			var formula = 3.0 / pow(n, 1.5)
+			if rand < formula:
+				var tier:int = int(clamp(pow(formula / rand, 0.6), 1, 5))
+				var contents:Dictionary = generate_treasure(tier)
+				if contents.empty():
+					continue
+				var chest = chest_scene.instance()
+				add_child(chest)
+				if tier == 1:
+					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
+				elif tier == 2:
+					chest.modulate = Color(0, 0.79, 0.0, 1.0)
+				elif tier == 3:
+					chest.modulate = Color(0, 0.5, 0.79, 1.0)
+				elif tier == 4:
+					chest.modulate = Color(0.7, 0, 0.79, 1.0)
+				elif tier == 5:
+					chest.modulate = Color(0.85, 1.0, 0, 1.0)
+				chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
+				chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
+				chest.scale *= 0.8
+				chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
+				chests[String(tile)] = {"node":chest, "contents":contents}
+	#Determines the tile where the entrance will be. It has to be adjacent to an unpassable tile
 	var spawn_edge_tiles = []
-	for tile_id in rooms[0].tiles:
-		var top = tile_id / cave_size == 0
-		var left = tile_id % cave_size == 0
-		var bottom = tile_id / cave_size == cave_size - 1
-		var right = tile_id % cave_size == cave_size - 1
-		if left:
-			spawn_edge_tiles.append({"id":tile_id, "dir":-PI/2})
-		elif right:
-			spawn_edge_tiles.append({"id":tile_id, "dir":PI/2})
-		elif top:
-			spawn_edge_tiles.append({"id":tile_id, "dir":0})
-		elif bottom:
-			spawn_edge_tiles.append({"id":tile_id, "dir":PI})
+	var j = 0
+	while len(spawn_edge_tiles) == 0:
+		for tile_id in rooms[j].tiles:
+			var top = tile_id / cave_size == 0
+			var left = tile_id % cave_size == 0
+			var bottom = tile_id / cave_size == cave_size - 1
+			var right = tile_id % cave_size == cave_size - 1
+			if left:
+				spawn_edge_tiles.append({"id":tile_id, "dir":-PI/2})
+			elif right:
+				spawn_edge_tiles.append({"id":tile_id, "dir":PI/2})
+			elif top:
+				spawn_edge_tiles.append({"id":tile_id, "dir":0})
+			elif bottom:
+				spawn_edge_tiles.append({"id":tile_id, "dir":PI})
+		j += 1
 			
 	var rand_spawn = Helper.rand_int(0, len(spawn_edge_tiles) - 1)
 	var rand_exit = Helper.rand_int(0, len(rooms[0]) - 1)
@@ -157,6 +205,21 @@ func _ready():
 	$UI2/Inventory/Bar.value = weight
 	$UI2/Inventory/Bar.max_value = weight_cap
 	update_health_bar(total_HP)
+
+func on_chest_entered(body, tile:String):
+	print(tile)
+
+func on_chest_exited():
+	pass
+
+func generate_treasure(tier:int):
+	var contents = {	"money":round(rand_range(20000, 50000) * pow(tier, 3.0)),
+						"minerals":round(rand_range(4000, 10000) * pow(tier, 3.0)),
+						"hx_core":Helper.rand_int(0, 5 * pow(tier, 1.5))}
+	for met in game.met_info.values():
+		if randf() < 0.5 / met.rarity:
+			contents[met] = game.clever_round(rand_range(0.8, 1.2) * met.amount * pow(tier, 1.5), 3)
+	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
 	var tile_index = get_tile_index(tile)
@@ -300,28 +363,44 @@ func hit_rock():
 		sq_bar.set_progress(tiles_mined[st].progress)
 		if tiles_mined[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
-			var rsrc = {"stone":Helper.rand_int(200, 250)}
+			var rsrc = {"stone":Helper.rand_int(150, 200)}
 			var wall_type = cave_wall.get_cellv(map_pos)
-#			for mat in p_i.surface.keys():
-#				if randf() < p_i.surface[mat].chance / 2.5:
-#					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.25), 3)
-#					if amount < 1:
-#						continue
-#					rsrc[mat] = amount
+			for mat in p_i.surface.keys():
+				if randf() < p_i.surface[mat].chance / 2.5:
+					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12), 3)
+					if amount < 1:
+						continue
+					rsrc[mat] = amount
+			if deposits.has(st):
+				var deposit = deposits[st]
+				rsrc[deposit.rsrc_name] = game.clever_round(deposit.amount * rand_range(0.95, 1.05), 3)
+				remove_child(deposit)
 			for r in rsrc:
 				weight += rsrc[r]
+				if i_w_w.has(r):
+					i_w_w[r] += rsrc[r]
+				else:
+					i_w_w[r] = rsrc[r]
 				if weight > weight_cap:
-					weight = weight_cap
+					var diff = weight - weight_cap
+					weight -= diff
+					i_w_w[r] -= diff
 					break
 			$UI2/Inventory/Bar.value = weight
 			cave_wall.set_cellv(map_pos, -1)
 			minimap_cave.set_cellv(map_pos, 0)
 			cave_wall.update_bitmask_region()
-			$UI2/Panel.visible = true
 			var vbox = $UI2/Panel/VBoxContainer
+			$UI2/Panel.visible = false
 			Helper.put_rsrc(vbox, 32, rsrc)
-			var d = get_tree().create_timer(1.0 * vbox.get_child_count())
-			d.connect("timeout", self, "timeout")
+			$UI2/Panel.visible = true
+			$UI2/Panel.modulate.a = 1
+			var tween = $UI2/Panel/Tween
+			tween.remove_all()
+			var timer = $UI2/Panel/Timer
+			timer.stop()
+			timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
+			timer.start()
 			astar_node.add_point(tile_highlighted, Vector2(map_pos.x, map_pos.y))
 			connect_points(map_pos, true)
 			remove_child(tiles_mined[st].bar)
@@ -329,15 +408,13 @@ func hit_rock():
 			cave.set_cellv(map_pos, 0)
 			tile_highlighted = -1
 
-func timeout():
-	var tween = Tween.new()
-	add_child(tween)
+func _on_Timer_timeout():
+	var tween = $UI2/Panel/Tween
 	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
 	tween.start()
 	yield(tween, "tween_all_completed")
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
-	remove_child(tween)
 
 func hit_player(damage:float):
 	update_health_bar(HP - damage / def)

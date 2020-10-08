@@ -16,6 +16,7 @@ onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
+onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -64,19 +65,19 @@ var energy:float = 200
 var SP:float = 0
 #Dimension remnants
 var DRs:float = 0
+var lv:int = 5
 var xp:float = 0
 var xp_to_lv:float = 10
 
 #id of the universe/supercluster/etc. you're viewing the object in
-var c_u:int = 0
-var c_sc:int = 0
-var c_c:int = 0
+var c_u:int = 0#c_u: current_universe
+var c_sc:int = 0#c_sc: current_supercluster
+var c_c:int = 0#etc.
 var c_g:int = 0
 var c_s:int = 0
 var c_p:int = 2
 var c_t:int = 0#For mining only
 
-var lv:int = 5
 #Number of items per stack
 var stack_size:int = 16
 
@@ -168,6 +169,7 @@ var item_to_use = {"name":"", "type":"", "num":0}
 var mining_HUD
 var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
+var cave
 
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":20},
@@ -200,6 +202,13 @@ var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "durati
 var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":2*3600000, "lake":"water", "produce":50},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
+var other_items_info = {"hx_core":{}}
+
+var item_groups = [	{"dict":speedup_info, "path":"Items/Speedups"},
+					{"dict":overclock_info, "path":"Items/Overclocks"},
+					{"dict":craft_agric_info, "path":"Agriculture"},
+					{"dict":other_items_info, "path":"Items/Others"},
+					]
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
@@ -483,6 +492,9 @@ func switch_view(new_view:String, first_time:bool = false):
 				remove_mining()
 			"science_tree":
 				remove_science_tree()
+			"cave":
+				remove_child(cave)
+				cave = null
 		c_v = new_view
 	match new_view:
 		"planet":
@@ -507,6 +519,9 @@ func switch_view(new_view:String, first_time:bool = false):
 			add_mining()
 		"science_tree":
 			add_science_tree()
+		"cave":
+			cave = cave_scene.instance()
+			add_child(cave)
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false

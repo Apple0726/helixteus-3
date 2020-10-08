@@ -269,7 +269,7 @@ settings={
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Player projectiles"
 2d_physics/layer_5="Enemy projectiles"
-2d_physics/layer_6="Entrance/exit"
+2d_physics/layer_6="Interactables"
 
 [locale]
 
