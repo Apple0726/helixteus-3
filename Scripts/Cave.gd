@@ -29,26 +29,27 @@ onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
 onready var chest_scene = preload("res://Scenes/Cave/Chest.tscn")
 
-var minimap_zoom = 0.02
-var minimap_center = Vector2(1150, 128)
-var curr_slot = 0
-var difficulty = 1
+var minimap_zoom:float = 0.02
+var minimap_center:Vector2 = Vector2(1150, 128)
+var curr_slot:int = 0
+var difficulty:float = 1.0
 
 #Rover stats
-var atk = 5.0
-var def = 5.0
-var HP = 20.0
-var total_HP = 20.0
-var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
-var inventory_ready = [true, true, true, true, true]#For cooldowns
-var i_w_w = {}#inventory_with_weight
-var weight = 0.0
-var weight_cap = 1500.0
+var atk:float = 5.0
+var def:float = 5.0
+var HP:float = 20.0
+var total_HP:float = 20.0
+var inventory:Array = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
+var inventory_ready:Array = [true, true, true, true, true]#For cooldowns
+var i_w_w:Dictionary = {}#inventory_with_weight
+var weight:float = 0.0
+var weight_cap:float = 1500.0
 
-var rooms = []
-var HX_tiles = []#Tile ids occupied by HX
-var deposits = {}#Random metal/material deposits
-var chests = {}#Random chests and their contents
+var rooms:Array = []
+var HX_tiles:Array = []#Tile ids occupied by HX
+var deposits:Dictionary = {}#Random metal/material deposits
+var chests:Dictionary = {}#Random chests and their contents
+var active_chest:String = "-1"#Chest id of currently active chest (rover is touching it)
 
 func _ready():
 	minimap_rover.position = minimap_center
@@ -138,9 +139,9 @@ func _ready():
 		var n = room.size
 		for tile in room.tiles:
 			var rand = randf()
-			var formula = 3.0 / pow(n, 1.5)
+			var formula = 15.0 / pow(n, 1.1)
 			if rand < formula:
-				var tier:int = int(clamp(pow(formula / rand, 0.6), 1, 5))
+				var tier:int = int(clamp(pow(formula / rand, 0.4), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
 				if contents.empty():
 					continue
@@ -205,20 +206,38 @@ func _ready():
 	$UI2/Inventory/Bar.value = weight
 	$UI2/Inventory/Bar.max_value = weight_cap
 	update_health_bar(total_HP)
+	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
 
 func on_chest_entered(body, tile:String):
-	print(tile)
+	var chest_rsrc = chests[tile].contents
+	active_chest = tile
+	var vbox = $UI2/Panel/VBoxContainer
+	var timer = $UI2/Panel/Timer
+	timer.stop()
+	var tween = $UI2/Panel/Tween
+	tween.stop_all()
+	$UI2/Panel.visible = false
+	$UI2/Panel.modulate.a = 1
+	Helper.put_rsrc(vbox, 32, chest_rsrc)
+	var take_all = Label.new()
+	take_all.align = Label.ALIGN_CENTER
+	take_all.text = tr("TAKE_ALL")
+	vbox.add_child(take_all)
+	$UI2/Panel.visible = true
+	$UI2/Panel.modulate.a = 1
 
-func on_chest_exited():
-	pass
+func on_chest_exited(body):
+	active_chest = "-1"
+	$UI2/Panel.visible = false
 
 func generate_treasure(tier:int):
 	var contents = {	"money":round(rand_range(20000, 50000) * pow(tier, 3.0)),
 						"minerals":round(rand_range(4000, 10000) * pow(tier, 3.0)),
-						"hx_core":Helper.rand_int(0, 5 * pow(tier, 1.5))}
-	for met in game.met_info.values():
-		if randf() < 0.5 / met.rarity:
-			contents[met] = game.clever_round(rand_range(0.8, 1.2) * met.amount * pow(tier, 1.5), 3)
+						"hx_core":Helper.rand_int(1, 5 * pow(tier, 1.5))}
+	for met in game.met_info:
+		var met_value = game.met_info[met]
+		if randf() < 0.5 / met_value.rarity:
+			contents[met] = game.clever_round(rand_range(0.8, 1.2) * met_value.amount * pow(tier, 1.5), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -258,7 +277,8 @@ func update_ray():
 			var pos = ray.get_collision_point() + ray.cast_to / 200.0
 			laser_reach = rover.position.distance_to(pos)
 			tile_highlighted = get_tile_index(cave_wall.world_to_map(pos))
-			if tile_highlighted != -1 and cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0:
+			var is_minable = cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
+			if tile_highlighted != -1 and is_minable:
 				tile_highlight.visible = true
 				tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
 				tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
@@ -267,6 +287,7 @@ func update_ray():
 					mining_p.position = pos
 			else:
 				mining_p.emitting = false
+				tile_highlighted = -1
 		else:
 			tile_highlighted = -1
 			tile_highlight.visible = false
@@ -317,6 +338,41 @@ func _input(event):
 		elif Input.is_action_just_released("hotbar_5") and curr_slot != 4:
 			curr_slot = 4
 			set_border(curr_slot)
+		if Input.is_action_just_released("upgrade") and $UI2/Panel.visible:
+			var remainders = {}
+			var contents = chests[active_chest].contents
+			for rsrc in contents:
+				var has_weight = true
+				for item_group in game.item_groups:
+					if item_group.dict.has(rsrc):
+						has_weight = false
+				if rsrc == "money" or rsrc == "minerals":
+					has_weight = false
+				if has_weight:
+					var remainder = add_weight_rsrc(rsrc, contents[rsrc])
+					if remainder != 0:
+						remainders[rsrc] = remainder
+				else:
+					for i in len(inventory):
+						if rsrc != inventory[i].name and inventory[i].name != "":
+							continue
+						var slot = slots[i]
+						if inventory[i].name == "":
+							inventory[i].name = rsrc
+							slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
+							slot.get_node("Label").text = Helper.format_num(contents[rsrc], 3)
+							inventory[i].num = contents[rsrc]
+						else:
+							inventory[i].num += contents[rsrc]
+							slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
+						break
+			$UI2/Panel.visible = false
+			if not remainders.empty():
+				chests[active_chest].contents = remainders.duplicate(true)
+				Helper.put_rsrc($UI2/Panel/VBoxContainer, 32, remainders)
+				$UI2/Panel.visible = true
+			else:
+				remove_child(chests[active_chest].node)
 		update_ray()
 
 func cooldown():
@@ -376,17 +432,7 @@ func hit_rock():
 				rsrc[deposit.rsrc_name] = game.clever_round(deposit.amount * rand_range(0.95, 1.05), 3)
 				remove_child(deposit)
 			for r in rsrc:
-				weight += rsrc[r]
-				if i_w_w.has(r):
-					i_w_w[r] += rsrc[r]
-				else:
-					i_w_w[r] = rsrc[r]
-				if weight > weight_cap:
-					var diff = weight - weight_cap
-					weight -= diff
-					i_w_w[r] -= diff
-					break
-			$UI2/Inventory/Bar.value = weight
+				add_weight_rsrc(r, rsrc[r])
 			cave_wall.set_cellv(map_pos, -1)
 			minimap_cave.set_cellv(map_pos, 0)
 			cave_wall.update_bitmask_region()
@@ -408,6 +454,20 @@ func hit_rock():
 			cave.set_cellv(map_pos, 0)
 			tile_highlighted = -1
 
+func add_weight_rsrc(r, rsrc_amount):
+	weight += rsrc_amount
+	if i_w_w.has(r):
+		i_w_w[r] += rsrc_amount
+	else:
+		i_w_w[r] = rsrc_amount
+	var diff = weight - weight_cap
+	if weight > weight_cap:
+		weight -= diff
+		i_w_w[r] -= diff
+	$UI2/Inventory/Bar.value = weight
+	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
+	return max(diff, 0.0)
+
 func _on_Timer_timeout():
 	var tween = $UI2/Panel/Tween
 	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
@@ -415,6 +475,7 @@ func _on_Timer_timeout():
 	yield(tween, "tween_all_completed")
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
+	$UI2/Panel/Timer.stop()
 
 func hit_player(damage:float):
 	update_health_bar(HP - damage / def)

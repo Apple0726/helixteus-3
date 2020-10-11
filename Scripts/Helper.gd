@@ -147,6 +147,12 @@ func get_dir_from_name(name:String):
 	match name:
 		"lead_seeds", "fertilizer":
 			return "Agriculture"
+		"money":
+			return "Icons"
+		"minerals":
+			return "Icons"
+		"hx_core":
+			return "Items/Others"
 
 func get_type_from_name(name:String):
 	if name.substr(0, 7) == "speedup":
@@ -156,3 +162,26 @@ func get_type_from_name(name:String):
 	match name:
 		"lead_seeds", "fertilizer":
 			return "craft_agric_info"
+
+func format_num(num:float, threshold:int):
+	if num < pow(10, threshold):
+		var string = str(num)
+		var mod = string.length() % 3
+		var res = ""
+		for i in range(0, string.length()):
+			if i != 0 and i % 3 == mod:
+				res += ","
+			res += string[i]
+		return res
+	else:
+		var suff:String = ""
+		var p = floor(log10(num))
+		var div = max(pow(10, stepify(p - 1, 3)), 1)
+		if p >= 3 and p < 6:
+			suff = "k"
+		elif p < 9:
+			suff = "M"
+		elif p < 12:
+			suff = "G"
+		return "%s%s" % [game.clever_round(num / div, 3), suff]
+		

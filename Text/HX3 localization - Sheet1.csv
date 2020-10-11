@@ -124,7 +124,7 @@ STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,Steinspitzhacke,
 STONE_PICKAXE_DESC,,,,,,,
 LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,Bleispitzhacke,Pico de plomo,납 곡괭이
 LEAD_PICKAXE_DESC,,,,,,,
-COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,Kupferspitzhacke,Pico de cobre,동 곡괭이
+COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,Kupferspitzhacke,Pico de cobre,구리 곡괭이
 COPPER_PICKAXE_DESC,,,,,,,
 IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,Eisenspitzhacke,Pico de hierro,철 곡괭이
 IRON_PICKAXE_DESC,,,,,,,
@@ -162,7 +162,7 @@ PHILOSOPHY_DESC,Enemies and treasure chests drop better and rarer loot.\nMore en
 ENGINEERING_DESC,"Reduces the initial cost of buildings, megastructures and gigastructures (minimum of 1 gram)\nIncreases pickaxe durability and speed, decreases cost\nMore lenient building restrictions",,,,,,
 DIMENSIONAL_POWER_DESC,Affects the average “universe value” property of universes\nDetermines the number of dimension remnants you get from renewing dimensions,,,,,,
 LEAD,Lead,Plomb,Piombo,,Blei,,납
-COPPER,Copper,Cuivre,Rame,,Kupfer,,동
+COPPER,Copper,Cuivre,Rame,,Kupfer,,구리
 IRON,Iron,Fer,Ferro,,Eisen,,철
 ALUMINIUM,Aluminium,Aluminium,Alluminio,,Aluminium,,알류미늄
 SILVER,Silver,Argent,Argento,,Silber,,은
@@ -190,7 +190,7 @@ SUPERCRITICAL,Supercritical,Supercritique,Supercritico/a,,,,초임계유체
 BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,"Ein großer Stein. Benötigt zum Abbauen Energie,Zeit und einige Ressourcen.",,
 LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},,{state} {contents}
 SEEDS,Seeds,Graines,Semi,,Pflanzensamen,,씨앗
-AGRICULTURE,Agriculture,Agriculture,Agricoltura,,농업,,
+AGRICULTURE,Agriculture,Agriculture,Agricoltura,,,,농업
 CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,,
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,,
@@ -244,3 +244,8 @@ RL_DESC,Does research on its own,Fait de la recherche en autonomie,Fa ricerca da
 MINERAL_SILO,Mineral silo,,,,,,광물 사일로
 MS_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de minéraux,,,,,광물 저장 용량을 올립니다
 REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s per sbloccare,,,,
+GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,,,,게임 저장했습니다
+CAVE,Cave,Grotte,Grotta,,,,동굴
+CAVE_DESC,Click to explore!,Cliquez pour explorer!,Cliccare per esplorare!,,,,탐험하려면 클릭하세요!
+TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,,
+WEIGHT_INV_FULL,The rover is unable to take everything.,,,,,,
