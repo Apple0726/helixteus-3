@@ -16,10 +16,10 @@ var costs = {	"ME":{"money":100, "energy":40, "time":8.0},
 				"MS":{"money":500, "energy":250, "time":40.0},
 }
 
-var icons = {	"ME":load("res://Graphics/Icons/Minerals.png"),
+var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
 				"PP":load("res://Graphics/Icons/Energy.png"),
 				"RL":load("res://Graphics/Icons/SP.png"),
-				"MS":load("res://Graphics/Icons/Minerals.png"),
+				"MS":load("res://Graphics/Icons/minerals.png"),
 }
 
 func reload():

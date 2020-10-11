@@ -27,8 +27,8 @@ var settings:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
-onready var tooltip:Control = $Tooltip
-onready var adv_tooltip:Control = $AdvTooltip
+onready var tooltip:Control = $Tooltips/Tooltip
+onready var adv_tooltip:Control = $Tooltips/AdvTooltip
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -365,7 +365,6 @@ func _load_game():
 
 	remove_child($Title)
 	
-	move_child($FPS, get_child_count())
 
 func popup(txt, dur):
 	$Popup.visible = true
@@ -493,6 +492,7 @@ func switch_view(new_view:String, first_time:bool = false):
 			"science_tree":
 				remove_science_tree()
 			"cave":
+				add_child(HUD)
 				remove_child(cave)
 				cave = null
 		c_v = new_view
@@ -520,6 +520,7 @@ func switch_view(new_view:String, first_time:bool = false):
 		"science_tree":
 			add_science_tree()
 		"cave":
+			remove_child(HUD)
 			cave = cave_scene.instance()
 			add_child(cave)
 
@@ -660,7 +661,6 @@ func add_planet():
 
 func remove_dimension():
 	add_child(HUD)
-	move_child($FPS, get_child_count())
 	dimension.visible = false
 	view.dragged = true
 
@@ -993,12 +993,12 @@ func generate_systems(id:int):
 			stars.append(star)
 		
 		var biggest_star_size = 0
-		var combined_star_size = 0
+#		var combined_star_size = 0
 		var combined_star_mass = 0
 		for star in stars:
 			if star["size"] > biggest_star_size:
 				biggest_star_size = star["size"]
-			combined_star_size += star["size"]
+#			combined_star_size += star["size"]
 			combined_star_mass += star.mass
 		var planet_num = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12)), 2)
 		if planet_num > 30:
@@ -1349,7 +1349,6 @@ func show_tooltip(txt:String):
 		tooltip.rect_size.x = 400
 	yield(get_tree().create_timer(0), "timeout")
 	tooltip.modulate.a = 1
-	move_child(tooltip, get_child_count())
 
 func hide_tooltip():
 	tooltip.visible = false
@@ -1361,14 +1360,13 @@ func show_adv_tooltip(txt:String, imgs:Array):
 	adv_tooltip.visible = true
 	adv_tooltip.modulate.a = 0
 	add_text_icons(adv_tooltip, txt, imgs, 17, true)
-	move_child(adv_tooltip, get_child_count())
 	yield(get_tree().create_timer(0.02), "timeout")
 	adv_tooltip.modulate.a = 1
 
 func hide_adv_tooltip():
 	adv_tooltip.visible = false
 
-func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, tooltip:bool = false):
+func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _tooltip:bool = false):
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
 	for st in arr:
@@ -1377,7 +1375,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, to
 		if i != len(imgs):
 			RTL.add_image(imgs[i], 0, size)
 		i += 1
-	if tooltip:
+	if _tooltip:
 		var arr2 = txt.split("\n")
 		var max_width = 0
 		for st in arr2:
@@ -1622,7 +1620,7 @@ var quadrant_top_left:PoolVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector
 var quadrant_top_right:PoolVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]
 var quadrant_bottom_left:PoolVector2Array = [Vector2(0, 360), Vector2(640, 360), Vector2(640, 720), Vector2(0, 720)]
 var quadrant_bottom_right:PoolVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
-onready var fps_text = $FPS
+onready var fps_text = $UI/FPS
 
 func _process(delta):
 	if delta != 0:

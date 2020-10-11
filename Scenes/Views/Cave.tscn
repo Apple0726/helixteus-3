@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=2]
+[gd_scene load_steps=85 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -623,8 +623,11 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 radius = 23.3054
 height = 151.187
 
+[sub_resource type="CircleShape2D" id=56]
+radius = 80.399
+
 [sub_resource type="CircleShape2D" id=51]
-radius = 72.2066
+radius = 52.1536
 
 [sub_resource type="ParticlesMaterial" id=52]
 flag_disable_z = true
@@ -658,6 +661,23 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
+[sub_resource type="StyleBoxFlat" id=57]
+content_margin_left = 7.0
+content_margin_right = 7.0
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 0.8, 1 )
+
+[sub_resource type="DynamicFont" id=58]
+size = 25
+use_mipmaps = true
+use_filter = true
+extra_spacing_char = 2
+font_data = ExtResource( 26 )
+
 [node name="Cave" type="Node2D"]
 script = ExtResource( 2 )
 __meta__ = {
@@ -685,10 +705,11 @@ smoothing_enabled = true
 smoothing_speed = 10.0
 
 [node name="Exit" type="Area2D" parent="."]
+position = Vector2( 212, 4 )
 collision_layer = 32
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
+[node name="ExitColl" type="CollisionShape2D" parent="Exit"]
 position = Vector2( -0.277153, -97.738 )
 rotation = 1.57108
 shape = SubResource( 50 )
@@ -699,7 +720,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="GoUpColl" type="CollisionShape2D" parent="Exit"]
+shape = SubResource( 56 )
+disabled = true
+
 [node name="Hole" type="Area2D" parent="."]
+position = Vector2( 460, -4 )
 collision_layer = 32
 collision_mask = 0
 
@@ -758,11 +784,11 @@ cell_quadrant_size = 100
 format = 1
 
 [node name="Hole" type="Sprite" parent="UI/Minimap"]
-scale = Vector2( 0.1, 0.1 )
+scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 17 )
 
 [node name="Exit" type="Sprite" parent="UI/Minimap"]
-scale = Vector2( 0.1, 0.1 )
+scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 21 )
 
 [node name="Rover" type="Sprite" parent="UI"]
@@ -779,7 +805,7 @@ __meta__ = {
 }
 
 [node name="UI2" type="CanvasLayer" parent="."]
-layer = 2
+layer = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI2"]
 margin_top = 660.0
@@ -911,6 +937,22 @@ alignment = 1
 [node name="Timer" type="Timer" parent="UI2/Panel"]
 
 [node name="Tween" type="Tween" parent="UI2/Panel"]
+
+[node name="Floor" type="Label" parent="UI2"]
+margin_right = 60.0
+margin_bottom = 30.0
+mouse_filter = 1
+custom_styles/normal = SubResource( 57 )
+custom_fonts/font = SubResource( 58 )
+text = "B1F"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
+[connection signal="body_exited" from="Exit" to="." method="_on_Exit_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
+[connection signal="body_exited" from="Hole" to="." method="_on_Hole_body_exited"]
 [connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="mouse_entered" from="UI2/Floor" to="." method="_on_Floor_mouse_entered"]
+[connection signal="mouse_exited" from="UI2/Floor" to="." method="_on_Floor_mouse_exited"]

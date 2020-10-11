@@ -17,18 +17,18 @@ func set_btn_color(btn):
 	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
 #put_rsrc helper function
-func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost, rsrc_available, mass_str:String = ""):
+func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost, rsrc_available, mass_str:String = "", threshold:int = 6):
 	texture.texture_normal = load("res://Graphics/" + path + ".png")
 	var text:String
 	var color:Color = Color(1.0, 1.0, 1.0, 1.0)
 	if show_available:
-		text = "%s/%s" % [rsrc_available, rsrc_cost] + mass_str
+		text = "%s/%s" % [format_num(rsrc_available, threshold / 2), format_num(rsrc_cost, threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		text = String(rsrc_cost) + mass_str
+		text = format_num(rsrc_cost, threshold) + mass_str
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
 
@@ -37,16 +37,15 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		for child in container.get_children():
 			container.remove_child(child)
 	var data = []
-	var mass_str = ""
 	for obj in objs:
 		var rsrc = rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
 		if obj == "money":
-			format_text(rsrc.get_node("Text"), texture, "Icons/Money", show_available, objs[obj], game.money)
+			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
-			format_text(rsrc.get_node("Text"), texture, "Icons/Stone", show_available, objs[obj], game.stone, " kg")
+			format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
 		elif obj == "minerals":
-			format_text(rsrc.get_node("Text"), texture, "Icons/Minerals", show_available, objs[obj], game.minerals)
+			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
 			format_text(rsrc.get_node("Text"), texture, "Icons/Energy", show_available, objs[obj], game.energy)
 		elif obj == "time":
@@ -166,13 +165,18 @@ func get_type_from_name(name:String):
 func format_num(num:float, threshold:int):
 	if num < pow(10, threshold):
 		var string = str(num)
-		var mod = string.length() % 3
+		var arr = string.split(".")
+		if len(arr) == 1:
+			arr.append("")
+		else:
+			arr[1] = "." + arr[1]
+		var mod = arr[0].length() % 3
 		var res = ""
-		for i in range(0, string.length()):
+		for i in range(0, arr[0].length()):
 			if i != 0 and i % 3 == mod:
 				res += ","
 			res += string[i]
-		return res
+		return res + arr[1]
 	else:
 		var suff:String = ""
 		var p = floor(log10(num))

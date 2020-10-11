@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/minerals.png-15f3cfe8d8eb9fce20b6289e6ca2ae25.stex"
+path="res://.import/go_up.png-c99d502c72c62b8ec26a9e050a6f8ca1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/minerals.png"
-dest_files=[ "res://.import/minerals.png-15f3cfe8d8eb9fce20b6289e6ca2ae25.stex" ]
+source_file="res://Graphics/Cave/go_up.png"
+dest_files=[ "res://.import/go_up.png-c99d502c72c62b8ec26a9e050a6f8ca1.stex" ]
 
 [params]
 

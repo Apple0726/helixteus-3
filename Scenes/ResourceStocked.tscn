@@ -1,8 +1,9 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Graphics/Icons/Minerals.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
+
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )

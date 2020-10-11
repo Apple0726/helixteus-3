@@ -116,6 +116,7 @@ func _input(event):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 2:
 				dragged = true
+# warning-ignore:return_value_discarded
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position

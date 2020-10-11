@@ -197,7 +197,7 @@ func get_met_str(met:String, desc:String = ""):
 		"sapphire":
 			return tr("SAPPHIRE" + desc)
 
-func _input(event):
+func _input(_event):
 	if item_hovered != "":
 		if Input.is_action_just_released("throw"):
 			if Input.is_action_pressed("shift"):

@@ -247,5 +247,9 @@ REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s
 GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,,,,게임 저장했습니다
 CAVE,Cave,Grotte,Grotta,,,,동굴
 CAVE_DESC,Click to explore!,Cliquez pour explorer!,Cliccare per esplorare!,,,,탐험하려면 클릭하세요!
-TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,,
-WEIGHT_INV_FULL,The rover is unable to take everything.,,,,,,
+TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,,F 누르면 모두 가져갑니다
+F_TO_EXIT,Press F to exit cave,Appuyez sur F pour sortir de la grotte,Premere F per uscire dalla grotta,,,,F 누르면 둥굴에서 나갑니다
+F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scendere,,,,F 누르면 내려갑니다
+F_TO_GO_UP,Press F to go up,Appuyez sur F pour monter,Premere F per salire,,,,F 누르면 올라갑니다
+WEIGHT_INV_FULL,The rover is unable to take everything in the chest.,,,,,,
+CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,,지하 %s층
