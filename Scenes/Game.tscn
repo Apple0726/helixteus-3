@@ -70,7 +70,7 @@ expand_margin_right = 15.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=6]
 size = 25
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -79,7 +79,7 @@ use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -91,13 +91,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=8]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -158,13 +158,6 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Popup" parent="." instance=ExtResource( 3 )]
-visible = false
-margin_left = 640.0
-margin_top = 100.808
-margin_right = 640.0
-margin_bottom = 144.023
 
 [node name="titlescreen" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
@@ -315,7 +308,7 @@ margin_left = 56.0
 margin_top = 48.0
 margin_right = 96.0
 margin_bottom = 77.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -365,6 +358,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Popup" parent="UI" instance=ExtResource( 3 )]
+visible = false
+margin_left = 640.0
+margin_top = 100.808
+margin_right = 640.0
+margin_bottom = 144.023
+
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 4
 
@@ -372,8 +372,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 6 )
-custom_fonts/font = SubResource( 7 )
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 text = "Tooltip
 a
 a
@@ -384,8 +384,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 8 )
-custom_fonts/normal_font = SubResource( 7 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/normal_font = SubResource( 8 )
 text = "Tooltip
 a
 a

@@ -18,6 +18,7 @@ var AI_enabled:bool = false
 var a_n:AStar2D
 var cave_tm:TileMap
 var room:int
+var spawn_tile:int#Tile on which the enemy spawned
 var move_speed:float = 200.0
 var ray_length:float = 1200.0
 onready var pr = get_parent()
@@ -41,7 +42,7 @@ func _ready():
 	
 	shoot_timer = Timer.new()
 	add_child(shoot_timer)
-	shoot_timer.wait_time = rand_range(0.0, 1.0)
+	shoot_timer.wait_time = 1.0
 	shoot_timer.start()
 	shoot_timer.autostart = true
 	shoot_timer.connect("timeout", self, "on_time_out")
@@ -54,7 +55,7 @@ func _ready():
 	
 	move_timer = Timer.new()
 	add_child(move_timer)
-	move_timer.start(rand_range(2.0, 5.0))
+	move_timer.start(3.0)
 	move_timer.autostart = true
 	move_timer.connect("timeout", self, "move_HX")
 
@@ -137,5 +138,6 @@ func hit(damage:float):
 	HP -= damage / def
 	$HP.value = HP
 	if HP <= 0:
+		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
 		cave_ref.get_node("UI/Minimap").remove_child(MM_icon)
 		cave_ref.remove_child(pr)

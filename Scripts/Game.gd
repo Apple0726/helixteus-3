@@ -367,9 +367,8 @@ func _load_game():
 	
 
 func popup(txt, dur):
-	$Popup.visible = true
-	move_child($Popup, get_child_count())
-	$Popup.init_popup(txt, dur)
+	$UI/Popup.visible = true
+	$UI/Popup.init_popup(txt, dur)
 
 var dialog:AcceptDialog
 

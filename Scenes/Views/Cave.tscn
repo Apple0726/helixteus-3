@@ -623,13 +623,13 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 radius = 23.3054
 height = 151.187
 
-[sub_resource type="CircleShape2D" id=56]
+[sub_resource type="CircleShape2D" id=51]
 radius = 80.399
 
-[sub_resource type="CircleShape2D" id=51]
+[sub_resource type="CircleShape2D" id=52]
 radius = 52.1536
 
-[sub_resource type="ParticlesMaterial" id=52]
+[sub_resource type="ParticlesMaterial" id=53]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -640,16 +640,16 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
 
-[sub_resource type="CircleShape2D" id=53]
+[sub_resource type="CircleShape2D" id=54]
 radius = 43.091
 
-[sub_resource type="DynamicFont" id=54]
+[sub_resource type="DynamicFont" id=55]
 size = 14
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 
-[sub_resource type="StyleBoxFlat" id=55]
+[sub_resource type="StyleBoxFlat" id=56]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -721,7 +721,7 @@ __meta__ = {
 }
 
 [node name="GoUpColl" type="CollisionShape2D" parent="Exit"]
-shape = SubResource( 56 )
+shape = SubResource( 51 )
 disabled = true
 
 [node name="Hole" type="Area2D" parent="."]
@@ -733,14 +733,14 @@ collision_mask = 0
 texture = ExtResource( 14 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hole"]
-shape = SubResource( 51 )
+shape = SubResource( 52 )
 
 [node name="MiningParticles" type="Particles2D" parent="."]
 emitting = false
 amount = 25
 lifetime = 0.2
 local_coords = false
-process_material = SubResource( 52 )
+process_material = SubResource( 53 )
 
 [node name="Rover" type="KinematicBody2D" parent="."]
 collision_layer = 2
@@ -758,7 +758,7 @@ region_rect = Rect2( 0, 0, 300, 16 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 53 )
+shape = SubResource( 54 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
@@ -906,7 +906,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 54 )
+custom_fonts/font = SubResource( 55 )
 custom_colors/font_color = Color( 1, 0.737255, 0.521569, 1 )
 align = 1
 __meta__ = {
@@ -922,7 +922,7 @@ margin_bottom = 438.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 3 )
-custom_styles/panel = SubResource( 55 )
+custom_styles/panel = SubResource( 56 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

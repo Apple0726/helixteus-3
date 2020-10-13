@@ -28,6 +28,7 @@ onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
 onready var chest_scene = preload("res://Scenes/Cave/Chest.tscn")
+onready var sq_bar_scene = preload("res://Scenes/SquareBar.tscn")
 
 var minimap_zoom:float = 0.02
 var minimap_center:Vector2 = Vector2(1150, 128)
@@ -47,6 +48,8 @@ var weight:float = 0.0
 var weight_cap:float = 1500.0
 
 var cave_floor:int = 1
+var cave_max_floors:int = 5
+var seeds = []
 var tiles:PoolVector2Array
 var rooms:Array = []
 var HX_tiles:Array = []#Tile ids occupied by HX
@@ -54,12 +57,18 @@ var deposits:Dictionary = {}#Random metal/material deposits
 var chests:Dictionary = {}#Random chests and their contents
 var active_chest:String = "-1"#Chest id of currently active chest (rover is touching it)
 var active_type:String = ""
+var tiles_touched_by_laser:Dictionary = {}
+
+var tiles_mined:Array = []#Contains data of mined tiles so they don't show up again when regenerating floor
+var enemies_rekt:Array = []#idem
+var chests_looted:Array = []
+var hole_exits:Array = []#id of hole and exit on each floor
 
 func _ready():
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
-	generate_cave(true)
+	generate_cave(true, false)
 	for i in range(0, len(inventory)):
 		var slot = slot_scene.instance()
 		hbox.add_child(slot)
@@ -95,36 +104,54 @@ func remove_cave():
 		remove_child(deposits[deposit])
 	for chest_str in chests:
 		remove_child(chests[chest_str].node)
+	for tile in tiles_touched_by_laser:
+		remove_child(tiles_touched_by_laser[tile].bar)
+	tiles_touched_by_laser.clear()
 	chests.clear()
 	deposits.clear()
 
-func generate_cave(first_floor:bool):
+func generate_cave(first_floor:bool, going_up:bool):
 	$UI2/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
-	noise.seed = randi()
+	var first_time = cave_floor > len(seeds)
+	if first_time:
+		var sd = 0
+		seed(sd)
+		noise.seed = sd
+		seeds.append(sd)
+		tiles_mined.append([])
+		enemies_rekt.append([])
+		chests_looted.append([])
+		hole_exits.append({"hole":-1, "exit":-1})
+	else:
+		noise.seed = seeds[cave_floor - 1]
+		seed(seeds[cave_floor - 1])
 	noise.octaves = 1
 	noise.period = 65
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
-			var tile_id = get_tile_index(Vector2(i, j))
+			var tile_id:int = get_tile_index(Vector2(i, j))
 			if level > 0:
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if randf() < 0.005:
 					var HX = HX1_scene.instance()
-					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
 					var HX_node = HX.get_node("HX")
 					HX_node.HP = round(10 * difficulty * rand_range(1, 1.4))
 					HX_node.atk = round(4 * difficulty * rand_range(1, 1.2))
 					HX_node.def = round(4 * difficulty * rand_range(1, 1.2))
+					if enemies_rekt[cave_floor - 1].has(tile_id):
+						continue
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
 					HX_node.cave_tm = cave
+					HX_node.spawn_tile = tile_id
 					HX.add_to_group("enemies")
+					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
 					add_child(HX)
 					HX_tiles.append(tile_id)
 					var enemy_icon = Sprite.new()
@@ -164,14 +191,6 @@ func generate_cave(first_floor:bool):
 			tiles_remaining.erase(tile_index)
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
-	#Assigns each enemy the room number they're in
-	for enemy in get_tree().get_nodes_in_group("enemies"):
-		var id = get_tile_index(cave.world_to_map(enemy.position))
-		var i = 0
-		for room in rooms:
-			if id in room.tiles:
-				enemy.get_node("HX").room = i
-			i += 1
 	#Generate treasure chests
 	for room in rooms:
 		var n = room.size
@@ -181,7 +200,7 @@ func generate_cave(first_floor:bool):
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
-				if contents.empty():
+				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 					continue
 				var chest = chest_scene.instance()
 				add_child(chest)
@@ -200,8 +219,32 @@ func generate_cave(first_floor:bool):
 				chest.scale *= 0.8
 				chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
 				chests[String(tile)] = {"node":chest, "contents":contents}
+	#Remove already-mined tiles
+	for i in cave_size:
+		for j in cave_size:
+			var tile_id:int = get_tile_index(Vector2(i, j))
+			if tiles_mined[cave_floor - 1].has(tile_id):
+				cave.set_cell(i, j, tile_type)
+				minimap_cave.set_cell(i, j, tile_type)
+				astar_node.add_point(tile_id, Vector2(i, j))
+				cave_wall.set_cell(i, j, -1)
+				if deposits.has(String(tile_id)):
+					remove_child(deposits[String(tile_id)])
+					deposits.erase(String(tile_id))
+	#Assigns each enemy the room number they're in
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		var id = get_tile_index(cave.world_to_map(enemy.position))
+		var i = 0
+		for room in rooms:
+			if id in room.tiles:
+				enemy.get_node("HX").room = i
+			i += 1
 	var pos:Vector2
 	var rand_hole:int = rooms[0].tiles[Helper.rand_int(0, len(rooms[0]) - 1)]
+	if first_time:
+		hole_exits[cave_floor - 1].hole = rand_hole
+	else:
+		rand_hole = hole_exits[cave_floor - 1].hole
 	var rand_spawn:int = rand_hole
 	if first_floor:
 		#Determines the tile where the entrance will be. It has to be adjacent to an unpassable tile
@@ -239,12 +282,30 @@ func generate_cave(first_floor:bool):
 		pos = tiles[Helper.rand_int(0, len(tiles) - 1)] * 200 + Vector2(100, 100)
 		while rand_hole == rand_spawn:
 			rand_spawn = get_tile_index(tiles[Helper.rand_int(0, len(tiles) - 1)])
-	hole.position = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
-	MM_hole.position = (get_tile_pos(rand_hole) * 200 + Vector2(100, 100)) * minimap_zoom
-	rover.position = pos
-	camera.position = pos
-	exit.position = pos
+	if cave_floor == cave_max_floors:
+		hole.get_node("CollisionShape2D").disabled = true
+		MM_hole.visible = false
+	else:
+		hole.get_node("CollisionShape2D").disabled = false
+		MM_hole.visible = true
+	#No treasure chests at spawn/hole
+	if chests.has(String(rand_hole)):
+		remove_child(chests[String(rand_hole)].node)
+		chests.erase(String(rand_hole))
+	if chests.has(String(rand_spawn)):
+		remove_child(chests[String(rand_spawn)].node)
+		chests.erase(String(rand_spawn))
+	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
+	hole.position = hole_pos
+	MM_hole.position = hole_pos * minimap_zoom
 	MM_exit.position = pos * minimap_zoom
+	if going_up:
+		rover.position = hole_pos
+		camera.position = hole_pos
+	else:
+		rover.position = pos
+		camera.position = pos
+	exit.position = pos
 
 func on_chest_entered(_body, tile:String):
 	var chest_rsrc = chests[tile].contents
@@ -407,17 +468,20 @@ func _input(event):
 					$UI2/Panel.visible = true
 					game.popup(tr("WEIGHT_INV_FULL"), 1.7)
 				else:
+					var temp = active_chest
 					remove_child(chests[active_chest].node)
+					chests.erase(temp)
+					chests_looted[cave_floor - 1].append(int(temp))
 			elif active_type == "exit":
-				pass
+				game.switch_view("planet")
 			elif active_type == "go_down":
 				remove_cave()
 				cave_floor += 1
-				generate_cave(false)
+				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
-				generate_cave(true if cave_floor == 1 else false)
+				generate_cave(true if cave_floor == 1 else false, true)
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.3
@@ -457,24 +521,21 @@ func attack():
 	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), inventory[curr_slot].damage * atk)
 	cooldown()
 
-var tiles_mined = {}
-var sq_bar_scene = load("res://Scenes/SquareBar.tscn")
-
 func hit_rock():
 	var st = String(tile_highlighted)
-	if not tiles_mined.has(st):
-		tiles_mined[st] = {}
-		var tile = tiles_mined[st]
+	if not tiles_touched_by_laser.has(st):
+		tiles_touched_by_laser[st] = {}
+		var tile = tiles_touched_by_laser[st]
 		tile.progress = 0
 		var sq_bar = sq_bar_scene.instance()
 		add_child(sq_bar)
 		sq_bar.rect_position = cave.map_to_world(get_tile_pos(tile_highlighted))
 		tile.bar = sq_bar
 	if st != "-1":
-		var sq_bar = tiles_mined[st].bar
-		tiles_mined[st].progress += 1
-		sq_bar.set_progress(tiles_mined[st].progress)
-		if tiles_mined[st].progress >= 100:
+		var sq_bar = tiles_touched_by_laser[st].bar
+		tiles_touched_by_laser[st].progress += 1
+		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
+		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
 			var rsrc = {"stone":Helper.rand_int(150, 200)}
 			#var wall_type = cave_wall.get_cellv(map_pos)
@@ -508,9 +569,10 @@ func hit_rock():
 			timer.start()
 			astar_node.add_point(tile_highlighted, Vector2(map_pos.x, map_pos.y))
 			connect_points(map_pos, true)
-			remove_child(tiles_mined[st].bar)
-			tiles_mined.erase(st)
+			remove_child(tiles_touched_by_laser[st].bar)
+			tiles_touched_by_laser.erase(st)
 			cave.set_cellv(map_pos, tile_type)
+			tiles_mined[cave_floor - 1].append(tile_highlighted)
 			tile_highlighted = -1
 
 func add_weight_rsrc(r, rsrc_amount):
@@ -535,6 +597,7 @@ func _on_Timer_timeout():
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
 	$UI2/Panel/Timer.stop()
+	tween.stop_all()
 
 func hit_player(damage:float):
 	update_health_bar(HP - damage / def)
@@ -612,6 +675,7 @@ func _physics_process(delta):
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
 	MM.position = minimap_center - rover.position * minimap_zoom
+
 func reset_panel_anim():
 	var timer = $UI2/Panel/Timer
 	timer.stop()
@@ -620,7 +684,7 @@ func reset_panel_anim():
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
 
-func _on_Exit_body_entered(body):
+func _on_Exit_body_entered(_body):
 	if cave_floor == 1:
 		show_right_info(tr("F_TO_EXIT"))
 		active_type = "exit"
@@ -628,7 +692,7 @@ func _on_Exit_body_entered(body):
 		show_right_info(tr("F_TO_GO_UP"))
 		active_type = "go_up"
 
-func _on_Hole_body_entered(body):
+func _on_Hole_body_entered(_body):
 	show_right_info(tr("F_TO_GO_DOWN"))
 	active_type = "go_down"
 
@@ -642,15 +706,16 @@ func show_right_info(txt:String):
 	vbox.add_child(info)
 	$UI2/Panel.visible = true
 
-func _on_Exit_body_exited(body):
+func _on_Exit_body_exited(_body):
 	$UI2/Panel.visible = false
+	active_type = ""
 
-func _on_Hole_body_exited(body):
+func _on_Hole_body_exited(_body):
 	$UI2/Panel.visible = false
+	active_type = ""
 
 func _on_Floor_mouse_entered():
 	game.show_tooltip(tr("CAVE_FLOOR") % [cave_floor])
-	print("A")
 
 func _on_Floor_mouse_exited():
 	game.hide_tooltip()
