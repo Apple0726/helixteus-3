@@ -2,7 +2,6 @@
 
 [ext_resource path="res://Scripts/Galaxy.gd" type="Script" id=1]
 
-
 [sub_resource type="Environment" id=1]
 background_mode = 4
 glow_enabled = true

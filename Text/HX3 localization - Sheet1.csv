@@ -58,9 +58,9 @@ SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura supe
 ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,,
 MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver mas detalles,
 SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
-GALAXY_INFO,%s\nSystems: %s,%s\nSystèmes: %s,%s\nSistemi: %s,,%s\nSysteme: %s,%s\nSistemas solares: %s,
+GALAXY_INFO,%s\nSystems: %s\nMagnetic field strength: %s Tesla\nDark matter: %s,%s\nSystèmes: %s\nIntensité du champ magnétique: %s Tesla\nMatière noire: %s,%s\nSistemi: %s\nIntensità del campo magnetico: %s Tesla\nMateria oscura: %s,,,,
 CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,,%s\nGalaxien: %s,%s\nGalaxias: %s,
-SUPERCLUSTER_INFO,%s\nClusters: %s,%s\nAmas: %s,%s\nAmmassi: %s,,%s\nCluster: %s,%s\nCumulos: %s,
+SUPERCLUSTER_INFO,%s\nClusters: %s\nDark energy: %s,%s\nAmas: %sÉnergie noire,%s\nAmmassi: %s\nEnergia oscura: %s,,,,
 DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들
 UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nDouble clic pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,,Anklicken für weiter details \n Doppelklick um das Universum zu betreten,Haz click para ver mas detalles\nDoble click para entrar a este universo,정보 보기: 클릭\n우주 들어가기: 더블 클릭
 DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),,Dimensionenreste (DR),Residuos dimensionales (RD),
@@ -219,7 +219,7 @@ FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,,비료
 FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,,비료는 식물의 성장을 1시간 가속화합니다.
 NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,,
 NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,,
-HIDE_HELP,Press F7 to not show this tooltip again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,,
+HIDE_HELP,Press F7 to not show this information again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,,
 HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,,단축키 정보 숨길려면 F7 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,,추출 속도: %s
 GENERATES_X,Generates %s,Produit %s,Produce %s,,,,발전 속도: %s
@@ -253,3 +253,5 @@ F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scend
 F_TO_GO_UP,Press F to go up,Appuyez sur F pour monter,Premere F per salire,,,,F 누르면 올라갑니다
 WEIGHT_INV_FULL,The rover is unable to take everything in the chest.,,,,,,
 CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,,지하 %s층
+NUM_FLOORS,%s floors,%s étages,%s piani,,,,층 수: %s
+FLOOR_SIZE,Floor size: {size}x{size},Dimensions des étages: {size}x{size},Dimensioni dei piani: {size}x{size},,,,층 크기: {size}x{size}

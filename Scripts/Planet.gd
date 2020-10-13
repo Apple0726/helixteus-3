@@ -146,8 +146,10 @@ func show_tooltip(tile):
 				"cave":
 					tooltip = tr("CAVE")
 					if game.help.cave_desc:
-						tooltip += "\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP")]
+						tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
 						game.help_str = "cave_desc"
+					else:
+						tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
 	if adv:
 		if tile.tile_str == "":
 			game.hide_adv_tooltip()
@@ -348,6 +350,7 @@ func _input(event):
 						tile.stored = 0
 		elif tile.type == "obstacle":
 			if tile.tile_str == "cave":
+				game.c_t = tile_id + id_offset
 				game.switch_view("cave")
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false

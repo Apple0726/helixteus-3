@@ -140,12 +140,13 @@ var show:Dictionary = {	"minerals":false,
 
 #Stores information of all objects discovered
 var universe_data:Array = [{"id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var supercluster_data:Array = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var supercluster_data:Array = [{"id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data:Array = [{"id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data:Array = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var galaxy_data:Array = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data:Array = []
 var tile_data:Array = []
+var cave_data:Array = []
 
 #Your inventory
 var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
@@ -341,6 +342,8 @@ func _load_game():
 		generate_tiles(2)
 		tile_data[42].type = "obstacle"
 		tile_data[42].tile_str = "cave"
+		tile_data[42].cave_id = 0
+		cave_data.append({"num_floors":5, "floor_size":40})
 		
 		for u_i in universe_data:
 			u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
@@ -736,6 +739,7 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
+		sc_i.dark_energy = clever_round(max(pow(dist_from_center / 1000.0, 0.1), 1))
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
@@ -794,6 +798,7 @@ func generate_galaxies(id:int):
 	var galaxy_num = total_gal_num - cluster_data[id]["galaxies"].size()
 	var gal_num_to_load = min(500, galaxy_num)
 	var progress = 1 - (galaxy_num - gal_num_to_load) / float(total_gal_num)
+	var dark_energy = supercluster_data[cluster_data[id].parent].dark_energy
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
 		g_i["status"] = "unconquered"
@@ -801,6 +806,14 @@ func generate_galaxies(id:int):
 		g_i["systems"] = []
 		g_i["discovered"] = false
 		g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
+		g_i["B_strength"] = clever_round(pow10(1, -9) * rand_range(0.2, 5), 3)#Influences star classes
+		g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1 #Influences planet numbers and size
+		var rand = randf()
+		if rand < 0.02:
+			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
+		elif rand < 0.2:
+			g_i.dark_matter = pow(g_i.dark_matter, 1.8)
+		g_i.dark_matter = clever_round(g_i.dark_matter, 3)
 		g_i["type"] = Helper.rand_int(0, 5)
 		g_i["rotation"] = rand_range(0, 2 * PI)
 		if randf() < 0.6: #Dwarf galaxy
@@ -881,6 +894,7 @@ func generate_systems(id:int):
 	
 	var sys_num_to_load = min(500, system_num)
 	var progress = 1 - (system_num - sys_num_to_load) / float(total_sys_num)
+	var B = galaxy_data[id].B_strength#Magnetic field strength
 	
 	for i in range(0, sys_num_to_load):
 		var s_i = {}
@@ -907,8 +921,9 @@ func generate_systems(id:int):
 #			num_stars += 1
 		var stars = []
 		for _j in range(0, num_stars):
-			var star = {}
+			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
+			a *= pow(pow10(1, -9) / B, 0.3)
 			#Solar masses
 			var mass = -log(1 - randf()) / a
 			var star_size = 1
@@ -999,7 +1014,8 @@ func generate_systems(id:int):
 				biggest_star_size = star["size"]
 #			combined_star_size += star["size"]
 			combined_star_mass += star.mass
-		var planet_num = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12)), 2)
+		var dark_matter = galaxy_data[c_g].dark_matter
+		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12) * dark_matter), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
 		s_i["planet_num"] = planet_num
@@ -1100,13 +1116,14 @@ func generate_planets(id:int):
 	var j = 0
 	while pow(1.3, j) * 240 < combined_star_size * 2.63:
 		j += 1
+	var dark_matter = galaxy_data[c_g].dark_matter
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
 		p_i["status"] = "unconquered"
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		p_i["size"] = 2000 + rand_range(0, 10000) * (i + 1)
+		p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1)) * dark_matter)
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -1206,9 +1223,18 @@ func generate_tiles(id:int):
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "rock"
-			if id != 2 and not tile_data[t_id].has("type") and randf() < 0.003:
+			if id != 2 and not tile_data[t_id].has("type") and randf() < 0.1 / wid:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "cave"
+				tile_data[t_id].cave_id = len(cave_data)
+				var floor_size:int = Helper.rand_int(25, 60)
+				if wid > 15:
+					floor_size *= 1.3
+				if wid > 75:
+					floor_size *= 1.3
+				if wid > 150:
+					floor_size *= 1.3
+				cave_data.append({"num_floors":Helper.rand_int(1, wid / 3), "floor_size":floor_size})
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":

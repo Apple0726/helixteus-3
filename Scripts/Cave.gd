@@ -2,7 +2,6 @@ extends Node2D
 
 onready var astar_node = AStar2D.new()
 
-var cave_size:int = 60
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
@@ -35,6 +34,8 @@ var minimap_center:Vector2 = Vector2(1150, 128)
 var curr_slot:int = 0
 var difficulty:float = 1.0
 var floor_seeds = []
+var id:int
+var cave_data:Dictionary
 
 #Rover stats
 var atk:float = 5.0
@@ -48,8 +49,8 @@ var weight:float = 0.0
 var weight_cap:float = 1500.0
 
 var cave_floor:int = 1
-var cave_max_floors:int = 5
-var seeds = []
+var num_floors:int
+var cave_size:int
 var tiles:PoolVector2Array
 var rooms:Array = []
 var HX_tiles:Array = []#Tile ids occupied by HX
@@ -59,12 +60,27 @@ var active_chest:String = "-1"#Chest id of currently active chest (rover is touc
 var active_type:String = ""
 var tiles_touched_by_laser:Dictionary = {}
 
+### Cave save data ###
+
+var seeds = []
 var tiles_mined:Array = []#Contains data of mined tiles so they don't show up again when regenerating floor
 var enemies_rekt:Array = []#idem
 var chests_looted:Array = []
 var hole_exits:Array = []#id of hole and exit on each floor
 
+### End cave save data ###
+
 func _ready():
+	id = game.tile_data[game.c_t].cave_id
+	cave_data = game.cave_data[id]
+	num_floors = cave_data.num_floors
+	cave_size = cave_data.floor_size
+	if cave_data.has("enemies_rekt"):
+		seeds = cave_data.seeds
+		tiles_mined = cave_data.tiles_mined
+		enemies_rekt = cave_data.enemies_rekt
+		chests_looted = cave_data.chests_looted
+		hole_exits = cave_data.hole_exits
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
@@ -115,7 +131,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var noise = OpenSimplexNoise.new()
 	var first_time = cave_floor > len(seeds)
 	if first_time:
-		var sd = 0
+		var sd = randi()
 		seed(sd)
 		noise.seed = sd
 		seeds.append(sd)
@@ -179,7 +195,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 		cave_wall.set_cell(-1, i, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(cave_size, i, 1)
-	cave_wall.update_bitmask_region()
 	tiles = cave.get_used_cells_by_id(tile_type)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
@@ -196,7 +211,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = randf()
-			var formula = 2.0 / pow(n, 0.9)
+			var formula = 0.7 / pow(n, 0.7)
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
@@ -230,50 +245,55 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave_wall.set_cell(i, j, -1)
 				if deposits.has(String(tile_id)):
 					remove_child(deposits[String(tile_id)])
-					deposits.erase(String(tile_id))
+	cave_wall.update_bitmask_region()
 	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		var id = get_tile_index(cave.world_to_map(enemy.position))
+		var _id = get_tile_index(cave.world_to_map(enemy.position))
 		var i = 0
 		for room in rooms:
-			if id in room.tiles:
+			if _id in room.tiles:
 				enemy.get_node("HX").room = i
 			i += 1
 	var pos:Vector2
 	var rand_hole:int = rooms[0].tiles[Helper.rand_int(0, len(rooms[0]) - 1)]
+	var rand_spawn:int
 	if first_time:
+		rand_spawn = rand_hole
 		hole_exits[cave_floor - 1].hole = rand_hole
 	else:
 		rand_hole = hole_exits[cave_floor - 1].hole
-	var rand_spawn:int = rand_hole
+		rand_spawn = hole_exits[cave_floor - 1].exit
 	if first_floor:
 		#Determines the tile where the entrance will be. It has to be adjacent to an unpassable tile
 		var spawn_edge_tiles = []
 		var j = 0
 		while len(spawn_edge_tiles) == 0:
 			for tile_id in rooms[j].tiles:
-				var top = tile_id / cave_size == 0
-				var left = tile_id % cave_size == 0
-				var bottom = tile_id / cave_size == cave_size - 1
-				var right = tile_id % cave_size == cave_size - 1
-				if left:
-					spawn_edge_tiles.append({"id":tile_id, "dir":-PI/2})
-				elif right:
-					spawn_edge_tiles.append({"id":tile_id, "dir":PI/2})
-				elif top:
-					spawn_edge_tiles.append({"id":tile_id, "dir":0})
-				elif bottom:
-					spawn_edge_tiles.append({"id":tile_id, "dir":PI})
+				if first_time or tile_id == rand_spawn:
+					var top = tile_id / cave_size == 0
+					var left = tile_id % cave_size == 0
+					var bottom = tile_id / cave_size == cave_size - 1
+					var right = tile_id % cave_size == cave_size - 1
+					if left:
+						spawn_edge_tiles.append({"id":tile_id, "dir":-PI/2})
+					elif right:
+						spawn_edge_tiles.append({"id":tile_id, "dir":PI/2})
+					elif top:
+						spawn_edge_tiles.append({"id":tile_id, "dir":0})
+					elif bottom:
+						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
 		exit.get_node("Sprite").texture = load("res://Graphics/Cave/exit.png")
 		exit.get_node("ExitColl").disabled = false
+		var rot = spawn_edge_tiles[0].dir
 		exit.get_node("GoUpColl").disabled = true
 		while rand_hole == rand_spawn:
 			var rand_id = Helper.rand_int(0, len(spawn_edge_tiles) - 1)
 			rand_spawn = spawn_edge_tiles[rand_id].id
-			pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
-			exit.rotation = spawn_edge_tiles[rand_id].dir
-			MM_exit.rotation = spawn_edge_tiles[rand_id].dir
+			rot = spawn_edge_tiles[rand_id].dir
+		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
+		exit.rotation = rot
+		MM_exit.rotation = rot
 	else:
 		MM_exit.rotation = 0
 		exit.get_node("Sprite").texture = load("res://Graphics/Cave/go_up.png")
@@ -282,7 +302,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		pos = tiles[Helper.rand_int(0, len(tiles) - 1)] * 200 + Vector2(100, 100)
 		while rand_hole == rand_spawn:
 			rand_spawn = get_tile_index(tiles[Helper.rand_int(0, len(tiles) - 1)])
-	if cave_floor == cave_max_floors:
+	if cave_floor == num_floors:
 		hole.get_node("CollisionShape2D").disabled = true
 		MM_hole.visible = false
 	else:
@@ -296,6 +316,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 		remove_child(chests[String(rand_spawn)].node)
 		chests.erase(String(rand_spawn))
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
+	if first_time:
+		hole_exits[cave_floor - 1].exit = rand_spawn
 	hole.position = hole_pos
 	MM_hole.position = hole_pos * minimap_zoom
 	MM_exit.position = pos * minimap_zoom
@@ -323,6 +345,7 @@ func on_chest_entered(_body, tile:String):
 
 func on_chest_exited(_body):
 	active_chest = "-1"
+	active_type = ""
 	$UI2/Panel.visible = false
 
 func generate_treasure(tier:int):
@@ -473,6 +496,12 @@ func _input(event):
 					chests.erase(temp)
 					chests_looted[cave_floor - 1].append(int(temp))
 			elif active_type == "exit":
+				if not cave_data.has("enemies_rekt"):
+					cave_data.seeds = seeds.duplicate(true)
+					cave_data.tiles_mined = tiles_mined.duplicate(true)
+					cave_data.enemies_rekt = enemies_rekt.duplicate(true)
+					cave_data.chests_looted = chests_looted.duplicate(true)
+					cave_data.hole_exits = hole_exits.duplicate(true)
 				game.switch_view("planet")
 			elif active_type == "go_down":
 				remove_cave()
@@ -484,15 +513,15 @@ func _input(event):
 				generate_cave(true if cave_floor == 1 else false, true)
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
-			minimap_zoom /= 1.3
+			minimap_zoom /= 1.5
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
-			MM_hole.position /= 1.3
-			MM_exit.position /= 1.3
+			MM_hole.position /= 1.5
+			MM_exit.position /= 1.5
 		elif Input.is_action_just_released("plus"):
-			minimap_zoom *= 1.3
+			minimap_zoom *= 1.5
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
-			MM_hole.position *= 1.3
-			MM_exit.position *= 1.3
+			MM_hole.position *= 1.5
+			MM_exit.position *= 1.5
 		update_ray()
 
 func cooldown():
@@ -549,6 +578,7 @@ func hit_rock():
 				var deposit = deposits[st]
 				rsrc[deposit.rsrc_name] = game.clever_round(deposit.amount * rand_range(0.95, 1.05), 3)
 				remove_child(deposit)
+				deposits.erase(st)
 			for r in rsrc:
 				add_weight_rsrc(r, rsrc[r])
 			cave_wall.set_cellv(map_pos, -1)
@@ -593,10 +623,10 @@ func _on_Timer_timeout():
 	var tween = $UI2/Panel/Tween
 	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
 	tween.start()
+	$UI2/Panel/Timer.stop()
 	yield(tween, "tween_all_completed")
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
-	$UI2/Panel/Timer.stop()
 	tween.stop_all()
 
 func hit_player(damage:float):
@@ -637,9 +667,9 @@ func sort_size(a, b):
 		return true
 	return false
 
-func get_connected_tiles(id:int):#Returns the list of all tiles connected to tile with index id, useful to get size of enclosed rooms for example
-	var unique_c_tiles = [id]
-	var c_tiles = [id]
+func get_connected_tiles(_id:int):#Returns the list of all tiles connected to tile with index id, useful to get size of enclosed rooms for example
+	var unique_c_tiles = [_id]
+	var c_tiles = [_id]
 	while len(c_tiles) != 0:
 		var new_c_tiles = []
 		for c_tile in c_tiles:
@@ -653,9 +683,9 @@ func get_connected_tiles(id:int):#Returns the list of all tiles connected to til
 func get_tile_index(pt:Vector2):
 	return pt.x + cave_size * pt.y
 
-func get_tile_pos(id:int):
+func get_tile_pos(_id:int):
 # warning-ignore:integer_division
-	return Vector2(id % cave_size, id / cave_size)
+	return Vector2(_id % cave_size, _id / cave_size)
 
 var velocity = Vector2.ZERO
 var max_speed = 1000
