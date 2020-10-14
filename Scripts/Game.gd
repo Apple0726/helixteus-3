@@ -1625,7 +1625,7 @@ func get_roman_num(num:int):
 	while c < n:
 		res = strs[c][int(num_str[n - c - 1])] + res;
 		c += 1
-	return res;
+	return res
 
 func e_notation(num:float):#e notation
 	var e = floor(Helper.log10(num))
