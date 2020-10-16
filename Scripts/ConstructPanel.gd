@@ -7,11 +7,12 @@ var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 
-#Stores basic building information (more in Data.gd)
+#In what GridContainer node building buttons should be in
 var bldg_infos = {"ME":{"type":"Basic"},
 				 "PP":{"type":"Basic"},
 				 "RL":{"type":"Basic"},
 				 "MS":{"type":"Storage"},
+				 "RCC":{"type":"Vehicles"},
 				}
 
 func _ready():
@@ -51,6 +52,13 @@ func _on_Production_pressed():
 	$Contents/Info.text = tr("PRODUCTION_DESC")
 	Helper.set_btn_color($Tabs/Production)
 
+func _on_Vehicles_pressed():
+	tab = "vehicles"
+	$Contents.visible = true
+	set_item_visibility("Vehicles")
+	$Contents/Info.text = tr("VEHICLES_DESC")
+	Helper.set_btn_color($Tabs/Vehicles)
+
 func set_item_visibility(type:String):
 	for other_type in $Contents/HBoxContainer/Items.get_children():
 		other_type.visible = false
@@ -79,10 +87,14 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	var rtl = vbox.get_node("RTL")
 	rtl.text = ""
 	var txt = (Data.path_1[name].desc + "\n") % [Data.path_1[name].value]
-	var icons = [Data.icons[name]]
+	var icons = []
+	var has_icon = Data.icons.has(name)
+	if has_icon:
+		icons.append(Data.icons[name])
 	if Data.path_2.has(name):
 		txt += (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
-		icons.append(Data.icons[name])
+		if has_icon:
+			icons.append(Data.icons[name])
 	game.add_text_icons(rtl, txt, icons, 22)
 	Helper.put_rsrc(vbox, 36, costs, false, true)
 	$Contents/HBoxContainer/ItemInfo.visible = true
@@ -97,6 +109,8 @@ func get_item_name(name:String):
 			return tr("RESEARCH_LAB")
 		"MS":
 			return tr("MINERAL_SILO")
+		"RCC":
+			return tr("ROVER_CONSTR_CENTER")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -108,3 +122,6 @@ func get_item(name, costs, _type, _dir):
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 	game.view.obj.construct(name, costs)
+
+func refresh():
+	$Tabs/Vehicles.visible = game.science_unlocked.RC

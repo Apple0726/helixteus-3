@@ -142,7 +142,7 @@ PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F pe
 PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,"Drücke ""Q"" zum duplizieren",Presiona Q para duplicar,Q 누르면 복제
 UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
 LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
-SECOND,Second,Seconde,Secondo,,Sekunde,Segundo,초
+SECOND,second,seconde,secondo,,Sekunde,segundo,초
 STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
 PATH,Path,Voie,Via,,Pfad,Camino,
 CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
@@ -236,7 +236,7 @@ CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,,
 SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,,
 SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,,
 SA_DESC,Allows you to farm metals.,,,,,,
-RESEARCH_SUCCESS,Research done,Recherche faite,Ricerca fatta,,,,연구 완료
+RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca fatta,,,,연구 완료
 USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,,가속화할 빌딩을 클릭하세요
 USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,,오버클럭할 빌딩을 클릭하세요
 RESEARCH_LAB,Research lab,Labo de recherche,Laboratorio di ricerca,,,,연구 실험실
@@ -246,7 +246,7 @@ MS_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de mi
 REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s per sbloccare,,,,
 GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,,,,게임 저장했습니다
 CAVE,Cave,Grotte,Grotta,,,,동굴
-CAVE_DESC,Click to explore!,Cliquez pour explorer!,Cliccare per esplorare!,,,,탐험하려면 클릭하세요!
+CAVE_DESC,"You will need a rover to explore this cave. Start by constructing a research lab, then research the Rover construction science!","Il faut avoir un rover pour explorer cette grotte. D'abord il faut construire un labo de recherche, puis rechercher ""Construction des rovers"".","Ti serve un rover per esplorare questa grotta. Innanzitutto devi costruire un labo di ricerca, poi devi ricercare ""Costruzione dei rover"".",,,,
 TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,,F 누르면 모두 가져갑니다
 F_TO_EXIT,Press F to exit cave,Appuyez sur F pour sortir de la grotte,Premere F per uscire dalla grotta,,,,F 누르면 둥굴에서 나갑니다
 F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scendere,,,,F 누르면 내려갑니다
@@ -255,3 +255,13 @@ WEIGHT_INV_FULL,The rover is unable to take everything in the chest.,,,,,,
 CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,,지하 %s층
 NUM_FLOORS,%s floors,%s étages,%s piani,,,,층 수: %s
 FLOOR_SIZE,Floor size: {size}x{size},Dimensions des étages: {size}x{size},Dimensioni dei piani: {size}x{size},,,,층 크기: {size}x{size}
+VEHICLES_ON_PLANET,Vehicles on this planet,Véhicules sur cette planète,Veicoli su questo pianeta,,,,이 행성에 있는 차량
+VEHICLES,Vehicles,Véhicules,Veicoli,,,,차량
+ROVERS,Rovers,Rovers,Rover,,,,
+SHIPS,Ships,Vaisseaux,Navicelle,,,,
+SATELLITES,Satellites,Satellites,Satelliti,,,,위성
+VEHICLES_DESC,"Vehicles help you interact with the universe, such as exploring caves and conquering planets.","Les véhicules te permettent d'interagir avec l'univers (exploration des grottes, conquête des planètes etc.)","I veicoli ti permettono di interagire con l'universo (esplorazione delle grotte, conquista dei pianeti ecc.)",,,,
+ROVER_CONSTRUCTION,Rover construction,Construction des rovers,Costruzione dei rover,,,,
+ROVER_CONSTR_CENTER,Rover construction center,Centre de construction des rovers,Centro di costruzione dei rover,,,,
+RC_DESC,Explore caves with rovers!,Explorez des grottes avec des rovers!,Esplora grotte con i rover!,,,,
+MULT_ROVER_STAT_BY,Multiplies rovers' stats by %s,Multiplie les stats des rovers par %s,Moltiplica le stat dei rover per %s,,,,

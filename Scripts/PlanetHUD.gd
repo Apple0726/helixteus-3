@@ -5,6 +5,7 @@ var on_button = false
 
 func _ready():
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
+	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
 
 func _on_StarSystem_pressed():
 	click_sound.play()
@@ -32,13 +33,17 @@ func _on_PlaceSoil_pressed():
 	game.HUD.get_node("Resources/Soil").visible = true
 	game.put_bottom_info(tr("PLACE_SOIL_INFO"))
 
+func _on_Vehicles_pressed():
+	click_sound.play()
+	game.toggle_panel(game.vehicle_panel)
+
 func _on_Construct_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("CONSTRUCT") + " (C)")
 
 func _on_StarSystem_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("VIEW_STAR_SYSTEM") + " (V)" + "\n" + tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"])
+	game.show_tooltip(tr("VIEW_STAR_SYSTEM") + " (Z)" + "\n" + tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"])
 
 func _on_Mine_mouse_entered():
 	on_button = true
@@ -47,6 +52,10 @@ func _on_Mine_mouse_entered():
 func _on_PlaceSoil_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("PLACE_SOIL") + " (P)")
+
+func _on_Vehicles_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("VEHICLES_ON_PLANET") + " (V)")
 
 func _on_mouse_exited():
 	on_button = false

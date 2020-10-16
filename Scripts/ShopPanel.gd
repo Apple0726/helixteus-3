@@ -165,3 +165,6 @@ func _on_BuyAmount_value_changed(value):
 		item_total_costs[cost] = item_costs[cost] * value
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	Helper.put_rsrc(vbox, 36, item_total_costs, false)
+
+func refresh():
+	pass

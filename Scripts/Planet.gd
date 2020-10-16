@@ -117,6 +117,8 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value]
 					icons = [Data.icons.MS]
 					adv = true
+				"RCC":
+					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value]
 			if game.help.tile_shortcuts:
 				game.help_str = "tile_shortcuts"
 				tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE") + "\n" + tr("HIDE_SHORTCUTS")
@@ -254,6 +256,9 @@ func _input(event):
 							tile.path_1 = 1
 							tile.path_1_value = Data.path_1.MS.value#Flat cap value
 							tile.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+						"RCC":
+							tile.path_1 = 1
+							tile.path_1_value = Data.path_1.RCC.value
 					add_bldg(tile_id + id_offset, bldg_to_construct)
 					add_time_bar(tile_id + id_offset, "bldg")
 				else:
@@ -348,6 +353,8 @@ func _input(event):
 					"RL":
 						game.SP += tile.stored
 						tile.stored = 0
+					"RCC":
+						game.toggle_panel(game.RC_panel)
 		elif tile.type == "obstacle":
 			if tile.tile_str == "cave":
 				game.c_t = tile_id + id_offset

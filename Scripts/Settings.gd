@@ -31,3 +31,6 @@ func _on_Sound_Effects_value_changed(value):
 		AudioServer.set_bus_mute(2,false)
 	else:
 		AudioServer.set_bus_mute(2,true)
+
+func refresh():
+	pass

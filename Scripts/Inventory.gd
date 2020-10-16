@@ -23,7 +23,7 @@ func _ready():
 	$Tabs/Materials.visible = game.show.materials
 	$Tabs/Metals.visible = game.show.metals
 
-func refresh_values():
+func refresh():
 	if tab == "items":
 		_on_Items_pressed()
 	elif tab == "materials":

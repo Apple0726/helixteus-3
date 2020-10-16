@@ -12,3 +12,10 @@ margin_top = 320.0
 margin_right = 128.0
 margin_bottom = 320.0
 science = "SA"
+
+[node name="RC" parent="." instance=ExtResource( 1 )]
+margin_left = 128.0
+margin_top = 480.0
+margin_right = 128.0
+margin_bottom = 480.0
+science = "RC"

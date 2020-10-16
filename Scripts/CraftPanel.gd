@@ -26,7 +26,7 @@ func _ready():
 		$Contents/HBoxContainer/Items/Agriculture.add_child(craft_item)
 	_on_Agric_pressed()
 
-func refresh_values():
+func refresh():
 	if tab == "agriculture":
 		_on_Agric_pressed()
 

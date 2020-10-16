@@ -5,6 +5,7 @@ onready var construct_panel_scene = preload("res://Scenes/Panels/ConstructPanel.
 onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
+onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
@@ -22,6 +23,7 @@ var construct_panel:Control
 var shop_panel:Control
 var upgrade_panel:Control
 var craft_panel:Control
+var vehicle_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -57,12 +59,12 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 800
+var money:float = 80000
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:float = 0
-var energy:float = 200
-var SP:float = 0
+var energy:float = 20000
+var SP:float = 500
 #Dimension remnants
 var DRs:float = 0
 var lv:int = 5
@@ -86,7 +88,7 @@ var auto_replace:bool = false
 #Stores information of the current pickaxe the player is holding
 var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
-var science_unlocked:Dictionary = {"SA":false}
+var science_unlocked:Dictionary = {"SA":false, "RC":true}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
@@ -121,9 +123,10 @@ var help:Dictionary = {"mining":true,
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
-						"SP":false,
+						"SP":true,
 						"mining_layer":false,
 						"plant_button":false,
+						"vehicles_button":false,
 						"materials":false,
 						"metals":false,
 						"glass":false,
@@ -231,6 +234,7 @@ func _ready():
 		else:
 			$titlescreen.play()
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
+		Data.reload()
 	config.save("user://settings.cfg")
 	var dir = Directory.new()
 	dir.remove("user://Save1/main.hx3")
@@ -250,6 +254,7 @@ func _load_game():
 	shop_panel = shop_panel_scene.instance()
 	construct_panel = construct_panel_scene.instance()
 	craft_panel = craft_panel_scene.instance()
+	vehicle_panel = vehicle_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	construct_panel.visible = false
@@ -260,6 +265,9 @@ func _load_game():
 
 	craft_panel.visible = false
 	$Panels.add_child(craft_panel)
+
+	vehicle_panel.visible = false
+	$Panels.add_child(vehicle_panel)
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
@@ -365,10 +373,8 @@ func _load_game():
 		c_v = "planet"
 		add_planet()
 		add_child(HUD)
-
 	remove_child($Title)
 	
-
 func popup(txt, dur):
 	$UI/Popup.visible = true
 	$UI/Popup.init_popup(txt, dur)
@@ -462,6 +468,7 @@ func toggle_panel(panel):
 	if not panel.visible:
 		panels.push_front(panel)
 		fade_in_panel(panel)
+		panel.refresh()
 	else:
 		fade_out_panel(panel)
 		panels.erase(panel)
@@ -1623,7 +1630,7 @@ func get_roman_num(num:int):
 	var n = num_str.length()
 	var c = 0;
 	while c < n:
-		res = strs[c][int(num_str[n - c - 1])] + res;
+		res = strs[c][int(num_str[n - c - 1])] + res
 		c += 1
 	return res
 

@@ -88,7 +88,10 @@ func update():
 		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str])
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
-		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value],  [Data.icons[bldg]], 20)
+		var icon = []
+		if Data.icons.has(bldg):
+			icon.append(Data.icons[bldg])
+		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], icon, 20)
 	else:
 		current_lv.text = tr("VARYING_LEVELS")
 		current.text = tr("VARIES")

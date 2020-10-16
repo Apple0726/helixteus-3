@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Graphics/Buttons/ConstructBuildings.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/PlanetHUD.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Buttons/PlaceSoil.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/StarSystemView.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Buttons/Mine.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Buttons/Vehicles.png" type="Texture" id=6]
 
 [sub_resource type="InputEventAction" id=1]
 action = "place_soil"
@@ -25,10 +26,16 @@ action = "construct"
 shortcut = SubResource( 5 )
 
 [sub_resource type="InputEventAction" id=7]
-action = "view_star_system"
+action = "vehicles"
 
 [sub_resource type="ShortCut" id=8]
 shortcut = SubResource( 7 )
+
+[sub_resource type="InputEventAction" id=9]
+action = "change_view"
+
+[sub_resource type="ShortCut" id=10]
+shortcut = SubResource( 9 )
 
 [node name="PlanetHUD" type="Control"]
 anchor_right = 1.0
@@ -58,9 +65,9 @@ shortcut = SubResource( 2 )
 texture_normal = ExtResource( 3 )
 
 [node name="Mine" type="TextureButton" parent="VBoxContainer"]
-margin_top = 264.0
+margin_top = 232.0
 margin_right = 64.0
-margin_bottom = 328.0
+margin_bottom = 296.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
 texture_normal = ExtResource( 5 )
@@ -69,9 +76,9 @@ __meta__ = {
 }
 
 [node name="Construct" type="TextureButton" parent="VBoxContainer"]
-margin_top = 328.0
+margin_top = 296.0
 margin_right = 64.0
-margin_bottom = 392.0
+margin_bottom = 360.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 6 )
 texture_normal = ExtResource( 1 )
@@ -79,12 +86,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StarSystem" type="TextureButton" parent="VBoxContainer"]
-margin_top = 392.0
+[node name="Vehicles" type="TextureButton" parent="VBoxContainer"]
+margin_top = 360.0
 margin_right = 64.0
-margin_bottom = 456.0
+margin_bottom = 424.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 8 )
+texture_normal = ExtResource( 6 )
+
+[node name="StarSystem" type="TextureButton" parent="VBoxContainer"]
+margin_top = 424.0
+margin_right = 64.0
+margin_bottom = 488.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 10 )
 texture_normal = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -98,6 +113,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="VBoxContainer/Construct" to="." method="_on_Construct_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Construct" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Construct" to="." method="_on_Construct_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Vehicles" to="." method="_on_Vehicles_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Vehicles" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Vehicles" to="." method="_on_Vehicles_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/StarSystem" to="." method="_on_StarSystem_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/StarSystem" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/StarSystem" to="." method="_on_StarSystem_pressed"]
