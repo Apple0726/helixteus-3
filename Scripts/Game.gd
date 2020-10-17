@@ -6,6 +6,7 @@ onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
 onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn")
+onready var RC_panel_scene = preload("res://Scenes/Panels/RCPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
@@ -24,6 +25,7 @@ var shop_panel:Control
 var upgrade_panel:Control
 var craft_panel:Control
 var vehicle_panel:Control
+var RC_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -78,7 +80,7 @@ var c_c:int = 0#etc.
 var c_g:int = 0
 var c_s:int = 0
 var c_p:int = 2
-var c_t:int = 0#For mining only
+var c_t:int = 0
 
 #Number of items per stack
 var stack_size:int = 16
@@ -150,6 +152,11 @@ var system_data:Array = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -
 var planet_data:Array = []
 var tile_data:Array = []
 var cave_data:Array = []
+
+#Vehicle data
+var rover_data:Array = []
+var ship_data:Array = []
+var satellite_data:Array = []
 
 #Your inventory
 var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
@@ -255,6 +262,7 @@ func _load_game():
 	construct_panel = construct_panel_scene.instance()
 	craft_panel = craft_panel_scene.instance()
 	vehicle_panel = vehicle_panel_scene.instance()
+	RC_panel = RC_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	construct_panel.visible = false
@@ -268,6 +276,9 @@ func _load_game():
 
 	vehicle_panel.visible = false
 	$Panels.add_child(vehicle_panel)
+
+	RC_panel.visible = false
+	$Panels.add_child(RC_panel)
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
@@ -295,7 +306,6 @@ func _load_game():
 		c_g = save_game.get_64()
 		c_s = save_game.get_64()
 		c_p = save_game.get_64()
-		c_t = save_game.get_64()
 		lv = save_game.get_64()
 		stack_size = save_game.get_64()
 		auto_replace = save_game.get_8()
@@ -376,8 +386,24 @@ func _load_game():
 	remove_child($Title)
 	
 func popup(txt, dur):
-	$UI/Popup.visible = true
-	$UI/Popup.init_popup(txt, dur)
+	var node = $UI/Popup
+	node.modulate.a = 0
+	node.rect_size.x = 0
+	node.text = txt
+	node.visible = true
+	node.rect_position.x = 640 - node.rect_size.x / 2
+	var tween:Tween = node.get_node("Tween")
+	tween.stop_all()
+	tween.remove_all()
+	tween.interpolate_property(node, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.15)
+	tween.interpolate_property(node, "rect_position", Vector2(490, 83), Vector2(490, 80), 0.15)
+	tween.interpolate_property(node, "rect_rotation", 0, 0, dur)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	if not tween.is_active():
+		tween.interpolate_property(node, "modulate", null, Color(1, 1, 1, 0), 0.15)
+		tween.interpolate_property(node, "rect_position", Vector2(490, 80), Vector2(490, 83), 0.15)
+		tween.start()
 
 var dialog:AcceptDialog
 
@@ -1386,12 +1412,12 @@ func hide_tooltip():
 	tooltip.visible = false
 	tooltip.autowrap = false
 
-func show_adv_tooltip(txt:String, imgs:Array):
+func show_adv_tooltip(txt:String, imgs:Array, size:int = 17):
 	adv_tooltip.visible = false
 	adv_tooltip.text = ""
 	adv_tooltip.visible = true
 	adv_tooltip.modulate.a = 0
-	add_text_icons(adv_tooltip, txt, imgs, 17, true)
+	add_text_icons(adv_tooltip, txt, imgs, size, true)
 	yield(get_tree().create_timer(0.02), "timeout")
 	adv_tooltip.modulate.a = 1
 
@@ -1758,7 +1784,6 @@ func _input(event):
 #		save_game.store_64(c_g)
 #		save_game.store_64(c_s)
 #		save_game.store_64(c_p)
-#		save_game.store_64(c_t)
 #		save_game.store_64(lv)
 #		save_game.store_64(stack_size)
 #		save_game.store_8(auto_replace)

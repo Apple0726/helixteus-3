@@ -11,7 +11,7 @@ use_filter = true
 font_data = ExtResource( 2 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_top = 6.0
 content_margin_bottom = 6.0
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
@@ -60,45 +60,50 @@ __meta__ = {
 }
 
 [node name="VBox1" type="VBoxContainer" parent="HBox"]
-margin_right = 532.0
+margin_right = 1063.0
 margin_bottom = 540.0
 size_flags_horizontal = 3
 custom_constants/separation = -2
 
 [node name="Rovers" type="Panel" parent="HBox/VBox1"]
-margin_right = 532.0
-margin_bottom = 271.0
+margin_right = 1063.0
+margin_bottom = 540.0
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="HBox/VBox1/Rovers"]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -266.0
-margin_right = 266.0
+anchor_right = 1.0
 margin_bottom = 36.0
 size_flags_horizontal = 3
-custom_styles/normal = SubResource( 5 )
+custom_styles/normal = SubResource( 2 )
 text = "ROVERS"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HBox" type="HBoxContainer" parent="HBox/VBox1/Rovers"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_vertical = 2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Satellites" type="Panel" parent="HBox/VBox1"]
+visible = false
 margin_top = 269.0
 margin_right = 532.0
 margin_bottom = 540.0
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="HBox/VBox1/Satellites"]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -266.0
-margin_right = 266.0
+anchor_right = 1.0
 margin_bottom = 36.0
-custom_styles/normal = SubResource( 5 )
+custom_styles/normal = SubResource( 2 )
 text = "SATELLITES"
 align = 1
 __meta__ = {
@@ -106,6 +111,7 @@ __meta__ = {
 }
 
 [node name="VBox2" type="VBoxContainer" parent="HBox"]
+visible = false
 margin_left = 530.0
 margin_right = 1063.0
 margin_bottom = 540.0
@@ -114,6 +120,6 @@ size_flags_horizontal = 3
 [node name="Ships" type="Label" parent="HBox/VBox2"]
 margin_right = 533.0
 margin_bottom = 36.0
-custom_styles/normal = SubResource( 5 )
+custom_styles/normal = SubResource( 2 )
 text = "SHIPS"
 align = 1

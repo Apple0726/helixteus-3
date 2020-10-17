@@ -11,7 +11,7 @@ var money_node
 func _ready():
 	$Resource/Texture.rect_min_size = Vector2(36, 36)
 	$Resource2/Texture.rect_min_size = Vector2(36, 36)
-	$Resource2/Texture.texture_normal = preload("res://Graphics/Icons/Money.png")
+	$Resource2/Texture.texture_normal = preload("res://Graphics/Icons/money.png")
 
 func _on_HSlider_mouse_entered():
 	game.view.move_view = false
@@ -41,7 +41,7 @@ func refresh(_type:String = type, _obj:String = obj):
 		$HSlider.rounded = true
 		$Buy.text = tr("BUY")
 	obj_node.get_node("Texture").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
-	money_node.get_node("Texture").texture_normal = load("res://Graphics/Icons/Money.png")
+	money_node.get_node("Texture").texture_normal = load("res://Graphics/Icons/money.png")
 	obj_node.get_node("Text").text = "0 kg"
 	money_node.get_node("Text").text = "0"
 

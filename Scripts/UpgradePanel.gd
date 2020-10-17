@@ -103,14 +103,17 @@ func update():
 	var next_value = bldg_value(first_tile_bldg_info.value, lv_to)
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
-	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], [Data.icons[bldg]], 20)
+	var icon2 = []
+	if Data.icons.has(bldg):
+		icon2.append(Data.icons[bldg])
+	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], icon2, 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 	
 func bldg_value(base_value, lv):
-	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 2) * pow(1.2, lv - 1), 3)
+	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 2) * pow(1.15, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1

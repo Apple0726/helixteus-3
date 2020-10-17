@@ -95,7 +95,7 @@ BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,
 PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,,Deine Spitzhacke ist Zerbrochen,Tu pico se rompio!,곡괭이가 부서졌습니다.
 AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,,Automatisches ersetzen,Reemplazar automaticamente,자동 교체
 AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Cocher pour racheter automatiquement la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,,Mit dieser Auswahl wird das Spiel automatisch die gleiche Spitzhacke erneut kaufen wenn das Geld ausreicht,"Chequear esta casilla hara que el juego automaticamente compre el pico que tenias cuando se rompa, si tienes dinero suficiente.",
-MINING_SPEED,Mining speed,Vitesse de minage,Velocità,,Abbaugeschwindigkeit,Velocidad de picado,
+MINING_SPEED,Mining speed,Vitesse de minage,,,Abbaugeschwindigkeit,Velocidad de picado,
 DURABILITY,Durability,Durabilité,Durabilità,,Haltbarkeit,Durabilidad,내구성
 COAL,Coal,Charbon,Carbone,,Kohle,Carbon,석탄
 GLASS,Glass,Verre,Vetro,,Glas,Vidrio,유리
@@ -143,6 +143,7 @@ PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q
 UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
 LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
 SECOND,second,seconde,secondo,,Sekunde,segundo,초
+S_SECOND,s,s,s,,,,초
 STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
 PATH,Path,Voie,Via,,Pfad,Camino,
 CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
@@ -265,3 +266,16 @@ ROVER_CONSTRUCTION,Rover construction,Construction des rovers,Costruzione dei ro
 ROVER_CONSTR_CENTER,Rover construction center,Centre de construction des rovers,Centro di costruzione dei rover,,,,
 RC_DESC,Explore caves with rovers!,Explorez des grottes avec des rovers!,Esplora grotte con i rover!,,,,
 MULT_ROVER_STAT_BY,Multiplies rovers' stats by %s,Multiplie les stats des rovers par %s,Moltiplica le stat dei rover per %s,,,,
+SA_DONE,You unlocked space agriculture! You can now buy seeds in the shop.,,,,,,
+RC_DONE,You unlocked rover construction! You can now construct the rover construction center.,,,,,,
+CONSTRUCT_ROVERS,Construct rovers,Construire des rovers,Costruire rover,,,,
+STATS,Stats,Stats,Stat,,,,
+LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers,,,,,,
+MINING_LASER_DESC,Allows the rover to mine rocks in caves,,,,,,
+CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,,
+CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,,
+ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,,
+LASER,Laser,Laser,,,,,
+MINING_LASER,Mining laser,Laser minier,,,,,
+COOLDOWN,Cooldown,,,,,,
+DAMAGE,Damage,Dégâts,Danni,,,,

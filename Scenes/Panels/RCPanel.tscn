@@ -1,14 +1,15 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
-[ext_resource path="res://Scenes/InventorySlot.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Graphics/Icons/Inventory.png" type="Texture" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=9]
+[ext_resource path="res://Scripts/RCPanel.gd" type="Script" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -31,6 +32,7 @@ margin_right = 1067.0
 margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 4 )
+script = ExtResource( 10 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
@@ -62,9 +64,9 @@ size_flags_vertical = 3
 custom_styles/panel = SubResource( 2 )
 
 [node name="Rover" type="TextureRect" parent="Stats"]
-margin_left = 40.0
+margin_left = 48.0
 margin_top = 84.0
-margin_right = 168.0
+margin_right = 176.0
 margin_bottom = 212.0
 texture = ExtResource( 9 )
 stretch_mode = 6
@@ -88,38 +90,48 @@ __meta__ = {
 
 [node name="HP" type="TextureRect" parent="Stats"]
 margin_left = 256.0
-margin_top = 84.0
+margin_top = 60.0
 margin_right = 296.0
-margin_bottom = 124.0
+margin_bottom = 100.0
 texture = ExtResource( 8 )
 expand = true
 stretch_mode = 6
 
 [node name="Attack" type="TextureRect" parent="Stats"]
 margin_left = 256.0
-margin_top = 132.0
+margin_top = 108.0
 margin_right = 296.0
-margin_bottom = 172.0
+margin_bottom = 148.0
 texture = ExtResource( 6 )
 expand = true
 stretch_mode = 6
 
 [node name="Defense" type="TextureRect" parent="Stats"]
 margin_left = 256.0
-margin_top = 180.0
+margin_top = 156.0
 margin_right = 296.0
-margin_bottom = 220.0
+margin_bottom = 196.0
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
+[node name="Defense2" type="TextureRect" parent="Stats"]
+margin_left = 256.0
+margin_top = 204.0
+margin_right = 296.0
+margin_bottom = 244.0
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
+
 [node name="Label2" type="Label" parent="Stats"]
-margin_left = 320.0
-margin_top = 92.0
-margin_right = 520.0
-margin_bottom = 220.0
-custom_constants/line_spacing = 25
+margin_left = 312.0
+margin_top = 68.0
+margin_right = 512.0
+margin_bottom = 260.0
+custom_constants/line_spacing = 24
 text = "a
+a
 a
 a"
 __meta__ = {
@@ -130,6 +142,7 @@ __meta__ = {
 margin_top = 328.0
 margin_right = 532.0
 margin_bottom = 600.0
+mouse_filter = 1
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 2 )
 __meta__ = {
@@ -158,40 +171,6 @@ custom_constants/separation = -2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Slot" parent="Inventory/HBoxContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 60.0
-margin_bottom = 60.0
-
-[node name="Slot2" parent="Inventory/HBoxContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 58.0
-margin_right = 118.0
-margin_bottom = 60.0
-
-[node name="Slot3" parent="Inventory/HBoxContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 116.0
-margin_right = 176.0
-margin_bottom = 60.0
-
-[node name="Slot4" parent="Inventory/HBoxContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 174.0
-margin_right = 234.0
-margin_bottom = 60.0
-
-[node name="Slot5" parent="Inventory/HBoxContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 232.0
-margin_right = 292.0
-margin_bottom = 60.0
 
 [node name="Costs" type="Label" parent="."]
 margin_left = 530.0
@@ -224,3 +203,4 @@ text = "CONSTRUCT"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

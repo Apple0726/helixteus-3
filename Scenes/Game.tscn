@@ -1,8 +1,7 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/Popup.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Audio/title1.ogg" type="AudioStream" id=4]
 [ext_resource path="res://Audio/ambient1.ogg" type="AudioStream" id=5]
 [ext_resource path="res://Scripts/ambient.gd" type="Script" id=6]
@@ -80,6 +79,22 @@ font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=7]
+content_margin_left = 15.0
+content_margin_right = 15.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.584314, 0.584314, 0.584314, 1 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 22
+use_filter = true
+font_data = ExtResource( 15 )
+fallback/0 = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -91,13 +106,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=10]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -358,13 +373,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Popup" parent="UI" instance=ExtResource( 3 )]
+[node name="Popup" type="Label" parent="UI"]
 visible = false
-margin_left = 640.0
-margin_top = 100.808
-margin_right = 640.0
-margin_bottom = 144.023
-mouse_filter = 2
+margin_left = 490.0
+margin_top = 83.308
+margin_right = 790.0
+margin_bottom = 118.308
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
+text = "Popup information"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="UI/Popup"]
 
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 4
@@ -373,8 +397,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 text = "Tooltip
 a
 a
@@ -385,8 +409,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 9 )
-custom_fonts/normal_font = SubResource( 8 )
+custom_styles/normal = SubResource( 11 )
+custom_fonts/normal_font = SubResource( 10 )
 text = "Tooltip
 a
 a

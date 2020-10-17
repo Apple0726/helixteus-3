@@ -10,7 +10,9 @@ onready var p_i = game.planet_data[id]
 onready var id_offset = p_i.tile_id_start
 
 #If true, clicking any tile initiates mining
-var about_to_mine = false
+var about_to_mine:bool = false
+#For exploring a cave
+var rover_selected:Dictionary = {}
 #The building you selected in construct panel
 var bldg_to_construct:String = ""
 #The cost of the above building
@@ -316,7 +318,8 @@ func _input(event):
 					var time_remaining = tile.construction_date + tile.construction_length - curr_time
 					var num_needed = min(game.item_to_use.num, ceil((time_remaining) / float(speedup_time)))
 					tile.construction_date -= speedup_time * num_needed
-					tile.collect_date -= min(speedup_time * num_needed, time_remaining)
+					if tile.has("collect_date"):
+						tile.collect_date -= min(speedup_time * num_needed, time_remaining)
 					game.remove_items(game.item_to_use.name, num_needed)
 					game.item_to_use.num -= num_needed
 					game.update_item_cursor()
@@ -354,11 +357,16 @@ func _input(event):
 						game.SP += tile.stored
 						tile.stored = 0
 					"RCC":
-						game.toggle_panel(game.RC_panel)
+						if not tile.is_constructing:
+							game.c_t = tile_id + id_offset
+							game.toggle_panel(game.RC_panel)
 		elif tile.type == "obstacle":
 			if tile.tile_str == "cave":
-				game.c_t = tile_id + id_offset
-				game.switch_view("cave")
+				if not rover_selected.empty():
+					game.c_t = tile_id + id_offset
+					game.switch_view("cave")
+					game.cave.rover_data = rover_selected
+					game.cave.set_rover_data()
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
 		finish_construct()
@@ -525,6 +533,9 @@ func _process(_delta):
 			if tile.is_constructing:
 				tile.is_constructing = false
 				game.xp += tile.XP
+				if tile.has("rover_id"):
+					game.rover_data[tile.rover_id].ready = true
+					tile.erase("rover_id")
 				hboxes[String(id2)].get_node("Path1").text = String(tile.path_1)
 				if tile.has("path_2"):
 					hboxes[String(id2)].get_node("Path2").text = String(tile.path_2)

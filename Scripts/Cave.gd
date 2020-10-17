@@ -34,7 +34,8 @@ var minimap_center:Vector2 = Vector2(1150, 128)
 var curr_slot:int = 0
 var difficulty:float = 1.0
 var floor_seeds = []
-var id:int
+var id:int#Cave id
+var rover_data:Dictionary = {}
 var cave_data:Dictionary
 
 #Rover stats
@@ -42,8 +43,8 @@ var atk:float = 5.0
 var def:float = 5.0
 var HP:float = 20.0
 var total_HP:float = 20.0
-var inventory:Array = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "cooldown":0.3}, {"name":""}, {"name":""}, {"name":""}]
-var inventory_ready:Array = [true, true, true, true, true]#For cooldowns
+var inventory:Array
+var inventory_ready:Array = []#For cooldowns
 var i_w_w:Dictionary = {}#inventory_with_weight
 var weight:float = 0.0
 var weight_cap:float = 1500.0
@@ -85,6 +86,16 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
+
+func set_rover_data():
+	HP = rover_data.HP
+	total_HP = rover_data.HP
+	atk = rover_data.atk
+	def = rover_data.def
+	weight_cap = rover_data.weight_cap
+	inventory = rover_data.inventory.duplicate(true)
+	for i in len(inventory):
+		inventory_ready.append(true)
 	for i in range(0, len(inventory)):
 		var slot = slot_scene.instance()
 		hbox.add_child(slot)
@@ -129,7 +140,7 @@ func remove_cave():
 func generate_cave(first_floor:bool, going_up:bool):
 	$UI2/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
-	var first_time = cave_floor > len(seeds)
+	var first_time:bool = cave_floor > len(seeds)
 	if first_time:
 		var sd = randi()
 		seed(sd)

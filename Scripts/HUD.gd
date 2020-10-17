@@ -92,7 +92,8 @@ func _on_ScienceTree_mouse_entered():
 
 func _on_ScienceTree_pressed():
 	click_sound.play()
-	game.switch_view("science_tree")
+	if game.c_v != "science_tree":
+		game.switch_view("science_tree")
 
 func update_hotbar():
 	for child in $Hotbar.get_children():

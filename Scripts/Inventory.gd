@@ -68,7 +68,9 @@ func on_slot_out():
 func on_slot_press(name:String, type:String, dir:String):
 	game.hide_tooltip()
 	if visible:
-		game.toggle_inventory(game.inventory)
+		game.toggle_panel(game.inventory)
+	if game.shop_panel.visible:
+		game.toggle_panel(game.shop_panel)
 	var num:int
 	if Input.is_action_pressed("shift"):
 		num = game.get_item_num(name)

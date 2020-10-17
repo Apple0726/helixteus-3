@@ -16,6 +16,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":8.0},
 				"RL":{"money":2000, "energy":650, "time":150.0},
 				"MS":{"money":500, "energy":250, "time":40.0},
 				"RCC":{"money":25000, "energy":5000, "time":280.0},
+				"rover":{"money":5000, "energy":2000, "time":80.0},
 }
 
 var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
@@ -25,10 +26,9 @@ var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
 }
 
 func reload():
-	path_1.ME.desc = "@i %s/" + tr("SECOND")
-	path_1.PP.desc = "@i %s/" + tr("SECOND")
-	path_1.RL.desc = "@i %s/" + tr("SECOND")
-	path_1.RL.desc = "@i %s/" + tr("SECOND")
+	path_1.ME.desc = "@i %s/" + tr("S_SECOND")
+	path_1.PP.desc = "@i %s/" + tr("S_SECOND")
+	path_1.RL.desc = "@i %s/" + tr("S_SECOND")
 	path_1.RCC.desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
 	path_1.MS.desc = tr("STORES_X") % [" @i %s"]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
