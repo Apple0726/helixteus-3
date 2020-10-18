@@ -188,4 +188,10 @@ func format_num(num:float, threshold:int):
 		elif p < 12:
 			suff = "G"
 		return "%s%s" % [game.clever_round(num / div, 3), suff]
-		
+
+#Assumes that all values of dict are floats/integers
+func get_sum_of_dict(dict:Dictionary):
+	var sum = 0
+	for el in dict.values():
+		sum += el
+	return sum

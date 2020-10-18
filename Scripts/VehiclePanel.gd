@@ -7,6 +7,7 @@ var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), V
 var HP_icon = load("res://Graphics/Icons/HP.png")
 var atk_icon = load("res://Graphics/Icons/atk.png")
 var def_icon = load("res://Graphics/Icons/def.png")
+var inv_icon = load("res://Graphics/Icons/Inventory.png")
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
@@ -30,7 +31,18 @@ func refresh():
 		$HBox/VBox1/Rovers.visible = true
 
 func on_rover_enter(rov:Dictionary):
-	game.show_adv_tooltip("@i %s\n@i %s\n@i %s\n%s" % [rov.HP, rov.atk, rov.def, tr("CLICK_TO_USE_ROVER")], [HP_icon, atk_icon, def_icon], 19)
+	var st = "@i %s\n@i %s\n@i %s\n@i %s / %s kg" % [rov.HP, rov.atk, rov.def, Helper.get_sum_of_dict(rov.i_w_w), rov.weight_cap]
+	var show_shortcut = false
+	if game.help.rover_shortcuts:
+		st += "\n%s" % [tr("CLICK_TO_USE_ROVER")]
+		for inv in rov.inventory:
+			if inv.name != "attack" and inv.name != "mining" and inv.name != "":
+				show_shortcut = true
+		show_shortcut = show_shortcut or not rov.i_w_w.empty()
+		if show_shortcut:
+			game.help_str = "rover_shortcuts"
+			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
+	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon], 19)
 
 func on_rover_exit():
 	game.hide_adv_tooltip()

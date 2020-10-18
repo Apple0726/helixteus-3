@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
@@ -9,7 +9,7 @@
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
-content_margin_bottom = 0.0
+content_margin_bottom = 5.0
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -19,6 +19,10 @@ border_color = Color( 0.4, 0.501961, 0.8, 1 )
 shadow_color = Color( 0.4, 0.501961, 0.8, 1 )
 shadow_size = 4
 
+[sub_resource type="StyleBoxEmpty" id=2]
+content_margin_left = 5.0
+content_margin_right = 5.0
+
 [node name="Control" type="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -26,19 +30,6 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="UpgradePanel2" type="Panel" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -288.0
-margin_top = -128.0
-margin_right = 288.0
-margin_bottom = 128.0
-custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -60,14 +51,13 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UpgradePanel"]
 margin_right = 576.0
-margin_bottom = 250.0
+margin_bottom = 246.0
 custom_constants/separation = 0
 alignment = 1
 
 [node name="Label" type="Label" parent="UpgradePanel/VBoxContainer"]
-margin_top = 2.0
 margin_right = 576.0
-margin_bottom = 37.0
+margin_bottom = 35.0
 rect_min_size = Vector2( 0, 35 )
 text = "UPGRADE"
 align = 1
@@ -77,10 +67,11 @@ __meta__ = {
 }
 
 [node name="PathButtons" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 37.0
+margin_top = 35.0
 margin_right = 576.0
-margin_bottom = 72.0
+margin_bottom = 70.0
 rect_min_size = Vector2( 0, 35 )
+size_flags_horizontal = 3
 custom_constants/separation = -2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -106,9 +97,9 @@ margin_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Control2" type="Control" parent="UpgradePanel/VBoxContainer"]
-margin_top = 72.0
+margin_top = 70.0
 margin_right = 576.0
-margin_bottom = 152.0
+margin_bottom = 150.0
 rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 
@@ -128,34 +119,50 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="CurrentLv2" type="Label" parent="UpgradePanel/VBoxContainer/Control2"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 37.0
+margin_top = -14.0
+margin_right = 139.0
+margin_bottom = 18.0
+text = "LEVEL"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="NextLv" type="SpinBox" parent="UpgradePanel/VBoxContainer/Control2"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 104.0
+margin_left = 144.0
 margin_top = -14.0
 margin_right = 234.0
 margin_bottom = 18.0
-rect_min_size = Vector2( 130, 0 )
 value = 2.0
+rounded = true
 allow_greater = true
 align = 1
-prefix = "LEVEL"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 152.0
+margin_top = 150.0
 margin_right = 576.0
-margin_bottom = 178.0
+margin_bottom = 176.0
 alignment = 1
 
 [node name="Current" type="RichTextLabel" parent="UpgradePanel/VBoxContainer/HBoxContainer2"]
 margin_right = 239.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
+custom_styles/normal = SubResource( 2 )
 bbcode_enabled = true
 bbcode_text = "[center]1 mineral/sec[/center]"
 text = "1 mineral/sec"
@@ -188,15 +195,15 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="UpgradePanel/VBoxContainer"]
-margin_top = 178.0
+margin_top = 176.0
 margin_right = 576.0
-margin_bottom = 208.0
+margin_bottom = 206.0
 rect_min_size = Vector2( 0, 30 )
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 208.0
+margin_top = 206.0
 margin_right = 576.0
-margin_bottom = 248.0
+margin_bottom = 246.0
 alignment = 2
 
 [node name="Control" type="Control" parent="UpgradePanel/VBoxContainer/HBoxContainer3"]

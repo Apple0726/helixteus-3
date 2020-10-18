@@ -120,6 +120,7 @@ var help:Dictionary = {"mining":true,
 			"tile_shortcuts":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
+			"rover_shortcuts":true,
 }
 
 #Measures to not overwhelm beginners. false: not visible
@@ -128,7 +129,7 @@ var show:Dictionary = {	"minerals":false,
 						"SP":true,
 						"mining_layer":false,
 						"plant_button":false,
-						"vehicles_button":false,
+						"vehicles_button":true,
 						"materials":false,
 						"metals":false,
 						"glass":false,
@@ -154,7 +155,7 @@ var tile_data:Array = []
 var cave_data:Array = []
 
 #Vehicle data
-var rover_data:Array = []
+var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "weight_cap":8000.0, "inventory":[{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}], "i_w_w":{}}]
 var ship_data:Array = []
 var satellite_data:Array = []
 
@@ -171,6 +172,9 @@ var save_g = false
 var save_s = false
 var save_p = false
 var save_t = false
+
+var EA_planet_visited = false
+var EA_galaxy_visited = false
 
 var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
@@ -384,13 +388,15 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 	remove_child($Title)
+	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find shortcuts not shown in the game.", "Early access note")
 	
 func popup(txt, dur):
 	var node = $UI/Popup
 	node.modulate.a = 0
-	node.rect_size.x = 0
 	node.text = txt
 	node.visible = true
+	yield(get_tree().create_timer(0), "timeout")
+	node.rect_size.x = 0
 	node.rect_position.x = 640 - node.rect_size.x / 2
 	var tween:Tween = node.get_node("Tween")
 	tween.stop_all()
@@ -690,6 +696,9 @@ func add_system():
 func add_planet():
 	if not planet_data[c_p]["discovered"]:
 		generate_tiles(c_p)
+		if not EA_planet_visited:
+			long_popup("Normally you need to fight enemies with ships before being able to visit other planets. But for testing purposes,\nbattle will come much later in the game and you'll be able to visit every planet with a click.", "Early access note")
+			EA_planet_visited = true
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
@@ -912,6 +921,9 @@ func generate_system_part():
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
 	add_obj("galaxy")
 	remove_child($Loading)
+	if not EA_galaxy_visited:
+		long_popup("Normally you need to reach a certain level before being able to view other star systems/galaxies/etc., but for testing purposes\nyou can go anywhere without limits.", "Early access note")
+		EA_galaxy_visited = true
 
 func generate_systems(id:int):
 	randomize()
@@ -1313,8 +1325,8 @@ func make_planet_composition(temp:float, depth:String):
 								}
 		else:
 			common_elements["Fe"] = rand_range(0.5, 0.95)
-			common_elements["Ni"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
 			uncommon_elements = {	"Cr":0.3,
 									"Ta":0.2,
 									"W":0.2,
@@ -1327,11 +1339,11 @@ func make_planet_composition(temp:float, depth:String):
 	else:
 		if depth == "crust" or depth == "mantle":
 			common_elements["N"] = randf()
-			common_elements["H"] = (1 - get_sum_of_dict(common_elements)) * randf()
-			common_elements["O"] = (1 - get_sum_of_dict(common_elements)) * randf()
-			common_elements["C"] = (1 - get_sum_of_dict(common_elements)) * randf()
-			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * randf()
-			common_elements["He"] = (1 - get_sum_of_dict(common_elements)) * randf()
+			common_elements["H"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+			common_elements["C"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+			common_elements["He"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
 			uncommon_elements = {	"Al":0.5,
 									"Fe":0.35,
 									"Ca":0.3,
@@ -1347,8 +1359,8 @@ func make_planet_composition(temp:float, depth:String):
 								}
 		else:
 			common_elements["Fe"] = rand_range(0.5, 0.95)
-			common_elements["Ni"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			common_elements["S"] = (1 - get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
 			uncommon_elements = {	"Cr":0.3,
 									"Ta":0.2,
 									"W":0.2,
@@ -1358,7 +1370,7 @@ func make_planet_composition(temp:float, depth:String):
 									"Co":0.1,
 									"Mn":0.1
 								}
-	var remaining = 1 - get_sum_of_dict(common_elements)
+	var remaining = 1 - Helper.get_sum_of_dict(common_elements)
 	var uncommon_element_count = 0
 	for u_el in uncommon_elements.keys():
 		if randf() < uncommon_elements[u_el] * 5.0:
@@ -1594,13 +1606,6 @@ func get_star_modulate (star_class:String):
 		"Z":
 			m = Color(0.05, 0.05, 0.05, 1)
 	return m
-
-#Assumes that all values of dict are floats/integers
-func get_sum_of_dict(dict:Dictionary):
-	var sum = 0
-	for el in dict.values():
-		sum += el
-	return sum
 
 #Checks if player has enough resources to buy/craft/build something
 func check_enough(costs):

@@ -1,10 +1,10 @@
 extends Node
 
-var path_1 = {	"ME":{"value":0.12, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":60}},
-				"PP":{"value":0.3, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":60}},
-				"RL":{"value":0.02, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150}},
-				"MS":{"value":25, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35}},
-				"RCC":{"value":1.0, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":50}},
+var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":60}},
+				"PP":{"value":0.3, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":60}},
+				"RL":{"value":0.02, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150}},
+				"MS":{"value":25, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35}},
+				"RCC":{"value":1.0, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":50}},
 }
 var path_2 = {	"ME":{"value":15, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 				"PP":{"value":70, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},

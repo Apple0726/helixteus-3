@@ -85,7 +85,7 @@ func update():
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str])
+		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw)
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		var icon = []
@@ -100,7 +100,7 @@ func update():
 		game.remove_upgrade_panel()
 		return
 	next.text = ""
-	var next_value = bldg_value(first_tile_bldg_info.value, lv_to)
+	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw)
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
 	var icon2 = []
@@ -112,8 +112,8 @@ func update():
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 	
-func bldg_value(base_value, lv):
-	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 2) * pow(1.15, lv - 1), 3)
+func bldg_value(base_value, lv:int, pw:float = 1.15):
+	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 1.4) * pow(pw, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1
@@ -158,7 +158,7 @@ func _on_Upgrade_pressed():
 			if tile.is_constructing:
 				continue
 			var curr_time = OS.get_system_time_msecs()
-			var new_value = bldg_value(bldg_info.value, next_lv.value)
+			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
 			if bldg_info.is_value_integer:
 				new_value = round(new_value)
 			if tile.has("collect_date"):

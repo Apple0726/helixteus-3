@@ -8,7 +8,7 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 5.0
-var weight_cap:float = 1400.0
+var weight_cap:float = 8000.0
 var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}]
 var tile
 
@@ -31,7 +31,7 @@ func _on_Button_pressed():
 		tile.construction_date = OS.get_system_time_msecs()
 		tile.construction_length = Data.costs.rover.time * 1000
 		tile.XP = round(Data.costs.rover.money / 100.0)
-		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":HP, "atk":atk, "def":def, "weight_cap":weight_cap, "inventory":inventory})
+		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":HP, "atk":atk, "def":def, "weight_cap":weight_cap, "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
