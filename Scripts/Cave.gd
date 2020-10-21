@@ -67,6 +67,7 @@ var seeds = []
 var tiles_mined:Array = []#Contains data of mined tiles so they don't show up again when regenerating floor
 var enemies_rekt:Array = []#idem
 var chests_looted:Array = []
+var partially_looted_chests:Array = []
 var hole_exits:Array = []#id of hole and exit on each floor
 
 ### End cave save data ###
@@ -81,6 +82,7 @@ func _ready():
 		tiles_mined = cave_data.tiles_mined
 		enemies_rekt = cave_data.enemies_rekt
 		chests_looted = cave_data.chests_looted
+		partially_looted_chests = cave_data.partially_looted_chests
 		hole_exits = cave_data.hole_exits
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
@@ -157,6 +159,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		tiles_mined.append([])
 		enemies_rekt.append([])
 		chests_looted.append([])
+		partially_looted_chests.append({})
 		hole_exits.append({"hole":-1, "exit":-1})
 	else:
 		noise.seed = seeds[cave_floor - 1]
@@ -235,12 +238,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = randf()
-			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1)
+			var formula = 2.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1)
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
 				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 					continue
+				if partially_looted_chests[cave_floor - 1].has(String(tile)):
+					contents = partially_looted_chests[cave_floor - 1][String(tile)].duplicate(true)
 				var chest = chest_scene.instance()
 				add_child(chest)
 				if tier == 1:
@@ -509,7 +514,7 @@ func _input(event):
 					if rsrc == "money" or rsrc == "minerals":
 						has_weight = false
 					if has_weight:
-						var remainder = add_weight_rsrc(rsrc, contents[rsrc])
+						var remainder:float = round(add_weight_rsrc(rsrc, contents[rsrc]) * 100) / 100.0
 						if remainder != 0:
 							remainders[rsrc] = remainder
 					else:
@@ -528,6 +533,7 @@ func _input(event):
 							break
 				if not remainders.empty():
 					chests[active_chest].contents = remainders.duplicate(true)
+					partially_looted_chests[cave_floor - 1][String(active_chest)] = remainders.duplicate(true)
 					Helper.put_rsrc($UI2/Panel/VBoxContainer, 32, remainders)
 					$UI2/Panel.visible = true
 					game.popup(tr("WEIGHT_INV_FULL"), 1.7)
@@ -567,6 +573,7 @@ func exit_cave():
 		cave_data.tiles_mined = tiles_mined.duplicate(true)
 		cave_data.enemies_rekt = enemies_rekt.duplicate(true)
 		cave_data.chests_looted = chests_looted.duplicate(true)
+		cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
 		cave_data.hole_exits = hole_exits.duplicate(true)
 	game.switch_view("planet")
 
@@ -657,10 +664,13 @@ func add_weight_rsrc(r, rsrc_amount):
 		i_w_w[r] += rsrc_amount
 	else:
 		i_w_w[r] = rsrc_amount
-	var diff = weight - weight_cap
+	var diff:float = floor((weight - weight_cap) * 100) / 100.0
 	if weight > weight_cap:
 		weight -= diff
 		i_w_w[r] -= diff
+		var float_error:float = weight - weight_cap
+		weight -= float_error
+		i_w_w[r] -= float_error
 	$UI2/Inventory/Bar.value = weight
 	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
 	return max(diff, 0.0)

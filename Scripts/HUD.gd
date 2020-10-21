@@ -129,7 +129,6 @@ func on_slot_press(i:int):
 	var name = game.hotbar[i]
 	game.inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
 
-
 func _on_Label_mouse_entered():
 	on_button = true
 	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s") % [game.lv, game.xp, game.xp_to_lv])

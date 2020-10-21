@@ -124,6 +124,8 @@ func get_item_name (name:String):
 			return tr("COPPER_PICKAXE")
 		"iron_pickaxe":
 			return tr("IRON_PICKAXE")
+		"hx_core":
+			return tr("HX_CORE")
 
 func get_plant_name(name:String):
 	match name:

@@ -158,7 +158,7 @@ func show_tooltip(tile):
 		if tile.tile_str == "":
 			game.hide_adv_tooltip()
 		else:
-			if not game.get_node("Tooltip").visible:
+			if not game.get_node("Tooltips/Tooltip").visible:
 				game.show_adv_tooltip(tooltip, icons)
 	else:
 		game.hide_adv_tooltip()

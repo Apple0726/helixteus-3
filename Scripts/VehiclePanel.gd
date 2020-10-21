@@ -48,7 +48,21 @@ func on_rover_exit():
 	game.hide_adv_tooltip()
 
 func on_rover_press(rov:Dictionary):
-	if game.c_v == "planet":
+	if Input.is_action_pressed("shift"):
+		for i in len(rov.inventory):
+			if rov.inventory[i].name == "money":
+				game.money += rov.inventory[i].num
+				rov.inventory[i] = {"name":""}
+			elif rov.inventory[i].name == "minerals":
+				game.minerals += rov.inventory[i].num
+				rov.inventory[i] = {"name":""}
+			elif rov.inventory[i].name != "attack" and rov.inventory[i].name != "mining" and rov.inventory[i].name != "":
+				game.add_items(rov.inventory[i].name, rov.inventory[i].num)
+				rov.inventory[i] = {"name":""}
+		game.add_resources(rov.i_w_w)
+		rov.i_w_w = {}
+		game.popup(tr("ITEMS_COLLECTED"), 1.5)
+	elif game.c_v == "planet":
 		game.view.obj.rover_selected = rov
 		game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"))
 		game.toggle_panel(self)

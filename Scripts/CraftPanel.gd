@@ -79,7 +79,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, type:String, dir:
 func get_item(name, costs, type, dir):
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
-		var items_left = game.add_items(name, type, dir, craft_btn.value)
+		var items_left = game.add_items(name, craft_btn.value)
 		if items_left > 0:
 			var refund = item_costs.duplicate(true)
 			for rsrc in item_costs:

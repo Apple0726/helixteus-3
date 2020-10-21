@@ -1,10 +1,7 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
-[ext_resource path="res://Audio/title1.ogg" type="AudioStream" id=4]
-[ext_resource path="res://Audio/ambient1.ogg" type="AudioStream" id=5]
-[ext_resource path="res://Scripts/ambient.gd" type="Script" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Audio/SFX/click.ogg" type="AudioStream" id=8]
 [ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
@@ -32,33 +29,7 @@ size = 50
 use_filter = true
 font_data = ExtResource( 15 )
 
-[sub_resource type="Animation" id=3]
-length = 5.0
-tracks/0/type = "bezier"
-tracks/0/path = NodePath("ambient:volume_db")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"points": PoolRealArray( -21, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( -0.1, 5 )
-}
-
-[sub_resource type="Animation" id=4]
-length = 4.0
-tracks/0/type = "bezier"
-tracks/0/path = NodePath("titlescreen:volume_db")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"points": PoolRealArray( -4, -0.25, 0, 0.25, 0, -40, -0.3, 11, 0.54, -25, -97, -0.33, 31, 0.29, -9 ),
-"times": PoolRealArray( -0.1, 2.5, 4 )
-}
-
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -69,7 +40,7 @@ expand_margin_right = 15.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=4]
 size = 25
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -78,7 +49,7 @@ use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=5]
 content_margin_left = 15.0
 content_margin_right = 15.0
 bg_color = Color( 0, 0, 0, 1 )
@@ -88,13 +59,13 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.584314, 0.584314, 0.584314, 1 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=6]
 size = 22
 use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -106,13 +77,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=8]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -174,26 +145,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="titlescreen" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 4 )
-volume_db = -4.0
-bus = "Music"
-
-[node name="ambient" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 5 )
-volume_db = -20.7503
-bus = "Music"
-script = ExtResource( 6 )
-
 [node name="click" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
 volume_db = 14.116
 bus = "SFX"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-playback_default_blend_time = 4096.0
-"anims/ambient fade in" = SubResource( 3 )
-"anims/title song fade" = SubResource( 4 )
 
 [node name="Control" type="Control" parent="."]
 margin_left = 640.0
@@ -215,7 +170,7 @@ margin_left = -320.0
 margin_top = 330.0
 margin_right = 320.0
 margin_bottom = 356.0
-custom_styles/normal = SubResource( 5 )
+custom_styles/normal = SubResource( 3 )
 text = "dsf"
 align = 1
 valign = 1
@@ -323,7 +278,7 @@ margin_left = 56.0
 margin_top = 48.0
 margin_right = 96.0
 margin_bottom = 77.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -379,8 +334,8 @@ margin_left = 490.0
 margin_top = 83.308
 margin_right = 790.0
 margin_bottom = 118.308
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 8 )
+custom_styles/normal = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 text = "Popup information"
 align = 1
 valign = 1
@@ -397,8 +352,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 9 )
-custom_fonts/font = SubResource( 10 )
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 text = "Tooltip
 a
 a
@@ -409,8 +364,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 11 )
-custom_fonts/normal_font = SubResource( 10 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/normal_font = SubResource( 8 )
 text = "Tooltip
 a
 a
@@ -418,6 +373,8 @@ a"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 [connection signal="start_game" from="Title" to="." method="_load_game"]
 [connection signal="pressed" from="Title/Button" to="Title" method="_on_start_press"]
 [connection signal="mouse_entered" from="Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]

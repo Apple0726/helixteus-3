@@ -231,9 +231,13 @@ var element = {	"Si":{"density":2.329},
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
 
+var music_player = AudioStreamPlayer.new()
+
 func _ready():
 	view = view_scene.instance()
 	add_child(view)
+	add_child(music_player)
+	music_player.bus = "Music"
 	#noob
 	#AudioServer.set_bus_mute(1,true)
 	
@@ -243,21 +247,32 @@ func _ready():
 		if config.get_value("audio", "mute", false):
 			AudioServer.set_bus_mute(1,true)
 		else:
-			$titlescreen.play()
+			switch_music(load("res://Audio/title1.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		Data.reload()
 	config.save("user://settings.cfg")
 	var dir = Directory.new()
 	dir.remove("user://Save1/main.hx3")
 
+func switch_music(src):
+	#Music fading
+	var tween = Tween.new()
+	add_child(tween)
+	if music_player.playing:
+		tween.interpolate_property(music_player, "volume_db", null, -50, 1, Tween.TRANS_QUAD, Tween.EASE_IN)
+		tween.start()
+		yield(tween, "tween_all_completed")
+	music_player.stream = src
+	music_player.volume_db = -20
+	music_player.play()
+	tween.interpolate_property(music_player, "volume_db", -50, 0, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	tween.start()
+
 func _load_game():
 	$Languages.visible = false
 	#Loads planet scene
 	$click.play()
-	#Music fading
-	$AnimationPlayer.play("title song fade")
-	$ambient.play()
-	$AnimationPlayer.play("ambient fade in")
+	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	
 	dimension = dimension_scene.instance()
 	inventory = inventory_scene.instance()
@@ -392,23 +407,24 @@ func _load_game():
 	
 func popup(txt, dur):
 	var node = $UI/Popup
-	node.modulate.a = 0
 	node.text = txt
 	node.visible = true
+	node.modulate.a = 0
 	yield(get_tree().create_timer(0), "timeout")
 	node.rect_size.x = 0
-	node.rect_position.x = 640 - node.rect_size.x / 2
+	var x_pos = 640 - node.rect_size.x / 2
+	node.rect_position.x = x_pos
 	var tween:Tween = node.get_node("Tween")
 	tween.stop_all()
 	tween.remove_all()
 	tween.interpolate_property(node, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.15)
-	tween.interpolate_property(node, "rect_position", Vector2(490, 83), Vector2(490, 80), 0.15)
+	tween.interpolate_property(node, "rect_position", Vector2(x_pos, 83), Vector2(x_pos, 80), 0.15)
 	tween.interpolate_property(node, "rect_rotation", 0, 0, dur)
 	tween.start()
 	yield(tween, "tween_all_completed")
 	if not tween.is_active():
 		tween.interpolate_property(node, "modulate", null, Color(1, 1, 1, 0), 0.15)
-		tween.interpolate_property(node, "rect_position", Vector2(490, 80), Vector2(490, 83), 0.15)
+		tween.interpolate_property(node, "rect_position", Vector2(x_pos, 80), Vector2(x_pos, 83), 0.15)
 		tween.start()
 
 var dialog:AcceptDialog
@@ -564,6 +580,7 @@ func switch_view(new_view:String, first_time:bool = false):
 			remove_child(HUD)
 			cave = cave_scene.instance()
 			add_child(cave)
+			switch_music(load("res://Audio/cave1.ogg"))
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false
@@ -1493,7 +1510,7 @@ func YNPanel(text:String):
 	YN.dialog_text = text
 	YN.popup_centered()
 
-func add_items(item:String, type:String, dir:String, num:int = 1):
+func add_items(item:String, num:int = 1):
 	var cycles = 0
 	while num > 0 and cycles < 2:
 		var i:int = 0
@@ -1502,7 +1519,7 @@ func add_items(item:String, type:String, dir:String, num:int = 1):
 				break
 			if st != null and st.name == item and st.num != stack_size or st == null:
 				if st == null:
-					items[i] = {"name":item, "num":0, "type":type, "directory":dir}
+					items[i] = {"name":item, "num":0, "type":Helper.get_type_from_name(item), "directory":Helper.get_dir_from_name(item)}
 				var sum = items[i].num + num
 				var diff = stack_size - items[i].num
 				items[i].num = min(stack_size, sum)
@@ -1755,22 +1772,16 @@ func _input(event):
 		money += minerals * 5
 		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
 		minerals = 0
-	if len(hotbar) > 0 and Input.is_action_just_released("hotbar_1"):
+	if Input.is_action_just_released("hotbar_1") and len(hotbar) > 0:
 		var name = hotbar[0]
-		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	if len(hotbar) > 1 and Input.is_action_just_released("hotbar_2"):
-		var name = hotbar[1]
-		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	if len(hotbar) > 2 and Input.is_action_just_released("hotbar_3"):
-		var name = hotbar[2]
-		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	if len(hotbar) > 3 and Input.is_action_just_released("hotbar_4"):
-		var name = hotbar[3]
-		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	if len(hotbar) > 4 and Input.is_action_just_released("hotbar_5"):
-		var name = hotbar[4]
-		inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	
+		if get_item_num(name) > 0:
+			inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	var hotbar_presses = [Input.is_action_just_released("hotbar_1"), Input.is_action_just_released("hotbar_2"), Input.is_action_just_released("hotbar_3"), Input.is_action_just_released("hotbar_4"), Input.is_action_just_released("hotbar_5")]
+	for i in 5:
+		if len(hotbar) > i and hotbar_presses[i]:
+			var name = hotbar[i]
+			if get_item_num(name) > 0:
+				inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
 #	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
 #		var save_game = File.new()
 #		save_game.open("user://Save1/main.hx3", File.WRITE)

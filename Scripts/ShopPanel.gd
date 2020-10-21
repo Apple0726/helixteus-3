@@ -127,7 +127,7 @@ func get_item(name, costs, _type, _dir):
 				buy_pickaxe()
 		else:
 			game.deduct_resources(costs)
-			var items_left = game.add_items(name, _type, _dir, buy_amount.value)
+			var items_left = game.add_items(name, buy_amount.value)
 			if items_left > 0:
 				var refund = costs.duplicate(true)
 				for rsrc in costs:
