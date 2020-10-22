@@ -16,6 +16,10 @@ func _ready():
 	shoot_timer.autostart = true
 	shoot_timer.connect("timeout", self, "on_time_out")
 	
+	aggressive_timer = Timer.new()
+	aggressive_timer.one_shot = true
+	add_child(aggressive_timer)
+	
 	ray_length = 1200.0
 	idle_move_speed = 200.0
 	atk_move_speed = 500.0
@@ -25,7 +29,7 @@ func set_rand():
 
 func on_time_out():
 	shoot_timer.wait_time = 1.0
-	if sees_player:
+	if sees_player or is_aggr():
 		var rand_rot = rand_range(0, PI/4)
 		for i in range(0, 8):
 			var rot = i * PI/4 + rand_rot

@@ -13,6 +13,7 @@ var cave_ref
 var shoot_timer:Timer
 var check_distance_timer:Timer
 var move_timer:Timer
+var aggressive_timer:Timer
 var sees_player:bool = false
 var AI_enabled:bool = false
 var a_n:AStar2D
@@ -48,20 +49,27 @@ func _ready():
 	check_distance_timer.autostart = true
 	check_distance_timer.connect("timeout", self, "check_distance")
 	
+func is_aggr():
+	return aggressive_timer and not aggressive_timer.is_stopped()
+
+func is_not_aggr():
+	if not aggressive_timer:
+		return true
+	return aggressive_timer and aggressive_timer.is_stopped()
 
 var move_path_v = []
 func move_HX():
 	var second_condition = true
 	if not sees_player:
 		second_condition = state == States.IDLE
-	if AI_enabled and second_condition:
+	if AI_enabled and second_condition or is_aggr():
 		move_timer.stop()
 		move_path_v = []
 		var target_tile
 		var curr_tile = cave_ref.get_tile_index(cave_tm.world_to_map(pr.position))
 		var room_tiles = cave_ref.rooms[room].tiles
 		var n = len(room_tiles)
-		if sees_player:
+		if sees_player or is_aggr():
 			target_tile = cave_ref.get_tile_index(cave_tm.world_to_map(cave_ref.rover.position))
 		else:
 			target_tile = room_tiles[Helper.rand_int(0, n-1)]
@@ -87,7 +95,7 @@ func _process(delta):
 		else:
 			state = States.IDLE
 			move_timer.start()
-	if ray.enabled:
+	if ray.enabled and is_not_aggr():
 		ray.cast_to = (cave_ref.rover.position - pr.position).normalized() * ray_length
 		if ray.get_collider() is KinematicBody2D:
 			if not sees_player:
@@ -98,6 +106,15 @@ func _process(delta):
 		else:
 			sees_player = false
 			move_speed = idle_move_speed
+
+func chase_player():
+	if aggressive_timer:
+		var not_chasing = aggressive_timer.is_stopped()
+		aggressive_timer.wait_time = 10.0
+		aggressive_timer.start()
+		if not_chasing:
+			move_HX()
+		move_speed = atk_move_speed
 
 func check_distance():
 	var dist = pr.position.distance_to(cave_ref.rover.position)
@@ -125,3 +142,5 @@ func hit(damage:float):
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
 		cave_ref.get_node("UI/Minimap").remove_child(MM_icon)
 		cave_ref.remove_child(pr)
+	else:
+		chase_player()

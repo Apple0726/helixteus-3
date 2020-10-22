@@ -119,10 +119,26 @@ func set_rover_data():
 				slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
+	$Rover/Bar.max_value = total_HP
 	$UI2/Inventory/Bar.value = weight
 	$UI2/Inventory/Bar.max_value = weight_cap
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
+
+func show_dmg(dmg:int, pos:Vector2):
+	var lb:Label = Label.new()
+	add_child(lb)
+	lb["custom_fonts/font"] = load("res://Resources/DamageText.tres")
+	lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
+	lb.text = "- %s" % [dmg]
+	var tween:Tween = Tween.new()
+	add_child(tween)
+	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1)
+	tween.interpolate_property(lb, "rect_position", pos - Vector2(0, 40), pos - Vector2(0, 55), 1)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(lb)
+	remove_child(tween)
 
 func remove_cave():
 	astar_node.clear()
@@ -429,6 +445,7 @@ func update_health_bar(_HP):
 			st.replace("wrecked", "rekt")
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP
+	$Rover/Bar.value = HP
 
 var mouse_pos = Vector2.ZERO
 var tile_highlighted:int = -1
@@ -689,7 +706,7 @@ func _on_Timer_timeout():
 	tween.stop_all()
 
 func hit_player(damage:float):
-	update_health_bar(HP - damage / def)
+	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float):
