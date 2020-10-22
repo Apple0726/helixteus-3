@@ -259,13 +259,12 @@ func switch_music(src):
 	var tween = Tween.new()
 	add_child(tween)
 	if music_player.playing:
-		tween.interpolate_property(music_player, "volume_db", null, -50, 1, Tween.TRANS_QUAD, Tween.EASE_IN)
+		tween.interpolate_property(music_player, "volume_db", null, -30, 1, Tween.TRANS_QUAD, Tween.EASE_IN)
 		tween.start()
 		yield(tween, "tween_all_completed")
 	music_player.stream = src
-	music_player.volume_db = -20
 	music_player.play()
-	tween.interpolate_property(music_player, "volume_db", -50, 0, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
 
 func _load_game():
@@ -381,6 +380,10 @@ func _load_game():
 		tile_data[42].tile_str = "cave"
 		tile_data[42].cave_id = 0
 		cave_data.append({"num_floors":5, "floor_size":40})
+		tile_data[315].type = "obstacle"
+		tile_data[315].tile_str = "cave"
+		tile_data[315].cave_id = 1
+		cave_data.append({"num_floors":8, "floor_size":50})
 		
 		for u_i in universe_data:
 			u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
@@ -552,6 +555,7 @@ func switch_view(new_view:String, first_time:bool = false):
 				add_child(HUD)
 				remove_child(cave)
 				cave = null
+				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 		c_v = new_view
 	match new_view:
 		"planet":

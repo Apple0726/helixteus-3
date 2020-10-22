@@ -20,7 +20,9 @@ var cave_tm:TileMap
 var room:int
 var spawn_tile:int#Tile on which the enemy spawned
 var move_speed:float = 200.0
-var ray_length:float = 1200.0
+var idle_move_speed:float
+var atk_move_speed:float
+var ray_length:float
 onready var pr = get_parent()
 onready var ray:RayCast2D = $RayCast2D
 
@@ -40,32 +42,12 @@ func _ready():
 	$HP.max_value = total_HP
 	$HP.value = HP
 	
-	shoot_timer = Timer.new()
-	add_child(shoot_timer)
-	shoot_timer.wait_time = 1.0
-	shoot_timer.start()
-	shoot_timer.autostart = true
-	shoot_timer.connect("timeout", self, "on_time_out")
-	
 	check_distance_timer = Timer.new()
 	add_child(check_distance_timer)
 	check_distance_timer.start(0.2)
 	check_distance_timer.autostart = true
 	check_distance_timer.connect("timeout", self, "check_distance")
 	
-	move_timer = Timer.new()
-	add_child(move_timer)
-	move_timer.start(3.0)
-	move_timer.autostart = true
-	move_timer.connect("timeout", self, "move_HX")
-
-func on_time_out():
-	shoot_timer.wait_time = 1.0
-	if sees_player:
-		var rand_rot = rand_range(0, PI/4)
-		for i in range(0, 8):
-			var rot = i * PI/4 + rand_rot
-			cave_ref.add_proj(true, pr.position, 15.0, rot, load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)
 
 var move_path_v = []
 func move_HX():
@@ -110,11 +92,12 @@ func _process(delta):
 		if ray.get_collider() is KinematicBody2D:
 			if not sees_player:
 				sees_player = true
-				move_HX()
-				move_speed = 500.0
+				if move_timer:
+					move_HX()
+					move_speed = atk_move_speed
 		else:
 			sees_player = false
-			move_speed = 200.0
+			move_speed = idle_move_speed
 
 func check_distance():
 	var dist = pr.position.distance_to(cave_ref.rover.position)
@@ -124,7 +107,8 @@ func check_distance():
 	else:
 		AI_enabled = false
 		ray.enabled = false
-		move_timer.start()
+		if move_timer:
+			move_timer.start()
 
 func on_tween_complete():
 	tween2.interpolate_property(self, "position", position, position + Vector2(0, float_height), 0.5, trans_tween, Tween.EASE_IN_OUT)

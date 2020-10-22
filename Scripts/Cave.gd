@@ -178,6 +178,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if randf() < 0.005:
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
+					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [Helper.rand_int(1, 3)]))
 					HX_node.HP = round(10 * difficulty * rand_range(1, 1.4))
 					HX_node.atk = round(4 * difficulty * rand_range(1, 1.2))
 					HX_node.def = round(4 * difficulty * rand_range(1, 1.2))
@@ -238,7 +239,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = randf()
-			var formula = 2.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1)
+			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1)
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
@@ -357,6 +358,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = pos
 		camera.position = pos
 	exit.position = pos
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy.get_node("HX").set_rand()
 
 func on_chest_entered(_body, tile:String):
 	var chest_rsrc = chests[tile].contents
