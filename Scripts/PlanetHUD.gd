@@ -51,7 +51,7 @@ func _on_Mine_mouse_entered():
 
 func _on_PlaceSoil_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("PLACE_SOIL") + " (P)")
+	game.show_tooltip(tr("PLACE_SOIL") + " (L)")
 
 func _on_Vehicles_mouse_entered():
 	on_button = true

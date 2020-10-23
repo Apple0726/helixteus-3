@@ -85,7 +85,8 @@ func _on_Button_pressed():
 		elif type == "Metals":
 			game.mets[obj] += rounded_value
 		game.popup(tr("PURCHASE_SUCCESS"), 1.5)
-	game.inventory.refresh_values()
+	game.inventory.refresh()
+	game.panels.pop_front()
 	visible = false
 
 

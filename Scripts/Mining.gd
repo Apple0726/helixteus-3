@@ -12,6 +12,13 @@ var tween:Tween
 var layer:String
 onready var met_info = game.met_info
 var metal_sprites = []
+var circ_vel:Vector2 = Vector2.ONE
+var points:float#Points for minigame
+onready var circ = $CanvasLayer/Circle
+onready var spd_mult_node = $SpdMult
+var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
+var mouse_pos:Vector2
+var speed_mult:float = 1.0
 
 func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
@@ -26,6 +33,7 @@ func _ready():
 	update_info()
 	generate_rock(false)
 	$Help.visible = game.help.mining
+	circ.visible = not game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
 	if $LayerInfo.visible:
@@ -133,8 +141,6 @@ func generate_rock(new:bool):
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
-var mouse_pos
-
 func _input(event):
 	if event is InputEventMouse:
 		mouse_pos = event.position
@@ -161,6 +167,14 @@ func place_crumbles(num:int, sc:float, v:float):
 func hide_help():
 	$Help.visible = false
 	game.help.mining = false
+	var tween:Tween = Tween.new()
+	circ.modulate.a = 0
+	circ.visible = true
+	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
+	add_child(tween)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(tween)
 
 var help_counter = 0
 func pickaxe_hit():
@@ -182,7 +196,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += game.pickaxe.speed / total_mass * 3000
+	progress += game.pickaxe.speed / total_mass * 3000 * speed_mult
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	if progress >= 100:
@@ -229,6 +243,7 @@ func pickaxe_hit():
 			update_info()
 		else:
 			game.pickaxe.clear()
+			circ_disabled = true
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
 
@@ -240,12 +255,42 @@ func _process(_delta):
 		if cr.sprite.position.y > 1000:
 			remove_child(cr.sprite)
 			crumbles.erase(cr)
+	if circ.visible and not circ_disabled:
+		circ.position += circ_vel * max(1, pow(points / 60.0, 0.25))
+		if circ.position.x < 284:
+			circ_vel.x = -sign(circ_vel.x) * rand_range(0.95, 1.1)
+			circ.position.x = 284
+		if circ.position.x > 484 - 100 * circ.scale.x:
+			circ_vel.x = -sign(circ_vel.x) * rand_range(0.95, 1.1)
+			circ.position.x = 484 - 100 * circ.scale.x
+		if circ.position.y < 284:
+			circ_vel.y = -sign(circ_vel.y) * rand_range(0.95, 1.1)
+			circ.position.y = 284
+		if circ.position.y > 484 - 100 * circ.scale.x:
+			circ_vel.y = -sign(circ_vel.y) * rand_range(0.95, 1.1)
+			circ.position.y = 484 - 100 * circ.scale.x
+		if spd_mult_node.visible:
+			speed_mult = game.clever_round(points / 1600.0 + 1)
+			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
+		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
+			points += 1
+			spd_mult_node.visible = true
+			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
+		else:
+			if points > 0:
+				points -= 2
+				spd_mult_node["custom_colors/font_color"] = Color(1, 0, 0, 1)
+			else:
+				spd_mult_node.visible = false
 
 func _on_Button_button_down():
-	$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-	$PickaxeAnim.play("Pickaxe swing")
+	if not game.pickaxe.empty():
+		circ_disabled = false
+		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+		$PickaxeAnim.play("Pickaxe swing")
 
 func _on_Button_button_up():
+	circ_disabled = true
 	$PickaxeAnim.get_animation("Pickaxe swing").loop = false
 
 func _on_CheckBox_mouse_entered():
@@ -259,7 +304,6 @@ func _on_Layer_mouse_entered():
 
 func _on_Layer_mouse_exited():
 	game.hide_tooltip()
-
 
 func _on_AutoReplace_pressed():
 	game.auto_replace = $AutoReplace.pressed

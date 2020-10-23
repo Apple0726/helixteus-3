@@ -19,10 +19,10 @@
 [ext_resource path="res://Graphics/Tiles/cave.png" type="Texture" id=17]
 [ext_resource path="res://Graphics/Tiles/Empty.jpg" type="Texture" id=18]
 
-[sub_resource type="ConvexPolygonShape2D" id=5]
+[sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 
-[sub_resource type="TileSet" id=3]
+[sub_resource type="TileSet" id=2]
 0/name = "3.jpg 0"
 0/texture = ExtResource( 1 )
 0/tex_offset = Vector2( 0, 0 )
@@ -168,19 +168,19 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 9/navigation_offset = Vector2( 0, 0 )
 9/shape_offset = Vector2( 0, 0 )
 9/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-9/shape = SubResource( 5 )
+9/shape = SubResource( 1 )
 9/shape_one_way = false
 9/shape_one_way_margin = 1.0
 9/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 5 ),
+"shape": SubResource( 1 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 9/z_index = 0
 
-[sub_resource type="TileSet" id=4]
+[sub_resource type="TileSet" id=3]
 0/name = "IceSpritesheet.png 0"
 0/texture = ExtResource( 13 )
 0/tex_offset = Vector2( 0, 0 )
@@ -251,7 +251,7 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 2/shapes = [  ]
 2/z_index = 0
 
-[sub_resource type="TileSet" id=9]
+[sub_resource type="TileSet" id=4]
 0/name = "SoilSpritesheet.png 0"
 0/texture = ExtResource( 16 )
 0/tex_offset = Vector2( 0, 0 )
@@ -276,7 +276,7 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="TileSet" id=6]
+[sub_resource type="TileSet" id=5]
 0/name = "rock_terrain.png 0"
 0/texture = ExtResource( 11 )
 0/tex_offset = Vector2( 0, 0 )
@@ -315,7 +315,7 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 1/shapes = [  ]
 1/z_index = 0
 
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id=6]
 code = "shader_type canvas_item;
 
 float rand(vec2 coord) {
@@ -329,33 +329,33 @@ void fragment() {
 	COLOR = vec4(vec3(value), 1.0);
 }"
 
-[sub_resource type="ShaderMaterial" id=8]
-shader = SubResource( 7 )
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
 
 [node name="Planet" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = SubResource( 3 )
+tile_set = SubResource( 2 )
 cell_size = Vector2( 200, 200 )
 format = 1
 
 [node name="Lakes2" type="TileMap" parent="."]
 modulate = Color( 0.733333, 0.917647, 1, 1 )
-tile_set = SubResource( 4 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
 
 [node name="Lakes1" type="TileMap" parent="."]
 modulate = Color( 1, 0.333333, 0.333333, 1 )
-tile_set = SubResource( 4 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
 
 [node name="Soil" type="TileMap" parent="."]
-tile_set = SubResource( 9 )
+tile_set = SubResource( 4 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
@@ -365,14 +365,14 @@ color = Color( 1, 1, 1, 0.184314 )
 polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 
 [node name="Obstacles" type="TileMap" parent="."]
-tile_set = SubResource( 6 )
+tile_set = SubResource( 5 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
 
 [node name="icon" type="Sprite" parent="."]
 visible = false
-material = SubResource( 8 )
+material = SubResource( 7 )
 position = Vector2( 396, 400 )
 scale = Vector2( 12.375, 12.5 )
 texture = ExtResource( 12 )

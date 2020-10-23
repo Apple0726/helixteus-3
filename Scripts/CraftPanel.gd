@@ -8,6 +8,7 @@ var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 onready var craft_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount
 onready var desc_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Description2
+onready var hbox = $Contents/HBoxContainer/
 
 
 func _ready():
@@ -16,6 +17,7 @@ func _ready():
 	for craft in game.craft_agric_info:
 		var craft_info = game.craft_agric_info[craft]
 		var craft_item = item_for_sale_scene.instance()
+		craft_item.visible = game.science_unlocked.SA
 		craft_item.get_node("SmallButton").text = tr("CRAFT")
 		craft_item.item_name = craft
 		craft_item.item_dir = "Agriculture"
@@ -23,10 +25,14 @@ func _ready():
 		craft_item.item_desc = craft_info.desc if craft_info.has("desc") else ""
 		craft_item.costs = craft_info.costs
 		craft_item.parent = "craft_panel"
-		$Contents/HBoxContainer/Items/Agriculture.add_child(craft_item)
-	_on_Agric_pressed()
+		hbox.get_node("Items/Agriculture").add_child(craft_item)
+	if game.science_unlocked.SA:
+		_on_Agric_pressed()
 
 func refresh():
+	$Tabs/Agriculture.visible = game.science_unlocked.SA
+	for node in hbox.get_node("Items/Agriculture").get_children():
+		node.visible = game.science_unlocked.SA
 	if tab == "agriculture":
 		_on_Agric_pressed()
 

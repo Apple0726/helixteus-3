@@ -54,10 +54,6 @@ func _on_Shop_pressed():
 	click_sound.play()
 	game.toggle_panel(game.shop_panel)
 
-func _on_Button_mouse_entered():
-	on_button = true
-	game.show_tooltip(tr("SETTINGS") + " (P)")
-
 func _on_Shop_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("SHOP") + " (R)")

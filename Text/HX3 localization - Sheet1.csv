@@ -143,7 +143,7 @@ PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q
 UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
 LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
 SECOND,second,seconde,secondo,,Sekunde,segundo,초
-S_SECOND,s,s,s,,,s,초
+S_SECOND,s,s,s,,S,s,초
 STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
 PATH,Path,Voie,Via,,Pfad,Camino,
 CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
@@ -196,14 +196,14 @@ CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas p
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
-INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,Alle einmal nutzbaren Items gibt es hier.,Todos los ítems de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
-PLACE_SOIL,Place soil,,,,Erde Platzieren,Poner tierra,
-PLACE_SOIL_INFO,Click a tile to place soil (10 kg per tile),,,,Klicke auf ein Tile um 10 kg Erde zu platzieren,Haz click en una casilla para poner tierra (10kg por casilla),
+INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,Alle einmal nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
+PLACE_SOIL,Place/remove soil,Placer/enlever terre,Piazzare terra,,Erde Platzieren,Poner tierra,
+PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour place ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Tile um 10 kg Erde zu platzieren,Haz click en una casilla para poner tierra (10 kg por casilla),
 NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,No tienes recursos suficientes.,자원이 부족합니다.
 NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,No tienes tierra suficiente.,흙이 부족합니다.
 NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,No tienes suficientes puntos de ciencia.,과학 포인트가 부족합니다.
 PLANT_TITLE,{metal} plant,Plante en {metal},Pianta di {metal},,{metal} pflanzen,Planta de {metal},{metal} 식물
-PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),Planta algo aquí! (Las semillas son componentes fabricables) ,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다)
+PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),Planta algo aquí! (Las semillas son objetos fabricables) ,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다)
 CLICK_TO_USE,Click to use,Cliquez pour utiliser,Cliccare per usare,,,Click para usar,클릭: 아이템 쓰기
 SHIFT_CLICK_TO_USE_ALL,Shift click to use all,Maj + clic pour tout utiliser,Shift + click per usare tutto,,,Shift click para usarlo todo,Shift 클릭: 이 아이템 모두 쓰기
 X_TO_THROW_ONE,Press X to throw one,Appuyer sur X pour jeter,Premere X per buttare,,,Presiona X para deshacerte de uno,X: 하나 버리기
@@ -218,8 +218,8 @@ LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,Semillas de plo
 SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,Cultiva @i %s kg,@i %s kg를 자랍니다 
 FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,Fertilizante,비료
 FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,El fertilizante acelera el crecimiento de las plantas por una hora.,비료는 식물의 성장을 1시간 가속화합니다.
-NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los componentes fueron fabricados,
-NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los componentes fueron comprados,
+NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los objetos fueron fabricados,
+NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los objetos fueron comprados,
 HIDE_HELP,Press F7 to not show this information again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,Presiona F7 para no volver a mostrar este mensaje,
 HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,Presiona F7 para ocultar esta información,단축키 정보 숨길려면 F7 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,Extrae %s,추출 속도: %s
@@ -266,24 +266,32 @@ ROVER_CONSTRUCTION,Rover construction,Construction des rovers,Costruzione dei ro
 ROVER_CONSTR_CENTER,Rover construction center,Centre de construction des rovers,Centro di costruzione dei rover,,,Centro de construcción de rovers,
 RC_DESC,Explore caves with rovers!,Explorez des grottes avec des rovers!,Esplora grotte con i rover!,,,Explora cuevas con rovers!,
 MULT_ROVER_STAT_BY,Multiplies rovers' stats by %s,Multiplie les stats des rovers par %s,Moltiplica le stat dei rover per %s,,,Mulitplica las estadísticas de los rovers por %s,
-SA_DONE,You unlocked space agriculture! You can now buy seeds in the shop.,,,,,Haz desbloqueado agricultura espacial! Ahora puedes comprar semillas en la tienda.,
+SA_DONE,You unlocked space agriculture! You can now craft seeds and fertilizers.,,,,,Haz desbloqueado agricultura espacial!,
 RC_DONE,You unlocked rover construction! You can now construct the rover construction center.,,,,,Haz desbloqueado construcción de rover! Ahora puedes construir el rover en su centro de construcción.,
 CONSTRUCT_ROVER,Construct a rover,Construire un rover,Costruire un rover,,,Construir un rover,
 STATS,Stats,Stats,Stat,,,Estadísticas,
-LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers,,,,,Permite al rover atacar enemigos con lasers,
-MINING_LASER_DESC,Allows the rover to mine rocks in caves,,,,,Le permite al rover minar rocas en las cuevas,
-CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Click para remover,
+LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers,Permet au rover d'attaquer les ennemis avec des lasers,,,,Permite al rover atacar enemigos con lasers,
+MINING_LASER_DESC,Allows the rover to mine rocks in caves,Permet au rover de miner les roches dans les grottes,,,,Le permite al rover minar rocas en las cuevas,
+CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Click para remover,클릭: 제거하기
 CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,Click para añadir un componente,
 ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,Este rover está siendo construido!,
-LASER,Laser,Laser,,,,Láser,
+LASER,Laser,Laser,Laser,,,Láser,레이저
 MINING_LASER,Mining laser,,,,,Láser de minería,
 COOLDOWN,Cooldown,,,,,Cooldown,
 DAMAGE,Damage,Dégâts,Danni,,,Daño,
-CLICK_TO_USE_ROVER,Click to use this rover to explore a cave,,,,,Haz click en este rover para explorar una cueva,
-CLICK_A_CAVE_TO_EXPLORE,Click a cave to explore,,,,,Haz click en una cueva para explorarla,
-RCC_DESC,Build rovers with this building.,,,,,,
-SHIFT_CLICK_TO_LOOT_ROVER,Shift click to take everything from the rover,,,,,,
-ROVER_REKT_TITLE,Rover destroyed,,,,,,
-ROVER_REKT,Your rover got wrecked by enemies! It lost half of each resource as a result (rounded down).,,,,,,
-YOU_MINED,You mined:,,,,,,
-TIER_X_CHEST,Tier %s chest,,,,,,
+CLICK_TO_USE_ROVER,Click to use this rover to explore a cave,Cliquez pour utiliser ce rover comme explorateur de grotte,,,,Haz click en este rover para explorar una cueva,
+CLICK_A_CAVE_TO_EXPLORE,Click a cave to explore,Cliquez une grotte à explorer,Cliccare una grotta da esplorare,,,Haz click en una cueva para explorarla,
+RCC_DESC,Build rovers with this building.,Construisez des rovers avec ce bâtiment.,,,,Construye rovers en este edificio.,
+SHIFT_CLICK_TO_LOOT_ROVER,Shift click to take everything from the rover,Maj + clic pour prendre tout ce que le rover possède,,,,Shift click para descargar todo del rover,
+ROVER_REKT_TITLE,Rover destroyed,Rover détruit,Rover distrutto,,,Rover destruido,
+ROVER_REKT,Your rover got wrecked by enemies! It lost half of each resource as a result (rounded down).,,,,,"Tu rover fue destruido por enemigos! como resultado, perdió la mitad de sus recursos (Redondeado).",
+YOU_MINED,You mined:,Tu as miné: ,Hai minato:,,,Minaste:,
+TIER_X_CHEST,Tier %s chest,Coffre de rang %s,,,,Cofre de rango %s,
+HX_CORE,Helix core,Noyau Helix,Nucleo Helix,,,Núcleo Helix,핼릭스 핵
+ITEMS_COLLECTED,Items collected,,,,,Objetos recogidos,
+SETTINGS,Settings,Paramètres,Impostazioni,,,Ajustes,설정
+MASTER,Master,,,,,Todo,
+MUSIC,Music,Musique,Musica,,,Música,음악
+SFX,Sounds,Sons,Suoni,,,Sonidos,
+HOLE_DEPTH,Hole depth,Profondeur du trou,Profondità del buco,,,Profundidad,구멍 크기
+SPEED_MULTIPLIER,Speed multiplier,Multiplicateur de vitesse,Moltiplicatore di velocità,,,Multiplicador de velocidad,속도 승수

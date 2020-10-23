@@ -34,7 +34,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Main audio" type="HSlider" parent="."]
+[node name="Master" type="HSlider" parent="."]
 margin_left = 64.0
 margin_top = 56.0
 margin_right = 384.0
@@ -45,11 +45,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Main audio"]
+[node name="Label" type="Label" parent="Master"]
 margin_right = 320.0
 margin_bottom = 24.0
 custom_fonts/font = SubResource( 1 )
-text = "Main audio"
+text = "MASTER"
 align = 1
 
 [node name="Music" type="HSlider" parent="."]
@@ -67,10 +67,10 @@ __meta__ = {
 margin_right = 320.0
 margin_bottom = 24.0
 custom_fonts/font = SubResource( 2 )
-text = "Music"
+text = "MUSIC"
 align = 1
 
-[node name="Sound Effects" type="HSlider" parent="."]
+[node name="SFX" type="HSlider" parent="."]
 margin_left = 64.0
 margin_top = 184.0
 margin_right = 384.0
@@ -81,19 +81,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Sound Effects"]
+[node name="Label" type="Label" parent="SFX"]
 margin_right = 320.0
 margin_bottom = 24.0
 custom_fonts/font = SubResource( 3 )
-text = "Sound effects"
+text = "SFX"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="."]
 margin_right = 896.0
 margin_bottom = 56.0
 custom_fonts/font = SubResource( 4 )
-text = "Settings"
+text = "SETTINGS"
 align = 1
-[connection signal="value_changed" from="Main audio" to="." method="_on_Main_audio_value_changed"]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
-[connection signal="value_changed" from="Sound Effects" to="." method="_on_Sound_Effects_value_changed"]
+[connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]

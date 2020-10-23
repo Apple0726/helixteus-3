@@ -61,15 +61,15 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 80000
+var money:float = 800
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:float = 0
-var energy:float = 20000
-var SP:float = 500
+var energy:float = 200
+var SP:float = 0
 #Dimension remnants
 var DRs:float = 0
-var lv:int = 5
+var lv:int = 1
 var xp:float = 0
 var xp_to_lv:float = 10
 
@@ -90,7 +90,7 @@ var auto_replace:bool = false
 #Stores information of the current pickaxe the player is holding
 var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
-var science_unlocked:Dictionary = {"SA":false, "RC":true}
+var science_unlocked:Dictionary = {"SA":false, "RC":false}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
@@ -126,10 +126,10 @@ var help:Dictionary = {"mining":true,
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
-						"SP":true,
+						"SP":false,
 						"mining_layer":false,
 						"plant_button":false,
-						"vehicles_button":true,
+						"vehicles_button":false,
 						"materials":false,
 						"metals":false,
 						"glass":false,
@@ -155,7 +155,8 @@ var tile_data:Array = []
 var cave_data:Array = []
 
 #Vehicle data
-var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "weight_cap":8000.0, "inventory":[{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}], "i_w_w":{}}]
+#var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "weight_cap":8000.0, "inventory":[{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}], "i_w_w":{}}]
+var rover_data:Array = []
 var ship_data:Array = []
 var satellite_data:Array = []
 
@@ -165,6 +166,7 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "director
 var hotbar:Array = []
 
 ############ End save data ############
+
 var save_u = false
 var save_sc = false
 var save_c = false
@@ -175,6 +177,7 @@ var save_t = false
 
 var EA_planet_visited = false
 var EA_galaxy_visited = false
+var EA_cave_visited = false
 
 var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
@@ -253,6 +256,11 @@ func _ready():
 	config.save("user://settings.cfg")
 	var dir = Directory.new()
 	dir.remove("user://Save1/main.hx3")
+	
+	settings = settings_scene.instance()
+	settings.visible = false
+	$Panels.add_child(settings)
+
 
 func switch_music(src):
 	#Music fading
@@ -275,7 +283,6 @@ func _load_game():
 	
 	dimension = dimension_scene.instance()
 	inventory = inventory_scene.instance()
-	settings = settings_scene.instance()
 	shop_panel = shop_panel_scene.instance()
 	construct_panel = construct_panel_scene.instance()
 	craft_panel = craft_panel_scene.instance()
@@ -300,9 +307,6 @@ func _load_game():
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
-
-	settings.visible = false
-	$Panels.add_child(settings)
 
 	dimension.visible = false
 	add_child(dimension)
@@ -406,8 +410,8 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 	remove_child($Title)
-	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find shortcuts not shown in the game.", "Early access note")
-	
+	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
+
 func popup(txt, dur):
 	var node = $UI/Popup
 	node.text = txt
@@ -434,12 +438,13 @@ var dialog:AcceptDialog
 
 func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
 	if dialog:
-		$Control.remove_child(dialog)
+		$UI.remove_child(dialog)
 	dialog = AcceptDialog.new()
+	dialog.theme = load("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
 	$PopupBackground.visible = true
 	move_child($PopupBackground, get_child_count())
-	$Control.add_child(dialog)
+	$UI.add_child(dialog)
 	dialog.window_title = title
 	dialog.dialog_text = txt
 	dialog.popup_centered()
@@ -1750,11 +1755,14 @@ func _input(event):
 		item_to_use.num = 0
 		update_item_cursor()
 		if len(panels) != 0:
-			if panels[0] == inventory.buy_sell:
-				inventory.buy_sell.visible = false
-				panels.pop_front()
-			elif panels[0] == upgrade_panel:
-				remove_upgrade_panel()
+			if c_v != "":
+				if panels[0] == inventory.buy_sell:
+					inventory.buy_sell.visible = false
+					panels.pop_front()
+				elif panels[0] == upgrade_panel:
+					remove_upgrade_panel()
+				else:
+					toggle_panel(panels[0])
 			else:
 				toggle_panel(panels[0])
 			hide_tooltip()
@@ -1840,7 +1848,8 @@ func update_item_cursor():
 		$Control/BottomInfo.visible = false
 	else:
 		item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
-	HUD.update_hotbar()
+	if HUD:
+		HUD.update_hotbar()
 	move_child(item_cursor, get_child_count())
 
 func hide_item_cursor():
@@ -1872,3 +1881,13 @@ func _on_lg_mouse_entered(extra_arg_0):
 
 func _on_lg_mouse_exited():
 	hide_tooltip()
+
+func _on_Settings_mouse_entered():
+	show_tooltip(tr("SETTINGS") + " (P)")
+
+func _on_Settings_mouse_exited():
+	hide_tooltip()
+
+func _on_Settings_pressed():
+	$click.play()
+	toggle_panel(settings)

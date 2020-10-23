@@ -1,7 +1,8 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
+[ext_resource path="res://Graphics/Buttons/settings.png" type="Texture" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Audio/SFX/click.ogg" type="AudioStream" id=8]
 [ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
@@ -64,6 +65,12 @@ size = 22
 use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
+
+[sub_resource type="InputEventAction" id=10]
+action = "settings"
+
+[sub_resource type="ShortCut" id=11]
+shortcut = SubResource( 10 )
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
@@ -196,9 +203,18 @@ texture_normal = ExtResource( 12 )
 expand = true
 stretch_mode = 4
 
-[node name="fr" type="TextureButton" parent="Languages"]
+[node name="es" type="TextureButton" parent="Languages"]
 margin_left = 80.0
 margin_right = 140.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 16 )
+expand = true
+stretch_mode = 4
+
+[node name="fr" type="TextureButton" parent="Languages"]
+margin_left = 160.0
+margin_right = 220.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 9 )
@@ -206,8 +222,8 @@ expand = true
 stretch_mode = 4
 
 [node name="it" type="TextureButton" parent="Languages"]
-margin_left = 160.0
-margin_right = 220.0
+margin_left = 240.0
+margin_right = 300.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 10 )
@@ -215,20 +231,11 @@ expand = true
 stretch_mode = 4
 
 [node name="de" type="TextureButton" parent="Languages"]
-margin_left = 240.0
-margin_right = 300.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 17 )
-expand = true
-stretch_mode = 4
-
-[node name="es" type="TextureButton" parent="Languages"]
 margin_left = 320.0
 margin_right = 380.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
+texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 4
 
@@ -322,7 +329,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.7:"
+text = "Alpha v0.7: 23 Oct 2020"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -344,6 +351,19 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="UI/Popup"]
+
+[node name="Settings" type="TextureButton" parent="UI"]
+margin_left = 1248.0
+margin_right = 1280.0
+margin_bottom = 32.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 11 )
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 4
@@ -380,21 +400,24 @@ __meta__ = {
 [connection signal="mouse_entered" from="Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
 [connection signal="mouse_exited" from="Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~95%)" ]]
+[connection signal="mouse_entered" from="Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~95%)" ]]
+[connection signal="mouse_exited" from="Languages/es" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
+[connection signal="mouse_entered" from="Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~90%)" ]]
 [connection signal="mouse_exited" from="Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
 [connection signal="mouse_entered" from="Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~85%)" ]]
 [connection signal="mouse_exited" from="Languages/it" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~85%)" ]]
+[connection signal="mouse_entered" from="Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~70%)" ]]
 [connection signal="mouse_exited" from="Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~75%)" ]]
-[connection signal="mouse_exited" from="Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~50%)" ]]
+[connection signal="mouse_entered" from="Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~60%)" ]]
 [connection signal="mouse_exited" from="Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
 [connection signal="mouse_entered" from="Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "Русский (4 lines)" ]]
 [connection signal="mouse_exited" from="Languages/ru" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
+[connection signal="mouse_entered" from="UI/Settings" to="." method="_on_Settings_mouse_entered"]
+[connection signal="mouse_exited" from="UI/Settings" to="." method="_on_Settings_mouse_exited"]
+[connection signal="pressed" from="UI/Settings" to="." method="_on_Settings_pressed"]

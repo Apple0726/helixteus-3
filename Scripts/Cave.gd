@@ -88,6 +88,9 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
+	if not game.EA_cave_visited:
+		game.long_popup("Caves right now are very unpolished, possibly unbalanced and may contain bugs. Don't expect too much for now!", "Early access note")
+		game.EA_cave_visited = true
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -132,9 +135,9 @@ func show_dmg(dmg:int, pos:Vector2):
 	lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
 	lb.text = "- %s" % [dmg]
 	var tween:Tween = Tween.new()
-	add_child(tween)
 	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1)
 	tween.interpolate_property(lb, "rect_position", pos - Vector2(0, 40), pos - Vector2(0, 55), 1)
+	add_child(tween)
 	tween.start()
 	yield(tween, "tween_all_completed")
 	remove_child(lb)
@@ -403,8 +406,8 @@ func on_chest_exited(_body):
 	$UI2/Panel.visible = false
 
 func generate_treasure(tier:int):
-	var contents = {	"money":round(rand_range(20000, 50000) * pow(tier, 3.0)),
-						"minerals":round(rand_range(4000, 10000) * pow(tier, 3.0)),
+	var contents = {	"money":round(rand_range(5000, 20000) * pow(tier, 3.0)),
+						"minerals":round(rand_range(1000, 4000) * pow(tier, 3.0)),
 						"hx_core":Helper.rand_int(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
@@ -446,6 +449,7 @@ func update_health_bar(_HP):
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
+	$UI2/HP/Label.text = "%s / %s" % [ceil(HP), total_HP]
 
 var mouse_pos = Vector2.ZERO
 var tile_highlighted:int = -1

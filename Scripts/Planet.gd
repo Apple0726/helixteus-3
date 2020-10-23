@@ -154,6 +154,8 @@ func show_tooltip(tile):
 						game.help_str = "cave_desc"
 					else:
 						tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
+	elif tile.depth > 0:
+		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	if adv:
 		if tile.tile_str == "":
 			game.hide_adv_tooltip()
@@ -269,7 +271,7 @@ func _input(event):
 				game.get_node("Control/BottomInfo").visible = false
 				game.c_t = tile_id + id_offset
 				game.switch_view("mining")
-			elif placing_soil and not tile.has("type"):
+			elif placing_soil:
 				if game.check_enough({"soil":10}):
 					game.deduct_resources({"soil":10})
 					tile.type = "plant"
@@ -278,7 +280,12 @@ func _input(event):
 				else:
 					game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
 		elif tile.type == "plant":
-			if tile.tile_str == "":
+			if placing_soil:
+				game.add_resources({"soil":10})
+				tile.erase("type")
+				$Soil.set_cell(x_pos, y_pos, -1)
+				$Soil.update_bitmask_region()
+			elif tile.tile_str == "":
 				if game.item_to_use.type == "seeds":
 					#Plants can't grow when not adjacent to lakes
 					var check_lake = check_lake(tile_id)
@@ -297,7 +304,7 @@ func _input(event):
 						tile.is_growing = true
 						add_plant(tile_id + id_offset, game.item_to_use.name)
 						game.update_item_cursor()
-						$PlantingSounds.get_node(String(Helper.rand_int(1,3))).play()
+						game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
 					else:
 						game.popup(tr("NOT_ADJACENT_TO_LAKE") % [game.craft_agric_info[game.item_to_use.name].lake], 2)
 			else:#When clicking a planted crop
