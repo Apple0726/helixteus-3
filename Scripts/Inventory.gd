@@ -44,10 +44,10 @@ func _on_Items_pressed():
 		var slot = slot_scene.instance()
 		if item != null:
 			slot.get_node("Label").text = String(item.num)
-			slot.get_node("TextureRect").texture = load("res://Graphics/" + item.directory  + "/" + item.name + ".png")
+			slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item.name)  + "/" + item.name + ".png")
 			slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [item.name, item.num, i])
 			slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name, item.type, item.directory])
+			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name])
 		inventory_grid.add_child(slot)
 		i += 1
 
@@ -65,7 +65,7 @@ func on_slot_out():
 	item_hovered = ""
 	game.hide_tooltip()
 
-func on_slot_press(name:String, type:String, dir:String):
+func on_slot_press(name:String):
 	game.hide_tooltip()
 	if visible:
 		game.toggle_panel(game.inventory)
@@ -79,6 +79,7 @@ func on_slot_press(name:String, type:String, dir:String):
 	game.item_to_use.name = name
 	game.item_to_use.num = num
 	var texture
+	var type:String = Helper.get_type_from_name(name)
 	if type == "craft_agric_info":
 		if game.craft_agric_info[name].has("grow_time"):
 			game.put_bottom_info(tr("PLANT_SEED_INFO"))
@@ -91,7 +92,7 @@ func on_slot_press(name:String, type:String, dir:String):
 	elif type == "overclock_info":
 		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"))
 		game.item_to_use.type = "overclock"
-	texture = load("res://Graphics/" + dir + "/" + name + ".png")
+	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
 	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():

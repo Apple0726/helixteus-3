@@ -114,7 +114,7 @@ func set_rover_data():
 		var dir = Directory.new()
 		var dir_str = "res://Graphics/Cave/InventoryItems/" + rsrc + ".png"
 		var texture_exists = dir.file_exists(dir_str)
-		if texture_exists:
+		if rsrc == "attack" or rsrc == "mining":
 			slot.get_node("TextureRect").texture = load(dir_str)
 		else:
 			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])

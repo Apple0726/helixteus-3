@@ -48,7 +48,7 @@ func _on_Agric_pressed():
 func remove_costs():
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	for child in vbox.get_children():
-		if not child is Label and not child is RichTextLabel:
+		if child is HBoxContainer:
 			vbox.remove_child(child)
 
 var item_costs
@@ -56,7 +56,7 @@ var item_total_costs
 var item_type
 var item_dir
 var item_name
-var item_num
+var item_num:int = 1
 
 func set_item_info(name:String, desc:String, costs:Dictionary, type:String, dir:String):
 	remove_costs()
@@ -65,8 +65,9 @@ func set_item_info(name:String, desc:String, costs:Dictionary, type:String, dir:
 	item_costs = costs
 	item_type = type
 	item_dir = dir
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount.value = 1
 	item_total_costs = costs.duplicate(true)
+	for cost in costs:
+		item_total_costs[cost] = costs[cost] * item_num
 	item_name = name
 	desc = get_item_desc(name)
 	var imgs = []
@@ -80,7 +81,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, type:String, dir:
 	desc_txt.text = ""
 	game.add_text_icons(desc_txt, desc, imgs, 22)
 	$Contents/HBoxContainer/ItemInfo.visible = true
-	Helper.put_rsrc(vbox, 32, costs, false, true)
+	Helper.put_rsrc(vbox, 32, item_total_costs, false, true)
 
 func get_item(name, costs, type, dir):
 	if game.check_enough(costs):
@@ -102,6 +103,7 @@ func _on_Craft_pressed():
 
 
 func _on_CraftAmount_value_changed(value):
+	item_num = value
 	remove_costs()
 	for cost in item_costs:
 		item_total_costs[cost] = item_costs[cost] * value

@@ -56,51 +56,65 @@ __meta__ = {
 }
 
 [node name="PlaceSoil" type="TextureButton" parent="VBoxContainer"]
-visible = false
-margin_top = 232.0
+margin_top = 200.0
 margin_right = 64.0
-margin_bottom = 296.0
+margin_bottom = 264.0
+rect_min_size = Vector2( 0, 64 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 2 )
 texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
 
 [node name="Mine" type="TextureButton" parent="VBoxContainer"]
-margin_top = 232.0
+margin_top = 264.0
 margin_right = 64.0
-margin_bottom = 296.0
+margin_bottom = 328.0
+rect_min_size = Vector2( 0, 64 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
 texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Construct" type="TextureButton" parent="VBoxContainer"]
-margin_top = 296.0
+margin_top = 328.0
 margin_right = 64.0
-margin_bottom = 360.0
+margin_bottom = 392.0
+rect_min_size = Vector2( 0, 64 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 6 )
 texture_normal = ExtResource( 1 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Vehicles" type="TextureButton" parent="VBoxContainer"]
-margin_top = 360.0
+margin_top = 392.0
 margin_right = 64.0
-margin_bottom = 424.0
+margin_bottom = 456.0
+rect_min_size = Vector2( 0, 64 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 8 )
 texture_normal = ExtResource( 6 )
+expand = true
+stretch_mode = 5
 
 [node name="StarSystem" type="TextureButton" parent="VBoxContainer"]
-margin_top = 424.0
+margin_top = 456.0
 margin_right = 64.0
-margin_bottom = 488.0
+margin_bottom = 520.0
+rect_min_size = Vector2( 0, 64 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 10 )
 texture_normal = ExtResource( 4 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -66,13 +66,13 @@ use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="InputEventAction" id=10]
+[sub_resource type="InputEventAction" id=7]
 action = "settings"
 
-[sub_resource type="ShortCut" id=11]
-shortcut = SubResource( 10 )
+[sub_resource type="ShortCut" id=8]
+shortcut = SubResource( 7 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -84,13 +84,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=10]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -290,15 +290,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PopupBackground" type="ColorRect" parent="."]
-visible = false
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0, 0, 0, 0.564706 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="PlantingSounds" type="Node" parent="."]
 
 [node name="1" type="AudioStreamPlayer" parent="PlantingSounds"]
@@ -357,10 +348,19 @@ margin_left = 1248.0
 margin_right = 1280.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 11 )
+shortcut = SubResource( 8 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PopupBackground" type="ColorRect" parent="UI"]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
+color = Color( 0, 0, 0, 0.564706 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -372,8 +372,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 text = "Tooltip
 a
 a
@@ -384,8 +384,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 9 )
-custom_fonts/normal_font = SubResource( 8 )
+custom_styles/normal = SubResource( 11 )
+custom_fonts/normal_font = SubResource( 10 )
 text = "Tooltip
 a
 a

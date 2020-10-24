@@ -17,7 +17,8 @@ func refresh():
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
 	for rov in game.rover_data:
-		if rov.c_p == game.c_p or rov.ready:
+		#if rov.c_p == game.c_p or rov.ready:
+		if rov.ready:
 			var rover = TextureButton.new()
 			rover.texture_normal = load("res://Graphics/Cave/Rover.png")
 			rover.set_anchors_and_margins_preset(Control.PRESET_CENTER)

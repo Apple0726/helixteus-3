@@ -90,8 +90,6 @@ var auto_replace:bool = false
 #Stores information of the current pickaxe the player is holding
 var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
-var science_unlocked:Dictionary = {"SA":false, "RC":false}
-
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
 						"sand":0,
@@ -122,6 +120,8 @@ var help:Dictionary = {"mining":true,
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
 }
+
+var science_unlocked:Dictionary = {"SA":false, "RC":false}
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
@@ -162,6 +162,7 @@ var satellite_data:Array = []
 
 #Your inventory
 var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
+#var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
 var hotbar:Array = []
 
@@ -189,7 +190,7 @@ var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 
-var mat_info = {	"coal":{"value":10},#One kg of coal = $10
+var mat_info = {	"coal":{"value":5},#One kg of coal = $10
 					"glass":{"value":20},
 					"sand":{"value":4},
 					"clay":{"value":12},
@@ -212,12 +213,12 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}
 					}
 
 var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
-						"speedup2":{"costs":{"money":3000}, "time":15*60000},}
+						"speedup2":{"costs":{"money":2800}, "time":15*60000},}
 
 var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
 						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000}}
 
-var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":2*3600000, "lake":"water", "produce":50},
+var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var other_items_info = {"hx_core":{}}
@@ -437,13 +438,14 @@ func popup(txt, dur):
 var dialog:AcceptDialog
 
 func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
+	hide_adv_tooltip()
+	hide_tooltip()
 	if dialog:
 		$UI.remove_child(dialog)
 	dialog = AcceptDialog.new()
 	dialog.theme = load("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
-	$PopupBackground.visible = true
-	move_child($PopupBackground, get_child_count())
+	$UI/PopupBackground.visible = true
 	$UI.add_child(dialog)
 	dialog.window_title = title
 	dialog.dialog_text = txt
@@ -458,7 +460,7 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	dialog.get_ok().text = ok_txt
 
 func popup_close():
-	$PopupBackground.visible = false
+	$UI/PopupBackground.visible = false
 
 func popup_action(action:String):
 	call(action)

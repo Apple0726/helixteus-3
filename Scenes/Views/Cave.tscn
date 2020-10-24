@@ -959,6 +959,7 @@ __meta__ = {
 }
 
 [node name="Panel" type="PanelContainer" parent="UI2"]
+visible = false
 margin_left = 1144.0
 margin_top = 392.0
 margin_right = 1208.0

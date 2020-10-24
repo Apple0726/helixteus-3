@@ -8,6 +8,7 @@ var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 onready var buy_amount = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
 onready var buy_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy
+var num:int = 1
 
 func _ready():
 	tween = Tween.new()
@@ -103,13 +104,15 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	item_type = _type
 	item_dir = _dir
 	if tab == "pickaxes":
-		buy_amount.value = 1
 		var pickaxe_info = game.pickaxe_info[name]
 		desc += ("\n\n" + tr("MINING_SPEED") + ": %s\n" + tr("DURABILITY") + ": %s") % [pickaxe_info.speed, pickaxe_info.durability]
+	else:
+		for cost in costs:
+			item_total_costs[cost] = costs[cost] * num
 	desc += "\n"
 	vbox.get_node("Description").text = desc
 	$Contents/HBoxContainer/ItemInfo.visible = true
-	Helper.put_rsrc(vbox, 36, costs, false)
+	Helper.put_rsrc(vbox, 36, item_total_costs, false)
 
 func _on_Buy_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
@@ -160,9 +163,10 @@ func buy_pickaxe():
 
 
 func _on_BuyAmount_value_changed(value):
+	num = value
 	remove_costs()
 	for cost in item_costs:
-		item_total_costs[cost] = item_costs[cost] * value
+		item_total_costs[cost] = item_costs[cost] * num
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	Helper.put_rsrc(vbox, 36, item_total_costs, false)
 

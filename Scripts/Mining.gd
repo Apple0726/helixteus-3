@@ -256,7 +256,7 @@ func _process(_delta):
 			remove_child(cr.sprite)
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
-		circ.position += circ_vel * max(1, pow(points / 60.0, 0.25))
+		circ.position += circ_vel * max(1, pow(points / 60.0, 0.28))
 		if circ.position.x < 284:
 			circ_vel.x = -sign(circ_vel.x) * rand_range(0.95, 1.1)
 			circ.position.x = 284
@@ -270,18 +270,16 @@ func _process(_delta):
 			circ_vel.y = -sign(circ_vel.y) * rand_range(0.95, 1.1)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = game.clever_round(points / 1600.0 + 1)
+			speed_mult = game.clever_round(points / 1800.0 + 1)
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
+		spd_mult_node.visible = bool(points)
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
 			points += 1
-			spd_mult_node.visible = true
 			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:
-				points -= 2
+				points = max(points - 3, 0)
 				spd_mult_node["custom_colors/font_color"] = Color(1, 0, 0, 1)
-			else:
-				spd_mult_node.visible = false
 
 func _on_Button_button_down():
 	if not game.pickaxe.empty():

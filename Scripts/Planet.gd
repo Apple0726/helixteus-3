@@ -104,15 +104,15 @@ func show_tooltip(tile):
 				mult = tile.overclock_mult
 			match strs[0]:
 				"ME":
-					tooltip = tr("EXTRACTS_X") % [(Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]]
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 					icons = [Data.icons.ME, Data.icons.ME]
 					adv = true
 				"PP":
-					tooltip = tr("GENERATES_X") % [(Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]]
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 					icons = [Data.icons.PP, Data.icons.PP]
 					adv = true
 				"RL":
-					tooltip = tr("PRODUCES_X") % [(Data.path_1[tile.tile_str].desc) % [tile.path_1_value * mult]]
+					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value * mult]
 					icons = [Data.icons.RL]
 					adv = true
 				"MS":
@@ -192,7 +192,7 @@ func _input(event):
 				return
 		var mouse_pos = to_local(event.position)
 		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
-		var black_bg = game.get_node("PopupBackground").visible
+		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
 		$WhiteRect.position.y = floor(mouse_pos.y / 200) * 200

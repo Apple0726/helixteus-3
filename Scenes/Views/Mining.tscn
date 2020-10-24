@@ -418,6 +418,7 @@ position = Vector2( 100, 100 )
 frames = SubResource( 5 )
 
 [node name="SquareBar" parent="Tile" instance=ExtResource( 10 )]
+mouse_filter = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 3
