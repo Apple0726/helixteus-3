@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Icons/Energy.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
+[ext_resource path="res://Graphics/Buttons/MineralUpgrades.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Buttons/Shop.png" type="Texture" id=9]
@@ -58,6 +59,12 @@ action = "shop"
 
 [sub_resource type="ShortCut" id=9]
 shortcut = SubResource( 8 )
+
+[sub_resource type="InputEventAction" id=12]
+action = "mineral_upgrades"
+
+[sub_resource type="ShortCut" id=13]
+shortcut = SubResource( 12 )
 
 [sub_resource type="InputEventAction" id=10]
 action = "science_tree"
@@ -304,11 +311,10 @@ __meta__ = {
 }
 
 [node name="Buttons" type="VBoxContainer" parent="."]
-margin_left = 1216.0
+margin_left = 1232.0
 margin_top = 48.0
 margin_right = 1280.0
 margin_bottom = 720.0
-rect_min_size = Vector2( 64, 0 )
 custom_constants/separation = 0
 alignment = 1
 __meta__ = {
@@ -320,33 +326,56 @@ visible = false
 margin_top = 240.0
 margin_right = 64.0
 margin_bottom = 304.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 5 )
 texture_normal = ExtResource( 1 )
+expand = true
+stretch_mode = 5
 
 [node name="Inventory" type="TextureButton" parent="Buttons"]
 margin_top = 240.0
-margin_right = 64.0
-margin_bottom = 304.0
+margin_right = 48.0
+margin_bottom = 288.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 7 )
 texture_normal = ExtResource( 10 )
+expand = true
+stretch_mode = 5
 
 [node name="Shop" type="TextureButton" parent="Buttons"]
-margin_top = 304.0
-margin_right = 64.0
-margin_bottom = 368.0
+margin_top = 288.0
+margin_right = 48.0
+margin_bottom = 336.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 9 )
 texture_normal = ExtResource( 9 )
+expand = true
+stretch_mode = 5
+
+[node name="MineralUpgrades" type="TextureButton" parent="Buttons"]
+margin_top = 336.0
+margin_right = 48.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 13 )
+texture_normal = ExtResource( 6 )
+expand = true
+stretch_mode = 5
 
 [node name="ScienceTree" type="TextureButton" parent="Buttons"]
-margin_top = 368.0
-margin_right = 64.0
+margin_top = 384.0
+margin_right = 48.0
 margin_bottom = 432.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 11 )
 texture_normal = ExtResource( 13 )
+expand = true
+stretch_mode = 5
 
 [node name="Hotbar" type="HBoxContainer" parent="."]
 margin_top = 680.0
@@ -381,6 +410,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="Buttons/Shop" to="." method="_on_Shop_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/Shop" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/Shop" to="." method="_on_Shop_pressed"]
+[connection signal="mouse_entered" from="Buttons/MineralUpgrades" to="." method="_on_MineralUpgrades_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/MineralUpgrades" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Buttons/MineralUpgrades" to="." method="_on_MineralUpgrades_pressed"]
 [connection signal="mouse_entered" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/ScienceTree" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_pressed"]

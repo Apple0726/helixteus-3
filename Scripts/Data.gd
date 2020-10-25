@@ -19,6 +19,10 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 
+var MUs = {	"MV":{"base_cost":100, "pw":2.3},
+			"MSMB":{"base_cost":100, "pw":1.6},
+}
+
 var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
 				"PP":load("res://Graphics/Icons/Energy.png"),
 				"RL":load("res://Graphics/Icons/SP.png"),

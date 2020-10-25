@@ -46,7 +46,7 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_right = 64.0
+margin_right = 48.0
 margin_bottom = 720.0
 mouse_filter = 2
 custom_constants/separation = 0
@@ -56,10 +56,10 @@ __meta__ = {
 }
 
 [node name="PlaceSoil" type="TextureButton" parent="VBoxContainer"]
-margin_top = 200.0
-margin_right = 64.0
-margin_bottom = 264.0
-rect_min_size = Vector2( 0, 64 )
+margin_top = 240.0
+margin_right = 48.0
+margin_bottom = 288.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 2 )
 texture_normal = ExtResource( 3 )
@@ -67,10 +67,10 @@ expand = true
 stretch_mode = 5
 
 [node name="Mine" type="TextureButton" parent="VBoxContainer"]
-margin_top = 264.0
-margin_right = 64.0
-margin_bottom = 328.0
-rect_min_size = Vector2( 0, 64 )
+margin_top = 288.0
+margin_right = 48.0
+margin_bottom = 336.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
 texture_normal = ExtResource( 5 )
@@ -81,10 +81,10 @@ __meta__ = {
 }
 
 [node name="Construct" type="TextureButton" parent="VBoxContainer"]
-margin_top = 328.0
-margin_right = 64.0
-margin_bottom = 392.0
-rect_min_size = Vector2( 0, 64 )
+margin_top = 336.0
+margin_right = 48.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 6 )
 texture_normal = ExtResource( 1 )
@@ -95,10 +95,10 @@ __meta__ = {
 }
 
 [node name="Vehicles" type="TextureButton" parent="VBoxContainer"]
-margin_top = 392.0
-margin_right = 64.0
-margin_bottom = 456.0
-rect_min_size = Vector2( 0, 64 )
+margin_top = 384.0
+margin_right = 48.0
+margin_bottom = 432.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 8 )
 texture_normal = ExtResource( 6 )
@@ -106,10 +106,10 @@ expand = true
 stretch_mode = 5
 
 [node name="StarSystem" type="TextureButton" parent="VBoxContainer"]
-margin_top = 456.0
-margin_right = 64.0
-margin_bottom = 520.0
-rect_min_size = Vector2( 0, 64 )
+margin_top = 432.0
+margin_right = 48.0
+margin_bottom = 480.0
+rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 10 )
 texture_normal = ExtResource( 4 )

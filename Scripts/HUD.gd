@@ -62,34 +62,38 @@ func _on_Inventory_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("INVENTORY") + " (E)")
 
-func _on_Craft_mouse_entered():
-	on_button = true
-	game.show_tooltip(tr("CRAFT") + " (T)")
-
 func _on_Inventory_pressed():
 	click_sound.play()
 	game.toggle_panel(game.inventory)
+
+func _on_Craft_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("CRAFT") + " (T)")
 
 func _on_Craft_pressed():
 	click_sound.play()
 	game.toggle_panel(game.craft_panel)
 
-func _on_mouse_exited():
-	on_button = false
-	game.hide_tooltip()
-
-func _on_Texture_mouse_entered(extra_arg_0):
-	game.show_tooltip(tr(extra_arg_0))
-
-
-func _on_ScienceTree_mouse_entered():
-	game.show_tooltip(tr("SCIENCE_TREE") + " (I)")
-
-
 func _on_ScienceTree_pressed():
 	click_sound.play()
 	if game.c_v != "science_tree":
 		game.switch_view("science_tree")
+
+func _on_ScienceTree_mouse_entered():
+	game.show_tooltip(tr("SCIENCE_TREE") + " (I)")
+
+func _on_MineralUpgrades_pressed():
+	game.toggle_panel(game.MU_panel)
+
+func _on_MineralUpgrades_mouse_entered():
+	game.show_tooltip(tr("MINERAL_UPGRADES") + " (U)")
+
+func _on_Texture_mouse_entered(extra_arg_0):
+	game.show_tooltip(tr(extra_arg_0))
+
+func _on_mouse_exited():
+	on_button = false
+	game.hide_tooltip()
 
 func update_hotbar():
 	for child in $Hotbar.get_children():

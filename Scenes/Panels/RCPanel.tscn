@@ -11,7 +11,7 @@
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=9]
 [ext_resource path="res://Scripts/RCPanel.gd" type="Script" id=10]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=3]
 size = 30
 use_filter = true
 font_data = ExtResource( 2 )
@@ -48,7 +48,7 @@ __meta__ = {
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
 margin_bottom = 64.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 3 )
 text = "CONSTRUCT_ROVER"
 align = 1
 valign = 1

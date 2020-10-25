@@ -7,6 +7,7 @@ onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn
 onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
 onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn")
 onready var RC_panel_scene = preload("res://Scenes/Panels/RCPanel.tscn")
+onready var MU_panel_scene = preload("res://Scenes/Panels/MUPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
@@ -26,6 +27,7 @@ var upgrade_panel:Control
 var craft_panel:Control
 var vehicle_panel:Control
 var RC_panel:Control
+var MU_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -62,7 +64,7 @@ var c_v:String = ""
 
 #Player resources
 var money:float = 800
-var minerals:float = 0
+var minerals:float = 500
 var mineral_capacity:float = 50
 var stone:float = 0
 var energy:float = 200
@@ -122,6 +124,8 @@ var help:Dictionary = {"mining":true,
 }
 
 var science_unlocked:Dictionary = {"SA":false, "RC":false}
+var MUs:Dictionary = {	"MV":1,
+						"MSMB":1}#Levels of mineral upgrades
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
@@ -163,6 +167,7 @@ var satellite_data:Array = []
 #Your inventory
 var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
 #var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
+
 
 var hotbar:Array = []
 
@@ -289,6 +294,7 @@ func _load_game():
 	craft_panel = craft_panel_scene.instance()
 	vehicle_panel = vehicle_panel_scene.instance()
 	RC_panel = RC_panel_scene.instance()
+	MU_panel = MU_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	construct_panel.visible = false
@@ -305,6 +311,9 @@ func _load_game():
 
 	RC_panel.visible = false
 	$Panels.add_child(RC_panel)
+
+	MU_panel.visible = false
+	$Panels.add_child(MU_panel)
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
@@ -411,7 +420,7 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 	remove_child($Title)
-	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
+	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -1465,6 +1474,7 @@ func hide_adv_tooltip():
 	adv_tooltip.visible = false
 
 func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _tooltip:bool = false):
+	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
 	for st in arr:
@@ -1783,8 +1793,8 @@ func _input(event):
 	
 	#Sell all minerals by pressing Shift C
 	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
-		money += minerals * 5
-		popup(tr("MINERAL_SOLD") % [String(minerals), String(minerals * 5)], 2)
+		money += minerals * (MUs.MV + 4)
+		popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
 		minerals = 0
 	if Input.is_action_just_released("hotbar_1") and len(hotbar) > 0:
 		var name = hotbar[0]
