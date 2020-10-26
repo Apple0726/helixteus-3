@@ -16,8 +16,13 @@ var other_str:String#String used to show other information too small to show in 
 var other_str_short:String#Shortened version of other_str that is shown on pie
 
 func _ready():
+	refresh()
+
+func refresh():
 	var last_value = 100.0
 	var trace_fraction = 0.0
+	small_elements = []
+	txts = []
 	for obj in objects:
 		var pie = TextureProgress.new()
 		#Angle where the text is placed

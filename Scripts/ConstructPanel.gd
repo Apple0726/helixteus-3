@@ -1,11 +1,7 @@
-extends Control
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
-#Tween for fading in/out panel
-var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 
 #In what GridContainer node building buttons should be in
 var bldg_infos = {"ME":{"type":"Basic"},
@@ -13,11 +9,10 @@ var bldg_infos = {"ME":{"type":"Basic"},
 				 "RL":{"type":"Basic"},
 				 "MS":{"type":"Storage"},
 				 "RCC":{"type":"Vehicles"},
+				 "SC":{"type":"Production"},
 				}
 
 func _ready():
-	tween = Tween.new()
-	add_child(tween)
 	var item_container = $Contents/HBoxContainer/Items
 	for bldg in bldg_infos:
 		var bldg_info = bldg_infos[bldg]
@@ -111,6 +106,8 @@ func get_item_name(name:String):
 			return tr("MINERAL_SILO")
 		"RCC":
 			return tr("ROVER_CONSTR_CENTER")
+		"SC":
+			return tr("STONE_CRUSHER")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -125,3 +122,4 @@ func get_item(name, costs, _type, _dir):
 
 func refresh():
 	$Tabs/Vehicles.visible = game.science_unlocked.RC
+	$Tabs/Production.visible = game.show.stone

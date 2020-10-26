@@ -47,6 +47,8 @@ func _ready():
 				$Obstacles.set_cell(i, j, 0)
 			elif tile.tile_str == "cave":
 				$Obstacles.set_cell(i, j, 1)
+			elif tile.tile_str == "crater":
+				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
 			if tile.has("type"):
 				match tile.type:
 					"plant":
@@ -103,13 +105,13 @@ func show_tooltip(tile):
 			if tile.has("overclock_mult"):
 				mult = tile.overclock_mult
 			match strs[0]:
-				"ME":
+				"ME", "PP":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
-					icons = [Data.icons.ME, Data.icons.ME]
+					icons = [Data.icons[strs[0]], Data.icons[strs[0]]]
 					adv = true
-				"PP":
-					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
-					icons = [Data.icons.PP, Data.icons.PP]
+				"SC":
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
+					icons = [Data.icons[strs[0]], Data.icons[strs[0]]]
 					adv = true
 				"RL":
 					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value * mult]
@@ -154,6 +156,12 @@ func show_tooltip(tile):
 						game.help_str = "cave_desc"
 					else:
 						tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
+				"crater":
+					if game.help.crater_desc:
+						tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+						game.help_str = "crater_desc"
+					else:
+						tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.depth > 0:
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	if adv:
@@ -231,7 +239,7 @@ func _input(event):
 		var tile_id = x_pos % wid + y_pos * wid
 		var tile = game.tile_data[tile_id + id_offset]
 		if not tile.has("type"):
-			if bldg_to_construct != "":
+			if bldg_to_construct != "" and tile.depth == 0:
 				if game.check_enough(constr_costs):
 					game.deduct_resources(constr_costs)
 					tile.tile_str = bldg_to_construct
@@ -243,7 +251,7 @@ func _input(event):
 					tile.type = "bldg"
 					tile.XP = round(constr_costs.money / 100.0)
 					match bldg_to_construct:
-						"ME", "PP":
+						"ME", "PP", "SC":
 							tile.collect_date = tile.construction_date + tile.construction_length
 							tile.stored = 0
 							tile.path_1 = 1
@@ -268,9 +276,7 @@ func _input(event):
 				else:
 					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 			elif about_to_mine:
-				game.get_node("Control/BottomInfo").visible = false
-				game.c_t = tile_id + id_offset
-				game.switch_view("mining")
+				mine_tile(tile_id + id_offset)
 			elif placing_soil:
 				if game.check_enough({"soil":10}):
 					game.deduct_resources({"soil":10})
@@ -363,10 +369,10 @@ func _input(event):
 					"RL":
 						game.SP += tile.stored
 						tile.stored = 0
-					"RCC":
+					"RCC", "SC":
 						if not tile.is_constructing:
 							game.c_t = tile_id + id_offset
-							game.toggle_panel(game.RC_panel)
+							game.toggle_panel(game[tile.tile_str + "_panel"])
 		elif tile.type == "obstacle":
 			if tile.tile_str == "cave":
 				if not rover_selected.empty():
@@ -374,6 +380,10 @@ func _input(event):
 					game.switch_view("cave")
 					game.cave.rover_data = rover_selected
 					game.cave.set_rover_data()
+			elif tile.tile_str == "crater":
+				if about_to_mine:
+					mine_tile(tile_id + id_offset)
+		game.HUD.refresh()
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
 		finish_construct()
@@ -381,6 +391,11 @@ func _input(event):
 		game.item_to_use.num = 0
 		game.update_item_cursor()
 		game.HUD.get_node("Resources/Soil").visible = false
+
+func mine_tile(id2:int):
+	game.get_node("Control/BottomInfo").visible = false
+	game.c_t = id2
+	game.switch_view("mining")
 
 func lake_bool(id2:int):
 	return game.tile_data[id2].tile_str.split("_")
@@ -460,6 +475,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.PP, id2)
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
+		"SC":
+			add_rsrc(v, Color(0.5, 0.5, 0.5, 1), Data.icons.SC, id2)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -501,7 +518,7 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "overclock")
 
 func overclockable(bldg:String):
-	return bldg == "ME" or bldg == "PP" or bldg == "RL"
+	return bldg == "ME" or bldg == "PP" or bldg == "RL" or bldg == "SC"
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()

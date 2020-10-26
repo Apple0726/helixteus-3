@@ -8,6 +8,7 @@ onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
 onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn")
 onready var RC_panel_scene = preload("res://Scenes/Panels/RCPanel.tscn")
 onready var MU_panel_scene = preload("res://Scenes/Panels/MUPanel.tscn")
+onready var SC_panel_scene = preload("res://Scenes/Panels/SCPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
@@ -28,6 +29,7 @@ var craft_panel:Control
 var vehicle_panel:Control
 var RC_panel:Control
 var MU_panel:Control
+var SC_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -63,15 +65,15 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 800
+var money:float = 8000
 var minerals:float = 500
 var mineral_capacity:float = 50
-var stone:float = 0
-var energy:float = 200
+var stone:Dictionary = {}
+var energy:float = 2000
 var SP:float = 0
 #Dimension remnants
 var DRs:float = 0
-var lv:int = 1
+var lv:int = 5
 var xp:float = 0
 var xp_to_lv:float = 10
 
@@ -90,7 +92,7 @@ var stack_size:int = 16
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
+var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":700}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
@@ -113,10 +115,11 @@ var mets:Dictionary = {	"lead":0,
 						"sapphire":0}
 
 #Display help when players see/do things for the first time. true: show help
-var help:Dictionary = {"mining":true,
+var help:Dictionary = {"mining":false,
 			"plant_something_here":true,
 			"boulder_desc":true,
 			"cave_desc":true,
+			"crater_desc":true,
 			"tile_shortcuts":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
@@ -129,9 +132,9 @@ var MUs:Dictionary = {	"MV":1,
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
-						"stone":false,
+						"stone":true,
 						"SP":false,
-						"mining_layer":false,
+						"mining_layer":true,
 						"plant_button":false,
 						"vehicles_button":false,
 						"materials":false,
@@ -207,7 +210,14 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
 					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
 					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
-					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300}}
+					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300},
+					"amethyst":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.0, "density":2.66, "value":500},
+					"emerald":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.2, "density":2.70, "value":540},
+					"quartz":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.4, "density":2.32, "value":580},
+					"topaz":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.6, "density":3.50, "value":620},
+					"ruby":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.8, "density":4.01, "value":660},
+					"sapphire":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":6.0, "density":3.99, "value":700},
+}
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300}},
@@ -295,6 +305,7 @@ func _load_game():
 	vehicle_panel = vehicle_panel_scene.instance()
 	RC_panel = RC_panel_scene.instance()
 	MU_panel = MU_panel_scene.instance()
+	SC_panel = SC_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	construct_panel.visible = false
@@ -314,6 +325,9 @@ func _load_game():
 
 	MU_panel.visible = false
 	$Panels.add_child(MU_panel)
+
+	SC_panel.visible = false
+	$Panels.add_child(SC_panel)
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
@@ -1285,26 +1299,33 @@ func generate_tiles(id:int):
 				if lake_1_phase == "L":
 					tile_data[t_id].tile_str = "liquid_" + p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
+					continue
 				elif lake_1_phase == "S":
 					tile_data[t_id].tile_str = "solid_"+ p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
+					continue
 				elif lake_1_phase == "SF":
 					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
+					continue
 			if level < -0.5:
 				if lake_2_phase == "L":
 					tile_data[t_id].tile_str = "liquid_" + p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
+					continue
 				elif lake_2_phase == "S":
 					tile_data[t_id].tile_str = "solid_"+ p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
+					continue
 				elif lake_2_phase == "SF":
 					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
+					continue
 			var rand_rock = rand_range(-0.7, 0.7)
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "rock"
+				continue
 			if id != 2 and not tile_data[t_id].has("type") and randf() < 0.1 / wid:
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "cave"
@@ -1317,6 +1338,20 @@ func generate_tiles(id:int):
 				if wid > 150:
 					floor_size *= 1.3
 				cave_data.append({"num_floors":Helper.rand_int(1, wid / 3), "floor_size":floor_size})
+				continue
+			if randf() < 0.01:
+				tile_data[t_id].type = "obstacle"
+				tile_data[t_id].tile_str = "crater"
+				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
+				var depth = round(pow(10, rand_range(1, 3)))
+				tile_data[t_id].init_depth = depth
+				tile_data[t_id].depth = depth
+				tile_data[t_id].crater_metal = "lead"
+				for met in met_info:
+					if met == "lead":
+						continue
+					if randf() < 1.0 / pow(met_info[met].rarity, 1.2):
+						tile_data[t_id].crater_metal = met
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1651,8 +1686,6 @@ func check_enough(costs):
 	for cost in costs:
 		if cost == "money" and money < costs[cost]:
 			enough = false
-		if cost == "stone" and stone < costs[cost]:
-			enough = false
 		if cost == "energy" and energy < costs[cost]:
 			enough = false
 		if mats.has(cost) and mats[cost] < costs[cost]:
@@ -1667,27 +1700,25 @@ func deduct_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money -= costs.money
-		if cost == "stone":
-			stone -= costs.stone
 		if cost == "energy":
 			energy -= costs.energy
 		if mats.has(cost):
 			mats[cost] -= costs[cost]
 		if mets.has(cost):
 			mets[cost] -= costs[cost]
+	HUD.refresh()
 
 func add_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money += costs.money
-		if cost == "stone":
-			stone += costs.stone
 		if cost == "energy":
 			energy += costs.energy
 		if mats.has(cost):
 			mats[cost] += costs[cost]
 		if mets.has(cost):
 			mets[cost] += costs[cost]
+	HUD.refresh()
 
 func get_roman_num(num:int):
 	if num > 3999:

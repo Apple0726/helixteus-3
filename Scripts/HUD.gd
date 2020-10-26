@@ -12,6 +12,7 @@ onready var minerals = $Resources/Minerals
 onready var stone = $Resources/Stone
 onready var SP = $Resources/SP
 onready var craft = $Buttons/Craft
+onready var MU = $Buttons/MineralUpgrades
 onready var sc_tree = $Buttons/ScienceTree
 onready var lv_txt = $Lv/Label
 onready var lv_progress = $Lv/TextureProgress
@@ -31,10 +32,14 @@ func _on_Button_pressed():
 #		config.set_value("audio", "mute", not config.get_value("audio", "mute"))
 #	config.save("user://settings.cfg")
 
-func _process(_delta):
+func _ready():
+	refresh()
+
+func refresh():
 	money_text.text = String(game.money)
 	minerals_text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
-	stone_text.text = String(game.stone) + " kg"
+	var total_stone:float = Helper.get_sum_of_dict(game.stone)
+	stone_text.text = String(total_stone) + " kg"
 	soil_text.text = String(game.mats.soil) + " kg"
 	energy_text.text = String(game.energy)
 	SP_text.text = String(game.SP)
@@ -43,6 +48,7 @@ func _process(_delta):
 	SP.visible = game.show.SP
 	sc_tree.visible = game.show.SP
 	craft.visible = game.show.materials
+	MU.visible = game.show.minerals
 	if game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv

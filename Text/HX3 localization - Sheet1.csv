@@ -299,5 +299,19 @@ COSTS,Costs,Coûts,Costi,,,,비용
 MINERAL_UPGRADES,Mineral upgrades,Améliorations minéraux,,,,,
 MU_DESC,Improve various areas of the game using minerals.,Améliorez différentes parties du jeu en échange de minéraux.,,,,,
 MINERAL_VALUE,Mineral value,Valeur des minéraux,,,,,
+MV_DESC,The amount of money you get per mineral sold.,,,,,,
 UPGRADE_NOUN,Upgrade,Amélioration,,,,,
 EFFECTS,Effects,Effets,,,,,
+UPGRADE_COST,Upgrade cost,Coût de l'amélioration,,,,,
+NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de minéraux.,Non hai abbastanza minerali.,,,,광물이 부족합니다.
+MINING_SPEED_MULTIPLIER_BOOST,Mining speed multiplier boost,,,,,,
+MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,,,,,
+CRATER,Crater,Cratère,Cratere,,,,충돌구
+CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters give you more varied resources than normal.",,,,,,
+PRODUCTION,Production,Production,Produzione,,,,
+PRODUCTION_DESC,These are buildings that transform resources.,,,,,,
+METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,,{metal} {crater}
+STONE_CRUSHER,Stone crusher,,,,,,
+SC_DESC,Crushes stone to bits and extracts usable resources.,,,,,,
+CRUSHES_X,Crushes %s,,,,,,
+CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,,%s 까지 저장할수 있음

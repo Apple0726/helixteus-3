@@ -127,34 +127,13 @@ func make_pie_chart(arr:Array, name:String):
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
 		var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"
-		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":get_el_color(obj.element), "texture":texture})
+		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
 	$ScrollContainer/VBoxContainer.add_child(pie)
 
 func remove_pie_chart(name:String):
 	if $ScrollContainer/VBoxContainer.has_node(name):
 		$ScrollContainer/VBoxContainer.remove_child($ScrollContainer/VBoxContainer.get_node(name))
 		
-
-func get_el_color(element:String):
-	match element:
-		"O":
-			return Color(1, 0.2, 0.2, 1)
-		"Si":
-			return Color(0.7, 0.7, 0.7, 1)
-		"Ca":
-			return Color(0.8, 1, 0.8, 1)
-		"Al":
-			return Color(0.6, 0.6, 0.6, 1)
-		"Mg":
-			return Color(0.69, 0.69, 0.53, 1)
-		"Na":
-			return Color(0.92, 0.98, 1, 1)
-		"Ni":
-			return Color(0.9, 0.9, 0.9, 1)
-		"H", "Fe":
-			return Color(1, 1, 1, 1)
-		_:
-			return Color(randf(), randf(), randf(), 1)
 
 func on_crust_exit():
 	game.hide_tooltip()
@@ -194,6 +173,9 @@ func get_surface_string(mats:Dictionary):
 	string = string.substr(0,len(string) - 1)
 	return string
 
+func _on_Planet_mouse_exited():
+	game.hide_tooltip()
+
 func obj_to_array(elements:Dictionary):
 	var arr = []
 	for element in elements.keys():
@@ -205,6 +187,3 @@ func sort_elements (a, b):
 	if a["fraction"] < b["fraction"]:
 		return true
 	return false
-
-func _on_Planet_mouse_exited():
-	game.hide_tooltip()

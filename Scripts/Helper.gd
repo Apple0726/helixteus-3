@@ -59,11 +59,18 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
 					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
-					
+		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tr(obj.to_upper())])
+		rsrc.get_node("Texture").connect("mouse_exited", self, "on_rsrc_out")
 		texture.rect_min_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})
 	return data
+
+func on_rsrc_over(st:String):
+	game.show_tooltip(st)
+
+func on_rsrc_out():
+	game.hide_tooltip()
 
 #Converts time in milliseconds to string format
 func time_to_str (time:float):
@@ -197,3 +204,24 @@ func get_sum_of_dict(dict:Dictionary):
 	for el in dict.values():
 		sum += el
 	return sum
+
+func get_el_color(element:String):
+	match element:
+		"O":
+			return Color(1, 0.2, 0.2, 1)
+		"Si":
+			return Color(0.7, 0.7, 0.7, 1)
+		"Ca":
+			return Color(0.8, 1, 0.8, 1)
+		"Al":
+			return Color(0.6, 0.6, 0.6, 1)
+		"Mg":
+			return Color(0.69, 0.69, 0.53, 1)
+		"Na":
+			return Color(0.92, 0.98, 1, 1)
+		"Ni":
+			return Color(0.9, 0.9, 0.9, 1)
+		"H", "Fe":
+			return Color(1, 1, 1, 1)
+		_:
+			return Color(randf(), randf(), randf(), 1)

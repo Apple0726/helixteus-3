@@ -44,7 +44,13 @@ func _ready():
 func update_info():
 	var upper_depth
 	var lower_depth 
-	if tile.depth <= p_i.crust_start_depth:
+	if tile.has("init_depth"):
+		layer = "crater"
+		upper_depth = tile.init_depth
+		lower_depth = 3 * tile.init_depth
+		$LayerInfo/Upper.text = String(upper_depth) + " m"
+		$LayerInfo/Lower.text = String(lower_depth) + " m"
+	elif tile.depth <= p_i.crust_start_depth:
 		layer = "surface"
 		upper_depth = 0
 		lower_depth = p_i.crust_start_depth
@@ -106,8 +112,9 @@ func generate_rock(new:bool):
 		if layer != "surface":
 			if not tile.has("current_deposit"):
 				for met in met_info:
-					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth:
-						if randf() < 0.25 / met_info[met].rarity:
+					var crater_metal = tile.has("init_depth") and met == tile.crater_metal
+					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth or crater_metal:
+						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1):
 							tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
@@ -218,6 +225,13 @@ func pickaxe_hit():
 					game.inventory.get_node("Tabs/Metals").visible = true
 					game.show.metals = true
 				game.mets[content] += amount
+			elif content == "stone":
+				var layer2 = "crust" if layer == "surface" or layer == "crater" else layer
+				for comp in p_i[layer2]:
+					if game.stone.has(comp):
+						game.stone[comp] += p_i[layer2][comp] * amount
+					else:
+						game.stone[comp] = p_i[layer2][comp] * amount
 			else:
 				game[content] += amount
 			if game.show.has(content):
@@ -226,6 +240,8 @@ func pickaxe_hit():
 		if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 			tile.erase("current_deposit")
 		tile.depth += 1
+		if tile.has("init_depth") and tile.depth > 3 * tile.init_depth:
+			tile.erase("init_depth")
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
@@ -233,6 +249,7 @@ func pickaxe_hit():
 			$LayerInfo.visible = true
 		place_crumbles(15, 0.2, 2)
 		generate_rock(true)
+		game.HUD.refresh()
 	update_info()
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxe_info[game.pickaxe.name]
