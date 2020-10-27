@@ -36,6 +36,8 @@ func _ready():
 	refresh()
 
 func refresh():
+	if not game:
+		return
 	money_text.text = String(game.money)
 	minerals_text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
 	var total_stone:float = Helper.get_sum_of_dict(game.stone)

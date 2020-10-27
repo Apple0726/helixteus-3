@@ -307,7 +307,7 @@ NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de min
 MINING_SPEED_MULTIPLIER_BOOST,Mining speed multiplier boost,,,,,,
 MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,,,,,
 CRATER,Crater,Cratère,Cratere,,,,충돌구
-CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters give you more varied resources than normal.",,,,,,
+CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.",,,,,,
 PRODUCTION,Production,Production,Produzione,,,,
 PRODUCTION_DESC,These are buildings that transform resources.,,,,,,
 METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,,{metal} {crater}
@@ -315,3 +315,14 @@ STONE_CRUSHER,Stone crusher,,,,,,
 SC_DESC,Crushes stone to bits and extracts usable resources.,,,,,,
 CRUSHES_X,Crushes %s,,,,,,
 CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,,%s 까지 저장할수 있음
+TIME,Time,Temps,Tempo,,,,시간
+CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,,,,,
+STONE_COMPOSITION,Stone composition,,,,,,
+START_CRUSHING,Start crushing,,,,,,
+STOP_CRUSHING,Stop crushing,,,,,,
+PUT_IN,Put in %s,Mettre %s,Mettere %s,,,,%s 놓기
+EXPECTED_RESOURCES,Expected resources,,,,,,
+RESOURCES_EXTRACTED,Resources extracted,,,,,,
+NO_STONE,You don't have any stone!,,,,,,
+SILICON,Silicon,,,,,,
+COMP_OF_STONE_BEING_CR,Composition of stone being crushed,,,,,,

@@ -23,6 +23,8 @@ func refresh():
 	var trace_fraction = 0.0
 	small_elements = []
 	txts = []
+	for pie in $Pies.get_children():
+		$Pies.remove_child(pie)
 	for obj in objects:
 		var pie = TextureProgress.new()
 		#Angle where the text is placed

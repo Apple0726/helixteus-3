@@ -9,7 +9,7 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 }
 var path_2 = {	"ME":{"value":15, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 				"PP":{"value":70, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
-				"SC":{"value":20000, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
+				"SC":{"value":4000, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 }
 
 var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
@@ -17,7 +17,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"RL":{"money":2000, "energy":600, "time":150.0},
 				"MS":{"money":500, "energy":80, "time":40.0},
 				"RCC":{"money":20000, "energy":4000, "time":280.0},
-				"SC":{"money":1200, "energy":800, "time":9.0},
+				"SC":{"money":1200, "energy":800, "time":2.0},#90
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 

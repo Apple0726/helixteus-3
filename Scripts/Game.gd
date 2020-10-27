@@ -99,7 +99,9 @@ var mats:Dictionary = {	"coal":0,
 						"sand":0,
 						"clay":0,
 						"soil":0,
-						"cellulose":0}
+						"cellulose":0,
+						"silicon":0,
+}
 
 var mets:Dictionary = {	"lead":0,
 						"copper":0,
@@ -204,6 +206,7 @@ var mat_info = {	"coal":{"value":5},#One kg of coal = $10
 					"clay":{"value":12},
 					"soil":{"value":6},
 					"cellulose":{"value":12},
+					"silicon":{"value":10},
 }
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
 					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
@@ -1350,7 +1353,7 @@ func generate_tiles(id:int):
 				for met in met_info:
 					if met == "lead":
 						continue
-					if randf() < 1.0 / pow(met_info[met].rarity, 1.2):
+					if randf() < 0.3 / pow(met_info[met].rarity, 1.3):
 						tile_data[t_id].crater_metal = met
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
@@ -1717,7 +1720,10 @@ func add_resources(costs):
 		if mats.has(cost):
 			mats[cost] += costs[cost]
 		if mets.has(cost):
+			show.metals = true
 			mets[cost] += costs[cost]
+		if show.has(cost):
+			show[cost] = true
 	HUD.refresh()
 
 func get_roman_num(num:int):

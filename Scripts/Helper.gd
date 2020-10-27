@@ -225,3 +225,16 @@ func get_el_color(element:String):
 			return Color(1, 1, 1, 1)
 		_:
 			return Color(randf(), randf(), randf(), 1)
+
+func mult_dict_by(dict:Dictionary, value:float):
+	var dict2:Dictionary = dict.duplicate(true)
+	for el in dict:
+		dict2[el] = dict[el] * value
+	return dict2
+
+func get_crush_info(tile_obj):
+	var time = OS.get_system_time_msecs()
+	var crush_spd = tile_obj.path_1_value
+	var progress = (time - tile_obj.start_date) / 1000.0 * crush_spd / tile_obj.stone_qty
+	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date) / 1000.0 * tile_obj.path_1_value))
+	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}

@@ -47,7 +47,12 @@ func _ready():
 				$Obstacles.set_cell(i, j, 0)
 			elif tile.tile_str == "cave":
 				$Obstacles.set_cell(i, j, 1)
-			elif tile.tile_str == "crater":
+			elif tile.tile_str == "crater" and tile.has("init_depth"):
+				var metal = Sprite.new()
+				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater_metal])
+				metal.scale *= 0.4
+				add_child(metal)
+				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
 			if tile.has("type"):
 				match tile.type:
@@ -225,6 +230,8 @@ func _input(event):
 	var placing_soil = game.HUD.get_node("Resources/Soil").visible
 	if Input.is_action_just_released("left_click") and not view.dragged:
 		var curr_time = OS.get_system_time_msecs()
+		if not event.position:
+			return
 		var mouse_pos = to_local(event.position)
 		if not Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 			return
@@ -476,7 +483,7 @@ func add_bldg(id2:int, st:String):
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
 		"SC":
-			add_rsrc(v, Color(0.5, 0.5, 0.5, 1), Data.icons.SC, id2)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.SC, id2)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -621,6 +628,14 @@ func update_rsrc(rsrc, tile):
 				tile.stored += 1
 				tile.collect_date += prod * 1000
 			rsrc.get_node("Control/Label").text = String(stored)
+		"SC":
+			if tile.has("stone"):
+				var c_i = Helper.get_crush_info(tile)
+				rsrc.get_node("Control/Label").text = String(c_i.qty_left)
+				rsrc.get_node("Control/CapacityBar").value = 1 - c_i.progress
+			else:
+				rsrc.get_node("Control/Label").text = ""
+				rsrc.get_node("Control/CapacityBar").value = 0
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()

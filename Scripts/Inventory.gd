@@ -1,14 +1,10 @@
-extends Control
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
-#Tween for fading in/out panel
-var tween:Tween
 var tab:String
 var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var buy_sell
 onready var inventory_grid = $Contents/Control/Inventory
-var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 var item_hovered:String = ""
 var item_stack:int = 0
 var item_slot:int = 0
@@ -17,11 +13,7 @@ func _ready():
 	buy_sell = buy_sell_scene.instance()
 	buy_sell.visible = false
 	add_child(buy_sell)
-	tween = Tween.new()
-	add_child(tween)
 	_on_Items_pressed()
-	$Tabs/Materials.visible = game.show.materials
-	$Tabs/Metals.visible = game.show.metals
 
 func refresh():
 	if tab == "items":
@@ -30,6 +22,8 @@ func refresh():
 		_on_Materials_pressed()
 	elif tab == "metals":
 		_on_Metals_pressed()
+	$Tabs/Materials.visible = game.show.materials
+	$Tabs/Metals.visible = game.show.metals
 
 func _on_Items_pressed():
 	tab = "items"
@@ -147,58 +141,19 @@ func show_buy_sell(type:String, obj:String):
 		game.panels.push_front(buy_sell)
 
 func show_mat(mat:String):
-	game.show_tooltip(get_mat_str(mat) + "\n" + get_mat_str(mat, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
+	game.show_tooltip(get_str(mat) + "\n" + get_str(mat, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
 
 func hide_mat():
 	game.hide_tooltip()
 
 func show_met(met:String):
-	game.show_tooltip(get_met_str(met) + "\n" + get_met_str(met, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
+	game.show_tooltip(get_str(met) + "\n" + get_str(met, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
 
 func hide_met():
 	game.hide_tooltip()
 
-func get_mat_str(mat:String, desc:String = ""):
-	match mat:
-		"coal":
-			return tr("COAL" + desc)
-		"glass":
-			return tr("GLASS" + desc)
-		"sand":
-			return tr("SAND" + desc)
-		"clay":
-			return tr("CLAY" + desc)
-		"soil":
-			return tr("SOIL" + desc)
-		"cellulose":
-			return tr("CELLULOSE" + desc)
-
-func get_met_str(met:String, desc:String = ""):
-	match met:
-		"lead":
-			return tr("LEAD" + desc)
-		"copper":
-			return tr("COPPER" + desc)
-		"iron":
-			return tr("IRON" + desc)
-		"aluminium":
-			return tr("ALUMINIUM" + desc)
-		"silver":
-			return tr("SILVER" + desc)
-		"gold":
-			return tr("GOLD" + desc)
-		"amethyst":
-			return tr("AMETHYST" + desc)
-		"emerald":
-			return tr("EMERALD" + desc)
-		"quartz":
-			return tr("QUARTZ" + desc)
-		"topaz":
-			return tr("TOPAZ" + desc)
-		"ruby":
-			return tr("RUBY" + desc)
-		"sapphire":
-			return tr("SAPPHIRE" + desc)
+func get_str(obj:String, desc:String = ""):
+	return tr(obj.to_upper() + desc)
 
 func _input(_event):
 	if item_hovered != "":

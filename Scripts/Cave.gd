@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var astar_node = AStar2D.new()
+var astar_node = AStar2D.new()
 
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
