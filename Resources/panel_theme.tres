@@ -118,6 +118,7 @@ LineEdit/styles/normal = SubResource( 4 )
 LineEdit/styles/read_only = null
 Panel/styles/panel = SubResource( 5 )
 PanelContainer/styles/panel = SubResource( 5 )
+SpinBox/icons/updown = null
 VScrollBar/icons/decrement = null
 VScrollBar/icons/decrement_highlight = null
 VScrollBar/icons/increment = null

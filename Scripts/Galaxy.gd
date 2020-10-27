@@ -6,7 +6,7 @@ onready var systems_id = game.galaxy_data[game.c_g]["systems"]
 var stars
 
 const DIST_MULT = 200.0
-var star_btns = []
+var obj_btns = []
 var overlays = []
 
 func _ready():
@@ -16,35 +16,25 @@ func _ready():
 	for s_i in systems_info:
 		var star = s_i["stars"][0]
 		var star_btn = TextureButton.new()
-		var overlay = TextureButton.new()
 		var system = Sprite.new()
 		var star_texture = preload("res://Graphics/Stars/Star.png")
-		var overlay_texture = preload("res://Graphics/Elements/Default.png")
 		star_btn.texture_normal = star_texture
-		overlay.texture_normal = overlay_texture
 		star_btn.modulate = game.get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
-		overlay.visible = false
-		system.add_child(overlay)
-		star_btns.append(star_btn)
-		overlays.append({"circle":overlay, "id":s_i.id})
+		obj_btns.append(star_btn)
 		star_btn.connect("mouse_entered", self, "on_system_over", [s_i["id"]])
 		star_btn.connect("mouse_exited", self, "on_system_out")
 		star_btn.connect("pressed", self, "on_system_click", [s_i["id"]])
-		overlay.connect("mouse_entered", self, "on_system_over", [s_i["id"]])
-		overlay.connect("mouse_exited", self, "on_system_out")
-		overlay.connect("pressed", self, "on_system_click", [s_i["id"]])
 		star_btn.rect_position = Vector2(-600 / 2, -600 / 2)
 		star_btn.rect_pivot_offset = Vector2(600 / 2, 600 / 2)
-		overlay.rect_position = Vector2(-300 / 2, -300 / 2)
-		overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
-		overlay.rect_scale *= 2
 		system.position = s_i["pos"]
+		Helper.add_overlay(system, self, "system", s_i, overlays)
 	if game.overlay_data.galaxy.visible:
-		toggle_overlay()
+		Helper.toggle_overlay(obj_btns, overlays)
+	game.overlay.refresh_overlay()
 
 func on_system_over (id:int):
 	var s_i = game.system_data[id]
@@ -60,26 +50,21 @@ func on_system_click (id:int):
 		game.switch_view("system")
 	view.dragged = false
 
-func toggle_overlay():
-	for star_btn in star_btns:
-		star_btn.visible = not star_btn.visible
-	for overlay in overlays:
-		overlay.circle.visible = not overlay.circle.visible
-
-func change_overlay(overlay:String, gradient:Gradient):
-	match overlay:
-		"planet_num":
+func change_overlay(overlay_id:int, gradient:Gradient):
+	var c_vl = game.overlay_data.galaxy.custom_values[overlay_id]
+	match overlay_id:
+		0:
 			for overlay in overlays:
-				var offset = inverse_lerp(2, 30, game.system_data[overlay.id].planet_num)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].planet_num)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		"discovered":
+		1:
 			for overlay in overlays:
 				if game.system_data[overlay.id].discovered:
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
-
-func change_circle_size(value):
-	for overlay in overlays:
-		overlay.circle.rect_scale.x = 2 * value
-		overlay.circle.rect_scale.y = 2 * value
+		2:
+			for overlay in overlays:
+				var temp = game.get_coldest_star_temp(overlay.id)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
+				overlay.circle.modulate = gradient.interpolate(offset)

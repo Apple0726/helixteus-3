@@ -173,9 +173,11 @@ var satellite_data:Array = []
 var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
 #var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
-
 var hotbar:Array = []
 
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":250, "right":100000}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
+}
 ############ End save data ############
 
 var save_u = false
@@ -189,8 +191,6 @@ var save_t = false
 var EA_planet_visited = false
 var EA_galaxy_visited = false
 var EA_cave_visited = false
-
-var overlay_data = {"galaxy":{"overlay":0, "visible":false}}
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -656,9 +656,8 @@ func add_obj(view_str):
 			add_space_HUD()
 			put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
-			add_overlay()
 		"cluster":
-			remove_space_HUD()
+			add_space_HUD()
 			put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 		"supercluster":
@@ -690,6 +689,7 @@ func add_space_HUD():
 	if not space_HUD or not is_a_parent_of(space_HUD):
 		space_HUD = space_HUD_scene.instance()
 		add_child(space_HUD)
+		add_overlay()
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -698,13 +698,15 @@ func add_overlay():
 	add_child(overlay)
 
 func remove_overlay():
-	remove_child(overlay)
+	if overlay and is_a_parent_of(overlay):
+		remove_child(overlay)
 	overlay = null
 
 func remove_space_HUD():
 	if space_HUD and is_a_parent_of(space_HUD):
 		remove_child(space_HUD)
 	space_HUD = null
+	remove_overlay()
 
 func add_dimension():
 	remove_child(HUD)
@@ -775,7 +777,6 @@ func remove_cluster():
 	view.remove_obj("cluster")
 
 func remove_galaxy():
-	remove_overlay()
 	remove_child(change_view_btn)
 	view.remove_obj("galaxy")
 
@@ -1264,6 +1265,12 @@ func generate_planets(id:int):
 		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	system_data[id]["discovered"] = true
 
+func get_coldest_star_temp(s_id):
+	var res = system_data[s_id].stars[0].temperature
+	for i in range(1, len(system_data[s_id].stars)):
+		if system_data[s_id].stars[i].temperature < res:
+			res = system_data[s_id].stars[i].temperature
+	return res
 func generate_tiles(id:int):
 	var p_i = planet_data[id]
 	#wid is number of tiles horizontally/vertically
@@ -1271,6 +1278,9 @@ func generate_tiles(id:int):
 # warning-ignore:narrowing_conversion
 	var wid:int = Helper.get_wid(p_i.size)
 	var id_offset = tile_data.size()
+	#We assume that the star system's age is inversely proportional to the coldest star's temperature
+	#Age is a factor in crater rarity. Older systems have more craters
+	var coldest_star_temp = get_coldest_star_temp(c_s)
 	p_i.tile_id_start = id_offset
 	p_i.tile_num = pow(wid, 2)
 	for _i in range(0, pow(wid, 2)):
@@ -1329,7 +1339,9 @@ func generate_tiles(id:int):
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "rock"
 				continue
-			if id != 2 and not tile_data[t_id].has("type") and randf() < 0.1 / wid:
+			if id == 2:
+				continue
+			if not tile_data[t_id].has("type") and randf() < 0.1 / pow(wid, 0.9):
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "cave"
 				tile_data[t_id].cave_id = len(cave_data)
@@ -1342,11 +1354,12 @@ func generate_tiles(id:int):
 					floor_size *= 1.3
 				cave_data.append({"num_floors":Helper.rand_int(1, wid / 3), "floor_size":floor_size})
 				continue
-			if randf() < 0.01:
+			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
+			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "crater"
 				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
-				var depth = round(pow(10, rand_range(1, 3)))
+				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
 				tile_data[t_id].init_depth = depth
 				tile_data[t_id].depth = depth
 				tile_data[t_id].crater_metal = "lead"
@@ -1818,9 +1831,8 @@ func _input(event):
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
-		if c_v == "galaxy":
+		if overlay:
 			overlay._on_CheckBox_pressed()
-			overlay.get_node("Panel/HBoxContainer/CheckBox").pressed = not overlay.get_node("Panel/HBoxContainer/CheckBox").pressed
 	
 	#F7 to hide help
 	if Input.is_action_just_released("hide_help"):

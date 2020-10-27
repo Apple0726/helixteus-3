@@ -238,3 +238,28 @@ func get_crush_info(tile_obj):
 	var progress = (time - tile_obj.start_date) / 1000.0 * crush_spd / tile_obj.stone_qty
 	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date) / 1000.0 * tile_obj.path_1_value))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
+
+func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
+	var overlay_texture = preload("res://Graphics/Elements/Default.png")
+	var overlay = TextureButton.new()
+	overlay.texture_normal = overlay_texture
+	overlay.visible = false
+	parent.add_child(overlay)
+	overlays.append({"circle":overlay, "id":obj_info.id})
+	overlay.connect("mouse_entered", self_node, "on_%s_over" % [c_v], [obj_info.id])
+	overlay.connect("mouse_exited", self_node, "on_%s_out" % [c_v])
+	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id])
+	overlay.rect_position = Vector2(-300 / 2, -300 / 2)
+	overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
+	overlay.rect_scale *= 2
+
+func toggle_overlay(obj_btns, overlays):
+	for obj_btn in obj_btns:
+		obj_btn.visible = not obj_btn.visible
+	for overlay in overlays:
+		overlay.circle.visible = not overlay.circle.visible
+
+func change_circle_size(value, overlays):
+	for overlay in overlays:
+		overlay.circle.rect_scale.x = 2 * value
+		overlay.circle.rect_scale.y = 2 * value
