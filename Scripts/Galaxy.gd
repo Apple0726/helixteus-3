@@ -68,3 +68,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
+
+
+func _on_Galaxy_tree_exited():
+	queue_free()

@@ -421,3 +421,4 @@ material = SubResource( 7 )
 position = Vector2( 396, 400 )
 scale = Vector2( 12.375, 12.5 )
 texture = ExtResource( 12 )
+[connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]

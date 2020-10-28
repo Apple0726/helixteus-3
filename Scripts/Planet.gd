@@ -1,13 +1,9 @@
 extends Node2D
 
-onready var time_scene = load("res://Scenes/TimeLeft.tscn")
-onready var rsrc_scene = load("res://Scenes/ResourceStocked.tscn")
-onready var particles_scene = load("res://Scenes/LiquidParticles.tscn")
 onready var game = get_node("/root/Game")
 onready var view = game.view
 onready var id = game.c_p
 onready var p_i = game.planet_data[id]
-onready var id_offset = p_i.tile_id_start
 
 #If true, clicking any tile initiates mining
 var about_to_mine:bool = false
@@ -22,27 +18,54 @@ var shadow:Sprite
 #Local id of the tile hovered
 var tile_over:int = -1
 
-onready var wid:int = round(pow(p_i.tile_num, 0.5))
+onready var wid:int = round(Helper.get_wid(p_i.size))
 #A rectangle enclosing all tiles
 onready var planet_bounds:PoolVector2Array = [Vector2.ZERO, Vector2(0, wid * 200), Vector2(wid * 200, wid * 200), Vector2(wid * 200, 0)]
 
 func _ready():
+	var planet_save:File = File.new()
+	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
+	planet_save.open(file_path, File.READ)
+	game.tile_data = planet_save.get_var()
+	planet_save.close()
+	#We assume that the star system's age is inversely proportional to the coldest star's temperature
+	#Age is a factor in crater rarity. Older systems have more craters
+	var coldest_star_temp = game.get_coldest_star_temp(p_i.parent)
+	var lake_1_phase = "G"
+	var lake_2_phase = "G"
 	if p_i.has("lake_1"):
 		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
 		var phase_1 = phase_1_scene.instance()
-		$Lakes1.modulate = phase_1.colors[Helper.get_state(p_i.temperature, p_i.pressure, phase_1)]
+		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
+		if lake_1_phase != "G":
+			$Lakes1.modulate = phase_1.colors[lake_1_phase]
 	if p_i.has("lake_2"):
 		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
 		var phase_2 = phase_2_scene.instance()
-		$Lakes2.modulate = phase_2.colors[Helper.get_state(p_i.temperature, p_i.pressure, phase_2)]
+		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
+		if lake_2_phase != "G":
+			$Lakes2.modulate = phase_2.colors[lake_2_phase]
+	
 	for i in wid:
 		for j in wid:
+			var id2 = i % wid + j * wid
+			var tile = game.tile_data[id2]
 			if p_i.temperature > 1000:
 				$TileMap.set_cell(i, j, 8)
 			else:
 				$TileMap.set_cell(i, j, p_i.type - 3)
-			var id2 = i % wid + j * wid + id_offset
-			var tile = game.tile_data[id2]
+			if not tile:
+				continue
+			if tile.has("type"):
+				match tile.type:
+					"plant":
+						$Soil.set_cell(i, j, 0)
+						if tile.has("tile_str"):
+							add_plant(id2, tile.tile_str)
+					"bldg":
+						add_bldg(id2, tile.tile_str)
+			if not tile.has("tile_str"):
+				continue
 			if tile.tile_str == "rock":
 				$Obstacles.set_cell(i, j, 0)
 			elif tile.tile_str == "cave":
@@ -54,69 +77,70 @@ func _ready():
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
-			if tile.has("type"):
-				match tile.type:
-					"plant":
-						$Soil.set_cell(i, j, 0)
-						if tile.tile_str != "":
-							add_plant(id2, tile.tile_str)
-					"bldg":
-						add_bldg(id2, tile.tile_str)
 	if p_i.has("lake_1"):
 		for i in wid:
 			for j in wid:
-				var tile = game.tile_data[i % wid + j * wid + id_offset]
+				var tile = game.tile_data[i % wid + j * wid]
+				if not tile:
+					continue
+				if not tile.has("tile_str"):
+					continue
 				var lake = tile.tile_str.split("_")
 				if len(lake) == 3 and lake[2] != "1":
 					continue
-				if lake[0] == "liquid":
+				if lake[0] == "l":
 					$Lakes1.set_cell(i, j, 2)
 					add_particles(Vector2(i*200, j*200))
-				elif lake[0] == "solid":
+				elif lake[0] == "s":
 					$Lakes1.set_cell(i, j, 0)
-				elif lake[0] == "supercritical":
+				elif lake[0] == "sc":
 					$Lakes1.set_cell(i, j, 1)
 	if p_i.has("lake_2"):
 		for i in wid:
 			for j in wid:
-				var tile = game.tile_data[i % wid + j * wid + id_offset]
+				var tile = game.tile_data[i % wid + j * wid]
+				if not tile:
+					continue
+				if not tile.has("tile_str"):
+					continue
 				var lake = tile.tile_str.split("_")
 				if len(lake) == 3 and lake[2] != "2":
 					continue
-				if lake[0] == "liquid":
+				if lake[0] == "l":
 					add_particles(Vector2(i*200, j*200))
 					$Lakes2.set_cell(i, j, 2)
-				elif lake[0] == "solid":
+				elif lake[0] == "s":
 					$Lakes2.set_cell(i, j, 0)
-				elif lake[0] == "supercritical":
+				elif lake[0] == "sc":
 					$Lakes2.set_cell(i, j, 1)
 	$Lakes1.update_bitmask_region()
 	$Lakes2.update_bitmask_region()
 	$Soil.update_bitmask_region()
 
 func add_particles(pos:Vector2):
-	var particle = particles_scene.instance()
+	var particle = game.particles_scene.instance()
 	particle.position = pos + Vector2(30, 30)
 	add_child(particle)
 
 func show_tooltip(tile):
-	var strs = tile.tile_str.split("_")
 	var tooltip:String = ""
 	var icons = []
 	var adv = false
+	if not tile:
+		return
 	if tile.has("type"):
 		if tile.type == "bldg":
 			var mult = 1
 			if tile.has("overclock_mult"):
 				mult = tile.overclock_mult
-			match strs[0]:
+			match tile.tile_str:
 				"ME", "PP":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
-					icons = [Data.icons[strs[0]], Data.icons[strs[0]]]
+					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
 				"SC":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
-					icons = [Data.icons[strs[0]], Data.icons[strs[0]]]
+					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
 				"RL":
 					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value * mult]
@@ -132,7 +156,7 @@ func show_tooltip(tile):
 				game.help_str = "tile_shortcuts"
 				tooltip += "\n" + tr("PRESS_F_TO_UPGRADE") + "\n" + tr("PRESS_Q_TO_DUPLICATE") + "\n" + tr("HIDE_SHORTCUTS")
 		elif tile.type == "plant":
-			if tile.tile_str == "":
+			if not tile.has("tile_str"):
 				if game.help.plant_something_here:
 					tooltip = tr("PLANT_STH") + "\n" + tr("HIDE_HELP")
 					game.help_str = "plant_something_here"
@@ -141,15 +165,16 @@ func show_tooltip(tile):
 				if OS.get_system_time_msecs() >= tile.construction_date + tile.construction_length:
 					tooltip += "\n" + tr("CLICK_TO_HARVEST")
 		elif tile.type == "lake":
+			var strs = tile.tile_str.split("_")
 			match strs[0]:
-				"liquid":
+				"l":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(strs[1].to_upper())})
-				"solid":
+				"s":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(strs[1].to_upper())})
-				"supercritical":
+				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(strs[1].to_upper())})
 		elif tile.type == "obstacle":
-			match strs[0]:
+			match tile.tile_str:
 				"rock":
 					if game.help.boulder_desc:
 						tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
@@ -167,7 +192,7 @@ func show_tooltip(tile):
 						game.help_str = "crater_desc"
 					else:
 						tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-	elif tile.depth > 0:
+	elif tile.has("depth"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	if adv:
 		if tile.tile_str == "":
@@ -185,13 +210,13 @@ func show_tooltip(tile):
 var prev_tile_over = -1
 func _input(event):
 	if tile_over != -1:
-		var tile = game.tile_data[tile_over + id_offset]
-		if tile.has("type") and tile.type == "bldg":
+		var tile = game.tile_data[tile_over]
+		if tile and tile.has("type") and tile.type == "bldg":
 			if Input.is_action_just_released("duplicate"):
 				game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 				construct(tile.tile_str, Data.costs[tile.tile_str])
 			if Input.is_action_just_released("upgrade"):
-				game.add_upgrade_panel([tile_over + id_offset])
+				game.add_upgrade_panel([tile_over])
 	if event is InputEventMouseMotion:
 		if len(game.panels) > 0:
 			var i = 0
@@ -214,7 +239,7 @@ func _input(event):
 			tile_over = int(mouse_pos.x / 200) % wid + floor(mouse_pos.y / 200) * wid
 			if tile_over != prev_tile_over and not game.planet_HUD.on_button and not game.HUD.on_button and not game.item_cursor.visible and not black_bg:
 				game.hide_tooltip()
-				show_tooltip(game.tile_data[tile_over + id_offset])
+				show_tooltip(game.tile_data[tile_over])
 			prev_tile_over = tile_over
 		else:
 			if tile_over != -1 and not game.planet_HUD.on_button and not game.HUD.on_button:
@@ -244,9 +269,11 @@ func _input(event):
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = x_pos % wid + y_pos * wid
-		var tile = game.tile_data[tile_id + id_offset]
+		var tile = game.tile_data[tile_id]
+		if not tile:
+			return
 		if not tile.has("type"):
-			if bldg_to_construct != "" and tile.depth == 0:
+			if bldg_to_construct != "" and not tile.has("depth"):
 				if game.check_enough(constr_costs):
 					game.deduct_resources(constr_costs)
 					tile.tile_str = bldg_to_construct
@@ -278,13 +305,13 @@ func _input(event):
 						"RCC":
 							tile.path_1 = 1
 							tile.path_1_value = Data.path_1.RCC.value
-					add_bldg(tile_id + id_offset, bldg_to_construct)
-					add_time_bar(tile_id + id_offset, "bldg")
+					add_bldg(tile_id, bldg_to_construct)
+					add_time_bar(tile_id, "bldg")
 				else:
 					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 			elif about_to_mine:
-				mine_tile(tile_id + id_offset)
-			elif placing_soil:
+				mine_tile(tile_id)
+			elif placing_soil and not tile.has("depth"):
 				if game.check_enough({"soil":10}):
 					game.deduct_resources({"soil":10})
 					tile.type = "plant"
@@ -310,12 +337,12 @@ func _input(event):
 							game.get_node("Control/BottomInfo").visible = false
 						tile.construction_date = curr_time
 						tile.construction_length = game.craft_agric_info[game.item_to_use.name].grow_time
-						if check_lake[1] == "liquid":
+						if check_lake[1] == "l":
 							tile.construction_length /= 2
-						elif check_lake[1] == "supercritical":
+						elif check_lake[1] == "sc":
 							tile.construction_length /= 4
 						tile.is_growing = true
-						add_plant(tile_id + id_offset, game.item_to_use.name)
+						add_plant(tile_id, game.item_to_use.name)
 						game.update_item_cursor()
 						game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
 					else:
@@ -324,7 +351,7 @@ func _input(event):
 				if curr_time >= tile.construction_length + tile.construction_date:
 					game.mets[Helper.get_plant_produce(tile.tile_str)] += game.craft_agric_info[tile.tile_str].produce
 					tile.tile_str = ""
-					remove_child(plant_sprites[String(tile_id + id_offset)])
+					remove_child(plant_sprites[String(tile_id)])
 				elif game.item_to_use.type == "fertilizer":
 					tile.construction_date -= game.craft_agric_info.fertilizer.speed_up_time
 					game.remove_items("fertilizer")
@@ -350,7 +377,7 @@ func _input(event):
 					tile.overclock_mult = game.overclock_info[game.item_to_use.name].mult
 					var coll_date = tile.collect_date
 					tile.collect_date = curr_time - (curr_time - coll_date) / tile.overclock_mult
-					add_time_bar(tile_id + id_offset, "overclock")
+					add_time_bar(tile_id, "overclock")
 				game.remove_items(game.item_to_use.name)
 				game.item_to_use.num -= 1
 				game.update_item_cursor()
@@ -378,18 +405,18 @@ func _input(event):
 						tile.stored = 0
 					"RCC", "SC":
 						if not tile.is_constructing:
-							game.c_t = tile_id + id_offset
+							game.c_t = tile_id
 							game.toggle_panel(game[tile.tile_str + "_panel"])
 		elif tile.type == "obstacle":
 			if tile.tile_str == "cave":
 				if not rover_selected.empty():
-					game.c_t = tile_id + id_offset
+					game.c_t = tile_id
 					game.switch_view("cave")
 					game.cave.rover_data = rover_selected
 					game.cave.set_rover_data()
 			elif tile.tile_str == "crater":
 				if about_to_mine:
-					mine_tile(tile_id + id_offset)
+					mine_tile(tile_id)
 		game.HUD.refresh()
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
@@ -416,7 +443,7 @@ func check_lake(local_id:int):
 		for j in range(v.y - 1, v.y + 2):
 			if Vector2(i, j) != v:
 				if $Lakes1.get_cell(i, j) != -1 or $Lakes2.get_cell(i, j) != -1:
-					var id2 = i % wid + j * wid + id_offset
+					var id2 = i % wid + j * wid
 					var okay = lake_bool(id2)[1] == game.craft_agric_info[game.item_to_use.name].lake
 					has_lake = has_lake or okay
 					if okay:
@@ -430,12 +457,12 @@ var plant_sprites = {}
 var hboxes = {}
 
 func add_time_bar(id2:int, type:String):
-	var local_id = id2 - id_offset
+	var local_id = id2
 	var v = Vector2.ZERO
 	v.x = (local_id % wid) * 200
 	v.y = floor(local_id / wid) * 200
 	v += Vector2(100, 15)
-	var time_bar = time_scene.instance()
+	var time_bar = game.time_scene.instance()
 	time_bar.rect_position = v
 	add_child(time_bar)
 	match type:
@@ -450,7 +477,7 @@ func add_time_bar(id2:int, type:String):
 func add_plant(id2:int, st:String):
 	var plant_scene = load("res://Scenes/Plants/" + st + ".tscn")
 	var plant = plant_scene.instance()
-	var local_id = id2 - id_offset
+	var local_id = id2
 	var v = Vector2.ZERO
 	v.x = (local_id % wid) * 200
 	v.y = floor(local_id / wid) * 200
@@ -466,7 +493,7 @@ func add_bldg(id2:int, st:String):
 	var bldg = Sprite.new()
 	bldg.texture = load("res://Graphics/Buildings/" + st + ".png")
 	bldg.scale *= 0.4
-	var local_id = id2 - id_offset
+	var local_id = id2
 	var v = Vector2.ZERO
 	v.x = (local_id % wid) * 200
 	v.y = floor(local_id / wid) * 200
@@ -535,7 +562,7 @@ func on_path_exit():
 	game.hide_tooltip()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
-	var rsrc = rsrc_scene.instance()
+	var rsrc = game.rsrc_scene.instance()
 	add_child(rsrc)
 	rsrc.get_node("TextureRect").texture = icon
 	rsrc.rect_position = v + Vector2(0, 70)
@@ -652,3 +679,6 @@ func finish_construct():
 		bldg_to_construct = ""
 		remove_child(shadow)
 		shadow = null
+
+func _on_Planet_tree_exited():
+	queue_free()

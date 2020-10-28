@@ -69,3 +69,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
 				overlay.circle.modulate = gradient.interpolate(offset)
+
+
+func _on_Galaxy_tree_exited():
+	queue_free()

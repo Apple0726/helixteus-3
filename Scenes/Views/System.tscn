@@ -4,3 +4,4 @@
 
 [node name="System" type="Node2D"]
 script = ExtResource( 1 )
+[connection signal="tree_exited" from="." to="." method="_on_System_tree_exited"]

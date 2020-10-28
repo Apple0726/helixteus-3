@@ -21,6 +21,8 @@ onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
+onready var particles_scene = load("res://Scenes/LiquidParticles.tscn")
+onready var time_scene = load("res://Scenes/TimeLeft.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -379,6 +381,7 @@ func _load_game():
 	else:
 		var dir = Directory.new()
 		dir.make_dir("user://Save1")
+		dir.make_dir("user://Save1/Planets")
 		generate_planets(0)
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
@@ -407,13 +410,7 @@ func _load_game():
 		supercluster_data[0].name = tr("LANIAKEA")
 		
 		generate_tiles(2)
-		tile_data[42].type = "obstacle"
-		tile_data[42].tile_str = "cave"
-		tile_data[42].cave_id = 0
 		cave_data.append({"num_floors":5, "floor_size":40})
-		tile_data[315].type = "obstacle"
-		tile_data[315].tile_str = "cave"
-		tile_data[315].cave_id = 1
 		cave_data.append({"num_floors":8, "floor_size":50})
 		
 		for u_i in universe_data:
@@ -1218,6 +1215,7 @@ func generate_planets(id:int):
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	for i in range(1, planet_num + 1):
+		var lakes = ["water", "ammonia", "methane", "co2"]
 		#p_i = planet_info
 		var p_i = {}
 		p_i["status"] = "unconquered"
@@ -1255,9 +1253,12 @@ func generate_planets(id:int):
 		p_i.liq_period = rand_range(60, 200)
 		if p_i.temperature <= 1000:
 			if randf() < 0.5:
-				p_i.lake_1 = "water"
+				var lake = Helper.rand_int(0, len(lakes) - 1)
+				p_i.lake_1 = lakes[lake]
+				lakes.remove(lake)
 			if randf() < 0.5:
-				p_i.lake_2 = "ammonia"
+				var lake = Helper.rand_int(0, len(lakes) - 1)
+				p_i.lake_2 = lakes[lake]
 		planet_data.append(p_i)
 	
 	if id != 0:
@@ -1271,25 +1272,19 @@ func get_coldest_star_temp(s_id):
 		if system_data[s_id].stars[i].temperature < res:
 			res = system_data[s_id].stars[i].temperature
 	return res
+
 func generate_tiles(id:int):
-	var p_i = planet_data[id]
+	tile_data.clear()
+	var p_i:Dictionary = planet_data[id]
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
-# warning-ignore:narrowing_conversion
 	var wid:int = Helper.get_wid(p_i.size)
-	var id_offset = tile_data.size()
+	var view_zoom = 3.0 / wid
+	p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
+	tile_data.resize(pow(wid, 2))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_coldest_star_temp(c_s)
-	p_i.tile_id_start = id_offset
-	p_i.tile_num = pow(wid, 2)
-	for _i in range(0, pow(wid, 2)):
-		tile_data.append({	"is_constructing":false,
-							"tile_str":"",
-							"depth":0,
-							"contents":{}})#To prevent "tile-scumming"
-	var view_zoom = 3.0 / wid
-	p_i["view"] = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 	var noise = OpenSimplexNoise.new()
 	noise.seed = p_i.liq_seed
 	noise.octaves = 1
@@ -1307,41 +1302,49 @@ func generate_tiles(id:int):
 	for i in wid:
 		for j in wid:
 			var level = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
-			var t_id = i % wid + j * wid + id_offset
+			var t_id = i % wid + j * wid
 			if level > 0.5:
 				if lake_1_phase == "L":
-					tile_data[t_id].tile_str = "liquid_" + p_i.lake_1 + "_1"
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "l_" + p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
 					continue
 				elif lake_1_phase == "S":
-					tile_data[t_id].tile_str = "solid_"+ p_i.lake_1 + "_1"
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "s_"+ p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
 					continue
-				elif lake_1_phase == "SF":
-					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_1 + "_1"
+				elif lake_1_phase == "SC":
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "sc_"+ p_i.lake_1 + "_1"
 					tile_data[t_id].type = "lake"
 					continue
 			if level < -0.5:
-				if lake_2_phase == "L":
-					tile_data[t_id].tile_str = "liquid_" + p_i.lake_2 + "_2"
+				if lake_2_phase == "L":#liquid
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "l_" + p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
 					continue
-				elif lake_2_phase == "S":
-					tile_data[t_id].tile_str = "solid_"+ p_i.lake_2 + "_2"
+				elif lake_2_phase == "S":#solid
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "s_"+ p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
 					continue
-				elif lake_2_phase == "SF":
-					tile_data[t_id].tile_str = "supercritical_"+ p_i.lake_2 + "_2"
+				elif lake_2_phase == "SC":#supercritical
+					tile_data[t_id] = {}
+					tile_data[t_id].tile_str = "sc_"+ p_i.lake_2 + "_2"
 					tile_data[t_id].type = "lake"
 					continue
 			var rand_rock = rand_range(-0.7, 0.7)
 			if p_i.temperature <= 1000 and level > rand_rock - 0.01 and level < rand_rock + 0.01:
+				tile_data[t_id] = {}
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "rock"
 				continue
 			if id == 2:
 				continue
-			if not tile_data[t_id].has("type") and randf() < 0.1 / pow(wid, 0.9):
+			if randf() < 0.1 / pow(wid, 0.9):
+				tile_data[t_id] = {}
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "cave"
 				tile_data[t_id].cave_id = len(cave_data)
@@ -1356,6 +1359,7 @@ func generate_tiles(id:int):
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
+				tile_data[t_id] = {}
 				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].tile_str = "crater"
 				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
@@ -1373,6 +1377,21 @@ func generate_tiles(id:int):
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
+	if id == 2:
+		tile_data[42] = {}
+		tile_data[42].type = "obstacle"
+		tile_data[42].tile_str = "cave"
+		tile_data[42].cave_id = 0
+		tile_data[315] = {}
+		tile_data[315].type = "obstacle"
+		tile_data[315].tile_str = "cave"
+		tile_data[315].cave_id = 1
+	var planet_save:File = File.new()
+	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
+	planet_save.open(file_path, File.WRITE)
+	planet_save.store_var(tile_data)
+	planet_save.close()
+	tile_data.clear()
 
 func make_planet_composition(temp:float, depth:String):
 	randomize()
@@ -1806,8 +1825,6 @@ func _input(event):
 	if Input.is_action_just_released("change_view"):
 		if c_v == "planet_details" and not planet_details.renaming:
 			switch_view("system")
-		elif c_v == "mining":
-			switch_view("planet")
 		elif c_v == "science_tree":
 			on_science_back_pressed()
 		elif not has_node("Loading"):

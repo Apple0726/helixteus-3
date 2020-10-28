@@ -51,3 +51,7 @@ func _process(_delta):
 			btns[i].rect_scale.y = radius
 		change_alpha *= -1
 		modulate.a = change_alpha
+
+
+func _on_Cluster_tree_exited():
+	queue_free()

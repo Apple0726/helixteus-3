@@ -6,10 +6,10 @@ func _ready():
 	place(195, 0.06, $TriplePoint)
 	place(406, 111, $SuperPoint)
 
-var colors = {	"S":Color(1.0, 1.0, 1.0, 0.3),
+var colors = {	"S":Color(1.0, 1.0, 1.0, 0.6),
 				"L":Color(1.0, 1.0, 1.0, 1.0),
-				"SF":Color(1.0, 1.0, 1.0, 0.2)}
+				"SC":Color(1.0, 1.0, 1.0, 0.4)}
 
 func place(T:float, P:float, node):
-	var v = Vector2(T / 1000.0 * 1109, -floor(log(P) / log(10)) * 576 / 12.0 + 290)
+	var v = Vector2(T / 1000.0 * 1109, -(log(P) / log(10)) * 576 / 12.0 + 290)
 	node.position = v

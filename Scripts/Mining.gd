@@ -7,7 +7,7 @@ onready var tile = game.tile_data[id]
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
 var total_mass = 0
-var contents = []
+var contents:Dictionary
 var tween:Tween
 var layer:String
 onready var met_info = game.met_info
@@ -29,6 +29,8 @@ func _ready():
 		$Tile/TextureRect.texture = tile_texture
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
+	if not tile.has("depth"):
+		tile.depth = 0
 	progress = tile.mining_progress
 	update_info()
 	generate_rock(false)
@@ -95,7 +97,7 @@ func generate_rock(new:bool):
 	for met_sprite in metal_sprites:
 		tile_sprite.remove_child(met_sprite)
 	metal_sprites = []
-	if tile.contents.empty() or new:
+	if not tile.has("contents") or new:
 		total_mass = 0
 		var other_volume = 0#in m^3
 		#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -154,6 +156,7 @@ func _input(event):
 		$Pickaxe.position = mouse_pos - Vector2(512, 576)
 
 func _on_Back_pressed():
+	tile.mining_progress = progress
 	game.switch_view("planet")
 
 var crumbles = []

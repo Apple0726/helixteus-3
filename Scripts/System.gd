@@ -100,3 +100,6 @@ func _process(_delta):
 			glow.visible = false
 		else:
 			glow.visible = true
+
+func _on_System_tree_exited():
+	queue_free()
