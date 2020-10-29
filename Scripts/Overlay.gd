@@ -98,7 +98,7 @@ func _on_HSlider_value_changed(value):
 		Helper.change_circle_size(value, game.view.obj.overlays)
 
 func _on_num_mouse_entered(type:String):
-	if editable:
+	if editable and not $Panel/Done.visible:
 		hovered_over = type
 		game.show_tooltip(tr("CLICK_TO_EDIT"))
 

@@ -23,28 +23,31 @@ onready var wid:int = round(Helper.get_wid(p_i.size))
 onready var planet_bounds:PoolVector2Array = [Vector2.ZERO, Vector2(0, wid * 200), Vector2(wid * 200, wid * 200), Vector2(wid * 200, 0)]
 
 func _ready():
+	$TileMap.tile_set = game.planet_TS
+	$Obstacles.tile_set = game.obstacles_TS
 	var planet_save:File = File.new()
 	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
 	planet_save.open(file_path, File.READ)
 	game.tile_data = planet_save.get_var()
 	planet_save.close()
-	#We assume that the star system's age is inversely proportional to the coldest star's temperature
-	#Age is a factor in crater rarity. Older systems have more craters
-	var coldest_star_temp = game.get_coldest_star_temp(p_i.parent)
 	var lake_1_phase = "G"
 	var lake_2_phase = "G"
 	if p_i.has("lake_1"):
+		$Lakes1.tile_set = game.lake_TS
 		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
 		var phase_1 = phase_1_scene.instance()
 		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
 		if lake_1_phase != "G":
 			$Lakes1.modulate = phase_1.colors[lake_1_phase]
+			#$Lakes1.modulate = Color(0.3, 0.3, 0.3, 1)
 	if p_i.has("lake_2"):
+		$Lakes2.tile_set = game.lake_TS
 		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
 		var phase_2 = phase_2_scene.instance()
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		if lake_2_phase != "G":
 			$Lakes2.modulate = phase_2.colors[lake_2_phase]
+			#$Lakes2.modulate = Color(0.3, 0.3, 0.3, 1)
 	
 	for i in wid:
 		for j in wid:
@@ -64,6 +67,12 @@ func _ready():
 							add_plant(id2, tile.tile_str)
 					"bldg":
 						add_bldg(id2, tile.tile_str)
+			if tile.has("aurora"):
+				var aurora = Sprite.new()
+				aurora.texture = game.aurora_texture
+				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				aurora.modulate = Color(rand_range(0.7, 1), 0, rand_range(0.7, 1))
+				add_child(aurora)
 			if not tile.has("tile_str"):
 				continue
 			if tile.tile_str == "rock":
@@ -77,17 +86,8 @@ func _ready():
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
-	if p_i.has("lake_1"):
-		for i in wid:
-			for j in wid:
-				var tile = game.tile_data[i % wid + j * wid]
-				if not tile:
-					continue
-				if not tile.has("tile_str"):
-					continue
-				var lake = tile.tile_str.split("_")
-				if len(lake) == 3 and lake[2] != "1":
-					continue
+			var lake = tile.tile_str.split("_")
+			if p_i.has("lake_1") and len(lake) == 3 and lake[2] == "1":
 				if lake[0] == "l":
 					$Lakes1.set_cell(i, j, 2)
 					add_particles(Vector2(i*200, j*200))
@@ -95,20 +95,10 @@ func _ready():
 					$Lakes1.set_cell(i, j, 0)
 				elif lake[0] == "sc":
 					$Lakes1.set_cell(i, j, 1)
-	if p_i.has("lake_2"):
-		for i in wid:
-			for j in wid:
-				var tile = game.tile_data[i % wid + j * wid]
-				if not tile:
-					continue
-				if not tile.has("tile_str"):
-					continue
-				var lake = tile.tile_str.split("_")
-				if len(lake) == 3 and lake[2] != "2":
-					continue
+			if p_i.has("lake_2") and len(lake) == 3 and lake[2] == "2":
 				if lake[0] == "l":
-					add_particles(Vector2(i*200, j*200))
 					$Lakes2.set_cell(i, j, 2)
+					add_particles(Vector2(i*200, j*200))
 				elif lake[0] == "s":
 					$Lakes2.set_cell(i, j, 0)
 				elif lake[0] == "sc":

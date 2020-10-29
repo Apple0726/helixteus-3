@@ -162,6 +162,7 @@ margin_left = 640.0
 margin_top = 360.0
 margin_right = 640.0
 margin_bottom = 360.0
+mouse_filter = 2
 theme = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false

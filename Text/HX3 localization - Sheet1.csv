@@ -58,7 +58,7 @@ SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura supe
 ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,Presión atmosférica,
 MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver más detalles,
 SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
-GALAXY_INFO,%s\nSystems: %s\nMagnetic field strength: %s Tesla\nDark matter: %s,%s\nSystèmes: %s\nIntensité du champ magnétique: %s Tesla\nMatière noire: %s,%s\nSistemi: %s\nIntensità del campo magnetico: %s Tesla\nMateria oscura: %s,,,%s\nSystems: %s\nIntensidad del campo magnético: %s Tesla\nMateria oscura: %s,
+GALAXY_INFO,%s\nSystems: %s\nMagnetic field strength: %s nT\nDark matter: %s,%s\nSystèmes: %s\nIntensité du champ magnétique: %s nT\nMatière noire: %s,%s\nSistemi: %s\nIntensità del campo magnetico: %s nT\nMateria oscura: %s,,,%s\nSystems: %s\nIntensidad del campo magnético: %s nT\nMateria oscura: %s,
 CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,,%s\nGalaxien: %s,%s\nGalaxias: %s,
 SUPERCLUSTER_INFO,%s\nClusters: %s\nDark energy: %s,%s\nAmas: %sÉnergie noire,%s\nAmmassi: %s\nEnergia oscura: %s,,,%s\nClústeres: %s\nEnergía oscura: %s,
 DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들
@@ -295,36 +295,43 @@ MUSIC,Music,Musique,Musica,,,Música,음악
 SFX,Sounds,Sons,Suoni,,,Sonidos,
 HOLE_DEPTH,Hole depth,Profondeur du trou,Profondità del buco,,,Profundidad,구멍 크기
 SPEED_MULTIPLIER,Speed multiplier,Multiplicateur de vitesse,Moltiplicatore di velocità,,,Multiplicador de velocidad,속도 승수
-COSTS,Costs,Coûts,Costi,,,,비용
-MINERAL_UPGRADES,Mineral upgrades,Améliorations minéraux,,,,,
-MU_DESC,Improve various areas of the game using minerals.,Améliorez différentes parties du jeu en échange de minéraux.,,,,,
-MINERAL_VALUE,Mineral value,Valeur des minéraux,,,,,
-MV_DESC,The amount of money you get per mineral sold.,,,,,,
-UPGRADE_NOUN,Upgrade,Amélioration,,,,,
-EFFECTS,Effects,Effets,,,,,
-UPGRADE_COST,Upgrade cost,Coût de l'amélioration,,,,,
-NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de minéraux.,Non hai abbastanza minerali.,,,,광물이 부족합니다.
-MINING_SPEED_MULTIPLIER_BOOST,Mining speed multiplier boost,,,,,,
-MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,,,,,
-CRATER,Crater,Cratère,Cratere,,,,충돌구
-CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.",,,,,,
-PRODUCTION,Production,Production,Produzione,,,,
-PRODUCTION_DESC,These are buildings that transform resources.,,,,,,
-METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,,{metal} {crater}
-STONE_CRUSHER,Stone crusher,,,,,,
-SC_DESC,Crushes stone to bits and extracts usable resources.,,,,,,
-CRUSHES_X,Crushes %s,,,,,,
-CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,,%s 까지 저장할수 있음
-TIME,Time,Temps,Tempo,,,,시간
-CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,,,,,
-STONE_COMPOSITION,Stone composition,,,,,,
-START_CRUSHING,Start crushing,,,,,,
-STOP_CRUSHING,Stop crushing,,,,,,
-EXPECTED_RESOURCES,Expected resources,,,,,,
-RESOURCES_EXTRACTED,Resources extracted,,,,,,
-NO_STONE,You don't have any stone!,,,,,,
-SILICON,Silicon,,,,,,
-COMP_OF_STONE_BEING_CR,Composition of stone being crushed,,,,,,
+COSTS,Costs,Coûts,Costi,,,Costos,비용
+MINERAL_UPGRADES,Mineral upgrades,Améliorations minéraux,,,,Potenciadores minerales,
+MU_DESC,Improve various areas of the game using minerals.,Améliorez différentes parties du jeu en échange de minéraux.,,,,Mejora algunas áreas del juego usando minerales.,
+MINERAL_VALUE,Mineral value,Valeur des minéraux,,,,Valor del mineral,
+MV_DESC,The amount of money you get per mineral sold.,,,,,La cantidad de dinero que obtienes por mineral vendido.,
+UPGRADE_NOUN,Upgrade,Amélioration,,,,Potenciador,
+EFFECTS,Effects,Effets,,,,Efectos,
+UPGRADE_COST,Upgrade cost,Coût de l'amélioration,,,,Costo de potenciador,
+NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de minéraux.,Non hai abbastanza minerali.,,,No tienes suficientes minerales.,광물이 부족합니다.
+MINING_SPEED_MULTIPLIER_BOOST,Mining speed multiplier boost,,,,,Multiplicador de velocidad minera,
+MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,,,,Multiplica la mejora de velocidad de minado que aparece con el minijuego.,
+CRATER,Crater,Cratère,Cratere,,,Cráter,충돌구
+CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.",,,,,Los cráteres son formados por asteroides ricos en recursos que impactan contra el planeta. Minarlos te rendirá una gran cantidad de un metal específico.,
+PRODUCTION,Production,Production,Produzione,,,Producción,
+PRODUCTION_DESC,These are buildings that transform resources.,,,,,Edificios que transforman rcursos.,
+METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,{crater} de {metal},{metal} {crater}
+STONE_CRUSHER,Stone crusher,,,,,Pulverizador de piedra,
+SC_DESC,Crushes stone to bits and extracts usable resources.,,,,,Rompe la piedra en pedacitos para extraer recursos más útiles.,
+CRUSHES_X,Crushes %s,,,,,Pulveriza %s,
+CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,Puede almacenar hasta %s,%s 까지 저장할수 있음
+TIME,Time,Temps,Tempo,,,Tiempo,시간
+CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,,,,Haz click para configurar,
+STONE_COMPOSITION,Stone composition,,,,,Composición de la piedra,
+START_CRUSHING,Start crushing,,,,,Iniciar pulverización,
+STOP_CRUSHING,Stop crushing,,,,,Detener pulverización,
+EXPECTED_RESOURCES,Expected resources,,,,,Resultados esperados,
+RESOURCES_EXTRACTED,Resources extracted,,,,,Recursos extraídos,
+NO_STONE,You don't have any stone!,,,,,No tienes piedra!,
+SILICON,Silicon,,,,,Silicio,
+COMP_OF_STONE_BEING_CR,Composition of stone being crushed,,,,,Composición de la piedra siendo pulverizada,
 COLDEST_STAR_TEMPERATURE,Coldest star temperature,,,,,,
-CLICK_TO_EDIT,Click to edit,,,,,,
-DONE,Done,,,,,,
+CLICK_TO_EDIT,Click to edit,,,,,Haz click para editar,
+DONE,Done,,,,,Listo,
+NUMBER_OF_SYSTEMS,Number of systems,,,,,Número de sistemas,
+GALAXY_ENTERED,Galaxy entered,,,,,Galaxia accedida,
+MAGNETIC_FIELD_STRENGTH,Magnetic field strength,,,,,Fuerza del campo magnético,
+DARK_MATTER,Dark matter,,,,,Materia oscura,
+METHANE,Methane,,,,,Metano,
+CO2,Carbon dioxide,,,,,Dióxido de carbono,
+OXYGEN,Oxygen,,,,,,

@@ -1,6 +1,5 @@
 extends Node
 
-onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 onready var game = get_node("/root/Game")
 #var game
 #A place to put frequently used functions
@@ -38,7 +37,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			container.remove_child(child)
 	var data = []
 	for obj in objs:
-		var rsrc = rsrc_scene.instance()
+		var rsrc = game.rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
