@@ -5,6 +5,9 @@ var astar_node = AStar2D.new()
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
+onready var tile = game.tile_data[game.c_t]
+onready var au_int:float = tile.au_int if tile.has("au_int") else 0
+onready var difficulty:int = 1 + au_int
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -32,7 +35,6 @@ onready var sq_bar_scene = preload("res://Scenes/SquareBar.tscn")
 var minimap_zoom:float = 0.02
 var minimap_center:Vector2 = Vector2(1150, 128)
 var curr_slot:int = 0
-var difficulty:int = 1
 var floor_seeds = []
 var id:int#Cave id
 var rover_data:Dictionary = {}
@@ -258,7 +260,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = randf()
-			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1)
+			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1) * pow(1 + au_int, 0.25)
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
@@ -411,7 +413,7 @@ func generate_treasure(tier:int):
 						"hx_core":Helper.rand_int(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		if randf() < 0.5 / met_value.rarity:
+		if randf() < 0.5 / met_value.rarity * pow(1 + au_int, 0.25):
 			contents[met] = game.clever_round(rand_range(0.8, 1.2) * met_value.amount * pow(tier, 1.5), 3)
 	return contents
 
@@ -600,6 +602,7 @@ func exit_cave():
 		cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
 		cave_data.hole_exits = hole_exits.duplicate(true)
 	game.switch_view("planet")
+	queue_free()
 
 func cooldown():
 	inventory_ready[curr_slot] = false

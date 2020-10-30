@@ -262,3 +262,10 @@ func change_circle_size(value, overlays):
 	for overlay in overlays:
 		overlay.circle.rect_scale.x = 2 * value
 		overlay.circle.rect_scale.y = 2 * value
+
+func save_tiles(id:int):
+	var planet_save:File = File.new()
+	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
+	planet_save.open(file_path, File.WRITE)
+	planet_save.store_var(game.tile_data)
+	planet_save.close()

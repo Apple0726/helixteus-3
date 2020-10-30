@@ -152,3 +152,14 @@ func _input(_event):
 		game.hide_tooltip()
 		slot_over = -1
 		update_hotbar()
+
+func _on_CollectAll_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("COLLECT_ALL_PLANET") + " (Shift V)")
+
+func _on_CollectAll_mouse_exited():
+	on_button = false
+	game.hide_tooltip()
+
+func _on_CollectAll_pressed():
+	game.view.obj.collect_all()

@@ -86,6 +86,7 @@ func _on_Button_pressed():
 			game.mets[obj] += rounded_value
 		game.popup(tr("PURCHASE_SUCCESS"), 1.5)
 	game.inventory.refresh()
+	game.HUD.refresh()
 	game.panels.pop_front()
 	visible = false
 

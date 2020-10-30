@@ -17,6 +17,7 @@ func _on_Upgrade_pressed(MU:String):
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
 		refresh()
+		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_MINERALS"), 1.5)
 

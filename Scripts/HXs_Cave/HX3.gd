@@ -42,7 +42,7 @@ func on_time_out():
 			cave_ref.add_proj(true, pr.position, 17.0, rot + i * 2*PI/5 * sign(sgn), load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)
 			rot += 0.02
 	counter += 1
-	if counter >= 25:
+	if counter >= 50:
 		counter = 0
 		rot = rand_range(0, 2*PI/5)
 		if randf() < 0.5:

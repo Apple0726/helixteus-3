@@ -15,8 +15,8 @@ func _on_StarSystem_pressed():
 
 
 func _on_Construct_pressed():
-	click_sound.play()
 	if not Input.is_action_pressed("shift"):
+		click_sound.play()
 		game.toggle_panel(game.construct_panel)
 
 func _on_Mine_pressed():
@@ -34,8 +34,9 @@ func _on_PlaceSoil_pressed():
 	game.put_bottom_info(tr("PLACE_SOIL_INFO"))
 
 func _on_Vehicles_pressed():
-	click_sound.play()
-	game.toggle_panel(game.vehicle_panel)
+	if not Input.is_action_pressed("shift"):
+		click_sound.play()
+		game.toggle_panel(game.vehicle_panel)
 
 func _on_Construct_mouse_entered():
 	on_button = true

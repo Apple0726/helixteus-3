@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var id:int = game.c_t
 onready var tile = game.tile_data[id]
+onready var au_int:float = tile.au_int if tile and tile.has("au_int") else 0
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
 var total_mass = 0
@@ -27,6 +28,8 @@ func _ready():
 		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
 	else:
 		$Tile/TextureRect.texture = tile_texture
+	if not tile:
+		tile = {}
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
@@ -116,14 +119,14 @@ func generate_rock(new:bool):
 				for met in met_info:
 					var crater_metal = tile.has("init_depth") and met == tile.crater_metal
 					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth or crater_metal:
-						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1):
+						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1) * pow(1 + au_int, 0.5):
 							tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
 				var size = tile.current_deposit.size
 				var progress2 = tile.current_deposit.progress
 				var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier, 3)
+				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * pow(1 + au_int, 0.5), 3)
 				for i in clamp(round(amount / 2.0), 1, 40):
 					var met_sprite = Sprite.new()
 					met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
@@ -157,7 +160,10 @@ func _input(event):
 
 func _on_Back_pressed():
 	tile.mining_progress = progress
+	game.tile_data[id] = tile
+	Helper.save_tiles(game.c_p)
 	game.switch_view("planet")
+	queue_free()
 
 var crumbles = []
 

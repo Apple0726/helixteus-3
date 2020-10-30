@@ -22,6 +22,7 @@ func _input(event):
 				game.long_popup(tr("RC_DONE"), tr("RESEARCH_SUCCESS"))
 			else:
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
+			game.HUD.refresh()
 			get_node(sc_over).get_node("PanelContainer/HBoxContainer/VBoxContainer/Label")["custom_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			game.popup(tr("NOT_ENOUGH_SP"), 1.5)

@@ -20,22 +20,27 @@ func _ready():
 func refresh():
 	c_t = game.c_t
 	tile = game.tile_data[c_t]
-	if not game.stone.empty():
-		expected_rsrc = {}
-		var is_crushing = tile.has("stone")
-		set_process(is_crushing)
-		pie.objects = []
-		pie.other_str = tr("TRACE_ELEMENTS")
-		pie.other_str_short = tr("TRACE")
-		var total_stone
-		var arr
-		if is_crushing:
-			arr = obj_to_array(tile.stone)
-			total_stone = Helper.get_sum_of_dict(tile.stone)
-			pie.get_node("Title").text = tr("COMP_OF_STONE_BEING_CR")
-			$Control/Button.text = tr("STOP_CRUSHING")
-			$Control/Label.text = tr("RESOURCES_EXTRACTED")
-			rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.expected_rsrc)
+	expected_rsrc = {}
+	var is_crushing = tile.has("stone")
+	set_process(is_crushing)
+	pie.objects = []
+	pie.other_str = tr("TRACE_ELEMENTS")
+	pie.other_str_short = tr("TRACE")
+	var total_stone
+	var arr
+	if is_crushing:
+		arr = obj_to_array(tile.stone)
+		total_stone = Helper.get_sum_of_dict(tile.stone)
+		pie.get_node("Title").text = tr("COMP_OF_STONE_BEING_CR")
+		$Control/Button.text = tr("STOP_CRUSHING")
+		$Control/Label.text = tr("RESOURCES_EXTRACTED")
+		rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.expected_rsrc)
+	else:
+		if Helper.get_sum_of_dict(game.stone) == 0:
+			game.stone.clear()
+			$Desc.text = tr("NO_STONE")
+			$Control.visible = false
+			return
 		else:
 			arr = obj_to_array(game.stone)
 			total_stone = Helper.get_sum_of_dict(game.stone)
@@ -60,28 +65,24 @@ func refresh():
 			for el in game.stone:
 				stone_to_crush[el] = game.stone[el] * hslider.value / total_stone
 			Helper.put_rsrc(vbox, 44, expected_rsrc)
-		for obj in arr:
-			var directory = Directory.new()
-			var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
-			var texture_exists = directory.file_exists(dir_str)
-			var texture
-			if texture_exists:
-				texture = load(dir_str)
-			else:
-				texture = preload("res://Graphics/Elements/Default.png")
-			var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"
-			pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
-		pie.refresh()
-		$Control/HBoxContainer/Label.text = "%s kg" % [round(hslider.value)]
-		$Desc.text = tr("SC_DESC")
-		$Control.visible = true
-		hbox.visible = not is_crushing
-		CC.visible = is_crushing
-		hslider.max_value = min(total_stone, tile.path_2_value)
-	else:
-		$Desc.text = tr("NO_STONE")
-		$Control.visible = false
-	game.HUD.refresh()
+	for obj in arr:
+		var directory = Directory.new()
+		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
+		var texture_exists = directory.file_exists(dir_str)
+		var texture
+		if texture_exists:
+			texture = load(dir_str)
+		else:
+			texture = preload("res://Graphics/Elements/Default.png")
+		var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"
+		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
+	pie.refresh()
+	$Control/HBoxContainer/Label.text = "%s kg" % [round(hslider.value)]
+	$Desc.text = tr("SC_DESC")
+	$Control.visible = true
+	hbox.visible = not is_crushing
+	CC.visible = is_crushing
+	hslider.max_value = min(total_stone, tile.path_2_value)
 
 func obj_to_array(elements:Dictionary):
 	var arr = []
@@ -104,6 +105,7 @@ func _on_Button_pressed():
 		tile.stone_qty = Helper.get_sum_of_dict(stone_to_crush)
 		tile.start_date = OS.get_system_time_msecs()
 		tile.expected_rsrc = expected_rsrc
+		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
 		var qty_left = max(0, round(tile.stone_qty - (time - tile.start_date) / 1000.0 * tile.path_1_value))
@@ -119,6 +121,7 @@ func _on_Button_pressed():
 		else:
 			game.add_resources(tile.expected_rsrc)
 		tile.erase("stone")
+		game.popup(tr("RESOURCES_COLLECTED"), 1.5)
 	refresh()
 
 func _process(delta):

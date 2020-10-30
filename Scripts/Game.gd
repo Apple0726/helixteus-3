@@ -20,13 +20,15 @@ onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
+onready var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
 onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
 onready var particles_scene = load("res://Scenes/LiquidParticles.tscn")
 onready var time_scene = load("res://Scenes/TimeLeft.tscn")
 onready var planet_TS = load("res://Resources/PlanetTileSet.tres")
 onready var lake_TS = load("res://Resources/LakeTileSet.tres")
 onready var obstacles_TS = load("res://Resources/ObstaclesTileSet.tres")
-onready var aurora_texture = load("res://Graphics/Tiles/Aurora.png")
+onready var aurora1_texture = load("res://Graphics/Tiles/Aurora1.png")
+onready var aurora2_texture = load("res://Graphics/Tiles/Aurora2.png")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -71,12 +73,12 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 8000
-var minerals:float = 500
+var money:float = 800
+var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
-var energy:float = 2000
-var SP:float = 0
+var energy:float = 200
+var SP:float = 400
 #Dimension remnants
 var DRs:float = 0
 var lv:int = 5
@@ -98,13 +100,13 @@ var stack_size:int = 16
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":700}
+var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
 						"sand":0,
 						"clay":0,
-						"soil":0,
+						"soil":50,
 						"cellulose":0,
 						"silicon":0,
 }
@@ -123,9 +125,10 @@ var mets:Dictionary = {	"lead":0,
 						"sapphire":0}
 
 #Display help when players see/do things for the first time. true: show help
-var help:Dictionary = {"mining":false,
+var help:Dictionary = {"mining":true,
 			"plant_something_here":true,
 			"boulder_desc":true,
+			"aurora_desc":true,
 			"cave_desc":true,
 			"crater_desc":true,
 			"tile_shortcuts":true,
@@ -140,9 +143,9 @@ var MUs:Dictionary = {	"MV":1,
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
-						"stone":true,
+						"stone":false,
 						"SP":false,
-						"mining_layer":true,
+						"mining_layer":false,
 						"plant_button":false,
 						"vehicles_button":false,
 						"materials":false,
@@ -194,9 +197,9 @@ var save_s = false
 var save_p = false
 var save_t = false
 
-var EA_planet_visited = true
-var EA_galaxy_visited = true
-var EA_cave_visited = true
+var EA_planet_visited = false
+var EA_galaxy_visited = false
+var EA_cave_visited = false
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -396,6 +399,7 @@ func _load_game():
 		planet_data[2]["discovered"] = false
 		planet_data[2].pressure = 1
 		planet_data[2].lake_1 = "water"
+		planet_data[2].erase("lake_2")
 		planet_data[2].liq_seed = 4
 		planet_data[2].liq_period = 100
 		planet_data[2].crust_start_depth = Helper.rand_int(35, 40)
@@ -438,7 +442,7 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 	remove_child($Title)
-	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
+	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -625,6 +629,7 @@ func add_science_tree():
 	add_obj("science_tree")
 
 func add_mining():
+	HUD.get_node("CollectAll").visible = false
 	HUD.get_node("Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instance()
 	add_child(mining_HUD)
@@ -749,6 +754,7 @@ func add_system():
 	if not system_data[c_s]["discovered"]:
 		generate_planets(c_s)
 	add_obj("system")
+	HUD.get_node("CollectAll").visible = false
 
 func add_planet():
 	if not planet_data[c_p]["discovered"]:
@@ -759,6 +765,7 @@ func add_planet():
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
+	HUD.get_node("CollectAll").visible = true
 
 func remove_dimension():
 	add_child(HUD)
@@ -786,6 +793,7 @@ func remove_system():
 	view.remove_obj("system")
 
 func remove_planet():
+	Helper.save_tiles(c_p)
 	$Control/BottomInfo.visible = false
 	view.remove_obj("planet")
 	remove_child(planet_HUD)
@@ -1201,17 +1209,20 @@ func generate_systems(id:int):
 		galaxy_data[id]["discovered"] = false
 	return progress
 
+func get_max_star_prop(s_id:int, prop:String):
+	var max_star_prop = 0
+	for star in system_data[s_id].stars:
+		if star[prop] > max_star_prop:
+			max_star_prop = star[prop]
+	return max_star_prop
+
 func generate_planets(id:int):
 	randomize()
 	var combined_star_size = 0
-	var max_star_temp = 0
-	var max_star_size = 0
+	var max_star_temp = get_max_star_prop(id, "temperature")
+	var max_star_size = get_max_star_prop(id, "size")
 	for star in system_data[id]["stars"]:
 		combined_star_size += star["size"]
-		if star.temperature > max_star_temp:
-			max_star_temp = star.temperature
-		if star.size > max_star_size:
-			max_star_size = star.size
 	var planet_num = system_data[id]["planet_num"]
 	var max_distance
 	var j = 0
@@ -1294,6 +1305,41 @@ func generate_tiles(id:int):
 	var view_zoom = 3.0 / wid
 	p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 	tile_data.resize(pow(wid, 2))
+	#Aurora spawn
+	var diff:int = 0
+	var tile_from:int = -1
+	var tile_to:int = -1
+	var rand:float = randf()
+	var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 50.0)
+	var pulsation:float = rand_range(0.4, 1)
+	var max_star_temp = get_max_star_prop(c_s, "temperature")
+	for i in 2:
+		if id != 2 and randf() < 0.35:
+			#au_int: aurora_intensity
+			var au_int = clever_round(rand_range(50000, 100000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_type = Helper.rand_int(1, 2)
+			if tile_from == -1:
+				tile_from = Helper.rand_int(0, wid)
+				tile_to = Helper.rand_int(0, wid)
+			if rand < 0.5:#Vertical
+				for j in wid:
+					var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness / 1.2 * sin(j / float(wid) * 4 * pulsation * PI)
+					for k in range(x_pos - int(thiccness / 2) + diff, x_pos + int(ceil(thiccness / 2.0)) + diff):
+						if k < 0 or k > wid - 1:
+							continue
+						tile_data[k + j * wid] = {}
+						tile_data[k + j * wid].aurora = au_type
+						tile_data[k + j * wid].au_int = au_int
+			else:#Horizontal
+				for j in wid:
+					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness / 1.2 * sin(j / float(wid) * 4 * pulsation * PI)
+					for k in range(y_pos - int(thiccness / 2) + diff, y_pos + int(ceil(thiccness / 2.0)) + diff):
+						if k < 0 or k > wid - 1:
+							continue
+						tile_data[j + k * wid] = {}
+						tile_data[j + k * wid].aurora = au_type
+						tile_data[j + k * wid].au_int = au_int
+			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_coldest_star_temp(c_s)
@@ -1313,26 +1359,26 @@ func generate_tiles(id:int):
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 	for i in wid:
 		for j in wid:
-			var level = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
+			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
 			var t_id = i % wid + j * wid
 			if level > 0.5:
 				if lake_1_phase != "G":
-					tile_data[t_id] = {}
+					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					make_lake(tile_data[t_id], lake_1_phase.to_lower(), p_i.lake_1, 1)
 					continue
 			if level < -0.5:
 				if lake_2_phase != "G":
-					tile_data[t_id] = {}
+					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
 					continue
 			if p_i.temperature <= 1000 and randf() < 0.001:
-				tile_data[t_id] = {}
+				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				make_obstacle(tile_data[t_id], "rock")
 				continue
 			if id == 2:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
-				tile_data[t_id] = {}
+				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				make_obstacle(tile_data[t_id], "cave")
 				tile_data[t_id].cave_id = len(cave_data)
 				var floor_size:int = Helper.rand_int(25, 60)
@@ -1346,7 +1392,7 @@ func generate_tiles(id:int):
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
-				tile_data[t_id] = {}
+				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				make_obstacle(tile_data[t_id], "crater")
 				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
@@ -1358,29 +1404,6 @@ func generate_tiles(id:int):
 						continue
 					if randf() < 0.3 / pow(met_info[met].rarity, 1.3):
 						tile_data[t_id].crater_metal = met
-	for i in 2:
-		if randf() < 0.5:
-			var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 30.0)
-			var tile_from:int = Helper.rand_int(0, wid)
-			var tile_to:int = Helper.rand_int(0, wid)
-			if randf() < 0.5:
-				for j in wid:
-					var x_pos:int = lerp(tile_from, tile_to, j / float(wid))
-					for k in range(x_pos - int(thiccness / 2), x_pos + int(ceil(thiccness / 2))):
-						if k < 0 or k > wid - 1:
-							continue
-						if not tile_data[k + j * wid]:
-							tile_data[k + j * wid] = {}
-						tile_data[k + j * wid].aurora = true
-			else:
-				for j in wid:
-					var y_pos:int = lerp(tile_from, tile_to, j / float(wid))
-					for k in range(y_pos - int(thiccness / 2), y_pos + int(ceil(thiccness / 2))):
-						if k < 0 or k > wid - 1:
-							continue
-						if not tile_data[j + k * wid]:
-							tile_data[j + k * wid] = {}
-						tile_data[j + k * wid].aurora = true
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1393,11 +1416,7 @@ func generate_tiles(id:int):
 		tile_data[315] = {}
 		make_obstacle(tile_data[315], "cave")
 		tile_data[315].cave_id = 1
-	var planet_save:File = File.new()
-	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
-	planet_save.open(file_path, File.WRITE)
-	planet_save.store_var(tile_data)
-	planet_save.close()
+	Helper.save_tiles(id)
 	tile_data.clear()
 
 func make_planet_composition(temp:float, depth:String):
@@ -1864,11 +1883,18 @@ func _input(event):
 		hide_tooltip()
 		hide_adv_tooltip()
 	
-	#Sell all minerals by pressing Shift C
-	if Input.is_action_pressed("shift") and Input.is_action_just_released("construct") and minerals > 0:
-		money += minerals * (MUs.MV + 4)
-		popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
-		minerals = 0
+	if Input.is_action_pressed("shift"):
+		#Sell all minerals by pressing Shift C
+		if Input.is_action_just_released("construct") and minerals > 0:
+			money += minerals * (MUs.MV + 4)
+			popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
+			minerals = 0
+			HUD.refresh()
+		#Collect all by pressing Shift V
+		if Input.is_action_just_released("vehicles"):
+			if c_v == "planet":
+				view.obj.collect_all()
+	
 	if Input.is_action_just_released("hotbar_1") and len(hotbar) > 0:
 		var name = hotbar[0]
 		if get_item_num(name) > 0:

@@ -8,6 +8,8 @@ var HP_icon = load("res://Graphics/Icons/HP.png")
 var atk_icon = load("res://Graphics/Icons/atk.png")
 var def_icon = load("res://Graphics/Icons/def.png")
 var inv_icon = load("res://Graphics/Icons/Inventory.png")
+var tile_id:int = -1
+
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
@@ -64,6 +66,13 @@ func on_rover_press(rov:Dictionary):
 		rov.i_w_w = {}
 		game.popup(tr("ITEMS_COLLECTED"), 1.5)
 	elif game.c_v == "planet":
-		game.view.obj.rover_selected = rov
-		game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"))
-		game.toggle_panel(self)
+		if tile_id == -1:
+			game.view.obj.rover_selected = rov
+			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"))
+			game.toggle_panel(self)
+		else:
+			game.c_t = tile_id
+			game.switch_view("cave")
+			game.cave.rover_data = rov
+			game.cave.set_rover_data()
+			game.toggle_panel(self)
