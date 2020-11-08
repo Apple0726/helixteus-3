@@ -11,10 +11,10 @@ SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점
 INVENTORY,Inventory,Inventaire,Inventario,,Inventar,Inventario,소지품
 CONSTRUCT,Construct,Construire,Costruire,,Bauen,Construir,건설하기
 BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기
-VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem bertrachten,Ver sistema estelar,항성계 보기
-MINE,Mine,Miner,Minare,,abbauen,Minar,
+VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem betrachten,Ver sistema estelar,항성계 보기
+MINE,Mine,Miner,Minare,,Abbauen,Minar,
 START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,
-MINE_HELP,Click and hold the tile to mine!,Cliquez et maintez la tuile pour miner!,,,Eine Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,
+MINE_HELP,Click and hold the tile to mine!,Cliquez et maintez la tuile pour miner!,,,Die Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,
 LAYER,Layer,Couche,Strato,,Ebene,Capa,계층
 SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,
 CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각
@@ -29,7 +29,7 @@ NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez 
 NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음
 BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기
 LATER,Later,Plus tard,Più tardi,,Später,Más tarde,나중에
-STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire,,Rechtsklicken um die Konstruktion zu stoppen,Click derecho para dejar de construir,다 지었으면 오른쪽 클릭
+STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire,,Rechtsklicken um die Konstruktion abzubrechen,Click derecho para dejar de construir,다 지었으면 오른쪽 클릭
 HOME_PLANET,Home planet,Planète originelle,,,Heimatplanet,Planeta hogar,
 SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,,Sonnensystem,Sistema solar,태양계
 MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Láctea,우리은하
@@ -84,7 +84,7 @@ OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Overclocks,오버클럭
 OVERCLOCK,Overclock,Overclock,Overclock,,,Overclock,오버클럭
 OVERCLOCK_DESC,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,Multiplicador de producción: %s\nDuración: %s,생산 승수: %s\n기간: %s
 PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이
-SPEED_UP_INFO,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,
+SPEED_UP_INFO,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind Gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,
 OVERCLOCK_INFO,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Overclocks temporalmente aumentan la producción de recursos de los edificios seleccionados.,
 PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
 STICK,Stick,Bâton,Bastone,,Stock,Palo,
@@ -196,9 +196,9 @@ CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas p
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
-INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,Alle einmal nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
+INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,AlleVerbauchbaren nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
 PLACE_SOIL,Place/remove soil,Placer/enlever terre,Piazzare terra,,Erde Platzieren,Poner tierra,
-PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour place ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Tile um 10 kg Erde zu platzieren,Haz click en una casilla para poner tierra (10 kg por casilla),
+PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour place ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Feld um 10 kg Erde zu platzieren oder zu entfernen,Haz click en una casilla para poner tierra (10 kg por casilla),
 NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,No tienes recursos suficientes.,자원이 부족합니다.
 NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,No tienes tierra suficiente.,흙이 부족합니다.
 NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,No tienes suficientes puntos de ciencia.,과학 포인트가 부족합니다.
@@ -276,9 +276,9 @@ CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Cli
 CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,Click para añadir un componente,
 ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,Este rover está siendo construido!,
 LASER,Laser,Laser,Laser,,,Láser,레이저
-MINING_LASER,Mining laser,,,,,Láser de minería,
+MINING_LASER,Mining laser,Laser de minage,,,,Láser de minería,
 COOLDOWN,Cooldown,,,,,Cooldown,
-DAMAGE,Damage,Dégâts,Danni,,,Daño,
+DAMAGE,Damage,Dégâts,Danno,,,Daño,
 CLICK_TO_USE_ROVER,Click to use this rover to explore a cave,Cliquez pour utiliser ce rover comme explorateur de grotte,,,,Haz click en este rover para explorar una cueva,
 CLICK_A_CAVE_TO_EXPLORE,Click a cave to explore,Cliquez une grotte à explorer,Cliccare una grotta da esplorare,,,Haz click en una cueva para explorarla,
 RCC_DESC,Build rovers with this building.,Construisez des rovers avec ce bâtiment.,,,,Construye rovers en este edificio.,
@@ -290,7 +290,7 @@ TIER_X_CHEST,Tier %s chest,Coffre de rang %s,,,,Cofre de rango %s,
 HX_CORE,Helix core,Noyau Helix,Nucleo Helix,,,Núcleo Helix,핼릭스 핵
 ITEMS_COLLECTED,Items collected,,,,,Objetos recogidos,
 SETTINGS,Settings,Paramètres,Impostazioni,,,Ajustes,설정
-MASTER,Master,,,,,Todo,
+MASTER,Master,Principal,Principale,,,Todo,
 MUSIC,Music,Musique,Musica,,,Música,음악
 SFX,Sounds,Sons,Suoni,,,Sonidos,
 HOLE_DEPTH,Hole depth,Profondeur du trou,Profondità del buco,,,Profundidad,구멍 크기
@@ -320,7 +320,7 @@ CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,,,,Haz click para 
 STONE_COMPOSITION,Stone composition,,,,,Composición de la piedra,
 START_CRUSHING,Start crushing,,,,,Iniciar pulverización,
 STOP_CRUSHING,Stop crushing,,,,,Detener pulverización,
-EXPECTED_RESOURCES,Expected resources,,,,,Resultados esperados,
+EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Resultados esperados,
 RESOURCES_EXTRACTED,Resources extracted,,,,,Recursos extraídos,
 NO_STONE,You don't have any stone!,,,,,No tienes piedra!,
 SILICON,Silicon,,,,,Silicio,
@@ -341,3 +341,15 @@ AURORA_DESC,Auroras are colorful lights caused by interactions of solar wind wit
 AURORA_INTENSITY,Aurora intensity,,,,,,
 COLLECT_ALL_PLANET,Collect all resources on this planet,,,,,,
 RESOURCES_COLLECTED,Resources collected,,,,,,
+ICE,Ice,Glace,Ghiaccio,,,,얼음
+METAL_COMP,{metal} {comp},{comp} en {metal},{comp} en {metal},,,,{metal} {comp}
+ARMOR,Armor,Armure,Armatura,,,,
+WHEELS,Wheels,Roues,Ruote,,,, 바퀴
+CC,Cargo container,Conteneur,Contenitore,,,,
+HEALTH_POINTS,Health points,Points de vie,Punti di vita,,,,
+ATTACK,Attack,,,,,,
+DEFENSE,Defense,,,,,,
+CARGO_CAPACITY,Cargo capacity,,,,,,
+MOVEMENT_SPEED,Movement speed,,,,,,
+SELECT,Select,Sélectionner,Selezionare,,,,선택하기
+SELECT_X,{select} {something},{select} {something},{select} {something},,,,{something} {select}

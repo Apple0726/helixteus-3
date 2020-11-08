@@ -21,6 +21,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="BlackBG" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_left = -320.0
+margin_top = -256.0
+margin_right = 960.0
+margin_bottom = 464.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 0.564706 )
+
 [node name="Label" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5

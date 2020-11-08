@@ -49,3 +49,16 @@ var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 var science_unlocks = {	"SA":{"cost":100},
 						"RC":{"cost":250},
 }
+
+var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},
+					"copper_armor":{"HP":10, "defense":5, "costs":{"copper":40}},
+					"iron_armor":{"HP":15, "defense":7, "costs":{"iron":40}},
+}
+var rover_wheels = {	"lead_wheels":{"speed":1.0, "costs":{"lead":30}},
+						"copper_wheels":{"speed":1.05, "costs":{"copper":30}},
+						"iron_wheels":{"speed":1.1, "costs":{"iron":30}},
+}
+var rover_CC = {	"lead_CC":{"capacity":3000, "costs":{"lead":70}},
+					"copper_CC":{"capacity":3500, "costs":{"copper":70}},
+					"iron_CC":{"capacity":4000, "costs":{"iron":70}},
+}

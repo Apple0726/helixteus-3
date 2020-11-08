@@ -144,7 +144,7 @@ func get_plant_produce(name:String):
 			return "lead"
 
 func get_wid(size:float):
-	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 250)
+	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 500)
 
 func get_dir_from_name(name:String):
 	if name.substr(0, 7) == "speedup":

@@ -29,6 +29,7 @@ onready var lake_TS = load("res://Resources/LakeTileSet.tres")
 onready var obstacles_TS = load("res://Resources/ObstaclesTileSet.tres")
 onready var aurora1_texture = load("res://Graphics/Tiles/Aurora1.png")
 onready var aurora2_texture = load("res://Graphics/Tiles/Aurora2.png")
+onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -442,7 +443,7 @@ func _load_game():
 		add_planet()
 		add_child(HUD)
 	remove_child($Title)
-	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
+	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -1416,6 +1417,16 @@ func generate_tiles(id:int):
 		tile_data[315] = {}
 		make_obstacle(tile_data[315], "cave")
 		tile_data[315].cave_id = 1
+		var curr_time = OS.get_system_time_msecs()
+		tile_data[110] = {}
+		tile_data[110].tile_str = "RCC"
+		tile_data[110].is_constructing = false
+		tile_data[110].construction_date = curr_time
+		tile_data[110].construction_length = 10
+		tile_data[110].type = "bldg"
+		tile_data[110].XP = 0
+		tile_data[110].path_1 = 1
+		tile_data[110].path_1_value = Data.path_1.RCC.value
 	Helper.save_tiles(id)
 	tile_data.clear()
 
@@ -1861,8 +1872,8 @@ func _input(event):
 		update_item_cursor()
 		if len(panels) != 0:
 			if c_v != "":
-				if panels[0] == inventory.buy_sell:
-					inventory.buy_sell.visible = false
+				if not panels[0].polygon:
+					panels[0].visible = false
 					panels.pop_front()
 				elif panels[0] == upgrade_panel:
 					remove_upgrade_panel()

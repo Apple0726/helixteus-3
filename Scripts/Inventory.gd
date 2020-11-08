@@ -2,7 +2,6 @@ extends "Panel.gd"
 
 var tab:String
 var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
-var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var buy_sell
 onready var inventory_grid = $Contents/Control/Inventory
 var item_hovered:String = ""
@@ -35,7 +34,7 @@ func _on_Items_pressed():
 		inventory_grid.remove_child(item)
 	var i:int = 0
 	for item in game.items:
-		var slot = slot_scene.instance()
+		var slot = game.slot_scene.instance()
 		if item != null:
 			slot.get_node("Label").text = String(item.num)
 			slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item.name)  + "/" + item.name + ".png")

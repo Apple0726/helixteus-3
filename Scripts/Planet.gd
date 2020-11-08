@@ -160,13 +160,16 @@ func show_tooltip(tile):
 					tooltip += "\n" + tr("CLICK_TO_HARVEST")
 		elif tile.type == "lake":
 			var strs = tile.tile_str.split("_")
-			match strs[0]:
-				"l":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(strs[1].to_upper())})
-				"s":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(strs[1].to_upper())})
-				"sc":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(strs[1].to_upper())})
+			if strs[0] == "s" and strs[1] == "water":
+				tooltip = tr("ICE")
+			else:
+				match strs[0]:
+					"l":
+						tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(strs[1].to_upper())})
+					"s":
+						tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(strs[1].to_upper())})
+					"sc":
+						tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(strs[1].to_upper())})
 		elif tile.type == "obstacle":
 			match tile.tile_str:
 				"rock":
@@ -311,6 +314,22 @@ func overclock_bldg(tile, tile_id:int):
 		game.item_to_use.num -= 1
 		game.update_item_cursor()
 
+func click_tile(tile, tile_id:int):
+	if not tile.has("tile_str"):
+		return
+	if tile.tile_str in ["ME", "PP", "RL"]:
+		collect_rsrc(tile, tile_id)
+	else:
+		match tile.tile_str:
+			"RCC":
+				if not tile.is_constructing:
+					game.c_t = tile_id
+					game.toggle_panel(game.RC_panel)
+			"SC":
+				if not tile.is_constructing:
+					game.c_t = tile_id
+					game.toggle_panel(game.SC_panel)
+
 func collect_rsrc(tile, tile_id:int):
 	if not tile.has("tile_str"):
 		return
@@ -336,14 +355,6 @@ func collect_rsrc(tile, tile_id:int):
 		"RL":
 			game.SP += tile.stored
 			tile.stored = 0
-		"RCC":
-			if not tile.is_constructing:
-				game.c_t = tile_id
-				game.toggle_panel(game.RC_panel)
-		"SC":
-			if not tile.is_constructing:
-				game.c_t = tile_id
-				game.toggle_panel(game.SC_panel)
 
 var prev_tile_over = -1
 func _input(event):
@@ -437,7 +448,7 @@ func _input(event):
 					elif game.item_to_use.type == "overclock":
 						overclock_bldg(tile, tile_id)
 					else:
-						collect_rsrc(tile, tile_id)
+						click_tile(tile, tile_id)
 				elif tile.type == "obstacle":
 					if tile.tile_str == "cave":
 						if not rover_selected.empty():
