@@ -1,5 +1,6 @@
 ,en,fr,it,ru,de,es,ko
 NEW_GAME,New game,Nouvelle partie,Nuova partita,Новая игра,Neues Spiel,Nueva partida,새 게임
+LOAD_GAME,Load game,Charger une partie,Caricare una partita,,,,불러오기
 MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈
 MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물
 STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌
@@ -270,8 +271,8 @@ SA_DONE,You unlocked space agriculture! You can now craft seeds and fertilizers.
 RC_DONE,You unlocked rover construction! You can now construct the rover construction center.,,,,,Haz desbloqueado construcción de rover! Ahora puedes construir el rover en su centro de construcción.,
 CONSTRUCT_ROVER,Construct a rover,Construire un rover,Costruire un rover,,,Construir un rover,
 STATS,Stats,Stats,Stat,,,Estadísticas,
-LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers,Permet au rover d'attaquer les ennemis avec des lasers,,,,Permite al rover atacar enemigos con lasers,
-MINING_LASER_DESC,Allows the rover to mine rocks in caves,Permet au rover de miner les roches dans les grottes,,,,Le permite al rover minar rocas en las cuevas,
+LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers.,Permet au rover d'attaquer les ennemis avec des lasers.,,,,Permite al rover atacar enemigos con lasers.,
+MINING_LASER_DESC,Allows the rover to mine rocks in caves.,Permet au rover de miner les roches dans les grottes.,,,,Le permite al rover minar rocas en las cuevas.,
 CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Click para remover,클릭: 제거하기
 CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,Click para añadir un componente,
 ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,Este rover está siendo construido!,
@@ -342,7 +343,7 @@ AURORA_INTENSITY,Aurora intensity,,,,,,
 COLLECT_ALL_PLANET,Collect all resources on this planet,,,,,,
 RESOURCES_COLLECTED,Resources collected,,,,,,
 ICE,Ice,Glace,Ghiaccio,,,,얼음
-METAL_COMP,{metal} {comp},{comp} en {metal},{comp} en {metal},,,,{metal} {comp}
+METAL_COMP,{metal} {comp},{comp} en {metal},{comp} di {metal},,,,{metal} {comp}
 ARMOR,Armor,Armure,Armatura,,,,
 WHEELS,Wheels,Roues,Ruote,,,, 바퀴
 CC,Cargo container,Conteneur,Contenitore,,,,
@@ -353,3 +354,20 @@ CARGO_CAPACITY,Cargo capacity,,,,,,
 MOVEMENT_SPEED,Movement speed,,,,,,
 SELECT,Select,Sélectionner,Selezionare,,,,선택하기
 SELECT_X,{select} {something},{select} {something},{select} {something},,,,{something} {select}
+CLICK_TO_CHANGE,Click to change,Cliquez pour changer,Cliccare per cambiare,,,,
+RED_LASER,Red {laser},{laser} rouge,{laser} rosso,,,,
+ORANGE_LASER,Orange {laser},{laser} orange,{laser} arancione,,,,
+YELLOW_LASER,Yellow {laser},{laser} jaune,{laser} giallo,,,,
+GREEN_LASER,Green {laser},{laser} vert,{laser} verde,,,,
+BLUE_LASER,Blue {laser},,,,,,
+PURPLE_LASER,Purple {laser},,,,,,
+UV_LASER,UV {laser},,,,,,
+XRAY_LASER,X-ray {laser},,,,,,
+GAMMA_LASER,Gamma ray {laser},,,,,,
+WEAPONS,Weapons,,,,,,
+MINING_TOOLS,Mining tools,,,,,,
+ARMOR_DESC,Armor protects the rover from cave hazards.,,,,,,
+WHEELS_DESC,Wheels allow the rover to move.,,,,,,
+CC_DESC,Cargo containers expand the rover's inventory capacity.,,,,,,
+X_TO_REMOVE,Press X to remove,,,,,,
+RANGE,Range,,,,,,

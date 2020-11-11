@@ -10,9 +10,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -320.0
-margin_top = -116.0
+margin_top = -136.0
 margin_right = 320.0
-margin_bottom = 100.0
+margin_bottom = 120.0
 theme = ExtResource( 4 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -22,12 +22,23 @@ __meta__ = {
 [node name="BlackBG" type="ColorRect" parent="."]
 show_behind_parent = true
 margin_left = -320.0
-margin_top = -256.0
+margin_top = -224.0
 margin_right = 960.0
-margin_bottom = 464.0
+margin_bottom = 496.0
 color = Color( 0, 0, 0, 0.564706 )
 __meta__ = {
 "_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="."]
+margin_left = 276.0
+margin_top = 12.0
+margin_right = 364.0
+margin_bottom = 44.0
+grow_horizontal = 2
+align = 1
+__meta__ = {
 "_edit_use_anchors_": false
 }
 
@@ -44,13 +55,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Desc" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -320.0
+margin_top = 52.0
+margin_right = 320.0
+margin_bottom = 96.0
+text = "Select"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CostLabel" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -276.0
-margin_top = 172.0
-margin_right = -156.0
-margin_bottom = 196.0
+margin_left = -296.0
+margin_top = 212.0
+margin_right = -176.0
+margin_bottom = 236.0
 text = "Cost"
 align = 1
 __meta__ = {
@@ -58,10 +82,10 @@ __meta__ = {
 }
 
 [node name="Cost" parent="." instance=ExtResource( 2 )]
-margin_left = 180.0
-margin_top = 152.0
-margin_right = -386.0
-margin_bottom = 0.0
+margin_left = 136.0
+margin_top = 204.0
+margin_right = -430.0
+margin_bottom = -20.0
 
 [node name="Select" type="Button" parent="."]
 anchor_left = 1.0
@@ -77,8 +101,9 @@ __meta__ = {
 
 [node name="HBox" type="HBoxContainer" parent="."]
 margin_left = 32.0
-margin_top = 68.0
+margin_top = 112.0
 margin_right = 608.0
-margin_bottom = 108.0
+margin_bottom = 152.0
 custom_constants/separation = -2
+[connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Select" to="." method="_on_Select_pressed"]

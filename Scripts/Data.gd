@@ -62,3 +62,13 @@ var rover_CC = {	"lead_CC":{"capacity":3000, "costs":{"lead":70}},
 					"copper_CC":{"capacity":3500, "costs":{"copper":70}},
 					"iron_CC":{"capacity":4000, "costs":{"iron":70}},
 }
+var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":5000, "silicon":5, "time":10}},
+						"orange_laser":{"damage":8, "cooldown":0.195, "costs":{"money":35000, "silicon":20, "time":20}},
+						"yellow_laser":{"damage":13, "cooldown":0.19, "costs":{"money":400000, "silicon":120, "time":30}},
+						"green_laser":{"damage":22, "cooldown":0.185, "costs":{"money":9000000, "silicon":1000, "time":50}},
+}#														rnge: mining range
+var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money":5000, "silicon":5, "time":10}},
+						"orange_mining_laser":{"speed":1.3, "rnge":260, "costs":{"money":25000, "silicon":15, "time":20}},
+						"yellow_mining_laser":{"speed":1.6, "rnge":270, "costs":{"money":180000, "silicon":60, "time":30}},
+						"green_mining_laser":{"speed":2.0, "rnge":285, "costs":{"money":3600000, "silicon":400, "time":50}},
+}

@@ -39,7 +39,7 @@ func on_rover_enter(rov:Dictionary):
 	if game.help.rover_shortcuts:
 		st += "\n%s" % [tr("CLICK_TO_USE_ROVER")]
 		for inv in rov.inventory:
-			if inv.name != "attack" and inv.name != "mining" and inv.name != "":
+			if inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				show_shortcut = true
 		show_shortcut = show_shortcut or not rov.i_w_w.empty()
 		if show_shortcut:
@@ -59,7 +59,7 @@ func on_rover_press(rov:Dictionary):
 			elif rov.inventory[i].name == "minerals":
 				game.minerals += rov.inventory[i].num
 				rov.inventory[i] = {"name":""}
-			elif rov.inventory[i].name != "attack" and rov.inventory[i].name != "mining" and rov.inventory[i].name != "":
+			elif rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
 				game.add_items(rov.inventory[i].name, rov.inventory[i].num)
 				rov.inventory[i] = {"name":""}
 		game.add_resources(rov.i_w_w)
@@ -72,6 +72,7 @@ func on_rover_press(rov:Dictionary):
 			game.toggle_panel(self)
 		else:
 			game.c_t = tile_id
+			tile_id = -1
 			game.switch_view("cave")
 			game.cave.rover_data = rov
 			game.cave.set_rover_data()

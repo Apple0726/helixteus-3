@@ -109,15 +109,14 @@ func set_rover_data():
 	for i in range(0, len(inventory)):
 		var slot = slot_scene.instance()
 		hbox.add_child(slot)
-		var rsrc = inventory[i].name
+		var rsrc = inventory[i].type
 		slots.append(slot)
 		if rsrc == "":
 			continue
-		var dir = Directory.new()
-		var dir_str = "res://Graphics/Cave/InventoryItems/" + rsrc + ".png"
-		var texture_exists = dir.file_exists(dir_str)
-		if rsrc == "attack" or rsrc == "mining":
-			slot.get_node("TextureRect").texture = load(dir_str)
+		if rsrc == "rover_weapons":
+			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + inventory[i].name + ".png")
+		elif rsrc == "rover_mining":
+			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + inventory[i].name + ".png")
 		else:
 			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
 			if inventory[i].has("num"):
@@ -457,9 +456,9 @@ var mouse_pos = Vector2.ZERO
 var tile_highlighted:int = -1
 
 func update_ray():
-	ray.enabled = inventory[curr_slot].name == "mining"
+	ray.enabled = inventory[curr_slot].type == "rover_mining"
 	if ray.enabled:
-		var laser_reach = 250.0
+		var laser_reach = Data.rover_mining[inventory[curr_slot].name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
 		var holding_left_click = Input.is_action_pressed("left_click")
@@ -545,7 +544,7 @@ func _input(event):
 							remainders[rsrc] = remainder
 					else:
 						for i in len(inventory):
-							if rsrc != inventory[i].name and inventory[i].name != "":
+							if not inventory[i].has("name") or rsrc != inventory[i].name:
 								continue
 							var slot = slots[i]
 							if inventory[i].name == "":
@@ -608,7 +607,7 @@ func cooldown():
 	inventory_ready[curr_slot] = false
 	var timer = Timer.new()
 	add_child(timer)
-	timer.start(inventory[curr_slot].cooldown)
+	timer.start(Data.rover_weapons[inventory[curr_slot].name].cooldown)
 	timer.connect("timeout", self, "on_timeout", [curr_slot, timer])
 
 func on_timeout(slot, timer):
@@ -617,9 +616,9 @@ func on_timeout(slot, timer):
 
 func _process(_delta):
 	if Input.is_action_pressed("left_click") and inventory_ready[curr_slot]:
-		if inventory[curr_slot].name == "attack":
+		if inventory[curr_slot].type == "rover_weapons":
 			attack()
-		elif inventory[curr_slot].name == "mining" and tile_highlighted != -1:
+		elif inventory[curr_slot].type == "rover_mining" and tile_highlighted != -1:
 			hit_rock()
 			update_ray()
 	if MM.visible:
@@ -627,7 +626,7 @@ func _process(_delta):
 			enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom
 
 func attack():
-	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), inventory[curr_slot].damage * atk)
+	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), Data.rover_weapons[inventory[curr_slot].name].damage * atk, get_color(inventory[curr_slot].name.split("_")[0]))
 	cooldown()
 
 func hit_rock():
@@ -642,7 +641,7 @@ func hit_rock():
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += 1
+		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
@@ -716,7 +715,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color(1, 1, 1, 1)):
 	var proj = load("res://Scenes/Cave/Projectile.tscn").instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -724,6 +723,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
+	proj.modulate = mod
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
@@ -744,6 +744,22 @@ func set_border(i:int):
 			border.name = "border"
 		elif slot.has_node("border"):
 			slot.remove_child(slot.get_node("border"))
+	if inventory[i].type == "rover_mining":
+		mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
+		var speed = Data.rover_mining[inventory[i].name].speed
+		mining_p.amount = int(25 * pow(speed, 0.8))
+		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.8))
+
+func get_color(color:String):
+	match color:
+		"red":
+			return Color.red
+		"orange":
+			return Color.orange
+		"yellow":
+			return Color.yellow
+		"green":
+			return Color.green
 
 func sort_size(a, b):
 	if a.size > b.size:

@@ -136,7 +136,7 @@ func on_tween2_complete():
 	tween.start()
 
 func hit(damage:float):
-	HP -= damage / def
+	HP -= damage
 	$HP.value = HP
 	if HP <= 0:
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)

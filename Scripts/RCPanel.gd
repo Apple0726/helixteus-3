@@ -7,9 +7,9 @@ var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 5.0
 var weight_cap:float = 3000.0
-var movement_speed:float = 0
-var inventory = [{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}]
+var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}]
 var tile
+var rover_costs:Dictionary
 
 onready var armor_slot = $Stats/HBoxContainer/Armor
 onready var wheels_slot = $Stats/HBoxContainer/Wheels
@@ -51,11 +51,29 @@ func _on_Slot_mouse_entered(type:String):
 	txt += "\n%s" % [tr("CLICK_TO_CHANGE")]
 	game.show_tooltip(txt)
 
-func _on_InvSlot_mouse_entered(txt:String):
-	game.show_tooltip(txt)
+var slot_over:int = -1
+
+func _on_InvSlot_mouse_entered(txt:String, index:int):
+	slot_over = index
+	if game.help.rover_inventory_shortcuts:
+		game.help_str = "rover_inventory_shortcuts"
+		if txt != "":
+			game.show_tooltip(txt + "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")])
+		else:
+			game.show_tooltip(txt + "%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("HIDE_SHORTCUTS")])
+	else:
+		if txt != "":
+			game.show_tooltip(txt)
 
 func _on_Slot_mouse_exited():
+	slot_over = -1
 	game.hide_tooltip()
+
+func _on_InvSlot_pressed(index:int):
+	if not game.panels.has(select_comp):
+		game.panels.push_front(select_comp)
+	select_comp.visible = true
+	select_comp.refresh(inventory[index].type, inventory[index].name if inventory[index].has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):
 	if not game.panels.has(select_comp):
@@ -69,15 +87,15 @@ func _on_Slot_pressed(type:String):
 		select_comp.refresh(type, CC)
 
 func _on_Button_pressed():
-	if game.check_enough(Data.costs.rover):
-		game.deduct_resources(Data.costs.rover)
+	if game.check_enough(rover_costs):
+		game.deduct_resources(rover_costs)
 		game.popup("ROVER_UNDER_CONSTR", 1.5)
 		tile.is_constructing = true
 		tile.rover_id = len(game.rover_data)
 		tile.construction_date = OS.get_system_time_msecs()
-		tile.construction_length = Data.costs.rover.time * 1000
-		tile.XP = round(Data.costs.rover.money / 100.0)
-		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":HP, "atk":atk, "def":def, "weight_cap":weight_cap, "inventory":inventory, "i_w_w":{}})
+		tile.construction_length = rover_costs.time * 1000
+		tile.XP = round(rover_costs.money / 100.0)
+		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":HP + HP_bonus, "atk":atk, "def":def + def_bonus, "weight_cap":weight_cap + cargo_bonus, "spd":spd_bonus, "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
@@ -88,7 +106,7 @@ func _on_Button_pressed():
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
 
 func refresh():
-	var rover_costs:Dictionary = Data.costs.rover.duplicate(true)
+	rover_costs = Data.costs.rover.duplicate(true)
 	for cost_key in Data.rover_armor[armor].costs.keys():
 		var cost = Data.rover_armor[armor].costs[cost_key]
 		if rover_costs.has(cost_key):
@@ -107,29 +125,40 @@ func refresh():
 			rover_costs[cost_key] += cost
 		else:
 			rover_costs[cost_key] = cost
-	Helper.put_rsrc($VBoxContainer, 36, rover_costs, true, true)
-	inventory[0].display_name = tr("LASER")
-	inventory[1].display_name = tr("MINING_LASER")
 	var hbox = $Inventory/HBoxContainer
 	for node in hbox.get_children():
 		hbox.remove_child(node)
 	for inv in inventory:
 		var slot = slot_scene.instance()
-		if inv.name == "attack":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/InventoryItems/attack.png")
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s\n%s\n%s\n%s\n%s" % [inv.display_name, tr("LASER_WEAPON_DESC"), "%s: %s" % [tr("DAMAGE"), inv.damage], "%s: %s%s" % [tr("COOLDOWN"), inv.cooldown, tr("S_SECOND")], tr("CLICK_TO_REMOVE")]])
-		elif inv.name == "mining":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/InventoryItems/mining.png")
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s\n%s\n%s\n%s" % [inv.display_name, tr("MINING_LASER_DESC"), "%s: %s" % [tr("MINING_SPEED"), inv.speed], tr("CLICK_TO_REMOVE")]])
+		if inv.type == "rover_weapons":
+			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
+			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], inventory.find(inv)])
+			for cost_key in Data.rover_weapons[inv.name].costs.keys():
+				var cost = Data.rover_weapons[inv.name].costs[cost_key]
+				if rover_costs.has(cost_key):
+					rover_costs[cost_key] += cost
+				else:
+					rover_costs[cost_key] = cost
+		elif inv.type == "rover_mining":
+			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.name])
+			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_mining_text(inv.name)], inventory.find(inv)])
+			for cost_key in Data.rover_mining[inv.name].costs.keys():
+				var cost = Data.rover_mining[inv.name].costs[cost_key]
+				if rover_costs.has(cost_key):
+					rover_costs[cost_key] += cost
+				else:
+					rover_costs[cost_key] = cost
 		else:
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", [tr("CLICK_TO_ADD_COMP")])
+			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["", -1])
 		slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
+		slot.get_node("Button").connect("pressed", self, "_on_InvSlot_pressed", [inventory.find(inv)])
 		hbox.add_child(slot)
+	Helper.put_rsrc($VBoxContainer, 36, rover_costs, true, true)
 	HP_bonus = Data.rover_armor[armor].HP
 	def_bonus = Data.rover_armor[armor].defense
 	spd_bonus = Data.rover_wheels[wheels].speed
 	cargo_bonus = Data.rover_CC[CC].capacity
-	$Stats/Label2.text = "%s\n%s\n%s\n%s kg\n%s" % [HP + HP_bonus, atk, def + def_bonus, weight_cap + cargo_bonus, movement_speed + spd_bonus]
+	$Stats/Label2.text = "%s\n%s\n%s\n%s kg\n%s" % [HP + HP_bonus, atk, def + def_bonus, weight_cap + cargo_bonus, spd_bonus]
 	tile = game.tile_data[game.c_t]
 	armor_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
@@ -140,3 +169,10 @@ func _on_icon_mouse_entered(extra_arg_0):
 
 func _on_icon_mouse_exited():
 	game.hide_tooltip()
+
+func _input(event):
+	if Input.is_action_just_released("throw") and slot_over != -1:
+		inventory[slot_over].erase("name")
+		inventory[slot_over].type = ""
+		refresh()
+		game.hide_tooltip()

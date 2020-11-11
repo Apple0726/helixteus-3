@@ -1,5 +1,6 @@
 extends Node2D
 
+onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 onready var view_scene = preload("res://Scenes/Views/View.tscn")
 onready var construct_panel_scene = preload("res://Scenes/Panels/ConstructPanel.tscn")
 onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
@@ -74,11 +75,11 @@ var view
 var c_v:String = ""
 
 #Player resources
-var money:float = 800
+var money:float = 80000000
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
-var energy:float = 200
+var energy:float = 2000
 var SP:float = 400
 #Dimension remnants
 var DRs:float = 0
@@ -109,10 +110,10 @@ var mats:Dictionary = {	"coal":0,
 						"clay":0,
 						"soil":50,
 						"cellulose":0,
-						"silicon":0,
+						"silicon":2000,
 }
 
-var mets:Dictionary = {	"lead":0,
+var mets:Dictionary = {	"lead":140,
 						"copper":0,
 						"iron":0,
 						"aluminium":0,
@@ -136,6 +137,7 @@ var help:Dictionary = {"mining":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
+			"rover_inventory_shortcuts":true,
 }
 
 var science_unlocked:Dictionary = {"SA":false, "RC":false}
@@ -289,7 +291,23 @@ func _ready():
 	settings = settings_scene.instance()
 	settings.visible = false
 	$Panels.add_child(settings)
-
+	for i in 80:
+		var star = star_scene.instance()
+		$Title/Background.add_child(star)
+	var tween:Tween = Tween.new()
+	add_child(tween)
+	tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
+	tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
+	tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
+	tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
+	tween.interpolate_property($Title/Discord, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1)
+	tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.25)
+	tween.interpolate_property($Title/GitHub, "rect_position", Vector2(0, 15), Vector2(0, 0), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.25)
+	tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.5)
+	tween.interpolate_property($Title/Godot, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.5)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(tween)
 
 func switch_music(src):
 	#Music fading
@@ -305,7 +323,7 @@ func switch_music(src):
 	tween.start()
 
 func _load_game():
-	$Languages.visible = false
+	$Title.visible = false
 	#Loads planet scene
 	$click.play()
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
@@ -442,7 +460,6 @@ func _load_game():
 		c_v = "planet"
 		add_planet()
 		add_child(HUD)
-	remove_child($Title)
 	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
 
 func popup(txt, dur):
@@ -1985,8 +2002,6 @@ func cancel_building():
 		tiles[id]._on_Button_button_out()
 
 func change_language():
-	$Title/Button.visible = false
-	$Title/Button.visible = true
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
@@ -2013,3 +2028,12 @@ func _on_Settings_mouse_exited():
 func _on_Settings_pressed():
 	$click.play()
 	toggle_panel(settings)
+
+func _on_NewGame_pressed():
+	var tween:Tween = Tween.new()
+	add_child(tween)
+	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(tween)
+	_load_game()

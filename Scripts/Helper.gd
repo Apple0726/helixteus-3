@@ -269,3 +269,11 @@ func save_tiles(id:int):
 	planet_save.open(file_path, File.WRITE)
 	planet_save.store_var(game.tile_data)
 	planet_save.close()
+
+func get_rover_weapon_text(name:String):
+	var laser = name.split("_")
+	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1])}), "%s: %s" % [tr("DAMAGE"), Data.rover_weapons[name].damage], "%s: %s%s" % [tr("COOLDOWN"), Data.rover_weapons[name].cooldown, tr("S_SECOND")]]
+
+func get_rover_mining_text(name:String):
+	var laser = name.split("_", true, 1)
+	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())}), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[name].rnge]]

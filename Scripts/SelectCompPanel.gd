@@ -5,24 +5,49 @@ onready var hbox = $HBox
 var polygon
 var g_cmp:String#armor, wheels, CC (g: general)
 var s_cmp:String#lead_armor, copper_wheels etc. (s: specific)
+var curr_cmp:String
+var is_inventory
+var index:int = -1
+onready var option_btn = $OptionButton
 
 func _ready():
 	$CostLabel.text = "%s:" % [tr("COSTS")]
 	$Select.text = tr("SELECT") + " (S)"
+	option_btn.add_item(tr("WEAPONS"))
+	option_btn.add_item(tr("MINING_TOOLS"))
+	option_btn.selected = 0
 
-func refresh(type:String, curr_cmp:String):
-	$Label.text = tr("SELECT_X").format({"select":tr("SELECT"), "something":tr(type.split("_")[1].to_upper())})
+func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:int = -1):
+	is_inventory = _is_inventory
+	index = _index
+	$Label.visible = not is_inventory
+	option_btn.visible = is_inventory
+	if not is_inventory:
+		$Label.text = tr("SELECT_X").format({"select":tr("SELECT"), "something":tr(type.split("_")[1].to_upper())})
 	for node in hbox.get_children():
 		hbox.remove_child(node)
 	var dir:String = ""
+	if type == "":
+		type = "rover_weapons"
 	if type == "rover_armor":
 		dir = "Armor"
+		$Desc.text = tr("ARMOR_DESC")
 	elif type == "rover_wheels":
 		dir = "Wheels"
+		$Desc.text = tr("WHEELS_DESC")
 	elif type == "rover_CC":
 		dir = "CargoContainer"
+		$Desc.text = tr("CC_DESC")
+	elif type == "rover_weapons":
+		dir = "Weapons"
+		$Desc.text = tr("LASER_WEAPON_DESC")
+	elif type == "rover_mining":
+		dir = "Mining"
+		$Desc.text = tr("MINING_LASER_DESC")
 	g_cmp = type.split("_")[1]
+	curr_cmp = _curr_cmp
 	s_cmp = curr_cmp
+	Helper.put_rsrc($Cost, 36, {})
 	for cmp in Data[type]:
 		var slot = game.slot_scene.instance()
 		var metal = tr(cmp.split("_")[0].to_upper())
@@ -43,6 +68,10 @@ func _on_Slot_mouse_entered(type:String, cmp:String, metal:String):
 		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[cmp].speed, tr("MOVEMENT_SPEED")]
 	elif type == "rover_CC":
 		txt = "%s\n+%s kg %s" % [metal_comp, Data.rover_CC[cmp].capacity, tr("CARGO_CAPACITY")]
+	elif type == "rover_weapons":
+		txt = Helper.get_rover_weapon_text(cmp)
+	elif type == "rover_mining":
+		txt = Helper.get_rover_mining_text(cmp)
 	game.show_tooltip(txt)
 
 func _on_Slot_mouse_exited():
@@ -58,17 +87,31 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 			border.name = "border"
 		elif slot.has_node("border"):
 			slot.remove_child(slot.get_node("border"))
-	Helper.put_rsrc($Cost, 42, Data[type][cmp].costs)
+	Helper.put_rsrc($Cost, 36, Data[type][cmp].costs)
 	s_cmp = cmp
 
 func _input(event):
-	if Input.is_action_just_released("ui_down"):
+	if Input.is_action_just_released("ui_down") and visible:
+		game.hide_tooltip()
 		set_cmp()
 
 func set_cmp():
-	get_parent()[g_cmp] = s_cmp
+	if s_cmp != "":
+		if is_inventory:
+			get_parent().inventory[index].type = "rover_" + g_cmp
+			get_parent().inventory[index].name = s_cmp
+		else:
+			get_parent()[g_cmp] = s_cmp
 	get_parent().refresh()
+	game.panels.pop_front()
 	visible = false
 
 func _on_Select_pressed():
 	set_cmp()
+
+
+func _on_OptionButton_item_selected(index):
+	if index == 0:
+		refresh("rover_weapons", curr_cmp, true, index)
+	elif index == 1:
+		refresh("rover_mining", curr_cmp, true, index)
