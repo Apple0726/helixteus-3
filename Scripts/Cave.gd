@@ -6,6 +6,7 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
+#Aurora intensity
 onready var au_int:float = tile.au_int if tile.has("au_int") else 0
 onready var difficulty:int = 1 + au_int
 
@@ -45,6 +46,7 @@ var atk:float = 5.0
 var def:float = 5.0
 var HP:float = 20.0
 var total_HP:float = 20.0
+var speed_mult:float = 1.0
 var inventory:Array
 var inventory_ready:Array = []#For cooldowns
 var i_w_w:Dictionary = {}#inventory_with_weight
@@ -99,6 +101,7 @@ func set_rover_data():
 	total_HP = rover_data.HP
 	atk = rover_data.atk
 	def = rover_data.def
+	speed_mult = rover_data.spd
 	weight_cap = rover_data.weight_cap
 	inventory = rover_data.inventory
 	i_w_w = rover_data.i_w_w
@@ -195,13 +198,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if randf() < 0.005:
+				if randf() < min(0.005 * cave_floor, 0.05):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [Helper.rand_int(1, 3)]))
-					HX_node.HP = round(10 * difficulty * rand_range(1, 1.4))
-					HX_node.atk = round(4 * difficulty * rand_range(1, 1.2))
-					HX_node.def = round(4 * difficulty * rand_range(1, 1.2))
+					HX_node.HP = round(15 * difficulty * rand_range(1, 1.4))
+					HX_node.atk = round(6 * difficulty * rand_range(1, 1.2))
+					HX_node.def = round(6 * difficulty * rand_range(1, 1.2))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						continue
 					HX_node.total_HP = HX_node.HP
@@ -261,7 +264,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var rand = randf()
 			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1) * pow(1 + au_int, 0.25)
 			if rand < formula:
-				var tier:int = int(clamp(pow(formula / rand, 0.35), 1, 5))
+				var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
 				var contents:Dictionary = generate_treasure(tier)
 				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 					continue
@@ -407,13 +410,13 @@ func on_chest_exited(_body):
 	$UI2/Panel.visible = false
 
 func generate_treasure(tier:int):
-	var contents = {	"money":round(rand_range(5000, 20000) * pow(tier, 3.0)),
-						"minerals":round(rand_range(1000, 4000) * pow(tier, 3.0)),
+	var contents = {	"money":round(rand_range(1500, 1800) * pow(tier, 3.0) * difficulty),
+						"minerals":round(rand_range(300, 400) * pow(tier, 3.0) * difficulty),
 						"hx_core":Helper.rand_int(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		if randf() < 0.5 / met_value.rarity * pow(1 + au_int, 0.25):
-			contents[met] = game.clever_round(rand_range(0.8, 1.2) * met_value.amount * pow(tier, 1.5), 3)
+			contents[met] = game.clever_round(rand_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * difficulty, 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -438,15 +441,15 @@ func connect_points(tile:Vector2, bidir:bool = false):
 func update_health_bar(_HP):
 	HP = _HP
 	if HP <= 0:
-		exit_cave()
 		for inv in inventory:
 			if inv.has("num"):
 				inv.num /= 2
 		for w in i_w_w:
 			i_w_w[w] /= 2
 		var st = tr("ROVER_REKT")
-		if randf() < 0.01:
+		if randf() < 1:
 			st.replace("wrecked", "rekt")
+		exit_cave()
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
@@ -544,10 +547,11 @@ func _input(event):
 							remainders[rsrc] = remainder
 					else:
 						for i in len(inventory):
-							if not inventory[i].has("name") or rsrc != inventory[i].name:
+							if inventory[i].has("name") and rsrc != inventory[i].name:
 								continue
 							var slot = slots[i]
-							if inventory[i].name == "":
+							if inventory[i].type == "":
+								inventory[i].type = "item"
 								inventory[i].name = rsrc
 								slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
 								slot.get_node("Label").text = Helper.format_num(contents[rsrc], 3)
@@ -600,6 +604,23 @@ func exit_cave():
 		cave_data.chests_looted = chests_looted.duplicate(true)
 		cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
 		cave_data.hole_exits = hole_exits.duplicate(true)
+	for i in len(inventory):
+		if not inventory[i].has("name"):
+			continue
+		if inventory[i].name == "money":
+			game.money += inventory[i].num
+			inventory[i] = {"type":""}
+		elif inventory[i].name == "minerals":
+			game.minerals += inventory[i].num
+			inventory[i] = {"type":""}
+		elif inventory[i].type != "rover_weapons" and inventory[i].type != "rover_mining" and inventory[i].has("name"):
+			var remaining:int = game.add_items(inventory[i].name, inventory[i].num)
+			if remaining > 0:
+				inventory[i].num = remaining
+			else:
+				inventory[i] = {"type":""}
+	game.add_resources(i_w_w)
+	i_w_w.clear()
 	game.switch_view("planet")
 	queue_free()
 
@@ -798,7 +819,7 @@ func _physics_process(delta):
 	input_vector.y = - Input.get_action_strength("ui_up") + Input.get_action_strength("ui_down")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed, acceleration * delta)
+		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 	velocity = rover.move_and_slide(velocity)

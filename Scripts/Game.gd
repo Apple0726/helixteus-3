@@ -115,7 +115,7 @@ var mats:Dictionary = {	"coal":0,
 
 var mets:Dictionary = {	"lead":140,
 						"copper":0,
-						"iron":0,
+						"iron":140,
 						"aluminium":0,
 						"silver":0,
 						"gold":0,
@@ -140,14 +140,14 @@ var help:Dictionary = {"mining":true,
 			"rover_inventory_shortcuts":true,
 }
 
-var science_unlocked:Dictionary = {"SA":false, "RC":false}
+var science_unlocked:Dictionary = {"SA":false, "RC":false, "OL":false, "YL":false, "GL":false}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1}#Levels of mineral upgrades
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
-						"SP":false,
+						"SP":true,
 						"mining_layer":false,
 						"plant_button":false,
 						"vehicles_button":false,
@@ -324,8 +324,8 @@ func switch_music(src):
 
 func _load_game():
 	$Title.visible = false
+	$UI/Settings.visible = true
 	#Loads planet scene
-	$click.play()
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	
 	dimension = dimension_scene.instance()

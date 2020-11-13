@@ -357,6 +357,7 @@ func collect_rsrc(tile, tile_id:int):
 			tile.stored = 0
 
 var prev_tile_over = -1
+var mouse_pos = Vector2.ZERO
 func _input(event):
 	if tile_over != -1:
 		var tile = game.tile_data[tile_over]
@@ -377,7 +378,7 @@ func _input(event):
 					game.hide_tooltip()
 					game.hide_adv_tooltip()
 				return
-		var mouse_pos = to_local(event.position)
+		mouse_pos = to_local(event.position)
 		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
@@ -404,14 +405,13 @@ func _input(event):
 	var placing_soil = game.HUD.get_node("Resources/Soil").visible
 	if Input.is_action_just_released("left_click") and not view.dragged:
 		var curr_time = OS.get_system_time_msecs()
-		var mouse_pos = to_local(event.position)
 		if not Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 			return
 		if len(game.panels) > 0:
 			var i = 0
 			while not game.panels[i].polygon:
 				i += 1
-			if Geometry.is_point_in_polygon(event.position, game.panels[i].polygon):
+			if Geometry.is_point_in_polygon(mouse_pos, game.panels[i].polygon):
 				return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -449,6 +449,7 @@ func _input(event):
 						overclock_bldg(tile, tile_id)
 					else:
 						click_tile(tile, tile_id)
+						mouse_pos = Vector2.ZERO
 				elif tile.type == "obstacle":
 					if tile.tile_str == "cave":
 						if not rover_selected.empty():

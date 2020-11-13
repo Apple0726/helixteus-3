@@ -169,6 +169,8 @@ func get_type_from_name(name:String):
 	match name:
 		"lead_seeds", "fertilizer":
 			return "craft_agric_info"
+		_:
+			return ""
 
 func format_num(num:float, threshold:int):
 	if num < pow(10, threshold):

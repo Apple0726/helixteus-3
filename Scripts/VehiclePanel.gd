@@ -33,16 +33,16 @@ func refresh():
 	else:
 		$HBox/VBox1/Rovers.visible = true
 
+var rover_has_items = false
 func on_rover_enter(rov:Dictionary):
-	var st = "@i %s\n@i %s\n@i %s\n@i %s / %s kg" % [rov.HP, rov.atk, rov.def, Helper.get_sum_of_dict(rov.i_w_w), rov.weight_cap]
-	var show_shortcut = false
+	var st = "@i %s\n@i %s\n@i %s\n@i %s kg" % [rov.HP, rov.atk, rov.def, rov.weight_cap]
 	if game.help.rover_shortcuts:
+		rover_has_items = false
 		st += "\n%s" % [tr("CLICK_TO_USE_ROVER")]
 		for inv in rov.inventory:
 			if inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
-				show_shortcut = true
-		show_shortcut = show_shortcut or not rov.i_w_w.empty()
-		if show_shortcut:
+				rover_has_items = true
+		if rover_has_items:
 			game.help_str = "rover_shortcuts"
 			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
 	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon], 19)
@@ -52,19 +52,20 @@ func on_rover_exit():
 
 func on_rover_press(rov:Dictionary):
 	if Input.is_action_pressed("shift"):
-		for i in len(rov.inventory):
-			if rov.inventory[i].name == "money":
-				game.money += rov.inventory[i].num
-				rov.inventory[i] = {"name":""}
-			elif rov.inventory[i].name == "minerals":
-				game.minerals += rov.inventory[i].num
-				rov.inventory[i] = {"name":""}
-			elif rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
-				game.add_items(rov.inventory[i].name, rov.inventory[i].num)
-				rov.inventory[i] = {"name":""}
-		game.add_resources(rov.i_w_w)
-		rov.i_w_w = {}
-		game.popup(tr("ITEMS_COLLECTED"), 1.5)
+		if rover_has_items:
+			var remaining:bool = false
+			for i in len(rov.inventory):
+				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
+					var remainder:int = game.add_items(rov.inventory[i].name, rov.inventory[i].num)
+					if remainder > 0:
+						remaining = true
+						rov.inventory[i].num = remainder
+					else:
+						rov.inventory[i] = {"type":""}
+			if remaining:
+				game.popup(tr("NOT_ENOUGH_INV_SPACE_COLLECT"), 2)
+			else:
+				game.popup(tr("ITEMS_COLLECTED"), 1.5)
 	elif game.c_v == "planet":
 		if tile_id == -1:
 			game.view.obj.rover_selected = rov

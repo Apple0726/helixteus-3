@@ -48,6 +48,9 @@ var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 #Science for unlocking game features
 var science_unlocks = {	"SA":{"cost":100},
 						"RC":{"cost":250},
+						"OL":{"cost":800},
+						"YL":{"cost":3000},
+						"GL":{"cost":15000},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},
