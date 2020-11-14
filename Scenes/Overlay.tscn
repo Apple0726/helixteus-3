@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Slider.gd" type="Script" id=3]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.202206, 0.404412, 1 )
@@ -117,6 +118,7 @@ value = 1.0
 scrollable = false
 tick_count = 20
 ticks_on_borders = true
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -51,6 +51,7 @@ func refresh():
 	sc_tree.visible = game.show.SP
 	craft.visible = game.show.materials
 	MU.visible = game.show.minerals
+	$ConvertMinerals.visible = game.show.minerals
 	if game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv
@@ -163,3 +164,14 @@ func _on_CollectAll_mouse_exited():
 
 func _on_CollectAll_pressed():
 	game.view.obj.collect_all()
+
+func _on_ConvertMinerals_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("SELL_MINERALS") + " (Shift C)")
+
+func _on_ConvertMinerals_mouse_exited():
+	on_button = false
+	game.hide_tooltip()
+
+func _on_ConvertMinerals_pressed():
+	game.sell_all_minerals()

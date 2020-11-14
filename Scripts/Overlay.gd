@@ -87,11 +87,9 @@ func send_overlay_info(index):
 
 func _on_HSlider_mouse_entered():
 	game.show_tooltip(tr("CIRCLE_SIZE"))
-	game.view.move_view = false
 
 func _on_HSlider_mouse_exited():
 	game.hide_tooltip()
-	game.view.move_view = true
 
 func _on_HSlider_value_changed(value):
 	if game.view.obj:

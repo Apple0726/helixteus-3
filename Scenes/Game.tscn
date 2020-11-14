@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -21,6 +21,9 @@
 [ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
 [ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
 [ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
+[ext_resource path="res://Graphics/Title screen/Discord_over.png" type="Texture" id=22]
+[ext_resource path="res://Graphics/Title screen/GitHub_over.png" type="Texture" id=23]
+[ext_resource path="res://Graphics/Title screen/Godot_over.png" type="Texture" id=24]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -346,6 +349,8 @@ margin_top = 676.0
 margin_right = 976.0
 margin_bottom = 712.0
 texture_normal = ExtResource( 6 )
+texture_pressed = ExtResource( 6 )
+texture_hover = ExtResource( 23 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -381,6 +386,8 @@ margin_top = 618.0
 margin_right = 1216.0
 margin_bottom = 714.0
 texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 5 )
+texture_hover = ExtResource( 24 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -408,11 +415,13 @@ margin_right = 40.0
 margin_bottom = 38.0
 
 [node name="Button" type="TextureButton" parent="Title/Discord"]
-margin_left = 584.0
+margin_left = 596.0
 margin_top = 678.0
-margin_right = 724.0
+margin_right = 712.0
 margin_bottom = 714.0
 texture_normal = ExtResource( 11 )
+texture_pressed = ExtResource( 11 )
+texture_hover = ExtResource( 22 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -553,6 +562,9 @@ align = 0
 [connection signal="mouse_entered" from="UI/Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="UI/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
+[connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
+[connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]
 [connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]

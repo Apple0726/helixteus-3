@@ -221,6 +221,7 @@ FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,Fertilizante,비료
 FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,El fertilizante acelera el crecimiento de las plantas por una hora.,비료는 식물의 성장을 1시간 가속화합니다.
 NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los objetos fueron fabricados,
 NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los objetos fueron comprados,
+NOT_ENOUGH_INV_SPACE_COLLECT,Inventory full: not all items were collected,Inventaire plein: pas tous les objets étaient collectés,Inventario pieno: alcuni oggetti non possono essere raccolti,,,,
 HIDE_HELP,Press F7 to not show this information again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,Presiona F7 para no volver a mostrar este mensaje,
 HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,Presiona F7 para ocultar esta información,단축키 정보 숨길려면 F7 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,Extrae %s,추출 속도: %s
@@ -372,3 +373,9 @@ CC_DESC,Cargo containers expand the rover's inventory capacity.,,,,,,
 X_TO_REMOVE,Press X to remove,,,,,,
 RANGE,Range,,,,,,
 REMOVE_WHEELS_ATTEMPT,You can't remove wheels! (how else would your rover be able to move?),,,,,,
+OL_DESC,Red lasers too weak? Maybe decreasing the wavelength will help!,,,,,,
+YL_DESC,Orange lasers too weak? Why not decrease the wavelength even more?,,,,,,
+GL_DESC,Yellow lasers too weak? Decreasing the wavelength once again turns it to green!,,,,,,
+GLASS_FACTORY,Glass factory,,,,,,
+GF_DESC,Produces glass from sand,,,,,,
+SELL_MINERALS,Sell all your minerals for money,,,,,,

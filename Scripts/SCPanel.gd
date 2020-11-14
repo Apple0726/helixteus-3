@@ -59,6 +59,9 @@ func refresh():
 				elif el.element == "Al":
 					item = "aluminium"
 					el_num = hslider.value * el.fraction / 200.0
+				elif el.element == "O":
+					item = "sand"
+					el_num = hslider.value * el.fraction / 2.0
 				el_num = round(el_num * 1000) / 1000.0
 				if el_num != 0:
 					expected_rsrc[item] = el_num

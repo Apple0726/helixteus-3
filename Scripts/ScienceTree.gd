@@ -3,26 +3,31 @@ extends Node2D
 onready var game = get_node('/root/Game')
 var sc_over:String = ""
 
-func show_tooltip(sc:String):
-	sc_over = sc
-	game.show_tooltip(tr(sc.to_upper() + "_DESC"))
+func _ready():
+	refresh(self)
 
-func hide_tooltip():
-	sc_over = ""
-	game.hide_tooltip()
-
-func _input(event):
-	if sc_over != "" and Input.is_action_just_released("left_click") and not game.science_unlocked[sc_over]:
-		if game.SP >= Data.science_unlocks[sc_over].cost:
-			game.SP -= Data.science_unlocks[sc_over].cost
-			game.science_unlocked[sc_over] = true
-			if sc_over == "SA":
-				game.long_popup(tr("SA_DONE"), tr("RESEARCH_SUCCESS"))
-			elif sc_over == "RC":
-				game.long_popup(tr("RC_DONE"), tr("RESEARCH_SUCCESS"))
+func refresh(child):
+	for sc in child.get_children():
+		if sc.get_script():#A way of checking whether the node is a button
+			sc.main_tree = self
+		if sc.get_index() == 0:
+			continue
+		if sc is ColorRect:
+			var sc_name:String = $HBoxContainer.get_child(sc.get_index() - 1).name
+			if not game.science_unlocked[sc_name]:
+				sc.modulate = Color(0.5, 0.5, 0.5, 1)
 			else:
-				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
-			game.HUD.refresh()
-			get_node(sc_over).get_node("PanelContainer/HBoxContainer/VBoxContainer/Label")["custom_colors/font_color"] = Color(0, 1, 0, 1)
-		else:
-			game.popup(tr("NOT_ENOUGH_SP"), 1.5)
+				sc.modulate = Color.white
+		elif sc is HBoxContainer:
+			refresh(sc)
+		elif sc.get_script():
+			var sc_name:String = $HBoxContainer.get_child(sc.get_index() - 2).name
+			if not game.science_unlocked[sc_name]:
+				sc.modulate = Color(0.5, 0.5, 0.5, 1)
+				sc.get_node("Panel/HBox/Texture").modulate = Color.black
+				sc.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			else:
+				sc.modulate = Color.white
+				sc.get_node("Panel/HBox/Texture").modulate = Color.white
+				sc.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_PASS
+			sc.refresh()

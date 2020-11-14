@@ -10,9 +10,11 @@ var bldg_infos = {"ME":{"type":"Basic"},
 				 "MS":{"type":"Storage"},
 				 "RCC":{"type":"Vehicles"},
 				 "SC":{"type":"Production"},
+				 "GF":{"type":"Production"},
 				}
 
 func _ready():
+	set_polygon($Background.rect_size)
 	var item_container = $Contents/HBoxContainer/Items
 	for bldg in bldg_infos:
 		var bldg_info = bldg_infos[bldg]
@@ -22,6 +24,8 @@ func _ready():
 		bldg_btn.item_dir = "Buildings"
 		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
 		bldg_btn.costs = Data.costs[bldg]
+		bldg_btn.name = bldg
+		bldg_btn.add_to_group("bldgs")
 		bldg_btn.parent = "construct_panel"
 		item_container.get_node(bldg_info.type).add_child(bldg_btn)
 	_on_Basic_pressed()
@@ -108,6 +112,8 @@ func get_item_name(name:String):
 			return tr("ROVER_CONSTR_CENTER")
 		"SC":
 			return tr("STONE_CRUSHER")
+		"GF":
+			return tr("GLASS_FACTORY")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -123,3 +129,6 @@ func get_item(name, costs, _type, _dir):
 func refresh():
 	$Tabs/Vehicles.visible = game.science_unlocked.RC
 	$Tabs/Production.visible = game.show.stone
+	for bldg in get_tree().get_nodes_in_group("bldgs"):
+		if bldg.name == "GF":
+			bldg.visible = game.show.sand

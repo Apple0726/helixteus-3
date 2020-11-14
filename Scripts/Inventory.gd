@@ -9,6 +9,7 @@ var item_stack:int = 0
 var item_slot:int = 0
 
 func _ready():
+	set_polygon($Background.rect_size)
 	buy_sell = buy_sell_scene.instance()
 	buy_sell.visible = false
 	add_child(buy_sell)

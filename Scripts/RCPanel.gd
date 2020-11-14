@@ -25,6 +25,7 @@ var CC:String = "lead_CC"
 var cargo_bonus:int
 
 func _ready():
+	set_polygon($Background.rect_size)
 	select_comp = select_comp_scene.instance()
 	select_comp.visible = false
 	add_child(select_comp)

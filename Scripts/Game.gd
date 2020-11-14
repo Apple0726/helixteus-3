@@ -10,6 +10,7 @@ onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn
 onready var RC_panel_scene = preload("res://Scenes/Panels/RCPanel.tscn")
 onready var MU_panel_scene = preload("res://Scenes/Panels/MUPanel.tscn")
 onready var SC_panel_scene = preload("res://Scenes/Panels/SCPanel.tscn")
+onready var GF_panel_scene = preload("res://Scenes/Panels/GFPanel.tscn")
 onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 onready var HUD_scene = preload("res://Scenes/HUD.tscn")
@@ -40,6 +41,7 @@ var vehicle_panel:Control
 var RC_panel:Control
 var MU_panel:Control
 var SC_panel:Control
+var GF_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -79,7 +81,7 @@ var money:float = 80000000
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
-var energy:float = 2000
+var energy:float = 20000
 var SP:float = 400
 #Dimension remnants
 var DRs:float = 0
@@ -102,7 +104,7 @@ var stack_size:int = 16
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
+var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":700}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
@@ -148,6 +150,7 @@ var MUs:Dictionary = {	"MV":1,
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
 						"SP":true,
+						"sand":false,
 						"mining_layer":false,
 						"plant_button":false,
 						"vehicles_button":false,
@@ -337,6 +340,7 @@ func _load_game():
 	RC_panel = RC_panel_scene.instance()
 	MU_panel = MU_panel_scene.instance()
 	SC_panel = SC_panel_scene.instance()
+	GF_panel = GF_panel_scene.instance()
 	HUD = HUD_scene.instance()
 	
 	construct_panel.visible = false
@@ -359,6 +363,9 @@ func _load_game():
 
 	SC_panel.visible = false
 	$Panels.add_child(SC_panel)
+
+	GF_panel.visible = false
+	$Panels.add_child(GF_panel)
 
 	inventory.visible = false
 	$Panels.add_child(inventory)
@@ -1444,6 +1451,17 @@ func generate_tiles(id:int):
 		tile_data[110].XP = 0
 		tile_data[110].path_1 = 1
 		tile_data[110].path_1_value = Data.path_1.RCC.value
+		tile_data[111] = {}
+		tile_data[111].tile_str = "GF"
+		tile_data[111].is_constructing = false
+		tile_data[111].construction_date = curr_time
+		tile_data[111].construction_length = 10
+		tile_data[111].type = "bldg"
+		tile_data[111].XP = 0
+		tile_data[111].path_1 = 1
+		tile_data[111].path_2 = 1
+		tile_data[111].path_1_value = Data.path_1.GF.value
+		tile_data[111].path_2_value = Data.path_2.GF.value
 	Helper.save_tiles(id)
 	tile_data.clear()
 
@@ -1853,6 +1871,13 @@ func _process(delta):
 var mouse_pos = Vector2.ZERO
 onready var item_cursor = $ItemCursor
 
+func sell_all_minerals():
+	if minerals > 0:
+		money += minerals * (MUs.MV + 4)
+		popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
+		minerals = 0
+		HUD.refresh()
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
@@ -1913,11 +1938,8 @@ func _input(event):
 	
 	if Input.is_action_pressed("shift"):
 		#Sell all minerals by pressing Shift C
-		if Input.is_action_just_released("construct") and minerals > 0:
-			money += minerals * (MUs.MV + 4)
-			popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
-			minerals = 0
-			HUD.refresh()
+		if Input.is_action_just_released("construct"):
+			sell_all_minerals()
 		#Collect all by pressing Shift V
 		if Input.is_action_just_released("vehicles"):
 			if c_v == "planet":
@@ -2037,3 +2059,6 @@ func _on_NewGame_pressed():
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
 	_load_game()
+
+func _on_Title_Button_pressed(URL:String):
+	OS.shell_open(URL)

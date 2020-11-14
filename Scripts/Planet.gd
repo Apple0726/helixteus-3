@@ -132,7 +132,7 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
-				"SC":
+				"SC", "GF":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
@@ -224,7 +224,7 @@ func constr_bldg(tile, tile_id:int):
 		tile.type = "bldg"
 		tile.XP = round(constr_costs.money / 100.0)
 		match bldg_to_construct:
-			"ME", "PP", "SC":
+			"ME", "PP", "SC", "GF":
 				tile.collect_date = tile.construction_date + tile.construction_length
 				tile.stored = 0
 				tile.path_1 = 1
@@ -320,15 +320,15 @@ func click_tile(tile, tile_id:int):
 	if tile.tile_str in ["ME", "PP", "RL"]:
 		collect_rsrc(tile, tile_id)
 	else:
-		match tile.tile_str:
-			"RCC":
-				if not tile.is_constructing:
-					game.c_t = tile_id
+		if not tile.is_constructing:
+			game.c_t = tile_id
+			match tile.tile_str:
+				"RCC":
 					game.toggle_panel(game.RC_panel)
-			"SC":
-				if not tile.is_constructing:
-					game.c_t = tile_id
+				"SC":
 					game.toggle_panel(game.SC_panel)
+				"GF":
+					game.toggle_panel(game.GF_panel)
 
 func collect_rsrc(tile, tile_id:int):
 	if not tile.has("tile_str"):
@@ -368,6 +368,7 @@ func _input(event):
 			if Input.is_action_just_released("upgrade"):
 				game.add_upgrade_panel([tile_over])
 	if event is InputEventMouseMotion:
+		mouse_pos = to_local(event.position)
 		if len(game.panels) > 0:
 			var i = 0
 			while not game.panels[i].polygon:
@@ -378,7 +379,6 @@ func _input(event):
 					game.hide_tooltip()
 					game.hide_adv_tooltip()
 				return
-		mouse_pos = to_local(event.position)
 		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
@@ -411,7 +411,7 @@ func _input(event):
 			var i = 0
 			while not game.panels[i].polygon:
 				i += 1
-			if Geometry.is_point_in_polygon(mouse_pos, game.panels[i].polygon):
+			if Geometry.is_point_in_polygon(to_global(mouse_pos), game.panels[i].polygon):
 				return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -431,7 +431,9 @@ func _input(event):
 				else:
 					game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
 		else:
-			if tile.has("type"):
+			if about_to_mine and tile.has("depth") or tile.has("aurora"):
+				mine_tile(tile_id)
+			elif tile.has("type"):
 				if tile.type == "plant":#if clicked tile has soil on it
 					if placing_soil:
 						game.add_resources({"soil":10})
@@ -461,9 +463,6 @@ func _input(event):
 							if game.show.vehicles_button and not game.vehicle_panel.visible:
 								game.toggle_panel(game.vehicle_panel)
 								game.vehicle_panel.tile_id = tile_id
-			else:
-				if tile.has("depth") and about_to_mine:
-					mine_tile(tile_id)
 		game.HUD.refresh()
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
@@ -558,6 +557,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
 		"SC":
 			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.SC, id2)
+		"GF":
+			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.icons.GF, id2)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -599,7 +600,7 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "overclock")
 
 func overclockable(bldg:String):
-	return bldg == "ME" or bldg == "PP" or bldg == "RL" or bldg == "SC"
+	return bldg in ["ME", "PP", "RL", "SC", "GF"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()

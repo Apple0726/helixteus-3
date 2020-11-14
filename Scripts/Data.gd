@@ -6,10 +6,12 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"MS":{"value":25, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35}},
 				"RCC":{"value":1.0, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":50}},
 				"SC":{"value":100.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":40, "iron":40}},
+				"GF":{"value":1.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":40, "iron":40}},
 }
 var path_2 = {	"ME":{"value":15, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 				"PP":{"value":70, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 				"SC":{"value":4000, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
+				"GF":{"value":100, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":45, "copper":45, "iron":45}},
 }
 
 var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
@@ -18,6 +20,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"MS":{"money":500, "energy":80, "time":40.0},
 				"RCC":{"money":20000, "energy":4000, "time":280.0},
 				"SC":{"money":1200, "energy":800, "time":90.0},
+				"GF":{"money":3000, "energy":2000, "time":120.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 
@@ -30,6 +33,7 @@ var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
 				"RL":load("res://Graphics/Icons/SP.png"),
 				"MS":load("res://Graphics/Icons/minerals.png"),
 				"SC":load("res://Graphics/Icons/stone.png"),
+				"GF":load("res://Graphics/Materials/glass.png"),
 }
 
 func reload():
@@ -39,9 +43,11 @@ func reload():
 	path_1.RCC.desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
 	path_1.MS.desc = tr("STORES_X") % [" @i %s"]
 	path_1.SC.desc = tr("CRUSHES_X") % ["@i %s kg/" + tr("S_SECOND")]
+	path_1.GF.desc = tr("PRODUCES_X") % ["@i %s kg/" + tr("S_SECOND")]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
 	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
+	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 
