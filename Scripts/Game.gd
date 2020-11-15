@@ -82,7 +82,7 @@ var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
 var energy:float = 20000
-var SP:float = 400
+var SP:float = 4000
 #Dimension remnants
 var DRs:float = 0
 var lv:int = 5
@@ -96,7 +96,7 @@ var c_c:int = 0#etc.
 var c_g:int = 0
 var c_s:int = 0
 var c_p:int = 2
-var c_t:int = 0
+var c_t:int = -1
 
 #Number of items per stack
 var stack_size:int = 16
@@ -140,9 +140,10 @@ var help:Dictionary = {"mining":true,
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
 			"rover_inventory_shortcuts":true,
+			"abandoned_ship":true,
 }
 
-var science_unlocked:Dictionary = {"SA":false, "RC":false, "OL":false, "YL":false, "GL":false}
+var science_unlocked:Dictionary = {"SA":false, "RC":false, "SCT":false, "OL":false, "YL":false, "GL":false}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1}#Levels of mineral upgrades
 
@@ -182,6 +183,7 @@ var cave_data:Array = []
 #var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "weight_cap":8000.0, "inventory":[{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}], "i_w_w":{}}]
 var rover_data:Array = []
 var ship_data:Array = []
+var ships_c_p:int = 2#Planet that the ships are on
 var satellite_data:Array = []
 
 #Your inventory
@@ -1462,6 +1464,9 @@ func generate_tiles(id:int):
 		tile_data[111].path_2 = 1
 		tile_data[111].path_1_value = Data.path_1.GF.value
 		tile_data[111].path_2_value = Data.path_2.GF.value
+		tile_data[112] = {}
+		tile_data[112].type = "obstacle"
+		tile_data[112].tile_str = "ship"
 	Helper.save_tiles(id)
 	tile_data.clear()
 

@@ -1,9 +1,5 @@
-extends Control
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
-#Tween for fading in/out panel
-var tween:Tween
-var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 var HP_icon = load("res://Graphics/Icons/HP.png")
 var atk_icon = load("res://Graphics/Icons/atk.png")
 var def_icon = load("res://Graphics/Icons/def.png")
@@ -11,8 +7,7 @@ var inv_icon = load("res://Graphics/Icons/Inventory.png")
 var tile_id:int = -1
 
 func _ready():
-	tween = Tween.new()
-	add_child(tween)
+	set_polygon($Background.rect_size)
 
 func refresh():
 	var hbox = $HBox/VBox1/Rovers/HBox
@@ -28,10 +23,8 @@ func refresh():
 			rover.connect("mouse_entered", self, "on_rover_enter", [rov])
 			rover.connect("mouse_exited", self, "on_rover_exit")
 			rover.connect("pressed", self, "on_rover_press", [rov])
-	if hbox.get_child_count() == 0:
-		$HBox/VBox1/Rovers.visible = false
-	else:
-		$HBox/VBox1/Rovers.visible = true
+	$HBox/VBox1.visible = hbox.get_child_count() != 0
+	$HBox/VBox2.visible = len(game.ship_data) > 0 and game.ships_c_p == game.c_p
 
 var rover_has_items = false
 func on_rover_enter(rov:Dictionary):

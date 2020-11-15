@@ -6,7 +6,7 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"MS":{"value":25, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35}},
 				"RCC":{"value":1.0, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":50, "copper":50, "iron":50}},
 				"SC":{"value":100.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":40, "iron":40}},
-				"GF":{"value":1.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":40, "iron":40}},
+				"GF":{"value":0.1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":40, "iron":40}},
 }
 var path_2 = {	"ME":{"value":15, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
 				"PP":{"value":70, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":50, "copper":50, "iron":60}},
@@ -52,11 +52,12 @@ func reload():
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 
 #Science for unlocking game features
-var science_unlocks = {	"SA":{"cost":100},
-						"RC":{"cost":250},
-						"OL":{"cost":800},
-						"YL":{"cost":3000},
-						"GL":{"cost":15000},
+var science_unlocks = {	"SA":{"cost":100, "parent":""},
+						"RC":{"cost":250, "parent":""},
+						"SCT":{"cost":3000, "parent":"RC"},
+						"OL":{"cost":800, "parent":"RC"},
+						"YL":{"cost":3000, "parent":"OL"},
+						"GL":{"cost":15000, "parent":"YL"},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},

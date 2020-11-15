@@ -18,8 +18,7 @@ func _ready():
 	set_process(false)
 
 func refresh():
-	c_t = game.c_t
-	tile = game.tile_data[c_t]
+	tile = game.tile_data[game.c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.has("stone")
 	set_process(is_crushing)
@@ -111,8 +110,8 @@ func _on_Button_pressed():
 		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
-		var qty_left = max(0, round(tile.stone_qty - (time - tile.start_date) / 1000.0 * tile.path_1_value))
 		var crush_spd = tile.path_1_value
+		var qty_left = max(0, round(tile.stone_qty - (time - tile.start_date) / 1000.0 * crush_spd))
 		if qty_left > 0:
 			var progress = (time - tile.start_date) / 1000.0 * crush_spd / tile.stone_qty
 			for el in tile.stone:
@@ -124,6 +123,9 @@ func _on_Button_pressed():
 		else:
 			game.add_resources(tile.expected_rsrc)
 		tile.erase("stone")
+		tile.erase("stone_qty")
+		tile.erase("start_date")
+		tile.erase("expected_rsrc")
 		game.popup(tr("RESOURCES_COLLECTED"), 1.5)
 	refresh()
 

@@ -92,7 +92,7 @@ STICK,Stick,Bâton,Bastone,,Stock,Palo,
 STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,
 NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.
 REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?,,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?
-BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,,Du hjast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.
+BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,,Du hast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.
 PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,,Deine Spitzhacke ist Zerbrochen,Tu pico se rompió!,곡괭이가 부서졌습니다.
 AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,,Automatisches ersetzen,Reemplazar automáticamente,자동 교체
 AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Cocher pour racheter automatiquement la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,,Mit dieser Auswahl wird das Spiel automatisch die gleiche Spitzhacke erneut kaufen wenn das Geld ausreicht,"Anotar esta casilla hará que el juego automáticamente compre el pico que tenías cuando se rompa, si tienes dinero suficiente.",
@@ -379,3 +379,15 @@ GL_DESC,Yellow lasers too weak? Decreasing the wavelength once again turns it to
 GLASS_FACTORY,Glass factory,,,,,,
 GF_DESC,Produces glass from sand,,,,,,
 SELL_MINERALS,Sell all your minerals for money,,,,,,
+START,Start,,,,,,
+NO_SAND,You don't have any sand!,,,,,,
+STOP,Stop,,,,,,
+RESOURCES_PRODUCED,Resources produced,,,,,,
+REMAINING,remaining,,,,,,
+SHIP_CONTROL,Ship control,,,,,,
+SCT_DESC,This science is needed to gain control of abandoned ships scattered across the universe.,,,,,,
+ABANDONED_SHIP,A spaceship abandoned by... someone. Research the necessary science to take control of this ship. You'll want this ship to explore and conquer other planets.,,,,,,
+SHIP_CONTROL_SUCCESS,You successfully took control of the ship!,,,,,,
+SHIP_CONTROL_FAIL,"You haven't researched ""Ship control"" yet!",,,,,,
+SHIP_CONTROL_HELP,Construct a research lab to start producing science points.,,,,,,
+RESEARCH_NEEDED,Research needed,,,,,,

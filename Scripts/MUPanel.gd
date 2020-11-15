@@ -1,6 +1,7 @@
 extends "Panel.gd"
 
 func refresh():
+	set_polygon($Background.rect_size)
 	for hbox in $VBoxContainer.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])

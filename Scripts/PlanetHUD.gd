@@ -4,6 +4,9 @@ onready var click_sound = get_node("../click")
 var on_button = false
 
 func _ready():
+	refresh()
+
+func refresh():
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
 

@@ -240,6 +240,14 @@ func get_crush_info(tile_obj):
 	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date) / 1000.0 * tile_obj.path_1_value))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
+func get_prod_info(tile_obj):
+	var time = OS.get_system_time_msecs()
+	var spd = tile_obj.path_1_value#qty1: resource being used. qty2: resource being produced
+	var qty_left = game.clever_round(max(0, tile_obj.qty1 - (time - tile_obj.start_date) / 1000.0 * spd / tile_obj.ratio), 3)
+	var qty_made = game.clever_round(min(tile_obj.qty2, (time - tile_obj.start_date) / 1000.0 * spd), 3)
+	var progress = qty_made / tile_obj.qty2
+	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
+
 func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
 	var overlay_texture = preload("res://Graphics/Elements/Default.png")
 	var overlay = TextureButton.new()

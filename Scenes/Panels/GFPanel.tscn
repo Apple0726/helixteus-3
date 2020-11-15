@@ -59,26 +59,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HSlider" type="HSlider" parent="Control"]
-margin_left = 68.0
-margin_top = 88.0
-margin_right = 404.0
-margin_bottom = 104.0
-step = 0.0
-script = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SandTexture" type="TextureRect" parent="Control"]
-margin_left = 444.0
-margin_top = 76.0
-margin_right = 484.0
-margin_bottom = 116.0
-texture = ExtResource( 3 )
-expand = true
-stretch_mode = 6
-
 [node name="GlassTexture" type="TextureRect" parent="Control"]
 margin_left = 280.0
 margin_top = 140.0
@@ -87,13 +67,6 @@ margin_bottom = 180.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
-
-[node name="Sand" type="Label" parent="Control"]
-margin_left = 500.0
-margin_top = 84.0
-margin_right = 596.0
-margin_bottom = 108.0
-text = "0 kg"
 
 [node name="Glass" type="Label" parent="Control"]
 margin_left = 332.0
@@ -114,4 +87,64 @@ margin_top = 180.0
 margin_right = 612.0
 margin_bottom = 216.0
 text = "START"
-[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+
+[node name="HBox" type="HBoxContainer" parent="Control"]
+margin_left = 36.0
+margin_top = 72.0
+margin_right = 572.0
+margin_bottom = 112.0
+custom_constants/separation = 15
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="Control/HBox"]
+margin_top = 12.0
+margin_right = 338.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Control/HBox"]
+margin_left = 353.0
+margin_right = 383.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 30, 0 )
+
+[node name="SandTexture" type="TextureRect" parent="Control/HBox"]
+margin_left = 398.0
+margin_right = 438.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 40, 0 )
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
+
+[node name="Sand" type="Label" parent="Control/HBox"]
+margin_left = 453.0
+margin_top = 8.0
+margin_right = 491.0
+margin_bottom = 32.0
+text = "0 kg"
+
+[node name="Remaining" type="Label" parent="Control/HBox"]
+visible = false
+margin_left = 431.0
+margin_top = 8.0
+margin_right = 544.0
+margin_bottom = 32.0
+text = "REMAINING"
+
+[node name="Control2" type="Control" parent="Control/HBox"]
+margin_left = 506.0
+margin_right = 536.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 30, 0 )
+[connection signal="pressed" from="Control/Start" to="." method="_on_Start_pressed"]
+[connection signal="value_changed" from="Control/HBox/HSlider" to="." method="_on_HSlider_value_changed"]

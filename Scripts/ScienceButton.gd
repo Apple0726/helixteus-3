@@ -29,6 +29,8 @@ func get_science_name(sc:String):
 			return tr("SPACE_AGRICULTURE")
 		"RC":
 			return tr("ROVER_CONSTRUCTION")
+		"SCT":
+			return tr("SHIP_CONTROL")
 		"OL":
 			return tr("ORANGE_LASER").format({"laser":tr("LASER")})
 		"YL":
@@ -57,6 +59,6 @@ func _input(event):
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 			game.HUD.refresh()
 			$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
-			main_tree.refresh(main_tree)
+			main_tree.refresh()
 		else:
 			game.popup(tr("NOT_ENOUGH_SP"), 1.5)

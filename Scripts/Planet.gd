@@ -90,6 +90,8 @@ func _ready():
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
+			elif tile.tile_str == "ship":
+				$Obstacles.set_cell(i, j, 5)
 			var lake = tile.tile_str.split("_")
 			if p_i.has("lake_1") and len(lake) == 3 and lake[2] == "1":
 				if lake[0] == "l":
@@ -176,6 +178,13 @@ func show_tooltip(tile):
 					if game.help.boulder_desc:
 						tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
 						game.help_str = "boulder_desc"
+				"ship":
+					if game.science_unlocked.SCT:
+						tooltip = tr("CLICK_TO_CONTROL_SHIP")
+					else:
+						if game.help.abandoned_ship:
+							tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
+							game.help_str = "abandoned_ship"
 				"cave":
 					tooltip = tr("CAVE")
 					if game.help.cave_desc:
@@ -329,6 +338,7 @@ func click_tile(tile, tile_id:int):
 					game.toggle_panel(game.SC_panel)
 				"GF":
 					game.toggle_panel(game.GF_panel)
+					game.hide_tooltip()
 
 func collect_rsrc(tile, tile_id:int):
 	if not tile.has("tile_str"):
@@ -463,7 +473,21 @@ func _input(event):
 							if game.show.vehicles_button and not game.vehicle_panel.visible:
 								game.toggle_panel(game.vehicle_panel)
 								game.vehicle_panel.tile_id = tile_id
+					elif tile.tile_str == "ship":
+						if game.science_unlocked.SCT:
+							game.tile_data[tile_id] = null
+							$Obstacles.set_cell(x_pos, y_pos, -1)
+							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
+							game.show.vehicles_button = true
+							game.ship_data.append({"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0})
+						else:
+							if game.show.SP:
+								game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)
+							else:
+								game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 		game.HUD.refresh()
+		if game.planet_HUD:
+			game.planet_HUD.refresh()
 	if Input.is_action_just_released("right_click"):
 		about_to_mine = false
 		finish_construct()
@@ -709,6 +733,14 @@ func update_rsrc(rsrc, tile):
 				var c_i = Helper.get_crush_info(tile)
 				rsrc.get_node("Control/Label").text = String(c_i.qty_left)
 				rsrc.get_node("Control/CapacityBar").value = 1 - c_i.progress
+			else:
+				rsrc.get_node("Control/Label").text = ""
+				rsrc.get_node("Control/CapacityBar").value = 0
+		"GF":
+			if tile.has("qty1"):
+				var prod_i = Helper.get_prod_info(tile)
+				rsrc.get_node("Control/Label").text = "%s kg " % [prod_i.qty_made]
+				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
 			else:
 				rsrc.get_node("Control/Label").text = ""
 				rsrc.get_node("Control/CapacityBar").value = 0
