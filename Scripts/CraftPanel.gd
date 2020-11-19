@@ -3,7 +3,7 @@ extends Control
 onready var game = get_node("/root/Game")
 #Tween for fading in/out panel
 var tween:Tween
-var tab:String
+var tab:String = "agriculture"
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 onready var craft_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount
@@ -33,7 +33,7 @@ func refresh():
 	$Tabs/Agriculture.visible = game.science_unlocked.SA
 	for node in hbox.get_node("Items/Agriculture").get_children():
 		node.visible = game.science_unlocked.SA
-	if tab == "agriculture":
+	if $Tabs/Agriculture.visible:
 		_on_Agric_pressed()
 
 func _on_Agric_pressed():

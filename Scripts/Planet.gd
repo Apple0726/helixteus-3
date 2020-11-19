@@ -164,6 +164,8 @@ func show_tooltip(tile):
 			var strs = tile.tile_str.split("_")
 			if strs[0] == "s" and strs[1] == "water":
 				tooltip = tr("ICE")
+			elif strs[0] == "l" and strs[1] == "water":
+				tooltip = tr("WATER")
 			else:
 				match strs[0]:
 					"l":
@@ -287,7 +289,7 @@ func harvest_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
 	if curr_time >= tile.construction_length + tile.construction_date:
 		game.mets[Helper.get_plant_produce(tile.tile_str)] += game.craft_agric_info[tile.tile_str].produce
-		tile.tile_str = ""
+		tile.erase("tile_str")
 		remove_child(plant_sprites[String(tile_id)])
 	elif game.item_to_use.type == "fertilizer":
 		tile.construction_date -= game.craft_agric_info.fertilizer.speed_up_time
@@ -450,7 +452,7 @@ func _input(event):
 						tile.erase("type")
 						$Soil.set_cell(x_pos, y_pos, -1)
 						$Soil.update_bitmask_region()
-					elif tile.tile_str == "":#if there are no plants
+					elif not tile.has("tile_str"):#if there are no plants
 						plant_seed(tile, tile_id)
 					else:#When clicking a planted crop
 						harvest_plant(tile, tile_id)

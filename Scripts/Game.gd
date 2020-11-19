@@ -2,21 +2,11 @@ extends Node2D
 
 onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 onready var view_scene = preload("res://Scenes/Views/View.tscn")
-onready var construct_panel_scene = preload("res://Scenes/Panels/ConstructPanel.tscn")
-onready var shop_panel_scene = preload("res://Scenes/Panels/ShopPanel.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
-onready var craft_panel_scene = preload("res://Scenes/Panels/CraftPanel.tscn")
-onready var vehicle_panel_scene = preload("res://Scenes/Panels/VehiclePanel.tscn")
-onready var RC_panel_scene = preload("res://Scenes/Panels/RCPanel.tscn")
-onready var MU_panel_scene = preload("res://Scenes/Panels/MUPanel.tscn")
-onready var SC_panel_scene = preload("res://Scenes/Panels/SCPanel.tscn")
-onready var GF_panel_scene = preload("res://Scenes/Panels/GFPanel.tscn")
-onready var inventory_scene = preload("res://Scenes/Panels/Inventory.tscn")
+onready var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
 onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
-onready var HUD_scene = preload("res://Scenes/HUD.tscn")
 onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
-onready var dimension_scene = preload("res://Scenes/Views/Dimension.tscn")
 onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
@@ -42,6 +32,7 @@ var RC_panel:Control
 var MU_panel:Control
 var SC_panel:Control
 var GF_panel:Control
+var send_ships_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -75,6 +66,7 @@ var view
 
 #Current view
 var c_v:String = ""
+var l_v:String = ""
 
 #Player resources
 var money:float = 80000000
@@ -333,17 +325,18 @@ func _load_game():
 	#Loads planet scene
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	
-	dimension = dimension_scene.instance()
-	inventory = inventory_scene.instance()
-	shop_panel = shop_panel_scene.instance()
-	construct_panel = construct_panel_scene.instance()
-	craft_panel = craft_panel_scene.instance()
-	vehicle_panel = vehicle_panel_scene.instance()
-	RC_panel = RC_panel_scene.instance()
-	MU_panel = MU_panel_scene.instance()
-	SC_panel = SC_panel_scene.instance()
-	GF_panel = GF_panel_scene.instance()
-	HUD = HUD_scene.instance()
+	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
+	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
+	shop_panel = load("res://Scenes/Panels/ShopPanel.tscn").instance()
+	construct_panel = load("res://Scenes/Panels/ConstructPanel.tscn").instance()
+	craft_panel = load("res://Scenes/Panels/CraftPanel.tscn").instance()
+	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
+	RC_panel = load("res://Scenes/Panels/RCPanel.tscn").instance()
+	MU_panel = load("res://Scenes/Panels/MUPanel.tscn").instance()
+	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
+	GF_panel = load("res://Scenes/Panels/GFPanel.tscn").instance()
+	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
+	HUD = load("res://Scenes/HUD.tscn").instance()
 	
 	construct_panel.visible = false
 	$Panels.add_child(construct_panel)
@@ -469,6 +462,10 @@ func _load_game():
 		c_v = "planet"
 		add_planet()
 		add_child(HUD)
+	
+	send_ships_panel.visible = false
+	$Panels.add_child(send_ships_panel)
+
 	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
 
 func popup(txt, dur):
@@ -621,8 +618,12 @@ func switch_view(new_view:String, first_time:bool = false):
 				remove_child(cave)
 				cave = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-		c_v = new_view
-	match new_view:
+		if c_v == "science_tree":
+			c_v = l_v
+		else:
+			l_v = c_v
+			c_v = new_view
+	match c_v:
 		"planet":
 			add_planet()
 		"planet_details":
@@ -1883,6 +1884,9 @@ func sell_all_minerals():
 		minerals = 0
 		HUD.refresh()
 
+var cmd_history:Array = []
+var cmd_history_index:int = -1
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
@@ -1929,6 +1933,7 @@ func _input(event):
 			else:
 				toggle_panel(panels[0])
 			hide_tooltip()
+			hide_adv_tooltip()
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
@@ -1950,10 +1955,68 @@ func _input(event):
 			if c_v == "planet":
 				view.obj.collect_all()
 	
+	var cmd_node = $UI/Command
+	#/ to type a command
+	if Input.is_action_just_released("command") and not cmd_node.visible:
+		cmd_node.visible = true
+		cmd_node.text = "/"
+		cmd_node.call_deferred("grab_focus")
+		cmd_node.caret_position = 1
+	
+	if Input.is_action_just_released("cancel"):
+		cmd_node.visible = false
+	
+	if Input.is_action_just_released("enter") and cmd_node.visible:
+		cmd_node.visible = false
+		cmd_history_index = -1
+		var arr:Array = cmd_node.text.substr(1).to_lower().split(" ")
+		var cmd:String = arr[0]
+		match cmd:
+			"setmoney":
+				money = arr[1]
+			"setmin":
+				minerals = arr[1]
+			"setmincap":
+				mineral_capacity = arr[1]
+			"setenergy":
+				energy = arr[1]
+			"setsp":
+				SP = arr[1]
+			"setmat":
+				mats[arr[2].to_lower()] = arr[1]
+			"setmet":
+				mets[arr[2].to_lower()] = arr[1]
+			"finconstr":
+				for tile in tile_data:
+					if tile and tile.has("construction_length"):
+						var diff_time = tile.construction_date + tile.construction_length - OS.get_system_time_msecs()
+						tile.construction_length = 1
+						if tile.has("collect_date"):
+							tile.collect_date -= diff_time
+			"setmulv":
+				MUs[arr[2].to_upper()] = arr[1]
+		popup("Command executed", 1.5)
+		cmd_history.append(cmd_node.text)
+	
+	if Input.is_action_just_released("up") and len(cmd_history) > 0 and cmd_node.visible:
+		if cmd_history_index < len(cmd_history) - 1:
+			cmd_history_index += 1
+		cmd_node.text = cmd_history[cmd_history_index]
+		cmd_node.caret_position = cmd_node.text.length()
+	
+	if Input.is_action_just_released("down") and len(cmd_history) > 0 and cmd_node.visible:
+		if cmd_history_index > 0:
+			cmd_history_index -= 1
+		else:
+			cmd_history_index = 0
+		cmd_node.text = cmd_history[cmd_history_index]
+		cmd_node.caret_position = cmd_node.text.length()
+	
 	if Input.is_action_just_released("hotbar_1") and len(hotbar) > 0:
 		var name = hotbar[0]
 		if get_item_num(name) > 0:
 			inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	
 	var hotbar_presses = [Input.is_action_just_released("hotbar_1"), Input.is_action_just_released("hotbar_2"), Input.is_action_just_released("hotbar_3"), Input.is_action_just_released("hotbar_4"), Input.is_action_just_released("hotbar_5")]
 	for i in 5:
 		if len(hotbar) > i and hotbar_presses[i]:
@@ -2057,6 +2120,7 @@ func _on_Settings_pressed():
 	toggle_panel(settings)
 
 func _on_NewGame_pressed():
+	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed", self, "_on_NewGame_pressed")
 	var tween:Tween = Tween.new()
 	add_child(tween)
 	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)

@@ -48,17 +48,18 @@ func on_mouse_exited():
 
 func _input(event):
 	if Input.is_action_just_released("left_click") and is_over:
-		if game.SP >= Data.science_unlocks[science].cost:
-			game.SP -= Data.science_unlocks[science].cost
-			game.science_unlocked[science] = true
-			if science == "SA":
-				game.long_popup(tr("SA_DONE"), tr("RESEARCH_SUCCESS"))
-			elif science == "RC":
-				game.long_popup(tr("RC_DONE"), tr("RESEARCH_SUCCESS"))
+		if not game.science_unlocked[science]:
+			if game.SP >= Data.science_unlocks[science].cost:
+				game.SP -= Data.science_unlocks[science].cost
+				game.science_unlocked[science] = true
+				if science == "SA":
+					game.long_popup(tr("SA_DONE"), tr("RESEARCH_SUCCESS"))
+				elif science == "RC":
+					game.long_popup(tr("RC_DONE"), tr("RESEARCH_SUCCESS"))
+				else:
+					game.popup(tr("RESEARCH_SUCCESS"), 1.5)
+				game.HUD.refresh()
+				$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+				main_tree.refresh()
 			else:
-				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
-			game.HUD.refresh()
-			$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
-			main_tree.refresh()
-		else:
-			game.popup(tr("NOT_ENOUGH_SP"), 1.5)
+				game.popup(tr("NOT_ENOUGH_SP"), 1.5)

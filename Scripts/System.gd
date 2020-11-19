@@ -75,10 +75,14 @@ func on_planet_over (id:int):
 
 func on_planet_click (id:int):
 	if not view.dragged:
-		game.c_p = id
 		if Input.is_action_pressed("shift"):
+			game.c_p = id
 			game.switch_view("planet_details")
+		elif Input.is_action_pressed("duplicate"):
+			game.send_ships_panel.dest_p_id = id
+			game.toggle_panel(game.send_ships_panel)
 		else:
+			game.c_p = id
 			game.switch_view("planet")
 
 func on_star_over (id:int):
