@@ -142,6 +142,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TravelCosts" type="Label" parent="."]
+margin_left = 488.0
+margin_top = 452.0
+margin_right = 672.0
+margin_bottom = 476.0
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="FasterTravel" type="Label" parent="."]
 margin_left = 880.0
 margin_top = 396.0
@@ -153,10 +163,10 @@ __meta__ = {
 }
 
 [node name="EnergyCost" type="Label" parent="."]
-margin_left = 544.0
-margin_top = 464.0
-margin_right = 728.0
-margin_bottom = 488.0
+margin_left = 772.0
+margin_top = 452.0
+margin_right = 956.0
+margin_bottom = 476.0
 text = "100"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -187,10 +197,10 @@ __meta__ = {
 }
 
 [node name="TimeCost" type="Label" parent="."]
-margin_left = 544.0
-margin_top = 504.0
-margin_right = 728.0
-margin_bottom = 528.0
+margin_left = 772.0
+margin_top = 492.0
+margin_right = 956.0
+margin_bottom = 516.0
 text = "01:12"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -207,10 +217,10 @@ __meta__ = {
 }
 
 [node name="EnergyIcon" type="TextureRect" parent="."]
-margin_left = 492.0
-margin_top = 460.0
-margin_right = 524.0
-margin_bottom = 492.0
+margin_left = 720.0
+margin_top = 448.0
+margin_right = 752.0
+margin_bottom = 480.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -231,10 +241,10 @@ __meta__ = {
 }
 
 [node name="TimeIcon" type="TextureRect" parent="."]
-margin_left = 492.0
-margin_top = 500.0
-margin_right = 524.0
-margin_bottom = 532.0
+margin_left = 720.0
+margin_top = 488.0
+margin_right = 752.0
+margin_bottom = 520.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6

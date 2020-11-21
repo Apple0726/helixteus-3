@@ -73,7 +73,7 @@ var money:float = 80000000
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
-var energy:float = 20000
+var energy:float = 200000000
 var SP:float = 4000
 #Dimension remnants
 var DRs:float = 0
@@ -176,6 +176,12 @@ var cave_data:Array = []
 var rover_data:Array = []
 var ship_data:Array = []
 var ships_c_p:int = 2#Planet that the ships are on
+var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
+var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
+var ships_dest_p_id:int = -1#Planet destination id
+var ships_travel_view:String = "-"#View in which ships travel
+var ships_travel_start_date:int = -1#View in which ships travel
+var ships_travel_length:int = -1#View in which ships travel
 var satellite_data:Array = []
 
 #Your inventory
@@ -651,6 +657,8 @@ func switch_view(new_view:String, first_time:bool = false):
 			cave = cave_scene.instance()
 			add_child(cave)
 			switch_music(load("res://Audio/cave1.ogg"))
+		"STM":
+			pass
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false
@@ -1592,10 +1600,12 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 		surface_mat_info[mat].amount = clever_round(surface_mat_info[mat].amount, 3)
 	return surface_mat_info
 
-func show_tooltip(txt:String):
-	hide_tooltip()
+func show_tooltip(txt:String, hide:bool = true):
+	if hide:
+		hide_tooltip()
 	tooltip.text = txt
-	tooltip.modulate.a = 0
+	if hide:
+		tooltip.modulate.a = 0
 	tooltip.visible = true
 	tooltip.rect_size = Vector2.ZERO
 	if tooltip.rect_size.x > 400:
@@ -1964,6 +1974,8 @@ func _input(event):
 		cmd_node.caret_position = 1
 	
 	if Input.is_action_just_released("cancel"):
+		hide_adv_tooltip()
+		hide_tooltip()
 		cmd_node.visible = false
 	
 	if Input.is_action_just_released("enter") and cmd_node.visible:
@@ -1997,6 +2009,7 @@ func _input(event):
 				MUs[arr[2].to_upper()] = arr[1]
 		popup("Command executed", 1.5)
 		cmd_history.append(cmd_node.text)
+		HUD.refresh()
 	
 	if Input.is_action_just_released("up") and len(cmd_history) > 0 and cmd_node.visible:
 		if cmd_history_index < len(cmd_history) - 1:
