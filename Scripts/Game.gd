@@ -14,6 +14,7 @@ onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
 onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 onready var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
 onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
+onready var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
 onready var particles_scene = load("res://Scenes/LiquidParticles.tscn")
 onready var time_scene = load("res://Scenes/TimeLeft.tscn")
 onready var planet_TS = load("res://Resources/PlanetTileSet.tres")
@@ -122,6 +123,7 @@ var mets:Dictionary = {	"lead":140,
 
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {"mining":true,
+			"STM":true,
 			"plant_something_here":true,
 			"boulder_desc":true,
 			"aurora_desc":true,
@@ -214,6 +216,7 @@ var mining_HUD
 var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
+var STM
 
 var mat_info = {	"coal":{"value":5},#One kg of coal = $10
 					"glass":{"value":20},
@@ -294,9 +297,16 @@ func _ready():
 	settings = settings_scene.instance()
 	settings.visible = false
 	$Panels.add_child(settings)
+	var bg = $Title/Background
+	var bg_area = $Title/Background/AllowedStarArea.polygon
 	for i in 80:
 		var star = star_scene.instance()
-		$Title/Background.add_child(star)
+		star.scale *= rand_range(0.04, 0.06)
+		star.rotation = rand_range(-7, 7)
+		star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
+		while not Geometry.is_point_in_polygon(star.position, bg_area):
+			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
+		bg.add_child(star)
 	var tween:Tween = Tween.new()
 	add_child(tween)
 	tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
@@ -624,7 +634,11 @@ func switch_view(new_view:String, first_time:bool = false):
 				remove_child(cave)
 				cave = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-		if c_v == "science_tree":
+			"STM":
+				add_child(HUD)
+				remove_child(STM)
+				STM = null
+		if c_v in  ["science_tree", "STM"]:
 			c_v = l_v
 		else:
 			l_v = c_v
@@ -658,7 +672,9 @@ func switch_view(new_view:String, first_time:bool = false):
 			add_child(cave)
 			switch_music(load("res://Audio/cave1.ogg"))
 		"STM":
-			pass
+			remove_child(HUD)
+			STM = STM_scene.instance()
+			add_child(STM)
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false
@@ -1914,6 +1930,8 @@ func _input(event):
 			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
 		if item_cursor.visible:
 			item_cursor.position = mouse_pos
+		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
+			STM.move_ship_inst = true
 
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):

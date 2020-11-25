@@ -47,7 +47,7 @@ func _ready():
 		planet.add_child(planet_glow)
 		planet.add_child(planet_btn)
 		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i["id"]])
-		planet_glow.connect("mouse_entered", self, "on_planet_over", [p_i["id"]])
+		planet_glow.connect("mouse_entered", self, "on_glow_planet_over", [p_i["id"], planet_glow])
 		planet_btn.connect("mouse_exited", self, "on_btn_out")
 		planet_glow.connect("mouse_exited", self, "on_btn_out")
 		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"]])
@@ -68,7 +68,16 @@ func _ready():
 		planet.position.y = sin(p_i["angle"]) * p_i["distance"]
 		glows.append(planet_glow)
 
+var glow_over
+
 func on_planet_over (id:int):
+	show_planet_info(id)
+
+func on_glow_planet_over (id:int, glow):
+	glow_over = glow
+	show_planet_info(id)
+
+func show_planet_info(id:int):
 	var p_i = game.planet_data[id]
 	var wid:int = Helper.get_wid(p_i.size)
 	game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
@@ -95,14 +104,17 @@ func on_star_over (id:int):
 	game.show_tooltip(tooltip)
 
 func on_btn_out ():
+	glow_over = null
 	game.hide_tooltip()
 
 func _process(_delta):
 	for glow in glows:
 		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.rect_scale.x) - 0.1, 0, 1)
-		if glow.modulate.a == 0:
+		if glow.modulate.a == 0 and glow.visible:
+			if glow == glow_over:
+				game.hide_tooltip()
 			glow.visible = false
-		else:
+		if glow.modulate.a != 0:
 			glow.visible = true
 
 func _on_System_tree_exited():

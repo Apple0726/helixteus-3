@@ -1,6 +1,6 @@
 extends Node
 
-onready var game = get_node("/root/Game")
+onready var game# = get_node("/root/Game")
 #var game
 #A place to put frequently used functions
 

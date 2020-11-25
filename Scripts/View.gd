@@ -120,7 +120,6 @@ func remove_obj(obj_str:String):
 
 #Executed every tick
 func _physics_process(_delta):
-	print("A")
 	#Moving tiles code
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_left") - Input.get_action_strength("ui_right")
