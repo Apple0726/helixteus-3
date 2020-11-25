@@ -44,7 +44,6 @@ func _ready():
 	core_layer.get_node("Background").connect("mouse_entered", self, "on_core_enter")
 	core_layer.get_node("Background").connect("mouse_exited", self, "on_core_exit")
 	core_layer.get_node("Background").connect("pressed", self, "on_core_press")
-	$Back.text = "<- " + tr("BACK") + " (Z)"
 
 var crust_always_visible = false
 var mantle_always_visible = false
@@ -154,7 +153,6 @@ func _on_Back_pressed():
 	p_i.name = $Name.text
 	game.switch_view("system")
 
-
 func _on_Name_focus_exited():
 	if $Name.text == "":
 		$Name.text = p_i.name
@@ -187,3 +185,6 @@ func sort_elements (a, b):
 	if a["fraction"] < b["fraction"]:
 		return true
 	return false
+
+func _input(event):
+	Helper.set_back_btn($Back)

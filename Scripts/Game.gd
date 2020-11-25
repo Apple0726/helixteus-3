@@ -289,6 +289,7 @@ func _ready():
 		else:
 			switch_music(load("res://Audio/title1.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
+		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		Data.reload()
 	config.save("user://settings.cfg")
 	var dir = Directory.new()
@@ -712,11 +713,11 @@ func add_obj(view_str):
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 		"galaxy":
 			add_space_HUD()
-			put_change_view_btn(tr("VIEW_CLUSTER") + " (Z)", "res://Graphics/Buttons/ClusterView.png")
+			put_change_view_btn(tr("VIEW_CLUSTER"), "res://Graphics/Buttons/ClusterView.png")
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 		"cluster":
 			add_space_HUD()
-			put_change_view_btn(tr("VIEW_SUPERCLUSTER") + " (Z)", "res://Graphics/Buttons/SuperclusterView.png")
+			put_change_view_btn(tr("VIEW_SUPERCLUSTER"), "res://Graphics/Buttons/SuperclusterView.png")
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 		"supercluster":
 			remove_space_HUD()
@@ -729,15 +730,18 @@ func add_obj(view_str):
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
 			var back_btn = Button.new()
 			back_btn.name = "ScienceBackBtn"
-			back_btn.text = "<- " + tr("BACK") + " (Z)"
 			back_btn.theme = load("res://Resources/default_theme.tres")
 			back_btn.margin_left = -640
 			back_btn.margin_top = 320
 			back_btn.margin_right = -512
 			back_btn.margin_bottom = 360
+			back_btn.shortcut_in_tooltip = false
+			back_btn.shortcut = ShortCut.new()
+			back_btn.shortcut.shortcut = InputEventAction.new()
 			add_child(back_btn)
 			back_btn.rect_position = Vector2(0, 680)
 			back_btn.connect("pressed", self, "on_science_back_pressed")
+			Helper.set_back_btn(back_btn)
 
 func on_science_back_pressed():
 	switch_view("planet")
@@ -771,14 +775,14 @@ func add_dimension():
 	dimension.visible = true
 
 func add_universe():
-	put_change_view_btn(tr("VIEW_DIMENSION") + " (Z)", "res://Graphics/Buttons/DimensionView.png")
+	put_change_view_btn(tr("VIEW_DIMENSION"), "res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u]["discovered"]:
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
 
 func add_supercluster():
-	put_change_view_btn(tr("VIEW_UNIVERSE") + " (Z)", "res://Graphics/Buttons/UniverseView.png")
+	put_change_view_btn(tr("VIEW_UNIVERSE"), "res://Graphics/Buttons/UniverseView.png")
 	if not supercluster_data[c_sc]["discovered"]:
 		reset_collisions()
 		generate_clusters(c_sc)
@@ -802,7 +806,7 @@ func add_galaxy():
 		add_obj("galaxy")
 
 func add_system():
-	put_change_view_btn(tr("VIEW_GALAXY") + " (Z)", "res://Graphics/Buttons/GalaxyView.png")
+	put_change_view_btn(tr("VIEW_GALAXY"), "res://Graphics/Buttons/GalaxyView.png")
 	if not system_data[c_s]["discovered"]:
 		generate_planets(c_s)
 	add_obj("system")
@@ -826,22 +830,27 @@ func remove_dimension():
 
 func remove_universe():
 	remove_child(change_view_btn)
+	change_view_btn = null
 	view.remove_obj("universe")
 
 func remove_supercluster():
 	remove_child(change_view_btn)
+	change_view_btn = null
 	view.remove_obj("supercluster")
 
 func remove_cluster():
 	remove_child(change_view_btn)
+	change_view_btn = null
 	view.remove_obj("cluster")
 
 func remove_galaxy():
 	remove_child(change_view_btn)
+	change_view_btn = null
 	view.remove_obj("galaxy")
 
 func remove_system():
 	remove_child(change_view_btn)
+	change_view_btn = null
 	view.remove_obj("system")
 
 func remove_planet():
@@ -1677,13 +1686,17 @@ func put_change_view_btn (info_str, icon_str):
 	var change_view_icon = load(icon_str)
 	change_view_btn.texture_normal = change_view_icon
 	add_child(change_view_btn)
+	change_view_btn.shortcut = ShortCut.new()
+	change_view_btn.shortcut.shortcut = InputEventAction.new()
+	Helper.set_back_btn(change_view_btn, false)
+	change_view_btn.shortcut_in_tooltip = false
 	change_view_btn.rect_position = Vector2(-1, 720 - 63)
 	change_view_btn.connect("mouse_entered", self, "on_change_view_over", [info_str])
 	change_view_btn.connect("mouse_exited", self, "hide_tooltip")
 	change_view_btn.connect("pressed", self, "on_change_view_click")
 
 func on_change_view_over (view_str):
-	show_tooltip(view_str)
+	show_tooltip("%s (%s)" % [view_str, change_view_btn.shortcut.shortcut.action])
 
 func on_change_view_click ():
 	$click.play()
@@ -1938,14 +1951,14 @@ func _input(event):
 		OS.window_fullscreen = not OS.window_fullscreen
 
 	#Press Z to view galaxy the system is in, etc. or go back
-	if Input.is_action_just_released("change_view"):
-		if c_v == "planet_details" and not planet_details.renaming:
-			switch_view("system")
-		elif c_v == "science_tree":
-			on_science_back_pressed()
-		elif not has_node("Loading"):
+	if OS.get_latin_keyboard_variant() == "QWERTY" and Input.is_action_just_released("Z") or OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_released("W"):
+		if not has_node("Loading"):
 			on_change_view_click()
+	if c_v == "science_tree":
+		Helper.set_back_btn(get_node("ScienceBackBtn"))
 
+	if change_view_btn:
+		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
 		item_to_use.num = 0
 		update_item_cursor()
@@ -1973,15 +1986,6 @@ func _input(event):
 		help[help_str] = false
 		hide_tooltip()
 		hide_adv_tooltip()
-	
-	if Input.is_action_pressed("shift"):
-		#Sell all minerals by pressing Shift C
-		if Input.is_action_just_released("construct"):
-			sell_all_minerals()
-		#Collect all by pressing Shift V
-		if Input.is_action_just_released("vehicles"):
-			if c_v == "planet":
-				view.obj.collect_all()
 	
 	var cmd_node = $UI/Command
 	#/ to type a command
@@ -2043,17 +2047,12 @@ func _input(event):
 		cmd_node.text = cmd_history[cmd_history_index]
 		cmd_node.caret_position = cmd_node.text.length()
 	
-	if Input.is_action_just_released("hotbar_1") and len(hotbar) > 0:
-		var name = hotbar[0]
-		if get_item_num(name) > 0:
-			inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
-	
-	var hotbar_presses = [Input.is_action_just_released("hotbar_1"), Input.is_action_just_released("hotbar_2"), Input.is_action_just_released("hotbar_3"), Input.is_action_just_released("hotbar_4"), Input.is_action_just_released("hotbar_5")]
+	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
 	for i in 5:
 		if len(hotbar) > i and hotbar_presses[i]:
 			var name = hotbar[i]
 			if get_item_num(name) > 0:
-				inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+				inventory.on_slot_press(name)
 #	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
 #		var save_game = File.new()
 #		save_game.open("user://Save1/main.hx3", File.WRITE)

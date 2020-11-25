@@ -4,6 +4,8 @@ onready var click_sound = get_node("../click")
 var on_button = false
 
 func _ready():
+	if OS.get_latin_keyboard_variant() == "AZERTY":
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
 	refresh()
 
 func refresh():
@@ -16,6 +18,11 @@ func _on_StarSystem_pressed():
 		return
 	game.switch_view("system")
 
+func _input(event):
+	if OS.get_latin_keyboard_variant() == "QWERTY":
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Z"
+	elif OS.get_latin_keyboard_variant() == "AZERTY":
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
 
 func _on_Construct_pressed():
 	if not Input.is_action_pressed("shift"):
@@ -47,7 +54,7 @@ func _on_Construct_mouse_entered():
 
 func _on_StarSystem_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("VIEW_STAR_SYSTEM") + " (Z)" + "\n" + tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"])
+	game.show_tooltip("%s (%s)\n%s" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action, tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"]])
 
 func _on_Mine_mouse_entered():
 	on_button = true

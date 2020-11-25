@@ -1,10 +1,16 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Planets/Other/mask.png" type="BitMap" id=4]
 [ext_resource path="res://Scenes/PieGraph.tscn" type="PackedScene" id=5]
+
+[sub_resource type="InputEventAction" id=1]
+action = "Z"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -52,6 +58,8 @@ __meta__ = {
 margin_top = 680.0
 margin_right = 128.0
 margin_bottom = 720.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 2 )
 text = "<- Back (Z)"
 __meta__ = {
 "_edit_use_anchors_": false

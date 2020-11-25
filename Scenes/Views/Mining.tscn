@@ -41,7 +41,7 @@ animations = [ {
 } ]
 
 [sub_resource type="InputEventAction" id=6]
-action = "change_view"
+action = "Z"
 
 [sub_resource type="ShortCut" id=7]
 shortcut = SubResource( 6 )

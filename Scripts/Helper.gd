@@ -1,6 +1,6 @@
 extends Node
 
-onready var game# = get_node("/root/Game")
+onready var game = get_node("/root/Game")
 #var game
 #A place to put frequently used functions
 
@@ -287,3 +287,11 @@ func get_rover_weapon_text(name:String):
 func get_rover_mining_text(name:String):
 	var laser = name.split("_", true, 1)
 	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())}), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[name].rnge]]
+
+func set_back_btn(back_btn, set_text:bool = true):
+	if OS.get_latin_keyboard_variant() == "QWERTY":
+		back_btn.shortcut.shortcut.action = "Z"
+	elif OS.get_latin_keyboard_variant() == "AZERTY":
+		back_btn.shortcut.shortcut.action = "W"
+	if set_text:
+		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]

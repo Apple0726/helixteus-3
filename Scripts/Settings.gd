@@ -18,6 +18,7 @@ func _ready():
 		update_volumes(1, config.get_value("audio", "music", 0))
 		$SFX.value = config.get_value("audio", "SFX", 0)
 		update_volumes(2, config.get_value("audio", "SFX", 0))
+		$Vsync.pressed = config.get_value("graphics", "vsync", true)
 
 func _on_Main_audio_value_changed(value):
 	update_volumes(0, value)
@@ -46,3 +47,9 @@ func update_volumes(bus:int, value:float):
 
 func refresh():
 	pass
+
+func _on_Vsync_toggled(button_pressed):
+	if err == OK:
+		OS.vsync_enabled = button_pressed
+		config.set_value("graphics", "vsync", button_pressed)
+		config.save("user://settings.cfg")

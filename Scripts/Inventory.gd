@@ -157,16 +157,19 @@ func get_str(obj:String, desc:String = ""):
 
 func _input(_event):
 	if item_hovered != "":
-		if Input.is_action_just_released("throw"):
-			if Input.is_action_pressed("shift"):
-				game.remove_items(item_hovered, item_stack)
-			else:
-				game.remove_items(item_hovered)
+		if Input.is_action_just_released("shift X"):
+			game.remove_items(item_hovered, item_stack)
 			_on_Items_pressed()
 			if not game.items[item_slot]:
 				item_hovered = ""
 				game.hide_tooltip()
-		if Input.is_action_just_released("hotbar"):
+		if Input.is_action_just_released("X"):
+			game.remove_items(item_hovered)
+			_on_Items_pressed()
+			if not game.items[item_slot]:
+				item_hovered = ""
+				game.hide_tooltip()
+		if Input.is_action_just_released("H"):
 			if game.hotbar.find(item_hovered) == -1:
 				game.hotbar.append(item_hovered)
 			else:

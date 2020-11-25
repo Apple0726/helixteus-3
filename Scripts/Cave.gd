@@ -511,26 +511,26 @@ func _input(event):
 			if curr_slot >= len(inventory):
 				curr_slot = 0
 			set_border(curr_slot)
-		if Input.is_action_just_released("map"):
+		if Input.is_action_just_released("M"):
 			$UI/Minimap.visible = not $UI/Minimap.visible
 			$UI/Rover.visible = not $UI/Rover.visible
 			$UI/MinimapBG.visible = not $UI/MinimapBG.visible
-		elif Input.is_action_just_released("hotbar_1") and curr_slot != 0:
+		elif Input.is_action_just_released("1") and curr_slot != 0:
 			curr_slot = 0
 			set_border(curr_slot)
-		elif Input.is_action_just_released("hotbar_2") and curr_slot != 1:
+		elif Input.is_action_just_released("2") and curr_slot != 1:
 			curr_slot = 1
 			set_border(curr_slot)
-		elif Input.is_action_just_released("hotbar_3") and curr_slot != 2:
+		elif Input.is_action_just_released("3") and curr_slot != 2:
 			curr_slot = 2
 			set_border(curr_slot)
-		elif Input.is_action_just_released("hotbar_4") and curr_slot != 3:
+		elif Input.is_action_just_released("4") and curr_slot != 3:
 			curr_slot = 3
 			set_border(curr_slot)
-		elif Input.is_action_just_released("hotbar_5") and curr_slot != 4:
+		elif Input.is_action_just_released("5") and curr_slot != 4:
 			curr_slot = 4
 			set_border(curr_slot)
-		if Input.is_action_just_released("upgrade"):
+		if Input.is_action_just_released("F"):
 			if active_type == "chest":
 				var remainders = {}
 				var contents = chests[active_chest].contents
@@ -815,8 +815,12 @@ func _physics_process(delta):
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
-	input_vector.x = - Input.get_action_strength("ui_left") + Input.get_action_strength("ui_right")
-	input_vector.y = - Input.get_action_strength("ui_up") + Input.get_action_strength("ui_down")
+	if OS.get_latin_keyboard_variant() == "QWERTY":
+		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("A")
+		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("W")
+	elif OS.get_latin_keyboard_variant() == "AZERTY":
+		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("Q")
+		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -45,34 +45,46 @@ border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
 
 [sub_resource type="InputEventAction" id=4]
-action = "craft"
+action = "T"
 
 [sub_resource type="ShortCut" id=5]
 shortcut = SubResource( 4 )
 
 [sub_resource type="InputEventAction" id=6]
-action = "inventory"
+action = "E"
 
 [sub_resource type="ShortCut" id=7]
 shortcut = SubResource( 6 )
 
 [sub_resource type="InputEventAction" id=8]
-action = "shop"
+action = "R"
 
 [sub_resource type="ShortCut" id=9]
 shortcut = SubResource( 8 )
 
 [sub_resource type="InputEventAction" id=10]
-action = "mineral_upgrades"
+action = "U"
 
 [sub_resource type="ShortCut" id=11]
 shortcut = SubResource( 10 )
 
 [sub_resource type="InputEventAction" id=12]
-action = "science_tree"
+action = "I"
 
 [sub_resource type="ShortCut" id=13]
 shortcut = SubResource( 12 )
+
+[sub_resource type="InputEventAction" id=14]
+action = "shift V"
+
+[sub_resource type="ShortCut" id=15]
+shortcut = SubResource( 14 )
+
+[sub_resource type="InputEventAction" id=16]
+action = "shift C"
+
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -331,6 +343,7 @@ margin_right = 64.0
 margin_bottom = 304.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
+keep_pressed_outside = true
 shortcut = SubResource( 5 )
 texture_normal = ExtResource( 1 )
 expand = true
@@ -397,9 +410,14 @@ margin_left = 1232.0
 margin_top = 656.0
 margin_right = 1272.0
 margin_bottom = 700.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 15 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ConvertMinerals" type="TextureButton" parent="."]
 visible = false
@@ -407,6 +425,8 @@ margin_left = 1176.0
 margin_top = 656.0
 margin_right = 1216.0
 margin_bottom = 700.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5

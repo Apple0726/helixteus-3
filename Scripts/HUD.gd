@@ -148,7 +148,7 @@ func _on_Label_mouse_exited():
 	game.hide_tooltip()
 
 func _input(_event):
-	if Input.is_action_just_released("hotbar") and slot_over != -1:
+	if Input.is_action_just_released("H") and slot_over != -1:
 		game.hotbar.remove(slot_over)
 		game.hide_tooltip()
 		slot_over = -1

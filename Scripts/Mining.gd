@@ -23,7 +23,6 @@ var speed_mult:float = 1.0
 
 func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
-	$Back.text = "<- " + tr("BACK") + " (Z)"
 	if p_i.temperature > 1000:
 		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
 	else:
@@ -157,6 +156,7 @@ func _input(event):
 	if event is InputEventMouse:
 		mouse_pos = event.position
 		$Pickaxe.position = mouse_pos - Vector2(512, 576)
+	Helper.set_back_btn($Back)
 
 func _on_Back_pressed():
 	tile.mining_progress = progress

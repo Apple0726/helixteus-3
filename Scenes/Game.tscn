@@ -62,7 +62,7 @@ font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="InputEventAction" id=5]
-action = "settings"
+action = "P"
 
 [sub_resource type="ShortCut" id=6]
 shortcut = SubResource( 5 )

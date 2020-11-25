@@ -100,6 +100,17 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Vsync" type="CheckButton" parent="."]
+margin_left = 556.621
+margin_top = 62.9289
+margin_right = 685.621
+margin_bottom = 102.929
+text = "Vsync (requires restart)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
+[connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
