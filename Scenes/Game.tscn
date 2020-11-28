@@ -216,7 +216,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.9:"
+text = "Alpha v0.9: 28 Nov 2020"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -577,19 +577,19 @@ align = 0
 [connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~95%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~75%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~90%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~70%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~85%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~65%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~70%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~50%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~60%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~50%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
 [connection signal="mouse_entered" from="Title/Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "Русский (4 lines)" ]]

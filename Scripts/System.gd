@@ -87,9 +87,12 @@ func on_planet_click (id:int):
 		if Input.is_action_pressed("shift"):
 			game.c_p = id
 			game.switch_view("planet_details")
-		elif Input.is_action_pressed("duplicate"):
-			game.send_ships_panel.dest_p_id = id
-			game.toggle_panel(game.send_ships_panel)
+		elif Input.is_action_pressed("Q"):
+			if len(game.ship_data) > 0:
+				game.send_ships_panel.dest_p_id = id
+				game.toggle_panel(game.send_ships_panel)
+			else:
+				game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 		else:
 			game.c_p = id
 			game.switch_view("planet")

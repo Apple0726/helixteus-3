@@ -374,10 +374,10 @@ func _input(event):
 	if tile_over != -1:
 		var tile = game.tile_data[tile_over]
 		if tile and tile.has("type") and tile.type == "bldg":
-			if Input.is_action_just_released("duplicate"):
+			if Input.is_action_just_released("Q"):
 				game.put_bottom_info(tr("STOP_CONSTRUCTION"))
 				construct(tile.tile_str, Data.costs[tile.tile_str])
-			if Input.is_action_just_released("upgrade"):
+			if Input.is_action_just_released("F"):
 				game.add_upgrade_panel([tile_over])
 	if event is InputEventMouseMotion:
 		mouse_pos = to_local(event.position)

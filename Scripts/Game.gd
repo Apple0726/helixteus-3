@@ -70,15 +70,15 @@ var c_v:String = ""
 var l_v:String = ""
 
 #Player resources
-var money:float = 80000000
+var money:float = 800
 var minerals:float = 0
 var mineral_capacity:float = 50
 var stone:Dictionary = {}
-var energy:float = 200000000
-var SP:float = 4000
+var energy:float = 200
+var SP:float = 0
 #Dimension remnants
 var DRs:float = 0
-var lv:int = 5
+var lv:int = 1
 var xp:float = 0
 var xp_to_lv:float = 10
 
@@ -97,20 +97,20 @@ var stack_size:int = 16
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":10.0, "durability":700}
+var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
 						"sand":0,
 						"clay":0,
-						"soil":50,
+						"soil":0,
 						"cellulose":0,
-						"silicon":2000,
+						"silicon":0,
 }
 
-var mets:Dictionary = {	"lead":140,
+var mets:Dictionary = {	"lead":0,
 						"copper":0,
-						"iron":140,
+						"iron":0,
 						"aluminium":0,
 						"silver":0,
 						"gold":0,
@@ -144,7 +144,7 @@ var MUs:Dictionary = {	"MV":1,
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
-						"SP":true,
+						"SP":false,
 						"sand":false,
 						"mining_layer":false,
 						"plant_button":false,
@@ -174,7 +174,7 @@ var tile_data:Array = []
 var cave_data:Array = []
 
 #Vehicle data
-#var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "weight_cap":8000.0, "inventory":[{"name":"attack", "cooldown":0.2, "damage":2.0}, {"name":"mining", "speed":1.0}, {"name":""}, {"name":""}, {"name":""}], "i_w_w":{}}]
+#var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 var rover_data:Array = []
 var ship_data:Array = []
 var ships_c_p:int = 2#Planet that the ships are on
@@ -182,8 +182,8 @@ var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc
 var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
 var ships_dest_p_id:int = -1#Planet destination id
 var ships_travel_view:String = "-"#View in which ships travel
-var ships_travel_start_date:int = -1#View in which ships travel
-var ships_travel_length:int = -1#View in which ships travel
+var ships_travel_start_date:int = -1
+var ships_travel_length:int = -1
 var satellite_data:Array = []
 
 #Your inventory
@@ -195,6 +195,8 @@ var hotbar:Array = []
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":250, "right":100000}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
 }
+var STM_lv:int = 1#ship travel minigame level
+
 ############ End save data ############
 
 var save_u = false
@@ -205,9 +207,9 @@ var save_s = false
 var save_p = false
 var save_t = false
 
-var EA_planet_visited = false
-var EA_galaxy_visited = false
-var EA_cave_visited = false
+var EA_planet_visited = true
+var EA_galaxy_visited = true
+var EA_cave_visited = true
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -483,7 +485,7 @@ func _load_game():
 	send_ships_panel.visible = false
 	$Panels.add_child(send_ships_panel)
 
-	#long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nYou also start at level 5 to be able to explore the universe right away.", "Early access note")
+	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -1477,27 +1479,27 @@ func generate_tiles(id:int):
 		tile_data[315] = {}
 		make_obstacle(tile_data[315], "cave")
 		tile_data[315].cave_id = 1
-		var curr_time = OS.get_system_time_msecs()
-		tile_data[110] = {}
-		tile_data[110].tile_str = "RCC"
-		tile_data[110].is_constructing = false
-		tile_data[110].construction_date = curr_time
-		tile_data[110].construction_length = 10
-		tile_data[110].type = "bldg"
-		tile_data[110].XP = 0
-		tile_data[110].path_1 = 1
-		tile_data[110].path_1_value = Data.path_1.RCC.value
-		tile_data[111] = {}
-		tile_data[111].tile_str = "GF"
-		tile_data[111].is_constructing = false
-		tile_data[111].construction_date = curr_time
-		tile_data[111].construction_length = 10
-		tile_data[111].type = "bldg"
-		tile_data[111].XP = 0
-		tile_data[111].path_1 = 1
-		tile_data[111].path_2 = 1
-		tile_data[111].path_1_value = Data.path_1.GF.value
-		tile_data[111].path_2_value = Data.path_2.GF.value
+#		var curr_time = OS.get_system_time_msecs()
+#		tile_data[110] = {}
+#		tile_data[110].tile_str = "RCC"
+#		tile_data[110].is_constructing = false
+#		tile_data[110].construction_date = curr_time
+#		tile_data[110].construction_length = 10
+#		tile_data[110].type = "bldg"
+#		tile_data[110].XP = 0
+#		tile_data[110].path_1 = 1
+#		tile_data[110].path_1_value = Data.path_1.RCC.value
+#		tile_data[111] = {}
+#		tile_data[111].tile_str = "GF"
+#		tile_data[111].is_constructing = false
+#		tile_data[111].construction_date = curr_time
+#		tile_data[111].construction_length = 10
+#		tile_data[111].type = "bldg"
+#		tile_data[111].XP = 0
+#		tile_data[111].path_1 = 1
+#		tile_data[111].path_2 = 1
+#		tile_data[111].path_1_value = Data.path_1.GF.value
+#		tile_data[111].path_2_value = Data.path_2.GF.value
 		tile_data[112] = {}
 		tile_data[112].type = "obstacle"
 		tile_data[112].tile_str = "ship"
@@ -1960,8 +1962,9 @@ func _input(event):
 	if change_view_btn:
 		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
-		item_to_use.num = 0
-		update_item_cursor()
+		if c_v != "STM":
+			item_to_use.num = 0
+			update_item_cursor()
 		if len(panels) != 0:
 			if c_v != "":
 				if not panels[0].polygon:
@@ -2029,6 +2032,8 @@ func _input(event):
 							tile.collect_date -= diff_time
 			"setmulv":
 				MUs[arr[2].to_upper()] = arr[1]
+			"setlv":
+				lv = int(arr[1])
 		popup("Command executed", 1.5)
 		cmd_history.append(cmd_node.text)
 		HUD.refresh()

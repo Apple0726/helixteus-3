@@ -1,5 +1,6 @@
 extends Panel
 
+onready var game = get_node("/root/Game")
 """
 audio sliders are set to each bus
 (you can find the buses by looking at the bottom of the screen and clicking Audio)
@@ -46,7 +47,10 @@ func update_volumes(bus:int, value:float):
 		AudioServer.set_bus_mute(bus,true)
 
 func refresh():
-	pass
+	if game.c_v == "STM":
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		game.STM.show_help("")
+		game.STM.set_process(false)
 
 func _on_Vsync_toggled(button_pressed):
 	if err == OK:
