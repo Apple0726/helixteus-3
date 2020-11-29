@@ -310,6 +310,8 @@ func _process(delta):
 				bullet_data[bullet.name].t += 10
 				cond = bullet_data[bullet.name].t > 1280 * 7
 			else:
+				if not bullet_data[bullet.name].has("dir"):
+					bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
 				bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir)
 				bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir)
 				cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
@@ -462,9 +464,8 @@ func pattern_12():
 		put_bullet(Vector2.ZERO, 0.25, 12, {"t":-i * 10, "b_type":"c", "y":190, "delay":0})
 	for i in 20:
 		var x_pos = rand_range(0, 1280)
-		var dir = atan2(mouse_pos.y - 720, mouse_pos.x - x_pos)
 		for j in 100:
-			put_bullet(Vector2(x_pos, 740), 0.4, 12, {"v":rand_range(3, 8), "dir":dir + rand_range(-0.1, 0.1), "delay":0.7 * i})
+			put_bullet(Vector2(x_pos, 740), 0.4, 12, {"v":rand_range(3, 8), "delay":0.7 * i})
 
 func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0):
 	var bullet = Sprite.new()
@@ -474,8 +475,6 @@ func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:floa
 	bullet.position = pos
 	bullet.rotation = rot
 	add_child(bullet)
-	#if _name != "":
-		#bullet.name = _name
 	if not data.empty():
 		bullet_data[bullet.name] = data
 	bullet.add_to_group("bullet_%s" % [group])

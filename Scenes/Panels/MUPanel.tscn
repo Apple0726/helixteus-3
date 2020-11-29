@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scripts/MUPanel.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -41,6 +42,12 @@ margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 7 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
@@ -184,6 +191,7 @@ theme = ExtResource( 5 )
 icon = ExtResource( 3 )
 align = 0
 expand_icon = true
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/MV/Label" to="." method="_on_Label_mouse_entered" binds= [ "MV" ]]
 [connection signal="mouse_exited" from="VBoxContainer/MV/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/MV/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "MV" ]]

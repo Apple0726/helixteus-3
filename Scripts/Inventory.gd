@@ -76,15 +76,15 @@ func on_slot_press(name:String):
 	var type:String = Helper.get_type_from_name(name)
 	if type == "craft_agric_info":
 		if game.craft_agric_info[name].has("grow_time"):
-			game.put_bottom_info(tr("PLANT_SEED_INFO"))
+			game.put_bottom_info(tr("PLANT_SEED_INFO"), "plant_seed", "hide_item_cursor")
 			game.item_to_use.type = "seeds"
 		elif game.craft_agric_info[name].has("speed_up_time"):
 			game.item_to_use.type = "fertilizer"
 	elif type == "speedup_info":
-		game.put_bottom_info(tr("USE_SPEEDUP_INFO"))
+		game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
 		game.item_to_use.type = "speedup"
 	elif type == "overclock_info":
-		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"))
+		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
 		game.item_to_use.type = "overclock"
 	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
 	game.show_item_cursor(texture)
@@ -175,3 +175,7 @@ func _input(_event):
 			else:
 				game.hotbar.erase(item_hovered)
 			game.HUD.update_hotbar()
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

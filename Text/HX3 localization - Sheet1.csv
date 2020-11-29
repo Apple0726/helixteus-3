@@ -30,7 +30,7 @@ NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez 
 NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음
 BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기
 LATER,Later,Plus tard,Più tardi,,Später,Más tarde,나중에
-STOP_CONSTRUCTION,Right click to stop constructing,Clic droit pour terminer la construction,Clic destro per smettere di costruire,,Rechtsklicken um die Konstruktion abzubrechen,Click derecho para dejar de construir,다 지었으면 오른쪽 클릭
+CLICK_TILE_TO_CONSTRUCT,Click on an empty tile to construct,Cliquez sur une tuile vide pour construire,,,,,
 HOME_PLANET,Home planet,Planète originelle,,,Heimatplanet,Planeta hogar,
 SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,,Sonnensystem,Sistema solar,태양계
 MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Láctea,우리은하
@@ -417,3 +417,5 @@ STM_LEVEL_3,Obstacles don't always come from the right. They can come from all 4
 STM_LEVEL_4,Look out for crates. They contain all sorts of useful things!,,,,,,
 NO_SHIPS,No ships,,,,,,
 NO_SHIPS_DESC,You need to have a ship to be able to attack the enemies on this planet.,,,,,,
+CLOSE_BUTTON_DESC1,You can also right click anywhere to close panels.,,,,,,
+CLOSE_BUTTON_DESC2,You can also right click anywhere to cancel actions.,,,,,,

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/BuySellPanel.gd" type="Script" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Graphics/Buttons/Switch.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
 [node name="BuySellPanel" type="Panel"]
 anchor_left = 0.5
@@ -91,8 +92,15 @@ stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="." instance=ExtResource( 6 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 [connection signal="mouse_entered" from="HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="HSlider" to="." method="_on_HSlider_mouse_exited"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Buy" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/Slider.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.202206, 0.404412, 1 )
@@ -77,9 +78,9 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
-margin_left = 32.0
+margin_left = 44.0
 margin_top = 12.0
-margin_right = 736.0
+margin_right = 716.0
 margin_bottom = 44.0
 custom_constants/separation = 20
 __meta__ = {
@@ -105,7 +106,7 @@ __meta__ = {
 
 [node name="HSlider" type="HSlider" parent="Panel/HBoxContainer"]
 margin_left = 275.0
-margin_right = 704.0
+margin_right = 672.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 50, 0 )
 focus_mode = 0
@@ -161,6 +162,13 @@ margin_left = 296.0
 margin_top = 80.0
 margin_right = 472.0
 margin_bottom = 104.0
+
+[node name="CloseButton" parent="Panel" instance=ExtResource( 4 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -32.0
+margin_right = 0.0
+margin_bottom = 32.0
 [connection signal="mouse_entered" from="Panel/LeftNum" to="." method="_on_num_mouse_entered" binds= [ "left" ]]
 [connection signal="mouse_exited" from="Panel/LeftNum" to="." method="_on_num_mouse_exited"]
 [connection signal="mouse_entered" from="Panel/RightNum" to="." method="_on_num_mouse_entered" binds= [ "right" ]]
@@ -171,3 +179,4 @@ margin_bottom = 104.0
 [connection signal="mouse_exited" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_exited"]
 [connection signal="value_changed" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Panel/Done" to="." method="_on_Done_pressed"]
+[connection signal="close_button_pressed" from="Panel/CloseButton" to="." method="_on_close_button_pressed"]

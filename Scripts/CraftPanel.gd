@@ -118,3 +118,7 @@ func get_item_desc(item:String):
 		"fertilizer":
 			output = tr("FERTILIZER_DESC")
 	return output
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

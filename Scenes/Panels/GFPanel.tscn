@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scripts/GFPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/Slider.gd" type="Script" id=7]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -32,6 +33,12 @@ margin_bottom = 216.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 8 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 612.0
@@ -146,5 +153,6 @@ margin_left = 506.0
 margin_right = 536.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 30, 0 )
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Control/Start" to="." method="_on_Start_pressed"]
 [connection signal="value_changed" from="Control/HBox/HSlider" to="." method="_on_HSlider_value_changed"]

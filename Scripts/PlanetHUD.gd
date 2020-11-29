@@ -32,16 +32,15 @@ func _on_Construct_pressed():
 func _on_Mine_pressed():
 	click_sound.play()
 	if not game.pickaxe.empty():
-		game.view.obj.about_to_mine = true
 		game.cancel_building()
-		game.put_bottom_info(tr("START_MINE"))
+		game.put_bottom_info(tr("START_MINE"), "about_to_mine")
 	else:
 		game.long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
 
 func _on_PlaceSoil_pressed():
 	click_sound.play()
 	game.HUD.get_node("Resources/Soil").visible = true
-	game.put_bottom_info(tr("PLACE_SOIL_INFO"))
+	game.put_bottom_info(tr("PLACE_SOIL_INFO"), "place_soil", "cancel_place_soil")
 
 func _on_Vehicles_pressed():
 	if not Input.is_action_pressed("shift"):

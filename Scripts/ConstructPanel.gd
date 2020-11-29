@@ -123,7 +123,7 @@ func get_item(name, costs, _type, _dir):
 		return
 	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_panel(game.construct_panel)
-	game.put_bottom_info(tr("STOP_CONSTRUCTION"))
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	game.view.obj.construct(name, costs)
 
 func refresh():
@@ -132,3 +132,6 @@ func refresh():
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.name == "GF":
 			bldg.visible = game.show.sand
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Graphics/Buttons/CloseButton.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/CloseButton.gd" type="Script" id=3]
+[ext_resource path="res://Graphics/Buttons/CloseButtonOver.png" type="Texture" id=4]
+
+[node name="CloseButton" type="PanelContainer"]
+margin_right = 48.0
+margin_bottom = 48.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 46.0
+margin_bottom = 46.0
+texture_normal = ExtResource( 2 )
+texture_hover = ExtResource( 4 )
+expand = true
+stretch_mode = 5
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]

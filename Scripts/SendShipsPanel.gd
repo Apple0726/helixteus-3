@@ -110,3 +110,6 @@ func _on_PlanetEECost_mouse_entered():
 
 func _on_PlanetEECost_mouse_exited():
 	game.hide_tooltip()
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

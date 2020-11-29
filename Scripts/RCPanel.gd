@@ -197,3 +197,7 @@ func _input(event):
 				game.hide_tooltip()
 			else:
 				game.popup(tr("REMOVE_WHEELS_ATTEMPT"), 2.5)
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

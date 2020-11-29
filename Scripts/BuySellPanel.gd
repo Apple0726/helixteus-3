@@ -87,9 +87,7 @@ func _on_Button_pressed():
 		game.popup(tr("PURCHASE_SUCCESS"), 1.5)
 	game.inventory.refresh()
 	game.HUD.refresh()
-	game.panels.pop_front()
-	visible = false
-
+	_on_close_button_pressed()
 
 func _on_TextureButton_pressed():
 	if is_selling:
@@ -107,3 +105,7 @@ func _on_TextureButton_pressed():
 			game.popup(tr("CANT_SELL"), 1.2)
 			return
 	refresh()
+
+func _on_close_button_pressed():
+	visible = false
+	game.panels.pop_front()

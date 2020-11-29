@@ -50,7 +50,7 @@ func _process(_delta):
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos
 		var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
-		var pos:Vector2 = lerp(dep_pos, dest_pos, progress)
+		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(progress, 0, 1))
 		green_line.points[1] = pos
 		ship.rect_position = pos - Vector2(50, 25)
 		if progress >= 1:

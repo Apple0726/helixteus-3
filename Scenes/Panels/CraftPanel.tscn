@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scripts/CraftPanel.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -39,6 +40,12 @@ margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 6 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
@@ -184,6 +191,7 @@ margin_right = 264.0
 margin_bottom = 396.0
 fit_content_height = true
 scroll_active = false
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Tabs/Agriculture" to="." method="_on_Agric_pressed"]
 [connection signal="value_changed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount" to="." method="_on_CraftAmount_value_changed"]
 [connection signal="pressed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/Craft" to="." method="_on_Craft_pressed"]

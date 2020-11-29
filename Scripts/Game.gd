@@ -122,7 +122,10 @@ var mets:Dictionary = {	"lead":0,
 						"sapphire":0}
 
 #Display help when players see/do things for the first time. true: show help
-var help:Dictionary = {"mining":true,
+var help:Dictionary = {
+			"close_btn1":true,
+			"close_btn2":true,
+			"mining":true,
 			"STM":true,
 			"plant_something_here":true,
 			"boulder_desc":true,
@@ -272,6 +275,7 @@ var element = {	"Si":{"density":2.329},
 
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
+var bottom_info_action:String = ""
 
 var music_player = AudioStreamPlayer.new()
 
@@ -546,8 +550,11 @@ func open_shop_pickaxe():
 		fade_in_panel(shop_panel)
 	shop_panel._on_Pickaxes_pressed()
 
-func put_bottom_info(txt:String):
-	var more_info = $Control/BottomInfo
+func put_bottom_info(txt:String, action:String, on_close:String = ""):
+	if $UI/BottomInfo.visible:
+		_on_BottomInfo_close_button_pressed()
+	$UI/BottomInfo.visible = true
+	var more_info = $UI/BottomInfo/Text
 	more_info.visible = false
 	more_info.text = txt
 	more_info.modulate.a = 0
@@ -555,7 +562,8 @@ func put_bottom_info(txt:String):
 	more_info.rect_size.x = 0#This "trick" lets us resize the label to fit the text
 	more_info.rect_position.x = -more_info.get_minimum_size().x / 2.0
 	more_info.modulate.a = 1
-	move_child($Control, get_child_count())
+	bottom_info_action = action
+	$UI/BottomInfo/CloseButton.on_close = on_close
 
 func fade_in_panel(panel:Control):
 	panel.visible = true
@@ -582,7 +590,7 @@ func on_fade_complete(panel:Control):
 
 func add_upgrade_panel(ids:Array):
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
-		$Panels.remove_child(upgrade_panel)
+		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
 	upgrade_panel.ids = ids
 	panels.push_front(upgrade_panel)
@@ -608,6 +616,7 @@ func toggle_panel(panel):
 func switch_view(new_view:String, first_time:bool = false):
 	hide_tooltip()
 	hide_adv_tooltip()
+	_on_BottomInfo_close_button_pressed()
 	if not first_time:
 		match c_v:
 			"planet":
@@ -857,7 +866,7 @@ func remove_system():
 
 func remove_planet():
 	Helper.save_tiles(c_p)
-	$Control/BottomInfo.visible = false
+	$UI/BottomInfo.visible = false
 	view.remove_obj("planet")
 	remove_child(planet_HUD)
 	planet_HUD = null
@@ -1916,7 +1925,7 @@ func _process(delta):
 		fps_text.text = String(round(1 / delta)) + " FPS"
 
 var mouse_pos = Vector2.ZERO
-onready var item_cursor = $ItemCursor
+onready var item_cursor = $UI/ItemCursor
 
 func sell_all_minerals():
 	if minerals > 0:
@@ -1965,6 +1974,7 @@ func _input(event):
 		if c_v != "STM":
 			item_to_use.num = 0
 			update_item_cursor()
+		_on_BottomInfo_close_button_pressed()
 		if len(panels) != 0:
 			if c_v != "":
 				if not panels[0].polygon:
@@ -2010,19 +2020,19 @@ func _input(event):
 		var cmd:String = arr[0]
 		match cmd:
 			"setmoney":
-				money = arr[1]
+				money = float(arr[1])
 			"setmin":
-				minerals = arr[1]
+				minerals = float(arr[1])
 			"setmincap":
-				mineral_capacity = arr[1]
+				mineral_capacity = float(arr[1])
 			"setenergy":
-				energy = arr[1]
+				energy = float(arr[1])
 			"setsp":
-				SP = arr[1]
+				SP = float(arr[1])
 			"setmat":
-				mats[arr[2].to_lower()] = arr[1]
+				mats[arr[1].to_lower()] = float(arr[2])
 			"setmet":
-				mets[arr[2].to_lower()] = arr[1]
+				mets[arr[1].to_lower()] = float(arr[2])
 			"finconstr":
 				for tile in tile_data:
 					if tile and tile.has("construction_length"):
@@ -2031,11 +2041,11 @@ func _input(event):
 						if tile.has("collect_date"):
 							tile.collect_date -= diff_time
 			"setmulv":
-				MUs[arr[2].to_upper()] = arr[1]
+				MUs[arr[1].to_upper()] = int(arr[2])
 			"setlv":
 				lv = int(arr[1])
 		popup("Command executed", 1.5)
-		cmd_history.append(cmd_node.text)
+		cmd_history.push_front(cmd_node.text)
 		HUD.refresh()
 	
 	if Input.is_action_just_released("up") and len(cmd_history) > 0 and cmd_node.visible:
@@ -2106,23 +2116,19 @@ func show_item_cursor(texture):
 
 func update_item_cursor():
 	if item_to_use.num == 0:
-		item_cursor.visible = false
+		_on_BottomInfo_close_button_pressed()
 		item_to_use = {"name":"", "type":"", "num":0}
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		$Control/BottomInfo.visible = false
 	else:
 		item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
 	if HUD:
 		HUD.update_hotbar()
-	move_child(item_cursor, get_child_count())
 
 func hide_item_cursor():
 	item_cursor.visible = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 func cancel_building():
-	view.obj.bldg_to_construct = ""
-	$Control/BottomInfo.visible = false
+	view.obj.finish_construct()
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
@@ -2166,3 +2172,25 @@ func _on_NewGame_pressed():
 
 func _on_Title_Button_pressed(URL:String):
 	OS.shell_open(URL)
+
+func _on_BottomInfo_close_button_pressed():
+	close_button_over = false
+	if $UI/BottomInfo.visible:
+		hide_tooltip()
+		$UI/BottomInfo.visible = false
+		if $UI/BottomInfo/CloseButton.on_close != "":
+			call($UI/BottomInfo/CloseButton.on_close)
+		$UI/BottomInfo/CloseButton.on_close = ""
+		bottom_info_action = ""
+
+func cancel_place_soil():
+	HUD.get_node("Resources/Soil").visible = false
+
+#Used in planet view only
+var close_button_over:bool = false
+
+func _on_CloseButton_close_button_over():
+	close_button_over = true
+
+func _on_CloseButton_close_button_out():
+	close_button_over = false

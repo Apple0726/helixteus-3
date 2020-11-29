@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/ConstructPanel.gd" type="Script" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -38,6 +39,12 @@ margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 5 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
@@ -226,6 +233,7 @@ margin_right = 264.0
 margin_bottom = 82.0
 text = "b"
 scroll_active = false
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Tabs/Basic" to="." method="_on_Basic_pressed"]
 [connection signal="pressed" from="Tabs/Storage" to="." method="_on_Storage_pressed"]
 [connection signal="pressed" from="Tabs/Production" to="." method="_on_Production_pressed"]

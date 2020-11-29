@@ -5,8 +5,6 @@ onready var view = game.view
 onready var id = game.c_p
 onready var p_i = game.planet_data[id]
 
-#If true, clicking any tile initiates mining
-var about_to_mine:bool = false
 #For exploring a cave
 var rover_selected:Dictionary = {}
 #The building you selected in construct panel
@@ -379,6 +377,7 @@ func _input(event):
 				construct(tile.tile_str, Data.costs[tile.tile_str])
 			if Input.is_action_just_released("F"):
 				game.add_upgrade_panel([tile_over])
+	var not_on_button = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouseMotion:
 		mouse_pos = to_local(event.position)
 		if len(game.panels) > 0:
@@ -398,13 +397,13 @@ func _input(event):
 		$WhiteRect.position.y = floor(mouse_pos.y / 200) * 200
 		if mouse_on_tiles:
 			tile_over = int(mouse_pos.x / 200) % wid + floor(mouse_pos.y / 200) * wid
-			if tile_over != prev_tile_over and not game.planet_HUD.on_button and not game.HUD.on_button and not game.item_cursor.visible and not black_bg:
+			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg:
 				game.hide_tooltip()
 				game.hide_adv_tooltip()
 				show_tooltip(game.tile_data[tile_over])
 			prev_tile_over = tile_over
 		else:
-			if tile_over != -1 and not game.planet_HUD.on_button and not game.HUD.on_button:
+			if tile_over != -1 and not_on_button:
 				game.hide_tooltip()
 				tile_over = -1
 				prev_tile_over = -1
@@ -414,11 +413,10 @@ func _input(event):
 			shadow.position.x = floor(mouse_pos.x / 200) * 200
 			shadow.position.y = floor(mouse_pos.y / 200) * 200
 			shadow.position += Vector2(100, 100)
-	var placing_soil = game.HUD.get_node("Resources/Soil").visible
-	if Input.is_action_just_released("left_click") and not view.dragged:
+	var placing_soil = game.bottom_info_action == "placing_soil"
+	var about_to_mine = game.bottom_info_action == "about_to_mine"
+	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
-		if not Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
-			return
 		if len(game.panels) > 0:
 			var i = 0
 			while not game.panels[i].polygon:
@@ -466,13 +464,13 @@ func _input(event):
 						mouse_pos = Vector2.ZERO
 				elif tile.type == "obstacle":
 					if tile.tile_str == "cave":
-						if not rover_selected.empty():
+						if game.bottom_info_action == "enter_cave":
 							game.c_t = tile_id
 							game.switch_view("cave")
 							game.cave.rover_data = rover_selected
 							game.cave.set_rover_data()
 						else:
-							if game.show.vehicles_button and not game.vehicle_panel.visible:
+							if (game.show.vehicles_button or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
 								game.toggle_panel(game.vehicle_panel)
 								game.vehicle_panel.tile_id = tile_id
 					elif tile.tile_str == "ship":
@@ -490,16 +488,8 @@ func _input(event):
 		game.HUD.refresh()
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
-	if Input.is_action_just_released("right_click"):
-		about_to_mine = false
-		finish_construct()
-		placing_soil = false
-		game.item_to_use.num = 0
-		game.update_item_cursor()
-		game.HUD.get_node("Resources/Soil").visible = false
 
 func mine_tile(id2:int):
-	game.get_node("Control/BottomInfo").visible = false
 	game.c_t = id2
 	game.switch_view("mining")
 

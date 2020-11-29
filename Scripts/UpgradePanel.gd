@@ -183,3 +183,7 @@ func _on_Upgrade_pressed():
 		game.remove_upgrade_panel()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
+
+
+func _on_close_button_pressed():
+	game.remove_upgrade_panel()

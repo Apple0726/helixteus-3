@@ -52,3 +52,7 @@ func _process(delta):
 	var prod_i = Helper.get_prod_info(tile)
 	sand_txt.text = "%s kg" % [prod_i.qty_left]
 	glass_txt.text = "%s kg" % [prod_i.qty_made]
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

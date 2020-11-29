@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -24,26 +24,19 @@
 [ext_resource path="res://Graphics/Title screen/Discord_over.png" type="Texture" id=22]
 [ext_resource path="res://Graphics/Title screen/GitHub_over.png" type="Texture" id=23]
 [ext_resource path="res://Graphics/Title screen/Godot_over.png" type="Texture" id=24]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 
 [sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 15.0
+content_margin_right = 15.0
+content_margin_top = 1.0
+content_margin_bottom = 12.0
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
-expand_margin_left = 15.0
-expand_margin_right = 15.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="DynamicFont" id=2]
-size = 25
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 14 )
-fallback/0 = ExtResource( 1 )
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 15.0
@@ -66,6 +59,15 @@ action = "P"
 
 [sub_resource type="ShortCut" id=6]
 shortcut = SubResource( 5 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 14 )
+fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
@@ -110,7 +112,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
+border_color = Color( 0.4, 0.501961, 1, 1 )
 expand_margin_left = 5.0
 expand_margin_right = 5.0
 expand_margin_top = 5.0
@@ -124,67 +126,10 @@ stream = ExtResource( 8 )
 volume_db = 14.116
 bus = "SFX"
 
-[node name="Control" type="Control" parent="."]
-margin_left = 640.0
-margin_top = 360.0
-margin_right = 640.0
-margin_bottom = 360.0
-mouse_filter = 2
-theme = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BottomInfo" type="Label" parent="Control"]
-visible = false
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -320.0
-margin_top = 330.0
-margin_right = 320.0
-margin_bottom = 356.0
-custom_styles/normal = SubResource( 1 )
-text = "dsf"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Panels" type="Control" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 640.0
-margin_top = 360.0
-margin_right = 640.0
-margin_bottom = 360.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ItemCursor" type="Node2D" parent="."]
-visible = false
-
-[node name="Sprite" type="Sprite" parent="ItemCursor"]
-position = Vector2( 32, 32 )
-scale = Vector2( 0.25, 0.25 )
-
-[node name="Polygon2D" type="Polygon2D" parent="ItemCursor"]
-polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
-
-[node name="Num" type="Label" parent="ItemCursor"]
-margin_left = 56.0
-margin_top = 48.0
-margin_right = 96.0
-margin_bottom = 77.0
-custom_fonts/font = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Panels" type="CanvasLayer" parent="."]
+layer = 2
+offset = Vector2( 640, 360 )
+transform = Transform2D( 1, 0, 0, 1, 640, 360 )
 
 [node name="PlantingSounds" type="Node" parent="."]
 
@@ -201,7 +146,42 @@ stream = ExtResource( 19 )
 bus = "SFX"
 
 [node name="UI" type="CanvasLayer" parent="."]
-layer = 2
+layer = 3
+
+[node name="BottomInfo" type="HBoxContainer" parent="UI"]
+visible = false
+margin_top = 684.0
+margin_right = 1280.0
+margin_bottom = 720.0
+mouse_filter = 2
+theme = ExtResource( 7 )
+custom_constants/separation = -2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Text" type="Label" parent="UI/BottomInfo"]
+visible = false
+margin_left = 595.0
+margin_right = 652.0
+margin_bottom = 37.0
+custom_styles/normal = SubResource( 1 )
+text = "dsf"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource( 25 )]
+margin_left = 650.0
+margin_right = 685.0
+margin_bottom = 37.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 35, 35 )
+close_button_type = 2
 
 [node name="FPS" type="Label" parent="UI"]
 margin_right = 74.0
@@ -216,7 +196,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.9: 28 Nov 2020"
+text = "Alpha v0.9.1: 29 Nov 2020"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -271,6 +251,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ItemCursor" type="Node2D" parent="UI"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="UI/ItemCursor"]
+position = Vector2( 32, 32 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="Polygon2D" type="Polygon2D" parent="UI/ItemCursor"]
+polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
+
+[node name="Num" type="Label" parent="UI/ItemCursor"]
+margin_left = 56.0
+margin_top = 48.0
+margin_right = 96.0
+margin_bottom = 77.0
+custom_fonts/font = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 4
 
@@ -306,6 +306,8 @@ __meta__ = {
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -568,6 +570,9 @@ margin_bottom = 106.0
 rect_min_size = Vector2( 0, 30 )
 text = "SETTINGS"
 align = 0
+[connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
+[connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
+[connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="mouse_entered" from="UI/Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="UI/Settings" to="." method="_on_Settings_pressed"]

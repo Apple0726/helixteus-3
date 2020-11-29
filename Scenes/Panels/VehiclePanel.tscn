@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/VehiclePanel.gd" type="Script" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -39,6 +40,12 @@ margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 6 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
@@ -172,3 +179,4 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 expand = true
 stretch_mode = 5
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]

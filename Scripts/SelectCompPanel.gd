@@ -113,8 +113,7 @@ func set_cmp():
 		else:
 			get_parent()[g_cmp] = s_cmp
 	get_parent().refresh()
-	game.panels.pop_front()
-	visible = false
+	_on_close_button_pressed()
 
 func _on_Select_pressed():
 	set_cmp()
@@ -125,3 +124,8 @@ func _on_OptionButton_item_selected(index):
 		refresh("rover_weapons", curr_cmp, true, index)
 	elif index == 1:
 		refresh("rover_mining", curr_cmp, true, index)
+
+
+func _on_close_button_pressed():
+	game.panels.pop_front()
+	visible = false

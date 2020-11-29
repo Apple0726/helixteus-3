@@ -117,24 +117,24 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 func _on_Buy_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
 
-func get_item(name, costs, _type, _dir):
-	if name == "":
+func get_item(_name, costs, _type, _dir):
+	if _name == "":
 		return
-	item_name = name
-	item_costs = costs
-	if game.check_enough(costs):
+	item_name = _name
+	item_total_costs = costs
+	if game.check_enough(item_total_costs):
 		if tab == "pickaxes":
 			if not game.pickaxe.empty():
-				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(name).to_lower()])
+				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()])
 			else:
 				buy_pickaxe()
 		else:
-			game.deduct_resources(costs)
-			var items_left = game.add_items(name, buy_amount.value)
+			game.deduct_resources(item_total_costs)
+			var items_left = game.add_items(item_name, buy_amount.value)
 			if items_left > 0:
-				var refund = costs.duplicate(true)
-				for rsrc in costs:
-					refund[rsrc] = costs[rsrc] * items_left
+				var refund = item_total_costs.duplicate(true)
+				for rsrc in item_total_costs:
+					refund[rsrc] = item_total_costs[rsrc] * items_left
 				game.add_resources(refund)
 				game.popup(tr("NOT_ENOUGH_INV_SPACE_BUY"), 2.0)
 			else:
@@ -172,3 +172,7 @@ func _on_BuyAmount_value_changed(value):
 
 func refresh():
 	pass
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

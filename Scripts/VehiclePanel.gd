@@ -62,7 +62,7 @@ func on_rover_press(rov:Dictionary):
 	elif game.c_v == "planet":
 		if tile_id == -1:
 			game.view.obj.rover_selected = rov
-			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"))
+			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"), "enter_cave")
 			game.toggle_panel(self)
 		else:
 			game.c_t = tile_id
@@ -71,3 +71,6 @@ func on_rover_press(rov:Dictionary):
 			game.cave.rover_data = rov
 			game.cave.set_rover_data()
 			game.toggle_panel(self)
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

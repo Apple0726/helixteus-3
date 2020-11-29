@@ -131,3 +131,7 @@ func apply_changes():
 
 func _on_Done_pressed():
 	apply_changes()
+
+
+func _on_close_button_pressed():
+	visible = false

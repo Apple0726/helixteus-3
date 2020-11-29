@@ -145,3 +145,7 @@ func _on_HSlider_mouse_entered():
 
 func _on_HSlider_mouse_exited():
 	game.view.move_view = true
+
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)
