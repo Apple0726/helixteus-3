@@ -8,6 +8,7 @@
 [ext_resource path="res://Scripts/SendShipsPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/Slider.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Resources/PanelBG.tres" type="StyleBox" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -16,16 +17,6 @@ font_data = ExtResource( 2 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
-
-[sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
@@ -35,7 +26,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
+border_color = Color( 0.4, 0.501961, 1, 1 )
 
 [node name="SendShipsPanel" type="Control"]
 margin_right = 1067.0
@@ -81,14 +72,13 @@ margin_bottom = 600.0
 custom_constants/separation = -2
 __meta__ = {
 "_edit_group_": true,
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Desc" type="Label" parent="VBoxContainer"]
 margin_right = 1064.0
-margin_bottom = 36.0
-custom_styles/normal = SubResource( 2 )
+margin_bottom = 40.0
+custom_styles/normal = ExtResource( 9 )
 text = "SEND_SHIPS_DESC"
 align = 1
 __meta__ = {
@@ -96,36 +86,44 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 34.0
+margin_top = 38.0
 margin_right = 1064.0
 margin_bottom = 540.0
 size_flags_vertical = 3
 custom_constants/separation = 0
 
-[node name="Panel" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
 margin_right = 416.0
-margin_bottom = 506.0
+margin_bottom = 502.0
 rect_min_size = Vector2( 416, 0 )
-custom_styles/panel = SubResource( 3 )
+custom_styles/bg = SubResource( 2 )
+scroll_horizontal_enabled = false
 
-[node name="Enemies" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Panel"]
+[node name="Enemies" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
 margin_right = 416.0
-margin_bottom = 506.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 416, 0 )
-custom_constants/separation = 0
+custom_constants/separation = 15
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Panel/Enemies"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ScrollContainer/Enemies"]
 margin_right = 416.0
-margin_bottom = 36.0
-custom_styles/normal = SubResource( 2 )
+margin_bottom = 40.0
+custom_styles/normal = ExtResource( 9 )
 text = "ENEMIES"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Panel" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+visible = false
+margin_right = 416.0
+margin_bottom = 502.0
+rect_min_size = Vector2( 416, 0 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="HSlider" type="HSlider" parent="."]
 margin_left = 608.0
@@ -259,6 +257,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/HBoxContainer/ScrollContainer" to="." method="_on_ScrollContainer_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/HBoxContainer/ScrollContainer" to="." method="_on_ScrollContainer_mouse_exited"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="mouse_entered" from="EnergyCost2" to="." method="_on_EnergyCost2_mouse_entered"]
 [connection signal="mouse_exited" from="EnergyCost2" to="." method="_on_EnergyCost2_mouse_exited"]

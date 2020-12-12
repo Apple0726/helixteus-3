@@ -32,17 +32,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OptionButton" type="OptionButton" parent="."]
-margin_left = 276.0
-margin_top = 12.0
-margin_right = 364.0
-margin_bottom = 44.0
-grow_horizontal = 2
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Label" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
@@ -51,6 +40,18 @@ margin_top = 16.0
 margin_right = 320.0
 margin_bottom = 40.0
 text = "Select"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="."]
+margin_left = 276.0
+margin_top = 12.0
+margin_right = 364.0
+margin_bottom = 44.0
+grow_horizontal = 2
+shortcut_in_tooltip = false
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false

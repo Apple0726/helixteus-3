@@ -1,4 +1,4 @@
-extends HSlider
+extends Control
 #Contains code that prevents moving view when dragging with mouse
 onready var game = get_node("/root/Game")
 

@@ -1,5 +1,7 @@
 extends Node2D
 
+const TEST:bool = false
+
 onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 onready var view_scene = preload("res://Scenes/Views/View.tscn")
 onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -173,13 +175,15 @@ var cluster_data:Array = [{"id":0, "type":0, "class":"group", "name":"Local Grou
 var galaxy_data:Array = [{"id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array = [{"id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data:Array = []
+var HX_data:Array = []
 var tile_data:Array = []
 var cave_data:Array = []
 
 #Vehicle data
 #var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 var rover_data:Array = []
-var ship_data:Array = []
+#var ship_data:Array = []
+var ship_data:Array = [{"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
 var ships_c_p:int = 2#Planet that the ships are on
 var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
 var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
@@ -210,9 +214,9 @@ var save_s = false
 var save_p = false
 var save_t = false
 
-var EA_planet_visited = true
-var EA_galaxy_visited = true
-var EA_cave_visited = true
+var EA_planet_visited = not TEST
+var EA_galaxy_visited = not TEST
+var EA_cave_visited = not TEST
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -303,7 +307,7 @@ func _ready():
 	
 	settings = settings_scene.instance()
 	settings.visible = false
-	$Panels.add_child(settings)
+	$Panels/Control.add_child(settings)
 	var bg = $Title/Background
 	var bg_area = $Title/Background/AllowedStarArea.polygon
 	for i in 80:
@@ -314,20 +318,28 @@ func _ready():
 		while not Geometry.is_point_in_polygon(star.position, bg_area):
 			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
 		bg.add_child(star)
-	var tween:Tween = Tween.new()
-	add_child(tween)
-	tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
-	tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-	tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
-	tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
-	tween.interpolate_property($Title/Discord, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1)
-	tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.25)
-	tween.interpolate_property($Title/GitHub, "rect_position", Vector2(0, 15), Vector2(0, 0), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.25)
-	tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.5)
-	tween.interpolate_property($Title/Godot, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.5)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(tween)
+	if TEST:
+		lv = 5
+		money = 2000000
+		mats.soil = 50
+		show.plant_button = true
+		energy = 2000000
+		_load_game()
+	else:
+		var tween:Tween = Tween.new()
+		add_child(tween)
+		tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
+		tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
+		tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
+		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
+		tween.interpolate_property($Title/Discord, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1)
+		tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.25)
+		tween.interpolate_property($Title/GitHub, "rect_position", Vector2(0, 15), Vector2(0, 0), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.25)
+		tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.5)
+		tween.interpolate_property($Title/Godot, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.5)
+		tween.start()
+		yield(tween, "tween_all_completed")
+		remove_child(tween)
 
 func switch_music(src):
 	#Music fading
@@ -362,31 +374,31 @@ func _load_game():
 	HUD = load("res://Scenes/HUD.tscn").instance()
 	
 	construct_panel.visible = false
-	$Panels.add_child(construct_panel)
+	$Panels/Control.add_child(construct_panel)
 
 	shop_panel.visible = false
-	$Panels.add_child(shop_panel)
+	$Panels/Control.add_child(shop_panel)
 
 	craft_panel.visible = false
-	$Panels.add_child(craft_panel)
+	$Panels/Control.add_child(craft_panel)
 
 	vehicle_panel.visible = false
-	$Panels.add_child(vehicle_panel)
+	$Panels/Control.add_child(vehicle_panel)
 
 	RC_panel.visible = false
-	$Panels.add_child(RC_panel)
+	$Panels/Control.add_child(RC_panel)
 
 	MU_panel.visible = false
-	$Panels.add_child(MU_panel)
+	$Panels/Control.add_child(MU_panel)
 
 	SC_panel.visible = false
-	$Panels.add_child(SC_panel)
+	$Panels/Control.add_child(SC_panel)
 
 	GF_panel.visible = false
-	$Panels.add_child(GF_panel)
+	$Panels/Control.add_child(GF_panel)
 
 	inventory.visible = false
-	$Panels.add_child(inventory)
+	$Panels/Control.add_child(inventory)
 
 	dimension.visible = false
 	add_child(dimension)
@@ -487,9 +499,9 @@ func _load_game():
 		add_child(HUD)
 	
 	send_ships_panel.visible = false
-	$Panels.add_child(send_ships_panel)
-
-	long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
+	$Panels/Control.add_child(send_ships_panel)
+	if not TEST:
+		long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -567,8 +579,7 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 
 func fade_in_panel(panel:Control):
 	panel.visible = true
-	move_child($Panels, get_child_count())
-	$Panels.move_child(panel, $Panels.get_child_count())
+	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 10), Vector2(-s.x / 2.0, -s.y / 2.0), 0.1)
@@ -595,12 +606,12 @@ func add_upgrade_panel(ids:Array):
 	upgrade_panel.ids = ids
 	panels.push_front(upgrade_panel)
 	if upgrade_panel:
-		$Panels.add_child(upgrade_panel)
-		move_child($Panels, get_child_count())
+		$Panels/Control.add_child(upgrade_panel)
+		move_child($Panels/Control, get_child_count())
 
 func remove_upgrade_panel():
 	if upgrade_panel:
-		$Panels.remove_child(upgrade_panel)
+		$Panels/Control.remove_child(upgrade_panel)
 	panels.erase(upgrade_panel)
 	upgrade_panel = null
 
@@ -1347,7 +1358,15 @@ func generate_planets(id:int):
 				var lake = Helper.rand_int(0, len(lakes) - 1)
 				p_i.lake_2 = lakes[lake]
 		planet_data.append(p_i)
-	
+		HX_data.append([])
+		for k in range(5):
+			var lv = Helper.rand_int(1, 4)
+			var HP = round(rand_range(1, 1.5) * 20 * pow(1.3, lv))
+			var atk = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
+			var def = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
+			var acc = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
+			var eva = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
+			HX_data[len(HX_data) - 1].append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva})
 	if id != 0:
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
@@ -1984,6 +2003,8 @@ func _input(event):
 					remove_upgrade_panel()
 				else:
 					toggle_panel(panels[0])
+				if view:
+					view.scroll_view = true
 			else:
 				toggle_panel(panels[0])
 			hide_tooltip()

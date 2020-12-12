@@ -199,7 +199,7 @@ GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tie
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
 INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,AlleVerbauchbaren nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
 PLACE_SOIL,Place/remove soil,Placer/enlever terre,Piazzare terra,,Erde Platzieren,Poner tierra,
-PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour place ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Feld um 10 kg Erde zu platzieren oder zu entfernen,Haz click en una casilla para poner tierra (10 kg por casilla),
+PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour placer ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Feld um 10 kg Erde zu platzieren oder zu entfernen,Haz click en una casilla para poner tierra (10 kg por casilla),
 NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,No tienes recursos suficientes.,자원이 부족합니다.
 NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,No tienes tierra suficiente.,흙이 부족합니다.
 NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,No tienes suficientes puntos de ciencia.,과학 포인트가 부족합니다.
@@ -212,7 +212,7 @@ SHIFT_X_TO_THROW_STACK,Press Shift X to throw this stack,Appuyez sur Maj X pour 
 H_FOR_HOTBAR,Press H to add/remove from hotbar,,,,,Presiona H para añadir/remover de la barra de acceso rápido,
 H_FOR_HOTBAR_REMOVE,Press H to remove from hotbar,,,,,Presiona H para remover de la barra de acceso rápido,
 PLANT_SEED_INFO,Click on a tile with dirt to plant the seeds,Cliquez une tuile avec de la terre pour planter les graines,,,,Haz click en una casilla con tierra para plantar las semillas,씨앗 심을라면 흙 있는 타일을 클릭하세요
-YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à ton inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,Haz minado materiales! Revísalos en tu inventario. También has desbloqueado la fabricación.,
+YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à votre inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,Haz minado materiales! Revísalos en tu inventario. También has desbloqueado la fabricación.,
 YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,Haz minado metales! Revísalos en tu inventario.,
 NOT_ADJACENT_TO_LAKE,Not adjacent to a %s lake,Non adjacent à un lac de %s,Non è adiacente a un lago di %s,,,No adyacente a un lago %s,%s 호수 옆에만 심을수 있습니다.
 LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,Semillas de plomo,납 씨앗
@@ -309,7 +309,7 @@ NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de min
 MINING_SPEED_MULTIPLIER_BOOST,Mining speed multiplier boost,,,,,Multiplicador de velocidad minera,
 MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,,,,Multiplica la mejora de velocidad de minado que aparece con el minijuego.,
 CRATER,Crater,Cratère,Cratere,,,Cráter,충돌구
-CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.",,,,,Los cráteres son formados por asteroides ricos en recursos que impactan contra el planeta. Minarlos te rendirá una gran cantidad de un metal específico.,
+CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.","Les cratères sont formées par des astéroïdes, qui contiennent des ressources de valeur. Lors de son minage, vous trouverez une quantité beaucoup plus importante d'un métal spécifique.",,,,Los cráteres son formados por asteroides ricos en recursos que impactan contra el planeta. Minarlos te rendirá una gran cantidad de un metal específico.,
 PRODUCTION,Production,Production,Produzione,,,Producción,
 PRODUCTION_DESC,These are buildings that transform resources.,,,,,Edificios que transforman rcursos.,
 METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,{crater} de {metal},{metal} {crater}
@@ -417,5 +417,5 @@ STM_LEVEL_3,Obstacles don't always come from the right. They can come from all 4
 STM_LEVEL_4,Look out for crates. They contain all sorts of useful things!,,,,,,
 NO_SHIPS,No ships,,,,,,
 NO_SHIPS_DESC,You need to have a ship to be able to attack the enemies on this planet.,,,,,,
-CLOSE_BUTTON_DESC1,You can also right click anywhere to close panels.,,,,,,
-CLOSE_BUTTON_DESC2,You can also right click anywhere to cancel actions.,,,,,,
+CLOSE_BUTTON_DESC1,You can also right click anywhere to close panels.,Un clic droit n'importe où ferme les fenêtres.,,,,,
+CLOSE_BUTTON_DESC2,You can also right click anywhere to cancel actions.,Un clic droit n'importe où annule les actions.,,,,,

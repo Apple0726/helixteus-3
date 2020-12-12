@@ -38,7 +38,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 15.0
 content_margin_right = 15.0
 bg_color = Color( 0, 0, 0, 1 )
@@ -48,19 +48,19 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.584314, 0.584314, 0.584314, 1 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=3]
 size = 22
 use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="InputEventAction" id=5]
+[sub_resource type="InputEventAction" id=4]
 action = "P"
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="ShortCut" id=5]
+shortcut = SubResource( 4 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=6]
 size = 25
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -128,8 +128,15 @@ bus = "SFX"
 
 [node name="Panels" type="CanvasLayer" parent="."]
 layer = 2
-offset = Vector2( 640, 360 )
-transform = Transform2D( 1, 0, 0, 1, 640, 360 )
+
+[node name="Control" type="Control" parent="Panels"]
+margin_left = 640.0
+margin_top = 360.0
+margin_right = 680.0
+margin_bottom = 400.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PlantingSounds" type="Node" parent="."]
 
@@ -196,7 +203,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.9.1: 29 Nov 2020"
+text = "Alpha v0.9.1: 12 Dec 2020"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -208,8 +215,8 @@ margin_left = 490.0
 margin_top = 83.308
 margin_right = 790.0
 margin_bottom = 118.308
-custom_styles/normal = SubResource( 3 )
-custom_fonts/font = SubResource( 4 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 text = "Popup information"
 align = 1
 valign = 1
@@ -225,7 +232,7 @@ margin_left = 1248.0
 margin_right = 1280.0
 margin_bottom = 32.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
+shortcut = SubResource( 5 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5
@@ -266,7 +273,7 @@ margin_left = 56.0
 margin_top = 48.0
 margin_right = 96.0
 margin_bottom = 77.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

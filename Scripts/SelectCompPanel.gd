@@ -101,7 +101,7 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 	s_cmp = cmp
 
 func _input(event):
-	if Input.is_action_just_released("ui_down") and visible:
+	if Input.is_action_just_released("S") and visible:
 		game.hide_tooltip()
 		set_cmp()
 
@@ -119,10 +119,10 @@ func _on_Select_pressed():
 	set_cmp()
 
 
-func _on_OptionButton_item_selected(index):
-	if index == 0:
+func _on_OptionButton_item_selected(_index):
+	if _index == 0:
 		refresh("rover_weapons", curr_cmp, true, index)
-	elif index == 1:
+	elif _index == 1:
 		refresh("rover_mining", curr_cmp, true, index)
 
 

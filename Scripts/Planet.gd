@@ -373,7 +373,7 @@ func _input(event):
 		var tile = game.tile_data[tile_over]
 		if tile and tile.has("type") and tile.type == "bldg":
 			if Input.is_action_just_released("Q"):
-				game.put_bottom_info(tr("STOP_CONSTRUCTION"))
+				game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 				construct(tile.tile_str, Data.costs[tile.tile_str])
 			if Input.is_action_just_released("F"):
 				game.add_upgrade_panel([tile_over])
@@ -413,7 +413,7 @@ func _input(event):
 			shadow.position.x = floor(mouse_pos.x / 200) * 200
 			shadow.position.y = floor(mouse_pos.y / 200) * 200
 			shadow.position += Vector2(100, 100)
-	var placing_soil = game.bottom_info_action == "placing_soil"
+	var placing_soil = game.bottom_info_action == "place_soil"
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()

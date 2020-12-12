@@ -144,11 +144,12 @@ func refresh():
 	var hbox = $Inventory/HBoxContainer
 	for node in hbox.get_children():
 		hbox.remove_child(node)
+	var i:int = 0
 	for inv in inventory:
 		var slot = slot_scene.instance()
 		if inv.type == "rover_weapons":
 			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], inventory.find(inv)])
+			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], i])
 			for cost_key in Data.rover_weapons[inv.name].costs.keys():
 				var cost = Data.rover_weapons[inv.name].costs[cost_key]
 				if rover_costs.has(cost_key):
@@ -157,7 +158,7 @@ func refresh():
 					rover_costs[cost_key] = cost
 		elif inv.type == "rover_mining":
 			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.name])
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_mining_text(inv.name)], inventory.find(inv)])
+			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_mining_text(inv.name)], i])
 			for cost_key in Data.rover_mining[inv.name].costs.keys():
 				var cost = Data.rover_mining[inv.name].costs[cost_key]
 				if rover_costs.has(cost_key):
@@ -167,8 +168,9 @@ func refresh():
 		else:
 			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["", -1])
 		slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
-		slot.get_node("Button").connect("pressed", self, "_on_InvSlot_pressed", [inventory.find(inv)])
+		slot.get_node("Button").connect("pressed", self, "_on_InvSlot_pressed", [i])
 		hbox.add_child(slot)
+		i += 1
 	Helper.put_rsrc($VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
 	$Stats/Label2.text = "%s\n%s\n%s\n%s kg\n%s" % [HP + HP_bonus, atk, def + def_bonus, weight_cap + cargo_bonus, spd_bonus]
@@ -184,7 +186,7 @@ func _on_icon_mouse_exited():
 	game.hide_tooltip()
 
 func _input(event):
-	if Input.is_action_just_released("throw"):
+	if Input.is_action_just_released("X"):
 		if slot_over != -1:
 			inventory[slot_over].erase("name")
 			inventory[slot_over].type = ""

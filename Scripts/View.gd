@@ -7,6 +7,8 @@ onready var ship = $Ship
 
 #Whether the view should be moved when dragging
 var move_view = true
+#Whether the view should be zoomed when scrolling
+var scroll_view = true
 
 #Variables for smoothly moving the tiles
 var acceleration = 90
@@ -154,22 +156,23 @@ var drag_delta = Vector2.ZERO
 
 #Executed once the receives any kind of input
 func _input(event):
-	if event.is_action_released("scroll_down"):
-		if event is InputEventMouse:
-			zoom_factor = 1.1
-		else:
-			zoom_factor = 1.2
-		zooming = "out"
-		progress = 0
-		check_change_scale()
-	elif event.is_action_released("scroll_up"):
-		if event is InputEventMouse:
-			zoom_factor = 1.1
-		else:
-			zoom_factor = 1.2
-		zooming = "in"
-		progress = 0
-		check_change_scale()
+	if scroll_view:
+		if event.is_action_released("scroll_down"):
+			if event is InputEventMouse:
+				zoom_factor = 1.1
+			else:
+				zoom_factor = 1.2
+			zooming = "out"
+			progress = 0
+			check_change_scale()
+		elif event.is_action_released("scroll_up"):
+			if event is InputEventMouse:
+				zoom_factor = 1.1
+			else:
+				zoom_factor = 1.2
+			zooming = "in"
+			progress = 0
+			check_change_scale()
 	if event is InputEventMouse and move_view:
 		if Input.is_action_just_pressed("left_click"):
 			drag_initial_position = event.position
