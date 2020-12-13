@@ -1,3 +1,4 @@
+ 
 extends Control
 
 onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
@@ -12,18 +13,21 @@ var secs_elapsed:int = 0
 var move_ship_inst:bool = false
 var help_tween:Tween
 var fn_to_call:String = ""
-var penalty_time:int = 0
-var lv:int
+var penalty_time:int = 0 #miliseconds
+var lv:int #minigame level
 var no_hit_combo:int = 0
 var got_hit:bool = false
-var lv_patterns:Array = [[1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12]]
+var lv_patterns:Array = [[1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12], [13]] #contains all level patterns
 
 func set_level():
 	$Timer.wait_time = 1.0 / lv
 	$Level.text = "%s %s" % [tr("LEVEL"), lv]
 	
 func _ready():
-	lv = game.STM_lv
+	if game:
+		lv = game.STM_lv
+	else:
+		lv = 1
 	help_tween = Tween.new()
 	add_child(help_tween)
 	$Back.text = "<- " + tr("BACK") + " (Z)"
@@ -32,7 +36,8 @@ func _ready():
 	tween.interpolate_property($Level, "modulate", null, Color.white, 0.5)
 	add_child(tween)
 	tween.start()
-	for i in 100:
+
+	for i in 100: #number of stars to render
 		var star = star_scene.instance()
 		star.scale *= rand_range(0.02, 0.05)
 		star.rotation = rand_range(0, 2 * PI)
@@ -40,6 +45,7 @@ func _ready():
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
 		star.add_to_group("stars")
+
 	if not game or game.help.STM:
 		fn_to_call = "pattern_1"
 		$Help.visible = true
@@ -58,7 +64,7 @@ func show_help(st:String):
 	$Timer.paused = true
 
 func hide_help():
-	if game.settings.visible:
+	if game and game.settings.visible:
 		return
 	set_process(true)
 	help_tween.interpolate_property($Help, "modulate", Color.white, Color(1, 1, 1, 0), 0.5)
@@ -106,6 +112,7 @@ func _process(delta):
 		star.position.x -= star.scale.x * 20
 		if star.position.x < -5:
 			star.position.x = 1285
+
 	for bullet in get_tree().get_nodes_in_group("bullet_1"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -119,6 +126,7 @@ func _process(delta):
 					fn_to_call = "pattern_2"
 					bullet_data.clear()
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_2"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -133,6 +141,7 @@ func _process(delta):
 					fn_to_call = "pattern_3"
 					bullet_data.clear()
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_3"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -147,12 +156,14 @@ func _process(delta):
 			if bullet.position.x < -25:
 				bullet.remove_from_group("bullet_3")
 				if get_tree().get_nodes_in_group("bullet_3").empty():
-					game.help.STM = false
+					if game:
+						game.help.STM = false
 					go_up_lv()
 					ship.modulate.a = 1.0
 					fn_to_call = "pattern_%s" % [Helper.rand_int(4, 7)]
 					bullet_data.clear()
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_4"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -171,6 +182,7 @@ func _process(delta):
 					else:
 						call("pattern_%s" % [Helper.rand_int(5, 7)])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_5"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -187,6 +199,7 @@ func _process(delta):
 					else:
 						call("pattern_%s" % [[4, 6, 7][Helper.rand_int(0, 2)]])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_6"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -202,6 +215,7 @@ func _process(delta):
 					else:
 						call("pattern_%s" % [[4, 5, 7][Helper.rand_int(0, 2)]])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_7"):
 		bullet.position.x -= 3 * (2.5 - bullet.scale.x)
 		hit_test(bullet)
@@ -215,6 +229,7 @@ func _process(delta):
 				else:
 					call("pattern_%s" % [[4, 5, 6][Helper.rand_int(0, 2)]])
 			remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_8"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -240,6 +255,7 @@ func _process(delta):
 					inc_combo()
 					call("pattern_%s" % [[9, 10, 11, 12][Helper.rand_int(0, 3)]])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_9"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -268,6 +284,7 @@ func _process(delta):
 					inc_combo()
 					call("pattern_%s" % [[8, 10, 11, 12][Helper.rand_int(0, 3)]])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_10"):
 		var b_type = bullet_data[bullet.name].b_type
 		var cond:bool = false#condition for bullet removal
@@ -285,6 +302,7 @@ func _process(delta):
 				inc_combo()
 				call("pattern_%s" % [[8, 9, 11, 12][Helper.rand_int(0, 3)]])
 			remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_11"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -297,6 +315,7 @@ func _process(delta):
 					inc_combo()
 					call("pattern_%s" % [[8, 9, 10, 12][Helper.rand_int(0, 3)]])
 				remove_child(bullet)
+
 	for bullet in get_tree().get_nodes_in_group("bullet_12"):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -322,6 +341,42 @@ func _process(delta):
 					inc_combo()
 					call("pattern_%s" % [[8, 9, 10, 11][Helper.rand_int(0, 3)]])
 				remove_child(bullet)
+				
+	for bullet in get_tree().get_nodes_in_group("bullet_13"):
+		bullet_data[bullet.name].delay -= delta
+		if bullet_data[bullet.name].delay < 0:
+			var cond:bool = false
+			if bullet_data[bullet.name].has("b_type"):
+				if bullet_data[bullet.name].b_type == "b":
+					bullet.position.x = bullet_data[bullet.name].t % 1
+				elif bullet_data[bullet.name].b_type == "c":
+					bullet.position.x = 1280 - bullet_data[bullet.name].t % 1280
+				bullet.position.y = -500 * sin(bullet.position.x / 1280.0 * PI) + bullet_data[bullet.name].y
+				bullet_data[bullet.name].t += 10
+				cond = bullet_data[bullet.name].t > 1280 * 7
+			else:
+				if not bullet_data[bullet.name].has("dir"):
+					bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
+				bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir)
+				bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir)
+				cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
+			hit_test(bullet)
+			if cond:
+				bullet.remove_from_group("bullet_13")
+				if get_tree().get_nodes_in_group("bullet_13").empty():
+					inc_combo()
+					call("pattern_%s" % [[8, 9, 10, 11][Helper.rand_int(0, 3)]])
+				remove_child(bullet)
+		for time in range(delta, 2):
+			var grow = delta + 0.01
+			bullet.scale += Vector2.ONE * grow * 0.1
+			if bullet.scale.x > 0.5: #sets max size
+				bullet.scale = Vector2.ONE * 0.5
+
+
+
+
+
 
 var bullet_data:Dictionary = {}#Holds individual custom bullet data
 func inc_combo():
@@ -332,8 +387,8 @@ func inc_combo():
 
 func hit_test(bullet):
 	if red_flash.modulate.a <= 0 and Geometry.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
-		red_flash.modulate.a = 0.3
-		penalty_time += 3000
+		red_flash.modulate.a = 0.3 
+		penalty_time += 3000 #miliseconds removed when hit
 		got_hit = true
 		no_hit_combo = 0
 
@@ -466,6 +521,13 @@ func pattern_12():
 		var x_pos = rand_range(0, 1280)
 		for j in 100:
 			put_bullet(Vector2(x_pos, 740), 0.4, 12, {"v":rand_range(3, 8), "delay":0.7 * i})
+
+func pattern_13():
+	for i in 120:	
+		var x_pos = rand_range(0, 1300)
+		var y_pos = rand_range(0, 1300)
+		for j in 2:
+			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":15, "delay":0.06 * i,})
 
 func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0):
 	var bullet = Sprite.new()
