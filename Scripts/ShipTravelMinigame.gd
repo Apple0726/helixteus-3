@@ -47,7 +47,7 @@ func _ready():
 		star.add_to_group("stars")
 
 	if not game or game.help.STM:
-		fn_to_call = "pattern_1"
+		fn_to_call = "pattern_14"
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
 	if game and not game.help.STM:
@@ -375,7 +375,14 @@ func _process(delta):
 
 
 
+	
 
+	for bullet in get_tree().get_nodes_in_group("bullet_14"):
+		var dx:float = 0.4
+		bullet.position.x += dx
+		bullet.position.y += -dx * 9 / 16.0 * PI * (20 * sin(PI * bullet.position.x / 1280) * pow(sin(PI * bullet.position.x / 64), 2) - cos(PI * bullet.position.x / 1280) * cos(PI * bullet.position.x / 64) * sin(PI * bullet.position.x / 64) - 20 * sin(PI * bullet.position.x / 1280) * pow(cos(PI * bullet.position.x / 64), 2))
+		if bullet.position.x > 1280:
+			bullet.position.x -= 1280
 
 
 var bullet_data:Dictionary = {}#Holds individual custom bullet data
@@ -528,6 +535,13 @@ func pattern_13():
 		var y_pos = rand_range(0, 1300)
 		for j in 2:
 			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":15, "delay":0.06 * i,})
+
+func pattern_14():
+	for i in 500:
+		var x_pos:float = i * 1280 / 500.0
+		var y_pos = 720 * sin(PI * x_pos / 1280) * sin(PI * x_pos / 64) * cos(PI * x_pos / 64) + 720 / 2
+		put_bullet(Vector2(x_pos, y_pos), 0.3, 14, {"delay":0.7 * i})
+
 
 func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0):
 	var bullet = Sprite.new()
