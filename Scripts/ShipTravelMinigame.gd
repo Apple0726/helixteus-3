@@ -47,7 +47,7 @@ func _ready():
 		star.add_to_group("stars")
 
 	if not game or game.help.STM:
-		fn_to_call = "pattern_1"
+		fn_to_call = "pattern_13"
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
 	if game and not game.help.STM:
@@ -524,10 +524,10 @@ func pattern_12():
 
 func pattern_13():
 	for i in 120:	
-		var x_pos = rand_range(0, 1300)
+		var x_pos = rand_range(1280, 1300)
 		var y_pos = rand_range(0, 1300)
 		for j in 2:
-			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":15, "delay":0.06 * i,})
+			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":15, "delay":0.06 * i,}) 
 
 func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0):
 	var bullet = Sprite.new()
