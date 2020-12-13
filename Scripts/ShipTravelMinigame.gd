@@ -344,6 +344,10 @@ func _process(delta):
 				
 	for bullet in get_tree().get_nodes_in_group("bullet_13"):
 		bullet_data[bullet.name].delay -= delta
+		var grow = delta + 0.01
+		bullet.scale += Vector2.ONE * grow * 0.1
+		if bullet.scale.x > 0.5: #sets max size
+				bullet.scale = Vector2.ONE * 0.5
 		if bullet_data[bullet.name].delay < 0:
 			var cond:bool = false
 			if bullet_data[bullet.name].has("b_type"):
@@ -367,15 +371,6 @@ func _process(delta):
 					inc_combo()
 					call("pattern_%s" % [[8, 9, 10, 11][Helper.rand_int(0, 3)]])
 				remove_child(bullet)
-		for time in range(delta, 2):
-			var grow = delta + 0.01
-			bullet.scale += Vector2.ONE * grow * 0.1
-			if bullet.scale.x > 0.5: #sets max size
-				bullet.scale = Vector2.ONE * 0.5
-
-
-
-	
 
 	for bullet in get_tree().get_nodes_in_group("bullet_14"):
 		var dx:float = 0.4
