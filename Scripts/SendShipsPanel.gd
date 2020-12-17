@@ -71,6 +71,8 @@ func refresh():
 		depart_pos = game.supercluster_data[depart_id].pos
 		dest_pos = game.supercluster_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
+	if game.TEST:
+		distance = 1
 	depart_p_id = game.ships_c_p
 	calc_costs()
 	for child in $VBoxContainer/HBoxContainer/ScrollContainer/Enemies.get_children():

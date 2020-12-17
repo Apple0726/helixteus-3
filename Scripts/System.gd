@@ -59,11 +59,10 @@ func _ready():
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
 		planet_glow.rect_scale *= p_i["distance"] / 1200.0
-		match p_i["status"]:
-			"conquered":
-				planet_glow.modulate = Color(0, 1, 0, 1)
-			"unconquered":
-				planet_glow.modulate = Color(1, 0, 0, 1)
+		if p_i.conquered:
+			planet_glow.modulate = Color(0, 1, 0, 1)
+		else:
+			planet_glow.modulate = Color(1, 0, 0, 1)
 		planet.position.x = cos(p_i["angle"]) * p_i["distance"]
 		planet.position.y = sin(p_i["angle"]) * p_i["distance"]
 		glows.append(planet_glow)
@@ -80,19 +79,26 @@ func on_glow_planet_over (id:int, glow):
 func show_planet_info(id:int):
 	var p_i = game.planet_data[id]
 	var wid:int = Helper.get_wid(p_i.size)
-	game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
+	if id == game.ships_c_p and not p_i.conquered:
+		game.show_tooltip(tr("CLICK_TO_BATTLE"))
+	else:
+		game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
 
 func on_planet_click (id:int):
+	var p_i = game.planet_data[id]
 	if not view.dragged:
 		if Input.is_action_pressed("shift"):
 			game.c_p = id
 			game.switch_view("planet_details")
 		elif Input.is_action_pressed("Q"):
-			if len(game.ship_data) > 0:
-				game.send_ships_panel.dest_p_id = id
-				game.toggle_panel(game.send_ships_panel)
+			if id == game.ships_c_p and not p_i.conquered:
+				game.switch_view("battle")
 			else:
-				game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
+				if len(game.ship_data) > 0:
+					game.send_ships_panel.dest_p_id = id
+					game.toggle_panel(game.send_ships_panel)
+				else:
+					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 		else:
 			game.c_p = id
 			game.switch_view("planet")

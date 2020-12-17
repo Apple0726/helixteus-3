@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 
 onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 onready var view_scene = preload("res://Scenes/Views/View.tscn")
@@ -17,6 +17,7 @@ onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
 onready var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
 onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
 onready var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
+onready var battle_scene = preload("res://Scenes/Views/Battle.tscn")
 onready var particles_scene = load("res://Scenes/LiquidParticles.tscn")
 onready var time_scene = load("res://Scenes/TimeLeft.tscn")
 onready var planet_TS = load("res://Resources/PlanetTileSet.tres")
@@ -180,10 +181,8 @@ var tile_data:Array = []
 var cave_data:Array = []
 
 #Vehicle data
-#var rover_data:Array = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 var rover_data:Array = []
-#var ship_data:Array = []
-var ship_data:Array = [{"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
+var ship_data:Array = []
 var ships_c_p:int = 2#Planet that the ships are on
 var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
 var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
@@ -226,6 +225,7 @@ var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 var STM
+var battle
 
 var mat_info = {	"coal":{"value":5},#One kg of coal = $10
 					"glass":{"value":20},
@@ -324,6 +324,8 @@ func _ready():
 		mats.soil = 50
 		show.plant_button = true
 		energy = 2000000
+		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
+		ship_data = [{"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
 		_load_game()
 	else:
 		var tween:Tween = Tween.new()
@@ -448,7 +450,7 @@ func _load_game():
 		generate_planets(0)
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
-		planet_data[2]["status"] = "conquered"
+		planet_data[2]["conquered"] = true
 		planet_data[2]["size"] = rand_range(12000, 12100)
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
@@ -661,6 +663,10 @@ func switch_view(new_view:String, first_time:bool = false):
 				add_child(HUD)
 				remove_child(STM)
 				STM = null
+			"battle":
+				add_child(HUD)
+				remove_child(battle)
+				battle = null
 		if c_v in  ["science_tree", "STM"]:
 			c_v = l_v
 		else:
@@ -698,6 +704,10 @@ func switch_view(new_view:String, first_time:bool = false):
 			remove_child(HUD)
 			STM = STM_scene.instance()
 			add_child(STM)
+		"battle":
+			remove_child(HUD)
+			battle = battle_scene.instance()
+			add_child(battle)
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false
@@ -918,7 +928,7 @@ func generate_superclusters(id:int):
 	max_dist_from_center = pow(total_sc_num, 0.5) * 300
 	for _i in range(1, total_sc_num):
 		var sc_i = {}
-		sc_i["status"] = "unconquered"
+		sc_i["conquered"] = false
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
 		sc_i["clusters"] = []
@@ -946,7 +956,7 @@ func generate_clusters(id:int):
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
 	for _i in range(1, total_clust_num):
 		var c_i = {}
-		c_i["status"] = "unconquered"
+		c_i["conquered"] = false
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
@@ -990,7 +1000,7 @@ func generate_galaxies(id:int):
 	var dark_energy = supercluster_data[cluster_data[id].parent].dark_energy
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
-		g_i["status"] = "unconquered"
+		g_i["conquered"] = false
 		g_i["parent"] = id
 		g_i["systems"] = []
 		g_i["discovered"] = false
@@ -1090,7 +1100,7 @@ func generate_systems(id:int):
 	
 	for i in range(0, sys_num_to_load):
 		var s_i = {}
-		s_i["status"] = "unconquered"
+		s_i["conquered"] = false
 		s_i["parent"] = id
 		s_i["planets"] = []
 		s_i["discovered"] = false
@@ -1316,7 +1326,7 @@ func generate_planets(id:int):
 		var lakes = ["water", "ammonia", "methane", "co2", "oxygen", "hydrogen"]
 		#p_i = planet_info
 		var p_i = {}
-		p_i["status"] = "unconquered"
+		p_i["conquered"] = false
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1)) * dark_matter)

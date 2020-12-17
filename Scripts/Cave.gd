@@ -447,8 +447,8 @@ func update_health_bar(_HP):
 		for w in i_w_w:
 			i_w_w[w] /= 2
 		var st = tr("ROVER_REKT")
-		if randf() < 1:
-			st.replace("wrecked", "rekt")
+		if randf() < 0.01:
+			st = st.replace("wrecked", "rekt")
 		exit_cave()
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP

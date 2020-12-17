@@ -30,7 +30,6 @@ func _ready():
 		lv = 1
 	help_tween = Tween.new()
 	add_child(help_tween)
-	$Back.text = "<- " + tr("BACK") + " (Z)"
 	set_level()
 	var tween:Tween = Tween.new()
 	tween.interpolate_property($Level, "modulate", null, Color.white, 0.5)
@@ -47,7 +46,7 @@ func _ready():
 		star.add_to_group("stars")
 
 	if not game or game.help.STM:
-		fn_to_call = "pattern_13"
+		fn_to_call = "pattern_11"
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
 	if game and not game.help.STM:
@@ -347,35 +346,34 @@ func _process(delta):
 		var grow = delta + 0.01
 		bullet.scale += Vector2.ONE * grow * 0.1
 		if bullet.scale.x > 0.5: #sets max size
-				bullet.scale = Vector2.ONE * 0.5
+			bullet.scale = Vector2.ONE * 0.5
 		if bullet_data[bullet.name].delay < 0:
 			var cond:bool = false
-			if bullet_data[bullet.name].has("b_type"):
-				if bullet_data[bullet.name].b_type == "b":
-					bullet.position.x = bullet_data[bullet.name].t % 1
-				elif bullet_data[bullet.name].b_type == "c":
-					bullet.position.x = 1280 - bullet_data[bullet.name].t % 1280
-				bullet.position.y = -500 * sin(bullet.position.x / 1280.0 * PI) + bullet_data[bullet.name].y
-				bullet_data[bullet.name].t += 10
-				cond = bullet_data[bullet.name].t > 1280 * 7
-			else:
-				if not bullet_data[bullet.name].has("dir"):
-					bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
-				bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir)
-				bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir)
-				cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
+			if not bullet_data[bullet.name].has("dir"):
+				bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
+			bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir)
+			bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir)
+			cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
 			hit_test(bullet)
 			if cond:
 				bullet.remove_from_group("bullet_13")
+				remove_child(bullet)
 				if get_tree().get_nodes_in_group("bullet_13").empty():
 					inc_combo()
-					call("pattern_%s" % [[8, 9, 10, 11][Helper.rand_int(0, 3)]])
-				remove_child(bullet)
+					call("pattern_%s" % [[13][Helper.rand_int(0, 0)]])
 
 	for bullet in get_tree().get_nodes_in_group("bullet_14"):
 		var dx:float = 0.4
 		bullet.position.x += dx
-		bullet.position.y += -dx * 9 / 16.0 * PI * (20 * sin(PI * bullet.position.x / 1280) * pow(sin(PI * bullet.position.x / 64), 2) - cos(PI * bullet.position.x / 1280) * cos(PI * bullet.position.x / 64) * sin(PI * bullet.position.x / 64) - 20 * sin(PI * bullet.position.x / 1280) * pow(cos(PI * bullet.position.x / 64), 2))
+		var x = bullet.position.x
+		bullet.position.y += -dx*9/16.0*PI*(20*sin(PI*x/1280)*pow(sin(PI*x/64),2)-cos(PI*x/1280)*cos(PI*x/64)*sin(PI*x/64)-20*sin(PI*x/1280)*pow(cos(PI*x/64),2))
+		#bullet.position.y += -dx * 9 / 16.0 * PI * (20 * sin(PI * x / 1280) * pow(sin(PI * x / 64), 2) - cos(PI * x / 1280) * cos(PI * x / 64) * sin(PI * x / 64) - 20 * sin(PI * x / 1280) * pow(cos(PI * x / 64), 2))
+		if bullet.position.x > 1280:
+			bullet.position.x -= 1280
+	for bullet in get_tree().get_nodes_in_group("bullet_15"):
+		var dx:float = 1
+		bullet.position.x += dx
+		bullet.position.y += dx * 45 * PI / 32 * cos(PI*(bullet.position.x)/256)
 		if bullet.position.x > 1280:
 			bullet.position.x -= 1280
 
@@ -529,7 +527,7 @@ func pattern_13():
 		var x_pos = rand_range(1280, 1300)
 		var y_pos = rand_range(0, 1300)
 		for j in 2:
-			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":15, "delay":0.06 * i,}) 
+			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":8, "delay":0.06 * i,}) 
 
 func pattern_14():
 	for i in 500:
@@ -537,6 +535,11 @@ func pattern_14():
 		var y_pos = 720 * sin(PI * x_pos / 1280) * sin(PI * x_pos / 64) * cos(PI * x_pos / 64) + 720 / 2
 		put_bullet(Vector2(x_pos, y_pos), 0.3, 14, {"delay":0.7 * i})
 
+func pattern_15():
+	for i in 500:
+		var x_pos:float = i * 1280 / 500.0
+		var y_pos = 360 * sin((5 * PI * x_pos) / 1280) + 720 / 2
+		put_bullet(Vector2(x_pos, y_pos), 0.3, 15, {"delay":1 * i})
 
 func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0):
 	var bullet = Sprite.new()
