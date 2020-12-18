@@ -132,21 +132,6 @@ func set_rover_data():
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
 
-func show_dmg(dmg:int, pos:Vector2):
-	var lb:Label = Label.new()
-	add_child(lb)
-	lb["custom_fonts/font"] = load("res://Resources/DamageText.tres")
-	lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
-	lb.text = "- %s" % [dmg]
-	var tween:Tween = Tween.new()
-	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1)
-	tween.interpolate_property(lb, "rect_position", pos - Vector2(0, 40), pos - Vector2(0, 55), 1)
-	add_child(tween)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(lb)
-	remove_child(tween)
-
 func remove_cave():
 	astar_node.clear()
 	rooms.clear()

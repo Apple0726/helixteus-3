@@ -82,3 +82,7 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"yellow_mining_laser":{"speed":1.6, "rnge":270, "costs":{"money":180000, "silicon":60, "time":30}},
 						"green_mining_laser":{"speed":2.0, "rnge":285, "costs":{"money":3600000, "silicon":400, "time":50}},
 }
+var bullet_data = [{"damage":10, "accuracy":0.8}]
+var laser_data = [{"damage":5, "accuracy":1.5}]
+var bomb_data = [{"damage":20, "accuracy":0.6}]
+var light_data = [{"damage":3, "accuracy":1.2}]

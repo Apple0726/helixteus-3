@@ -213,9 +213,9 @@ var save_s = false
 var save_p = false
 var save_t = false
 
-var EA_planet_visited = not TEST
-var EA_galaxy_visited = not TEST
-var EA_cave_visited = not TEST
+var EA_planet_visited = TEST
+var EA_galaxy_visited = TEST
+var EA_cave_visited = TEST
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}

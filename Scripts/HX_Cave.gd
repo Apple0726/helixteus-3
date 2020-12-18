@@ -1,4 +1,4 @@
-extends "res://Scripts/HX_Anim.gd"
+extends "res://Scripts/FloatAnim.gd"
 
 var HP
 var total_HP
