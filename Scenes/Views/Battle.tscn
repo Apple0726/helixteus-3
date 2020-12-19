@@ -324,10 +324,14 @@ stretch_mode = 6
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="ImmuneTimer" type="Timer" parent="."]
+one_shot = true
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
-[connection signal="area_entered" from="Ship1" to="." method="_on_Ship1_area_entered"]
+[connection signal="area_entered" from="Ship1" to="." method="_on_Ship_area_entered" binds= [ 0 ]]
 [connection signal="pressed" from="FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bullet" ]]
 [connection signal="pressed" from="FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_pressed" binds= [ "laser" ]]
 [connection signal="pressed" from="FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bomb" ]]
 [connection signal="pressed" from="FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_pressed" binds= [ "light" ]]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="ImmuneTimer" to="." method="_on_ImmuneTimer_timeout"]

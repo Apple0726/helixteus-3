@@ -12,6 +12,7 @@ margin_left = -44.0
 margin_top = -44.0
 margin_right = 44.0
 margin_bottom = 44.0
+shortcut_in_tooltip = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
