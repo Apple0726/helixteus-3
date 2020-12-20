@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/VehiclePanel.gd" type="Script" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
@@ -124,59 +123,10 @@ margin_right = 1063.0
 margin_bottom = 540.0
 size_flags_horizontal = 3
 
-[node name="Ships" type="Label" parent="HBox/VBox2"]
+[node name="Satellites" type="Label" parent="HBox/VBox2"]
 margin_right = 533.0
 margin_bottom = 36.0
 custom_styles/normal = SubResource( 2 )
-text = "SHIPS"
+text = "SATELLITES"
 align = 1
-
-[node name="GridContainer" type="GridContainer" parent="HBox/VBox2"]
-margin_top = 40.0
-margin_right = 533.0
-margin_bottom = 540.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 2
-
-[node name="TextureButton" type="TextureButton" parent="HBox/VBox2/GridContainer"]
-margin_right = 264.0
-margin_bottom = 248.0
-rect_min_size = Vector2( 100, 100 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture_normal = ExtResource( 5 )
-expand = true
-stretch_mode = 5
-
-[node name="TextureButton2" type="TextureButton" parent="HBox/VBox2/GridContainer"]
-margin_left = 268.0
-margin_right = 532.0
-margin_bottom = 248.0
-rect_min_size = Vector2( 100, 100 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-expand = true
-stretch_mode = 5
-
-[node name="TextureButton3" type="TextureButton" parent="HBox/VBox2/GridContainer"]
-margin_top = 252.0
-margin_right = 264.0
-margin_bottom = 500.0
-rect_min_size = Vector2( 100, 100 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-expand = true
-stretch_mode = 5
-
-[node name="TextureButton4" type="TextureButton" parent="HBox/VBox2/GridContainer"]
-margin_left = 268.0
-margin_top = 252.0
-margin_right = 532.0
-margin_bottom = 500.0
-rect_min_size = Vector2( 100, 100 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-expand = true
-stretch_mode = 5
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]

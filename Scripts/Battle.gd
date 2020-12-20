@@ -3,33 +3,37 @@ extends Control
 onready var game = get_node("/root/Game")
 onready var current = $Current
 onready var ship1 = $Ship1
-onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
-onready var target_scene = preload("res://Scenes/TargetButton.tscn")
-onready var HP_icon = preload("res://Graphics/Icons/HP.png")
-onready var atk_icon = preload("res://Graphics/Icons/atk.png")
-onready var def_icon = preload("res://Graphics/Icons/def.png")
-onready var acc_icon = preload("res://Graphics/Icons/acc.png")
-onready var eva_icon = preload("res://Graphics/Icons/eva.png")
-onready var w_1_1 = preload("res://Scenes/HX/Weapons/1_1.tscn")
-onready var w_1_2 = preload("res://Scenes/HX/Weapons/1_2.tscn")
-onready var w_1_3 = preload("res://Scenes/HX/Weapons/1_3.tscn")
-onready var w_2_1 = preload("res://Scenes/HX/Weapons/2_1.tscn")
-onready var w_2_2 = preload("res://Scenes/HX/Weapons/2_2.tscn")
-onready var w_2_3 = preload("res://Scenes/HX/Weapons/2_3.tscn")
+var victory_panel_scene = preload("res://Scenes/Panels/VictoryPanel.tscn")
+var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
+var target_scene = preload("res://Scenes/TargetButton.tscn")
+var HP_icon = preload("res://Graphics/Icons/HP.png")
+var atk_icon = preload("res://Graphics/Icons/atk.png")
+var def_icon = preload("res://Graphics/Icons/def.png")
+var acc_icon = preload("res://Graphics/Icons/acc.png")
+var eva_icon = preload("res://Graphics/Icons/eva.png")
+var w_1_1 = preload("res://Scenes/HX/Weapons/1_1.tscn")
+var w_1_2 = preload("res://Scenes/HX/Weapons/1_2.tscn")
+var w_1_3 = preload("res://Scenes/HX/Weapons/1_3.tscn")
+var w_2_1 = preload("res://Scenes/HX/Weapons/2_1.tscn")
+var w_2_2 = preload("res://Scenes/HX/Weapons/2_2.tscn")
+var w_2_3 = preload("res://Scenes/HX/Weapons/2_3.tscn")
 
 var star:Sprite#Shown right before HX magic
 
-var ship_data = [{"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "bullet":0, "laser":0, "bomb":0, "light":0}]
+var ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 var HX_data = []
 var HXs = []
 var HX_c_d:Dictionary = {}#HX_custom_data
 var w_c_d:Dictionary = {}#weapon_custom_data
 var HX_w_c_d:Dictionary = {}#HX_weapon_custom_data
-var curr_sh:int = 1#current_ship
+var curr_sh:int = 0#current_ship
 var curr_en:int = 0#current_enemy
 var weapon_type:String = ""
 var immune:bool = false
 var wave:int = 0
+var weapon_XPs:Array = [{"bullet":0, "laser":0, "bomb":0, "light":0}]
+
+var victory_panel
 
 enum BattleStages {CHOOSING, PLAYER, ENEMY}
 
@@ -42,17 +46,23 @@ func _ready():
 	$Current/Current.float_speed = 0.25
 	$Ship1/HP.max_value = ship_data[0].total_HP
 	$Ship1/HP.value = ship_data[0].HP
-	for k in 5:
+	for k in 2:
 		var lv = 1
 		var HP = round(rand_range(1, 1.5) * 15 * pow(1.3, lv))
 		var atk = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
 		var def = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
 		var acc = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
 		var eva = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-		HX_data.append({"type":Helper.rand_int(1, 2), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva})
+		var money = round(rand_range(0.2, 2.5) * pow(1.3, lv) * 10000)
+		var XP = round(pow(1.3, lv) * 5)
+		HX_data.append({"type":Helper.rand_int(1, 2), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+	send_HXs()
 
 func send_HXs():
-	for k in 4 + (wave * 4):
+	for j in 4:
+		var k:int = j + wave * 4
+		if k >= len(HX_data):
+			break
 		var btn = TextureButton.new()
 		btn.rect_position = -Vector2(90, 50)
 		btn.rect_size = Vector2(180, 100)
@@ -69,7 +79,7 @@ func send_HXs():
 		btn.connect("mouse_exited", self, "on_HX_out")
 		add_child(HX)
 		HXs.append(HX)
-		HX_c_d[HX.name] = {"knockback":Vector2.ZERO, "kb_dur":0, "kb_rot":0, "kb_spd":0, "position":Vector2((k % 2) * 300 + 850, (k / 2) * 150 + 250)}
+		HX_c_d[HX.name] = {"knockback":Vector2.ZERO, "kb_dur":0, "kb_rot":0, "kb_spd":0, "position":Vector2((j % 2) * 300 + 850, (j / 2) * 150 + 250)}
 	
 func on_HX_over(id:int):
 	if game:
@@ -132,10 +142,13 @@ func _on_Back_pressed():
 var ship_dir:String = ""
 
 func damage_HX(id:int, dmg:float):
-	HX_data[id].HP -= dmg
+	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("HX/HP").value = HX_data[id].HP
-	Helper.show_dmg(dmg, HXs[id].position, self, 0.6)
-	
+	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6)
+
+func hit_formula(acc:float, eva:float):
+	return 1 / (1 + eva / pow(acc, 1.4))
+
 func _process(delta):
 	for i in len(HXs):
 		var HX = HXs[i]
@@ -155,7 +168,7 @@ func _process(delta):
 			HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
 	if stage == BattleStages.CHOOSING:
 		ship1.position = ship1.position.move_toward(Vector2(200, 200), ship1.position.distance_to(Vector2(200, 200)) * delta * 5)
-		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -45)
+		current.position = self["ship%s" % [curr_sh + 1]].position + Vector2(0, -45)
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.scale += Vector2(0.1, 0.1)
 		light.modulate.a -= 0.02
@@ -163,14 +176,15 @@ func _process(delta):
 			light.remove_from_group("lights")
 			remove_child(light)
 	for weapon in get_tree().get_nodes_in_group("weapon"):
+		var sh:int = w_c_d[weapon.name].shooter
 		weapon.position += w_c_d[weapon.name].v * delta * 60
-		if weapon.position.x > w_c_d[weapon.name].lim:
-			weapon.remove_from_group("weapon")
-			remove_child(weapon)
+		var remove_weapon_b:bool = weapon.position.x > 1350
+		if weapon.position.x > w_c_d[weapon.name].lim and not w_c_d[weapon.name].has_hit:
 			var w_data = "%s_data" % [weapon_type]
 			var t = w_c_d[weapon.name].target
-			var dmg = ship_data[0].atk * Data[w_data][ship_data[0][weapon_type]].damage / HX_data[w_c_d[weapon.name].target].def
+			var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[w_c_d[weapon.name].target].def
 			if t == -1:
+				remove_weapon_b = true
 				var light = Sprite.new()
 				light.texture = preload("res://Graphics/Decoratives/light.png")
 				light.position = weapon.position
@@ -178,13 +192,29 @@ func _process(delta):
 				light.modulate.a = 0.7
 				add_child(light)
 				light.add_to_group("lights")
+				var light_hit:bool = false
 				for i in len(HXs):
 					if HX_data[i].HP <= 0:
 						continue
-					damage_HX(i, dmg)
+					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[i].eva):
+						damage_HX(i, dmg)
+						light_hit = true
+					else:
+						Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
+				if light_hit:
+					weapon_XPs[sh].light += 1
 			else:
-				damage_HX(t, dmg)
+				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[t].eva):
+					damage_HX(t, dmg)
+					weapon_XPs[sh][weapon_type] += 1
+					remove_weapon_b = true
+				else:
+					w_c_d[weapon.name].has_hit = true
+					Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
 			$Timer.start()
+		if remove_weapon_b:
+			weapon.remove_from_group("weapon")
+			remove_child(weapon)
 	for weapon in get_tree().get_nodes_in_group("w_1_1"):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
@@ -283,9 +313,14 @@ func remove_targets():
 
 func place_targets():
 	remove_targets()
+	var target_id:int = -1
 	for i in len(HXs):
 		if HX_data[i].HP <= 0:
 			continue
+		if target_id == -1:#A way to not show target buttons if there's only one target alive
+			target_id = i
+		else:
+			target_id = -2
 		var HX = HXs[i]
 		HX.get_node("HX").modulate.a = 0.5
 		var target = target_scene.instance()
@@ -293,10 +328,12 @@ func place_targets():
 		add_child(target)
 		target.get_node("TextureButton").shortcut = ShortCut.new()
 		target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
-		target.get_node("TextureButton").shortcut.shortcut.action = String(i + 1)
-		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
-		target.get_node("Label").text = String(i + 1)
+		target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
+		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i % 4])
+		target.get_node("Label").text = String((i % 4) + 1)
 		target.add_to_group("targets")
+	if target_id != -2:
+		on_target_pressed(target_id)
 
 func on_target_pressed(target:int):
 	$FightPanel.visible = false
@@ -306,7 +343,7 @@ func on_target_pressed(target:int):
 	var weapon = Sprite.new()
 	weapon.add_to_group("weapon")
 	weapon.texture = load("res://Graphics/Weapons/%s.png" % [weapon_type])
-	var ship_pos = self["ship%s" % [curr_sh]].position
+	var ship_pos = self["ship%s" % [curr_sh + 1]].position
 	weapon.position = ship_pos
 	weapon.scale *= 0.5
 	add_child(weapon)
@@ -314,8 +351,12 @@ func on_target_pressed(target:int):
 	weapon.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
 	w_c_d[weapon.name] = {"v":(HX_pos - ship_pos) / 30.0}
 	w_c_d[weapon.name].target = target
+	w_c_d[weapon.name].shooter = curr_sh
 	w_c_d[weapon.name].lim = HX_pos.x
+	w_c_d[weapon.name].acc_mult = Data["%s_data" % [weapon_type]][ship_data[curr_sh][weapon_type].lv - 1].accuracy
+	w_c_d[weapon.name].has_hit = false
 	remove_targets()
+	curr_sh += 1
 
 func _on_weapon_pressed(_weapon_type:String):
 	weapon_type = _weapon_type
@@ -326,15 +367,37 @@ func _on_weapon_pressed(_weapon_type:String):
 		place_targets()
 
 func _on_Timer_timeout():
-	stage = BattleStages.ENEMY
-	$Timer.wait_time = 0.2
-	enemy_attack()
+	var HXs_rekt:int = wave * 4
+	#var HXs_visible:int = (len(HX_data) - 1) % 4 + 1
+	while curr_en < len(HX_data) and HX_data[curr_en].HP <= 0:
+		HXs_rekt += 1
+		curr_en += 1
+	if HXs_rekt >= len(HX_data):
+		victory_panel = victory_panel_scene.instance()
+		victory_panel.HX_data = HX_data
+		victory_panel.ship_data = ship_data
+		victory_panel.weapon_XPs = weapon_XPs
+		victory_panel.rect_position = Vector2(108, 60)
+		add_child(victory_panel)
+		return
+	if HXs_rekt >= (wave + 1) * 4:
+		wave += 1
+		send_HXs()
+		curr_sh = 0
+	else:
+		if curr_sh >= len(ship_data):
+			stage = BattleStages.ENEMY
+			$Timer.wait_time = 0.2
+			enemy_attack()
+		else:
+			$FightPanel.visible = true
+			$Current.visible = true
+			$Back.visible = true
 
 func enemy_attack():
-	while HX_data[curr_en].HP <= 0 and curr_en < 4:
-		curr_en += 1
-	if curr_en == 4:
-		curr_en = 0
+	if curr_en == len(HX_data):
+		curr_sh = 0
+		curr_en = wave * 4
 		stage = BattleStages.CHOOSING
 		$Timer.wait_time = 1.0
 		$FightPanel.visible = true
@@ -397,9 +460,9 @@ func atk_2_1(id:int):
 		var pillar = w_2_1.instance()
 		if i % 2 == 0:
 			pillar.scale.y *= -1
-			pillar.position.y = rand_range(-100, 300)
+			pillar.position.y = rand_range(-50, 290)
 		else:
-			pillar.position.y = rand_range(420, 820)
+			pillar.position.y = rand_range(430, 770)
 		pillar.position.x = 1400
 		add_child(pillar)
 		pillar.add_to_group("w_2_1")
@@ -450,6 +513,8 @@ func _on_Ship_area_entered(area, ship_id:int):
 		remove_weapon(area, HX_w_c_d[area.name].group)
 	get_node("Ship%s/HP" % [ship_id + 1]).value = ship_data[ship_id].HP
 
-
 func _on_ImmuneTimer_timeout():
 	immune = false
+
+func _on_Battle_tree_exited():
+	queue_free()

@@ -296,11 +296,15 @@ func set_back_btn(back_btn, set_text:bool = true):
 	if set_text:
 		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
 
-func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0):
+func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false):
 	var lb:Label = Label.new()
 	lb["custom_fonts/font"] = load("res://Resources/DamageText.tres")
-	lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
-	lb.text = "- %s" % [dmg]
+	if missed:
+		lb["custom_colors/font_color"] = Color(1, 1, 0, 1)
+		lb.text = tr("MISSED")
+	else:
+		lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
+		lb.text = "- %s" % [dmg]
 	lb.rect_position = pos - Vector2(0, 40)
 	lb.rect_scale *= sc
 	var tween:Tween = Tween.new()

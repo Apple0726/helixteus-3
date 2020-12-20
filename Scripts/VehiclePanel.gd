@@ -24,7 +24,7 @@ func refresh():
 			rover.connect("mouse_exited", self, "on_rover_exit")
 			rover.connect("pressed", self, "on_rover_press", [rov])
 	$HBox/VBox1.visible = hbox.get_child_count() != 0
-	$HBox/VBox2.visible = len(game.ship_data) > 0 and game.ships_c_p == game.c_p
+	$HBox/VBox2.visible = false
 
 var rover_has_items = false
 func on_rover_enter(rov:Dictionary):

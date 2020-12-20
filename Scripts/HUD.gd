@@ -11,6 +11,7 @@ onready var SP_text = $Resources/SP/Text
 onready var minerals = $Resources/Minerals
 onready var stone = $Resources/Stone
 onready var SP = $Resources/SP
+onready var ships = $Buttons/Ships
 onready var craft = $Buttons/Craft
 onready var MU = $Buttons/MineralUpgrades
 onready var sc_tree = $Buttons/ScienceTree
@@ -22,15 +23,6 @@ var on_button = false
 func _on_Button_pressed():
 	click_sound.play()
 	game.toggle_panel(game.settings)
-#	if AudioServer.is_bus_mute(1) == false:
-#		AudioServer.set_bus_mute(1,true)
-#	else:
-#		AudioServer.set_bus_mute(1,false)
-#	var config = ConfigFile.new()
-#	var err = config.load("user://settings.cfg")
-#	if err == OK:
-#		config.set_value("audio", "mute", not config.get_value("audio", "mute"))
-#	config.save("user://settings.cfg")
 
 func _ready():
 	refresh()
@@ -50,6 +42,7 @@ func refresh():
 	SP.visible = game.show.SP
 	sc_tree.visible = game.show.SP
 	craft.visible = game.show.materials
+	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
 	$ConvertMinerals.visible = game.show.minerals
 	if game.xp >= game.xp_to_lv:
@@ -158,10 +151,6 @@ func _on_CollectAll_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("COLLECT_ALL_PLANET") + " (Shift V)")
 
-func _on_CollectAll_mouse_exited():
-	on_button = false
-	game.hide_tooltip()
-
 func _on_CollectAll_pressed():
 	game.view.obj.collect_all()
 
@@ -169,9 +158,12 @@ func _on_ConvertMinerals_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("SELL_MINERALS") + " (Shift C)")
 
-func _on_ConvertMinerals_mouse_exited():
-	on_button = false
-	game.hide_tooltip()
-
 func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()
+
+func _on_Ships_pressed():
+	print("A")
+
+func _on_Ships_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("SHIPS") + " (Y)")

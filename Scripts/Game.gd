@@ -2,30 +2,30 @@ extends Node2D
 
 const TEST:bool = true
 
-onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
-onready var view_scene = preload("res://Scenes/Views/View.tscn")
-onready var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
-onready var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
-onready var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
-onready var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
-onready var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
-onready var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
-onready var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
-onready var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
-onready var overlay_scene = preload("res://Scenes/Overlay.tscn")
-onready var rsrc_scene = preload("res://Scenes/Resource.tscn")
-onready var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
-onready var cave_scene = preload("res://Scenes/Views/Cave.tscn")
-onready var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
-onready var battle_scene = preload("res://Scenes/Views/Battle.tscn")
-onready var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
-onready var time_scene = preload("res://Scenes/TimeLeft.tscn")
-onready var planet_TS = preload("res://Resources/PlanetTileSet.tres")
-onready var lake_TS = preload("res://Resources/LakeTileSet.tres")
-onready var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
-onready var aurora1_texture = preload("res://Graphics/Tiles/Aurora1.png")
-onready var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
-onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
+var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
+var view_scene = preload("res://Scenes/Views/View.tscn")
+var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
+var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
+var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
+var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
+var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
+var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
+var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
+var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
+var overlay_scene = preload("res://Scenes/Overlay.tscn")
+var rsrc_scene = preload("res://Scenes/Resource.tscn")
+var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
+var cave_scene = preload("res://Scenes/Views/Cave.tscn")
+var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
+var battle_scene = preload("res://Scenes/Views/Battle.tscn")
+var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
+var time_scene = preload("res://Scenes/TimeLeft.tscn")
+var planet_TS = preload("res://Resources/PlanetTileSet.tres")
+var lake_TS = preload("res://Resources/LakeTileSet.tres")
+var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
+var aurora1_texture = preload("res://Graphics/Tiles/Aurora1.png")
+var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
+var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -325,7 +325,7 @@ func _ready():
 		show.plant_button = true
 		energy = 2000000
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
+		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
 		_load_game()
 	else:
 		var tween:Tween = Tween.new()
