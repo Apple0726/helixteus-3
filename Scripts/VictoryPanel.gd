@@ -6,6 +6,7 @@ var ship_data# = [{"lv":1, "HP":20, "total_HP":20, "atk":15, "def":15, "acc":15,
 var weapon_XPs:Array# = [{"bullet":0, "laser":2, "bomb":0, "light":0}]
 var XP:float = 0
 var money:float = 0
+var p_id:int
 
 func _ready():
 	for HX in HX_data:
@@ -13,18 +14,10 @@ func _ready():
 		XP += HX.XP
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
 	$Grid/Panel1/XP/Label.text = "+ %s" % [XP]
-	$Grid/Panel1/XP/TextureProgress.value = ship_data[0].XP
-	$Grid/Panel1/XP/TextureProgress2.value = ship_data[0].XP
-	$Grid/Panel1/XP/TextureProgress.max_value = ship_data[0].XP_to_lv
-	$Grid/Panel1/XP/TextureProgress2.max_value = ship_data[0].XP_to_lv
-	$Grid/Panel1/Lv.text = "%s %s" % [tr("LV"), ship_data[0].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		get_node("Grid/Panel1/%s/TextureProgress" % [weapon]).value = ship_data[0][weapon.to_lower()].XP
-		get_node("Grid/Panel1/%s/TextureProgress" % [weapon]).max_value = ship_data[0][weapon.to_lower()].XP_to_lv
-		get_node("Grid/Panel1/%s/TextureProgress2" % [weapon]).value = ship_data[0][weapon.to_lower()].XP
-		get_node("Grid/Panel1/%s/TextureProgress2" % [weapon]).max_value = ship_data[0][weapon.to_lower()].XP_to_lv
-		get_node("Grid/Panel1/%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
-	
+		get_node("%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
+	$Grid/Panel1.show_weapon_stats = false
+	$Grid/Panel1.set_visibility()
 
 func _process(delta):
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
@@ -40,7 +33,17 @@ func _process(delta):
 
 func _on_close_button_pressed():
 	ship_data[0].XP += XP
+	if ship_data[0].XP >= ship_data[0].XP_to_lv:
+		ship_data[0].XP -= ship_data[0].XP_to_lv
+		ship_data[0].XP_to_lv = round(ship_data[0].XP_to_lv * 1.3)
+		ship_data[0].lv += 1
+		ship_data[0].HP = round(ship_data[0].XP_to_lv * 1.2)
+		ship_data[0].atk = round(ship_data[0].atk * 1.2)
+		ship_data[0].def = round(ship_data[0].def * 1.2)
+		ship_data[0].acc = round(ship_data[0].acc * 1.2)
+		ship_data[0].eva = round(ship_data[0].eva * 1.2)
 	game.money += money
 	for weapon in ["bullet", "laser", "bomb", "light"]:
 		ship_data[0][weapon].XP += weapon_XPs[0][weapon]
+	game.planet_data[p_id].conquered = true
 	game.switch_view("system")

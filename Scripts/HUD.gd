@@ -162,7 +162,7 @@ func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()
 
 func _on_Ships_pressed():
-	print("A")
+	game.toggle_panel(game.ship_panel)
 
 func _on_Ships_mouse_entered():
 	on_button = true

@@ -410,6 +410,7 @@ PLAY_SHIP_MINIGAME,Click to accelerate ship travel by playing a minigame. You ca
 TRAVEL_ACCELERATED_BY,Travel accelerated by %s,,,,,,
 MOVE_SHIP_WITH_MOUSE,The ship follows your cursor. Dodge the obstacles!,,,,,,
 CLICK_ANYWHERE_TO_CONTINUE,Click anywhere to continue,,,,,,
+PRESS_ANY_KEY_TO_CONTINUE,Press any key to continue,,,,,,
 STM_AFTER_PATTERN_1,"The ship's hitbox is only a pixel, right at the tip of your cursor. Makes life easier for both you and the developer!",,,,,,
 STM_AFTER_PATTERN_2,"Each level consists of a variety of ""patterns"". You just went through 2 patterns. If you go through 3 patterns without being hit once, you go up a level!",,,,,,
 STM_LEVEL_2,"You went up a level! Waves become more difficult as you gain levels, but ship travel is accelerated more.",,,,,,
@@ -424,3 +425,12 @@ MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피
 CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타
 ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률
 EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율
+BATTLE_HELP,Press left or %s to move your ship up\nPress right or %s to move your ship down\nHold %s to move the ship faster,,,,,,
+SHOW_WEAPON_XPS,Show weapon XPs,,,,,,
+BULLET,Bullet,,,,,,
+BULLET_DESC,Average damage and accuracy weapon.,,,,,,
+LASER_DESC,Highly accurate but low damage.,,,,,,
+BOMB,Bomb,,,,,,
+BOMB_DESC,Very powerful but easy for enemies to dodge.,,,,,,
+LIGHT,Light,,,,,,
+LIGHT_DESC,Very low damage but hits all enemies and has good accuracy.,,,,,,

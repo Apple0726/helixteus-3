@@ -1,0 +1,86 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
+[ext_resource path="res://Scripts/ShipPanel.gd" type="Script" id=3]
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scenes/ShipInfo.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
+
+[node name="ShipPanel" type="Control"]
+margin_right = 1067.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 4 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 6 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "SHIPS"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_top = 104.0
+margin_right = 1064.0
+margin_bottom = 600.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel1" parent="GridContainer" instance=ExtResource( 5 )]
+margin_right = 532.0
+margin_bottom = 496.0
+victory_screen = false
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 60.0
+margin_right = 1064.0
+margin_bottom = 108.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="Panel"]
+margin_left = 48.0
+margin_top = 4.0
+margin_right = 380.0
+margin_bottom = 44.0
+theme = ExtResource( 7 )
+custom_constants/hseparation = 11
+text = "SHOW_WEAPON_XPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="toggled" from="Panel/CheckBox" to="." method="_on_CheckBox_toggled"]

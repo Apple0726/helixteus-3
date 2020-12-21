@@ -90,8 +90,13 @@ func on_planet_click (id:int):
 		if Input.is_action_pressed("shift"):
 			game.c_p = id
 			game.switch_view("planet_details")
-		elif Input.is_action_pressed("Q"):
+		elif Input.is_action_pressed("Q") or game.planet_data[id].conquered:
+			game.c_p = id
+			game.switch_view("planet")
+			game.planet_data[id].conquered = true
+		else:
 			if id == game.ships_c_p and not p_i.conquered:
+				game.c_p = id
 				game.switch_view("battle")
 			else:
 				if len(game.ship_data) > 0:
@@ -99,9 +104,6 @@ func on_planet_click (id:int):
 					game.toggle_panel(game.send_ships_panel)
 				else:
 					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
-		else:
-			game.c_p = id
-			game.switch_view("planet")
 
 func on_star_over (id:int):
 	var star = stars_info[id]

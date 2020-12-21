@@ -6,7 +6,6 @@ var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var view_scene = preload("res://Scenes/Views/View.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
-var settings_scene = preload("res://Scenes/Panels/Settings.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
 var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
@@ -29,6 +28,7 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
+var ship_panel:Control
 var upgrade_panel:Control
 var craft_panel:Control
 var vehicle_panel:Control
@@ -130,6 +130,7 @@ var help:Dictionary = {
 			"close_btn2":true,
 			"mining":true,
 			"STM":true,
+			"battle":true,
 			"plant_something_here":true,
 			"boulder_desc":true,
 			"aurora_desc":true,
@@ -305,7 +306,7 @@ func _ready():
 	var dir = Directory.new()
 	dir.remove("user://Save1/main.hx3")
 	
-	settings = settings_scene.instance()
+	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
 	var bg = $Title/Background
@@ -325,7 +326,7 @@ func _ready():
 		show.plant_button = true
 		energy = 2000000
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0}]
+		ship_data = [{"lv":1, "HP":25, "total_HP":25, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		_load_game()
 	else:
 		var tween:Tween = Tween.new()
@@ -365,6 +366,7 @@ func _load_game():
 	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
 	shop_panel = load("res://Scenes/Panels/ShopPanel.tscn").instance()
+	ship_panel = load("res://Scenes/Panels/ShipPanel.tscn").instance()
 	construct_panel = load("res://Scenes/Panels/ConstructPanel.tscn").instance()
 	craft_panel = load("res://Scenes/Panels/CraftPanel.tscn").instance()
 	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
@@ -374,36 +376,7 @@ func _load_game():
 	GF_panel = load("res://Scenes/Panels/GFPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	HUD = load("res://Scenes/HUD.tscn").instance()
-	
-	construct_panel.visible = false
-	$Panels/Control.add_child(construct_panel)
 
-	shop_panel.visible = false
-	$Panels/Control.add_child(shop_panel)
-
-	craft_panel.visible = false
-	$Panels/Control.add_child(craft_panel)
-
-	vehicle_panel.visible = false
-	$Panels/Control.add_child(vehicle_panel)
-
-	RC_panel.visible = false
-	$Panels/Control.add_child(RC_panel)
-
-	MU_panel.visible = false
-	$Panels/Control.add_child(MU_panel)
-
-	SC_panel.visible = false
-	$Panels/Control.add_child(SC_panel)
-
-	GF_panel.visible = false
-	$Panels/Control.add_child(GF_panel)
-
-	inventory.visible = false
-	$Panels/Control.add_child(inventory)
-
-	dimension.visible = false
-	add_child(dimension)
 	var save_game = File.new()
 	if save_game.file_exists("user://Save1/main.hx3"):
 		save_game.open("user://Save1/main.hx3", File.READ)
@@ -503,7 +476,40 @@ func _load_game():
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
 	if not TEST:
-		long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
+		long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")	
+	
+	construct_panel.visible = false
+	$Panels/Control.add_child(construct_panel)
+
+	shop_panel.visible = false
+	$Panels/Control.add_child(shop_panel)
+
+	ship_panel.visible = false
+	$Panels/Control.add_child(ship_panel)
+
+	craft_panel.visible = false
+	$Panels/Control.add_child(craft_panel)
+
+	vehicle_panel.visible = false
+	$Panels/Control.add_child(vehicle_panel)
+
+	RC_panel.visible = false
+	$Panels/Control.add_child(RC_panel)
+
+	MU_panel.visible = false
+	$Panels/Control.add_child(MU_panel)
+
+	SC_panel.visible = false
+	$Panels/Control.add_child(SC_panel)
+
+	GF_panel.visible = false
+	$Panels/Control.add_child(GF_panel)
+
+	inventory.visible = false
+	$Panels/Control.add_child(inventory)
+
+	dimension.visible = false
+	add_child(dimension)
 
 func popup(txt, dur):
 	var node = $UI/Popup

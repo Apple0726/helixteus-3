@@ -51,9 +51,15 @@ margin_right = 187.0
 margin_bottom = 32.0
 text = "10 / 10"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Control2" type="Control" parent="."]
 margin_left = 191.0
-margin_right = 231.0
+margin_right = 201.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 10, 0 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 205.0
+margin_right = 245.0
 margin_bottom = 50.0
 alignment = 1
 __meta__ = {
@@ -99,8 +105,8 @@ margin_bottom = 14.0
 text = "10"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
-margin_left = 235.0
-margin_right = 275.0
+margin_left = 249.0
+margin_right = 289.0
 margin_bottom = 50.0
 alignment = 1
 __meta__ = {

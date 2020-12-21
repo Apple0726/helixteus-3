@@ -20,7 +20,7 @@ var w_2_3 = preload("res://Scenes/HX/Weapons/2_3.tscn")
 
 var star:Sprite#Shown right before HX magic
 
-var ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+var ship_data# = [{"lv":1, "HP":25, "total_HP":25, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 var HX_data = []
 var HXs = []
 var HX_c_d:Dictionary = {}#HX_custom_data
@@ -41,6 +41,10 @@ var stage
 
 func _ready():
 	randomize()
+	if OS.get_latin_keyboard_variant() == "AZERTY":
+		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["M", "ù", "X"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+	else:
+		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % [";", "'", "X"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
@@ -124,6 +128,13 @@ func _input(event):
 		ship_dir = "left"
 	elif Input.is_action_just_released("right"):
 		ship_dir = ""
+	if $Help.modulate.a == 1 and event is InputEventKey:
+		game.help.battle = false
+		$Help.modulate.a = 0
+		tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
+		tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
+		tween.start()
+		enemy_attack()
 
 func display_HX_info(type:String):
 	var i:int = 0
@@ -141,10 +152,10 @@ func _on_Back_pressed():
 
 var ship_dir:String = ""
 
-func damage_HX(id:int, dmg:float):
+func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("HX/HP").value = HX_data[id].HP
-	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6)
+	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
 
 func hit_formula(acc:float, eva:float):
 	return 1 / (1 + eva / pow(acc, 1.4))
@@ -182,7 +193,6 @@ func _process(delta):
 		if weapon.position.x > w_c_d[weapon.name].lim and not w_c_d[weapon.name].has_hit:
 			var w_data = "%s_data" % [weapon_type]
 			var t = w_c_d[weapon.name].target
-			var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[w_c_d[weapon.name].target].def
 			if t == -1:
 				remove_weapon_b = true
 				var light = Sprite.new()
@@ -197,7 +207,11 @@ func _process(delta):
 					if HX_data[i].HP <= 0:
 						continue
 					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[i].eva):
-						damage_HX(i, dmg)
+						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[i].def
+						var crit = randf() < 0.1
+						if crit:
+							dmg *= 1.5
+						damage_HX(i, dmg, crit)
 						light_hit = true
 					else:
 						Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
@@ -205,7 +219,11 @@ func _process(delta):
 					weapon_XPs[sh].light += 1
 			else:
 				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[t].eva):
-					damage_HX(t, dmg)
+					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[w_c_d[weapon.name].target].def
+					var crit = randf() < 0.1
+					if crit:
+						dmg *= 1.5
+					damage_HX(t, dmg, crit)
 					weapon_XPs[sh][weapon_type] += 1
 					remove_weapon_b = true
 				else:
@@ -378,6 +396,7 @@ func _on_Timer_timeout():
 		victory_panel.ship_data = ship_data
 		victory_panel.weapon_XPs = weapon_XPs
 		victory_panel.rect_position = Vector2(108, 60)
+		victory_panel.p_id = game.c_p
 		add_child(victory_panel)
 		return
 	if HXs_rekt >= (wave + 1) * 4:
@@ -394,18 +413,28 @@ func _on_Timer_timeout():
 			$Current.visible = true
 			$Back.visible = true
 
+var tween:Tween
 func enemy_attack():
-	if curr_en == len(HX_data):
-		curr_sh = 0
-		curr_en = wave * 4
-		stage = BattleStages.CHOOSING
-		$Timer.wait_time = 1.0
-		$FightPanel.visible = true
-		$Back.visible = true
-		$Current.visible = true
+	if game and game.help.battle:
+		tween = Tween.new()
+		add_child(tween)
+		$Help.modulate.a = 0
+		$Help.visible = true
+		tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
+		tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
+		tween.start()
 	else:
-		call("atk_%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)], curr_en)
-		curr_en += 1
+		if curr_en == len(HX_data):
+			curr_sh = 0
+			curr_en = wave * 4
+			stage = BattleStages.CHOOSING
+			$Timer.wait_time = 1.0
+			$FightPanel.visible = true
+			$Back.visible = true
+			$Current.visible = true
+		else:
+			call("atk_%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)], curr_en)
+			curr_en += 1
 
 func put_magic(id:int):
 	star = Sprite.new()
@@ -460,9 +489,9 @@ func atk_2_1(id:int):
 		var pillar = w_2_1.instance()
 		if i % 2 == 0:
 			pillar.scale.y *= -1
-			pillar.position.y = rand_range(-50, 290)
+			pillar.position.y = rand_range(-50, 280)
 		else:
-			pillar.position.y = rand_range(430, 770)
+			pillar.position.y = rand_range(440, 770)
 		pillar.position.x = 1400
 		add_child(pillar)
 		pillar.add_to_group("w_2_1")

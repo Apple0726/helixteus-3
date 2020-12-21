@@ -483,7 +483,7 @@ func _input(event):
 						else:
 							if game.show.SP:
 								game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)
-							else:
+							elif not game.get_node("UI/PopupBackground").visible:
 								game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 		game.HUD.refresh()
 		if game.planet_HUD:
