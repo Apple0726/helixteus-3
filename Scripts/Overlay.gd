@@ -14,10 +14,12 @@ func refresh_overlay():
 		"galaxy":
 			option_btn.add_item(tr("NUMBER_OF_PLANETS"))
 			option_btn.add_item(tr("SYSTEM_ENTERED"))
+			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("COLDEST_STAR_TEMPERATURE"))
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
+			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("MAGNETIC_FIELD_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
 	$Panel/HBoxContainer/CheckBox.pressed = game.overlay_data[game.c_v].visible
@@ -34,27 +36,44 @@ func _on_CheckBox_pressed():
 func _on_OptionButton_item_selected(index):
 	refresh_options(index)
 
-func refresh_options(index:int):
+func get_obj_min_max(obj:String, property:String):
+	var overlays = game.view.obj.overlays
+	var _min = game["%s_data" % [obj]][overlays[0].id][property]
+	var _max = _min
+	for i in range(1, len(overlays)):
+		var id:int = overlays[i].id
+		var prop = game["%s_data" % [obj]][id][property]
+		if prop < _min:
+			_min = prop
+		if prop > _max:
+			_max = prop
+	return {"_min":_min, "_max":_max}
+
+func get_CST_min_max():
+	var overlays = game.view.obj.overlays
+	var _min = game.get_coldest_star_temp(overlays[0].id)
+	var _max = _min
+	for i in range(1, len(overlays)):
+		var id:int = overlays[i].id
+		var T = game.get_coldest_star_temp(id)
+		if T < _min:
+			_min = T
+		if T > _max:
+			_max = T
+	return {"_min":_min, "_max":_max}
+
+func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var is_int:bool = true
+	var min_max:Dictionary
 	match game.c_v:
 		"galaxy":
 			match index:
 				0:
-					editable = true
-					$Panel/LeftNum.text = "%s" % [c_vl.left]
-					$Panel/RightNum.text = "%s+" % [c_vl.right]
-				1:
-					editable = false
-					$Panel/LeftNum.text = tr("YES")
-					$Panel/RightNum.text = tr("NO")
-				2:
-					editable = true
-					$Panel/LeftNum.text = "%s K" % [c_vl.left]
-					$Panel/RightNum.text = "%s+ K" % [c_vl.right]
-		"cluster":
-			match index:
-				0:
+					if recalculate:
+						min_max = get_obj_min_max("system", "planet_num")
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
@@ -63,14 +82,62 @@ func refresh_options(index:int):
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
 				2:
+					if recalculate:
+						min_max = get_obj_min_max("system", "diff")
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					is_int = false
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
+				3:
+					if recalculate:
+						min_max = get_CST_min_max()#CST: coldest star temperature
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					$Panel/LeftNum.text = "%s K" % [c_vl.left]
+					$Panel/RightNum.text = "%s K" % [c_vl.right]
+		"cluster":
+			match index:
+				0:
+					if recalculate:
+						min_max = get_obj_min_max("galaxy", "system_num")
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
+				1:
+					editable = false
+					$Panel/LeftNum.text = tr("YES")
+					$Panel/RightNum.text = tr("NO")
+				2:
+					if recalculate:
+						min_max = get_obj_min_max("galaxy", "diff")
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					is_int = false
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
+				3:
+					if recalculate:
+						min_max = get_obj_min_max("galaxy", "B_strength")
+						c_vl.left = min_max._min * game.pow10(1, 9)
+						c_vl.right = min_max._max * game.pow10(1, 9)
 					editable = true
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
-				3:
+				4:
+					if recalculate:
+						min_max = get_obj_min_max("galaxy", "dark_matter")
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNum.text = "<%s" % [c_vl.left]
-					$Panel/RightNum.text = ">%s" % [c_vl.right]
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
 	if editable:
 		$Panel/LeftNum["custom_colors/font_color"] = Color.yellow
 		$Panel/RightNum["custom_colors/font_color"] = Color.yellow
@@ -127,7 +194,7 @@ func apply_changes():
 		$Panel/RightNumEdit.visible = false
 	$Panel/Done.visible = false
 	hovered_over = ""
-	refresh_options(option_btn.selected)
+	refresh_options(option_btn.selected, false)
 
 func _on_Done_pressed():
 	apply_changes()

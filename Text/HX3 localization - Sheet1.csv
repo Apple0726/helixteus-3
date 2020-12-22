@@ -24,8 +24,8 @@ MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀
 MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composición del manto,맨틀 구성
 CORE,Core,Noyau,Nucleo,,Kern,Núcleo,핵
 CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composición del núcleo,핵 구성
-TRACE,Trace,Autres,Altri,,Spuren,Buscar,
-TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Buscar elementos,
+TRACE,Trace,Autres,Altri,,Spuren,Otros,
+TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Otros elementos,
 NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,
 NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음
 BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기
@@ -37,12 +37,16 @@ MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Láctea,우리은�
 LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,
 LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercúmulo de Laniakea,
 PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성
-PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성들
+PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성
 STAR_SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계
+SYSTEMS,Systems,Systèmes,Sistemi,,,,
 GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하
+GALAXIES,Galaxies,Galaxies,Galassie,,,,
 GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,,Galaxiengruppe,Grupo galáctico,
 GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,,Galaxienhaufen,Clúster galáctico,
+CLUSTERS,Clusters,Amas,Ammassi,,,,
 SUPERCLUSTER,Supercluster,Superamas,Superammasso,,Supergalaxienhaufen,Supercúmulo,
+SUPERCLUSTERS,Superclusters,Superamas,Superammassi,,,,
 UNIVERSE,Universe,Univers,Universo,,Universum,Universo,우주
 DIMENSION,Dimension,Dimension,Dimensione,,Dimensionen,Dimensión,차원
 VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema,,Entdeckte Galaxien in diesem System Anzeigen,Ver la galaxia en donde se encuentra este sistema,
@@ -58,10 +62,10 @@ DISTANCE_FROM_STAR,Distance from star,Distance de l'étoile,Distanza dalla stell
 SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächentemperatur,Temperatura en la superficie,
 ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,Presión atmosférica,
 MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver más detalles,
-SYSTEM_INFO,%s\nPlanets: %s,%s\nPlanètes: %s,%s\nPianeti: %s,,%s\nPlaneten: %s,%s\nPlanetas: %s,
-GALAXY_INFO,%s\nSystems: %s\nMagnetic field strength: %s nT\nDark matter: %s,%s\nSystèmes: %s\nIntensité du champ magnétique: %s nT\nMatière noire: %s,%s\nSistemi: %s\nIntensità del campo magnetico: %s nT\nMateria oscura: %s,,,%s\nSystems: %s\nIntensidad del campo magnético: %s nT\nMateria oscura: %s,
-CLUSTER_INFO,%s\nGalaxies: %s,%s\nGalaxies: %s,%s\nGalassie: %s,,%s\nGalaxien: %s,%s\nGalaxias: %s,
-SUPERCLUSTER_INFO,%s\nClusters: %s\nDark energy: %s,%s\nAmas: %sÉnergie noire,%s\nAmmassi: %s\nEnergia oscura: %s,,,%s\nClústeres: %s\nEnergía oscura: %s,
+DARK_ENERGY,Dark energy,Énergie noire,Energia oscura,,,,
+DARK_MATTER,Dark matter,Matière noire,Materia oscura,,,,
+B_STRENGTH,Magnetic field strength,Intensité du champ magnétique,Intensità del campo magnetico,,,,
+DIFFICULTY,Difficulty,Difficulté,Difficoltà,,,,난이도
 DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들
 UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nDouble clic pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,,Anklicken für weiter details \n Doppelklick um das Universum zu betreten,Haz click para ver más detalles\nDoble click para entrar a este universo,정보 보기: 클릭\n우주 들어가기: 더블 클릭
 DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),,Dimensionenreste (DR),Residuos dimensionales (RD),
@@ -425,7 +429,7 @@ MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피
 CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타
 ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률
 EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율
-BATTLE_HELP,Press left or %s to move your ship up\nPress right or %s to move your ship down\nHold %s to move the ship faster,,,,,,
+BATTLE_HELP,Press up or %s to move your ship up\nPress down or %s to move your ship down\nHold %s to move the ship faster,,,,,,
 SHOW_WEAPON_XPS,Show weapon XPs,,,,,,
 BULLET,Bullet,,,,,,
 BULLET_DESC,Average damage and accuracy weapon.,,,,,,
@@ -434,3 +438,5 @@ BOMB,Bomb,,,,,,
 BOMB_DESC,Very powerful but easy for enemies to dodge.,,,,,,
 LIGHT,Light,,,,,,
 LIGHT_DESC,Very low damage but hits all enemies and has good accuracy.,,,,,,
+BASE_DAMAGE,Base damage,,,,,,
+BASE_ACCURACY,Base accuracy,,,,,,

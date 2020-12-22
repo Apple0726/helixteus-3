@@ -29,7 +29,7 @@ func _ready():
 
 func on_cluster_over (id:int):
 	var c_i = game.cluster_data[id]
-	game.show_tooltip(tr("CLUSTER_INFO") % [c_i.name, c_i.galaxy_num])
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [c_i.name, tr("GALAXIES"), c_i.galaxy_num, tr("DIFFICULTY"), c_i.diff])
 
 func on_cluster_out ():
 	game.hide_tooltip()

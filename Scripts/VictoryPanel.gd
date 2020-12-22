@@ -17,7 +17,7 @@ func _ready():
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		get_node("%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
 	$Grid/Panel1.show_weapon_stats = false
-	$Grid/Panel1.set_visibility()
+	$Grid/Panel1.refresh()
 
 func _process(delta):
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
@@ -45,5 +45,9 @@ func _on_close_button_pressed():
 	game.money += money
 	for weapon in ["bullet", "laser", "bomb", "light"]:
 		ship_data[0][weapon].XP += weapon_XPs[0][weapon]
+		if ship_data[0][weapon].XP >= ship_data[0][weapon].XP_to_lv and ship_data[0][weapon].lv < 7:
+			ship_data[0][weapon].XP -= ship_data[0][weapon].XP_to_lv
+			ship_data[0][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[0][weapon].lv - 1]
+			ship_data[0][weapon].lv += 1
 	game.planet_data[p_id].conquered = true
 	game.switch_view("system")

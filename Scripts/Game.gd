@@ -199,8 +199,8 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "director
 
 var hotbar:Array = []
 
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":250, "right":100000}]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":0.5, "right":15}, {"left":250, "right":100000}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":1, "right":100}, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
 }
 var STM_lv:int = 1#ship travel minigame level
 
@@ -326,7 +326,7 @@ func _ready():
 		show.plant_button = true
 		energy = 2000000
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":25, "total_HP":25, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		_load_game()
 	else:
 		var tween:Tween = Tween.new()
@@ -615,7 +615,6 @@ func add_upgrade_panel(ids:Array):
 	panels.push_front(upgrade_panel)
 	if upgrade_panel:
 		$Panels/Control.add_child(upgrade_panel)
-		move_child($Panels/Control, get_child_count())
 
 func remove_upgrade_panel():
 	if upgrade_panel:
@@ -960,7 +959,9 @@ func generate_clusters(id:int):
 	randomize()
 	var total_clust_num = supercluster_data[id]["cluster_num"]
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
-	for _i in range(1, total_clust_num):
+	for _i in range(0, total_clust_num):
+		if id == 0 and _i == 0:
+			continue
 		var c_i = {}
 		c_i["conquered"] = false
 		c_i["type"] = Helper.rand_int(0, 0)
@@ -981,6 +982,10 @@ func generate_clusters(id:int):
 		c_i["pos"] = pos
 		c_i["id"] = c_id
 		c_i["discovered"] = false
+		if id == 0:
+			c_i.diff = clever_round(1 + pos.length(), 3)
+		else:
+			c_i.diff = clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2), 3)
 		supercluster_data[id]["clusters"].append(c_id)
 		cluster_data.append(c_i)
 	if id != 0:
@@ -1065,6 +1070,10 @@ func generate_galaxies(id:int):
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
 			cluster_data[id]["galaxies"].append(0)
 		else:
+			if id == 0:
+				g_i.diff = clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 100, 3)
+			else:
+				g_i.diff = clever_round(cluster_data[id].diff * rand_range(0.8, 1.2), 3)
 			cluster_data[id]["galaxies"].append(g_id)
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -1185,23 +1194,24 @@ func generate_systems(id:int):
 					temp = rand_range(10000, 60000)
 				star_size = rand_range(0.006, 0.03)
 				mass = rand_range(0.4, 1.2)
-			if mass > 0.25 and randf() < 0.08:
-				star_type = "giant"
-				star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
-			if star_type == "main-sequence":
-				if randf() < 0.01:
-					mass = rand_range(10, 50)
-					star_type = "supergiant"
-					star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
-				elif randf() < 0.0015:
-					mass = rand_range(5, 30)
-					star_type = "hypergiant"
-					star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
-					var tier = 1
-					while randf() < 0.2:
-						tier += 1
-						star_type = "hypergiant " + get_roman_num(tier)
-						star_size *= 1.2
+			else:
+				if mass > 0.25 and randf() < 0.08:
+					star_type = "giant"
+					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
+				if star_type == "main-sequence":
+					if randf() < 0.01:
+						mass = rand_range(10, 50)
+						star_type = "supergiant"
+						star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
+					elif randf() < 0.0015:
+						mass = rand_range(5, 30)
+						star_type = "hypergiant"
+						star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
+						var tier = 1
+						while randf() < 0.2:
+							tier += 1
+							star_type = "hypergiant " + get_roman_num(tier)
+							star_size *= 1.2
 			
 			star_class = get_star_class(temp)
 			#star["luminosity"] = pow(mass, rand_range(3, 4))
@@ -1297,6 +1307,10 @@ func generate_systems(id:int):
 			obj_shapes.append({"pos":s_i["pos"], "radius":radius, "outer_radius":s_i["pos"].length() + radius})
 			galaxy_data[id]["systems"].append(0)
 		else:
+			if id == 0:
+				s_i.diff = clever_round(1 + pos.distance_to(system_data[0].pos) / 5000, 3)
+			else:
+				s_i.diff = clever_round(galaxy_data[id].diff * combined_star_mass * rand_range(0.8, 1.2), 3)
 			galaxy_data[id]["systems"].append(s_id)
 			system_data.append(s_i)
 	if progress == 1:
@@ -1376,12 +1390,12 @@ func generate_planets(id:int):
 		planet_data.append(p_i)
 		HX_data.append([])
 		for k in range(5):
-			var lv = Helper.rand_int(1, 4)
-			var HP = round(rand_range(1, 1.5) * 20 * pow(1.3, lv))
-			var atk = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
-			var def = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
-			var acc = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
-			var eva = round(rand_range(1, 1.5) * 10 * pow(1.3, lv))
+			var lv = round(rand_range(0.6, 1.6) * 1)
+			var HP = round(rand_range(1, 1.5) * 15 * pow(1.3, lv))
+			var atk = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
+			var def = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
+			var acc = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
+			var eva = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
 			HX_data[len(HX_data) - 1].append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva})
 	if id != 0:
 		var view_zoom = 400 / max_distance

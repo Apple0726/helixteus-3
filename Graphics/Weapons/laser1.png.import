@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bullet.png-7085da1298bf28e3c4a8fac76327d7e4.stex"
+path="res://.import/laser1.png-a6a246bcf9a9ff96dab15f46024c38a4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Weapons/bullet.png"
-dest_files=[ "res://.import/bullet.png-7085da1298bf28e3c4a8fac76327d7e4.stex" ]
+source_file="res://Graphics/Weapons/laser1.png"
+dest_files=[ "res://.import/laser1.png-a6a246bcf9a9ff96dab15f46024c38a4.stex" ]
 
 [params]
 

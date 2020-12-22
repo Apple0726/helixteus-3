@@ -51,7 +51,7 @@ collision_mask = 3
 position = Vector2( -20, 128 )
 scale = Vector2( 2.3, 2.3 )
 
-[node name="Sprite" type="Sprite" parent="Info"]
+[node name="Icon" type="Sprite" parent="Info"]
 visible = false
 position = Vector2( -18, 0 )
 scale = Vector2( 0.23, 0.23 )

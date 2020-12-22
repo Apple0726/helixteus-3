@@ -38,7 +38,7 @@ func _ready():
 
 func on_system_over (id:int):
 	var s_i = game.system_data[id]
-	game.show_tooltip(tr("SYSTEM_INFO") % [s_i.name, s_i.planet_num])
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [s_i.name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
 
 func on_system_out ():
 	game.hide_tooltip()
@@ -64,6 +64,10 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		2:
+			for overlay in overlays:
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
+				overlay.circle.modulate = gradient.interpolate(offset)
+		3:
 			for overlay in overlays:
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)

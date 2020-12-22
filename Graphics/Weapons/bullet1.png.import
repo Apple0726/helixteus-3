@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bomb.png-29f7f3fc8a278a6f977a7a2f855fae0f.stex"
+path="res://.import/bullet1.png-33c3ec1d31f7a14360e8ec4e48ea5090.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Weapons/bomb.png"
-dest_files=[ "res://.import/bomb.png-29f7f3fc8a278a6f977a7a2f855fae0f.stex" ]
+source_file="res://Graphics/Weapons/bullet1.png"
+dest_files=[ "res://.import/bullet1.png-33c3ec1d31f7a14360e8ec4e48ea5090.stex" ]
 
 [params]
 
