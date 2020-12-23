@@ -91,7 +91,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
+[node name="Label2" type="Label" parent="."]
+margin_left = 498.0
+margin_top = 186.0
+margin_right = 818.0
+margin_bottom = 210.0
+custom_fonts/font = SubResource( 3 )
+text = "AUTOSAVE_INTERVAL"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 775.113
+margin_top = 217.715
+margin_right = 929.113
+margin_bottom = 241.715
+custom_fonts/font = SubResource( 3 )
+text = "30 s"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Autosave" type="HSlider" parent="."]
+margin_left = 524.0
+margin_top = 196.0
+margin_right = 764.0
+margin_bottom = 260.0
+min_value = 1.0
+max_value = 120.0
+value = 30.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
 margin_right = 896.0
 margin_bottom = 56.0
 custom_fonts/font = SubResource( 4 )
@@ -110,7 +146,19 @@ text = "Vsync (requires restart)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AutosaveLight" type="CheckButton" parent="."]
+margin_left = 558.035
+margin_top = 265.869
+margin_right = 786.035
+margin_bottom = 305.869
+text = "AUTOSAVE_LIGHT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
+[connection signal="value_changed" from="Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
+[connection signal="toggled" from="AutosaveLight" to="." method="_on_AutosaveLight_toggled"]

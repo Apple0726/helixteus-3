@@ -33,6 +33,7 @@ func refresh():
 		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
+	$XP/Label2.text = "%s / %s" % [game.ship_data[id].XP, game.ship_data[id].XP_to_lv]
 	set_visibility()
 	$Stats/HP.text = String(game.ship_data[id].total_HP)
 	$Stats/Atk.text = String(game.ship_data[id].atk)

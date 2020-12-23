@@ -6,7 +6,7 @@
 [ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 
-[sub_resource type="StyleBoxEmpty" id=2]
+[sub_resource type="StyleBoxEmpty" id=1]
 content_margin_left = 5.0
 content_margin_right = 5.0
 
@@ -22,28 +22,58 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -288.0
+margin_left = -320.0
 margin_top = -128.0
-margin_right = 288.0
-margin_bottom = 125.0
+margin_right = 320.0
+margin_bottom = 152.0
 grow_horizontal = 0
-rect_min_size = Vector2( 576, 0 )
+rect_min_size = Vector2( 576, 280 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Upgrade" type="Button" parent="UpgradePanel"]
+margin_left = 432.0
+margin_top = 232.0
+margin_right = 640.0
+margin_bottom = 280.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "UPGRADE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
+margin_left = 19.0
+margin_top = 232.0
+margin_right = 440.0
+margin_bottom = 280.0
+rect_min_size = Vector2( 200, 40 )
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Costs" type="GridContainer" parent="UpgradePanel/ScrollContainer"]
+custom_constants/vseparation = 5
+custom_constants/hseparation = 20
+columns = 3
+
 [node name="VBoxContainer" type="VBoxContainer" parent="UpgradePanel"]
-margin_right = 576.0
-margin_bottom = 246.0
-custom_constants/separation = 0
+margin_right = 640.0
+margin_bottom = 184.0
+custom_constants/separation = -1
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="UpgradePanel/VBoxContainer"]
-margin_right = 576.0
-margin_bottom = 38.0
+margin_top = 2.0
+margin_right = 640.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 0, 38 )
 size_flags_vertical = 0
 text = "UPGRADE"
@@ -54,9 +84,9 @@ __meta__ = {
 }
 
 [node name="PathButtons" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 38.0
-margin_right = 576.0
-margin_bottom = 73.0
+margin_top = 39.0
+margin_right = 640.0
+margin_bottom = 74.0
 rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 custom_constants/separation = -2
@@ -65,7 +95,7 @@ __meta__ = {
 }
 
 [node name="Path1" type="Button" parent="UpgradePanel/VBoxContainer/PathButtons"]
-margin_right = 576.0
+margin_right = 640.0
 margin_bottom = 35.0
 size_flags_horizontal = 3
 
@@ -85,9 +115,9 @@ size_flags_horizontal = 3
 
 [node name="Control2" type="Control" parent="UpgradePanel/VBoxContainer"]
 margin_top = 73.0
-margin_right = 576.0
-margin_bottom = 153.0
-rect_min_size = Vector2( 0, 80 )
+margin_right = 640.0
+margin_bottom = 133.0
+rect_min_size = Vector2( 0, 60 )
 size_flags_horizontal = 3
 
 [node name="CurrentLv" type="Label" parent="UpgradePanel/VBoxContainer/Control2"]
@@ -139,17 +169,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Control" type="Control" parent="UpgradePanel/VBoxContainer"]
+margin_top = 132.0
+margin_right = 640.0
+margin_bottom = 157.0
+rect_min_size = Vector2( 0, 25 )
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 153.0
-margin_right = 576.0
-margin_bottom = 179.0
+margin_left = 45.0
+margin_top = 156.0
+margin_right = 595.0
+margin_bottom = 182.0
+rect_min_size = Vector2( 550, 0 )
+size_flags_horizontal = 4
 alignment = 1
 
 [node name="Current" type="RichTextLabel" parent="UpgradePanel/VBoxContainer/HBoxContainer2"]
-margin_right = 239.0
+margin_right = 226.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
-custom_styles/normal = SubResource( 2 )
+custom_styles/normal = SubResource( 1 )
 bbcode_enabled = true
 bbcode_text = "[center]1 mineral/sec[/center]"
 text = "1 mineral/sec"
@@ -159,8 +198,8 @@ __meta__ = {
 }
 
 [node name="Arrow" type="TextureRect" parent="UpgradePanel/VBoxContainer/HBoxContainer2"]
-margin_left = 243.0
-margin_right = 333.0
+margin_left = 230.0
+margin_right = 320.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 90, 26 )
 size_flags_vertical = 3
@@ -169,8 +208,8 @@ expand = true
 stretch_mode = 6
 
 [node name="Next" type="RichTextLabel" parent="UpgradePanel/VBoxContainer/HBoxContainer2"]
-margin_left = 337.0
-margin_right = 576.0
+margin_left = 324.0
+margin_right = 550.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -181,61 +220,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="Control" parent="UpgradePanel/VBoxContainer"]
-margin_top = 179.0
-margin_right = 576.0
-margin_bottom = 209.0
-rect_min_size = Vector2( 0, 30 )
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="UpgradePanel/VBoxContainer"]
-margin_top = 209.0
-margin_right = 576.0
-margin_bottom = 249.0
-alignment = 2
-
-[node name="Control" type="Control" parent="UpgradePanel/VBoxContainer/HBoxContainer3"]
-margin_right = 15.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 15, 0 )
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel/VBoxContainer/HBoxContainer3"]
-margin_left = 19.0
-margin_right = 219.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 200, 40 )
-rect_clip_content = false
-scroll_horizontal_enabled = false
-scroll_vertical_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Costs" type="GridContainer" parent="UpgradePanel/VBoxContainer/HBoxContainer3/ScrollContainer"]
-custom_constants/vseparation = 5
-custom_constants/hseparation = 30
-columns = 3
-
-[node name="Upgrade" type="Button" parent="UpgradePanel/VBoxContainer/HBoxContainer3"]
-margin_left = 223.0
-margin_right = 576.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-theme = ExtResource( 3 )
-text = "UPGRADE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="CloseButton" parent="UpgradePanel" instance=ExtResource( 5 )]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -40.0
 margin_right = 0.0
 margin_bottom = 40.0
+[connection signal="pressed" from="UpgradePanel/Upgrade" to="." method="_on_Upgrade_pressed"]
+[connection signal="resized" from="UpgradePanel/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
 [connection signal="pressed" from="UpgradePanel/VBoxContainer/PathButtons/Path1" to="." method="_on_Path1_pressed"]
 [connection signal="pressed" from="UpgradePanel/VBoxContainer/PathButtons/Path2" to="." method="_on_Path2_pressed"]
 [connection signal="pressed" from="UpgradePanel/VBoxContainer/PathButtons/Path3" to="." method="_on_Path3_pressed"]
 [connection signal="value_changed" from="UpgradePanel/VBoxContainer/Control2/NextLv" to="." method="_on_NextLv_value_changed"]
-[connection signal="resized" from="UpgradePanel/VBoxContainer/HBoxContainer3/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
-[connection signal="pressed" from="UpgradePanel/VBoxContainer/HBoxContainer3/Upgrade" to="." method="_on_Upgrade_pressed"]
 [connection signal="close_button_pressed" from="UpgradePanel/CloseButton" to="." method="_on_close_button_pressed"]

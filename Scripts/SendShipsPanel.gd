@@ -14,8 +14,8 @@ func _ready():
 	set_polygon($Background.rect_size)
 	$PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
 	$TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
-	$VBoxContainer/HBoxContainer/ScrollContainer.get_v_scrollbar().connect("mouse_entered", self, "on_mouse_entered")
-	$VBoxContainer/HBoxContainer/ScrollContainer.get_v_scrollbar().connect("mouse_exited", self, "on_mouse_entered")
+	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_entered", self, "on_mouse_entered")
+	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_exited", self, "on_mouse_exited")
 	refresh()
 
 func on_mouse_entered():
@@ -75,19 +75,19 @@ func refresh():
 		distance = 1
 	depart_p_id = game.ships_c_p
 	calc_costs()
-	for child in $VBoxContainer/HBoxContainer/ScrollContainer/Enemies.get_children():
-		if not child is Label:
-			$VBoxContainer/HBoxContainer/ScrollContainer/Enemies.remove_child(child)
+	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
+		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
 	for HX_data in game.HX_data[dest_p_id]:
 		var HX_data_node = HX_data_scene.instance()
 		HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s.png" % [HX_data.type])
-		HX_data_node.get_node("HP").text = "%s / %s" % [HX_data.HP, HX_data.total_HP]
+		HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, 4), Helper.format_num(HX_data.total_HP, 4)]
 		HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
-		HX_data_node.get_node("VBoxContainer/Atk/Label").text = String(HX_data.atk)
-		HX_data_node.get_node("VBoxContainer/Acc/Label").text = String(HX_data.acc)
-		HX_data_node.get_node("VBoxContainer2/Def/Label").text = String(HX_data.def)
-		HX_data_node.get_node("VBoxContainer2/Eva/Label").text = String(HX_data.eva)
-		$VBoxContainer/HBoxContainer/ScrollContainer/Enemies.add_child(HX_data_node)
+		HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, 4)
+		HX_data_node.get_node("VBoxContainer/Acc/Label").text = Helper.format_num(HX_data.acc, 4)
+		HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, 4)
+		HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
+		$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
+		HX_data_node.rect_min_size.y = 70
 
 func _on_Send_pressed():
 	if game.energy >= energy_cost:
@@ -139,7 +139,8 @@ func _on_close_button_pressed():
 	game.toggle_panel(self)
 
 func _on_ScrollContainer_mouse_entered():
-	game.view.scroll_view = false
+	if modulate.a == 1:
+		game.view.scroll_view = false
 
 
 func _on_ScrollContainer_mouse_exited():

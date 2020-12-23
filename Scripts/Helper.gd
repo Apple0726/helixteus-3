@@ -27,7 +27,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		text = format_num(rsrc_cost, threshold) + mass_str
+		text = format_num(game.clever_round(rsrc_cost, 3), threshold) + mass_str
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
 
@@ -144,7 +144,7 @@ func get_plant_produce(name:String):
 			return "lead"
 
 func get_wid(size:float):
-	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 500)
+	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
 
 func get_dir_from_name(name:String):
 	if name.substr(0, 7) == "speedup":
@@ -197,6 +197,10 @@ func format_num(num:float, threshold:int):
 			suff = "M"
 		elif p < 12:
 			suff = "G"
+		elif p < 15:
+			suff = "T"
+		elif p < 18:
+			suff = "P"
 		return "%s%s" % [game.clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers

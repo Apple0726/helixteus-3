@@ -17,28 +17,28 @@ __meta__ = {
 
 [node name="HX" type="TextureRect" parent="."]
 margin_right = 50.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 50, 50 )
 expand = true
 stretch_mode = 6
 
 [node name="Lv" type="Label" parent="."]
 margin_left = 54.0
-margin_top = 18.0
+margin_top = 93.0
 margin_right = 80.0
-margin_bottom = 32.0
+margin_bottom = 107.0
 text = "Lv 1"
 
 [node name="Control" type="Control" parent="."]
 margin_left = 84.0
 margin_right = 114.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 30, 0 )
 
 [node name="HPIcon" type="TextureRect" parent="."]
 margin_left = 118.0
 margin_right = 138.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 20, 0 )
 texture = ExtResource( 5 )
 expand = true
@@ -46,30 +46,30 @@ stretch_mode = 6
 
 [node name="HP" type="Label" parent="."]
 margin_left = 142.0
-margin_top = 18.0
+margin_top = 93.0
 margin_right = 187.0
-margin_bottom = 32.0
+margin_bottom = 107.0
 text = "10 / 10"
 
 [node name="Control2" type="Control" parent="."]
 margin_left = 191.0
 margin_right = 201.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 10, 0 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 205.0
 margin_right = 245.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Atk" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 9.0
+margin_top = 84.0
 margin_right = 40.0
-margin_bottom = 23.0
+margin_bottom = 98.0
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/Atk"]
 margin_right = 20.0
@@ -86,9 +86,9 @@ margin_bottom = 14.0
 text = "10"
 
 [node name="Acc" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 27.0
+margin_top = 102.0
 margin_right = 40.0
-margin_bottom = 41.0
+margin_bottom = 116.0
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/Acc"]
 margin_right = 20.0
@@ -107,16 +107,16 @@ text = "10"
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
 margin_left = 249.0
 margin_right = 289.0
-margin_bottom = 50.0
+margin_bottom = 200.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Def" type="HBoxContainer" parent="VBoxContainer2"]
-margin_top = 9.0
+margin_top = 84.0
 margin_right = 40.0
-margin_bottom = 23.0
+margin_bottom = 98.0
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Def"]
 margin_right = 20.0
@@ -133,9 +133,9 @@ margin_bottom = 14.0
 text = "10"
 
 [node name="Eva" type="HBoxContainer" parent="VBoxContainer2"]
-margin_top = 27.0
+margin_top = 102.0
 margin_right = 40.0
-margin_bottom = 41.0
+margin_bottom = 116.0
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Eva"]
 margin_right = 20.0

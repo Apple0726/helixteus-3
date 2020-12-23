@@ -15,8 +15,8 @@ func _ready():
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
 	$Grid/Panel1/XP/Label.text = "+ %s" % [XP]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		get_node("%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
-	$Grid/Panel1.show_weapon_stats = false
+		get_node("Grid/Panel1/%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
+	$Grid/Panel1.show_weapon_XPs = true
 	$Grid/Panel1.refresh()
 
 func _process(delta):
@@ -37,7 +37,8 @@ func _on_close_button_pressed():
 		ship_data[0].XP -= ship_data[0].XP_to_lv
 		ship_data[0].XP_to_lv = round(ship_data[0].XP_to_lv * 1.3)
 		ship_data[0].lv += 1
-		ship_data[0].HP = round(ship_data[0].XP_to_lv * 1.2)
+		ship_data[0].total_HP = round(ship_data[0].total_HP * 1.2)
+		ship_data[0].HP = ship_data[0].total_HP
 		ship_data[0].atk = round(ship_data[0].atk * 1.2)
 		ship_data[0].def = round(ship_data[0].def * 1.2)
 		ship_data[0].acc = round(ship_data[0].acc * 1.2)

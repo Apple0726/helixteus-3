@@ -134,6 +134,7 @@ margin_left = 640.0
 margin_top = 360.0
 margin_right = 680.0
 margin_bottom = 400.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -577,6 +578,8 @@ margin_bottom = 106.0
 rect_min_size = Vector2( 0, 30 )
 text = "SETTINGS"
 align = 0
+
+[node name="Autosave" type="Timer" parent="."]
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
@@ -608,4 +611,6 @@ align = 0
 [connection signal="mouse_exited" from="Title/Languages/ru" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]

@@ -15,6 +15,7 @@ var expected_rsrc:Dictionary
 var rsrc_nodes:Array
 
 func _ready():
+	set_polygon($Background.rect_size)
 	set_process(false)
 
 func refresh():
@@ -87,9 +88,12 @@ func refresh():
 	hslider.max_value = min(total_stone, tile.path_2_value)
 
 func obj_to_array(elements:Dictionary):
+	var stone_qty = Helper.get_sum_of_dict(elements)
+	if stone_qty == 0:
+		return
 	var arr = []
 	for element in elements.keys():
-		arr.append({"element":element, "fraction":elements[element] / Helper.get_sum_of_dict(elements)})
+		arr.append({"element":element, "fraction":elements[element] / stone_qty})
 	arr.sort_custom(self, "sort_elements")
 	return arr
 
@@ -101,10 +105,13 @@ func sort_elements (a, b):
 
 func _on_Button_pressed():
 	if not tile.has("stone"):
+		var stone_qty = Helper.get_sum_of_dict(stone_to_crush)
+		if stone_qty == 0:
+			return
 		for el in game.stone:
 			game.stone[el] = max(0, game.stone[el] - stone_to_crush[el])
 		tile.stone = stone_to_crush
-		tile.stone_qty = Helper.get_sum_of_dict(stone_to_crush)
+		tile.stone_qty = stone_qty
 		tile.start_date = OS.get_system_time_msecs()
 		tile.expected_rsrc = expected_rsrc
 		game.HUD.refresh()

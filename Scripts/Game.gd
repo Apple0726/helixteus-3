@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var view_scene = preload("res://Scenes/Views/View.tscn")
@@ -136,6 +136,7 @@ var help:Dictionary = {
 			"aurora_desc":true,
 			"cave_desc":true,
 			"crater_desc":true,
+			"autosave_light_desc":true,
 			"tile_shortcuts":true,
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
@@ -199,13 +200,13 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "director
 
 var hotbar:Array = []
 
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":0.5, "right":15}, {"left":250, "right":100000}]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":1, "right":100}, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
-}
 var STM_lv:int = 1#ship travel minigame level
 
 ############ End save data ############
 
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":0.5, "right":15}, {"left":250, "right":100000}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":1, "right":100}, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
+}
 var save_u = false
 var save_sc = false
 var save_c = false
@@ -228,8 +229,8 @@ var cave
 var STM
 var battle
 
-var mat_info = {	"coal":{"value":5},#One kg of coal = $10
-					"glass":{"value":20},
+var mat_info = {	"coal":{"value":5},#One kg of coal = $5
+					"glass":{"value":40},
 					"sand":{"value":4},
 					"clay":{"value":12},
 					"soil":{"value":6},
@@ -281,10 +282,12 @@ var element = {	"Si":{"density":2.329},
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
 var bottom_info_action:String = ""
+var autosave_interval:int = 10
 
 var music_player = AudioStreamPlayer.new()
 
 func _ready():
+	HUD = load("res://Scenes/HUD.tscn").instance()
 	view = view_scene.instance()
 	add_child(view)
 	add_child(music_player)
@@ -301,11 +304,13 @@ func _ready():
 			switch_music(load("res://Audio/title1.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
+		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
+		autosave_interval = 10
 		Data.reload()
 	config.save("user://settings.cfg")
 	var dir = Directory.new()
-	dir.remove("user://Save1/main.hx3")
-	
+	if dir.file_exists("user://Save1/main.hx3"):
+		$Title/Menu/VBoxContainer/LoadGame.disabled = false
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
@@ -326,8 +331,8 @@ func _ready():
 		show.plant_button = true
 		energy = 2000000
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
-		_load_game()
+		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		new_game()
 	else:
 		var tween:Tween = Tween.new()
 		add_child(tween)
@@ -357,12 +362,136 @@ func switch_music(src):
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
 
-func _load_game():
-	$Title.visible = false
-	$UI/Settings.visible = true
-	#Loads planet scene
-	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+func load_game():
+	var save_game = File.new()
+	if save_game.file_exists("user://Save1/main.hx3"):
+		save_game.open("user://Save1/main.hx3", File.READ)
+		c_v = save_game.get_var()
+		l_v = save_game.get_var()
+		money = save_game.get_float()
+		minerals = save_game.get_float()
+		mineral_capacity = save_game.get_float()
+		stone = save_game.get_var()
+		energy = save_game.get_float()
+		SP = save_game.get_float()
+		DRs = save_game.get_float()
+		xp = save_game.get_float()
+		xp_to_lv = save_game.get_float()
+		c_u = save_game.get_64()
+		c_sc = save_game.get_64()
+		c_c = save_game.get_64()
+		c_g = save_game.get_64()
+		c_s = save_game.get_64()
+		c_p = save_game.get_64()
+		c_t = save_game.get_64()
+		lv = save_game.get_64()
+		stack_size = save_game.get_64()
+		auto_replace = save_game.get_8()
+		pickaxe = save_game.get_var()
+		science_unlocked = save_game.get_var()
+		mats = save_game.get_var()
+		mets = save_game.get_var()
+		help = save_game.get_var()
+		show = save_game.get_var()
+		universe_data = save_game.get_var()
+		supercluster_data = save_game.get_var()
+		cluster_data = save_game.get_var()
+		galaxy_data = save_game.get_var()
+		system_data = save_game.get_var()
+		planet_data = save_game.get_var()
+		HX_data = save_game.get_var()
+		cave_data = save_game.get_var()
+		#tile_data = save_game.get_var()
+		items = save_game.get_var()
+		hotbar = save_game.get_var()
+		MUs = save_game.get_var()
+		STM_lv = save_game.get_64()
+		rover_data = save_game.get_var()
+		ship_data = save_game.get_var()
+		ships_c_p = save_game.get_64()
+		ships_depart_pos = save_game.get_var()
+		ships_dest_pos = save_game.get_var()
+		ships_dest_p_id = save_game.get_64()
+		ships_travel_view = save_game.get_var()
+		ships_travel_start_date = save_game.get_64()
+		ships_travel_length = save_game.get_64()
+		save_game.close()
+		add_child(HUD)
+		if c_v in ["mining", "cave"]:
+			var planet_save:File = File.new()
+			var file_path:String = "user://Save1/Planets/%s.hx3" % [c_p]
+			planet_save.open(file_path, File.READ)
+			tile_data = planet_save.get_var()
+			planet_save.close()
+		switch_view(c_v, true)
+
+func new_game():
+	var dir = Directory.new()
+	if dir.open("user://Save1/Planets") == OK:
+		dir.list_dir_begin(true)
+		var file_name = dir.get_next()
+		while file_name != "":
+			dir.remove(file_name)
+			file_name = dir.get_next()
+	dir = Directory.new()
+	dir.make_dir("user://Save1")
+	dir.make_dir("user://Save1/Planets")
+	generate_planets(0)
+	#Home planet information
+	planet_data[2]["name"] = tr("HOME_PLANET")
+	planet_data[2]["conquered"] = true
+	planet_data[2]["size"] = rand_range(12000, 12100)
+	planet_data[2]["angle"] = PI / 2
+	planet_data[2]["tiles"] = []
+	planet_data[2]["discovered"] = false
+	planet_data[2].pressure = 1
+	planet_data[2].lake_1 = "water"
+	planet_data[2].erase("lake_2")
+	planet_data[2].liq_seed = 4
+	planet_data[2].liq_period = 100
+	planet_data[2].crust_start_depth = Helper.rand_int(35, 40)
+	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
+	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
+	planet_data[2].surface.coal.chance = 0.5
+	planet_data[2].surface.coal.amount = 100
+	planet_data[2].surface.soil.chance = 0.6
+	planet_data[2].surface.soil.amount = 60
+	planet_data[2].surface.cellulose.chance = 0.4
+	planet_data[2].surface.cellulose.amount = 10
 	
+	system_data[0].name = tr("SOLAR_SYSTEM")
+	galaxy_data[0].name = tr("MILKY_WAY")
+	cluster_data[0].name = tr("LOCAL_GROUP")
+	supercluster_data[0].name = tr("LANIAKEA")
+	
+	generate_tiles(2)
+	cave_data.append({"num_floors":5, "floor_size":40})
+	cave_data.append({"num_floors":8, "floor_size":50})
+	
+	for u_i in universe_data:
+		u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
+		u_i["mu_zero"] = pow10(1.257, -6)#H/m
+		u_i["planck"] = pow10(6.626, -34)#J.s
+		u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
+		u_i["charge"] = pow10(1.602, -19)#C
+		u_i["strong_force"] = 1.0
+		u_i["weak_force"] = 1.0
+		u_i["dark_matter"] = 1.0
+		u_i["difficulty"] = 1.0
+		u_i["multistar_systems"] = 1.0
+		u_i["rare_stars"] = 1.0
+		u_i["rare_materials"] = 1.0
+		u_i["time_speed"] = 1.0
+		u_i["radiation"] = 1.0
+		u_i["antimatter"] = 1.0
+		u_i["value"] = 1.0
+	c_v = "planet"
+	add_child(HUD)
+	add_planet()
+	if not TEST:
+		long_popup("This game is currently in very early access. Saves are wiped after most updates, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
+
+func add_panels():
 	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
 	shop_panel = load("res://Scenes/Panels/ShopPanel.tscn").instance()
@@ -375,108 +504,8 @@ func _load_game():
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
 	GF_panel = load("res://Scenes/Panels/GFPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
-	HUD = load("res://Scenes/HUD.tscn").instance()
-
-	var save_game = File.new()
-	if save_game.file_exists("user://Save1/main.hx3"):
-		save_game.open("user://Save1/main.hx3", File.READ)
-		c_v = save_game.get_var()
-		money = save_game.get_float()
-		minerals = save_game.get_float()
-		mineral_capacity = save_game.get_float()
-		energy = save_game.get_float()
-		SP = save_game.get_float()
-		DRs = save_game.get_float()
-		xp = save_game.get_float()
-		xp_to_lv = save_game.get_float()
-		c_u = save_game.get_64()
-		c_sc = save_game.get_64()
-		c_c = save_game.get_64()
-		c_g = save_game.get_64()
-		c_s = save_game.get_64()
-		c_p = save_game.get_64()
-		lv = save_game.get_64()
-		stack_size = save_game.get_64()
-		auto_replace = save_game.get_8()
-		pickaxe = save_game.get_var()
-		science_unlocked = save_game.get_var()
-		mats = save_game.get_var()
-		mets = save_game.get_var()
-		help = save_game.get_var()
-		show = save_game.get_var()
-#		universe_data = save_game.get_var()
-#		supercluster_data = save_game.get_var()
-#		cluster_data = save_game.get_var()
-#		galaxy_data = save_game.get_var()
-#		system_data = save_game.get_var()
-#		planet_data = save_game.get_var()
-#		tile_data = save_game.get_var()
-		items = save_game.get_var()
-		hotbar = save_game.get_var()
-		save_game.close()
-		add_child(HUD)
-		switch_view(c_v, true)
-	else:
-		var dir = Directory.new()
-		dir.make_dir("user://Save1")
-		dir.make_dir("user://Save1/Planets")
-		generate_planets(0)
-		#Home planet information
-		planet_data[2]["name"] = tr("HOME_PLANET")
-		planet_data[2]["conquered"] = true
-		planet_data[2]["size"] = rand_range(12000, 12100)
-		planet_data[2]["angle"] = PI / 2
-		planet_data[2]["tiles"] = []
-		planet_data[2]["discovered"] = false
-		planet_data[2].pressure = 1
-		planet_data[2].lake_1 = "water"
-		planet_data[2].erase("lake_2")
-		planet_data[2].liq_seed = 4
-		planet_data[2].liq_period = 100
-		planet_data[2].crust_start_depth = Helper.rand_int(35, 40)
-		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
-		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
-		planet_data[2].surface.coal.chance = 0.5
-		planet_data[2].surface.coal.amount = 100
-		planet_data[2].surface.soil.chance = 0.6
-		planet_data[2].surface.soil.amount = 60
-		planet_data[2].surface.cellulose.chance = 0.4
-		planet_data[2].surface.cellulose.amount = 10
-		
-		system_data[0].name = tr("SOLAR_SYSTEM")
-		galaxy_data[0].name = tr("MILKY_WAY")
-		cluster_data[0].name = tr("LOCAL_GROUP")
-		supercluster_data[0].name = tr("LANIAKEA")
-		
-		generate_tiles(2)
-		cave_data.append({"num_floors":5, "floor_size":40})
-		cave_data.append({"num_floors":8, "floor_size":50})
-		
-		for u_i in universe_data:
-			u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
-			u_i["mu_zero"] = pow10(1.257, -6)#H/m
-			u_i["planck"] = pow10(6.626, -34)#J.s
-			u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
-			u_i["charge"] = pow10(1.602, -19)#C
-			u_i["strong_force"] = 1.0
-			u_i["weak_force"] = 1.0
-			u_i["dark_matter"] = 1.0
-			u_i["difficulty"] = 1.0
-			u_i["multistar_systems"] = 1.0
-			u_i["rare_stars"] = 1.0
-			u_i["rare_materials"] = 1.0
-			u_i["time_speed"] = 1.0
-			u_i["radiation"] = 1.0
-			u_i["antimatter"] = 1.0
-			u_i["value"] = 1.0
-		c_v = "planet"
-		add_planet()
-		add_child(HUD)
-	
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
-	if not TEST:
-		long_popup("This game is currently in very early access. There is no saving yet, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")	
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
@@ -948,6 +977,7 @@ func generate_superclusters(id:int):
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
 		sc_i["discovered"] = false
+		sc_i.diff = clever_round(universe_data[id].difficulty * pos.length(), 3)
 		universe_data[id]["superclusters"].append(sc_id)
 		supercluster_data.append(sc_i)
 	if id != 0:
@@ -1073,7 +1103,7 @@ func generate_galaxies(id:int):
 			if id == 0:
 				g_i.diff = clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 100, 3)
 			else:
-				g_i.diff = clever_round(cluster_data[id].diff * rand_range(0.8, 1.2), 3)
+				g_i.diff = clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
 			cluster_data[id]["galaxies"].append(g_id)
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -1214,7 +1244,6 @@ func generate_systems(id:int):
 							star_size *= 1.2
 			
 			star_class = get_star_class(temp)
-			#star["luminosity"] = pow(mass, rand_range(3, 4))
 			star["luminosity"] = clever_round(4 * PI * pow(star_size * pow10(6.957, 8), 2) * pow10(5.67, -8) * pow(temp, 4) / pow10(3.828, 26))
 			star["mass"] = clever_round(mass)
 			star["size"] = clever_round(star_size)
@@ -1308,9 +1337,9 @@ func generate_systems(id:int):
 			galaxy_data[id]["systems"].append(0)
 		else:
 			if id == 0:
-				s_i.diff = clever_round(1 + pos.distance_to(system_data[0].pos) / 5000, 3)
+				s_i.diff = clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000, 3)
 			else:
-				s_i.diff = clever_round(galaxy_data[id].diff * combined_star_mass * rand_range(0.8, 1.2), 3)
+				s_i.diff = clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
 			galaxy_data[id]["systems"].append(s_id)
 			system_data.append(s_i)
 	if progress == 1:
@@ -1349,7 +1378,7 @@ func generate_planets(id:int):
 		p_i["conquered"] = false
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1)) * dark_matter)
+		p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -1389,14 +1418,25 @@ func generate_planets(id:int):
 				p_i.lake_2 = lakes[lake]
 		planet_data.append(p_i)
 		HX_data.append([])
-		for k in range(5):
-			var lv = round(rand_range(0.6, 1.6) * 1)
-			var HP = round(rand_range(1, 1.5) * 15 * pow(1.3, lv))
-			var atk = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var def = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var acc = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var eva = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			HX_data[len(HX_data) - 1].append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva})
+		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
+		var num:int = 0
+		while num < 12:
+			num += 1
+			var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
+			if num == 12:
+				lv = ceil(0.9 * log(power) / log(1.2))
+			var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.2, lv - 1))
+			var atk = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
+			var def = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
+			var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
+			var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
+			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 100000)
+			var XP = round(pow(1.2, lv - 1) * 5)
+			HX_data[len(HX_data) - 1].append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+			power -= floor(pow(1.2, lv))
+			if power <= 1:
+				break
+		HX_data[len(HX_data) - 1].shuffle()
 	if id != 0:
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
@@ -1537,27 +1577,28 @@ func generate_tiles(id:int):
 		tile_data[315] = {}
 		make_obstacle(tile_data[315], "cave")
 		tile_data[315].cave_id = 1
-#		var curr_time = OS.get_system_time_msecs()
-#		tile_data[110] = {}
-#		tile_data[110].tile_str = "RCC"
-#		tile_data[110].is_constructing = false
-#		tile_data[110].construction_date = curr_time
-#		tile_data[110].construction_length = 10
-#		tile_data[110].type = "bldg"
-#		tile_data[110].XP = 0
-#		tile_data[110].path_1 = 1
-#		tile_data[110].path_1_value = Data.path_1.RCC.value
-#		tile_data[111] = {}
-#		tile_data[111].tile_str = "GF"
-#		tile_data[111].is_constructing = false
-#		tile_data[111].construction_date = curr_time
-#		tile_data[111].construction_length = 10
-#		tile_data[111].type = "bldg"
-#		tile_data[111].XP = 0
-#		tile_data[111].path_1 = 1
-#		tile_data[111].path_2 = 1
-#		tile_data[111].path_1_value = Data.path_1.GF.value
-#		tile_data[111].path_2_value = Data.path_2.GF.value
+		if TEST:
+			var curr_time = OS.get_system_time_msecs()
+			tile_data[110] = {}
+			tile_data[110].tile_str = "RCC"
+			tile_data[110].is_constructing = false
+			tile_data[110].construction_date = curr_time
+			tile_data[110].construction_length = 10
+			tile_data[110].type = "bldg"
+			tile_data[110].XP = 0
+			tile_data[110].path_1 = 1
+			tile_data[110].path_1_value = Data.path_1.RCC.value
+			tile_data[111] = {}
+			tile_data[111].tile_str = "GF"
+			tile_data[111].is_constructing = false
+			tile_data[111].construction_date = curr_time
+			tile_data[111].construction_length = 10
+			tile_data[111].type = "bldg"
+			tile_data[111].XP = 0
+			tile_data[111].path_1 = 1
+			tile_data[111].path_2 = 1
+			tile_data[111].path_1_value = Data.path_1.GF.value
+			tile_data[111].path_2_value = Data.path_2.GF.value
 		tile_data[112] = {}
 		tile_data[112].type = "obstacle"
 		tile_data[112].tile_str = "ship"
@@ -2024,6 +2065,9 @@ func _input(event):
 			item_to_use.num = 0
 			update_item_cursor()
 		_on_BottomInfo_close_button_pressed()
+		if view:
+			view.scroll_view = true
+			view.move_view = true
 		if len(panels) != 0:
 			if c_v != "":
 				if not panels[0].polygon:
@@ -2033,8 +2077,6 @@ func _input(event):
 					remove_upgrade_panel()
 				else:
 					toggle_panel(panels[0])
-				if view:
-					view.scroll_view = true
 			else:
 				toggle_panel(panels[0])
 			hide_tooltip()
@@ -2119,44 +2161,66 @@ func _input(event):
 			var name = hotbar[i]
 			if get_item_num(name) > 0:
 				inventory.on_slot_press(name)
-#	if Input.is_action_just_released("ui_down") and Input.is_action_pressed("ctrl"):
-#		var save_game = File.new()
-#		save_game.open("user://Save1/main.hx3", File.WRITE)
-#		save_game.store_var(c_v)
-#		save_game.store_float(money)
-#		save_game.store_float(minerals)
-#		save_game.store_float(mineral_capacity)
-#		save_game.store_float(energy)
-#		save_game.store_float(SP)
-#		save_game.store_float(DRs)
-#		save_game.store_float(xp)
-#		save_game.store_float(xp_to_lv)
-#		save_game.store_64(c_u)
-#		save_game.store_64(c_sc)
-#		save_game.store_64(c_c)
-#		save_game.store_64(c_g)
-#		save_game.store_64(c_s)
-#		save_game.store_64(c_p)
-#		save_game.store_64(lv)
-#		save_game.store_64(stack_size)
-#		save_game.store_8(auto_replace)
-#		save_game.store_var(pickaxe)
-#		save_game.store_var(science_unlocked)
-#		save_game.store_var(mats)
-#		save_game.store_var(mets)
-#		save_game.store_var(help)
-#		save_game.store_var(show)
-#		save_game.store_var(universe_data)
-#		save_game.store_var(supercluster_data)
-#		save_game.store_var(cluster_data)
-#		save_game.store_var(galaxy_data)
-#		save_game.store_var(system_data)
-#		save_game.store_var(planet_data)
-#		save_game.store_var(tile_data)
-#		save_game.store_var(items)
-#		save_game.store_var(hotbar)
-#		save_game.close()
-#		popup(tr("GAME_SAVED"), 1.2)
+	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
+		save_game(false)
+
+func save_game(autosave:bool):
+	var save_game = File.new()
+	save_game.open("user://Save1/main.hx3", File.WRITE)
+	save_game.store_var(c_v)
+	save_game.store_var(l_v)
+	save_game.store_float(money)
+	save_game.store_float(minerals)
+	save_game.store_float(mineral_capacity)
+	save_game.store_var(stone)
+	save_game.store_float(energy)
+	save_game.store_float(SP)
+	save_game.store_float(DRs)
+	save_game.store_float(xp)
+	save_game.store_float(xp_to_lv)
+	save_game.store_64(c_u)
+	save_game.store_64(c_sc)
+	save_game.store_64(c_c)
+	save_game.store_64(c_g)
+	save_game.store_64(c_s)
+	save_game.store_64(c_p)
+	save_game.store_64(c_t)
+	save_game.store_64(lv)
+	save_game.store_64(stack_size)
+	save_game.store_8(auto_replace)
+	save_game.store_var(pickaxe)
+	save_game.store_var(science_unlocked)
+	save_game.store_var(mats)
+	save_game.store_var(mets)
+	save_game.store_var(help)
+	save_game.store_var(show)
+	save_game.store_var(universe_data)
+	save_game.store_var(supercluster_data)
+	save_game.store_var(cluster_data)
+	save_game.store_var(galaxy_data)
+	save_game.store_var(system_data)
+	save_game.store_var(planet_data)
+	save_game.store_var(HX_data)
+	save_game.store_var(cave_data)
+	#save_game.store_var(tile_data)
+	save_game.store_var(items)
+	save_game.store_var(hotbar)
+	save_game.store_var(MUs)
+	save_game.store_64(STM_lv)
+	save_game.store_var(rover_data)
+	save_game.store_var(ship_data)
+	save_game.store_64(ships_c_p)
+	save_game.store_var(ships_depart_pos)
+	save_game.store_var(ships_dest_pos)
+	save_game.store_64(ships_dest_p_id)
+	save_game.store_var(ships_travel_view)
+	save_game.store_64(ships_travel_start_date)
+	save_game.store_64(ships_travel_length)
+	save_game.close()
+	if c_v == "planet":
+		Helper.save_tiles(c_p)
+	if not autosave:
+		popup(tr("GAME_SAVED"), 1.2)
 
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite").texture = texture
@@ -2211,16 +2275,6 @@ func _on_Settings_pressed():
 	$click.play()
 	toggle_panel(settings)
 
-func _on_NewGame_pressed():
-	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed", self, "_on_NewGame_pressed")
-	var tween:Tween = Tween.new()
-	add_child(tween)
-	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(tween)
-	_load_game()
-
 func _on_Title_Button_pressed(URL:String):
 	OS.shell_open(URL)
 
@@ -2245,3 +2299,27 @@ func _on_CloseButton_close_button_over():
 
 func _on_CloseButton_close_button_out():
 	close_button_over = false
+
+func fade_out_title(fn:String):
+	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed", self, "_on_NewGame_pressed")
+	var tween:Tween = Tween.new()
+	add_child(tween)
+	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(tween)
+	$Title.visible = false
+	$UI/Settings.visible = true
+	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	call(fn)
+	add_panels()
+	$Autosave.start()
+	
+func _on_NewGame_pressed():
+	fade_out_title("new_game")
+
+func _on_LoadGame_pressed():
+	fade_out_title("load_game")
+
+func _on_Autosave_timeout():
+	save_game(true)

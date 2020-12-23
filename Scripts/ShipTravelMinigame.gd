@@ -46,7 +46,7 @@ func _ready():
 		star.add_to_group("stars")
 
 	if not game or game.help.STM:
-		fn_to_call = "pattern_11"
+		fn_to_call = "pattern_1"
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
 	if game and not game.help.STM:

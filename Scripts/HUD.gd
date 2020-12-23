@@ -19,6 +19,7 @@ onready var lv_txt = $Lv/Label
 onready var lv_progress = $Lv/TextureProgress
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
+var config = ConfigFile.new()
 
 func _on_Button_pressed():
 	click_sound.play()
@@ -27,12 +28,19 @@ func _on_Button_pressed():
 func _ready():
 	refresh()
 
+func _process(delta):
+	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
+
 func refresh():
 	if not game:
 		return
+	if config.load("user://settings.cfg") == OK:
+		var autosave_light = config.get_value("saving", "autosave_light", false)
+		set_process(autosave_light)
+		$AutosaveLight.visible = autosave_light
 	money_text.text = String(game.money)
 	minerals_text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
-	var total_stone:float = Helper.get_sum_of_dict(game.stone)
+	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = String(total_stone) + " kg"
 	soil_text.text = String(game.mats.soil) + " kg"
 	energy_text.text = String(game.energy)
@@ -51,6 +59,7 @@ func refresh():
 		game.xp_to_lv = round(game.xp_to_lv * 1.5)
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
+	update_hotbar()
 
 func _on_Shop_pressed():
 	click_sound.play()
@@ -129,7 +138,7 @@ func on_slot_out():
 
 func on_slot_press(i:int):
 	var name = game.hotbar[i]
-	game.inventory.on_slot_press(name, Helper.get_type_from_name(name), Helper.get_dir_from_name(name))
+	game.inventory.on_slot_press(name)
 
 func _on_Label_mouse_entered():
 	on_button = true
@@ -167,3 +176,12 @@ func _on_Ships_pressed():
 func _on_Ships_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("SHIPS") + " (Y)")
+
+
+func _on_AutosaveLight_mouse_entered():
+	if game.help.autosave_light_desc:
+		game.help_str = "autosave_light_desc"
+		game.show_tooltip("%s\n%s" % [tr("AUTOSAVE_LIGHT_DESC"), tr("HIDE_HELP")])
+
+func _on_AutosaveLight_mouse_exited():
+	game.hide_tooltip()

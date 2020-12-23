@@ -102,7 +102,7 @@ func _on_Craft_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
 
 
-func _on_CraftAmount_value_changed(value):
+func _on_BuyAmount_value_changed(value):
 	item_num = value
 	remove_costs()
 	for cost in item_costs:

@@ -185,7 +185,6 @@ func _input(event):
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position
-		#get_node("../FPS").text = String(to_local(mouse_position))
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
@@ -214,7 +213,6 @@ func check_change_scale():
 		scale_inc_threshold = scale_dec_threshold
 		scale_dec_threshold /= 10.0
 		scale_mult *= 10
-
 
 func _on_Ship_mouse_entered():
 	game.show_tooltip("")

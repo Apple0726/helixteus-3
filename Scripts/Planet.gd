@@ -268,8 +268,6 @@ func plant_seed(tile, tile_id:int):
 			tile.tile_str = game.item_to_use.name
 			game.remove_items(game.item_to_use.name)
 			game.item_to_use.num -= 1
-			if game.item_to_use.num == 0:
-				game.get_node("Control/BottomInfo").visible = false
 			tile.construction_date = curr_time
 			tile.construction_length = game.craft_agric_info[game.item_to_use.name].grow_time
 			if check_lake[1] == "l":
@@ -650,8 +648,12 @@ func _process(_delta):
 		time_bar.get_node("Bar").value = progress
 		if tile.type == "plant":
 			var plant:AnimatedSprite = plant_sprites[String(id2)]
-			plant.frame = int(progress * 4)
-		if progress > 1:
+			plant.frame = min(4, int(progress * 4))
+			if progress > 1:
+				tile.is_growing = false
+				remove_child(time_bar)
+				time_bars.erase(time_bar_obj)
+		elif progress > 1:
 			if tile.is_constructing:
 				tile.is_constructing = false
 				game.xp += tile.XP

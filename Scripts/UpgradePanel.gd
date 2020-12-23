@@ -17,8 +17,8 @@ onready var next_lv = $UpgradePanel/VBoxContainer/Control2/NextLv
 onready var current_lv = $UpgradePanel/VBoxContainer/Control2/CurrentLv
 onready var next = $UpgradePanel/VBoxContainer/HBoxContainer2/Next
 onready var current = $UpgradePanel/VBoxContainer/HBoxContainer2/Current
-onready var cost_icons = $UpgradePanel/VBoxContainer/HBoxContainer3/ScrollContainer/Costs
-onready var upgrade_btn = $UpgradePanel/VBoxContainer/HBoxContainer3/Upgrade
+onready var cost_icons = $UpgradePanel/ScrollContainer/Costs
+onready var upgrade_btn = $UpgradePanel/Upgrade
 
 func _ready():
 	if game.tile_data[ids[0]].has("path_2"):

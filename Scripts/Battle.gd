@@ -54,12 +54,12 @@ func _ready():
 		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		for k in 3:
 			var lv = 1
-			var HP = round(rand_range(1, 1.5) * 15 * pow(1.3, lv))
-			var atk = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var def = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var acc = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var eva = round(rand_range(1, 1.5) * 8 * pow(1.3, lv))
-			var money = round(rand_range(0.2, 2.5) * pow(1.3, lv) * 10000)
+			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
+			var atk = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var def = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var acc = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
 			HX_data.append({"type":Helper.rand_int(1, 2), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
@@ -182,6 +182,13 @@ func hit_formula(acc:float, eva:float):
 	return 1 / (1 + eva / pow(acc, 1.4))
 
 func _process(delta):
+	if ship_data[0].HP <= 0:
+		ship1.modulate.a -= 0.03
+		if ship1.modulate.a <= 0:
+			ship_data[0].HP = ship_data[0].total_HP
+			game.switch_view("system")
+			game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
+			return
 	for i in len(HXs):
 		var HX = HXs[i]
 		if HX_data[i].HP <= 0 and HX.modulate.a > 0:
@@ -480,7 +487,7 @@ func enemy_attack():
 		tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
 		tween.start()
 	else:
-		if curr_en == 4:
+		if curr_en == min((wave + 1) * 4, len(HX_data)):
 			curr_sh = 0
 			curr_en = wave * 4
 			stage = BattleStages.CHOOSING
@@ -510,9 +517,15 @@ func atk_1_1(id:int):
 
 func atk_1_2(id:int):
 	for i in 4:
+		var y_pos:int = 0
 		for j in 2:
 			var beam = w_1_2.instance()
 			var target:Vector2 = Vector2(0, rand_range(0, 720))
+			if j == 0:
+				y_pos = target.y
+			else:
+				while abs(target.y - y_pos) < 200:
+					target.y = rand_range(0, 720)
 			var pos = HXs[id].position
 			beam.position = pos
 			beam.rotation = atan2(pos.y - target.y, pos.x - target.x)
@@ -562,9 +575,9 @@ func atk_2_2(id:int):
 		else:
 			ball.position.y = 920
 		var y_target = rand_range(280, 440)
-		var y_target2 = rand_range(0, 720)
+		var y_target2 = rand_range(-50, 770)
 		while abs(y_target2 - y_target) < 100:
-			y_target2 = rand_range(0, 720)
+			y_target2 = rand_range(-50, 770)
 		ball.position.x = rand_range(900, 1250)
 		add_child(ball)
 		ball.add_to_group("w_2_2")
