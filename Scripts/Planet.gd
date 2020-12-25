@@ -464,9 +464,8 @@ func _input(event):
 					if tile.tile_str == "cave":
 						if game.bottom_info_action == "enter_cave":
 							game.c_t = tile_id
+							game.rover_id = rover_selected
 							game.switch_view("cave")
-							game.cave.rover_data = rover_selected
-							game.cave.set_rover_data()
 						else:
 							if (game.show.vehicles_button or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
 								game.toggle_panel(game.vehicle_panel)
@@ -476,7 +475,6 @@ func _input(event):
 							game.tile_data[tile_id] = null
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.show.vehicles_button = true
 							game.ship_data.append({"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						else:
 							if game.show.SP:

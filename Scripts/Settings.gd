@@ -69,9 +69,10 @@ func _on_Autosave_value_changed(value):
 		game.autosave_interval = value
 		config.set_value("saving", "autosave", value)
 		config.save("user://settings.cfg")
-		game.get_node("Autosave").stop()
-		game.get_node("Autosave").wait_time = value
-		game.get_node("Autosave").start()
+		if game.c_v != "":
+			game.get_node("Autosave").stop()
+			game.get_node("Autosave").wait_time = value
+			game.get_node("Autosave").start()
 
 
 func _on_AutosaveLight_toggled(button_pressed):

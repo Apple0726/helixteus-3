@@ -13,7 +13,8 @@ func refresh():
 	var hbox = $HBox/VBox1/Rovers/HBox
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
-	for rov in game.rover_data:
+	for i in len(game.rover_data):
+		var rov = game.rover_data[i]
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()
@@ -22,7 +23,7 @@ func refresh():
 			hbox.add_child(rover)
 			rover.connect("mouse_entered", self, "on_rover_enter", [rov])
 			rover.connect("mouse_exited", self, "on_rover_exit")
-			rover.connect("pressed", self, "on_rover_press", [rov])
+			rover.connect("pressed", self, "on_rover_press", [rov, i])
 	$HBox/VBox1.visible = hbox.get_child_count() != 0
 	$HBox/VBox2.visible = false
 
@@ -43,7 +44,7 @@ func on_rover_enter(rov:Dictionary):
 func on_rover_exit():
 	game.hide_adv_tooltip()
 
-func on_rover_press(rov:Dictionary):
+func on_rover_press(rov:Dictionary, rov_id:int):
 	if Input.is_action_pressed("shift"):
 		if rover_has_items:
 			var remaining:bool = false
@@ -61,15 +62,14 @@ func on_rover_press(rov:Dictionary):
 				game.popup(tr("ITEMS_COLLECTED"), 1.5)
 	elif game.c_v == "planet":
 		if tile_id == -1:
-			game.view.obj.rover_selected = rov
+			game.view.obj.rover_selected = rov_id
 			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"), "enter_cave")
 			game.toggle_panel(self)
 		else:
 			game.c_t = tile_id
 			tile_id = -1
+			game.rover_id = rov_id
 			game.switch_view("cave")
-			game.cave.rover_data = rov
-			game.cave.set_rover_data()
 			game.toggle_panel(self)
 
 func _on_close_button_pressed():

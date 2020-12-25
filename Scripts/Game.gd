@@ -3,7 +3,6 @@ extends Node2D
 const TEST:bool = false
 
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
-var view_scene = preload("res://Scenes/Views/View.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
@@ -201,6 +200,7 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "director
 var hotbar:Array = []
 
 var STM_lv:int = 1#ship travel minigame level
+var rover_id:int = -1#Rover id when in cave
 
 ############ End save data ############
 
@@ -234,7 +234,7 @@ var mat_info = {	"coal":{"value":5},#One kg of coal = $5
 					"sand":{"value":4},
 					"clay":{"value":12},
 					"soil":{"value":6},
-					"cellulose":{"value":12},
+					"cellulose":{"value":15},
 					"silicon":{"value":10},
 }
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
@@ -286,9 +286,9 @@ var autosave_interval:int = 10
 
 var music_player = AudioStreamPlayer.new()
 
+var spectrum
 func _ready():
-	HUD = load("res://Scenes/HUD.tscn").instance()
-	view = view_scene.instance()
+	view = load("res://Scenes/Views/View.tscn").instance()
 	add_child(view)
 	add_child(music_player)
 	music_player.bus = "Music"
@@ -301,15 +301,15 @@ func _ready():
 		if config.get_value("audio", "mute", false):
 			AudioServer.set_bus_mute(1,true)
 		else:
-			switch_music(load("res://Audio/title1.ogg"))
+			switch_music(load("res://Audio/Title.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		Data.reload()
 	config.save("user://settings.cfg")
-	var dir = Directory.new()
-	if dir.file_exists("user://Save1/main.hx3"):
+	var file = File.new()
+	if file.file_exists("user://Save1/main.hx3"):
 		$Title/Menu/VBoxContainer/LoadGame.disabled = false
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
@@ -332,7 +332,11 @@ func _ready():
 		energy = 2000000
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		$Title.visible = false
+		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game()
+		add_panels()
+		$Autosave.start()
 	else:
 		var tween:Tween = Tween.new()
 		add_child(tween)
@@ -406,6 +410,7 @@ func load_game():
 		hotbar = save_game.get_var()
 		MUs = save_game.get_var()
 		STM_lv = save_game.get_64()
+		rover_id = save_game.get_64()
 		rover_data = save_game.get_var()
 		ship_data = save_game.get_var()
 		ships_c_p = save_game.get_64()
@@ -415,6 +420,9 @@ func load_game():
 		ships_travel_view = save_game.get_var()
 		ships_travel_start_date = save_game.get_64()
 		ships_travel_length = save_game.get_64()
+		EA_planet_visited = save_game.get_8()
+		EA_galaxy_visited = save_game.get_8()
+		EA_cave_visited = save_game.get_8()
 		save_game.close()
 		add_child(HUD)
 		if c_v in ["mining", "cave"]:
@@ -733,6 +741,8 @@ func switch_view(new_view:String, first_time:bool = false):
 			remove_child(HUD)
 			cave = cave_scene.instance()
 			add_child(cave)
+			cave.rover_data = rover_data[rover_id]
+			cave.set_rover_data()
 			switch_music(load("res://Audio/cave1.ogg"))
 		"STM":
 			remove_child(HUD)
@@ -2061,7 +2071,7 @@ func _input(event):
 	if change_view_btn:
 		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
-		if c_v != "STM":
+		if not c_v in ["STM", ""]:
 			item_to_use.num = 0
 			update_item_cursor()
 		_on_BottomInfo_close_button_pressed()
@@ -2167,6 +2177,14 @@ func _input(event):
 func save_game(autosave:bool):
 	var save_game = File.new()
 	save_game.open("user://Save1/main.hx3", File.WRITE)
+	if c_v == "cave":
+		var c_d = cave_data[cave.id]
+		c_d.seeds = cave.seeds.duplicate(true)
+		c_d.tiles_mined = cave.tiles_mined.duplicate(true)
+		c_d.enemies_rekt = cave.enemies_rekt.duplicate(true)
+		c_d.chests_looted = cave.chests_looted.duplicate(true)
+		c_d.partially_looted_chests = cave.partially_looted_chests.duplicate(true)
+		c_d.hole_exits = cave.hole_exits.duplicate(true)
 	save_game.store_var(c_v)
 	save_game.store_var(l_v)
 	save_game.store_float(money)
@@ -2207,6 +2225,7 @@ func save_game(autosave:bool):
 	save_game.store_var(hotbar)
 	save_game.store_var(MUs)
 	save_game.store_64(STM_lv)
+	save_game.store_64(rover_id)
 	save_game.store_var(rover_data)
 	save_game.store_var(ship_data)
 	save_game.store_64(ships_c_p)
@@ -2216,6 +2235,9 @@ func save_game(autosave:bool):
 	save_game.store_var(ships_travel_view)
 	save_game.store_64(ships_travel_start_date)
 	save_game.store_64(ships_travel_length)
+	save_game.store_8(EA_planet_visited)
+	save_game.store_8(EA_galaxy_visited)
+	save_game.store_8(EA_cave_visited)
 	save_game.close()
 	if c_v == "planet":
 		Helper.save_tiles(c_p)
@@ -2311,6 +2333,7 @@ func fade_out_title(fn:String):
 	$Title.visible = false
 	$UI/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	HUD = load("res://Scenes/HUD.tscn").instance()
 	call(fn)
 	add_panels()
 	$Autosave.start()

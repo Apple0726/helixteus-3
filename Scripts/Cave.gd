@@ -186,6 +186,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if randf() < min(0.005 * cave_floor, 0.05):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
+					HX.get_node("Info").visible = false
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [Helper.rand_int(1, 3)]))
 					HX_node.HP = round(15 * difficulty * rand_range(1, 1.4))
 					HX_node.atk = round(6 * difficulty * rand_range(1, 1.2))

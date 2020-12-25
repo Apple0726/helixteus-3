@@ -45,6 +45,7 @@ enum BattleStages {CHOOSING, PLAYER, ENEMY}
 var stage
 
 func _ready():
+	Helper.set_back_btn($Back)
 	randomize()
 	if game:
 		ship_data = game.ship_data

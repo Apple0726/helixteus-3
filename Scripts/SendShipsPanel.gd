@@ -16,7 +16,6 @@ func _ready():
 	$TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_entered", self, "on_mouse_entered")
 	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_exited", self, "on_mouse_exited")
-	refresh()
 
 func on_mouse_entered():
 	game.view.move_view = false
