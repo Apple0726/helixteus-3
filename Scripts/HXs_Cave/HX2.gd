@@ -14,9 +14,9 @@ func set_rand():
 	pass
 
 func on_time_out():
-	shoot_timer.wait_time = 0.2
+	shoot_timer.wait_time = 0.3
 	if sees_player:
 		var rand_rot = rand_range(0, PI/2)
 		for i in range(0, 4):
 			var rot = i * PI/2 + rand_rot
-			cave_ref.add_proj(true, pr.position, 20.0, rot, load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)
+			cave_ref.add_proj(true, pr.position, 12.0, rot, load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)

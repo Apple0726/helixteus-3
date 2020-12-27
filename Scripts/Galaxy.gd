@@ -1,7 +1,6 @@
 extends Node2D
 
 onready var game = self.get_parent().get_parent()
-onready var systems_id = game.galaxy_data[game.c_g]["systems"]
 
 var stars
 
@@ -10,10 +9,7 @@ var obj_btns = []
 var overlays = []
 
 func _ready():
-	var systems_info = []
-	for i in systems_id:
-		systems_info.append(game.system_data[i])
-	for s_i in systems_info:
+	for s_i in game.system_data:
 		var star = s_i["stars"][0]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
@@ -23,9 +19,9 @@ func _ready():
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
-		star_btn.connect("mouse_entered", self, "on_system_over", [s_i["id"]])
+		star_btn.connect("mouse_entered", self, "on_system_over", [s_i.l_id])
 		star_btn.connect("mouse_exited", self, "on_system_out")
-		star_btn.connect("pressed", self, "on_system_click", [s_i["id"]])
+		star_btn.connect("pressed", self, "on_system_click", [s_i.id, s_i.l_id])
 		star_btn.rect_position = Vector2(-600 / 2, -600 / 2)
 		star_btn.rect_pivot_offset = Vector2(600 / 2, 600 / 2)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
@@ -36,17 +32,18 @@ func _ready():
 		Helper.toggle_overlay(obj_btns, overlays)
 	game.overlay.refresh_overlay()
 
-func on_system_over (id:int):
-	var s_i = game.system_data[id]
+func on_system_over (l_id:int):
+	var s_i = game.system_data[l_id]
 	game.show_tooltip("%s\n%s: %s\n%s: %s" % [s_i.name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
 
 func on_system_out ():
 	game.hide_tooltip()
 
-func on_system_click (id:int):
+func on_system_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
-		game.c_s = id
+		game.c_s = l_id
+		game.c_s_g = id
 		game.switch_view("system")
 	view.dragged = false
 

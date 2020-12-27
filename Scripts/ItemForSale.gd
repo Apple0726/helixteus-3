@@ -16,5 +16,6 @@ func _on_Button_pressed():
 
 func _on_SmallButton_pressed():
 	if parent != "construct_panel":
+		game[parent].item_costs = costs.duplicate(true)
 		game[parent]._on_BuyAmount_value_changed(1)
 	game[parent].get_item(item_name, costs, item_type, item_dir)

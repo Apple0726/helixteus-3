@@ -10,3 +10,13 @@ func _on_Overlay_mouse_exited():
 
 func _on_Overlay_pressed():
 	game.overlay.visible = not game.overlay.visible
+
+
+func _on_Home_mouse_entered():
+	game.show_tooltip(tr("CLICK_TO_GO_HOME"))
+
+func _on_Home_mouse_exited():
+	game.hide_tooltip()
+
+func _on_Home_pressed():
+	game.switch_view("planet", false, "set_home_coords")

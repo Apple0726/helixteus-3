@@ -12,6 +12,7 @@ var tile
 var rover_costs:Dictionary
 var slot_over:int = -1
 var cmp_over:String = ""
+var mult:float
 
 onready var armor_slot = $Stats/HBoxContainer/Armor
 onready var wheels_slot = $Stats/HBoxContainer/Wheels
@@ -47,7 +48,7 @@ func _on_Slot_mouse_entered(type:String):
 	var metal_comp:String = tr("METAL_COMP").format({"metal":metal, "comp":comp})
 	cmp_over = type
 	if type == "rover_armor" and armor != "":
-		txt = "%s\n+%s %s" % [metal_comp, Data.rover_armor[armor].defense, tr("DEFENSE")]
+		txt = "%s\n+%s %s\n+%s %s" % [metal_comp, Data.rover_armor[armor].HP, tr("HEALTH_POINTS"), Data.rover_armor[armor].defense, tr("DEFENSE")]
 	elif type == "rover_wheels":
 		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[wheels].speed, tr("MOVEMENT_SPEED")]
 	elif type == "rover_CC" and CC != "":
@@ -99,10 +100,9 @@ func _on_Button_pressed():
 		tile.is_constructing = true
 		tile.rover_id = len(game.rover_data)
 		tile.construction_date = OS.get_system_time_msecs()
-		var mult = tile.path_1_value
 		tile.construction_length = rover_costs.time * 1000
 		tile.XP = round(rover_costs.money / 100.0)
-		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round(def + def_bonus), "weight_cap":round(weight_cap + cargo_bonus), "spd":spd_bonus, "inventory":inventory, "i_w_w":{}})
+		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult), "spd":round(spd_bonus * mult), "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
@@ -113,6 +113,8 @@ func _on_Button_pressed():
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
 
 func refresh():
+	tile = game.tile_data[game.c_t]
+	mult = tile.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
 	if armor != "":
 		for cost_key in Data.rover_armor[armor].costs.keys():
@@ -174,8 +176,11 @@ func refresh():
 		i += 1
 	Helper.put_rsrc($VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
-	$Stats/Label2.text = "%s\n%s\n%s\n%s kg\n%s" % [HP + HP_bonus, atk, def + def_bonus, weight_cap + cargo_bonus, spd_bonus]
-	tile = game.tile_data[game.c_t]
+	$Stats/HPText.text = String(round((HP + HP_bonus) * mult))
+	$Stats/AtkText.text = String(round(atk * mult))
+	$Stats/DefText.text = String(round((def + def_bonus) * mult))
+	$Stats/CargoText.text = "%s kg" % [round((weight_cap + cargo_bonus) * mult)]
+	$Stats/SpeedText.text = String(game.clever_round(spd_bonus * mult, 3))
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -201,6 +206,23 @@ func _input(event):
 			else:
 				game.popup(tr("REMOVE_WHEELS_ATTEMPT"), 2.5)
 
-
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+
+func _on_HPText_mouse_entered():
+	game.show_tooltip("(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult)])
+
+func _on_Text_mouse_exited():
+	game.hide_tooltip()
+
+func _on_AtkText_mouse_entered():
+	game.show_tooltip("(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult)])
+
+func _on_DefText_mouse_entered():
+	game.show_tooltip("(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)])
+
+func _on_CargoText_mouse_entered():
+	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus) * mult)])
+
+func _on_SpeedText_mouse_entered():
+	game.show_tooltip("(%s + %s) * %s = %s" % [0, spd_bonus, mult, game.clever_round((spd_bonus) * mult, 3)])

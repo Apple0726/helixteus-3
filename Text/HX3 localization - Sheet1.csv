@@ -145,6 +145,7 @@ POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,Kraftwerk,Plant
 PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,Generiert Energie,Genera energía de la nada,
 PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,"Drücke ""F"" zum upgraden",Presiona F para mejorar,F 누르면 업그레이드
 PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,"Drücke ""Q"" zum duplizieren",Presiona Q para duplicar,Q 누르면 복제
+PRESS_X_TO_DESTROY,Press X to destroy (no refunds),Appuyer sur X pour détruire (pas de remboursements),,,,,
 UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
 LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
 SECOND,second,seconde,secondo,,Sekunde,segundo,초
@@ -446,3 +447,7 @@ TRAVEL_COSTS,Travel costs,,,,,,
 AUTOSAVE_LIGHT_DESC,This light glows green when the game just autosaved.,,,,,,
 AUTOSAVE_INTERVAL,Autosave interval,,,,,,
 AUTOSAVE_LIGHT,Autosave light,,,,,,
+CLICK_TO_FERTILIZE,Click a plant to fertilize,,,,,,
+CLICK_TO_GO_HOME,Click to go to your home planet,,,,,,
+AURORA_MULTIPLIER,Aurora multiplier,,,,,,
+AURORA_MULT_INFO,"An aurora is blessing this tile! Mining here will give you %sx more materials and metals, and will appear %sx more often.",,,,,,

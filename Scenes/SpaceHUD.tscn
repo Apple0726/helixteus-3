@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
+[ext_resource path="res://Graphics/Buttons/Home.png" type="Texture" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "O"
@@ -27,6 +28,7 @@ __meta__ = {
 }
 
 [node name="Overlay" type="TextureButton" parent="VBoxContainer"]
+visible = false
 margin_top = 328.0
 margin_right = 64.0
 margin_bottom = 392.0
@@ -36,6 +38,21 @@ texture_normal = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Home" type="TextureButton" parent="."]
+margin_left = 16.0
+margin_top = 96.0
+margin_right = 88.0
+margin_bottom = 168.0
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]
+[connection signal="mouse_entered" from="Home" to="." method="_on_Home_mouse_entered"]
+[connection signal="mouse_exited" from="Home" to="." method="_on_Home_mouse_exited"]
+[connection signal="pressed" from="Home" to="." method="_on_Home_pressed"]

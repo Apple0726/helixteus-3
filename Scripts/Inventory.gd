@@ -79,6 +79,7 @@ func on_slot_press(name:String):
 			game.put_bottom_info(tr("PLANT_SEED_INFO"), "plant_seed", "hide_item_cursor")
 			game.item_to_use.type = "seeds"
 		elif game.craft_agric_info[name].has("speed_up_time"):
+			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
 			game.item_to_use.type = "fertilizer"
 	elif type == "speedup_info":
 		game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")

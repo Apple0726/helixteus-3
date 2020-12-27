@@ -16,10 +16,11 @@ var metal_sprites = []
 var circ_vel:Vector2 = Vector2.ONE
 var points:float#Points for minigame
 onready var circ = $CanvasLayer/Circle
-onready var spd_mult_node = $SpdMult
+onready var spd_mult_node = $Mults/SpdMult
 var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
 var mouse_pos:Vector2
 var speed_mult:float = 1.0
+var aurora_mult:float = 1.0
 
 func _ready():
 	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
@@ -29,6 +30,10 @@ func _ready():
 		$Tile/TextureRect.texture = tile_texture
 	if not tile:
 		tile = {}
+	if tile.has("au_int"):
+		$Mults/AuroraMult.visible = true
+		aurora_mult = game.clever_round(pow(1 + tile.au_int, 0.5))
+		$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
@@ -107,8 +112,8 @@ func generate_rock(new:bool):
 		for mat in p_i.surface.keys():
 			#Material quantity penalty the further you go from surface
 			var depth_limit_mult = max(1, 1 + (tile.depth / 2.0 - p_i.crust_start_depth) / float(p_i.crust_start_depth))
-			if randf() < p_i.surface[mat].chance / depth_limit_mult:
-				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult, 3)
+			if randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
+				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
 				if amount < 1:
 					continue
 				contents[mat] = amount
@@ -118,14 +123,14 @@ func generate_rock(new:bool):
 				for met in met_info:
 					var crater_metal = tile.has("init_depth") and met == tile.crater_metal
 					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth or crater_metal:
-						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1) * pow(1 + au_int, 0.5):
+						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1) * aurora_mult:
 							tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
 			if tile.has("current_deposit"):
 				var met = tile.current_deposit.met
 				var size = tile.current_deposit.size
 				var progress2 = tile.current_deposit.progress
 				var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * pow(1 + au_int, 0.5), 3)
+				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult, 3)
 				for i in clamp(round(amount / 2.0), 1, 40):
 					var met_sprite = Sprite.new()
 					met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
@@ -161,7 +166,7 @@ func _input(event):
 func _on_Back_pressed():
 	tile.mining_progress = progress
 	game.tile_data[id] = tile
-	Helper.save_tiles(game.c_p)
+	Helper.save_obj("Planets", game.c_p, game.tile_data)
 	game.switch_view("planet")
 	queue_free()
 
@@ -331,3 +336,11 @@ func _on_Layer_mouse_exited():
 
 func _on_AutoReplace_pressed():
 	game.auto_replace = $AutoReplace.pressed
+
+
+func _on_AuroraMult_mouse_entered():
+	game.show_tooltip(tr("AURORA_MULT_INFO") % [aurora_mult, aurora_mult])
+
+
+func _on_AuroraMult_mouse_exited():
+	game.hide_tooltip()

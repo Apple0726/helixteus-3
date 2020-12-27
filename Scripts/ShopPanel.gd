@@ -121,13 +121,13 @@ func get_item(_name, costs, _type, _dir):
 	if _name == "":
 		return
 	item_name = _name
-	item_total_costs = costs
+	item_total_costs = costs.duplicate(true)
 	if game.check_enough(item_total_costs):
 		if tab == "pickaxes":
 			if not game.pickaxe.empty():
-				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()])
+				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()], costs.duplicate(true))
 			else:
-				buy_pickaxe()
+				buy_pickaxe(costs)
 		else:
 			game.deduct_resources(item_total_costs)
 			var items_left = game.add_items(item_name, buy_amount.value)
@@ -142,20 +142,21 @@ func get_item(_name, costs, _type, _dir):
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
-func YNPanel(text:String):
+func YNPanel(text:String, _costs:Dictionary):
 	$ConfirmationDialog.dialog_text = text
 	$ConfirmationDialog.popup_centered()
-	if not $ConfirmationDialog.is_connected("confirmed", self, "buy_pickaxe"):
-		$ConfirmationDialog.connect("confirmed", self, "buy_pickaxe")
+	if $ConfirmationDialog.is_connected("confirmed", self, "buy_pickaxe_confirm"):
+		$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe_confirm")
+	$ConfirmationDialog.connect("confirmed", self, "buy_pickaxe_confirm", [_costs])
 
-func buy_pickaxe_confirm():
-	buy_pickaxe()
-	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe")
+func buy_pickaxe_confirm(_costs:Dictionary):
+	buy_pickaxe(_costs)
+	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe_confirm")
 
-func buy_pickaxe():
-	if not game.check_enough(item_costs):
+func buy_pickaxe(_costs:Dictionary):
+	if not game.check_enough(_costs):
 		return
-	game.deduct_resources(item_costs)
+	game.deduct_resources(_costs)
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}

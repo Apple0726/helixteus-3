@@ -3,7 +3,6 @@ extends Node2D
 onready var game = get_node("/root/Game")
 onready var stars_info = game.system_data[game.c_s]["stars"]
 onready var star_graphic = preload("res://Graphics/Stars/Star.png")
-onready var planets_id = game.system_data[game.c_s]["planets"]
 onready var view = get_parent()
 
 var stars
@@ -30,9 +29,7 @@ func _ready():
 	
 	var orbit_scene = preload("res://Scenes/Orbit.tscn")
 	var planets_info = []
-	for i in planets_id:
-		planets_info.append(game.planet_data[i])
-	for p_i in planets_info:
+	for p_i in game.planet_data:
 		var orbit = orbit_scene.instance()
 		orbit.radius = p_i["distance"]
 		self.add_child(orbit)
@@ -46,12 +43,12 @@ func _ready():
 		self.add_child(planet)
 		planet.add_child(planet_glow)
 		planet.add_child(planet_btn)
-		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i["id"]])
-		planet_glow.connect("mouse_entered", self, "on_glow_planet_over", [p_i["id"], planet_glow])
+		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i.id, p_i.l_id])
+		planet_glow.connect("mouse_entered", self, "on_glow_planet_over", [p_i.id, p_i.l_id, planet_glow])
 		planet_btn.connect("mouse_exited", self, "on_btn_out")
 		planet_glow.connect("mouse_exited", self, "on_btn_out")
-		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"]])
-		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"]])
+		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
+		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
 		planet_btn.rect_position = Vector2(-320, -320)
 		planet_btn.rect_pivot_offset = Vector2(320, 320)
 		planet_btn.rect_scale.x = p_i["size"] / PLANET_SCALE_DIV
@@ -69,38 +66,42 @@ func _ready():
 
 var glow_over
 
-func on_planet_over (id:int):
-	show_planet_info(id)
+func on_planet_over (id:int, l_id:int):
+	show_planet_info(id, l_id)
 
-func on_glow_planet_over (id:int, glow):
+func on_glow_planet_over (id:int, l_id:int, glow):
 	glow_over = glow
-	show_planet_info(id)
+	show_planet_info(id, l_id)
 
-func show_planet_info(id:int):
-	var p_i = game.planet_data[id]
+func show_planet_info(id:int, l_id:int):
+	var p_i = game.planet_data[l_id]
 	var wid:int = Helper.get_wid(p_i.size)
-	if id == game.ships_c_p and not p_i.conquered:
+	if {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":game.c_p} == game.ships_c_coords and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
 
-func on_planet_click (id:int):
-	var p_i = game.planet_data[id]
+func on_planet_click (id:int, l_id:int):
+	var p_i = game.planet_data[l_id]
 	if not view.dragged:
 		if Input.is_action_pressed("shift"):
-			game.c_p = id
+			game.c_p = l_id
+			game.c_p_g = id
 			game.switch_view("planet_details")
-		elif Input.is_action_pressed("Q") or game.planet_data[id].conquered:
-			game.c_p = id
+		elif Input.is_action_pressed("Q") or p_i.conquered:
+			game.c_p = l_id
+			game.c_p_g = id
 			game.switch_view("planet")
-			game.planet_data[id].conquered = true
+			p_i.conquered = true
+			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 		else:
-			if id == game.ships_c_p and not p_i.conquered:
-				game.c_p = id
+			if {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":game.c_p} == game.ships_c_coords and not p_i.conquered:
+				game.c_p = l_id
+				game.c_p_g = id
 				game.switch_view("battle")
 			else:
 				if len(game.ship_data) > 0:
-					game.send_ships_panel.dest_p_id = id
+					game.send_ships_panel.dest_p_id = l_id
 					game.toggle_panel(game.send_ships_panel)
 				else:
 					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))

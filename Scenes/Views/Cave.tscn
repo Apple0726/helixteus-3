@@ -835,7 +835,7 @@ __meta__ = {
 }
 
 [node name="UI2" type="CanvasLayer" parent="."]
-layer = 3
+layer = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI2"]
 margin_top = 660.0

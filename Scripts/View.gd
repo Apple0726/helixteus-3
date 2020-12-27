@@ -47,8 +47,6 @@ func _process(_delta):
 	if not Input.is_action_pressed("left_click"):
 		dragged = false
 	if game.ships_travel_view == game.c_v:
-		move_child(red_line, get_child_count())
-		move_child(green_line, get_child_count())
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos
 		var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
@@ -57,14 +55,25 @@ func _process(_delta):
 		ship.rect_position = pos - Vector2(50, 25)
 		if progress >= 1:
 			game.ships_travel_view = "-"
-			game.ships_c_p = game.ships_dest_p_id
+			game.ships_c_coords = game.ships_dest_coords.duplicate(true)
+			game.ships_c_g_s = game.ships_travel_view_g_coords.s
 
 func refresh():
 	var show_lines = game.ships_travel_view == game.c_v
+	if game.c_v == "supercluster":
+		show_lines = show_lines and game.ships_travel_view_g_coords.sc == game.c_sc
+	elif game.c_v == "cluster":
+		show_lines = show_lines and game.ships_travel_view_g_coords.c == game.c_c_g
+	elif game.c_v == "galaxy":
+		show_lines = show_lines and game.ships_travel_view_g_coords.g == game.c_g_g
+	elif game.c_v == "system":
+		show_lines = show_lines and game.ships_travel_view_g_coords.s == game.c_s_g
 	red_line.visible = show_lines
 	green_line.visible = show_lines
 	ship.visible = show_lines
 	if show_lines:
+		move_child(red_line, get_child_count())
+		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
 		var dep_pos:Vector2 = game.ships_depart_pos
 		var dest_pos:Vector2 = game.ships_dest_pos
@@ -89,6 +98,15 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	refresh()
 
 func remove_obj(obj_str:String):
+	save_zooms(obj_str)
+	self.remove_child(obj)
+	obj_scene = null
+	obj = null
+	red_line.visible = false
+	green_line.visible = false
+	ship.visible = false
+
+func save_zooms(obj_str:String):
 	match obj_str:
 		"planet":
 			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
@@ -113,13 +131,6 @@ func remove_obj(obj_str:String):
 		"science_tree":
 			game.science_tree_view.pos = position / scale.x
 			game.science_tree_view.zoom = scale.x
-	self.remove_child(obj)
-	obj_scene = null
-	obj = null
-	red_line.visible = false
-	green_line.visible = false
-	ship.visible = false
-
 #Executed every tick
 func _physics_process(_delta):
 	#Moving tiles code
@@ -147,6 +158,26 @@ func _physics_process(_delta):
 	if progress >= 1:
 		zooming = ""
 		progress = 0
+	if scale.x < 0.25 and not obj.icons_hidden:
+		for time_bar in obj.time_bars:
+			time_bar.node.visible = false
+		for rsrc in obj.rsrcs:
+			rsrc.node.visible = false
+		for hbox in obj.hboxes:
+			if not hbox:
+				continue
+			hbox.visible = false
+		obj.icons_hidden = true
+	elif scale.x >= 0.25 and obj.icons_hidden:
+		for time_bar in obj.time_bars:
+			time_bar.node.visible = true
+		for rsrc in obj.rsrcs:
+			rsrc.node.visible = true
+		for hbox in obj.hboxes:
+			if not hbox:
+				continue
+			hbox.visible = true
+		obj.icons_hidden = false
 
 #Dragging variables
 var dragged = false
@@ -199,20 +230,19 @@ var scale_inc_threshold
 var scale_dec_threshold
 var scale_mult
 func check_change_scale():
-	if game.c_v != "supercluster" and game.c_v != "universe":
-		return
-	if scale_inc_threshold < 50 and scale.x > scale_inc_threshold:
-		obj.modulate.a = 0.95
-		obj.change_alpha = -0.05
-		scale_dec_threshold = scale_inc_threshold
-		scale_inc_threshold *= 10
-		scale_mult *= 0.1
-	if scale_dec_threshold > 0.1 and scale.x < scale_dec_threshold:
-		obj.modulate.a = 0.95
-		obj.change_alpha = -0.05
-		scale_inc_threshold = scale_dec_threshold
-		scale_dec_threshold /= 10.0
-		scale_mult *= 10
+	if game.c_v in ["supercluster", "universe"]:
+		if scale_inc_threshold < 50 and scale.x > scale_inc_threshold:
+			obj.modulate.a = 0.95
+			obj.change_alpha = -0.05
+			scale_dec_threshold = scale_inc_threshold
+			scale_inc_threshold *= 10
+			scale_mult *= 0.1
+		if scale_dec_threshold > 0.1 and scale.x < scale_dec_threshold:
+			obj.modulate.a = 0.95
+			obj.change_alpha = -0.05
+			scale_inc_threshold = scale_dec_threshold
+			scale_dec_threshold /= 10.0
+			scale_mult *= 10
 
 func _on_Ship_mouse_entered():
 	game.show_tooltip("")

@@ -597,8 +597,9 @@ func exit_cave():
 			game.money += inventory[i].num
 			inventory[i] = {"type":""}
 		elif inventory[i].name == "minerals":
-			game.minerals += inventory[i].num
-			inventory[i] = {"type":""}
+			inventory[i].num = Helper.add_minerals(inventory[i].num)
+			if inventory[i].num <= 0:
+				inventory[i] = {"type":""}
 		elif inventory[i].type != "rover_weapons" and inventory[i].type != "rover_mining" and inventory[i].has("name"):
 			var remaining:int = game.add_items(inventory[i].name, inventory[i].num)
 			if remaining > 0:

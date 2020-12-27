@@ -68,7 +68,7 @@ __meta__ = {
 [node name="Stats" type="Panel" parent="."]
 margin_top = 60.0
 margin_right = 532.0
-margin_bottom = 331.0
+margin_bottom = 336.0
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 2 )
 __meta__ = {
@@ -132,10 +132,10 @@ __meta__ = {
 }
 
 [node name="HP" type="TextureRect" parent="Stats"]
-margin_left = 304.0
-margin_top = 42.2182
-margin_right = 344.0
-margin_bottom = 82.2182
+margin_left = 280.0
+margin_top = 36.0
+margin_right = 320.0
+margin_bottom = 76.0
 texture = ExtResource( 8 )
 expand = true
 stretch_mode = 6
@@ -144,28 +144,28 @@ __meta__ = {
 }
 
 [node name="Attack" type="TextureRect" parent="Stats"]
-margin_left = 304.0
-margin_top = 88.171
-margin_right = 344.0
-margin_bottom = 128.171
+margin_left = 280.0
+margin_top = 84.0
+margin_right = 320.0
+margin_bottom = 124.0
 texture = ExtResource( 6 )
 expand = true
 stretch_mode = 6
 
 [node name="Defense" type="TextureRect" parent="Stats"]
-margin_left = 304.0
-margin_top = 130.218
-margin_right = 344.0
-margin_bottom = 170.218
+margin_left = 280.0
+margin_top = 132.0
+margin_right = 320.0
+margin_bottom = 172.0
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
 [node name="Cargo" type="TextureRect" parent="Stats"]
-margin_left = 304.0
-margin_top = 175.837
-margin_right = 344.0
-margin_bottom = 215.837
+margin_left = 280.0
+margin_top = 180.0
+margin_right = 320.0
+margin_bottom = 220.0
 texture = ExtResource( 3 )
 expand = true
 stretch_mode = 6
@@ -174,31 +174,86 @@ __meta__ = {
 }
 
 [node name="Speed" type="TextureRect" parent="Stats"]
-margin_left = 304.0
-margin_top = 218.218
-margin_right = 344.0
-margin_bottom = 258.218
+margin_left = 280.0
+margin_top = 228.0
+margin_right = 320.0
+margin_bottom = 268.0
 texture = ExtResource( 12 )
 expand = true
 stretch_mode = 6
 
-[node name="Label2" type="Label" parent="Stats"]
-margin_left = 360.0
-margin_top = 50.2182
-margin_right = 512.0
-margin_bottom = 258.218
+[node name="HPText" type="Label" parent="Stats"]
+margin_left = 336.0
+margin_top = 36.0
+margin_right = 488.0
+margin_bottom = 76.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
 custom_constants/line_spacing = 20
-text = "a
-a
-a
-a
-a"
+text = "a"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AtkText" type="Label" parent="Stats"]
+margin_left = 336.0
+margin_top = 84.0
+margin_right = 488.0
+margin_bottom = 124.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+custom_constants/line_spacing = 20
+text = "a"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DefText" type="Label" parent="Stats"]
+margin_left = 336.0
+margin_top = 132.0
+margin_right = 488.0
+margin_bottom = 172.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+custom_constants/line_spacing = 20
+text = "a"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CargoText" type="Label" parent="Stats"]
+margin_left = 336.0
+margin_top = 180.0
+margin_right = 488.0
+margin_bottom = 220.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+custom_constants/line_spacing = 20
+text = "a"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpeedText" type="Label" parent="Stats"]
+margin_left = 336.0
+margin_top = 228.0
+margin_right = 488.0
+margin_bottom = 268.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+custom_constants/line_spacing = 20
+text = "a"
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Inventory" type="Panel" parent="."]
-margin_top = 328.0
+margin_top = 336.0
 margin_right = 532.0
 margin_bottom = 600.0
 mouse_filter = 1
@@ -273,4 +328,14 @@ __meta__ = {
 [connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered" binds= [ "MOVEMENT_SPEED" ]]
 [connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/HPText" to="." method="_on_HPText_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/HPText" to="." method="_on_Text_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/AtkText" to="." method="_on_AtkText_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/AtkText" to="." method="_on_Text_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/DefText" to="." method="_on_DefText_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/DefText" to="." method="_on_Text_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/CargoText" to="." method="_on_CargoText_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/CargoText" to="." method="_on_Text_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/SpeedText" to="." method="_on_SpeedText_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/SpeedText" to="." method="_on_Text_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

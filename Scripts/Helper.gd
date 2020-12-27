@@ -258,10 +258,10 @@ func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Ar
 	overlay.texture_normal = overlay_texture
 	overlay.visible = false
 	parent.add_child(overlay)
-	overlays.append({"circle":overlay, "id":obj_info.id})
-	overlay.connect("mouse_entered", self_node, "on_%s_over" % [c_v], [obj_info.id])
+	overlays.append({"circle":overlay, "id":obj_info.l_id})
+	overlay.connect("mouse_entered", self_node, "on_%s_over" % [c_v], [obj_info.l_id])
 	overlay.connect("mouse_exited", self_node, "on_%s_out" % [c_v])
-	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id])
+	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id, obj_info.l_id])
 	overlay.rect_position = Vector2(-300 / 2, -300 / 2)
 	overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
 	overlay.rect_scale *= 2
@@ -277,12 +277,12 @@ func change_circle_size(value, overlays):
 		overlay.circle.rect_scale.x = 2 * value
 		overlay.circle.rect_scale.y = 2 * value
 
-func save_tiles(id:int):
-	var planet_save:File = File.new()
-	var file_path:String = "user://Save1/Planets/%s.hx3" % [id]
-	planet_save.open(file_path, File.WRITE)
-	planet_save.store_var(game.tile_data)
-	planet_save.close()
+func save_obj(type:String, id:int, arr:Array):
+	var save:File = File.new()
+	var file_path:String = "user://Save1/%s/%s.hx3" % [type, id]
+	save.open(file_path, File.WRITE)
+	save.store_var(arr)
+	save.close()
 
 func get_rover_weapon_text(name:String):
 	var laser = name.split("_")
@@ -325,3 +325,12 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	yield(tween, "tween_all_completed")
 	parent.remove_child(lb)
 	remove_child(tween)
+
+func add_minerals(amount:float):
+	var mineral_space_available = game.mineral_capacity - game.minerals
+	if mineral_space_available >= amount:
+		game.minerals += amount
+		return 0
+	else:
+		game.minerals = game.mineral_capacity
+		return amount - mineral_space_available
