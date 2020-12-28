@@ -125,7 +125,7 @@ func get_item(_name, costs, _type, _dir):
 	if game.check_enough(item_total_costs):
 		if tab == "pickaxes":
 			if not game.pickaxe.empty():
-				YNPanel(tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()], costs.duplicate(true))
+				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()], [costs.duplicate(true)])
 			else:
 				buy_pickaxe(costs)
 		else:
@@ -141,17 +141,6 @@ func get_item(_name, costs, _type, _dir):
 				game.popup(tr("PURCHASE_SUCCESS"), 1.5)
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
-
-func YNPanel(text:String, _costs:Dictionary):
-	$ConfirmationDialog.dialog_text = text
-	$ConfirmationDialog.popup_centered()
-	if $ConfirmationDialog.is_connected("confirmed", self, "buy_pickaxe_confirm"):
-		$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe_confirm")
-	$ConfirmationDialog.connect("confirmed", self, "buy_pickaxe_confirm", [_costs])
-
-func buy_pickaxe_confirm(_costs:Dictionary):
-	buy_pickaxe(_costs)
-	$ConfirmationDialog.disconnect("confirmed", self, "buy_pickaxe_confirm")
 
 func buy_pickaxe(_costs:Dictionary):
 	if not game.check_enough(_costs):

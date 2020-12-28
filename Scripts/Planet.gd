@@ -20,6 +20,7 @@ var time_bars = []
 var rsrcs = []
 var bldgs#Tiles with a bldg
 var plant_sprites = {}
+var tiles_selected = []
 
 var icons_hidden:bool = false#To save performance
 
@@ -371,6 +372,13 @@ func collect_rsrc(tile, tile_id:int):
 			game.SP += tile.stored
 			tile.stored = 0
 
+func destroy_bldg(id2:int):
+	var tile = game.tile_data[id2]
+	collect_rsrc(tile, id2)
+	remove_child(bldgs[id2])
+	remove_child(hboxes[id2])
+	game.tile_data[id2] = null
+
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
 func _input(event):
@@ -381,13 +389,33 @@ func _input(event):
 				game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 				construct(tile.tile_str, Data.costs[tile.tile_str])
 			if Input.is_action_just_released("F"):
-				game.add_upgrade_panel([tile_over])
+				if tiles_selected.empty():
+					game.add_upgrade_panel([tile_over])
+				else:
+					game.add_upgrade_panel(tiles_selected)
 			if Input.is_action_just_released("X"):
-				collect_rsrc(tile, tile_over)
-				remove_child(bldgs[tile_over])
-				remove_child(hboxes[tile_over])
-				game.tile_data[tile_over] = null
+				game.hide_adv_tooltip()
 				game.hide_tooltip()
+				if tiles_selected.empty():
+					destroy_bldg(tile_over)
+				else:
+					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
+			if Input.is_action_just_pressed("shift"):
+				for i in len(game.tile_data):
+					if not game.tile_data[i] or not game.tile_data[i].has("tile_str"):
+						continue
+					if game.tile_data[i].tile_str == tile.tile_str:
+						tiles_selected.append(i)
+						var white_rect = game.white_rect_scene.instance()
+						white_rect.position.x = (i % wid) * 200
+						white_rect.position.y = (i / wid) * 200
+						add_child(white_rect)
+						white_rect.add_to_group("white_rects")
+	if Input.is_action_just_released("shift"):
+		tiles_selected.clear()
+		for white_rect in get_tree().get_nodes_in_group("white_rects"):
+			remove_child(white_rect)
+			white_rect.remove_from_group("white_rects")
 				
 	var not_on_button = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouseMotion:

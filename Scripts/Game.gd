@@ -24,6 +24,7 @@ var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
 var aurora1_texture = preload("res://Graphics/Tiles/Aurora1.png")
 var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
+var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 
 var construct_panel:Control
 var shop_panel:Control
@@ -43,6 +44,7 @@ var planet_details:Control
 var overlay:Control
 onready var tooltip:Control = $Tooltips/Tooltip
 onready var adv_tooltip:Control = $Tooltips/AdvTooltip
+onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -263,10 +265,16 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}
 					}
 
 var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
-						"speedup2":{"costs":{"money":2800}, "time":15*60000},}
+						"speedup2":{"costs":{"money":2800}, "time":15*60000},
+						"speedup3":{"costs":{"money":11000}, "time":60*60000},
+						"speedup4":{"costs":{"money":65000}, "time":360*60000},
+}
 
 var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
-						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000}}
+						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000},
+						"overclock3":{"costs":{"money":60000}, "mult":2.5, "duration":60*60000},
+						"overclock4":{"costs":{"money":450000}, "mult":3, "duration":120*60000},
+}
 
 var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
@@ -291,6 +299,7 @@ var music_player = AudioStreamPlayer.new()
 
 var spectrum
 func _ready():
+	YN_panel.connect("popup_hide", self, "popup_close")
 	view = load("res://Scenes/Views/View.tscn").instance()
 	add_child(view)
 	add_child(music_player)
@@ -690,7 +699,7 @@ func add_upgrade_panel(ids:Array):
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
-	upgrade_panel.ids = ids
+	upgrade_panel.ids = ids.duplicate(true)
 	panels.push_front(upgrade_panel)
 	if upgrade_panel:
 		$Panels/Control.add_child(upgrade_panel)
@@ -1936,12 +1945,6 @@ func on_change_view_click ():
 		"universe":
 			switch_view("dimension")
 
-func YNPanel(text:String):
-	var YN = ConfirmationDialog.new()
-	$Control.add_child(YN)
-	YN.dialog_text = text
-	YN.popup_centered()
-
 func add_items(item:String, num:int = 1):
 	var cycles = 0
 	while num > 0 and cycles < 2:
@@ -2487,3 +2490,26 @@ func _on_LoadGame_pressed():
 
 func _on_Autosave_timeout():
 	save_game(true)
+
+func show_YN_panel(type:String, text:String, args:Array = []):
+	$UI/PopupBackground.visible = true
+	YN_panel.dialog_text = text
+	YN_panel.popup_centered()
+	if type == "buy_pickaxe":
+		if YN_panel.is_connected("confirmed", self, "buy_pickaxe_confirm"):
+			YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
+		YN_panel.connect("confirmed", self, "buy_pickaxe_confirm", args)
+	elif type == "destroy_buildings":
+		if YN_panel.is_connected("confirmed", self, "destroy_buildings_confirm"):
+			YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
+		YN_panel.connect("confirmed", self, "destroy_buildings_confirm", args)
+
+func buy_pickaxe_confirm(_costs:Dictionary):
+	shop_panel.buy_pickaxe(_costs)
+	YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
+
+func destroy_buildings_confirm(arr:Array):
+	for tile in arr:
+		view.obj.destroy_bldg(tile)
+	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
+	
