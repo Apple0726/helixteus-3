@@ -334,3 +334,6 @@ func add_minerals(amount:float):
 	else:
 		game.minerals = game.mineral_capacity
 		return amount - mineral_space_available
+
+func get_AIE(next_lv:int = 0):
+	return 0.24 + (game.MUs.AIE + next_lv) / 100.0

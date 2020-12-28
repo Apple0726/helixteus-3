@@ -7,6 +7,7 @@ var tab:String = "agriculture"
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 onready var craft_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount
+onready var name_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Name
 onready var desc_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Description2
 onready var hbox = $Contents/HBoxContainer/
 
@@ -33,12 +34,14 @@ func refresh():
 	$Tabs/Agriculture.visible = game.science_unlocked.SA
 	for node in hbox.get_node("Items/Agriculture").get_children():
 		node.visible = game.science_unlocked.SA
-	if $Tabs/Agriculture.visible:
-		_on_Agric_pressed()
+	if tab == "agriculture" and item_name != "":
+		set_item_info(item_name, get_item_desc(item_name), item_costs, item_type, item_dir)
 
 func _on_Agric_pressed():
-	if tab != "agriculture":
-		remove_costs()
+	remove_costs()
+	name_txt.text = ""
+	desc_txt.text = ""
+	$Contents/HBoxContainer/ItemInfo.visible = false
 	tab = "agriculture"
 	$Contents.visible = true
 	Helper.set_visibility($Contents/HBoxContainer/Items/Agriculture)
@@ -55,7 +58,7 @@ var item_costs
 var item_total_costs
 var item_type
 var item_dir
-var item_name
+var item_name = ""
 var item_num:int = 1
 
 func set_item_info(name:String, desc:String, costs:Dictionary, type:String, dir:String):
@@ -95,6 +98,7 @@ func get_item(name, costs, type, dir):
 			game.popup(tr("NOT_ENOUGH_INV_SPACE_CRAFT"), 2.0)
 		else:
 			game.popup(tr("CRAFT_SUCCESS"), 1.5)
+			set_item_info(item_name, get_item_desc(item_name), item_costs, item_type, item_dir)
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 

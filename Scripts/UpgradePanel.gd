@@ -31,7 +31,7 @@ func _ready():
 	path3.text = tr("PATH") + " 3"
 
 func geo_seq(q:float, start_n:int, end_n:int):
-	return pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q)
+	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))
 
 func get_min_lv():
 	var min_lv = INF
@@ -55,13 +55,13 @@ func update():
 		var lv_curr = tile[path_str]
 		if lv_curr != first_tile[path_str]:
 			same_lv = false
-		if tile.is_constructing:
+		if tile.is_constructing or tile[path_str] >= next_lv.value:
 			continue
 		all_tiles_constructing = false
 		var base_costs = Data.costs[tile.tile_str]
 		var base_metal_costs = Data[path_str][tile.tile_str].metal_costs
 		costs.money += round(base_costs.money * geo_seq(1.25, lv_curr, lv_to))
-		costs.time += round(base_costs.time * geo_seq(1.25, lv_curr, lv_to))
+		costs.time = round(base_costs.time * geo_seq(1.25, lv_curr, lv_to))
 		if base_costs.has("energy"):
 			costs.energy += round(base_costs.energy * geo_seq(1.2, lv_curr, lv_to))
 		if lv_to >= 10:
@@ -85,7 +85,6 @@ func update():
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		costs.time /= len(ids)
 		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw)
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
@@ -157,7 +156,7 @@ func _on_Upgrade_pressed():
 		game.deduct_resources(costs)
 		for id in ids:
 			var tile = game.tile_data[id]
-			if tile.is_constructing:
+			if tile.is_constructing or tile[path_str] >= next_lv.value:
 				continue
 			var curr_time = OS.get_system_time_msecs()
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
@@ -165,6 +164,7 @@ func _on_Upgrade_pressed():
 				new_value = round(new_value)
 			var base_costs = Data.costs[tile.tile_str]
 			var cost_time = round(base_costs.time * geo_seq(1.25, tile[path_str], next_lv.value))
+			var cost_money = round(base_costs.money * geo_seq(1.25, tile[path_str], next_lv.value))
 			if tile.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
@@ -180,7 +180,7 @@ func _on_Upgrade_pressed():
 			tile[path_str] = next_lv.value
 			tile[path_str + "_value"] = new_value
 			tile.construction_date = curr_time
-			tile.XP = round(costs.money / 100.0)
+			tile.XP = round(cost_money / 100.0)
 			tile.construction_length = cost_time * 1000.0
 			tile.is_constructing = true
 			game.view.obj.add_time_bar(id, "bldg")

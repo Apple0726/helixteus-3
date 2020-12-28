@@ -158,26 +158,29 @@ func _physics_process(_delta):
 	if progress >= 1:
 		zooming = ""
 		progress = 0
-	if scale.x < 0.25 and not obj.icons_hidden:
-		for time_bar in obj.time_bars:
-			time_bar.node.visible = false
-		for rsrc in obj.rsrcs:
-			rsrc.node.visible = false
-		for hbox in obj.hboxes:
-			if not hbox:
-				continue
-			hbox.visible = false
-		obj.icons_hidden = true
-	elif scale.x >= 0.25 and obj.icons_hidden:
-		for time_bar in obj.time_bars:
-			time_bar.node.visible = true
-		for rsrc in obj.rsrcs:
-			rsrc.node.visible = true
-		for hbox in obj.hboxes:
-			if not hbox:
-				continue
-			hbox.visible = true
-		obj.icons_hidden = false
+	if not obj:
+		return
+	if game.c_v == "planet":
+		if scale.x < 0.25 and not obj.icons_hidden:
+			for time_bar in obj.time_bars:
+				time_bar.node.visible = false
+			for rsrc in obj.rsrcs:
+				rsrc.node.visible = false
+			for hbox in obj.hboxes:
+				if not hbox:
+					continue
+				hbox.visible = false
+			obj.icons_hidden = true
+		elif scale.x >= 0.25 and obj.icons_hidden:
+			for time_bar in obj.time_bars:
+				time_bar.node.visible = true
+			for rsrc in obj.rsrcs:
+				rsrc.node.visible = true
+			for hbox in obj.hboxes:
+				if not hbox:
+					continue
+				hbox.visible = true
+			obj.icons_hidden = false
 
 #Dragging variables
 var dragged = false

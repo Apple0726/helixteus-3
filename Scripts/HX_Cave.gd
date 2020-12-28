@@ -65,6 +65,8 @@ func move_HX():
 		while cave_ref.HX_tiles.has(target_tile) and i < 100:#If the tile is occupied by a HX
 			var target_neighbours = a_n.get_point_connections(target_tile)
 			var m = len(target_neighbours)
+			if m == 0:
+				break
 			target_tile = target_neighbours[Helper.rand_int(0, m-1)]
 			i += 1
 		if target_tile != curr_tile:

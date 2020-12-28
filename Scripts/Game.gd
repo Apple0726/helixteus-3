@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -152,7 +152,9 @@ var help:Dictionary = {
 
 var science_unlocked:Dictionary = {"SA":false, "RC":false, "SCT":false, "OL":false, "YL":false, "GL":false}
 var MUs:Dictionary = {	"MV":1,
-						"MSMB":1}#Levels of mineral upgrades
+						"MSMB":1,
+						"AIE":1,
+}#Levels of mineral upgrades
 
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
@@ -220,7 +222,6 @@ var c_num:int = 0
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":0.5, "right":15}, {"left":250, "right":100000}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":1, "right":100}, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
 }
-var EA_planet_visited = TEST
 var EA_galaxy_visited = TEST
 var EA_cave_visited = TEST
 
@@ -242,6 +243,7 @@ var mat_info = {	"coal":{"value":5},#One kg of coal = $5
 					"cellulose":{"value":15},
 					"silicon":{"value":10},
 }
+#Changing length of met_info changes cave rng!
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
 					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
 					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
@@ -272,8 +274,8 @@ var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 
 var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
 						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000},
-						"overclock3":{"costs":{"money":60000}, "mult":2.5, "duration":60*60000},
-						"overclock4":{"costs":{"money":450000}, "mult":3, "duration":120*60000},
+						"overclock3":{"costs":{"money":50000}, "mult":3, "duration":60*60000},
+						"overclock4":{"costs":{"money":170000}, "mult":4, "duration":120*60000},
 }
 
 var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
@@ -297,7 +299,6 @@ var autosave_interval:int = 10
 
 var music_player = AudioStreamPlayer.new()
 
-var spectrum
 func _ready():
 	YN_panel.connect("popup_hide", self, "popup_close")
 	view = load("res://Scenes/Views/View.tscn").instance()
@@ -444,7 +445,6 @@ func load_game():
 		ships_travel_view_g_coords = save_game.get_var()
 		ships_travel_start_date = save_game.get_64()
 		ships_travel_length = save_game.get_64()
-		EA_planet_visited = save_game.get_8()
 		EA_galaxy_visited = save_game.get_8()
 		EA_cave_visited = save_game.get_8()
 		p_num = save_game.get_64()
@@ -453,7 +453,7 @@ func load_game():
 		c_num = save_game.get_64()
 		save_game.close()
 		add_child(HUD)
-		if c_v in ["mining", "cave"]:
+		if c_v in ["mining", "cave", "planet"]:
 			tile_data = open_obj("Planets", c_p_g)
 		var file = File.new()
 		if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
@@ -986,9 +986,6 @@ func add_planet():
 	var file:File = File.new()
 	if not planet_data[c_p].discovered:
 		generate_tiles(c_p)
-		if not EA_planet_visited:
-			long_popup("Normally you need to fight enemies with ships before being able to visit other planets. But for testing purposes,\nbattle will come much later in the game and you'll be able to visit every planet with a click.", "Early access note")
-			EA_planet_visited = true
 	add_obj("planet")
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
@@ -1609,7 +1606,7 @@ func generate_tiles(id:int):
 	for i in 2:
 		if id != 2 and randf() < 0.35:
 			#au_int: aurora_intensity
-			var au_int = clever_round(rand_range(50000, 100000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = clever_round(rand_range(20000, 40000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, wid)
@@ -1735,6 +1732,7 @@ func generate_tiles(id:int):
 		tile_data[112].type = "obstacle"
 		tile_data[112].tile_str = "ship"
 	Helper.save_obj("Planets", id, tile_data)
+	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
 
 func make_planet_composition(temp:float, depth:String):
@@ -2293,11 +2291,12 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	for i in 5:
-		if len(hotbar) > i and hotbar_presses[i]:
-			var name = hotbar[i]
-			if get_item_num(name) > 0:
-				inventory.on_slot_press(name)
+	if c_v != "battle":
+		for i in 5:
+			if len(hotbar) > i and hotbar_presses[i]:
+				var name = hotbar[i]
+				if get_item_num(name) > 0:
+					inventory.on_slot_press(name)
 	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
 		save_game(false)
 
@@ -2367,7 +2366,6 @@ func save_game(autosave:bool):
 	save_game.store_var(ships_travel_view_g_coords)
 	save_game.store_64(ships_travel_start_date)
 	save_game.store_64(ships_travel_length)
-	save_game.store_8(EA_planet_visited)
 	save_game.store_8(EA_galaxy_visited)
 	save_game.store_8(EA_cave_visited)
 	save_game.store_64(p_num)
@@ -2511,5 +2509,5 @@ func buy_pickaxe_confirm(_costs:Dictionary):
 func destroy_buildings_confirm(arr:Array):
 	for tile in arr:
 		view.obj.destroy_bldg(tile)
+	HUD.refresh()
 	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
-	

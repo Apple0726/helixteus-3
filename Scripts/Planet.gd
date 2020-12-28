@@ -157,7 +157,7 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value]
 			if game.help.tile_shortcuts:
 				game.help_str = "tile_shortcuts"
-				tooltip += "\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HIDE_SHORTCUTS")]
+				tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 		elif tile.type == "plant":
 			if not tile.has("tile_str"):
 				if game.help.plant_something_here:
@@ -232,7 +232,8 @@ func constr_bldg(tile, tile_id:int):
 	if game.check_enough(constr_costs):
 		game.deduct_resources(constr_costs)
 		var curr_time = OS.get_system_time_msecs()
-		tile = {}
+		if not tile:
+			tile = {}
 		tile.tile_str = bldg_to_construct
 		if not game.show.minerals and tile.tile_str == "ME":
 			game.show.minerals = true
@@ -280,7 +281,7 @@ func plant_seed(tile, tile_id:int):
 			tile.construction_date = curr_time
 			tile.construction_length = game.craft_agric_info[game.item_to_use.name].grow_time
 			if tile.has("aurora"):
-				tile.construction_length /= pow(1 + tile.au_int, 0.5)
+				tile.construction_length /= pow(1 + tile.au_int, Helper.get_AIE())
 			if check_lake[1] == "l":
 				tile.construction_length /= 2
 			elif check_lake[1] == "sc":
@@ -295,7 +296,7 @@ func plant_seed(tile, tile_id:int):
 func harvest_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
 	if curr_time >= tile.construction_length + tile.construction_date:
-		game.mets[Helper.get_plant_produce(tile.tile_str)] += game.craft_agric_info[tile.tile_str].produce * (pow(1 + tile.au_int, 0.5) if tile.has("aurora") else 1)
+		game.mets[Helper.get_plant_produce(tile.tile_str)] += game.craft_agric_info[tile.tile_str].produce * (pow(1 + tile.au_int, Helper.get_AIE()) if tile.has("aurora") else 1)
 		tile.erase("tile_str")
 		remove_child(plant_sprites[String(tile_id)])
 	elif game.item_to_use.type == "fertilizer":
@@ -377,7 +378,16 @@ func destroy_bldg(id2:int):
 	collect_rsrc(tile, id2)
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
-	game.tile_data[id2] = null
+	if tile.tile_str == "MS":
+		game.mineral_capacity -= tile.path_1_value
+	if tile.has("aurora"):
+		var au_type = tile.aurora
+		var au_int = tile.au_int
+		game.tile_data[id2].clear()
+		game.tile_data[id2].aurora = au_type
+		game.tile_data[id2].au_int = au_int
+	else:
+		game.tile_data[id2] = null
 
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
@@ -398,6 +408,7 @@ func _input(event):
 				game.hide_tooltip()
 				if tiles_selected.empty():
 					destroy_bldg(tile_over)
+					game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
 			if Input.is_action_just_pressed("shift"):
@@ -475,6 +486,8 @@ func _input(event):
 			elif placing_soil:
 				if game.check_enough({"soil":10}):
 					game.deduct_resources({"soil":10})
+					if not game.tile_data[tile_id]:
+						game.tile_data[tile_id] = {}
 					game.tile_data[tile_id].type = "plant"
 					$Soil.set_cell(x_pos, y_pos, 0)
 					$Soil.update_bitmask_region()
@@ -557,6 +570,7 @@ func add_time_bar(id2:int, type:String):
 	v.y = floor(local_id / wid) * 200
 	v += Vector2(100, 15)
 	var time_bar = game.time_scene.instance()
+	time_bar.visible = get_parent().scale.x >= 0.25
 	time_bar.rect_position = v
 	add_child(time_bar)
 	match type:
@@ -640,6 +654,7 @@ func add_bldg(id2:int, st:String):
 		hbox.add_child(path_3)
 	hbox.rect_size.x = 200
 	hbox.rect_position = v - Vector2(100, 90)
+	hbox.visible = get_parent().scale.x >= 0.25
 	add_child(hbox)
 	hboxes[id2] = hbox
 	if tile.is_constructing:
@@ -659,6 +674,7 @@ func on_path_exit():
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	var rsrc = game.rsrc_stocked_scene.instance()
+	rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
 	rsrc.get_node("TextureRect").texture = icon
 	rsrc.rect_position = v + Vector2(0, 70)
@@ -672,7 +688,7 @@ func _process(_delta):
 		var time_bar = time_bar_obj.node
 		var id2 = time_bar_obj.id
 		var tile = game.tile_data[id2]
-		if not tile:
+		if not tile or not tile.has("type"):
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
 			continue
@@ -719,7 +735,7 @@ func _process(_delta):
 	for rsrc_obj in rsrcs:
 		var tile = game.tile_data[rsrc_obj.id]
 		var rsrc = rsrc_obj.node
-		if not tile:
+		if not tile or not tile.has("type"):
 			remove_child(rsrc_obj.node)
 			rsrcs.erase(rsrc_obj)
 			continue

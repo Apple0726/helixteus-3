@@ -455,3 +455,6 @@ HOLD_SHIFT_TO_SELECT_SIMILAR,Hold shift to select all other buildings of this ty
 VARIES,Varies,,,,,,
 VARYING_LEVELS,Varying levels,,,,,,
 DESTROY_X_BUILDINGS,Destroy %s buildings? You don't get anything back.,,,,,,
+AURORA_INTENSITY_EXPONENT,Aurora intensity exponent,,,,,,
+AIE_DESC,"All aurora multipliers are equal to (1 + aurora intensity)^exponent, where exponent is the value of this upgrade.\nException: caves always have an exponent of 0.25.",,,,,,
+TOTAL_ENERGY_COST,Total energy cost,,,,,,

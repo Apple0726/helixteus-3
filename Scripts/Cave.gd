@@ -8,7 +8,8 @@ onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
 #Aurora intensity
 onready var au_int:float = tile.au_int if tile.has("au_int") else 0
-onready var difficulty:int = 1 + au_int
+onready var aurora_mult:float = pow(1 + au_int, 0.25)
+onready var difficulty:float = 1 * aurora_mult
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -156,12 +157,13 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	var rng = RandomNumberGenerator.new()
 	$UI2/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
 	var first_time:bool = cave_floor > len(seeds)
 	if first_time:
 		var sd = randi()
-		seed(sd)
+		rng.set_seed(sd)
 		noise.seed = sd
 		seeds.append(sd)
 		tiles_mined.append([])
@@ -170,8 +172,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 		partially_looted_chests.append({})
 		hole_exits.append({"hole":-1, "exit":-1})
 	else:
+		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
-		seed(seeds[cave_floor - 1])
 	noise.octaves = 1
 	noise.period = 65
 	#Generate cave
@@ -183,14 +185,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if randf() < min(0.005 * cave_floor, 0.05):
+				if rng.randf() < min(0.005 * cave_floor, 0.05):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX.get_node("Info").visible = false
-					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [Helper.rand_int(1, 3)]))
-					HX_node.HP = round(15 * difficulty * rand_range(1, 1.4))
-					HX_node.atk = round(6 * difficulty * rand_range(1, 1.2))
-					HX_node.def = round(6 * difficulty * rand_range(1, 1.2))
+					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 3)]))
+					HX_node.HP = round(15 * difficulty * rng.randf_range(1, 1.4))
+					HX_node.atk = round(6 * difficulty * rng.randf_range(1, 1.2))
+					HX_node.def = round(6 * difficulty * rng.randf_range(1, 1.2))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						continue
 					HX_node.total_HP = HX_node.HP
@@ -210,7 +212,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					enemy_icon.add_to_group("enemy_icons")
 			else:
 				cave_wall.set_cell(i, j, 0)
-				var rand:float = randf()
+				var rand:float = rng.randf()
 				var ch = 0.01 * pow(cave_floor / 3.0, 1.5)
 				if rand < ch:
 					var diff:float = ch / rand
@@ -219,7 +221,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					for met in game.met_info:
 						if diff > game.met_info[met].rarity:
 							deposit.rsrc_name = met
-							deposit.amount = int(rand_range(0.05, 0.3) * game.met_info[met].amount)
+							deposit.amount = int(rng.randf_range(0.05, 0.3) * game.met_info[met].amount)
 					add_child(deposit)
 					deposit.position = cave_wall.map_to_world(Vector2(i, j))
 					deposits[String(tile_id)] = deposit
@@ -247,17 +249,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 	for room in rooms:
 		var n = room.size
 		for tile in room.tiles:
-			var rand = randf()
-			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1) * pow(1 + au_int, 0.25)
+			var rand = rng.randf()
+			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1) * aurora_mult
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
-				var contents:Dictionary = generate_treasure(tier)
+				var contents:Dictionary = generate_treasure(tier, rng)
 				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 					continue
 				if partially_looted_chests[cave_floor - 1].has(String(tile)):
 					contents = partially_looted_chests[cave_floor - 1][String(tile)].duplicate(true)
 				var chest = chest_scene.instance()
-				add_child(chest)
 				if tier == 1:
 					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
 				elif tier == 2:
@@ -273,6 +274,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				chest.scale *= 0.8
 				chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
 				chests[String(tile)] = {"node":chest, "contents":contents, "tier":tier}
+				add_child(chest)
 	#Remove already-mined tiles
 	for i in cave_size:
 		for j in cave_size:
@@ -284,6 +286,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave_wall.set_cell(i, j, -1)
 				if deposits.has(String(tile_id)):
 					remove_child(deposits[String(tile_id)])
+					deposits.erase(String(tile_id))
 	cave_wall.update_bitmask_region()
 	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
@@ -294,7 +297,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				enemy.get_node("HX").room = i
 			i += 1
 	var pos:Vector2
-	var rand_hole:int = rooms[0].tiles[Helper.rand_int(0, len(rooms[0]) - 1)]
+	var rand_hole:int = rooms[0].tiles[rng.randi_range(0, len(rooms[0]) - 1)]
 	var rand_spawn:int
 	if first_time:
 		rand_spawn = rand_hole
@@ -327,7 +330,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var rot = spawn_edge_tiles[0].dir
 		exit.get_node("GoUpColl").disabled = true
 		while rand_hole == rand_spawn:
-			var rand_id = Helper.rand_int(0, len(spawn_edge_tiles) - 1)
+			var rand_id = rng.randi_range(0, len(spawn_edge_tiles) - 1)
 			rand_spawn = spawn_edge_tiles[rand_id].id
 			rot = spawn_edge_tiles[rand_id].dir
 		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
@@ -338,9 +341,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		exit.get_node("Sprite").texture = load("res://Graphics/Cave/go_up.png")
 		exit.get_node("ExitColl").disabled = true
 		exit.get_node("GoUpColl").disabled = false
-		pos = tiles[Helper.rand_int(0, len(tiles) - 1)] * 200 + Vector2(100, 100)
 		while rand_hole == rand_spawn:
-			rand_spawn = get_tile_index(tiles[Helper.rand_int(0, len(tiles) - 1)])
+			rand_spawn = get_tile_index(tiles[rng.randi_range(0, len(tiles) - 1)])
+		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
 	if cave_floor == num_floors:
 		hole.get_node("CollisionShape2D").disabled = true
 		MM_hole.visible = false
@@ -395,14 +398,14 @@ func on_chest_exited(_body):
 	active_type = ""
 	$UI2/Panel.visible = false
 
-func generate_treasure(tier:int):
-	var contents = {	"money":round(rand_range(1500, 1800) * pow(tier, 3.0) * difficulty),
-						"minerals":round(rand_range(300, 400) * pow(tier, 3.0) * difficulty),
-						"hx_core":Helper.rand_int(1, 5 * pow(tier, 1.5))}
+func generate_treasure(tier:int, rng:RandomNumberGenerator):
+	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty),
+						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * difficulty),
+						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		if randf() < 0.5 / met_value.rarity * pow(1 + au_int, 0.25):
-			contents[met] = game.clever_round(rand_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * difficulty, 3)
+		if rng.randf() < 0.5 / met_value.rarity * aurora_mult:
+			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 0.5), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -795,7 +798,7 @@ func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
 var velocity = Vector2.ZERO
-var max_speed = 1000
+var max_speed = 5000#1000
 var acceleration = 8000
 var friction = 8000
 func _physics_process(delta):
@@ -803,11 +806,15 @@ func _physics_process(delta):
 	update_ray()
 	var input_vector = Vector2.ZERO
 	if OS.get_latin_keyboard_variant() == "QWERTY":
-		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("A")
-		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("W")
+		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
+		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
+#		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("A")
+#		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("W")
 	elif OS.get_latin_keyboard_variant() == "AZERTY":
-		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("Q")
-		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
+		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
+		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))
+#		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("Q")
+#		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta)
@@ -815,6 +822,7 @@ func _physics_process(delta):
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
+	#print(get_tile_index(Vector2(floor(rover.position.x / 200), floor(rover.position.y / 200))))
 	MM.position = minimap_center - rover.position * minimap_zoom
 
 func reset_panel_anim():

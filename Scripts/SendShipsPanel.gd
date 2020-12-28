@@ -2,7 +2,8 @@ extends "Panel.gd"
 onready var HX_data_scene = preload("res://Scenes/HXData.tscn")
 
 var travel_view:String
-var energy_cost:float = 0
+var travel_energy_cost:float = 0
+var total_energy_cost:float = 0
 var time_cost:float = 0
 var depart_pos:Vector2
 var dest_pos:Vector2
@@ -15,6 +16,7 @@ func _ready():
 	set_polygon($Background.rect_size)
 	$PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
 	$TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
+	$TotalEnergyCost.text = "%s:" % [tr("TOTAL_ENERGY_COST")]
 	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_entered", self, "on_mouse_entered")
 	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_exited", self, "on_mouse_exited")
 
@@ -91,8 +93,8 @@ func refresh():
 		HX_data_node.rect_min_size.y = 70
 
 func _on_Send_pressed():
-	if game.energy >= energy_cost:
-		game.energy -= round(energy_cost)
+	if game.energy >= total_energy_cost:
+		game.energy -= round(total_energy_cost)
 		game.ships_depart_pos = depart_pos
 		game.ships_dest_pos = dest_pos
 		game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_g, "g":game.c_g, "s":game.c_g, "p":dest_p_id}
@@ -115,10 +117,13 @@ func calc_costs():
 	var gravity_exit_cost = pow(depart_planet_data.size / 600.0, 2.5) * 50
 	var atm_entry_cost = 8000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10)
 	var gravity_entry_cost = pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 6
-	$EnergyCost2.text = String(round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost))
-	energy_cost = slider_factor * distance * 60 + atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost
+	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
+	$EnergyCost2.text = String(entry_exit_cost)
+	travel_energy_cost = slider_factor * distance * 60
 	time_cost = 5000 / slider_factor * distance
-	$EnergyCost.text = String(game.clever_round(energy_cost))
+	$EnergyCost.text = String(round(travel_energy_cost))
+	total_energy_cost = travel_energy_cost + entry_exit_cost
+	$TotalEnergyCost2.text = String(round(total_energy_cost))
 	$TimeCost.text = Helper.time_to_str(time_cost)
 
 func _on_EnergyCost2_mouse_entered():

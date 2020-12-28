@@ -31,9 +31,7 @@ func _ready():
 	if not tile:
 		tile = {}
 	if tile.has("au_int"):
-		$Mults/AuroraMult.visible = true
-		aurora_mult = game.clever_round(pow(1 + tile.au_int, 0.5))
-		$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
+		refresh_aurora_bonus()
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
@@ -50,6 +48,11 @@ func _ready():
 		$LayerAnim.seek(1, true)
 	$AutoReplace.pressed = game.auto_replace
 
+func refresh_aurora_bonus():
+	$Mults/AuroraMult.visible = true
+	aurora_mult = game.clever_round(pow(1 + tile.au_int, Helper.get_AIE()))
+	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
+	
 func update_info():
 	var upper_depth
 	var lower_depth 

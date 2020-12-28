@@ -69,9 +69,9 @@ func refresh():
 				stone_to_crush[el] = game.stone[el] * hslider.value / total_stone
 			Helper.put_rsrc(vbox, 44, expected_rsrc)
 	for obj in arr:
-		var directory = Directory.new()
+		var file = File.new()
 		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
-		var texture_exists = directory.file_exists(dir_str)
+		var texture_exists = file.file_exists(dir_str)
 		var texture
 		if texture_exists:
 			texture = load(dir_str)

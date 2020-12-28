@@ -72,6 +72,7 @@ margin_bottom = 600.0
 custom_constants/separation = -2
 __meta__ = {
 "_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -124,9 +125,9 @@ __meta__ = {
 
 [node name="HSlider" type="HSlider" parent="."]
 margin_left = 628.0
-margin_top = 404.0
+margin_top = 312.0
 margin_right = 868.0
-margin_bottom = 420.0
+margin_bottom = 328.0
 value = 50.0
 script = ExtResource( 7 )
 __meta__ = {
@@ -135,9 +136,9 @@ __meta__ = {
 
 [node name="LessEnergy" type="Label" parent="."]
 margin_left = 448.0
-margin_top = 384.0
+margin_top = 292.0
 margin_right = 616.0
-margin_bottom = 440.0
+margin_bottom = 348.0
 text = "LESS_ENERGY"
 align = 2
 valign = 1
@@ -147,9 +148,20 @@ __meta__ = {
 
 [node name="TravelCosts" type="Label" parent="."]
 margin_left = 488.0
-margin_top = 452.0
+margin_top = 360.0
 margin_right = 672.0
-margin_bottom = 476.0
+margin_bottom = 384.0
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TotalEnergyCost" type="Label" parent="."]
+margin_left = 460.0
+margin_top = 488.0
+margin_right = 672.0
+margin_bottom = 544.0
+text = "a"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -157,9 +169,9 @@ __meta__ = {
 
 [node name="FasterTravel" type="Label" parent="."]
 margin_left = 880.0
-margin_top = 384.0
+margin_top = 292.0
 margin_right = 1064.0
-margin_bottom = 440.0
+margin_bottom = 348.0
 text = "FASTER_TRAVEL"
 valign = 1
 __meta__ = {
@@ -168,9 +180,9 @@ __meta__ = {
 
 [node name="EnergyCost" type="Label" parent="."]
 margin_left = 772.0
-margin_top = 452.0
+margin_top = 360.0
 margin_right = 956.0
-margin_bottom = 476.0
+margin_bottom = 384.0
 text = "100"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -178,9 +190,9 @@ __meta__ = {
 
 [node name="EnergyCost2" type="Label" parent="."]
 margin_left = 772.0
-margin_top = 324.0
+margin_top = 232.0
 margin_right = 956.0
-margin_bottom = 348.0
+margin_bottom = 256.0
 mouse_filter = 1
 custom_colors/font_color = Color( 1, 1, 0, 1 )
 text = "100"
@@ -190,9 +202,9 @@ __meta__ = {
 
 [node name="PlanetEECost" type="Label" parent="."]
 margin_left = 460.0
-margin_top = 324.0
+margin_top = 232.0
 margin_right = 706.0
-margin_bottom = 348.0
+margin_bottom = 256.0
 mouse_filter = 1
 custom_colors/font_color = Color( 1, 1, 0, 1 )
 align = 2
@@ -202,9 +214,9 @@ __meta__ = {
 
 [node name="TimeCost" type="Label" parent="."]
 margin_left = 772.0
-margin_top = 492.0
+margin_top = 400.0
 margin_right = 956.0
-margin_bottom = 516.0
+margin_bottom = 424.0
 text = "01:12"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -222,9 +234,31 @@ __meta__ = {
 
 [node name="EnergyIcon" type="TextureRect" parent="."]
 margin_left = 720.0
-margin_top = 448.0
+margin_top = 356.0
 margin_right = 752.0
-margin_bottom = 480.0
+margin_bottom = 388.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TotalEnergyCost2" type="Label" parent="."]
+margin_left = 772.0
+margin_top = 488.0
+margin_right = 956.0
+margin_bottom = 512.0
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyIcon3" type="TextureRect" parent="."]
+margin_left = 720.0
+margin_top = 484.0
+margin_right = 752.0
+margin_bottom = 516.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -234,9 +268,9 @@ __meta__ = {
 
 [node name="EnergyIcon2" type="TextureRect" parent="."]
 margin_left = 724.0
-margin_top = 320.0
+margin_top = 228.0
 margin_right = 756.0
-margin_bottom = 352.0
+margin_bottom = 260.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -246,9 +280,9 @@ __meta__ = {
 
 [node name="TimeIcon" type="TextureRect" parent="."]
 margin_left = 720.0
-margin_top = 488.0
+margin_top = 396.0
 margin_right = 752.0
-margin_bottom = 520.0
+margin_bottom = 428.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6

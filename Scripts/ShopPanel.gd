@@ -148,6 +148,7 @@ func buy_pickaxe(_costs:Dictionary):
 	game.deduct_resources(_costs)
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
+		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Pickaxes/" + item_name + ".png")
 	game.pickaxe = {"name":item_name, "speed":game.pickaxe_info[item_name].speed, "durability":game.pickaxe_info[item_name].durability}
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
 
