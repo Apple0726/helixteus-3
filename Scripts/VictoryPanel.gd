@@ -51,4 +51,5 @@ func _on_close_button_pressed():
 			ship_data[0][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[0][weapon].lv - 1]
 			ship_data[0][weapon].lv += 1
 	game.planet_data[p_id].conquered = true
+	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	game.switch_view("system")

@@ -388,7 +388,7 @@ func inc_combo():
 func hit_test(bullet):
 	if red_flash.modulate.a <= 0 and Geometry.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
 		red_flash.modulate.a = 0.3 
-		penalty_time += 3000 #miliseconds removed when hit
+		penalty_time += 6000 #miliseconds removed when hit
 		got_hit = true
 		no_hit_combo = 0
 

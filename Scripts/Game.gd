@@ -1500,10 +1500,12 @@ func generate_planets(id:int):
 		p_i["conquered"] = false
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		if p_num == 0:#Starting solar system has smaller planets
+		if p_num == 0:#Starting solar system has smaller and low pressure planets
 			p_i["size"] = int((2000 + rand_range(0, 3000) * (i + 1) / 2.0))
+			p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 4)))# in bars
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
+			p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 2)))# in bars
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -1524,7 +1526,6 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 2)))# in bars
 		p_i.crust = make_planet_composition(temp, "crust")
 		p_i.mantle = make_planet_composition(temp, "mantle")
 		p_i.core = make_planet_composition(temp, "core")
@@ -1555,7 +1556,7 @@ func generate_planets(id:int):
 			var def = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
 			var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
 			var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
-			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 100000)
+			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 50000)
 			var XP = round(pow(1.2, lv - 1) * 5)
 			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 			power -= floor(pow(1.2, lv))
@@ -1840,17 +1841,25 @@ func make_planet_composition(temp:float, depth:String):
 	return result
 
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
-	var surface_mat_info = {	"coal":{"chance":rand_range(0.1, 0.7), "amount":rand_range(50, 150)},
+	#temp in Celsius
+	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp, 2)), "amount":rand_range(50, 150)},
 								"glass":{"chance":0.1, "amount":1},
 								"sand":{"chance":0.8, "amount":50},
 								"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
-								"cellulose":{"chance":rand_range(0.01, 0.5), "amount":rand_range(1, 20)}
+								"cellulose":{"chance":exp(-0.001 * pow(temp, 2)), "amount":rand_range(3, 15)}
 	}
+	if abs(temp) > 80:
+		surface_mat_info.erase("cellulose")
+		surface_mat_info.erase("coal")
 	surface_mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
 	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
 	surface_mat_info.glass.chance = surface_mat_info.sand.chance * sand_glass_ratio
 	surface_mat_info.sand.chance *= (1 - sand_glass_ratio)
+	if sand_glass_ratio == 0:
+		surface_mat_info.erase("glass")
+	elif sand_glass_ratio == 1:
+		surface_mat_info.erase("sand")
 	for mat in surface_mat_info:
 		surface_mat_info[mat].chance = clever_round(surface_mat_info[mat].chance, 3)
 		surface_mat_info[mat].amount = clever_round(surface_mat_info[mat].amount, 3)
@@ -1962,17 +1971,17 @@ func add_items(item:String, num:int = 1):
 	return num
 
 func remove_items(item:String, num:int = 1):
+	if get_item_num(item) == 0:
+		return 0
 	while num > 0:
 		for st in items:
 			if st != null and st.name == item:
-				var diff = st.num - num
-				st.num = max(0, diff)
-				if st.num == 0:
+				st.num -= num
+				if st.num <= 0:
+					num = -st.num
 					items[items.find(st)] = null
-				if diff == 0:
+				else:
 					return get_item_num(item)
-# warning-ignore:narrowing_conversion
-				num -= min(abs(diff), num)
 	return get_item_num(item)
 
 func get_item_num(item:String):
@@ -2291,7 +2300,7 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if c_v != "battle":
+	if not c_v in ["battle", "cave", ""] and not shop_panel.visible and not craft_panel.visible:
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var name = hotbar[i]
@@ -2394,7 +2403,7 @@ func show_item_cursor(texture):
 	item_cursor.visible = true
 
 func update_item_cursor():
-	if item_to_use.num == 0:
+	if item_to_use.num <= 0:
 		_on_BottomInfo_close_button_pressed()
 		item_to_use = {"name":"", "type":"", "num":0}
 	else:
@@ -2501,6 +2510,10 @@ func show_YN_panel(type:String, text:String, args:Array = []):
 		if YN_panel.is_connected("confirmed", self, "destroy_buildings_confirm"):
 			YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
 		YN_panel.connect("confirmed", self, "destroy_buildings_confirm", args)
+	elif type == "send_ships":
+		if YN_panel.is_connected("confirmed", self, "send_ships_confirm"):
+			YN_panel.disconnect("confirmed", self, "send_ships_confirm")
+		YN_panel.connect("confirmed", self, "send_ships_confirm")
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)
@@ -2511,3 +2524,7 @@ func destroy_buildings_confirm(arr:Array):
 		view.obj.destroy_bldg(tile)
 	HUD.refresh()
 	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
+
+func send_ships_confirm():
+	send_ships_panel.send_ships()
+	YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")

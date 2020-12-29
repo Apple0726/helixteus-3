@@ -702,6 +702,7 @@ format = 1
 tile_set = SubResource( 49 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
+collision_layer = 2147483649
 collision_mask = 0
 format = 1
 

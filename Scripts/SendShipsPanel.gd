@@ -93,6 +93,12 @@ func refresh():
 		HX_data_node.rect_min_size.y = 70
 
 func _on_Send_pressed():
+	if game.c_s_g == 0 and game.planet_data[dest_p_id].pressure > 26:
+		game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
+	else:
+		send_ships()
+
+func send_ships():
 	if game.energy >= total_energy_cost:
 		game.energy -= round(total_energy_cost)
 		game.ships_depart_pos = depart_pos
@@ -107,16 +113,16 @@ func _on_Send_pressed():
 	else:
 		game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	game.HUD.refresh()
-
+	
 func _on_HSlider_value_changed(value):
 	calc_costs()
 
 func calc_costs():
 	var slider_factor = pow(10, $HSlider.value / 25.0 - 2)
-	var atm_exit_cost = pow(depart_planet_data.pressure, 1.5) * 10000
-	var gravity_exit_cost = pow(depart_planet_data.size / 600.0, 2.5) * 50
-	var atm_entry_cost = 8000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10)
-	var gravity_entry_cost = pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 6
+	var atm_exit_cost = round(pow(depart_planet_data.pressure, 1.4) * 8000)
+	var gravity_exit_cost = round(pow(depart_planet_data.size / 600.0, 2.5) * 40)
+	var atm_entry_cost = round(6000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10))
+	var gravity_entry_cost = round(pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 5)
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.text = String(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 60
@@ -127,7 +133,7 @@ func calc_costs():
 	$TimeCost.text = Helper.time_to_str(time_cost)
 
 func _on_EnergyCost2_mouse_entered():
-	var atm_exit_cost = round(pow(depart_planet_data.pressure, 1.5) * 8000)
+	var atm_exit_cost = round(pow(depart_planet_data.pressure, 1.4) * 8000)
 	var gravity_exit_cost = round(pow(depart_planet_data.size / 600.0, 2.5) * 40)
 	var atm_entry_cost = round(6000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10))
 	var gravity_entry_cost = round(pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 5)

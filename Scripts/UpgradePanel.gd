@@ -1,14 +1,10 @@
-extends Control
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
 var ids:Array
 var bldg:String#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
-const C = Vector2(640, 360)
-const W = Vector2(576 / 2, 250 / 2)
-var polygon:PoolVector2Array = [C - W, C + Vector2(576 / 2, -250 / 2), C + W, C  + Vector2(-576 / 2, 250 / 2)]
 
 onready var path1 = $UpgradePanel/VBoxContainer/PathButtons/Path1
 onready var path2 = $UpgradePanel/VBoxContainer/PathButtons/Path2
@@ -21,6 +17,7 @@ onready var cost_icons = $UpgradePanel/ScrollContainer/Costs
 onready var upgrade_btn = $UpgradePanel/Upgrade
 
 func _ready():
+	set_polygon($UpgradePanel.rect_size)
 	if game.tile_data[ids[0]].has("path_2"):
 		path2.visible = true
 	if game.tile_data[ids[0]].has("path_3"):

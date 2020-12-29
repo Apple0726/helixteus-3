@@ -49,7 +49,7 @@ func _ready():
 	randomize()
 	if game:
 		ship_data = game.ship_data
-		HX_data = game.HX_data[game.c_p]
+		HX_data = game.planet_data[game.c_p].HX_data
 	else:
 		HX_data = []
 		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]

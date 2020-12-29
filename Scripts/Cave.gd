@@ -122,14 +122,14 @@ func set_rover_data():
 		elif rsrc == "rover_mining":
 			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + inventory[i].name + ".png")
 		else:
-			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
+			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(inventory[i].name), inventory[i].name])
 			if inventory[i].has("num"):
 				slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
 	$Rover/Bar.max_value = total_HP
-	$UI2/Inventory/Bar.value = weight
 	$UI2/Inventory/Bar.max_value = weight_cap
+	$UI2/Inventory/Bar.value = weight
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
 
@@ -188,13 +188,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rng.randf() < min(0.005 * cave_floor, 0.05):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
-					HX.get_node("Info").visible = false
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 3)]))
 					HX_node.HP = round(15 * difficulty * rng.randf_range(1, 1.4))
 					HX_node.atk = round(6 * difficulty * rng.randf_range(1, 1.2))
 					HX_node.def = round(6 * difficulty * rng.randf_range(1, 1.2))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						continue
+					HX.get_node("Info").visible = false
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
@@ -586,13 +586,12 @@ func _input(event):
 		update_ray()
 
 func exit_cave():
-	if not cave_data.has("enemies_rekt"):
-		cave_data.seeds = seeds.duplicate(true)
-		cave_data.tiles_mined = tiles_mined.duplicate(true)
-		cave_data.enemies_rekt = enemies_rekt.duplicate(true)
-		cave_data.chests_looted = chests_looted.duplicate(true)
-		cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
-		cave_data.hole_exits = hole_exits.duplicate(true)
+	cave_data.seeds = seeds.duplicate(true)
+	cave_data.tiles_mined = tiles_mined.duplicate(true)
+	cave_data.enemies_rekt = enemies_rekt.duplicate(true)
+	cave_data.chests_looted = chests_looted.duplicate(true)
+	cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
+	cave_data.hole_exits = hole_exits.duplicate(true)
 	for i in len(inventory):
 		if not inventory[i].has("name"):
 			continue
@@ -798,9 +797,9 @@ func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
 var velocity = Vector2.ZERO
-var max_speed = 5000#1000
-var acceleration = 8000
-var friction = 8000
+var max_speed = 1000#1000
+var acceleration = 12000
+var friction = 12000
 func _physics_process(delta):
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
@@ -817,12 +816,11 @@ func _physics_process(delta):
 #		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta)
+		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta * speed_mult)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_mult)
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
-	#print(get_tile_index(Vector2(floor(rover.position.x / 200), floor(rover.position.y / 200))))
 	MM.position = minimap_center - rover.position * minimap_zoom
 
 func reset_panel_anim():

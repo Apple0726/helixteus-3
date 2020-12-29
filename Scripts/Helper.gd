@@ -146,12 +146,12 @@ func get_plant_produce(name:String):
 func get_wid(size:float):
 	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
 
-func get_dir_from_name(name:String):
-	if name.substr(0, 7) == "speedup":
+func get_dir_from_name(_name:String):
+	if _name.substr(0, 7) == "speedup":
 		return "Items/Speedups"
-	if name.substr(0, 9) == "overclock":
+	if _name.substr(0, 9) == "overclock":
 		return "Items/Overclocks"
-	match name:
+	match _name:
 		"lead_seeds", "fertilizer":
 			return "Agriculture"
 		"money":

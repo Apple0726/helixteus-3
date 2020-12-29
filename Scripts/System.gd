@@ -76,7 +76,7 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 func show_planet_info(id:int, l_id:int):
 	var p_i = game.planet_data[l_id]
 	var wid:int = Helper.get_wid(p_i.size)
-	if {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":game.c_p} == game.ships_c_coords and not p_i.conquered:
+	if game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and l_id == game.ships_c_coords.p and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
@@ -95,7 +95,7 @@ func on_planet_click (id:int, l_id:int):
 			p_i.conquered = true
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 		else:
-			if {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":game.c_p} == game.ships_c_coords and not p_i.conquered:
+			if game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and l_id == game.ships_c_coords.p and not p_i.conquered:
 				game.c_p = l_id
 				game.c_p_g = id
 				game.switch_view("battle")

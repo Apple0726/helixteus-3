@@ -12,7 +12,7 @@ func _ready():
 	set_polygon($Background.rect_size)
 
 func _input(event):
-	if Input.is_action_just_released("X") and rover_over_id != -1:
+	if modulate.a == 1 and Input.is_action_just_released("X") and rover_over_id != -1:
 		game.rover_data.remove(rover_over_id)
 		rover_over_id = -1
 		game.hide_adv_tooltip()

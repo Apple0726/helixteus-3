@@ -134,17 +134,6 @@ func generate_rock(new:bool):
 				var progress2 = tile.current_deposit.progress
 				var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult, 3)
-				for i in clamp(round(amount / 2.0), 1, 40):
-					var met_sprite = Sprite.new()
-					met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
-					met_sprite.centered = true
-					met_sprite.scale *= rand_range(0.15, 0.2)
-					var half_size_in_px = met_sprite.scale.x * 128
-					met_sprite.rotation = rand_range(0, 2 * PI)
-					met_sprite.position.x = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
-					met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
-					metal_sprites.append(met_sprite)
-					tile_sprite.add_child(met_sprite)
 				contents[met] = amount
 				other_volume += amount / game.met_info[met].density / 1000
 				tile.current_deposit.progress += 1
@@ -154,6 +143,20 @@ func generate_rock(new:bool):
 		tile.contents = contents
 	else:
 		contents = tile.contents
+	if tile.has("current_deposit"):
+		var met = tile.current_deposit.met
+		var amount = contents[met]
+		for i in clamp(round(amount / 2.0), 1, 40):
+			var met_sprite = Sprite.new()
+			met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
+			met_sprite.centered = true
+			met_sprite.scale *= rand_range(0.15, 0.2)
+			var half_size_in_px = met_sprite.scale.x * 128
+			met_sprite.rotation = rand_range(0, 2 * PI)
+			met_sprite.position.x = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
+			met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
+			metal_sprites.append(met_sprite)
+			tile_sprite.add_child(met_sprite)
 	Helper.put_rsrc(vbox, 42, contents)
 	for mass in contents.values():
 		total_mass += mass

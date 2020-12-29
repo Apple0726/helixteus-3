@@ -102,7 +102,7 @@ func _on_Button_pressed():
 		tile.construction_date = OS.get_system_time_msecs()
 		tile.construction_length = rover_costs.time * 1000
 		tile.XP = round(rover_costs.money / 100.0)
-		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult), "spd":round(spd_bonus * mult), "inventory":inventory, "i_w_w":{}})
+		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult), "spd":round(spd_bonus * pow(mult, 0.25)), "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
@@ -180,7 +180,7 @@ func refresh():
 	$Stats/AtkText.text = String(round(atk * mult))
 	$Stats/DefText.text = String(round((def + def_bonus) * mult))
 	$Stats/CargoText.text = "%s kg" % [round((weight_cap + cargo_bonus) * mult)]
-	$Stats/SpeedText.text = String(game.clever_round(spd_bonus * mult, 3))
+	$Stats/SpeedText.text = String(game.clever_round(spd_bonus * pow(mult, 0.25), 3))
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -225,4 +225,4 @@ func _on_CargoText_mouse_entered():
 	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus) * mult)])
 
 func _on_SpeedText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [0, spd_bonus, mult, game.clever_round((spd_bonus) * mult, 3)])
+	game.show_tooltip("(%s + %s) * %s^0.25 = %s" % [0, spd_bonus, mult, game.clever_round((spd_bonus) * pow(mult, 0.25), 3)])
