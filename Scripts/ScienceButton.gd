@@ -37,6 +37,18 @@ func get_science_name(sc:String):
 			return tr("YELLOW_LASER").format({"laser":tr("LASER")})
 		"GL":
 			return tr("GREEN_LASER").format({"laser":tr("LASER")})
+		"BL":
+			return tr("BLUE_LASER").format({"laser":tr("LASER")})
+		"PL":
+			return tr("PURPLE_LASER").format({"laser":tr("LASER")})
+		"UVL":
+			return tr("UV_LASER").format({"laser":tr("LASER")})
+		"XRL":
+			return tr("XRAY_LASER").format({"laser":tr("LASER")})
+		"GRL":
+			return tr("GAMMARAY_LASER").format({"laser":tr("LASER")})
+		"UGRL":
+			return tr("ULTRAGAMMARAY_LASER").format({"laser":tr("LASER")})
 
 func on_mouse_entered():
 	is_over = true
