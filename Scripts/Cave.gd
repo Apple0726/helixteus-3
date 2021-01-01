@@ -778,6 +778,18 @@ func get_color(color:String):
 			return Color.yellow
 		"green":
 			return Color.green
+		"blue":
+			return Color.blue
+		"purple":
+			return Color.purple
+		"ultra":
+			return Color.violet
+		"xray":
+			return Color.lightgray
+		"gamma":
+			return Color.lightgreen
+		"ultragamma":
+			return Color.white
 
 func sort_size(a, b):
 	if a.size > b.size:

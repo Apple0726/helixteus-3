@@ -60,6 +60,12 @@ var science_unlocks = {	"SA":{"cost":100, "parent":""},
 						"OL":{"cost":1500, "parent":"RC"},
 						"YL":{"cost":8000, "parent":"OL"},
 						"GL":{"cost":40000, "parent":"YL"},
+						"BL":{"cost":200000, "parent":"GL"},
+						"PL":{"cost":800000, "parent":"BL"},
+						"UVL":{"cost":2000000, "parent":"PL"},
+						"XRL":{"cost":10000000, "parent":"UVL"},
+						"GRL":{"cost":30000000, "parent":"XRL"},
+						"UGRL":{"cost":200000000, "parent":"GRL"},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},
@@ -78,11 +84,23 @@ var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":
 						"orange_laser":{"damage":10, "cooldown":0.195, "costs":{"money":20000, "silicon":10, "time":60}},
 						"yellow_laser":{"damage":22, "cooldown":0.19, "costs":{"money":150000, "silicon":15, "time":360}},
 						"green_laser":{"damage":48, "cooldown":0.185, "costs":{"money":900000, "silicon":20, "time":1500}},
+						"blue_laser":{"damage":100, "cooldown":0.18, "costs":{"money":2500000, "silicon":50, "quartz":25, "time":4500}},
+						"purple_laser":{"damage":185, "cooldown":0.175, "costs":{"money":7500000, "silicon":100, "quartz":50, "time":9000}},
+						"ultra_violet_laser":{"damage":250, "cooldown":0.17, "costs":{"money":32500000, "silicon":200, "quartz":100, "time":18000}},
+						"xray_laser":{"damage":600, "cooldown":0.165, "costs":{"money":125000000, "silicon":500, "quartz":200, "time":30000}},
+						"gamma_ray_laser":{"damage":1250, "cooldown":0.16, "costs":{"money":2500000000, "silicon":1000, "quartz":500, "time":65000}},
+						"ultragamma_ray_laser":{"damage":10000, "cooldown":1, "costs":{"money":20000000000, "silicon":2500, "quartz":1000, "time":100000}},
 }#														rnge: mining range
 var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money":3000, "silicon":5, "time":10}},
 						"orange_mining_laser":{"speed":1.4, "rnge":260, "costs":{"money":20000, "silicon":10, "time":60}},
 						"yellow_mining_laser":{"speed":1.9, "rnge":270, "costs":{"money":150000, "silicon":15, "time":360}},
 						"green_mining_laser":{"speed":2.5, "rnge":285, "costs":{"money":900000, "silicon":20, "time":1500}},
+						"blue_mining_laser":{"speed":3, "rnge":300, "costs":{"money":2500000, "silicon":50, "quartz":25, "time":4500}},
+						"purple_mining_laser":{"speed":3.6, "rnge":315, "costs":{"money":7500000, "silicon":100, "quartz":50, "time":9000}},
+						"ultra_violet_mining_laser":{"speed":4.3, "rnge":330, "costs":{"money":32500000, "silicon":200, "quartz":100, "time":18000}},
+						"xray_mining_laser":{"speed":5.1, "rnge":350, "costs":{"money":125000000, "silicon":500, "quartz":200, "time":30000}},
+						"gamma_ray_mining_laser":{"speed":6, "rnge":380, "costs":{"money":2500000000, "silicon":1000, "quartz":500, "time":65000}},
+						"ultragamma_ray_mining_laser":{"speed":10, "rnge":230, "costs":{"money":20000000000, "silicon":2500, "quartz":1000, "time":100000}},
 }
 var bullet_data = [{"damage":7, "accuracy":1.0}, {"damage":10, "accuracy":1.05}]
 var laser_data = [{"damage":4, "accuracy":1.5}, {"damage":6, "accuracy":1.6}]
