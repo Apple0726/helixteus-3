@@ -40,7 +40,7 @@ func get_min_lv():
 	return min_lv
 
 func update():
-	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "time":0.0}
+	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "time":0.0}
 	var same_lv = true
 	var first_tile = game.tile_data[ids[0]]
 	bldg = first_tile.tile_str
@@ -58,27 +58,18 @@ func update():
 		var base_costs = Data.costs[tile.tile_str]
 		var base_metal_costs = Data[path_str][tile.tile_str].metal_costs
 		costs.money += round(base_costs.money * geo_seq(1.25, lv_curr, lv_to))
-		costs.time = round(base_costs.time * geo_seq(1.25, lv_curr, lv_to))
+		costs.time = round(base_costs.time * geo_seq(1.24, lv_curr, lv_to))
 		if base_costs.has("energy"):
 			costs.energy += round(base_costs.energy * geo_seq(1.2, lv_curr, lv_to))
-		if lv_to >= 10:
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-			costs.lead += round(base_metal_costs.lead * geo_seq(1.2, max(0, lv_curr - 10), min(lv_to, 20) - 10))
-		if lv_to >= 20:
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-			costs.copper += round(base_metal_costs.copper * geo_seq(1.2, max(0, lv_curr - 20), min(lv_to, 30) - 20))
-		if lv_to >= 30:
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-# warning-ignore:narrowing_conversion
-			costs.iron += round(base_metal_costs.iron * geo_seq(1.2, max(0, lv_curr - 30), min(lv_to, 40) - 30))
+		if lv_curr <= 10 and lv_to >= 11:
+			#costs.lead += round(base_metal_costs.lead * geo_seq(1.2, max(0, lv_curr - 10), min(lv_to, 20) - 10))
+			costs.lead += base_metal_costs.lead
+		if lv_curr <= 20 and lv_to >= 21:
+			costs.copper += base_metal_costs.copper
+		if lv_curr <= 30 and lv_to >= 31:
+			costs.iron += base_metal_costs.iron
+		if lv_curr <= 40 and lv_to >= 41:
+			costs.aluminium += base_metal_costs.aluminium
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
@@ -160,7 +151,7 @@ func _on_Upgrade_pressed():
 			if bldg_info.is_value_integer:
 				new_value = round(new_value)
 			var base_costs = Data.costs[tile.tile_str]
-			var cost_time = round(base_costs.time * geo_seq(1.25, tile[path_str], next_lv.value))
+			var cost_time = round(base_costs.time * geo_seq(1.24, tile[path_str], next_lv.value))
 			var cost_money = round(base_costs.money * geo_seq(1.25, tile[path_str], next_lv.value))
 			if tile.has("collect_date"):
 				var prod_ratio
@@ -170,10 +161,12 @@ func _on_Upgrade_pressed():
 					prod_ratio = 1.0
 				var coll_date = tile.collect_date
 				tile.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
-				if tile.has("overclock_mult"):
-					tile.overclock_date += cost_time * 1000.0
 			elif tile.tile_str == "MS":
 				tile.mineral_cap_upgrade = new_value - tile.path_1_value
+			if tile.has("start_date"):
+				tile.start_date += cost_time * 1000
+			if tile.has("overclock_mult"):
+				tile.overclock_date += cost_time * 1000
 			tile[path_str] = next_lv.value
 			tile[path_str + "_value"] = new_value
 			tile.construction_date = curr_time

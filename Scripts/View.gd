@@ -111,6 +111,7 @@ func save_zooms(obj_str:String):
 		"planet":
 			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
+			#print(game.planet_data[game.c_p].view)
 		"system":
 			game.system_data[game.c_s]["view"]["pos"] = self.position / self.scale.x
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x

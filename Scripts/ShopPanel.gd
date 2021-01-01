@@ -6,7 +6,7 @@ var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
-onready var buy_amount = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
+onready var amount_node = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
 onready var buy_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy
 var num:int = 1
 
@@ -130,7 +130,7 @@ func get_item(_name, costs, _type, _dir):
 				buy_pickaxe(costs)
 		else:
 			game.deduct_resources(item_total_costs)
-			var items_left = game.add_items(item_name, buy_amount.value)
+			var items_left = game.add_items(item_name, amount_node.value)
 			if items_left > 0:
 				var refund = item_total_costs.duplicate(true)
 				for rsrc in item_total_costs:
@@ -139,6 +139,8 @@ func get_item(_name, costs, _type, _dir):
 				game.popup(tr("NOT_ENOUGH_INV_SPACE_BUY"), 2.0)
 			else:
 				game.popup(tr("PURCHASE_SUCCESS"), 1.5)
+			if game.HUD:
+				game.HUD.update_hotbar()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 

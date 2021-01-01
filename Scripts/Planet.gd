@@ -6,7 +6,7 @@ onready var id = game.c_p
 onready var p_i = game.planet_data[id]
 
 #For exploring a cave
-var rover_selected:Dictionary = {}
+var rover_selected:int = -1
 #The building you selected in construct panel
 var bldg_to_construct:String = ""
 #The cost of the above building
@@ -319,8 +319,10 @@ func speedup_bldg(tile, tile_id:int):
 		var time_sped_up = min(speedup_time * num_needed, time_remaining)
 		if tile.has("collect_date"):
 			tile.collect_date -= time_sped_up
-		if tile.has("overclock_length"):
-			tile.overclock_length -= time_sped_up
+		if tile.has("overclock_date"):
+			tile.overclock_date -= time_sped_up
+		if tile.has("start_date"):
+			tile.start_date -= time_sped_up
 		game.item_to_use.num -= num_needed
 
 func overclock_bldg(tile, tile_id:int):
@@ -506,7 +508,7 @@ func _input(event):
 						$Soil.set_cell(x_pos, y_pos, -1)
 						$Soil.update_bitmask_region()
 					else:
-						if t in ["seeds", "fertilizer", ""]:
+						if t in ["fertilizer", ""]:
 							var orig_num:int = game.item_to_use.num
 							if tiles_selected.empty():
 								call("%s_plant" % ["harvest" if t == "" else t], tile, tile_id)
@@ -516,6 +518,10 @@ func _input(event):
 									if t != "" and game.item_to_use.num <= 0:
 										break
 							game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
+							game.update_item_cursor()
+						elif t == "seeds" and not tile.has("tile_str"):
+							seeds_plant(tile, tile_id)
+							game.remove_items(game.item_to_use.name, 1)
 							game.update_item_cursor()
 				elif tile.type == "bldg":
 					if t in ["speedup", "overclock"]:

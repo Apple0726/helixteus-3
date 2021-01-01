@@ -116,6 +116,8 @@ func get_item_name (name:String):
 	match name:
 		"lead_seeds":
 			return tr("LEAD_SEEDS")
+		"copper_seeds":
+			return tr("COPPER_SEEDS")
 		"fertilizer":
 			return tr("FERTILIZER")
 		"stick":
@@ -134,14 +136,10 @@ func get_item_name (name:String):
 			return tr("HX_CORE")
 
 func get_plant_name(name:String):
-	match name:
-		"lead_seeds":
-			return tr("PLANT_TITLE").format({"metal":tr("LEAD")})
+	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
 
 func get_plant_produce(name:String):
-	match name:
-		"lead_seeds":
-			return "lead"
+	return name.split("_")[0]
 
 func get_wid(size:float):
 	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
@@ -152,7 +150,7 @@ func get_dir_from_name(_name:String):
 	if _name.substr(0, 9) == "overclock":
 		return "Items/Overclocks"
 	match _name:
-		"lead_seeds", "fertilizer":
+		"lead_seeds", "copper_seeds", "fertilizer":
 			return "Agriculture"
 		"money":
 			return "Icons"
@@ -167,7 +165,7 @@ func get_type_from_name(name:String):
 	if name.substr(0, 9) == "overclock":
 		return "overclock_info"
 	match name:
-		"lead_seeds", "fertilizer":
+		"lead_seeds", "copper_seeds", "fertilizer":
 			return "craft_agric_info"
 		_:
 			return ""
@@ -240,8 +238,11 @@ func mult_dict_by(dict:Dictionary, value:float):
 func get_crush_info(tile_obj):
 	var time = OS.get_system_time_msecs()
 	var crush_spd = tile_obj.path_1_value
-	var progress = (time - tile_obj.start_date) / 1000.0 * crush_spd / tile_obj.stone_qty
-	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date) / 1000.0 * tile_obj.path_1_value))
+	var constr_delay = 0
+	if tile_obj.is_constructing:
+		constr_delay = tile_obj.construction_date + tile_obj.construction_length - time
+	var progress = (time - tile_obj.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.stone_qty
+	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date + constr_delay) / 1000.0 * tile_obj.path_1_value))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
 func get_prod_info(tile_obj):

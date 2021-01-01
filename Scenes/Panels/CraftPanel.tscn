@@ -142,6 +142,7 @@ margin_right = 146.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 146, 30 )
 value = 1.0
+allow_greater = true
 align = 2
 prefix = "x "
 

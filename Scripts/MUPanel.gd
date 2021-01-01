@@ -10,6 +10,7 @@ func refresh():
 			hbox.get_node("Upgrade").text = "  %s" % [get_min_cost(hbox.name)]
 	set_upg_text("MV")
 	set_upg_text("MSMB")
+	set_upg_text("IS")
 	set_upg_text("AIE")
 
 func set_upg_text(MU:String, next_lv:int = 0):
@@ -18,6 +19,8 @@ func set_upg_text(MU:String, next_lv:int = 0):
 			game.add_text_icons($VBoxContainer/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [load("res://Graphics/Icons/minerals.png"), load("res://Graphics/Icons/money.png")])
 		"MSMB":
 			$VBoxContainer/MSMB/Effects.text = "+ %s " % [(game.MUs.MSMB + next_lv - 1) * 5] + "%"
+		"IS":
+			$VBoxContainer/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"AIE":
 			$VBoxContainer/AIE/Effects.text = String(Helper.get_AIE(next_lv))
 	if next_lv == 0:
@@ -37,6 +40,8 @@ func _on_Upgrade_pressed(MU:String):
 		game.HUD.refresh()
 		if MU == "AIE" and game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
 			game.mining_HUD.refresh_aurora_bonus()
+		if MU == "IS":
+			game.items.append(null)
 	else:
 		game.popup(tr("NOT_ENOUGH_MINERALS"), 1.5)
 

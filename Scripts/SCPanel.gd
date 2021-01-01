@@ -86,6 +86,8 @@ func refresh():
 	hbox.visible = not is_crushing
 	CC.visible = is_crushing
 	hslider.max_value = min(total_stone, tile.path_2_value)
+	hslider.min_value = 0
+	hslider.value = hslider.max_value
 
 func obj_to_array(elements:Dictionary):
 	var stone_qty = Helper.get_sum_of_dict(elements)

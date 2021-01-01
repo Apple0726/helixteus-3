@@ -221,6 +221,7 @@ YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You a
 YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,Haz minado metales! Revísalos en tu inventario.,
 NOT_ADJACENT_TO_LAKE,Not adjacent to a %s lake,Non adjacent à un lac de %s,Non è adiacente a un lago di %s,,,No adyacente a un lago %s,%s 호수 옆에만 심을수 있습니다.
 LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,Semillas de plomo,납 씨앗
+COPPER_SEEDS,Copper seeds,Graines de cuivre,Semi di rame,,,,구리 씨앗
 SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,Cultiva @i %s kg,@i %s kg를 자랍니다 
 FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,Fertilizante,비료
 FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,El fertilizante acelera el crecimiento de las plantas por una hora.,비료는 식물의 성장을 1시간 가속화합니다.
@@ -259,7 +260,8 @@ TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prend
 F_TO_EXIT,Press F to exit cave,Appuyez sur F pour sortir de la grotte,Premere F per uscire dalla grotta,,,Presiona F para salir de la cueva,F 누르면 둥굴에서 나갑니다
 F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scendere,,,Presiona F para bajar,F 누르면 내려갑니다
 F_TO_GO_UP,Press F to go up,Appuyez sur F pour monter,Premere F per salire,,,Presiona F para subir,F 누르면 올라갑니다
-WEIGHT_INV_FULL,The rover is unable to take everything in the chest.,,,,,Este rover es incapaz de llevárselo todo en el cofre.,
+WEIGHT_INV_FULL_CHEST,The rover is unable to take everything in the chest.,,,,,Este rover es incapaz de llevárselo todo en el cofre.,
+WEIGHT_INV_FULL_MINING,The rover is unable to take everything you just mined.,,,,,,
 CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,Piso B%s,지하 %s층
 NUM_FLOORS,%s floors,%s étages,%s piani,,,%s pisos,층 수: %s
 FLOOR_SIZE,Floor size: {size}x{size},Dimensions des étages: {size}x{size},Dimensioni dei piani: {size}x{size},,,Tamaño del piso: {size}x{size},층 크기: {size}x{size}
@@ -460,3 +462,6 @@ AIE_DESC,"All aurora multipliers are equal to (1 + aurora intensity)^exponent, w
 TOTAL_ENERGY_COST,Total energy cost,,,,,,
 WARNING,Warning,,,,,,
 HIGH_PRESSURE_PLANET,"This planet has a very high atmospheric pressure. Your ship will have an easy time going in, but it will\nneed immense amounts of energy (in the millions!) to get out. Send anyway?",,,,,,
+INVENTORY_SLOTS,Inventory slots,,,,,,
+IS_DESC,Number of slots you have in your inventory.,,,,,,
+X_SLOTS,%s slots,,,,,,

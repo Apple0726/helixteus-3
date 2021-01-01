@@ -54,6 +54,7 @@ var i_w_w:Dictionary = {}#inventory_with_weight
 var weight:float = 0.0
 var weight_cap:float = 1500.0
 
+var moving_fast:bool = false
 var cave_floor:int = 1
 var num_floors:int
 var cave_size:int
@@ -131,7 +132,7 @@ func set_rover_data():
 	$UI2/Inventory/Bar.max_value = weight_cap
 	$UI2/Inventory/Bar.value = weight
 	update_health_bar(total_HP)
-	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
+	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
 
 func remove_cave():
 	astar_node.clear()
@@ -185,13 +186,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if rng.randf() < min(0.005 * cave_floor, 0.05):
+				if rng.randf() < 0.005 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 3)]))
-					HX_node.HP = round(15 * difficulty * rng.randf_range(1, 1.4))
-					HX_node.atk = round(6 * difficulty * rng.randf_range(1, 1.2))
-					HX_node.def = round(6 * difficulty * rng.randf_range(1, 1.2))
+					HX_node.HP = round(10 * pow(difficulty, 0.9) * rng.randf_range(0.8, 1.2))
+					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
+					HX_node.def = round(6 * pow(difficulty, 0.9) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						continue
 					HX.get_node("Info").visible = false
@@ -346,9 +347,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
 	if cave_floor == num_floors:
 		hole.get_node("CollisionShape2D").disabled = true
+		hole.visible = false
 		MM_hole.visible = false
 	else:
 		hole.get_node("CollisionShape2D").disabled = false
+		hole.visible = true
 		MM_hole.visible = true
 	#No treasure chests at spawn/hole
 	if chests.has(String(rand_hole)):
@@ -519,6 +522,8 @@ func _input(event):
 		elif Input.is_action_just_released("5") and curr_slot != 4:
 			curr_slot = 4
 			set_border(curr_slot)
+		if Input.is_action_just_released("E"):
+			moving_fast = not moving_fast
 		if Input.is_action_just_released("F"):
 			if active_type == "chest":
 				var remainders = {}
@@ -554,7 +559,7 @@ func _input(event):
 					partially_looted_chests[cave_floor - 1][String(active_chest)] = remainders.duplicate(true)
 					Helper.put_rsrc($UI2/Panel/VBoxContainer, 32, remainders)
 					$UI2/Panel.visible = true
-					game.popup(tr("WEIGHT_INV_FULL"), 1.7)
+					game.popup(tr("WEIGHT_INV_FULL_CHEST"), 1.7)
 				else:
 					var temp = active_chest
 					remove_child(chests[active_chest].node)
@@ -608,7 +613,7 @@ func exit_cave():
 				inventory[i].num = remaining
 			else:
 				inventory[i] = {"type":""}
-	game.add_resources(i_w_w)
+	game.add_resources(i_w_w, p_i.crust)
 	i_w_w.clear()
 	game.switch_view("planet")
 	queue_free()
@@ -668,8 +673,11 @@ func hit_rock():
 				rsrc[deposit.rsrc_name] = game.clever_round(deposit.amount * rand_range(0.95, 1.05), 3)
 				remove_child(deposit)
 				deposits.erase(st)
+			var remainder:float = 0
 			for r in rsrc:
-				add_weight_rsrc(r, rsrc[r])
+				remainder += add_weight_rsrc(r, rsrc[r])
+			if remainder != 0:
+				game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
 			cave_wall.set_cellv(map_pos, -1)
 			minimap_cave.set_cellv(map_pos, tile_type)
 			cave_wall.update_bitmask_region()
@@ -708,7 +716,7 @@ func add_weight_rsrc(r, rsrc_amount):
 		weight -= float_error
 		i_w_w[r] -= float_error
 	$UI2/Inventory/Bar.value = weight
-	$UI2/Inventory/Label.text = "%s / %s kg" % [weight, weight_cap]
+	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
 	return max(diff, 0.0)
 
 func _on_Timer_timeout():
@@ -801,6 +809,7 @@ var max_speed = 1000#1000
 var acceleration = 12000
 var friction = 12000
 func _physics_process(delta):
+	var speed_mult2 = speed_mult if moving_fast else 1.0
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
@@ -816,9 +825,9 @@ func _physics_process(delta):
 #		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed * speed_mult, acceleration * delta * speed_mult)
+		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * delta * speed_mult2)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_mult)
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_mult2)
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
 	MM.position = minimap_center - rover.position * minimap_zoom

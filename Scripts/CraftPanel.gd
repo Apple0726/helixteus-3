@@ -10,6 +10,7 @@ onready var craft_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmou
 onready var name_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Name
 onready var desc_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Description2
 onready var hbox = $Contents/HBoxContainer/
+onready var amount_node = $Contents/HBoxContainer/ItemInfo/HBoxContainer/CraftAmount
 
 
 func _ready():
@@ -99,6 +100,8 @@ func get_item(name, costs, type, dir):
 		else:
 			game.popup(tr("CRAFT_SUCCESS"), 1.5)
 			set_item_info(item_name, get_item_desc(item_name), item_costs, item_type, item_dir)
+			if game.HUD:
+				game.HUD.update_hotbar()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
@@ -119,6 +122,8 @@ func get_item_desc(item:String):
 	match item:
 		"lead_seeds":
 			output = tr("SEEDS_DESC") % [game.craft_agric_info.lead_seeds.produce]
+		"copper_seeds":
+			output = tr("SEEDS_DESC") % [game.craft_agric_info.copper_seeds.produce]
 		"fertilizer":
 			output = tr("FERTILIZER_DESC")
 	return output

@@ -247,11 +247,7 @@ func pickaxe_hit():
 				game.mets[content] += amount
 			elif content == "stone":
 				var layer2 = "crust" if layer == "surface" or layer == "crater" else layer
-				for comp in p_i[layer2]:
-					if game.stone.has(comp):
-						game.stone[comp] += p_i[layer2][comp] * amount
-					else:
-						game.stone[comp] = p_i[layer2][comp] * amount
+				game.add_resources({"stone":amount}, p_i[layer2])
 			else:
 				game[content] += amount
 			if game.show.has(content):

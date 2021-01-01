@@ -153,6 +153,7 @@ var help:Dictionary = {
 var science_unlocked:Dictionary = {"SA":false, "RC":false, "SCT":false, "OL":false, "YL":false, "GL":false}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1,
+						"IS":1,
 						"AIE":1,
 }#Levels of mineral upgrades
 
@@ -245,25 +246,25 @@ var mat_info = {	"coal":{"value":5},#One kg of coal = $5
 }
 #Changing length of met_info changes cave rng!
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
-					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
-					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
-					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
-					"silver":{"min_depth":500, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
-					"gold":{"min_depth":700, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300},
-					"amethyst":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.0, "density":2.66, "value":500},
-					"emerald":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.2, "density":2.70, "value":540},
-					"quartz":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.4, "density":2.32, "value":580},
-					"topaz":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.6, "density":3.50, "value":620},
-					"ruby":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":5.8, "density":4.01, "value":660},
-					"sapphire":{"min_depth":1000, "max_depth":3000, "amount":16, "rarity":6.0, "density":3.99, "value":700},
+					"copper":{"min_depth":50, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
+					"iron":{"min_depth":100, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
+					"aluminium":{"min_depth":150, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
+					"silver":{"min_depth":200, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
+					"gold":{"min_depth":250, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300},
+					"amethyst":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.0, "density":2.66, "value":500},
+					"emerald":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.2, "density":2.70, "value":540},
+					"quartz":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.4, "density":2.32, "value":580},
+					"topaz":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.6, "density":3.50, "value":620},
+					"ruby":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.8, "density":4.01, "value":660},
+					"sapphire":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":6.0, "density":3.99, "value":700},
 }
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
-					"wooden_pickaxe":{"speed":1.4, "durability":150, "costs":{"money":1300}},
-					"stone_pickaxe":{"speed":1.9, "durability":400, "costs":{"money":9000}},
-					"lead_pickaxe":{"speed":2.5, "durability":700, "costs":{"money":85000}},
-					"copper_pickaxe":{"speed":3.3, "durability":1100, "costs":{"money":600000}},
-					"iron_pickaxe":{"speed":4.3, "durability":1600, "costs":{"money":4000000}},
+					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":1300}},
+					"stone_pickaxe":{"speed":2.1, "durability":400, "costs":{"money":9000}},
+					"lead_pickaxe":{"speed":2.8, "durability":750, "costs":{"money":75000}},
+					"copper_pickaxe":{"speed":3.6, "durability":1200, "costs":{"money":500000}},
+					"iron_pickaxe":{"speed":4.5, "durability":1700, "costs":{"money":3200000}},
 					}
 
 var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -279,6 +280,7 @@ var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "durati
 }
 
 var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
+						"copper_seeds":{"costs":{"cellulose":20, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var other_items_info = {"hx_core":{}}
@@ -1030,6 +1032,7 @@ func remove_planet():
 	_on_BottomInfo_close_button_pressed()
 	#$UI/BottomInfo.visible = false
 	view.remove_obj("planet")
+	Helper.save_obj("Systems", c_s_g, planet_data)
 	remove_child(planet_HUD)
 	planet_HUD = null
 
@@ -1500,12 +1503,11 @@ func generate_planets(id:int):
 		p_i["conquered"] = false
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		if p_num == 0:#Starting solar system has smaller and low pressure planets
-			p_i["size"] = int((2000 + rand_range(0, 3000) * (i + 1) / 2.0))
-			p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 4)))# in bars
+		if p_num == 0:#Starting solar system has smaller planets
+			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0))
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
-			p_i.pressure = pow10(rand_range(1, 10), Helper.rand_int(-5, int(log(p_i.size) / 2)))# in bars
+		p_i.pressure = pow(10, rand_range(-5, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -1549,13 +1551,15 @@ func generate_planets(id:int):
 		while num < 12:
 			num += 1
 			var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
+			if p_num == 0 and lv > 3:
+				lv = 3
 			if num == 12:
 				lv = ceil(0.9 * log(power) / log(1.2))
-			var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.2, lv - 1))
-			var atk = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
-			var def = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
-			var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
-			var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.2, lv - 1))
+			var HP = round(rand_range(0.8, 1.2) * 20 * pow(1.2, lv - 1))
+			var atk = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
+			var def = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
+			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
+			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
 			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 50000)
 			var XP = round(pow(1.2, lv - 1) * 5)
 			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
@@ -1605,7 +1609,7 @@ func generate_tiles(id:int):
 	var pulsation:float = rand_range(0.4, 1)
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	for i in 2:
-		if id != 2 and randf() < 0.35:
+		if c_p_g != 2 and randf() < 0.35 * pow(p_i.pressure, 0.1):
 			#au_int: aurora_intensity
 			var au_int = clever_round(rand_range(20000, 40000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
@@ -1666,7 +1670,7 @@ func generate_tiles(id:int):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				make_obstacle(tile_data[t_id], "rock")
 				continue
-			if id == 2:
+			if c_p_g == 2:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
@@ -1700,7 +1704,7 @@ func generate_tiles(id:int):
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
-	if id == 2:
+	if c_p_g == 2:
 		tile_data[42] = {}
 		make_obstacle(tile_data[42], "cave")
 		tile_data[42].cave_id = 0
@@ -1732,7 +1736,7 @@ func generate_tiles(id:int):
 		tile_data[112] = {}
 		tile_data[112].type = "obstacle"
 		tile_data[112].tile_str = "ship"
-	Helper.save_obj("Planets", id, tile_data)
+	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
 
@@ -1841,15 +1845,15 @@ func make_planet_composition(temp:float, depth:String):
 	return result
 
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
-	#temp in Celsius
-	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp, 2)), "amount":rand_range(50, 150)},
+	#temp in K
+	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(50, 150)},
 								"glass":{"chance":0.1, "amount":1},
 								"sand":{"chance":0.8, "amount":50},
 								"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
-								"cellulose":{"chance":exp(-0.001 * pow(temp, 2)), "amount":rand_range(3, 15)}
+								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(3, 15)}
 	}
-	if abs(temp) > 80:
+	if abs(temp - 273) > 80:
 		surface_mat_info.erase("cellulose")
 		surface_mat_info.erase("coal")
 	surface_mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
@@ -2094,15 +2098,21 @@ func deduct_resources(costs):
 			mets[cost] -= costs[cost]
 	HUD.refresh()
 
-func add_resources(costs):
+func add_resources(costs, p_i_layer:Dictionary = {}):
 	for cost in costs:
 		if cost == "money":
 			money += costs.money
-		if cost == "energy":
+		elif cost == "energy":
 			energy += costs.energy
-		if mats.has(cost):
+		elif cost == "stone":
+			for comp in p_i_layer:
+				if stone.has(comp):
+					stone[comp] += p_i_layer[comp] * costs[cost]
+				else:
+					stone[comp] = p_i_layer[comp] * costs[cost]
+		elif mats.has(cost):
 			mats[cost] += costs[cost]
-		if mets.has(cost):
+		elif mets.has(cost):
 			show.metals = true
 			mets[cost] += costs[cost]
 		if show.has(cost):
@@ -2527,4 +2537,4 @@ func destroy_buildings_confirm(arr:Array):
 
 func send_ships_confirm():
 	send_ships_panel.send_ships()
-	YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
+	YN_panel.disconnect("confirmed", self, "send_ships_confirm")

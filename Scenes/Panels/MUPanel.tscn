@@ -192,10 +192,47 @@ icon = ExtResource( 3 )
 align = 0
 expand_icon = true
 
-[node name="AIE" type="HBoxContainer" parent="VBoxContainer"]
+[node name="IS" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 110.0
 margin_right = 996.0
 margin_bottom = 134.0
+
+[node name="Label" type="Label" parent="VBoxContainer/IS"]
+margin_right = 450.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 450, 0 )
+mouse_filter = 1
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+text = "INVENTORY_SLOTS"
+
+[node name="Lv" type="Label" parent="VBoxContainer/IS"]
+margin_left = 454.0
+margin_right = 632.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "1"
+
+[node name="Effects" type="Label" parent="VBoxContainer/IS"]
+margin_left = 636.0
+margin_right = 814.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Upgrade" type="Button" parent="VBoxContainer/IS"]
+margin_left = 818.0
+margin_right = 996.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+theme = ExtResource( 5 )
+icon = ExtResource( 3 )
+align = 0
+expand_icon = true
+
+[node name="AIE" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 138.0
+margin_right = 996.0
+margin_bottom = 162.0
 
 [node name="Label" type="Label" parent="VBoxContainer/AIE"]
 margin_right = 450.0
@@ -239,6 +276,11 @@ expand_icon = true
 [connection signal="mouse_entered" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "MSMB" ]]
 [connection signal="mouse_exited" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "MSMB" ]]
 [connection signal="pressed" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "MSMB" ]]
+[connection signal="mouse_entered" from="VBoxContainer/IS/Label" to="." method="_on_Label_mouse_entered" binds= [ "IS" ]]
+[connection signal="mouse_exited" from="VBoxContainer/IS/Label" to="." method="_on_Label_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "IS" ]]
+[connection signal="mouse_exited" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "IS" ]]
+[connection signal="pressed" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "IS" ]]
 [connection signal="mouse_entered" from="VBoxContainer/AIE/Label" to="." method="_on_Label_mouse_entered" binds= [ "AIE" ]]
 [connection signal="mouse_exited" from="VBoxContainer/AIE/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="mouse_entered" from="VBoxContainer/AIE/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "AIE" ]]

@@ -75,8 +75,8 @@ func refresh():
 		depart_pos = game.supercluster_data[depart_id].pos
 		dest_pos = game.supercluster_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-#	if game.TEST:
-#		distance = 1
+	if game.TEST:
+		distance = 1
 	calc_costs()
 	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
 		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
@@ -117,12 +117,24 @@ func send_ships():
 func _on_HSlider_value_changed(value):
 	calc_costs()
 
+func get_atm_exit_cost(pressure:float):
+	return round(pow(pressure * 10, 1.4) * 800)
+
+func get_grav_exit_cost(size:float):
+	return round(pow(size / 120.0, 2.5))
+
+func get_atm_entry_cost(pressure:float):
+	return round(6000 / clamp(pressure, 0.1, 10))
+
+func get_grav_entry_cost(size:float):
+	return round(pow(size / 600.0, 2.5) * 5)
+
 func calc_costs():
 	var slider_factor = pow(10, $HSlider.value / 25.0 - 2)
-	var atm_exit_cost = round(pow(depart_planet_data.pressure, 1.4) * 8000)
-	var gravity_exit_cost = round(pow(depart_planet_data.size / 600.0, 2.5) * 40)
-	var atm_entry_cost = round(6000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10))
-	var gravity_entry_cost = round(pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 5)
+	var atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
+	var gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
+	var atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
+	var gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.text = String(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 60
@@ -133,10 +145,10 @@ func calc_costs():
 	$TimeCost.text = Helper.time_to_str(time_cost)
 
 func _on_EnergyCost2_mouse_entered():
-	var atm_exit_cost = round(pow(depart_planet_data.pressure, 1.4) * 8000)
-	var gravity_exit_cost = round(pow(depart_planet_data.size / 600.0, 2.5) * 40)
-	var atm_entry_cost = round(6000 / clamp(game.planet_data[dest_p_id].pressure, 0.1, 10))
-	var gravity_entry_cost = round(pow(game.planet_data[dest_p_id].size / 600.0, 2.5) * 5)
+	var atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
+	var gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
+	var atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
+	var gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	game.show_adv_tooltip("%s: @i %s\n%s: @i %s\n%s: @i %s\n%s: @i %s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, tr("GRAVITY_EXIT"), gravity_exit_cost, tr("ATMOSPHERE_ENTRY"), atm_entry_cost, tr("GRAVITY_ENTRY"), gravity_entry_cost], [Data.icons.PP, Data.icons.PP, Data.icons.PP, Data.icons.PP])
 
 func _on_EnergyCost2_mouse_exited():
