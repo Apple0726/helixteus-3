@@ -150,7 +150,7 @@ var help:Dictionary = {
 			"abandoned_ship":true,
 }
 
-var science_unlocked:Dictionary = {"SA":false, "RC":false, "SCT":false, "OL":false, "YL":false, "GL":false}
+var science_unlocked:Dictionary = {"SA":false, "RC":false, "MAE":false, "SCT":false, "SUP":false, "CD":false, "ID":false, "FD":false, "PD":false, "OL":false, "YL":false, "GL":false, "BL":false, "PL":false, "UVL":false, "XRL":false, "GRL":false, "UGRL":false}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1,
 						"IS":1,
