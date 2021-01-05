@@ -36,7 +36,10 @@ func refresh():
 		return
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
-		set_process(autosave_light)
+		if config.get_value("saving", "enable_autosave", true):
+			set_process(autosave_light)
+		else:
+			$AutosaveLight.modulate.g = 0.3
 		$AutosaveLight.visible = autosave_light
 	money_text.text = String(game.money)
 	minerals_text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
@@ -59,6 +62,10 @@ func refresh():
 		game.xp_to_lv = round(game.xp_to_lv * 1.5)
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
+	if OS.get_latin_keyboard_variant() == "QWERTZ":
+		$Buttons/Ships.shortcut.shortcut.action = "Z"
+	else:
+		$Buttons/Ships.shortcut.shortcut.action = "Y"
 	update_hotbar()
 
 func _on_Shop_pressed():
@@ -155,6 +162,7 @@ func _input(_event):
 		game.hide_tooltip()
 		slot_over = -1
 		update_hotbar()
+	refresh()
 
 func _on_CollectAll_mouse_entered():
 	on_button = true
@@ -175,7 +183,7 @@ func _on_Ships_pressed():
 
 func _on_Ships_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("SHIPS") + " (Y)")
+	game.show_tooltip("%s (%s)" % [tr("SHIPS"), $Buttons/Ships.shortcut.shortcut.action])
 
 
 func _on_AutosaveLight_mouse_entered():

@@ -11,6 +11,7 @@ var bldg_infos = {"ME":{"type":"Basic"},
 				 "RCC":{"type":"Vehicles"},
 				 "SC":{"type":"Production"},
 				 "GF":{"type":"Production"},
+				 "SE":{"type":"Production"},
 				}
 
 func _ready():
@@ -114,6 +115,8 @@ func get_item_name(name:String):
 			return tr("STONE_CRUSHER")
 		"GF":
 			return tr("GLASS_FACTORY")
+		"SE":
+			return tr("STEAM_ENGINE")
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -132,6 +135,8 @@ func refresh():
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.name == "GF":
 			bldg.visible = game.show.sand
+		if bldg.name == "SE":
+			bldg.visible = game.show.coal
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

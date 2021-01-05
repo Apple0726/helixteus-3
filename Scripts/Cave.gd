@@ -147,6 +147,10 @@ func remove_cave():
 		remove_child(enemy)
 	for enemy_icon in get_tree().get_nodes_in_group("enemy_icons"):
 		MM.remove_child(enemy_icon)
+	for proj in get_tree().get_nodes_in_group("projectiles"):
+		proj.remove_from_group("projectiles")
+		if is_a_parent_of(proj):
+			remove_child(proj)
 	for deposit in deposits:
 		remove_child(deposits[deposit])
 	for chest_str in chests:
@@ -750,6 +754,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
 	add_child(proj)
+	proj.add_to_group("projectiles")
 
 var slots = []
 func set_border(i:int):
@@ -825,16 +830,14 @@ func _physics_process(delta):
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "QWERTY":
-		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
-		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 #		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("A")
 #		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("W")
-	elif OS.get_latin_keyboard_variant() == "AZERTY":
+	if OS.get_latin_keyboard_variant() == "AZERTY":
 		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
 		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))
-#		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("Q")
-#		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("Z")
+	else:
+		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
+		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * delta * speed_mult2)

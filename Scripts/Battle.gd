@@ -692,7 +692,7 @@ func _on_Battle_tree_exited():
 func _on_weapon_mouse_entered(weapon:String):
 	if game:
 		var w_lv:int = ship_data[curr_sh][weapon].lv
-		game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [tr(weapon.to_upper()), tr("LV"), w_lv, tr("BASE_DAMAGE"), Data["%s_data" % [weapon]][w_lv].damage, tr("BASE_ACCURACY"), Data["%s_data" % [weapon]][w_lv].accuracy])
+		game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [tr(weapon.to_upper()), tr("LV"), w_lv, tr("BASE_DAMAGE"), Data["%s_data" % [weapon]][w_lv - 1].damage, tr("BASE_ACCURACY"), Data["%s_data" % [weapon]][w_lv - 1].accuracy])
 
 func _on_weapon_mouse_exited():
 	if game:

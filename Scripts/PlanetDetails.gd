@@ -119,9 +119,8 @@ func make_pie_chart(arr:Array, name:String):
 	for obj in arr:
 		var file = File.new()
 		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
-		var texture_exists = file.file_exists(dir_str)
 		var texture
-		if texture_exists:
+		if ResourceLoader.exists(dir_str):
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")

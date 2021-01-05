@@ -102,7 +102,7 @@ func _on_Button_pressed():
 		tile.construction_date = OS.get_system_time_msecs()
 		tile.construction_length = rover_costs.time * 1000
 		tile.XP = round(rover_costs.money / 100.0)
-		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.25)), "spd":round(spd_bonus * pow(mult, 0.25)), "inventory":inventory, "i_w_w":{}})
+		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.25)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:

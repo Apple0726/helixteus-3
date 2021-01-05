@@ -4,13 +4,17 @@ onready var click_sound = get_node("../click")
 var on_button = false
 
 func _ready():
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
 	refresh()
 
 func refresh():
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
+	if OS.get_latin_keyboard_variant() == "AZERTY":
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
+	elif OS.get_latin_keyboard_variant() == "QWERTZ":
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Y"
+	else:
+		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Z"
 
 func _on_StarSystem_pressed():
 	click_sound.play()
@@ -19,10 +23,7 @@ func _on_StarSystem_pressed():
 	game.switch_view("system")
 
 func _input(event):
-	if OS.get_latin_keyboard_variant() == "QWERTY":
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Z"
-	elif OS.get_latin_keyboard_variant() == "AZERTY":
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
+	refresh()
 
 func _on_Construct_pressed():
 	if not Input.is_action_pressed("shift"):

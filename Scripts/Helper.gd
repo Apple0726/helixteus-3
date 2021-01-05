@@ -46,7 +46,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		elif obj == "minerals":
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
-			format_text(rsrc.get_node("Text"), texture, "Icons/Energy", show_available, objs[obj], game.energy)
+			format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
 		elif obj == "time":
 			texture.texture_normal = load("res://Graphics/Icons/Time.png")
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
@@ -294,10 +294,12 @@ func get_rover_mining_text(name:String):
 	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())}), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[name].rnge]]
 
 func set_back_btn(back_btn, set_text:bool = true):
-	if OS.get_latin_keyboard_variant() == "QWERTY":
-		back_btn.shortcut.shortcut.action = "Z"
+	if OS.get_latin_keyboard_variant() == "QWERTZ":
+		back_btn.shortcut.shortcut.action = "Y"
 	elif OS.get_latin_keyboard_variant() == "AZERTY":
 		back_btn.shortcut.shortcut.action = "W"
+	else:
+		back_btn.shortcut.shortcut.action = "Z"
 	if set_text:
 		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
 

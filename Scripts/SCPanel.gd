@@ -71,9 +71,8 @@ func refresh():
 	for obj in arr:
 		var file = File.new()
 		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
-		var texture_exists = file.file_exists(dir_str)
 		var texture
-		if texture_exists:
+		if ResourceLoader.exists(dir_str):
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
@@ -87,7 +86,6 @@ func refresh():
 	CC.visible = is_crushing
 	hslider.max_value = min(total_stone, tile.path_2_value)
 	hslider.min_value = 0
-	hslider.value = hslider.max_value
 
 func obj_to_array(elements:Dictionary):
 	var stone_qty = Helper.get_sum_of_dict(elements)

@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -35,7 +35,7 @@ var vehicle_panel:Control
 var RC_panel:Control
 var MU_panel:Control
 var SC_panel:Control
-var GF_panel:Control
+var production_panel:Control
 var send_ships_panel:Control
 var inventory:Control
 var settings:Control
@@ -162,6 +162,7 @@ var show:Dictionary = {	"minerals":false,
 						"stone":false,
 						"SP":false,
 						"sand":false,
+						"coal":false,
 						"mining_layer":false,
 						"plant_button":false,
 						"vehicles_button":false,
@@ -347,6 +348,8 @@ func _ready():
 		show.vehicles_button = true
 		energy = 2000000
 		SP = 20000
+		mats.coal = 100
+		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		$Title.visible = false
@@ -440,6 +443,7 @@ func load_game():
 		rover_data = save_game.get_var()
 		ship_data = save_game.get_var()
 		ships_c_coords = save_game.get_var()
+		ships_dest_coords = save_game.get_var()
 		ships_c_g_s = save_game.get_64()
 		ships_depart_pos = save_game.get_var()
 		ships_dest_pos = save_game.get_var()
@@ -563,7 +567,7 @@ func add_panels():
 	RC_panel = load("res://Scenes/Panels/RCPanel.tscn").instance()
 	MU_panel = load("res://Scenes/Panels/MUPanel.tscn").instance()
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
-	GF_panel = load("res://Scenes/Panels/GFPanel.tscn").instance()
+	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
@@ -592,8 +596,8 @@ func add_panels():
 	SC_panel.visible = false
 	$Panels/Control.add_child(SC_panel)
 
-	GF_panel.visible = false
-	$Panels/Control.add_child(GF_panel)
+	production_panel.visible = false
+	$Panels/Control.add_child(production_panel)
 
 	inventory.visible = false
 	$Panels/Control.add_child(inventory)
@@ -867,24 +871,25 @@ func open_obj(type:String, id:int):
 		save.close()
 	return arr
 	
+func obj_exists(type:String, id:int):
+	var save:File = File.new()
+	var file_path:String = "user://Save1/%s/%s.hx3" % [type, id]
+	if save.file_exists(file_path):
+		return true
+	return false
+	
 func add_obj(view_str):
 	match view_str:
 		"planet":
 			tile_data = open_obj("Planets", c_p_g)
 			view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 		"system":
-			planet_data = open_obj("Systems", c_s_g)
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 		"galaxy":
-			put_change_view_btn(tr("VIEW_CLUSTER"), "res://Graphics/Buttons/ClusterView.png")
-			system_data = open_obj("Galaxies", c_g_g)
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 		"cluster":
-			put_change_view_btn(tr("VIEW_SUPERCLUSTER"), "res://Graphics/Buttons/SuperclusterView.png")
-			galaxy_data = open_obj("Clusters", c_c_g)
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 		"supercluster":
-			cluster_data = open_obj("Superclusters", c_sc)
 			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
 		"universe":
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
@@ -947,13 +952,19 @@ func add_universe():
 
 func add_supercluster():
 	put_change_view_btn(tr("VIEW_UNIVERSE"), "res://Graphics/Buttons/UniverseView.png")
+	if obj_exists("Superclusters", c_sc):
+		cluster_data = open_obj("Superclusters", c_sc)
 	if not supercluster_data[c_sc]["discovered"]:
 		reset_collisions()
 		generate_clusters(c_sc)
 	add_obj("supercluster")
 
 func add_cluster():
-	var file:File = File.new()
+	put_change_view_btn(tr("VIEW_SUPERCLUSTER"), "res://Graphics/Buttons/SuperclusterView.png")
+	if obj_exists("Superclusters", c_sc):
+		cluster_data = open_obj("Superclusters", c_sc)
+	if obj_exists("Clusters", c_c_g):
+		galaxy_data = open_obj("Clusters", c_c_g)
 	if not cluster_data[c_c]["discovered"]:
 		add_loading()
 		reset_collisions()
@@ -964,7 +975,11 @@ func add_cluster():
 		add_obj("cluster")
 
 func add_galaxy():
-	var file:File = File.new()
+	put_change_view_btn(tr("VIEW_CLUSTER"), "res://Graphics/Buttons/ClusterView.png")
+	if obj_exists("Clusters", c_c_g):
+		galaxy_data = open_obj("Clusters", c_c_g)
+	if obj_exists("Galaxies", c_g_g):
+		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g]["discovered"]:
 		add_loading()
 		reset_collisions()
@@ -977,6 +992,9 @@ func add_galaxy():
 
 func add_system():
 	put_change_view_btn(tr("VIEW_GALAXY"), "res://Graphics/Buttons/GalaxyView.png")
+	if obj_exists("Galaxies", c_g_g):
+		system_data = open_obj("Galaxies", c_g_g)
+	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s]["discovered"]:
 		if c_s_g != 0:
 			planet_data.clear()
@@ -985,10 +1003,11 @@ func add_system():
 	HUD.get_node("CollectAll").visible = false
 
 func add_planet():
-	var file:File = File.new()
+	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].discovered:
 		generate_tiles(c_p)
 	add_obj("planet")
+	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
 	HUD.get_node("CollectAll").visible = true
@@ -1004,34 +1023,38 @@ func remove_universe():
 	view.remove_obj("universe")
 
 func remove_supercluster():
+	view.remove_obj("supercluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	remove_child(change_view_btn)
 	change_view_btn = null
-	view.remove_obj("supercluster")
 
 func remove_cluster():
+	view.remove_obj("cluster")
+	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	remove_child(change_view_btn)
 	change_view_btn = null
-	view.remove_obj("cluster")
 
 func remove_galaxy():
+	view.remove_obj("galaxy")
+	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	remove_child(change_view_btn)
 	change_view_btn = null
-	view.remove_obj("galaxy")
 
 func remove_system():
+	view.remove_obj("system")
+	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	remove_child(change_view_btn)
 	change_view_btn = null
-	view.remove_obj("system")
 
 func remove_planet():
+	view.remove_obj("planet")
+	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
 	#$UI/BottomInfo.visible = false
-	view.remove_obj("planet")
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	remove_child(planet_HUD)
 	planet_HUD = null
@@ -1723,7 +1746,7 @@ func generate_tiles(id:int):
 			tile_data[110].path_1 = 1
 			tile_data[110].path_1_value = Data.path_1.RCC.value
 			tile_data[111] = {}
-			tile_data[111].tile_str = "GF"
+			tile_data[111].tile_str = "SE"
 			tile_data[111].is_constructing = false
 			tile_data[111].construction_date = curr_time
 			tile_data[111].construction_length = 10
@@ -1731,8 +1754,8 @@ func generate_tiles(id:int):
 			tile_data[111].XP = 0
 			tile_data[111].path_1 = 1
 			tile_data[111].path_2 = 1
-			tile_data[111].path_1_value = Data.path_1.GF.value
-			tile_data[111].path_2_value = Data.path_2.GF.value
+			tile_data[111].path_1_value = Data.path_1.SE.value
+			tile_data[111].path_2_value = Data.path_2.SE.value
 		tile_data[112] = {}
 		tile_data[112].type = "obstacle"
 		tile_data[112].tile_str = "ship"
@@ -2277,6 +2300,10 @@ func _input(event):
 						tile.construction_length = 1
 						if tile.has("collect_date"):
 							tile.collect_date -= diff_time
+						if tile.has("start_date"):
+							tile.start_date -= diff_time
+						if tile.has("overclock_date"):
+							tile.overclock_date -= diff_time
 			"setmulv":
 				MUs[arr[1].to_upper()] = int(arr[2])
 			"setlv":
@@ -2378,6 +2405,7 @@ func save_game(autosave:bool):
 	save_game.store_var(rover_data)
 	save_game.store_var(ship_data)
 	save_game.store_var(ships_c_coords)
+	save_game.store_var(ships_dest_coords)
 	save_game.store_64(ships_c_g_s)
 	save_game.store_var(ships_depart_pos)
 	save_game.store_var(ships_dest_pos)
@@ -2506,7 +2534,11 @@ func _on_LoadGame_pressed():
 	fade_out_title("load_game")
 
 func _on_Autosave_timeout():
-	save_game(true)
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		if config.get_value("saving", "enable_autosave", true):
+			save_game(true)
 
 func show_YN_panel(type:String, text:String, args:Array = []):
 	$UI/PopupBackground.visible = true

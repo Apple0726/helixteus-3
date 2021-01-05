@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/Dimension/DimensionUpgrade.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Graphics/Icons/Energy.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=2]
 
 [node name="Panel" instance=ExtResource( 1 )]
 

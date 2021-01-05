@@ -132,9 +132,9 @@ func get_item(_name, costs, _type, _dir):
 			game.deduct_resources(item_total_costs)
 			var items_left = game.add_items(item_name, amount_node.value)
 			if items_left > 0:
-				var refund = item_total_costs.duplicate(true)
-				for rsrc in item_total_costs:
-					refund[rsrc] = item_total_costs[rsrc] * items_left
+				var refund = item_costs.duplicate(true)
+				for rsrc in item_costs:
+					refund[rsrc] = item_costs[rsrc] * items_left
 				game.add_resources(refund)
 				game.popup(tr("NOT_ENOUGH_INV_SPACE_BUY"), 2.0)
 			else:

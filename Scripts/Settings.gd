@@ -21,6 +21,7 @@ func _ready():
 		update_volumes(2, config.get_value("audio", "SFX", 0))
 		$Vsync.pressed = config.get_value("graphics", "vsync", true)
 		$AutosaveLight.pressed = config.get_value("saving", "autosave_light", false)
+		$EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
 		$Autosave.value = autosave_interval
@@ -78,6 +79,14 @@ func _on_Autosave_value_changed(value):
 func _on_AutosaveLight_toggled(button_pressed):
 	if err == OK:
 		config.set_value("saving", "autosave_light", button_pressed)
+		config.save("user://settings.cfg")
+		if game.HUD:
+			game.HUD.refresh()
+
+
+func _on_EnableAutosave_toggled(button_pressed):
+	if err == OK:
+		config.set_value("saving", "enable_autosave", button_pressed)
 		config.save("user://settings.cfg")
 		if game.HUD:
 			game.HUD.refresh()

@@ -141,7 +141,7 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
-				"SC", "GF":
+				"SC", "GF", "SE":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
@@ -243,7 +243,7 @@ func constr_bldg(tile, tile_id:int):
 		tile.type = "bldg"
 		tile.XP = round(constr_costs.money / 100.0)
 		match bldg_to_construct:
-			"ME", "PP", "SC", "GF":
+			"ME", "PP", "SC", "GF", "SE":
 				tile.collect_date = tile.construction_date + tile.construction_length
 				tile.stored = 0
 				tile.path_1 = 1
@@ -350,9 +350,14 @@ func click_tile(tile, tile_id:int):
 					game.toggle_panel(game.RC_panel)
 				"SC":
 					game.toggle_panel(game.SC_panel)
+					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 				"GF":
-					game.toggle_panel(game.GF_panel)
-					game.hide_tooltip()
+					game.toggle_panel(game.production_panel)
+					game.production_panel.refresh2(tile.tile_str, "sand", "glass", "mats", "mats")
+				"SE":
+					game.toggle_panel(game.production_panel)
+					game.production_panel.refresh2(tile.tile_str, "coal", "energy", "mats", "")
+			game.hide_tooltip()
 
 func collect_rsrc(tile, tile_id:int):
 	if not tile.has("tile_str"):
@@ -619,6 +624,8 @@ func add_plant(id2:int, st:String):
 	var tile = game.tile_data[id2]
 	if tile.is_growing:
 		add_time_bar(id2, "plant")
+	else:
+		plant.frame = 4
 
 func add_bldg(id2:int, st:String):
 	var bldg = Sprite.new()
@@ -644,6 +651,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.SC, id2)
 		"GF":
 			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.icons.GF, id2)
+		"SE":
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.SE, id2)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -686,7 +695,7 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "overclock")
 
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "SC", "GF"]
+	return bldg in ["ME", "PP", "RL", "SC", "GF", "SE"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()
@@ -820,7 +829,15 @@ func update_rsrc(rsrc, tile):
 		"GF":
 			if tile.has("qty1"):
 				var prod_i = Helper.get_prod_info(tile)
-				rsrc.get_node("Control/Label").text = "%s kg " % [prod_i.qty_made]
+				rsrc.get_node("Control/Label").text = "%s kg" % [prod_i.qty_made]
+				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
+			else:
+				rsrc.get_node("Control/Label").text = ""
+				rsrc.get_node("Control/CapacityBar").value = 0
+		"SE":
+			if tile.has("qty1"):
+				var prod_i = Helper.get_prod_info(tile)
+				rsrc.get_node("Control/Label").text = "%s" % [round(prod_i.qty_made)]
 				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
 			else:
 				rsrc.get_node("Control/Label").text = ""

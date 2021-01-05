@@ -136,12 +136,12 @@ func save_zooms(obj_str:String):
 func _physics_process(_delta):
 	#Moving tiles code
 	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "QWERTY":
-		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
-	elif OS.get_latin_keyboard_variant() == "AZERTY":
+	if OS.get_latin_keyboard_variant() == "AZERTY":
 		input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
 		input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
+	else:
+		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
+		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed, acceleration)
