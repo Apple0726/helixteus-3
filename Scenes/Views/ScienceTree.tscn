@@ -161,12 +161,12 @@ margin_right = 1888.23
 margin_bottom = 588.035
 science = "PL"
 
-[node name="L_ULV" type="Line2D" parent="."]
+[node name="L_UVL" type="Line2D" parent="."]
 position = Vector2( 2112.07, 539.588 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 
-[node name="ULV" parent="." instance=ExtResource( 1 )]
+[node name="UVL" parent="." instance=ExtResource( 1 )]
 margin_left = 2240.07
 margin_top = 523.588
 margin_right = 2240.07
