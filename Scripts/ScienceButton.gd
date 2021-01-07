@@ -29,8 +29,20 @@ func get_science_name(sc:String):
 			return tr("SPACE_AGRICULTURE")
 		"RC":
 			return tr("ROVER_CONSTRUCTION")
+		"MAE":
+			return tr("MACRO_ENGINEERING")
 		"SCT":
 			return tr("SHIP_CONTROL")
+		"SUP":
+			return tr("SHIP_UPGRADE")
+		"CD":
+			return tr("CHEMICAL_DRIVE")
+		"ID":
+			return tr("ION_DRIVE")
+		"FD":
+			return tr("FUSION_DRIVE")
+		"PD":
+			return tr("PHOTON_DRIVE")
 		"OL":
 			return tr("ORANGE_LASER").format({"laser":tr("LASER")})
 		"YL":

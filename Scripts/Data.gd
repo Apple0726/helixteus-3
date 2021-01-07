@@ -60,9 +60,12 @@ func reload():
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 
 #Science for unlocking game features
-var science_unlocks = {	"SA":{"cost":100, "parent":""},
+var science_unlocks = {	
+						#Agriculture Sciences
+						"SA":{"cost":100, "parent":""},
+						
+						#Rover Sciences
 						"RC":{"cost":250, "parent":""},
-						"SCT":{"cost":3000, "parent":"RC"},
 						"OL":{"cost":1500, "parent":"RC"},
 						"YL":{"cost":8000, "parent":"OL"},
 						"GL":{"cost":40000, "parent":"YL"},
@@ -72,6 +75,17 @@ var science_unlocks = {	"SA":{"cost":100, "parent":""},
 						"XRL":{"cost":10000000, "parent":"UVL"},
 						"GRL":{"cost":30000000, "parent":"XRL"},
 						"UGRL":{"cost":200000000, "parent":"GRL"},
+						
+						#Ship Sciences
+						"SCT":{"cost":3000, "parent":"RC"},
+						"SUP":{"cost":15000, "parent":"SCT"},
+						"CD":{"cost":4000, "parent":"SUP"},
+						"ID":{"cost":10000, "parent":"CD"},
+						"FD":{"cost":150000, "parent":"ID"},
+						"PD":{"cost":1200000, "parent":"FD"},
+						
+						#Megastructure Sciences
+						"MAE":{"cost":100000, "parent":""},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},
