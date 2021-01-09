@@ -86,6 +86,15 @@ var science_unlocks = {
 						
 						#Megastructure Sciences
 						"MAE":{"cost":100000, "parent":""},
+						#Dyson sphere
+						"DS1":{"cost":8000000, "parent":"MAE"},
+						"DS2":{"cost":25000000, "parent":"DS1"},
+						"DS3":{"cost":50000000, "parent":"DS2"},
+						"DS4":{"cost":75000000, "parent":"DS3"},
+						#Space elevator
+						"SE1":{"cost":150000, "parent":"MAE"},
+						"SE2":{"cost":500000, "parent":"SE1"},
+						"SE3":{"cost":1000000, "parent":"SE2"},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},

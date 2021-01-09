@@ -25,7 +25,6 @@ func _ready():
 		bldg_btn.item_dir = "Buildings"
 		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
 		bldg_btn.costs = Data.costs[bldg]
-		bldg_btn.name = bldg
 		bldg_btn.add_to_group("bldgs")
 		bldg_btn.parent = "construct_panel"
 		item_container.get_node(bldg_info.type).add_child(bldg_btn)
@@ -121,21 +120,21 @@ func get_item_name(name:String):
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
 
-func get_item(name, costs, _type, _dir):
-	if name == "" or game.c_v != "planet":
+func get_item(_name, costs, _type, _dir):
+	if _name == "" or game.c_v != "planet":
 		return
 	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	game.view.obj.construct(name, costs)
+	game.view.obj.construct(_name, costs)
 
 func refresh():
 	$Tabs/Vehicles.visible = game.science_unlocked.RC
 	$Tabs/Production.visible = game.show.stone
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.name == "GF":
+		if bldg.item_name == "GF":
 			bldg.visible = game.show.sand
-		if bldg.name == "SE":
+		if bldg.item_name == "SE":
 			bldg.visible = game.show.coal
 
 func _on_close_button_pressed():

@@ -26,8 +26,8 @@ func refresh():
 				sc.get_node("Panel/HBox/Texture").modulate = Color.white
 				sc.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_PASS
 			sc.refresh()
-		if not sc.name in ["SA", "RC"]:
+		if not sc.name in ["SA", "RC", "MAE"]:
 			var p_n = get_node(p_sc)
 			var l_n = get_node("L_%s" % [sc.name])
-			l_n.position.x = p_n.rect_position.x + p_n.rect_size.x + 20
+			l_n.position.x = p_n.rect_position.x + p_n.get_node("Panel").rect_size.x + 20
 			get_node(sc.name).rect_position.x = l_n.position.x + 96 + 20

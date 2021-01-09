@@ -187,7 +187,9 @@ func format_num(num:float, threshold:int):
 		return res + arr[1]
 	else:
 		var suff:String = ""
-		var p = floor(log10(num))
+		var p:float = log(num) / log(10)
+		if is_equal_approx(p, ceil(p)):
+			p = ceil(p)
 		var div = max(pow(10, stepify(p - 1, 3)), 1)
 		if p >= 3 and p < 6:
 			suff = "k"

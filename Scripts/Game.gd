@@ -27,6 +27,7 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 
 var construct_panel:Control
+var megastructures_panel:Control
 var shop_panel:Control
 var ship_panel:Control
 var upgrade_panel:Control
@@ -148,9 +149,10 @@ var help:Dictionary = {
 			"rover_shortcuts":true,
 			"rover_inventory_shortcuts":true,
 			"abandoned_ship":true,
+			"science_tree":true,
 }
 
-var science_unlocked:Dictionary = {"SA":false, "RC":false, "MAE":false, "SCT":false, "SUP":false, "CD":false, "ID":false, "FD":false, "PD":false, "OL":false, "YL":false, "GL":false, "BL":false, "PL":false, "UVL":false, "XRL":false, "GRL":false, "UGRL":false}
+var science_unlocked:Dictionary = {}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1,
 						"IS":1,
@@ -347,8 +349,9 @@ func _ready():
 		show.plant_button = true
 		show.vehicles_button = true
 		energy = 2000000
-		SP = 20000
+		SP = 2000000000
 		mats.coal = 100
+		show.SP = true
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
@@ -500,6 +503,8 @@ func new_game():
 	dir.make_dir("user://Save1/Galaxies")
 	dir.make_dir("user://Save1/Clusters")
 	dir.make_dir("user://Save1/Superclusters")
+	for sc in Data.science_unlocks:
+		science_unlocked[sc] = false
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
@@ -562,6 +567,7 @@ func add_panels():
 	shop_panel = load("res://Scenes/Panels/ShopPanel.tscn").instance()
 	ship_panel = load("res://Scenes/Panels/ShipPanel.tscn").instance()
 	construct_panel = load("res://Scenes/Panels/ConstructPanel.tscn").instance()
+	megastructures_panel = load("res://Scenes/Panels/MegastructuresPanel.tscn").instance()
 	craft_panel = load("res://Scenes/Panels/CraftPanel.tscn").instance()
 	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
 	RC_panel = load("res://Scenes/Panels/RCPanel.tscn").instance()
@@ -574,6 +580,9 @@ func add_panels():
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
+
+	megastructures_panel.visible = false
+	$Panels/Control.add_child(megastructures_panel)
 
 	shop_panel.visible = false
 	$Panels/Control.add_child(shop_panel)
@@ -769,6 +778,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
 			"mining":
 				remove_mining()
 			"science_tree":
+				$UI/Help.visible = false
 				remove_science_tree()
 			"cave":
 				add_child(HUD)
@@ -819,6 +829,10 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
 			add_mining()
 		"science_tree":
 			add_science_tree()
+			if help.science_tree:
+				$UI/Help.visible = true
+				$UI/Help.text = tr("SC_TREE_ZOOM")
+				help.science_tree = false
 		"cave":
 			remove_child(HUD)
 			cave = cave_scene.instance()

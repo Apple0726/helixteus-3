@@ -41,13 +41,13 @@ func refresh():
 		else:
 			$AutosaveLight.modulate.g = 0.3
 		$AutosaveLight.visible = autosave_light
-	money_text.text = String(game.money)
-	minerals_text.text = String(game.minerals) + " / " + String(game.mineral_capacity)
+	money_text.text = Helper.format_num(game.money, 6)
+	minerals_text.text = Helper.format_num(game.minerals, 6) + " / " + Helper.format_num(game.mineral_capacity, 6)
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
-	stone_text.text = String(total_stone) + " kg"
+	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = String(game.mats.soil) + " kg"
-	energy_text.text = String(game.energy)
-	SP_text.text = String(game.SP)
+	energy_text.text = Helper.format_num(game.energy, 6)
+	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
 	SP.visible = game.show.SP
