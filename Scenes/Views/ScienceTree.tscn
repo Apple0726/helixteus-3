@@ -30,59 +30,48 @@ margin_top = 432.0
 margin_right = 480.0
 margin_bottom = 496.0
 
-[node name="L_SUP" type="Line2D" parent="."]
-position = Vector2( 704.365, 448.423 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-
-[node name="SUP" parent="." instance=ExtResource( 1 )]
-margin_left = 832.0
-margin_top = 432.0
-margin_right = 832.0
-margin_bottom = 496.0
-
 [node name="L_CD" type="Line2D" parent="."]
-position = Vector2( 1056, 448 )
+position = Vector2( 704, 448 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 
 [node name="CD" parent="." instance=ExtResource( 1 )]
+margin_left = 832.37
+margin_top = 432.423
+margin_right = 832.37
+margin_bottom = 496.423
+
+[node name="L_ID" type="Line2D" parent="."]
+position = Vector2( 1056.37, 448.423 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+
+[node name="ID" parent="." instance=ExtResource( 1 )]
 margin_left = 1184.37
 margin_top = 432.423
 margin_right = 1184.37
 margin_bottom = 496.423
 
-[node name="L_ID" type="Line2D" parent="."]
-position = Vector2( 1408.37, 448.423 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-
-[node name="ID" parent="." instance=ExtResource( 1 )]
-margin_left = 1536.37
-margin_top = 432.423
-margin_right = 1536.37
-margin_bottom = 496.423
-
 [node name="L_FD" type="Line2D" parent="."]
-position = Vector2( 1760.3, 448.171 )
+position = Vector2( 1408.3, 448.171 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 
 [node name="FD" parent="." instance=ExtResource( 1 )]
-margin_left = 1888.3
+margin_left = 1536.3
 margin_top = 432.171
-margin_right = 1888.3
+margin_right = 1536.3
 margin_bottom = 496.171
 
 [node name="L_PD" type="Line2D" parent="."]
-position = Vector2( 2112.3, 448.171 )
+position = Vector2( 1760.3, 448.171 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 
 [node name="PD" parent="." instance=ExtResource( 1 )]
-margin_left = 2240.3
+margin_left = 1888.3
 margin_top = 432.171
-margin_right = 2240.3
+margin_right = 1888.3
 margin_bottom = 496.171
 
 [node name="L_OL" type="Line2D" parent="."]

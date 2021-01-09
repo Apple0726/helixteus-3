@@ -78,8 +78,7 @@ var science_unlocks = {
 						
 						#Ship Sciences
 						"SCT":{"cost":3000, "parent":"RC"},
-						"SUP":{"cost":15000, "parent":"SCT"},
-						"CD":{"cost":4000, "parent":"SUP"},
+						"CD":{"cost":4000, "parent":"SCT"},
 						"ID":{"cost":10000, "parent":"CD"},
 						"FD":{"cost":150000, "parent":"ID"},
 						"PD":{"cost":1200000, "parent":"FD"},

@@ -30,8 +30,6 @@ func get_science_name(sc:String):
 			return tr("ROVER_CONSTRUCTION")
 		"SCT":
 			return tr("SHIP_CONTROL")
-		"SUP":
-			return tr("SHIP_UPGRADE")
 		"CD":
 			return tr("CHEMICAL_DRIVE")
 		"ID":
