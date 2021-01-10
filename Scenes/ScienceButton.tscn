@@ -13,6 +13,7 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
+corner_detail = 1
 
 [node name="ScienceButton" type="Control"]
 margin_right = 192.0

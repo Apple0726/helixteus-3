@@ -149,7 +149,7 @@ func on_slot_press(i:int):
 
 func _on_Label_mouse_entered():
 	on_button = true
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s") % [game.lv, game.xp, game.xp_to_lv])
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s") % [game.lv, Helper.format_num(game.xp, 4), Helper.format_num(game.xp_to_lv, 4)])
 
 
 func _on_Label_mouse_exited():

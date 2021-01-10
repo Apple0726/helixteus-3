@@ -9,11 +9,11 @@ func _ready():
 	for MS in $GridContainer.get_children():
 		MS.get_node("SmallButton").text = tr("CONSTRUCT")
 		MS.item_name = MS.name
-		MS.item_dir = "Megastructures"
+		MS.item_dir = "Icons/Megastructures"
 		MS.item_desc = tr(MS.name.to_upper() + "_DESC")
 		MS.costs = {}
 		MS.parent = "megastructures_panel"
-		MS.get_node("ItemTexture").texture = load("res://Graphics/Megastructures/" + MS.name + ".png")
+		MS.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/" + MS.name + ".png")
 
 func get_MS_name(_name:String):
 	match _name:
@@ -38,9 +38,12 @@ func remove_costs():
 func get_item(_name, costs, _type, _dir):
 	if _name == "" or game.c_v != "system":
 		return
-	game.toggle_panel(game.construct_panel)
+	game.toggle_panel(game.megastructures_panel)
 	if _name == "M_DS":
-		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building", "cancel_building")
+		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
 	elif _name == "M_SE":
-		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building", "cancel_building")
-	#game.view.obj.construct(_name, costs)
+		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building_SE", "cancel_building_MS")
+	game.view.obj.construct(_name)
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)

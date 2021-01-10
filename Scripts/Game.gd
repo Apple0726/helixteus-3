@@ -128,7 +128,13 @@ var mets:Dictionary = {	"lead":0,
 						"quartz":0,
 						"topaz":0,
 						"ruby":0,
-						"sapphire":0}
+						"sapphire":0,
+						"platinum":0,
+						"titanium":0,
+						"diamond":0,
+						"nanocrystal":0,
+						"mythril":0,
+}
 
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {
@@ -163,24 +169,12 @@ var MUs:Dictionary = {	"MV":1,
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
 						"SP":false,
-						"sand":false,
-						"coal":false,
 						"mining_layer":false,
 						"plant_button":false,
 						"vehicles_button":false,
 						"materials":false,
 						"metals":false,
-						"glass":false,
-						"clay":false,
-						"aluminium":false,
-						"silver":false,
-						"gold":false,
-						"amethyst":false,
-						"emerald":false,
-						"quartz":false,
-						"topaz":false,
-						"ruby":false,
-						"sapphire":false}
+}
 
 #Stores information of all objects discovered
 var universe_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
@@ -223,10 +217,9 @@ var c_num:int = 0
 
 ############ End save data ############
 
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30}, null, {"left":0.5, "right":15}, {"left":250, "right":100000}]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000}, null, {"left":1, "right":100}, {"left":0.2, "right":5}, {"left":0.8, "right":1.2}]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
-var EA_galaxy_visited = TEST
 var EA_cave_visited = TEST
 
 #Stores data of the item that you clicked in your inventory
@@ -260,6 +253,11 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"topaz":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.6, "density":3.50, "value":620},
 					"ruby":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.8, "density":4.01, "value":660},
 					"sapphire":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":6.0, "density":3.99, "value":700},
+					"platinum":{"min_depth":500, "max_depth":4000, "amount":14, "rarity":6.5, "density":21.45, "value":800},
+					"titanium":{"min_depth":700, "max_depth":5000, "amount":14, "rarity":7.2, "density":4.51, "value":980},
+					"diamond":{"min_depth":900, "max_depth":6000, "amount":14, "rarity":8.2, "density":4.20, "value":1200},
+					"nanocrystal":{"min_depth":1200, "max_depth":8000, "amount":12, "rarity":10.6, "density":1.5, "value":1900},
+					"mythril":{"min_depth":1500, "max_depth":10000, "amount":12, "rarity":13.4, "density":13.4, "value":3500},
 }
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
@@ -343,17 +341,24 @@ func _ready():
 			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
 		bg.add_child(star)
 	if TEST:
-		lv = 5
-		money = 2000000
+		lv = 100
+		money = 1000000000
 		mats.soil = 50
 		show.plant_button = true
 		show.vehicles_button = true
 		energy = 2000000
-		SP = 2000000000
+		SP = 200000000
+		stone.O = 80000000
+		mats.silicon = 40000
 		mats.coal = 100
+		mets.copper = 250000
+		mets.iron = 1600000
+		mets.aluminium = 500000
+		mets.titanium = 50000
 		show.SP = true
+		show.stone = true
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
-		rover_data = [{"c_p":2, "ready":true, "HP":20.0, "atk":5.0, "def":5.0, "spd":1.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
+		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
@@ -454,7 +459,6 @@ func load_game():
 		ships_travel_view_g_coords = save_game.get_var()
 		ships_travel_start_date = save_game.get_64()
 		ships_travel_length = save_game.get_64()
-		EA_galaxy_visited = save_game.get_8()
 		EA_cave_visited = save_game.get_8()
 		p_num = save_game.get_64()
 		s_num = save_game.get_64()
@@ -505,6 +509,10 @@ func new_game():
 	dir.make_dir("user://Save1/Superclusters")
 	for sc in Data.science_unlocks:
 		science_unlocked[sc] = false
+	for mat in mats:
+		show[mat] = false
+	for met in mets:
+		show[met] = false
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
@@ -935,6 +943,7 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
+		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system"
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -958,14 +967,20 @@ func add_dimension():
 	dimension.visible = true
 
 func add_universe():
-	put_change_view_btn(tr("VIEW_DIMENSION"), "res://Graphics/Buttons/DimensionView.png")
+	var view_str:String = tr("VIEW_DIMENSION")
+	if lv < 100:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 100"]]
+	put_change_view_btn(view_str, "res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u]["discovered"]:
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
 
 func add_supercluster():
-	put_change_view_btn(tr("VIEW_UNIVERSE"), "res://Graphics/Buttons/UniverseView.png")
+	var view_str:String = tr("VIEW_UNIVERSE")
+	if lv < 70:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 70"]]
+	put_change_view_btn(view_str, "res://Graphics/Buttons/UniverseView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if not supercluster_data[c_sc]["discovered"]:
@@ -974,7 +989,10 @@ func add_supercluster():
 	add_obj("supercluster")
 
 func add_cluster():
-	put_change_view_btn(tr("VIEW_SUPERCLUSTER"), "res://Graphics/Buttons/SuperclusterView.png")
+	var view_str:String = tr("VIEW_SUPERCLUSTER")
+	if lv < 50:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 50"]]
+	put_change_view_btn(view_str, "res://Graphics/Buttons/SuperclusterView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if obj_exists("Clusters", c_c_g):
@@ -989,7 +1007,10 @@ func add_cluster():
 		add_obj("cluster")
 
 func add_galaxy():
-	put_change_view_btn(tr("VIEW_CLUSTER"), "res://Graphics/Buttons/ClusterView.png")
+	var view_str:String = tr("VIEW_CLUSTER")
+	if lv < 35:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
+	put_change_view_btn(view_str, "res://Graphics/Buttons/ClusterView.png")
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
 	if obj_exists("Galaxies", c_g_g):
@@ -1005,7 +1026,10 @@ func add_galaxy():
 		add_obj("galaxy")
 
 func add_system():
-	put_change_view_btn(tr("VIEW_GALAXY"), "res://Graphics/Buttons/GalaxyView.png")
+	var view_str:String = tr("VIEW_GALAXY")
+	if lv < 20:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 20"]]
+	put_change_view_btn(view_str, "res://Graphics/Buttons/GalaxyView.png")
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1284,9 +1308,6 @@ func generate_system_part():
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	add_obj("galaxy")
 	remove_child($Loading)
-	if not EA_galaxy_visited:
-		long_popup("Normally you need to reach a certain level before being able to view other star systems/galaxies/etc., but for testing purposes\nyou can go anywhere without limits.", "Early access note")
-		EA_galaxy_visited = true
 
 func generate_systems(id:int):
 	randomize()
@@ -1339,7 +1360,7 @@ func generate_systems(id:int):
 			#Temperature in K
 			var temp = 0
 			if mass < 0.08:
-				star_size = range_lerp(mass, 0, 0.08, 0.001, 0.1)
+				star_size = range_lerp(mass, 0, 0.08, 0.01, 0.1)
 				temp = range_lerp(mass, 0, 0.08, 250, 2400)
 			if mass >= 0.08 and mass < 0.45:
 				star_size = range_lerp(mass, 0.08, 0.45, 0.1, 0.7)
@@ -1389,7 +1410,7 @@ func generate_systems(id:int):
 				if mass > 0.25 and randf() < 0.08:
 					star_type = "giant"
 					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
-				if star_type == "main-sequence":
+				if star_type == "main_sequence":
 					if randf() < 0.01:
 						mass = rand_range(10, 50)
 						star_type = "supergiant"
@@ -1620,6 +1641,20 @@ func get_coldest_star_temp(s_id):
 			res = system_data[s_id].stars[i].temperature
 	return res
 
+func get_biggest_star_size(s_id):
+	var res = system_data[s_id].stars[0].size
+	for i in range(1, len(system_data[s_id].stars)):
+		if system_data[s_id].stars[i].size > res:
+			res = system_data[s_id].stars[i].size
+	return res
+
+func get_brightest_star_luminosity(s_id):
+	var res = system_data[s_id].stars[0].luminosity
+	for i in range(1, len(system_data[s_id].stars)):
+		if system_data[s_id].stars[i].luminosity > res:
+			res = system_data[s_id].stars[i].luminosity
+	return res
+
 func make_lake(tile, state:String, lake:String, which_lake):
 	tile.type = "lake"
 	tile.tile_str = "%s_%s_%s" % [state, lake, which_lake]
@@ -1648,7 +1683,7 @@ func generate_tiles(id:int):
 	for i in 2:
 		if c_p_g != 2 and randf() < 0.35 * pow(p_i.pressure, 0.1):
 			#au_int: aurora_intensity
-			var au_int = clever_round(rand_range(20000, 40000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = clever_round(rand_range(40000, 80000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, wid)
@@ -1735,6 +1770,8 @@ func generate_tiles(id:int):
 					if met == "lead":
 						continue
 					if randf() < 0.3 / pow(met_info[met].rarity, 1.3):
+						if c_s_g == 0 and met_info[met].rarity > 6:
+							continue
 						tile_data[t_id].crater_metal = met
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
@@ -1983,15 +2020,20 @@ func on_change_view_click ():
 	$click.play()
 	match c_v:
 		"system":
-			switch_view("galaxy")
+			if lv >= 20:
+				switch_view("galaxy")
 		"galaxy":
-			switch_view("cluster")
+			if lv >= 35:
+				switch_view("cluster")
 		"cluster":
-			switch_view("supercluster")
+			if lv >= 50:
+				switch_view("supercluster")
 		"supercluster":
-			switch_view("universe")
+			if lv >= 70:
+				switch_view("universe")
 		"universe":
-			switch_view("dimension")
+			if lv >= 100:
+				switch_view("dimension")
 
 func add_items(item:String, num:int = 1):
 	var cycles = 0
@@ -2119,6 +2161,8 @@ func check_enough(costs):
 			enough = false
 		if mets.has(cost) and mets[cost] < costs[cost]:
 			enough = false
+		if cost == "stone" and Helper.get_sum_of_dict(stone) < costs.stone:
+			enough = false
 		if not enough:
 			break
 	return enough
@@ -2129,6 +2173,10 @@ func deduct_resources(costs):
 			money -= costs.money
 		if cost == "energy":
 			energy -= costs.energy
+		if cost == "stone":
+			var ratio = 1 - costs.stone / Helper.get_sum_of_dict(stone)
+			for el in stone:
+				stone[el] *= ratio
 		if mats.has(cost):
 			mats[cost] -= costs[cost]
 		if mets.has(cost):
@@ -2169,11 +2217,6 @@ func get_roman_num(num:int):
 		res = strs[c][int(num_str[n - c - 1])] + res
 		c += 1
 	return res
-
-func e_notation(num:float):#e notation
-	var e = floor(Helper.log10(num))
-	var n = num * pow(10, -e)
-	return String(clever_round(n)) + "e" + String(e)
 
 func clever_round (num:float, sd:int = 4):#sd: significant digits
 	var e = floor(Helper.log10(abs(num)))
@@ -2427,7 +2470,6 @@ func save_game(autosave:bool):
 	save_game.store_var(ships_travel_view_g_coords)
 	save_game.store_64(ships_travel_start_date)
 	save_game.store_64(ships_travel_length)
-	save_game.store_8(EA_galaxy_visited)
 	save_game.store_8(EA_cave_visited)
 	save_game.store_64(p_num)
 	save_game.store_64(s_num)
@@ -2471,6 +2513,10 @@ func cancel_building():
 	view.obj.finish_construct()
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
+
+func cancel_building_MS():
+	$UI/Panel.visible = false
+	view.obj.finish_construct()
 
 func change_language():
 	var config = ConfigFile.new()

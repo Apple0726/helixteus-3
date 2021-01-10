@@ -218,18 +218,21 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				cave_wall.set_cell(i, j, 0)
 				var rand:float = rng.randf()
-				var ch = 0.01 * pow(cave_floor / 3.0, 1.5)
+				var rand2:float = rng.randf()
+				var ch = 0.02 * pow(difficulty / 3.0, 0.4)
 				if rand < ch:
-					var diff:float = ch / rand
-					var deposit = deposit_scene.instance()
-					deposit.dir = "Metals"
+					var met_spawned:String = "lead"
 					for met in game.met_info:
-						if diff > game.met_info[met].rarity:
-							deposit.rsrc_name = met
-							deposit.amount = int(rng.randf_range(0.05, 0.3) * game.met_info[met].amount)
-					add_child(deposit)
-					deposit.position = cave_wall.map_to_world(Vector2(i, j))
-					deposits[String(tile_id)] = deposit
+						if rand2 < 1 / game.met_info[met].rarity:
+							met_spawned = met
+					if met_spawned != "":
+						var deposit = deposit_scene.instance()
+						deposit.dir = "Metals"
+						deposit.rsrc_name = met_spawned
+						deposit.amount = int(rng.randf_range(0.1, 0.15) * game.met_info[met_spawned].amount * min(5, pow(difficulty, 0.3)))
+						add_child(deposit)
+						deposit.position = cave_wall.map_to_world(Vector2(i, j))
+						deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, -1, 1)
@@ -255,7 +258,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = rng.randf()
-			var formula = 0.8 / pow(n, 0.8) * pow(cave_floor / 3.0, 1.1) * aurora_mult
+			var formula = 0.2 / pow(n, 0.8) * pow(cave_floor, 0.8) * aurora_mult
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
 				var contents:Dictionary = generate_treasure(tier, rng)
@@ -411,7 +414,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		if rng.randf() < 0.5 / met_value.rarity * aurora_mult:
+		if difficulty > met_value.rarity and rng.randf() < 0.5 / met_value.rarity * aurora_mult:
 			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 0.5), 3)
 	return contents
 
@@ -633,12 +636,12 @@ func on_timeout(slot, timer):
 	inventory_ready[slot] = true
 	remove_child(timer)
 
-func _process(_delta):
+func _process(delta):
 	if Input.is_action_pressed("left_click") and inventory_ready[curr_slot]:
 		if inventory[curr_slot].type == "rover_weapons":
 			attack()
 		elif inventory[curr_slot].type == "rover_mining" and tile_highlighted != -1:
-			hit_rock()
+			hit_rock(delta)
 			update_ray()
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
@@ -648,7 +651,7 @@ func attack():
 	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), Data.rover_weapons[inventory[curr_slot].name].damage * atk, get_color(inventory[curr_slot].name.split("_")[0]))
 	cooldown()
 
-func hit_rock():
+func hit_rock(delta):
 	var st = String(tile_highlighted)
 	if not tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st] = {}
@@ -660,7 +663,7 @@ func hit_rock():
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed
+		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
@@ -674,7 +677,7 @@ func hit_rock():
 					rsrc[mat] = amount
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = game.clever_round(deposit.amount * rand_range(0.95, 1.05), 3)
+				rsrc[deposit.rsrc_name] = game.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05), 3)
 				remove_child(deposit)
 				deposits.erase(st)
 			var remainder:float = 0

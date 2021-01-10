@@ -21,13 +21,16 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	var text:String
 	var color:Color = Color(1.0, 1.0, 1.0, 1.0)
 	if show_available:
+		if path == "Icons/stone":
+			rsrc_available = Helper.get_sum_of_dict(rsrc_available)
 		text = "%s/%s" % [format_num(rsrc_available, threshold / 2), format_num(rsrc_cost, threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		text = format_num(game.clever_round(rsrc_cost, 3), threshold) + mass_str
+		var num_str:String = Helper.e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(game.clever_round(rsrc_cost, 3), threshold)
+		text = num_str + mass_str
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
 
@@ -144,6 +147,11 @@ func get_plant_produce(name:String):
 func get_wid(size:float):
 	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
 
+func e_notation(num:float):#e notation
+	var e = floor(Helper.log10(num))
+	var n = num * pow(10, -e)
+	return "%se%s" %  [game.clever_round(n), e]
+
 func get_dir_from_name(_name:String):
 	if _name.substr(0, 7) == "speedup":
 		return "Items/Speedups"
@@ -170,7 +178,7 @@ func get_type_from_name(name:String):
 		_:
 			return ""
 
-func format_num(num:float, threshold:int):
+func format_num(num:float, threshold:int = 6):
 	if num < pow(10, threshold):
 		var string = str(num)
 		var arr = string.split(".")
@@ -190,6 +198,8 @@ func format_num(num:float, threshold:int):
 		var p:float = log(num) / log(10)
 		if is_equal_approx(p, ceil(p)):
 			p = ceil(p)
+		else:
+			p = int(p)
 		var div = max(pow(10, stepify(p - 1, 3)), 1)
 		if p >= 3 and p < 6:
 			suff = "k"

@@ -724,7 +724,7 @@ func _process(_delta):
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
 			continue
-		var progress = (curr_time - tile.construction_date) / float(tile.construction_length)
+		var progress:float
 		if time_bar_obj.type == "overclock":
 			progress = 1 - (curr_time - tile.overclock_date) / float(tile.overclock_length)
 			time_bar.get_node("TimeString").text = Helper.time_to_str(tile.overclock_length - curr_time + tile.overclock_date)

@@ -16,6 +16,8 @@ func refresh_overlay():
 			option_btn.add_item(tr("SYSTEM_ENTERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("COLDEST_STAR_TEMPERATURE"))
+			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
+			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
@@ -62,15 +64,42 @@ func get_CST_min_max():
 			_max = T
 	return {"_min":_min, "_max":_max}
 
+func get_BSS_min_max():
+	var overlays = game.view.obj.overlays
+	var _min = game.get_biggest_star_size(overlays[0].id)
+	var _max = _min
+	for i in range(1, len(overlays)):
+		var id:int = overlays[i].id
+		var T = game.get_biggest_star_size(id)
+		if T < _min:
+			_min = T
+		if T > _max:
+			_max = T
+	return {"_min":_min, "_max":_max}
+
+func get_BSL_min_max():
+	var overlays = game.view.obj.overlays
+	var _min = game.get_brightest_star_luminosity(overlays[0].id)
+	var _max = _min
+	for i in range(1, len(overlays)):
+		var id:int = overlays[i].id
+		var T = game.get_brightest_star_luminosity(id)
+		if T < _min:
+			_min = T
+		if T > _max:
+			_max = T
+	return {"_min":_min, "_max":_max}
+
 func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var is_int:bool = true
 	var min_max:Dictionary
+	$Panel/Reset.visible = false if not c_vl else c_vl.modified
 	match game.c_v:
 		"galaxy":
 			match index:
 				0:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("system", "planet_num")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
@@ -82,7 +111,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
 				2:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("system", "diff")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
@@ -91,17 +120,36 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
 				3:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_CST_min_max()#CST: coldest star temperature
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
+					is_int = false
 					$Panel/LeftNum.text = "%s K" % [c_vl.left]
 					$Panel/RightNum.text = "%s K" % [c_vl.right]
+				4:
+					if recalculate and not c_vl.modified:
+						min_max = get_BSS_min_max()#CST: coldest star temperature
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					is_int = false
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
+				5:
+					if recalculate and not c_vl.modified:
+						min_max = get_BSL_min_max()#CST: coldest star temperature
+						c_vl.left = min_max._min
+						c_vl.right = min_max._max
+					editable = true
+					is_int = false
+					$Panel/LeftNum.text = "%s" % [c_vl.left]
+					$Panel/RightNum.text = "%s" % [c_vl.right]
 		"cluster":
 			match index:
 				0:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "system_num")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
@@ -113,7 +161,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
 				2:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "diff")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
@@ -122,7 +170,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
 				3:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
 						c_vl.left = min_max._min * game.pow10(1, 9)
 						c_vl.right = min_max._max * game.pow10(1, 9)
@@ -130,7 +178,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
 				4:
-					if recalculate:
+					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "dark_matter")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
@@ -155,7 +203,7 @@ func send_overlay_info(index):
 func _on_HSlider_mouse_entered():
 	game.show_tooltip(tr("CIRCLE_SIZE"))
 
-func _on_HSlider_mouse_exited():
+func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_HSlider_value_changed(value):
@@ -188,9 +236,11 @@ func _input(event):
 func apply_changes():
 	if hovered_over == "left":
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = $Panel/LeftNumEdit.value
+		game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 		$Panel/LeftNumEdit.visible = false
 	elif hovered_over == "right":
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = $Panel/RightNumEdit.value
+		game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 		$Panel/RightNumEdit.visible = false
 	$Panel/Done.visible = false
 	hovered_over = ""
@@ -202,3 +252,11 @@ func _on_Done_pressed():
 
 func _on_close_button_pressed():
 	visible = false
+
+
+func _on_Reset_mouse_entered():
+	game.show_tooltip("RESET_TO_DEFAULT")
+
+func _on_Reset_pressed():
+	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = false
+	refresh_options(option_btn.selected, true)

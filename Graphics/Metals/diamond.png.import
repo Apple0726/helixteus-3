@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/M_DS.png-21e67c5844e6b390820cdc3f7aa94d5b.stex"
+path="res://.import/diamond.png-97066f93a640a0aabfb3d065fa34265c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Megastructures/M_DS.png"
-dest_files=[ "res://.import/M_DS.png-21e67c5844e6b390820cdc3f7aa94d5b.stex" ]
+source_file="res://Graphics/Metals/diamond.png"
+dest_files=[ "res://.import/diamond.png-97066f93a640a0aabfb3d065fa34265c.stex" ]
 
 [params]
 

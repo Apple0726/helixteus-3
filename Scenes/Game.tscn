@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -70,6 +70,18 @@ font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -81,13 +93,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=9]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -99,14 +111,14 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=11]
 size = 50
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
 font_data = ExtResource( 15 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -296,6 +308,26 @@ margin_right = 200.0
 margin_bottom = 70.0
 theme = ExtResource( 7 )
 
+[node name="Panel" type="PanelContainer" parent="UI"]
+visible = false
+margin_left = 1008.0
+margin_top = 368.0
+margin_right = 1156.0
+margin_bottom = 382.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource( 7 )
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="UI/Panel"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 146.0
+margin_bottom = 12.0
+
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 4
 
@@ -303,8 +335,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 8 )
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 text = "Tooltip
 a
 a
@@ -315,8 +347,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 9 )
-custom_fonts/normal_font = SubResource( 8 )
+custom_styles/normal = SubResource( 10 )
+custom_fonts/normal_font = SubResource( 9 )
 text = "Tooltip
 a
 a
@@ -363,7 +395,7 @@ margin_left = 456.0
 margin_top = 69.313
 margin_right = 784.0
 margin_bottom = 230.313
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 11 )
 text = "Helixteus 3
 "
 align = 1
@@ -557,7 +589,7 @@ margin_top = 464.0
 margin_right = 232.0
 margin_bottom = 574.0
 theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

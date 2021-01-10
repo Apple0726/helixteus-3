@@ -69,13 +69,14 @@ margin_bottom = 100.0
 custom_styles/normal = SubResource( 2 )
 text = "MEGASTRUCTURES_DESC"
 align = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="GridContainer" type="GridContainer" parent="."]
 margin_top = 100.0
-margin_right = 788.0
+margin_right = 800.0
 margin_bottom = 600.0
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
@@ -100,6 +101,7 @@ margin_bottom = 230.0
 item_name = "M_DS"
 
 [node name="ItemInfo" type="Panel" parent="."]
+visible = false
 margin_left = 788.0
 margin_top = 100.0
 margin_right = 1064.0

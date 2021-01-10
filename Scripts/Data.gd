@@ -27,6 +27,13 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 
+var MS_costs = {	"M_DS_0":{"money":1000000000, "stone":80000000, "silicon":40000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":10},
+					"M_SE_0":{"money":15000000, "stone":1000000, "energy":800000, "copper":10000, "iron":10000, "time":4*3600},
+}
+
+var MS_output = {	"M_DS_0":500000
+}
+
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
 			"MSMB":{"base_cost":100, "pw":1.6},
 			"IS":{"base_cost":500, "pw":2.1},
@@ -88,9 +95,9 @@ var science_unlocks = {
 						"MAE":{"cost":100000, "parent":""},
 						#Dyson sphere
 						"DS1":{"cost":8000000, "parent":"MAE"},
-						"DS2":{"cost":25000000, "parent":"DS1"},
-						"DS3":{"cost":50000000, "parent":"DS2"},
-						"DS4":{"cost":75000000, "parent":"DS3"},
+						"DS2":{"cost":250000000, "parent":"DS1"},
+						"DS3":{"cost":500000000, "parent":"DS2"},
+						"DS4":{"cost":750000000, "parent":"DS3"},
 						#Space elevator
 						"SE1":{"cost":150000, "parent":"MAE"},
 						"SE2":{"cost":500000, "parent":"SE1"},

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/M_SE.png-32715414e64c0b88c427ade0c68bd755.stex"
+path="res://.import/Reset.png-d708b37cc7d3905892534d1be942bef7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Megastructures/M_SE.png"
-dest_files=[ "res://.import/M_SE.png-32715414e64c0b88c427ade0c68bd755.stex" ]
+source_file="res://Graphics/Buttons/Reset.png"
+dest_files=[ "res://.import/Reset.png-d708b37cc7d3905892534d1be942bef7.stex" ]
 
 [params]
 

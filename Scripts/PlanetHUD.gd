@@ -54,7 +54,10 @@ func _on_Construct_mouse_entered():
 
 func _on_StarSystem_mouse_entered():
 	on_button = true
-	game.show_tooltip("%s (%s)\n%s" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action, tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"]])
+	var view_str:String = "%s (%s)" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action]
+	if game.lv < 5:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"]]
+	game.show_tooltip(view_str)
 
 func _on_Mine_mouse_entered():
 	on_button = true
