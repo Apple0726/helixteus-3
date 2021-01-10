@@ -35,8 +35,10 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	match bldg_type:
 		"GF":
 			ratio = 1 / 100.0
+			$Title.text = tr("GLASS_FACTORY")
 		"SE":
 			ratio = 20.0
+			$Title.text = tr("STEAM_ENGINE")
 		_:
 			ratio = 0.0
 	input_unit = ""

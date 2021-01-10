@@ -82,7 +82,14 @@ func _ready():
 					aurora.texture = game.aurora2_texture
 					aurora.modulate = Color(1, 1, rand_range(0.7, 1))
 				add_child(aurora)
-			if tile.has("depth"):
+			if tile.has("init_depth"):
+				var metal = Sprite.new()
+				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater_metal])
+				metal.scale *= 0.4
+				add_child(metal)
+				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
+			elif tile.has("depth"):
 				$Obstacles.set_cell(i, j, 6)
 			if not tile.has("tile_str"):
 				continue
@@ -90,13 +97,6 @@ func _ready():
 				$Obstacles.set_cell(i, j, 0)
 			elif tile.tile_str == "cave":
 				$Obstacles.set_cell(i, j, 1)
-			elif tile.tile_str == "crater" and tile.has("init_depth"):
-				var metal = Sprite.new()
-				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater_metal])
-				metal.scale *= 0.4
-				add_child(metal)
-				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				$Obstacles.set_cell(i, j, 1 + tile.crater_variant)
 			elif tile.tile_str == "ship":
 				$Obstacles.set_cell(i, j, 5)
 			var lake = tile.tile_str.split("_")
@@ -141,6 +141,8 @@ func show_tooltip(tile):
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
+				"MM":
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
 				"SC", "GF", "SE":
 					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
@@ -182,31 +184,33 @@ func show_tooltip(tile):
 					"sc":
 						tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(strs[1].to_upper())})
 		elif tile.type == "obstacle":
-			match tile.tile_str:
-				"rock":
-					if game.help.boulder_desc:
-						tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
-						game.help_str = "boulder_desc"
-				"ship":
-					if game.science_unlocked.SCT:
-						tooltip = tr("CLICK_TO_CONTROL_SHIP")
-					else:
-						if game.help.abandoned_ship:
-							tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
-							game.help_str = "abandoned_ship"
-				"cave":
-					tooltip = tr("CAVE")
-					if game.help.cave_desc:
-						tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
-						game.help_str = "cave_desc"
-					else:
-						tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
-				"crater":
-					if game.help.crater_desc:
-						tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-						game.help_str = "crater_desc"
-					else:
-						tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			if tile.has("init_depth"):
+				if game.help.crater_desc:
+					tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+					game.help_str = "crater_desc"
+				else:
+					tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			else:
+				match tile.tile_str:
+					"rock":
+						if game.help.boulder_desc:
+							tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
+							game.help_str = "boulder_desc"
+					"ship":
+						if game.science_unlocked.SCT:
+							tooltip = tr("CLICK_TO_CONTROL_SHIP")
+						else:
+							if game.help.abandoned_ship:
+								tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
+								game.help_str = "abandoned_ship"
+					"cave":
+						tooltip = tr("CAVE")
+						if game.help.cave_desc:
+							tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
+							game.help_str = "cave_desc"
+						else:
+							tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
+			
 	elif tile.has("depth"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora"):
@@ -243,13 +247,15 @@ func constr_bldg(tile, tile_id:int):
 		tile.type = "bldg"
 		tile.XP = round(constr_costs.money / 100.0)
 		match bldg_to_construct:
-			"ME", "PP", "SC", "GF", "SE":
+			"ME", "PP", "SC", "GF", "SE", "MM":
 				tile.collect_date = tile.construction_date + tile.construction_length
 				tile.stored = 0
 				tile.path_1 = 1
 				tile.path_1_value = Data.path_1[tile.tile_str].value
 				tile.path_2 = 1
 				tile.path_2_value = Data.path_2[tile.tile_str].value
+				if bldg_to_construct == "MM" and not tile.has("depth"):
+					tile.depth = 0
 			"RL":
 				game.show.SP = true
 				tile.collect_date = tile.construction_date + tile.construction_length
@@ -340,7 +346,7 @@ func overclock_bldg(tile, tile_id:int):
 func click_tile(tile, tile_id:int):
 	if not tile.has("tile_str"):
 		return
-	if tile.tile_str in ["ME", "PP", "RL"]:
+	if tile.tile_str in ["ME", "PP", "RL", "MM"]:
 		collect_rsrc(tile, tile_id)
 	else:
 		if not tile.is_constructing:
@@ -378,6 +384,12 @@ func collect_rsrc(tile, tile_id:int):
 		"RL":
 			game.SP += tile.stored
 			tile.stored = 0
+		"MM":
+			if tile.stored >= 1 and not tile.has("depth"):
+				tile.depth = 0
+			for i in tile.stored:
+				Helper.get_rsrc_from_rock(Helper.generate_rock(tile, p_i), tile, p_i, true)
+			tile.stored = 0
 
 func destroy_bldg(id2:int):
 	var tile = game.tile_data[id2]
@@ -386,14 +398,21 @@ func destroy_bldg(id2:int):
 	remove_child(hboxes[id2])
 	if tile.tile_str == "MS":
 		game.mineral_capacity -= tile.path_1_value
+	var new_tile:Dictionary = {}
 	if tile.has("aurora"):
-		var au_type = tile.aurora
-		var au_int = tile.au_int
-		game.tile_data[id2].clear()
-		game.tile_data[id2].aurora = au_type
-		game.tile_data[id2].au_int = au_int
-	else:
+		new_tile.aurora = tile.aurora
+		new_tile.au_int = tile.au_int
+	if tile.has("depth"):
+		new_tile.depth = tile.depth
+	if tile.has("init_depth"):
+		new_tile.type = "obstacle"
+		new_tile.crater_variant = tile.crater_variant
+		new_tile.init_depth = tile.init_depth
+		new_tile.crater_metal = tile.crater_metal
+	if new_tile.empty():
 		game.tile_data[id2] = null
+	else:
+		game.tile_data[id2] = new_tile.duplicate(true)
 
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
@@ -486,12 +505,14 @@ func _input(event):
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = x_pos % wid + y_pos * wid
 		var tile = game.tile_data[tile_id]
-		if not tile or tile.has("aurora"):
+		if not tile or tile.has("aurora") or tile.has("depth"):
 			if about_to_mine:
 				mine_tile(tile_id)
 			elif bldg_to_construct != "":
-				constr_bldg(tile, tile_id)
-			elif placing_soil:
+				if bldg_to_construct == "MM" or not (tile and tile.has("depth")):
+					constr_bldg(tile, tile_id)
+		if not tile or tile.has("aurora"):
+			if placing_soil:
 				if game.check_enough({"soil":10}):
 					game.deduct_resources({"soil":10})
 					if not game.tile_data[tile_id]:
@@ -501,11 +522,9 @@ func _input(event):
 					$Soil.update_bitmask_region()
 				else:
 					game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
-		else:
+		if tile:
 			var t:String = game.item_to_use.type
-			if about_to_mine and tile.has("depth"):
-				mine_tile(tile_id)
-			elif tile.has("type"):
+			if tile.has("type"):
 				if tile.type == "plant":#if clicked tile has soil on it
 					if placing_soil:
 						game.add_resources({"soil":10})
@@ -543,7 +562,7 @@ func _input(event):
 					else:
 						click_tile(tile, tile_id)
 						mouse_pos = Vector2.ZERO
-				elif tile.type == "obstacle":
+				elif tile.type == "obstacle" and tile.has("tile_str"):
 					if tile.tile_str == "cave":
 						if game.bottom_info_action == "enter_cave":
 							game.c_t = tile_id
@@ -647,6 +666,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.PP, id2)
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
+		"MM":
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.MM, id2)
 		"SC":
 			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.SC, id2)
 		"GF":
@@ -695,7 +716,7 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "overclock")
 
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "SC", "GF", "SE"]
+	return bldg in ["ME", "PP", "RL", "MM", "SC", "GF", "SE"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()
@@ -720,7 +741,7 @@ func _process(_delta):
 		var time_bar = time_bar_obj.node
 		var id2 = time_bar_obj.id
 		var tile = game.tile_data[id2]
-		if not tile or not tile.has("type"):
+		if not tile or not tile.has("construction_date"):
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
 			continue
@@ -767,7 +788,7 @@ func _process(_delta):
 	for rsrc_obj in rsrcs:
 		var tile = game.tile_data[rsrc_obj.id]
 		var rsrc = rsrc_obj.node
-		if not tile or not tile.has("type"):
+		if not tile or not tile.has("is_constructing"):
 			remove_child(rsrc_obj.node)
 			rsrcs.erase(rsrc_obj)
 			continue
@@ -778,7 +799,7 @@ func _process(_delta):
 func update_rsrc(rsrc, tile):
 	var curr_time = OS.get_system_time_msecs()
 	match tile.tile_str:
-		"ME", "PP":
+		"ME", "PP", "MM":
 			#Number of seconds needed per mineral
 			var prod = 1000 / tile.path_1_value
 			if tile.has("overclock_mult"):
@@ -803,7 +824,10 @@ func update_rsrc(rsrc, tile):
 			else:
 				current_bar.value = 0
 				capacity_bar.value = 1
-			rsrc.get_node("Control/Label").text = String(stored)
+			if tile.tile_str == "MM":
+				rsrc.get_node("Control/Label").text = "%s / %s m" % [tile.depth + tile.stored, tile.depth + cap]
+			else:
+				rsrc.get_node("Control/Label").text = String(stored)
 		"RL":
 			var prod = 1000 / tile.path_1_value
 			if tile.has("overclock_mult"):

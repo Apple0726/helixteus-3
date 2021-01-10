@@ -1760,7 +1760,7 @@ func generate_tiles(id:int):
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				make_obstacle(tile_data[t_id], "crater")
+				tile_data[t_id].type = "obstacle"
 				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
 				tile_data[t_id].init_depth = depth

@@ -44,7 +44,6 @@ margin_right = 0.0
 margin_right = 612.0
 margin_bottom = 48.0
 custom_fonts/font = SubResource( 1 )
-text = "GLASS_FACTORY"
 align = 1
 valign = 1
 __meta__ = {

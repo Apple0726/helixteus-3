@@ -7,6 +7,7 @@ var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 var bldg_infos = {"ME":{"type":"Basic"},
 				 "PP":{"type":"Basic"},
 				 "RL":{"type":"Basic"},
+				 "MM":{"type":"Basic"},
 				 "MS":{"type":"Storage"},
 				 "RCC":{"type":"Vehicles"},
 				 "SC":{"type":"Production"},
@@ -87,25 +88,28 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	rtl.text = ""
 	var txt = (Data.path_1[name].desc + "\n") % [Data.path_1[name].value]
 	var icons = []
-	var has_icon = Data.icons.has(name)
+	var has_icon = Data.icons.has(name) and txt.find("@i") != -1
 	if has_icon:
 		icons.append(Data.icons[name])
 	if Data.path_2.has(name):
-		txt += (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
-		if has_icon:
+		var txt2:String = (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
+		txt += txt2
+		if has_icon and txt2.find("@i"):
 			icons.append(Data.icons[name])
 	game.add_text_icons(rtl, txt, icons, 22)
 	Helper.put_rsrc(vbox, 36, costs, false, true)
 	$Contents/HBoxContainer/ItemInfo.visible = true
 
-func get_item_name(name:String):
-	match name:
+func get_item_name(_name:String):
+	match _name:
 		"ME":
 			return tr("MINERAL_EXTRACTOR")
 		"PP":
 			return tr("POWER_PLANT")
 		"RL":
 			return tr("RESEARCH_LAB")
+		"MM":
+			return tr("MINING_MACHINE")
 		"MS":
 			return tr("MINERAL_SILO")
 		"RCC":

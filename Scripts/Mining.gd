@@ -109,37 +109,7 @@ func generate_rock(new:bool):
 	metal_sprites = []
 	if not tile.has("contents") or new:
 		total_mass = 0
-		var other_volume = 0#in m^3
-		#We assume all materials have a density of 1.5g/cm^3 to simplify things
-		var rho = 1.5
-		for mat in p_i.surface.keys():
-			#Material quantity penalty the further you go from surface
-			var depth_limit_mult = max(1, 1 + (tile.depth / 2.0 - p_i.crust_start_depth) / float(p_i.crust_start_depth))
-			if randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
-				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
-				if amount < 1:
-					continue
-				contents[mat] = amount
-				other_volume += amount / rho / 1000
-		if layer != "surface":
-			if not tile.has("current_deposit"):
-				for met in met_info:
-					var crater_metal = tile.has("init_depth") and met == tile.crater_metal
-					if met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < met_info[met].max_depth or crater_metal:
-						if randf() < 0.25 / met_info[met].rarity * (6 if crater_metal else 1) * aurora_mult:
-							tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
-			if tile.has("current_deposit"):
-				var met = tile.current_deposit.met
-				var size = tile.current_deposit.size
-				var progress2 = tile.current_deposit.progress
-				var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-				var amount = game.clever_round(met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult, 3)
-				contents[met] = amount
-				other_volume += amount / game.met_info[met].density / 1000
-				tile.current_deposit.progress += 1
-			#   									                          	    V Every km, rock density goes up by 0.01
-		var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
-		contents.stone = stone_amount
+		contents = Helper.generate_rock(tile, p_i).duplicate(true)
 		tile.contents = contents
 	else:
 		contents = tile.contents
@@ -229,35 +199,8 @@ func pickaxe_hit():
 	if progress >= 100:
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()
-		for content in contents:
-			var amount = contents[content]
-			if game.mats.has(content):
-				game.mats[content] += amount
-				if not game.show.plant_button and content == "soil":
-					game.show.plant_button = true
-				if not game.show.materials:
-					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
-					game.inventory.get_node("Tabs/Materials").visible = true
-					game.show.materials = true
-			elif game.mets.has(content):
-				if not game.show.metals:
-					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
-					game.inventory.get_node("Tabs/Metals").visible = true
-					game.show.metals = true
-				game.mets[content] += amount
-			elif content == "stone":
-				var layer2 = "crust" if layer == "surface" or layer == "crater" else layer
-				game.add_resources({"stone":amount}, p_i[layer2])
-			else:
-				game[content] += amount
-			if game.show.has(content):
-				game.show[content] = true
+		Helper.get_rsrc_from_rock(contents, tile, p_i)
 		progress -= 100
-		if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
-			tile.erase("current_deposit")
-		tile.depth += 1
-		if tile.has("init_depth") and tile.depth > 3 * tile.init_depth:
-			tile.erase("init_depth")
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true

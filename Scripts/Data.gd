@@ -8,12 +8,14 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"SC":{"value":50.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300}},
 				"GF":{"value":0.1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350}},
 				"SE":{"value":20.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200}},
+				"MM":{"value":0.01, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100}},
 }
-var path_2 = {	"ME":{"value":15, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60}},
-				"PP":{"value":70, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60}},
-				"SC":{"value":4000, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300}},
-				"GF":{"value":10, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350}},
-				"SE":{"value":900, "pw":1.17, "is_value_integer":true, "desc":tr("STORES_X") % [" @i %s"], "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350}},
+var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60}},
+				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60}},
+				"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300}},
+				"GF":{"value":10, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350}},
+				"SE":{"value":900, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350}},
+				"MM":{"value":4, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100}},
 }
 
 var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
@@ -23,7 +25,8 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"RCC":{"money":20000, "energy":4000, "time":280.0},
 				"SC":{"money":1200, "energy":800, "time":90.0},
 				"GF":{"money":3000, "energy":2000, "time":120.0},
-				"SE":{"money":1500, "energy":500, "time":120.0},
+				"SE":{"money":1500, "energy":200, "time":120.0},
+				"MM":{"money":13000, "energy":5000, "time":300.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 
@@ -47,6 +50,7 @@ var icons = {	"ME":load("res://Graphics/Icons/minerals.png"),
 				"SC":load("res://Graphics/Icons/stone.png"),
 				"GF":load("res://Graphics/Materials/glass.png"),
 				"SE":load("res://Graphics/Icons/energy.png"),
+				"MM":load("res://Graphics/Icons/MM.png"),
 }
 
 func reload():
@@ -58,11 +62,13 @@ func reload():
 	path_1.SC.desc = tr("CRUSHES_X") % ["@i %s kg/" + tr("S_SECOND")]
 	path_1.GF.desc = tr("PRODUCES_X") % ["@i %s kg/" + tr("S_SECOND")]
 	path_1.SE.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.MM.desc = tr("X_M_PER_SECOND") % ["%s", tr("S_SECOND")]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
 	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s"]
+	path_2.MM.desc = tr("X_M_AT_ONCE")
 
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 

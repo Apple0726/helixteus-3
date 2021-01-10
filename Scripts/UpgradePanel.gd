@@ -77,7 +77,7 @@ func update():
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		var icon = []
-		if Data.icons.has(bldg):
+		if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
 			icon.append(Data.icons[bldg])
 		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], icon, 20)
 	else:
@@ -93,7 +93,7 @@ func update():
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
 	var icon2 = []
-	if Data.icons.has(bldg):
+	if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
 		icon2.append(Data.icons[bldg])
 	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], icon2, 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
