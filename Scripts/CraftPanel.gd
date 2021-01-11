@@ -118,16 +118,11 @@ func _on_BuyAmount_value_changed(value):
 	Helper.put_rsrc(vbox, 32, item_total_costs, false, true)
 
 func get_item_desc(item:String):
-	var output = ""
 	match item:
-		"lead_seeds":
-			output = tr("SEEDS_DESC") % [game.craft_agric_info.lead_seeds.produce]
-		"copper_seeds":
-			output = tr("SEEDS_DESC") % [game.craft_agric_info.copper_seeds.produce]
 		"fertilizer":
-			output = tr("FERTILIZER_DESC")
-	return output
-
+			return tr("FERTILIZER_DESC")
+	if item.split("_")[1] == "seeds":
+		return tr("SEEDS_DESC") % [game.craft_agric_info[item].produce]
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

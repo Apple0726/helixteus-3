@@ -77,6 +77,9 @@ var science_unlocks = {
 						#Agriculture Sciences
 						"SA":{"cost":100, "parent":""},
 						
+						#Auto mining
+						"AM":{"cost":10000, "parent":""},
+						
 						#Rover Sciences
 						"RC":{"cost":250, "parent":""},
 						"OL":{"cost":1500, "parent":"RC"},
@@ -108,6 +111,12 @@ var science_unlocks = {
 						"SE1":{"cost":150000, "parent":"MAE"},
 						"SE2":{"cost":500000, "parent":"SE1"},
 						"SE3":{"cost":1000000, "parent":"SE2"},
+						
+}
+var infinite_research_sciences = {	"MEE":{"cost":5000, "pw":6.2, "value":1.2},
+									"PPE":{"cost":5000, "pw":6.2, "value":1.2},
+									"RLE":{"cost":25000, "pw":6.8, "value":1.2},
+									"MSE":{"cost":7000, "pw":6.2, "value":1.2},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},

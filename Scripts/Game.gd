@@ -159,6 +159,7 @@ var help:Dictionary = {
 }
 
 var science_unlocked:Dictionary = {}
+var infinite_research:Dictionary = {}
 var MUs:Dictionary = {	"MV":1,
 						"MSMB":1,
 						"IS":1,
@@ -237,7 +238,7 @@ var mat_info = {	"coal":{"value":5},#One kg of coal = $5
 					"sand":{"value":4},
 					"clay":{"value":12},
 					"soil":{"value":6},
-					"cellulose":{"value":15},
+					"cellulose":{"value":30},
 					"silicon":{"value":10},
 }
 #Changing length of met_info changes cave rng!
@@ -271,17 +272,22 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}
 var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 						"speedup2":{"costs":{"money":2800}, "time":15*60000},
 						"speedup3":{"costs":{"money":11000}, "time":60*60000},
-						"speedup4":{"costs":{"money":65000}, "time":360*60000},
+						"speedup4":{"costs":{"money":65000}, "time":6*60*60000},
+						"speedup5":{"costs":{"money":255000}, "time":24*60*60000},
+						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60000},
 }
 
 var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
 						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000},
 						"overclock3":{"costs":{"money":50000}, "mult":3, "duration":60*60000},
-						"overclock4":{"costs":{"money":170000}, "mult":4, "duration":120*60000},
+						"overclock4":{"costs":{"money":170000}, "mult":4, "duration":2*60*60000},
+						"overclock5":{"costs":{"money":850000}, "mult":6, "duration":6*60*60000},
+						"overclock6":{"costs":{"money":9000000}, "mult":10, "duration":24*60*60000},
 }
 
-var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":20, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
-						"copper_seeds":{"costs":{"cellulose":20, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
+var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
+						"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
+						"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"water", "produce":60},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var other_items_info = {"hx_core":{}}
@@ -350,6 +356,8 @@ func _ready():
 		SP = 200000000
 		stone.O = 80000000
 		mats.silicon = 40000
+		mats.cellulose = 1000
+		mats.soil = 1000
 		mats.coal = 100
 		mets.copper = 250000
 		mets.iron = 1600000
@@ -357,6 +365,7 @@ func _ready():
 		mets.titanium = 50000
 		show.SP = true
 		show.stone = true
+		show.materials = true
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
@@ -430,6 +439,7 @@ func load_game():
 		auto_replace = save_game.get_8()
 		pickaxe = save_game.get_var()
 		science_unlocked = save_game.get_var()
+		infinite_research = save_game.get_var()
 		mats = save_game.get_var()
 		mets = save_game.get_var()
 		help = save_game.get_var()
@@ -509,6 +519,8 @@ func new_game():
 	dir.make_dir("user://Save1/Superclusters")
 	for sc in Data.science_unlocks:
 		science_unlocked[sc] = false
+	for sc in Data.infinite_research_sciences:
+		infinite_research[sc] = 0
 	for mat in mats:
 		show[mat] = false
 	for met in mets:
@@ -1752,9 +1764,9 @@ func generate_tiles(id:int):
 				if wid > 15:
 					floor_size *= 1.3
 				if wid > 75:
-					floor_size *= 1.3
+					floor_size *= 1.2
 				if wid > 150:
-					floor_size *= 1.3
+					floor_size *= 1.2
 				cave_data.append({"num_floors":Helper.rand_int(1, wid / 3), "floor_size":floor_size})
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
@@ -2441,6 +2453,7 @@ func save_game(autosave:bool):
 	save_game.store_8(auto_replace)
 	save_game.store_var(pickaxe)
 	save_game.store_var(science_unlocked)
+	save_game.store_var(infinite_research)
 	save_game.store_var(mats)
 	save_game.store_var(mets)
 	save_game.store_var(help)

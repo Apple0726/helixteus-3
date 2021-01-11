@@ -308,7 +308,10 @@ func harvest_plant(tile, tile_id:int):
 		return
 	var curr_time = OS.get_system_time_msecs()
 	if curr_time >= tile.construction_length + tile.construction_date:
-		game.mets[Helper.get_plant_produce(tile.tile_str)] += game.craft_agric_info[tile.tile_str].produce * (pow(1 + tile.au_int, Helper.get_AIE()) if tile.has("aurora") else 1)
+		var plant:String = Helper.get_plant_produce(tile.tile_str)
+		game.mets[plant] += game.craft_agric_info[tile.tile_str].produce * (pow(1 + tile.au_int, Helper.get_AIE()) if tile.has("aurora") else 1)
+		game.show[plant] = true
+		game.show.metals = true
 		tile.erase("tile_str")
 		remove_child(plant_sprites[String(tile_id)])
 
@@ -389,6 +392,8 @@ func collect_rsrc(tile, tile_id:int):
 				tile.depth = 0
 			for i in tile.stored:
 				Helper.get_rsrc_from_rock(Helper.generate_rock(tile, p_i), tile, p_i, true)
+			if tile.stored == tile.path_2_value:
+				tile.collect_date = curr_time
 			tile.stored = 0
 
 func destroy_bldg(id2:int):
@@ -630,8 +635,10 @@ func add_time_bar(id2:int, type:String):
 	time_bars.append({"node":time_bar, "id":id2, "type":type})
 
 func add_plant(id2:int, st:String):
-	var plant_scene = load("res://Scenes/Plants/" + st + ".tscn")
-	var plant = plant_scene.instance()
+	var plant:AnimatedSprite = AnimatedSprite.new()
+	plant.frames = SpriteFrames.new()
+	for i in 5:
+		plant.frames.add_frame("default", load("res://Graphics/Plants/%s/%s.png" % [st, i]))
 	var local_id = id2
 	var v = Vector2.ZERO
 	v.x = (local_id % wid) * 200

@@ -140,6 +140,8 @@ func refresh():
 			bldg.visible = game.show.sand
 		if bldg.item_name == "SE":
 			bldg.visible = game.show.coal
+		if bldg.item_name == "MM":
+			bldg.visible = game.science_unlocked.AM
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

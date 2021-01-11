@@ -198,7 +198,7 @@ BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of res
 LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},{state} {contents},{state} {contents}
 SEEDS,Seeds,Graines,Semi,,Pflanzensamen,Semillas,씨앗
 AGRICULTURE,Agriculture,Agriculture,Agricoltura,,,Agricultura,농업
-CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas para producir metales.,
+CRAFT_AGRIC_DESC,"Unlocks the base construction stage of all megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.",,,,,Todo lo que neceistas para producir metales.,
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
@@ -244,7 +244,7 @@ CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Cliccare per raccoglier
 CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,Fabricación exitosa,제작 성공
 SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,Árbol científico,
 SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,Agricultura espacial,
-SA_DESC,Allows you to farm metals.,,,,,Te permite cultivar metales.,
+SA_DESC,Allows you to farm basic metals.,,,,,Te permite cultivar metales.,
 RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca fatta,,,Investigación completa,연구 완료
 USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,Haz click en un edificio para acelerar la construcción,가속화할 빌딩을 클릭하세요
 USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,Haz click en un edificio para hacer overclock,오버클럭할 빌딩을 클릭하세요
@@ -395,7 +395,7 @@ UVL_DESC,Purple lasers too weak? Maybe try going outside the visible range?,,,,,
 XRL_DESC,Ultra violet lasers too weak? You know the drill.,,,,,,
 GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,,,,,,
 UGRL_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,,,,,,
-MAE_DESC,"Megastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,,
+MAE_DESC,"Base science for constructing megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,,
 CD_DESC,"Can burn fuels like coal, cellulose, etc. to speed up travel.",,,,,,
 ID_DESC,Ionizes noble gasses to speed up travel even further.,,,,,,
 FD_DESC,Fuse elements together for even more speed.,,,,,,
@@ -518,5 +518,17 @@ PRODUCTION_PER_SECOND,Production per second:,,,,,,
 MS_ALREADY_PRESENT,There's already a megastructure around this star!,,,,,,
 PRESS_F_TO_CONTINUE_CONSTR,Press F to continue construction,,,,,,
 MINING_MACHINE,Mining machine,,,,,,
+MM_DESC,Automatically mines tiles for you. Note: this building does not play the minigame.,,,,,,
 X_M_PER_SECOND,Mines %s m/%s,,,,,,
 X_M_AT_ONCE,Can mine %s m at once,,,,,,
+AUTO_MINING,Auto mining,,,,,,
+AM_DESC,Unlocks a building that automatically mines tiles.,,,,,,
+INFINITE_RESEARCH,Infinite research,,,,,,
+MEE_X,Mineral extractor efficiency %s,,,,,,
+MEE_DESC,Each research multiplies all mineral extractors' speed and capacity by 1.2.,,,,,,
+PPE_X,Power plant efficiency %s,,,,,,
+PPE_DESC,Each research multiplies all power plants' speed and capacity by 1.2.,,,,,,
+RLE_X,Research lab efficiency %s,,,,,,
+RLE_DESC,Each research multiplies all research lab's speed by 1.2.,,,,,,
+MSE_X,Mineral silo expansion %s,,,,,,
+MSE_DESC,Each research multiplies all mineral silos' capacity by 1.2.,,,,,,

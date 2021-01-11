@@ -1,10 +1,82 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/ScienceButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/ScienceTree.gd" type="Script" id=2]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=4]
 
 [node name="ScienceTree" type="Node2D"]
 script = ExtResource( 2 )
+
+[node name="Control" type="Control" parent="."]
+margin_left = 92.0
+margin_top = 332.0
+margin_right = 132.0
+margin_bottom = 372.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control"]
+margin_left = 16.0
+margin_right = 218.0
+margin_bottom = 24.0
+text = "INFINITE_RESEARCH"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+margin_top = -9.0
+margin_right = 64.0
+margin_bottom = 34.0
+rect_scale = Vector2( -1, 1 )
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfiniteResearch" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MEE" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -576.0
+margin_top = 160.0
+margin_right = -576.0
+margin_bottom = 224.0
+infinite_research = true
+
+[node name="PPE" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -576.0
+margin_top = 256.0
+margin_right = -576.0
+margin_bottom = 320.0
+infinite_research = true
+
+[node name="RLE" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -576.0
+margin_top = 352.0
+margin_right = -576.0
+margin_bottom = 416.0
+infinite_research = true
+
+[node name="MSE" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -576.0
+margin_top = 448.0
+margin_right = -576.0
+margin_bottom = 512.0
+infinite_research = true
+
+[node name="AM" parent="." instance=ExtResource( 1 )]
+margin_left = 128.0
+margin_right = 128.0
 
 [node name="SA" parent="." instance=ExtResource( 1 )]
 margin_left = 128.0

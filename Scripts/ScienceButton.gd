@@ -2,6 +2,7 @@ extends Control
 
 var main_tree
 var is_over:bool = false
+export var infinite_research:bool = false
 onready var game = get_node("/root/Game")
 
 func _ready():
@@ -10,20 +11,33 @@ func _ready():
 	$Panel.connect("mouse_exited", self, "on_mouse_exited")
 	$Panel/HBox/Texture.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
-	rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
-	if game.science_unlocked[name]:
-		$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+	if not infinite_research:
+		rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
+		if game.science_unlocked[name]:
+			$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+	else:
+		var sc_lv:int = game.infinite_research[name]
+		var st:String = tr("%s_X" % name) % sc_lv
+		rect_min_size.x = font.get_string_size(st).x + 80
 
 func refresh():
-	if modulate == Color.white:
-		$Panel/HBox/VBox/Label.text = get_science_name(name)
-		$Panel/HBox/VBox/Resource/Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
+	if infinite_research:
+		var sc_lv:int = game.infinite_research[name]
+		var sc:Dictionary = Data.infinite_research_sciences[name]
+		$Panel/HBox/VBox/Label.text = tr("%s_X" % name) % [sc_lv + 1]
+		$Panel/HBox/VBox/Resource/Text.text = Helper.format_num(sc.cost * pow(sc.pw, sc_lv), 6)
 	else:
-		$Panel/HBox/VBox/Label.text = "?"
-		$Panel/HBox/VBox/Resource/Text.text = "-"
+		if modulate == Color.white:
+			$Panel/HBox/VBox/Label.text = get_science_name(name)
+			$Panel/HBox/VBox/Resource/Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
+		else:
+			$Panel/HBox/VBox/Label.text = "?"
+			$Panel/HBox/VBox/Resource/Text.text = "-"
 
 func get_science_name(sc:String):
 	match sc:
+		"AM":
+			return tr("AUTO_MINING")
 		"SA":
 			return tr("SPACE_AGRICULTURE")
 		"RC":
@@ -60,20 +74,10 @@ func get_science_name(sc:String):
 			return tr("ULTRAGAMMARAY_LASER").format({"laser":tr("LASER")})
 		"MAE":
 			return tr("MACRO_ENGINEERING")
-		"DS1":
-			return tr("DYSON_SPHERE_X") % [1]
-		"DS2":
-			return tr("DYSON_SPHERE_X") % [2]
-		"DS3":
-			return tr("DYSON_SPHERE_X") % [3]
-		"DS4":
-			return tr("DYSON_SPHERE_X") % [4]
-		"SE1":
-			return tr("SPACE_ELEVATOR_X") % [1]
-		"SE2":
-			return tr("SPACE_ELEVATOR_X") % [2]
-		"SE3":
-			return tr("SPACE_ELEVATOR_X") % [3]
+	if sc.substr(0, 2) == "DS":
+		return tr("DYSON_SPHERE_X") % [sc[2]]
+	elif sc.substr(0, 2) == "SE":
+		return tr("SPACE_ELEVATOR_X") % [sc[2]]
 
 func on_mouse_entered():
 	is_over = true
@@ -85,11 +89,24 @@ func on_mouse_exited():
 
 func _input(event):
 	if Input.is_action_just_released("left_click") and is_over:
-		if not game.science_unlocked[name]:
+		if infinite_research:
+			var sc_lv:int = game.infinite_research[name]
+			var sc:Dictionary = Data.infinite_research_sciences[name]
+			if game.SP >= sc.cost * pow(sc.pw, sc_lv):
+				game.SP -= sc.cost * pow(sc.pw, sc_lv)
+				game.infinite_research[name] += 1
+				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
+				game.HUD.refresh()
+				refresh()
+			else:
+				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
+		elif not game.science_unlocked[name]:
 			if game.SP >= Data.science_unlocks[name].cost:
 				game.SP -= Data.science_unlocks[name].cost
 				game.science_unlocked[name] = true
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
+				if name == "SA":
+					game.craft_panel._on_Agric_pressed()
 				game.HUD.refresh()
 				$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 				main_tree.refresh()

@@ -111,32 +111,12 @@ func set_visibility(node):
 		other_node.visible = false
 	node.visible = true
 
-func get_item_name (name:String):
-	if name.substr(0, 7) == "speedup":
-		return tr("SPEED_UP") + " " + game.get_roman_num(int(name.substr(7, 1)))
-	if name.substr(0, 9) == "overclock":
-		return tr("OVERCLOCK") + " " + game.get_roman_num(int(name.substr(9, 1)))
-	match name:
-		"lead_seeds":
-			return tr("LEAD_SEEDS")
-		"copper_seeds":
-			return tr("COPPER_SEEDS")
-		"fertilizer":
-			return tr("FERTILIZER")
-		"stick":
-			return tr("STICK")
-		"wooden_pickaxe":
-			return tr("WOODEN_PICKAXE")
-		"stone_pickaxe":
-			return tr("STONE_PICKAXE")
-		"lead_pickaxe":
-			return tr("LEAD_PICKAXE")
-		"copper_pickaxe":
-			return tr("COPPER_PICKAXE")
-		"iron_pickaxe":
-			return tr("IRON_PICKAXE")
-		"hx_core":
-			return tr("HX_CORE")
+func get_item_name (_name:String):
+	if _name.substr(0, 7) == "speedup":
+		return tr("SPEED_UP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
+	if _name.substr(0, 9) == "overclock":
+		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
+	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
@@ -158,7 +138,7 @@ func get_dir_from_name(_name:String):
 	if _name.substr(0, 9) == "overclock":
 		return "Items/Overclocks"
 	match _name:
-		"lead_seeds", "copper_seeds", "fertilizer":
+		"fertilizer":
 			return "Agriculture"
 		"money":
 			return "Icons"
@@ -166,17 +146,21 @@ func get_dir_from_name(_name:String):
 			return "Icons"
 		"hx_core":
 			return "Items/Others"
+	if _name.split("_")[1] == "seeds":
+		return "Agriculture"
+	return ""
 
-func get_type_from_name(name:String):
-	if name.substr(0, 7) == "speedup":
+func get_type_from_name(_name:String):
+	if _name.substr(0, 7) == "speedup":
 		return "speedup_info"
-	if name.substr(0, 9) == "overclock":
+	if _name.substr(0, 9) == "overclock":
 		return "overclock_info"
-	match name:
-		"lead_seeds", "copper_seeds", "fertilizer":
+	match _name:
+		"fertilizer":
 			return "craft_agric_info"
-		_:
-			return ""
+	if _name.split("_")[1] == "seeds":
+		return "craft_agric_info"
+	return ""
 
 func format_num(num:float, threshold:int = 6):
 	if num < pow(10, threshold):
