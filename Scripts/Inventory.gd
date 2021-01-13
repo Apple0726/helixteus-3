@@ -45,15 +45,17 @@ func _on_Items_pressed():
 		inventory_grid.add_child(slot)
 		i += 1
 
-func on_slot_over (name:String, num:int, slot:int):
+func on_slot_over (_name:String, num:int, slot:int):
+	var st:String = Helper.get_item_name(_name)
+	if game.other_items_info.has(_name):
+		st += "\n%s" % [tr("%s_DESC" % _name.to_upper())]
 	item_slot = slot
-	item_hovered = name
+	item_hovered = _name
 	item_stack = num
 	if game.help.inventory_shortcuts:
 		game.help_str = "inventory_shortcuts"
-		game.show_tooltip(Helper.get_item_name(name) + "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS"))
-	else:
-		game.show_tooltip(Helper.get_item_name(name))
+		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
+	game.show_tooltip(st)
 
 func on_slot_out():
 	item_hovered = ""
@@ -61,10 +63,6 @@ func on_slot_out():
 
 func on_slot_press(name:String):
 	game.hide_tooltip()
-	if visible:
-		game.toggle_panel(game.inventory)
-	if game.shop_panel.visible:
-		game.toggle_panel(game.shop_panel)
 	var num:int
 	if Input.is_action_pressed("shift"):
 		num = game.get_item_num(name)
@@ -87,6 +85,19 @@ func on_slot_press(name:String):
 	elif type == "overclock_info":
 		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
 		game.item_to_use.type = "overclock"
+	elif type == "other_items_info":
+		if name == "hx_core":
+			if len(game.ship_data) > 0:
+				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
+				if not game.ship_panel.visible:
+					game.toggle_panel(game.ship_panel)
+			else:
+				game.popup(tr("NO_SHIPS_2"), 1.5)
+				return
+	if visible:
+		game.toggle_panel(game.inventory)
+	if game.shop_panel.visible:
+		game.toggle_panel(game.shop_panel)
 	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
 	game.show_item_cursor(texture)
 

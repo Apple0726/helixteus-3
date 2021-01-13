@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2_clickmask.png" type="BitMap" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/XP.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=6]
@@ -30,12 +31,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Ship" type="TextureButton" parent="."]
 margin_left = 32.0
 margin_top = 44.0
 margin_right = 172.0
 margin_bottom = 128.0
-texture = ExtResource( 6 )
+texture_normal = ExtResource( 6 )
+texture_click_mask = ExtResource( 2 )
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -579,6 +581,9 @@ text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
+[connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
+[connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
 [connection signal="mouse_entered" from="Bullet/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "BULLET" ]]
 [connection signal="mouse_exited" from="Bullet/TextureRect" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Laser/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "LASER" ]]

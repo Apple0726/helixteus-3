@@ -49,3 +49,27 @@ func _on_icon_mouse_exited():
 
 func _on_weapon_mouse_entered(weapon:String):
 	game.show_tooltip("%s\n%s" % [tr(weapon), tr("%s_DESC" % [weapon])])
+
+func _on_Ship_mouse_entered():
+	if game.bottom_info_action == "use_hx_core":
+		$XP/TextureProgress2.value = $XP/TextureProgress.value + 5 * game.item_to_use.num
+		$XP/Label.visible = true
+		$XP/Label.text = "+ %s" % [5 * game.item_to_use.num]
+
+func _on_Ship_mouse_exited():
+	$XP/TextureProgress2.value = $XP/TextureProgress.value
+	$XP/Label.visible = false
+
+
+func _on_Ship_pressed():
+	if game.bottom_info_action == "use_hx_core":
+		if game.get_item_num("hx_core") >= game.item_to_use.num:
+			game.remove_items("hx_core", game.item_to_use.num)
+			Helper.add_ship_XP(id, 5 * game.item_to_use.num)
+			refresh()
+			if game.get_item_num("hx_core") > 0:
+				_on_Ship_mouse_entered()
+			else:
+				game.item_to_use.num = 0
+				game.update_item_cursor()
+				_on_Ship_mouse_exited()

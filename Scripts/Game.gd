@@ -203,7 +203,7 @@ var ships_travel_length:int = -1
 var satellite_data:Array = []
 
 #Your inventory
-var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info", "directory":"Items/Speedups"}, {"name":"overclock1", "num":1, "type":"overclock_info", "directory":"Items/Overclocks"}, null, null, null, null, null, null, null, null]
+var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info"}, {"name":"overclock1", "num":1, "type":"overclock_info"}, null, null, null, null, null, null, null, null]
 #var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
 var hotbar:Array = []
@@ -227,7 +227,7 @@ var EA_cave_visited = TEST
 var item_to_use = {"name":"", "type":"", "num":0}
 
 var mining_HUD
-var science_tree
+#var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 var STM
@@ -352,6 +352,7 @@ func _ready():
 		mats.soil = 50
 		show.plant_button = true
 		show.vehicles_button = true
+		show.minerals = true
 		energy = 2000000
 		SP = 200000000
 		stone.O = 80000000
@@ -366,6 +367,8 @@ func _ready():
 		show.SP = true
 		show.stone = true
 		show.materials = true
+		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
+		items[3] = {"name":"lead_seeds", "num":10}
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
@@ -852,6 +855,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
 			if help.science_tree:
 				$UI/Help.visible = true
 				$UI/Help.text = tr("SC_TREE_ZOOM")
+				view.obj.get_node("Help").visible = true
 				help.science_tree = false
 		"cave":
 			remove_child(HUD)
@@ -2296,26 +2300,27 @@ func _input(event):
 	if change_view_btn:
 		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
-		if not c_v in ["STM", ""]:
-			item_to_use.num = 0
-			update_item_cursor()
-		_on_BottomInfo_close_button_pressed()
 		if view:
 			view.scroll_view = true
 			view.move_view = true
-		if len(panels) != 0:
-			if c_v != "":
-				if not panels[0].polygon:
-					panels[0].visible = false
-					panels.pop_front()
-				elif panels[0] == upgrade_panel:
-					remove_upgrade_panel()
+		if bottom_info_action != "":
+			if not c_v in ["STM", ""]:
+				item_to_use.num = 0
+				update_item_cursor()
+		else:
+			if len(panels) != 0:
+				if c_v != "":
+					if not panels[0].polygon:
+						panels[0].visible = false
+						panels.pop_front()
+					elif panels[0] == upgrade_panel:
+						remove_upgrade_panel()
+					else:
+						toggle_panel(panels[0])
 				else:
 					toggle_panel(panels[0])
-			else:
-				toggle_panel(panels[0])
-			hide_tooltip()
-			hide_adv_tooltip()
+				hide_tooltip()
+				hide_adv_tooltip()
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
@@ -2364,7 +2369,7 @@ func _input(event):
 				mets[arr[1].to_lower()] = float(arr[2])
 			"finconstr":
 				for tile in tile_data:
-					if tile and tile.has("construction_length"):
+					if tile and tile.has("construction_length") and tile.is_constructing:
 						var diff_time = tile.construction_date + tile.construction_length - OS.get_system_time_msecs()
 						tile.construction_length = 1
 						if tile.has("collect_date"):

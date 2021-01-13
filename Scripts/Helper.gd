@@ -158,6 +158,8 @@ func get_type_from_name(_name:String):
 	match _name:
 		"fertilizer":
 			return "craft_agric_info"
+		"hx_core":
+			return "other_items_info"
 	if _name.split("_")[1] == "seeds":
 		return "craft_agric_info"
 	return ""
@@ -419,3 +421,24 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 	contents.stone = stone_amount
 	return contents
+
+func get_IR_mult(tile):
+	var mult = 1.0
+	var sc:String = "%sE" % tile.tile_str
+	if game.infinite_research.has(sc):
+		mult = pow(Data.infinite_research_sciences[sc].value, game.infinite_research[sc])
+	return mult
+
+func add_ship_XP(id:int, XP:float):
+	var ship_data = game.ship_data
+	ship_data[id].XP += XP
+	while ship_data[id].XP >= ship_data[id].XP_to_lv:
+		ship_data[id].XP -= ship_data[id].XP_to_lv
+		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * 1.3)
+		ship_data[id].lv += 1
+		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.2)
+		ship_data[id].HP = ship_data[id].total_HP
+		ship_data[id].atk = round(ship_data[id].atk * 1.2)
+		ship_data[id].def = round(ship_data[id].def * 1.2)
+		ship_data[id].acc = round(ship_data[id].acc * 1.2)
+		ship_data[id].eva = round(ship_data[id].eva * 1.2)

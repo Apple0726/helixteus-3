@@ -70,12 +70,18 @@ func update():
 			costs.iron += base_metal_costs.iron
 		if lv_curr <= 40 and lv_to >= 41:
 			costs.aluminium += base_metal_costs.aluminium
+		if lv_curr <= 50 and lv_to >= 51:
+			costs.silver += base_metal_costs.silver
+		if lv_curr <= 60 and lv_to >= 61:
+			costs.gold += base_metal_costs.gold
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw)
+		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * Helper.get_IR_mult(first_tile)
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
+		else:
+			curr_value = game.clever_round(curr_value, 3)
 		var icon = []
 		if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
 			icon.append(Data.icons[bldg])
@@ -89,9 +95,11 @@ func update():
 		game.remove_upgrade_panel()
 		return
 	next.text = ""
-	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw)
+	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * Helper.get_IR_mult(first_tile)
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
+	else:
+		next_value = game.clever_round(next_value, 3)
 	var icon2 = []
 	if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
 		icon2.append(Data.icons[bldg])
@@ -148,8 +156,9 @@ func _on_Upgrade_pressed():
 				continue
 			var curr_time = OS.get_system_time_msecs()
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
-			if bldg_info.is_value_integer:
-				new_value = round(new_value)
+			#print(new_value)
+			#if bldg_info.is_value_integer:
+				#new_value = round(new_value)
 			var base_costs = Data.costs[tile.tile_str]
 			var cost_time = round(base_costs.time * geo_seq(1.24, tile[path_str], next_lv.value))
 			var cost_money = round(base_costs.money * geo_seq(1.25, tile[path_str], next_lv.value))

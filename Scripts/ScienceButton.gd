@@ -81,7 +81,10 @@ func get_science_name(sc:String):
 
 func on_mouse_entered():
 	is_over = true
-	game.show_tooltip(tr(name.to_upper() + "_DESC"))
+	var tooltip:String = tr(name.to_upper() + "_DESC")
+	if infinite_research:
+		tooltip += "\n%s: %s" % [tr("CURRENT_MULT"), game.clever_round(pow(Data.infinite_research_sciences[name].value, game.infinite_research[name]), 3)]
+	game.show_tooltip(tooltip)
 
 func on_mouse_exited():
 	is_over = false

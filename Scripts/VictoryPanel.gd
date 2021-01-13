@@ -32,17 +32,7 @@ func _process(delta):
 	XP_text_node.text = "%s / %s" % [round(XP_node.value), ship_data[0].XP_to_lv]
 
 func _on_close_button_pressed():
-	ship_data[0].XP += XP
-	if ship_data[0].XP >= ship_data[0].XP_to_lv:
-		ship_data[0].XP -= ship_data[0].XP_to_lv
-		ship_data[0].XP_to_lv = round(ship_data[0].XP_to_lv * 1.3)
-		ship_data[0].lv += 1
-		ship_data[0].total_HP = round(ship_data[0].total_HP * 1.2)
-		ship_data[0].HP = ship_data[0].total_HP
-		ship_data[0].atk = round(ship_data[0].atk * 1.2)
-		ship_data[0].def = round(ship_data[0].def * 1.2)
-		ship_data[0].acc = round(ship_data[0].acc * 1.2)
-		ship_data[0].eva = round(ship_data[0].eva * 1.2)
+	Helper.add_ship_XP(0, XP)
 	game.money += money
 	for weapon in ["bullet", "laser", "bomb", "light"]:
 		ship_data[0][weapon].XP += weapon_XPs[0][weapon]

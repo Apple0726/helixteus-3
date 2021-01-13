@@ -133,26 +133,28 @@ func show_tooltip(tile):
 		return
 	if tile.has("type"):
 		if tile.type == "bldg":
-			var mult = 1
-			if tile.has("overclock_mult"):
-				mult = tile.overclock_mult
+			var mult:float = get_prod_mult(tile)
+			var path_1_value = game.clever_round(tile.path_1_value * mult, 3)
+			var path_2_value
+			if tile.has("path_2_value"):
+				path_2_value = round(tile.path_2_value * mult)
 			match tile.tile_str:
 				"ME", "PP":
-					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [path_1_value, path_2_value]
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
 				"MM":
-					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value]
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [path_1_value, path_2_value]
 				"SC", "GF", "SE":
-					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [tile.path_1_value * mult, tile.path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
+					tooltip = (Data.path_1[tile.tile_str].desc + "\n" + Data.path_2[tile.tile_str].desc) % [path_1_value, path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
 					icons = [Data.icons[tile.tile_str], Data.icons[tile.tile_str]]
 					adv = true
 				"RL":
-					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value * mult]
+					tooltip = (Data.path_1[tile.tile_str].desc) % [path_1_value]
 					icons = [Data.icons.RL]
 					adv = true
 				"MS":
-					tooltip = (Data.path_1[tile.tile_str].desc) % [tile.path_1_value]
+					tooltip = (Data.path_1[tile.tile_str].desc) % [round(path_1_value)]
 					icons = [Data.icons.MS]
 					adv = true
 				"RCC":
@@ -269,6 +271,8 @@ func constr_bldg(tile, tile_id:int):
 			"RCC":
 				tile.path_1 = 1
 				tile.path_1_value = Data.path_1.RCC.value
+		if bldg_to_construct in ["ME", "PP", "RL", "MS"]:
+			tile.IR_mult = Helper.get_IR_mult(tile)
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, bldg_to_construct)
 		add_time_bar(tile_id, "bldg")
@@ -281,7 +285,6 @@ func seeds_plant(tile, tile_id:int):
 	if check_lake[0]:
 		var curr_time = OS.get_system_time_msecs()
 		tile.tile_str = game.item_to_use.name
-		game.remove_items(game.item_to_use.name)
 		game.item_to_use.num -= 1
 		tile.construction_date = curr_time
 		tile.construction_length = game.craft_agric_info[game.item_to_use.name].grow_time
@@ -402,7 +405,7 @@ func destroy_bldg(id2:int):
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
 	if tile.tile_str == "MS":
-		game.mineral_capacity -= tile.path_1_value
+		game.mineral_capacity -= tile.path_1_value * Helper.get_IR_mult(tile)
 	var new_tile:Dictionary = {}
 	if tile.has("aurora"):
 		new_tile.aurora = tile.aurora
@@ -681,6 +684,9 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.icons.GF, id2)
 		"SE":
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.SE, id2)
+		"MS":
+			if not tile.is_constructing:
+				update_MS(tile)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -722,6 +728,12 @@ func add_bldg(id2:int, st:String):
 	if tile.has("overclock_mult"):
 		add_time_bar(id2, "overclock")
 
+func update_MS(tile):
+	var new_IR_mult:float = Helper.get_IR_mult(tile)
+	if tile.IR_mult != new_IR_mult:
+		game.mineral_capacity += tile.path_1_value * (new_IR_mult - tile.IR_mult)
+		tile.IR_mult = new_IR_mult
+	
 func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "MM", "SC", "GF", "SE"]
 
@@ -740,6 +752,15 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrc.rect_position = v + Vector2(0, 70)
 	rsrc.get_node("Control").modulate = mod
 	rsrcs.append({"node":rsrc, "id":id2})
+	var tile = game.tile_data[id2]
+	var curr_time = OS.get_system_time_msecs()
+	if tile.has("IR_mult"):
+		var IR_mult = Helper.get_IR_mult(tile)
+		if tile.IR_mult != IR_mult:
+			var diff:float = IR_mult / tile.IR_mult
+			tile.IR_mult = IR_mult
+			if not tile.is_constructing:
+				tile.collect_date = curr_time - (curr_time - tile.collect_date) / diff
 	update_rsrc(rsrc, game.tile_data[id2])
 
 func _process(_delta):
@@ -780,7 +801,8 @@ func _process(_delta):
 				if tile.has("path_3"):
 					hboxes[id2].get_node("Path3").text = String(tile.path_3)
 				if tile.tile_str == "MS":
-					game.mineral_capacity += tile.mineral_cap_upgrade
+					tile.IR_mult = Helper.get_IR_mult(tile)
+					game.mineral_capacity += tile.mineral_cap_upgrade * tile.IR_mult
 				game.HUD.refresh()
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
@@ -803,16 +825,22 @@ func _process(_delta):
 			continue
 		update_rsrc(rsrc, tile)
 
+func get_prod_mult(tile):
+	var mult = Helper.get_IR_mult(tile)
+	if tile.has("overclock_mult"):
+		mult *= tile.overclock_mult
+	return mult
+	
 func update_rsrc(rsrc, tile):
 	var curr_time = OS.get_system_time_msecs()
 	match tile.tile_str:
 		"ME", "PP", "MM":
 			#Number of seconds needed per mineral
 			var prod = 1000 / tile.path_1_value
-			if tile.has("overclock_mult"):
-				prod /= tile.overclock_mult
-			var cap = tile.path_2_value
+			prod /= get_prod_mult(tile)
+			var cap = round(tile.path_2_value * Helper.get_IR_mult(tile))
 			var stored = tile.stored
+			#print(stored < cap)
 			var c_d = tile.collect_date
 			var c_t = curr_time
 			var current_bar = rsrc.get_node("Control/CurrentBar")
@@ -837,8 +865,7 @@ func update_rsrc(rsrc, tile):
 				rsrc.get_node("Control/Label").text = String(stored)
 		"RL":
 			var prod = 1000 / tile.path_1_value
-			if tile.has("overclock_mult"):
-				prod /= tile.overclock_mult
+			prod /= get_prod_mult(tile)
 			var stored = tile.stored
 			var c_d = tile.collect_date
 			var c_t = curr_time
