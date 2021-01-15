@@ -235,11 +235,11 @@ func mult_dict_by(dict:Dictionary, value:float):
 
 func get_crush_info(tile_obj):
 	var time = OS.get_system_time_msecs()
-	var crush_spd = tile_obj.path_1_value
+	var crush_spd = tile_obj.bldg.path_1_value
 	var constr_delay = 0
-	if tile_obj.is_constructing:
-		constr_delay = tile_obj.construction_date + tile_obj.construction_length - time
-	var progress = (time - tile_obj.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.stone_qty
+	if tile_obj.bldg.is_constructing:
+		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
+	var progress = (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty
 	var qty_left = max(0, round(tile_obj.stone_qty - (time - tile_obj.start_date + constr_delay) / 1000.0 * tile_obj.path_1_value))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
@@ -387,7 +387,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		tile.erase("init_depth")
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
-	var aurora_mult = game.clever_round(pow(1 + tile.au_int, Helper.get_AIE())) if tile.has("au_int") else 1.0
+	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -424,7 +424,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 
 func get_IR_mult(tile):
 	var mult = 1.0
-	var sc:String = "%sE" % tile.tile_str
+	var sc:String = "%sE" % tile.bldg.name
 	if game.infinite_research.has(sc):
 		mult = pow(Data.infinite_research_sciences[sc].value, game.infinite_research[sc])
 	return mult

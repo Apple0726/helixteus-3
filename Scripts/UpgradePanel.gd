@@ -18,9 +18,9 @@ onready var upgrade_btn = $UpgradePanel/Upgrade
 
 func _ready():
 	set_polygon($UpgradePanel.rect_size)
-	if game.tile_data[ids[0]].has("path_2"):
+	if game.tile_data[ids[0]].bldg.has("path_2"):
 		path2.visible = true
-	if game.tile_data[ids[0]].has("path_3"):
+	if game.tile_data[ids[0]].bldg.has("path_3"):
 		path3.visible = true
 	_on_Path1_pressed()
 	path1.text = tr("PATH") + " 1"
@@ -34,7 +34,7 @@ func get_min_lv():
 	var min_lv = INF
 	for id in ids:
 		var tile = game.tile_data[id]
-		var lv_curr = tile[path_str]
+		var lv_curr = tile.bldg[path_str]
 		if lv_curr < min_lv:
 			min_lv = lv_curr
 	return min_lv
@@ -42,21 +42,22 @@ func get_min_lv():
 func update():
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "time":0.0}
 	var same_lv = true
-	var first_tile = game.tile_data[ids[0]]
-	bldg = first_tile.tile_str
+	var first_tile = game.tile_data[ids[0]].bldg
+	bldg = first_tile.bldg.name
 	var first_tile_bldg_info = Data[path_str][bldg]
 	var lv_to = next_lv.value
 	var all_tiles_constructing = true
 	for id in ids:
 		var tile = game.tile_data[id]
-		var lv_curr = tile[path_str]
+		var tile_bldg:String = tile.bldg.name
+		var lv_curr = tile.bldg[path_str]
 		if lv_curr != first_tile[path_str]:
 			same_lv = false
-		if tile.is_constructing or tile[path_str] >= next_lv.value:
+		if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
 			continue
 		all_tiles_constructing = false
-		var base_costs = Data.costs[tile.tile_str]
-		var base_metal_costs = Data[path_str][tile.tile_str].metal_costs
+		var base_costs = Data.costs[tile_bldg]
+		var base_metal_costs = Data[path_str][tile_bldg].metal_costs
 		costs.money += round(base_costs.money * geo_seq(1.25, lv_curr, lv_to))
 		costs.time = round(base_costs.time * geo_seq(1.24, lv_curr, lv_to))
 		if base_costs.has("energy"):
@@ -152,36 +153,36 @@ func _on_Upgrade_pressed():
 		game.deduct_resources(costs)
 		for id in ids:
 			var tile = game.tile_data[id]
-			if tile.is_constructing or tile[path_str] >= next_lv.value:
+			if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
 				continue
 			var curr_time = OS.get_system_time_msecs()
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
 			#print(new_value)
 			#if bldg_info.is_value_integer:
 				#new_value = round(new_value)
-			var base_costs = Data.costs[tile.tile_str]
-			var cost_time = round(base_costs.time * geo_seq(1.24, tile[path_str], next_lv.value))
-			var cost_money = round(base_costs.money * geo_seq(1.25, tile[path_str], next_lv.value))
-			if tile.has("collect_date"):
+			var base_costs = Data.costs[tile.bldg.name]
+			var cost_time = round(base_costs.time * geo_seq(1.24, tile.bldg[path_str], next_lv.value))
+			var cost_money = round(base_costs.money * geo_seq(1.25, tile.bldg[path_str], next_lv.value))
+			if tile.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
-					prod_ratio = new_value / game.tile_data[id].path_1_value
+					prod_ratio = new_value / game.tile_data[id].bldg.path_1_value
 				else:
 					prod_ratio = 1.0
-				var coll_date = tile.collect_date
-				tile.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
-			elif tile.tile_str == "MS":
-				tile.mineral_cap_upgrade = new_value - tile.path_1_value
-			if tile.has("start_date"):
-				tile.start_date += cost_time * 1000
-			if tile.has("overclock_mult"):
-				tile.overclock_date += cost_time * 1000
-			tile[path_str] = next_lv.value
-			tile[path_str + "_value"] = new_value
-			tile.construction_date = curr_time
-			tile.XP = round(cost_money / 100.0)
-			tile.construction_length = cost_time * 1000.0
-			tile.is_constructing = true
+				var coll_date = tile.bldg.collect_date
+				tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
+			elif tile.bldg.name == "MS":
+				tile.mineral_cap_upgrade = new_value - tile.bldg.path_1_value
+			if tile.bldg.has("start_date"):
+				tile.bldg.start_date += cost_time * 1000
+			if tile.bldg.has("overclock_mult"):
+				tile.bldg.overclock_date += cost_time * 1000
+			tile.bldg[path_str] = next_lv.value
+			tile.bldg[path_str + "_value"] = new_value
+			tile.bldg.construction_date = curr_time
+			tile.bldg.XP = round(cost_money / 100.0)
+			tile.bldg.construction_length = cost_time * 1000.0
+			tile.bldg.is_constructing = true
 			game.view.obj.add_time_bar(id, "bldg")
 		game.remove_upgrade_panel()
 	else:

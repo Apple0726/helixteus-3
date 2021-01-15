@@ -574,6 +574,7 @@ expand = true
 stretch_mode = 4
 
 [node name="ru" type="TextureButton" parent="Title/Languages"]
+visible = false
 margin_left = 420.0
 margin_right = 480.0
 margin_bottom = 28.0

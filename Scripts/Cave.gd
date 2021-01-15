@@ -79,7 +79,7 @@ var hole_exits:Array = []#id of hole and exit on each floor
 ### End cave save data ###
 
 func _ready():
-	id = game.tile_data[game.c_t].cave_id
+	id = game.tile_data[game.c_t].cave.id
 	cave_data = game.cave_data[id]
 	num_floors = cave_data.num_floors
 	cave_size = cave_data.floor_size

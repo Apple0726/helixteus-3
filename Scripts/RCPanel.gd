@@ -97,11 +97,11 @@ func _on_Button_pressed():
 	if game.check_enough(rover_costs):
 		game.deduct_resources(rover_costs)
 		game.popup("ROVER_UNDER_CONSTR", 1.5)
-		tile.is_constructing = true
-		tile.rover_id = len(game.rover_data)
-		tile.construction_date = OS.get_system_time_msecs()
-		tile.construction_length = rover_costs.time * 1000
-		tile.XP = round(rover_costs.money / 100.0)
+		tile.bldg.is_constructing = true
+		tile.bldg.rover_id = len(game.rover_data)
+		tile.bldg.construction_date = OS.get_system_time_msecs()
+		tile.bldg.construction_length = rover_costs.time * 1000
+		tile.bldg.XP = round(rover_costs.money / 100.0)
 		game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.25)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory, "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
@@ -114,7 +114,7 @@ func _on_Button_pressed():
 
 func refresh():
 	tile = game.tile_data[game.c_t]
-	mult = tile.path_1_value
+	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
 	if armor != "":
 		for cost_key in Data.rover_armor[armor].costs.keys():

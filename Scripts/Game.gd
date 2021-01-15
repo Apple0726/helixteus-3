@@ -25,6 +25,7 @@ var aurora1_texture = preload("res://Graphics/Tiles/Aurora1.png")
 var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
+var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 
 var construct_panel:Control
 var megastructures_panel:Control
@@ -582,7 +583,7 @@ func new_game():
 	add_child(HUD)
 	add_planet()
 	if not TEST:
-		long_popup("This game is currently in very early access. Saves are wiped after most updates, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.\nThere are also commands to help you test, join our Discord to see the list of commands!", "Early access note")
+		long_popup("This game is currently in very early access. Saves are wiped after most updates, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
 
 func add_panels():
 	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
@@ -1672,12 +1673,9 @@ func get_brightest_star_luminosity(s_id):
 	return res
 
 func make_lake(tile, state:String, lake:String, which_lake):
+	tile.lake = {"state":state, "element":lake, "type":which_lake}#type: 1 or 2
 	tile.type = "lake"
 	tile.tile_str = "%s_%s_%s" % [state, lake, which_lake]
-
-func make_obstacle(tile, type:String):
-	tile.type = "obstacle"
-	tile.tile_str = type
 
 func generate_tiles(id:int):
 	tile_data.clear()
@@ -1711,8 +1709,7 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						tile_data[k + j * wid] = {}
-						tile_data[k + j * wid].aurora = au_type
-						tile_data[k + j * wid].au_int = au_int
+						tile_data[k + j * wid].aurora = {"au_int":au_int, "type":au_type}
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness / 1.2 * sin(j / float(wid) * 4 * pulsation * PI)
@@ -1720,8 +1717,7 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						tile_data[j + k * wid] = {}
-						tile_data[j + k * wid].aurora = au_type
-						tile_data[j + k * wid].au_int = au_int
+						tile_data[j + k * wid].aurora = {"au_int":au_int}
 			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
@@ -1756,14 +1752,14 @@ func generate_tiles(id:int):
 					continue
 			if p_i.temperature <= 1000 and randf() < 0.001:
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				make_obstacle(tile_data[t_id], "rock")
+				tile_data[t_id].rock = {}
 				continue
 			if c_p_g == 2:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				make_obstacle(tile_data[t_id], "cave")
-				tile_data[t_id].cave_id = len(cave_data)
+				tile_data[t_id].cave = {}
+				tile_data[t_id].cave.id = len(cave_data)
 				var floor_size:int = Helper.rand_int(25, 60)
 				if wid > 15:
 					floor_size *= 1.3
@@ -1776,19 +1772,19 @@ func generate_tiles(id:int):
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				tile_data[t_id].type = "obstacle"
-				tile_data[t_id].crater_variant = Helper.rand_int(1, 3)
+				tile_data[t_id].crater = {}
+				tile_data[t_id].variant = Helper.rand_int(1, 3)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
-				tile_data[t_id].init_depth = depth
+				tile_data[t_id].crater.init_depth = depth
 				tile_data[t_id].depth = depth
-				tile_data[t_id].crater_metal = "lead"
+				tile_data[t_id].crater.metal = "lead"
 				for met in met_info:
 					if met == "lead":
 						continue
 					if randf() < 0.3 / pow(met_info[met].rarity, 1.3):
 						if c_s_g == 0 and met_info[met].rarity > 6:
 							continue
-						tile_data[t_id].crater_metal = met
+						tile_data[t_id].crater.metal = met
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1796,36 +1792,35 @@ func generate_tiles(id:int):
 	planet_data[id]["discovered"] = true
 	if c_p_g == 2:
 		tile_data[42] = {}
-		make_obstacle(tile_data[42], "cave")
-		tile_data[42].cave_id = 0
+		tile_data[42].cave = {}
+		tile_data[42].cave.id = 0
 		tile_data[315] = {}
-		make_obstacle(tile_data[315], "cave")
-		tile_data[315].cave_id = 1
+		tile_data[315].cave = {}
+		tile_data[315].cave.id = 1
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[110] = {}
-			tile_data[110].tile_str = "RCC"
-			tile_data[110].is_constructing = false
-			tile_data[110].construction_date = curr_time
-			tile_data[110].construction_length = 10
-			tile_data[110].type = "bldg"
-			tile_data[110].XP = 0
-			tile_data[110].path_1 = 1
-			tile_data[110].path_1_value = Data.path_1.RCC.value
+			tile_data[110].bldg = {}
+			tile_data[110].bldg.name = "RCC"
+			tile_data[110].bldg.is_constructing = false
+			tile_data[110].bldg.construction_date = curr_time
+			tile_data[110].bldg.construction_length = 10
+			tile_data[110].bldg.XP = 0
+			tile_data[110].bldg.path_1 = 1
+			tile_data[110].bldg.path_1_value = Data.path_1.RCC.value
 			tile_data[111] = {}
-			tile_data[111].tile_str = "SE"
-			tile_data[111].is_constructing = false
-			tile_data[111].construction_date = curr_time
-			tile_data[111].construction_length = 10
-			tile_data[111].type = "bldg"
-			tile_data[111].XP = 0
-			tile_data[111].path_1 = 1
-			tile_data[111].path_2 = 1
-			tile_data[111].path_1_value = Data.path_1.SE.value
-			tile_data[111].path_2_value = Data.path_2.SE.value
+			tile_data[111].bldg = {}
+			tile_data[111].bldg.name = "SE"
+			tile_data[111].bldg.is_constructing = false
+			tile_data[111].bldg.construction_date = curr_time
+			tile_data[111].bldg.construction_length = 10
+			tile_data[111].bldg.XP = 0
+			tile_data[111].bldg.path_1 = 1
+			tile_data[111].bldg.path_2 = 1
+			tile_data[111].bldg.path_1_value = Data.path_1.SE.value
+			tile_data[111].bldg.path_2_value = Data.path_2.SE.value
 		tile_data[112] = {}
-		tile_data[112].type = "obstacle"
-		tile_data[112].tile_str = "ship"
+		tile_data[112].ship = {}
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()

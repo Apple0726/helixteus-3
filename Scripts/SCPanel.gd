@@ -21,7 +21,7 @@ func _ready():
 func refresh():
 	tile = game.tile_data[game.c_t]
 	expected_rsrc = {}
-	var is_crushing = tile.has("stone")
+	var is_crushing = tile.bldg.has("stone")
 	set_process(is_crushing)
 	pie.objects = []
 	pie.other_str = tr("TRACE_ELEMENTS")
@@ -29,12 +29,12 @@ func refresh():
 	var total_stone
 	var arr
 	if is_crushing:
-		arr = obj_to_array(tile.stone)
-		total_stone = Helper.get_sum_of_dict(tile.stone)
+		arr = obj_to_array(tile.bldg.stone)
+		total_stone = Helper.get_sum_of_dict(tile.bldg.stone)
 		pie.get_node("Title").text = tr("COMP_OF_STONE_BEING_CR")
 		$Control/Button.text = tr("STOP_CRUSHING")
 		$Control/Label.text = tr("RESOURCES_EXTRACTED")
-		rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.expected_rsrc)
+		rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.bldg.expected_rsrc)
 	else:
 		if Helper.get_sum_of_dict(game.stone) == 0:
 			game.stone.clear()
@@ -84,7 +84,7 @@ func refresh():
 	$Control.visible = true
 	hbox.visible = not is_crushing
 	CC.visible = is_crushing
-	hslider.max_value = min(total_stone, tile.path_2_value)
+	hslider.max_value = min(total_stone, tile.bldg.path_2_value)
 	hslider.min_value = 0
 
 func obj_to_array(elements:Dictionary):
@@ -104,35 +104,35 @@ func sort_elements (a, b):
 
 
 func _on_Button_pressed():
-	if not tile.has("stone"):
+	if not tile.bldg.has("stone"):
 		var stone_qty = Helper.get_sum_of_dict(stone_to_crush)
 		if stone_qty == 0:
 			return
 		for el in game.stone:
 			game.stone[el] = max(0, game.stone[el] - stone_to_crush[el])
-		tile.stone = stone_to_crush
-		tile.stone_qty = stone_qty
-		tile.start_date = OS.get_system_time_msecs()
-		tile.expected_rsrc = expected_rsrc
+		tile.bldg.stone = stone_to_crush
+		tile.bldg.stone_qty = stone_qty
+		tile.bldg.start_date = OS.get_system_time_msecs()
+		tile.bldg.expected_rsrc = expected_rsrc
 		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
-		var crush_spd = tile.path_1_value
-		var qty_left = max(0, round(tile.stone_qty - (time - tile.start_date) / 1000.0 * crush_spd))
+		var crush_spd = tile.bldg.path_1_value
+		var qty_left = max(0, round(tile.bldg.stone_qty - (time - tile.bldg.start_date) / 1000.0 * crush_spd))
 		if qty_left > 0:
-			var progress = (time - tile.start_date) / 1000.0 * crush_spd / tile.stone_qty
-			for el in tile.stone:
-				game.stone[el] += qty_left / tile.stone_qty * tile.stone[el]
-			var rsrc_collected = tile.expected_rsrc.duplicate(true)
+			var progress = (time - tile.bldg.start_date) / 1000.0 * crush_spd / tile.bldg.stone_qty
+			for el in tile.bldg.stone:
+				game.stone[el] += qty_left / tile.bldg.stone_qty * tile.bldg.stone[el]
+			var rsrc_collected = tile.bldg.expected_rsrc.duplicate(true)
 			for rsrc in rsrc_collected:
 				rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
 			game.add_resources(rsrc_collected)
 		else:
-			game.add_resources(tile.expected_rsrc)
-		tile.erase("stone")
-		tile.erase("stone_qty")
-		tile.erase("start_date")
-		tile.erase("expected_rsrc")
+			game.add_resources(tile.bldg.expected_rsrc)
+		tile.bldg.erase("stone")
+		tile.bldg.erase("stone_qty")
+		tile.bldg.erase("start_date")
+		tile.bldg.erase("expected_rsrc")
 		game.popup(tr("RESOURCES_COLLECTED"), 1.5)
 	refresh()
 
@@ -142,7 +142,7 @@ func _process(delta):
 	CC_stone.text = "%s kg" % [c_i.qty_left]
 	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd * 1000)
 	for hbox in rsrc_nodes:
-		hbox.rsrc.get_node("Text").text = "%s kg" % [round(tile.expected_rsrc[hbox.name] * (1 - CC_bar.value) * 1000) / 1000]
+		hbox.rsrc.get_node("Text").text = "%s kg" % [round(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value) * 1000) / 1000]
 
 func _on_HSlider_value_changed(value):
 	refresh()

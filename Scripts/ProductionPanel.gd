@@ -48,8 +48,8 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	if output_type in ["mats", "mets"]:
 		output_unit = "kg"
 	tile = game.tile_data[game.c_t]
-	$Control/HBox/Remaining.visible = tile.has("qty1")
-	$Control/HBox/HSlider.visible = not tile.has("qty1")
+	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
+	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 	var rsrc:float
 	if input_type == "":
 		rsrc = game[input]
@@ -67,7 +67,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	elif output_type == "mets":
 		$Control/Texture.texture = load("res://Graphics/Metals/%s.png" % [output])
 	
-	if tile.has("qty1"):
+	if tile.bldg.has("qty1"):
 		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
 	else:
 		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
@@ -79,7 +79,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 			$Control/HBox/HSlider.value = rsrc
 
 func _on_Start_pressed():
-	if tile.has("qty1"):
+	if tile.bldg.has("qty1"):
 		set_process(false)
 		$Control/Start.text = tr("START")
 		var prod_i = Helper.get_prod_info(tile)
@@ -91,24 +91,24 @@ func _on_Start_pressed():
 		if not output_type in ["mats", "mets"]:
 			rsrc_to_add[output] = round(prod_i.qty_made)
 		game.add_resources(rsrc_to_add)
-		tile.erase("qty1")
-		tile.erase("start_date")
-		tile.erase("ratio")
-		tile.erase("qty2")
+		tile.bldg.erase("qty1")
+		tile.bldg.erase("start_date")
+		tile.bldg.erase("ratio")
+		tile.bldg.erase("qty2")
 		refresh2(bldg_type, input, output, input_type, output_type)
 	else:
 		var rsrc = $Control/HBox/HSlider.value
 		var rsrc_to_deduct = {}
 		rsrc_to_deduct[input] = rsrc
 		game.deduct_resources(rsrc_to_deduct)
-		tile.qty1 = rsrc
-		tile.start_date = OS.get_system_time_msecs()
-		tile.ratio = ratio
-		tile.qty2 = rsrc * ratio
+		tile.bldg.qty1 = rsrc
+		tile.bldg.start_date = OS.get_system_time_msecs()
+		tile.bldg.ratio = ratio
+		tile.bldg.qty2 = rsrc * ratio
 		set_process(true)
 		$Control/Start.text = tr("STOP")
-	$Control/HBox/Remaining.visible = tile.has("qty1")
-	$Control/HBox/HSlider.visible = not tile.has("qty1")
+	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
+	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 
 func _process(delta):
 	var prod_i = Helper.get_prod_info(tile)
