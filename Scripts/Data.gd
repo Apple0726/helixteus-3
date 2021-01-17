@@ -30,11 +30,11 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 }
 
-var MS_costs = {	"M_DS_0":{"money":1000000000, "stone":80000000, "silicon":40000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":10},
-					"M_SE_0":{"money":15000000, "stone":1000000, "energy":800000, "copper":10000, "iron":10000, "time":4*3600},
+var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400000, "copper":2500000, "iron":16000000, "aluminium":5000000, "titanium":500000, "time":10 * 86400},
+					"M_SE_0":{"money":7000000, "stone":500000, "energy":500000, "copper":8000, "iron":10000, "aluminium":3000, "time":8*3600},
 }
 
-var MS_output = {	"M_DS_0":500000
+var MS_output = {	"M_DS_0":50000000
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
@@ -82,7 +82,7 @@ var science_unlocks = {
 						
 						#Rover Sciences
 						"RC":{"cost":250, "parent":""},
-						"OL":{"cost":1500, "parent":"RC"},
+						"OL":{"cost":1000, "parent":"RC"},
 						"YL":{"cost":8000, "parent":"OL"},
 						"GL":{"cost":40000, "parent":"YL"},
 						"BL":{"cost":200000, "parent":"GL"},
@@ -93,7 +93,7 @@ var science_unlocks = {
 						"UGRL":{"cost":200000000, "parent":"GRL"},
 						
 						#Ship Sciences
-						"SCT":{"cost":3000, "parent":"RC"},
+						"SCT":{"cost":1500, "parent":"RC"},
 						"SUP":{"cost":15000, "parent":"SCT"},
 						"CD":{"cost":4000, "parent":"SUP"},
 						"ID":{"cost":10000, "parent":"CD"},
@@ -117,6 +117,7 @@ var infinite_research_sciences = {	"MEE":{"cost":5000, "pw":6.2, "value":1.2},
 									"PPE":{"cost":5000, "pw":6.2, "value":1.2},
 									"RLE":{"cost":25000, "pw":6.8, "value":1.2},
 									"MSE":{"cost":7000, "pw":6.2, "value":1.2},
+									"MMS":{"cost":3000, "pw":6.0, "value":1.2},
 }
 
 var rover_armor = {	"lead_armor":{"HP":5, "defense":3, "costs":{"lead":40}},

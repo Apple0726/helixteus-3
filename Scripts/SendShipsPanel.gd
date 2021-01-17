@@ -17,14 +17,6 @@ func _ready():
 	$PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
 	$TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("TOTAL_ENERGY_COST")]
-	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_entered", self, "on_mouse_entered")
-	$VBox/HBox/VBox/Scroll.get_v_scrollbar().connect("mouse_exited", self, "on_mouse_exited")
-
-func on_mouse_entered():
-	game.view.move_view = false
-
-func on_mouse_exited():
-	game.view.move_view = true
 
 func refresh():
 	var depart_id:int
@@ -93,8 +85,10 @@ func refresh():
 		HX_data_node.rect_min_size.y = 70
 
 func _on_Send_pressed():
-	if game.c_s_g == 0 and game.planet_data[dest_p_id].pressure > 26:
+	if game.c_s_g == 0 and game.planet_data[dest_p_id].pressure > 30:
 		game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
+	elif game.c_s_g == 0 and time_cost > 4 * 60 * 60 * 1000:
+		game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])
 	else:
 		send_ships()
 
@@ -118,16 +112,16 @@ func _on_HSlider_value_changed(value):
 	calc_costs()
 
 func get_atm_exit_cost(pressure:float):
-	return round(pow(pressure * 10, 1.4) * 800)
+	return round(pow(pressure * 10, 1.4) * 300)
 
 func get_grav_exit_cost(size:float):
-	return round(pow(size / 120.0, 2.5))
+	return round(pow(size / 180.0, 2.5))
 
 func get_atm_entry_cost(pressure:float):
-	return round(6000 / clamp(pressure, 0.1, 10))
+	return round(1000 / clamp(pressure, 0.1, 10))
 
 func get_grav_entry_cost(size:float):
-	return round(pow(size / 600.0, 2.5) * 5)
+	return round(pow(size / 600.0, 2.5) * 3)
 
 func calc_costs():
 	var slider_factor = pow(10, $HSlider.value / 25.0 - 2)
@@ -137,7 +131,7 @@ func calc_costs():
 	var gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.text = Helper.format_num(entry_exit_cost)
-	travel_energy_cost = slider_factor * distance * 60
+	travel_energy_cost = slider_factor * distance * 30
 	time_cost = 5000 / slider_factor * distance
 	$EnergyCost.text = Helper.format_num(round(travel_energy_cost))
 	total_energy_cost = travel_energy_cost + entry_exit_cost
@@ -162,11 +156,3 @@ func _on_PlanetEECost_mouse_exited():
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
-
-func _on_ScrollContainer_mouse_entered():
-	if modulate.a == 1:
-		game.view.scroll_view = false
-
-
-func _on_ScrollContainer_mouse_exited():
-	game.view.scroll_view = true

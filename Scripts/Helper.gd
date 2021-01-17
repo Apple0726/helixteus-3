@@ -442,3 +442,17 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].def = round(ship_data[id].def * 1.2)
 		ship_data[id].acc = round(ship_data[id].acc * 1.2)
 		ship_data[id].eva = round(ship_data[id].eva * 1.2)
+
+func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
+	var vbox = game.get_node("UI/Panel/VBox")
+	var label = Label.new()
+	label.autowrap = autowrap
+	if autowrap:
+		label.rect_size.x = 250
+		label.rect_min_size.x = 250
+	if center:
+		label.align = Label.ALIGN_CENTER
+	label.text = txt
+	vbox.add_child(label)
+	if idx != -1:
+		vbox.move_child(label, idx)

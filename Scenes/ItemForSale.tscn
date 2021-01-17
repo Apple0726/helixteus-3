@@ -29,6 +29,7 @@ __meta__ = {
 [node name="Button" type="Button" parent="."]
 margin_right = 192.0
 margin_bottom = 230.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -37,6 +38,7 @@ __meta__ = {
 margin_top = 200.0
 margin_right = 192.0
 margin_bottom = 230.0
+mouse_filter = 1
 text = "BUY"
 __meta__ = {
 "_edit_use_anchors_": false

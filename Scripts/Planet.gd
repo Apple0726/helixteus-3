@@ -405,6 +405,20 @@ func destroy_bldg(id2:int):
 	if tile.empty():
 		game.tile_data[id2] = null
 
+func add_shadows():
+	for sh in shadows:
+		remove_child(sh)
+	shadows.clear()
+	var poly:Rect2 = Rect2(mass_build_rect.rect_position, Vector2.ZERO)
+	poly.end = mouse_pos
+	poly = poly.abs()
+	for i in wid:
+		for j in wid:
+			var shadow_pos:Vector2 = Vector2(i * 200, j * 200) + Vector2(100, 100)
+			var tile_rekt:Rect2 = Rect2(Vector2(i * 200, j * 200), Vector2.ONE * 200)
+			if poly.intersects(tile_rekt) and available_to_build(game.tile_data[get_tile_id_from_pos(shadow_pos)]):
+				shadows.append(put_shadow(Sprite.new(), shadow_pos))
+
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
 func _input(event):
@@ -450,65 +464,33 @@ func _input(event):
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouseMotion:
 		mouse_pos = to_local(event.position)
+		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var N:int = mass_build_rect_size.x
 		var M:int = mass_build_rect_size.y
 		if mass_build:
-			mass_build_rect.rect_size.x = mouse_pos.x - mass_build_rect.rect_position.x
-			mass_build_rect.rect_size.y = mouse_pos.y - mass_build_rect.rect_position.y
-#			if mouse_pos.x - mass_build_rect.rect_position.x < 0:
-#				return
-#			if mouse_pos.y - mass_build_rect.rect_position.y < 0:
-#				return
+			mass_build_rect.rect_size.x = abs(mouse_pos.x - mass_build_rect.rect_position.x)
+			mass_build_rect.rect_size.y = abs(mouse_pos.y - mass_build_rect.rect_position.y)
+			if mouse_pos.x - mass_build_rect.rect_position.x < 0:
+				mass_build_rect.rect_scale.x = -1
+			else:
+				mass_build_rect.rect_scale.x = 1
+			if mouse_pos.y - mass_build_rect.rect_position.y < 0:
+				mass_build_rect.rect_scale.y = -1
+			else:
+				mass_build_rect.rect_scale.y = 1
 			var delta:Vector2 = event.relative / view.scale
-			var new_x = stepify(mouse_pos.x - 100, 200)
-			var new_y = stepify(mouse_pos.y - 100, 200)
-			var old_x = stepify(mouse_pos.x - delta.x - 100, 200)
-			var old_y = stepify(mouse_pos.y - delta.y - 100, 200)
-			#print("new: %s, old: %s, delta: %s" % [new_x, old_x, delta.x])
-			if new_x > old_x and mouse_pos.x - mass_build_rect.rect_position.x >= 0:
-				for i in int((new_x - old_x) / 200):
-					for j in M:
-						if shadows[N + i][j]:
-							continue
-						var shadow_pos:Vector2 = Vector2(old_x + 200 * (i+1), mass_build_rect.rect_position.y + 200 * j)
-						var shadow_tile_id:int = get_tile_id_from_pos(shadow_pos)
-						if shadow_pos.x >= wid * 200 or shadow_pos.y >= wid * 200:
-							continue
-						var shadow_tile = game.tile_data[shadow_tile_id]
-						if not available_to_build(shadow_tile):
-							continue
-						shadows[N + i][j] = put_shadow(Sprite.new(), shadow_pos)
-					mass_build_rect_size.x += 1
-			elif new_x < old_x and mouse_pos.x - mass_build_rect.rect_position.x >= 0:
-				mass_build_rect_size.x -= 1
-				N -= 1
-				for i in int((old_x - new_x) / 200):
-					for j in len(shadows[0]):
-						if shadows[N - i][j]:
-							remove_child(shadows[N - i][j])
-							shadows[N - i][j] = null
-			if new_y > old_y and mouse_pos.y - mass_build_rect.rect_position.y >= 0:
-				for i in int((new_y - old_y) / 200):
-					for j in N:
-						if shadows[j][M + i]:
-							continue
-						var shadow_pos:Vector2 = Vector2(mass_build_rect.rect_position.x + 200 * j, old_y + 200 * (i+1))
-						var shadow_tile_id:int = get_tile_id_from_pos(shadow_pos)
-						if shadow_pos.x >= wid * 200 or shadow_pos.y >= wid * 200:
-							continue
-						var shadow_tile = game.tile_data[shadow_tile_id]
-						if not available_to_build(shadow_tile):
-							continue
-						shadows[j][M + i] = put_shadow(Sprite.new(), shadow_pos)
-					mass_build_rect_size.y += 1
-			elif new_y < old_y and mouse_pos.y - mass_build_rect.rect_position.y >= 0:
-				mass_build_rect_size.y -= 1
-				M -= 1
-				for i in int((old_y - new_y) / 200):
-					for j in len(shadows):
-						if shadows[j][M - i]:
-							remove_child(shadows[j][M - i])
-							shadows[j][M - i] = null
+			var new_x = stepify(round(mouse_pos.x - 100), 200)
+			var new_y = stepify(round(mouse_pos.y - 100), 200)
+			var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
+			var old_y = stepify(round(mouse_pos.y - delta.y - 100), 200)
+			if new_x > old_x:
+				add_shadows()
+			elif new_x < old_x:
+				add_shadows()
+			if new_y > old_y:
+				add_shadows()
+			elif new_y < old_y:
+				add_shadows()
 		if len(game.panels) > 0:
 			var i = 0
 			while not game.panels[i].polygon:
@@ -519,7 +501,6 @@ func _input(event):
 					game.hide_tooltip()
 					game.hide_adv_tooltip()
 				return
-		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
@@ -547,11 +528,8 @@ func _input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
-			for j in len(shadows[i]):
-				if shadows[i][j]:
-					var pos2:Vector2 = mass_build_rect.rect_position + Vector2(i, j) * 200
-					constr_bldg(get_tile_id_from_pos(pos2), true)
-					remove_child(shadows[i][j])
+			constr_bldg(get_tile_id_from_pos(shadows[i].position), true)
+			remove_child(shadows[i])
 		shadows.clear()
 		view.move_view = true
 		view.scroll_view = true
@@ -564,15 +542,7 @@ func _input(event):
 		mass_build_rect.rect_size = Vector2.ZERO
 		mass_build_rect.visible = true
 		mass_build_rect_size = Vector2.ONE
-		shadows = [[put_shadow(Sprite.new(), mouse_pos)]]
-		shadows.resize(wid)
-		shadows[0].resize(wid)
-		for i in len(shadows):
-			if not shadows[i]:
-				shadows[i] = []
-				for j in len(shadows):
-					shadows[i].append(null)
-		#print(shadows)
+		shadows = [put_shadow(Sprite.new(), mouse_pos)]
 		shadow.visible = false
 	if mass_build:
 		return
@@ -995,6 +965,12 @@ func update_rsrc(rsrc, tile):
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
+	if game.help.mass_build:
+		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
+		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
+		game.help_str = "mass_build"
+		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
+		game.get_node("UI/Panel").visible = true
 	bldg_to_construct = st
 	constr_costs = costs
 	shadow = Sprite.new()
@@ -1014,6 +990,7 @@ func finish_construct():
 		bldg_to_construct = ""
 		remove_child(shadow)
 		shadow = null
+	game.get_node("UI/Panel").visible = false
 
 func _on_Planet_tree_exited():
 	queue_free()

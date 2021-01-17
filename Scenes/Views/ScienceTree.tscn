@@ -78,6 +78,13 @@ margin_right = -384.0
 margin_bottom = 512.0
 infinite_research = true
 
+[node name="MMS" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -384.0
+margin_top = 544.0
+margin_right = -384.0
+margin_bottom = 608.0
+infinite_research = true
+
 [node name="AM" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
 margin_top = -64.0

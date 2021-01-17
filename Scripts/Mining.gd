@@ -193,7 +193,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += game.pickaxe.speed / total_mass * 3000 * speed_mult
+	progress += game.pickaxe.speed / total_mass * 3000 * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	if progress >= 100:

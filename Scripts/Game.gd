@@ -26,6 +26,7 @@ var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
+var orbit_scene = preload("res://Scenes/Orbit.tscn")
 
 var construct_panel:Control
 var megastructures_panel:Control
@@ -155,6 +156,7 @@ var help:Dictionary = {
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
 			"rover_inventory_shortcuts":true,
+			"mass_build":true,
 			"abandoned_ship":true,
 			"science_tree":true,
 }
@@ -179,11 +181,11 @@ var show:Dictionary = {	"minerals":false,
 }
 
 #Stores information of all objects discovered
-var universe_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var supercluster_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var cluster_data:Array = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data:Array = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+var universe_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var supercluster_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+var cluster_data:Array = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":2000, "systems":[], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var system_data:Array = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data:Array = []
 #var HX_data:Array = []
 var tile_data:Array = []
@@ -263,12 +265,16 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 }
 
 var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
-					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":1300}},
-					"stone_pickaxe":{"speed":2.1, "durability":400, "costs":{"money":9000}},
-					"lead_pickaxe":{"speed":2.8, "durability":750, "costs":{"money":75000}},
-					"copper_pickaxe":{"speed":3.6, "durability":1200, "costs":{"money":500000}},
-					"iron_pickaxe":{"speed":4.5, "durability":1700, "costs":{"money":3200000}},
-					}
+					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":900}},
+					"stone_pickaxe":{"speed":2.1, "durability":300, "costs":{"money":5000}},
+					"lead_pickaxe":{"speed":2.8, "durability":550, "costs":{"money":35000}},
+					"copper_pickaxe":{"speed":3.6, "durability":800, "costs":{"money":180000}},
+					"iron_pickaxe":{"speed":4.5, "durability":1100, "costs":{"money":840000}},
+					"aluminium_pickaxe":{"speed":5.5, "durability":1400, "costs":{"money":3500000}},
+					"silver_pickaxe":{"speed":6.7, "durability":1700, "costs":{"money":15000000}},
+					"gold_pickaxe":{"speed":8.3, "durability":600, "costs":{"money":32500000}},
+					"gemstone_pickaxe":{"speed":11.2, "durability":2000, "costs":{"money":156000000}},
+}
 
 var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 						"speedup2":{"costs":{"money":2800}, "time":15*60000},
@@ -733,6 +739,9 @@ func fade_out_panel(panel:Control):
 func on_fade_complete(panel:Control):
 	hide_tooltip()
 	panel.visible = false
+	if view:
+		view.scroll_view = true
+		view.move_view = true
 
 func add_upgrade_panel(ids:Array):
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
@@ -1580,9 +1589,10 @@ func generate_planets(id:int):
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets
 			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0))
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 2))
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
-		p_i.pressure = pow(10, rand_range(-5, log(p_i.size) / log(10) - 2))
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -2295,9 +2305,6 @@ func _input(event):
 	if change_view_btn:
 		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
-		if view:
-			view.scroll_view = true
-			view.move_view = true
 		if bottom_info_action != "":
 			if not c_v in ["STM", ""]:
 				item_to_use.num = 0
@@ -2327,6 +2334,7 @@ func _input(event):
 		help[help_str] = false
 		hide_tooltip()
 		hide_adv_tooltip()
+		$UI/Panel.visible = false
 	
 	var cmd_node = $UI/Command
 	#/ to type a command

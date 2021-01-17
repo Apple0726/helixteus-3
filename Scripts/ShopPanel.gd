@@ -1,18 +1,16 @@
-extends Control
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
-#Tween for fading in/out panel
-var tween:Tween
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-var polygon:PoolVector2Array = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 onready var amount_node = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
 onready var buy_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy
 var num:int = 1
 
 func _ready():
-	tween = Tween.new()
-	add_child(tween)
+	set_polygon($Background.rect_size)
+
+func _on_Speedups_pressed():
+	change_tab()
 	for speedup in game.speedup_info:
 		var speedup_info = game.speedup_info[speedup]
 		var speedup_item = item_for_sale_scene.instance()
@@ -23,7 +21,15 @@ func _ready():
 		speedup_item.item_desc = tr("SPEED_UP_DESC") % [Helper.time_to_str(speedup_info.time)]
 		speedup_item.costs = speedup_info.costs
 		speedup_item.parent = "shop_panel"
-		$Contents/HBoxContainer/Items/Speedups.add_child(speedup_item)
+		$Contents/HBoxContainer/Items/Items.add_child(speedup_item)
+	tab = "speedups"
+	$Contents/Info.text = tr("SPEED_UP_INFO")
+	Helper.set_btn_color($Tabs/Speedups)
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
+	buy_btn.visible = true
+
+func _on_Overclocks_pressed():
+	change_tab()
 	for overclock in game.overclock_info:
 		var overclock_info = game.overclock_info[overclock]
 		var overclock_item = item_for_sale_scene.instance()
@@ -34,7 +40,15 @@ func _ready():
 		overclock_item.item_desc = tr("OVERCLOCK_DESC") % [overclock_info.mult, Helper.time_to_str(overclock_info.duration)]
 		overclock_item.costs = overclock_info.costs
 		overclock_item.parent = "shop_panel"
-		$Contents/HBoxContainer/Items/Overclocks.add_child(overclock_item)
+		$Contents/HBoxContainer/Items/Items.add_child(overclock_item)
+	tab = "overclocks"
+	$Contents/Info.text = tr("OVERCLOCK_INFO")
+	Helper.set_btn_color($Tabs/Overclocks)
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
+	buy_btn.visible = true
+
+func _on_Pickaxes_pressed():
+	change_tab()
 	for pickaxe in game.pickaxe_info:
 		var pickaxe_info = game.pickaxe_info[pickaxe]
 		var pickaxe_item = item_for_sale_scene.instance()
@@ -45,43 +59,22 @@ func _ready():
 		pickaxe_item.item_desc = tr(pickaxe.to_upper() + "_DESC")
 		pickaxe_item.costs = pickaxe_info.costs
 		pickaxe_item.parent = "shop_panel"
-		$Contents/HBoxContainer/Items/Pickaxes.add_child(pickaxe_item)
-
-func _on_Speedups_pressed():
-	buy_btn.visible = true
-	tab = "speedups"
-	$Contents.visible = true
-	set_item_visibility("Speedups")
-	$Contents/Info.text = tr("SPEED_UP_INFO")
-	Helper.set_btn_color($Tabs/Speedups)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
-
-func _on_Overclocks_pressed():
-	buy_btn.visible = true
-	tab = "overclocks"
-	$Contents.visible = true
-	set_item_visibility("Overclocks")
-	$Contents/Info.text = tr("OVERCLOCK_INFO")
-	Helper.set_btn_color($Tabs/Overclocks)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = true
-
-func _on_Pickaxes_pressed():
-	buy_btn.visible = false
+		$Contents/HBoxContainer/Items/Items.add_child(pickaxe_item)
 	tab = "pickaxes"
-	$Contents.visible = true
-	set_item_visibility("Pickaxes")
 	$Contents/Info.text = tr("PICKAXE_DESC")
 	Helper.set_btn_color($Tabs/Pickaxes)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount.visible = false
+	buy_btn.visible = false
 
-func set_item_visibility(type:String):
-	for other_type in $Contents/HBoxContainer/Items.get_children():
-		other_type.visible = false
-	remove_costs()
-	$Contents/HBoxContainer/Items.get_node(type).visible = true
-	$Contents/HBoxContainer/ItemInfo.visible = false
+func change_tab():
+	for item in $Contents/HBoxContainer/Items/Items.get_children():
+		$Contents/HBoxContainer/Items/Items.remove_child(item)
 	item_name = ""
-
+	remove_costs()
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = false
+	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = false
+	$Contents.visible = true
+	
 func remove_costs():
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	for child in vbox.get_children():
@@ -111,7 +104,8 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 			item_total_costs[cost] = costs[cost] * num
 	desc += "\n"
 	vbox.get_node("Description").text = desc
-	$Contents/HBoxContainer/ItemInfo.visible = true
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
+	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = true
 	Helper.put_rsrc(vbox, 36, item_total_costs, false)
 
 func _on_Buy_pressed():
@@ -168,4 +162,6 @@ func refresh():
 
 
 func _on_close_button_pressed():
+#	game.view.move_view = true
+#	game.view.scroll_view = true
 	game.toggle_panel(self)
