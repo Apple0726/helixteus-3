@@ -81,9 +81,9 @@ func _ready():
 					aurora.texture = game.aurora2_texture
 					aurora.modulate = Color(1, 1, rand_range(0.7, 1))
 				add_child(aurora)
-			if tile.has("crater") and tile.crater.has("init_depth"):
+			if tile.has("crater"):
 				var metal = Sprite.new()
-				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater_metal])
+				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater.metal])
 				metal.scale *= 0.4
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
@@ -94,7 +94,7 @@ func _ready():
 				add_plant(id2, tile.plant.name)
 			if tile.has("bldg"):
 				add_bldg(id2, tile.bldg.name)
-			if tile.has("depth"):
+			if tile.has("depth") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
 			if tile.has("rock"):
 				$Obstacles.set_cell(i, j, 0)
@@ -104,14 +104,16 @@ func _ready():
 				$Obstacles.set_cell(i, j, 5)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
-					$Lakes1.set_cell(i, j, 2)
+					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
 					add_particles(Vector2(i*200, j*200))
 				elif tile.lake.state == "s":
-					$Lakes1.set_cell(i, j, 0)
+					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 0)
 				elif tile.lake.state == "sc":
-					$Lakes1.set_cell(i, j, 1)
-	$Lakes1.update_bitmask_region()
-	$Lakes2.update_bitmask_region()
+					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 1)
+	if p_i.has("lake_1"):
+		$Lakes1.update_bitmask_region()
+	if p_i.has("lake_2"):
+		$Lakes2.update_bitmask_region()
 	$Soil.update_bitmask_region()
 
 func add_particles(pos:Vector2):
@@ -173,17 +175,17 @@ func show_tooltip(tile):
 		else:
 			match tile.lake.state:
 				"l":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(tile.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(tile.lake.element.to_upper())})
 				"s":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(tile.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(tile.lake.element.to_upper())})
 				"sc":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(tile.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(tile.lake.element.to_upper())})
 	if tile.has("crater") and tile.has("init_depth"):
 		if game.help.crater_desc:
-			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 			game.help_str = "crater_desc"
 		else:
-			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater_metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	if tile.has("rock"):
 		if game.help.boulder_desc:
 			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
@@ -204,7 +206,7 @@ func show_tooltip(tile):
 			tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
 	if tile.has("depth"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
-	elif tile.has("aurora"):
+	elif tile.has("aurora") and tooltip == "":
 		if game.help.aurora_desc:
 			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]]
 			game.help_str = "aurora_desc"

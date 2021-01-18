@@ -64,9 +64,9 @@ func _ready():
 			var XP = round(pow(1.3, lv) * 5)
 			HX_data.append({"type":Helper.rand_int(1, 2), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["M", "ù", "X"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
-		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % [";", "'", "X"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
@@ -367,7 +367,7 @@ func _process(delta):
 			if weapon.position.x < -150 or weapon.position.y < -20 or weapon.position.y > 740:
 				remove_weapon(weapon, "w_3_3")
 	if stage == BattleStages.ENEMY:
-		var boost:int = 2.5 if Input.is_action_pressed("X") else 1.1
+		var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.1
 		if ship_dir == "left":
 			ship1.position.y = max(0, ship1.position.y - 10 * boost * delta * 60)
 		elif ship_dir == "right":

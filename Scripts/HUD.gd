@@ -56,6 +56,7 @@ func refresh():
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
 	$ConvertMinerals.visible = game.show.minerals
+	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
 	if game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv
@@ -193,3 +194,16 @@ func _on_AutosaveLight_mouse_entered():
 
 func _on_AutosaveLight_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_ShipLocator_pressed():
+	if game.c_v == "galaxy":
+		game.put_bottom_info(tr("LOCATE_SHIP_HELP"), "locating_ship", "hide_ship_locator")
+		game.show_ship_locator()
+
+
+func _on_ShipLocator_mouse_entered():
+	if game.c_v == "galaxy":
+		game.show_tooltip(tr("LOCATE_SHIP"))
+	else:
+		game.show_tooltip(tr("SHIP_LOCATOR_ERROR"))

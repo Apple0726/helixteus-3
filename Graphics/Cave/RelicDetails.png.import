@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Chest.png-26e8720f50350bff8020ab7362658309.stex"
+path="res://.import/RelicDetails.png-85ac319f699881963c0f5c64b9e9b4b7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/Chest.png"
-dest_files=[ "res://.import/Chest.png-26e8720f50350bff8020ab7362658309.stex" ]
+source_file="res://Graphics/Cave/RelicDetails.png"
+dest_files=[ "res://.import/RelicDetails.png-85ac319f699881963c0f5c64b9e9b4b7.stex" ]
 
 [params]
 

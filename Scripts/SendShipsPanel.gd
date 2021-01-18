@@ -111,17 +111,54 @@ func send_ships():
 func _on_HSlider_value_changed(value):
 	calc_costs()
 
+func has_SE(p_i:Dictionary):
+	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.is_constructing
+
 func get_atm_exit_cost(pressure:float):
-	return round(pow(pressure * 10, 1.4) * 300)
+	var res:float = pow(pressure * 10, 1.4) * 300
+	if has_SE(depart_planet_data):
+		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
+	return round(res)
 
 func get_grav_exit_cost(size:float):
-	return round(pow(size / 180.0, 2.5))
+	var res:float = pow(size / 180.0, 2.5)
+	if has_SE(depart_planet_data):
+		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
+	return round(res)
 
 func get_atm_entry_cost(pressure:float):
-	return round(1000 / clamp(pressure, 0.1, 10))
+	var res:float = 1000 / clamp(pressure, 0.1, 10)
+	if has_SE(game.planet_data[dest_p_id]):
+		res *= get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv)
+	return round(res)
 
 func get_grav_entry_cost(size:float):
-	return round(pow(size / 600.0, 2.5) * 3)
+	var res:float = pow(size / 600.0, 2.5) * 3
+	if has_SE(game.planet_data[dest_p_id]):
+		res *= get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv)
+	return round(res)
+
+func get_entry_exit_multiplier(lv:int):
+	match lv:
+		0:
+			return 0.9
+		1:
+			return 0.6
+		2:
+			return 0.3
+		3:
+			return 0
+
+func get_travel_cost_multiplier(lv:int):
+	match lv:
+		0:
+			return 0.95
+		1:
+			return 0.8
+		2:
+			return 0.65
+		3:
+			return 0.5
 
 func calc_costs():
 	var slider_factor = pow(10, $HSlider.value / 25.0 - 2)
@@ -133,7 +170,7 @@ func calc_costs():
 	$EnergyCost2.text = Helper.format_num(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 30
 	time_cost = 5000 / slider_factor * distance
-	$EnergyCost.text = Helper.format_num(round(travel_energy_cost))
+	$EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
 	$TimeCost.text = Helper.time_to_str(time_cost)
@@ -143,7 +180,7 @@ func _on_EnergyCost2_mouse_entered():
 	var gravity_exit_cost = Helper.format_num(get_grav_exit_cost(depart_planet_data.size))
 	var atm_entry_cost = Helper.format_num(get_atm_entry_cost(game.planet_data[dest_p_id].pressure))
 	var gravity_entry_cost = Helper.format_num(get_grav_entry_cost(game.planet_data[dest_p_id].size))
-	game.show_adv_tooltip("%s: @i %s\n%s: @i %s\n%s: @i %s\n%s: @i %s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, tr("GRAVITY_EXIT"), gravity_exit_cost, tr("ATMOSPHERE_ENTRY"), atm_entry_cost, tr("GRAVITY_ENTRY"), gravity_entry_cost], [Data.icons.PP, Data.icons.PP, Data.icons.PP, Data.icons.PP])
+	game.show_adv_tooltip("%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""], [Data.icons.PP, Data.icons.PP, Data.icons.PP, Data.icons.PP])
 
 func _on_EnergyCost2_mouse_exited():
 	game.hide_adv_tooltip()

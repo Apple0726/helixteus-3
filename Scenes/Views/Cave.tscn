@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=2]
+[gd_scene load_steps=89 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -12,8 +12,8 @@
 [ext_resource path="res://Graphics/Tiles/10.jpg" type="Texture" id=10]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Tiles/CaveSpritesheet.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Cave/exit.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Tiles/Hole.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Cave/Objects/exit.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Cave/Objects/Hole.png" type="Texture" id=14]
 [ext_resource path="res://Graphics/Cave/minimap.png" type="Texture" id=15]
 [ext_resource path="res://Graphics/Cave/MMIcons/Rover.png" type="Texture" id=16]
 [ext_resource path="res://Graphics/Cave/MMIcons/NextFloor.png" type="Texture" id=17]
@@ -26,6 +26,8 @@
 [ext_resource path="res://Graphics/Tiles/Empty.jpg" type="Texture" id=24]
 [ext_resource path="res://Graphics/Icons/Inventory.png" type="Texture" id=25]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=26]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=27]
+[ext_resource path="res://Graphics/Cave/RelicDetails.png" type="Texture" id=28]
 
 [sub_resource type="TileSet" id=1]
 0/name = "3.jpg 0"
@@ -619,17 +621,17 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 } ]
 1/z_index = 0
 
-[sub_resource type="CapsuleShape2D" id=50]
+[sub_resource type="CapsuleShape2D" id=51]
 radius = 23.3054
 height = 151.187
 
-[sub_resource type="CircleShape2D" id=51]
+[sub_resource type="CircleShape2D" id=52]
 radius = 52.0
 
-[sub_resource type="CircleShape2D" id=52]
+[sub_resource type="CircleShape2D" id=53]
 radius = 52.1536
 
-[sub_resource type="ParticlesMaterial" id=53]
+[sub_resource type="ParticlesMaterial" id=54]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -640,14 +642,8 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
 
-[sub_resource type="CircleShape2D" id=54]
-radius = 43.091
-
-[sub_resource type="DynamicFont" id=55]
-size = 14
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 26 )
+[sub_resource type="CircleShape2D" id=55]
+radius = 40.0
 
 [sub_resource type="DynamicFont" id=56]
 size = 14
@@ -655,7 +651,13 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 
-[sub_resource type="StyleBoxFlat" id=57]
+[sub_resource type="DynamicFont" id=57]
+size = 14
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 26 )
+
+[sub_resource type="StyleBoxFlat" id=58]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -667,7 +669,7 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id=58]
+[sub_resource type="StyleBoxFlat" id=59]
 content_margin_left = 7.0
 content_margin_right = 7.0
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
@@ -677,12 +679,19 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
 
-[sub_resource type="DynamicFont" id=59]
+[sub_resource type="DynamicFont" id=60]
 size = 25
 use_mipmaps = true
 use_filter = true
 extra_spacing_char = 2
 font_data = ExtResource( 26 )
+
+[sub_resource type="DynamicFont" id=61]
+size = 18
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 26 )
+fallback/0 = ExtResource( 27 )
 
 [node name="Cave" type="Node2D"]
 script = ExtResource( 2 )
@@ -720,7 +729,7 @@ collision_mask = 0
 [node name="ExitColl" type="CollisionShape2D" parent="Exit"]
 position = Vector2( -0.277153, -97.738 )
 rotation = 1.57108
-shape = SubResource( 50 )
+shape = SubResource( 51 )
 
 [node name="Sprite" type="Sprite" parent="Exit"]
 texture = ExtResource( 13 )
@@ -729,7 +738,7 @@ __meta__ = {
 }
 
 [node name="GoUpColl" type="CollisionShape2D" parent="Exit"]
-shape = SubResource( 51 )
+shape = SubResource( 52 )
 disabled = true
 
 [node name="Hole" type="Area2D" parent="."]
@@ -741,14 +750,14 @@ collision_mask = 0
 texture = ExtResource( 14 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hole"]
-shape = SubResource( 52 )
+shape = SubResource( 53 )
 
 [node name="MiningParticles" type="Particles2D" parent="."]
 emitting = false
 amount = 25
 lifetime = 0.2
 local_coords = false
-process_material = SubResource( 53 )
+process_material = SubResource( 54 )
 
 [node name="Rover" type="KinematicBody2D" parent="."]
 collision_layer = 2
@@ -789,7 +798,7 @@ region_rect = Rect2( 0, 0, 300, 16 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 54 )
+shape = SubResource( 55 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
@@ -895,7 +904,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 55 )
+custom_fonts/font = SubResource( 56 )
 custom_colors/font_color = Color( 0.580392, 1, 0.521569, 1 )
 text = "1 / 30"
 align = 1
@@ -951,7 +960,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 56 )
+custom_fonts/font = SubResource( 57 )
 custom_colors/font_color = Color( 1, 0.807812, 0.671875, 1 )
 align = 1
 valign = 1
@@ -969,7 +978,7 @@ grow_horizontal = 0
 grow_vertical = 2
 rect_pivot_offset = Vector2( -96, 0 )
 theme = ExtResource( 3 )
-custom_styles/panel = SubResource( 57 )
+custom_styles/panel = SubResource( 58 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -989,10 +998,35 @@ alignment = 1
 margin_right = 60.0
 margin_bottom = 30.0
 mouse_filter = 1
-custom_styles/normal = SubResource( 58 )
-custom_fonts/font = SubResource( 59 )
+custom_styles/normal = SubResource( 59 )
+custom_fonts/font = SubResource( 60 )
 text = "B1F"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Relic" type="TextureRect" parent="UI2"]
+visible = false
+margin_left = 340.0
+margin_top = 36.0
+margin_right = 940.0
+margin_bottom = 636.0
+texture = ExtResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Text" type="Label" parent="UI2/Relic"]
+margin_left = 156.0
+margin_top = 84.0
+margin_right = 432.0
+margin_bottom = 504.0
+custom_fonts/font = SubResource( 61 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "RELIC_TEXT"
+valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

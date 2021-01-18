@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/go_up.png-c99d502c72c62b8ec26a9e050a6f8ca1.stex"
+path="res://.import/M_SE_3.png-7fa44230b89cd818e39b1f5723339419.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/go_up.png"
-dest_files=[ "res://.import/go_up.png-c99d502c72c62b8ec26a9e050a6f8ca1.stex" ]
+source_file="res://Graphics/Megastructures/M_SE_3.png"
+dest_files=[ "res://.import/M_SE_3.png-7fa44230b89cd818e39b1f5723339419.stex" ]
 
 [params]
 

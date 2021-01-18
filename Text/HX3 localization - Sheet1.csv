@@ -449,7 +449,7 @@ MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피
 CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타
 ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률
 EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율
-BATTLE_HELP,Press up or %s to move your ship up\nPress down or %s to move your ship down\nHold %s to move the ship faster,,,,,,
+BATTLE_HELP,Press %s or %s to move your ship up\nPress %s or %s to move your ship down\nHold %s to move the ship faster,,,,,,
 SHOW_WEAPON_XPS,Show weapon XPs,,,,,,
 BULLET,Bullet,,,,,,
 BULLET_DESC,Average damage and accuracy weapon.,,,,,,
@@ -547,3 +547,13 @@ GEMSTONE_PICKAXE,Gemstone pickaxe,,,,,,
 GEMSTONE_PICKAXE_DESC,Pretty!,,,,,,
 STAR_MS_ERROR,All planets in this system must be conquered before building a megastructure around stars.,,,,,,
 PLANET_MS_ERROR,This planet must be conquered before building a megastructure on it.,,,,,,
+VICTORY,Victory,,,,,,
+SYSTEM_CONQUERED,System conquered,,,,,,
+SE_0_BENEFITS,Planet entry/exit costs -10%\nTravel costs -5%,,,,,,
+SE_1_BENEFITS,Planet entry/exit costs -40%\nTravel costs -20%,,,,,,
+SE_2_BENEFITS,Planet entry/exit costs -70%\nTravel costs -35%,,,,,,
+SE_3_BENEFITS,Planet entry/exit costs -100%\nTravel costs -50%,,,,,,
+F_TO_CONFIRM,Press F to confirm,,,,,,
+SHIP_SIGNAL,You detect a signal coming from somewhere on this planet...,,,,,,
+SIGNAL_DETECTED,Signal detected,,,,,,
+RELIC_TEXT,"Stuck in this cave, unable to find my way out\nMy ship probably ran out of fuel on some other planet\nNot too sure what to do here anymore\nIf someone's reading this, I guess you can have my ship\nI hid a ship locator device just south of this cave, just dig a few meters there\nHope you can make good use of it.\nI'm running out of ink, so I don't think I can write much more",,,,,,

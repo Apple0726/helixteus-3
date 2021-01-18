@@ -62,19 +62,25 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 					overlay.circle.modulate = gradient.interpolate(1)
 		2:
 			for overlay in overlays:
+				if game.system_data[overlay.id].conquered:
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
+		3:
+			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		3:
+		4:
 			for overlay in overlays:
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		4:
+		5:
 			for overlay in overlays:
 				var temp = game.get_biggest_star_size(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		5:
+		6:
 			for overlay in overlays:
 				var temp = game.get_brightest_star_luminosity(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)

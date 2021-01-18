@@ -194,6 +194,7 @@ var cave_data:Array = []
 #Vehicle data
 var rover_data:Array = []
 var ship_data:Array = []
+var second_ship_hints:Dictionary = {"signal_emitted":false, "ship_locator":false}
 var ships_c_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 var ships_dest_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 var ships_c_g_s:int = 0#ship current global system id
@@ -221,7 +222,7 @@ var c_num:int = 0
 
 ############ End save data ############
 
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
 var EA_cave_visited = TEST
@@ -297,7 +298,7 @@ var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow
 						"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"water", "produce":60},
 						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
-var other_items_info = {"hx_core":{}}
+var other_items_info = {"hx_core":{}, "ship_locator":{}}
 
 var item_groups = [	{"dict":speedup_info, "path":"Items/Speedups"},
 					{"dict":overclock_info, "path":"Items/Overclocks"},
@@ -470,6 +471,7 @@ func load_game():
 		rover_id = save_game.get_64()
 		rover_data = save_game.get_var()
 		ship_data = save_game.get_var()
+		second_ship_hints = save_game.get_var()
 		ships_c_coords = save_game.get_var()
 		ships_dest_coords = save_game.get_var()
 		ships_c_g_s = save_game.get_64()
@@ -682,11 +684,9 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	dialog.dialog_text = txt
 	dialog.popup_centered()
 	for i in range(0, len(other_buttons)):
-# warning-ignore:return_value_discarded
 		dialog.add_button(other_buttons[i], false, other_functions[i])
-# warning-ignore:return_value_discarded
-		dialog.connect("custom_action", self, "popup_action")
-# warning-ignore:return_value_discarded
+		if other_functions[i] != "":
+			dialog.connect("custom_action", self, "popup_action")
 	dialog.connect("popup_hide", self, "popup_close")
 	dialog.get_ok().text = ok_txt
 
@@ -1358,16 +1358,17 @@ func generate_systems(id:int):
 		s_i["planets"] = []
 		s_i["discovered"] = false
 		
-		#Checks whether the star is in globular cluster
 		var N = obj_shapes.size()
+		#Whether to move on to a new "ring" for collision detection
 		if N >= total_sys_num / 8:
 			obj_shapes.sort_custom(self, "sort_shapes")
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.9), N - 1)
 			min_dist_from_center = obj_shapes[0]["outer_radius"]
+			#								V this condition makes sure globular clusters don't spawn near the center
 			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
 				gc_remaining -= 1
 				gc_stars_remaining = int(pow(total_sys_num, 0.5) * rand_range(1, 3))
-				gc_center = polar2cartesian(rand_range(min_dist_from_center * 1.25, min_dist_from_center * 1.5), rand_range(0, 2 * PI))
+				gc_center = polar2cartesian(min_dist_from_center, rand_range(0, 2 * PI))
 				max_dist_from_center = 100
 			gc_offset += 1
 		
@@ -1473,6 +1474,8 @@ func generate_systems(id:int):
 		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12) * dark_matter), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
+		if planet_num > 40:
+			planet_num -= floor((planet_num - 40) / 2)
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -1704,13 +1707,14 @@ func generate_tiles(id:int):
 	var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 50.0)
 	var pulsation:float = rand_range(0.4, 1)
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
+	var ship_signal:bool = not second_ship_hints.signal_emitted and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
 	for i in 2:
-		if c_p_g != 2 and randf() < 0.35 * pow(p_i.pressure, 0.1):
+		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.1) or ship_signal):
 			#au_int: aurora_intensity
 			var au_int = clever_round(rand_range(40000, 80000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
 			if tile_from == -1:
-				tile_from = Helper.rand_int(0, wid)
+				tile_from = Helper.rand_int(0, 1 if ship_signal else wid)
 				tile_to = Helper.rand_int(0, wid)
 			if rand < 0.5:#Vertical
 				for j in wid:
@@ -1727,7 +1731,7 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						tile_data[j + k * wid] = {}
-						tile_data[j + k * wid].aurora = {"au_int":au_int}
+						tile_data[j + k * wid].aurora = {"au_int":au_int, "type":au_type}
 			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
@@ -1746,6 +1750,8 @@ func generate_tiles(id:int):
 		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
 		var phase_2 = phase_2_scene.instance()
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
+	var second_ship_cave_placed:bool = false
+	var relic_cave_id:int = -1
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
@@ -1766,24 +1772,32 @@ func generate_tiles(id:int):
 				continue
 			if c_p_g == 2:
 				continue
-			if randf() < 0.1 / pow(wid, 0.9):
+			var normal_cond:bool = randf() < 0.1 / pow(wid, 0.9)
+			var ship_cond:bool = (ship_signal and not second_ship_cave_placed and tile_data[t_id] and tile_data[t_id].has("aurora"))
+			if normal_cond or ship_cond:
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].cave = {}
 				tile_data[t_id].cave.id = len(cave_data)
 				var floor_size:int = Helper.rand_int(25, 60)
+				var num_floors:int = Helper.rand_int(1, wid / 3)
 				if wid > 15:
 					floor_size *= 1.3
 				if wid > 75:
 					floor_size *= 1.2
 				if wid > 150:
 					floor_size *= 1.2
-				cave_data.append({"num_floors":Helper.rand_int(1, wid / 3), "floor_size":floor_size})
+				if ship_cond:
+					relic_cave_id = t_id
+					second_ship_cave_placed = true
+					floor_size = 20
+					num_floors = 3
+				cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].crater = {}
-				tile_data[t_id].variant = Helper.rand_int(1, 3)
+				tile_data[t_id].crater.variant = Helper.rand_int(1, 3)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
 				tile_data[t_id].crater.init_depth = depth
 				tile_data[t_id].depth = depth
@@ -1795,6 +1809,14 @@ func generate_tiles(id:int):
 						if c_s_g == 0 and met_info[met].rarity > 6:
 							continue
 						tile_data[t_id].crater.metal = met
+	if relic_cave_id != -1:
+		if not tile_data[relic_cave_id + wid]:
+			tile_data[relic_cave_id + wid] = {}
+		else:
+			for k in tile_data[relic_cave_id + wid]:
+				if k != "aurora":
+					tile_data[relic_cave_id + wid].erase(k)
+		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1834,6 +1856,9 @@ func generate_tiles(id:int):
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
+	if ship_signal:
+		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
+		second_ship_hints.signal_emitted = true
 
 func make_planet_composition(temp:float, depth:String):
 	randomize()
@@ -2482,6 +2507,7 @@ func save_game(autosave:bool):
 	save_game.store_64(rover_id)
 	save_game.store_var(rover_data)
 	save_game.store_var(ship_data)
+	save_game.store_var(second_ship_hints)
 	save_game.store_var(ships_c_coords)
 	save_game.store_var(ships_dest_coords)
 	save_game.store_64(ships_c_g_s)
@@ -2510,6 +2536,12 @@ func save_game(autosave:bool):
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 
+func show_ship_locator():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+func hide_ship_locator():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite").texture = texture
 	update_item_cursor()

@@ -7,7 +7,7 @@ onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
 #Aurora intensity
-onready var au_int:float = tile.au_int if tile.has("au_int") else 0
+onready var au_int:float = tile.aurora.au_int if tile.has("aurora") else 0
 onready var aurora_mult:float = pow(1 + au_int, 0.25)
 onready var difficulty:float = 1 * aurora_mult
 
@@ -31,7 +31,7 @@ onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
-onready var chest_scene = preload("res://Scenes/Cave/Chest.tscn")
+onready var object_scene = preload("res://Scenes/Cave/Object.tscn")
 onready var sq_bar_scene = preload("res://Scenes/SquareBar.tscn")
 
 var minimap_zoom:float = 0.02
@@ -145,6 +145,9 @@ func remove_cave():
 	minimap_cave.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		remove_child(enemy)
+	for relic in get_tree().get_nodes_in_group("relic"):
+		relic.remove_from_group("relic")
+		remove_child(relic)
 	for enemy_icon in get_tree().get_nodes_in_group("enemy_icons"):
 		MM.remove_child(enemy_icon)
 	for proj in get_tree().get_nodes_in_group("projectiles"):
@@ -180,7 +183,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-	noise.period = 65
+	if cave_size == 20 and num_floors == 3:
+		noise.period = 20
+	else:
+		noise.period = 65
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
@@ -266,7 +272,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					continue
 				if partially_looted_chests[cave_floor - 1].has(String(tile)):
 					contents = partially_looted_chests[cave_floor - 1][String(tile)].duplicate(true)
-				var chest = chest_scene.instance()
+				var chest = object_scene.instance()
 				if tier == 1:
 					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
 				elif tier == 2:
@@ -277,6 +283,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					chest.modulate = Color(0.7, 0, 0.79, 1.0)
 				elif tier == 5:
 					chest.modulate = Color(0.85, 1.0, 0, 1.0)
+				chest.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Chest.png")
 				chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
 				chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
 				chest.scale *= 0.8
@@ -333,7 +340,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					elif bottom:
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
-		exit.get_node("Sprite").texture = load("res://Graphics/Cave/exit.png")
+		exit.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/exit.png")
 		exit.get_node("ExitColl").disabled = false
 		var rot = spawn_edge_tiles[0].dir
 		exit.get_node("GoUpColl").disabled = true
@@ -346,7 +353,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		MM_exit.rotation = rot
 	else:
 		MM_exit.rotation = 0
-		exit.get_node("Sprite").texture = load("res://Graphics/Cave/go_up.png")
+		exit.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/go_up.png")
 		exit.get_node("ExitColl").disabled = true
 		exit.get_node("GoUpColl").disabled = false
 		while rand_hole == rand_spawn:
@@ -367,6 +374,17 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if chests.has(String(rand_spawn)):
 		remove_child(chests[String(rand_spawn)].node)
 		chests.erase(String(rand_spawn))
+	#A way to check whether cave has the relic for 2nd ship
+	if cave_size == 20 and num_floors == 3 and cave_floor == 3:
+		var relic = object_scene.instance()
+		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
+		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")
+		relic.get_node("Area2D").connect("body_exited", self, "on_relic_exited")
+		var relic_tile = rooms[0].tiles[0]
+		relic.position = cave.map_to_world(get_tile_pos(relic_tile)) + Vector2(100, 100)
+		add_child(relic)
+		relic.add_to_group("relic")
+		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
 		hole_exits[cave_floor - 1].exit = rand_spawn
@@ -403,10 +421,16 @@ func on_chest_entered(_body, tile:String):
 	$UI2/Panel.visible = true
 	$UI2/Panel.modulate.a = 1
 
+func on_relic_entered(_body):
+	$UI2/Relic.visible = true
+
 func on_chest_exited(_body):
 	active_chest = "-1"
 	active_type = ""
 	$UI2/Panel.visible = false
+
+func on_relic_exited(_body):
+	$UI2/Relic.visible = false
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty),

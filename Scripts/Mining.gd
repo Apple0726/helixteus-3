@@ -4,7 +4,7 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var id:int = game.c_t
 onready var tile = game.tile_data[id]
-onready var au_int:float = tile.au_int if tile and tile.has("au_int") else 0
+onready var au_int:float = tile.aurora.au_int if tile and tile.has("aurora") else 0
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
 var total_mass = 0
@@ -30,7 +30,7 @@ func _ready():
 		$Tile/TextureRect.texture = tile_texture
 	if not tile:
 		tile = {}
-	if tile.has("au_int"):
+	if tile.has("aurora"):
 		refresh_aurora_bonus()
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
@@ -50,16 +50,16 @@ func _ready():
 
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
-	aurora_mult = game.clever_round(pow(1 + tile.au_int, Helper.get_AIE()))
+	aurora_mult = game.clever_round(pow(1 + au_int, Helper.get_AIE()))
 	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info():
 	var upper_depth
 	var lower_depth 
-	if tile.has("init_depth"):
+	if tile.has("crater"):
 		layer = "crater"
-		upper_depth = tile.init_depth
-		lower_depth = 3 * tile.init_depth
+		upper_depth = tile.crater.init_depth
+		lower_depth = 3 * tile.crater.init_depth
 		$LayerInfo/Upper.text = String(upper_depth) + " m"
 		$LayerInfo/Lower.text = String(lower_depth) + " m"
 	elif tile.depth <= p_i.crust_start_depth:
@@ -142,7 +142,7 @@ func _input(event):
 func _on_Back_pressed():
 	tile.mining_progress = progress
 	game.tile_data[id] = tile
-	Helper.save_obj("Planets", game.c_p, game.tile_data)
+	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
 	game.switch_view("planet")
 	queue_free()
 

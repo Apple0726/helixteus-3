@@ -376,6 +376,8 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		elif content == "stone":
 			var layer2 = "crust" if layer == "surface" or layer == "crater" else layer
 			game.add_resources({"stone":amount}, p_i[layer2])
+		elif content == "ship_locator":
+			game.second_ship_hints.ship_locator = true
 		else:
 			game[content] += amount
 		if game.show.has(content):
@@ -420,6 +422,9 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 	contents.stone = stone_amount
+	if tile.has("ship_locator_depth") and tile.depth == tile.ship_locator_depth:
+		contents.ship_locator = 1
+		tile.erase("ship_locator_depth")
 	return contents
 
 func get_IR_mult(tile):

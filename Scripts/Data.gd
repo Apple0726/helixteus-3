@@ -31,7 +31,10 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 }
 
 var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400000, "copper":2500000, "iron":16000000, "aluminium":5000000, "titanium":500000, "time":10 * 86400},
-					"M_SE_0":{"money":7000000, "stone":500000, "energy":500000, "copper":8000, "iron":10000, "aluminium":3000, "time":8*3600},
+					"M_SE_0":{"money":700000, "stone":50000, "energy":50000, "copper":800, "iron":1000, "aluminium":300, "time":5},#2*3600
+					"M_SE_1":{"money":3200000, "stone":200000, "energy":200000, "copper":1000, "iron":1400, "aluminium":400, "time":5},#8, 8, 12
+					"M_SE_2":{"money":6800000, "stone":350000, "energy":350000, "copper":2000, "iron":2800, "aluminium":800, "time":5},
+					"M_SE_3":{"money":10000000, "stone":500000, "energy":500000, "copper":8000, "iron":10000, "aluminium":3000, "time":5},
 }
 
 var MS_output = {	"M_DS_0":50000000
