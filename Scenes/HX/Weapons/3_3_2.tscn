@@ -6,6 +6,8 @@
 radius = 5.86446
 
 [node name="3_2" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

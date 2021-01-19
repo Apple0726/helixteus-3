@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/View.gd" type="Script" id=1]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2_clickmask.png" type="BitMap" id=3]
+[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=3]
 
 [node name="View" type="KinematicBody2D"]
 script = ExtResource( 1 )

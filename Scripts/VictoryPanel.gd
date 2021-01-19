@@ -13,33 +13,36 @@ func _ready():
 		money += HX.money
 		XP += HX.XP
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
-	$Grid/Panel1/XP/Label.text = "+ %s" % [XP]
-	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		get_node("Grid/Panel1/%s/Label" % [weapon]).text = "+ %s" % [weapon_XPs[0][weapon.to_lower()]]
-	$Grid/Panel1.show_weapon_XPs = true
-	$Grid/Panel1.refresh()
+	for i in 2:
+		if i >= len(ship_data):
+			$Grid.get_node("Panel%s" % (i + 1)).modulate.a = 0
+			break
+		else:
+			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
+			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [weapon_XPs[i][weapon.to_lower()]]
+			$Grid.get_node("Panel%s" % (i + 1)).show_weapon_XPs = true
+			$Grid.get_node("Panel%s" % (i + 1)).refresh()
 
 func _process(delta):
-	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		var node = get_node("Grid/Panel1/%s/TextureProgress2" % [weapon])
-		var text_node = get_node("Grid/Panel1/%s/Label2" % [weapon])
-		var XP_get = weapon_XPs[0][weapon.to_lower()]
-		node.value = move_toward(node.value, node.value + XP_get, (XP_get + ship_data[0][weapon.to_lower()].XP - node.value) * delta * 2)
-		text_node.text = "%s / %s" % [round(node.value), ship_data[0][weapon.to_lower()].XP_to_lv]
-	var XP_node = $Grid/Panel1/XP/TextureProgress2
-	var XP_text_node = $Grid/Panel1/XP/Label2
-	XP_node.value = move_toward(XP_node.value, XP_node.value + XP, (XP + ship_data[0].XP - XP_node.value) * delta * 2)
-	XP_text_node.text = "%s / %s" % [round(XP_node.value), ship_data[0].XP_to_lv]
+	for i in len(ship_data):
+		for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+			var node = get_node("Grid/Panel%s/%s/TextureProgress2" % [i + 1, weapon])
+			var text_node = get_node("Grid/Panel%s/%s/Label2" % [i + 1, weapon])
+			var XP_get = weapon_XPs[i][weapon.to_lower()]
+			node.value = move_toward(node.value, node.value + XP_get, (XP_get + ship_data[i][weapon.to_lower()].XP - node.value) * delta * 2)
+			text_node.text = "%s / %s" % [round(node.value), ship_data[i][weapon.to_lower()].XP_to_lv]
+		var XP_node = $Grid.get_node("Panel%s/XP/TextureProgress2" % (i + 1))
+		var XP_text_node = $Grid.get_node("Panel%s/XP/Label2" % (i + 1))
+		XP_node.value = move_toward(XP_node.value, XP_node.value + XP, (XP + ship_data[i].XP - XP_node.value) * delta * 2)
+		XP_text_node.text = "%s / %s" % [round(XP_node.value), ship_data[i].XP_to_lv]
 
 func _on_close_button_pressed():
-	Helper.add_ship_XP(0, XP)
 	game.money += money
-	for weapon in ["bullet", "laser", "bomb", "light"]:
-		ship_data[0][weapon].XP += weapon_XPs[0][weapon]
-		if ship_data[0][weapon].XP >= ship_data[0][weapon].XP_to_lv and ship_data[0][weapon].lv < 7:
-			ship_data[0][weapon].XP -= ship_data[0][weapon].XP_to_lv
-			ship_data[0][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[0][weapon].lv - 1]
-			ship_data[0][weapon].lv += 1
+	for i in len(ship_data):
+		Helper.add_ship_XP(i, XP)
+		for weapon in ["bullet", "laser", "bomb", "light"]:
+			Helper.add_weapon_XP(i, weapon, weapon_XPs[i][weapon])
 	game.planet_data[p_id].conquered = true
 	var all_conquered = true
 	for planet in game.planet_data:

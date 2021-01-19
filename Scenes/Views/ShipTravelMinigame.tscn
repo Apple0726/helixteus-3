@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/ShipTravelMinigame.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=3]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=5]
 

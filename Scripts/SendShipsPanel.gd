@@ -67,8 +67,8 @@ func refresh():
 		depart_pos = game.supercluster_data[depart_id].pos
 		dest_pos = game.supercluster_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-#	if game.TEST:
-#		distance = 1
+	if game.TEST:
+		distance = 1
 	calc_costs()
 	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
 		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)

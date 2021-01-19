@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Ship_Tier_2.png-c4e5b4bac0de6cc84d5dcb5229a4b7a4.stex"
+path="res://.import/light3.png-7eba932e3a3b5aedb154ccd996e0f3ba.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Ships/Ship_Tier_2.png"
-dest_files=[ "res://.import/Ship_Tier_2.png-c4e5b4bac0de6cc84d5dcb5229a4b7a4.stex" ]
+source_file="res://Graphics/Weapons/light3.png"
+dest_files=[ "res://.import/light3.png-7eba932e3a3b5aedb154ccd996e0f3ba.stex" ]
 
 [params]
 

@@ -3,6 +3,8 @@
 [ext_resource path="res://Graphics/HX/Weapons/3_3_1.png" type="Texture" id=1]
 
 [node name="3_2" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

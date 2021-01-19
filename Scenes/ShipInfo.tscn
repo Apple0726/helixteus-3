@@ -1,10 +1,8 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2_clickmask.png" type="BitMap" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/XP.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Ships/Ship_Tier_1_v2.png" type="Texture" id=6]
 [ext_resource path="res://Scripts/ShipInfo.gd" type="Script" id=9]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=11]
@@ -32,14 +30,12 @@ __meta__ = {
 }
 
 [node name="Ship" type="TextureButton" parent="."]
-margin_left = 32.0
-margin_top = 44.0
-margin_right = 172.0
-margin_bottom = 128.0
-texture_normal = ExtResource( 6 )
-texture_click_mask = ExtResource( 2 )
+margin_left = 28.0
+margin_top = 56.0
+margin_right = 188.0
+margin_bottom = 140.0
 expand = true
-stretch_mode = 6
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -459,11 +455,12 @@ __meta__ = {
 }
 
 [node name="Lv" type="Label" parent="."]
-margin_left = 84.0
+margin_left = 28.0
 margin_top = 20.0
-margin_right = 124.0
+margin_right = 184.0
 margin_bottom = 44.0
 text = "Lv 5"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

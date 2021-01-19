@@ -194,7 +194,7 @@ var cave_data:Array = []
 #Vehicle data
 var rover_data:Array = []
 var ship_data:Array = []
-var second_ship_hints:Dictionary = {"signal_emitted":false, "ship_locator":false}
+var second_ship_hints:Dictionary = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
 var ships_c_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 var ships_dest_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 var ships_c_g_s:int = 0#ship current global system id
@@ -354,6 +354,14 @@ func _ready():
 		while not Geometry.is_point_in_polygon(star.position, bg_area):
 			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
 		bg.add_child(star)
+	for sc in Data.science_unlocks:
+		science_unlocked[sc] = false
+	for sc in Data.infinite_research_sciences:
+		infinite_research[sc] = 0
+	for mat in mats:
+		show[mat] = false
+	for met in mets:
+		show[met] = false
 	if TEST:
 		lv = 100
 		money = 1000000000
@@ -363,6 +371,8 @@ func _ready():
 		show.minerals = true
 		energy = 2000000
 		SP = 200000000
+		science_unlocked.RC = true
+		science_unlocked.SCT = true
 		stone.O = 80000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
@@ -529,14 +539,6 @@ func new_game():
 	dir.make_dir("user://Save1/Galaxies")
 	dir.make_dir("user://Save1/Clusters")
 	dir.make_dir("user://Save1/Superclusters")
-	for sc in Data.science_unlocks:
-		science_unlocked[sc] = false
-	for sc in Data.infinite_research_sciences:
-		infinite_research[sc] = 0
-	for mat in mats:
-		show[mat] = false
-	for met in mets:
-		show[met] = false
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
@@ -1329,6 +1331,17 @@ func generate_system_part():
 		progress = generate_systems(c_g)
 		$Loading.update_bar(progress, tr("GENERATING_GALAXY") % [String(galaxy_data[c_g]["systems"].size()), String(galaxy_data[c_g]["system_num"])])
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
+	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
+		#Second ship can only appear in a system in the rektangle formed by solar system and center of galaxy
+		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
+		for system in system_data:
+			if system.id == 0:
+				continue
+			rect = rect.abs()
+			if rect.has_point(system.pos) and randf() < 0.02:
+				system.second_ship = Helper.rand_int(1, system.planet_num)
+				second_ship_hints.spawned_at = system.id
+				break
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
@@ -1655,6 +1668,8 @@ func generate_planets(id:int):
 			if power <= 1:
 				break
 		p_i.HX_data.shuffle()
+		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
+			p_i.second_ship = true
 		planet_data.append(p_i)
 	if id != 0:
 		var view_zoom = 400 / max_distance
@@ -1817,6 +1832,15 @@ func generate_tiles(id:int):
 				if k != "aurora":
 					tile_data[relic_cave_id + wid].erase(k)
 		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
+	if p_i.has("second_ship"):
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		if not tile_data[random_tile]:
+			tile_data[random_tile] = {}
+		else:
+			for k in tile_data[random_tile]:
+				if k != "aurora":
+					tile_data[random_tile].erase(k)
+		tile_data[random_tile].ship = true
 	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -1852,7 +1876,7 @@ func generate_tiles(id:int):
 			tile_data[111].bldg.path_1_value = Data.path_1.SE.value
 			tile_data[111].bldg.path_2_value = Data.path_2.SE.value
 		tile_data[112] = {}
-		tile_data[112].ship = {}
+		tile_data[112].ship = true
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -2313,6 +2337,11 @@ func _input(event):
 			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
 		if item_cursor.visible:
 			item_cursor.position = mouse_pos
+		if ship_locator:
+			ship_locator.position = mouse_pos
+			var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
+			var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
+			ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
 		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
 			STM.move_ship_inst = true
 
@@ -2536,10 +2565,16 @@ func save_game(autosave:bool):
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 
+var ship_locator
+
 func show_ship_locator():
+	ship_locator = load("res://Scenes/ShipLocator.tscn").instance()
+	add_child(ship_locator)
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 func hide_ship_locator():
+	remove_child(ship_locator)
+	ship_locator = null
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 func show_item_cursor(texture):

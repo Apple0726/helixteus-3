@@ -60,28 +60,13 @@ __meta__ = {
 }
 
 [node name="Panel1" parent="Grid" instance=ExtResource( 3 )]
+margin_bottom = 476.0
 
-[node name="Panel2" type="Panel" parent="Grid"]
+[node name="Panel2" parent="Grid" instance=ExtResource( 3 )]
 margin_left = 531.0
 margin_right = 1064.0
-margin_bottom = 239.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Panel3" type="Panel" parent="Grid"]
-margin_top = 237.0
-margin_right = 533.0
 margin_bottom = 476.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Panel4" type="Panel" parent="Grid"]
-margin_left = 531.0
-margin_top = 237.0
-margin_right = 1064.0
-margin_bottom = 476.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+id = 1
 
 [node name="Label" type="Label" parent="."]
 margin_left = 28.0

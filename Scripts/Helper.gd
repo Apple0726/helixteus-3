@@ -448,6 +448,14 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].acc = round(ship_data[id].acc * 1.2)
 		ship_data[id].eva = round(ship_data[id].eva * 1.2)
 
+func add_weapon_XP(id:int, weapon:String, XP:float):
+	var ship_data = game.ship_data
+	ship_data[id][weapon].XP += XP
+	if ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 7:
+		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
+		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[id][weapon].lv - 1]
+		ship_data[id][weapon].lv += 1
+
 func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	var label = Label.new()

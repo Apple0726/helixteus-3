@@ -11,6 +11,8 @@ func _ready():
 	$Bomb/Label.visible = victory_screen
 	$Light/Label.visible = victory_screen
 	$XP/Label.visible = victory_screen
+	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
+	$Ship.texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 
 func set_visibility():
 	$Bullet.visible = show_weapon_XPs
@@ -20,6 +22,8 @@ func set_visibility():
 	$Stats.visible = not show_weapon_XPs
 
 func refresh():
+	if id >= len(game.ship_data):
+		return
 	$XP/TextureProgress.value = game.ship_data[id].XP
 	$XP/TextureProgress2.value = game.ship_data[id].XP
 	$XP/TextureProgress.max_value = game.ship_data[id].XP_to_lv
@@ -57,8 +61,9 @@ func _on_Ship_mouse_entered():
 		$XP/Label.text = "+ %s" % [5 * game.item_to_use.num]
 
 func _on_Ship_mouse_exited():
-	$XP/TextureProgress2.value = $XP/TextureProgress.value
-	$XP/Label.visible = false
+	if not victory_screen:
+		$XP/TextureProgress2.value = $XP/TextureProgress.value
+		$XP/Label.visible = false
 
 
 func _on_Ship_pressed():

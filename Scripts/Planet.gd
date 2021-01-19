@@ -101,7 +101,10 @@ func _ready():
 			if tile.has("cave"):
 				$Obstacles.set_cell(i, j, 1)
 			if tile.has("ship"):
-				$Obstacles.set_cell(i, j, 5)
+				if len(game.ship_data) == 0:
+					$Obstacles.set_cell(i, j, 5)
+				elif len(game.ship_data) == 1:
+					$Obstacles.set_cell(i, j, 7)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -627,10 +630,16 @@ func _input(event):
 						game.vehicle_panel.tile_id = tile_id
 			elif tile.has("ship"):
 				if game.science_unlocked.SCT:
-					game.tile_data[tile_id] = null
+					game.tile_data[tile_id].erase("ship")
 					$Obstacles.set_cell(x_pos, y_pos, -1)
 					game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 					game.ship_data.append({"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+					if len(game.ship_data) == 2:
+						Helper.add_ship_XP(1, 181)
+						Helper.add_weapon_XP(1, "bullet", 10)
+						Helper.add_weapon_XP(1, "laser", 10)
+						Helper.add_weapon_XP(1, "bomb", 10)
+						Helper.add_weapon_XP(1, "light", 20)
 				else:
 					if game.show.SP:
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)

@@ -6,6 +6,8 @@
 radius = 32.0
 
 [node name="1_1" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -12 )
