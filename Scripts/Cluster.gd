@@ -24,6 +24,8 @@ func _ready():
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.7)
 		galaxy_btn.rect_scale.x = radius
 		galaxy_btn.rect_scale.y = radius
+		if g_i.has("modulate"):
+			galaxy_btn.modulate = g_i.modulate
 		galaxy.position = g_i["pos"]
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
 	if game.overlay_data.cluster.visible:
