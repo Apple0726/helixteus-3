@@ -17,7 +17,7 @@ var lv:int #minigame level
 var no_hit_combo:int = 0
 var got_hit:bool = false
 var lvpatterns:Array = [[1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12], [13, 14, 15, 16, 17, 18]] #contains all level patterns
-var pattern:int = 18
+var pattern:int = 1
 
 func set_level():
 	$Timer.wait_time = 1.0 / lv
@@ -116,7 +116,7 @@ func process_3(bullet, delta):
 		bullet.position.y += delta
 	else:
 		bullet.position.y -= delta
-	return {"remove":bullet.position.x < -25, "fn":"pattern_%s" % [Helper.rand_int(4, 7)]}
+	return {"remove":bullet.position.x < -25, "fn":"pattern_4"}
 
 func process_4(bullet, delta):
 	if bullet_data[bullet.name].has("b_type"):
@@ -329,13 +329,17 @@ func _process(delta):
 					inc_combo()
 					bullet_data.clear()
 					pattern = int(data.fn.split("_")[1])
-					if no_hit_combo == 3:
+					if no_hit_combo == 3 and lv != 1:
 						go_up_lv()
-						fn_to_call = "pattern_%s" % [Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])]
+						pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
+						fn_to_call = "pattern_%s" % [pattern]
 					else:
 						if lv == 1:
 							fn_to_call = "pattern_%s" % pattern
-							show_help(tr("STM_AFTERpattern_%s" % [pattern - 1]))
+							if pattern == 4:
+								go_up_lv()
+							else:
+								show_help(tr("STM_AFTER_PATTERN_%s" % [pattern - 1]))
 						else:
 							if lv % 4 == 0:
 								call("graph_pattern")
@@ -359,7 +363,7 @@ func hit_test(bullet):
 func pattern_1():
 	var delay:float = 0
 	for i in 100:
-		put_bullet(Vector2(1300, rand_range(10, 710)), rand_range(0.3, 0.5), 1, {"delay":delay})
+		put_bullet(Vector2(1300, rand_range(0, 720)), rand_range(0.3, 0.5), 1, {"delay":delay})
 		delay += 0.5 if (i+1) % 10 == 0 else 0.02
 
 func pattern_2():

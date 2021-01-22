@@ -6,13 +6,13 @@ var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
 
-onready var path1 = $UpgradePanel/VBoxContainer/PathButtons/Path1
-onready var path2 = $UpgradePanel/VBoxContainer/PathButtons/Path2
-onready var path3 = $UpgradePanel/VBoxContainer/PathButtons/Path3
-onready var next_lv = $UpgradePanel/VBoxContainer/Control2/NextLv
-onready var current_lv = $UpgradePanel/VBoxContainer/Control2/CurrentLv
-onready var next = $UpgradePanel/VBoxContainer/HBoxContainer2/Next
-onready var current = $UpgradePanel/VBoxContainer/HBoxContainer2/Current
+onready var path1 = $UpgradePanel/PathButtons/Path1
+onready var path2 = $UpgradePanel/PathButtons/Path2
+onready var path3 = $UpgradePanel/PathButtons/Path3
+onready var next_lv = $UpgradePanel/Control2/NextLv
+onready var current_lv = $UpgradePanel/Control2/CurrentLv
+onready var next = $UpgradePanel/Next
+onready var current = $UpgradePanel/Current
 onready var cost_icons = $UpgradePanel/ScrollContainer/Costs
 onready var upgrade_btn = $UpgradePanel/Upgrade
 
@@ -40,10 +40,10 @@ func get_min_lv():
 	return min_lv
 
 func update():
-	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "time":0.0}
+	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "time":0.0}
 	var same_lv = true
 	var first_tile = game.tile_data[ids[0]].bldg
-	bldg = first_tile.bldg.name
+	bldg = first_tile.name
 	var first_tile_bldg_info = Data[path_str][bldg]
 	var lv_to = next_lv.value
 	var all_tiles_constructing = true
@@ -75,18 +75,16 @@ func update():
 			costs.silver += base_metal_costs.silver
 		if lv_curr <= 60 and lv_to >= 61:
 			costs.gold += base_metal_costs.gold
+	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * Helper.get_IR_mult(first_tile)
+		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * Helper.get_IR_mult(game.tile_data[ids[0]])
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		else:
 			curr_value = game.clever_round(curr_value, 3)
-		var icon = []
-		if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
-			icon.append(Data.icons[bldg])
-		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], icon, 20)
+		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], rsrc_icon, 20)
 	else:
 		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
@@ -96,22 +94,19 @@ func update():
 		game.remove_upgrade_panel()
 		return
 	next.text = ""
-	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * Helper.get_IR_mult(first_tile)
+	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * Helper.get_IR_mult(game.tile_data[ids[0]])
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
 	else:
 		next_value = game.clever_round(next_value, 3)
-	var icon2 = []
-	if Data.icons.has(bldg) and first_tile_bldg_info.desc.find("@i") != -1:
-		icon2.append(Data.icons[bldg])
-	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], icon2, 20)
+	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], rsrc_icon, 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 	
 func bldg_value(base_value, lv:int, pw:float = 1.15):
-	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, 1.4) * pow(pw, lv - 1), 3)
+	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, pw * pw) * pow(pw, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/SelectCompPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=5]
 
 [node name="SelectCompPanel" type="Panel"]
 anchor_left = 0.5
@@ -83,11 +84,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Cost" parent="." instance=ExtResource( 2 )]
-margin_left = 136.0
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = 128.0
 margin_top = 204.0
-margin_right = -430.0
-margin_bottom = -20.0
+margin_right = 480.0
+margin_bottom = 236.0
+scroll_vertical_enabled = false
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" parent="ScrollContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 352.0
+margin_bottom = 32.0
 
 [node name="Select" type="Button" parent="."]
 anchor_left = 1.0

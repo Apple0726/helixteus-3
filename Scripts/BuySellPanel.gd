@@ -61,9 +61,9 @@ func _on_HSlider_value_changed(value):
 		money_value = value
 		money_node.get_node("Text").text = String(value)
 		if type == "Materials":
-			rounded_value = game.clever_round(0.2 * value / game.mat_info[obj].value)
+			rounded_value = game.clever_round(0.1 * value / game.mat_info[obj].value)
 		elif type == "Metals":
-			rounded_value = game.clever_round(0.2 * value / game.met_info[obj].value)
+			rounded_value = game.clever_round(0.1 * value / game.met_info[obj].value)
 		obj_node.get_node("Text").text = String(rounded_value) + " kg"
 
 func _on_Button_pressed():

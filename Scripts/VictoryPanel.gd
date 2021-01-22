@@ -15,7 +15,7 @@ func _ready():
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
 	for i in 2:
 		if i >= len(ship_data):
-			$Grid.get_node("Panel%s" % (i + 1)).modulate.a = 0
+			$Grid.get_node("Panel%s" % (i + 1)).visible = false
 			break
 		else:
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]

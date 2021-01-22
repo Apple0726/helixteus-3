@@ -13,7 +13,7 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 	if err == OK:
-		$Master.value = config.get_value("audio", "master", 0)
+		$Master.value = config.get_value("audio", "master", -42)
 		update_volumes(0, config.get_value("audio", "master", 0))
 		$Music.value = config.get_value("audio", "music", 0)
 		update_volumes(1, config.get_value("audio", "music", 0))

@@ -88,14 +88,15 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	rtl.text = ""
 	var txt = (Data.path_1[name].desc + "\n") % [Data.path_1[name].value]
 	var icons = []
-	var has_icon = Data.icons.has(name) and txt.find("@i") != -1
+	var has_icon = Data.desc_icons.has(name)# and txt.find("@i") != -1
 	if has_icon:
-		icons.append(Data.icons[name])
+		icons = Data.desc_icons[name]
 	if Data.path_2.has(name):
 		var txt2:String = (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
 		txt += txt2
-		if has_icon and txt2.find("@i"):
-			icons.append(Data.icons[name])
+	if Data.path_3.has(name):
+		var txt2:String = (Data.path_3[name].desc + "\n") % [Data.path_3[name].value]
+		txt += txt2
 	game.add_text_icons(rtl, txt, icons, 22)
 	Helper.put_rsrc(vbox, 36, costs, false, true)
 	$Contents/HBoxContainer/ItemInfo.visible = true

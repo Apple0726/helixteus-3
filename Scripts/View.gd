@@ -87,8 +87,8 @@ func refresh():
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale_mult = s_m
-	scale_dec_threshold = 5 * pow(10, -2 - floor(Helper.log10(s_m)))
-	scale_inc_threshold = 5 * pow(10, -1 - floor(Helper.log10(s_m)))
+	scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
+	scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
 	obj_scene = load("res://Scenes/Views/" + obj_str + ".tscn")
 	obj = obj_scene.instance()
 	add_child(obj)
@@ -235,17 +235,17 @@ var scale_dec_threshold
 var scale_mult
 func check_change_scale():
 	if game.c_v in ["supercluster", "universe"]:
-		if scale_inc_threshold < 50 and scale.x > scale_inc_threshold:
+		if scale_inc_threshold < 3 and scale.x > scale_inc_threshold:
 			obj.modulate.a = 0.95
 			obj.change_alpha = -0.05
 			scale_dec_threshold = scale_inc_threshold
-			scale_inc_threshold *= 10
+			scale_inc_threshold *= 20
 			scale_mult *= 0.1
 		if scale_dec_threshold > 0.1 and scale.x < scale_dec_threshold:
 			obj.modulate.a = 0.95
 			obj.change_alpha = -0.05
 			scale_inc_threshold = scale_dec_threshold
-			scale_dec_threshold /= 10.0
+			scale_dec_threshold /= 20.0
 			scale_mult *= 10
 
 func _on_Ship_mouse_entered():

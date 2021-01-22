@@ -40,6 +40,7 @@ func refresh():
 			set_process(autosave_light)
 		else:
 			$AutosaveLight.modulate.g = 0.3
+			set_process(false)
 		$AutosaveLight.visible = autosave_light
 	money_text.text = Helper.format_num(game.money, 6)
 	minerals_text.text = "%s / %s" % [Helper.format_num(game.minerals, 6), Helper.format_num(round(game.mineral_capacity), 6)]
@@ -163,7 +164,7 @@ func _input(_event):
 		game.hide_tooltip()
 		slot_over = -1
 		update_hotbar()
-	refresh()
+		refresh()
 
 func _on_CollectAll_mouse_entered():
 	on_button = true

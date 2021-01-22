@@ -4,6 +4,7 @@ func _ready():
 	set_polygon($Background.rect_size)
 	
 func refresh():
+	$VBoxContainer/AIE.visible = game.show.auroras
 	for hbox in $VBoxContainer.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])

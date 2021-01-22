@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 2000
 
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
@@ -179,6 +179,7 @@ var show:Dictionary = {	"minerals":false,
 						"vehicles_button":false,
 						"materials":false,
 						"metals":false,
+						"auroras":false,
 }
 
 #Stores information of all objects discovered
@@ -221,6 +222,8 @@ var s_num:int = 0
 var g_num:int = 0#Total number of galaxies generated
 var c_num:int = 0
 
+var stats:Dictionary = {"bldgs_built":0}
+
 ############ End save data ############
 
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
@@ -238,7 +241,7 @@ var cave
 var STM
 var battle
 
-var mat_info = {	"coal":{"value":5},#One kg of coal = $5
+var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":40},
 					"sand":{"value":4},
 					"clay":{"value":12},
@@ -318,6 +321,7 @@ var autosave_interval:int = 10
 var music_player = AudioStreamPlayer.new()
 
 func _ready():
+	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
 	view = load("res://Scenes/Views/View.tscn").instance()
 	add_child(view)
@@ -329,10 +333,7 @@ func _ready():
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
-		if config.get_value("audio", "mute", false):
-			AudioServer.set_bus_mute(1,true)
-		else:
-			switch_music(load("res://Audio/Title.ogg"))
+		switch_music(load("res://Audio/Title.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
@@ -467,14 +468,7 @@ func load_game():
 		help = save_game.get_var()
 		show = save_game.get_var()
 		universe_data = save_game.get_var()
-#		supercluster_data = save_game.get_var()
-#		cluster_data = save_game.get_var()
-#		galaxy_data = save_game.get_var()
-#		system_data = save_game.get_var()
-#		planet_data = save_game.get_var()
-#		HX_data = save_game.get_var()
 		cave_data = save_game.get_var()
-		#tile_data = save_game.get_var()
 		items = save_game.get_var()
 		hotbar = save_game.get_var()
 		MUs = save_game.get_var()
@@ -497,6 +491,7 @@ func load_game():
 		s_num = save_game.get_64()
 		g_num = save_game.get_64()
 		c_num = save_game.get_64()
+		stats = save_game.get_var()
 		save_game.close()
 		add_child(HUD)
 		if c_v in ["mining", "cave", "planet"]:
@@ -760,6 +755,9 @@ func remove_upgrade_panel():
 		$Panels/Control.remove_child(upgrade_panel)
 	panels.erase(upgrade_panel)
 	upgrade_panel = null
+	if view:
+		view.scroll_view = true
+		view.move_view = true
 
 func toggle_panel(panel):
 	if not panel.visible:
@@ -972,7 +970,7 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
-		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system"
+		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -1014,6 +1012,8 @@ func add_supercluster():
 		cluster_data = open_obj("Superclusters", c_sc)
 	if not supercluster_data[c_sc]["discovered"]:
 		reset_collisions()
+		if c_sc != 0:
+			cluster_data.clear()
 		generate_clusters(c_sc)
 	add_obj("supercluster")
 
@@ -1350,7 +1350,6 @@ func generate_system_part():
 		var th:float = init_th
 		var N_init:int = systems_collision_detection2(c_g, 0, 0, 0, true)#Generate stars at the center
 		var N_progress:int = N_init
-		print(N_progress)
 		while N_progress < (N + N_init) / 2.0:#Arm #1
 			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, N_progress)
 			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
@@ -1397,7 +1396,9 @@ func generate_system_part():
 			if i % 100 == 0:
 				update_loading_bar(N - len(stars_failed) + i, N, tr("GENERATING_GALAXY"))
 				yield(get_tree().create_timer(0.0000000000001),"timeout")
-		#print(max_outer_radius)
+		if c_g != 0:
+			var view_zoom = 500.0 / max_outer_radius
+			galaxy_data[c_g]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	else:
 		for i in range(0, N, 500):
 			systems_collision_detection(c_g, i)
@@ -1820,8 +1821,6 @@ func get_brightest_star_luminosity(s_id):
 
 func make_lake(tile, state:String, lake:String, which_lake):
 	tile.lake = {"state":state, "element":lake, "type":which_lake}#type: 1 or 2
-	tile.type = "lake"
-	tile.tile_str = "%s_%s_%s" % [state, lake, which_lake]
 
 func generate_tiles(id:int):
 	tile_data.clear()
@@ -1855,6 +1854,7 @@ func generate_tiles(id:int):
 					for k in range(x_pos - int(thiccness / 2) + diff, x_pos + int(ceil(thiccness / 2.0)) + diff):
 						if k < 0 or k > wid - 1:
 							continue
+						show.auroras = true
 						tile_data[k + j * wid] = {}
 						tile_data[k + j * wid].aurora = {"au_int":au_int, "type":au_type}
 			else:#Horizontal
@@ -1863,6 +1863,7 @@ func generate_tiles(id:int):
 					for k in range(y_pos - int(thiccness / 2) + diff, y_pos + int(ceil(thiccness / 2.0)) + diff):
 						if k < 0 or k > wid - 1:
 							continue
+						show.auroras = true
 						tile_data[j + k * wid] = {}
 						tile_data[j + k * wid].aurora = {"au_int":au_int, "type":au_type}
 			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
@@ -1899,10 +1900,10 @@ func generate_tiles(id:int):
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
 					continue
-			if p_i.temperature <= 1000 and randf() < 0.001:
-				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				tile_data[t_id].rock = {}
-				continue
+#			if p_i.temperature <= 1000 and randf() < 0.001:
+#				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+#				tile_data[t_id].rock = {}
+#				continue
 			if c_p_g == 2:
 				continue
 			var normal_cond:bool = randf() < 0.1 / pow(wid, 0.9)
@@ -2169,7 +2170,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 	for st in arr:
 # warning-ignore:return_value_discarded
 		RTL.append_bbcode(st)
-		if i != len(imgs):
+		if i != len(imgs) and imgs[i]:
 			RTL.add_image(imgs[i], 0, size)
 		i += 1
 	if _tooltip:
@@ -2544,15 +2545,15 @@ func _input(event):
 				mets[arr[1].to_lower()] = float(arr[2])
 			"finconstr":
 				for tile in tile_data:
-					if tile and tile.has("construction_length") and tile.is_constructing:
-						var diff_time = tile.construction_date + tile.construction_length - OS.get_system_time_msecs()
-						tile.construction_length = 1
-						if tile.has("collect_date"):
-							tile.collect_date -= diff_time
-						if tile.has("start_date"):
-							tile.start_date -= diff_time
-						if tile.has("overclock_date"):
-							tile.overclock_date -= diff_time
+					if tile and tile.has("bldg") and tile.bldg.is_constructing:
+						var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - OS.get_system_time_msecs()
+						tile.bldg.construction_length = 1
+						if tile.bldg.has("collect_date"):
+							tile.bldg.collect_date -= diff_time
+						if tile.bldg.has("start_date"):
+							tile.bldg.start_date -= diff_time
+						if tile.bldg.has("overclock_date"):
+							tile.bldg.overclock_date -= diff_time
 			"setmulv":
 				MUs[arr[1].to_upper()] = int(arr[2])
 			"setlv":
@@ -2639,14 +2640,7 @@ func save_game(autosave:bool):
 	save_game.store_var(help)
 	save_game.store_var(show)
 	save_game.store_var(universe_data)
-#	save_game.store_var(supercluster_data)
-#	save_game.store_var(cluster_data)
-#	save_game.store_var(galaxy_data)
-#	save_game.store_var(system_data)
-#	save_game.store_var(planet_data)
-#	save_game.store_var(HX_data)
 	save_game.store_var(cave_data)
-	#save_game.store_var(tile_data)
 	save_game.store_var(items)
 	save_game.store_var(hotbar)
 	save_game.store_var(MUs)
@@ -2669,6 +2663,7 @@ func save_game(autosave:bool):
 	save_game.store_64(s_num)
 	save_game.store_64(g_num)
 	save_game.store_64(c_num)
+	save_game.store_var(stats)
 	save_game.close()
 	if view.obj:
 		view.save_zooms(c_v)

@@ -2,14 +2,12 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 onready var view = self.get_parent()
-onready var superclusters_id = game.universe_data[game.c_u]["superclusters"]
+#onready var superclusters_id = game.universe_data[game.c_u]["superclusters"]
 var superclusters_info = []
 var btns = []
 
 func _ready():
-	for i in superclusters_id:
-		superclusters_info.append(game.supercluster_data[i])
-	for sc_i in superclusters_info:
+	for sc_i in game.supercluster_data:
 		var supercluster_btn = TextureButton.new()
 		var supercluster = Sprite.new()
 		var supercluster_texture = load("res://Graphics/Clusters/" + String(sc_i["type"]) + ".png")
@@ -46,7 +44,7 @@ func _process(_delta):
 	if modulate.a <= 0:
 		game.hide_tooltip()
 		for i in range(0, btns.size()):
-			var radius = pow(superclusters_info[i]["cluster_num"] / game.SC_SCALE_DIV, 0.5) * view.scale_mult
+			var radius = pow(game.supercluster_data[i]["cluster_num"] / game.SC_SCALE_DIV, 0.5) * view.scale_mult
 			btns[i].rect_scale.x = radius
 			btns[i].rect_scale.y = radius
 		change_alpha *= -1

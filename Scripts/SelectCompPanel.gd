@@ -49,7 +49,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 	g_cmp = type.split("_")[1]
 	curr_cmp = _curr_cmp
 	s_cmp = curr_cmp
-	Helper.put_rsrc($Cost, 36, {})
+	Helper.put_rsrc($ScrollContainer/Cost, 36, {})
 	for cmp in Data[type]:
 		if type in ["rover_weapons", "rover_mining"]:
 			var laser_color = cmp.split("_")[0]
@@ -58,6 +58,18 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 			if laser_color == "yellow" and not game.science_unlocked.YL:
 				continue
 			if laser_color == "green" and not game.science_unlocked.GL:
+				continue
+			if laser_color == "blue" and not game.science_unlocked.BL:
+				continue
+			if laser_color == "purple" and not game.science_unlocked.PL:
+				continue
+			if laser_color == "UV" and not game.science_unlocked.UVL:
+				continue
+			if laser_color == "xray" and not game.science_unlocked.XRL:
+				continue
+			if laser_color == "gammaray" and not game.science_unlocked.GRL:
+				continue
+			if laser_color == "ultragammaray" and not game.science_unlocked.UGRL:
 				continue
 		var slot = game.slot_scene.instance()
 		var metal = tr(cmp.split("_")[0].to_upper())
@@ -97,7 +109,7 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 			border.name = "border"
 		elif slot.has_node("border"):
 			slot.remove_child(slot.get_node("border"))
-	Helper.put_rsrc($Cost, 36, Data[type][cmp].costs)
+	Helper.put_rsrc($ScrollContainer/Cost, 36, Data[type][cmp].costs)
 	s_cmp = cmp
 
 func _input(event):

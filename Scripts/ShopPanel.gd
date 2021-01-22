@@ -106,7 +106,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	vbox.get_node("Description").text = desc
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = true
-	Helper.put_rsrc(vbox, 36, item_total_costs, false)
+	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 
 func _on_Buy_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
@@ -155,7 +155,7 @@ func _on_BuyAmount_value_changed(value):
 	for cost in item_costs:
 		item_total_costs[cost] = item_costs[cost] * num
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	Helper.put_rsrc(vbox, 36, item_total_costs, false)
+	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 
 func refresh():
 	pass

@@ -814,13 +814,13 @@ func get_color(color:String):
 			return Color.blue
 		"purple":
 			return Color.purple
-		"ultra":
+		"UV":
 			return Color.violet
 		"xray":
 			return Color.lightgray
-		"gamma":
+		"gammaray":
 			return Color.lightgreen
-		"ultragamma":
+		"ultragammaray":
 			return Color.white
 
 func sort_size(a, b):

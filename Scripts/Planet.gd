@@ -88,10 +88,10 @@ func _ready():
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater.variant)
-			if tile.has("soil"):
-				$Soil.set_cell(i, j, 0)
 			if tile.has("plant"):
-				add_plant(id2, tile.plant.name)
+				$Soil.set_cell(i, j, 0)
+				if not tile.plant.empty():
+					add_plant(id2, tile.plant.name)
 			if tile.has("bldg"):
 				add_bldg(id2, tile.bldg.name)
 			if tile.has("depth") and not tile.has("crater"):
@@ -118,6 +118,7 @@ func _ready():
 	if p_i.has("lake_2"):
 		$Lakes2.update_bitmask_region()
 	$Soil.update_bitmask_region()
+	game.HUD.refresh()
 
 func add_particles(pos:Vector2):
 	var particle = game.particles_scene.instance()
@@ -133,42 +134,42 @@ func show_tooltip(tile):
 	if tile.has("bldg"):
 		var bldg:String = tile.bldg.name
 		var mult:float = get_prod_mult(tile)
+		var IR_mult:float = Helper.get_IR_mult(tile)
 		var path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
 		var path_2_value
+		var path_3_value
 		if tile.bldg.has("path_2_value"):
-			path_2_value = round(tile.bldg.path_2_value * mult)
+			path_2_value = round(tile.bldg.path_2_value)
+		if tile.bldg.has("path_3_value"):
+			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
 			"ME", "PP":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
-				icons = [Data.icons[bldg], Data.icons[bldg]]
 				adv = true
 			"MM":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
 			"SC", "GF", "SE":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value] + "\n" + tr("CLICK_TO_CONFIGURE")
-				icons = [Data.icons[bldg], Data.icons[bldg]]
+				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 				adv = true
 			"RL":
 				tooltip = (Data.path_1[bldg].desc) % [path_1_value]
-				icons = [Data.icons.RL]
 				adv = true
 			"MS":
 				tooltip = (Data.path_1[bldg].desc) % [round(path_1_value)]
-				icons = [Data.icons.MS]
 				adv = true
 			"RCC":
 				tooltip = (Data.path_1[bldg].desc) % [tile.bldg.path_1_value]
 		if game.help.tile_shortcuts:
 			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
-	if tile.has("soil"):
-		if not tile.has("plant"):
+	if tile.has("plant"):
+		if tile.plant.empty():
 			if game.help.plant_something_here:
 				tooltip = tr("PLANT_STH") + "\n" + tr("HIDE_HELP")
 				game.help_str = "plant_something_here"
 		else:
 			tooltip = Helper.get_plant_name(tile.plant.name)
-			if OS.get_system_time_msecs() >= tile.plant.plant_date + tile.grow_time:
+			if OS.get_system_time_msecs() >= tile.plant.plant_date + tile.plant.grow_time:
 				tooltip += "\n" + tr("CLICK_TO_HARVEST")
 	if tile.has("lake"):
 		if tile.lake.state == "s" and tile.lake.element == "water":
@@ -206,8 +207,8 @@ func show_tooltip(tile):
 			tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
 			game.help_str = "cave_desc"
 		else:
-			tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave_id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave_id].floor_size})]
-	if tile.has("depth"):
+			tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
+	if tile.has("depth") and not tile.has("bldg"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora") and tooltip == "":
 		if game.help.aurora_desc:
@@ -220,7 +221,7 @@ func show_tooltip(tile):
 			game.hide_adv_tooltip()
 		else:
 			if not game.get_node("Tooltips/Tooltip").visible:
-				game.show_adv_tooltip(tooltip, icons)
+				game.show_adv_tooltip(tooltip, Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
 	else:
 		game.hide_adv_tooltip()
 		if tooltip == "":
@@ -234,6 +235,7 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 	var tile = game.tile_data[tile_id]
 	if game.check_enough(constr_costs):
 		game.deduct_resources(constr_costs)
+		game.stats.bldgs_built += 1
 		var curr_time = OS.get_system_time_msecs()
 		if not tile:
 			tile = {}
@@ -245,29 +247,24 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs.time * 1000
 		tile.bldg.XP = round(constr_costs.money / 100.0)
-		match bldg_to_construct:
-			"ME", "PP", "SC", "GF", "SE", "MM":
-				tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
-				tile.bldg.stored = 0
-				tile.bldg.path_1 = 1
-				tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
-				tile.bldg.path_2 = 1
-				tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
-				if bldg_to_construct == "MM" and not tile.has("depth"):
-					tile.depth = 0
-			"RL":
-				game.show.SP = true
-				tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
-				tile.bldg.stored = 0
-				tile.bldg.path_1 = 1
-				tile.bldg.path_1_value = Data.path_1.RL.value
-			"MS":
-				tile.bldg.path_1 = 1
-				tile.bldg.path_1_value = Data.path_1.MS.value#Flat cap value
-				tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
-			"RCC":
-				tile.bldg.path_1 = 1
-				tile.bldg.path_1_value = Data.path_1.RCC.value
+		tile.bldg.path_1 = 1
+		tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
+		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE"]:
+			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
+			tile.bldg.stored = 0
+			tile.bldg.path_2 = 1
+			tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
+		if bldg_to_construct in ["SC", "GF", "SE"]:
+			tile.bldg.path_3 = 1
+			tile.bldg.path_3_value = Data.path_3[bldg_to_construct].value
+		if bldg_to_construct == "RL":
+			game.show.SP = true
+			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
+			tile.bldg.stored = 0
+		if bldg_to_construct == "MS":
+			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+		if bldg_to_construct == "MM" and not tile.has("depth"):
+			tile.depth = 0
 		if bldg_to_construct in ["ME", "PP", "RL", "MS"]:
 			tile.bldg.IR_mult = Helper.get_IR_mult(tile)
 		game.tile_data[tile_id] = tile
@@ -293,14 +290,13 @@ func seeds_plant(tile, tile_id:int):
 			tile.plant.grow_time /= 4
 		tile.plant.is_growing = true
 		add_plant(tile_id, game.item_to_use.name)
-		game.update_item_cursor()
 		game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
 	else:
 		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [game.craft_agric_info[game.item_to_use.name].lake], 2)
 
 func fertilizer_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
-	tile.construction_date -= game.craft_agric_info.fertilizer.speed_up_time
+	tile.plant.grow_time -= game.craft_agric_info.fertilizer.speed_up_time
 	game.item_to_use.num -= 1
 
 func harvest_plant(tile, tile_id:int):
@@ -336,7 +332,7 @@ func speedup_bldg(tile, tile_id:int):
 
 func overclock_bldg(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
-	if overclockable(tile.tile_str) and not tile.bldg.is_constructing:
+	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing:
 		tile.bldg.overclock_date = curr_time
 		if not tile.bldg.has("overclock_mult"):
 			tile.bldg.overclock_length = game.overclock_info[game.item_to_use.name].duration
@@ -370,7 +366,7 @@ func click_tile(tile, tile_id:int):
 			game.hide_tooltip()
 
 func collect_rsrc(tile, tile_id:int):
-	if not tile.has("tile_str"):
+	if not tile.has("bldg"):
 		return
 	var bldg:String = tile.bldg.name
 	var curr_time = OS.get_system_time_msecs()
@@ -428,7 +424,7 @@ var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
 func _input(event):
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
-	if tile_over != -1 and not mass_build:
+	if tile_over != -1 and game.bottom_info_action != "building":
 		var tile = game.tile_data[tile_over]
 		if tile and tile.has("bldg"):
 			if Input.is_action_just_released("Q"):
@@ -447,19 +443,26 @@ func _input(event):
 					game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
-			if Input.is_action_just_pressed("shift"):
-				tiles_selected.clear()
-				for i in len(game.tile_data):
-					var tile2 = game.tile_data[i]
-					if not tile2 or not tile2.has("bldg") and not tile2.has("plant"):
-						continue
-					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name or tile2.has("plant") and tile2.plant.name == tile.plant.name:
-						tiles_selected.append(i)
-						var white_rect = game.white_rect_scene.instance()
-						white_rect.position.x = (i % wid) * 200
-						white_rect.position.y = (i / wid) * 200
-						add_child(white_rect)
-						white_rect.add_to_group("white_rects")
+		if Input.is_action_just_pressed("shift") and tile:
+			tiles_selected.clear()
+			for i in len(game.tile_data):
+				var select:bool = false
+				var tile2 = game.tile_data[i]
+				if not tile2 or not tile2.has("bldg") and not tile2.has("plant"):
+					continue
+				if tile.has("bldg"):
+					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
+						select = true
+				elif tile.has("plant") and not tile.plant.empty():
+					if tile2.has("plant") and not tile2.plant.empty() and tile2.plant.name == tile.plant.name:
+						select = true
+				if select:
+					tiles_selected.append(i)
+					var white_rect = game.white_rect_scene.instance()
+					white_rect.position.x = (i % wid) * 200
+					white_rect.position.y = (i / wid) * 200
+					add_child(white_rect)
+					white_rect.add_to_group("white_rects")
 	if Input.is_action_just_released("shift"):
 		tiles_selected.clear()
 		for white_rect in get_tree().get_nodes_in_group("white_rects"):
@@ -525,10 +528,9 @@ func _input(event):
 			game.hide_adv_tooltip()
 		if shadow:
 			shadow.visible = mouse_on_tiles and not mass_build
-			shadow.modulate.a = 0
-			shadow.position.x = floor(mouse_pos.x / 200) * 200
-			shadow.position.y = floor(mouse_pos.y / 200) * 200
-			shadow.position += Vector2(100, 100)
+			shadow.modulate.a = 0.5
+			shadow.position.x = floor(mouse_pos.x / 200) * 200 + 100
+			shadow.position.y = floor(mouse_pos.y / 200) * 200 + 100
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
@@ -540,7 +542,7 @@ func _input(event):
 		view.scroll_view = true
 		return
 	#initiate mass build
-	if Input.is_action_just_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
+	if Input.is_action_just_pressed("left_click") and len(shadows) == 0 and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
 		view.move_view = false
 		view.scroll_view = false
 		mass_build_rect.rect_position = mouse_pos
@@ -580,12 +582,12 @@ func _input(event):
 				$Soil.update_bitmask_region()
 			else:
 				game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
-		if tile:
+		if tile and bldg_to_construct == "":
 			var t:String = game.item_to_use.type
 			if tile.has("plant"):#if clicked tile has soil on it
 				if placing_soil and tile.plant.empty():
 					game.add_resources({"soil":10})
-					tile.erase("type")
+					tile.erase("plant")
 					$Soil.set_cell(x_pos, y_pos, -1)
 					$Soil.update_bitmask_region()
 				else:
@@ -600,7 +602,7 @@ func _input(event):
 									break
 						game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
 						game.update_item_cursor()
-					elif t == "seeds" and not tile.has("tile_str"):
+					elif t == "seeds" and tile.plant.empty():
 						seeds_plant(tile, tile_id)
 						game.remove_items(game.item_to_use.name, 1)
 						game.update_item_cursor()
@@ -650,7 +652,7 @@ func _input(event):
 			game.planet_HUD.refresh()
 
 func available_for_plant(tile):
-	return not tile or available_for_mining(tile) and not tile.has("crater")
+	return not tile or available_for_mining(tile) and not tile.has("crater") and not tile.has("depth")
 
 func available_for_mining(tile):
 	return not tile or not tile.has("bldg") and not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("lake") and not tile.has("cave")
@@ -658,14 +660,11 @@ func available_for_mining(tile):
 func available_to_build(tile):
 	if bldg_to_construct == "MM":
 		return not tile or available_for_mining(tile)
-	return not tile or available_for_plant(tile)
+	return not tile or available_for_plant(tile) and not tile.has("plant")
 
 func mine_tile(id2:int):
 	game.c_t = id2
 	game.switch_view("mining")
-
-func lake_bool(id2:int):
-	return game.tile_data[id2].tile_str.split("_")
 
 func check_lake(local_id:int):
 # warning-ignore:integer_division
@@ -677,10 +676,10 @@ func check_lake(local_id:int):
 			if Vector2(i, j) != v:
 				if $Lakes1.get_cell(i, j) != -1 or $Lakes2.get_cell(i, j) != -1:
 					var id2 = i % wid + j * wid
-					var okay = lake_bool(id2)[1] == game.craft_agric_info[game.item_to_use.name].lake
+					var okay = game.tile_data[id2].lake.element == game.craft_agric_info[game.item_to_use.name].lake
 					has_lake = has_lake or okay
 					if okay:
-						state = lake_bool(id2)[0]
+						state = game.tile_data[id2].lake.state
 	return [has_lake, state]
 
 func add_time_bar(id2:int, type:String):
@@ -736,19 +735,19 @@ func add_bldg(id2:int, st:String):
 	var tile = game.tile_data[id2]
 	match st:
 		"ME":
-			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.icons.ME, id2)
+			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, id2)
 		"PP":
-			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.PP, id2)
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
 		"RL":
-			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.icons.RL, id2)
+			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons.RL, id2)
 		"MM":
-			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.MM, id2)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, id2)
 		"SC":
-			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.icons.SC, id2)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.SC, id2)
 		"GF":
-			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.icons.GF, id2)
+			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.rsrc_icons.GF, id2)
 		"SE":
-			add_rsrc(v, Color(0, 0.8, 0, 1), Data.icons.SE, id2)
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SE, id2)
 		"MS":
 			if not tile.bldg.is_constructing:
 				update_MS(tile)
@@ -866,7 +865,7 @@ func _process(_delta):
 				tile.bldg.is_constructing = false
 				game.xp += tile.bldg.XP
 				if tile.bldg.has("rover_id"):
-					game.rover_data[tile.rover_id].ready = true
+					game.rover_data[tile.bldg.rover_id].ready = true
 					tile.bldg.erase("rover_id")
 				hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
 				if tile.bldg.has("path_2"):
@@ -900,7 +899,7 @@ func _process(_delta):
 
 func get_prod_mult(tile):
 	var mult = Helper.get_IR_mult(tile)
-	if tile.has("overclock_mult"):
+	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
 	
@@ -950,7 +949,7 @@ func update_rsrc(rsrc, tile):
 				tile.bldg.collect_date += prod * rsrc_num
 			rsrc.get_node("Control/Label").text = String(stored)
 		"SC":
-			if tile.has("stone"):
+			if tile.bldg.has("stone"):
 				var c_i = Helper.get_crush_info(tile)
 				rsrc.get_node("Control/Label").text = String(c_i.qty_left)
 				rsrc.get_node("Control/CapacityBar").value = 1 - c_i.progress
@@ -958,7 +957,7 @@ func update_rsrc(rsrc, tile):
 				rsrc.get_node("Control/Label").text = ""
 				rsrc.get_node("Control/CapacityBar").value = 0
 		"GF":
-			if tile.has("qty1"):
+			if tile.bldg.has("qty1"):
 				var prod_i = Helper.get_prod_info(tile)
 				rsrc.get_node("Control/Label").text = "%s kg" % [prod_i.qty_made]
 				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
@@ -966,7 +965,7 @@ func update_rsrc(rsrc, tile):
 				rsrc.get_node("Control/Label").text = ""
 				rsrc.get_node("Control/CapacityBar").value = 0
 		"SE":
-			if tile.has("qty1"):
+			if tile.bldg.has("qty1"):
 				var prod_i = Helper.get_prod_info(tile)
 				rsrc.get_node("Control/Label").text = "%s" % [round(prod_i.qty_made)]
 				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
@@ -976,7 +975,7 @@ func update_rsrc(rsrc, tile):
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
-	if game.help.mass_build:
+	if game.help.mass_build and game.stats.bldgs_built >= 20:
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		game.help_str = "mass_build"
@@ -1001,6 +1000,13 @@ func finish_construct():
 		bldg_to_construct = ""
 		remove_child(shadow)
 		shadow = null
+	if mass_build_rect.visible:
+		mass_build_rect.visible = false
+		for i in len(shadows):
+			remove_child(shadows[i])
+		shadows.clear()
+		view.move_view = true
+		view.scroll_view = true
 	game.get_node("UI/Panel").visible = false
 
 func _on_Planet_tree_exited():

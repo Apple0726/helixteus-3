@@ -62,7 +62,10 @@ func refresh():
 				elif el.element == "O":
 					item = "sand"
 					el_num = hslider.value * el.fraction / 2.0
-				el_num = round(el_num * 1000) / 1000.0
+				elif el.element == "Ti":
+					item = "titanium"
+					el_num = hslider.value * el.fraction / 1200.0
+				el_num = stepify(el_num * tile.bldg.path_3_value, 0.001)
 				if el_num != 0:
 					expected_rsrc[item] = el_num
 			for el in game.stone:

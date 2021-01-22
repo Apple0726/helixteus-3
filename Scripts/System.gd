@@ -146,7 +146,7 @@ func show_planet_info(id:int, l_id:int):
 		Helper.add_label(tr("%s_STAGE_X" % p_i.MS) % p_i.MS_lv)
 		Helper.add_label(tr("SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
 		if not p_i.is_constructing:
-			if p_i.MS == "M_SE" and p_i.MS_lv < 3:
+			if p_i.MS == "M_SE" and p_i.MS_lv < 3 and game.science_unlocked["SE%s" % (p_i.MS_lv + 1)]:
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -231,7 +231,12 @@ var bldg_costs:Dictionary
 
 func on_star_over (id:int):
 	var star = stars_info[id]
-	var tooltip = tr("STAR_TITLE").format({"type":tr(star.type.to_upper()), "class":star.class})
+	var star_type:String = star.type
+	var star_tier:String = ""
+	if star_type.substr(0, 11) == "hypergiant ":
+		star_type = star_type.split(" ")[0]
+		star_tier = " %s" % star.type.split(" ")[1]
+	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star.class})
 	tooltip += "\n%s\n%s\n%s\n%s" % [	tr("STAR_TEMPERATURE") % [star.temperature], 
 										tr("STAR_SIZE") % [star.size],
 										tr("STAR_MASS") % [star.mass],
@@ -255,7 +260,7 @@ func on_star_over (id:int):
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 		Helper.put_rsrc(vbox, 32, {"energy":Data.MS_output.M_DS_0 * star.luminosity}, false)
 		if not star.is_constructing:
-			if star.MS == "M_DS" and star.MS_lv < 4:
+			if star.MS == "M_DS" and star.MS_lv < 4 and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 	game.show_tooltip(tooltip)
 

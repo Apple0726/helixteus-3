@@ -32,30 +32,31 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	input = _input
 	output_type = _output_type
 	output = _output
+	tile = game.tile_data[game.c_t]
 	match bldg_type:
 		"GF":
 			ratio = 1 / 100.0
 			$Title.text = tr("GLASS_FACTORY")
 		"SE":
-			ratio = 20.0
+			ratio = 40.0
 			$Title.text = tr("STEAM_ENGINE")
 		_:
 			ratio = 0.0
+	ratio *=  tile.bldg.path_3_value
 	input_unit = ""
 	output_unit = ""
 	if input_type in ["mats", "mets"]:
 		input_unit = "kg"
 	if output_type in ["mats", "mets"]:
 		output_unit = "kg"
-	tile = game.tile_data[game.c_t]
 	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
 	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 	var rsrc:float
-	if input_type == "":
-		rsrc = game[input]
+	if input_type == "":#energy, money, minerals
+		rsrc = min(game[input], Data.path_2[tile.bldg.name].value)
 		$Control/HBox/Texture.texture = load("res://Graphics/Icons/%s.png" % [input])
-	else:
-		rsrc = game[input_type][input]
+	else:#mat, met, etc.
+		rsrc = min(game[input_type][input], Data.path_2[tile.bldg.name].value)
 		if input_type == "mats":
 			$Control/HBox/Texture.texture = load("res://Graphics/Materials/%s.png" % [input])
 		elif input_type == "mets":

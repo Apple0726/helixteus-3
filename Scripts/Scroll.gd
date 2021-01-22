@@ -5,6 +5,8 @@ onready var game = get_node("/root/Game")
 func _ready():
 	get_v_scrollbar().connect("mouse_entered", self, "on_scroll_mouse_entered")
 	get_v_scrollbar().connect("mouse_exited", self, "on_scroll_mouse_exited")
+	get_h_scrollbar().connect("mouse_entered", self, "on_scroll_mouse_entered")
+	get_h_scrollbar().connect("mouse_exited", self, "on_scroll_mouse_exited")
 	connect("mouse_entered", self, "on_mouse_entered")
 	connect("mouse_exited", self, "on_mouse_exited")
 
