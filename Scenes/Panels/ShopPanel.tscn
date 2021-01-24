@@ -162,7 +162,6 @@ value = 1.0
 rounded = true
 allow_greater = true
 align = 2
-prefix = "x "
 
 [node name="Buy" type="Button" parent="Contents/HBoxContainer/ItemInfo/HBoxContainer"]
 margin_left = 146.0

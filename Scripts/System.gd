@@ -153,7 +153,11 @@ func show_planet_info(id:int, l_id:int):
 	if game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and l_id == game.ships_c_coords.p and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
-		game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")])
+		if game.help.planet_details:
+			game.help_str = "planet_details"
+			game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s\n%s\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS"), tr("CTRL_CLICK_TO_SEND_SHIPS"), tr("HIDE_SHORTCUTS")])
+		else:
+			game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure)])
 
 var MS_constr_data:Dictionary = {}
 
@@ -203,7 +207,7 @@ func on_planet_click (id:int, l_id:int):
 				game.c_p = l_id
 				game.c_p_g = id
 				game.switch_view("planet_details")
-			elif Input.is_action_pressed("Q") or p_i.conquered:
+			elif (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
 				game.c_p = l_id
 				game.c_p_g = id
 				game.switch_view("planet")
@@ -222,8 +226,9 @@ func on_planet_click (id:int, l_id:int):
 					game.switch_view("battle")
 				else:
 					if len(game.ship_data) > 0:
-						game.send_ships_panel.dest_p_id = l_id
-						game.toggle_panel(game.send_ships_panel)
+						if not p_i.conquered or Input.is_action_pressed("ctrl"):
+							game.send_ships_panel.dest_p_id = l_id
+							game.toggle_panel(game.send_ships_panel)
 					else:
 						game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 

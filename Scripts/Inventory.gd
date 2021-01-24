@@ -63,6 +63,7 @@ func on_slot_out():
 
 func on_slot_press(name:String):
 	game.hide_tooltip()
+	game._on_BottomInfo_close_button_pressed()
 	var num:int
 	if Input.is_action_pressed("shift"):
 		num = game.get_item_num(name)

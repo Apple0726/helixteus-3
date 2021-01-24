@@ -5,10 +5,11 @@ func _ready():
 	
 func refresh():
 	$VBoxContainer/AIE.visible = game.show.auroras
+	$VBoxContainer/MSMB.visible = game.show.mining
 	for hbox in $VBoxContainer.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
-			hbox.get_node("Upgrade").text = "  %s" % [get_min_cost(hbox.name)]
+			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name), 6)]
 	set_upg_text("MV")
 	set_upg_text("MSMB")
 	set_upg_text("IS")

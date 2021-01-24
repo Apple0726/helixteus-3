@@ -9,6 +9,7 @@ func _ready():
 func refresh():
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
+	$VBoxContainer/Mine.visible = game.show.mining
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
 	elif OS.get_latin_keyboard_variant() == "QWERTZ":

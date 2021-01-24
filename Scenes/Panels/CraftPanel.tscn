@@ -144,7 +144,6 @@ rect_min_size = Vector2( 146, 30 )
 value = 1.0
 allow_greater = true
 align = 2
-prefix = "x "
 
 [node name="Craft" type="Button" parent="Contents/HBoxContainer/ItemInfo/HBoxContainer"]
 margin_left = 146.0

@@ -44,7 +44,6 @@ func _ready():
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
 		star.add_to_group("stars")
-
 	if not game or game.help.STM:
 		if lv % 4 == 0:
 			fn_to_call = "graph_pattern"
@@ -53,8 +52,11 @@ func _ready():
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
 	if game and not game.help.STM:
-		var n:int = len(lvpatterns[lv - 1]) - 1
-		call("pattern_%s" % [lvpatterns[lv - 1][Helper.rand_int(0, n)]])
+		pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
+		if lv % 4 == 0:
+			graph_pattern()
+		else:
+			call("pattern_%s" % [pattern])
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 func show_help(st:String):
@@ -74,7 +76,10 @@ func hide_help():
 	help_tween.start()
 	$Timer.paused = false
 	if fn_to_call != "":
-		call(fn_to_call)
+		if lv % 4 == 0:
+			graph_pattern()
+		else:
+			call(fn_to_call)
 		fn_to_call = ""
 	ship.modulate.a = 0.5
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
@@ -329,7 +334,7 @@ func _process(delta):
 					inc_combo()
 					bullet_data.clear()
 					pattern = int(data.fn.split("_")[1])
-					if no_hit_combo == 3 and lv != 1:
+					if no_hit_combo == 3 and lv != 1 and lv != 4:
 						go_up_lv()
 						pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 						fn_to_call = "pattern_%s" % [pattern]
@@ -338,6 +343,7 @@ func _process(delta):
 							fn_to_call = "pattern_%s" % pattern
 							if pattern == 4:
 								go_up_lv()
+								game.help.STM = false
 							else:
 								show_help(tr("STM_AFTER_PATTERN_%s" % [pattern - 1]))
 						else:

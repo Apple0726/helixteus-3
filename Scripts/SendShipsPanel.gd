@@ -37,7 +37,7 @@ func refresh():
 		distance = depart_pos.distance_to(dest_pos)
 	elif game.c_g == coords.g:
 		travel_view = "galaxy"
-		distance = 373
+		distance = 161
 		depart_id = coords.s
 		dest_id = game.planet_data[dest_p_id].parent
 		depart_pos = game.system_data[depart_id].pos
@@ -83,30 +83,34 @@ func refresh():
 		HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
 		$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
 		HX_data_node.rect_min_size.y = 70
+	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].conquered
 
 func _on_Send_pressed():
 	if game.c_s_g == 0 and game.planet_data[dest_p_id].pressure > 30:
 		game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
-	elif game.c_s_g == 0 and time_cost > 4 * 60 * 60 * 1000:
+	elif time_cost > 4 * 60 * 60 * 1000:
 		game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])
 	else:
 		send_ships()
 
 func send_ships():
-	if game.energy >= total_energy_cost:
-		game.energy -= round(total_energy_cost)
-		game.ships_depart_pos = depart_pos
-		game.ships_dest_pos = dest_pos
-		game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_g, "g":game.c_g, "s":game.c_g, "p":dest_p_id}
-		game.ships_travel_view_g_coords = {"sc":game.c_sc, "c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
-		game.ships_travel_view = travel_view
-		game.ships_travel_start_date = OS.get_system_time_msecs()
-		game.ships_travel_length = time_cost
-		game.toggle_panel(self)
-		game.view.refresh()
+	if game.ships_travel_view == "-":
+		if game.energy >= total_energy_cost:
+			game.energy -= round(total_energy_cost)
+			game.ships_depart_pos = depart_pos
+			game.ships_dest_pos = dest_pos
+			game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_g, "g":game.c_g, "s":game.c_g, "p":dest_p_id}
+			game.ships_travel_view_g_coords = {"sc":game.c_sc, "c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
+			game.ships_travel_view = travel_view
+			game.ships_travel_start_date = OS.get_system_time_msecs()
+			game.ships_travel_length = time_cost
+			game.toggle_panel(self)
+			game.view.refresh()
+			game.HUD.refresh()
+		else:
+			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
-		game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
-	game.HUD.refresh()
+		game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 	
 func _on_HSlider_value_changed(value):
 	calc_costs()

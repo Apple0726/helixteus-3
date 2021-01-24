@@ -30,6 +30,8 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
 		var num_str:String = Helper.e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(game.clever_round(rsrc_cost, 3), threshold)
+		if rsrc_cost == 0:
+			num_str = "0"
 		text = num_str + mass_str
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
@@ -328,7 +330,7 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	remove_child(tween)
 
 func add_minerals(amount:float):
-	var mineral_space_available = game.mineral_capacity - game.minerals
+	var mineral_space_available = round(game.mineral_capacity) - round(game.minerals)
 	if mineral_space_available >= amount:
 		game.minerals += amount
 		return 0
@@ -341,7 +343,7 @@ func get_AIE(next_lv:int = 0):
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
-	if tile.has("init_depth"):
+	if tile.has("crater") and tile.crater.has("init_depth"):
 		layer = "crater"
 	elif tile.depth <= p_i.crust_start_depth:
 		layer = "surface"
@@ -406,7 +408,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	if get_layer(tile, p_i) != "surface":
 		if not tile.has("current_deposit"):
 			for met in game.met_info:
-				var crater_metal = tile.has("init_depth") and met == tile.crater_metal
+				var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 				if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
 					if randf() < 0.25 / game.met_info[met].rarity * (6 if crater_metal else 1) * aurora_mult:
 						tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}

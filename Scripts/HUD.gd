@@ -12,6 +12,7 @@ onready var minerals = $Resources/Minerals
 onready var stone = $Resources/Stone
 onready var SP = $Resources/SP
 onready var ships = $Buttons/Ships
+onready var shop = $Buttons/Shop
 onready var craft = $Buttons/Craft
 onready var MU = $Buttons/MineralUpgrades
 onready var sc_tree = $Buttons/ScienceTree
@@ -42,8 +43,8 @@ func refresh():
 			$AutosaveLight.modulate.g = 0.3
 			set_process(false)
 		$AutosaveLight.visible = autosave_light
-	money_text.text = Helper.format_num(game.money, 6)
-	minerals_text.text = "%s / %s" % [Helper.format_num(game.minerals, 6), Helper.format_num(round(game.mineral_capacity), 6)]
+	money_text.text = Helper.format_num(round(game.money), 6)
+	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(round(game.mineral_capacity), 6)]
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = String(game.mats.soil) + " kg"
@@ -51,6 +52,7 @@ func refresh():
 	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
+	shop.visible = game.show.shop
 	SP.visible = game.show.SP
 	sc_tree.visible = game.show.SP
 	craft.visible = game.show.materials

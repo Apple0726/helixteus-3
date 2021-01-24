@@ -32,7 +32,7 @@ func refresh():
 		arr = obj_to_array(tile.bldg.stone)
 		total_stone = Helper.get_sum_of_dict(tile.bldg.stone)
 		pie.get_node("Title").text = tr("COMP_OF_STONE_BEING_CR")
-		$Control/Button.text = tr("STOP_CRUSHING")
+		$Control/Button.text = "%s (G)" % tr("STOP_CRUSHING")
 		$Control/Label.text = tr("RESOURCES_EXTRACTED")
 		rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.bldg.expected_rsrc)
 	else:
@@ -45,7 +45,7 @@ func refresh():
 			arr = obj_to_array(game.stone)
 			total_stone = Helper.get_sum_of_dict(game.stone)
 			pie.get_node("Title").text = tr("STONE_COMPOSITION")
-			$Control/Button.text = tr("START_CRUSHING")
+			$Control/Button.text = "%s (G)" % tr("START_CRUSHING")
 			$Control/Label.text = tr("EXPECTED_RESOURCES")
 			for el in arr:
 				var item:String

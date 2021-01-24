@@ -142,6 +142,9 @@ func buy_pickaxe(_costs:Dictionary):
 	if not game.check_enough(_costs):
 		return
 	game.deduct_resources(_costs)
+	game.show.mining = true
+	if game.planet_HUD:
+		game.planet_HUD.refresh()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
 		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Pickaxes/" + item_name + ".png")

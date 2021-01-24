@@ -167,7 +167,7 @@ func _on_Upgrade_pressed():
 				var coll_date = tile.bldg.collect_date
 				tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 			elif tile.bldg.name == "MS":
-				tile.mineral_cap_upgrade = new_value - tile.bldg.path_1_value
+				tile.bldg.mineral_cap_upgrade = new_value - tile.bldg.path_1_value
 			if tile.bldg.has("start_date"):
 				tile.bldg.start_date += cost_time * 1000
 			if tile.bldg.has("overclock_mult"):

@@ -35,7 +35,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	tile = game.tile_data[game.c_t]
 	match bldg_type:
 		"GF":
-			ratio = 1 / 100.0
+			ratio = 1 / 10.0
 			$Title.text = tr("GLASS_FACTORY")
 		"SE":
 			ratio = 40.0
@@ -53,10 +53,10 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 	var rsrc:float
 	if input_type == "":#energy, money, minerals
-		rsrc = min(game[input], Data.path_2[tile.bldg.name].value)
+		rsrc = min(game[input], tile.bldg.path_2_value)
 		$Control/HBox/Texture.texture = load("res://Graphics/Icons/%s.png" % [input])
 	else:#mat, met, etc.
-		rsrc = min(game[input_type][input], Data.path_2[tile.bldg.name].value)
+		rsrc = min(game[input_type][input], tile.bldg.path_2_value)
 		if input_type == "mats":
 			$Control/HBox/Texture.texture = load("res://Graphics/Materials/%s.png" % [input])
 		elif input_type == "mets":
@@ -69,12 +69,16 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 		$Control/Texture.texture = load("res://Graphics/Metals/%s.png" % [output])
 	
 	if tile.bldg.has("qty1"):
+		set_process(true)
+		$Control/Start.text = "%s (G)" % tr("STOP")
 		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
 	else:
+		set_process(false)
 		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
 		var has_rsrc:bool = rsrc > 0
 		$Control.visible = has_rsrc
 		$NoRsrc.visible = not has_rsrc
+		$Control/Start.text = "%s (G)" % tr("START")
 		if has_rsrc:
 			$Control/HBox/HSlider.max_value = rsrc
 			$Control/HBox/HSlider.value = rsrc
@@ -82,7 +86,8 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 func _on_Start_pressed():
 	if tile.bldg.has("qty1"):
 		set_process(false)
-		$Control/Start.text = tr("START")
+		$Control/Start.text = "%s (G)" % tr("START")
+		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
 		var prod_i = Helper.get_prod_info(tile)
 		var rsrc_to_add = {}
 		rsrc_to_add[input] = prod_i.qty_left
@@ -107,11 +112,16 @@ func _on_Start_pressed():
 		tile.bldg.ratio = ratio
 		tile.bldg.qty2 = rsrc * ratio
 		set_process(true)
-		$Control/Start.text = tr("STOP")
+		$Control/Start.text = "%s (G)" % tr("STOP")
+		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
 	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
 	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 
 func _process(delta):
+	if not tile or tile.empty():
+		_on_close_button_pressed()
+		set_process(false)
+		return
 	var prod_i = Helper.get_prod_info(tile)
 	if input_type in ["mats", "mets"]:
 		storage_txt.text = "%s %s" % [prod_i.qty_left, input_unit]

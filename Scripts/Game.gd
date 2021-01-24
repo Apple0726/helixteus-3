@@ -109,7 +109,7 @@ var stack_size:int = 16
 var auto_replace:bool = false
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {"name":"stick", "speed":1.0, "durability":70}
+var pickaxe:Dictionary = {}
 
 var mats:Dictionary = {	"coal":0,
 						"glass":0,
@@ -157,9 +157,11 @@ var help:Dictionary = {
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
 			"rover_inventory_shortcuts":true,
+			"planet_details":true,
 			"mass_build":true,
 			"abandoned_ship":true,
 			"science_tree":true,
+			"sprint_mode":true
 }
 
 var science_unlocked:Dictionary = {}
@@ -173,6 +175,8 @@ var MUs:Dictionary = {	"MV":1,
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary = {	"minerals":false,
 						"stone":false,
+						"mining":false,
+						"shop":false,
 						"SP":false,
 						"mining_layer":false,
 						"plant_button":false,
@@ -242,7 +246,7 @@ var STM
 var battle
 
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
-					"glass":{"value":40},
+					"glass":{"value":45},
 					"sand":{"value":4},
 					"clay":{"value":12},
 					"soil":{"value":6},
@@ -321,6 +325,8 @@ var autosave_interval:int = 10
 var music_player = AudioStreamPlayer.new()
 
 func _ready():
+	if not OS.is_userfs_persistent():
+		long_popup("It seems like your browser isn't allowing cookies. If you want to save your game, you should enable them.\nIf you still get this message, play one of the downloadable versions.", "Enable cookies")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
 	view = load("res://Scenes/Views/View.tscn").instance()
@@ -338,9 +344,9 @@ func _ready():
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
-		Data.reload()
-	config.save("user://settings.cfg")
-	var file = File.new()
+		config.save("user://settings.cfg")
+	Data.reload()
+	var file = Directory.new()
 	if file.file_exists("user://Save1/main.hx3"):
 		$Title/Menu/VBoxContainer/LoadGame.disabled = false
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
@@ -496,7 +502,7 @@ func load_game():
 		add_child(HUD)
 		if c_v in ["mining", "cave", "planet"]:
 			tile_data = open_obj("Planets", c_p_g)
-		var file = File.new()
+		var file = Directory.new()
 		if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
 			planet_data = open_obj("Systems", c_s_g)
 		if file.file_exists("user://Save1/Galaxies/%s.hx3" % [c_g_g]):
@@ -506,6 +512,8 @@ func load_game():
 		if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
 			cluster_data = open_obj("Superclusters", c_sc)
 		switch_view(c_v, true)
+	else:
+		popup("load error", 1.5)
 
 func remove_files(dir:Directory):
 	dir.list_dir_begin(true)
@@ -883,6 +891,8 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
 			remove_child(HUD)
 			battle = battle_scene.instance()
 			add_child(battle)
+	if not first_time:
+		fn_save_game(true)
 
 func add_science_tree():
 	HUD.get_node("Hotbar").visible = false
@@ -1037,8 +1047,8 @@ func add_cluster():
 
 func add_galaxy():
 	var view_str:String = tr("VIEW_CLUSTER")
-	if lv < 35:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
+	if lv < 40:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 40"]]
 	put_change_view_btn(view_str, "res://Graphics/Buttons/ClusterView.png")
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
@@ -1056,8 +1066,8 @@ func add_galaxy():
 
 func add_system():
 	var view_str:String = tr("VIEW_GALAXY")
-	if lv < 20:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 20"]]
+	if lv < 18:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 18"]]
 	put_change_view_btn(view_str, "res://Graphics/Buttons/GalaxyView.png")
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
@@ -1118,6 +1128,7 @@ func remove_system():
 
 func remove_planet():
 	view.remove_obj("planet")
+	vehicle_panel.tile_id = -1
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
@@ -2168,8 +2179,8 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
 	for st in arr:
-# warning-ignore:return_value_discarded
-		RTL.append_bbcode(st)
+		if RTL.append_bbcode(st) != OK:
+			return
 		if i != len(imgs) and imgs[i]:
 			RTL.add_image(imgs[i], 0, size)
 		i += 1
@@ -2209,10 +2220,10 @@ func on_change_view_click ():
 	$click.play()
 	match c_v:
 		"system":
-			if lv >= 20:
+			if lv >= 18:
 				switch_view("galaxy")
 		"galaxy":
-			if lv >= 35:
+			if lv >= 40:
 				switch_view("cluster")
 		"cluster":
 			if lv >= 50:
@@ -2432,8 +2443,9 @@ onready var item_cursor = $UI/ItemCursor
 func sell_all_minerals():
 	if minerals > 0:
 		money += minerals * (MUs.MV + 4)
-		popup(tr("MINERAL_SOLD") % [minerals, minerals * (MUs.MV + 4)], 2)
+		popup(tr("MINERAL_SOLD") % [round(minerals), round(minerals * (MUs.MV + 4))], 2)
 		minerals = 0
+		show.shop = true
 		HUD.refresh()
 
 var cmd_history:Array = []
@@ -2594,9 +2606,9 @@ func _input(event):
 				if get_item_num(name) > 0:
 					inventory.on_slot_press(name)
 	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
-		save_game(false)
+		fn_save_game(false)
 
-func save_game(autosave:bool):
+func fn_save_game(autosave:bool):
 	var save_game = File.new()
 	save_game.open("user://Save1/main.hx3", File.WRITE)
 	if c_v == "cave":
@@ -2669,6 +2681,7 @@ func save_game(autosave:bool):
 		view.save_zooms(c_v)
 	if c_v == "planet":
 		Helper.save_obj("Planets", c_p_g, tile_data)
+		Helper.save_obj("Systems", c_s_g, planet_data)
 	elif c_v == "system":
 		Helper.save_obj("Galaxies", c_g_g, system_data)
 	elif c_v == "galaxy":
@@ -2707,6 +2720,7 @@ func update_item_cursor():
 		HUD.update_hotbar()
 
 func hide_item_cursor():
+	item_to_use = {"name":"", "type":"", "num":0}
 	item_cursor.visible = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
@@ -2789,7 +2803,10 @@ func fade_out_title(fn:String):
 	$Autosave.start()
 	
 func _on_NewGame_pressed():
-	fade_out_title("new_game")
+	if $Title/Menu/VBoxContainer/LoadGame.disabled:
+		fade_out_title("new_game")
+	else:
+		show_YN_panel("new_game", tr("START_NEW_GAME"))
 
 func _on_LoadGame_pressed():
 	fade_out_title("load_game")
@@ -2799,24 +2816,28 @@ func _on_Autosave_timeout():
 	var err = config.load("user://settings.cfg")
 	if err == OK:
 		if config.get_value("saving", "enable_autosave", true):
-			save_game(true)
+			fn_save_game(true)
 
 func show_YN_panel(type:String, text:String, args:Array = []):
 	$UI/PopupBackground.visible = true
 	YN_panel.dialog_text = text
 	YN_panel.popup_centered()
 	if type == "buy_pickaxe":
-		if YN_panel.is_connected("confirmed", self, "buy_pickaxe_confirm"):
-			YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
+		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
+			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
 		YN_panel.connect("confirmed", self, "buy_pickaxe_confirm", args)
 	elif type == "destroy_buildings":
-		if YN_panel.is_connected("confirmed", self, "destroy_buildings_confirm"):
-			YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
+		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
+			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
 		YN_panel.connect("confirmed", self, "destroy_buildings_confirm", args)
 	elif type == "send_ships":
-		if YN_panel.is_connected("confirmed", self, "send_ships_confirm"):
-			YN_panel.disconnect("confirmed", self, "send_ships_confirm")
+		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
+			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
 		YN_panel.connect("confirmed", self, "send_ships_confirm")
+	elif type == "new_game":
+		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
+			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
+		YN_panel.connect("confirmed", self, "new_game_confirm")
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)
@@ -2831,3 +2852,7 @@ func destroy_buildings_confirm(arr:Array):
 func send_ships_confirm():
 	send_ships_panel.send_ships()
 	YN_panel.disconnect("confirmed", self, "send_ships_confirm")
+
+func new_game_confirm():
+	fade_out_title("new_game")
+	YN_panel.disconnect("confirmed", self, "new_game_confirm")

@@ -1,25 +1,25 @@
 extends Node
 
-var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60, "silver":60, "gold":60}},
-				"PP":{"value":0.3, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60, "silver":60, "gold":60}},
+var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
+				"PP":{"value":0.3, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.03, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150}},
 				"MS":{"value":25, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
 				"RCC":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":2000, "iron":1800, "aluminium":1800, "silver":1800, "gold":1800}},
 				"SC":{"value":50.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
-				"GF":{"value":0.1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
+				"GF":{"value":1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":20.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"MM":{"value":0.01, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 }
-var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60, "silver":60, "gold":60}},
-				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":40, "copper":50, "iron":60, "aluminium":60, "silver":60, "gold":60}},
+var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
+				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":50, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"MM":{"value":4, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":600, "copper":600, "iron":600, "aluminium":600, "silver":600, "gold":600}},
-				"GF":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":700, "copper":700, "iron":700, "aluminium":700, "silver":700, "gold":700}},
-				"SE":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":700, "copper":700, "iron":700, "aluminium":700, "silver":700, "gold":700}},
+				"GF":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1000, "iron":1400, "aluminium":2000, "silver":2500, "gold":3500}},
+				"SE":{"value":1.0, "pw":1.01, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1400, "iron":2800, "aluminium":5600, "silver":11200, "gold":22400}},
 }
 
 var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
@@ -41,7 +41,7 @@ var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400
 					"M_SE_3":{"money":10000000, "stone":500000, "energy":500000, "copper":8000, "iron":10000, "aluminium":3000, "time":12*3600},
 }
 
-var MS_output = {	"M_DS_0":50000000
+var MS_output = {	"M_DS_0":500000000
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
@@ -111,12 +111,12 @@ var science_unlocks = {
 						"OL":{"cost":1000, "parent":"RC"},
 						"YL":{"cost":8000, "parent":"OL"},
 						"GL":{"cost":40000, "parent":"YL"},
-						"BL":{"cost":200000, "parent":"GL"},
-						"PL":{"cost":800000, "parent":"BL"},
-						"UVL":{"cost":2000000, "parent":"PL"},
-						"XRL":{"cost":10000000, "parent":"UVL"},
-						"GRL":{"cost":30000000, "parent":"XRL"},
-						"UGRL":{"cost":200000000, "parent":"GRL"},
+						"BL":{"cost":250000, "parent":"GL"},
+						"PL":{"cost":1400000, "parent":"BL"},
+						"UVL":{"cost":8000000, "parent":"PL"},
+						"XRL":{"cost":44000000, "parent":"UVL"},
+						"GRL":{"cost":300000000, "parent":"XRL"},
+						"UGRL":{"cost":2000000000, "parent":"GRL"},
 						
 						#Ship Sciences
 						"SCT":{"cost":1500, "parent":"RC"},
@@ -129,14 +129,14 @@ var science_unlocks = {
 						#Megastructure Sciences
 						"MAE":{"cost":100000, "parent":""},
 						#Dyson sphere
-						"DS1":{"cost":8000000, "parent":"MAE"},
+						"DS1":{"cost":120000000, "parent":"MAE"},
 						"DS2":{"cost":250000000, "parent":"DS1"},
 						"DS3":{"cost":500000000, "parent":"DS2"},
 						"DS4":{"cost":750000000, "parent":"DS3"},
 						#Space elevator
 						"SE1":{"cost":150000, "parent":"MAE"},
-						"SE2":{"cost":500000, "parent":"SE1"},
-						"SE3":{"cost":1000000, "parent":"SE2"},
+						"SE2":{"cost":300000, "parent":"SE1"},
+						"SE3":{"cost":500000, "parent":"SE2"},
 						
 }
 var infinite_research_sciences = {	"MEE":{"cost":5000, "pw":6.2, "value":1.2},
@@ -170,16 +170,16 @@ var rover_CC = {	"lead_CC":{"capacity":2500, "costs":{"lead":70}},
 					"gold_CC":{"capacity":6000, "costs":{"gold":140}},
 					"gemstone_CC":{"capacity":7000, "costs":{"amethyst":50, "quartz":50, "topaz":50, "sapphire":50, "emerald":50, "ruby":50}},
 }
-var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":3000, "silicon":5, "time":10}},
-						"orange_laser":{"damage":10, "cooldown":0.195, "costs":{"money":20000, "silicon":10, "time":60}},
-						"yellow_laser":{"damage":22, "cooldown":0.19, "costs":{"money":150000, "silicon":15, "time":360}},
-						"green_laser":{"damage":48, "cooldown":0.185, "costs":{"money":900000, "silicon":20, "time":1500}},
-						"blue_laser":{"damage":100, "cooldown":0.18, "costs":{"money":2500000, "silicon":50, "quartz":25, "time":4500}},
-						"purple_laser":{"damage":185, "cooldown":0.175, "costs":{"money":7500000, "silicon":100, "quartz":50, "time":9000}},
-						"UV_laser":{"damage":250, "cooldown":0.17, "costs":{"money":32500000, "silicon":200, "quartz":100, "time":18000}},
-						"xray_laser":{"damage":600, "cooldown":0.165, "costs":{"money":125000000, "silicon":500, "quartz":200, "time":30000}},
-						"gammaray_laser":{"damage":1250, "cooldown":0.16, "costs":{"money":2500000000, "silicon":1000, "quartz":500, "time":65000}},
-						"ultragammaray_laser":{"damage":10000, "cooldown":1, "costs":{"money":20000000000, "silicon":2500, "quartz":1000, "time":100000}},
+var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":3400, "silicon":5, "time":10}},
+						"orange_laser":{"damage":12, "cooldown":0.195, "costs":{"money":20000, "silicon":10, "time":60}},
+						"yellow_laser":{"damage":29, "cooldown":0.19, "costs":{"money":150000, "silicon":15, "time":360}},
+						"green_laser":{"damage":68, "cooldown":0.185, "costs":{"money":900000, "silicon":20, "time":1500}},
+						"blue_laser":{"damage":150, "cooldown":0.18, "costs":{"money":2500000, "silicon":50, "quartz":25, "time":4500}},
+						"purple_laser":{"damage":285, "cooldown":0.175, "costs":{"money":7500000, "silicon":100, "quartz":50, "time":9000}},
+						"UV_laser":{"damage":550, "cooldown":0.17, "costs":{"money":32500000, "silicon":200, "quartz":100, "time":18000}},
+						"xray_laser":{"damage":1400, "cooldown":0.165, "costs":{"money":125000000, "silicon":500, "quartz":200, "time":30000}},
+						"gammaray_laser":{"damage":3250, "cooldown":0.16, "costs":{"money":2500000000, "silicon":1000, "quartz":500, "time":65000}},
+						"ultragammaray_laser":{"damage":30000, "cooldown":1, "costs":{"money":20000000000, "silicon":2500, "quartz":1000, "time":100000}},
 }#														rnge: mining range
 var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money":3000, "silicon":5, "time":10}},
 						"orange_mining_laser":{"speed":1.4, "rnge":260, "costs":{"money":20000, "silicon":10, "time":60}},

@@ -56,9 +56,9 @@ func _on_weapon_mouse_entered(weapon:String):
 
 func _on_Ship_mouse_entered():
 	if game.bottom_info_action == "use_hx_core":
-		$XP/TextureProgress2.value = $XP/TextureProgress.value + 5 * game.item_to_use.num
+		$XP/TextureProgress2.value = $XP/TextureProgress.value + 3 * game.item_to_use.num
 		$XP/Label.visible = true
-		$XP/Label.text = "+ %s" % [5 * game.item_to_use.num]
+		$XP/Label.text = "+ %s" % [3 * game.item_to_use.num]
 
 func _on_Ship_mouse_exited():
 	if not victory_screen:
@@ -70,7 +70,7 @@ func _on_Ship_pressed():
 	if game.bottom_info_action == "use_hx_core":
 		if game.get_item_num("hx_core") >= game.item_to_use.num:
 			game.remove_items("hx_core", game.item_to_use.num)
-			Helper.add_ship_XP(id, 5 * game.item_to_use.num)
+			Helper.add_ship_XP(id, 3 * game.item_to_use.num)
 			refresh()
 			if game.get_item_num("hx_core") > 0:
 				_on_Ship_mouse_entered()

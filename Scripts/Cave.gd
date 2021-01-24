@@ -97,6 +97,9 @@ func _ready():
 	if not game.EA_cave_visited:
 		game.long_popup("Caves right now are very unpolished, possibly unbalanced and may contain bugs. Don't expect too much for now!", "Early access note")
 		game.EA_cave_visited = true
+	elif not game.help.has("sprint_mode") or not game.help.sprint_mode:
+		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
+		game.help.sprint_mode = true
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -200,9 +203,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 3)]))
-					HX_node.HP = round(10 * pow(difficulty, 0.9) * rng.randf_range(0.8, 1.2))
+					HX_node.HP = round(10 * pow(difficulty, 0.85) * rng.randf_range(0.8, 1.2))
 					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
-					HX_node.def = round(6 * pow(difficulty, 0.9) * rng.randf_range(0.9, 1.1))
+					HX_node.def = round(6 * pow(difficulty, 0.85) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						continue
 					HX.get_node("Info").visible = false
@@ -439,7 +442,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		if difficulty > met_value.rarity and rng.randf() < 0.5 / met_value.rarity * aurora_mult:
-			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 0.5), 3)
+			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * difficulty, 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):

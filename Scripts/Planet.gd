@@ -71,6 +71,8 @@ func _ready():
 				$TileMap.set_cell(i, j, p_i.type - 3)
 			if not tile:
 				continue
+			if tile.has("bldg"):
+				add_bldg(id2, tile.bldg.name)
 			if tile.has("aurora"):
 				var aurora = Sprite.new()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
@@ -92,8 +94,6 @@ func _ready():
 				$Soil.set_cell(i, j, 0)
 				if not tile.plant.empty():
 					add_plant(id2, tile.plant.name)
-			if tile.has("bldg"):
-				add_bldg(id2, tile.bldg.name)
 			if tile.has("depth") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
 			if tile.has("rock"):
@@ -144,10 +144,10 @@ func show_tooltip(tile):
 			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
 			"ME", "PP":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
+				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, round(path_2_value * IR_mult)]
 				adv = true
 			"MM":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
+				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value * IR_mult]
 			"SC", "GF", "SE":
 				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 				adv = true
@@ -162,7 +162,7 @@ func show_tooltip(tile):
 		if game.help.tile_shortcuts:
 			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
-	if tile.has("plant"):
+	elif tile.has("plant"):
 		if tile.plant.empty():
 			if game.help.plant_something_here:
 				tooltip = tr("PLANT_STH") + "\n" + tr("HIDE_HELP")
@@ -171,7 +171,7 @@ func show_tooltip(tile):
 			tooltip = Helper.get_plant_name(tile.plant.name)
 			if OS.get_system_time_msecs() >= tile.plant.plant_date + tile.plant.grow_time:
 				tooltip += "\n" + tr("CLICK_TO_HARVEST")
-	if tile.has("lake"):
+	elif tile.has("lake"):
 		if tile.lake.state == "s" and tile.lake.element == "water":
 			tooltip = tr("ICE")
 		elif tile.lake.state == "l" and tile.lake.element == "water":
@@ -184,7 +184,7 @@ func show_tooltip(tile):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(tile.lake.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(tile.lake.element.to_upper())})
-	if tile.has("crater") and tile.has("init_depth"):
+	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if game.help.crater_desc:
 			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 			game.help_str = "crater_desc"
@@ -208,7 +208,7 @@ func show_tooltip(tile):
 			game.help_str = "cave_desc"
 		else:
 			tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
-	if tile.has("depth") and not tile.has("bldg"):
+	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora") and tooltip == "":
 		if game.help.aurora_desc:
@@ -296,7 +296,7 @@ func seeds_plant(tile, tile_id:int):
 
 func fertilizer_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
-	tile.plant.grow_time -= game.craft_agric_info.fertilizer.speed_up_time
+	tile.plant.plant_date -= game.craft_agric_info.fertilizer.speed_up_time
 	game.item_to_use.num -= 1
 
 func harvest_plant(tile, tile_id:int):
@@ -333,13 +333,13 @@ func speedup_bldg(tile, tile_id:int):
 func overclock_bldg(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
 	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing:
-		tile.bldg.overclock_date = curr_time
 		if not tile.bldg.has("overclock_mult"):
-			tile.bldg.overclock_length = game.overclock_info[game.item_to_use.name].duration
-			tile.bldg.overclock_mult = game.overclock_info[game.item_to_use.name].mult
-			var coll_date = tile.bldg.collect_date
-			tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 			add_time_bar(tile_id, "overclock")
+		tile.bldg.overclock_date = curr_time
+		tile.bldg.overclock_length = game.overclock_info[game.item_to_use.name].duration
+		tile.bldg.overclock_mult = game.overclock_info[game.item_to_use.name].mult
+		var coll_date = tile.bldg.collect_date
+		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
 
 func click_tile(tile, tile_id:int):
@@ -374,11 +374,11 @@ func collect_rsrc(tile, tile_id:int):
 		"ME":
 			var stored = tile.bldg.stored
 			tile.bldg.stored = Helper.add_minerals(stored)
-			if stored == tile.bldg.path_2_value:
+			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
 				tile.bldg.collect_date = curr_time
 		"PP":
 			var stored = tile.bldg.stored
-			if stored == tile.bldg.path_2_value:
+			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
 				tile.bldg.collect_date = curr_time
 			game.energy += stored
 			tile.bldg.stored = 0
@@ -635,9 +635,11 @@ func _input(event):
 					game.tile_data[tile_id].erase("ship")
 					$Obstacles.set_cell(x_pos, y_pos, -1)
 					game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-					game.ship_data.append({"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-					if len(game.ship_data) == 2:
-						Helper.add_ship_XP(1, 181)
+					if len(game.ship_data) == 0:
+						game.ship_data.append({"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+					elif len(game.ship_data) == 1:
+						game.ship_data.append({"lv":1, "HP":32, "total_HP":32, "atk":22, "def":8, "acc":18, "eva":12, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						Helper.add_ship_XP(1, 1000)
 						Helper.add_weapon_XP(1, "bullet", 10)
 						Helper.add_weapon_XP(1, "laser", 10)
 						Helper.add_weapon_XP(1, "bomb", 10)
@@ -787,10 +789,10 @@ func add_bldg(id2:int, st:String):
 	hbox.visible = get_parent().scale.x >= 0.25
 	add_child(hbox)
 	hboxes[id2] = hbox
-	if tile.bldg.is_constructing:
-		add_time_bar(id2, "bldg")
 	if tile.bldg.has("overclock_mult"):
 		add_time_bar(id2, "overclock")
+	if tile.bldg.is_constructing:
+		add_time_bar(id2, "bldg")
 
 func update_MS(tile):
 	var new_IR_mult:float = Helper.get_IR_mult(tile)
@@ -799,7 +801,7 @@ func update_MS(tile):
 		tile.bldg.IR_mult = new_IR_mult
 	
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "MM", "SC", "GF", "SE"]
+	return bldg in ["ME", "PP", "RL", "MM"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()
@@ -825,7 +827,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 			tile.bldg.IR_mult = IR_mult
 			if not tile.bldg.is_constructing:
 				tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
-	update_rsrc(rsrc, game.tile_data[id2])
+	#update_rsrc(rsrc, game.tile_data[id2])
 
 func _process(_delta):
 	var curr_time = OS.get_system_time_msecs()
@@ -833,7 +835,7 @@ func _process(_delta):
 		var time_bar = time_bar_obj.node
 		var id2 = time_bar_obj.id
 		var tile = game.tile_data[id2]
-		if not tile or tile.has("bldg") and not tile.bldg.has("construction_date") or tile.has("plant") and not tile.plant.has("plant_date"):
+		if not tile or not tile.has("bldg") and not tile.has("plant") or tile.has("plant") and not tile.plant.has("plant_date"):
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
 			continue
@@ -860,7 +862,7 @@ func _process(_delta):
 				tile.plant.is_growing = false
 				remove_child(time_bar)
 				time_bars.erase(time_bar_obj)
-		elif progress > 1:
+		elif progress > 1 and time_bar_obj.type == "bldg":
 			if tile.bldg.is_constructing:
 				tile.bldg.is_constructing = false
 				game.xp += tile.bldg.XP
@@ -873,12 +875,12 @@ func _process(_delta):
 				if tile.bldg.has("path_3"):
 					hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
 				if tile.bldg.name == "MS":
-					tile.bldg.IR_mult = Helper.get_IR_mult(tile)
-					game.mineral_capacity += tile.bldg.mineral_cap_upgrade * tile.bldg.IR_mult
+					update_MS(tile)
+					game.mineral_capacity += tile.bldg.mineral_cap_upgrade * Helper.get_IR_mult(tile)
 				game.HUD.refresh()
 			remove_child(time_bar)
 			time_bars.erase(time_bar_obj)
-		if progress < 0:
+		if progress < 0 and time_bar_obj.type == "overclock":
 			var coll_date = tile.bldg.collect_date
 			tile.bldg.collect_date = curr_time - (curr_time - coll_date) * tile.bldg.overclock_mult
 			tile.bldg.erase("overclock_date")
@@ -889,7 +891,7 @@ func _process(_delta):
 	for rsrc_obj in rsrcs:
 		var tile = game.tile_data[rsrc_obj.id]
 		var rsrc = rsrc_obj.node
-		if not tile or not tile.bldg.has("is_constructing"):
+		if not tile or not tile.has("bldg"):
 			remove_child(rsrc_obj.node)
 			rsrcs.erase(rsrc_obj)
 			continue
@@ -917,6 +919,8 @@ func update_rsrc(rsrc, tile):
 			var c_t = curr_time
 			var current_bar = rsrc.get_node("Control/CurrentBar")
 			var capacity_bar = rsrc.get_node("Control/CapacityBar")
+			if c_t < c_d and not tile.bldg.is_constructing:
+				tile.bldg.collect_date = curr_time
 			if stored < cap:
 				current_bar.value = min((c_t - c_d) / prod, 1)
 				capacity_bar.value = min(stored / float(cap), 1)
@@ -924,8 +928,8 @@ func update_rsrc(rsrc, tile):
 					var rsrc_num = floor((c_t - c_d) / prod)
 					tile.bldg.stored += rsrc_num
 					tile.bldg.collect_date += prod * rsrc_num
-					if tile.bldg.stored >= tile.bldg.path_2_value:
-						tile.bldg.stored = tile.bldg.path_2_value
+					if tile.bldg.stored >= cap:
+						tile.bldg.stored = cap
 						current_bar.value = 0
 						capacity_bar.value = 1
 			else:
@@ -943,6 +947,8 @@ func update_rsrc(rsrc, tile):
 			var c_t = curr_time
 			var current_bar = rsrc.get_node("Control/CurrentBar")
 			current_bar.value = min((c_t - c_d) / prod, 1)
+			if c_t < c_d:
+				tile.bldg.collect_date = curr_time
 			if c_t - c_d > prod:
 				var rsrc_num = floor((c_t - c_d) / prod)
 				tile.bldg.stored += rsrc_num

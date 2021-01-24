@@ -76,26 +76,26 @@ func remove_costs():
 var item_costs:Dictionary
 var item_name = ""
 
-func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
+func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	vbox.get_node("Name").text = get_item_name(name)
+	vbox.get_node("Name").text = get_item_name(_name)
 	item_costs = costs
-	item_name = name
+	item_name = _name
 	desc += "\n"
 	vbox.get_node("Description").text = desc
 	var rtl = vbox.get_node("RTL")
 	rtl.text = ""
-	var txt = (Data.path_1[name].desc + "\n") % [Data.path_1[name].value]
+	var txt = (Data.path_1[_name].desc + "\n") % [Data.path_1[_name].value]
 	var icons = []
-	var has_icon = Data.desc_icons.has(name)# and txt.find("@i") != -1
+	var has_icon = Data.desc_icons.has(_name)# and txt.find("@i") != -1
 	if has_icon:
-		icons = Data.desc_icons[name]
-	if Data.path_2.has(name):
-		var txt2:String = (Data.path_2[name].desc + "\n") % [Data.path_2[name].value]
+		icons = Data.desc_icons[_name]
+	if Data.path_2.has(_name):
+		var txt2:String = (Data.path_2[_name].desc + "\n") % [Data.path_2[_name].value]
 		txt += txt2
-	if Data.path_3.has(name):
-		var txt2:String = (Data.path_3[name].desc + "\n") % [Data.path_3[name].value]
+	if Data.path_3.has(_name):
+		var txt2:String = (Data.path_3[_name].desc + "\n") % [Data.path_3[_name].value]
 		txt += txt2
 	game.add_text_icons(rtl, txt, icons, 22)
 	Helper.put_rsrc(vbox, 36, costs, false, true)
