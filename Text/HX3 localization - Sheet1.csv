@@ -82,16 +82,16 @@ LV,Lv,Nv,Lv,,Lvl,Nvl,Lv
 INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자
 INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricación, agricultura espacial y conversión de recursos.",
 MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료
-SPEED_UPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업
-SPEED_UP_DESC,Accelerates by %s,Accélère de %s,Accelera di %s,,,Acelera por %s,%s 가속화
-SPEED_UP,Speed-up,Speed-up,Speed-up,,,Acelerador ,스피드업
+SPEEDUPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업
+SPEEDUPS_DESC2,Accelerates by %s,Accélère de %s,Accelera di %s,,,Acelera por %s,%s 가속화
+SPEEDUP,Speed-up,Speed-up,Speed-up,,,Acelerador ,스피드업
 OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Overclocks,오버클럭
 OVERCLOCK,Overclock,Overclock,Overclock,,,Overclock,오버클럭
-OVERCLOCK_DESC,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,Multiplicador de producción: %s\nDuración: %s,생산 승수: %s\n기간: %s
+OVERCLOCKS_DESC2,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,Multiplicador de producción: %s\nDuración: %s,생산 승수: %s\n기간: %s
 PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이
-SPEED_UP_INFO,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind Gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,
-OVERCLOCK_INFO,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Overclocks temporalmente aumentan la producción de recursos de los edificios seleccionados.,
-PICKAXE_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
+SPEEDUPS_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind Gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,
+OVERCLOCKS_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Overclocks temporalmente aumentan la producción de recursos de los edificios seleccionados.,
+PICKAXES_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
 STICK,Stick,Bâton,Bastone,,Stock,Palo,
 STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,
 NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.
@@ -332,7 +332,7 @@ STOP_CRUSHING,Stop crushing,,,,,Detener pulverización,
 EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Resultados esperados,
 RESOURCES_EXTRACTED,Resources extracted,Ressources extraites,Risorse estratte,,,Recursos extraídos,
 NO_STONE,You don't have any stone!,Vous n'avez pas de pierre!,Non hai pietra!,,,No tienes piedra!,
-SILICON,Silicon,,Silicio,,,Silicio,
+SILICON,Silicon,Silicium,Silicio,,,Silicio,
 COMP_OF_STONE_BEING_CR,Composition of stone being crushed,,,,,Composición de la piedra siendo pulverizada,
 COLDEST_STAR_TEMPERATURE,Coldest star temperature,Température de l'étoile la plus froide,Temperature della stella più fredda,,,,
 CLICK_TO_EDIT,Click to edit,Cliquez pour modifier,Cliccare per modificare,,,Haz click para editar,
@@ -352,7 +352,7 @@ COLLECT_ALL_PLANET,Collect all resources on this planet,,Raccogliere tutte le ri
 RESOURCES_COLLECTED,Resources collected,,Risorse raccolte,,,,
 ICE,Ice,Glace,Ghiaccio,,,,얼음
 METAL_COMP,{metal} {comp},{comp} en {metal},{comp} di {metal},,,,{metal} {comp}
-ARMOR,Armor,Armure,Armatura,,,,
+ARMOR,Armor,Blindage,Armatura,,,,
 WHEELS,Wheels,Roues,Ruote,,,, 바퀴
 CC,Cargo container,Conteneur,Contenitore,,,,
 HEALTH_POINTS,Health points,Points de vie,Punti di vita,,,,
@@ -396,10 +396,10 @@ XRL_DESC,Ultraviolet lasers too weak? You know the drill.,,,,,,
 GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,,,,,,
 UGRL_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,,,,,,
 MAE_DESC,"Base science for constructing megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,,
-CD_DESC,"Can burn fuels like coal, cellulose, etc. to speed up travel.",,,,,,
-ID_DESC,Ionizes noble gasses to speed up travel even further.,,,,,,
-FD_DESC,Fuse elements together for even more speed.,,,,,,
-PD_DESC,Somehow collect particles for maximum travel speed.,,,,,,
+CD_DESC,Allows all sorts of exotic chemical reactions in the ship's engines to speed up travel.\nThis halves ship travelling times.,,,,,,
+ID_DESC,Ionizes noble gases to speed up travel even further.\nThis halves ship travelling times (again!).,,,,,,
+FD_DESC,Fuse elements together for even more speed and efficiency.\nThis halves ship travelling times -and- energy costs!,,,,,,
+PD_DESC,Uses light itself for maximum travel speed.\nThis halves ship travelling times once again.,,,,,,
 GLASS_FACTORY,Glass factory,Usine de verre,,,,,
 GF_DESC,Produces glass from sand,Produit du verre à partir du sable,,,,,
 SELL_MINERALS,Sell all your minerals for money,Vendre tous les minéraux pour de l'argent,,,,,
@@ -567,5 +567,14 @@ START_NEW_GAME,Start a new game? Your current save will be erased.,Commencer une
 IRON_SEEDS,Iron seeds,Graines de fer,,,,,
 SHIPS_ALREADY_TRAVELLING,Your ships are already travelling!,,,,,,
 CTRL_CLICK_TO_SEND_SHIPS,Ctrl click to send ships here,,,,,,
-PRESS_E_TO_SPRINT,Your rover can sprint (movement speed greater than 1)! Press E to toggle sprint mode.,Ton rover peut sprinter (vitesse de déplacement supérieure à 1)! Appuyez sur E pour (dés)activer le mode sprint.,,,,,
+PRESS_E_TO_SPRINT,Your rover can sprint (movement speed greater than 1)! Press E to toggle sprint mode.,Votre rover peut sprinter (vitesse de déplacement supérieure à 1)! Appuyez sur E pour (dés)activer le mode sprint.,,,,,
 SPRINT_MODE,Sprint mode,Mode sprint,,,,,
+NO_COAL,You don't have any coal!,Vous n'avez pas de charbon!,,,,,
+GREENHOUSE,Greenhouse,Serre,,,,,
+GH_DESC,Buildings that protect plants from extreme temperatures.\nEnergy costs scale with how far the planet temperature is away from 0°C.,,,,,,
+EXTRA_GREENHOUSES,Extraterrestrial greenhouses,,,,,,
+EGH_DESC,Unlocks greenhouses.,,,,,,
+SUPPORT,Support,,,,,,
+SUPPORT_DESC,"Buildings that boost other buildings, plants etc.",,,,,,
+X_PLANT_GROWTH,x %s growth speed,,,,,,
+X_PLANT_PRODUCE,x %s produce,,,,,,

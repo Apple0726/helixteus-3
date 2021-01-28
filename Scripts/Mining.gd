@@ -23,7 +23,7 @@ var speed_mult:float = 1.0
 var aurora_mult:float = 1.0
 
 func _ready():
-	$Pickaxe/Sprite.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
+	$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
 	if p_i.temperature > 1000:
 		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
 	else:
@@ -91,8 +91,8 @@ func update_info():
 	$LayerInfo/Depth/Label.text = String(tile.depth) + " m"
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
-	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxe_info[game.pickaxe.name].durability]	
-	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxe_info[game.pickaxe.name].durability) * 100
+	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]	
+	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):
 	var tile_sprite = $Tile
@@ -211,7 +211,7 @@ func pickaxe_hit():
 		game.HUD.refresh()
 	update_info()
 	if game.pickaxe.durability == 0:
-		var curr_pick_info = game.pickaxe_info[game.pickaxe.name]
+		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
 		if $AutoReplace.pressed and game.check_enough(costs):
 			game.deduct_resources(costs)

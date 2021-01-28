@@ -97,6 +97,18 @@ margin_top = 224.0
 margin_right = 800.0
 margin_bottom = 288.0
 
+[node name="L_EGH" type="Line2D" parent="."]
+position = Vector2( 1024, 236 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+antialiased = true
+
+[node name="EGH" parent="." instance=ExtResource( 1 )]
+margin_left = 1152.0
+margin_top = 224.0
+margin_right = 1152.0
+margin_bottom = 288.0
+
 [node name="RC" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
 margin_top = 508.0

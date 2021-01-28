@@ -1,8 +1,9 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 2000
 
+var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
@@ -213,7 +214,7 @@ var ships_travel_length:int = -1
 var satellite_data:Array = []
 
 #Your inventory
-var items:Array = [{"name":"speedup1", "num":1, "type":"speedup_info"}, {"name":"overclock1", "num":1, "type":"overclock_info"}, null, null, null, null, null, null, null, null]
+var items:Array = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
 #var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
 var hotbar:Array = []
@@ -273,7 +274,7 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"mythril":{"min_depth":1500, "max_depth":10000, "amount":12, "rarity":13.4, "density":13.4, "value":3500},
 }
 
-var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
+var pickaxes_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":900}},
 					"stone_pickaxe":{"speed":2.1, "durability":300, "costs":{"money":5000}},
 					"lead_pickaxe":{"speed":2.8, "durability":550, "costs":{"money":35000}},
@@ -285,7 +286,7 @@ var pickaxe_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}
 					"gemstone_pickaxe":{"speed":11.2, "durability":2000, "costs":{"money":156000000}},
 }
 
-var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
+var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 						"speedup2":{"costs":{"money":2800}, "time":15*60000},
 						"speedup3":{"costs":{"money":11000}, "time":60*60000},
 						"speedup4":{"costs":{"money":65000}, "time":6*60*60000},
@@ -293,7 +294,7 @@ var speedup_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60000},
 }
 
-var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
+var overclocks_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
 						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000},
 						"overclock3":{"costs":{"money":50000}, "mult":3, "duration":60*60000},
 						"overclock4":{"costs":{"money":170000}, "mult":4, "duration":2*60*60000},
@@ -301,16 +302,16 @@ var overclock_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "durati
 						"overclock6":{"costs":{"money":9000000}, "mult":10, "duration":24*60*60000},
 }
 
-var craft_agric_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
-						"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
-						"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"water", "produce":60},
-						"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
+var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
+							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
+							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"water", "produce":60},
+							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var other_items_info = {"hx_core":{}, "ship_locator":{}}
 
-var item_groups = [	{"dict":speedup_info, "path":"Items/Speedups"},
-					{"dict":overclock_info, "path":"Items/Overclocks"},
-					{"dict":craft_agric_info, "path":"Agriculture"},
+var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
+					{"dict":overclocks_info, "path":"Items/Overclocks"},
+					{"dict":craft_agriculture_info, "path":"Agriculture"},
 					{"dict":other_items_info, "path":"Items/Others"},
 					]
 #Density is in g/cm^3
@@ -375,13 +376,16 @@ func _ready():
 		money = 1000000000
 		mats.soil = 50
 		show.plant_button = true
+		show.mining = true
+		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
 		energy = 2000000
 		SP = 200000000
 		science_unlocked.RC = true
 		science_unlocked.SCT = true
-		stone.O = 80000000
+		science_unlocked.SA = true
+		#stone.O = 80000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
 		mats.soil = 1000
@@ -602,11 +606,14 @@ func new_game():
 func add_panels():
 	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
-	shop_panel = load("res://Scenes/Panels/ShopPanel.tscn").instance()
+	shop_panel = generic_panel_scene.instance()
+	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
 	ship_panel = load("res://Scenes/Panels/ShipPanel.tscn").instance()
-	construct_panel = load("res://Scenes/Panels/ConstructPanel.tscn").instance()
+	construct_panel = generic_panel_scene.instance()
+	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
 	megastructures_panel = load("res://Scenes/Panels/MegastructuresPanel.tscn").instance()
-	craft_panel = load("res://Scenes/Panels/CraftPanel.tscn").instance()
+	craft_panel = generic_panel_scene.instance()
+	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
 	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
 	RC_panel = load("res://Scenes/Panels/RCPanel.tscn").instance()
 	MU_panel = load("res://Scenes/Panels/MUPanel.tscn").instance()
@@ -1994,19 +2001,9 @@ func generate_tiles(id:int):
 			tile_data[110].bldg.XP = 0
 			tile_data[110].bldg.path_1 = 1
 			tile_data[110].bldg.path_1_value = Data.path_1.RCC.value
-			tile_data[111] = {}
-			tile_data[111].bldg = {}
-			tile_data[111].bldg.name = "SE"
-			tile_data[111].bldg.is_constructing = false
-			tile_data[111].bldg.construction_date = curr_time
-			tile_data[111].bldg.construction_length = 10
-			tile_data[111].bldg.XP = 0
-			tile_data[111].bldg.path_1 = 1
-			tile_data[111].bldg.path_2 = 1
-			tile_data[111].bldg.path_1_value = Data.path_1.SE.value
-			tile_data[111].bldg.path_2_value = Data.path_2.SE.value
-		tile_data[112] = {}
-		tile_data[112].ship = true
+		else:
+			tile_data[112] = {}
+			tile_data[112].ship = true
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -2738,7 +2735,7 @@ func change_language():
 	var err = config.load("user://settings.cfg")
 	if err == OK:
 		config.set_value("interface", "language", TranslationServer.get_locale())
-	config.save("user://settings.cfg")
+		config.save("user://settings.cfg")
 	Data.reload()
 
 func _on_lg_pressed(extra_arg_0):

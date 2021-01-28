@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/silver_pickaxe.png-98a3418bd3e596c3675fd3cac8b86736.stex"
+path="res://.import/wooden_pickaxe.png-7e4ed5134546adc98bc185a30fc31fd3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Pickaxes/silver_pickaxe.png"
-dest_files=[ "res://.import/silver_pickaxe.png-98a3418bd3e596c3675fd3cac8b86736.stex" ]
+source_file="res://Graphics/Items/Pickaxes/wooden_pickaxe.png"
+dest_files=[ "res://.import/wooden_pickaxe.png-7e4ed5134546adc98bc185a30fc31fd3.stex" ]
 
 [params]
 

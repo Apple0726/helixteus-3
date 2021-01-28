@@ -115,9 +115,30 @@ func set_visibility(node):
 
 func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
-		return tr("SPEED_UP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
+		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
+	match _name:
+		"ME":
+			return tr("MINERAL_EXTRACTOR")
+		"PP":
+			return tr("POWER_PLANT")
+		"RL":
+			return tr("RESEARCH_LAB")
+		"MM":
+			return tr("MINING_MACHINE")
+		"MS":
+			return tr("MINERAL_SILO")
+		"RCC":
+			return tr("ROVER_CONSTR_CENTER")
+		"SC":
+			return tr("STONE_CRUSHER")
+		"GF":
+			return tr("GLASS_FACTORY")
+		"SE":
+			return tr("STEAM_ENGINE")
+		"GH":
+			return tr("GREENHOUSE")
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -154,16 +175,16 @@ func get_dir_from_name(_name:String):
 
 func get_type_from_name(_name:String):
 	if _name.substr(0, 7) == "speedup":
-		return "speedup_info"
+		return "speedups_info"
 	if _name.substr(0, 9) == "overclock":
-		return "overclock_info"
+		return "overclocks_info"
 	match _name:
 		"fertilizer":
-			return "craft_agric_info"
+			return "craft_agriculture_info"
 		"hx_core":
 			return "other_items_info"
 	if _name.split("_")[1] == "seeds":
-		return "craft_agric_info"
+		return "craft_agriculture_info"
 	return ""
 
 func format_num(num:float, threshold:int = 6):

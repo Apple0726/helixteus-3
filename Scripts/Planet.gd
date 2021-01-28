@@ -420,6 +420,12 @@ func add_shadows():
 			if poly.intersects(tile_rekt) and available_to_build(game.tile_data[get_tile_id_from_pos(shadow_pos)]):
 				shadows.append(put_shadow(Sprite.new(), shadow_pos))
 
+func remove_selected_tiles():
+	tiles_selected.clear()
+	for white_rect in get_tree().get_nodes_in_group("white_rects"):
+		remove_child(white_rect)
+		white_rect.remove_from_group("white_rects")
+
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
 func _input(event):
@@ -464,10 +470,7 @@ func _input(event):
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
 	if Input.is_action_just_released("shift"):
-		tiles_selected.clear()
-		for white_rect in get_tree().get_nodes_in_group("white_rects"):
-			remove_child(white_rect)
-			white_rect.remove_from_group("white_rects")
+		remove_selected_tiles()
 				
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouseMotion:
@@ -518,6 +521,8 @@ func _input(event):
 			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg:
 				game.hide_tooltip()
 				game.hide_adv_tooltip()
+				if not tiles_selected.empty() and not tile_over in tiles_selected:
+					remove_selected_tiles()
 				show_tooltip(game.tile_data[tile_over])
 			prev_tile_over = tile_over
 		else:

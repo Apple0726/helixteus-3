@@ -1,24 +1,23 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/ShopPanel.gd" type="Script" id=5]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=7]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
+font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[node name="ShopPanel" type="Control"]
+[node name="GenericPanel" type="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -29,7 +28,6 @@ margin_right = 533.5
 margin_bottom = 300.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 4 )
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
@@ -42,7 +40,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CloseButton" parent="Background" instance=ExtResource( 6 )]
+[node name="CloseButton" parent="Background" instance=ExtResource( 3 )]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -48.0
@@ -52,7 +50,6 @@ margin_right = 0.0
 margin_right = 1064.0
 margin_bottom = 64.0
 custom_fonts/font = SubResource( 1 )
-text = "SHOP"
 align = 1
 valign = 1
 __meta__ = {
@@ -64,30 +61,10 @@ margin_top = 64.0
 margin_right = 1064.0
 margin_bottom = 104.0
 custom_constants/separation = -2
+alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Speedups" type="Button" parent="Tabs"]
-margin_right = 356.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-shortcut_in_tooltip = false
-text = "SPEED_UPS"
-
-[node name="Overclocks" type="Button" parent="Tabs"]
-margin_left = 354.0
-margin_right = 710.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-text = "OVERCLOCKS"
-
-[node name="Pickaxes" type="Button" parent="Tabs"]
-margin_left = 708.0
-margin_right = 1064.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-text = "PICKAXES"
 
 [node name="Contents" type="VBoxContainer" parent="."]
 visible = false
@@ -123,7 +100,7 @@ margin_right = 762.0
 margin_bottom = 460.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 7 )
+script = ExtResource( 6 )
 
 [node name="Items" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 margin_right = 762.0
@@ -142,6 +119,7 @@ margin_bottom = 460.0
 rect_min_size = Vector2( 304, 0 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]
+visible = false
 margin_left = 3.0
 margin_top = 420.0
 margin_right = 307.0
@@ -167,7 +145,7 @@ margin_left = 146.0
 margin_right = 304.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
-theme = ExtResource( 3 )
+theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 text = "BUY"
 
@@ -191,18 +169,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Description" type="Label" parent="Contents/HBoxContainer/ItemInfo/VBoxContainer"]
+[node name="Description" type="RichTextLabel" parent="Contents/HBoxContainer/ItemInfo/VBoxContainer"]
 margin_top = 54.0
 margin_right = 264.0
-margin_bottom = 78.0
+margin_bottom = 54.0
 text = "b"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Tabs/Speedups" to="." method="_on_Speedups_pressed"]
-[connection signal="pressed" from="Tabs/Overclocks" to="." method="_on_Overclocks_pressed"]
-[connection signal="pressed" from="Tabs/Pickaxes" to="." method="_on_Pickaxes_pressed"]
 [connection signal="value_changed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount" to="." method="_on_BuyAmount_value_changed"]
 [connection signal="pressed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy" to="." method="_on_Buy_pressed"]

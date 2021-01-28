@@ -1,126 +1,52 @@
-extends "Panel.gd"
+extends "GenericPanel.gd"
 
-var tab:String = ""
-var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-
-#In what GridContainer node building buttons should be in
-var bldg_infos = {"ME":{"type":"Basic"},
-				 "PP":{"type":"Basic"},
-				 "RL":{"type":"Basic"},
-				 "MM":{"type":"Basic"},
-				 "MS":{"type":"Storage"},
-				 "RCC":{"type":"Vehicles"},
-				 "SC":{"type":"Production"},
-				 "GF":{"type":"Production"},
-				 "SE":{"type":"Production"},
-				}
+var basic_bldgs:Array = ["ME", "PP", "RL", "MM"]
+var storage_bldgs:Array = ["MS"]
+var production_bldgs:Array = ["SC", "GF", "SE"]
+var support_bldgs:Array = ["GH"]
+var vehicles_bldgs:Array = ["RCC"]
 
 func _ready():
-	set_polygon($Background.rect_size)
-	var item_container = $Contents/HBoxContainer/Items
-	for bldg in bldg_infos:
-		var bldg_info = bldg_infos[bldg]
-		var bldg_btn = item_for_sale_scene.instance()
-		bldg_btn.get_node("SmallButton").text = tr("CONSTRUCT")
-		bldg_btn.item_name = bldg
-		bldg_btn.item_dir = "Buildings"
-		bldg_btn.item_desc = tr(bldg.to_upper() + "_DESC")
-		bldg_btn.costs = Data.costs[bldg]
-		bldg_btn.add_to_group("bldgs")
-		bldg_btn.parent = "construct_panel"
-		item_container.get_node(bldg_info.type).add_child(bldg_btn)
-	_on_Basic_pressed()
+	$Title.text = tr("CONSTRUCT")
+	for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
+		var btn = Button.new()
+		btn.name = btn_str
+		btn.text = tr(btn_str.to_upper())
+		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
+		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
+		$Tabs.add_child(btn)
 
-func _on_Basic_pressed():
-	tab = "basic"
-	$Contents.visible = true
-	set_item_visibility("Basic")
-	$Contents/Info.text = tr("BASIC_DESC")
-	Helper.set_btn_color($Tabs/Basic)
-
-func _on_Storage_pressed():
-	tab = "storage"
-	$Contents.visible = true
-	set_item_visibility("Storage")
-	$Contents/Info.text = tr("STORAGE_DESC")
-	Helper.set_btn_color($Tabs/Storage)
-
-func _on_Production_pressed():
-	tab = "production"
-	$Contents.visible = true
-	set_item_visibility("Production")
-	$Contents/Info.text = tr("PRODUCTION_DESC")
-	Helper.set_btn_color($Tabs/Production)
-
-func _on_Vehicles_pressed():
-	tab = "vehicles"
-	$Contents.visible = true
-	set_item_visibility("Vehicles")
-	$Contents/Info.text = tr("VEHICLES_DESC")
-	Helper.set_btn_color($Tabs/Vehicles)
-
-func set_item_visibility(type:String):
-	for other_type in $Contents/HBoxContainer/Items.get_children():
-		other_type.visible = false
-	remove_costs()
-	$Contents/HBoxContainer/Items.get_node(type).visible = true
-	$Contents/HBoxContainer/ItemInfo.visible = false
-	item_name = ""
-
-func remove_costs():
-	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	for child in vbox.get_children():
-		if not child is Label and not child is RichTextLabel:
-			vbox.remove_child(child)
-
-var item_costs:Dictionary
-var item_name = ""
+func _on_btn_pressed(btn_str:String):
+	var btn_str_l:String = btn_str.to_lower()
+	var btn_str_u:String = btn_str.to_upper()
+	tab = btn_str_l
+	change_tab(btn_str)
+	for bldg in self["%s_bldgs" % btn_str_l]:
+		var item = item_for_sale_scene.instance()
+		item.get_node("SmallButton").text = tr("CONSTRUCT")
+		item.item_name = bldg
+		item.item_dir = "Buildings"
+		#item.item_type = "%s_info" % btn_str_l
+		var txt = (Data.path_1[bldg].desc + "\n") % [Data.path_1[bldg].value]
+		if Data.path_2.has(bldg):
+			var txt2:String = (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value]
+			txt += txt2
+		if Data.path_3.has(bldg):
+			var txt2:String = (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
+			txt += txt2
+		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
+		item.costs = Data.costs[bldg]
+		item.parent = "construct_panel"
+		grid.add_child(item)
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
-	remove_costs()
-	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	vbox.get_node("Name").text = get_item_name(_name)
-	item_costs = costs
-	item_name = _name
-	desc += "\n"
-	vbox.get_node("Description").text = desc
-	var rtl = vbox.get_node("RTL")
-	rtl.text = ""
-	var txt = (Data.path_1[_name].desc + "\n") % [Data.path_1[_name].value]
+	.set_item_info(_name, desc, costs, _type, _dir)
+	desc_txt.text = ""
 	var icons = []
 	var has_icon = Data.desc_icons.has(_name)# and txt.find("@i") != -1
 	if has_icon:
 		icons = Data.desc_icons[_name]
-	if Data.path_2.has(_name):
-		var txt2:String = (Data.path_2[_name].desc + "\n") % [Data.path_2[_name].value]
-		txt += txt2
-	if Data.path_3.has(_name):
-		var txt2:String = (Data.path_3[_name].desc + "\n") % [Data.path_3[_name].value]
-		txt += txt2
-	game.add_text_icons(rtl, txt, icons, 22)
-	Helper.put_rsrc(vbox, 36, costs, false, true)
-	$Contents/HBoxContainer/ItemInfo.visible = true
-
-func get_item_name(_name:String):
-	match _name:
-		"ME":
-			return tr("MINERAL_EXTRACTOR")
-		"PP":
-			return tr("POWER_PLANT")
-		"RL":
-			return tr("RESEARCH_LAB")
-		"MM":
-			return tr("MINING_MACHINE")
-		"MS":
-			return tr("MINERAL_SILO")
-		"RCC":
-			return tr("ROVER_CONSTR_CENTER")
-		"SC":
-			return tr("STONE_CRUSHER")
-		"GF":
-			return tr("GLASS_FACTORY")
-		"SE":
-			return tr("STEAM_ENGINE")
+	game.add_text_icons(desc_txt, desc, icons, 22)
 
 func _on_Buy_pressed():
 	get_item(item_name, item_costs, null, null)
@@ -143,6 +69,3 @@ func refresh():
 			bldg.visible = game.show.coal
 		if bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.AM
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

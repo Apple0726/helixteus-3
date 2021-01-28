@@ -40,6 +40,8 @@ func get_science_name(sc:String):
 			return tr("AUTO_MINING")
 		"SA":
 			return tr("SPACE_AGRICULTURE")
+		"EGH":
+			return tr("EXTRA_GREENHOUSES")
 		"RC":
 			return tr("ROVER_CONSTRUCTION")
 		"SCT":

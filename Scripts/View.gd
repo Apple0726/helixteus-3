@@ -72,6 +72,7 @@ func refresh():
 	green_line.visible = show_lines
 	ship.visible = show_lines
 	if show_lines:
+		move_child(ship, get_child_count())
 		move_child(red_line, get_child_count())
 		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view

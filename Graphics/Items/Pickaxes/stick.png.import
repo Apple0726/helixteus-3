@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/copper_pickaxe.png-04a4510047e78c1546da24de31d9b432.stex"
+path="res://.import/stick.png-a501bc4e50fb5c4dd145e32c976c88c1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Pickaxes/copper_pickaxe.png"
-dest_files=[ "res://.import/copper_pickaxe.png-04a4510047e78c1546da24de31d9b432.stex" ]
+source_file="res://Graphics/Items/Pickaxes/stick.png"
+dest_files=[ "res://.import/stick.png-a501bc4e50fb5c4dd145e32c976c88c1.stex" ]
 
 [params]
 

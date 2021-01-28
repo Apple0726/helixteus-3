@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/stick.png-605163bc40d5e45d53fa5bef5963e7e9.stex"
+path="res://.import/EGH.png-9d30806ca6813a2d42f398861f129da9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Pickaxes/stick.png"
-dest_files=[ "res://.import/stick.png-605163bc40d5e45d53fa5bef5963e7e9.stex" ]
+source_file="res://Graphics/Science/EGH.png"
+dest_files=[ "res://.import/EGH.png-9d30806ca6813a2d42f398861f129da9.stex" ]
 
 [params]
 

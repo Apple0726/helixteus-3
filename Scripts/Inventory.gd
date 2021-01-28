@@ -73,17 +73,17 @@ func on_slot_press(name:String):
 	game.item_to_use.num = num
 	var texture
 	var type:String = Helper.get_type_from_name(name)
-	if type == "craft_agric_info":
-		if game.craft_agric_info[name].has("grow_time"):
+	if type == "craft_agriculture_info":
+		if game.craft_agriculture_info[name].has("grow_time"):
 			game.put_bottom_info(tr("PLANT_SEED_INFO"), "plant_seed", "hide_item_cursor")
 			game.item_to_use.type = "seeds"
-		elif game.craft_agric_info[name].has("speed_up_time"):
+		elif game.craft_agriculture_info[name].has("speed_up_time"):
 			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
 			game.item_to_use.type = "fertilizer"
-	elif type == "speedup_info":
+	elif type == "speedups_info":
 		game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
 		game.item_to_use.type = "speedup"
-	elif type == "overclock_info":
+	elif type == "overclocks_info":
 		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
 		game.item_to_use.type = "overclock"
 	elif type == "other_items_info":
