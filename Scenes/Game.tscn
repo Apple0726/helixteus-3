@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -129,6 +129,22 @@ expand_margin_left = 5.0
 expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
+
+[sub_resource type="Animation" id=13]
+resource_name = "Fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("UI/Panel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -584,7 +600,6 @@ expand = true
 stretch_mode = 4
 
 [node name="Menu" type="PanelContainer" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = 44.0
 margin_top = 464.0
 margin_right = 232.0
@@ -630,6 +645,11 @@ text = "SETTINGS"
 align = 0
 
 [node name="Autosave" type="Timer" parent="."]
+
+[node name="CollectPanelTimer" type="Timer" parent="."]
+
+[node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource( 13 )
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
@@ -664,3 +684,5 @@ align = 0
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
+[connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
+[connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]

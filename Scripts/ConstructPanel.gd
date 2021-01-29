@@ -15,6 +15,7 @@ func _ready():
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$Tabs.add_child(btn)
+	_on_btn_pressed("Basic")
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
@@ -37,6 +38,7 @@ func _on_btn_pressed(btn_str:String):
 		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
 		item.costs = Data.costs[bldg]
 		item.parent = "construct_panel"
+		item.add_to_group("bldgs")
 		grid.add_child(item)
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
@@ -60,8 +62,6 @@ func get_item(_name, costs, _type, _dir):
 	game.view.obj.construct(_name, costs)
 
 func refresh():
-	$Tabs/Vehicles.visible = game.science_unlocked.RC
-	$Tabs/Production.visible = game.show.stone
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name == "GF":
 			bldg.visible = game.show.sand
@@ -69,3 +69,6 @@ func refresh():
 			bldg.visible = game.show.coal
 		if bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.AM
+	$Tabs/Production.visible = game.show.stone
+	$Tabs/Support.visible = game.science_unlocked.EGH
+	$Tabs/Vehicles.visible = game.show.vehicles_button

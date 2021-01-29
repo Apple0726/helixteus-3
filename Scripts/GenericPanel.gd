@@ -24,7 +24,8 @@ func change_tab(btn_str:String):
 	item_name = ""
 	_on_BuyAmount_value_changed(1)
 	remove_costs()
-	$Contents/HBoxContainer/ItemInfo.visible = false
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = false
+	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = false
 	$Contents.visible = true
 	$Contents/Info.text = tr("%s_DESC" % btn_str.to_upper())
 	Helper.set_btn_color(get_node("Tabs/%s" % btn_str))
@@ -37,7 +38,7 @@ func remove_costs():
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
-	$Contents/HBoxContainer/ItemInfo.visible = true
+	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = true
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
 	vbox.get_node("Name").text = Helper.get_item_name(name)
 	desc_txt.text = desc + "\n"

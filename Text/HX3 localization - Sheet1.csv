@@ -198,7 +198,7 @@ BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of res
 LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},{state} {contents},{state} {contents}
 SEEDS,Seeds,Graines,Semi,,Pflanzensamen,Semillas,씨앗
 AGRICULTURE,Agriculture,Agriculture,Agricoltura,,,Agricultura,농업
-CRAFT_AGRIC_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas para producir metales.,
+AGRICULTURE_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas para producir metales.,
 CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작
 GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,
 GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
@@ -573,8 +573,9 @@ NO_COAL,You don't have any coal!,Vous n'avez pas de charbon!,,,,,
 GREENHOUSE,Greenhouse,Serre,,,,,
 GH_DESC,Buildings that protect plants from extreme temperatures.\nEnergy costs scale with how far the planet temperature is away from 0°C.,,,,,,
 EXTRA_GREENHOUSES,Extraterrestrial greenhouses,,,,,,
-EGH_DESC,Unlocks greenhouses.,,,,,,
+EGH_DESC,Unlocks greenhouses that boost plant growth and output.,,,,,,
 SUPPORT,Support,,,,,,
 SUPPORT_DESC,"Buildings that boost other buildings, plants etc.",,,,,,
 X_PLANT_GROWTH,x %s growth speed,,,,,,
 X_PLANT_PRODUCE,x %s produce,,,,,,
+YOU_COLLECTED,You collected:,,,,,,

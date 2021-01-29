@@ -52,6 +52,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
 			format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
+		elif obj == "SP":
+			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
 		elif obj == "time":
 			texture.texture_normal = load("res://Graphics/Icons/Time.png")
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
@@ -354,10 +356,10 @@ func add_minerals(amount:float):
 	var mineral_space_available = round(game.mineral_capacity) - round(game.minerals)
 	if mineral_space_available >= amount:
 		game.minerals += amount
-		return 0
+		return {"added":amount, "remainder":0}
 	else:
 		game.minerals = game.mineral_capacity
-		return amount - mineral_space_available
+		return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):
 	return 0.24 + (game.MUs.AIE + next_lv) / 100.0

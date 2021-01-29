@@ -11,7 +11,6 @@ func _ready():
 		$Tabs.add_child(btn)
 	if game.science_unlocked.SA:
 		_on_btn_pressed("Agriculture")
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 	buy_btn.text = tr("CRAFT")
 
 func _on_btn_pressed(btn_str:String):
@@ -50,8 +49,12 @@ func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _
 		if agric_info.has("grow_time"):
 			imgs = [load("res://Graphics/Metals/" + Helper.get_plant_produce(_name) + ".png")]
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 
-func get_item(name, costs, type, dir):
+func get_item(_name, costs, _type, _dir):
+	item_name = _name
+	item_type = _type
+	item_dir = _dir
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		add_items(tr("NOT_ENOUGH_INV_SPACE_CRAFT"), tr("CRAFT_SUCCESS"))

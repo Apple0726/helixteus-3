@@ -9,6 +9,7 @@ func _ready():
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$Tabs.add_child(btn)
+	_on_btn_pressed("Speedups")
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
@@ -32,7 +33,10 @@ func _on_btn_pressed(btn_str:String):
 		item.costs = obj_info.costs
 		item.parent = "shop_panel"
 		grid.add_child(item)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = btn_str_l in ["speedups", "overclocks"]
+
+func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
+	.set_item_info(_name, _desc, costs, _type, _dir)
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = tab in ["speedups", "overclocks"]
 
 func _on_Buy_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
@@ -40,7 +44,9 @@ func _on_Buy_pressed():
 func get_item(_name, costs, _type, _dir):
 	if _name == "":
 		return
-	#item_name = _name
+	item_name = _name
+	item_type = _type
+	item_dir = _dir
 	if game.check_enough(costs):
 		if tab == "pickaxes":
 			if not game.pickaxe.empty():

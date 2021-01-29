@@ -375,6 +375,7 @@ func _ready():
 		lv = 100
 		money = 1000000000
 		mats.soil = 50
+		mats.glass = 1000
 		show.plant_button = true
 		show.mining = true
 		show.shop = true
@@ -385,6 +386,7 @@ func _ready():
 		science_unlocked.RC = true
 		science_unlocked.SCT = true
 		science_unlocked.SA = true
+		science_unlocked.EGH = true
 		#stone.O = 80000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
@@ -396,6 +398,7 @@ func _ready():
 		mets.titanium = 50000
 		show.SP = true
 		show.stone = true
+		show.glass = true
 		show.materials = true
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
 		items[3] = {"name":"lead_seeds", "num":10}
@@ -2853,3 +2856,21 @@ func send_ships_confirm():
 func new_game_confirm():
 	fade_out_title("new_game")
 	YN_panel.disconnect("confirmed", self, "new_game_confirm")
+
+func show_collect_info(info:Dictionary):
+	if info.empty():
+		return
+	$UI/Panel.visible = false
+	Helper.put_rsrc($UI/Panel/VBox, 32, info)
+	$UI/Panel/VBox.rect_size.y = 0
+	$UI/Panel.visible = true
+	$UI/Panel.modulate.a = 1.0
+	Helper.add_label(tr("YOU_COLLECTED"), 0)
+	$CollectPanelTimer.start(0.5 + 0.5 * $UI/Panel/VBox.get_child_count())
+	$CollectPanelAnim.stop()
+
+func _on_CollectPanelTimer_timeout():
+	$CollectPanelAnim.play("Fade")
+
+func _on_CollectPanelAnim_animation_finished(anim_name):
+	$UI/Panel.visible = false
