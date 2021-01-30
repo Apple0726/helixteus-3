@@ -17,14 +17,8 @@ func _ready():
 	pass
 
 func refresh(value):
-	if game.science_unlocked["CD"] == true:
-		$HBoxContainer/ChemicalDrive.visible = true
-	if game.science_unlocked["ID"] == true:
-		$HBoxContainer/IonDrive.visible = true
-	if game.science_unlocked["FD"] == true:
-		$HBoxContainer/FusionDrive.visible = true
-	if game.science_unlocked["PD"] == true:
-		$HBoxContainer/ParticleDrive.visible = true
+	for drive in $HBoxContainer.get_children():
+		drive.visible = game.science_unlocked[drive.name]
 	
 	meta = op.get_selected_metadata()
 	$HSlider.value = value
@@ -48,14 +42,13 @@ func refresh(value):
 	
 	if meta != null:
 		cost = game.mats[meta] * (value / 100)
-		if game.mats[meta] > 100 && cost < 100:
-			cost = 100
 		$Label.text = String(cost) + " kg"
 	
 	var slider_factor = (-100 * pow(0.95, $HSlider.value)) + 101
 	var time_reduction = (cost * speed) / slider_factor
+	
 	if game.ships_travel_length - time_reduction < 0:
-		$Label2.text = Helper.time_to_str(0)
+		$Label2.text = tr("TOO_FAST")
 	else:
 		$Label2.text = Helper.time_to_str(time_reduction)
 	
@@ -71,6 +64,7 @@ func use_drive():
 		game.ships_travel_length -= time_reduction
 		game.mats[meta] -= cost
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
+		refresh(50)
 
 func _on_ChemicalDrive_pressed():
 	op.clear()

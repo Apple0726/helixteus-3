@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 2000
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
