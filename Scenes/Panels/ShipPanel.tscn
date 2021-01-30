@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Scenes/ShipInfo.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Scenes/Drives.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -71,6 +72,9 @@ margin_bottom = 496.0
 victory_screen = false
 id = 1
 
+[node name="Drives" parent="." instance=ExtResource( 8 )]
+visible = false
+
 [node name="Panel" type="Panel" parent="."]
 margin_top = 60.0
 margin_right = 1064.0
@@ -90,5 +94,28 @@ text = "SHOW_WEAPON_XPS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="DriveButton" type="Button" parent="Panel"]
+margin_left = 371.0
+margin_top = 6.0
+margin_right = 693.0
+margin_bottom = 41.0
+text = "OPEN_DRIVE_MENU"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="Panel"]
+visible = false
+margin_left = 371.0
+margin_top = 6.0
+margin_right = 693.0
+margin_bottom = 41.0
+text = "CLOSE_DRIVE_MENU"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="toggled" from="Panel/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="pressed" from="Panel/DriveButton" to="." method="_on_DriveButton_pressed"]
+[connection signal="pressed" from="Panel/BackButton" to="." method="_on_BackButton_pressed"]
