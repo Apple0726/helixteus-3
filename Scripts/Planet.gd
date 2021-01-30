@@ -318,21 +318,30 @@ func harvest_plant(tile, tile_id:int):
 			produce *= pow(1 + tile.aurora.au_int, Helper.get_AIE())
 		if tile.has("bldg") and tile.bldg.name == "GH":
 			produce *= tile.bldg.path_2_value
-		game.mets[plant] += produce
+		#game.mets[plant] += produce
 		game.show[plant] = true
 		game.show.metals = true
 		add_item_to_coll(plant, produce)
 		tile.plant.clear()
 		remove_child(plant_sprites[String(tile_id)])
 
-func add_item_to_coll(item:String, num:float):
-	if num == 0:
-		return
-	if items_collected.has(item):
-		items_collected[item] += num
+func add_item_to_coll(item:String, num):
+	if num is float:
+		if num == 0:
+			return
+		if items_collected.has(item):
+			items_collected[item] += num
+		else:
+			items_collected[item] = num
 	else:
-		items_collected[item] = num
-	
+		if not items_collected.has("stone"):
+			items_collected.stone = {}
+		for el in num:
+			if items_collected.stone.has(el):
+				items_collected.stone[el] += num[el]
+			else:
+				items_collected.stone[el] = num[el]
+
 func speedup_bldg(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
 	if tile.bldg.is_constructing:
@@ -395,7 +404,7 @@ func collect_rsrc(tile, tile_id:int):
 	match bldg:
 		"ME":
 			var stored = tile.bldg.stored
-			var min_info:Dictionary = Helper.add_minerals(stored)
+			var min_info:Dictionary = Helper.add_minerals(stored, false)
 			tile.bldg.stored = min_info.remainder
 			add_item_to_coll("minerals", min_info.added)
 			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
@@ -404,18 +413,28 @@ func collect_rsrc(tile, tile_id:int):
 			var stored = tile.bldg.stored
 			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
 				tile.bldg.collect_date = curr_time
-			game.energy += stored
+			#game.energy += stored
 			add_item_to_coll("energy", stored)
 			tile.bldg.stored = 0
 		"RL":
-			game.SP += tile.bldg.stored
+			#game.SP += tile.bldg.stored
 			add_item_to_coll("SP", tile.bldg.stored)
 			tile.bldg.stored = 0
 		"MM":
 			if tile.bldg.stored >= 1 and not tile.has("depth"):
 				tile.depth = 0
-			for i in tile.bldg.stored:
-				Helper.get_rsrc_from_rock(Helper.generate_rock(tile, p_i), tile, p_i, true)
+			if tile.bldg.stored >= 10:
+				var contents:Dictionary = Helper.mass_generate_rock(tile, p_i, tile.bldg.stored)
+				tile.depth += tile.bldg.stored
+				tile.erase("contents")
+				for content in contents:
+					add_item_to_coll(content, contents[content])
+			else:
+				for i in tile.bldg.stored:
+					var contents:Dictionary = Helper.generate_rock(tile, p_i)
+					Helper.get_rsrc_from_rock(contents, tile, p_i, true)
+					for content in contents:
+						add_item_to_coll(content, contents[content])
 			if tile.bldg.stored == tile.bldg.path_2_value:
 				tile.bldg.collect_date = curr_time
 			tile.bldg.stored = 0

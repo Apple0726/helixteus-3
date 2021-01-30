@@ -352,13 +352,15 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	parent.remove_child(lb)
 	remove_child(tween)
 
-func add_minerals(amount:float):
+func add_minerals(amount:float, add:bool = true):
 	var mineral_space_available = round(game.mineral_capacity) - round(game.minerals)
 	if mineral_space_available >= amount:
-		game.minerals += amount
+		if add:
+			game.minerals += amount
 		return {"added":amount, "remainder":0}
 	else:
-		game.minerals = game.mineral_capacity
+		if add:
+			game.minerals = game.mineral_capacity
 		return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):
@@ -371,6 +373,16 @@ func get_layer(tile:Dictionary, p_i:Dictionary):
 	elif tile.depth <= p_i.crust_start_depth:
 		layer = "surface"
 	elif tile.depth <= p_i.mantle_start_depth:
+		layer = "crust"
+	elif tile.depth <= p_i.core_start_depth:
+		layer = "mantle"
+	else:
+		layer = "core"
+	return layer
+
+func get_rock_layer(tile:Dictionary, p_i:Dictionary):
+	var layer:String = ""
+	if tile.depth <= p_i.mantle_start_depth:
 		layer = "crust"
 	elif tile.depth <= p_i.core_start_depth:
 		layer = "mantle"
@@ -399,8 +411,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.show.metals = true
 			game.mets[content] += amount
 		elif content == "stone":
-			var layer2 = "crust" if layer == "surface" or layer == "crater" else layer
-			game.add_resources({"stone":amount}, p_i[layer2])
+			game.add_resources(contents.stone)
 		elif content == "ship_locator":
 			game.second_ship_hints.ship_locator = true
 		else:
@@ -410,8 +421,53 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	tile.depth += 1
-	if tile.has("init_depth") and tile.depth > 3 * tile.init_depth:
-		tile.erase("init_depth")
+	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+		tile.crater.erase("init_depth")
+
+func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
+	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
+	var contents = {}
+	var other_volume = 0#in m^3
+	#We assume all materials have a density of 1.5g/cm^3 to simplify things
+	var rho = 1.5
+	for mat in p_i.surface.keys():
+		#Material quantity penalty the further you go from surface
+		var depth_limit_mult = max(1, 1 + (((2 * tile.depth + depth) / 2.0) - p_i.crust_start_depth) / float(p_i.crust_start_depth))
+		var chance_mult:float = min(p_i.surface[mat].chance / depth_limit_mult * aurora_mult, 1)
+		var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult * chance_mult * depth, 3)
+		if amount < 1:
+			continue
+		contents[mat] = amount
+		other_volume += amount / rho / 1000
+	for met in game.met_info:
+		var chance_mult:float = 0.25 / game.met_info[met].rarity * aurora_mult
+		if tile.has("crater") and met == tile.crater.metal:
+			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
+			contents[met] = game.clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * aurora_mult * chance_mult * min(depth, 2 * tile.crater.init_depth), 3)
+		else:
+			chance_mult = min(7.0 / (7.0 + 1 / chance_mult), 1)
+			var end_depth:int = tile.depth + depth
+			var met_start_depth:int = game.met_info[met].min_depth + p_i.crust_start_depth
+			var met_end_depth:int = game.met_info[met].max_depth + p_i.crust_start_depth
+			var num_tiles:int = end_depth - met_start_depth
+			var num_tiles2:int = met_end_depth - tile.depth
+			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
+			var amount:float = game.clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * aurora_mult * chance_mult * num_tiles3, 3)
+			contents[met] = amount
+			other_volume += amount / game.met_info[met].density / 1000
+		#   									                          	    V Every km, rock density goes up by 0.01
+	var stone_amount = game.clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0), 3)
+	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
+	if tile.has("ship_locator_depth"):
+		contents.ship_locator = 1
+		tile.erase("ship_locator_depth")
+	return contents
+
+func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
+	var stone = {}
+	for comp in p_i_layer:
+		stone[comp] = p_i_layer[comp] * amount
+	return stone
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
 	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
@@ -421,7 +477,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	var rho = 1.5
 	for mat in p_i.surface.keys():
 		#Material quantity penalty the further you go from surface
-		var depth_limit_mult = max(1, 1 + (tile.depth / 2.0 - p_i.crust_start_depth) / float(p_i.crust_start_depth))
+		var depth_limit_mult = max(1, 1 + (tile.depth - p_i.crust_start_depth) / float(p_i.crust_start_depth))
 		if randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
 			var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
 			if amount < 1:
@@ -446,7 +502,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
-	contents.stone = stone_amount
+	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth") and tile.depth == tile.ship_locator_depth:
 		contents.ship_locator = 1
 		tile.erase("ship_locator_depth")

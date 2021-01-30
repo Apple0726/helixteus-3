@@ -14,7 +14,7 @@ func _ready():
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
-	tab = btn_str_l
+	tab = btn_str
 	change_tab(btn_str)
 	for obj in game["%s_info" % btn_str_l]:
 		var obj_info = game["%s_info" % btn_str_l][obj]

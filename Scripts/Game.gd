@@ -2004,6 +2004,20 @@ func generate_tiles(id:int):
 			tile_data[110].bldg.XP = 0
 			tile_data[110].bldg.path_1 = 1
 			tile_data[110].bldg.path_1_value = Data.path_1.RCC.value
+			tile_data[111] = {}
+			tile_data[111].bldg = {}
+			tile_data[111].bldg.name = "MM"
+			tile_data[111].bldg.is_constructing = false
+			tile_data[111].bldg.construction_date = curr_time
+			tile_data[111].bldg.construction_length = 10
+			tile_data[111].bldg.XP = 0
+			tile_data[111].bldg.path_1 = 1
+			tile_data[111].bldg.path_1_value = Data.path_1.MM.value
+			tile_data[111].bldg.path_2 = 1
+			tile_data[111].bldg.path_2_value = Data.path_2.MM.value
+			tile_data[111].bldg.collect_date = curr_time
+			tile_data[111].bldg.stored = 0
+			tile_data[111].depth = 0
 		else:
 			tile_data[112] = {}
 			tile_data[112].ship = true
@@ -2383,18 +2397,20 @@ func deduct_resources(costs):
 			mets[cost] -= costs[cost]
 	HUD.refresh()
 
-func add_resources(costs, p_i_layer:Dictionary = {}):
+func add_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money += costs.money
+		elif cost == "minerals":
+			minerals += costs.minerals
 		elif cost == "energy":
 			energy += costs.energy
 		elif cost == "stone":
-			for comp in p_i_layer:
+			for comp in costs.stone:
 				if stone.has(comp):
-					stone[comp] += p_i_layer[comp] * costs[cost]
+					stone[comp] += costs.stone[comp]
 				else:
-					stone[comp] = p_i_layer[comp] * costs[cost]
+					stone[comp] = costs.stone[comp]
 		elif mats.has(cost):
 			mats[cost] += costs[cost]
 		elif mets.has(cost):
@@ -2860,13 +2876,17 @@ func new_game_confirm():
 func show_collect_info(info:Dictionary):
 	if info.empty():
 		return
+	add_resources(info)
 	$UI/Panel.visible = false
-	Helper.put_rsrc($UI/Panel/VBox, 32, info)
+	var info2:Dictionary = info.duplicate(true)
+	if info2.has("stone"):
+		info2.stone = Helper.get_sum_of_dict(info2.stone)
+	Helper.put_rsrc($UI/Panel/VBox, 32, info2)
 	$UI/Panel/VBox.rect_size.y = 0
 	$UI/Panel.visible = true
 	$UI/Panel.modulate.a = 1.0
 	Helper.add_label(tr("YOU_COLLECTED"), 0)
-	$CollectPanelTimer.start(0.5 + 0.5 * $UI/Panel/VBox.get_child_count())
+	$CollectPanelTimer.start(0.5 + 0.3 * $UI/Panel/VBox.get_child_count())
 	$CollectPanelAnim.stop()
 
 func _on_CollectPanelTimer_timeout():

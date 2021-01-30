@@ -54,30 +54,6 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	yield(get_tree().create_timer(0), "timeout")
 	desc_txt.rect_min_size.y = desc_txt.get_content_height()
 	desc_txt.rect_size.y = desc_txt.get_content_height()
-#
-#func _on_Buy_pressed():
-#	get_item(item_name, item_total_costs, item_type, item_dir)
-
-#func get_item(_name, costs, _type, _dir):
-#	if _name == "":
-#		return
-#	item_name = _name
-#	item_total_costs = costs.duplicate(true)
-#	if game.check_enough(item_total_costs):
-#		game.deduct_resources(item_total_costs)
-#		var items_left = game.add_items(item_name, amount_node.value)
-#		if items_left > 0:
-#			var refund = item_costs.duplicate(true)
-#			for rsrc in item_costs:
-#				refund[rsrc] = item_costs[rsrc] * items_left
-#			game.add_resources(refund)
-#			game.popup(tr("NOT_ENOUGH_INV_SPACE_BUY"), 2.0)
-#		else:
-#			game.popup(tr("PURCHASE_SUCCESS"), 1.5)
-#		if game.HUD:
-#			game.HUD.update_hotbar()
-#	else:
-#		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func add_items(not_enough_inv:String, success:String):
 	var items_left = game.add_items(item_name, amount_node.value)
