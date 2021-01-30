@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 2000
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -119,6 +119,9 @@ var mats:Dictionary = {	"coal":0,
 						"soil":0,
 						"cellulose":0,
 						"silicon":0,
+						"xenon":0,
+						"he3mix":0,
+						"graviton":0,
 }
 
 var mets:Dictionary = {	"lead":0,

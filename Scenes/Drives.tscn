@@ -1,0 +1,162 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Graphics/Buttons/FusionDrive.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Buttons/ParticleDrive.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Buttons/IonDrive.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Buttons/ChemicalDrive.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
+[ext_resource path="res://Scripts/DrivePanel.gd" type="Script" id=6]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+
+[node name="Drives" type="Panel"]
+margin_top = 104.0
+margin_right = 1064.0
+margin_bottom = 600.0
+theme = ExtResource( 7 )
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 3.0
+margin_right = 260.0
+margin_bottom = 131.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChemicalDrive" type="TextureButton" parent="HBoxContainer"]
+visible = false
+margin_right = 128.0
+margin_bottom = 128.0
+theme = ExtResource( 7 )
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IonDrive" type="TextureButton" parent="HBoxContainer"]
+visible = false
+margin_right = 128.0
+margin_bottom = 128.0
+theme = ExtResource( 7 )
+texture_normal = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FusionDrive" type="TextureButton" parent="HBoxContainer"]
+visible = false
+margin_right = 128.0
+margin_bottom = 128.0
+theme = ExtResource( 7 )
+texture_normal = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ParticleDrive" type="TextureButton" parent="HBoxContainer"]
+visible = false
+margin_right = 128.0
+margin_bottom = 128.0
+theme = ExtResource( 7 )
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="."]
+margin_left = 39.8016
+margin_top = 158.092
+margin_right = 248.802
+margin_bottom = 186.092
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="."]
+margin_left = 408.0
+margin_top = 280.0
+margin_right = 720.0
+margin_bottom = 296.0
+value = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = 528.0
+margin_top = 216.0
+margin_right = 560.0
+margin_bottom = 248.0
+grow_horizontal = 0
+grow_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+margin_left = 528.0
+margin_top = 328.0
+margin_right = 560.0
+margin_bottom = 360.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 568.0
+margin_top = 216.0
+margin_right = 688.0
+margin_bottom = 248.0
+text = "0"
+valign = 1
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 568.0
+margin_top = 328.0
+margin_right = 688.0
+margin_bottom = 360.0
+text = "0"
+valign = 1
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 344.0
+margin_top = 328.0
+margin_right = 520.0
+margin_bottom = 360.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "TIME_REDUCTION"
+valign = 1
+
+[node name="Label4" type="Label" parent="."]
+margin_left = 404.0
+margin_top = 216.0
+margin_right = 520.0
+margin_bottom = 248.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "FUEL_COST"
+valign = 1
+
+[node name="Button" type="Button" parent="."]
+margin_left = 448.0
+margin_top = 376.0
+margin_right = 680.0
+margin_bottom = 404.0
+text = "SPEED_UP_SHIPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="HBoxContainer/ChemicalDrive" to="." method="_on_ChemicalDrive_pressed"]
+[connection signal="pressed" from="HBoxContainer/IonDrive" to="." method="_on_IonDrive_pressed"]
+[connection signal="pressed" from="HBoxContainer/FusionDrive" to="." method="_on_FusionDrive_pressed"]
+[connection signal="pressed" from="HBoxContainer/ParticleDrive" to="." method="_on_ParticleDrive_pressed"]
+[connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Button" to="." method="use_drive"]
