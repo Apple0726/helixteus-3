@@ -600,6 +600,7 @@ expand = true
 stretch_mode = 4
 
 [node name="Menu" type="PanelContainer" parent="Title"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 44.0
 margin_top = 464.0
 margin_right = 232.0

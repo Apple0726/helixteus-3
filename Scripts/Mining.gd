@@ -7,7 +7,6 @@ onready var tile = game.tile_data[id]
 onready var au_int:float = tile.aurora.au_int if tile and tile.has("aurora") else 0
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
-var total_mass = 0
 var contents:Dictionary
 var tween:Tween
 var layer:String
@@ -108,7 +107,6 @@ func generate_rock(new:bool):
 		tile_sprite.remove_child(met_sprite)
 	metal_sprites = []
 	if not tile.has("contents") or new:
-		total_mass = 0
 		contents = Helper.generate_rock(tile, p_i).duplicate(true)
 		tile.contents = contents
 	else:
@@ -127,9 +125,9 @@ func generate_rock(new:bool):
 			met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
 			metal_sprites.append(met_sprite)
 			tile_sprite.add_child(met_sprite)
-	Helper.put_rsrc(vbox, 42, contents)
-	for mass in contents.values():
-		total_mass += mass
+	var contents2 = contents.duplicate(true)
+	contents2.stone = Helper.get_sum_of_dict(contents.stone)
+	Helper.put_rsrc(vbox, 42, contents2)
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
@@ -193,7 +191,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += game.pickaxe.speed / total_mass * 3000 * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
+	progress += game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	if progress >= 100:

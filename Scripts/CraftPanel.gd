@@ -16,7 +16,7 @@ func _ready():
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
-	tab = btn_str_l
+	tab = btn_str
 	change_tab(btn_str)
 	var info:String = "craft_%s_info" % btn_str_l
 	for craft in game[info]:
@@ -44,7 +44,7 @@ func refresh():
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, _desc, costs, _type, _dir)
 	var imgs = []
-	if tab == "agriculture":
+	if tab == "Agriculture":
 		var agric_info = game.craft_agriculture_info[_name]
 		if agric_info.has("grow_time"):
 			imgs = [load("res://Graphics/Metals/" + Helper.get_plant_produce(_name) + ".png")]

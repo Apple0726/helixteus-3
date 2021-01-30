@@ -7,6 +7,7 @@ var support_bldgs:Array = ["GH"]
 var vehicles_bldgs:Array = ["RCC"]
 
 func _ready():
+	tab = "Basic"
 	$Title.text = tr("CONSTRUCT")
 	for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
 		var btn = Button.new()
@@ -15,12 +16,11 @@ func _ready():
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$Tabs.add_child(btn)
-	_on_btn_pressed("Basic")
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
-	tab = btn_str_l
+	tab = btn_str
 	change_tab(btn_str)
 	for bldg in self["%s_bldgs" % btn_str_l]:
 		var item = item_for_sale_scene.instance()
@@ -36,7 +36,9 @@ func _on_btn_pressed(btn_str:String):
 			var txt2:String = (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
 			txt += txt2
 		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
-		item.costs = Data.costs[bldg]
+		item.costs = Data.costs[bldg].duplicate(true)
+		if bldg == "GH":
+			item.costs.energy *= 1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0
 		item.parent = "construct_panel"
 		item.add_to_group("bldgs")
 		grid.add_child(item)
@@ -72,3 +74,4 @@ func refresh():
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = game.science_unlocked.EGH
 	$Tabs/Vehicles.visible = game.show.vehicles_button
+	_on_btn_pressed(tab)
