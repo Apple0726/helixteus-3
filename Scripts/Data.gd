@@ -10,6 +10,7 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"SE":{"value":20.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"MM":{"value":10, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":2.0, "pw":1.02, "is_value_integer":false, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
+				"SP":{"value":1.0, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 }
 var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -18,6 +19,7 @@ var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_cost
 				"SE":{"value":50, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"MM":{"value":40, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.01, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
+				"SP":{"value":300, "pw":1.12, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":600, "copper":600, "iron":600, "aluminium":600, "silver":600, "gold":600}},
 				"GF":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1000, "iron":1400, "aluminium":2000, "silver":2500, "gold":3500}},
@@ -35,6 +37,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"MM":{"money":13000, "energy":7000, "time":400.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 				"GH":{"money":10000, "energy":1500, "glass":200, "time":75.0},
+				"SP":{"money":4000, "time":90.0},
 }
 
 var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
@@ -68,6 +71,7 @@ var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"SC":[stone_icon, stone_icon, null],
 					"GF":[glass_icon, sand_icon, null],
 					"SE":[energy_icon, coal_icon, null],
+					"SP":[energy_icon, energy_icon],
 }
 
 var rsrc_icons = {	"ME":minerals_icon,
@@ -77,6 +81,7 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"GF":glass_icon,
 					"SE":energy_icon,
 					"MM":MM_icon,
+					"SP":energy_icon,
 }
 
 func reload():
@@ -90,6 +95,7 @@ func reload():
 	path_1.SE.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.MM.desc = tr("X_M_PER_SECOND") % ["%s", tr("S_SECOND")]
 	path_1.GH.desc = tr("X_PLANT_GROWTH")
+	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
 	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
@@ -97,6 +103,7 @@ func reload():
 	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.MM.desc = tr("X_M_AT_ONCE")
 	path_2.GH.desc = tr("X_PLANT_PRODUCE")
+	path_2.SP.desc = tr("STORES_X") % [" @i %s"]
 	path_3.SC.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.GF.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.SE.desc = tr("OUTPUT_MULTIPLIER")

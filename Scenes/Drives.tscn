@@ -18,7 +18,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="Drives" type="HBoxContainer" parent="."]
 margin_top = 3.0
 margin_right = 260.0
 margin_bottom = 131.0
@@ -26,7 +26,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ChemicalDrive" type="TextureButton" parent="HBoxContainer"]
+[node name="CD" type="TextureButton" parent="Drives"]
 visible = false
 margin_right = 128.0
 margin_bottom = 128.0
@@ -36,7 +36,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="IonDrive" type="TextureButton" parent="HBoxContainer"]
+[node name="ID" type="TextureButton" parent="Drives"]
 visible = false
 margin_right = 128.0
 margin_bottom = 128.0
@@ -46,7 +46,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FusionDrive" type="TextureButton" parent="HBoxContainer"]
+[node name="FD" type="TextureButton" parent="Drives"]
 visible = false
 margin_right = 128.0
 margin_bottom = 128.0
@@ -56,7 +56,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ParticleDrive" type="TextureButton" parent="HBoxContainer"]
+[node name="PD" type="TextureButton" parent="Drives"]
 visible = false
 margin_right = 128.0
 margin_bottom = 128.0
@@ -153,10 +153,10 @@ text = "SPEED_UP_SHIPS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="HBoxContainer/ChemicalDrive" to="." method="_on_ChemicalDrive_pressed"]
-[connection signal="pressed" from="HBoxContainer/IonDrive" to="." method="_on_IonDrive_pressed"]
-[connection signal="pressed" from="HBoxContainer/FusionDrive" to="." method="_on_FusionDrive_pressed"]
-[connection signal="pressed" from="HBoxContainer/ParticleDrive" to="." method="_on_ParticleDrive_pressed"]
+[connection signal="pressed" from="Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
+[connection signal="pressed" from="Drives/ID" to="." method="_on_IonDrive_pressed"]
+[connection signal="pressed" from="Drives/FD" to="." method="_on_FusionDrive_pressed"]
+[connection signal="pressed" from="Drives/PD" to="." method="_on_ParticleDrive_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Button" to="." method="use_drive"]

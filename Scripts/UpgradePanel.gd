@@ -63,7 +63,6 @@ func update():
 		if base_costs.has("energy"):
 			costs.energy += round(base_costs.energy * geo_seq(1.2, lv_curr, lv_to))
 		if lv_curr <= 10 and lv_to >= 11:
-			#costs.lead += round(base_metal_costs.lead * geo_seq(1.2, max(0, lv_curr - 10), min(lv_to, 20) - 10))
 			costs.lead += base_metal_costs.lead
 		if lv_curr <= 20 and lv_to >= 21:
 			costs.copper += base_metal_costs.copper
@@ -80,6 +79,8 @@ func update():
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
 		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * Helper.get_IR_mult(game.tile_data[ids[0]])
+		if bldg == "SP":
+			curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw)
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		else:
@@ -95,6 +96,8 @@ func update():
 		return
 	next.text = ""
 	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * Helper.get_IR_mult(game.tile_data[ids[0]])
+	if bldg == "SP":
+		next_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
 	else:
@@ -152,9 +155,6 @@ func _on_Upgrade_pressed():
 				continue
 			var curr_time = OS.get_system_time_msecs()
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
-			#print(new_value)
-			#if bldg_info.is_value_integer:
-				#new_value = round(new_value)
 			var base_costs = Data.costs[tile.bldg.name]
 			var cost_time = round(base_costs.time * geo_seq(1.24, tile.bldg[path_str], next_lv.value))
 			var cost_money = round(base_costs.money * geo_seq(1.25, tile.bldg[path_str], next_lv.value))

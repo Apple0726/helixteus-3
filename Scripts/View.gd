@@ -173,6 +173,7 @@ func _physics_process(_delta):
 					continue
 				hbox.visible = false
 			obj.icons_hidden = true
+			obj.set_process(false)
 		elif scale.x >= 0.25 and obj.icons_hidden:
 			for time_bar in obj.time_bars:
 				time_bar.node.visible = true
@@ -183,6 +184,7 @@ func _physics_process(_delta):
 					continue
 				hbox.visible = true
 			obj.icons_hidden = false
+			obj.set_process(true)
 
 #Dragging variables
 var dragged = false

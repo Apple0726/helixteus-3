@@ -141,6 +141,8 @@ func get_item_name (_name:String):
 			return tr("STEAM_ENGINE")
 		"GH":
 			return tr("GREENHOUSE")
+		"SP":
+			return tr("SOLAR_PANELS")
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -422,7 +424,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		tile.erase("current_deposit")
 	tile.depth += 1
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-		tile.crater.erase("init_depth")
+		tile.erase("crater")
 
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
@@ -550,3 +552,6 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 	vbox.add_child(label)
 	if idx != -1:
 		vbox.move_child(label, idx)
+
+func get_SP_production(temp:float, value:float):
+	return game.clever_round(value * temp / 273.0, 3)

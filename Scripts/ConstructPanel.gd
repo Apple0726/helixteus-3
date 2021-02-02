@@ -1,6 +1,6 @@
 extends "GenericPanel.gd"
 
-var basic_bldgs:Array = ["ME", "PP", "RL", "MM"]
+var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP"]
 var storage_bldgs:Array = ["MS"]
 var production_bldgs:Array = ["SC", "GF", "SE"]
 var support_bldgs:Array = ["GH"]
@@ -16,6 +16,7 @@ func _ready():
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$Tabs.add_child(btn)
+	refresh()
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
@@ -27,8 +28,11 @@ func _on_btn_pressed(btn_str:String):
 		item.get_node("SmallButton").text = tr("CONSTRUCT")
 		item.item_name = bldg
 		item.item_dir = "Buildings"
-		#item.item_type = "%s_info" % btn_str_l
-		var txt = (Data.path_1[bldg].desc + "\n") % [Data.path_1[bldg].value]
+		var txt
+		if bldg == "SP":
+			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value), 3)]
+		else:
+			txt = (Data.path_1[bldg].desc + "\n") % [Data.path_1[bldg].value]
 		if Data.path_2.has(bldg):
 			var txt2:String = (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value]
 			txt += txt2
@@ -64,6 +68,7 @@ func get_item(_name, costs, _type, _dir):
 	game.view.obj.construct(_name, costs)
 
 func refresh():
+	_on_btn_pressed(tab)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name == "GF":
 			bldg.visible = game.show.sand
@@ -74,4 +79,3 @@ func refresh():
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = game.science_unlocked.EGH
 	$Tabs/Vehicles.visible = game.show.vehicles_button
-	_on_btn_pressed(tab)

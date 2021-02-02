@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 2000
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -2404,8 +2404,6 @@ func add_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money += costs.money
-		elif cost == "minerals":
-			minerals += costs.minerals
 		elif cost == "energy":
 			energy += costs.energy
 		elif cost == "stone":

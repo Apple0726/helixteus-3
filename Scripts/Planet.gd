@@ -136,7 +136,11 @@ func show_tooltip(tile):
 		var bldg:String = tile.bldg.name
 		var mult:float = get_prod_mult(tile)
 		var IR_mult:float = Helper.get_IR_mult(tile)
-		var path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
+		var path_1_value
+		if bldg == "SP":
+			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult)
+		else:
+			path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
 		var path_2_value
 		var path_3_value
 		if tile.bldg.has("path_2_value"):
@@ -146,7 +150,7 @@ func show_tooltip(tile):
 		if tile.bldg.has("path_3_value"):
 			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
-			"ME", "PP":
+			"ME", "PP", "SP":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, round(path_2_value * IR_mult)]
 				adv = true
 			"MM":
@@ -254,10 +258,10 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 		tile.bldg.XP = round(constr_costs.money / 100.0)
 		tile.bldg.path_1 = 1
 		tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH"]:
+		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE"]:
+		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
 		if bldg_to_construct in ["SC", "GF", "SE"]:
@@ -377,7 +381,7 @@ func click_tile(tile, tile_id:int):
 	if not tile.has("bldg"):
 		return
 	var bldg:String = tile.bldg.name
-	if bldg in ["ME", "PP", "RL", "MM"]:
+	if bldg in ["ME", "PP", "RL", "MM", "SP"]:
 		collect_rsrc(tile, tile_id)
 	else:
 		if not tile.bldg.is_constructing:
@@ -401,10 +405,11 @@ func collect_rsrc(tile, tile_id:int):
 		return
 	var bldg:String = tile.bldg.name
 	var curr_time = OS.get_system_time_msecs()
+	update_rsrc(tile)
 	match bldg:
 		"ME":
 			var stored = tile.bldg.stored
-			var min_info:Dictionary = Helper.add_minerals(stored, false)
+			var min_info:Dictionary = Helper.add_minerals(stored)
 			tile.bldg.stored = min_info.remainder
 			add_item_to_coll("minerals", min_info.added)
 			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
@@ -416,6 +421,13 @@ func collect_rsrc(tile, tile_id:int):
 			#game.energy += stored
 			add_item_to_coll("energy", stored)
 			tile.bldg.stored = 0
+		"SP":
+			var stored = tile.bldg.stored
+			if stored == round(tile.bldg.path_2_value):
+				tile.bldg.collect_date = curr_time
+			#game.energy += stored
+			add_item_to_coll("energy", stored)
+			tile.bldg.stored = 0
 		"RL":
 			#game.SP += tile.bldg.stored
 			add_item_to_coll("SP", tile.bldg.stored)
@@ -423,10 +435,13 @@ func collect_rsrc(tile, tile_id:int):
 		"MM":
 			if tile.bldg.stored >= 1 and not tile.has("depth"):
 				tile.depth = 0
-			if tile.bldg.stored >= 10:
+			if tile.bldg.stored >= 3:
 				var contents:Dictionary = Helper.mass_generate_rock(tile, p_i, tile.bldg.stored)
 				tile.depth += tile.bldg.stored
 				tile.erase("contents")
+				if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+					tile.erase("crater")
+					$Obstacles.set_cell(tile_id % wid, int(tile_id / wid), 6)
 				for content in contents:
 					add_item_to_coll(content, contents[content])
 			else:
@@ -808,6 +823,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, id2)
 		"PP":
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
+		"SP":
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SP, id2)
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons.RL, id2)
 		"MM":
@@ -869,7 +886,7 @@ func update_MS(tile):
 		tile.bldg.IR_mult = new_IR_mult
 	
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "MM"]
+	return bldg in ["ME", "PP", "RL", "MM", "SP"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()
@@ -968,7 +985,7 @@ func _process(_delta):
 			continue
 		if tile.bldg.is_constructing:
 			continue
-		update_rsrc(rsrc, tile)
+		update_rsrc(tile, rsrc)
 
 func get_prod_mult(tile):
 	var mult = Helper.get_IR_mult(tile)
@@ -976,78 +993,90 @@ func get_prod_mult(tile):
 		mult *= tile.bldg.overclock_mult
 	return mult
 	
-func update_rsrc(rsrc, tile):
+func update_rsrc(tile, rsrc = null):
 	var curr_time = OS.get_system_time_msecs()
+	var current_bar
+	var capacity_bar
+	var rsrc_text
+	if rsrc:
+		current_bar = rsrc.get_node("Control/CurrentBar")
+		capacity_bar = rsrc.get_node("Control/CapacityBar")
+		rsrc_text = rsrc.get_node("Control/Label")
+	else:
+		if tile.bldg.name in ["SC", "GF", "SE"]:
+			return
 	match tile.bldg.name:
-		"ME", "PP", "MM":
+		"ME", "PP", "MM", "SP":
 			#Number of seconds needed per mineral
-			var prod = 1000 / tile.bldg.path_1_value
+			var prod
+			if tile.bldg.name == "SP":
+				prod = 1000 / Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value)
+			else:
+				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
 			var cap = round(tile.bldg.path_2_value * Helper.get_IR_mult(tile))
 			var stored = tile.bldg.stored
 			var c_d = tile.bldg.collect_date
 			var c_t = curr_time
-			var current_bar = rsrc.get_node("Control/CurrentBar")
-			var capacity_bar = rsrc.get_node("Control/CapacityBar")
 			if c_t < c_d and not tile.bldg.is_constructing:
 				tile.bldg.collect_date = curr_time
 			if stored < cap:
-				current_bar.value = min((c_t - c_d) / prod, 1)
-				capacity_bar.value = min(stored / float(cap), 1)
 				if c_t - c_d > prod:
 					var rsrc_num = floor((c_t - c_d) / prod)
 					tile.bldg.stored += rsrc_num
 					tile.bldg.collect_date += prod * rsrc_num
 					if tile.bldg.stored >= cap:
 						tile.bldg.stored = cap
-						current_bar.value = 0
-						capacity_bar.value = 1
-			else:
-				current_bar.value = 0
-				capacity_bar.value = 1
-			if tile.bldg.name == "MM":
-				rsrc.get_node("Control/Label").text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
-			else:
-				rsrc.get_node("Control/Label").text = String(stored)
+			if rsrc:
+				if tile.bldg.stored >= cap:
+					current_bar.value = 0
+					capacity_bar.value = 1
+				else:
+					current_bar.value = min((c_t - c_d) / prod, 1)
+					capacity_bar.value = min(stored / float(cap), 1)
+				if tile.bldg.name == "MM":
+					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
+				else:
+					rsrc_text.text = String(stored)
 		"RL":
 			var prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
 			var stored = tile.bldg.stored
 			var c_d = tile.bldg.collect_date
 			var c_t = curr_time
-			var current_bar = rsrc.get_node("Control/CurrentBar")
-			current_bar.value = min((c_t - c_d) / prod, 1)
 			if c_t < c_d:
 				tile.bldg.collect_date = curr_time
 			if c_t - c_d > prod:
 				var rsrc_num = floor((c_t - c_d) / prod)
 				tile.bldg.stored += rsrc_num
 				tile.bldg.collect_date += prod * rsrc_num
-			rsrc.get_node("Control/Label").text = String(stored)
+			if rsrc:
+				current_bar.value = min((c_t - c_d) / prod, 1)
+				rsrc_text.text = String(stored)
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = Helper.get_crush_info(tile)
-				rsrc.get_node("Control/Label").text = String(c_i.qty_left)
-				rsrc.get_node("Control/CapacityBar").value = 1 - c_i.progress
+				rsrc_text.text = String(c_i.qty_left)
+				capacity_bar.value = 1 - c_i.progress
 			else:
-				rsrc.get_node("Control/Label").text = ""
-				rsrc.get_node("Control/CapacityBar").value = 0
+				rsrc_text.text = ""
+				capacity_bar.value = 0
 		"GF":
 			if tile.bldg.has("qty1"):
 				var prod_i = Helper.get_prod_info(tile)
-				rsrc.get_node("Control/Label").text = "%s kg" % [prod_i.qty_made]
-				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
+				rsrc_text.text = "%s kg" % [prod_i.qty_made]
+				capacity_bar.value = prod_i.progress
 			else:
-				rsrc.get_node("Control/Label").text = ""
-				rsrc.get_node("Control/CapacityBar").value = 0
+				rsrc_text.text = ""
+				capacity_bar.value = 0
 		"SE":
 			if tile.bldg.has("qty1"):
 				var prod_i = Helper.get_prod_info(tile)
-				rsrc.get_node("Control/Label").text = "%s" % [round(prod_i.qty_made)]
-				rsrc.get_node("Control/CapacityBar").value = prod_i.progress
+				rsrc_text.text = "%s" % [round(prod_i.qty_made)]
+				capacity_bar.value = prod_i.progress
 			else:
-				rsrc.get_node("Control/Label").text = ""
-				rsrc.get_node("Control/CapacityBar").value = 0
+				rsrc_text.text = ""
+				capacity_bar.value = 0
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()

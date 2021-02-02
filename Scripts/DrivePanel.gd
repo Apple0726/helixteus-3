@@ -13,19 +13,10 @@ var cost = float(0)
 var meta = ""
 var speed = 0
 
-func _ready():
-	pass
-
 func refresh(value):
-	if game.science_unlocked["CD"] == true:
-		$HBoxContainer/ChemicalDrive.visible = true
-	if game.science_unlocked["ID"] == true:
-		$HBoxContainer/IonDrive.visible = true
-	if game.science_unlocked["FD"] == true:
-		$HBoxContainer/FusionDrive.visible = true
-	if game.science_unlocked["PD"] == true:
-		$HBoxContainer/ParticleDrive.visible = true
-	
+	for drive in $Drives.get_children():
+		drive.visible = game.science_unlocked[drive.name]
+
 	meta = op.get_selected_metadata()
 	$HSlider.value = value
 	
@@ -46,11 +37,11 @@ func refresh(value):
 			$TextureRect.texture = graviton_texture
 			speed = 4000000
 	
-	if meta != null:
+	if meta:
 		cost = game.mats[meta] * (value / 100)
-		if game.mats[meta] > 100 && cost < 100:
+		if game.mats[meta] > 100 and cost < 100:
 			cost = 100
-		$Label.text = String(cost) + " kg"
+		$Label.text = "%s kg" % cost
 	
 	var slider_factor = (-100 * pow(0.95, $HSlider.value)) + 101
 	var time_reduction = (cost * speed) / slider_factor
@@ -58,9 +49,6 @@ func refresh(value):
 		$Label2.text = Helper.time_to_str(0)
 	else:
 		$Label2.text = Helper.time_to_str(time_reduction)
-	
-	return cost
-	return meta
 
 func use_drive():
 	if game.ships_travel_view == "-":
