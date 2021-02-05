@@ -106,6 +106,8 @@ func _ready():
 					$Obstacles.set_cell(i, j, 5)
 				elif len(game.ship_data) == 1:
 					$Obstacles.set_cell(i, j, 7)
+			if tile.has("wormhole"):
+				$Obstacles.set_cell(i, j, 8)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -134,7 +136,8 @@ func show_tooltip(tile):
 		return
 	if tile.has("bldg"):
 		var bldg:String = tile.bldg.name
-		var mult:float = get_prod_mult(tile)
+		icons = Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else []
+		var mult:float = Helper.get_prod_mult(tile)
 		var IR_mult:float = Helper.get_IR_mult(tile)
 		var path_1_value
 		if bldg == "SP":
@@ -210,6 +213,23 @@ func show_tooltip(tile):
 			if game.help.abandoned_ship:
 				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
 				game.help_str = "abandoned_ship"
+	if tile.has("wormhole"):
+		if tile.wormhole.active:
+			if game.help.active_wormhole:
+				tooltip = "%s\n%s\n%s" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				game.help_str = "active_wormhole"
+			else:
+				tooltip = tr("ACTIVE_WORMHOLE")
+		else:
+			if game.help.inactive_wormhole:
+				tooltip = "%s\n%s\n%s" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				game.help_str = "inactive_wormhole"
+			else:
+				tooltip = tr("INACTIVE_WORMHOLE")
+			var wh_costs:Dictionary = get_wh_costs()
+			tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP, 6), Helper.time_to_str(wh_costs.time * 1000)]
+			icons = [Data.SP_icon, Data.time_icon]
+			adv = true
 	if tile.has("cave"):
 		tooltip = tr("CAVE")
 		if game.help.cave_desc:
@@ -226,17 +246,17 @@ func show_tooltip(tile):
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
 	if adv:
-		if not tile.has("bldg"):
-			game.hide_adv_tooltip()
-		else:
-			if not game.get_node("Tooltips/Tooltip").visible:
-				game.show_adv_tooltip(tooltip, Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
+		if not game.get_node("Tooltips/Tooltip").visible:
+			game.show_adv_tooltip(tooltip, icons)
 	else:
 		game.hide_adv_tooltip()
 		if tooltip == "":
 			game.hide_tooltip()
 		else:
 			game.show_tooltip(tooltip)
+
+func get_wh_costs():
+	return {"SP":10000 * pow(game.stats.wormholes_activated + 1, 2.2), "time":3600 * pow(game.stats.wormholes_activated + 1, 0.8)}
 
 func constr_bldg(tile_id:int, mass_build:bool = false):
 	if bldg_to_construct == "":
@@ -325,26 +345,9 @@ func harvest_plant(tile, tile_id:int):
 		#game.mets[plant] += produce
 		game.show[plant] = true
 		game.show.metals = true
-		add_item_to_coll(plant, produce)
+		Helper.add_item_to_coll(items_collected, plant, produce)
 		tile.plant.clear()
 		remove_child(plant_sprites[String(tile_id)])
-
-func add_item_to_coll(item:String, num):
-	if num is float:
-		if num == 0:
-			return
-		if items_collected.has(item):
-			items_collected[item] += num
-		else:
-			items_collected[item] = num
-	else:
-		if not items_collected.has("stone"):
-			items_collected.stone = {}
-		for el in num:
-			if items_collected.stone.has(el):
-				items_collected.stone[el] += num[el]
-			else:
-				items_collected.stone[el] = num[el]
 
 func speedup_bldg(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
@@ -382,7 +385,7 @@ func click_tile(tile, tile_id:int):
 		return
 	var bldg:String = tile.bldg.name
 	if bldg in ["ME", "PP", "RL", "MM", "SP"]:
-		collect_rsrc(tile, tile_id)
+		Helper.collect_rsrc(items_collected, p_i, tile, tile_id)
 	else:
 		if not tile.bldg.is_constructing:
 			game.c_t = tile_id
@@ -400,64 +403,10 @@ func click_tile(tile, tile_id:int):
 					game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
 			game.hide_tooltip()
 
-func collect_rsrc(tile, tile_id:int):
-	if not tile.has("bldg"):
-		return
-	var bldg:String = tile.bldg.name
-	var curr_time = OS.get_system_time_msecs()
-	update_rsrc(tile)
-	match bldg:
-		"ME":
-			var stored = tile.bldg.stored
-			var min_info:Dictionary = Helper.add_minerals(stored)
-			tile.bldg.stored = min_info.remainder
-			add_item_to_coll("minerals", min_info.added)
-			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
-				tile.bldg.collect_date = curr_time
-		"PP":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * Helper.get_IR_mult(tile)):
-				tile.bldg.collect_date = curr_time
-			#game.energy += stored
-			add_item_to_coll("energy", stored)
-			tile.bldg.stored = 0
-		"SP":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value):
-				tile.bldg.collect_date = curr_time
-			#game.energy += stored
-			add_item_to_coll("energy", stored)
-			tile.bldg.stored = 0
-		"RL":
-			#game.SP += tile.bldg.stored
-			add_item_to_coll("SP", tile.bldg.stored)
-			tile.bldg.stored = 0
-		"MM":
-			if tile.bldg.stored >= 1 and not tile.has("depth"):
-				tile.depth = 0
-			if tile.bldg.stored >= 3:
-				var contents:Dictionary = Helper.mass_generate_rock(tile, p_i, tile.bldg.stored)
-				tile.depth += tile.bldg.stored
-				tile.erase("contents")
-				if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-					tile.erase("crater")
-					$Obstacles.set_cell(tile_id % wid, int(tile_id / wid), 6)
-				for content in contents:
-					add_item_to_coll(content, contents[content])
-			else:
-				for i in tile.bldg.stored:
-					var contents:Dictionary = Helper.generate_rock(tile, p_i)
-					Helper.get_rsrc_from_rock(contents, tile, p_i, true)
-					for content in contents:
-						add_item_to_coll(content, contents[content])
-			if tile.bldg.stored == tile.bldg.path_2_value:
-				tile.bldg.collect_date = curr_time
-			tile.bldg.stored = 0
-
 func destroy_bldg(id2:int):
 	var tile = game.tile_data[id2]
 	var bldg:String = tile.bldg.name
-	collect_rsrc(tile, id2)
+	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
 	if bldg == "MS":
@@ -465,6 +414,7 @@ func destroy_bldg(id2:int):
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
+	game.show_collect_info(items_collected)
 
 func add_shadows():
 	for sh in shadows:
@@ -721,6 +671,75 @@ func _input(event):
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)
 					elif not game.get_node("UI/PopupBackground").visible:
 						game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
+			elif tile.has("wormhole"):
+				if tile.wormhole.active:
+					Helper.update_ship_travel()
+					if Helper.ships_on_planet(id):
+						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
+							tile.wormhole.new = false
+							visible = false
+							if game.galaxy_data[game.c_g].has("wormholes"):
+								game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
+							else:
+								game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
+							if not game.galaxy_data[game.c_g].discovered:#if galaxy generated systems
+								yield(game.start_system_generation(), "completed")
+							else:
+								Helper.save_obj("Clusters", game.c_c_g, game.galaxy_data)
+							var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]
+							var orig_s_l:int = game.c_s
+							var orig_s_g:int = game.c_s_g
+							var orig_p_l:int = game.c_p
+							var orig_p_g:int = game.c_p_g
+							view.save_zooms("planet")
+							Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+							game.c_s = tile.wormhole.l_dest_s_id
+							game.c_s_g = tile.wormhole.g_dest_s_id
+							if wh_system.discovered:#if system generated planets
+								game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
+							else:
+								game.planet_data.clear()
+								game.generate_planets(tile.wormhole.l_dest_s_id)
+							var wh_planet = game.planet_data[Helper.rand_int(0, wh_system.planet_num - 1)]
+							game.planet_data[wh_planet.l_id].conquered = true
+							game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
+							game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
+							Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
+							game.c_p = wh_planet.l_id
+							game.c_p_g = wh_planet.id
+							if not wh_planet.discovered:
+								game.generate_tiles(wh_planet.l_id)
+							game.tile_data = game.open_obj("Planets", wh_planet.id)
+							var wh_tile:int = Helper.rand_int(0, len(game.tile_data) - 1)
+							game.erase_tile(wh_tile)
+							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
+							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
+						else:
+							game.switch_view("")
+							game.c_p = tile.wormhole.l_dest_p_id
+							game.c_p_g = tile.wormhole.g_dest_p_id
+							game.c_s = tile.wormhole.l_dest_s_id
+							game.c_s_g = tile.wormhole.g_dest_s_id
+							game.tile_data = game.open_obj("Planets", game.c_p_g)
+							game.planet_data = game.open_obj("Systems", game.c_s_g)
+						game.ships_c_coords.p = game.c_p
+						game.ships_c_coords.s = game.c_s
+						game.ships_c_g_coords.s = game.c_s_g
+						game.switch_view("planet", false, "", [], false)
+					elif game.ships_travel_view == "-":
+						game.send_ships_panel.dest_p_id = id
+						game.toggle_panel(game.send_ships_panel)
+				else:
+					if not tile.wormhole.has("investigation_length"):
+						var costs:Dictionary = get_wh_costs()
+						if game.SP >= costs.SP:
+							game.SP -= costs.SP
+							tile.wormhole.investigation_length = costs.time
+							tile.wormhole.investigation_date = curr_time
+							game.popup(tr("INVESTIGATION_STARTED"), 2.0)
+							add_time_bar(tile_id, "wormhole")
+						else:
+							game.popup(tr("NOT_ENOUGH_SP"), 1.5)
 			game.show_collect_info(items_collected)
 		game.HUD.refresh()
 		if game.planet_HUD:
@@ -729,20 +748,20 @@ func _input(event):
 func available_for_plant(tile):
 	if not tile:
 		return true
-	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth")
+	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth")
 	if tile.has("bldg") and tile.bldg.name == "GH":
 		return bool1
 	else:
 		return not tile.has("bldg") and bool1
 
 func available_for_mining(tile):
-	return not tile or not tile.has("bldg") and not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("lake") and not tile.has("cave")
+	return not tile or not tile.has("bldg") and not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave")
 
 func available_to_build(tile):
 	if bldg_to_construct == "MM":
 		return not tile or available_for_mining(tile)
 	if bldg_to_construct == "GH":
-		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
+		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
 
 func mine_tile(id2:int):
@@ -782,6 +801,8 @@ func add_time_bar(id2:int, type:String):
 			time_bar.modulate = Color(105/255.0, 65/255.0, 40/255.0, 1)
 		"overclock":
 			time_bar.modulate = Color(0, 0, 1, 1)
+		"wormhole":
+			time_bar.modulate = Color(105/255.0, 0, 1, 1)
 	time_bars.append({"node":time_bar, "id":id2, "type":type})
 
 func add_plant(id2:int, st:String):
@@ -974,6 +995,16 @@ func _process(_delta):
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
+		elif type == "wormhole":
+			if tile.wormhole.active:
+				remove_child(time_bar)
+				time_bars.erase(time_bar_obj)
+				continue
+			start_date = tile.wormhole.investigation_date
+			length = tile.wormhole.investigation_length
+			progress = (curr_time - start_date) / float(length)
+			if progress > 1:
+				tile.wormhole.active = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
 	for rsrc_obj in rsrcs:
@@ -985,98 +1016,7 @@ func _process(_delta):
 			continue
 		if tile.bldg.is_constructing:
 			continue
-		update_rsrc(tile, rsrc)
-
-func get_prod_mult(tile):
-	var mult = Helper.get_IR_mult(tile)
-	if tile.bldg.has("overclock_mult"):
-		mult *= tile.bldg.overclock_mult
-	return mult
-	
-func update_rsrc(tile, rsrc = null):
-	var curr_time = OS.get_system_time_msecs()
-	var current_bar
-	var capacity_bar
-	var rsrc_text
-	if rsrc:
-		current_bar = rsrc.get_node("Control/CurrentBar")
-		capacity_bar = rsrc.get_node("Control/CapacityBar")
-		rsrc_text = rsrc.get_node("Control/Label")
-	else:
-		if tile.bldg.name in ["SC", "GF", "SE"]:
-			return
-	match tile.bldg.name:
-		"ME", "PP", "MM", "SP":
-			#Number of seconds needed per mineral
-			var prod
-			if tile.bldg.name == "SP":
-				prod = 1000 / Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value)
-			else:
-				prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			var cap = round(tile.bldg.path_2_value * Helper.get_IR_mult(tile))
-			var stored = tile.bldg.stored
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d and not tile.bldg.is_constructing:
-				tile.bldg.collect_date = curr_time
-			if stored < cap:
-				if c_t - c_d > prod:
-					var rsrc_num = floor((c_t - c_d) / prod)
-					tile.bldg.stored += rsrc_num
-					tile.bldg.collect_date += prod * rsrc_num
-					if tile.bldg.stored >= cap:
-						tile.bldg.stored = cap
-			if rsrc:
-				if tile.bldg.stored >= cap:
-					current_bar.value = 0
-					capacity_bar.value = 1
-				else:
-					current_bar.value = min((c_t - c_d) / prod, 1)
-					capacity_bar.value = min(stored / float(cap), 1)
-				if tile.bldg.name == "MM":
-					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
-				else:
-					rsrc_text.text = String(stored)
-		"RL":
-			var prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			var stored = tile.bldg.stored
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d:
-				tile.bldg.collect_date = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num = floor((c_t - c_d) / prod)
-				tile.bldg.stored += rsrc_num
-				tile.bldg.collect_date += prod * rsrc_num
-			if rsrc:
-				current_bar.value = min((c_t - c_d) / prod, 1)
-				rsrc_text.text = String(stored)
-		"SC":
-			if tile.bldg.has("stone"):
-				var c_i = Helper.get_crush_info(tile)
-				rsrc_text.text = String(c_i.qty_left)
-				capacity_bar.value = 1 - c_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
-		"GF":
-			if tile.bldg.has("qty1"):
-				var prod_i = Helper.get_prod_info(tile)
-				rsrc_text.text = "%s kg" % [prod_i.qty_made]
-				capacity_bar.value = prod_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
-		"SE":
-			if tile.bldg.has("qty1"):
-				var prod_i = Helper.get_prod_info(tile)
-				rsrc_text.text = "%s" % [round(prod_i.qty_made)]
-				capacity_bar.value = prod_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+		Helper.update_rsrc(p_i, tile, rsrc)
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
@@ -1122,7 +1062,7 @@ func collect_all():
 	items_collected.clear()
 	for tile in game.tile_data:
 		if tile:
-			collect_rsrc(tile, i)
+			Helper.collect_rsrc(items_collected, p_i, tile, i)
 		i += 1
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()

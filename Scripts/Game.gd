@@ -165,7 +165,9 @@ var help:Dictionary = {
 			"mass_build":true,
 			"abandoned_ship":true,
 			"science_tree":true,
-			"sprint_mode":true
+			"sprint_mode":true,
+			"active_wormhole":true,
+			"inactive_wormhole":true,
 }
 
 var science_unlocked:Dictionary = {}
@@ -206,12 +208,12 @@ var rover_data:Array = []
 var ship_data:Array = []
 var second_ship_hints:Dictionary = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
 var ships_c_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
-var ships_dest_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
-var ships_c_g_s:int = 0#ship current global system id
+var ships_c_g_coords:Dictionary = {"c":0, "g":0, "s":0}#ship global coordinates (current)
+var ships_dest_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
+var ships_dest_g_coords:Dictionary = {"c":0, "g":0, "s":0}#ship global coordinates (destination)
 var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
 var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
 var ships_travel_view:String = "-"#View in which ships travel
-var ships_travel_view_g_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0}#ship current global system id
 var ships_travel_start_date:int = -1
 var ships_travel_length:int = -1
 var satellite_data:Array = []
@@ -230,7 +232,9 @@ var s_num:int = 0
 var g_num:int = 0#Total number of galaxies generated
 var c_num:int = 0
 
-var stats:Dictionary = {"bldgs_built":0}
+var stats:Dictionary = {	"bldgs_built":0,
+							"wormholes_activated":0,
+							}
 
 ############ End save data ############
 
@@ -495,11 +499,11 @@ func load_game():
 		second_ship_hints = save_game.get_var()
 		ships_c_coords = save_game.get_var()
 		ships_dest_coords = save_game.get_var()
-		ships_c_g_s = save_game.get_64()
 		ships_depart_pos = save_game.get_var()
 		ships_dest_pos = save_game.get_var()
 		ships_travel_view = save_game.get_var()
-		ships_travel_view_g_coords = save_game.get_var()
+		ships_c_g_coords = save_game.get_var()
+		ships_dest_g_coords = save_game.get_var()
 		ships_travel_start_date = save_game.get_64()
 		ships_travel_length = save_game.get_64()
 		EA_cave_visited = save_game.get_8()
@@ -800,15 +804,19 @@ func set_home_coords():
 	c_s_g = 0
 	c_p = 2
 	c_p_g = 2
-	
-func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
+
+func set_planet_ids(l_id:int, g_id:int):
+	c_p = l_id
+	c_p_g = g_id
+#															V function to execute after removing objects but before adding new ones
+func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true):
 	hide_tooltip()
 	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
 	if not first_time:
 		match c_v:
 			"planet":
-				remove_planet()
+				remove_planet(save_zooms)
 			"planet_details":
 				remove_child(planet_details)
 				planet_details = null
@@ -855,7 +863,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = ""):
 			l_v = c_v
 			c_v = new_view
 	if fn != "":
-		call(fn)
+		callv(fn, fn_args)
 	match c_v:
 		"planet":
 			add_planet()
@@ -1068,15 +1076,18 @@ func add_galaxy():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g]["discovered"]:
-		add_loading()
-		reset_collisions()
-		gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
-		if c_g_g != 0:
-			system_data.clear()
-		generate_system_part()
-	else:
-		add_obj("galaxy")
+		yield(start_system_generation(), "completed")
+	add_obj("galaxy")
 
+func start_system_generation():
+	yield(get_tree(), "idle_frame")
+	add_loading()
+	reset_collisions()
+	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
+	if c_g_g != 0:
+		system_data.clear()
+	yield(generate_system_part(), "completed")
+	
 func add_system():
 	var view_str:String = tr("VIEW_GALAXY")
 	if lv < 18:
@@ -1090,7 +1101,6 @@ func add_system():
 			planet_data.clear()
 		generate_planets(c_s)
 	add_obj("system")
-	HUD.get_node("CollectAll").visible = false
 
 func add_planet():
 	planet_data = open_obj("Systems", c_s_g)
@@ -1100,7 +1110,6 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
-	HUD.get_node("CollectAll").visible = true
 
 func remove_dimension():
 	add_child(HUD)
@@ -1139,14 +1148,13 @@ func remove_system():
 	remove_child(change_view_btn)
 	change_view_btn = null
 
-func remove_planet():
-	view.remove_obj("planet")
+func remove_planet(save_zooms:bool = true):
+	view.remove_obj("planet", save_zooms)
 	vehicle_panel.tile_id = -1
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
 	#$UI/BottomInfo.visible = false
-	Helper.save_obj("Systems", c_s_g, planet_data)
 	remove_child(planet_HUD)
 	planet_HUD = null
 
@@ -1372,6 +1380,8 @@ func generate_system_part():
 		var r:float = N / 20.0
 		var init_th:float = rand_range(0, PI)
 		var th:float = init_th
+		update_loading_bar(0, N, tr("GENERATING_GALAXY"))
+		#yield(get_tree().create_timer(5),"timeout")
 		var N_init:int = systems_collision_detection2(c_g, 0, 0, 0, true)#Generate stars at the center
 		var N_progress:int = N_init
 		while N_progress < (N + N_init) / 2.0:#Arm #1
@@ -1390,7 +1400,6 @@ func generate_system_part():
 			r += (1 - lerp(0, 0.8, progress)) * 1280 * lerp(1.3, 4, inverse_lerp(5000, 20000, N))
 			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
 			yield(get_tree().create_timer(0.0000000000001),"timeout")
-		#print(max_outer_radius)
 		for i in len(stars_failed):#Put stars that failed to pass the collision tests above
 			var attempts:int = 0
 			var s_i = system_data[stars_failed[i]]
@@ -1442,7 +1451,6 @@ func generate_system_part():
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
-	add_obj("galaxy")
 	remove_child($Loading)
 
 func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false):
@@ -1766,7 +1774,7 @@ func generate_planets(id:int):
 		p_i["id"] = p_id + p_num
 		p_i["l_id"] = p_id
 		p_i["name"] = tr("PLANET") + " " + String(p_id)
-		system_data[id]["planets"].append(p_id)
+		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
 		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
 		var dist_in_km = p_i.distance / 569.0 * pow10(1.5, 8)
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
@@ -1813,6 +1821,9 @@ func generate_planets(id:int):
 		p_i.HX_data.shuffle()
 		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
 			p_i.second_ship = true
+		var wid:int = Helper.get_wid(p_i.size)
+		var view_zoom = 3.0 / wid
+		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 		planet_data.append(p_i)
 	if id != 0:
 		var view_zoom = 400 / max_distance
@@ -1852,9 +1863,10 @@ func generate_tiles(id:int):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
-	var view_zoom = 3.0 / wid
-	p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 	tile_data.resize(pow(wid, 2))
+	if p_i.id == 2:
+		var view_zoom = 3.0 / wid
+		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 	#Aurora spawn
 	var diff:int = 0
 	var tile_from:int = -1
@@ -1968,23 +1980,18 @@ func generate_tiles(id:int):
 							continue
 						tile_data[t_id].crater.metal = met
 	if relic_cave_id != -1:
-		if not tile_data[relic_cave_id + wid]:
-			tile_data[relic_cave_id + wid] = {}
-		else:
-			for k in tile_data[relic_cave_id + wid]:
-				if k != "aurora":
-					tile_data[relic_cave_id + wid].erase(k)
+		erase_tile(relic_cave_id + wid)
 		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
 	if p_i.has("second_ship"):
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-		if not tile_data[random_tile]:
-			tile_data[random_tile] = {}
-		else:
-			for k in tile_data[random_tile]:
-				if k != "aurora":
-					tile_data[random_tile].erase(k)
+		erase_tile(random_tile)
 		tile_data[random_tile].ship = true
-	if lake_1_phase == "G":
+	elif p_i.id == 6:
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		var dest_id:int = Helper.rand_int(1, 1999)#						local_destination_system_id		global_dest_s_id
+		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
+	if lake_1_phase == "G":#								new: whether the wormhole should generate a new wormhole on another planet
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
@@ -2030,6 +2037,14 @@ func generate_tiles(id:int):
 	if ship_signal:
 		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
 		second_ship_hints.signal_emitted = true
+
+func erase_tile(random_tile:int):
+	if not tile_data[random_tile]:
+		tile_data[random_tile] = {}
+	else:
+		for k in tile_data[random_tile]:
+			if k != "aurora":
+				tile_data[random_tile].erase(k)
 
 func make_planet_composition(temp:float, depth:String):
 	randomize()
@@ -2680,11 +2695,11 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(second_ship_hints)
 	save_game.store_var(ships_c_coords)
 	save_game.store_var(ships_dest_coords)
-	save_game.store_64(ships_c_g_s)
 	save_game.store_var(ships_depart_pos)
 	save_game.store_var(ships_dest_pos)
 	save_game.store_var(ships_travel_view)
-	save_game.store_var(ships_travel_view_g_coords)
+	save_game.store_var(ships_c_g_coords)
+	save_game.store_var(ships_dest_g_coords)
 	save_game.store_64(ships_travel_start_date)
 	save_game.store_64(ships_travel_length)
 	save_game.store_8(EA_cave_visited)

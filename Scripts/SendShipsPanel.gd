@@ -22,7 +22,7 @@ func refresh():
 	var depart_id:int
 	var dest_id:int
 	var coords:Dictionary = game.ships_c_coords
-	var g_s:int = game.ships_c_g_s
+	var g_s:int = game.ships_c_g_coords.s
 	var file = File.new()
 	file.open("user://Save1/Systems/%s.hx3" % [g_s], File.READ)
 	planets_in_depart_system = file.get_var()
@@ -100,7 +100,7 @@ func send_ships():
 			game.ships_depart_pos = depart_pos
 			game.ships_dest_pos = dest_pos
 			game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
-			game.ships_travel_view_g_coords = {"sc":game.c_sc, "c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
+			game.ships_dest_g_coords = {"c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
 			game.ships_travel_view = travel_view
 			game.ships_travel_start_date = OS.get_system_time_msecs()
 			game.ships_travel_length = time_cost

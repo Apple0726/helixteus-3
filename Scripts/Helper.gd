@@ -22,14 +22,14 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	var color:Color = Color(1.0, 1.0, 1.0, 1.0)
 	if show_available:
 		if path == "Icons/stone":
-			rsrc_available = Helper.get_sum_of_dict(rsrc_available)
+			rsrc_available = get_sum_of_dict(rsrc_available)
 		text = "%s/%s" % [format_num(rsrc_available, threshold / 2), format_num(rsrc_cost, threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		var num_str:String = Helper.e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(game.clever_round(rsrc_cost, 3), threshold)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(game.clever_round(rsrc_cost, 3), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = num_str + mass_str
@@ -155,7 +155,7 @@ func get_wid(size:float):
 	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
 
 func e_notation(num:float):#e notation
-	var e = floor(Helper.log10(num))
+	var e = floor(log10(num))
 	var n = num * pow(10, -e)
 	return "%se%s" %  [game.clever_round(n), e]
 
@@ -427,7 +427,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		tile.erase("crater")
 
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
-	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
+	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, get_AIE())) if tile.has("aurora") else 1.0
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -472,7 +472,7 @@ func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
 	return stone
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
-	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, Helper.get_AIE())) if tile.has("aurora") else 1.0
+	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, get_AIE())) if tile.has("aurora") else 1.0
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -492,7 +492,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 				var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 				if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
 					if randf() < 0.25 / game.met_info[met].rarity * (6 if crater_metal else 1) * aurora_mult:
-						tile.current_deposit = {"met":met, "size":Helper.rand_int(4, 10), "progress":1}
+						tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
 		if tile.has("current_deposit"):
 			var met = tile.current_deposit.met
 			var size = tile.current_deposit.size
@@ -555,3 +555,175 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 
 func get_SP_production(temp:float, value:float):
 	return game.clever_round(value * temp / 273.0, 3)
+
+func update_rsrc(p_i, tile, rsrc = null):
+	var curr_time = OS.get_system_time_msecs()
+	var current_bar
+	var capacity_bar
+	var rsrc_text
+	if rsrc:
+		current_bar = rsrc.get_node("Control/CurrentBar")
+		capacity_bar = rsrc.get_node("Control/CapacityBar")
+		rsrc_text = rsrc.get_node("Control/Label")
+	else:
+		if tile.bldg.name in ["SC", "GF", "SE"]:
+			return
+	match tile.bldg.name:
+		"ME", "PP", "MM", "SP":
+			#Number of seconds needed per mineral
+			var prod
+			if tile.bldg.name == "SP":
+				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value)
+			else:
+				prod = 1000 / tile.bldg.path_1_value
+			prod /= get_prod_mult(tile)
+			var cap = round(tile.bldg.path_2_value * get_IR_mult(tile))
+			var stored = tile.bldg.stored
+			var c_d = tile.bldg.collect_date
+			var c_t = curr_time
+			if c_t < c_d and not tile.bldg.is_constructing:
+				tile.bldg.collect_date = curr_time
+			if stored < cap:
+				if c_t - c_d > prod:
+					var rsrc_num = floor((c_t - c_d) / prod)
+					tile.bldg.stored += rsrc_num
+					tile.bldg.collect_date += prod * rsrc_num
+					if tile.bldg.stored >= cap:
+						tile.bldg.stored = cap
+			if rsrc:
+				if tile.bldg.stored >= cap:
+					current_bar.value = 0
+					capacity_bar.value = 1
+				else:
+					current_bar.value = min((c_t - c_d) / prod, 1)
+					capacity_bar.value = min(stored / float(cap), 1)
+				if tile.bldg.name == "MM":
+					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
+				else:
+					rsrc_text.text = String(stored)
+		"RL":
+			var prod = 1000 / tile.bldg.path_1_value
+			prod /= get_prod_mult(tile)
+			var stored = tile.bldg.stored
+			var c_d = tile.bldg.collect_date
+			var c_t = curr_time
+			if c_t < c_d:
+				tile.bldg.collect_date = curr_time
+			if c_t - c_d > prod:
+				var rsrc_num = floor((c_t - c_d) / prod)
+				tile.bldg.stored += rsrc_num
+				tile.bldg.collect_date += prod * rsrc_num
+			if rsrc:
+				current_bar.value = min((c_t - c_d) / prod, 1)
+				rsrc_text.text = String(stored)
+		"SC":
+			if tile.bldg.has("stone"):
+				var c_i = get_crush_info(tile)
+				rsrc_text.text = String(c_i.qty_left)
+				capacity_bar.value = 1 - c_i.progress
+			else:
+				rsrc_text.text = ""
+				capacity_bar.value = 0
+		"GF":
+			if tile.bldg.has("qty1"):
+				var prod_i = get_prod_info(tile)
+				rsrc_text.text = "%s kg" % [prod_i.qty_made]
+				capacity_bar.value = prod_i.progress
+			else:
+				rsrc_text.text = ""
+				capacity_bar.value = 0
+		"SE":
+			if tile.bldg.has("qty1"):
+				var prod_i = get_prod_info(tile)
+				rsrc_text.text = "%s" % [round(prod_i.qty_made)]
+				capacity_bar.value = prod_i.progress
+			else:
+				rsrc_text.text = ""
+				capacity_bar.value = 0
+
+func get_prod_mult(tile):
+	var mult = get_IR_mult(tile)
+	if tile.bldg.has("overclock_mult"):
+		mult *= tile.bldg.overclock_mult
+	return mult
+
+func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int):
+	if not tile.has("bldg"):
+		return
+	var bldg:String = tile.bldg.name
+	var curr_time = OS.get_system_time_msecs()
+	update_rsrc(p_i, tile)
+	match bldg:
+		"ME":
+			var stored = tile.bldg.stored
+			var min_info:Dictionary = add_minerals(stored)
+			tile.bldg.stored = min_info.remainder
+			add_item_to_coll(rsrc_collected, "minerals", min_info.added)
+			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile)):
+				tile.bldg.collect_date = curr_time
+		"PP":
+			var stored = tile.bldg.stored
+			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile)):
+				tile.bldg.collect_date = curr_time
+			#game.energy += stored
+			add_item_to_coll(rsrc_collected, "energy", stored)
+			tile.bldg.stored = 0
+		"SP":
+			var stored = tile.bldg.stored
+			if stored == round(tile.bldg.path_2_value):
+				tile.bldg.collect_date = curr_time
+			#game.energy += stored
+			add_item_to_coll(rsrc_collected, "energy", stored)
+			tile.bldg.stored = 0
+		"RL":
+			#game.SP += tile.bldg.stored
+			add_item_to_coll(rsrc_collected, "SP", tile.bldg.stored)
+			tile.bldg.stored = 0
+		"MM":
+			if tile.bldg.stored >= 1 and not tile.has("depth"):
+				tile.depth = 0
+			if tile.bldg.stored >= 3:
+				var contents:Dictionary = mass_generate_rock(tile, p_i, tile.bldg.stored)
+				tile.depth += tile.bldg.stored
+				tile.erase("contents")
+				for content in contents:
+					add_item_to_coll(rsrc_collected, content, contents[content])
+			else:
+				for i in tile.bldg.stored:
+					var contents:Dictionary = generate_rock(tile, p_i)
+					get_rsrc_from_rock(contents, tile, p_i, true)
+					for content in contents:
+						add_item_to_coll(rsrc_collected, content, contents[content])
+			if tile.bldg.stored == tile.bldg.path_2_value:
+				tile.bldg.collect_date = curr_time
+			tile.bldg.stored = 0
+
+func add_item_to_coll(dict:Dictionary, item:String, num):
+	if num is float:
+		if num == 0:
+			return
+		if dict.has(item):
+			dict[item] += num
+		else:
+			dict[item] = num
+	else:
+		if not dict.has("stone"):
+			dict.stone = {}
+		for el in num:
+			if dict.stone.has(el):
+				dict.stone[el] += num[el]
+			else:
+				dict.stone[el] = num[el]
+
+func ships_on_planet(p_id:int):#local planet id
+	return game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
+
+func update_ship_travel():
+	if game.ships_travel_view == "-":
+		return 1
+	var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
+	if progress >= 1:
+		game.ships_travel_view = "-"
+		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
+		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
+	return progress

@@ -28,9 +28,19 @@ func _ready():
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]
 		Helper.add_overlay(system, self, "system", s_i, overlays)
+	if game.galaxy_data[game.c_g].has("wormholes"):
+		for wh_data in game.galaxy_data[game.c_g].wormholes:
+			var blue_line = Line2D.new()
+			add_child(blue_line)
+			blue_line.add_point(game.system_data[wh_data.from].pos)
+			blue_line.add_point(game.system_data[wh_data.to].pos)
+			blue_line.width = 1
+			blue_line.default_color = Color(0.4, 0.2, 1.0, 1.0)
+			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays)
-	game.overlay.refresh_overlay()
+	if game.overlay:
+		game.overlay.refresh_overlay()
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]

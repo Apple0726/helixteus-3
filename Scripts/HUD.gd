@@ -170,7 +170,7 @@ func _input(_event):
 
 func _on_CollectAll_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("COLLECT_ALL_PLANET") + " (Shift V)")
+	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (Shift V)")
 
 func _on_CollectAll_pressed():
 	game.view.obj.collect_all()

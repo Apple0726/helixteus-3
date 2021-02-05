@@ -49,25 +49,20 @@ func _process(_delta):
 	if game.ships_travel_view == game.c_v:
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos
-		var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
-		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(progress, 0, 1))
+		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		green_line.points[1] = pos
 		ship.rect_position = pos - Vector2(50, 25)
-		if progress >= 1:
-			game.ships_travel_view = "-"
-			game.ships_c_coords = game.ships_dest_coords.duplicate(true)
-			game.ships_c_g_s = game.ships_travel_view_g_coords.s
 
 func refresh():
 	var show_lines = game.ships_travel_view == game.c_v
 	if game.c_v == "supercluster":
-		show_lines = show_lines and game.ships_travel_view_g_coords.sc == game.c_sc
+		show_lines = show_lines and game.ships_coords.sc == game.c_sc
 	elif game.c_v == "cluster":
-		show_lines = show_lines and game.ships_travel_view_g_coords.c == game.c_c_g
+		show_lines = show_lines and game.ships_c_g_coords.c == game.c_c_g
 	elif game.c_v == "galaxy":
-		show_lines = show_lines and game.ships_travel_view_g_coords.g == game.c_g_g
+		show_lines = show_lines and game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
-		show_lines = show_lines and game.ships_travel_view_g_coords.s == game.c_s_g
+		show_lines = show_lines and game.ships_c_g_coords.s == game.c_s_g
 	red_line.visible = show_lines
 	green_line.visible = show_lines
 	ship.visible = show_lines
@@ -98,8 +93,9 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	position *= sc
 	refresh()
 
-func remove_obj(obj_str:String):
-	save_zooms(obj_str)
+func remove_obj(obj_str:String, save_zooms:bool = true):
+	if save_zooms:
+		save_zooms(obj_str)
 	self.remove_child(obj)
 	obj_scene = null
 	obj = null
@@ -112,7 +108,6 @@ func save_zooms(obj_str:String):
 		"planet":
 			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
-			#print(game.planet_data[game.c_p].view)
 		"system":
 			game.system_data[game.c_s]["view"]["pos"] = self.position / self.scale.x
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x

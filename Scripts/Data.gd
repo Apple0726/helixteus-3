@@ -57,6 +57,7 @@ var MUs = {	"MV":{"base_cost":100, "pw":2.3},
 }
 var minerals_icon = load("res://Graphics/Icons/minerals.png")
 var energy_icon = load("res://Graphics/Icons/energy.png")
+var time_icon = load("res://Graphics/Icons/Time.png")
 var stone_icon = load("res://Graphics/Icons/stone.png")
 var SP_icon = load("res://Graphics/Icons/SP.png")
 var glass_icon = load("res://Graphics/Materials/glass.png")
@@ -133,8 +134,7 @@ var science_unlocks = {
 						
 						#Ship sciences
 						"SCT":{"cost":1500, "parent":"RC"},
-						"SUP":{"cost":15000, "parent":"SCT"},
-						"CD":{"cost":4000, "parent":"SUP"},
+						"CD":{"cost":4000, "parent":"SCT"},
 						"ID":{"cost":10000, "parent":"CD"},
 						"FD":{"cost":150000, "parent":"ID"},
 						"PD":{"cost":1200000, "parent":"FD"},

@@ -150,7 +150,7 @@ func show_planet_info(id:int, l_id:int):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-	if game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and l_id == game.ships_c_coords.p and not p_i.conquered:
+	if Helper.ships_on_planet(l_id) and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		if game.help.planet_details:
@@ -220,7 +220,7 @@ func on_planet_click (id:int, l_id:int):
 				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 				Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 			else:
-				if game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and l_id == game.ships_c_coords.p and not p_i.conquered:
+				if Helper.ships_on_planet(l_id) and not p_i.conquered:
 					game.c_p = l_id
 					game.c_p_g = id
 					game.switch_view("battle")
@@ -377,3 +377,18 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool):
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:
 		planet_rsrcs.append({"node":rsrc, "id":id})
+
+var items_collected = {}
+
+func collect_all():
+	items_collected.clear()
+	for p_ids in game.system_data[game.c_s].planets:
+		game.tile_data = game.open_obj("Planets", p_ids.global)
+		var i:int
+		for tile in game.tile_data:
+			if tile:
+				Helper.collect_rsrc(items_collected, game.planet_data[p_ids.local], tile, i)
+			i += 1
+		Helper.save_obj("Planets", p_ids.global, game.tile_data)
+	game.show_collect_info(items_collected)
+	game.HUD.refresh()
