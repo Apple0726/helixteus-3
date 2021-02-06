@@ -22,8 +22,11 @@ func refresh():
 		_on_Materials_pressed()
 	elif tab == "metals":
 		_on_Metals_pressed()
+	elif tab == "atoms":
+		_on_Atoms_pressed()
 	$Tabs/Materials.visible = game.show.materials
 	$Tabs/Metals.visible = game.show.metals
+	$Tabs/Atoms.visible = game.show.atoms
 
 func _on_Items_pressed():
 	tab = "items"
@@ -134,6 +137,14 @@ func _on_Metals_pressed():
 		texture.connect("mouse_exited", self, "hide_met")
 		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
 
+func _on_Atoms_pressed():
+	tab = "atoms"
+	$Contents/Info.text = tr("INV_ATOMS_DESC")
+	Helper.set_btn_color($Tabs/Atoms)
+	inventory_grid.visible = false
+	$Contents/Control/GridContainer.visible = true
+	Helper.put_rsrc($Contents/Control/GridContainer, 48, game.atoms)
+
 func show_buy_sell(type:String, obj:String):
 	if game.money == 0:
 		if type == "Materials" and game.mats[obj] == 0:
@@ -191,3 +202,4 @@ func _input(_event):
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+

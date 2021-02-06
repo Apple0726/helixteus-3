@@ -107,7 +107,10 @@ func _ready():
 				elif len(game.ship_data) == 1:
 					$Obstacles.set_cell(i, j, 7)
 			if tile.has("wormhole"):
-				$Obstacles.set_cell(i, j, 8)
+				if tile.wormhole.active:
+					$Obstacles.set_cell(i, j, 8)
+				else:
+					$Obstacles.set_cell(i, j, 9)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -138,7 +141,7 @@ func show_tooltip(tile):
 		var bldg:String = tile.bldg.name
 		icons = Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else []
 		var mult:float = Helper.get_prod_mult(tile)
-		var IR_mult:float = Helper.get_IR_mult(tile)
+		var IR_mult:float = Helper.get_IR_mult(tile.bldg.name)
 		var path_1_value
 		if bldg == "SP":
 			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult)
@@ -296,7 +299,7 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 		if bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
 		if bldg_to_construct in ["ME", "PP", "RL", "MS"]:
-			tile.bldg.IR_mult = Helper.get_IR_mult(tile)
+			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, bldg_to_construct)
 		add_time_bar(tile_id, "bldg")
@@ -410,7 +413,7 @@ func destroy_bldg(id2:int):
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
 	if bldg == "MS":
-		game.mineral_capacity -= tile.bldg.path_1_value * Helper.get_IR_mult(tile)
+		game.mineral_capacity -= tile.bldg.path_1_value * Helper.get_IR_mult(tile.bldg.name)
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -901,7 +904,7 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "bldg")
 
 func update_MS(tile):
-	var new_IR_mult:float = Helper.get_IR_mult(tile)
+	var new_IR_mult:float = Helper.get_IR_mult(tile.bldg.name)
 	if tile.bldg.IR_mult != new_IR_mult:
 		game.mineral_capacity += tile.bldg.path_1_value * (new_IR_mult - tile.bldg.IR_mult)
 		tile.bldg.IR_mult = new_IR_mult
@@ -927,7 +930,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	var tile = game.tile_data[id2]
 	var curr_time = OS.get_system_time_msecs()
 	if tile.bldg.has("IR_mult"):
-		var IR_mult = Helper.get_IR_mult(tile)
+		var IR_mult = Helper.get_IR_mult(tile.bldg.name)
 		if tile.bldg.IR_mult != IR_mult:
 			var diff:float = IR_mult / tile.bldg.IR_mult
 			tile.bldg.IR_mult = IR_mult
@@ -967,7 +970,7 @@ func _process(_delta):
 						hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
 					if tile.bldg.name == "MS":
 						update_MS(tile)
-						game.mineral_capacity += tile.bldg.mineral_cap_upgrade * Helper.get_IR_mult(tile)
+						game.mineral_capacity += tile.bldg.mineral_cap_upgrade * Helper.get_IR_mult(tile.bldg.name)
 					game.HUD.refresh()
 		elif type == "plant":
 			if not tile or not tile.has("plant") or not tile.plant.is_growing:
@@ -997,6 +1000,7 @@ func _process(_delta):
 				tile.bldg.erase("overclock_mult")
 		elif type == "wormhole":
 			if tile.wormhole.active:
+				$Obstacles.set_cell(id2 % wid, int(id2 / wid), 8)
 				remove_child(time_bar)
 				time_bars.erase(time_bar_obj)
 				continue

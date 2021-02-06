@@ -30,11 +30,15 @@ func _on_btn_pressed(btn_str:String):
 		item.item_dir = "Buildings"
 		var txt
 		if bldg == "SP":
-			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value), 3)]
+			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
 		else:
-			txt = (Data.path_1[bldg].desc + "\n") % [Data.path_1[bldg].value]
+			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg), 3)]
 		if Data.path_2.has(bldg):
-			var txt2:String = (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value]
+			var txt2:String
+			if Data.path_2[bldg].is_value_integer:
+				txt2 = (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
+			else:
+				txt2 = (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value * Helper.get_IR_mult(bldg)]
 			txt += txt2
 		if Data.path_3.has(bldg):
 			var txt2:String = (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]

@@ -53,8 +53,10 @@ func add_pie_text(txt:String, angle:float):
 	var text = Label.new()
 	$Pies.add_child(text)
 	text.align = text.ALIGN_CENTER
-	text.rect_position = polar2cartesian(94, angle) + Vector2(128, 128)
 	text.text = txt
+	text.visible = false
+	text.visible = true
+	text.rect_position = polar2cartesian(95, angle) + Vector2(150, 150) - text.rect_size / 2.0
 	text["custom_colors/font_color_shadow"] = Color(0, 0, 0, 1)
 	text["custom_constants/shadow_as_outline"] = 1
 	txts.append(text)

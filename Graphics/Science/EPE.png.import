@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/xenon.png-762c76f71a55e338561ac6d28f3b8612.stex"
+path="res://.import/EPE.png-f0abdbab813ca86ec1342ffd216b8b95.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/xenon.png"
-dest_files=[ "res://.import/xenon.png-762c76f71a55e338561ac6d28f3b8612.stex" ]
+source_file="res://Graphics/Science/EPE.png"
+dest_files=[ "res://.import/EPE.png-f0abdbab813ca86ec1342ffd216b8b95.stex" ]
 
 [params]
 

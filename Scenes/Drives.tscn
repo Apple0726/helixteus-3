@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Graphics/Buttons/FusionDrive.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Buttons/ParticleDrive.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/DrivePanel.gd" type="Script" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Scripts/Slider.gd" type="Script" id=8]
 
 [node name="Drives" type="Panel"]
 margin_top = 104.0
@@ -15,19 +16,38 @@ margin_bottom = 600.0
 theme = ExtResource( 7 )
 script = ExtResource( 6 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Drives" type="HBoxContainer" parent="."]
-margin_top = 3.0
-margin_right = 260.0
-margin_bottom = 131.0
+[node name="Label5" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 4.0
+margin_right = 251.0
+margin_bottom = 48.0
+text = "CLICK_DRIVE_TO_USE"
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CD" type="TextureButton" parent="Drives"]
-visible = false
+[node name="Panel" type="Panel" parent="."]
+margin_top = 48.0
+margin_right = 1064.0
+margin_bottom = 196.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Drives" type="HBoxContainer" parent="Panel"]
+margin_right = 524.0
+margin_bottom = 128.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CD" type="TextureButton" parent="Panel/Drives"]
+modulate = Color( 1, 1, 1, 0.501961 )
 margin_right = 128.0
 margin_bottom = 128.0
 theme = ExtResource( 7 )
@@ -36,9 +56,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ID" type="TextureButton" parent="Drives"]
-visible = false
-margin_right = 128.0
+[node name="ID" type="TextureButton" parent="Panel/Drives"]
+modulate = Color( 1, 1, 1, 0.501961 )
+margin_left = 132.0
+margin_right = 260.0
 margin_bottom = 128.0
 theme = ExtResource( 7 )
 texture_normal = ExtResource( 3 )
@@ -46,9 +67,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FD" type="TextureButton" parent="Drives"]
-visible = false
-margin_right = 128.0
+[node name="FD" type="TextureButton" parent="Panel/Drives"]
+modulate = Color( 1, 1, 1, 0.501961 )
+margin_left = 264.0
+margin_right = 392.0
 margin_bottom = 128.0
 theme = ExtResource( 7 )
 texture_normal = ExtResource( 1 )
@@ -56,9 +78,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PD" type="TextureButton" parent="Drives"]
-visible = false
-margin_right = 128.0
+[node name="PD" type="TextureButton" parent="Panel/Drives"]
+modulate = Color( 1, 1, 1, 0.501961 )
+margin_left = 396.0
+margin_right = 524.0
 margin_bottom = 128.0
 theme = ExtResource( 7 )
 texture_normal = ExtResource( 2 )
@@ -66,41 +89,46 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OptionButton" type="OptionButton" parent="."]
-margin_left = 39.8016
-margin_top = 158.092
-margin_right = 248.802
-margin_bottom = 186.092
+[node name="Control" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="OptionButton" type="OptionButton" parent="Control"]
+margin_left = 460.0
+margin_top = 236.0
+margin_right = 669.0
+margin_bottom = 268.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HSlider" type="HSlider" parent="."]
-margin_left = 408.0
-margin_top = 280.0
-margin_right = 720.0
-margin_bottom = 296.0
-value = 50.0
+[node name="HSlider" type="HSlider" parent="Control"]
+margin_left = 392.0
+margin_top = 320.0
+margin_right = 548.0
+margin_bottom = 336.0
+script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 528.0
-margin_top = 216.0
-margin_right = 560.0
-margin_bottom = 248.0
+[node name="TextureRect" type="TextureRect" parent="Control"]
+margin_left = 572.0
+margin_top = 308.0
+margin_right = 604.0
+margin_bottom = 340.0
 grow_horizontal = 0
 grow_vertical = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect2" type="TextureRect" parent="."]
-margin_left = 528.0
-margin_top = 328.0
-margin_right = 560.0
-margin_bottom = 360.0
+[node name="TextureRect2" type="TextureRect" parent="Control"]
+margin_left = 580.0
+margin_top = 376.0
+margin_right = 612.0
+margin_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource( 5 )
@@ -108,55 +136,69 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
-margin_left = 568.0
-margin_top = 216.0
-margin_right = 688.0
-margin_bottom = 248.0
+[node name="Label" type="Label" parent="Control"]
+margin_left = 612.0
+margin_top = 309.0
+margin_right = 732.0
+margin_bottom = 341.0
 text = "0"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label2" type="Label" parent="."]
-margin_left = 568.0
-margin_top = 328.0
-margin_right = 688.0
-margin_bottom = 360.0
+[node name="Label2" type="Label" parent="Control"]
+margin_left = 620.0
+margin_top = 376.0
+margin_right = 740.0
+margin_bottom = 408.0
 text = "0"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label3" type="Label" parent="."]
-margin_left = 344.0
-margin_top = 328.0
-margin_right = 520.0
-margin_bottom = 360.0
+[node name="Label3" type="Label" parent="Control"]
+margin_left = 324.0
+margin_top = 376.0
+margin_right = 544.0
+margin_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "TIME_REDUCTION"
+align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label4" type="Label" parent="."]
-margin_left = 404.0
-margin_top = 216.0
-margin_right = 520.0
-margin_bottom = 248.0
+[node name="Label4" type="Label" parent="Control"]
+margin_left = 332.0
+margin_top = 236.0
+margin_right = 436.0
+margin_bottom = 276.0
 grow_horizontal = 0
 grow_vertical = 2
-text = "FUEL_COST"
+text = "FUEL"
+align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Button" type="Button" parent="."]
-margin_left = 448.0
-margin_top = 376.0
-margin_right = 680.0
-margin_bottom = 404.0
+[node name="Button" type="Button" parent="Control"]
+margin_left = 404.0
+margin_top = 444.0
+margin_right = 696.0
+margin_bottom = 480.0
 text = "SPEED_UP_SHIPS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
-[connection signal="pressed" from="Drives/ID" to="." method="_on_IonDrive_pressed"]
-[connection signal="pressed" from="Drives/FD" to="." method="_on_FusionDrive_pressed"]
-[connection signal="pressed" from="Drives/PD" to="." method="_on_ParticleDrive_pressed"]
-[connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="pressed" from="Button" to="." method="use_drive"]
+[connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/FD" to="." method="_on_FusionDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/PD" to="." method="_on_ParticleDrive_pressed"]
+[connection signal="item_selected" from="Control/OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Control/Button" to="." method="use_drive"]

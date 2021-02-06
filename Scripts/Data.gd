@@ -114,46 +114,49 @@ var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 #Science for unlocking game features
 var science_unlocks = {	
 						#Agriculture sciences
-						"SA":{"cost":100, "parent":""},
-						"EGH":{"cost":35000, "parent":"SA"},
+						"SA":{"cost":100, "parents":[]},
+						"EGH":{"cost":35000, "parents":["SA"]},
 						
 						#Auto mining
-						"AM":{"cost":10000, "parent":""},
+						"AM":{"cost":10000, "parents":[]},
+						
+						#Atom manipulation
+						"ATM":{"cost":90000, "parents":[]},
 						
 						#Rover sciences
-						"RC":{"cost":250, "parent":""},
-						"OL":{"cost":1000, "parent":"RC"},
-						"YL":{"cost":8000, "parent":"OL"},
-						"GL":{"cost":40000, "parent":"YL"},
-						"BL":{"cost":250000, "parent":"GL"},
-						"PL":{"cost":1400000, "parent":"BL"},
-						"UVL":{"cost":8000000, "parent":"PL"},
-						"XRL":{"cost":44000000, "parent":"UVL"},
-						"GRL":{"cost":300000000, "parent":"XRL"},
-						"UGRL":{"cost":2000000000, "parent":"GRL"},
+						"RC":{"cost":250, "parents":[]},
+						"OL":{"cost":1000, "parents":["RC"]},
+						"YL":{"cost":8000, "parents":["OL"]},
+						"GL":{"cost":40000, "parents":["YL"]},
+						"BL":{"cost":250000, "parents":["GL"]},
+						"PL":{"cost":1400000, "parents":["BL"]},
+						"UVL":{"cost":8000000, "parents":["PL"]},
+						"XRL":{"cost":44000000, "parents":["UVL"]},
+						"GRL":{"cost":300000000, "parents":["XRL"]},
+						"UGRL":{"cost":2000000000, "parents":["GRL"]},
 						
 						#Ship sciences
-						"SCT":{"cost":1500, "parent":"RC"},
-						"CD":{"cost":4000, "parent":"SCT"},
-						"ID":{"cost":10000, "parent":"CD"},
-						"FD":{"cost":150000, "parent":"ID"},
-						"PD":{"cost":1200000, "parent":"FD"},
+						"SCT":{"cost":1500, "parents":["RC"]},
+						"CD":{"cost":4000, "parents":["SCT"]},
+						"ID":{"cost":10000, "parents":["CD", "ATM"]},
+						"FD":{"cost":150000, "parents":["ID"]},
+						"PD":{"cost":1200000, "parents":["FD"]},
 						
 						#Megastructure sciences
-						"MAE":{"cost":100000, "parent":""},
+						"MAE":{"cost":100000, "parents":[]},
 						#Dyson sphere
-						"DS1":{"cost":120000000, "parent":"MAE"},
-						"DS2":{"cost":250000000, "parent":"DS1"},
-						"DS3":{"cost":500000000, "parent":"DS2"},
-						"DS4":{"cost":750000000, "parent":"DS3"},
+						"DS1":{"cost":120000000, "parents":["MAE"]},
+						"DS2":{"cost":250000000, "parents":["DS1"]},
+						"DS3":{"cost":500000000, "parents":["DS2"]},
+						"DS4":{"cost":750000000, "parents":["DS3"]},
 						#Space elevator
-						"SE1":{"cost":150000, "parent":"MAE"},
-						"SE2":{"cost":300000, "parent":"SE1"},
-						"SE3":{"cost":500000, "parent":"SE2"},
+						"SE1":{"cost":150000, "parents":["MAE"]},
+						"SE2":{"cost":300000, "parents":["SE1"]},
+						"SE3":{"cost":500000, "parents":["SE2"]},
 						
 }
 var infinite_research_sciences = {	"MEE":{"cost":5000, "pw":6.2, "value":1.2},
-									"PPE":{"cost":5000, "pw":6.2, "value":1.2},
+									"EPE":{"cost":8000, "pw":6.2, "value":1.2},
 									"RLE":{"cost":25000, "pw":6.8, "value":1.2},
 									"MSE":{"cost":7000, "pw":6.2, "value":1.2},
 									"MMS":{"cost":3000, "pw":6.0, "value":1.2},
@@ -209,3 +212,6 @@ var bullet_data = [{"damage":7, "accuracy":1.0}, {"damage":10, "accuracy":1.05}]
 var laser_data = [{"damage":4, "accuracy":1.5}, {"damage":6, "accuracy":1.6}]
 var bomb_data = [{"damage":12, "accuracy":0.7}, {"damage":16, "accuracy":0.72}]
 var light_data = [{"damage":3, "accuracy":1.2}, {"damage":5, "accuracy":1.25}]
+
+#the numbers are the elements' abundance relative to hydrogen
+var elements = {"ammonia":0.05, "co2":0.01, "hydrogen":1.0, "methane":0.2, "oxygen":0.014, "water":0.05, "neon":0.001813}

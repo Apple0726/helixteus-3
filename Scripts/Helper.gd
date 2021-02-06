@@ -61,6 +61,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
 		elif game.mets.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
+		elif game.atoms.has(obj):
+			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
 		else:
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
@@ -510,9 +512,13 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		tile.erase("ship_locator_depth")
 	return contents
 
-func get_IR_mult(tile):
+func get_IR_mult(bldg_name:String):
 	var mult = 1.0
-	var sc:String = "%sE" % tile.bldg.name
+	var sc:String
+	if bldg_name in ["PP", "SP"]:
+		sc = "EPE"
+	else:
+		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
 		mult = pow(Data.infinite_research_sciences[sc].value, game.infinite_research[sc])
 	return mult
@@ -577,7 +583,7 @@ func update_rsrc(p_i, tile, rsrc = null):
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
-			var cap = round(tile.bldg.path_2_value * get_IR_mult(tile))
+			var cap = round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name))
 			var stored = tile.bldg.stored
 			var c_d = tile.bldg.collect_date
 			var c_t = curr_time
@@ -642,7 +648,7 @@ func update_rsrc(p_i, tile, rsrc = null):
 				capacity_bar.value = 0
 
 func get_prod_mult(tile):
-	var mult = get_IR_mult(tile)
+	var mult = get_IR_mult(tile.bldg.name)
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
@@ -659,11 +665,11 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			var min_info:Dictionary = add_minerals(stored)
 			tile.bldg.stored = min_info.remainder
 			add_item_to_coll(rsrc_collected, "minerals", min_info.added)
-			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile)):
+			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name)):
 				tile.bldg.collect_date = curr_time
 		"PP":
 			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile)):
+			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name)):
 				tile.bldg.collect_date = curr_time
 			#game.energy += stored
 			add_item_to_coll(rsrc_collected, "energy", stored)

@@ -67,24 +67,32 @@ __meta__ = {
 }
 
 [node name="Items" type="Button" parent="Tabs"]
-margin_right = 356.0
+margin_right = 267.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "ITEMS"
 
 [node name="Materials" type="Button" parent="Tabs"]
-margin_left = 354.0
-margin_right = 710.0
+margin_left = 265.0
+margin_right = 533.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "MATERIALS"
 
 [node name="Metals" type="Button" parent="Tabs"]
-margin_left = 708.0
-margin_right = 1064.0
+margin_left = 531.0
+margin_right = 798.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "METALS"
+expand_icon = true
+
+[node name="Atoms" type="Button" parent="Tabs"]
+margin_left = 796.0
+margin_right = 1064.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "ATOMS"
 expand_icon = true
 
 [node name="Contents" type="VBoxContainer" parent="."]
@@ -146,3 +154,4 @@ __meta__ = {
 [connection signal="pressed" from="Tabs/Items" to="." method="_on_Items_pressed"]
 [connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
 [connection signal="pressed" from="Tabs/Metals" to="." method="_on_Metals_pressed"]
+[connection signal="pressed" from="Tabs/Atoms" to="." method="_on_Atoms_pressed"]

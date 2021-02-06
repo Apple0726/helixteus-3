@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -25,6 +25,8 @@
 [ext_resource path="res://Graphics/Title screen/GitHub_over.png" type="Texture" id=23]
 [ext_resource path="res://Graphics/Title screen/Godot_over.png" type="Texture" id=24]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
+[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
+[ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 15.0
@@ -651,6 +653,18 @@ align = 0
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
 anims/Fade = SubResource( 13 )
+
+[node name="Ship" type="TextureButton" parent="."]
+margin_right = 68.0
+margin_bottom = 44.0
+rect_pivot_offset = Vector2( 34, 22 )
+texture_normal = ExtResource( 26 )
+texture_click_mask = ExtResource( 27 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
@@ -687,3 +701,6 @@ anims/Fade = SubResource( 13 )
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]
+[connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
+[connection signal="mouse_exited" from="Ship" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]

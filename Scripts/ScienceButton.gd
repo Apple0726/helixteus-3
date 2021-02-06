@@ -1,4 +1,4 @@
-extends Control
+extends Panel
 
 var main_tree
 var is_over:bool = false
@@ -7,37 +7,39 @@ onready var game = get_node("/root/Game")
 
 func _ready():
 	var font = theme.default_font
-	$Panel.connect("mouse_entered", self, "on_mouse_entered")
-	$Panel.connect("mouse_exited", self, "on_mouse_exited")
-	$Panel/HBox/Texture.texture = load("res://Graphics/Science/" + name + ".png")
+	connect("mouse_entered", self, "on_mouse_entered")
+	connect("mouse_exited", self, "on_mouse_exited")
+	$Texture.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
 	if not infinite_research:
-		rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
+		#rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
 		if game.science_unlocked[name]:
-			$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+			$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 	else:
 		var sc_lv:int = game.infinite_research[name]
 		var st:String = tr("%s_X" % name) % sc_lv
-		rect_min_size.x = font.get_string_size(st).x + 80
+		#rect_min_size.x = font.get_string_size(st).x + 80
 
 func refresh():
 	if infinite_research:
 		var sc_lv:int = game.infinite_research[name]
 		var sc:Dictionary = Data.infinite_research_sciences[name]
-		$Panel/HBox/VBox/Label.text = tr("%s_X" % name) % [sc_lv + 1]
-		$Panel/HBox/VBox/Resource/Text.text = Helper.format_num(sc.cost * pow(sc.pw, sc_lv), 6)
+		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
+		$Text.text = Helper.format_num(sc.cost * pow(sc.pw, sc_lv), 6)
 	else:
 		if modulate == Color.white:
-			$Panel/HBox/VBox/Label.text = get_science_name(name)
-			$Panel/HBox/VBox/Resource/Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
+			$Label.text = get_science_name(name)
+			$Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
 		else:
-			$Panel/HBox/VBox/Label.text = "?"
-			$Panel/HBox/VBox/Resource/Text.text = "-"
+			$Label.text = "?"
+			$Text.text = "-"
 
 func get_science_name(sc:String):
 	match sc:
 		"AM":
 			return tr("AUTO_MINING")
+		"ATM":
+			return tr("ATOM_MANIPULATION")
 		"SA":
 			return tr("SPACE_AGRICULTURE")
 		"EGH":
@@ -113,7 +115,7 @@ func _input(event):
 				if name == "SA":
 					game.craft_panel._on_Agric_pressed()
 				game.HUD.refresh()
-				$Panel/HBox/VBox/Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)

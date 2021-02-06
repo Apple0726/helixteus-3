@@ -119,7 +119,6 @@ var mats:Dictionary = {	"coal":0,
 						"soil":0,
 						"cellulose":0,
 						"silicon":0,
-						"xenon":0,
 						"he3mix":0,
 						"graviton":0,
 }
@@ -141,6 +140,10 @@ var mets:Dictionary = {	"lead":0,
 						"diamond":0,
 						"nanocrystal":0,
 						"mythril":0,
+}
+
+var atoms:Dictionary = {	"neon":0,
+							"xenon":0,
 }
 
 #Display help when players see/do things for the first time. true: show help
@@ -189,6 +192,7 @@ var show:Dictionary = {	"minerals":false,
 						"vehicles_button":false,
 						"materials":false,
 						"metals":false,
+						"atoms":false,
 						"auroras":false,
 }
 
@@ -391,6 +395,7 @@ func _ready():
 		energy = 2000000
 		SP = 200000000
 		science_unlocked.RC = true
+		science_unlocked.CD = true
 		science_unlocked.SCT = true
 		science_unlocked.SA = true
 		science_unlocked.EGH = true
@@ -485,6 +490,7 @@ func load_game():
 		infinite_research = save_game.get_var()
 		mats = save_game.get_var()
 		mets = save_game.get_var()
+		atoms = save_game.get_var()
 		help = save_game.get_var()
 		show = save_game.get_var()
 		universe_data = save_game.get_var()
@@ -1748,7 +1754,6 @@ func generate_planets(id:int):
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	for i in range(1, planet_num + 1):
-		var lakes = ["water", "ammonia", "methane", "co2", "oxygen", "hydrogen"]
 		#p_i = planet_info
 		var p_i = {}
 		p_i["conquered"] = false
@@ -1780,6 +1785,7 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
+		p_i.atmosphere = make_atmosphere_composition(temp, p_i.pressure)
 		p_i.crust = make_planet_composition(temp, "crust")
 		p_i.mantle = make_planet_composition(temp, "mantle")
 		p_i.core = make_planet_composition(temp, "core")
@@ -1789,14 +1795,15 @@ func generate_planets(id:int):
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
 		p_i.liq_period = rand_range(60, 300)
-		if p_i.temperature <= 1000:
-			if randf() < 0.5:
-				var lake = Helper.rand_int(0, len(lakes) - 1)
-				p_i.lake_1 = lakes[lake]
-				lakes.remove(lake)
-			if randf() < 0.5:
-				var lake = Helper.rand_int(0, len(lakes) - 1)
-				p_i.lake_2 = lakes[lake]
+		var lakes = Data.elements.duplicate(true)
+		if id + s_num == 0:#Only water in solar system
+			if randf() < 0.2:
+				p_i.lake_1 = "water"
+			if randf() < 0.2:
+				p_i.lake_2 = "water"
+		elif p_i.temperature <= 1000:
+			p_i.lake_1 = get_random_element(lakes)
+			p_i.lake_2 = get_random_element(lakes)
 		p_i.HX_data = []
 		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
 		var num:int = 0
@@ -1832,6 +1839,22 @@ func generate_planets(id:int):
 	p_num += planet_num
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
+
+func get_random_element(elements:Dictionary):
+	var S:float = 0.0
+	var els:Array = []
+	var numbers:Array = []
+	for el in elements:
+		els.append(el)
+		numbers.append(elements[el] + S)
+		S += elements[el]
+	var rand = randf() * S
+	var chosen_el:String = els[0]
+	for k in range(1, len(numbers)):
+		if rand < numbers[k - 1]:
+			break
+		chosen_el = els[k]
+	return chosen_el
 
 func get_coldest_star_temp(s_id):
 	var res = system_data[s_id].stars[0].temperature
@@ -1879,7 +1902,7 @@ func generate_tiles(id:int):
 	for i in 2:
 		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.1) or ship_signal):
 			#au_int: aurora_intensity
-			var au_int = clever_round(rand_range(40000, 80000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = clever_round(rand_range(80000, 160000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, 1 if ship_signal else wid)
@@ -1986,11 +2009,16 @@ func generate_tiles(id:int):
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		tile_data[random_tile].ship = true
-	elif p_i.id == 6:
+	elif p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, 1999)#						local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
+	elif c_s_g != 0 and randf() < 0.05:#5% chance to spawn a wormhole on a planet outside solar system
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
+		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
 	if lake_1_phase == "G":#								new: whether the wormhole should generate a new wormhole on another planet
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -2045,6 +2073,20 @@ func erase_tile(random_tile:int):
 		for k in tile_data[random_tile]:
 			if k != "aurora":
 				tile_data[random_tile].erase(k)
+
+func make_atmosphere_composition(temp:float, pressure:float):
+	var atm = {}
+	var S:float = 0
+	for el in Data.elements:
+		var phase_scene = load("res://Scenes/PhaseDiagrams/" + el + ".tscn")
+		var phase = phase_scene.instance()
+		if Helper.get_state(temp, pressure, phase) == "G":
+			var rand = randf() * Data.elements[el]
+			atm[el] = rand
+			S += rand
+	for el in atm:
+		atm[el] /= S
+	return atm
 
 func make_planet_composition(temp:float, depth:String):
 	randomize()
@@ -2681,6 +2723,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(infinite_research)
 	save_game.store_var(mats)
 	save_game.store_var(mets)
+	save_game.store_var(atoms)
 	save_game.store_var(help)
 	save_game.store_var(show)
 	save_game.store_var(universe_data)
@@ -2910,3 +2953,13 @@ func _on_CollectPanelTimer_timeout():
 
 func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.visible = false
+
+
+func _on_Ship_pressed():
+	switch_view("STM")#Ship travel minigame
+
+func _on_Ship_mouse_entered():
+	show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(ships_travel_length - OS.get_system_time_msecs() + ships_travel_start_date), tr("PLAY_SHIP_MINIGAME")])
+
+func _on_mouse_exited():
+	hide_tooltip()

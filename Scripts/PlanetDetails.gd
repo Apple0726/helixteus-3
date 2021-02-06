@@ -45,6 +45,7 @@ func _ready():
 	core_layer.get_node("Background").connect("mouse_exited", self, "on_core_exit")
 	core_layer.get_node("Background").connect("pressed", self, "on_core_press")
 
+var atm_always_visible = false
 var crust_always_visible = false
 var mantle_always_visible = false
 var core_always_visible = false
@@ -150,6 +151,7 @@ func on_core_exit():
 
 func _on_Back_pressed():
 	p_i.name = $Name.text
+	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	game.switch_view("system")
 
 func _on_Name_focus_exited():
@@ -187,3 +189,28 @@ func sort_elements (a, b):
 
 func _input(event):
 	Helper.set_back_btn($Back)
+
+
+func _on_Atmosphere_mouse_entered():
+	var tooltip = tr("ATMOSPHERE")
+	if atm_always_visible:
+		tooltip += "\nClick to hide atmospheric composition\nwhen not hovered over"
+	else:
+		tooltip += "\nClick to show atmospheric composition\neven when not hovered over"
+		make_pie_chart(obj_to_array(p_i.atmosphere), tr("ATMOSPHERE_COMPOSITION"))
+	game.show_tooltip(tooltip)
+
+func _on_Atmosphere_mouse_exited():
+	game.hide_tooltip()
+	if not atm_always_visible:
+		remove_pie_chart(tr("ATMOSPHERE_COMPOSITION"))
+
+
+func _on_Atmosphere_pressed():
+	atm_always_visible = not atm_always_visible
+	var popup = "Set atmospheric composition pie chart: "
+	if atm_always_visible:
+		popup += "always visible"
+	else:
+		popup += "default"
+	game.popup(popup, 1.5)

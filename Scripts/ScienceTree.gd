@@ -11,23 +11,23 @@ func refresh():
 	for sc in get_children():
 		if sc is Line2D or not Data.science_unlocks.has(sc.name):
 			continue
-		var p_sc:String = Data.science_unlocks[sc.name].parent
+		var p_scs:Array = Data.science_unlocks[sc.name].parents
 		if sc.get_script():#A way of checking whether the node is a button
 			sc.main_tree = self
 			#parent_science
-			if p_sc == "":
+			if p_scs.empty():
 				continue
-			if not game.science_unlocked[p_sc]:
-				sc.modulate = Color(0.5, 0.5, 0.5, 1)
-				sc.get_node("Panel/HBox/Texture").modulate = Color.black
-				sc.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_IGNORE
-			else:
+			var available:bool = true
+			for p_sc in p_scs:
+				if not game.science_unlocked[p_sc]:
+					available = false
+					break
+			if available:
 				sc.modulate = Color.white
-				sc.get_node("Panel/HBox/Texture").modulate = Color.white
-				sc.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_PASS
+				sc.get_node("Texture").modulate = Color.white
+				sc.mouse_filter = Control.MOUSE_FILTER_PASS
+			else:
+				sc.modulate = Color(0.5, 0.5, 0.5, 1)
+				sc.get_node("Texture").modulate = Color.black
+				sc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			sc.refresh()
-		if Data.science_unlocks[sc.name].parent != "":
-			var p_n = get_node(p_sc)
-			var l_n = get_node("L_%s" % [sc.name])
-			l_n.position.x = p_n.rect_position.x + p_n.get_node("Panel").rect_size.x + 20
-			get_node(sc.name).rect_position.x = l_n.position.x + 96 + 20

@@ -14,7 +14,13 @@ func refresh():
 		panel.refresh()
 	$GridContainer/Panel1.visible = len(game.ship_data) >= 1
 	$GridContainer/Panel2.visible = len(game.ship_data) >= 2
-	$Drives.refresh(50)
+	$Drives.refresh()
+	set_process(game.ships_travel_view != "-")
+
+func _process(delta):
+	$Panel/TravelETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date)]
+	if not visible:
+		set_process(false)
 
 func _on_CheckBox_toggled(button_pressed):
 	for panel in $GridContainer.get_children():
@@ -51,3 +57,9 @@ func _on_GoToShips_pressed():
 	game.c_s_g = game.ships_dest_g_coords.s
 	game.switch_view("system")
 	_on_close_button_pressed()
+
+func _on_DriveButton_mouse_entered():
+	game.show_tooltip(tr("OPEN_DRIVE_MENU"))
+
+func _on_BackButton_mouse_entered():
+	game.show_tooltip(tr("CLOSE_DRIVE_MENU"))

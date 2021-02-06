@@ -1,9 +1,9 @@
 extends KinematicBody2D
 
 onready var game = self.get_parent()
+onready var ship:TextureButton = game.get_node("Ship")
 var obj_scene
 var obj
-onready var ship = $Ship
 
 #Whether the view should be moved when dragging
 var move_view = true
@@ -51,23 +51,42 @@ func _process(_delta):
 		var dest_pos = game.ships_dest_pos
 		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		green_line.points[1] = pos
-		ship.rect_position = pos - Vector2(50, 25)
+		ship.rect_position = to_global(pos) - Vector2(32, 22)
+	else:
+		if game.c_v == "universe":
+			ship.rect_position = to_global(game.supercluster_data[game.c_sc].pos) - Vector2(32, 22)
+		if game.c_v == "supercluster":
+			ship.rect_position = to_global(game.cluster_data[game.c_c].pos) - Vector2(32, 22)
+		elif game.c_v == "cluster":
+			ship.rect_position = to_global(game.galaxy_data[game.c_g].pos) - Vector2(32, 22)
+		elif game.c_v == "galaxy":
+			ship.rect_position = to_global(game.system_data[game.c_s].pos) - Vector2(32, 22)
+		elif game.c_v == "system":
+			ship.rect_position = to_global(polar2cartesian(game.planet_data[game.c_p].distance, game.planet_data[game.c_p].angle)) - Vector2(32, 22)
 
 func refresh():
-	var show_lines = game.ships_travel_view == game.c_v
+	var show_ship = false
+	if game.c_v == "universe":
+		show_ship = true
+		ship.rect_position = to_global(game.supercluster_data[game.c_sc].pos) - Vector2(32, 22)
 	if game.c_v == "supercluster":
-		show_lines = show_lines and game.ships_coords.sc == game.c_sc
+		show_ship = game.ships_coords.sc == game.c_sc
 	elif game.c_v == "cluster":
-		show_lines = show_lines and game.ships_c_g_coords.c == game.c_c_g
+		show_ship = game.ships_c_g_coords.c == game.c_c_g
 	elif game.c_v == "galaxy":
-		show_lines = show_lines and game.ships_c_g_coords.g == game.c_g_g
+		show_ship = game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
-		show_lines = show_lines and game.ships_c_g_coords.s == game.c_s_g
+		show_ship = game.ships_c_g_coords.s == game.c_s_g
+	var show_lines = show_ship and game.ships_travel_view != "-"
 	red_line.visible = show_lines
 	green_line.visible = show_lines
-	ship.visible = show_lines
+	ship.visible = show_ship
+	game.move_child(ship, game.get_child_count())
+	if game.ships_travel_view == "-":
+		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
+	else:
+		ship.mouse_filter = TextureButton.MOUSE_FILTER_STOP
 	if show_lines:
-		move_child(ship, get_child_count())
 		move_child(red_line, get_child_count())
 		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
@@ -77,9 +96,9 @@ func refresh():
 		green_line.points[0] = dep_pos
 		red_line.points[1] = dest_pos
 		if dest_pos.x < dep_pos.x:
-			ship.rect_scale.x = -0.2
+			ship.rect_scale.x = -1
 		else:
-			ship.rect_scale.x = 0.2
+			ship.rect_scale.x = 1
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale_mult = s_m
@@ -101,7 +120,6 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 	obj = null
 	red_line.visible = false
 	green_line.visible = false
-	ship.visible = false
 
 func save_zooms(obj_str:String):
 	match obj_str:
@@ -245,28 +263,3 @@ func check_change_scale():
 			scale_inc_threshold = scale_dec_threshold
 			scale_dec_threshold /= 20.0
 			scale_mult *= 10
-
-func _on_Ship_mouse_entered():
-	game.show_tooltip("")
-	update_tooltip()
-
-func update_tooltip():
-	if game.tooltip.visible:
-		show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date), tr("PLAY_SHIP_MINIGAME")])
-		yield(get_tree().create_timer(0.02), "timeout")
-		update_tooltip()
-
-func show_tooltip(txt:String):
-	var tooltip = game.tooltip
-	tooltip.autowrap = true
-	tooltip.text = txt
-	tooltip.rect_size.x = 400
-
-func hide_tooltip():
-	game.tooltip.visible = false
-
-func _on_Ship_mouse_exited():
-	hide_tooltip()
-
-func _on_Ship_pressed():
-	game.switch_view("STM")#Ship travel minigame

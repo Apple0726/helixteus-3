@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/PhaseDiagrams/xenon.gd" type="Script" id=1]
+
+[node name="Neon" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 288.0 ],
+"_edit_vertical_guides_": [ 288.0, 1112.0 ]
+}
+
+[node name="Solid" type="Polygon2D" parent="."]
+color = Color( 0.682353, 0.866667, 1, 1 )
+polygon = PoolVector2Array( 0, 0, 1112, 0, 1112, 576, 0, 576 )
+
+[node name="Liquid" type="Polygon2D" parent="."]
+color = Color( 0.776471, 1, 0.8, 1 )
+polygon = PoolVector2Array( 28, 312, 32, 188, 52, 180, 52, 220, 44, 232, 32, 288 )
+
+[node name="Gas" type="Polygon2D" parent="."]
+color = Color( 1, 0.839216, 0.564706, 1 )
+polygon = PoolVector2Array( 8, 576, 20, 360, 32, 288, 44, 232, 52, 220, 1112, 180, 1112, 576 )
+
+[node name="Superfluid" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 52, 180, 52, 220, 1112, 180, 1112, 112 )
+
+[node name="TriplePoint" type="Polygon2D" parent="."]
+color = Color( 1, 0, 0, 1 )
+polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+
+[node name="MeltPoint" type="Polygon2D" parent="."]
+color = Color( 1, 0, 0, 1 )
+polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+
+[node name="BoilPoint" type="Polygon2D" parent="."]
+color = Color( 1, 0, 0, 1 )
+polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+
+[node name="SuperPoint" type="Polygon2D" parent="."]
+color = Color( 1, 0, 0, 1 )
+polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
