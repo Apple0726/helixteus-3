@@ -53,22 +53,25 @@ func _process(_delta):
 		green_line.points[1] = pos
 		ship.rect_position = to_global(pos) - Vector2(32, 22)
 	else:
+		var sh_c:Dictionary = game.ships_c_coords
+		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
-			ship.rect_position = to_global(game.supercluster_data[game.c_sc].pos) - Vector2(32, 22)
+			ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
 		if game.c_v == "supercluster":
-			ship.rect_position = to_global(game.cluster_data[game.c_c].pos) - Vector2(32, 22)
-		elif game.c_v == "cluster":
-			ship.rect_position = to_global(game.galaxy_data[game.c_g].pos) - Vector2(32, 22)
-		elif game.c_v == "galaxy":
-			ship.rect_position = to_global(game.system_data[game.c_s].pos) - Vector2(32, 22)
-		elif game.c_v == "system":
-			ship.rect_position = to_global(polar2cartesian(game.planet_data[game.c_p].distance, game.planet_data[game.c_p].angle)) - Vector2(32, 22)
+			ship.rect_position = to_global(game.cluster_data[sh_c.c].pos) - Vector2(32, 22)
+		elif game.c_v == "cluster" and game.c_c_g == sh_c_g.c:
+			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
+		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
+			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
+		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
+			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
 
 func refresh():
 	var show_ship = false
+	var sh_c:Dictionary = game.ships_c_coords
 	if game.c_v == "universe":
 		show_ship = true
-		ship.rect_position = to_global(game.supercluster_data[game.c_sc].pos) - Vector2(32, 22)
+		ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
 	if game.c_v == "supercluster":
 		show_ship = game.ships_coords.sc == game.c_sc
 	elif game.c_v == "cluster":

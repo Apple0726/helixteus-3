@@ -145,6 +145,8 @@ func show_tooltip(tile):
 		var path_1_value
 		if bldg == "SP":
 			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult)
+		elif bldg == "AE":
+			path_1_value = Helper.get_AE_production(p_i.pressure, tile.bldg.path_1_value * mult)
 		else:
 			path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
 		var path_2_value
@@ -156,7 +158,7 @@ func show_tooltip(tile):
 		if tile.bldg.has("path_3_value"):
 			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
-			"ME", "PP", "SP":
+			"ME", "PP", "SP", "AE":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, round(path_2_value * IR_mult)]
 				adv = true
 			"MM":
@@ -164,7 +166,7 @@ func show_tooltip(tile):
 			"SC", "GF", "SE":
 				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 				adv = true
-			"RL":
+			"RL", "AMN":
 				tooltip = (Data.path_1[bldg].desc) % [path_1_value]
 				adv = true
 			"MS":
@@ -281,10 +283,10 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 		tile.bldg.XP = round(constr_costs.money / 100.0)
 		tile.bldg.path_1 = 1
 		tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP"]:
+		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP"]:
+		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
 		if bldg_to_construct in ["SC", "GF", "SE"]:
@@ -298,7 +300,7 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
 		if bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
-		if bldg_to_construct in ["ME", "PP", "RL", "MS"]:
+		if bldg_to_construct in ["ME", "PP", "RL", "MS", "SP"]:
 			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, bldg_to_construct)
@@ -387,7 +389,7 @@ func click_tile(tile, tile_id:int):
 	if not tile.has("bldg"):
 		return
 	var bldg:String = tile.bldg.name
-	if bldg in ["ME", "PP", "RL", "MM", "SP"]:
+	if bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]:
 		Helper.collect_rsrc(items_collected, p_i, tile, tile_id)
 	else:
 		if not tile.bldg.is_constructing:
@@ -404,6 +406,8 @@ func click_tile(tile, tile_id:int):
 				"SE":
 					game.toggle_panel(game.production_panel)
 					game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
+				"AMN":
+					game.toggle_panel(game.AMN_panel)
 			game.hide_tooltip()
 
 func destroy_bldg(id2:int):
@@ -849,6 +853,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
 		"SP":
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SP, id2)
+		"AE":
+			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, id2)
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons.RL, id2)
 		"MM":
@@ -859,6 +865,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.rsrc_icons.GF, id2)
 		"SE":
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SE, id2)
+		"AMN":
+			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AMN, id2)
 		"MS":
 			if not tile.bldg.is_constructing:
 				update_MS(tile)
@@ -910,7 +918,7 @@ func update_MS(tile):
 		tile.bldg.IR_mult = new_IR_mult
 	
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "MM", "SP"]
+	return bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]
 
 func on_path_enter(path:String, tile):
 	game.hide_adv_tooltip()

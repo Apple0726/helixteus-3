@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/coal.png-26fdd94c034207d9fdbe7d813e0c5ec0.stex"
+path="res://.import/proton.png-9dc45b3a98e7b6c13ce230b7e889cf73.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/coal.png"
-dest_files=[ "res://.import/coal.png-26fdd94c034207d9fdbe7d813e0c5ec0.stex" ]
+source_file="res://Graphics/Particles/proton.png"
+dest_files=[ "res://.import/proton.png-9dc45b3a98e7b6c13ce230b7e889cf73.stex" ]
 
 [params]
 

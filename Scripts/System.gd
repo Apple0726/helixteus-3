@@ -210,6 +210,7 @@ func on_planet_click (id:int, l_id:int):
 			elif (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
 				game.c_p = l_id
 				game.c_p_g = id
+				game.stats.planets_conquered += 1
 				game.switch_view("planet")
 				game.planet_data[l_id].conquered = true
 				var all_conquered = true

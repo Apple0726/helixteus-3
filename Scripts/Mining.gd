@@ -244,7 +244,7 @@ func _process(_delta):
 			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = game.clever_round(points * ((game.MUs.MSMB - 1) * 0.05 + 1) / 3000.0 + 1)
+			speed_mult = game.clever_round(points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1)
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points)
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):

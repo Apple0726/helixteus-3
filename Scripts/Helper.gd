@@ -63,6 +63,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
 		elif game.atoms.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
+		elif game.particles.has(obj):
+			format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
 		else:
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
@@ -145,6 +147,10 @@ func get_item_name (_name:String):
 			return tr("GREENHOUSE")
 		"SP":
 			return tr("SOLAR_PANELS")
+		"AE":
+			return tr("ATMOSPHERE_EXTRACTOR")
+		"AMN":
+			return tr("ATOM_MANIPULATOR")
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -562,6 +568,9 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 func get_SP_production(temp:float, value:float):
 	return game.clever_round(value * temp / 273.0, 3)
 
+func get_AE_production(pressure:float, value:float):
+	return game.clever_round(value * pressure, 3)
+
 func update_rsrc(p_i, tile, rsrc = null):
 	var curr_time = OS.get_system_time_msecs()
 	var current_bar
@@ -575,11 +584,13 @@ func update_rsrc(p_i, tile, rsrc = null):
 		if tile.bldg.name in ["SC", "GF", "SE"]:
 			return
 	match tile.bldg.name:
-		"ME", "PP", "MM", "SP":
+		"ME", "PP", "MM", "SP", "AE":
 			#Number of seconds needed per mineral
 			var prod
 			if tile.bldg.name == "SP":
 				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value)
+			elif tile.bldg.name == "AE":
+				prod = 1000 / get_AE_production(p_i.pressure, tile.bldg.path_1_value)
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
@@ -680,6 +691,27 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 				tile.bldg.collect_date = curr_time
 			#game.energy += stored
 			add_item_to_coll(rsrc_collected, "energy", stored)
+			tile.bldg.stored = 0
+		"AE":
+			var stored = tile.bldg.stored
+			if stored == round(tile.bldg.path_2_value):
+				tile.bldg.collect_date = curr_time
+			#game.energy += stored
+			for el in p_i.atmosphere:
+				if el == "ammonia":
+					add_item_to_coll(rsrc_collected, "hydrogen", 3 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "nitrogen", 1 * stored * p_i.atmosphere[el])
+				elif el == "co2":
+					add_item_to_coll(rsrc_collected, "carbon", 1 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "oxygen", 2 * stored * p_i.atmosphere[el])
+				elif el == "methane":
+					add_item_to_coll(rsrc_collected, "carbon", 1 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "hydrogen", 4 * stored * p_i.atmosphere[el])
+				elif el == "water":
+					add_item_to_coll(rsrc_collected, "hydrogen", 2 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "oxygen", 1 * stored * p_i.atmosphere[el])
+				else:
+					add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
 			tile.bldg.stored = 0
 		"RL":
 			#game.SP += tile.bldg.stored

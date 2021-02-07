@@ -140,17 +140,29 @@ margin_top = 464.0
 margin_right = 1888.0
 margin_bottom = 528.0
 
-[node name="L_ID" type="Line2D" parent="."]
-position = Vector2( 1920, 476 )
-points = PoolVector2Array( 0, 20, 96, -28 )
-width = 2.0
-antialiased = true
-
 [node name="ATM" parent="." instance=ExtResource( 1 )]
 margin_left = 1632.0
 margin_top = 368.0
 margin_right = 1888.0
 margin_bottom = 432.0
+
+[node name="L_SAP" type="Line2D" parent="."]
+position = Vector2( 1920, 380 )
+points = PoolVector2Array( 0, 20, 96, -28 )
+width = 2.0
+antialiased = true
+
+[node name="SAP" parent="." instance=ExtResource( 1 )]
+margin_left = 2048.0
+margin_top = 320.0
+margin_right = 2304.0
+margin_bottom = 384.0
+
+[node name="L_ID" type="Line2D" parent="."]
+position = Vector2( 1920, 476 )
+points = PoolVector2Array( 0, 20, 96, -28 )
+width = 2.0
+antialiased = true
 
 [node name="L_ID2" type="Line2D" parent="."]
 position = Vector2( 1920, 380 )

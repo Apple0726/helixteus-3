@@ -18,6 +18,7 @@ func _ready():
 	$Planet.texture_focused = texture
 	$Name.text = p_i.name
 	$Diameter.text = String(round(p_i.size)) + " km"
+	$Atmosphere.visible = not p_i.atmosphere.empty()
 	crust_layer = layer_scene.instance()
 	add_child(crust_layer)
 	crust_layer.get_node("Shadow").visible = false

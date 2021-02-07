@@ -96,9 +96,10 @@ margin_bottom = 40.0
 
 [node name="OptionButton" type="OptionButton" parent="Control"]
 margin_left = 460.0
-margin_top = 236.0
+margin_top = 240.0
 margin_right = 669.0
-margin_bottom = 268.0
+margin_bottom = 272.0
+expand_icon = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -108,18 +109,21 @@ margin_left = 392.0
 margin_top = 320.0
 margin_right = 548.0
 margin_bottom = 336.0
+step = 0.0
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
-margin_left = 572.0
+margin_left = 564.0
 margin_top = 308.0
-margin_right = 604.0
+margin_right = 596.0
 margin_bottom = 340.0
 grow_horizontal = 0
 grow_vertical = 2
+expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -174,9 +178,9 @@ __meta__ = {
 
 [node name="Label4" type="Label" parent="Control"]
 margin_left = 332.0
-margin_top = 236.0
+margin_top = 240.0
 margin_right = 436.0
-margin_bottom = 276.0
+margin_bottom = 272.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "FUEL"

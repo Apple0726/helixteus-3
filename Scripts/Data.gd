@@ -8,18 +8,21 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"SC":{"value":50.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":20.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"MM":{"value":10, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
+				"MM":{"value":0.01, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":2.0, "pw":1.02, "is_value_integer":false, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
 				"SP":{"value":1.0, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				"AE":{"value":0.2, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
+				"AMN":{"value":1.0, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 }
 var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":50, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
-				"MM":{"value":40, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
+				"MM":{"value":4, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.01, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
 				"SP":{"value":300, "pw":1.12, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				"AE":{"value":60, "pw":1.12, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":600, "copper":600, "iron":600, "aluminium":600, "silver":600, "gold":600}},
 				"GF":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1000, "iron":1400, "aluminium":2000, "silver":2500, "gold":3500}},
@@ -38,6 +41,8 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"rover":{"money":5000, "energy":300, "time":80.0},
 				"GH":{"money":10000, "energy":1500, "glass":200, "time":75.0},
 				"SP":{"money":4000, "time":90.0},
+				"AE":{"money":415000, "energy":250000, "time":450.0},
+				"AMN":{"money":5800000, "energy":82000, "time":990.0},
 }
 
 var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
@@ -54,6 +59,8 @@ var MUs = {	"MV":{"base_cost":100, "pw":2.3},
 			"MSMB":{"base_cost":100, "pw":1.6},
 			"IS":{"base_cost":500, "pw":2.1},
 			"AIE":{"base_cost":1000, "pw":1.9},
+			"STMB":{"base_cost":600, "pw":1.7},
+			"SHSR":{"base_cost":2000, "pw":1.8},
 }
 var minerals_icon = load("res://Graphics/Icons/minerals.png")
 var energy_icon = load("res://Graphics/Icons/energy.png")
@@ -64,6 +71,7 @@ var glass_icon = load("res://Graphics/Materials/glass.png")
 var sand_icon = load("res://Graphics/Materials/sand.png")
 var coal_icon = load("res://Graphics/Materials/coal.png")
 var MM_icon = load("res://Graphics/Icons/MM.png")
+var atom_icon = load("res://Graphics/Science/ATM.png")
 
 var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"PP":[energy_icon, energy_icon],
@@ -83,10 +91,13 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"SE":energy_icon,
 					"MM":MM_icon,
 					"SP":energy_icon,
+					"AE":atom_icon,
+					"AMN":atom_icon,
 }
 
 func reload():
 	path_1.ME.desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.AE.desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]
 	path_1.PP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.RL.desc = tr("PRODUCES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.RCC.desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
@@ -97,7 +108,9 @@ func reload():
 	path_1.MM.desc = tr("X_M_PER_SECOND") % ["%s", tr("S_SECOND")]
 	path_1.GH.desc = tr("X_PLANT_GROWTH")
 	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.AMN.desc = "%s: %%s" % [tr("BASE_SPEED")]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
+	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
 	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
@@ -122,6 +135,7 @@ var science_unlocks = {
 						
 						#Atom manipulation
 						"ATM":{"cost":90000, "parents":[]},
+						"SAP":{"cost":12500000, "parents":["ATM"]},
 						
 						#Rover sciences
 						"RC":{"cost":250, "parents":[]},
@@ -138,9 +152,9 @@ var science_unlocks = {
 						#Ship sciences
 						"SCT":{"cost":1500, "parents":["RC"]},
 						"CD":{"cost":4000, "parents":["SCT"]},
-						"ID":{"cost":10000, "parents":["CD", "ATM"]},
-						"FD":{"cost":150000, "parents":["ID"]},
-						"PD":{"cost":1200000, "parents":["FD"]},
+						"ID":{"cost":100000, "parents":["CD", "ATM"]},
+						"FD":{"cost":1500000, "parents":["ID"]},
+						"PD":{"cost":12000000, "parents":["FD"]},
 						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":[]},
@@ -214,4 +228,4 @@ var bomb_data = [{"damage":12, "accuracy":0.7}, {"damage":16, "accuracy":0.72}]
 var light_data = [{"damage":3, "accuracy":1.2}, {"damage":5, "accuracy":1.25}]
 
 #the numbers are the elements' abundance relative to hydrogen
-var elements = {"ammonia":0.05, "co2":0.01, "hydrogen":1.0, "methane":0.2, "oxygen":0.014, "water":0.05, "neon":0.001813}
+var elements = {"ammonia":0.05, "co2":0.01, "hydrogen":1.0, "methane":0.2, "oxygen":0.014, "water":0.05, "neon":0.001813, "xenon":0.0000022}

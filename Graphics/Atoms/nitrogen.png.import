@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/cellulose.png-329c548c182adfd5a448ad3ce7863327.stex"
+path="res://.import/nitrogen.png-c157ee068e2b993d1faa493ad32e9433.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/cellulose.png"
-dest_files=[ "res://.import/cellulose.png-329c548c182adfd5a448ad3ce7863327.stex" ]
+source_file="res://Graphics/Atoms/nitrogen.png"
+dest_files=[ "res://.import/nitrogen.png-c157ee068e2b993d1faa493ad32e9433.stex" ]
 
 [params]
 

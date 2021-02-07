@@ -1,9 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
-[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=3]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scripts/MUPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
@@ -29,7 +27,7 @@ margin_right = 1067.0
 margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
 mouse_filter = 1
-theme = ExtResource( 4 )
+theme = ExtResource( 5 )
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
@@ -116,173 +114,4 @@ margin_right = 996.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 text = "UPGRADE"
-
-[node name="MV" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 54.0
-margin_right = 996.0
-margin_bottom = 78.0
-
-[node name="Label" type="Label" parent="VBoxContainer/MV"]
-margin_right = 450.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 450, 0 )
-mouse_filter = 1
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "MINERAL_VALUE"
-
-[node name="Lv" type="Label" parent="VBoxContainer/MV"]
-margin_left = 454.0
-margin_right = 632.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "1"
-
-[node name="Effects" type="RichTextLabel" parent="VBoxContainer/MV"]
-margin_left = 636.0
-margin_right = 814.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-scroll_active = false
-
-[node name="Upgrade" type="Button" parent="VBoxContainer/MV"]
-margin_left = 818.0
-margin_right = 996.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-theme = ExtResource( 5 )
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
-
-[node name="MSMB" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 82.0
-margin_right = 996.0
-margin_bottom = 106.0
-
-[node name="Label" type="Label" parent="VBoxContainer/MSMB"]
-margin_right = 450.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 450, 0 )
-mouse_filter = 1
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "MINING_SPEED_MULTIPLIER_BOOST"
-
-[node name="Lv" type="Label" parent="VBoxContainer/MSMB"]
-margin_left = 454.0
-margin_right = 632.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "1"
-
-[node name="Effects" type="Label" parent="VBoxContainer/MSMB"]
-margin_left = 636.0
-margin_right = 814.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-
-[node name="Upgrade" type="Button" parent="VBoxContainer/MSMB"]
-margin_left = 818.0
-margin_right = 996.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-theme = ExtResource( 5 )
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
-
-[node name="IS" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 110.0
-margin_right = 996.0
-margin_bottom = 134.0
-
-[node name="Label" type="Label" parent="VBoxContainer/IS"]
-margin_right = 450.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 450, 0 )
-mouse_filter = 1
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "INVENTORY_SLOTS"
-
-[node name="Lv" type="Label" parent="VBoxContainer/IS"]
-margin_left = 454.0
-margin_right = 632.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "1"
-
-[node name="Effects" type="Label" parent="VBoxContainer/IS"]
-margin_left = 636.0
-margin_right = 814.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-
-[node name="Upgrade" type="Button" parent="VBoxContainer/IS"]
-margin_left = 818.0
-margin_right = 996.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-theme = ExtResource( 5 )
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
-
-[node name="AIE" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 138.0
-margin_right = 996.0
-margin_bottom = 162.0
-
-[node name="Label" type="Label" parent="VBoxContainer/AIE"]
-margin_right = 450.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 450, 0 )
-mouse_filter = 1
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "AURORA_INTENSITY_EXPONENT"
-
-[node name="Lv" type="Label" parent="VBoxContainer/AIE"]
-margin_left = 454.0
-margin_right = 632.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "1"
-
-[node name="Effects" type="Label" parent="VBoxContainer/AIE"]
-margin_left = 636.0
-margin_right = 814.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-
-[node name="Upgrade" type="Button" parent="VBoxContainer/AIE"]
-margin_left = 818.0
-margin_right = 996.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-theme = ExtResource( 5 )
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="mouse_entered" from="VBoxContainer/MV/Label" to="." method="_on_Label_mouse_entered" binds= [ "MV" ]]
-[connection signal="mouse_exited" from="VBoxContainer/MV/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/MV/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "MV" ]]
-[connection signal="mouse_exited" from="VBoxContainer/MV/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "MV" ]]
-[connection signal="pressed" from="VBoxContainer/MV/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "MV" ]]
-[connection signal="mouse_entered" from="VBoxContainer/MSMB/Label" to="." method="_on_Label_mouse_entered" binds= [ "MSMB" ]]
-[connection signal="mouse_exited" from="VBoxContainer/MSMB/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "MSMB" ]]
-[connection signal="mouse_exited" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "MSMB" ]]
-[connection signal="pressed" from="VBoxContainer/MSMB/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "MSMB" ]]
-[connection signal="mouse_entered" from="VBoxContainer/IS/Label" to="." method="_on_Label_mouse_entered" binds= [ "IS" ]]
-[connection signal="mouse_exited" from="VBoxContainer/IS/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "IS" ]]
-[connection signal="mouse_exited" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "IS" ]]
-[connection signal="pressed" from="VBoxContainer/IS/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "IS" ]]
-[connection signal="mouse_entered" from="VBoxContainer/AIE/Label" to="." method="_on_Label_mouse_entered" binds= [ "AIE" ]]
-[connection signal="mouse_exited" from="VBoxContainer/AIE/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/AIE/Upgrade" to="." method="_on_Upgrade_mouse_entered" binds= [ "AIE" ]]
-[connection signal="mouse_exited" from="VBoxContainer/AIE/Upgrade" to="." method="_on_Upgrade_mouse_exited" binds= [ "AIE" ]]
-[connection signal="pressed" from="VBoxContainer/AIE/Upgrade" to="." method="_on_Upgrade_pressed" binds= [ "AIE" ]]

@@ -42,6 +42,7 @@ var MU_panel:Control
 var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
+var AMN_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -142,8 +143,17 @@ var mets:Dictionary = {	"lead":0,
 						"mythril":0,
 }
 
-var atoms:Dictionary = {	"neon":0,
+var atoms:Dictionary = {	"hydrogen":0,
+							"carbon":0,
+							"nitrogen":0,
+							"oxygen":0,
+							"neon":0,
 							"xenon":0,
+}
+
+var particles:Dictionary = {	"proton":0,
+								"neutron":0,
+								"electron":0,
 }
 
 #Display help when players see/do things for the first time. true: show help
@@ -179,6 +189,8 @@ var MUs:Dictionary = {	"MV":1,
 						"MSMB":1,
 						"IS":1,
 						"AIE":1,
+						"STMB":1,
+						"SHSR":1,
 }#Levels of mineral upgrades
 
 #Measures to not overwhelm beginners. false: not visible
@@ -193,6 +205,7 @@ var show:Dictionary = {	"minerals":false,
 						"materials":false,
 						"metals":false,
 						"atoms":false,
+						"particles":false,
 						"auroras":false,
 }
 
@@ -228,7 +241,7 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name"
 
 var hotbar:Array = []
 
-var STM_lv:int = 1#ship travel minigame level
+var STM_lv:int = 2#ship travel minigame level
 var rover_id:int = -1#Rover id when in cave
 
 var p_num:int = 0
@@ -238,6 +251,7 @@ var c_num:int = 0
 
 var stats:Dictionary = {	"bldgs_built":0,
 							"wormholes_activated":0,
+							"planets_conquered":1,
 							}
 
 ############ End save data ############
@@ -399,6 +413,7 @@ func _ready():
 		science_unlocked.SCT = true
 		science_unlocked.SA = true
 		science_unlocked.EGH = true
+		science_unlocked.ATM = true
 		#stone.O = 80000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
@@ -636,6 +651,11 @@ func add_panels():
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
+	AMN_panel = load("res://Scenes/Panels/AMNPanel.tscn").instance()
+	
+	AMN_panel.visible = false
+	$Panels/Control.add_child(AMN_panel)
+	
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
 	
@@ -2035,13 +2055,13 @@ func generate_tiles(id:int):
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[110] = {}
 			tile_data[110].bldg = {}
-			tile_data[110].bldg.name = "RCC"
+			tile_data[110].bldg.name = "AMN"
 			tile_data[110].bldg.is_constructing = false
 			tile_data[110].bldg.construction_date = curr_time
 			tile_data[110].bldg.construction_length = 10
 			tile_data[110].bldg.XP = 0
 			tile_data[110].bldg.path_1 = 1
-			tile_data[110].bldg.path_1_value = Data.path_1.RCC.value
+			tile_data[110].bldg.path_1_value = Data.path_1.AMN.value
 			tile_data[111] = {}
 			tile_data[111].bldg = {}
 			tile_data[111].bldg.name = "MM"
@@ -2080,10 +2100,15 @@ func make_atmosphere_composition(temp:float, pressure:float):
 	for el in Data.elements:
 		var phase_scene = load("res://Scenes/PhaseDiagrams/" + el + ".tscn")
 		var phase = phase_scene.instance()
-		if Helper.get_state(temp, pressure, phase) == "G":
-			var rand = randf() * Data.elements[el]
-			atm[el] = rand
-			S += rand
+		var rand = Data.elements[el] / (1 - randf())
+		if Helper.get_state(temp, pressure, phase) == "L":
+			rand *= 0.2
+		elif Helper.get_state(temp, pressure, phase) == "SC":
+			rand *= 0.5
+		elif Helper.get_state(temp, pressure, phase) == "S":
+			rand *= 0.05
+		atm[el] = rand
+		S += rand
 	for el in atm:
 		atm[el] /= S
 	return atm
@@ -2474,6 +2499,9 @@ func add_resources(costs):
 		elif mets.has(cost):
 			show.metals = true
 			mets[cost] += costs[cost]
+		elif atoms.has(cost):
+			show.atoms = true
+			atoms[cost] += costs[cost]
 		if show.has(cost):
 			show[cost] = true
 	HUD.refresh()

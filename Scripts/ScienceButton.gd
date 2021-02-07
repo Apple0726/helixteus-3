@@ -40,6 +40,8 @@ func get_science_name(sc:String):
 			return tr("AUTO_MINING")
 		"ATM":
 			return tr("ATOM_MANIPULATION")
+		"SAP":
+			return tr("SUBATOMIC_PARTICLES")
 		"SA":
 			return tr("SPACE_AGRICULTURE")
 		"EGH":
@@ -114,6 +116,10 @@ func _input(event):
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				if name == "SA":
 					game.craft_panel._on_Agric_pressed()
+				elif name == "ATM":
+					game.show.atoms = true
+				elif name == "SAP":
+					game.show.particles = true
 				game.HUD.refresh()
 				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 				main_tree.refresh()

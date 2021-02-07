@@ -1,0 +1,255 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
+[ext_resource path="res://Scripts/AMNPanel.gd" type="Script" id=3]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=4]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Graphics/Metals/diamond.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Atoms/carbon.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Buttons/Switch.png" type="Texture" id=10]
+[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=11]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=13]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_top = 7.0
+content_margin_bottom = 6.0
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id=3]
+content_margin_top = 10.0
+
+[node name="AMNPanel" type="Control"]
+margin_right = 1067.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 5 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 13 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "ATOM_MANIPULATOR"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="."]
+margin_top = 60.0
+margin_right = 1064.0
+margin_bottom = 124.0
+custom_styles/normal = SubResource( 4 )
+text = "AMN_PANEL_DESC"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_top = 124.0
+margin_right = 384.0
+margin_bottom = 600.0
+custom_styles/bg = SubResource( 3 )
+scroll_horizontal_enabled = false
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_top = 10.0
+margin_right = 384.0
+margin_bottom = 476.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CAD" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_right = 384.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+text = "CARBON_AND_DIAMOND"
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 380.0
+margin_top = 124.0
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="HSlider" type="HSlider" parent="Control"]
+margin_left = 508.0
+margin_top = 268.0
+margin_right = 916.0
+margin_bottom = 284.0
+step = 0.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FromIcon" type="TextureRect" parent="Control"]
+margin_left = 500.0
+margin_top = 308.0
+margin_right = 536.0
+margin_bottom = 344.0
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FromText" type="Label" parent="Control"]
+margin_left = 556.0
+margin_top = 308.0
+margin_right = 660.0
+margin_bottom = 344.0
+text = "0 mol"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Arrow" type="TextureRect" parent="Control"]
+margin_left = 672.0
+margin_top = 308.0
+margin_right = 724.0
+margin_bottom = 346.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="Switch" type="TextureButton" parent="Control"]
+margin_left = 688.0
+margin_top = 360.0
+margin_right = 712.0
+margin_bottom = 384.0
+texture_normal = ExtResource( 10 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ToIcon" type="TextureRect" parent="Control"]
+margin_left = 788.0
+margin_top = 308.0
+margin_right = 824.0
+margin_bottom = 344.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ToText" type="Label" parent="Control"]
+margin_left = 844.0
+margin_top = 308.0
+margin_right = 948.0
+margin_bottom = 344.0
+text = "0 kg"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyCost" type="TextureRect" parent="Control"]
+margin_left = 492.0
+margin_top = 448.0
+margin_right = 528.0
+margin_bottom = 484.0
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyCostText" type="Label" parent="Control"]
+margin_left = 556.0
+margin_top = 448.0
+margin_right = 660.0
+margin_bottom = 484.0
+text = "0"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeCost" type="TextureRect" parent="Control"]
+margin_left = 492.0
+margin_top = 496.0
+margin_right = 528.0
+margin_bottom = 532.0
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeCostText" type="Label" parent="Control"]
+margin_left = 556.0
+margin_top = 496.0
+margin_right = 660.0
+margin_bottom = 532.0
+text = "0"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Transform" type="Button" parent="Control"]
+margin_left = 860.0
+margin_top = 564.0
+margin_right = 1064.0
+margin_bottom = 600.0
+text = "TRANSFORM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/CAD" to="." method="_on_CAD_pressed"]
+[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Control/Switch" to="." method="_on_Switch_pressed"]

@@ -1,7 +1,6 @@
-[gd_resource type="Theme" load_steps=39 format=2]
+[gd_resource type="Theme" load_steps=37 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Graphics/Buttons/CheckboxChecked.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/CheckboxUnchecked.png" type="Texture" id=4]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=5]
@@ -61,6 +60,8 @@ border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
 [sub_resource type="StyleBoxFlat" id=16]
 content_margin_left = 8.0
 content_margin_right = 8.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -109,12 +110,6 @@ bg_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="StyleBoxFlat" id=23]
 bg_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="DynamicFont" id=24]
-size = 25
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=25]
 bg_color = Color( 0, 0, 0, 1 )
@@ -450,7 +445,7 @@ RichTextLabel/fonts/bold_font = null
 RichTextLabel/fonts/bold_italics_font = null
 RichTextLabel/fonts/italics_font = null
 RichTextLabel/fonts/mono_font = null
-RichTextLabel/fonts/normal_font = SubResource( 24 )
+RichTextLabel/fonts/normal_font = null
 RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
 ScrollContainer/styles/bg = null

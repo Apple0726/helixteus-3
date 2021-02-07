@@ -24,9 +24,12 @@ func refresh():
 		_on_Metals_pressed()
 	elif tab == "atoms":
 		_on_Atoms_pressed()
+	elif tab == "particles":
+		_on_Particles_pressed()
 	$Tabs/Materials.visible = game.show.materials
 	$Tabs/Metals.visible = game.show.metals
 	$Tabs/Atoms.visible = game.show.atoms
+	$Tabs/Particles.visible = game.show.particles
 
 func _on_Items_pressed():
 	tab = "items"
@@ -145,6 +148,14 @@ func _on_Atoms_pressed():
 	$Contents/Control/GridContainer.visible = true
 	Helper.put_rsrc($Contents/Control/GridContainer, 48, game.atoms)
 
+func _on_Particles_pressed():
+	tab = "particles"
+	$Contents/Info.text = tr("INV_PARTICLES_DESC")
+	Helper.set_btn_color($Tabs/Particles)
+	inventory_grid.visible = false
+	$Contents/Control/GridContainer.visible = true
+	Helper.put_rsrc($Contents/Control/GridContainer, 48, game.particles)
+
 func show_buy_sell(type:String, obj:String):
 	if game.money == 0:
 		if type == "Materials" and game.mats[obj] == 0:
@@ -202,4 +213,5 @@ func _input(_event):
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+
 
