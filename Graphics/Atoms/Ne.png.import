@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/xenon.png-f9c1e8b08399f425bd7e131cae840c76.stex"
+path="res://.import/Ne.png-cfe31df5f862a53f1f9f4cc8130eea11.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Atoms/xenon.png"
-dest_files=[ "res://.import/xenon.png-f9c1e8b08399f425bd7e131cae840c76.stex" ]
+source_file="res://Graphics/Atoms/Ne.png"
+dest_files=[ "res://.import/Ne.png-cfe31df5f862a53f1f9f4cc8130eea11.stex" ]
 
 [params]
 

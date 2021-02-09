@@ -170,14 +170,14 @@ func _input(_event):
 
 func _on_CollectAll_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (Shift V)")
+	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
 
 func _on_CollectAll_pressed():
 	game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("SELL_MINERALS") + " (Shift C)")
+	game.show_tooltip(tr("SELL_MINERALS") + " (,)")
 
 func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()

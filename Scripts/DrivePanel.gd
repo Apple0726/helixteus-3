@@ -5,8 +5,8 @@ onready var game = get_node("/root/Game")
 
 var coal_texture = preload("res://Graphics/Materials/coal.png")
 var cellulose_texture = preload("res://Graphics/Materials/cellulose.png")
-var neon_texture = preload("res://Graphics/Atoms/neon.png")
-var xenon_texture = preload("res://Graphics/Atoms/xenon.png")
+var neon_texture = preload("res://Graphics/Atoms/Ne.png")
+var xenon_texture = preload("res://Graphics/Atoms/Xe.png")
 var he3mix_texture = preload("res://Graphics/Icons/he3mix.png")
 var graviton_texture = preload("res://Graphics/Icons/graviton.png")
 

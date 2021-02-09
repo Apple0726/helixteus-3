@@ -44,6 +44,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 	for obj in objs:
 		var rsrc = game.rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
+		var atom:bool = false
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
@@ -62,6 +63,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		elif game.mets.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
 		elif game.atoms.has(obj):
+			atom = true
 			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
 		elif game.particles.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
@@ -69,7 +71,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
 					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
-		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tr(obj.to_upper())])
+		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tr(("%s_NAME" % obj).to_upper() if atom else obj.to_upper())])
 		rsrc.get_node("Texture").connect("mouse_exited", self, "on_rsrc_out")
 		texture.rect_min_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
@@ -260,7 +262,7 @@ func get_el_color(element:String):
 		"H", "Fe":
 			return Color(1, 1, 1, 1)
 		_:
-			return Color(randf(), randf(), randf(), 1)
+			return Color(randf() * 0.5, randf() * 0.5, randf() * 0.5, 1)
 
 func mult_dict_by(dict:Dictionary, value:float):
 	var dict2:Dictionary = dict.duplicate(true)
@@ -283,7 +285,7 @@ func get_prod_info(tile_obj):
 	var spd = tile_obj.bldg.path_1_value#qty1: resource being used. qty2: resource being produced
 	var qty_left = game.clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio), 3)
 	var qty_made = game.clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd), 3)
-	var progress = qty_made / tile_obj.bldg.qty2
+	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
 func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):

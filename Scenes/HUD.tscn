@@ -84,13 +84,13 @@ action = "I"
 shortcut = SubResource( 14 )
 
 [sub_resource type="InputEventAction" id=16]
-action = "shift V"
+action = "."
 
 [sub_resource type="ShortCut" id=17]
 shortcut = SubResource( 16 )
 
 [sub_resource type="InputEventAction" id=18]
-action = "shift C"
+action = ","
 
 [sub_resource type="ShortCut" id=19]
 shortcut = SubResource( 18 )

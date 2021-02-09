@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/nitrogen.png-c157ee068e2b993d1faa493ad32e9433.stex"
+path="res://.import/Si.png-d5514c1e02e9b3f682f86b182d502f4e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Atoms/nitrogen.png"
-dest_files=[ "res://.import/nitrogen.png-c157ee068e2b993d1faa493ad32e9433.stex" ]
+source_file="res://Graphics/Atoms/Si.png"
+dest_files=[ "res://.import/Si.png-d5514c1e02e9b3f682f86b182d502f4e.stex" ]
 
 [params]
 

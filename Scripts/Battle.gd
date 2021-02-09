@@ -191,6 +191,12 @@ func damage_HX(id:int, dmg:float, crit:bool = false):
 func hit_formula(acc:float, eva:float):
 	return 1 / (1 + eva / pow(acc, 1.4))
 
+func hitbox_size():
+	if game:
+		return 1 - (game.MUs.SHSR - 1) * 0.01
+	else:
+		return 0.5
+
 func _process(delta):
 	var battle_lost:bool = true
 	for i in len(ship_data):
@@ -224,18 +230,25 @@ func _process(delta):
 		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0.position.distance_to(Vector2(200, 200)) * delta * 5)
 		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1.position.distance_to(Vector2(400, 200)) * delta * 5)
 		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -45)
+		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):
 			if ship_data[i].HP <= 0:
 				continue
-			self["ship%s" % i].modulate.a = min(self["ship%s" % i].modulate.a + 0.03, 1)
+			var ship_i = self["ship%s" % i]
+			ship_i.scale = ship_i.scale.move_toward(Vector2.ONE, ship_i.scale.distance_to(Vector2.ONE) * delta * 5)
+			ship_i.modulate.a = min(ship_i.modulate.a + 0.03, 1)
 	elif stage == BattleStages.ENEMY:
+		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):
+			var ship_i = self["ship%s" % i]
 			if i == tgt_sh:
-				self["ship%s" % i].position.x = move_toward(self["ship%s" % i].position.x, 200, (abs(int(self["ship%s" % i].position.x - 200))) * delta * 5)
+				ship_i.scale = ship_i.scale.move_toward(Vector2.ONE * hitbox_size, ship_i.scale.distance_to(Vector2.ONE * hitbox_size) * delta * 5)
+				ship_i.position.x = move_toward(ship_i.position.x, 200, (abs(int(ship_i.position.x - 200))) * delta * 5)
 				if ship_data[i].HP > 0:
-					self["ship%s" % i].modulate.a = min(self["ship%s" % i].modulate.a + 0.03, 1)
+					ship_i.modulate.a = min(ship_i.modulate.a + 0.03, 1)
 			else:
-				self["ship%s" % i].modulate.a = max(self["ship%s" % i].modulate.a - 0.03, 0.2)
+				ship_i.scale = ship_i.scale.move_toward(Vector2.ONE, ship_i.scale.distance_to(Vector2.ONE) * delta * 5)
+				ship_i.modulate.a = max(ship_i.modulate.a - 0.03, 0.2)
 		var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.1
 		if ship_dir == "left":
 			self["ship%s" % tgt_sh].position.y = max(0, self["ship%s" % tgt_sh].position.y - 10 * boost * delta * 60)

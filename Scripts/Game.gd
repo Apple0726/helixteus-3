@@ -143,12 +143,16 @@ var mets:Dictionary = {	"lead":0,
 						"mythril":0,
 }
 
-var atoms:Dictionary = {	"hydrogen":0,
-							"carbon":0,
-							"nitrogen":0,
-							"oxygen":0,
-							"neon":0,
-							"xenon":0,
+var atoms:Dictionary = {	"H":0,
+							"C":0,
+							"N":0,
+							"O":0,
+							"F":0,
+							"Ne":0,
+							"Al":0,
+							"Si":0,
+							"Fe":0,
+							"Xe":0,
 }
 
 var particles:Dictionary = {	"proton":0,
@@ -423,10 +427,13 @@ func _ready():
 		mets.iron = 1600000
 		mets.aluminium = 500000
 		mets.titanium = 50000
+		mets.topaz = 50
 		show.SP = true
 		show.stone = true
 		show.glass = true
 		show.materials = true
+		show.atoms = true
+		atoms.C = 100
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
 		items[3] = {"name":"lead_seeds", "num":10}
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
@@ -2480,6 +2487,8 @@ func deduct_resources(costs):
 			mats[cost] -= costs[cost]
 		if mets.has(cost):
 			mets[cost] -= costs[cost]
+		if atoms.has(cost):
+			atoms[cost] -= costs[cost]
 	HUD.refresh()
 
 func add_resources(costs):
@@ -2657,6 +2666,8 @@ func _input(event):
 				mats[arr[1].to_lower()] = float(arr[2])
 			"setmet":
 				mets[arr[1].to_lower()] = float(arr[2])
+			"setatom":
+				atoms[arr[1].to_lower()] = float(arr[2])
 			"finconstr":
 				for tile in tile_data:
 					if tile and tile.has("bldg") and tile.bldg.is_constructing:
@@ -2981,7 +2992,6 @@ func _on_CollectPanelTimer_timeout():
 
 func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.visible = false
-
 
 func _on_Ship_pressed():
 	switch_view("STM")#Ship travel minigame

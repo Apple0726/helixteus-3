@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/hydrogen.png-4468d26f2f639654e1b5bb6f2aed721e.stex"
+path="res://.import/Xe.png-48d19cb8ee25fedb58da3da136a4bba9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Atoms/hydrogen.png"
-dest_files=[ "res://.import/hydrogen.png-4468d26f2f639654e1b5bb6f2aed721e.stex" ]
+source_file="res://Graphics/Atoms/Xe.png"
+dest_files=[ "res://.import/Xe.png-48d19cb8ee25fedb58da3da136a4bba9.stex" ]
 
 [params]
 
