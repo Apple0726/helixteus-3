@@ -228,4 +228,4 @@ var bomb_data = [{"damage":12, "accuracy":0.7}, {"damage":16, "accuracy":0.72}]
 var light_data = [{"damage":3, "accuracy":1.2}, {"damage":5, "accuracy":1.25}]
 
 #the numbers are the elements' abundance relative to hydrogen
-var elements = {"ammonia":0.05, "co2":0.01, "hydrogen":1.0, "methane":0.2, "oxygen":0.014, "water":0.05, "neon":0.001813, "xenon":0.0000022}
+var elements = {"NH3":0.05, "CO2":0.01, "H":1.0, "He":0.325, "CH4":0.2, "O":0.014, "H2O":0.05, "Ne":0.001813, "Xe":0.0000022}

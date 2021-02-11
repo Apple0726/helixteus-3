@@ -151,6 +151,8 @@ func save_zooms(obj_str:String):
 			game.science_tree_view.zoom = scale.x
 #Executed every tick
 func _physics_process(_delta):
+	if not obj:
+		return
 	#Moving tiles code
 	var input_vector = Vector2.ZERO
 	if OS.get_latin_keyboard_variant() == "AZERTY":
@@ -176,8 +178,6 @@ func _physics_process(_delta):
 	if progress >= 1:
 		zooming = ""
 		progress = 0
-	if not obj:
-		return
 	if game.c_v == "planet":
 		if scale.x < 0.25 and not obj.icons_hidden:
 			for time_bar in obj.time_bars:

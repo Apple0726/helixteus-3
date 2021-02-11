@@ -331,9 +331,9 @@ var overclocks_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "durat
 						"overclock6":{"costs":{"money":9000000}, "mult":10, "duration":24*60*60000},
 }
 
-var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"water", "produce":60},
-							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"water", "produce":60},
-							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"water", "produce":60},
+var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":60},
+							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":60},
+							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var other_items_info = {"hx_core":{}, "ship_locator":{}}
@@ -594,7 +594,7 @@ func new_game():
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
 	planet_data[2].pressure = 1
-	planet_data[2].lake_1 = "water"
+	planet_data[2].lake_1 = "H2O"
 	planet_data[2].erase("lake_2")
 	planet_data[2].liq_seed = 4
 	planet_data[2].liq_period = 100
@@ -1770,10 +1770,12 @@ func get_max_star_prop(s_id:int, prop:String):
 func generate_planets(id:int):
 	randomize()
 	var combined_star_size = 0
+	var combined_star_mass = 0
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
 	for star in system_data[id]["stars"]:
 		combined_star_size += star["size"]
+		combined_star_mass += star.mass
 	var planet_num = system_data[id]["planet_num"]
 	var max_distance
 	var j = 0
@@ -1805,19 +1807,29 @@ func generate_planets(id:int):
 		var p_id = planet_data.size()
 		p_i["id"] = p_id + p_num
 		p_i["l_id"] = p_id
-		p_i["name"] = tr("PLANET") + " " + String(p_id)
 		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
 		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
 		var dist_in_km = p_i.distance / 569.0 * pow10(1.5, 8)
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
+		var gas_giant:bool = p_i.size >= max(18000, 45000 * pow(combined_star_mass, 0.3))
+		if gas_giant:
+			p_i.crust_start_depth = 0
+			p_i.mantle_start_depth = 0
+			if p_i.temperature > 200:
+				p_i.type = 12
+			else:
+				p_i.type = 11
+			p_i.name = "%s %s" % [tr("GAS_GIANT"), p_id]
+		else:
+			p_i["name"] = tr("PLANET") + " " + String(p_id)
+			p_i.crust_start_depth = Helper.rand_int(50, 450)
+			p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
 		p_i.atmosphere = make_atmosphere_composition(temp, p_i.pressure)
-		p_i.crust = make_planet_composition(temp, "crust")
-		p_i.mantle = make_planet_composition(temp, "mantle")
-		p_i.core = make_planet_composition(temp, "core")
-		p_i.crust_start_depth = Helper.rand_int(50, 450)
-		p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
+		p_i.crust = make_planet_composition(temp, "crust", p_i.size, gas_giant)
+		p_i.mantle = make_planet_composition(temp, "mantle", p_i.size, gas_giant)
+		p_i.core = make_planet_composition(temp, "core", p_i.size, gas_giant)
 		p_i.core_start_depth = round(rand_range(0.4, 0.46) * p_i.size * 1000)
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
@@ -1825,9 +1837,9 @@ func generate_planets(id:int):
 		var lakes = Data.elements.duplicate(true)
 		if id + s_num == 0:#Only water in solar system
 			if randf() < 0.2:
-				p_i.lake_1 = "water"
+				p_i.lake_1 = "H2O"
 			if randf() < 0.2:
-				p_i.lake_2 = "water"
+				p_i.lake_2 = "H2O"
 		elif p_i.temperature <= 1000:
 			p_i.lake_1 = get_random_element(lakes)
 			p_i.lake_2 = get_random_element(lakes)
@@ -2120,11 +2132,12 @@ func make_atmosphere_composition(temp:float, pressure:float):
 		atm[el] /= S
 	return atm
 
-func make_planet_composition(temp:float, depth:String):
+func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
 	randomize()
 	var common_elements = {}
 	var uncommon_elements = {}
-	if temp > -100:
+	var big_planet_factor:float = lerp(1, 5, inverse_lerp(12500, 45000, size))
+	if not gas_giant or depth == "core":
 		if depth == "crust":
 			common_elements["O"] = rand_range(0.1, 0.19)
 			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
@@ -2135,7 +2148,9 @@ func make_planet_composition(temp:float, depth:String):
 									"Mg":0.2,
 									"K":0.2,
 									"Ti":0.05,
-									"H":0.02,
+									"H":0.1 * big_planet_factor,
+									"C":0.1 * big_planet_factor,
+									"He":0.03 * big_planet_factor,
 									"P":0.02,
 									"U":0.02,
 									"Np":0.004,
@@ -2152,16 +2167,20 @@ func make_planet_composition(temp:float, depth:String):
 									"Mg":0.2,
 									"K":0.2,
 									"Np":0.1,
+									"H":0.1 * big_planet_factor,
+									"C":0.1 * big_planet_factor,
 									"Ti":0.05,
-									"H":0.02,
+									"He":0.03 * big_planet_factor,
 									"P":0.02,
 									"Pu":0.01
 								}
 		else:
 			common_elements["Fe"] = rand_range(0.5, 0.95)
 			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			uncommon_elements = {	"Cr":0.3,
+			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.19)
+			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
+			uncommon_elements = {	"S":0.5,
+									"Cr":0.3,
 									"Ta":0.2,
 									"W":0.2,
 									"Os":0.1,
@@ -2171,18 +2190,19 @@ func make_planet_composition(temp:float, depth:String):
 									"Mn":0.1
 								}
 	else:
-		if depth == "crust" or depth == "mantle":
-			common_elements["N"] = randf()
-			common_elements["H"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			common_elements["C"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+		if depth == "crust":
+			return {}
+		if depth == "mantle":
+			common_elements["H"] = randf()
+			common_elements["N"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
 			common_elements["He"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
+			common_elements["C"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
 			uncommon_elements = {	"Al":0.5,
 									"Fe":0.35,
 									"Ca":0.3,
 									"Na":0.25,
 									"U":0.25,
+									"S":0.2,
 									"Mg":0.2,
 									"K":0.2,
 									"Np":0.1,
@@ -2190,19 +2210,6 @@ func make_planet_composition(temp:float, depth:String):
 									"H":0.02,
 									"P":0.02,
 									"Pu":0.01
-								}
-		else:
-			common_elements["Fe"] = rand_range(0.5, 0.95)
-			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			common_elements["S"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
-			uncommon_elements = {	"Cr":0.3,
-									"Ta":0.2,
-									"W":0.2,
-									"Os":0.1,
-									"Ir":0.1,
-									"Ti":0.1,
-									"Co":0.1,
-									"Mn":0.1
 								}
 	var remaining = 1 - Helper.get_sum_of_dict(common_elements)
 	var uncommon_element_count = 0

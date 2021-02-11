@@ -19,15 +19,16 @@ func _ready():
 	$Name.text = p_i.name
 	$Diameter.text = String(round(p_i.size)) + " km"
 	$Atmosphere.visible = not p_i.atmosphere.empty()
-	crust_layer = layer_scene.instance()
-	add_child(crust_layer)
-	crust_layer.get_node("Shadow").visible = false
-	crust_layer.get_node("Background").modulate = Color(0.4, 0.22, 0, 1)
-	crust_layer.rect_scale *= 0.65
-	crust_layer.rect_position = Vector2(654, 357)
-	crust_layer.get_node("Background").connect("mouse_entered", self, "on_crust_enter")
-	crust_layer.get_node("Background").connect("mouse_exited", self, "on_crust_exit")
-	crust_layer.get_node("Background").connect("pressed", self, "on_crust_press")
+	if not p_i.type in [11, 12]:#if not gas giant
+		crust_layer = layer_scene.instance()
+		add_child(crust_layer)
+		crust_layer.get_node("Shadow").visible = false
+		crust_layer.get_node("Background").modulate = Color(0.4, 0.22, 0, 1)
+		crust_layer.rect_scale *= 0.65
+		crust_layer.rect_position = Vector2(654, 357)
+		crust_layer.get_node("Background").connect("mouse_entered", self, "on_crust_enter")
+		crust_layer.get_node("Background").connect("mouse_exited", self, "on_crust_exit")
+		crust_layer.get_node("Background").connect("pressed", self, "on_crust_press")
 	mantle_layer = layer_scene.instance()
 	add_child(mantle_layer)
 	mantle_layer.rect_scale *= min(0.63, 0.65 - 0.65 * p_i.mantle_start_depth / (p_i.size * 500.0))
@@ -36,6 +37,8 @@ func _ready():
 	mantle_layer.get_node("Background").connect("mouse_entered", self, "on_mantle_enter")
 	mantle_layer.get_node("Background").connect("mouse_exited", self, "on_mantle_exit")
 	mantle_layer.get_node("Background").connect("pressed", self, "on_mantle_press")
+	if p_i.type == 11:
+		mantle_layer.get_node("Background").modulate = Color(0, 0.3, 0.6, 1)
 	core_layer = layer_scene.instance()
 	add_child(core_layer)
 	core_layer.get_node("Shadow").visible = false
@@ -126,14 +129,13 @@ func make_pie_chart(arr:Array, name:String):
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
-		var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"
+		var pie_text = "%s\n%s%%" % [tr("%s_NAME" % obj.element.to_upper()), game.clever_round(obj.fraction * 100.0, 2)]
 		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
 	$ScrollContainer/VBoxContainer.add_child(pie)
 
-func remove_pie_chart(name:String):
-	if $ScrollContainer/VBoxContainer.has_node(name):
-		$ScrollContainer/VBoxContainer.remove_child($ScrollContainer/VBoxContainer.get_node(name))
-		
+func remove_pie_chart(_name:String):
+	if $ScrollContainer/VBoxContainer.has_node(_name):
+		$ScrollContainer/VBoxContainer.remove_child($ScrollContainer/VBoxContainer.get_node(_name))
 
 func on_crust_exit():
 	game.hide_tooltip()
@@ -164,7 +166,10 @@ func _on_Name_focus_entered():
 	renaming = true
 
 func _on_Planet_mouse_entered():
-	game.show_tooltip((tr("SURFACE") + "\n" + tr("DEPTHS") + ": 0 m - %s m\n" + tr("MATERIALS") + ":\n%s") % [p_i.crust_start_depth + 1, get_surface_string(p_i.surface)])
+	if game.planet_data[id].type == 11:
+		game.show_tooltip(tr("SURFACE"))
+	else:
+		game.show_tooltip((tr("SURFACE") + "\n" + tr("DEPTHS") + ": 0 m - %s m\n" + tr("MATERIALS") + ":\n%s") % [p_i.crust_start_depth + 1, get_surface_string(p_i.surface)])
 
 func get_surface_string(mats:Dictionary):
 	var string = ""

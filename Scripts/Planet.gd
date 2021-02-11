@@ -189,18 +189,18 @@ func show_tooltip(tile):
 			if OS.get_system_time_msecs() >= tile.plant.plant_date + tile.plant.grow_time:
 				tooltip += "\n" + tr("CLICK_TO_HARVEST")
 	elif tile.has("lake"):
-		if tile.lake.state == "s" and tile.lake.element == "water":
+		if tile.lake.state == "s" and tile.lake.element == "H2O":
 			tooltip = tr("ICE")
-		elif tile.lake.state == "l" and tile.lake.element == "water":
-			tooltip = tr("WATER")
+		elif tile.lake.state == "l" and tile.lake.element == "H2O":
+			tooltip = tr("H2O_NAME")
 		else:
 			match tile.lake.state:
 				"l":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr(tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"s":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr(tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"sc":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr(tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if game.help.crater_desc:
 			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]

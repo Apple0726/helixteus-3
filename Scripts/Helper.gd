@@ -258,9 +258,15 @@ func get_el_color(element:String):
 		"Na":
 			return Color(0.92, 0.98, 1, 1)
 		"Ni":
-			return Color(0.9, 0.9, 0.9, 1)
+			return Color(0.8, 0.8, 0.8, 1)
 		"H", "Fe":
-			return Color(1, 1, 1, 1)
+			return Color(0.9, 0.9, 0.9, 1)
+		"He":
+			return Color(0.8, 0.5, 1.0, 1)
+		"H2O":
+			return Color(0.2, 0.7, 1.0, 1)
+		"C":
+			return Color(0.15, 0.15, 0.15, 1)
 		_:
 			return Color(randf() * 0.5, randf() * 0.5, randf() * 0.5, 1)
 

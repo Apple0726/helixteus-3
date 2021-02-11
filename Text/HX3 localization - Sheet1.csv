@@ -189,8 +189,8 @@ YES,Yes,Oui,Sì,,Ja,Sí,네
 NO,No,Non,No,,Nein,No,아니요
 CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,Ausgewählter Bereich,Tamaño del círculo,원 크기
 SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,Alle ausgewählten Gebäude sind in Bau.,Todos los edificios seleccionados están en construcción.,선택한 빌딩들이 모두 건설 중입니다.
-WATER,Water,Eau,Acqua,,Wasser,Agua,물
-AMMONIA,Ammonia,Ammoniac,Ammoniaca,,Ammoniak,Amoniaco,암모니아
+H2O_NAME,Water,Eau,Acqua,,Wasser,Agua,물
+NH3_NAME,Ammonia,Ammoniac,Ammoniaca,,Ammoniak,Amoniaco,암모니아
 LIQUID,Liquid,Liquide,Liquido/a,,Flüssigkeit,Líquido,액체
 SOLID,Solid,Solide,Solido/a,,Feststoff,Sólido,고체
 SUPERCRITICAL,Supercritical,Supercritique,Supercritico/a,,,Supercrítico,초임계유체
@@ -341,8 +341,8 @@ NUMBER_OF_SYSTEMS,Number of systems,Nombre de systèmes,Numero di sistemi,,,Núm
 GALAXY_ENTERED,Galaxy entered,Galaxie visitée,Galassia visitata,,,Galaxia accedida,
 MAGNETIC_FIELD_STRENGTH,Magnetic field strength,Force du champ magnétique,,,,Fuerza del campo magnético,
 DARK_MATTER,Dark matter,Matière noire,,,,Materia oscura,
-METHANE,Methane,Méthane,,,,Metano,
-CO2,Carbon dioxide,Dioxyde de carbone,,,,Dióxido de carbono,
+CH4_NAME,Methane,Méthane,,,,Metano,
+CO2_NAME,Carbon dioxide,Dioxyde de carbone,,,,Dióxido de carbono,
 O_NAME,Oxygen,Oxygène,Ossigeno,,,,
 H_NAME,Hydrogen,Hydrogène,Idrogeno,,,,
 AURORA,Aurora,Aurore,Aurora,,,,
@@ -636,3 +636,12 @@ SI_NAME,Silicon,,,,,,
 F_NAME,Fluorine,,,,,,
 FE_NAME,Iron,,,,,,
 AL_NAME,Aluminium,,,,,,
+GAS_GIANT,Gas giant,,,,,,
+HELIUM,Helium,,,,,,
+HE_NAME,Helium,,,,,,
+K_NAME,Potassium,,,,,,
+MG_NAME,Magnesium,,,,,,
+NA_NAME,Sodium,,,,,,
+TI_NAME,Titanium,,,,,,
+CA_NAME,Calcium,,,,,,
+NI_NAME,Nickel,,,,,,

@@ -1,8 +1,9 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scenes/PhaseDiagrams/xenon.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/PhaseDiagrams/NH3.gd" type="Script" id=1]
 
-[node name="Xenon" type="Node2D"]
+
+[node name="Ammonia" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 288.0 ],
@@ -15,14 +16,14 @@ polygon = PoolVector2Array( 0, 0, 1112, 0, 1112, 576, 0, 576 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
 color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PoolVector2Array( 192, 232, 320, 164, 320, 204, 272, 216, 180, 296 )
+polygon = PoolVector2Array( 216, 392, 216, 152, 456, 112, 456, 192, 288, 256 )
 
 [node name="Gas" type="Polygon2D" parent="."]
 color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PoolVector2Array( 160, 576, 172, 356, 180, 296, 272, 216, 320, 204, 1112, 180, 1112, 576 )
+polygon = PoolVector2Array( 112, 576, 216, 392, 288, 256, 456, 192, 1112, 192, 1112, 576 )
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 320, 164, 320, 204, 1112, 180, 1112, 112 )
+polygon = PoolVector2Array( 456, 112, 456, 192, 1112, 192, 1112, 64 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )
