@@ -81,9 +81,11 @@ func get_science_name(sc:String):
 		"MAE":
 			return tr("MACRO_ENGINEERING")
 	if sc.substr(0, 2) == "DS":
-		return tr("DYSON_SPHERE_X") % [sc[2]]
+		return "%s %s" % [tr("DYSON_SPHERE"), sc[2]]
 	elif sc.substr(0, 2) == "SE":
-		return tr("SPACE_ELEVATOR_X") % [sc[2]]
+		return "%s %s" % [tr("SPACE_ELEVATOR"), sc[2]]
+	elif sc.substr(0, 3) == "MME":
+		return "%s %s" % [tr("MEGA_MINERAL_EXTRACTOR"), sc[3]]
 
 func on_mouse_entered():
 	is_over = true

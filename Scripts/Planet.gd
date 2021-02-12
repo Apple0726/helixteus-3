@@ -166,7 +166,7 @@ func show_tooltip(tile):
 			"SC", "GF", "SE":
 				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 				adv = true
-			"RL", "AMN":
+			"RL", "AMN", "SPR":
 				tooltip = (Data.path_1[bldg].desc) % [path_1_value]
 				adv = true
 			"MS":
@@ -408,6 +408,8 @@ func click_tile(tile, tile_id:int):
 					game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
 				"AMN":
 					game.toggle_panel(game.AMN_panel)
+				"SPR":
+					game.toggle_panel(game.SPR_panel)
 			game.hide_tooltip()
 
 func destroy_bldg(id2:int):
@@ -867,6 +869,8 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SE, id2)
 		"AMN":
 			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AMN, id2)
+		"SPR":
+			add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
 		"MS":
 			if not tile.bldg.is_constructing:
 				update_MS(tile)

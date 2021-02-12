@@ -55,11 +55,16 @@ func refresh_planets():
 			planet_glow.modulate = Color(1, 0, 0, 1)
 		if p_i.has("MS"):
 			var MS = Sprite.new()
-			MS.texture = load("res://Graphics/Megastructures/M_SE_%s.png" % p_i.MS_lv)
-			MS.scale *= 0.2
-			MS.position.x = -50 * cos(p_i.angle)
-			MS.position.y = -50 * sin(p_i.angle)
-			MS.rotation = p_i.angle + PI / 2
+			if p_i.MS == "M_SE":
+				MS.texture = load("res://Graphics/Megastructures/M_SE_%s.png" % p_i.MS_lv)
+				MS.scale *= 0.2
+				MS.position.x = -50 * cos(p_i.angle)
+				MS.position.y = -50 * sin(p_i.angle)
+				MS.rotation = p_i.angle + PI / 2
+			else:
+				MS.texture = load("res://Graphics/Megastructures/M_MME_%s.png" % p_i.MS_lv)
+				MS.scale *= 0.05
+				add_rsrc(polar2cartesian(p_i.distance, p_i.angle), Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false)
 			planet.add_child(MS)
 			if p_i.is_constructing:
 				var time_bar = game.time_scene.instance()
@@ -67,8 +72,7 @@ func refresh_planets():
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
-		planet.position.x = cos(p_i["angle"]) * p_i["distance"]
-		planet.position.y = sin(p_i["angle"]) * p_i["distance"]
+		planet.position = polar2cartesian(p_i.distance, p_i.angle)
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
 	
@@ -120,7 +124,7 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 	glow_over = glow
 	show_planet_info(id, l_id)
 
-func show_SE_costs(p_i:Dictionary):
+func show_M_SE_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_SE_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
@@ -132,21 +136,39 @@ func show_SE_costs(p_i:Dictionary):
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	
+func show_M_MME_costs(p_i:Dictionary):
+	if p_i.type in [11, 12]:
+		var vbox = game.get_node("UI/Panel/VBox")
+		game.get_node("UI/Panel").visible = true
+		bldg_costs = Data.MS_costs["M_MME_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
+		for cost in bldg_costs:
+			bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2))
+		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Data.MS_output["M_MME_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))}, false)
+	
 func show_planet_info(id:int, l_id:int):
 	var p_i = game.planet_data[l_id]
 	var wid:int = Helper.get_wid(p_i.size)
-	var building:bool = game.bottom_info_action == "building_SE"
+	var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]
 	var has_MS:bool = p_i.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if building:
-		show_SE_costs(p_i)
+		var MS:String = game.bottom_info_action.split("-")[1]
+		call("show_%s_costs" % MS, p_i)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		Helper.add_label(tr("%s_STAGE_X" % p_i.MS) % p_i.MS_lv)
-		Helper.add_label(tr("SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
+		var stage:String = "%s (%s)" % [tr("%s_NAME" % p_i.MS), tr("STAGE_X_X") % [p_i.MS_lv, 3]]
+		Helper.add_label(stage)
+		if p_i.MS == "M_SE":
+			Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
+		elif p_i.MS == "M_MME":
+			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"minerals":Data.MS_output["M_MME_%s" % p_i.MS_lv] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))}, false)
 		if not p_i.is_constructing:
-			if p_i.MS == "M_SE" and p_i.MS_lv < 3 and game.science_unlocked["SE%s" % (p_i.MS_lv + 1)]:
+			if p_i.MS_lv < 3 and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -164,62 +186,80 @@ var MS_constr_data:Dictionary = {}
 func _input(event):
 	if Input.is_action_just_released("F") and not MS_constr_data.empty():
 		if not MS_constr_data.confirm:
-			if MS_constr_data.obj.MS == "M_SE":
-				show_SE_costs(MS_constr_data.obj)
-				MS_constr_data.confirm = true
-				Helper.add_label(tr("F_TO_CONFIRM"))
+			var MS:String = MS_constr_data.obj.MS
+			call("show_%s_costs" % MS, MS_constr_data.obj, MS)
+			MS_constr_data.confirm = true
+			Helper.add_label(tr("F_TO_CONFIRM"))
 		else:
-			build_SE(MS_constr_data.obj)
+			build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 
-func build_SE(p_i:Dictionary):
+func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
-		if p_i.has("MS"):
-			p_i.MS_lv += 1
+		if obj.has("MS"):
+			obj.MS_lv += 1
 		else:
-			p_i.MS = "M_SE"
-			p_i.MS_lv = 0
-		p_i.is_constructing = true
-		p_i.construction_date = curr_time
-		p_i.construction_length = bldg_costs.time * 1000
-		p_i.XP = round(bldg_costs.money / 100.0)
-		refresh_planets()
+			obj.MS = MS
+			obj.MS_lv = 0
+		obj.is_constructing = true
+		obj.construction_date = curr_time
+		obj.construction_length = bldg_costs.time * 1000
+		obj.XP = round(bldg_costs.money / 100.0)
+		if MS in ["M_DS", "M_MME"]:
+			obj.stored = 0
+			obj.collect_date = obj.construction_date + obj.construction_length
 		game.get_node("UI/Panel").visible = false
 		MS_constr_data.clear()
 		Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+		refresh_planets()
+		refresh_stars()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func on_planet_click (id:int, l_id:int):
 	var p_i = game.planet_data[l_id]
 	if not view.dragged:
-		game.get_node("UI/Panel").visible = false
-		var building:bool = game.bottom_info_action == "building_SE"
-		var vbox = game.get_node("UI/Panel/VBox")
+		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]
 		if building:
 			if p_i.conquered:
-				build_SE(p_i)
+				if not p_i.has("MS"):
+					var MS:String = game.bottom_info_action.split("-")[1]
+					if MS == "M_MME" and not p_i.type in [11, 12]:
+						game.popup(tr("ONLY_GAS_GIANT"), 2.0)
+					else:
+						call("build_MS", p_i, MS)
+				else:
+					game.popup(tr("MS_ALREADY_PRESENT_PLANET"), 2.0)
 			else:
 				game.popup(tr("PLANET_MS_ERROR"), 2.5)
+		elif p_i.has("MS") and p_i.MS == "M_MME":
+			var stored = p_i.stored
+			var min_info:Dictionary = Helper.add_minerals(stored)
+			p_i.stored = min_info.remainder
+			game.HUD.refresh()
 		else:
 			if Input.is_action_pressed("shift"):
 				game.c_p = l_id
 				game.c_p_g = id
 				game.switch_view("planet_details")
 			elif (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
-				game.c_p = l_id
-				game.c_p_g = id
 				game.stats.planets_conquered += 1
-				game.switch_view("planet")
 				game.planet_data[l_id].conquered = true
 				var all_conquered = true
 				for planet in game.planet_data:
 					if not planet.conquered:
 						all_conquered = false
-				game.system_data[game.c_s].conquered = all_conquered
-				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-				Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
+				if not p_i.type in [11, 12]:
+					game.c_p = l_id
+					game.c_p_g = id
+					game.switch_view("planet")
+					Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+				else:
+					game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
+				if game.system_data[game.c_s].conquered != all_conquered:
+					game.system_data[game.c_s].conquered = all_conquered
+					Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 			else:
 				if Helper.ships_on_planet(l_id) and not p_i.conquered:
 					game.c_p = l_id
@@ -262,7 +302,8 @@ func on_star_over (id:int):
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		Helper.add_label(tr("%s_STAGE_X" % star.MS) % star.MS_lv)
+		var stage:String = "%s (%s)" % [tr("%s_NAME" % star.MS), tr("STAGE_X_X") % [star.MS_lv, 4]]
+		Helper.add_label(stage)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 		Helper.put_rsrc(vbox, 32, {"energy":Data.MS_output.M_DS_0 * star.luminosity}, false)
 		if not star.is_constructing:
@@ -276,14 +317,15 @@ func on_star_pressed (id:int):
 	if game.bottom_info_action == "building_DS":
 		if game.system_data[game.c_s].conquered:
 			if not star.has("MS"):
+				build_MS(star, "M_DS")
 				if game.check_enough(bldg_costs):
 					game.deduct_resources(bldg_costs)
 					star.MS = "M_DS"
 					star.MS_lv = 0
-					star.stored = 0
 					star.is_constructing = true
 					star.construction_date = curr_time
 					star.construction_length = bldg_costs.time * 1000
+					star.stored = 0
 					star.collect_date = star.construction_date + star.construction_length
 					star.XP = round(bldg_costs.money / 100.0)
 					refresh_stars()
@@ -357,6 +399,22 @@ func _process(_delta):
 			var rsrc_num = floor((c_t - c_d) / prod)
 			star.stored += rsrc_num
 			star.collect_date += prod * rsrc_num
+		rsrc.get_node("Control/Label").text = Helper.format_num(stored, 4)
+	for rsrc_obj in planet_rsrcs:
+		var planet = game.planet_data[rsrc_obj.id]
+		if planet.is_constructing:
+			continue
+		var rsrc = rsrc_obj.node
+		var prod = 1000.0 / Data.MS_output["M_MME_%s" % [planet.MS_lv]]
+		var stored = planet.stored
+		var c_d = planet.collect_date
+		var c_t = curr_time
+		var current_bar = rsrc.get_node("Control/CurrentBar")
+		current_bar.value = min((c_t - c_d) / prod, 1)
+		if c_t - c_d > prod:
+			var rsrc_num = floor((c_t - c_d) / prod)
+			planet.stored += rsrc_num
+			planet.collect_date += prod * rsrc_num
 		rsrc.get_node("Control/Label").text = Helper.format_num(stored, 4)
 
 func _on_System_tree_exited():

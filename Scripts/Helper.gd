@@ -23,7 +23,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	if show_available:
 		if path == "Icons/stone":
 			rsrc_available = get_sum_of_dict(rsrc_available)
-		text = "%s/%s" % [format_num(rsrc_available, threshold / 2), format_num(rsrc_cost, threshold / 2)] + mass_str
+		text = "%s/%s" % [format_num(game.clever_round(rsrc_available, 3), threshold / 2), format_num(game.clever_round(rsrc_cost, 3), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:

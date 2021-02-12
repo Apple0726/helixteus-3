@@ -22,6 +22,8 @@ var reactions:Dictionary = {	"diamond":{"MM":"mets", "atoms":["C"]},
 func _ready():
 	set_process(false)
 	set_polygon($Background.rect_size)
+	$Title.text = tr("AMN_NAME")
+	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = Button.new()
 		btn.name = _name
@@ -218,6 +220,8 @@ func _on_Transform_pressed():
 		_on_HSlider_value_changed($Control/HSlider.value)
 	else:
 		var rsrc = $Control/HSlider.value
+		if rsrc == 0:
+			return
 		var rsrc_to_deduct = {}
 		if atom_to_MM:
 			rsrc_to_deduct = atom_costs.duplicate(true)

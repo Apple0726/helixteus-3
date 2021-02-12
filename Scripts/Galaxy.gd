@@ -99,3 +99,24 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
+
+var items_collected = {}
+
+func collect_all():
+	items_collected.clear()
+	for s_ids in game.galaxy_data[game.c_g].systems:
+		if not game.system_data[s_ids.local].discovered:
+			continue
+		game.planet_data = game.open_obj("Systems", s_ids.global)
+		for p_ids in game.system_data[game.c_s].planets:
+			if not game.planet_data[p_ids.local].discovered:
+				continue
+			game.tile_data = game.open_obj("Planets", p_ids.global)
+			var i:int
+			for tile in game.tile_data:
+				if tile:
+					Helper.collect_rsrc(items_collected, game.planet_data[p_ids.local], tile, i)
+				i += 1
+			Helper.save_obj("Planets", p_ids.global, game.tile_data)
+	game.show_collect_info(items_collected)
+	game.HUD.refresh()

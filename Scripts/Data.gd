@@ -13,6 +13,7 @@ var path_1 = {	"ME":{"value":0.12, "pw":1.15, "is_value_integer":false, "metal_c
 				"SP":{"value":1.0, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":0.2, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"AMN":{"value":1.0, "pw":1.12, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				"SPR":{"value":1.0, "pw":1.11, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 }
 var path_2 = {	"ME":{"value":15, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":70, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -43,16 +44,21 @@ var costs = {	"ME":{"money":100, "energy":40, "time":12.0},
 				"SP":{"money":4000, "time":90.0},
 				"AE":{"money":415000, "energy":250000, "time":450.0},
 				"AMN":{"money":5800000, "energy":82000, "time":990.0},
+				"SPR":{"money":65000000, "energy":613000, "time":3400.0},
 }
 
-var MS_costs = {	"M_DS_0":{"money":10000000000, "stone":800000000, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
+var MS_costs = {	"M_DS_0":{"money":30000000000, "stone":800000000, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"M_SE_0":{"money":700000, "stone":50000, "energy":50000, "copper":800, "iron":1000, "aluminium":300, "time":2*3600},#2*3600
 					"M_SE_1":{"money":3200000, "stone":200000, "energy":200000, "copper":1000, "iron":1400, "aluminium":400, "time":8*3600},#8, 8, 12
 					"M_SE_2":{"money":6800000, "stone":350000, "energy":350000, "copper":2000, "iron":2800, "aluminium":800, "time":8*3600},
 					"M_SE_3":{"money":10000000, "stone":500000, "energy":500000, "copper":8000, "iron":10000, "aluminium":3000, "time":12*3600},
+					"M_MME_0":{"money":500000000, "stone":40000000, "copper":10000, "iron":8000, "aluminium":30000, "titanium":3000, "time":8},#* 3600
+					"M_MME_1":{"money":4500000000, "stone":320000000, "copper":90000, "iron":75000, "aluminium":300000, "titanium":30000, "time":32},
 }
 
-var MS_output = {	"M_DS_0":500000000
+var MS_output = {	"M_DS_0":50000000,
+					"M_MME_0":20000,
+					"M_MME_1":175000,
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
@@ -72,6 +78,7 @@ var sand_icon = load("res://Graphics/Materials/sand.png")
 var coal_icon = load("res://Graphics/Materials/coal.png")
 var MM_icon = load("res://Graphics/Icons/MM.png")
 var atom_icon = load("res://Graphics/Science/ATM.png")
+var particle_icon = load("res://Graphics/Science/SAP.png")
 
 var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"PP":[energy_icon, energy_icon],
@@ -93,6 +100,7 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"SP":energy_icon,
 					"AE":atom_icon,
 					"AMN":atom_icon,
+					"SPR":particle_icon,
 }
 
 func reload():
@@ -109,6 +117,7 @@ func reload():
 	path_1.GH.desc = tr("X_PLANT_GROWTH")
 	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.AMN.desc = "%s: %%s" % [tr("BASE_SPEED")]
+	path_1.SPR.desc = "%s: %%s" % [tr("BASE_SPEED")]
 	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
 	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
 	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
@@ -128,7 +137,7 @@ var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 var science_unlocks = {	
 						#Agriculture sciences
 						"SA":{"cost":100, "parents":[]},
-						"EGH":{"cost":35000, "parents":["SA"]},
+						"EGH":{"cost":3500, "parents":["SA"]},
 						
 						#Auto mining
 						"AM":{"cost":10000, "parents":[]},
@@ -167,6 +176,11 @@ var science_unlocks = {
 						"SE1":{"cost":150000, "parents":["MAE"]},
 						"SE2":{"cost":300000, "parents":["SE1"]},
 						"SE3":{"cost":500000, "parents":["SE2"]},
+						
+						#Mega mineral extractor
+						"MME1":{"cost":17000000, "parents":["MAE"]},
+						"MME2":{"cost":40000000, "parents":["MME1"]},
+						"MME3":{"cost":72000000, "parents":["MME2"]},
 						
 }
 var infinite_research_sciences = {	"MEE":{"cost":5000, "pw":6.2, "value":1.2},

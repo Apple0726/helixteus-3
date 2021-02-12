@@ -16,11 +16,7 @@ func _ready():
 		MS.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/" + MS.name + ".png")
 
 func get_MS_name(_name:String):
-	match _name:
-		"M_DS":
-			return tr("DYSON_SPHERE")
-		"M_SE":
-			return tr("SPACE_ELEVATOR")
+	return tr("%s_NAME" % _name)
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
@@ -42,7 +38,9 @@ func get_item(_name, costs, _type, _dir):
 	if _name == "M_DS":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
 	elif _name == "M_SE":
-		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building_SE", "cancel_building_MS")
+		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_SE", "cancel_building_MS")
+	elif _name == "M_MME":
+		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
 	game.view.obj.construct(_name)
 
 func _on_close_button_pressed():

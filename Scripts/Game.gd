@@ -43,6 +43,7 @@ var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
 var AMN_panel:Control
+var SPR_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -144,6 +145,7 @@ var mets:Dictionary = {	"lead":0,
 }
 
 var atoms:Dictionary = {	"H":0,
+							"He":0,
 							"C":0,
 							"N":0,
 							"O":0,
@@ -217,7 +219,7 @@ var show:Dictionary = {	"minerals":false,
 var universe_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var supercluster_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 var cluster_data:Array = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[0], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data:Array = []
 #var HX_data:Array = []
@@ -400,9 +402,13 @@ func _ready():
 		show[mat] = false
 	for met in mets:
 		show[met] = false
+	for atom in atoms:
+		show[atom] = false
+	for particle in particles:
+		show[particle] = false
 	if TEST:
 		lv = 100
-		money = 1000000000
+		money = 10000000000
 		mats.soil = 50
 		mats.glass = 1000
 		show.plant_button = true
@@ -418,7 +424,8 @@ func _ready():
 		science_unlocked.SA = true
 		science_unlocked.EGH = true
 		science_unlocked.ATM = true
-		#stone.O = 80000000
+		science_unlocked.MAE = true
+		stone.O = 800000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
 		mats.soil = 1000
@@ -434,6 +441,7 @@ func _ready():
 		show.materials = true
 		show.atoms = true
 		atoms.C = 100
+		atoms.Xe = 100
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
 		items[3] = {"name":"lead_seeds", "num":10}
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
@@ -658,10 +666,16 @@ func add_panels():
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
-	AMN_panel = load("res://Scenes/Panels/AMNPanel.tscn").instance()
+	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
+	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
+	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
+	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
 	
 	AMN_panel.visible = false
 	$Panels/Control.add_child(AMN_panel)
+	
+	SPR_panel.visible = false
+	$Panels/Control.add_child(SPR_panel)
 	
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
@@ -846,6 +860,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	hide_tooltip()
 	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
+	$UI/Panel.visible = false
 	if not first_time:
 		match c_v:
 			"planet":
@@ -1657,7 +1672,7 @@ func generate_systems(id:int):
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
 			a *= pow(pow10(1, -9) / B, 0.3)
 			#Solar masses
-			var mass = -log(1 - randf()) / a
+			var mass:float = -log(1 - randf()) / a
 			var star_size = 1
 			var star_class = ""
 			#Temperature in K
@@ -1756,7 +1771,7 @@ func generate_systems(id:int):
 		s_i["discovered"] = false
 		s_i.pos = Vector2.ZERO
 		s_i.diff = 1.0
-		galaxy_data[id]["systems"].append(s_id)
+		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
 	galaxy_data[id]["discovered"] = true
 
@@ -1813,11 +1828,11 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = p_i.size >= max(18000, 45000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = p_i.size >= 18000#max(18000, 45000 * pow(combined_star_mass, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
-			if p_i.temperature > 200:
+			if p_i.temperature > 100:
 				p_i.type = 12
 			else:
 				p_i.type = 11
@@ -2072,6 +2087,15 @@ func generate_tiles(id:int):
 		tile_data[315].cave.id = 1
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
+			tile_data[109] = {}
+			tile_data[109].bldg = {}
+			tile_data[109].bldg.name = "SPR"
+			tile_data[109].bldg.is_constructing = false
+			tile_data[109].bldg.construction_date = curr_time
+			tile_data[109].bldg.construction_length = 10
+			tile_data[109].bldg.XP = 0
+			tile_data[109].bldg.path_1 = 1
+			tile_data[109].bldg.path_1_value = Data.path_1.SPR.value
 			tile_data[110] = {}
 			tile_data[110].bldg = {}
 			tile_data[110].bldg.name = "AMN"
@@ -2496,6 +2520,8 @@ func deduct_resources(costs):
 			mets[cost] -= costs[cost]
 		if atoms.has(cost):
 			atoms[cost] -= costs[cost]
+		if particles.has(cost):
+			particles[cost] -= costs[cost]
 	HUD.refresh()
 
 func add_resources(costs):
@@ -2518,6 +2544,9 @@ func add_resources(costs):
 		elif atoms.has(cost):
 			show.atoms = true
 			atoms[cost] += costs[cost]
+		elif particles.has(cost):
+			show.particles = true
+			particles[cost] += costs[cost]
 		if show.has(cost):
 			show[cost] = true
 	HUD.refresh()
@@ -2670,12 +2699,26 @@ func _input(event):
 			"setsp":
 				SP = float(arr[1])
 			"setmat":
-				mats[arr[1].to_lower()] = float(arr[2])
+				if mats.has(arr[1].to_lower()):
+					mats[arr[1].to_lower()] = float(arr[2])
+				else:
+					popup("No such material", 1.5)
 			"setmet":
-				mets[arr[1].to_lower()] = float(arr[2])
+				if mets.has(arr[1].to_lower()):
+					mets[arr[1].to_lower()] = float(arr[2])
+				else:
+					popup("No such metal", 1.5)
 			"setatom":
-				atoms[arr[1].to_lower()] = float(arr[2])
-			"finconstr":
+				if atoms.has(arr[1].capitalize()):
+					atoms[arr[1].capitalize()] = float(arr[2])
+				else:
+					popup("No such atom", 1.5)
+			"setpart":
+				if particles.has(arr[1].to_lower()):
+					particles[arr[1].to_lower()] = float(arr[2])
+				else:
+					popup("No such particle", 1.5)
+			"fc":
 				for tile in tile_data:
 					if tile and tile.has("bldg") and tile.bldg.is_constructing:
 						var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - OS.get_system_time_msecs()

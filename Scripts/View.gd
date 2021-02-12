@@ -73,7 +73,7 @@ func refresh():
 		show_ship = true
 		ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
 	if game.c_v == "supercluster":
-		show_ship = game.ships_coords.sc == game.c_sc
+		show_ship = game.ships_c_coords.sc == game.c_sc
 	elif game.c_v == "cluster":
 		show_ship = game.ships_c_g_coords.c == game.c_c_g
 	elif game.c_v == "galaxy":
