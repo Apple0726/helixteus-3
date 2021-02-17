@@ -1,6 +1,7 @@
 extends Node2D
 
 var astar_node = AStar2D.new()
+const DEF_EXPO = 0.7
 
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
@@ -8,8 +9,8 @@ onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if tile.has("aurora") else 0
-onready var aurora_mult:float = pow(1 + au_int, 0.25)
-onready var difficulty:float = 1 * aurora_mult
+onready var aurora_mult:float = game.clever_round(pow(1 + au_int, 1.5), 3)
+onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -97,9 +98,9 @@ func _ready():
 	if not game.EA_cave_visited:
 		game.long_popup("Caves right now are very unpolished, possibly unbalanced and may contain bugs. Don't expect too much for now!", "Early access note")
 		game.EA_cave_visited = true
-	elif not game.help.has("sprint_mode") or not game.help.sprint_mode:
+	elif game.help.sprint_mode:
 		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
-		game.help.sprint_mode = true
+		game.help.sprint_mode = false
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -168,6 +169,7 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	$UI2/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), difficulty]
 	var rng = RandomNumberGenerator.new()
 	$UI2/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
@@ -203,7 +205,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 3)]))
-					HX_node.HP = round(10 * pow(difficulty, 0.85) * rng.randf_range(0.8, 1.2))
+					HX_node.HP = round(10 * pow(difficulty, 0.8) * rng.randf_range(0.8, 1.2))
 					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
 					HX_node.def = round(6 * pow(difficulty, 0.85) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
@@ -267,7 +269,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = rng.randf()
-			var formula = 0.2 / pow(n, 0.8) * pow(cave_floor, 0.8) * aurora_mult
+			var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * aurora_mult
 			if rand < formula:
 				var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
 				var contents:Dictionary = generate_treasure(tier, rng)
@@ -436,13 +438,13 @@ func on_relic_exited(_body):
 	$UI2/Relic.visible = false
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
-	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty),
-						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * difficulty),
+	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.2)),
+						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.1)),
 						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		if difficulty > met_value.rarity and rng.randf() < 0.5 / met_value.rarity * aurora_mult:
-			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * difficulty, 3)
+			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 1.1), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -648,7 +650,8 @@ func exit_cave():
 			else:
 				inventory[i] = {"type":""}
 	var i_w_w2 = i_w_w.duplicate(true)
-	i_w_w2.stone = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
+	if i_w_w.has("stone"):
+		i_w_w2.stone = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
 	game.add_resources(i_w_w2)
 	i_w_w.clear()
 	game.switch_view("planet")
@@ -700,13 +703,13 @@ func hit_rock(delta):
 			#var wall_type = cave_wall.get_cellv(map_pos)
 			for mat in p_i.surface.keys():
 				if randf() < p_i.surface[mat].chance / 2.5:
-					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12), 3)
+					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.85), 3)
 					if amount < 1:
 						continue
 					rsrc[mat] = amount
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = game.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05), 3)
+				rsrc[deposit.rsrc_name] = game.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.75), 3)
 				remove_child(deposit)
 				deposits.erase(st)
 			var remainder:float = 0
@@ -920,5 +923,13 @@ func _on_Hole_body_exited(_body):
 func _on_Floor_mouse_entered():
 	game.show_tooltip(tr("CAVE_FLOOR") % [cave_floor])
 
-func _on_Floor_mouse_exited():
+func _on_mouse_exited():
 	game.hide_tooltip()
+
+func _on_Difficulty_mouse_entered():
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), pow(2, cave_floor - 1)]
+	if game.help.cave_diff_info:
+		game.help_str = "cave_diff_info"
+		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
+	else:
+		game.show_tooltip(tooltip)

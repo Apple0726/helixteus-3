@@ -54,6 +54,8 @@ func get_science_name(sc:String):
 			return tr("SHIP_UPGRADE")
 		"CD":
 			return tr("CHEMICAL_DRIVE")
+		"FTL":
+			return tr("FTL_DRIVE")
 		"ID":
 			return tr("ION_DRIVE")
 		"FD":
@@ -81,11 +83,11 @@ func get_science_name(sc:String):
 		"MAE":
 			return tr("MACRO_ENGINEERING")
 	if sc.substr(0, 2) == "DS":
-		return "%s %s" % [tr("DYSON_SPHERE"), sc[2]]
+		return "%s %s" % [tr("M_DS_NAME"), sc[2]]
 	elif sc.substr(0, 2) == "SE":
-		return "%s %s" % [tr("SPACE_ELEVATOR"), sc[2]]
+		return "%s %s" % [tr("M_SE_NAME"), sc[2]]
 	elif sc.substr(0, 3) == "MME":
-		return "%s %s" % [tr("MEGA_MINERAL_EXTRACTOR"), sc[3]]
+		return "%s %s" % [tr("M_MME_NAME"), sc[3]]
 
 func on_mouse_entered():
 	is_over = true
@@ -116,8 +118,10 @@ func _input(event):
 				game.SP -= Data.science_unlocks[name].cost
 				game.science_unlocked[name] = true
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
-				if name == "SA":
-					game.craft_panel._on_Agric_pressed()
+				if name == "RC":
+					game.show.vehicles_button = true
+				elif name == "SA":
+					game.craft_panel._on_btn_pressed("Agriculture")
 				elif name == "ATM":
 					game.show.atoms = true
 				elif name == "SAP":

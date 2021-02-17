@@ -35,7 +35,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	tile = game.tile_data[game.c_t]
 	match bldg_type:
 		"GF":
-			ratio = 1 / 10.0
+			ratio = 1 / 15.0
 			$Title.text = tr("GLASS_FACTORY")
 		"SE":
 			ratio = 40.0

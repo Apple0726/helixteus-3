@@ -51,6 +51,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 	s_cmp = curr_cmp
 	Helper.put_rsrc($ScrollContainer/Cost, 36, {})
 	for cmp in Data[type]:
+		var metal = tr(cmp.split("_")[0].to_upper())
 		if type in ["rover_weapons", "rover_mining"]:
 			var laser_color = cmp.split("_")[0]
 			if laser_color == "orange" and not game.science_unlocked.OL:
@@ -71,8 +72,14 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 				continue
 			if laser_color == "ultragammaray" and not game.science_unlocked.UGRL:
 				continue
+		else:
+			var l_metal = metal.to_lower()
+			if not l_metal in ["lead", "gemstone"] and not game.show[l_metal]:
+				continue
+			if l_metal == "gemstone":
+				if not game.show.amethyst and not game.show.emerald and not game.show.quartz and not game.show.ruby and not game.show.sapphire and not game.show.topaz:
+					continue
 		var slot = game.slot_scene.instance()
-		var metal = tr(cmp.split("_")[0].to_upper())
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/%s/%s.png" % [dir, cmp])
 		slot.get_node("Button").connect("mouse_entered", self, "_on_Slot_mouse_entered", [type, cmp, metal])
 		slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")

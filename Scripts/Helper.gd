@@ -152,7 +152,9 @@ func get_item_name (_name:String):
 		"AE":
 			return tr("ATMOSPHERE_EXTRACTOR")
 		"AMN":
-			return tr("ATOM_MANIPULATOR")
+			return tr("AMN_NAME")
+		"SPR":
+			return tr("SPR_NAME")
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -382,7 +384,7 @@ func add_minerals(amount:float, add:bool = true):
 		return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):
-	return 0.24 + (game.MUs.AIE + next_lv) / 100.0
+	return 0.48 + (game.MUs.AIE + next_lv) / 50.0
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
@@ -429,7 +431,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.show.metals = true
 			game.mets[content] += amount
 		elif content == "stone":
-			game.add_resources(contents.stone)
+			game.add_resources({"stone":contents.stone})
 		elif content == "ship_locator":
 			game.second_ship_hints.ship_locator = true
 		else:
@@ -461,7 +463,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		var chance_mult:float = 0.25 / game.met_info[met].rarity * aurora_mult
 		if tile.has("crater") and met == tile.crater.metal:
 			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
-			contents[met] = game.clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * aurora_mult * chance_mult * min(depth, 2 * tile.crater.init_depth), 3)
+			contents[met] = game.clever_round(game.met_info[met].amount * rand_range(0.2, 0.225) * aurora_mult * chance_mult * min(depth, 2 * tile.crater.init_depth), 3)
 		else:
 			chance_mult = min(7.0 / (7.0 + 1 / chance_mult), 1)
 			var end_depth:int = tile.depth + depth
@@ -544,12 +546,12 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].XP -= ship_data[id].XP_to_lv
 		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * 1.3)
 		ship_data[id].lv += 1
-		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.2)
+		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.15)
 		ship_data[id].HP = ship_data[id].total_HP
-		ship_data[id].atk = round(ship_data[id].atk * 1.2)
-		ship_data[id].def = round(ship_data[id].def * 1.2)
-		ship_data[id].acc = round(ship_data[id].acc * 1.2)
-		ship_data[id].eva = round(ship_data[id].eva * 1.2)
+		ship_data[id].atk = round(ship_data[id].atk * 1.15)
+		ship_data[id].def = round(ship_data[id].def * 1.15)
+		ship_data[id].acc = round(ship_data[id].acc * 1.15)
+		ship_data[id].eva = round(ship_data[id].eva * 1.15)
 
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
@@ -589,8 +591,9 @@ func update_rsrc(p_i, tile, rsrc = null):
 		capacity_bar = rsrc.get_node("Control/CapacityBar")
 		rsrc_text = rsrc.get_node("Control/Label")
 	else:
-		if tile.bldg.name in ["SC", "GF", "SE"]:
+		if tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
 			return
+	update_bldg_constr(tile)
 	match tile.bldg.name:
 		"ME", "PP", "MM", "SP", "AE":
 			#Number of seconds needed per mineral
@@ -602,7 +605,7 @@ func update_rsrc(p_i, tile, rsrc = null):
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
-			var cap = round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name))
+			var cap = round(tile.bldg.path_2_value * tile.bldg.IR_mult)
 			var stored = tile.bldg.stored
 			var c_d = tile.bldg.collect_date
 			var c_t = curr_time
@@ -665,12 +668,24 @@ func update_rsrc(p_i, tile, rsrc = null):
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
+		"SPR":
+			if tile.bldg.has("qty"):
+				var reaction_info = get_reaction_info(tile)
+				var MM_value = reaction_info.MM_value
+				capacity_bar.value = reaction_info.progress
+				rsrc_text.text = "%s mol" % [game.clever_round(MM_value, 2)]
+			else:
+				rsrc_text.text = ""
+				capacity_bar.value = 0
 
 func get_prod_mult(tile):
-	var mult = get_IR_mult(tile.bldg.name)
+	var mult = tile.bldg.IR_mult
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
+
+func has_IR(bldg_name:String):
+	return bldg_name in ["ME", "PP", "RL", "MS", "SP"]
 
 func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int):
 	if not tile.has("bldg"):
@@ -684,18 +699,18 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			var min_info:Dictionary = add_minerals(stored)
 			tile.bldg.stored = min_info.remainder
 			add_item_to_coll(rsrc_collected, "minerals", min_info.added)
-			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name)):
+			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
 				tile.bldg.collect_date = curr_time
 		"PP":
 			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * get_IR_mult(tile.bldg.name)):
+			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
 				tile.bldg.collect_date = curr_time
 			#game.energy += stored
 			add_item_to_coll(rsrc_collected, "energy", stored)
 			tile.bldg.stored = 0
 		"SP":
 			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value):
+			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
 				tile.bldg.collect_date = curr_time
 			#game.energy += stored
 			add_item_to_coll(rsrc_collected, "energy", stored)
@@ -706,18 +721,18 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 				tile.bldg.collect_date = curr_time
 			#game.energy += stored
 			for el in p_i.atmosphere:
-				if el == "ammonia":
-					add_item_to_coll(rsrc_collected, "hydrogen", 3 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "nitrogen", 1 * stored * p_i.atmosphere[el])
-				elif el == "co2":
-					add_item_to_coll(rsrc_collected, "carbon", 1 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "oxygen", 2 * stored * p_i.atmosphere[el])
-				elif el == "methane":
-					add_item_to_coll(rsrc_collected, "carbon", 1 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "hydrogen", 4 * stored * p_i.atmosphere[el])
-				elif el == "water":
-					add_item_to_coll(rsrc_collected, "hydrogen", 2 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "oxygen", 1 * stored * p_i.atmosphere[el])
+				if el == "NH3":
+					add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
+				elif el == "CO2":
+					add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
+				elif el == "CH4":
+					add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
+				elif el == "H2O":
+					add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
+					add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
 				else:
 					add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
 			tile.bldg.stored = 0
@@ -773,3 +788,35 @@ func update_ship_travel():
 		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
 	return progress
+
+func update_bldg_constr(tile):
+	var curr_time = OS.get_system_time_msecs()
+	var start_date = tile.bldg.construction_date
+	var length = tile.bldg.construction_length
+	var progress = (curr_time - start_date) / float(length)
+	var update_boxes:bool = false
+	if progress > 1:
+		if tile.bldg.is_constructing:
+			tile.bldg.is_constructing = false
+			game.xp += tile.bldg.XP
+			if tile.bldg.has("rover_id"):
+				game.rover_data[tile.bldg.rover_id].ready = true
+				tile.bldg.erase("rover_id")
+			if game.c_v == "planet":
+				update_boxes = true
+			if tile.bldg.name == "MS":
+				update_MS(tile)
+				game.mineral_capacity += tile.bldg.mineral_cap_upgrade * tile.bldg.IR_mult
+			game.HUD.refresh()
+	return update_boxes
+
+func update_MS(tile):
+	var new_IR_mult:float = get_IR_mult(tile.bldg.name)
+	if tile.bldg.IR_mult != new_IR_mult:
+		game.mineral_capacity += tile.bldg.path_1_value * (new_IR_mult - tile.bldg.IR_mult)
+		tile.bldg.IR_mult = new_IR_mult
+	
+
+func get_reaction_info(tile):
+	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)
+	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}

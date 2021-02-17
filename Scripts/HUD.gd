@@ -47,7 +47,7 @@ func refresh():
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(round(game.mineral_capacity), 6)]
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
-	soil_text.text = String(game.mats.soil) + " kg"
+	soil_text.text = Helper.format_num(game.clever_round(game.mats.soil, 3), 6) + " kg"
 	energy_text.text = Helper.format_num(game.energy, 6)
 	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
@@ -153,7 +153,7 @@ func on_slot_press(i:int):
 
 func _on_Label_mouse_entered():
 	on_button = true
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s") % [game.lv, Helper.format_num(game.xp, 4), Helper.format_num(game.xp_to_lv, 4)])
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.lv, Helper.format_num(game.xp, 4), Helper.format_num(game.xp_to_lv, 4), tr("XP_HELP")])
 
 
 func _on_Label_mouse_exited():

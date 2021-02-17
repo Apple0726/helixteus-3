@@ -7,9 +7,10 @@ var energy_cost:float
 var reaction:String = ""
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"He":2,
-								"Ne":10,
-								"Xe":54,
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":100, "difficulty":0.1},
+								"He":{"Z":2, "energy_cost":200, "difficulty":0.15},
+								"Ne":{"Z":10, "energy_cost":800, "difficulty":1},
+								"Xe":{"Z":54, "energy_cost":10000, "difficulty":20},
 }
 
 func _ready():
@@ -22,25 +23,14 @@ func _ready():
 		btn.name = _name
 		btn.rect_min_size.y = 30
 		btn.text = tr("%s_NAME" % _name.to_upper())
-		btn.connect("pressed", self, "_on_%s_pressed" % _name, [_name, reactions[_name]])
+		btn.connect("pressed", self, "_on_Atom_pressed", [_name])
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
-func _on_He_pressed(_name:String, Z:int):
-	reset_poses(_name, Z)
-	energy_cost = 1000
-	difficulty = 10.0
-	refresh()
 
-func _on_Ne_pressed(_name:String, Z:int):
-	reset_poses(_name, Z)
-	energy_cost = 10000
-	difficulty = 80.0
-	refresh()
-
-func _on_Xe_pressed(_name:String, Z:int):
-	reset_poses(_name, Z)
-	energy_cost = 80000
-	difficulty = 400.0
+func _on_Atom_pressed(_name:String):
+	reset_poses(_name, reactions[_name].Z)
+	energy_cost = reactions[_name].energy_cost
+	difficulty = reactions[_name].difficulty
 	refresh()
 
 func refresh():
@@ -51,6 +41,8 @@ func refresh():
 			disabled = true
 		disabled = disabled and game.atoms[reaction_name] == 0 and (not tile.bldg.has("qty") or not tile.bldg.reaction == reaction_name)
 		$ScrollContainer/VBoxContainer.get_node(reaction_name).disabled = disabled
+	if tile.bldg.has("qty"):
+		$ScrollContainer/VBoxContainer.get_node(tile.bldg.reaction).icon = Data.time_icon
 	if reaction == "":
 		return
 	set_process($Control3.visible)
@@ -70,6 +62,8 @@ func refresh():
 	else:
 		$Transform.visible = $Control/HSlider.max_value != 0 and not tile.bldg.has("qty")
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
+		$ScrollContainer/VBoxContainer.get_node(reaction).icon = null
+	$Control/HSlider.value = $Control/HSlider.max_value
 
 func reset_poses(_name:String, _Z:int):
 	for btn in $ScrollContainer/VBoxContainer.get_children():
@@ -91,7 +85,7 @@ func reset_poses(_name:String, _Z:int):
 	$Control.visible = not $Control3.visible
 	if $Control3.visible and not tile.bldg.atom_to_p:
 		_on_Switch_pressed(false)
-	_on_HSlider_value_changed(0)
+	#_on_HSlider_value_changed(0)
 
 func _on_Switch_pressed(refresh:bool = true):
 	var pos = $Control2/To.rect_position
@@ -99,7 +93,7 @@ func _on_Switch_pressed(refresh:bool = true):
 	$Control2/From.rect_position = pos
 	atom_to_p = not atom_to_p
 	if refresh:
-		_on_HSlider_value_changed($Control/HSlider.value)
+		#_on_HSlider_value_changed($Control/HSlider.value)
 		refresh()
 
 func _on_HSlider_value_changed(value):
@@ -112,12 +106,12 @@ func _on_HSlider_value_changed(value):
 	Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * value))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000)
-	refresh()
+	#refresh(false)
 
 func _on_Transform_pressed():
 	if tile.bldg.has("qty"):
 		set_process(false)
-		var reaction_info = get_reaction_info(tile)
+		var reaction_info = Helper.get_reaction_info(tile)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
 		var rsrc_to_add:Dictionary
@@ -136,11 +130,12 @@ func _on_Transform_pressed():
 		tile.bldg.erase("qty")
 		tile.bldg.erase("start_date")
 		tile.bldg.erase("reaction")
+		tile.bldg.erase("difficulty")
 		$Control.visible = true
 		$Control3.visible = false
-		$Transform.text = "%s (G)" % tr("TRANSFORM")
-		$ScrollContainer/VBoxContainer.get_node(reaction).icon = null
-		_on_HSlider_value_changed($Control/HSlider.value)
+#		$Transform.text = "%s (G)" % tr("TRANSFORM")
+#		$ScrollContainer/VBoxContainer.get_node(reaction).icon = null
+		#_on_HSlider_value_changed($Control/HSlider.value)
 	else:
 		var rsrc = $Control/HSlider.value
 		if rsrc == 0:
@@ -155,12 +150,18 @@ func _on_Transform_pressed():
 		tile.bldg.qty = rsrc
 		tile.bldg.start_date = OS.get_system_time_msecs()
 		tile.bldg.reaction = reaction
+		tile.bldg.difficulty = difficulty
 		tile.bldg.atom_to_p = atom_to_p
+		for rsrc2 in game.view.obj.rsrcs:
+			if rsrc2.id == game.c_t:
+				rsrc2.node.get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % reaction)
+				break
 		set_process(true)
 		$Control.visible = false
 		$Control3.visible = true
-		$Transform.text = "%s (G)" % tr("STOP")
-		$ScrollContainer/VBoxContainer.get_node(reaction).icon = Data.time_icon
+#		$Transform.text = "%s (G)" % tr("STOP")
+		#$ScrollContainer/VBoxContainer.get_node(reaction).icon = Data.time_icon
+	refresh()
 	game.HUD.refresh()
 
 func _process(delta):
@@ -168,7 +169,10 @@ func _process(delta):
 		_on_close_button_pressed()
 		set_process(false)
 		return
-	var reaction_info = get_reaction_info(tile)
+	if not tile.bldg.has("start_date"):
+		set_process(false)
+		return
+	var reaction_info = Helper.get_reaction_info(tile)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
 	$Control3/TextureProgress.value = reaction_info.progress
@@ -185,10 +189,6 @@ func _process(delta):
 	Helper.put_rsrc($Control2/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000))
-
-func get_reaction_info(tile):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)
-	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

@@ -73,7 +73,18 @@ margin_left = 28.0
 margin_top = 556.0
 margin_right = 68.0
 margin_bottom = 580.0
-text = "Loot"
+text = "LOOT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bonus" type="Label" parent="."]
+margin_left = 24.0
+margin_top = 20.0
+margin_right = 320.0
+margin_bottom = 44.0
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -84,3 +95,5 @@ margin_top = 548.0
 margin_right = 544.0
 margin_bottom = 588.0
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="Bonus" to="." method="_on_Bonus_mouse_entered"]
+[connection signal="mouse_exited" from="Bonus" to="." method="_on_mouse_exited"]

@@ -16,10 +16,12 @@ func _physics_process(_delta):
 		if target is KinematicBody2D:
 			if not enemy:
 				var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
-				Helper.show_dmg(int(damage / dmg_penalty / target.def), target_coll.position, cave_ref)
-				target.hit(damage / dmg_penalty / target.def)
+				var dmg:float = damage / dmg_penalty / pow(target.def, cave_ref.DEF_EXPO)
+				Helper.show_dmg(int(dmg), target_coll.position, cave_ref)
+				target.hit(dmg)
 			else:
-				cave_ref.hit_player(damage / cave_ref.def)
+				var dmg:float = damage / pow(cave_ref.def, cave_ref.DEF_EXPO)
+				cave_ref.hit_player(dmg)
 				if cave_ref.HP >= 0:
-					Helper.show_dmg(int(damage / cave_ref.def), target_coll.position, cave_ref)
+					Helper.show_dmg(int(dmg), target_coll.position, cave_ref)
 		get_parent().remove_child(self)

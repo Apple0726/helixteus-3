@@ -78,10 +78,10 @@ func update():
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * Helper.get_IR_mult(bldg)
-		if bldg == "SP":
-			curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw)
-		elif bldg == "AE":
+		var curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * first_tile.IR_mult
+		if bldg == "SP" and path_selected == 1:
+			curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw) * first_tile.IR_mult
+		elif bldg == "AE" and path_selected == 1:
 			curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw)
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
@@ -97,10 +97,10 @@ func update():
 		game.remove_upgrade_panel()
 		return
 	next.text = ""
-	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * Helper.get_IR_mult(bldg)
-	if bldg == "SP":
-		next_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
-	elif bldg == "AE":
+	var next_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * first_tile.IR_mult
+	if bldg == "SP" and path_selected == 1:
+		next_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw) * first_tile.IR_mult
+	elif bldg == "AE" and path_selected == 1:
 		next_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)

@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
+const DEF_EXPO = 0.7
 var victory_panel_scene = preload("res://Scenes/Panels/VictoryPanel.tscn")
 var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 var target_scene = preload("res://Scenes/TargetButton.tscn")
@@ -39,6 +40,7 @@ var immune:bool = false
 var wave:int = 0
 var weapon_XPs:Array = []
 var tgt_sh:int = -1#target_ship
+var hit_amount:int#Number of times your ships got hit (combined)
 
 var victory_panel
 
@@ -79,9 +81,12 @@ func _ready():
 		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP
 		get_node("Ship%s/HP" % i).value = ship_data[i].HP
 		get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
-	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		get_node("FightPanel/HBox/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[0].bullet.lv])
+	refresh_fight_panel()
 	send_HXs()
+
+func refresh_fight_panel():
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		get_node("FightPanel/HBox/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[0][weapon.to_lower()].lv])
 
 func send_HXs():
 	for j in 4:
@@ -281,7 +286,7 @@ func _process(delta):
 					if HX_data[i].HP <= 0:
 						continue
 					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[i].eva):
-						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[i].def
+						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[i].def, DEF_EXPO)
 						var crit = randf() < 0.1
 						if crit:
 							dmg *= 1.5
@@ -293,7 +298,7 @@ func _process(delta):
 					weapon_XPs[sh].light += 1
 			else:
 				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[t].eva):
-					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / HX_data[w_c_d[weapon.name].target].def
+					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[w_c_d[weapon.name].target].def, DEF_EXPO)
 					var crit = randf() < 0.1
 					if crit:
 						dmg *= 1.5
@@ -450,7 +455,7 @@ func place_targets():
 		target.get_node("TextureButton").shortcut = ShortCut.new()
 		target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
 		target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
-		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i % 4])
+		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
 		target.get_node("Label").text = String((i % 4) + 1)
 		target.add_to_group("targets")
 	if target_id != -2:
@@ -500,6 +505,14 @@ func _on_Timer_timeout():
 		victory_panel.weapon_XPs = weapon_XPs
 		victory_panel.rect_position = Vector2(108, 60)
 		victory_panel.p_id = game.c_p
+		if hit_amount == 0:
+			victory_panel.mult = 1.5
+		elif hit_amount == 1:
+			victory_panel.mult = 1.25
+		elif hit_amount == 2:
+			victory_panel.mult = 1.1
+		else:
+			victory_panel.mult = 1
 		add_child(victory_panel)
 		return
 	if HXs_rekt >= (wave + 1) * 4:
@@ -507,6 +520,11 @@ func _on_Timer_timeout():
 		send_HXs()
 		curr_sh = 0
 		curr_en = wave * 4
+		stage = BattleStages.CHOOSING
+		$FightPanel.visible = true
+		refresh_fight_panel()
+		$Current.visible = true
+		$Back.visible = true
 	else:
 		if curr_sh >= len(ship_data):
 			stage = BattleStages.ENEMY
@@ -516,9 +534,10 @@ func _on_Timer_timeout():
 				tgt_sh = Helper.rand_int(1, len(ship_data)) - 1
 			enemy_attack()
 		else:
-			curr_en = 0
+			curr_en = wave * 4
 			stage = BattleStages.CHOOSING
 			$FightPanel.visible = true
+			refresh_fight_panel()
 			$Current.visible = true
 			$Back.visible = true
 
@@ -717,12 +736,13 @@ func _on_Ship_area_entered(area, ship_id:int):
 		return
 	var HX = HX_data[HX_w_c_d[area.name].id]
 	if randf() < hit_formula(HX.acc, ship_data[ship_id].eva):
-		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / ship_data[ship_id].def
+		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def, DEF_EXPO)
 		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
 		ship_data[ship_id].HP -= dmg
 	else:
 		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 0.6, true)
 	$ImmuneTimer.start()
+	hit_amount += 1
 	immune = true
 	if not HX_w_c_d[area.name].group in ["w_1_2", "w_2_1", "w_3_3"]:
 		remove_weapon(area, HX_w_c_d[area.name].group)

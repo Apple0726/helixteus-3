@@ -24,17 +24,17 @@ func set_visibility():
 func refresh():
 	if id >= len(game.ship_data):
 		return
-	$XP/TextureProgress.value = game.ship_data[id].XP
-	$XP/TextureProgress2.value = game.ship_data[id].XP
 	$XP/TextureProgress.max_value = game.ship_data[id].XP_to_lv
 	$XP/TextureProgress2.max_value = game.ship_data[id].XP_to_lv
+	$XP/TextureProgress.value = game.ship_data[id].XP
+	$XP/TextureProgress2.value = game.ship_data[id].XP
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
+		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
 	$XP/Label2.text = "%s / %s" % [game.ship_data[id].XP, game.ship_data[id].XP_to_lv]

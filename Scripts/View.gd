@@ -80,10 +80,10 @@ func refresh():
 		show_ship = game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
 		show_ship = game.ships_c_g_coords.s == game.c_s_g
-	var show_lines = show_ship and game.ships_travel_view != "-"
+	var show_lines = show_ship and game.ships_travel_view == game.c_v
 	red_line.visible = show_lines
 	green_line.visible = show_lines
-	ship.visible = show_ship
+	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
 	if game.ships_travel_view == "-":
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE

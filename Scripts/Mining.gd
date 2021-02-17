@@ -194,18 +194,21 @@ func pickaxe_hit():
 	progress += game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
-	if progress >= 100:
-		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
-		$MiningSound.play()
+	var rock_gen:bool = false
+	while progress >= 100:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
 		progress -= 100
+		rock_gen = true
+		generate_rock(true)
+	if rock_gen:
+		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
+		$MiningSound.play()
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
 			$LayerAnim.play("Layer fade")
 			$LayerInfo.visible = true
 		place_crumbles(15, 0.2, 2)
-		generate_rock(true)
 		game.HUD.refresh()
 	update_info()
 	if game.pickaxe.durability == 0:

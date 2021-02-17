@@ -36,7 +36,7 @@ func _on_btn_pressed(btn_str:String):
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, _desc, costs, _type, _dir)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = tab in ["speedups", "overclocks"]
+	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = tab in ["Speedups", "Overclocks"]
 
 func _on_Buy_pressed():
 	get_item(item_name, item_total_costs, item_type, item_dir)
@@ -48,7 +48,7 @@ func get_item(_name, costs, _type, _dir):
 	item_type = _type
 	item_dir = _dir
 	if game.check_enough(costs):
-		if tab == "pickaxes":
+		if tab == "Pickaxes":
 			if not game.pickaxe.empty():
 				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(_name).to_lower()], [costs.duplicate(true)])
 			else:
@@ -68,6 +68,6 @@ func buy_pickaxe(_costs:Dictionary):
 		game.planet_HUD.refresh()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
-		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Pickaxes/" + item_name + ".png")
+		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
 	game.pickaxe = {"name":item_name, "speed":game.pickaxes_info[item_name].speed, "durability":game.pickaxes_info[item_name].durability}
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)

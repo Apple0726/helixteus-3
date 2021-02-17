@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 2000
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -121,8 +121,8 @@ var mats:Dictionary = {	"coal":0,
 						"soil":0,
 						"cellulose":0,
 						"silicon":0,
-						"he3mix":0,
-						"graviton":0,
+						#"he3mix":0,
+						#"graviton":0,
 }
 
 var mets:Dictionary = {	"lead":0,
@@ -187,6 +187,7 @@ var help:Dictionary = {
 			"sprint_mode":true,
 			"active_wormhole":true,
 			"inactive_wormhole":true,
+			"cave_diff_info":true,
 }
 
 var science_unlocked:Dictionary = {}
@@ -222,7 +223,6 @@ var cluster_data:Array = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"
 var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 var planet_data:Array = []
-#var HX_data:Array = []
 var tile_data:Array = []
 var cave_data:Array = []
 
@@ -247,7 +247,7 @@ var items:Array = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name"
 
 var hotbar:Array = []
 
-var STM_lv:int = 2#ship travel minigame level
+var STM_lv:int = 1#ship travel minigame level
 var rover_id:int = -1#Rover id when in cave
 
 var p_num:int = 0
@@ -308,13 +308,13 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 var pickaxes_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
 					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":900}},
 					"stone_pickaxe":{"speed":2.1, "durability":300, "costs":{"money":5000}},
-					"lead_pickaxe":{"speed":2.8, "durability":550, "costs":{"money":35000}},
-					"copper_pickaxe":{"speed":3.6, "durability":800, "costs":{"money":180000}},
-					"iron_pickaxe":{"speed":4.5, "durability":1100, "costs":{"money":840000}},
-					"aluminium_pickaxe":{"speed":5.5, "durability":1400, "costs":{"money":3500000}},
-					"silver_pickaxe":{"speed":6.7, "durability":1700, "costs":{"money":15000000}},
-					"gold_pickaxe":{"speed":8.3, "durability":600, "costs":{"money":32500000}},
-					"gemstone_pickaxe":{"speed":11.2, "durability":2000, "costs":{"money":156000000}},
+					"lead_pickaxe":{"speed":2.9, "durability":550, "costs":{"money":35000}},
+					"copper_pickaxe":{"speed":4.3, "durability":800, "costs":{"money":180000}},
+					"iron_pickaxe":{"speed":5.9, "durability":1100, "costs":{"money":840000}},
+					"aluminium_pickaxe":{"speed":8.8, "durability":1400, "costs":{"money":3500000}},
+					"silver_pickaxe":{"speed":12.7, "durability":1700, "costs":{"money":15000000}},
+					"gold_pickaxe":{"speed":50.0, "durability":140, "costs":{"money":32500000}},
+					"gemstone_pickaxe":{"speed":35.0, "durability":2000, "costs":{"money":156000000}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -446,7 +446,7 @@ func _ready():
 		items[3] = {"name":"lead_seeds", "num":10}
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game()
@@ -521,7 +521,9 @@ func load_game():
 		mats = save_game.get_var()
 		mets = save_game.get_var()
 		atoms = save_game.get_var()
+		particles = save_game.get_var()
 		help = save_game.get_var()
+		help.cave_diff_info = true
 		show = save_game.get_var()
 		universe_data = save_game.get_var()
 		cave_data = save_game.get_var()
@@ -771,7 +773,7 @@ func open_shop_pickaxe():
 	if not shop_panel.visible:
 		panels.push_front(shop_panel)
 		fade_in_panel(shop_panel)
-	shop_panel._on_Pickaxes_pressed()
+	shop_panel._on_btn_pressed("Pickaxes")
 
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	if $UI/BottomInfo.visible:
@@ -953,10 +955,12 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			cave.set_rover_data()
 			switch_music(load("res://Audio/cave1.ogg"))
 		"STM":
+			$Ship.visible = false
 			remove_child(HUD)
 			STM = STM_scene.instance()
 			add_child(STM)
 		"battle":
+			$Ship.visible = false
 			remove_child(HUD)
 			battle = battle_scene.instance()
 			add_child(battle)
@@ -964,6 +968,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		fn_save_game(true)
 
 func add_science_tree():
+	HUD.get_node("CollectAll").visible = false
 	HUD.get_node("Hotbar").visible = false
 	add_obj("science_tree")
 
@@ -974,6 +979,7 @@ func add_mining():
 	add_child(mining_HUD)
 
 func remove_mining():
+	HUD.get_node("CollectAll").visible = true
 	HUD.get_node("Hotbar").visible = true
 	remove_child(mining_HUD)
 	mining_HUD = null
@@ -1113,11 +1119,12 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
+	HUD.get_node("CollectAll").visible = false
 
 func add_galaxy():
 	var view_str:String = tr("VIEW_CLUSTER")
-	if lv < 40:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 40"]]
+	if lv < 35:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
 	put_change_view_btn(view_str, "res://Graphics/Buttons/ClusterView.png")
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
@@ -1126,6 +1133,7 @@ func add_galaxy():
 	if not galaxy_data[c_g]["discovered"]:
 		yield(start_system_generation(), "completed")
 	add_obj("galaxy")
+	HUD.get_node("CollectAll").visible = true
 
 func start_system_generation():
 	yield(get_tree(), "idle_frame")
@@ -1144,11 +1152,12 @@ func add_system():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
-	if not system_data[c_s]["discovered"]:
+	if not system_data[c_s]["discovered"] or planet_data.empty():
 		if c_s_g != 0:
 			planet_data.clear()
 		generate_planets(c_s)
 	add_obj("system")
+	HUD.get_node("CollectAll").visible = true
 
 func add_planet():
 	planet_data = open_obj("Systems", c_s_g)
@@ -1158,6 +1167,7 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
+	HUD.get_node("CollectAll").visible = true
 
 func remove_dimension():
 	add_child(HUD)
@@ -1797,6 +1807,7 @@ func generate_planets(id:int):
 	while pow(1.3, j) * 240 < combined_star_size * 2.63:
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
+	system_data[id]["planets"].clear()
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -1828,7 +1839,7 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = p_i.size >= 18000#max(18000, 45000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = p_i.size >= max(18000, 45000 * pow(combined_star_mass, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -1868,11 +1879,11 @@ func generate_planets(id:int):
 				lv = 3
 			if num == 12:
 				lv = ceil(0.9 * log(power) / log(1.2))
-			var HP = round(rand_range(0.8, 1.2) * 20 * pow(1.2, lv - 1))
-			var atk = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
-			var def = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
-			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
-			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.2, lv - 1))
+			var HP = round(rand_range(0.8, 1.2) * 20 * pow(1.15, lv - 1))
+			var atk = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+			var def = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 50000)
 			var XP = round(pow(1.2, lv - 1) * 5)
 			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
@@ -2068,7 +2079,7 @@ func generate_tiles(id:int):
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, 1999)#						local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
-	elif c_s_g != 0 and randf() < 0.05:#5% chance to spawn a wormhole on a planet outside solar system
+	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
@@ -2087,6 +2098,16 @@ func generate_tiles(id:int):
 		tile_data[315].cave.id = 1
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
+			tile_data[108] = {}
+			tile_data[108].bldg = {}
+			tile_data[108].bldg.name = "RCC"
+			tile_data[108].bldg.is_constructing = false
+			tile_data[108].bldg.construction_date = curr_time
+			tile_data[108].bldg.construction_length = 10
+			tile_data[108].bldg.XP = 0
+			tile_data[108].bldg.path_1 = 1
+			tile_data[108].bldg.path_1_value = Data.path_1.SPR.value
+			tile_data[108].bldg.IR_mult = 1
 			tile_data[109] = {}
 			tile_data[109].bldg = {}
 			tile_data[109].bldg.name = "SPR"
@@ -2096,6 +2117,7 @@ func generate_tiles(id:int):
 			tile_data[109].bldg.XP = 0
 			tile_data[109].bldg.path_1 = 1
 			tile_data[109].bldg.path_1_value = Data.path_1.SPR.value
+			tile_data[109].bldg.IR_mult = 1
 			tile_data[110] = {}
 			tile_data[110].bldg = {}
 			tile_data[110].bldg.name = "AMN"
@@ -2105,6 +2127,7 @@ func generate_tiles(id:int):
 			tile_data[110].bldg.XP = 0
 			tile_data[110].bldg.path_1 = 1
 			tile_data[110].bldg.path_1_value = Data.path_1.AMN.value
+			tile_data[110].bldg.IR_mult = 1
 			tile_data[111] = {}
 			tile_data[111].bldg = {}
 			tile_data[111].bldg.name = "MM"
@@ -2119,6 +2142,7 @@ func generate_tiles(id:int):
 			tile_data[111].bldg.collect_date = curr_time
 			tile_data[111].bldg.stored = 0
 			tile_data[111].depth = 0
+			tile_data[111].bldg.IR_mult = 1
 		else:
 			tile_data[112] = {}
 			tile_data[112].ship = true
@@ -2130,12 +2154,10 @@ func generate_tiles(id:int):
 		second_ship_hints.signal_emitted = true
 
 func erase_tile(random_tile:int):
-	if not tile_data[random_tile]:
+	if not tile_data[random_tile] or not tile_data[random_tile].has("aurora"):
 		tile_data[random_tile] = {}
 	else:
-		for k in tile_data[random_tile]:
-			if k != "aurora":
-				tile_data[random_tile].erase(k)
+		tile_data[random_tile] = {"aurora":tile_data[random_tile].aurora}
 
 func make_atmosphere_composition(temp:float, pressure:float):
 	var atm = {}
@@ -2360,7 +2382,7 @@ func on_change_view_click ():
 			if lv >= 18:
 				switch_view("galaxy")
 		"galaxy":
-			if lv >= 40:
+			if lv >= 35:
 				switch_view("cluster")
 		"cluster":
 			if lv >= 50:
@@ -2515,13 +2537,13 @@ func deduct_resources(costs):
 			for el in stone:
 				stone[el] *= ratio
 		if mats.has(cost):
-			mats[cost] -= costs[cost]
+			mats[cost] = max(0, mats[cost] - costs[cost])
 		if mets.has(cost):
-			mets[cost] -= costs[cost]
+			mets[cost] = max(0, mets[cost] - costs[cost])
 		if atoms.has(cost):
-			atoms[cost] -= costs[cost]
+			atoms[cost] = max(0, atoms[cost] - costs[cost])
 		if particles.has(cost):
-			particles[cost] -= costs[cost]
+			particles[cost] = max(0, particles[cost] - costs[cost])
 	HUD.refresh()
 
 func add_resources(costs):
@@ -2530,6 +2552,8 @@ func add_resources(costs):
 			money += costs.money
 		elif cost == "energy":
 			energy += costs.energy
+		elif cost == "SP":
+			SP += costs.SP
 		elif cost == "stone":
 			for comp in costs.stone:
 				if stone.has(comp):
@@ -2762,7 +2786,7 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", ""] and not shop_panel.visible and not craft_panel.visible:
+	if not c_v in ["battle", "cave", ""] and not shop_panel.visible and not craft_panel.visible and not upgrade_panel and not overlay:
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var name = hotbar[i]
@@ -2813,6 +2837,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(mats)
 	save_game.store_var(mets)
 	save_game.store_var(atoms)
+	save_game.store_var(particles)
 	save_game.store_var(help)
 	save_game.store_var(show)
 	save_game.store_var(universe_data)
@@ -2974,6 +2999,7 @@ func _on_NewGame_pressed():
 
 func _on_LoadGame_pressed():
 	fade_out_title("load_game")
+	$Title/Menu/VBoxContainer/LoadGame.disconnect("pressed", self, "_on_LoadGame_pressed")
 
 func _on_Autosave_timeout():
 	var config = ConfigFile.new()
@@ -3022,6 +3048,8 @@ func new_game_confirm():
 	YN_panel.disconnect("confirmed", self, "new_game_confirm")
 
 func show_collect_info(info:Dictionary):
+	if info.has("stone") and Helper.get_sum_of_dict(info.stone) == 0:
+		info.erase("stone")
 	if info.empty():
 		return
 	add_resources(info)
@@ -3042,6 +3070,7 @@ func _on_CollectPanelTimer_timeout():
 
 func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.visible = false
+	$UI/Panel.modulate.a = 1.0
 
 func _on_Ship_pressed():
 	switch_view("STM")#Ship travel minigame

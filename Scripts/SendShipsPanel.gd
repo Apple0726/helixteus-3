@@ -37,7 +37,7 @@ func refresh():
 		distance = depart_pos.distance_to(dest_pos)
 	elif game.c_g == coords.g:
 		travel_view = "galaxy"
-		distance = 161
+		distance = 121
 		depart_id = coords.s
 		dest_id = game.planet_data[dest_p_id].parent
 		depart_pos = game.system_data[depart_id].pos
@@ -119,7 +119,7 @@ func has_SE(p_i:Dictionary):
 	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.is_constructing
 
 func get_atm_exit_cost(pressure:float):
-	var res:float = pow(pressure * 10, 1.4) * 300
+	var res:float = pow(pressure * 10, 1.5) * 300
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
@@ -170,10 +170,18 @@ func calc_costs():
 	var gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	var atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
 	var gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
+	if depart_planet_data.type in [11, 12]:
+		atm_exit_cost = 0
+		gravity_exit_cost = 0
+	if game.planet_data[dest_p_id].type in [11, 12]:
+		atm_entry_cost = 0
+		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.text = Helper.format_num(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 30
 	time_cost = 5000 / slider_factor * distance
+	if game.science_unlocked.FTL:
+		time_cost /= 10.0
 	$EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
@@ -184,6 +192,12 @@ func _on_EnergyCost2_mouse_entered():
 	var gravity_exit_cost = Helper.format_num(get_grav_exit_cost(depart_planet_data.size))
 	var atm_entry_cost = Helper.format_num(get_atm_entry_cost(game.planet_data[dest_p_id].pressure))
 	var gravity_entry_cost = Helper.format_num(get_grav_entry_cost(game.planet_data[dest_p_id].size))
+	if depart_planet_data.type in [11, 12]:
+		atm_exit_cost = 0
+		gravity_exit_cost = 0
+	if game.planet_data[dest_p_id].type in [11, 12]:
+		atm_entry_cost = 0
+		gravity_entry_cost = 0
 	game.show_adv_tooltip("%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""], [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon])
 
 func _on_EnergyCost2_mouse_exited():

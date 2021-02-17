@@ -110,6 +110,8 @@ func _ready():
 				if tile.wormhole.active:
 					$Obstacles.set_cell(i, j, 8)
 				else:
+					if tile.wormhole.has("investigation_length"):
+						add_time_bar(id2, "wormhole")
 					$Obstacles.set_cell(i, j, 9)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
@@ -141,7 +143,7 @@ func show_tooltip(tile):
 		var bldg:String = tile.bldg.name
 		icons = Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else []
 		var mult:float = Helper.get_prod_mult(tile)
-		var IR_mult:float = Helper.get_IR_mult(tile.bldg.name)
+		var IR_mult:float = tile.bldg.IR_mult#Helper.get_IR_mult(tile.bldg.name)
 		var path_1_value
 		if bldg == "SP":
 			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult)
@@ -162,7 +164,7 @@ func show_tooltip(tile):
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, round(path_2_value * IR_mult)]
 				adv = true
 			"MM":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value * IR_mult]
+				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
 			"SC", "GF", "SE":
 				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 				adv = true
@@ -261,7 +263,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":10000 * pow(game.stats.wormholes_activated + 1, 2.2), "time":3600 * pow(game.stats.wormholes_activated + 1, 0.8)}
+	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":3600 * pow(game.stats.wormholes_activated + 1, 0.2)}
 
 func constr_bldg(tile_id:int, mass_build:bool = false):
 	if bldg_to_construct == "":
@@ -300,8 +302,10 @@ func constr_bldg(tile_id:int, mass_build:bool = false):
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
 		if bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
-		if bldg_to_construct in ["ME", "PP", "RL", "MS", "SP"]:
+		if Helper.has_IR(bldg_to_construct):
 			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
+		else:
+			tile.bldg.IR_mult = 1
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, bldg_to_construct)
 		add_time_bar(tile_id, "bldg")
@@ -410,16 +414,19 @@ func click_tile(tile, tile_id:int):
 					game.toggle_panel(game.AMN_panel)
 				"SPR":
 					game.toggle_panel(game.SPR_panel)
+					if tile.bldg.has("reaction"):
+						game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
 			game.hide_tooltip()
 
 func destroy_bldg(id2:int):
 	var tile = game.tile_data[id2]
 	var bldg:String = tile.bldg.name
+	items_collected.clear()
 	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
 	if bldg == "MS":
-		game.mineral_capacity -= tile.bldg.path_1_value * Helper.get_IR_mult(tile.bldg.name)
+		game.mineral_capacity -= tile.bldg.path_1_value * tile.bldg.IR_mult#Helper.get_IR_mult(tile.bldg.name)
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -667,14 +674,14 @@ func _input(event):
 					$Obstacles.set_cell(x_pos, y_pos, -1)
 					game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 					if len(game.ship_data) == 0:
-						game.ship_data.append({"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
-						game.ship_data.append({"lv":1, "HP":32, "total_HP":32, "atk":22, "def":8, "acc":18, "eva":12, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-						Helper.add_ship_XP(1, 1000)
-						Helper.add_weapon_XP(1, "bullet", 10)
-						Helper.add_weapon_XP(1, "laser", 10)
-						Helper.add_weapon_XP(1, "bomb", 10)
-						Helper.add_weapon_XP(1, "light", 20)
+						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":7, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						Helper.add_ship_XP(1, 2000)
+						Helper.add_weapon_XP(1, "bullet", 50)
+						Helper.add_weapon_XP(1, "laser", 50)
+						Helper.add_weapon_XP(1, "bomb", 50)
+						Helper.add_weapon_XP(1, "light", 60)
 				else:
 					if game.show.SP:
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)
@@ -682,6 +689,9 @@ func _input(event):
 						game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 			elif tile.has("wormhole"):
 				if tile.wormhole.active:
+					if game.lv < 18:
+						game.long_popup(tr("LV_18_NEEDED"))
+						return
 					Helper.update_ship_travel()
 					if Helper.ships_on_planet(id):
 						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
@@ -743,7 +753,8 @@ func _input(event):
 						var costs:Dictionary = get_wh_costs()
 						if game.SP >= costs.SP:
 							game.SP -= costs.SP
-							tile.wormhole.investigation_length = costs.time
+							game.stats.wormholes_activated += 1
+							tile.wormhole.investigation_length = costs.time * 1000
 							tile.wormhole.investigation_date = curr_time
 							game.popup(tr("INVESTIGATION_STARTED"), 2.0)
 							add_time_bar(tile_id, "wormhole")
@@ -870,10 +881,13 @@ func add_bldg(id2:int, st:String):
 		"AMN":
 			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AMN, id2)
 		"SPR":
-			add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
+			if tile.bldg.has("reaction"):
+				add_rsrc(v, Color.white, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
+			else:
+				add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
 		"MS":
 			if not tile.bldg.is_constructing:
-				update_MS(tile)
+				Helper.update_MS(tile)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -915,12 +929,6 @@ func add_bldg(id2:int, st:String):
 	if tile.bldg.is_constructing:
 		add_time_bar(id2, "bldg")
 
-func update_MS(tile):
-	var new_IR_mult:float = Helper.get_IR_mult(tile.bldg.name)
-	if tile.bldg.IR_mult != new_IR_mult:
-		game.mineral_capacity += tile.bldg.path_1_value * (new_IR_mult - tile.bldg.IR_mult)
-		tile.bldg.IR_mult = new_IR_mult
-	
 func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]
 
@@ -941,14 +949,14 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrcs.append({"node":rsrc, "id":id2})
 	var tile = game.tile_data[id2]
 	var curr_time = OS.get_system_time_msecs()
-	if tile.bldg.has("IR_mult"):
+	if tile.bldg.IR_mult != 0:
 		var IR_mult = Helper.get_IR_mult(tile.bldg.name)
 		if tile.bldg.IR_mult != IR_mult:
 			var diff:float = IR_mult / tile.bldg.IR_mult
 			tile.bldg.IR_mult = IR_mult
 			if not tile.bldg.is_constructing:
 				tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
-	#update_rsrc(rsrc, game.tile_data[id2])
+	#Helper.update_rsrc(p_i, game.tile_data[id2], rsrc)
 
 func _process(_delta):
 	var curr_time = OS.get_system_time_msecs()
@@ -968,24 +976,14 @@ func _process(_delta):
 			start_date = tile.bldg.construction_date
 			length = tile.bldg.construction_length
 			progress = (curr_time - start_date) / float(length)
-			if progress > 1:
-				if tile.bldg.is_constructing:
-					tile.bldg.is_constructing = false
-					game.xp += tile.bldg.XP
-					if tile.bldg.has("rover_id"):
-						game.rover_data[tile.bldg.rover_id].ready = true
-						tile.bldg.erase("rover_id")
-					hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
-					if tile.bldg.has("path_2"):
-						hboxes[id2].get_node("Path2").text = String(tile.bldg.path_2)
-					if tile.bldg.has("path_3"):
-						hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
-					if tile.bldg.name == "MS":
-						update_MS(tile)
-						game.mineral_capacity += tile.bldg.mineral_cap_upgrade * Helper.get_IR_mult(tile.bldg.name)
-					game.HUD.refresh()
+			if Helper.update_bldg_constr(tile):
+				hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
+				if tile.bldg.has("path_2"):
+					hboxes[id2].get_node("Path2").text = String(tile.bldg.path_2)
+				if tile.bldg.has("path_3"):
+					hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
 		elif type == "plant":
-			if not tile or not tile.has("plant") or not tile.plant.is_growing:
+			if not tile or not tile.has("plant") or tile.plant.empty() or not tile.plant.is_growing:
 				remove_child(time_bar)
 				time_bars.erase(time_bar_obj)
 				continue

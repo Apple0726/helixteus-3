@@ -7,11 +7,12 @@ var weapon_XPs:Array# = [{"bullet":0, "laser":2, "bomb":0, "light":0}]
 var XP:float = 0
 var money:float = 0
 var p_id:int
+var mult:float
 
 func _ready():
 	for HX in HX_data:
-		money += HX.money
-		XP += HX.XP
+		money += round(HX.money * mult)
+		XP += round(HX.XP * mult)
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
 	for i in 2:
 		if i >= len(ship_data):
@@ -20,16 +21,17 @@ func _ready():
 		else:
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
 			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [weapon_XPs[i][weapon.to_lower()]]
+				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [round(weapon_XPs[i][weapon.to_lower()] * mult)]
 			$Grid.get_node("Panel%s" % (i + 1)).show_weapon_XPs = true
 			$Grid.get_node("Panel%s" % (i + 1)).refresh()
+	$Bonus.text = "%s: %sx" % [tr("LOOT_XP_BONUS"), mult]
 
 func _process(delta):
 	for i in len(ship_data):
 		for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 			var node = get_node("Grid/Panel%s/%s/TextureProgress2" % [i + 1, weapon])
 			var text_node = get_node("Grid/Panel%s/%s/Label2" % [i + 1, weapon])
-			var XP_get = weapon_XPs[i][weapon.to_lower()]
+			var XP_get = round(weapon_XPs[i][weapon.to_lower()] * mult)
 			node.value = move_toward(node.value, node.value + XP_get, (XP_get + ship_data[i][weapon.to_lower()].XP - node.value) * delta * 2)
 			text_node.text = "%s / %s" % [round(node.value), ship_data[i][weapon.to_lower()].XP_to_lv]
 		var XP_node = $Grid.get_node("Panel%s/XP/TextureProgress2" % (i + 1))
@@ -42,7 +44,7 @@ func _on_close_button_pressed():
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)
 		for weapon in ["bullet", "laser", "bomb", "light"]:
-			Helper.add_weapon_XP(i, weapon, weapon_XPs[i][weapon])
+			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult))
 	game.planet_data[p_id].conquered = true
 	var all_conquered = true
 	for planet in game.planet_data:
@@ -52,3 +54,9 @@ func _on_close_button_pressed():
 	game.system_data[game.c_s].conquered = all_conquered
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	game.switch_view("system")
+
+func _on_Bonus_mouse_entered():
+	game.show_tooltip(tr("LOOT_XP_BONUS_DESC"))
+
+func _on_mouse_exited():
+	game.hide_tooltip()

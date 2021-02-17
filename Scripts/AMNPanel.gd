@@ -39,8 +39,8 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
-	energy_cost = 40000
-	difficulty = 90.0
+	energy_cost = 5000
+	difficulty = 1.0
 	refresh()
 
 func _on_silicon_pressed(_name:String, dict:Dictionary):
@@ -49,8 +49,8 @@ func _on_silicon_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"silicon":0})
 	metal = "silicon"
-	energy_cost = 10000
-	difficulty = 10.0
+	energy_cost = 500
+	difficulty = 0.2
 	refresh()
 
 func _on_amethyst_pressed(_name:String, dict:Dictionary):
@@ -208,7 +208,7 @@ func _on_Transform_pressed():
 			for atom in rsrc_to_add:
 				rsrc_to_add[atom] = MM_value * ratios[atom]
 			rsrc_to_add[metal] = max(0, tile.bldg.qty - MM_value)
-		rsrc_to_add.energy = (1 - progress) * energy_cost
+		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile.bldg.qty)
 		game.add_resources(rsrc_to_add)
 		tile.bldg.erase("qty")
 		tile.bldg.erase("start_date")
@@ -227,7 +227,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct = atom_costs.duplicate(true)
 		else:
 			rsrc_to_deduct[metal] = rsrc
-		rsrc_to_deduct.energy = energy_cost
+		rsrc_to_deduct.energy = round(energy_cost * rsrc)
 		game.deduct_resources(rsrc_to_deduct)
 		tile.bldg.qty = rsrc
 		tile.bldg.start_date = OS.get_system_time_msecs()

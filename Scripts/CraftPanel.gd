@@ -30,7 +30,7 @@ func _on_btn_pressed(btn_str:String):
 		if btn_str == "Agriculture":
 			if craft_info.has("grow_time"):
 				desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time)]
-				desc += tr("GROWS_NEXT_TO") % [tr(craft_info.lake.to_upper())]
+				desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
 		item.item_desc = desc
 		item.costs = craft_info.costs
 		item.parent = "craft_panel"

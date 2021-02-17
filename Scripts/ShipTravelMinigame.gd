@@ -24,6 +24,7 @@ func set_level():
 	$Level.text = "%s %s" % [tr("LEVEL"), lv]
 	
 func _ready():
+	randomize()
 	if game:
 		lv = game.STM_lv
 	else:

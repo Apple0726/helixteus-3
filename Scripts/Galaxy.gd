@@ -108,8 +108,8 @@ func collect_all():
 		if not game.system_data[s_ids.local].discovered:
 			continue
 		game.planet_data = game.open_obj("Systems", s_ids.global)
-		for p_ids in game.system_data[game.c_s].planets:
-			if not game.planet_data[p_ids.local].discovered:
+		for p_ids in game.system_data[s_ids.local].planets:
+			if p_ids.local >= len(game.planet_data) or not game.planet_data[p_ids.local].discovered:
 				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)
 			var i:int

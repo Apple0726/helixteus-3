@@ -87,7 +87,10 @@ func on_slot_press(name:String):
 			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
 			game.item_to_use.type = "fertilizer"
 	elif type == "speedups_info":
-		game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
+		if game.c_v == "system" and game.science_unlocked.MAE:
+			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
+		else:
+			game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
 		game.item_to_use.type = "speedup"
 	elif type == "overclocks_info":
 		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
@@ -146,7 +149,10 @@ func _on_Atoms_pressed():
 	Helper.set_btn_color($Tabs/Atoms)
 	inventory_grid.visible = false
 	$Contents/Control/GridContainer.visible = true
-	Helper.put_rsrc($Contents/Control/GridContainer, 48, game.atoms)
+	var atom_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.atoms)
+	for atom in atom_data:
+		if game.show.has(atom.name) and not game.show[atom.name]:
+			atom.rsrc.visible = false
 
 func _on_Particles_pressed():
 	tab = "particles"

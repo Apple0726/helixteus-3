@@ -48,7 +48,7 @@ func _on_btn_pressed(btn_str:String):
 		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
 		item.costs = Data.costs[bldg].duplicate(true)
 		if bldg == "GH":
-			item.costs.energy *= 1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0
+			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 		item.parent = "construct_panel"
 		item.add_to_group("bldgs")
 		grid.add_child(item)
@@ -59,8 +59,12 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.show.coal
 		if bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.AM
+		if bldg.item_name == "SP":
+			bldg.visible = game.stats.planets_conquered > 1
 		if bldg.item_name in ["AE", "AMN"]:
 			bldg.visible = game.science_unlocked.ATM
+		if bldg.item_name == "SPR":
+			bldg.visible = game.science_unlocked.SAP
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = game.science_unlocked.EGH
 	$Tabs/Vehicles.visible = game.show.vehicles_button
@@ -86,4 +90,5 @@ func get_item(_name, costs, _type, _dir):
 	game.view.obj.construct(_name, costs)
 
 func refresh():
-	_on_btn_pressed(tab)
+	if game.c_v == "planet":
+		_on_btn_pressed(tab)
