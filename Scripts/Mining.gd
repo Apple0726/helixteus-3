@@ -141,6 +141,8 @@ func _on_Back_pressed():
 	tile.mining_progress = progress
 	game.tile_data[id] = tile
 	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
+	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
+		game.tutorial.fade()
 	game.switch_view("planet")
 	queue_free()
 
@@ -191,13 +193,15 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
+	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	var rock_gen:bool = false
 	while progress >= 100:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
 		progress -= 100
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
+			game.objective.current += 1
 		rock_gen = true
 		generate_rock(true)
 	if rock_gen:

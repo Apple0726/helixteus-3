@@ -1,0 +1,100 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Scripts/TutOrNoTut.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=4]
+size = 25
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 15
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[node name="Control" type="Control"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_top = 68.0
+margin_right = 1280.0
+margin_bottom = 92.0
+custom_fonts/font = SubResource( 4 )
+text = "T_OR_NO_T"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_top = 488.0
+margin_right = 1280.0
+margin_bottom = 512.0
+custom_fonts/font = SubResource( 1 )
+text = "NOT_OBVIOUS_GAMEPLAY"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 448.0
+margin_top = 244.0
+margin_right = 832.0
+margin_bottom = 284.0
+custom_styles/hover = SubResource( 5 )
+custom_styles/normal = SubResource( 2 )
+text = "GUIDE_ME"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="."]
+margin_left = 448.0
+margin_top = 440.0
+margin_right = 832.0
+margin_bottom = 480.0
+custom_styles/hover = SubResource( 6 )
+custom_styles/normal = SubResource( 2 )
+text = "FIGURE_OUT_MYSELF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

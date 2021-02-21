@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const SYS_NUM:int = 2000
+const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
@@ -29,6 +29,8 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 var orbit_scene = preload("res://Scenes/Orbit.tscn")
+
+var tutorial:Node2D
 
 var construct_panel:Control
 var megastructures_panel:Control
@@ -83,7 +85,7 @@ var l_v:String = ""
 #Player resources
 var money:float = 800
 var minerals:float = 0
-var mineral_capacity:float = 50
+var mineral_capacity:float = 100
 var stone:Dictionary = {}
 var energy:float = 200
 var SP:float = 0
@@ -164,6 +166,7 @@ var particles:Dictionary = {	"proton":0,
 
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {
+			"tutorial":true,
 			"close_btn1":true,
 			"close_btn2":true,
 			"mining":true,
@@ -207,6 +210,7 @@ var show:Dictionary = {	"minerals":false,
 						"shop":false,
 						"SP":false,
 						"mining_layer":false,
+						"construct_button":false,
 						"plant_button":false,
 						"vehicles_button":false,
 						"materials":false,
@@ -260,6 +264,9 @@ var stats:Dictionary = {	"bldgs_built":0,
 							"planets_conquered":1,
 							}
 
+enum ObjectiveType {BUILD, SAVE, MINE}
+var objective:Dictionary = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
+
 ############ End save data ############
 
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
@@ -305,10 +312,10 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"mythril":{"min_depth":1500, "max_depth":10000, "amount":12, "rarity":13.4, "density":13.4, "value":3500},
 }
 
-var pickaxes_info = {"stick":{"speed":1.0, "durability":70, "costs":{"money":150}},
-					"wooden_pickaxe":{"speed":1.5, "durability":150, "costs":{"money":900}},
-					"stone_pickaxe":{"speed":2.1, "durability":300, "costs":{"money":5000}},
-					"lead_pickaxe":{"speed":2.9, "durability":550, "costs":{"money":35000}},
+var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
+					"wooden_pickaxe":{"speed":1.5, "durability":300, "costs":{"money":1200}},
+					"stone_pickaxe":{"speed":2.1, "durability":500, "costs":{"money":5000}},
+					"lead_pickaxe":{"speed":2.9, "durability":650, "costs":{"money":35000}},
 					"copper_pickaxe":{"speed":4.3, "durability":800, "costs":{"money":180000}},
 					"iron_pickaxe":{"speed":5.9, "durability":1100, "costs":{"money":840000}},
 					"aluminium_pickaxe":{"speed":8.8, "durability":1400, "costs":{"money":3500000}},
@@ -357,6 +364,8 @@ var autosave_interval:int = 10
 var music_player = AudioStreamPlayer.new()
 
 func _ready():
+	if TranslationServer.get_locale() != "fr":
+		TranslationServer.set_locale("en")
 	if not OS.is_userfs_persistent():
 		long_popup("It seems like your browser isn't allowing cookies. If you want to save your game, you should enable them.\nIf you still get this message, play one of the downloadable versions.", "Enable cookies")
 	AudioServer.set_bus_volume_db(0, -40)
@@ -449,7 +458,7 @@ func _ready():
 		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
-		new_game()
+		new_game(false)
 		add_panels()
 		$Autosave.start()
 	else:
@@ -574,7 +583,9 @@ func remove_files(dir:Directory):
 		dir.remove(file_name)
 		file_name = dir.get_next()
 	
-func new_game():
+func new_game(tut:bool):
+	help.tutorial = tut
+	show.construct_button = not tut
 	var file = File.new()
 	var dir = Directory.new()
 	if file.file_exists("user://Save1/supercluster_data.hx3"):
@@ -648,11 +659,19 @@ func new_game():
 	c_v = "planet"
 	add_child(HUD)
 	add_planet()
-	if not TEST:
-		long_popup("This game is currently in very early access. Saves are wiped after most updates, so don't spend too much time playing!\nRead the game description to find (helpful) shortcuts not shown in the game.", "Early access note")
+	$Autosave.start()
+	var init_time = OS.get_system_time_msecs()
+	add_panels()
+	view.modulate.a = 0
+	view.first_zoom = true
+	view.zoom_factor = 1.03
+	view.zooming = "in"
+	if tut:
+		tutorial = load("res://Scenes/Tutorial.tscn").instance()
+		tutorial.visible = false
+		$UI.add_child(tutorial)
 
 func add_panels():
-	dimension = load("res://Scenes/Views/Dimension.tscn").instance()
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
 	shop_panel = generic_panel_scene.instance()
 	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
@@ -714,9 +733,6 @@ func add_panels():
 
 	inventory.visible = false
 	$Panels/Control.add_child(inventory)
-
-	dimension.visible = false
-	add_child(dimension)
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -1046,6 +1062,8 @@ func add_obj(view_str):
 
 func on_science_back_pressed():
 	switch_view("planet")
+	if tutorial and tutorial.tut_num == 26:
+		tutorial.begin()
 	remove_child(get_node("ScienceBackBtn"))
 
 func add_space_HUD():
@@ -1076,7 +1094,12 @@ func remove_space_HUD():
 
 func add_dimension():
 	remove_child(HUD)
-	dimension.visible = true
+	if dimension:
+		dimension.visible = true
+	else:
+		dimension = load("res://Scenes/Views/Dimension.tscn").instance()
+		dimension.visible = false
+		add_child(dimension)
 
 func add_universe():
 	var view_str:String = tr("VIEW_DIMENSION")
@@ -1586,7 +1609,7 @@ func systems_collision_detection(id:int, N_init:int):
 		if gc_stars_remaining == 0:
 			gc_center = Vector2.ZERO
 			if min_dist_from_center == 0:
-				max_dist_from_center = 6000
+				max_dist_from_center = 3000
 			else:
 				max_dist_from_center = min_dist_from_center * pow(total_sys_num, 0.04) * 1.1
 		var outer_radius
@@ -1729,11 +1752,9 @@ func generate_systems(id:int):
 			
 			if mass > 0.2 and mass < 1.3 and randf() < 0.02:
 				star_type = "white_dwarf"
-				temp = rand_range(4000,10000)
-				if randf() < 0.05:
-					temp = rand_range(10000, 60000)
-				star_size = rand_range(0.006, 0.03)
-				mass = rand_range(0.4, 1.2)
+				temp = 4000 + exp(10 * randf())
+				star_size = rand_range(0.008, 0.02)
+				mass = rand_range(0.4, 0.8)
 			else:
 				if mass > 0.25 and randf() < 0.08:
 					star_type = "giant"
@@ -1955,6 +1976,7 @@ func generate_tiles(id:int):
 	if p_i.id == 2:
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
+		p_i.type = 5
 	#Aurora spawn
 	var diff:int = 0
 	var tile_from:int = -1
@@ -2093,9 +2115,9 @@ func generate_tiles(id:int):
 		tile_data[42] = {}
 		tile_data[42].cave = {}
 		tile_data[42].cave.id = 0
-		tile_data[315] = {}
-		tile_data[315].cave = {}
-		tile_data[315].cave.id = 1
+		tile_data[215] = {}
+		tile_data[215].cave = {}
+		tile_data[215].cave.id = 1
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[108] = {}
@@ -2305,6 +2327,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 func show_tooltip(txt:String, hide:bool = true):
 	if hide:
 		hide_tooltip()
+		hide_adv_tooltip()
 	tooltip.text = txt
 	if hide:
 		tooltip.modulate.a = 0
@@ -2665,7 +2688,7 @@ func _input(event):
 			if not c_v in ["STM", ""]:
 				item_to_use.num = 0
 				update_item_cursor()
-		else:
+		elif not tutorial:
 			if len(panels) != 0:
 				if c_v != "":
 					if not panels[0].polygon:
@@ -2962,6 +2985,10 @@ func _on_BottomInfo_close_button_pressed():
 			call($UI/BottomInfo/CloseButton.on_close)
 		$UI/BottomInfo/CloseButton.on_close = ""
 		bottom_info_action = ""
+		if tutorial and tutorial.tut_num == 6:
+			tutorial.fade(0.4, false)
+			tutorial.get_node("RsrcCheckTimer").start()
+		HUD.refresh()
 
 func cancel_place_soil():
 	HUD.get_node("Resources/Soil").visible = false
@@ -2987,12 +3014,17 @@ func fade_out_title(fn:String):
 	$UI/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = load("res://Scenes/HUD.tscn").instance()
-	call(fn)
-	add_panels()
-	$Autosave.start()
+	if fn == "new_game":
+		var tut_or_no_tut = load("res://Scenes/TutOrNoTut.tscn").instance()
+		add_child(tut_or_no_tut)
+		tut_or_no_tut.connect("new_game", self, "new_game")
+	else:
+		call(fn)
+		$Autosave.start()
+		add_panels()
 	
 func _on_NewGame_pressed():
-	if $Title/Menu/VBoxContainer/LoadGame.disabled:
+	if true or $Title/Menu/VBoxContainer/LoadGame.disabled:
 		fade_out_title("new_game")
 	else:
 		show_YN_panel("new_game", tr("START_NEW_GAME"))

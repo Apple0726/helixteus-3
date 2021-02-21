@@ -21,12 +21,15 @@ onready var lv_progress = $Lv/TextureProgress
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
+var tween:Tween
 
 func _on_Button_pressed():
 	click_sound.play()
 	game.toggle_panel(game.settings)
 
 func _ready():
+	tween = Tween.new()
+	add_child(tween)
 	refresh()
 
 func _process(delta):
@@ -43,12 +46,36 @@ func refresh():
 			$AutosaveLight.modulate.g = 0.3
 			set_process(false)
 		$AutosaveLight.visible = autosave_light
-	money_text.text = Helper.format_num(round(game.money), 6)
+	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
+		var money_cost = game.view.obj.constr_costs.money
+		var energy_cost = game.view.obj.constr_costs.energy if game.view.obj.constr_costs.has("energy") else 0
+		money_text.text = "%s / %s" % [Helper.format_num(round(game.money), 6), Helper.format_num(round(money_cost), 6)]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy), 6), Helper.format_num(round(energy_cost), 6)]
+		if game.money >= money_cost:
+			money_text["custom_colors/font_color"] = Color.green
+		else:
+			money_text["custom_colors/font_color"] = Color.red
+		if game.energy >= energy_cost:
+			energy_text["custom_colors/font_color"] = Color.green
+		else:
+			energy_text["custom_colors/font_color"] = Color.red
+	else:
+		money_text["custom_colors/font_color"] = Color.white
+		energy_text["custom_colors/font_color"] = Color.white
+		money_text.text = Helper.format_num(round(game.money), 6)
+		energy_text.text = Helper.format_num(game.energy, 6)
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(round(game.mineral_capacity), 6)]
+	if round(game.minerals) == round(game.mineral_capacity):
+		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		minerals_text["custom_colors/font_color"] = Color.red
+	else:
+		if $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			 $Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		minerals_text["custom_colors/font_color"] = Color.white
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = Helper.format_num(game.clever_round(game.mats.soil, 3), 6) + " kg"
-	energy_text.text = Helper.format_num(game.energy, 6)
 	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
@@ -71,10 +98,62 @@ func refresh():
 	else:
 		$Buttons/Ships.shortcut.shortcut.action = "Y"
 	update_hotbar()
+	if not game.objective.empty():
+		if game.objective.type == game.ObjectiveType.SAVE:
+			var split:Array = game.objective.data.split("/")
+			var primary_resource = len(split) == 1
+			if primary_resource:
+				game.objective.current = game[game.objective.data]
+			else:
+				game.objective.current = game[split[0]][split[1]]
+		if game.objective.current >= game.objective.goal:
+			game.objective.clear()
+			$Objectives/TextureProgress.value = 0
+			if game.tutorial and game.tutorial.tut_num in [6, 9, 10, 15, 24, 28, 31]:
+				game.tutorial.begin()
+			if game.tutorial.tut_num == 11:
+				if game.money < 300:
+					game.objective = {"type":game.ObjectiveType.SAVE, "data":"money", "current":game.money, "goal":300}
+				else:
+					game.tutorial.begin()
+	tween.stop_all()
+	$Objectives.visible = not game.objective.empty()
+	if $Objectives.visible:
+		$Objectives/Label.visible = false
+		if game.objective.type == game.ObjectiveType.BUILD:
+			if TranslationServer.get_locale() == "en":
+				$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "s":"" if game.objective.goal == 1 else "s", "bldg":Helper.get_item_name(game.objective.data).to_lower()})
+			else:
+				$Objectives/Label.text = tr("BUILD_OBJECTIVE_2").format({"num":game.objective.goal, "bldg":Helper.get_item_name(game.objective.data)})
+		elif game.objective.type == game.ObjectiveType.SAVE:
+			var split:Array = game.objective.data.split("/")
+			var primary_resource = len(split) == 1
+			if primary_resource:
+				$Objectives/Label.text = tr("SAVE_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[0].to_upper()).to_lower()})
+			else:
+				$Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
+		elif game.objective.type == game.ObjectiveType.MINE:
+			$Objectives/Label.text = tr("MINE_OBJECTIVE").format({"num":game.objective.goal})
+		$Objectives/Label.visible = true
+		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
+		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position
+		tween.interpolate_property($Objectives, "rect_position", null, Vector2($Objectives.rect_position.x, 36), 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+		tween.interpolate_property($Objectives/TextureProgress, "value", null, game.objective.current / float(game.objective.goal) * 100, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+		tween.start()
+	else:
+		$Objectives.rect_position.y = 4
+		
 
 func _on_Shop_pressed():
 	click_sound.play()
-	game.toggle_panel(game.shop_panel)
+	if game.tutorial:
+		if game.tutorial.visible and not game.shop_panel.visible and game.tutorial.tut_num == 11:
+			game.tutorial.fade(0.15)
+			game.toggle_panel(game.shop_panel)
+		if not game.tutorial.tut_num in [11, 12, 13]:
+			game.toggle_panel(game.shop_panel)
+	else:
+		game.toggle_panel(game.shop_panel)
 
 func _on_Shop_mouse_entered():
 	on_button = true
@@ -86,7 +165,14 @@ func _on_Inventory_mouse_entered():
 
 func _on_Inventory_pressed():
 	click_sound.play()
-	game.toggle_panel(game.inventory)
+	if game.tutorial and game.tutorial.visible:
+		if not game.inventory.visible and game.tutorial.tut_num in [18, 20, 21]:
+			game.tutorial.fade(0.15)
+			game.toggle_panel(game.inventory)
+		if not game.tutorial.tut_num in [18, 19, 20, 21]:
+			game.toggle_panel(game.inventory)
+	else:
+		game.toggle_panel(game.inventory)
 
 func _on_Craft_mouse_entered():
 	on_button = true
@@ -99,7 +185,12 @@ func _on_Craft_pressed():
 func _on_ScienceTree_pressed():
 	click_sound.play()
 	if game.c_v != "science_tree":
-		game.switch_view("science_tree")
+		if game.tutorial and game.tutorial.visible:
+			if game.tutorial.tut_num == 24:
+				game.tutorial.fade(0.15)
+				game.switch_view("science_tree")
+		else:
+			game.switch_view("science_tree")
 
 func _on_ScienceTree_mouse_entered():
 	game.show_tooltip(tr("SCIENCE_TREE") + " (I)")
@@ -181,6 +272,8 @@ func _on_ConvertMinerals_mouse_entered():
 
 func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()
+	if game.tutorial and game.tutorial.tut_num == 8 and not game.tutorial.tween.is_active():
+		game.tutorial.fade()
 
 func _on_Ships_pressed():
 	game.toggle_panel(game.ship_panel)
@@ -210,3 +303,9 @@ func _on_ShipLocator_mouse_entered():
 		game.show_tooltip(tr("LOCATE_SHIP"))
 	else:
 		game.show_tooltip(tr("SHIP_LOCATOR_ERROR"))
+
+func _on_MineralsText_mouse_entered():
+	game.show_tooltip(tr("FULL_MINERALS"))
+
+func _on_MineralsText_mouse_exited():
+	game.hide_tooltip()

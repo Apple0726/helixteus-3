@@ -12,6 +12,8 @@ func _ready():
 	_on_btn_pressed("Speedups")
 
 func _on_btn_pressed(btn_str:String):
+	if game.tutorial and game.tutorial.tut_num == 12 and btn_str == "Pickaxes" and not game.tutorial.tween.is_active():
+		game.tutorial.fade()
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
 	tab = btn_str
@@ -71,3 +73,9 @@ func buy_pickaxe(_costs:Dictionary):
 		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
 	game.pickaxe = {"name":item_name, "speed":game.pickaxes_info[item_name].speed, "durability":game.pickaxes_info[item_name].durability}
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
+	if game.tutorial and game.tutorial.tut_num == 13 and not game.tutorial.tween.is_active():
+		game.tutorial.fade()
+
+func _on_close_button_pressed():
+	if not game.tutorial or game.tutorial and not game.tutorial.BG_blocked:
+		._on_close_button_pressed()

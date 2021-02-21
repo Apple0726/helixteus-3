@@ -5,7 +5,7 @@ MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈
 MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물
 STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌
 ENERGY,Energy,Énergie,Energia,,Energie,Energía,에너지
-SCIENCE_POINTS,Science points,Points de science,Punti di scienza,,Forschungspunkte,Puntos de ciencia,과학 포인트
+SP,Science points,Points de science,Punti di scienza,,Forschungspunkte,Puntos de ciencia,과학 포인트
 MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stummschalten,(Des)Activar la musica,음악 켜기/끄기
 BACK,Back,Retour,Indietro,,Zurück,Atrás,뒤로
 SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점
@@ -150,7 +150,7 @@ UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
 LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
 SECOND,second,seconde,secondo,,Sekunde,segundo,초
 S_SECOND,s,s,s,,S,s,초
-STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
+STORES_X,%s capacity,Capacité de %s,,,Lager %s,Almacena %s,저장 용량: %s
 PATH,Path,Voie,Via,,Pfad,Camino,
 CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
 COAL_DESC,,,,,,,
@@ -321,19 +321,19 @@ PRODUCTION,Production,Production,Produzione,,,Producción,
 PRODUCTION_DESC,These are buildings that transform resources.,,Questi sono edifici che trasformano risorse.,,,Edificios que transforman rcursos.,
 METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,{crater} de {metal},{metal} {crater}
 STONE_CRUSHER,Stone crusher,,,,,Pulverizador de piedra,
-SC_DESC,Crushes stone to bits and extracts usable resources.,,,,,Rompe la piedra en pedacitos para extraer recursos más útiles.,
-CRUSHES_X,Crushes %s,,,,,Pulveriza %s,
+SC_DESC,Crushes stone to bits and extracts usable resources.,Écrase de la pierre et en extrait des ressources.,,,,Rompe la piedra en pedacitos para extraer recursos más útiles.,
+CRUSHES_X,Crushes %s,Écrase %s,,,,Pulveriza %s,
 CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,Puede almacenar hasta %s,%s 까지 저장할수 있음
 TIME,Time,Temps,Tempo,,,Tiempo,시간
 CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,Cliccare per configurare,,,Haz click para configurar,
 STONE_COMPOSITION,Stone composition,Composition de pierre,Composizione di pietra,,,Composición de la piedra,
-START_CRUSHING,Start crushing,,,,,Iniciar pulverización,
-STOP_CRUSHING,Stop crushing,,,,,Detener pulverización,
+START_CRUSHING,Start crushing,Écraser,,,,Iniciar pulverización,
+STOP_CRUSHING,Stop crushing,Arrêter,,,,Detener pulverización,
 EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Resultados esperados,
 RESOURCES_EXTRACTED,Resources extracted,Ressources extraites,Risorse estratte,,,Recursos extraídos,
 NO_STONE,You don't have any stone!,Vous n'avez pas de pierre!,Non hai pietra!,,,No tienes piedra!,
 SILICON,Silicon,Silicium,Silicio,,,Silicio,
-COMP_OF_STONE_BEING_CR,Composition of stone being crushed,,,,,Composición de la piedra siendo pulverizada,
+COMP_OF_STONE_BEING_CR,Composition of stone being crushed,Composition de la pierre étant écrasée,,,,Composición de la piedra siendo pulverizada,
 COLDEST_STAR_TEMPERATURE,Coldest star temperature,Température de l'étoile la plus froide,Temperature della stella più fredda,,,,
 CLICK_TO_EDIT,Click to edit,Cliquez pour modifier,Cliccare per modificare,,,Haz click para editar,
 DONE,Done,Terminé,Fatto,,,Listo,
@@ -346,7 +346,7 @@ CO2_NAME,Carbon dioxide,Dioxyde de carbone,,,,Dióxido de carbono,
 O_NAME,Oxygen,Oxygène,Ossigeno,,,,
 H_NAME,Hydrogen,Hydrogène,Idrogeno,,,,
 AURORA,Aurora,Aurore,Aurora,,,,
-AURORA_DESC,Auroras are colorful lights caused by interactions of solar wind with the planet's magnetosphere. They have all sorts of effects on the tile that they happen to shine.,,,,,,
+AURORA_DESC,Auroras are colorful lights caused by interactions of solar wind with the planet's magnetosphere. They have all sorts of effects on the tile that they happen to shine.,Les aurores sont des faisceaux de lumière créés par l'interaction entre le vent solaire et la magnétosphère de la planète. ,,,,,
 AURORA_INTENSITY,Aurora intensity,Intensité de l'aurore,Intensità dell'aurora,,,,
 COLLECT_ALL_PLANET,Collect all resources on this planet,,Raccogliere tutte le risorse su questo pianeta,,,,
 COLLECT_ALL_SYSTEM,Collect all resources in this system,,Raccogliere tutte le risorse in questo sistema,,,,
@@ -663,3 +663,46 @@ CAVE_DIFF_INFO,Enemy stats and resources you get from mining and from treasure a
 STAR_SYSTEM_DIFFICULTY,Star system difficulty,,,,,,
 FLOOR_MULTIPLIER,Floor multiplier,,,,,,
 USE_SPEEDUP_MS,Click a megastructure to accelerate construction (%s%% efficiency),,,,,,
+U_NAME,Uranium,,,,,,
+TERRAFORM,Terraform,,,,,,
+TERRAFORM_DESC,"Click on a task the planet should specialize in. Everything on the planet will be wiped. Once terraformed, planets cannot be entered.",,,,,,
+MINERAL_STORAGE,Mineral storage,,,,,,
+TERRAFORMING,Terraforming,,,,,,
+TRR_DESC,"Unlocks terraforming planets. A terraformed planet specializes in a certain task, like storing minerals.\nInstead of constructing only one type of building on a planet, terraforming may be preferred to reduce save file sizes and reduce lag when clicking the collect all button.",,,,,,
+T_OR_NO_T,Tutorial or no tutorial?,Voulez-vous un tutoriel?,,,,,
+GUIDE_ME,Guiding me would be nice,Ce serait bien de me guider,,,,,
+FIGURE_OUT_MYSELF,I'll figure everything out myself,Je vais apprendre tout seul,,,,,
+NOT_OBVIOUS_GAMEPLAY,(some gameplay elements may not be intuitive),(certains éléments de jeu peuvent être non intuitifs),,,,,
+TUTORIAL_1,Welcome to Helixteus 3!\nYour objective is to make as much money as possible.,,,,,,
+TUTORIAL_2,Click this button to construct a building\n(or press C on your keyboard),,,,,,
+TUTORIAL_3,Start by constructing these to produce minerals.,,,,,,
+TUTORIAL_4,You have no more energy! Constructing buildings also uses energy most of the time.\nBuild a power plant to start generating energy.,,,,,,
+TUTORIAL_6,Press Esc or right click anywhere to exit building mode.\nYou can also press the close button at the bottom of the screen.,,,,,,
+TUTORIAL_7,Click this button to collect all the\nresources produced by your buildings.,,,,,,
+TUTORIAL_8,You now have some minerals!\nPress this button to sell all of them\nfor $5 each.,,,,,,
+TUTORIAL_9,You earned some money! Use that money\nto construct 4 more power plants.,,,,,,
+TUTORIAL_10,Now you have a good energy supply.\nIt's time to increase mineral production for even more money!,,,,,,
+TUTORIAL_11,"While you wait for the buildings to generate resources,\nyou can go mining rocks yourself to get other useful things.\nClick this button to open the shop menu to buy a pickaxe.",,,,,,
+TUTORIAL_14,Click this button to pick a tile to mine.,,,,,,
+TUTORIAL_15,Click this back button to go back to your planet.,,,,,,
+TUTORIAL_16,A good way of investing money is in research\nto unlock new features and boost resource production.\n,,,,,,
+TUTORIAL_17,Save up $2000 and 600 energy to construct a research lab.\nDon't hesitate to build more mineral extractors\nand power plants.,,,,,,
+TUTORIAL_18,Research labs take over 2 minutes to build.\nLet's speed that up. Go to your inventory.,,,,,,
+TUTORIAL_19,This item speeds up construction of\none building by 2 minutes. You can buy more\nof these in the shop. Click to use it.,,,,,,
+TUTORIAL_20,Research labs are pretty slow compared to other\nbuildings. Let's overclock it. Open your inventory again.,,,,,,
+TUTORIAL_22,There we go! Now it's a little faster.,,,,,,
+TUTORIAL_23,Labs produce science points (SP) that can\nbe spent in the science tree.\nSave up 10 SP to do your first research.\n,,,,,,
+TUTORIAL_24,You are ready to do your first research!\nClick this to open the science tree.,,,,,,
+TUTORIAL_25,"Look for the ""Rover construction"" science\nand click to research it.",,,,,,
+TUTORIAL_26,Rovers are used to explore caves. You need silicon\nto construct them. Silicon can be obtained by crushing stone.\n,,,,,,
+TUTORIAL_27,"Look for the ""stone crusher"" building in the construction menu\nand build it.",,,,,,
+TUTORIAL_28,Click the stone crusher to open its menu.,,,,,,
+TUTORIAL_30,Your stone is now being crushed.\nCome back to this building after a minute to collect\nits resources.,,,,,,
+TUTORIAL_31,Now it's time to try doing things on your own.\nThe game will still give you objectives to\nguide you a little bit. Experiment with things\nand have fun!,,,,,,
+BUILD_OBJECTIVE,Build {num} {bldg}{s},,,,,,
+BUILD_OBJECTIVE_2,Build {num} {bldg}s,Construire: {num}x {bldg},Costruire: {num}x {bldg},,,,{bldg} {num}개 건설하기
+MINE_OBJECTIVE,Mine {num} tiles,,,,,,
+SAVE_OBJECTIVE,Save up {num} {rsrc},,,,,,
+SAVE_W_OBJECTIVE,Save up {num} kg of {rsrc},,,,,,
+TUTORIAL_OVERCLOCK,This overclock will be used later in the tutorial. Don't use it yet!,,,,,,
+FULL_MINERALS,You have reached your maximum mineral storage capacity. Build mineral silos to increase it!,,,,,,

@@ -117,6 +117,8 @@ func _on_Button_pressed():
 		tile.bldg.stone_qty = stone_qty
 		tile.bldg.start_date = OS.get_system_time_msecs()
 		tile.bldg.expected_rsrc = expected_rsrc
+		if game.tutorial and game.tutorial.tut_num == 29:
+			game.tutorial.fade()
 		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()

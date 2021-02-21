@@ -164,7 +164,7 @@ func get_plant_produce(name:String):
 	return name.split("_")[0]
 
 func get_wid(size:float):
-	return min(round(pow(size / 4000.0, 0.7) * 8.0) + 3, 300)
+	return min(round(pow(size / 6000.0, 0.7) * 8.0) + 3, 100)
 
 func e_notation(num:float):#e notation
 	var e = floor(log10(num))
@@ -799,6 +799,8 @@ func update_bldg_constr(tile):
 		if tile.bldg.is_constructing:
 			tile.bldg.is_constructing = false
 			game.xp += tile.bldg.XP
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
+				game.objective.current += 1
 			if tile.bldg.has("rover_id"):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")

@@ -53,6 +53,10 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
+		if bldg.item_name in ["PP", "MS"]:
+			bldg.visible = game.stats.bldgs_built >= 5
+		if bldg.item_name == "RL":
+			bldg.visible = game.stats.bldgs_built >= 18
 		if bldg.item_name == "GF":
 			bldg.visible = game.show.sand
 		if bldg.item_name == "SE":
@@ -88,7 +92,13 @@ func get_item(_name, costs, _type, _dir):
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	game.view.obj.construct(_name, costs)
+	if game.tutorial and game.tutorial.tut_num in [3, 5]:
+		game.tutorial.fade(0.15, false)
 
 func refresh():
 	if game.c_v == "planet":
 		_on_btn_pressed(tab)
+
+func _on_close_button_pressed():
+	if not game.tutorial or game.tutorial and not game.tutorial.BG_blocked:
+		._on_close_button_pressed()

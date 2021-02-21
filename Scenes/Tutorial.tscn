@@ -1,0 +1,1001 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/Tutorial.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Blinking"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("1/Panel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("2/Panel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("3/Panel:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("4/Panel:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("5/Panel:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("7/Panel:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("8/Panel:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("11/Panel:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("12/Panel:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("13/Panel:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("14/Panel:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("15/Panel:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("18/Panel:modulate")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/13/type = "value"
+tracks/13/path = NodePath("19/Panel:modulate")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.427451, 0.427451, 0.427451, 1 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 0.937255, 0, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 0.937255, 0, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 0.937255, 0, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 0.937255, 0, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 0.937255, 0, 1 )
+border_blend = true
+
+[node name="Tutorial" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Blinking = SubResource( 1 )
+
+[node name="1" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="1"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 32, 136, 32, 136, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="1"]
+visible = false
+margin_left = 104.0
+margin_top = 68.0
+margin_right = 162.0
+margin_bottom = 96.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="1"]
+margin_right = 116.0
+margin_bottom = 40.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="2" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="2"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 48, 308, 0, 308, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 360, 48, 360 )
+
+[node name="Label" type="Label" parent="2"]
+visible = false
+margin_left = 80.0
+margin_top = 292.0
+margin_right = 138.0
+margin_bottom = 320.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="2"]
+margin_top = 308.0
+margin_right = 48.0
+margin_bottom = 360.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="3" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="3"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 300, 200, 108, 200, 108, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 300, 432 )
+
+[node name="Label" type="Label" parent="3"]
+margin_left = 340.0
+margin_top = 292.0
+margin_right = 398.0
+margin_bottom = 320.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="3"]
+margin_left = 108.0
+margin_top = 200.0
+margin_right = 300.0
+margin_bottom = 432.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="4" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="4"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 48, 308, 0, 308, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 360, 48, 360 )
+
+[node name="Label" type="Label" parent="4"]
+visible = false
+margin_left = 80.0
+margin_top = 292.0
+margin_right = 138.0
+margin_bottom = 320.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="4"]
+margin_top = 308.0
+margin_right = 48.0
+margin_bottom = 360.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="5" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="5"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 488, 200, 296, 200, 296, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 488, 432 )
+
+[node name="Panel" type="Panel" parent="5"]
+margin_left = 296.0
+margin_top = 200.0
+margin_right = 488.0
+margin_bottom = 432.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="6" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="6"]
+visible = false
+margin_left = 388.0
+margin_top = 600.0
+margin_right = 446.0
+margin_bottom = 628.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="7" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="7"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 652, 1224, 652, 1224, 704, 1280, 704, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="7"]
+margin_left = 904.0
+margin_top = 580.0
+margin_right = 962.0
+margin_bottom = 608.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="7"]
+margin_left = 1224.0
+margin_top = 652.0
+margin_right = 1280.0
+margin_bottom = 704.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="8" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="8"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 704, 1224, 704, 1224, 652, 1168, 652, 1168, 704, 1280, 704, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="8"]
+margin_left = 948.0
+margin_top = 548.0
+margin_right = 1006.0
+margin_bottom = 576.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="8"]
+margin_left = 1168.0
+margin_top = 652.0
+margin_right = 1224.0
+margin_bottom = 704.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="9" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="9"]
+visible = false
+margin_left = 456.0
+margin_top = 156.0
+margin_right = 514.0
+margin_bottom = 184.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="10" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="10"]
+visible = false
+margin_left = 380.0
+margin_top = 156.0
+margin_right = 438.0
+margin_bottom = 184.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="11" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="11"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 360, 1232, 360, 1232, 408, 1280, 408, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="11"]
+margin_left = 652.0
+margin_top = 344.0
+margin_right = 710.0
+margin_bottom = 372.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="11"]
+margin_left = 1232.0
+margin_top = 360.0
+margin_right = 1280.0
+margin_bottom = 408.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="12" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="12"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 164, 1172, 164, 1172, 124, 812, 124, 812, 164, 1280, 164, 1280, 724, 0, 724 )
+
+[node name="Panel" type="Panel" parent="12"]
+margin_left = 812.0
+margin_top = 124.0
+margin_right = 1172.0
+margin_bottom = 164.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="13" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="13"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 300, 200, 108, 200, 108, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 300, 432 )
+
+[node name="Panel" type="Panel" parent="13"]
+margin_left = 108.0
+margin_top = 200.0
+margin_right = 300.0
+margin_bottom = 432.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="14" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="14"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 48, 284, 0, 284, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 336, 48, 336 )
+
+[node name="Label" type="Label" parent="14"]
+visible = false
+margin_left = 80.0
+margin_top = 292.0
+margin_right = 138.0
+margin_bottom = 320.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="14"]
+margin_top = 284.0
+margin_right = 48.0
+margin_bottom = 336.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="15" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="15"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 136, 724, 136, 684, 0, 684 )
+
+[node name="Label" type="Label" parent="15"]
+margin_left = 32.0
+margin_top = 628.0
+margin_right = 90.0
+margin_bottom = 656.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="15"]
+margin_top = 684.0
+margin_right = 132.0
+margin_bottom = 720.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="16" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="16"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="16"]
+margin_left = 608.0
+margin_top = 212.0
+margin_right = 672.0
+margin_bottom = 240.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="17" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="17"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="17"]
+margin_left = 608.0
+margin_top = 204.0
+margin_right = 672.0
+margin_bottom = 232.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="18" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="18"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 312, 1232, 312, 1232, 360, 1280, 360, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="18"]
+margin_left = 1120.0
+margin_top = 308.0
+margin_right = 1184.0
+margin_bottom = 336.0
+grow_horizontal = 0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="18"]
+margin_left = 1232.0
+margin_top = 312.0
+margin_right = 1280.0
+margin_bottom = 360.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="19" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="19"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 276, 248, 276, 248, 216, 188, 216, 188, 276, 0, 276 )
+
+[node name="Label" type="Label" parent="19"]
+margin_left = 280.0
+margin_top = 220.0
+margin_right = 344.0
+margin_bottom = 248.0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="19"]
+margin_left = 188.0
+margin_top = 216.0
+margin_right = 248.0
+margin_bottom = 276.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="20" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="20"]
+margin_left = 608.0
+margin_top = 144.0
+margin_right = 672.0
+margin_bottom = 172.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="21" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="21"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 276, 304, 276, 304, 216, 248, 216, 248, 276, 0, 276 )
+
+[node name="Panel" type="Panel" parent="21"]
+margin_left = 244.0
+margin_top = 216.0
+margin_right = 304.0
+margin_bottom = 276.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="22" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="22"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="22"]
+margin_left = 608.0
+margin_top = 204.0
+margin_right = 672.0
+margin_bottom = 232.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="23" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="23"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 808, 0, 808, 40, 900, 40, 900, 0, 1280, 0, 1280, 724, 0, 724, 0, 276 )
+
+[node name="Label" type="Label" parent="23"]
+margin_left = 820.0
+margin_top = 68.0
+margin_right = 884.0
+margin_bottom = 96.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="23"]
+margin_left = 808.0
+margin_right = 900.0
+margin_bottom = 40.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="24" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="24"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 456, 1232, 456, 1232, 504, 1280, 504, 1280, 724, 0, 724, 0, 276 )
+
+[node name="Label" type="Label" parent="24"]
+margin_left = 1120.0
+margin_top = 456.0
+margin_right = 1184.0
+margin_bottom = 484.0
+grow_horizontal = 0
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="24"]
+margin_left = 1232.0
+margin_top = 456.0
+margin_right = 1280.0
+margin_bottom = 504.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="25" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="25"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 276 )
+
+[node name="Label" type="Label" parent="25"]
+margin_left = 608.0
+margin_top = 264.0
+margin_right = 672.0
+margin_bottom = 292.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="26" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="26"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 480, 0, 480, 40, 636, 40, 636, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="26"]
+margin_left = 528.0
+margin_top = 96.0
+margin_right = 592.0
+margin_bottom = 124.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="26"]
+margin_left = 480.0
+margin_right = 636.0
+margin_bottom = 40.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="27" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="27"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="27"]
+margin_left = 608.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 220.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="28" type="Node2D" parent="."]
+visible = false
+
+[node name="Label" type="Label" parent="28"]
+margin_left = 608.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 220.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="29" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="29"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 612, 884, 612, 884, 660, 1168, 660, 1168, 612, 1280, 612, 1280, 724, 0, 724 )
+
+[node name="Panel" type="Panel" parent="29"]
+margin_left = 884.0
+margin_top = 612.0
+margin_right = 1168.0
+margin_bottom = 660.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="30" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="30"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="30"]
+margin_left = 608.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 220.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="31" type="Node2D" parent="."]
+visible = false
+
+[node name="Polygon" type="Polygon2D" parent="31"]
+color = Color( 0, 0, 0, 0.615686 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724 )
+
+[node name="Label" type="Label" parent="31"]
+margin_left = 608.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 220.0
+grow_horizontal = 2
+theme = ExtResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "dsfsdf"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RsrcCheckTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="RsrcCheckTimer2" type="Timer" parent="."]
+
+[node name="EnergyCheckTimer" type="Timer" parent="."]
+
+[node name="RLCheckTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="RLCheckTimer2" type="Timer" parent="."]
+wait_time = 2.0
+[connection signal="timeout" from="RsrcCheckTimer" to="." method="_on_RsrcCheckTimer_timeout"]
+[connection signal="timeout" from="RsrcCheckTimer2" to="." method="_on_RsrcCheckTimer2_timeout"]
+[connection signal="timeout" from="EnergyCheckTimer" to="." method="_on_EnergyCheckTimer_timeout"]
+[connection signal="timeout" from="RLCheckTimer" to="." method="_on_RLCheckTimer_timeout"]
+[connection signal="timeout" from="RLCheckTimer2" to="." method="_on_RLCheckTimer2_timeout"]

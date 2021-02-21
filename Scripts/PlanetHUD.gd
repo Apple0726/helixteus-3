@@ -7,6 +7,7 @@ func _ready():
 	refresh()
 
 func refresh():
+	$VBoxContainer/Construct.visible = game.show.construct_button
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
 	$VBoxContainer/Mine.visible = game.show.mining
@@ -29,12 +30,22 @@ func _input(event):
 func _on_Construct_pressed():
 	if not Input.is_action_pressed("shift"):
 		click_sound.play()
-		game.toggle_panel(game.construct_panel)
+		if game.tutorial:
+			if game.tutorial.visible and not game.construct_panel.visible and game.tutorial.tut_num in [2, 3, 4]:
+				game.tutorial.fade(0.15)
+				game.toggle_panel(game.construct_panel)
+			if not game.tutorial.tut_num in [2, 3, 4, 5]:
+				game.toggle_panel(game.construct_panel)
+		else:
+			game.toggle_panel(game.construct_panel)
 
 func _on_Mine_pressed():
 	click_sound.play()
 	if not game.pickaxe.empty():
-		game.cancel_building()
+		if game.shop_panel.visible:
+			game.toggle_panel(game.shop_panel)
+		if game.tutorial.visible and game.tutorial.tut_num == 14:
+			game.tutorial.fade(0.4, false)
 		game.put_bottom_info(tr("START_MINE"), "about_to_mine")
 	else:
 		game.long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))

@@ -4,7 +4,7 @@
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.6, 0.6, 0.6, 0.109804 )
+bg_color = Color( 0.6, 0.6, 0.6, 0.137255 )
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2

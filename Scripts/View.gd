@@ -149,6 +149,8 @@ func save_zooms(obj_str:String):
 		"science_tree":
 			game.science_tree_view.pos = position / scale.x
 			game.science_tree_view.zoom = scale.x
+
+var first_zoom:bool = false
 #Executed every tick
 func _physics_process(_delta):
 	if not obj:
@@ -170,12 +172,18 @@ func _physics_process(_delta):
 	
 	#Zooming animation
 	if zooming == "in":
-		_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)
-		progress += 0.03
+		if first_zoom:
+			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 200))
+			progress += 0.002
+			modulate.a = min(1, modulate.a + 0.01)
+		else:
+			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)
+			progress += 0.03
 	if zooming == "out":
 		_zoom_at_point(ease(progress, 0.1) * (1 - 1 / zoom_factor) + 1 / zoom_factor)
 		progress += 0.03
-	if progress >= 1:
+	if progress >= 1.0:
+		first_zoom = false
 		zooming = ""
 		progress = 0
 	if game.c_v == "planet":
@@ -210,6 +218,10 @@ var drag_delta = Vector2.ZERO
 
 #Executed once the receives any kind of input
 func _input(event):
+	if not event is InputEventMouseMotion:
+		if first_zoom and modulate.a == 1:
+			first_zoom = false
+			zooming = ""
 	if scroll_view:
 		if event.is_action_released("scroll_down"):
 			if event is InputEventMouse:

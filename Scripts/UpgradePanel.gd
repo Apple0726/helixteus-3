@@ -111,7 +111,7 @@ func update():
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
-	
+
 func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, pw * pw) * pow(pw, lv - 1), 3)
 

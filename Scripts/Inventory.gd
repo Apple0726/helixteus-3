@@ -58,7 +58,7 @@ func on_slot_over (_name:String, num:int, slot:int):
 	item_slot = slot
 	item_hovered = _name
 	item_stack = num
-	if game.help.inventory_shortcuts:
+	if game.help.inventory_shortcuts and not game.tutorial:
 		game.help_str = "inventory_shortcuts"
 		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
 	game.show_tooltip(st)
@@ -91,10 +91,17 @@ func on_slot_press(name:String):
 			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
 		else:
 			game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
+			if game.tutorial and game.tutorial.tut_num == 19:
+				game.tutorial.fade(0.4, false)
 		game.item_to_use.type = "speedup"
 	elif type == "overclocks_info":
-		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
-		game.item_to_use.type = "overclock"
+		if game.tutorial and game.tutorial.tut_num != 21:
+			game.popup(tr("TUTORIAL_OVERCLOCK"), 2.5)
+		else:
+			game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
+			game.item_to_use.type = "overclock"
+			if game.tutorial and game.tutorial.tut_num == 21:
+				game.tutorial.fade(0.4, false)
 	elif type == "other_items_info":
 		if name == "hx_core":
 			if len(game.ship_data) > 0:

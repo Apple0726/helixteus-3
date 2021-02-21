@@ -178,7 +178,7 @@ func show_tooltip(tile):
 				tooltip = (Data.path_1[bldg].desc) % [tile.bldg.path_1_value]
 			"GH":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
-		if game.help.tile_shortcuts:
+		if game.help.tile_shortcuts and not game.tutorial:
 			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 	elif tile.has("plant"):
@@ -265,16 +265,20 @@ func show_tooltip(tile):
 func get_wh_costs():
 	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":3600 * pow(game.stats.wormholes_activated + 1, 0.2)}
 
-func constr_bldg(tile_id:int, mass_build:bool = false):
+func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 	if bldg_to_construct == "":
 		return
 	var tile = game.tile_data[tile_id]
 	if game.check_enough(constr_costs):
 		game.deduct_resources(constr_costs)
 		game.stats.bldgs_built += 1
-		var curr_time = OS.get_system_time_msecs()
 		if not tile:
 			tile = {}
+		if game.tutorial:
+			if game.tutorial.tut_num in [9, 10, 11] and game.tutorial.visible:
+				game.tutorial.fade(0.4, false)
+			elif game.tutorial.tut_num == 18:
+				game.tutorial.begin()
 		tile.bldg = {}
 		tile.bldg.name = bldg_to_construct
 		if not game.show.minerals and bldg_to_construct == "ME":
@@ -402,6 +406,8 @@ func click_tile(tile, tile_id:int):
 				"RCC":
 					game.toggle_panel(game.RC_panel)
 				"SC":
+					if game.tutorial and game.tutorial.tut_num == 28:
+						game.tutorial.fade()
 					game.toggle_panel(game.SC_panel)
 					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 				"GF":
@@ -426,7 +432,10 @@ func destroy_bldg(id2:int):
 	remove_child(bldgs[id2])
 	remove_child(hboxes[id2])
 	if bldg == "MS":
-		game.mineral_capacity -= tile.bldg.path_1_value * tile.bldg.IR_mult#Helper.get_IR_mult(tile.bldg.name)
+		if tile.bldg.is_constructing:
+			game.mineral_capacity -= (tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade) * tile.bldg.IR_mult
+		else:
+			game.mineral_capacity -= tile.bldg.path_1_value * tile.bldg.IR_mult
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -455,6 +464,8 @@ func remove_selected_tiles():
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
 func _input(event):
+	if game.tutorial and game.tutorial.BG_blocked:
+		return
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
 	if tile_over != -1 and game.bottom_info_action != "building":
 		var tile = game.tile_data[tile_over]
@@ -565,8 +576,9 @@ func _input(event):
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
+		var curr_time = OS.get_system_time_msecs()
 		for i in len(shadows):
-			constr_bldg(get_tile_id_from_pos(shadows[i].position), true)
+			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, true)
 			remove_child(shadows[i])
 		shadows.clear()
 		view.move_view = true
@@ -600,7 +612,7 @@ func _input(event):
 		var tile = game.tile_data[tile_id]
 		if bldg_to_construct != "":
 			if available_to_build(tile):
-				constr_bldg(tile_id)
+				constr_bldg(tile_id, curr_time)
 		if about_to_mine and available_for_mining(tile):
 			mine_tile(tile_id)
 		if placing_soil and available_for_plant(tile):
@@ -786,6 +798,8 @@ func available_to_build(tile):
 
 func mine_tile(id2:int):
 	game.c_t = id2
+	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
+		game.objective = {"type":game.ObjectiveType.MINE, "data":null, "current":0, "goal":2}
 	game.switch_view("mining")
 
 func check_lake(local_id:int):
@@ -1034,7 +1048,7 @@ func _process(_delta):
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
-	if game.help.mass_build and game.stats.bldgs_built >= 20:
+	if game.help.mass_build and game.stats.bldgs_built >= 30:
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		game.help_str = "mass_build"
@@ -1044,6 +1058,7 @@ func construct(st:String, costs:Dictionary):
 	constr_costs = costs
 	shadow = Sprite.new()
 	put_shadow(shadow)
+	game.HUD.refresh()
 
 func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):
 	spr.texture = load("res://Graphics/Buildings/%s.png" % bldg_to_construct)
@@ -1080,6 +1095,8 @@ func collect_all():
 		i += 1
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()
+	if game.tutorial and game.tutorial.tut_num == 7 and not game.tutorial.tween.is_active():
+		game.tutorial.fade(0.4, game.minerals > 0)
 
 func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)
