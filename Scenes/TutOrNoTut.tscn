@@ -4,19 +4,19 @@
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/TutOrNoTut.gd" type="Script" id=3]
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=1]
 size = 25
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=2]
 size = 15
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
 border_width_left = 2
 border_width_top = 2
@@ -24,7 +24,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 border_width_left = 2
 border_width_top = 2
@@ -32,7 +32,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
 border_width_left = 2
 border_width_top = 2
@@ -55,7 +55,7 @@ __meta__ = {
 margin_top = 68.0
 margin_right = 1280.0
 margin_bottom = 92.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
 text = "T_OR_NO_T"
 align = 1
 __meta__ = {
@@ -66,8 +66,21 @@ __meta__ = {
 margin_top = 488.0
 margin_right = 1280.0
 margin_bottom = 512.0
-custom_fonts/font = SubResource( 1 )
+rect_scale = Vector2( 1, 0.989126 )
+custom_fonts/font = SubResource( 2 )
 text = "NOT_OBVIOUS_GAMEPLAY"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="."]
+margin_top = 292.0
+margin_right = 1280.0
+margin_bottom = 316.0
+rect_scale = Vector2( 1, 0.989126 )
+custom_fonts/font = SubResource( 2 )
+text = "NO_SAVING_IN_TUT"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -78,8 +91,8 @@ margin_left = 448.0
 margin_top = 244.0
 margin_right = 832.0
 margin_bottom = 284.0
-custom_styles/hover = SubResource( 5 )
-custom_styles/normal = SubResource( 2 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
 text = "GUIDE_ME"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -90,8 +103,8 @@ margin_left = 448.0
 margin_top = 440.0
 margin_right = 832.0
 margin_bottom = 480.0
-custom_styles/hover = SubResource( 6 )
-custom_styles/normal = SubResource( 2 )
+custom_styles/hover = SubResource( 5 )
+custom_styles/normal = SubResource( 4 )
 text = "FIGURE_OUT_MYSELF"
 __meta__ = {
 "_edit_use_anchors_": false

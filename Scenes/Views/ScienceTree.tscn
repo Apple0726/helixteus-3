@@ -87,8 +87,14 @@ infinite_research = true
 
 [node name="AM" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
+margin_top = -272.0
+margin_right = 1056.0
+margin_bottom = -208.0
+
+[node name="ISC" parent="." instance=ExtResource( 1 )]
+margin_left = 800.0
 margin_top = -64.0
-margin_right = 800.0
+margin_right = 1056.0
 margin_bottom = 0.0
 
 [node name="SA" parent="." instance=ExtResource( 1 )]

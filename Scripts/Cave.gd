@@ -95,12 +95,15 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
-	if not game.EA_cave_visited:
-		game.long_popup("Caves right now are very unpolished, possibly unbalanced and may contain bugs. Don't expect too much for now!", "Early access note")
-		game.EA_cave_visited = true
-	elif game.help.sprint_mode:
+	if game.help.sprint_mode and speed_mult > 1:
 		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
 		game.help.sprint_mode = false
+	if game.help.cave_controls:
+		$UI2/Controls.visible = true
+		game.help_str = "cave_controls"
+		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
+	if game.objective.id == 1:
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":2, "current":0, "goal":10}
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -234,7 +237,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rand < ch:
 					var met_spawned:String = "lead"
 					for met in game.met_info:
-						if rand2 < 1 / game.met_info[met].rarity:
+						if rand2 < 1 / (game.met_info[met].rarity + 1):
 							met_spawned = met
 					if met_spawned != "":
 						var deposit = deposit_scene.instance()
@@ -624,6 +627,8 @@ func _input(event):
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
 			MM_hole.position *= 1.5
 			MM_exit.position *= 1.5
+		if Input.is_action_just_released("hide_help"):
+			$UI2/Controls.visible = false
 		update_ray()
 
 func exit_cave():
@@ -652,9 +657,9 @@ func exit_cave():
 	var i_w_w2 = i_w_w.duplicate(true)
 	if i_w_w.has("stone"):
 		i_w_w2.stone = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
-	game.add_resources(i_w_w2)
 	i_w_w.clear()
 	game.switch_view("planet")
+	game.add_resources(i_w_w2)
 	queue_free()
 
 func cooldown():

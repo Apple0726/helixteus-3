@@ -138,11 +138,6 @@ func _input(event):
 	Helper.set_back_btn($Back)
 
 func _on_Back_pressed():
-	tile.mining_progress = progress
-	game.tile_data[id] = tile
-	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
-	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
-		game.tutorial.fade()
 	game.switch_view("planet")
 	queue_free()
 

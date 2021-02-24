@@ -38,6 +38,8 @@ func get_science_name(sc:String):
 	match sc:
 		"AM":
 			return tr("AUTO_MINING")
+		"ISC":
+			return tr("IMPROVED_STONE_CRUSHER")
 		"ATM":
 			return tr("ATOM_MANIPULATION")
 		"SAP":

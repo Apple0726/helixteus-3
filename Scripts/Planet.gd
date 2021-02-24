@@ -277,7 +277,7 @@ func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 		if game.tutorial:
 			if game.tutorial.tut_num in [9, 10, 11] and game.tutorial.visible:
 				game.tutorial.fade(0.4, false)
-			elif game.tutorial.tut_num == 18:
+			elif game.tutorial.tut_num == 18 and bldg_to_construct == "RL":
 				game.tutorial.begin()
 		tile.bldg = {}
 		tile.bldg.name = bldg_to_construct
@@ -732,6 +732,8 @@ func _input(event):
 								game.planet_data.clear()
 								game.generate_planets(tile.wormhole.l_dest_s_id)
 							var wh_planet = game.planet_data[Helper.rand_int(0, wh_system.planet_num - 1)]
+							while wh_planet.type in [11, 12]:
+								wh_planet = game.planet_data[Helper.rand_int(0, wh_system.planet_num - 1)]
 							game.planet_data[wh_planet.l_id].conquered = true
 							game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 							game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
@@ -799,7 +801,7 @@ func available_to_build(tile):
 func mine_tile(id2:int):
 	game.c_t = id2
 	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
-		game.objective = {"type":game.ObjectiveType.MINE, "data":null, "current":0, "goal":2}
+		game.objective = {"type":game.ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
 	game.switch_view("mining")
 
 func check_lake(local_id:int):

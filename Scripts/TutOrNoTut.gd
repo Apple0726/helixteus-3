@@ -25,4 +25,5 @@ func disconnect_things():
 	$Button2.disconnect("pressed", self, "_on_Button2_pressed")
 	
 func on_tween_complete():
+	get_parent().remove_child(self)
 	emit_signal("new_game", tut)

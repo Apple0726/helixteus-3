@@ -20,7 +20,7 @@ func refresh():
 
 func _on_StarSystem_pressed():
 	click_sound.play()
-	if game.lv < 5:
+	if game.lv < 8:
 		return
 	game.switch_view("system")
 
@@ -44,7 +44,7 @@ func _on_Mine_pressed():
 	if not game.pickaxe.empty():
 		if game.shop_panel.visible:
 			game.toggle_panel(game.shop_panel)
-		if game.tutorial.visible and game.tutorial.tut_num == 14:
+		if game.tutorial and game.tutorial.visible and game.tutorial.tut_num == 14:
 			game.tutorial.fade(0.4, false)
 		game.put_bottom_info(tr("START_MINE"), "about_to_mine")
 	else:
@@ -67,8 +67,8 @@ func _on_Construct_mouse_entered():
 func _on_StarSystem_mouse_entered():
 	on_button = true
 	var view_str:String = "%s (%s)" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action]
-	if game.lv < 5:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 5"]]
+	if game.lv < 8:
+		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 8"]]
 	game.show_tooltip(view_str)
 
 func _on_Mine_mouse_entered():

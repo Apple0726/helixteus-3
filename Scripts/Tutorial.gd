@@ -2,7 +2,7 @@ extends Node2D
 
 onready var game = get_node("/root/Game")
 var tween:Tween
-var tut_num:int = 1
+var tut_num:int
 var click_anywhere:bool = false
 var BG_blocked:bool = true
 var PP_built:int = 0
@@ -10,27 +10,37 @@ var PP_built:int = 0
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
-	yield(get_tree().create_timer(1.5), "timeout")
 	$AnimationPlayer.play("Blinking")
 	modulate.a = 0
-	begin()
+	if tut_num == 1:
+		yield(get_tree().create_timer(1.5), "timeout")
+		begin()
 
 func begin():
-	click_anywhere = tut_num in [1, 16, 17, 22, 23, 25, 26, 27, 30, 31]
+	click_anywhere = tut_num in [1, 16, 17, 22, 23, 25, 26, 27, 30, 31, 32, 33, 34, 35]
 	if tut_num == 2:
 		game.show.construct_button = true
 		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
 	elif tut_num == 10:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "current":0, "goal":6}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "id":-1, "current":0, "goal":6}
 		game.HUD.refresh()
 	elif tut_num == 17:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "current":0, "goal":1}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":-1, "current":0, "goal":1}
 		game.HUD.refresh()
 	elif tut_num == 31:
-		yield(get_tree().create_timer(5.0), "timeout")
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "current":0, "goal":1}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":0, "current":0, "goal":1}
+		game.show.construct_button = true
+		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
+		game.stats.bldgs_built = 20
+		game.money = 100000
+		game.energy = 100000
+		game.SP = 10000
+		game.mats.silicon = 30
+		game.stone.O = 600
+		for sh in game.show:
+			game.show[sh] = true
 		game.HUD.refresh()
-	var node = get_node(String(tut_num))
+	var node = get_node(String(tut_num)) if tut_num <= 31 else get_node("31")
 	var node_label
 	if node.has_node("Label"):
 		node_label = node.get_node("Label")
@@ -46,7 +56,7 @@ func begin():
 	visible = true
 
 func _input(event):
-	if visible and Input.is_action_just_released("left_click") and click_anywhere:
+	if visible and Input.is_action_just_released("left_click") and not tween.is_active() and click_anywhere:
 		fade()
 
 func fade(spd:float = 0.4, begin:bool = true):
@@ -55,40 +65,49 @@ func fade(spd:float = 0.4, begin:bool = true):
 	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0), spd)
 	tween.start()
 	yield(tween, "tween_all_completed")
-	if tut_num == 31:
-		click_anywhere = false
-		BG_blocked = false
-		return
-	get_node(String(tut_num)).visible = false
+#	if tut_num == 31:
+#		click_anywhere = false
+#		BG_blocked = false
+#		game.get_node("UI").remove_child(game.tutorial)
+#		game.tutorial = null
+#		game.help.tutorial = false
+#		return
+	get_node(String(tut_num if tut_num <= 31 else 31)).visible = false
 	tut_num += 1
-	var node = get_node(String(tut_num))
+	var node = get_node(String(tut_num if tut_num <= 31 else 31))
 	BG_blocked = node.visible and node.has_node("Polygon")
 	if tut_num == 4:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "current":0, "goal":5}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "id":-1, "current":0, "goal":5}
 		game.HUD.refresh()
 		$EnergyCheckTimer.start()
 	elif tut_num == 6:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "current":0, "goal":3}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":3}
 		game.HUD.refresh()
 	elif tut_num == 9:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "current":0, "goal":4}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":4}
 		game.HUD.refresh()
-	elif tut_num in [18, 26, 28, 31]:
+	elif tut_num in [18, 26, 28, 31, 32, 35, 36]:
 		begin = false
 	elif tut_num == 20:
 		$RLCheckTimer.start()
 	elif tut_num == 22:
 		$RLCheckTimer2.start()
 	elif tut_num == 24:
-		game.objective = {"type":game.ObjectiveType.SAVE, "data":"SP", "current":game.SP, "goal":10}
+		game.objective = {"type":game.ObjectiveType.SAVE, "data":"SP", "id":-1, "current":game.SP, "goal":10}
 		game.HUD.refresh()
 		begin = false
 	elif tut_num == 27:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"SC", "current":0, "goal":1}
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"SC", "id":-1, "current":0, "goal":1}
 		game.HUD.refresh()
 	elif tut_num == 30:
-		game.objective = {"type":game.ObjectiveType.SAVE, "data":"mats/silicon", "current":game.mats.silicon, "goal":20}
+		game.objective = {"type":game.ObjectiveType.SAVE, "data":"mats/silicon", "id":-1, "current":game.mats.silicon, "goal":20}
 		game.HUD.refresh()
+	elif tut_num == 34:
+		if len(game.ship_data) != 0:
+			tut_num = 35
+	elif tut_num == 35:
+		begin = false
+	game.help.tutorial = tut_num
 	if begin:
 		begin()
 	else:

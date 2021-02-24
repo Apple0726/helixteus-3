@@ -26,6 +26,7 @@ var red_line:Line2D
 var green_line:Line2D
 
 func _ready():
+	set_process(false)
 	red_line = Line2D.new()
 	add_child(red_line)
 	red_line.add_point(Vector2.ZERO)
@@ -245,7 +246,7 @@ func _input(event):
 			drag_position = event.position
 		if Input.is_action_pressed("left_click"):
 			drag_delta = event.position - drag_position
-			if (event.position - drag_initial_position).length() > 2:
+			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
 # warning-ignore:return_value_discarded
 			move_and_collide(drag_delta)

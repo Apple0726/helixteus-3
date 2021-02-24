@@ -53,18 +53,18 @@ func refresh():
 				if el.element == "Si":
 					item = "silicon"
 					el_num = hslider.value * el.fraction / 50.0
-				elif el.element == "Fe":
+				elif el.element == "Fe" and game.science_unlocked.ISC:
 					item = "iron"
-					el_num = hslider.value * el.fraction / 200.0
-				elif el.element == "Al":
+					el_num = hslider.value * el.fraction / 50.0
+				elif el.element == "Al" and game.science_unlocked.ISC:
 					item = "aluminium"
-					el_num = hslider.value * el.fraction / 200.0
+					el_num = hslider.value * el.fraction / 50.0
 				elif el.element == "O":
 					item = "sand"
 					el_num = hslider.value * el.fraction / 2.0
-				elif el.element == "Ti":
+				elif el.element == "Ti" and game.science_unlocked.ISC:
 					item = "titanium"
-					el_num = hslider.value * el.fraction / 1200.0
+					el_num = hslider.value * el.fraction / 200.0
 				el_num = stepify(el_num * tile.bldg.path_3_value, 0.001)
 				if el_num != 0:
 					expected_rsrc[item] = el_num

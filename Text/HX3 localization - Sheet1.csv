@@ -38,7 +38,7 @@ LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,
 LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercúmulo de Laniakea,
 PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성
 PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성
-STAR_SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계
+SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계
 SYSTEMS,Systems,Systèmes,Sistemi,,,,
 GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하
 GALAXIES,Galaxies,Galaxies,Galassie,,,,
@@ -453,7 +453,7 @@ MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피
 CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타
 ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률
 EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율
-BATTLE_HELP,Press %s or %s to move your ship up\nPress %s or %s to move your ship down\nHold %s to move the ship faster,,,,,,
+BATTLE_HELP,Dodge enemy attacks by moving the ship yourself with your keyboard!\n%s or %s: go up\n%s or %s: go down\nHold %s to move the ship faster,,,,,,
 SHOW_WEAPON_XPS,Show weapon XPs,,,,,,
 BULLET,Bullet,,,,,,
 BULLET_DESC,Average damage and accuracy weapon.,,,,,,
@@ -698,11 +698,23 @@ TUTORIAL_26,Rovers are used to explore caves. You need silicon\nto construct the
 TUTORIAL_27,"Look for the ""stone crusher"" building in the construction menu\nand build it.",,,,,,
 TUTORIAL_28,Click the stone crusher to open its menu.,,,,,,
 TUTORIAL_30,Your stone is now being crushed.\nCome back to this building after a minute to collect\nits resources.,,,,,,
-TUTORIAL_31,Now it's time to try doing things on your own.\nThe game will still give you objectives to\nguide you a little bit. Experiment with things\nand have fun!,,,,,,
+TUTORIAL_31,Now it's time to try doing things on your own.\nThe game will still give you objectives to\nguide you a little bit. Experiment with things\nand have fun! The game now auto-saves every 10 seconds.\n,,,,,,
+TUTORIAL_32,You have unlocked the star system view!\nThis is where you can see other planets in this star system\nand conquer them. Your planets have a green glow.,,,,,,
+TUTORIAL_33,You can move/zoom the view like you do in planet view.,,,,,,
+TUTORIAL_34,You don't seem to have a ship yet. You need to take control\nof the ship that you can find in your home planet.\nCome back here once you have it!,,,,,,
+TUTORIAL_35,Click a planet with a red glow to send ships over there\nand engage in battle.,,,,,,
 BUILD_OBJECTIVE,Build {num} {bldg}{s},,,,,,
 BUILD_OBJECTIVE_2,Build {num} {bldg}s,Construire: {num}x {bldg},Costruire: {num}x {bldg},,,,{bldg} {num}개 건설하기
-MINE_OBJECTIVE,Mine {num} tiles,,,,,,
+MINE_OBJECTIVE,Mine %s tiles,,,,,,
 SAVE_OBJECTIVE,Save up {num} {rsrc},,,,,,
 SAVE_W_OBJECTIVE,Save up {num} kg of {rsrc},,,,,,
+CONQUER_OBJECTIVE,Conquer {num} {object},,,,,,
 TUTORIAL_OVERCLOCK,This overclock will be used later in the tutorial. Don't use it yet!,,,,,,
 FULL_MINERALS,You have reached your maximum mineral storage capacity. Build mineral silos to increase it!,,,,,,
+IMPROVED_STONE_CRUSHER,Improved stone crusher,,,,,,
+ISC_DESC,Allows stone crushers to extract metals.,,,,,,
+CAVE_CONTROLS,Controls:\nWASD: move rover\nScroll wheel: Change active item\nHold left click: use active item\nM: toggle minimap,,,,,,
+CRUST_OBJECTIVE,Reach the crust in mining,,,,,,
+CAVE_OBJECTIVE,Enter a cave,,,,,,
+LEVEL_OBJECTIVE,Reach level %s,,,,,,
+NO_SAVING_IN_TUT,(saving possible only after finishing tutorial (~10 minutes long)),,,,,,

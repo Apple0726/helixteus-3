@@ -369,8 +369,9 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	tween.start()
 	parent.add_child(lb)
 	yield(tween, "tween_all_completed")
-	parent.remove_child(lb)
-	remove_child(tween)
+	if parent:
+		parent.remove_child(lb)
+		remove_child(tween)
 
 func add_minerals(amount:float, add:bool = true):
 	var mineral_space_available = round(game.mineral_capacity) - round(game.minerals)

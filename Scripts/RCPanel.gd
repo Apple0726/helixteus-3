@@ -17,12 +17,12 @@ var mult:float
 onready var armor_slot = $Stats/HBoxContainer/Armor
 onready var wheels_slot = $Stats/HBoxContainer/Wheels
 onready var CC_slot = $Stats/HBoxContainer/CC#CC: Cargo Container
-var armor:String = "lead_armor"
+var armor:String = "stone_armor"
 var HP_bonus:int
 var def_bonus:int
-var wheels:String = "lead_wheels"
+var wheels:String = "stone_wheels"
 var spd_bonus:float
-var CC:String = "lead_CC"
+var CC:String = "stone_CC"
 var cargo_bonus:int
 
 func _ready():

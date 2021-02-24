@@ -40,7 +40,7 @@ func refresh():
 		return
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
-		if config.get_value("saving", "enable_autosave", true):
+		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num > 30):
 			set_process(autosave_light)
 		else:
 			$AutosaveLight.modulate.g = 0.3
@@ -91,6 +91,8 @@ func refresh():
 		game.lv += 1
 		game.xp -= game.xp_to_lv
 		game.xp_to_lv = round(game.xp_to_lv * 1.5)
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
+			game.objective.current += 1
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
@@ -106,16 +108,33 @@ func refresh():
 				game.objective.current = game[game.objective.data]
 			else:
 				game.objective.current = game[split[0]][split[1]]
+		elif game.objective.type == game.ObjectiveType.CRUST and game.c_v == "mining":
+			game.objective.current = game.mining_HUD.tile.depth
+			game.objective.goal = game.planet_data[game.c_p].crust_start_depth + 1
 		if game.objective.current >= game.objective.goal:
-			game.objective.clear()
+			if game.objective.id == 0:
+				game.objective = {"type":game.ObjectiveType.CAVE, "id":1, "current":0, "goal":1}
+			elif game.objective.id == 2:
+				game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
+			elif game.objective.id == 3:
+				game.objective = {"type":game.ObjectiveType.CRUST, "id":4, "current":game.mining_HUD.tile.depth, "goal":game.planet_data[game.c_p].crust_start_depth + 1}
+			elif game.objective.id == 4:
+				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":5, "current":0, "goal":4}
+			elif game.objective.id == 5:
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":6, "current":game.lv, "goal":8}
+			elif game.objective.id == 6:
+				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":7, "current":0, "goal":1}
+			else:
+				game.objective.clear()
+				if game.tutorial:
+					if game.tutorial.tut_num in [6, 9, 10, 15, 24, 28, 31]:
+						game.tutorial.begin()
+					elif game.tutorial.tut_num == 11:
+						if game.money < 300:
+							game.objective = {"type":game.ObjectiveType.SAVE, "data":"money", "id":-1, "current":game.money, "goal":300}
+						else:
+							game.tutorial.begin()
 			$Objectives/TextureProgress.value = 0
-			if game.tutorial and game.tutorial.tut_num in [6, 9, 10, 15, 24, 28, 31]:
-				game.tutorial.begin()
-			if game.tutorial.tut_num == 11:
-				if game.money < 300:
-					game.objective = {"type":game.ObjectiveType.SAVE, "data":"money", "current":game.money, "goal":300}
-				else:
-					game.tutorial.begin()
 	tween.stop_all()
 	$Objectives.visible = not game.objective.empty()
 	if $Objectives.visible:
@@ -133,7 +152,15 @@ func refresh():
 			else:
 				$Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
 		elif game.objective.type == game.ObjectiveType.MINE:
-			$Objectives/Label.text = tr("MINE_OBJECTIVE").format({"num":game.objective.goal})
+			$Objectives/Label.text = tr("MINE_OBJECTIVE") % game.objective.goal
+		elif game.objective.type == game.ObjectiveType.CAVE:
+			$Objectives/Label.text = tr("CAVE_OBJECTIVE")
+		elif game.objective.type == game.ObjectiveType.CRUST:
+			$Objectives/Label.text = tr("CRUST_OBJECTIVE")
+		elif game.objective.type == game.ObjectiveType.LEVEL:
+			$Objectives/Label.text = tr("LEVEL_OBJECTIVE") % game.objective.goal
+		elif game.objective.type == game.ObjectiveType.CONQUER:
+			$Objectives/Label.text = tr("CONQUER_OBJECTIVE").format({"num":game.objective.goal, "object":tr(game.objective.data.to_upper() + ("S" if game.objective.goal > 1 else "")).to_lower()})
 		$Objectives/Label.visible = true
 		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
 		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position

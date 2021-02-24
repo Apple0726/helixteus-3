@@ -16,6 +16,12 @@ var planet_rsrcs = []
 func _ready():
 	refresh_planets()
 	refresh_stars()
+	if game.tutorial:
+		print(game.tutorial.tut_num)
+		if game.tutorial.tut_num == 32:
+			game.tutorial.begin()
+		elif game.tutorial.tut_num == 35 and len(game.ship_data) > 0:
+			game.tutorial.begin()
 
 func refresh_planets():
 	for planet_thing in get_tree().get_nodes_in_group("planet_stuff"):
@@ -181,11 +187,15 @@ func show_planet_info(id:int, l_id:int):
 	if Helper.ships_on_planet(l_id) and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
+		var tooltip:String
 		if game.help.planet_details:
 			game.help_str = "planet_details"
-			game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s\n%s\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS"), tr("CTRL_CLICK_TO_SEND_SHIPS"), tr("HIDE_SHORTCUTS")])
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS"), tr("HIDE_SHORTCUTS")]
 		else:
-			game.show_tooltip("%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure)])
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure)]
+		if p_i.conquered:
+			tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
+		game.show_tooltip(tooltip)
 
 var MS_constr_data:Dictionary = {}
 
@@ -224,6 +234,8 @@ func build_MS(obj:Dictionary, MS:String):
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func on_planet_click (id:int, l_id:int):
+	if game.tutorial and game.tutorial.visible:
+		return
 	var p_i = game.planet_data[l_id]
 	if not view.dragged:
 		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]

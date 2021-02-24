@@ -79,206 +79,111 @@ var view
 ############ Save data ############
 
 #Current view
-var c_v:String = ""
-var l_v:String = ""
+var c_v:String
+var l_v:String
 
 #Player resources
-var money:float = 800
-var minerals:float = 0
-var mineral_capacity:float = 100
-var stone:Dictionary = {}
-var energy:float = 200
-var SP:float = 0
+var money:float
+var minerals:float
+var mineral_capacity:float
+var stone:Dictionary
+var energy:float
+var SP:float
 #Dimension remnants
-var DRs:float = 0
-var lv:int = 1
-var xp:float = 0
-var xp_to_lv:float = 10
+var DRs:float
+var lv:int
+var xp:float
+var xp_to_lv:float
 
 #id of the universe/supercluster/etc. you're viewing the object in
-var c_u:int = 0#c_u: current_universe
-var c_sc:int = 0#c_sc: current_supercluster
-var c_c:int = 0#etc.
-var c_c_g:int = 0#etc.
-var c_g:int = 0
-var c_g_g:int = 0
-var c_s:int = 0
-var c_s_g:int = 0
-var c_p:int = 2
-var c_p_g:int = 2
-var c_t:int = -1
+var c_u:int#c_u: current_universe
+var c_sc:int#c_sc: current_supercluster
+var c_c:int#etc.
+var c_c_g:int#etc.
+var c_g:int
+var c_g_g:int
+var c_s:int
+var c_s_g:int
+var c_p:int
+var c_p_g:int
+var c_t:int
 
 #Number of items per stack
-var stack_size:int = 16
+var stack_size:int
 
-var auto_replace:bool = false
+var auto_replace:bool
 
 #Stores information of the current pickaxe the player is holding
-var pickaxe:Dictionary = {}
+var pickaxe:Dictionary
 
-var mats:Dictionary = {	"coal":0,
-						"glass":0,
-						"sand":0,
-						"clay":0,
-						"soil":0,
-						"cellulose":0,
-						"silicon":0,
-						#"he3mix":0,
-						#"graviton":0,
-}
-
-var mets:Dictionary = {	"lead":0,
-						"copper":0,
-						"iron":0,
-						"aluminium":0,
-						"silver":0,
-						"gold":0,
-						"amethyst":0,
-						"emerald":0,
-						"quartz":0,
-						"topaz":0,
-						"ruby":0,
-						"sapphire":0,
-						"platinum":0,
-						"titanium":0,
-						"diamond":0,
-						"nanocrystal":0,
-						"mythril":0,
-}
-
-var atoms:Dictionary = {	"H":0,
-							"He":0,
-							"C":0,
-							"N":0,
-							"O":0,
-							"F":0,
-							"Ne":0,
-							"Al":0,
-							"Si":0,
-							"Fe":0,
-							"Xe":0,
-}
-
-var particles:Dictionary = {	"proton":0,
-								"neutron":0,
-								"electron":0,
-}
+var mats:Dictionary
+var mets:Dictionary
+var atoms:Dictionary
+var particles:Dictionary
 
 #Display help when players see/do things for the first time. true: show help
-var help:Dictionary = {
-			"tutorial":true,
-			"close_btn1":true,
-			"close_btn2":true,
-			"mining":true,
-			"STM":true,
-			"battle":true,
-			"plant_something_here":true,
-			"boulder_desc":true,
-			"aurora_desc":true,
-			"cave_desc":true,
-			"crater_desc":true,
-			"autosave_light_desc":true,
-			"tile_shortcuts":true,
-			"inventory_shortcuts":true,
-			"hotbar_shortcuts":true,
-			"rover_shortcuts":true,
-			"rover_inventory_shortcuts":true,
-			"planet_details":true,
-			"mass_build":true,
-			"abandoned_ship":true,
-			"science_tree":true,
-			"sprint_mode":true,
-			"active_wormhole":true,
-			"inactive_wormhole":true,
-			"cave_diff_info":true,
-}
+var help:Dictionary
 
-var science_unlocked:Dictionary = {}
-var infinite_research:Dictionary = {}
-var MUs:Dictionary = {	"MV":1,
-						"MSMB":1,
-						"IS":1,
-						"AIE":1,
-						"STMB":1,
-						"SHSR":1,
-}#Levels of mineral upgrades
-
+var science_unlocked:Dictionary
+var infinite_research:Dictionary
+var MUs:Dictionary#Levels of mineral upgrades
 #Measures to not overwhelm beginners. false: not visible
-var show:Dictionary = {	"minerals":false,
-						"stone":false,
-						"mining":false,
-						"shop":false,
-						"SP":false,
-						"mining_layer":false,
-						"construct_button":false,
-						"plant_button":false,
-						"vehicles_button":false,
-						"materials":false,
-						"metals":false,
-						"atoms":false,
-						"particles":false,
-						"auroras":false,
-}
+var show:Dictionary
 
 #Stores information of all objects discovered
-var universe_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var supercluster_data:Array = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-var cluster_data:Array = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-var galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-var system_data:Array = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
-var planet_data:Array = []
-var tile_data:Array = []
-var cave_data:Array = []
+var universe_data:Array
+var supercluster_data:Array
+var cluster_data:Array
+var galaxy_data:Array
+var system_data:Array
+var planet_data:Array
+var tile_data:Array
+var cave_data:Array
 
 #Vehicle data
-var rover_data:Array = []
-var ship_data:Array = []
-var second_ship_hints:Dictionary = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
-var ships_c_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
-var ships_c_g_coords:Dictionary = {"c":0, "g":0, "s":0}#ship global coordinates (current)
-var ships_dest_coords:Dictionary = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
-var ships_dest_g_coords:Dictionary = {"c":0, "g":0, "s":0}#ship global coordinates (destination)
-var ships_depart_pos:Vector2 = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
-var ships_dest_pos:Vector2 = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
-var ships_travel_view:String = "-"#View in which ships travel
-var ships_travel_start_date:int = -1
-var ships_travel_length:int = -1
-var satellite_data:Array = []
+var rover_data:Array
+var ship_data:Array
+var second_ship_hints:Dictionary
+var ships_c_coords:Dictionary#Local coords of the planet that the ships are on
+var ships_c_g_coords:Dictionary#ship global coordinates (current)
+var ships_dest_coords:Dictionary#Local coords of the destination planet
+var ships_dest_g_coords:Dictionary#ship global coordinates (destination)
+var ships_depart_pos:Vector2#Depart position of system/galaxy/etc. depending on view
+var ships_dest_pos:Vector2#Destination position of system/galaxy/etc. depending on view
+var ships_travel_view:String#View in which ships travel
+var ships_travel_start_date:int
+var ships_travel_length:int
+var satellite_data:Array
 
 #Your inventory
-var items:Array = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
+var items:Array
 #var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
-var hotbar:Array = []
+var hotbar:Array
 
-var STM_lv:int = 1#ship travel minigame level
-var rover_id:int = -1#Rover id when in cave
+var STM_lv:int#ship travel minigame level
+var rover_id:int#Rover id when in cave
 
-var p_num:int = 0
-var s_num:int = 0
-var g_num:int = 0#Total number of galaxies generated
-var c_num:int = 0
+var p_num:int
+var s_num:int
+var g_num:int#Total number of galaxies generated
+var c_num:int
 
-var stats:Dictionary = {	"bldgs_built":0,
-							"wormholes_activated":0,
-							"planets_conquered":1,
-							}
+var stats:Dictionary
 
-enum ObjectiveType {BUILD, SAVE, MINE}
-var objective:Dictionary = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
+enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL}
+var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 ############ End save data ############
 
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
-var EA_cave_visited = TEST
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
 
 var mining_HUD
-#var science_tree
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 var STM
@@ -287,29 +192,29 @@ var battle
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":45},
 					"sand":{"value":4},
-					"clay":{"value":12},
+					#"clay":{"value":12},
 					"soil":{"value":6},
 					"cellulose":{"value":30},
 					"silicon":{"value":10},
 }
 #Changing length of met_info changes cave rng!
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
-					"copper":{"min_depth":50, "max_depth":750, "amount":20, "rarity":1.3, "density":8.96, "value":60},
-					"iron":{"min_depth":100, "max_depth":1000, "amount":20, "rarity":1.7, "density":7.87, "value":95},
-					"aluminium":{"min_depth":150, "max_depth":1500, "amount":20, "rarity":2.3, "density":2.7, "value":140},
-					"silver":{"min_depth":200, "max_depth":1750, "amount":20, "rarity":2.9, "density":10.49, "value":200},
-					"gold":{"min_depth":250, "max_depth":2500, "amount":16, "rarity":4.5, "density":19.3, "value":300},
-					"amethyst":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.0, "density":2.66, "value":500},
-					"emerald":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.2, "density":2.70, "value":540},
-					"quartz":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.4, "density":2.32, "value":580},
-					"topaz":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.6, "density":3.50, "value":620},
-					"ruby":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":5.8, "density":4.01, "value":660},
-					"sapphire":{"min_depth":300, "max_depth":3000, "amount":16, "rarity":6.0, "density":3.99, "value":700},
-					"platinum":{"min_depth":500, "max_depth":4000, "amount":14, "rarity":6.5, "density":21.45, "value":800},
-					"titanium":{"min_depth":700, "max_depth":5000, "amount":14, "rarity":7.2, "density":4.51, "value":980},
-					"diamond":{"min_depth":900, "max_depth":6000, "amount":14, "rarity":8.2, "density":4.20, "value":1200},
-					"nanocrystal":{"min_depth":1200, "max_depth":8000, "amount":12, "rarity":10.6, "density":1.5, "value":1900},
-					"mythril":{"min_depth":1500, "max_depth":10000, "amount":12, "rarity":13.4, "density":13.4, "value":3500},
+					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.7, "density":8.96, "value":55},
+					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":2.6, "density":7.87, "value":85},
+					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":4.5, "density":2.7, "value":140},
+					"silver":{"min_depth":400, "max_depth":1750, "amount":20, "rarity":7.2, "density":10.49, "value":200},
+					"gold":{"min_depth":500, "max_depth":2500, "amount":16, "rarity":10.0, "density":19.3, "value":300},
+					"amethyst":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":14.5, "density":2.66, "value":500},
+					"emerald":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":14.7, "density":2.70, "value":540},
+					"quartz":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.0, "density":2.32, "value":580},
+					"topaz":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.3, "density":3.50, "value":620},
+					"ruby":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.6, "density":4.01, "value":660},
+					"sapphire":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.9, "density":3.99, "value":700},
+					"platinum":{"min_depth":1000, "max_depth":4000, "amount":14, "rarity":20.0, "density":21.45, "value":1000},
+					"titanium":{"min_depth":1400, "max_depth":5000, "amount":14, "rarity":28.5, "density":4.51, "value":1450},
+					"diamond":{"min_depth":1800, "max_depth":6000, "amount":14, "rarity":42.0, "density":4.20, "value":2200},
+					"nanocrystal":{"min_depth":2400, "max_depth":8000, "amount":12, "rarity":67.5, "density":1.5, "value":3000},
+					"mythril":{"min_depth":3000, "max_depth":10000, "amount":12, "rarity":99.4, "density":13.4, "value":4000},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -403,19 +308,10 @@ func _ready():
 		while not Geometry.is_point_in_polygon(star.position, bg_area):
 			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
 		bg.add_child(star)
-	for sc in Data.science_unlocks:
-		science_unlocked[sc] = false
-	for sc in Data.infinite_research_sciences:
-		infinite_research[sc] = 0
-	for mat in mats:
-		show[mat] = false
-	for met in mets:
-		show[met] = false
-	for atom in atoms:
-		show[atom] = false
-	for particle in particles:
-		show[particle] = false
 	if TEST:
+		$Title.visible = false
+		HUD = load("res://Scenes/HUD.tscn").instance()
+		new_game(false)
 		lv = 100
 		money = 10000000000
 		mats.soil = 50
@@ -456,9 +352,6 @@ func _ready():
 		pickaxe = {"name":"stick", "speed":10, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
-		$Title.visible = false
-		HUD = load("res://Scenes/HUD.tscn").instance()
-		new_game(false)
 		add_panels()
 		$Autosave.start()
 	else:
@@ -532,7 +425,6 @@ func load_game():
 		atoms = save_game.get_var()
 		particles = save_game.get_var()
 		help = save_game.get_var()
-		help.cave_diff_info = true
 		show = save_game.get_var()
 		universe_data = save_game.get_var()
 		cave_data = save_game.get_var()
@@ -553,26 +445,30 @@ func load_game():
 		ships_dest_g_coords = save_game.get_var()
 		ships_travel_start_date = save_game.get_64()
 		ships_travel_length = save_game.get_64()
-		EA_cave_visited = save_game.get_8()
 		p_num = save_game.get_64()
 		s_num = save_game.get_64()
 		g_num = save_game.get_64()
 		c_num = save_game.get_64()
 		stats = save_game.get_var()
+		objective = save_game.get_var()
 		save_game.close()
-		add_child(HUD)
-		if c_v in ["mining", "cave", "planet"]:
-			tile_data = open_obj("Planets", c_p_g)
-		var file = Directory.new()
-		if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
-			planet_data = open_obj("Systems", c_s_g)
-		if file.file_exists("user://Save1/Galaxies/%s.hx3" % [c_g_g]):
-			system_data = open_obj("Galaxies", c_g_g)
-		if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
-			galaxy_data = open_obj("Clusters", c_c_g)
-		if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
-			cluster_data = open_obj("Superclusters", c_sc)
-		switch_view(c_v, true)
+		if help.tutorial >= 1 and help.tutorial <= 30:
+			new_game(true)
+		else:
+			add_child(HUD)
+			view.set_process(true)
+			switch_view(c_v, true)
+			if c_v in ["mining", "cave", "planet"]:
+				tile_data = open_obj("Planets", c_p_g)
+			var file = Directory.new()
+			if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
+				planet_data = open_obj("Systems", c_s_g)
+			if file.file_exists("user://Save1/Galaxies/%s.hx3" % [c_g_g]):
+				system_data = open_obj("Galaxies", c_g_g)
+			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
+				galaxy_data = open_obj("Clusters", c_c_g)
+			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
+				cluster_data = open_obj("Superclusters", c_sc)
 	else:
 		popup("load error", 1.5)
 
@@ -584,7 +480,8 @@ func remove_files(dir:Directory):
 		file_name = dir.get_next()
 	
 func new_game(tut:bool):
-	help.tutorial = tut
+	if not tut:
+		help.tutorial = -1
 	show.construct_button = not tut
 	var file = File.new()
 	var dir = Directory.new()
@@ -606,6 +503,202 @@ func new_game(tut:bool):
 	dir.make_dir("user://Save1/Galaxies")
 	dir.make_dir("user://Save1/Clusters")
 	dir.make_dir("user://Save1/Superclusters")
+	c_v = ""
+	l_v = ""
+
+	#Player resources
+	money = 800
+	minerals = 0
+	mineral_capacity = 200
+	stone = {}
+	energy = 200
+	SP = 0
+	#Dimension remnants
+	DRs = 0
+	lv = 1
+	xp = 0
+	xp_to_lv = 10
+
+	#id of the universe/supercluster/etc. you're viewing the object in
+	c_u = 0#c_u: current_universe
+	c_sc = 0#c_sc: current_supercluster
+	c_c = 0#etc.
+	c_c_g = 0#etc.
+	c_g = 0
+	c_g_g = 0
+	c_s = 0
+	c_s_g = 0
+	c_p = 2
+	c_p_g = 2
+	c_t = -1
+
+	#Number of items per stack
+	stack_size = 16
+
+	auto_replace = false
+
+	#Stores information of the current pickaxe the player is holding
+	pickaxe = {}
+
+	for sc in Data.science_unlocks:
+		science_unlocked[sc] = false
+	for sc in Data.infinite_research_sciences:
+		infinite_research[sc] = 0
+	mats = {	"coal":0,
+				"glass":0,
+				"sand":0,
+				"clay":0,
+				"soil":0,
+				"cellulose":0,
+				"silicon":0,
+				#"he3mix":0,
+				#"graviton":0,
+	}
+
+	mets = {	"lead":0,
+				"copper":0,
+				"iron":0,
+				"aluminium":0,
+				"silver":0,
+				"gold":0,
+				"amethyst":0,
+				"emerald":0,
+				"quartz":0,
+				"topaz":0,
+				"ruby":0,
+				"sapphire":0,
+				"platinum":0,
+				"titanium":0,
+				"diamond":0,
+				"nanocrystal":0,
+				"mythril":0,
+	}
+
+	atoms = {	"H":0,
+				"He":0,
+				"C":0,
+				"N":0,
+				"O":0,
+				"F":0,
+				"Ne":0,
+				"Al":0,
+				"Si":0,
+				"Fe":0,
+				"Xe":0,
+	}
+
+	particles = {	"proton":0,
+					"neutron":0,
+					"electron":0,
+	}
+
+	#Display help when players see/do things for the first time. true: show help
+	help = {
+			"tutorial":1,
+			"close_btn1":true,
+			"close_btn2":true,
+			"mining":true,
+			"STM":true,
+			"battle":true,
+			"plant_something_here":true,
+			"boulder_desc":true,
+			"aurora_desc":true,
+			"cave_desc":true,
+			"crater_desc":true,
+			"autosave_light_desc":true,
+			"tile_shortcuts":true,
+			"inventory_shortcuts":true,
+			"hotbar_shortcuts":true,
+			"rover_shortcuts":true,
+			"rover_inventory_shortcuts":true,
+			"planet_details":true,
+			"mass_build":true,
+			"abandoned_ship":true,
+			"science_tree":true,
+			"sprint_mode":true,
+			"cave_controls":true,
+			"active_wormhole":true,
+			"inactive_wormhole":true,
+			"cave_diff_info":true,
+	}
+
+	MUs = {	"MV":1,
+			"MSMB":1,
+			"IS":1,
+			"AIE":1,
+			"STMB":1,
+				"SHSR":1,
+	}#Levels of mineral upgrades
+
+	#Measures to not overwhelm beginners. false: not visible
+	show = {	"minerals":false,
+				"stone":false,
+				"mining":false,
+				"shop":false,
+				"SP":false,
+				"mining_layer":false,
+				"construct_button":false,
+				"plant_button":false,
+				"vehicles_button":false,
+				"materials":false,
+				"metals":false,
+				"atoms":false,
+				"particles":false,
+				"auroras":false,
+	}
+	for mat in mats:
+		show[mat] = false
+	for met in mets:
+		show[met] = false
+	for atom in atoms:
+		show[atom] = false
+	for particle in particles:
+		show[particle] = false
+
+	#Stores information of all objects discovered
+	universe_data = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	supercluster_data = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	cluster_data = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	planet_data = []
+	tile_data = []
+	cave_data = []
+
+	#Vehicle data
+	rover_data = []
+	ship_data = []
+	second_ship_hints = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
+	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
+	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
+	ships_dest_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
+	ships_dest_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (destination)
+	ships_depart_pos = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
+	ships_dest_pos = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
+	ships_travel_view = "-"#View in which ships travel
+	ships_travel_start_date = -1
+	ships_travel_length = -1
+	satellite_data = []
+
+	items = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
+
+	hotbar = []
+
+	STM_lv = 1#ship travel minigame level
+	rover_id = -1#Rover id when in cave
+
+	p_num = 0
+	s_num = 0
+	g_num = 0#Total number of galaxies generated
+	c_num = 0
+
+	stats = {	"bldgs_built":0,
+				"wormholes_activated":0,
+				"planets_conquered":1,
+				}
+
+	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
+
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
@@ -619,7 +712,7 @@ func new_game(tut:bool):
 	planet_data[2].erase("lake_2")
 	planet_data[2].liq_seed = 4
 	planet_data[2].liq_period = 100
-	planet_data[2].crust_start_depth = Helper.rand_int(35, 40)
+	planet_data[2].crust_start_depth = Helper.rand_int(25, 30)
 	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
 	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
 	planet_data[2].surface.coal.chance = 0.5
@@ -657,6 +750,11 @@ func new_game(tut:bool):
 		u_i["antimatter"] = 1.0
 		u_i["value"] = 1.0
 	c_v = "planet"
+	if tut:
+		tutorial = load("res://Scenes/Tutorial.tscn").instance()
+		tutorial.visible = false
+		tutorial.tut_num = 1
+		$UI.add_child(tutorial)
 	add_child(HUD)
 	add_planet()
 	$Autosave.start()
@@ -666,10 +764,7 @@ func new_game(tut:bool):
 	view.first_zoom = true
 	view.zoom_factor = 1.03
 	view.zooming = "in"
-	if tut:
-		tutorial = load("res://Scenes/Tutorial.tscn").instance()
-		tutorial.visible = false
-		$UI.add_child(tutorial)
+	view.set_process(true)
 
 func add_panels():
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
@@ -995,6 +1090,11 @@ func add_mining():
 	add_child(mining_HUD)
 
 func remove_mining():
+	mining_HUD.tile.mining_progress = mining_HUD.progress
+	tile_data[c_t] = mining_HUD.tile
+	Helper.save_obj("Planets", c_p_g, tile_data)
+	if tutorial and tutorial.tut_num == 15 and objective.empty():
+		tutorial.fade()
 	HUD.get_node("CollectAll").visible = true
 	HUD.get_node("Hotbar").visible = true
 	remove_child(mining_HUD)
@@ -1798,7 +1898,7 @@ func generate_systems(id:int):
 		s_i["id"] = s_id + s_num
 		s_i["l_id"] = s_id
 		s_i["stars"] = stars
-		s_i["name"] = tr("STAR_SYSTEM") + " %s" % s_id
+		s_i["name"] = tr("SYSTEM") + " %s" % s_id
 		s_i["discovered"] = false
 		s_i.pos = Vector2.ZERO
 		s_i.diff = 1.0
@@ -2304,7 +2404,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(50, 150)},
 								"glass":{"chance":0.1, "amount":1},
 								"sand":{"chance":0.8, "amount":50},
-								"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
+								#"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
 								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(3, 15)}
 	}
@@ -2556,7 +2656,7 @@ func deduct_resources(costs):
 		if cost == "energy":
 			energy -= costs.energy
 		if cost == "stone":
-			var ratio = 1 - costs.stone / Helper.get_sum_of_dict(stone)
+			var ratio:float = 1 - costs.stone / float(Helper.get_sum_of_dict(stone))
 			for el in stone:
 				stone[el] *= ratio
 		if mats.has(cost):
@@ -2688,7 +2788,7 @@ func _input(event):
 			if not c_v in ["STM", ""]:
 				item_to_use.num = 0
 				update_item_cursor()
-		elif not tutorial:
+		elif not tutorial or tutorial.tut_num >= 31:
 			if len(panels) != 0:
 				if c_v != "":
 					if not panels[0].polygon:
@@ -2809,12 +2909,12 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", ""] and not shop_panel.visible and not craft_panel.visible and not upgrade_panel and not overlay:
+	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not upgrade_panel and not overlay:
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
-				var name = hotbar[i]
-				if get_item_num(name) > 0:
-					inventory.on_slot_press(name)
+				var _name = hotbar[i]
+				if get_item_num(_name) > 0:
+					inventory.on_slot_press(_name)
 	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
 		fn_save_game(false)
 
@@ -2882,12 +2982,12 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(ships_dest_g_coords)
 	save_game.store_64(ships_travel_start_date)
 	save_game.store_64(ships_travel_length)
-	save_game.store_8(EA_cave_visited)
 	save_game.store_64(p_num)
 	save_game.store_64(s_num)
 	save_game.store_64(g_num)
 	save_game.store_64(c_num)
 	save_game.store_var(stats)
+	save_game.store_var(objective)
 	save_game.close()
 	if view.obj:
 		view.save_zooms(c_v)
