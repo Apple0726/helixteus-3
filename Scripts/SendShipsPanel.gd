@@ -1,6 +1,7 @@
 extends "Panel.gd"
 onready var HX_data_scene = preload("res://Scenes/HXData.tscn")
 
+const TEST:bool = false
 var travel_view:String
 var travel_energy_cost:float = 0
 var total_energy_cost:float = 0
@@ -67,8 +68,8 @@ func refresh():
 		depart_pos = game.supercluster_data[depart_id].pos
 		dest_pos = game.supercluster_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-#	if game.TEST:
-#		distance = 1
+	if TEST:
+		distance = 1
 	calc_costs()
 	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
 		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
@@ -86,7 +87,7 @@ func refresh():
 	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].conquered
 
 func _on_Send_pressed():
-	if game.c_s_g == 0 and game.planet_data[dest_p_id].pressure > 30:
+	if game.c_g_g == 0 and game.planet_data[dest_p_id].pressure > 30:
 		game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
 	elif time_cost > 4 * 60 * 60 * 1000:
 		game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])

@@ -178,7 +178,7 @@ func show_tooltip(tile):
 				tooltip = (Data.path_1[bldg].desc) % [tile.bldg.path_1_value]
 			"GH":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
-		if game.help.tile_shortcuts and not game.tutorial:
+		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
 			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 	elif tile.has("plant"):
@@ -234,16 +234,16 @@ func show_tooltip(tile):
 			else:
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
-			tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP, 6), Helper.time_to_str(wh_costs.time * 1000)]
-			icons = [Data.SP_icon, Data.time_icon]
-			adv = true
+			if not tile.wormhole.has("investigation_length"):
+				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP, 6), Helper.time_to_str(wh_costs.time * 1000)]
+				icons = [Data.SP_icon, Data.time_icon]
+				adv = true
 	if tile.has("cave"):
 		tooltip = tr("CAVE")
-		if game.help.cave_desc:
+		if not game.science_unlocked.RC:
 			tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
-			game.help_str = "cave_desc"
 		else:
-			tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
+			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora") and tooltip == "":
@@ -406,8 +406,6 @@ func click_tile(tile, tile_id:int):
 				"RCC":
 					game.toggle_panel(game.RC_panel)
 				"SC":
-					if game.tutorial and game.tutorial.tut_num == 28:
-						game.tutorial.fade()
 					game.toggle_panel(game.SC_panel)
 					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 				"GF":
@@ -454,6 +452,7 @@ func add_shadows():
 			var tile_rekt:Rect2 = Rect2(Vector2(i * 200, j * 200), Vector2.ONE * 200)
 			if poly.intersects(tile_rekt) and available_to_build(game.tile_data[get_tile_id_from_pos(shadow_pos)]):
 				shadows.append(put_shadow(Sprite.new(), shadow_pos))
+	game.HUD.refresh()
 
 func remove_selected_tiles():
 	tiles_selected.clear()
@@ -688,6 +687,8 @@ func _input(event):
 					if len(game.ship_data) == 0:
 						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
+						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":12, "current":game.lv, "goal":35}
 						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":7, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
@@ -702,7 +703,7 @@ func _input(event):
 			elif tile.has("wormhole"):
 				if tile.wormhole.active:
 					if game.lv < 18:
-						game.long_popup(tr("LV_18_NEEDED"))
+						game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
 						return
 					Helper.update_ship_travel()
 					if Helper.ships_on_planet(id):
@@ -766,6 +767,8 @@ func _input(event):
 					if not tile.wormhole.has("investigation_length"):
 						var costs:Dictionary = get_wh_costs()
 						if game.SP >= costs.SP:
+							if not game.objective.empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
+								game.objective.current += 1
 							game.SP -= costs.SP
 							game.stats.wormholes_activated += 1
 							tile.wormhole.investigation_length = costs.time * 1000
@@ -901,9 +904,6 @@ func add_bldg(id2:int, st:String):
 				add_rsrc(v, Color.white, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
 				add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
-		"MS":
-			if not tile.bldg.is_constructing:
-				Helper.update_MS(tile)
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
@@ -1050,7 +1050,7 @@ func _process(_delta):
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
-	if game.help.mass_build and game.stats.bldgs_built >= 30:
+	if game.help.mass_build and game.stats.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		game.help_str = "mass_build"

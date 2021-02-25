@@ -4,6 +4,7 @@ var HP_icon = load("res://Graphics/Icons/HP.png")
 var atk_icon = load("res://Graphics/Icons/atk.png")
 var def_icon = load("res://Graphics/Icons/def.png")
 var inv_icon = load("res://Graphics/Icons/Inventory.png")
+var spd_icon = load("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
@@ -38,7 +39,7 @@ func refresh():
 
 func on_rover_enter(rov:Dictionary, rov_id:int):
 	rover_over_id = rov_id
-	var st = "@i %s\n@i %s\n@i %s\n@i %s kg" % [rov.HP, rov.atk, rov.def, rov.weight_cap]
+	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [rov.HP, rov.atk, rov.def, rov.weight_cap, game.clever_round(rov.spd, 3)]
 	if game.help.rover_shortcuts:
 		rover_has_items = false
 		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]
@@ -49,7 +50,7 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 		if rover_has_items:
 			game.help_str = "rover_shortcuts"
 			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
-	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon], 19)
+	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
 
 func on_rover_exit():
 	rover_over_id = -1
@@ -63,7 +64,7 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			for i in len(rov.inventory):
 				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
 					if rov.inventory[i].name == "minerals":
-						rov.inventory[i].num = Helper.add_minerals(rov.inventory[i].num)
+						rov.inventory[i].num = Helper.add_minerals(rov.inventory[i].num).remainder
 						if rov.inventory[i].num <= 0:
 							rov.inventory[i] = {"type":""}
 						else:

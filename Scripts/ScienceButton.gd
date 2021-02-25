@@ -25,7 +25,7 @@ func refresh():
 		var sc_lv:int = game.infinite_research[name]
 		var sc:Dictionary = Data.infinite_research_sciences[name]
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
-		$Text.text = Helper.format_num(sc.cost * pow(sc.pw, sc_lv), 6)
+		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)), 6)
 	else:
 		if modulate == Color.white:
 			$Label.text = get_science_name(name)
@@ -107,8 +107,8 @@ func _input(event):
 		if infinite_research:
 			var sc_lv:int = game.infinite_research[name]
 			var sc:Dictionary = Data.infinite_research_sciences[name]
-			if game.SP >= sc.cost * pow(sc.pw, sc_lv):
-				game.SP -= sc.cost * pow(sc.pw, sc_lv)
+			if game.SP >= round(sc.cost * pow(sc.pw, sc_lv)):
+				game.SP -= round(sc.cost * pow(sc.pw, sc_lv))
 				game.infinite_research[name] += 1
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				game.HUD.refresh()

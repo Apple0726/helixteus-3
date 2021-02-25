@@ -95,7 +95,7 @@ func on_slot_press(name:String):
 				game.tutorial.fade(0.4, false)
 		game.item_to_use.type = "speedup"
 	elif type == "overclocks_info":
-		if game.tutorial and game.tutorial.tut_num != 21:
+		if game.tutorial and game.tutorial.tut_num < 21:
 			game.popup(tr("TUTORIAL_OVERCLOCK"), 2.5)
 			return
 		else:

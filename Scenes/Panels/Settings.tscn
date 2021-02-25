@@ -166,6 +166,39 @@ text = "ENABLE_AUTOSAVE"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="FPS" type="Control" parent="."]
+margin_left = 533.954
+margin_top = 388.871
+margin_right = 573.954
+margin_bottom = 428.871
+
+[node name="Label" type="Label" parent="FPS"]
+margin_left = 71.6436
+margin_top = -3.23785
+margin_right = 123.644
+margin_bottom = 10.7621
+text = "Max FPS"
+
+[node name="Label2" type="Label" parent="FPS"]
+margin_left = 211.825
+margin_top = 27.4903
+margin_right = 263.825
+margin_bottom = 41.4903
+text = "60"
+
+[node name="FPS" type="HSlider" parent="FPS"]
+margin_left = -20.0
+margin_top = 26.0
+margin_right = 200.0
+margin_bottom = 42.0
+min_value = 1.0
+max_value = 144.0
+value = 1.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
@@ -173,3 +206,4 @@ __meta__ = {
 [connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
 [connection signal="toggled" from="AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="toggled" from="EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
+[connection signal="value_changed" from="FPS/FPS" to="." method="_on_FPS_value_changed"]

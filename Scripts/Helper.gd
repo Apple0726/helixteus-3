@@ -45,6 +45,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		var rsrc = game.rsrc_scene.instance()
 		var texture = rsrc.get_node("Texture")
 		var atom:bool = false
+		var tooltip:String = tr(obj.to_upper())
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
@@ -59,11 +60,14 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			texture.texture_normal = load("res://Graphics/Icons/Time.png")
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
+			if obj == "silicon" and not game.show.silicon:
+				tooltip += "\n%s" % [tr("HOW2SILICON")]
 			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
 		elif game.mets.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
 		elif game.atoms.has(obj):
 			atom = true
+			tooltip = tr(("%s_NAME" % obj).to_upper())
 			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
 		elif game.particles.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
@@ -71,7 +75,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
 					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
-		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tr(("%s_NAME" % obj).to_upper() if atom else obj.to_upper())])
+		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tooltip])
 		rsrc.get_node("Texture").connect("mouse_exited", self, "on_rsrc_out")
 		texture.rect_min_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
@@ -328,13 +332,19 @@ func save_obj(type:String, id:int, arr:Array):
 	save.store_var(arr)
 	save.close()
 
-func get_rover_weapon_text(name:String):
-	var laser = name.split("_")
-	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1])}), "%s: %s" % [tr("DAMAGE"), Data.rover_weapons[name].damage], "%s: %s%s" % [tr("COOLDOWN"), Data.rover_weapons[name].cooldown, tr("S_SECOND")]]
+func get_rover_weapon_text(_name:String):
+	return "%s\n%s\n%s" % [get_rover_weapon_name(_name), "%s: %s" % [tr("DAMAGE"), Data.rover_weapons[_name].damage], "%s: %s%s" % [tr("COOLDOWN"), Data.rover_weapons[_name].cooldown, tr("S_SECOND")]]
 
-func get_rover_mining_text(name:String):
-	var laser = name.split("_", true, 1)
-	return "%s\n%s\n%s" % [tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())}), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[name].rnge]]
+func get_rover_weapon_name(_name:String):
+	var laser = _name.split("_")
+	return tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1])})
+
+func get_rover_mining_text(_name:String):
+	return "%s\n%s\n%s" % [get_rover_mining_name(_name), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[_name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[_name].rnge]]
+
+func get_rover_mining_name(_name:String):
+	var laser = _name.split("_", true, 1)
+	return tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())})
 
 func set_back_btn(back_btn, set_text:bool = true):
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
@@ -434,6 +444,8 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
 		elif content == "ship_locator":
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.SIGNAL:
+				game.objective.current += 1
 			game.second_ship_hints.ship_locator = true
 		else:
 			game[content] += amount
@@ -678,6 +690,8 @@ func update_rsrc(p_i, tile, rsrc = null):
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
+		"MS":
+			update_MS(tile)
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult

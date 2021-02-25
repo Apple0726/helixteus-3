@@ -10,7 +10,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_c
 				"SE":{"value":20.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"MM":{"value":0.01, "pw":1.08, "is_value_integer":false, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.5, "pw":1.02, "is_value_integer":false, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
-				"SP":{"value":1.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				"SP":{"value":2.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":0.2, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"AMN":{"value":1.0, "pw":1.13, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.13, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
@@ -22,7 +22,7 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 				"SE":{"value":50, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"MM":{"value":4, "pw":1.08, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
-				"SP":{"value":2100, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":60, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.03, "is_value_integer":false, "metal_costs":{"lead":600, "copper":600, "iron":600, "aluminium":600, "silver":600, "gold":600}},
@@ -35,7 +35,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"RL":{"money":2000, "energy":600, "time":130.0},
 				"MS":{"money":500, "energy":80, "time":20.0},
 				"RCC":{"money":5000, "energy":400, "time":140.0},
-				"SC":{"money":1600, "energy":250, "time":150.0},
+				"SC":{"money":900, "energy":150, "time":50.0},
 				"GF":{"money":1500, "energy":1000, "time":120.0},
 				"SE":{"money":1500, "energy":500, "time":120.0},
 				"MM":{"money":13000, "energy":7000, "time":400.0},
@@ -118,15 +118,15 @@ func reload():
 	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.AMN.desc = "%s: %%s" % [tr("BASE_SPEED")]
 	path_1.SPR.desc = "%s: %%s" % [tr("BASE_SPEED")]
-	path_2.ME.desc = tr("STORES_X") % [" @i %s"]
+	path_2.ME.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
-	path_2.PP.desc = tr("STORES_X") % [" @i %s"]
+	path_2.PP.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.MM.desc = tr("X_M_AT_ONCE")
 	path_2.GH.desc = tr("X_PLANT_PRODUCE")
-	path_2.SP.desc = tr("STORES_X") % [" @i %s"]
+	path_2.SP.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_3.SC.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.GF.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.SE.desc = tr("OUTPUT_MULTIPLIER")
@@ -150,7 +150,7 @@ var science_unlocks = {
 						"SAP":{"cost":12500000, "parents":["ATM"]},
 						
 						#Rover sciences
-						"RC":{"cost":10, "parents":[]},
+						"RC":{"cost":5, "parents":[]},
 						"OL":{"cost":1000, "parents":["RC"]},
 						"YL":{"cost":12000, "parents":["OL"]},
 						"GL":{"cost":70000, "parents":["YL"]},
@@ -162,15 +162,15 @@ var science_unlocks = {
 						"UGRL":{"cost":100000000000, "parents":["GRL"]},
 						
 						#Ship sciences
-						"SCT":{"cost":1500, "parents":["RC"]},
-						"CD":{"cost":24000, "parents":["SCT"]},
+						"SCT":{"cost":350, "parents":["RC"]},
+						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":15000000, "parents":["ID"]},
 						"PD":{"cost":120000000, "parents":["FD"]},
 						
 						#Megastructure sciences
-						"MAE":{"cost":100000, "parents":[]},
+						"MAE":{"cost":100000, "parents":["SCT"]},
 						#Dyson sphere
 						"DS1":{"cost":1200000000, "parents":["MAE"]},
 						"DS2":{"cost":2500000000, "parents":["DS1"]},
@@ -209,7 +209,7 @@ var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},
 var rover_wheels = {	"stone_wheels":{"speed":1.0, "costs":{"stone":100}},
 						"lead_wheels":{"speed":1.05, "costs":{"lead":30}},
 						"copper_wheels":{"speed":1.1, "costs":{"copper":40}},
-						"iron_wheels":{"speed":1.5, "costs":{"iron":50}},
+						"iron_wheels":{"speed":1.15, "costs":{"iron":50}},
 						"aluminium_wheels":{"speed":1.2, "costs":{"aluminium":70}},
 						"silver_wheels":{"speed":1.25, "costs":{"silver":100}},
 						"gold_wheels":{"speed":1.3, "costs":{"gold":150}},

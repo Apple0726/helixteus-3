@@ -23,8 +23,10 @@ func _ready():
 		$AutosaveLight.pressed = config.get_value("saving", "autosave_light", false)
 		$EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
-		$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
+		var max_fps = config.get_value("rendering", "max_fps", 60)
+		#$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
 		$Autosave.value = autosave_interval
+		$FPS/FPS.value = max_fps
 
 func _on_Main_audio_value_changed(value):
 	update_volumes(0, value)
@@ -90,3 +92,10 @@ func _on_EnableAutosave_toggled(button_pressed):
 		config.save("user://settings.cfg")
 		if game.HUD:
 			game.HUD.refresh()
+
+func _on_FPS_value_changed(value):
+	if err == OK:
+		$FPS/Label2.text = String(value)
+		OS.low_processor_usage_mode_sleep_usec = 1000000 / value
+		config.set_value("rendering", "max_fps", value)
+		config.save("user://settings.cfg")

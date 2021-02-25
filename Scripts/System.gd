@@ -17,10 +17,9 @@ func _ready():
 	refresh_planets()
 	refresh_stars()
 	if game.tutorial:
-		print(game.tutorial.tut_num)
-		if game.tutorial.tut_num == 32:
+		if game.tutorial.tut_num == 27:
 			game.tutorial.begin()
-		elif game.tutorial.tut_num == 35 and len(game.ship_data) > 0:
+		elif game.tutorial.tut_num == 30 and len(game.ship_data) > 0:
 			game.tutorial.begin()
 
 func refresh_planets():

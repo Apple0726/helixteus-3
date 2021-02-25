@@ -95,15 +95,12 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
-	if game.help.sprint_mode and speed_mult > 1:
-		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
-		game.help.sprint_mode = false
 	if game.help.cave_controls:
 		$UI2/Controls.visible = true
 		game.help_str = "cave_controls"
 		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-	if game.objective.id == 1:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":2, "current":0, "goal":10}
+	if game.objective.id == 2:
+		game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -140,6 +137,9 @@ func set_rover_data():
 	$UI2/Inventory/Bar.value = weight
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
+	if game.help.sprint_mode and speed_mult > 1:
+		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
+		game.help.sprint_mode = false
 
 func remove_cave():
 	astar_node.clear()
@@ -172,7 +172,7 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
-	$UI2/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), difficulty]
+	$UI2/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), game.clever_round(difficulty, 3)]
 	var rng = RandomNumberGenerator.new()
 	$UI2/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
@@ -237,7 +237,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rand < ch:
 					var met_spawned:String = "lead"
 					for met in game.met_info:
-						if rand2 < 1 / (game.met_info[met].rarity + 1):
+						var rarity = game.met_info[met].rarity
+						if rarity > difficulty:
+							break
+						if rand2 < 1 / (rarity + 1):
 							met_spawned = met
 					if met_spawned != "":
 						var deposit = deposit_scene.instance()
@@ -446,7 +449,9 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		if difficulty > met_value.rarity and rng.randf() < 0.5 / met_value.rarity * aurora_mult:
+		if met_value.rarity > difficulty:
+			break
+		if rng.randf() < 0.5 / met_value.rarity:
 			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 1.1), 3)
 	return contents
 
@@ -563,6 +568,10 @@ func _input(event):
 			set_border(curr_slot)
 		if Input.is_action_just_released("E"):
 			moving_fast = not moving_fast
+			if moving_fast:
+				$AnimationPlayer.play("RoverSprint")
+			else:
+				$AnimationPlayer.play_backwards("RoverSprint")
 		if Input.is_action_just_released("F"):
 			if active_type == "chest":
 				var remainders = {}
@@ -810,8 +819,15 @@ func set_border(i:int):
 	if inventory[i].type == "rover_mining":
 		mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed
-		mining_p.amount = int(25 * pow(speed, 0.8))
-		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.8))
+		mining_p.amount = int(25 * pow(speed, 0.7))
+		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7))
+		$UI2/ActiveItem.text = Helper.get_rover_mining_name(inventory[i].name)
+	elif inventory[i].type == "rover_weapons":
+		$UI2/ActiveItem.text = Helper.get_rover_weapon_name(inventory[i].name)
+	elif inventory[i].has("name"):
+		$UI2/ActiveItem.text = tr(inventory[i].name.to_upper())
+	else:
+		$UI2/ActiveItem.text = ""
 
 func get_color(color:String):
 	match color:

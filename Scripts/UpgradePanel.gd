@@ -165,7 +165,7 @@ func _on_Upgrade_pressed():
 			if tile.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
-					prod_ratio = new_value / game.tile_data[id].bldg.path_1_value
+					prod_ratio = new_value / tile.bldg.path_1_value
 				else:
 					prod_ratio = 1.0
 				var coll_date = tile.bldg.collect_date

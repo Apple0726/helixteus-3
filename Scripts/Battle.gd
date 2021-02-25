@@ -327,7 +327,7 @@ func _process(delta):
 		if HX_w_c_d[weapon.name].delay < 0:
 			if HX_w_c_d[weapon.name].stage == 0:
 				weapon.visible = true
-				weapon.scale.y += 0.005
+				weapon.scale.y += 0.005 * delta * 60
 				if weapon.scale.y > 0.2:
 					HX_w_c_d[weapon.name].stage = 1
 			elif HX_w_c_d[weapon.name].stage == 1:
@@ -340,7 +340,7 @@ func _process(delta):
 				HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_rot = PI / 8
 				weapon.get_node("CollisionShape2D").disabled = false
 			elif HX_w_c_d[weapon.name].stage == 2:
-				weapon.modulate.a -= 0.02
+				weapon.modulate.a -= 0.02 * delta * 60
 				if weapon.modulate.a <= 0:
 					remove_weapon(weapon, "w_1_2")
 	for weapon in get_tree().get_nodes_in_group("w_1_3"):
@@ -378,14 +378,14 @@ func _process(delta):
 	for weapon in get_tree().get_nodes_in_group("w_2_3"):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position += HX_w_c_d[weapon.name].v
+			weapon.position += HX_w_c_d[weapon.name].v * delta * 60
 			if weapon.position.x < -100:
 				remove_weapon(weapon, "w_2_3")
 	for weapon in get_tree().get_nodes_in_group("w_3_1"):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			weapon.visible = true
-			weapon.position += HX_w_c_d[weapon.name].v
+			weapon.position += HX_w_c_d[weapon.name].v * delta * 60
 			if weapon.position.x < -100:
 				remove_weapon(weapon, "w_3_1")
 	if a_p_c_d.has("pattern") and a_p_c_d.pattern == "3_1":
@@ -400,7 +400,7 @@ func _process(delta):
 	for weapon in get_tree().get_nodes_in_group("w_3_2"):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position -= Vector2(8, 0)
+			weapon.position -= Vector2(10, 0) * delta * 60
 			if weapon.position.x < 300:
 				weapon.get_node("CollisionPolygon2D").disabled = false
 			if weapon.position.x < -100:
@@ -408,12 +408,12 @@ func _process(delta):
 	for weapon in get_tree().get_nodes_in_group("w_3_3"):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position.x -= 5
+			weapon.position.x -= 5 * delta * 60
 			if HX_w_c_d[weapon.name].has("vy"):
 				HX_w_c_d[weapon.name].delay2 -= delta
 				if HX_w_c_d[weapon.name].delay2 < 0:
 					weapon.visible = true
-					weapon.position.y += HX_w_c_d[weapon.name].vy
+					weapon.position.y += HX_w_c_d[weapon.name].vy * delta * 60
 			if weapon.position.x < -150 or weapon.position.y < -20 or weapon.position.y > 740:
 				remove_weapon(weapon, "w_3_3")
 	if star:
@@ -578,7 +578,7 @@ func atk_1_1(id:int):
 		fireball.visible = false
 		fireball.add_to_group("w_1_1")
 		add_child(fireball)
-		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":5, "id":id, "delay":i * 0.4}
+		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":5, "id":id, "delay":i * 0.3}
 
 func atk_1_2(id:int):
 	for i in 4:
@@ -605,7 +605,7 @@ func atk_1_2(id:int):
 
 func atk_1_3(id:int):
 	for i in 5:
-		for j in 9:
+		for j in 18:
 			var bullet = w_1_3.instance()
 			var target:Vector2 = Vector2(1100, rand_range(0, 720))
 			var pos = HXs[id].position
@@ -692,7 +692,7 @@ func atk_3_2(id:int):
 	var dir_bool = true
 	for i in 50:
 		for j in 16:
-			if j >= path and j <= path + 3:
+			if j >= path and j <= path + 4:
 				continue
 			var diamond = w_3_2.instance()
 			diamond.position = Vector2(1350 + i * 48, j * 48)
@@ -715,7 +715,7 @@ func atk_3_2(id:int):
 
 func atk_3_3(id:int):
 	put_magic(id)
-	for i in 5:
+	for i in 3:
 		var platform = w_3_3_1.instance()
 		platform.position = Vector2(1400, rand_range(200, 520))
 		add_child(platform)

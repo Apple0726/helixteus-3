@@ -28,7 +28,8 @@ func _ready():
 	else:
 		$Tile/TextureRect.texture = tile_texture
 	if not tile:
-		tile = {}
+		game.tile_data[id] = {}
+		tile = game.tile_data[id]
 	if tile.has("aurora"):
 		refresh_aurora_bonus()
 	if not tile.has("mining_progress"):
@@ -223,16 +224,16 @@ func pickaxe_hit():
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
 
-func _process(_delta):
+func _process(delta):
 	for cr in crumbles:
 		cr.sprite.position += cr.velocity
-		cr.velocity.y += 0.6
-		cr.sprite.rotation += cr.angular_velocity
+		cr.velocity.y += 0.6 * delta * 60
+		cr.sprite.rotation += cr.angular_velocity * delta * 60
 		if cr.sprite.position.y > 1000:
 			remove_child(cr.sprite)
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
-		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4))
+		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60
 		if circ.position.x < 284:
 			circ_vel.x = -sign(circ_vel.x) * rand_range(1 / 1.2, 1.2)
 			circ.position.x = 284
@@ -250,7 +251,7 @@ func _process(_delta):
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points)
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
-			points += 1
+			points += delta * 60.0
 			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:

@@ -117,8 +117,6 @@ func _on_Button_pressed():
 		tile.bldg.stone_qty = stone_qty
 		tile.bldg.start_date = OS.get_system_time_msecs()
 		tile.bldg.expected_rsrc = expected_rsrc
-		if game.tutorial and game.tutorial.tut_num == 29:
-			game.tutorial.fade()
 		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
@@ -157,7 +155,6 @@ func _on_HSlider_mouse_entered():
 
 func _on_HSlider_mouse_exited():
 	game.view.move_view = true
-
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

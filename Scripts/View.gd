@@ -68,6 +68,8 @@ func _process(_delta):
 			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
 
 func refresh():
+	if game.c_v == "":
+		return
 	var show_ship = false
 	var sh_c:Dictionary = game.ships_c_coords
 	if game.c_v == "universe":
@@ -86,6 +88,7 @@ func refresh():
 	green_line.visible = show_lines
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
+	var progress = Helper.update_ship_travel()
 	if game.ships_travel_view == "-":
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 	else:

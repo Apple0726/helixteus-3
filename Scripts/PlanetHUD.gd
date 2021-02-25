@@ -81,7 +81,7 @@ func _on_PlaceSoil_mouse_entered():
 
 func _on_Vehicles_mouse_entered():
 	on_button = true
-	game.show_tooltip(tr("VEHICLES_ON_PLANET") + " (V)")
+	game.show_tooltip(tr("VEHICLES") + " (V)")
 
 func _on_mouse_exited():
 	on_button = false

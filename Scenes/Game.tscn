@@ -234,7 +234,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.14:"
+text = "Alpha v0.14: 25 Feb 2021"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -656,6 +656,7 @@ one_shot = true
 anims/Fade = SubResource( 13 )
 
 [node name="Ship" type="TextureButton" parent="."]
+visible = false
 margin_right = 68.0
 margin_bottom = 44.0
 rect_pivot_offset = Vector2( 34, 22 )
@@ -672,6 +673,7 @@ __meta__ = {
 [connection signal="mouse_entered" from="UI/Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="UI/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
 [connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
 [connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
 [connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]

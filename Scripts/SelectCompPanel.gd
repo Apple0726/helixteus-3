@@ -74,7 +74,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 				continue
 		else:
 			var l_metal = metal.to_lower()
-			if not l_metal in ["lead", "gemstone"] and not game.show[l_metal]:
+			if not l_metal in ["gemstone"] and not game.show[l_metal]:
 				continue
 			if l_metal == "gemstone":
 				if not game.show.amethyst and not game.show.emerald and not game.show.quartz and not game.show.ruby and not game.show.sapphire and not game.show.topaz:

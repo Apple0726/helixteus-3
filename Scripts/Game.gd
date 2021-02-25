@@ -134,7 +134,7 @@ var show:Dictionary
 var universe_data:Array
 var supercluster_data:Array
 var cluster_data:Array
-var galaxy_data:Array
+var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array
 var planet_data:Array
 var tile_data:Array
@@ -171,7 +171,7 @@ var c_num:int
 
 var stats:Dictionary
 
-enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL}
+enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID}
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 ############ End save data ############
@@ -271,8 +271,6 @@ var music_player = AudioStreamPlayer.new()
 func _ready():
 	if TranslationServer.get_locale() != "fr":
 		TranslationServer.set_locale("en")
-	if not OS.is_userfs_persistent():
-		long_popup("It seems like your browser isn't allowing cookies. If you want to save your game, you should enable them.\nIf you still get this message, play one of the downloadable versions.", "Enable cookies")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
 	view = load("res://Scenes/Views/View.tscn").instance()
@@ -284,12 +282,18 @@ func _ready():
 	
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
+	if err == 7:
+		config.save("user://settings.cfg")
+		err = config.load("user://settings.cfg")
 	if err == OK:
 		switch_music(load("res://Audio/Title.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
+		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
+			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
+			config.set_value("misc", "HTML5", true)
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
@@ -452,14 +456,15 @@ func load_game():
 		stats = save_game.get_var()
 		objective = save_game.get_var()
 		save_game.close()
-		if help.tutorial >= 1 and help.tutorial <= 30:
+		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
+			if c_v in ["cave", "planet"]:
+				tile_data = open_obj("Planets", c_p_g)
+			elif c_v == "mining":
+				c_v = "planet"
 			add_child(HUD)
 			view.set_process(true)
-			switch_view(c_v, true)
-			if c_v in ["mining", "cave", "planet"]:
-				tile_data = open_obj("Planets", c_p_g)
 			var file = Directory.new()
 			if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
 				planet_data = open_obj("Systems", c_s_g)
@@ -467,8 +472,17 @@ func load_game():
 				system_data = open_obj("Galaxies", c_g_g)
 			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
+			else:
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+				Helper.save_obj("Clusters", 0, galaxy_data)
 			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
+			if help.tutorial >= 26:
+				tutorial = load("res://Scenes/Tutorial.tscn").instance()
+				tutorial.visible = false
+				tutorial.tut_num = help.tutorial
+				$UI.add_child(tutorial)
+			switch_view(c_v, true)
 	else:
 		popup("load error", 1.5)
 
@@ -478,11 +492,8 @@ func remove_files(dir:Directory):
 	while file_name != "":
 		dir.remove(file_name)
 		file_name = dir.get_next()
-	
+
 func new_game(tut:bool):
-	if not tut:
-		help.tutorial = -1
-	show.construct_button = not tut
 	var file = File.new()
 	var dir = Directory.new()
 	if file.file_exists("user://Save1/supercluster_data.hx3"):
@@ -594,7 +605,7 @@ func new_game(tut:bool):
 
 	#Display help when players see/do things for the first time. true: show help
 	help = {
-			"tutorial":1,
+			"tutorial":1 if tut else -1,
 			"close_btn1":true,
 			"close_btn2":true,
 			"mining":true,
@@ -637,7 +648,7 @@ func new_game(tut:bool):
 				"shop":false,
 				"SP":false,
 				"mining_layer":false,
-				"construct_button":false,
+				"construct_button":not tut,
 				"plant_button":false,
 				"vehicles_button":false,
 				"materials":false,
@@ -659,8 +670,8 @@ func new_game(tut:bool):
 	universe_data = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	supercluster_data = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
-	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-15000, -15000), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -729,8 +740,8 @@ func new_game(tut:bool):
 	supercluster_data[0].name = tr("LANIAKEA")
 	
 	generate_tiles(2)
-	cave_data.append({"num_floors":5, "floor_size":40})
-	cave_data.append({"num_floors":8, "floor_size":50})
+	cave_data.append({"num_floors":5, "floor_size":30})
+	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	for u_i in universe_data:
 		u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
@@ -755,6 +766,13 @@ func new_game(tut:bool):
 		tutorial.visible = false
 		tutorial.tut_num = 1
 		$UI.add_child(tutorial)
+	Helper.save_obj("Galaxies", 0, system_data)
+	Helper.save_obj("Clusters", 0, galaxy_data)
+	Helper.save_obj("Superclusters", 0, cluster_data)
+	var save_sc = File.new()
+	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+	save_sc.store_var(supercluster_data)
+	save_sc.close()
 	add_child(HUD)
 	add_planet()
 	$Autosave.start()
@@ -858,6 +876,8 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	hide_tooltip()
 	if dialog:
 		$UI.remove_child(dialog)
+		dialog = null
+		return
 	dialog = AcceptDialog.new()
 	dialog.theme = load("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
@@ -1028,6 +1048,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	match c_v:
 		"planet":
 			add_planet()
+			HUD.refresh()
 		"planet_details":
 			planet_details = planet_details_scene.instance()
 			add_child(planet_details)
@@ -1090,8 +1111,6 @@ func add_mining():
 	add_child(mining_HUD)
 
 func remove_mining():
-	mining_HUD.tile.mining_progress = mining_HUD.progress
-	tile_data[c_t] = mining_HUD.tile
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	if tutorial and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
@@ -1198,7 +1217,6 @@ func add_dimension():
 		dimension.visible = true
 	else:
 		dimension = load("res://Scenes/Views/Dimension.tscn").instance()
-		dimension.visible = false
 		add_child(dimension)
 
 func add_universe():
@@ -1621,10 +1639,10 @@ func generate_system_part():
 	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
 		#Second ship can only appear in a system in the rektangle formed by solar system and center of galaxy
 		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
+		rect = rect.abs()
 		for system in system_data:
 			if system.id == 0:
 				continue
-			rect = rect.abs()
 			if rect.has_point(system.pos) and randf() < 0.02:
 				system.second_ship = Helper.rand_int(1, system.planet_num)
 				second_ship_hints.spawned_at = system.id
@@ -1937,7 +1955,7 @@ func generate_planets(id:int):
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets
 			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0))
-			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 2))
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3))
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
@@ -2013,7 +2031,10 @@ func generate_planets(id:int):
 				break
 		p_i.HX_data.shuffle()
 		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
-			p_i.second_ship = true
+			if p_i.type in [11, 12]:
+				planet_data[0].second_ship = true
+			else:
+				p_i.second_ship = true
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
@@ -2158,13 +2179,13 @@ func generate_tiles(id:int):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].cave = {}
 				tile_data[t_id].cave.id = len(cave_data)
-				var floor_size:int = Helper.rand_int(25, 60)
-				var num_floors:int = Helper.rand_int(1, wid / 3)
+				var floor_size:int = Helper.rand_int(25, 50)
+				var num_floors:int = Helper.rand_int(1, wid / 4) + 2
 				if wid > 15:
-					floor_size *= 1.3
-				if wid > 75:
 					floor_size *= 1.2
-				if wid > 150:
+				if wid > 30:
+					floor_size *= 1.2
+				if wid > 45:
 					floor_size *= 1.2
 				if ship_cond:
 					relic_cave_id = t_id
@@ -2199,9 +2220,9 @@ func generate_tiles(id:int):
 	elif p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
-		var dest_id:int = Helper.rand_int(1, 1999)#						local_destination_system_id		global_dest_s_id
+		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#						local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
-	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
+	elif c_s_g != 0 and not second_ship_cave_placed and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
@@ -2272,6 +2293,7 @@ func generate_tiles(id:int):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
 	if ship_signal:
+		objective = {"type":ObjectiveType.SIGNAL, "id":10, "current":0, "goal":1}
 		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
 		second_ship_hints.signal_emitted = true
 
@@ -2788,7 +2810,7 @@ func _input(event):
 			if not c_v in ["STM", ""]:
 				item_to_use.num = 0
 				update_item_cursor()
-		elif not tutorial or tutorial.tut_num >= 31:
+		elif not tutorial or tutorial.tut_num >= 26:
 			if len(panels) != 0:
 				if c_v != "":
 					if not panels[0].polygon:
@@ -2991,7 +3013,7 @@ func fn_save_game(autosave:bool):
 	save_game.close()
 	if view.obj:
 		view.save_zooms(c_v)
-	if c_v == "planet":
+	if c_v in ["planet", "mining"]:
 		Helper.save_obj("Planets", c_p_g, tile_data)
 		Helper.save_obj("Systems", c_s_g, planet_data)
 	elif c_v == "system":
@@ -3120,11 +3142,11 @@ func fade_out_title(fn:String):
 		tut_or_no_tut.connect("new_game", self, "new_game")
 	else:
 		call(fn)
-		$Autosave.start()
 		add_panels()
+		$Autosave.start()
 	
 func _on_NewGame_pressed():
-	if true or $Title/Menu/VBoxContainer/LoadGame.disabled:
+	if $Title/Menu/VBoxContainer/LoadGame.disabled:
 		fade_out_title("new_game")
 	else:
 		show_YN_panel("new_game", tr("START_NEW_GAME"))
@@ -3140,26 +3162,17 @@ func _on_Autosave_timeout():
 		if config.get_value("saving", "enable_autosave", true):
 			fn_save_game(true)
 
-func show_YN_panel(type:String, text:String, args:Array = []):
+var YN_str:String = ""
+func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	$UI/PopupBackground.visible = true
 	YN_panel.dialog_text = text
+	YN_panel.window_title = title
 	YN_panel.popup_centered()
-	if type == "buy_pickaxe":
-		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
-			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
-		YN_panel.connect("confirmed", self, "buy_pickaxe_confirm", args)
-	elif type == "destroy_buildings":
-		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
-			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
-		YN_panel.connect("confirmed", self, "destroy_buildings_confirm", args)
-	elif type == "send_ships":
-		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
-			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
-		YN_panel.connect("confirmed", self, "send_ships_confirm")
-	elif type == "new_game":
-		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
-			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
-		YN_panel.connect("confirmed", self, "new_game_confirm")
+	YN_str = type
+	if type in ["buy_pickaxe", "destroy_buildings", "op_galaxy"]:
+		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
+	else:
+		YN_panel.connect("confirmed", self, "%s_confirm" % type)
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)
@@ -3179,6 +3192,12 @@ func new_game_confirm():
 	fade_out_title("new_game")
 	YN_panel.disconnect("confirmed", self, "new_game_confirm")
 
+func op_galaxy_confirm(l_id:int, g_id:int):
+	c_g_g = g_id
+	c_g = l_id
+	switch_view("galaxy")
+	YN_panel.disconnect("confirmed", self, "op_galaxy_confirm")
+
 func show_collect_info(info:Dictionary):
 	if info.has("stone") and Helper.get_sum_of_dict(info.stone) == 0:
 		info.erase("stone")
@@ -3194,7 +3213,7 @@ func show_collect_info(info:Dictionary):
 	$UI/Panel.visible = true
 	$UI/Panel.modulate.a = 1.0
 	Helper.add_label(tr("YOU_COLLECTED"), 0)
-	$CollectPanelTimer.start(0.5 + 0.3 * $UI/Panel/VBox.get_child_count())
+	$CollectPanelTimer.start(min(2.5, 0.5 + 0.3 * $UI/Panel/VBox.get_child_count()))
 	$CollectPanelAnim.stop()
 
 func _on_CollectPanelTimer_timeout():
@@ -3212,3 +3231,8 @@ func _on_Ship_mouse_entered():
 
 func _on_mouse_exited():
 	hide_tooltip()
+
+func _on_ConfirmationDialog_popup_hide():
+	yield(get_tree().create_timer(0), "timeout")
+	if YN_panel.is_connected("confirmed", self, "%s_confirm" % YN_str):
+		YN_panel.disconnect("confirmed", self, "%s_confirm" % YN_str)

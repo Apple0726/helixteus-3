@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=2]
+[gd_scene load_steps=93 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -29,6 +29,7 @@
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=27]
 [ext_resource path="res://Graphics/Cave/RelicDetails.png" type="Texture" id=28]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=29]
+[ext_resource path="res://Graphics/Misc/Glow.png" type="Texture" id=30]
 
 [sub_resource type="TileSet" id=1]
 0/name = "3.jpg 0"
@@ -707,6 +708,22 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
+[sub_resource type="Animation" id=62]
+resource_name = "RoverSprint"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Rover/Glow:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [node name="Cave" type="Node2D"]
 script = ExtResource( 2 )
 __meta__ = {
@@ -808,6 +825,12 @@ offset = Vector2( 0, -8 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 300, 16 )
 
+[node name="Glow" type="Sprite" parent="Rover"]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 0, -1 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 30 )
+
 [node name="Sprite" type="Sprite" parent="Rover"]
 texture = ExtResource( 11 )
 
@@ -866,6 +889,17 @@ margin_top = 660.0
 margin_right = 1280.0
 margin_bottom = 720.0
 custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActiveItem" type="Label" parent="UI2"]
+margin_top = 628.0
+margin_right = 300.0
+margin_bottom = 652.0
+theme = ExtResource( 29 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1071,6 +1105,9 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RoverSprint = SubResource( 62 )
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_Exit_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]

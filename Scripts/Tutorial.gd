@@ -4,7 +4,7 @@ onready var game = get_node("/root/Game")
 var tween:Tween
 var tut_num:int
 var click_anywhere:bool = false
-var BG_blocked:bool = true
+var BG_blocked:bool = false
 var PP_built:int = 0
 
 func _ready():
@@ -13,11 +13,12 @@ func _ready():
 	$AnimationPlayer.play("Blinking")
 	modulate.a = 0
 	if tut_num == 1:
+		BG_blocked = true
 		yield(get_tree().create_timer(1.5), "timeout")
 		begin()
 
 func begin():
-	click_anywhere = tut_num in [1, 16, 17, 22, 23, 25, 26, 27, 30, 31, 32, 33, 34, 35]
+	click_anywhere = tut_num in [1, 16, 17, 22, 23, 25, 26, 27, 28, 29, 30]
 	if tut_num == 2:
 		game.show.construct_button = true
 		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
@@ -27,20 +28,20 @@ func begin():
 	elif tut_num == 17:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":-1, "current":0, "goal":1}
 		game.HUD.refresh()
-	elif tut_num == 31:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":0, "current":0, "goal":1}
-		game.show.construct_button = true
-		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
-		game.stats.bldgs_built = 20
-		game.money = 100000
-		game.energy = 100000
-		game.SP = 10000
-		game.mats.silicon = 30
-		game.stone.O = 600
-		for sh in game.show:
-			game.show[sh] = true
+	elif tut_num == 26:
+		game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":0, "current":0, "goal":10}
+#		game.show.construct_button = true
+#		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
+#		game.stats.bldgs_built = 20
+#		game.money = 100000
+#		game.energy = 100000
+#		game.SP = 10000
+#		game.mats.silicon = 30
+#		game.stone.O = 600
+#		for sh in game.show:
+#			game.show[sh] = true
 		game.HUD.refresh()
-	var node = get_node(String(tut_num)) if tut_num <= 31 else get_node("31")
+	var node = get_node(String(tut_num)) if tut_num <= 26 else get_node("26")
 	var node_label
 	if node.has_node("Label"):
 		node_label = node.get_node("Label")
@@ -65,16 +66,9 @@ func fade(spd:float = 0.4, begin:bool = true):
 	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0), spd)
 	tween.start()
 	yield(tween, "tween_all_completed")
-#	if tut_num == 31:
-#		click_anywhere = false
-#		BG_blocked = false
-#		game.get_node("UI").remove_child(game.tutorial)
-#		game.tutorial = null
-#		game.help.tutorial = false
-#		return
-	get_node(String(tut_num if tut_num <= 31 else 31)).visible = false
+	get_node(String(tut_num if tut_num <= 26 else 26)).visible = false
 	tut_num += 1
-	var node = get_node(String(tut_num if tut_num <= 31 else 31))
+	var node = get_node(String(tut_num if tut_num <= 26 else 26))
 	BG_blocked = node.visible and node.has_node("Polygon")
 	if tut_num == 4:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "id":-1, "current":0, "goal":5}
@@ -86,26 +80,23 @@ func fade(spd:float = 0.4, begin:bool = true):
 	elif tut_num == 9:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":4}
 		game.HUD.refresh()
-	elif tut_num in [18, 26, 28, 31, 32, 35, 36]:
+	elif tut_num in [18, 26, 27, 30, 31]:
 		begin = false
 	elif tut_num == 20:
 		$RLCheckTimer.start()
 	elif tut_num == 22:
 		$RLCheckTimer2.start()
 	elif tut_num == 24:
-		game.objective = {"type":game.ObjectiveType.SAVE, "data":"SP", "id":-1, "current":game.SP, "goal":10}
+		game.objective = {"type":game.ObjectiveType.SAVE, "data":"SP", "id":-1, "current":game.SP, "goal":5}
 		game.HUD.refresh()
 		begin = false
-	elif tut_num == 27:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"SC", "id":-1, "current":0, "goal":1}
-		game.HUD.refresh()
-	elif tut_num == 30:
-		game.objective = {"type":game.ObjectiveType.SAVE, "data":"mats/silicon", "id":-1, "current":game.mats.silicon, "goal":20}
-		game.HUD.refresh()
-	elif tut_num == 34:
+#	elif tut_num == 30:
+#		game.objective = {"type":game.ObjectiveType.SAVE, "data":"mats/silicon", "id":-1, "current":game.mats.silicon, "goal":20}
+#		game.HUD.refresh()
+	elif tut_num == 29:
 		if len(game.ship_data) != 0:
-			tut_num = 35
-	elif tut_num == 35:
+			tut_num = 30
+	elif tut_num == 30:
 		begin = false
 	game.help.tutorial = tut_num
 	if begin:
@@ -147,10 +138,6 @@ func _on_RLCheckTimer2_timeout():
 	for tile in game.tile_data:
 		if not tile:
 			continue
-		if tile.has("bldg") and tile.bldg.name == "RL" and tile.bldg.has("overclock_date"):
+		if tile.has("bldg") and tile.bldg.has("overclock_date"):
 			begin()
 			$RLCheckTimer2.stop()
-
-
-func _on_SCCheckTimer_timeout():
-	pass # Replace with function body.
