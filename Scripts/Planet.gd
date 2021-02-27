@@ -146,7 +146,7 @@ func show_tooltip(tile):
 		var IR_mult:float = tile.bldg.IR_mult#Helper.get_IR_mult(tile.bldg.name)
 		var path_1_value
 		if bldg == "SP":
-			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult)
+			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, Helper.get_au_mult(tile))
 		elif bldg == "AE":
 			path_1_value = Helper.get_AE_production(p_i.pressure, tile.bldg.path_1_value * mult)
 		else:
@@ -263,7 +263,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":3600 * pow(game.stats.wormholes_activated + 1, 0.2)}
+	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2)}
 
 func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 	if bldg_to_construct == "":
@@ -325,8 +325,7 @@ func seeds_plant(tile, tile_id:int):
 		game.item_to_use.num -= 1
 		tile.plant.plant_date = curr_time
 		tile.plant.grow_time = game.craft_agriculture_info[game.item_to_use.name].grow_time
-		if tile.has("aurora"):
-			tile.plant.grow_time /= pow(1 + tile.aurora.au_int, Helper.get_AIE())
+		tile.plant.grow_time /= Helper.get_au_mult(tile)
 		if tile.has("bldg") and tile.bldg.name == "GH":
 			tile.plant.grow_time /= tile.bldg.path_1_value
 		if check_lake[1] == "l":
@@ -351,8 +350,7 @@ func harvest_plant(tile, tile_id:int):
 	if curr_time >= tile.plant.grow_time + tile.plant.plant_date:
 		var plant:String = Helper.get_plant_produce(tile.plant.name)
 		var produce:float = game.craft_agriculture_info[tile.plant.name].produce
-		if tile.has("aurora"):
-			produce *= pow(1 + tile.aurora.au_int, Helper.get_AIE())
+		produce *= Helper.get_au_mult(tile)
 		if tile.has("bldg") and tile.bldg.name == "GH":
 			produce *= tile.bldg.path_2_value
 		#game.mets[plant] += produce
@@ -944,6 +942,8 @@ func add_bldg(id2:int, st:String):
 		add_time_bar(id2, "overclock")
 	if tile.bldg.is_constructing:
 		add_time_bar(id2, "bldg")
+	else:
+		Helper.update_rsrc(p_i, tile)
 
 func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]

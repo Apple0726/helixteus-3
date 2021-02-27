@@ -229,8 +229,8 @@ FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais a
 NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los objetos fueron fabricados,
 NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los objetos fueron comprados,
 NOT_ENOUGH_INV_SPACE_COLLECT,Inventory full: not all items were collected,Inventaire plein: pas tous les objets étaient collectés,Inventario pieno: alcuni oggetti non possono essere raccolti,,,,
-HIDE_HELP,Press F7 to not show this information again,Appuyez sur F7 pour ne plus afficher cette information,Premere F7 per non mostrare più questa informazione,,,Presiona F7 para no volver a mostrar este mensaje,
-HIDE_SHORTCUTS,Press F7 to hide this shortcut information,Appuyez sur F7 pour ne plus afficher cette liste de raccourcis,Premere F7 per non mostrare più questa lista di scorciatoie,,,Presiona F7 para ocultar esta información,단축키 정보 숨길려면 F7 누르세요
+HIDE_HELP,Press J to not show this information again,Appuyez sur J pour ne plus afficher cette information,Premere J per non mostrare più questa informazione,,,Presiona J para no volver a mostrar este mensaje,
+HIDE_SHORTCUTS,Press J to hide this shortcut information,Appuyez sur J pour ne plus afficher cette liste de raccourcis,Premere J per non mostrare più questa lista di scorciatoie,,,Presiona J para ocultar esta información,단축키 정보 숨길려면 J 누르세요
 EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,Extrae %s,추출 속도: %s
 GENERATES_X,Generates %s,Produit %s,Produce %s,,,Genera %s,발전 속도: %s
 PRODUCES_X,Produces %s,Produit %s,Produce %s,,,Produce %s,생산 속도: %s

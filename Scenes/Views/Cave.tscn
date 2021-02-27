@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=2]
+[gd_scene load_steps=144 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -30,6 +30,7 @@
 [ext_resource path="res://Graphics/Cave/RelicDetails.png" type="Texture" id=28]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=29]
 [ext_resource path="res://Graphics/Misc/Glow.png" type="Texture" id=30]
+[ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=31]
 
 [sub_resource type="TileSet" id=1]
 0/name = "3.jpg 0"
@@ -158,6 +159,147 @@
 8/shape_one_way_margin = 0.0
 8/shapes = [  ]
 8/z_index = 0
+
+[sub_resource type="OccluderPolygon2D" id=63]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=64]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=65]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=72]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=66]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=110]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=68]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=73]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=69]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=70]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=71]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=74]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=75]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=76]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=77]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=78]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=79]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=80]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=81]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=82]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=83]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=84]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=85]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=86]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=87]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=88]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=89]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=90]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=91]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=92]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=93]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=94]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=95]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=96]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=97]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=98]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=99]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=100]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=101]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=102]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=103]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=104]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=105]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=106]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=107]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=108]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+
+[sub_resource type="OccluderPolygon2D" id=109]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
@@ -312,7 +454,7 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 0/autotile/icon_coordinate = Vector2( 0, 0 )
 0/autotile/tile_size = Vector2( 200, 200 )
 0/autotile/spacing = 0
-0/autotile/occluder_map = [  ]
+0/autotile/occluder_map = [ Vector2( 0, 0 ), SubResource( 63 ), Vector2( 0, 1 ), SubResource( 64 ), Vector2( 0, 2 ), SubResource( 65 ), Vector2( 0, 3 ), SubResource( 72 ), Vector2( 1, 0 ), SubResource( 66 ), Vector2( 1, 1 ), SubResource( 110 ), Vector2( 1, 2 ), SubResource( 68 ), Vector2( 1, 3 ), SubResource( 73 ), Vector2( 2, 0 ), SubResource( 69 ), Vector2( 2, 1 ), SubResource( 70 ), Vector2( 2, 2 ), SubResource( 71 ), Vector2( 2, 3 ), SubResource( 74 ), Vector2( 3, 0 ), SubResource( 75 ), Vector2( 3, 1 ), SubResource( 76 ), Vector2( 3, 2 ), SubResource( 77 ), Vector2( 3, 3 ), SubResource( 78 ), Vector2( 4, 0 ), SubResource( 79 ), Vector2( 4, 1 ), SubResource( 80 ), Vector2( 4, 2 ), SubResource( 81 ), Vector2( 4, 3 ), SubResource( 82 ), Vector2( 4, 4 ), SubResource( 83 ), Vector2( 5, 0 ), SubResource( 84 ), Vector2( 5, 1 ), SubResource( 85 ), Vector2( 5, 2 ), SubResource( 86 ), Vector2( 5, 3 ), SubResource( 87 ), Vector2( 5, 4 ), SubResource( 88 ), Vector2( 6, 0 ), SubResource( 89 ), Vector2( 6, 1 ), SubResource( 90 ), Vector2( 6, 2 ), SubResource( 91 ), Vector2( 6, 3 ), SubResource( 92 ), Vector2( 6, 4 ), SubResource( 93 ), Vector2( 7, 0 ), SubResource( 94 ), Vector2( 7, 1 ), SubResource( 95 ), Vector2( 7, 2 ), SubResource( 96 ), Vector2( 7, 3 ), SubResource( 97 ), Vector2( 7, 4 ), SubResource( 98 ), Vector2( 8, 0 ), SubResource( 99 ), Vector2( 8, 1 ), SubResource( 100 ), Vector2( 8, 2 ), SubResource( 101 ), Vector2( 8, 3 ), SubResource( 102 ), Vector2( 8, 4 ), SubResource( 103 ), Vector2( 9, 0 ), SubResource( 104 ), Vector2( 9, 1 ), SubResource( 105 ), Vector2( 9, 2 ), SubResource( 106 ), Vector2( 9, 3 ), SubResource( 107 ), Vector2( 10, 2 ), SubResource( 108 ), Vector2( 10, 3 ), SubResource( 109 ) ]
 0/autotile/navpoly_map = [  ]
 0/autotile/priority_map = [  ]
 0/autotile/z_index_map = [  ]
@@ -708,7 +850,57 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
+[sub_resource type="Animation" id=111]
+resource_name = "Aurora"
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("AuroraModulate:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2, 3, 4, 5, 6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.784314, 1, 0.784314, 1 ), Color( 0.784314, 1, 1, 1 ), Color( 0.784314, 0.784314, 1, 1 ), Color( 1, 0.784314, 1, 1 ), Color( 1, 0.784314, 0.784314, 1 ), Color( 1, 1, 0.784314, 1 ), Color( 0.784314, 1, 0.784314, 1 ) ]
+}
+
 [sub_resource type="Animation" id=62]
+resource_name = "RoverSprint"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Rover/Glow:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=112]
+resource_name = "Aurora"
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("AuroraModulate:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2, 3, 4, 5, 6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.784314, 1, 0.784314, 1 ), Color( 0.784314, 1, 1, 1 ), Color( 0.784314, 0.784314, 1, 1 ), Color( 1, 0.784314, 1, 1 ), Color( 1, 0.784314, 0.784314, 1 ), Color( 1, 1, 0.784314, 1 ), Color( 0.784314, 1, 0.784314, 1 ) ]
+}
+
+[sub_resource type="Animation" id=113]
 resource_name = "RoverSprint"
 length = 0.1
 tracks/0/type = "value"
@@ -731,7 +923,7 @@ __meta__ = {
 }
 
 [node name="TileMap" type="TileMap" parent="."]
-modulate = Color( 1, 1, 1, 0.682353 )
+modulate = Color( 1, 1, 1, 0.678431 )
 tile_set = SubResource( 1 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
@@ -794,6 +986,15 @@ process_material = SubResource( 53 )
 collision_layer = 2
 collision_mask = 37
 
+[node name="Light2D" type="Light2D" parent="Rover"]
+visible = false
+texture = ExtResource( 31 )
+texture_scale = 3.0
+energy = 0.8
+shadow_enabled = true
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_buffer_size = 1024
+
 [node name="HPBG" type="ColorRect" parent="Rover"]
 margin_left = -48.0
 margin_top = 64.0
@@ -827,6 +1028,7 @@ region_rect = Rect2( 0, 0, 300, 16 )
 
 [node name="Glow" type="Sprite" parent="Rover"]
 modulate = Color( 1, 1, 1, 0 )
+light_mask = -2147483647
 position = Vector2( 0, -1 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 30 )
@@ -840,8 +1042,8 @@ shape = SubResource( 54 )
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
 [node name="TileHighlight" type="Sprite" parent="."]
-visible = false
 modulate = Color( 1, 1, 1, 0.192157 )
+light_mask = -2147483646
 position = Vector2( 0, -1 )
 texture = ExtResource( 22 )
 
@@ -849,26 +1051,32 @@ texture = ExtResource( 22 )
 
 [node name="MinimapBG" type="Sprite" parent="UI"]
 modulate = Color( 0, 0, 0, 1 )
+light_mask = -2147483647
 position = Vector2( 636, 360 )
 texture = ExtResource( 15 )
 
 [node name="Minimap" type="Node2D" parent="UI"]
+light_mask = -2147483647
 
 [node name="TileMap" type="TileMap" parent="UI/Minimap"]
+light_mask = -2147483647
 tile_set = SubResource( 1 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
 
 [node name="Hole" type="Sprite" parent="UI/Minimap"]
+light_mask = -2147483647
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 17 )
 
 [node name="Exit" type="Sprite" parent="UI/Minimap"]
+light_mask = -2147483647
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 21 )
 
 [node name="Rover" type="Sprite" parent="UI"]
+light_mask = -2147483647
 texture = ExtResource( 16 )
 
 [node name="Mask" type="Light2D" parent="UI"]
@@ -877,6 +1085,7 @@ texture = ExtResource( 15 )
 mode = 3
 range_layer_min = 1
 range_layer_max = 1
+range_item_cull_mask = -2147483647
 __meta__ = {
 "_edit_lock_": true
 }
@@ -1107,7 +1316,17 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Aurora = SubResource( 111 )
 anims/RoverSprint = SubResource( 62 )
+
+[node name="AuroraPlayer" type="AnimationPlayer" parent="."]
+anims/Aurora = SubResource( 112 )
+anims/RoverSprint = SubResource( 113 )
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+[node name="AuroraModulate" type="Node2D" parent="."]
+modulate = Color( 0.784314, 1, 0.784314, 1 )
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_Exit_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]

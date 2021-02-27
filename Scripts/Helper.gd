@@ -377,6 +377,7 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	tween.interpolate_property(lb, "rect_position", null, pos - Vector2(0, 55), dur, Tween.TRANS_BACK, Tween.EASE_OUT)
 	add_child(tween)
 	tween.start()
+	#lb.light_mask = 2
 	parent.add_child(lb)
 	yield(tween, "tween_all_completed")
 	if parent:
@@ -384,18 +385,31 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		remove_child(tween)
 
 func add_minerals(amount:float, add:bool = true):
-	var mineral_space_available = round(game.mineral_capacity) - round(game.minerals)
+	var mineral_space_available:float = round(game.mineral_capacity) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
 			game.minerals += amount
 		return {"added":amount, "remainder":0}
 	else:
-		if add:
-			game.minerals = game.mineral_capacity
-		return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
+		if game.autosell:
+			if add:
+				var diff:float = round(amount) - round(mineral_space_available)
+				game.minerals = fmod(diff, round(game.mineral_capacity))
+				game.money += ceil(diff / game.mineral_capacity) * round(game.mineral_capacity) * (game.MUs.MV + 4)
+			return {"added":amount, "remainder":0}
+		else:
+			if add:
+				game.minerals = game.mineral_capacity
+			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):
 	return 0.48 + (game.MUs.AIE + next_lv) / 50.0
+
+func get_au_mult(tile:Dictionary):
+	if tile.has("aurora"):
+		return pow(1 + tile.aurora.au_int, get_AIE())
+	else:
+		return 1.0
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
@@ -458,7 +472,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		tile.erase("crater")
 
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
-	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, get_AIE())) if tile.has("aurora") else 1.0
+	var aurora_mult = game.clever_round(get_au_mult(tile))
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -503,7 +517,7 @@ func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
 	return stone
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
-	var aurora_mult = game.clever_round(pow(1 + tile.aurora.au_int, get_AIE())) if tile.has("aurora") else 1.0
+	var aurora_mult = game.clever_round(get_au_mult(tile))
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -588,9 +602,11 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 	if idx != -1:
 		vbox.move_child(label, idx)
 
-func get_SP_production(temp:float, value:float):
-	return game.clever_round(value * temp / 273.0, 3)
+#solar panels
+func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
+	return game.clever_round(value * temp * au_mult / 273.0, 3)
 
+#atm extractor
 func get_AE_production(pressure:float, value:float):
 	return game.clever_round(value * pressure, 3)
 
@@ -612,7 +628,7 @@ func update_rsrc(p_i, tile, rsrc = null):
 			#Number of seconds needed per mineral
 			var prod
 			if tile.bldg.name == "SP":
-				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value)
+				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, get_au_mult(tile))
 			elif tile.bldg.name == "AE":
 				prod = 1000 / get_AE_production(p_i.pressure, tile.bldg.path_1_value)
 			else:
@@ -822,8 +838,8 @@ func update_bldg_constr(tile):
 			if game.c_v == "planet":
 				update_boxes = true
 			if tile.bldg.name == "MS":
-				update_MS(tile)
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade * tile.bldg.IR_mult
+				update_MS(tile)
 			game.HUD.refresh()
 	return update_boxes
 

@@ -7,6 +7,7 @@ var support_bldgs:Array = ["GH"]
 var vehicles_bldgs:Array = ["RCC"]
 
 func _ready():
+	type = PanelType.CONSTRUCT
 	tab = "Basic"
 	$Title.text = tr("CONSTRUCT")
 	for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
@@ -83,15 +84,15 @@ func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _d
 	game.add_text_icons(desc_txt, desc, icons, 22)
 
 func _on_Buy_pressed():
-	get_item(item_name, item_costs, null, null)
+	get_item(item_name, null, null)
 
-func get_item(_name, costs, _type, _dir):
+func get_item(_name, _type, _dir):
 	if _name == "" or game.c_v != "planet":
 		return
 	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	game.view.obj.construct(_name, costs)
+	game.view.obj.construct(_name, item_costs)
 	if game.tutorial and game.tutorial.tut_num in [3, 5]:
 		game.tutorial.fade(0.15, false)
 

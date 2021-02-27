@@ -7,8 +7,9 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
+onready var aurora = tile.has("aurora")
 #Aurora intensity
-onready var au_int:float = tile.aurora.au_int if tile.has("aurora") else 0
+onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = game.clever_round(pow(1 + au_int, 1.5), 3)
 onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult
 
@@ -20,6 +21,7 @@ onready var MM_hole = $UI/Minimap/Hole
 onready var MM_exit = $UI/Minimap/Exit
 onready var MM = $UI/Minimap
 onready var rover = $Rover
+onready var rover_light = $Rover/Light2D
 onready var camera = $Camera2D
 onready var exit = $Exit
 onready var hole = $Hole
@@ -28,6 +30,8 @@ onready var ray = $Rover/RayCast2D
 onready var mining_laser = $Rover/MiningLaser
 onready var mining_p = $MiningParticles
 onready var tile_highlight = $TileHighlight
+onready var canvas_mod = $CanvasModulate
+onready var aurora_mod = $AuroraModulate
 onready var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
@@ -42,6 +46,7 @@ var floor_seeds = []
 var id:int#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
+var light_amount:float = 1.0
 
 #Rover stats
 var atk:float = 5.0
@@ -99,8 +104,10 @@ func _ready():
 		$UI2/Controls.visible = true
 		game.help_str = "cave_controls"
 		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-	if game.objective.id == 2:
+	if not game.objective.empty() and game.objective.id == 2:
 		game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
+	if aurora:
+		$AuroraPlayer.play("Aurora", -1, 0.2)
 
 func set_rover_data():
 	HP = rover_data.HP
@@ -275,9 +282,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var n = room.size
 		for tile in room.tiles:
 			var rand = rng.randf()
-			var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * aurora_mult
+			var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8)
 			if rand < formula:
-				var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
+				var tier:int = int(clamp(pow(formula / rand * aurora_mult, 0.2), 1, 5))
 				var contents:Dictionary = generate_treasure(tier, rng)
 				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 					continue
@@ -619,11 +626,17 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				difficulty *= 2
+				light_amount = clamp((9 - cave_floor) * 0.125, 0.2, 1)
+				rover_light.energy = 1 - light_amount
+				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
 				difficulty /= 2
+				light_amount = clamp((9 - cave_floor) * 0.125, 0.2, 1)
+				rover_light.energy = 1 - light_amount
+				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
@@ -689,6 +702,9 @@ func _process(delta):
 		elif inventory[curr_slot].type == "rover_mining" and tile_highlighted != -1:
 			hit_rock(delta)
 			update_ray()
+	if aurora:
+		canvas_mod.color = aurora_mod.modulate * light_amount
+		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
 			enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom

@@ -22,6 +22,7 @@ func _ready():
 		$Vsync.pressed = config.get_value("graphics", "vsync", true)
 		$AutosaveLight.pressed = config.get_value("saving", "autosave_light", false)
 		$EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
+		$AutosellMinerals.pressed = config.get_value("game", "autosell", false)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		#$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
@@ -98,4 +99,19 @@ func _on_FPS_value_changed(value):
 		$FPS/Label2.text = String(value)
 		OS.low_processor_usage_mode_sleep_usec = 1000000 / value
 		config.set_value("rendering", "max_fps", value)
+		config.save("user://settings.cfg")
+
+
+func _on_AutosellMinerals_mouse_entered():
+	game.show_tooltip(tr("AUTOSELL_MINERALS_DESC"))
+
+
+func _on_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_AutosellMinerals_toggled(button_pressed):
+	if err == OK:
+		config.set_value("game", "autosell", button_pressed)
+		game.autosell = button_pressed
 		config.save("user://settings.cfg")

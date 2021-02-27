@@ -47,17 +47,20 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SPR":{"money":6500000, "energy":61300, "time":1400.0},
 }
 
-var MS_costs = {	"M_DS_0":{"money":13000000000, "stone":800000000, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
+func e(n, e):
+	return n * pow(10, e)
+
+var MS_costs = {	"M_DS_0":{"money":e(1.3, 10), "stone":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"M_SE_0":{"money":700000, "stone":50000, "energy":20000, "copper":800, "iron":1000, "aluminium":300, "time":2*3600},#2*3600
 					"M_SE_1":{"money":3200000, "stone":200000, "energy":40000, "copper":1000, "iron":1400, "aluminium":400, "time":8*3600},#8, 8, 12
 					"M_SE_2":{"money":6800000, "stone":350000, "energy":60000, "copper":2000, "iron":2800, "aluminium":800, "time":8*3600},
 					"M_SE_3":{"money":10000000, "stone":500000, "energy":80000, "copper":8000, "iron":10000, "aluminium":3000, "time":12*3600},
-					"M_MME_0":{"money":50000000, "stone":4000000, "copper":1000, "iron":800, "aluminium":3000, "titanium":300, "time":8 * 3600},#* 3600
-					"M_MME_1":{"money":4500000000, "stone":320000000, "copper":90000, "iron":75000, "aluminium":300000, "titanium":30000, "time":32},
+					"M_MME_0":{"money":e(5, 8), "stone":e(4, 7), "copper":8000, "iron":95000, "aluminium":25000, "titanium":5000, "time":8 * 3600},#* 3600
+					"M_MME_1":{"money":e(3.5, 10), "stone":e(3.2, 9), "copper":90000, "iron":4500000, "aluminium":900000, "titanium":300000, "time":32 * 3600},
 }
 
 var MS_output = {	"M_DS_0":450000000,
-					"M_MME_0":6000,
+					"M_MME_0":600,
 					"M_MME_1":475000,
 }
 

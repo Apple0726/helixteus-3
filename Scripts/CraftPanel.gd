@@ -1,6 +1,7 @@
 extends "GenericPanel.gd"
 
 func _ready():
+	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
 	for btn_str in ["Agriculture"]:
 		var btn = Button.new()
@@ -51,18 +52,18 @@ func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
 	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 
-func get_item(_name, costs, _type, _dir):
+func get_item(_name, _type, _dir):
 	item_name = _name
 	item_type = _type
 	item_dir = _dir
-	if game.check_enough(costs):
-		game.deduct_resources(costs)
+	if game.check_enough(item_total_costs):
+		game.deduct_resources(item_total_costs)
 		add_items(tr("NOT_ENOUGH_INV_SPACE_CRAFT"), tr("CRAFT_SUCCESS"))
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func _on_Buy_pressed():
-	get_item(item_name, item_total_costs, item_type, item_dir)
+	get_item(item_name, item_type, item_dir)
 
 func get_item_desc(item:String):
 	match item:

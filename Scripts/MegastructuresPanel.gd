@@ -31,7 +31,7 @@ func remove_costs():
 		if not child is Label:
 			vbox.remove_child(child)
 
-func get_item(_name, costs, _type, _dir):
+func get_item(_name, _type, _dir):
 	if _name == "" or game.c_v != "system":
 		return
 	game.toggle_panel(game.megastructures_panel)

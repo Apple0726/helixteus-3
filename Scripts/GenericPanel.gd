@@ -1,5 +1,6 @@
 extends "Panel.gd"
 
+enum PanelType {SHOP, CRAFT, CONSTRUCT}
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 onready var amount_node = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
@@ -7,6 +8,7 @@ onready var buy_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy
 onready var grid = $Contents/HBoxContainer/Items/Items
 onready var desc_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Description
 var num:int = 1
+var type:int
 
 var item_type:String = ""
 var item_dir:String = ""
@@ -17,6 +19,22 @@ var item_name = ""
 
 func _ready():
 	set_polygon($Background.rect_size)
+
+func _input(event):
+	if Input.is_action_just_pressed("shift"):
+		if type == PanelType.SHOP and tab != "Pickaxes":
+			for grid_el in grid.get_children():
+				grid_el.get_node("SmallButton").text = "%s 10" % tr("BUY")
+		elif type == PanelType.CRAFT:
+			for grid_el in grid.get_children():
+				grid_el.get_node("SmallButton").text = "%s 10" % tr("CRAFT")
+	elif Input.is_action_just_released("shift"):
+		if type == PanelType.SHOP and tab != "Pickaxes":
+			for grid_el in grid.get_children():
+				grid_el.get_node("SmallButton").text = tr("BUY")
+		elif type == PanelType.CRAFT:
+			for grid_el in grid.get_children():
+				grid_el.get_node("SmallButton").text = tr("CRAFT")
 
 func change_tab(btn_str:String):
 	for item in $Contents/HBoxContainer/Items/Items.get_children():

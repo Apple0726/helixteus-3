@@ -265,6 +265,7 @@ var element = {	"Si":{"density":2.329},
 var help_str:String
 var bottom_info_action:String = ""
 var autosave_interval:int = 10
+var autosell:bool = true
 
 var music_player = AudioStreamPlayer.new()
 
@@ -294,6 +295,7 @@ func _ready():
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
 			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
+		autosell = config.get_value("game", "autosell", false)
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
@@ -374,7 +376,7 @@ func _ready():
 		yield(tween, "tween_all_completed")
 		remove_child(tween)
 
-func switch_music(src):
+func switch_music(src, pitch:float = 1.0):
 	#Music fading
 	var tween = Tween.new()
 	add_child(tween)
@@ -383,6 +385,7 @@ func switch_music(src):
 		tween.start()
 		yield(tween, "tween_all_completed")
 	music_player.stream = src
+	music_player.pitch_scale = pitch
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
@@ -895,10 +898,12 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 
 func popup_close():
 	$UI/PopupBackground.visible = false
+	if dialog:
+		$UI.remove_child(dialog)
+		dialog = null
 
 func popup_action(action:String):
 	call(action)
-	dialog.visible = false
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
@@ -1085,7 +1090,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			add_child(cave)
 			cave.rover_data = rover_data[rover_id]
 			cave.set_rover_data()
-			switch_music(load("res://Audio/cave1.ogg"))
+			switch_music(load("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 		"STM":
 			$Ship.visible = false
 			remove_child(HUD)
@@ -1637,13 +1642,13 @@ func generate_system_part():
 			update_loading_bar(i, N, tr("GENERATING_GALAXY"))
 			yield(get_tree().create_timer(0.0000000000001),"timeout")
 	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
-		#Second ship can only appear in a system in the rektangle formed by solar system and center of galaxy
+		#Second ship can only appear in a system in the rectangle formed by solar system and center of galaxy
 		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
 		rect = rect.abs()
 		for system in system_data:
 			if system.id == 0:
 				continue
-			if rect.has_point(system.pos) and randf() < 0.02:
+			if rect.has_point(system.pos) and randf() < 0.1:
 				system.second_ship = Helper.rand_int(1, system.planet_num)
 				second_ship_hints.spawned_at = system.id
 				break
@@ -2830,7 +2835,7 @@ func _input(event):
 		if overlay:
 			overlay._on_CheckBox_pressed()
 	
-	#F7 to hide help
+	#J to hide help
 	if Input.is_action_just_released("hide_help"):
 		help[help_str] = false
 		hide_tooltip()

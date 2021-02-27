@@ -14,7 +14,7 @@ func _ready():
 
 func _input(event):
 	if modulate.a == 1 and Input.is_action_just_released("X") and rover_over_id != -1:
-		game.rover_data.remove(rover_over_id)
+		game.rover_data[rover_over_id] = null
 		rover_over_id = -1
 		game.hide_adv_tooltip()
 		refresh()
@@ -25,6 +25,8 @@ func refresh():
 		hbox.remove_child(rov)
 	for i in len(game.rover_data):
 		var rov = game.rover_data[i]
+		if not rov:
+			continue
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()

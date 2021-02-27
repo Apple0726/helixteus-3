@@ -148,11 +148,21 @@ __meta__ = {
 }
 
 [node name="AutosaveLight" type="CheckButton" parent="."]
-margin_left = 558.035
+margin_left = 558.876
 margin_top = 265.869
-margin_right = 786.035
+margin_right = 786.876
 margin_bottom = 305.869
 text = "AUTOSAVE_LIGHT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AutosellMinerals" type="CheckButton" parent="."]
+margin_left = 123.293
+margin_top = 361.731
+margin_right = 351.293
+margin_bottom = 401.731
+text = "AUTOSELL_MINERALS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -205,5 +215,8 @@ __meta__ = {
 [connection signal="value_changed" from="Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
 [connection signal="toggled" from="AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
+[connection signal="mouse_entered" from="AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
+[connection signal="mouse_exited" from="AutosellMinerals" to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="value_changed" from="FPS/FPS" to="." method="_on_FPS_value_changed"]

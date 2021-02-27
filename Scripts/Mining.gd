@@ -4,7 +4,6 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var id:int = game.c_t
 onready var tile = game.tile_data[id]
-onready var au_int:float = tile.aurora.au_int if tile and tile.has("aurora") else 0
 onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
 var contents:Dictionary
@@ -50,7 +49,7 @@ func _ready():
 
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
-	aurora_mult = game.clever_round(pow(1 + au_int, Helper.get_AIE()))
+	aurora_mult = game.clever_round(Helper.get_au_mult(tile))
 	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info():
