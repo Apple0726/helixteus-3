@@ -1,7 +1,7 @@
 extends Panel
 
 onready var game = get_node("/root/Game")
-onready var hbox = $HBox
+onready var hbox = $ScrollContainer2/HBox
 var polygon
 var g_cmp:String#armor, wheels, CC (g: general)
 var s_cmp:String#lead_armor, copper_wheels etc. (s: specific)
@@ -107,7 +107,7 @@ func _on_Slot_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Slot_pressed(type:String, cmp:String, _slot):
-	for slot in $HBox.get_children():
+	for slot in hbox.get_children():
 		if slot == _slot and not slot.has_node("border"):
 			var border = TextureRect.new()
 			border.texture = load("res://Graphics/Cave/SlotBorder.png")
@@ -146,5 +146,4 @@ func _on_OptionButton_item_selected(_index):
 
 
 func _on_close_button_pressed():
-	game.panels.pop_front()
 	visible = false

@@ -50,21 +50,21 @@ var money_value = 0
 func _on_HSlider_value_changed(value):
 	if is_selling:
 		rounded_value = game.clever_round(value)
-		obj_node.get_node("Text").text = String(rounded_value) + " kg"
+		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
 		if type == "Materials":
 			money_value = floor(rounded_value * game.mat_info[obj].value)
-			money_node.get_node("Text").text = String(money_value)
+			money_node.get_node("Text").text = Helper.format_num(money_value, 6)
 		elif type == "Metals":
 			money_value = floor(rounded_value * game.met_info[obj].value)
-			money_node.get_node("Text").text = String(money_value)
+			money_node.get_node("Text").text = Helper.format_num(money_value, 6)
 	else:
 		money_value = value
-		money_node.get_node("Text").text = String(value)
+		money_node.get_node("Text").text = Helper.format_num(value, 6)
 		if type == "Materials":
 			rounded_value = game.clever_round(0.1 * value / game.mat_info[obj].value)
 		elif type == "Metals":
 			rounded_value = game.clever_round(0.1 * value / game.met_info[obj].value)
-		obj_node.get_node("Text").text = String(rounded_value) + " kg"
+		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
 
 func _on_Button_pressed():
 	if is_selling:
@@ -108,4 +108,3 @@ func _on_TextureButton_pressed():
 
 func _on_close_button_pressed():
 	visible = false
-	game.panels.pop_front()

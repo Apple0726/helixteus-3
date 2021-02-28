@@ -1,725 +1,728 @@
-,en,fr,it,ru,de,es,ko
-NEW_GAME,New game,Nouvelle partie,Nuova partita,Новая игра,Neues Spiel,Nueva partida,새 게임
-LOAD_GAME,Load game,Charger une partie,Caricare una partita,,,,불러오기
-MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈
-MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물
-STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌
-ENERGY,Energy,Énergie,Energia,,Energie,Energía,에너지
-SP,Science points,Points de science,Punti di scienza,,Forschungspunkte,Puntos de ciencia,과학 포인트
-MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stummschalten,(Des)Activar la musica,음악 켜기/끄기
-BACK,Back,Retour,Indietro,,Zurück,Atrás,뒤로
-SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점
-INVENTORY,Inventory,Inventaire,Inventario,,Inventar,Inventario,소지품
-CONSTRUCT,Construct,Construire,Costruire,,Bauen,Construir,건설하기
-BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기
-VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem betrachten,Ver sistema estelar,항성계 보기
-MINE,Mine,Miner,Minare,,Abbauen,Minar,
-START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,
-MINE_HELP,Click and hold the tile to mine!,Cliquez et maintenez la tuile pour miner!,,,Die Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,
-LAYER,Layer,Couche,Strato,,Ebene,Capa,계층
-SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,
-CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각
-CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,,Krustenzusammensetzung,Composición de la corteza,지각 구성
-MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀
-MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composición del manto,맨틀 구성
-CORE,Core,Noyau,Nucleo,,Kern,Núcleo,핵
-CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composición del núcleo,핵 구성
-TRACE,Trace,Autres,Altri,,Spuren,Otros,
-TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Otros elementos,
-NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,
-NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음
-BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기
-LATER,Later,Plus tard,Più tardi,,Später,Más tarde,나중에
-CLICK_TILE_TO_CONSTRUCT,Click on an empty tile to construct,Cliquez sur une tuile vide pour construire,,,,,
-HOME_PLANET,Home planet,Planète originelle,,,Heimatplanet,Planeta hogar,
-SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,,Sonnensystem,Sistema solar,태양계
-MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Láctea,우리은하
-LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,
-LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercúmulo de Laniakea,
-PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성
-PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성
-SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계
-SYSTEMS,Systems,Systèmes,Sistemi,,,,
-GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하
-GALAXIES,Galaxies,Galaxies,Galassie,,,,
-GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,,Galaxiengruppe,Grupo galáctico,
-GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,,Galaxienhaufen,Clúster galáctico,
-CLUSTERS,Clusters,Amas,Ammassi,,,,
-SUPERCLUSTER,Supercluster,Superamas,Superammasso,,Supergalaxienhaufen,Supercúmulo,
-SUPERCLUSTERS,Superclusters,Superamas,Superammassi,,,,
-UNIVERSE,Universe,Univers,Universo,,Universum,Universo,우주
-DIMENSION,Dimension,Dimension,Dimensione,,Dimensionen,Dimensión,차원
-VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema,,Entdeckte Galaxien in diesem System Anzeigen,Ver la galaxia en donde se encuentra este sistema,
-VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizzare l'ammasso contenendo questa galassia,,Entdeckte Cluster in dieser GalaxieAnzeigen,Ver el cúmulo en donde se encuentra esta galaxia,
-VIEW_SUPERCLUSTER,View the supercluster this cluster is in,Voir le superamas contenant cet amas,Vlisualizzare il superammasso contenendo questo ammasso,,Entdeckte Cluster in diesem Supercluster Anzeigen,Ver el supercúmulo en donde se encuentra este cúmulo,
-VIEW_UNIVERSE,View the universe this supercluster is in,Voir l'univers contenant ce superamas,Visualizzare l'universo contenendo questo superammasso,,Entdeckte Supercluster in diesem Universen Anzeigen,Ver el universo en donde se encuentra este supercúmulo,
-VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizzare gli universi scoperti in questa dimensione,,Entdeckte Universen in dieser dimension Anzeigen,Ver universos descubiertos en esta dimensión,
-GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie),,Generiere Cluster... (%s / %s Galaxien),Generando clúster... (%s / %s galaxias),
-GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi),,Generiere Galaxie ... (%s / %s Systemen),Generando galaxia... (%s / %s sistemas solares) ,은하 로딩 중... (%s / %s 항성계)
-MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다
-DIAMETER,Diameter,Diamètre,Diametro,,Durchmesser,Diámetro,
-DISTANCE_FROM_STAR,Distance from star,Distance de l'étoile,Distanza dalla stella,,Entfernung zum Stem,Distancia de la estrella,
-SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächentemperatur,Temperatura en la superficie,
-ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,Presión atmosférica,
-MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver más detalles,
-DARK_ENERGY,Dark energy,Énergie noire,Energia oscura,,,,
-DARK_MATTER,Dark matter,Matière noire,Materia oscura,,,,
-B_STRENGTH,Magnetic field strength,Intensité du champ magnétique,Intensità del campo magnetico,,,,
-DIFFICULTY,Difficulty,Difficulté,Difficoltà,,,,난이도
-DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들
-UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nDouble clic pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,,Anklicken für weiter details \n Doppelklick um das Universum zu betreten,Haz click para ver más detalles\nDoble click para entrar a este universo,정보 보기: 클릭\n우주 들어가기: 더블 클릭
-DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),,Dimensionenreste (DR),Residuos dimensionales (RD),
-DR,DRs,RD,RD,,DR,RD,
-NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione,,Neue Dimension,Nueva dimensión,새로운 차원
-MATHS,Mathematics,Mathématiques,Matematica,,Mathematik,Matemáticas,수학
-PHYSICS,Physics,Physique,Fisica,,Physik,Física,물리학
-CHEMISTRY,Chemistry,Chimie,Chimica,,Chemie,Química,화학
-BIOLOGY,Biology,Biologie,Biologia,,Biologie,Biología,생물학
-PHILOSOPHY,Philosophy,Philosophie,Filosofia,,Philosophie,Filosofía,철학
-ENGINEERING,Engineering,Ingénierie,Ingegneria,,Ingineurswesen,Ingeniería,공학
-DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,,Dimensionale Kräfte,Poder dimensional,차원력
-LV,Lv,Nv,Lv,,Lvl,Nvl,Lv
-INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자
-INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricación, agricultura espacial y conversión de recursos.",
-MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료
-SPEEDUPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업
-SPEEDUPS_DESC2,Accelerates by %s,Accélère de %s,Accelera di %s,,,Acelera por %s,%s 가속화
-SPEEDUP,Speed-up,Speed-up,Speed-up,,,Acelerador ,스피드업
-OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Overclocks,오버클럭
-OVERCLOCK,Overclock,Overclock,Overclock,,,Overclock,오버클럭
-OVERCLOCKS_DESC2,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,Multiplicador de producción: %s\nDuración: %s,생산 승수: %s\n기간: %s
-PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이
-SPEEDUPS_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind Gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,
-OVERCLOCKS_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Overclocks temporalmente aumentan la producción de recursos de los edificios seleccionados.,
-PICKAXES_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,
-STICK,Stick,Bâton,Bastone,,Stock,Palo,
-STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,
-NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.
-REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?,,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?
-BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,,Du hast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.
-PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,,Deine Spitzhacke ist Zerbrochen,Tu pico se rompió!,곡괭이가 부서졌습니다.
-AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,,Automatisches ersetzen,Reemplazar automáticamente,자동 교체
-AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Cocher pour racheter automatiquement la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,,Mit dieser Auswahl wird das Spiel automatisch die gleiche Spitzhacke erneut kaufen wenn das Geld ausreicht,"Anotar esta casilla hará que el juego automáticamente compre el pico que tenías cuando se rompa, si tienes dinero suficiente.",
-MINING_SPEED,Mining speed,Vitesse de minage,Velocità di scavo,,Abbaugeschwindigkeit,Velocidad de picado,
-DURABILITY,Durability,Durabilité,Durabilità,,Haltbarkeit,Durabilidad,내구성
-COAL,Coal,Charbon,Carbone,,Kohle,Carbón,석탄
-GLASS,Glass,Verre,Vetro,,Glas,Vidrio,유리
-SAND,Sand,Sable,Sabbia,,Sand,Arena,모래
-CLAY,Clay,Argile,Argilla,,Lehm,Arcilla,점토
-SOIL,Soil,Terre,Terra,,Erde,Tierra,흙
-CELLULOSE,Cellulose,Cellulose,Cellulosa,,Zellulose,Celulosa,셀룰로오스
-ENTER_PLANET_NAME,Enter planet name,Entrer nom de planète,Inserire nome di pianeta,,Planetenname eingeben,Introduce el nombre del planeta,행성 이름 입력하기
-DEPTHS,Depths,Profondeurs,Profondità,,Tiefe,Profundidades,깊이
-MAIN_SEQUENCE,Main sequence,De la séquence principale,Di sequenza principale,,Hauptsequenz,Secuencia Principal,
-GIANT,Giant,Géante,Gigante,,Gigant,Gigante,
-SUPERGIANT,Supergiant,Supergéante,Supergigante,,Supergigant,Supergigante,
-HYPERGIANT,Hypergiant,Hypergéante,Ipergigante,,Hypergigant,Hipergigante,
-WHITE_DWARF,White dwarf,Naine blanche,Nana bianca,,Weißer Zwerg,Enana blanca,
-BROWN_DWARF,Brown dwarf,Naine brune,Nana bruna,,Brauner Zwerg,Enana marrón,
-STAR_TITLE,Class {class} {type} star,Étoile {type} de classe {class},Stella {type} di classe {class},,{class} Klasse {type} Stern,Estrella {type} de clase {class},
-STAR_TEMPERATURE,Temperature: %s K,Température: %s K,Temperatura: %s K,,Temperatur: %s in Kelvin,Temperatura: %s K,온도: %s K
-STAR_SIZE,Radius: %s solar radii,Rayon: %s rayons solaires,Raggio: %s raggi solari,,Radius: %s Sonnen radien,Radio: %s radios solares,
-STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari,,Masse: %s Sonnenmassen,Masa: %s masas solares,
-STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosités solaires,Luminosità: %s luminosità solari,,Helligkeit: %s Sonnenhelligkeit,Luminosidad: %s luminosidades solares,
-METALS,Metals,Métaux,Metalli,,Metalle,Metales,금속
-INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,Metalle werden zum Herstellen von Items und Bauen von einigen Gebäuden benötigt.,Los metales son usados en la fabricación y construcción de edificios de mayor nivel.,
-WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,Holzspitzhacke,Pico de madera,나무 곡괭이
-WOODEN_PICKAXE_DESC,,,,,,,
-STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,Steinspitzhacke,Pico de piedra,돌 곡괭이
-STONE_PICKAXE_DESC,,,,,,,
-LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,Bleispitzhacke,Pico de plomo,납 곡괭이
-LEAD_PICKAXE_DESC,,,,,,,
-COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,Kupferspitzhacke,Pico de cobre,구리 곡괭이
-COPPER_PICKAXE_DESC,,,,,,,
-IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,Eisenspitzhacke,Pico de hierro,철 곡괭이
-IRON_PICKAXE_DESC,,,,,,,
-SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,"Die oberste Schicht eines Planete, in welcher Metalle abgebaut werden können.","Es la parte más superficial de un planeta, puedes encontrar materiales en esta capa.",
-CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,Die Kruste ist reich an Metallen welche für den Spielfortschritt wichtig sind.,La corteza es rica en minerales que son importantes en la progresión del juego.,
-BASIC,Basic,Base,Base,,Basis,Básico,기본
-BASIC_DESC,Construct buildings that generate the most basic resources.,Les bâtiments qui produisent des ressources de base se trouvent ici.,Gli edifici che producono risorse di base si trovano qui.,,Basisgebäude bauen,Construye edificios que generan los recursos más basicos.,
-STORAGE,Storage,Stockage,,,Lager,Almacenamiento,보관
-STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,,,Gebäude welche die Lagerkapazität von bestimmten Ressourcen erhöhen können hier gefunden werden.,Los edificios que aumentan el almacenamiento de un recurso en particular se encuentran aquí.,
-MINERAL_EXTRACTOR,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,,Mineralienextraktor,Extractor de minerales,광물 추출기
-ME_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per una fornitura costante di minerali.,,Extrahiert Mineralien aus der Planetenoberfläche um eine stetige Versorgung zu ermöglichen.,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",
-POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,Kraftwerk,Planta de energía,발전소
-PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,Generiert Energie,Genera energía de la nada,
-PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,"Drücke ""F"" zum upgraden",Presiona F para mejorar,F 누르면 업그레이드
-PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,"Drücke ""Q"" zum duplizieren",Presiona Q para duplicar,Q 누르면 복제
-PRESS_X_TO_DESTROY,Press X to destroy (no refunds),Appuyer sur X pour détruire (pas de remboursements),,,,,
-UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드
-LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨
-SECOND,second,seconde,secondo,,Sekunde,segundo,초
-S_SECOND,s,s,s,,S,s,초
-X_CAPACITY,%s capacity,Capacité de %s,,,Lager %s,Almacena %s,저장 용량: %s
-STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s
-PATH,Path,Voie,Via,,Pfad,Camino,
-CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다
-COAL_DESC,,,,,,,
-SAND_DESC,,,,,,,
-CLAY_DESC,,,,,,,
-SOIL_DESC,,,,,,,
-CELLULOSE_DESC,,,,,,,
-LEAD_DESC,,,,,,,
-COPPER_DESC,,,,,,,
-IRON_DESC,,,,,,,
-MATHS_DESC,"Increases exponential growth of building upgrades, permanent upgrades and rare item tiers\nReduces exponential growth of costs",,,,,,
-PHYSICS_DESC,"Changes to planet/system/etc. generation\nCelestial bodies further from the center are more adversely modified (difficulty, rarer loot bonus etc.)\nAdds a new fundamental force at the 10th level\nIncreases exponential growth of all sciences related to physics",,,,,,
-CHEMISTRY_DESC,Each dimension remnant invested into chemistry adds a completely new atom (and its antimatter form) which unlocks interdimensional buildings and items. Caps at 50 DRs\nIncreases exponential growth of all sciences related to chemistry,,,,,,
-BIOLOGY_DESC,Plants grow faster and have higher yields\nReduces enemy strength\nIncreases exponential growth of all sciences related to biology,,,,,,
-PHILOSOPHY_DESC,Enemies and treasure chests drop better and rarer loot.\nMore enemy attack patterns,,,,,,
-ENGINEERING_DESC,"Reduces the initial cost of buildings, megastructures and gigastructures (minimum of 1 gram)\nIncreases pickaxe durability and speed, decreases cost\nMore lenient building restrictions",,,,,,
-DIMENSIONAL_POWER_DESC,Affects the average “universe value” property of universes\nDetermines the number of dimension remnants you get from renewing dimensions,,,,,,
-LEAD,Lead,Plomb,Piombo,,Blei,Plomo,납
-COPPER,Copper,Cuivre,Rame,,Kupfer,Cobre,구리
-IRON,Iron,Fer,Ferro,,Eisen,Hierro,철
-ALUMINIUM,Aluminium,Aluminium,Alluminio,,Aluminium,Aluminio,알류미늄
-SILVER,Silver,Argent,Argento,,Silber,Plata,은
-GOLD,Gold,Or,Oro,,Gold,Oro,금
-AMETHYST,Amethyst,Améthyste,Ametista,,Amethyst,Amatista,자수정
-EMERALD,Emerald,Émeraude,Smeraldo,,Smaragd,Esmeralda,에메랄드
-QUARTZ,Quartz,Quartz,Quarzo,,Quarz,Cuarzo,석영
-TOPAZ,Topaz,Topaze,Topazio,,Topas,Topacio,황옥
-RUBY,Ruby,Rubis,Rubino,,Rubin,Rubí,루비
-SAPPHIRE,Sapphire,Saphir,Zaffiro,,Saphir,Zafiro,사파이어
-OVERLAY,Overlay,,,,,Capa,오버레이
-OVERLAY_DESC,"Overlays let you see various properties at a glance, using color.",,,,,"Las capas te permiten ver varias propiedades a la vez, usando colores.",오버레이는 다양한 형질들을 바로 볼 수 있게 하는 도구입니다.
-TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,Umschalten,(Des)Activar,표시하기/숨기기
-NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,Menge der Planeten,Número de planetas,행성 수
-SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,System betreten,Sistema visitado,항성계 들어갔음
-YES,Yes,Oui,Sì,,Ja,Sí,네
-NO,No,Non,No,,Nein,No,아니요
-CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,Ausgewählter Bereich,Tamaño del círculo,원 크기
-SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,Alle ausgewählten Gebäude sind in Bau.,Todos los edificios seleccionados están en construcción.,선택한 빌딩들이 모두 건설 중입니다.
-H2O_NAME,Water,Eau,Acqua,,Wasser,Agua,물
-NH3_NAME,Ammonia,Ammoniac,Ammoniaca,,Ammoniak,Amoniaco,암모니아
-LIQUID,Liquid,Liquide,Liquido/a,,Flüssigkeit,Líquido,액체
-SOLID,Solid,Solide,Solido/a,,Feststoff,Sólido,고체
-SUPERCRITICAL,Supercritical,Supercritique,Supercritico/a,,,Supercrítico,초임계유체
-BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,"Ein großer Stein. Benötigt zum Abbauen Energie,Zeit und einige Ressourcen.",Una gran roca. Requiere energía y tiempo para extraerla por su gran cantidad de recursos.,
-LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},{state} {contents},{state} {contents}
-SEEDS,Seeds,Graines,Semi,,Pflanzensamen,Semillas,씨앗
-AGRICULTURE,Agriculture,Agriculture,Agricoltura,,,Agricultura,농업
-AGRICULTURE_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas para producir metales.,
-CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작
-GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,
-GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,
-INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,AlleVerbauchbaren nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.
-PLACE_SOIL,Place/remove soil,Placer/enlever terre,Piazzare terra,,Erde Platzieren,Poner tierra,
-PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour placer ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Feld um 10 kg Erde zu platzieren oder zu entfernen,Haz click en una casilla para poner tierra (10 kg por casilla),
-NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,No tienes recursos suficientes.,자원이 부족합니다.
-NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,No tienes tierra suficiente.,흙이 부족합니다.
-NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,No tienes suficientes puntos de ciencia.,과학 포인트가 부족합니다.
-PLANT_TITLE,{metal} plant,Plante en {metal},Pianta di {metal},,{metal} pflanzen,Planta de {metal},{metal} 식물
-PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),Planta algo aquí! (Las semillas son objetos fabricables) ,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다)
-CLICK_TO_USE,Click to use,Cliquez pour utiliser,Cliccare per usare,,,Click para usar,클릭: 아이템 쓰기
-SHIFT_CLICK_TO_USE_ALL,Shift click to use all,Maj + clic pour tout utiliser,Shift + click per usare tutto,,,Shift click para usarlo todo,Shift 클릭: 이 아이템 모두 쓰기
-X_TO_THROW_ONE,Press X to throw one,Appuyer sur X pour jeter,Premere X per buttare,,,Presiona X para deshacerte de uno,X: 하나 버리기
-SHIFT_X_TO_THROW_STACK,Press Shift X to throw this stack,Appuyez sur Maj X pour jeter cette pile,Premere Shift X per buttare questa pila,,,Presiona Shift X para deshacerte de un grupo,Shift X: 이 스택 버리기
-H_FOR_HOTBAR,Press H to add/remove from hotbar,,,,,Presiona H para añadir/remover de la barra de acceso rápido,
-H_FOR_HOTBAR_REMOVE,Press H to remove from hotbar,,,,,Presiona H para remover de la barra de acceso rápido,
-PLANT_SEED_INFO,Click on a tile with dirt to plant the seeds,Cliquez une tuile avec de la terre pour planter les graines,,,,Haz click en una casilla con tierra para plantar las semillas,씨앗 심을라면 흙 있는 타일을 클릭하세요
-YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à votre inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,Haz minado materiales! Revísalos en tu inventario. También has desbloqueado la fabricación.,
-YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,Haz minado metales! Revísalos en tu inventario.,
-NOT_ADJACENT_TO_LAKE,Not adjacent to a %s lake,Non adjacent à un lac de %s,Non è adiacente a un lago di %s,,,No adyacente a un lago %s,%s 호수 옆에만 심을수 있습니다.
-LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,Semillas de plomo,납 씨앗
-COPPER_SEEDS,Copper seeds,Graines de cuivre,Semi di rame,,,,구리 씨앗
-SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,Cultiva @i %s kg,@i %s kg를 자랍니다 
-FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,Fertilizante,비료
-FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,El fertilizante acelera el crecimiento de las plantas por una hora.,비료는 식물의 성장을 1시간 가속화합니다.
-NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los objetos fueron fabricados,
-NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los objetos fueron comprados,
-NOT_ENOUGH_INV_SPACE_COLLECT,Inventory full: not all items were collected,Inventaire plein: pas tous les objets étaient collectés,Inventario pieno: alcuni oggetti non possono essere raccolti,,,,
-HIDE_HELP,Press J to not show this information again,Appuyez sur J pour ne plus afficher cette information,Premere J per non mostrare più questa informazione,,,Presiona J para no volver a mostrar este mensaje,
-HIDE_SHORTCUTS,Press J to hide this shortcut information,Appuyez sur J pour ne plus afficher cette liste de raccourcis,Premere J per non mostrare più questa lista di scorciatoie,,,Presiona J para ocultar esta información,단축키 정보 숨길려면 J 누르세요
-EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,Extrae %s,추출 속도: %s
-GENERATES_X,Generates %s,Produit %s,Produce %s,,,Genera %s,발전 속도: %s
-PRODUCES_X,Produces %s,Produit %s,Produce %s,,,Produce %s,생산 속도: %s
-ITEMS,Items,Objets,Oggetti,,,Componentes,아이템
-SALE_SUCCESS,Sale successful,Vendu avec succès,Vendita riuscita,,,Vendido exitosamente,판매 성공
-PURCHASE_SUCCESS,Purchase successful,Acheté avec succès,Acquista riuscita,,,Comprado exitosamente,구매 성공
-SELL,Sell,Vendre,Vendere,,,Vender,팔기
-PURCHASE_SALE_IMPOSSIBLE,Purchase/sale impossible,Achat/vente impossible,Acquista/vendita impossibile,,,Compra/venta imposible,구매/판매 불가
-CANT_BUY,Can't buy,Achat impossible,Acquista impossibile,,,Compra imposible,구매 불가
-CANT_SELL,Can't sell,Vente impossible,Vendita impossibile,,,Venta imposible,판매 불가
-CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Cliccare per raccogliere,,,Haz click para recolectar,클릭하면 수확
-CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,Fabricación exitosa,제작 성공
-SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,Árbol científico,
-SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,Agricultura espacial,
-SA_DESC,Allows you to farm basic metals.,,,,,Te permite cultivar metales.,
-RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca fatta,,,Investigación completa,연구 완료
-USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,Haz click en un edificio para acelerar la construcción,가속화할 빌딩을 클릭하세요
-USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,Haz click en un edificio para hacer overclock,오버클럭할 빌딩을 클릭하세요
-RESEARCH_LAB,Research lab,Labo de recherche,Laboratorio di ricerca,,,Laboratorio de investigación,연구 실험실
-RL_DESC,Does research on its own,Fait de la recherche en autonomie,Fa ricerca da solo,,,Investiga por su cuenta,자기 혼자서 조사합니다
-MINERAL_SILO,Mineral silo,,Magazzino di minerali,,,Silo de minerales,광물 사일로
-MS_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de minéraux,Aumenta la capacità massima di minerali,,,Incrementa el almacenamiento máximo de minerales,광물 저장 용량을 올립니다
-REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s per sbloccare,,,Alcanza %s para desbloquear,
-GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,,,Juego guardado,게임 저장했습니다
-CAVE,Cave,Grotte,Grotta,,,Cueva,동굴
-CAVE_DESC,"You will need a rover to explore this cave. Start by constructing a research lab, then research the Rover construction science!","Il faut avoir un rover pour explorer cette grotte. D'abord il faut construire un labo de recherche, puis rechercher ""Construction des rovers"".","Ti serve un rover per esplorare questa grotta. Innanzitutto devi costruire un labo di ricerca, poi devi ricercare ""Costruzione dei rover"".",,,Necesitas un rover para explorar esta cueva. Empieza por construir un laboratorio y luego investiga construcción de rover!,
-TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,Presiona F para tomarlo todo,F 누르면 모두 가져갑니다
-F_TO_EXIT,Press F to exit cave,Appuyez sur F pour sortir de la grotte,Premere F per uscire dalla grotta,,,Presiona F para salir de la cueva,F 누르면 둥굴에서 나갑니다
-F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scendere,,,Presiona F para bajar,F 누르면 내려갑니다
-F_TO_GO_UP,Press F to go up,Appuyez sur F pour monter,Premere F per salire,,,Presiona F para subir,F 누르면 올라갑니다
-WEIGHT_INV_FULL_CHEST,The rover is unable to take everything in the chest.,,,,,Este rover es incapaz de llevárselo todo en el cofre.,
-WEIGHT_INV_FULL_MINING,The rover is unable to take everything you just mined.,,Il rover non può più prendere tutto quello che hai appena scavato.,,,,
-CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,Piso B%s,지하 %s층
-NUM_FLOORS,%s floors,%s étages,%s piani,,,%s pisos,층 수: %s
-FLOOR_SIZE,Floor size: {size}x{size},Dimensions des étages: {size}x{size},Dimensioni dei piani: {size}x{size},,,Tamaño del piso: {size}x{size},층 크기: {size}x{size}
-VEHICLES_ON_PLANET,Vehicles on this planet,Véhicules sur cette planète,Veicoli su questo pianeta,,,Vehículos en este planeta,이 행성에 있는 차량
-VEHICLES,Vehicles,Véhicules,Veicoli,,,Vehículos,차량
-ROVERS,Rovers,Rovers,Rover,,,Rovers,
-SHIPS,Ships,Vaisseaux,Navicelle,,,Naves,
-SATELLITES,Satellites,Satellites,Satelliti,,,Satélites,위성
-VEHICLES_DESC,"Vehicles help you interact with the universe, such as exploring caves and conquering planets.","Les véhicules te permettent d'interagir avec l'univers (exploration des grottes, conquête des planètes etc.)","I veicoli ti permettono di interagire con l'universo (esplorazione delle grotte, conquista dei pianeti ecc.)",,,"Los vehículos te permiten interactuar con el universo, ya sea explorando cuevas o conquistando planetas.",
-ROVER_CONSTRUCTION,Rover construction,Construction des rovers,Costruzione dei rover,,,Construcción de rover,
-ROVER_CONSTR_CENTER,Rover construction center,Centre de construction des rovers,Centro di costruzione dei rover,,,Centro de construcción de rovers,
-RC_DESC,Explore caves with rovers!,Explorez des grottes avec des rovers!,Esplora grotte con i rover!,,,Explora cuevas con rovers!,
-MULT_ROVER_STAT_BY,Multiplies rovers' stats by %s,Multiplie les stats des rovers par %s,Moltiplica le stat dei rover per %s,,,Mulitplica las estadísticas de los rovers por %s,
-SA_DONE,You unlocked space agriculture! You can now craft seeds and fertilizers.,,,,,Haz desbloqueado agricultura espacial!,
-RC_DONE,You unlocked rover construction! You can now construct the rover construction center.,,,,,Haz desbloqueado construcción de rover! Ahora puedes construir el rover en su centro de construcción.,
-CONSTRUCT_ROVER,Construct a rover,Construire un rover,Costruire un rover,,,Construir un rover,
-STATS,Stats,Stats,Stat,,,Estadísticas,
-LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers.,Permet au rover d'attaquer les ennemis avec des lasers.,,,,Permite al rover atacar enemigos con lasers.,
-MINING_LASER_DESC,Allows the rover to mine rocks in caves.,Permet au rover de miner les roches dans les grottes.,,,,Le permite al rover minar rocas en las cuevas.,
-CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Click para remover,클릭: 제거하기
-CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,Click para añadir un componente,
-ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,Este rover está siendo construido!,
-LASER,Laser,Laser,Laser,,,Láser,레이저
-MINING_LASER,Mining laser,Laser de minage,Laser di scavo,,,Láser de minería,
-COOLDOWN,Cooldown,,,,,Cooldown,
-DAMAGE,Damage,Dégâts,Danno,,,Daño,
-CLICK_TO_USE_ROVER,Click to use this rover to explore a cave,Cliquez pour utiliser ce rover comme explorateur de grotte,,,,Haz click en este rover para explorar una cueva,
-CLICK_A_CAVE_TO_EXPLORE,Click a cave to explore,Cliquez une grotte à explorer,Cliccare una grotta da esplorare,,,Haz click en una cueva para explorarla,
-RCC_DESC,Build rovers with this building.,Construisez des rovers avec ce bâtiment.,,,,Construye rovers en este edificio.,
-SHIFT_CLICK_TO_LOOT_ROVER,Shift click to take everything from the rover,Maj + clic pour prendre tout ce que le rover possède,,,,Shift click para descargar todo del rover,
-ROVER_REKT_TITLE,Rover destroyed,Rover détruit,Rover distrutto,,,Rover destruido,
-ROVER_REKT,Your rover got wrecked by enemies! It lost half of each resource as a result (rounded down).,,,,,"Tu rover fue destruido por enemigos! como resultado, perdió la mitad de sus recursos (Redondeado).",
-YOU_MINED,You mined:,Vous avez miné: ,Hai minato:,,,Minaste:,
-TIER_X_CHEST,Tier %s chest,Coffre de rang %s,Forziere rango %s,,,Cofre de rango %s,
-HX_CORE,Helix core,Noyau Helix,Nucleo Helix,,,Núcleo Helix,핼릭스 핵
-ITEMS_COLLECTED,Items collected,,Oggetti raccolti,,,Objetos recogidos,
-SETTINGS,Settings,Paramètres,Impostazioni,,,Ajustes,설정
-MASTER,Master,Principal,Principale,,,Todo,
-MUSIC,Music,Musique,Musica,,,Música,음악
-SFX,Sounds,Sons,Suoni,,,Sonidos,
-HOLE_DEPTH,Hole depth,Profondeur du trou,Profondità del buco,,,Profundidad,구멍 크기
-SPEED_MULTIPLIER,Speed multiplier,Multiplicateur de vitesse,Moltiplicatore di velocità,,,Multiplicador de velocidad,속도 승수
-COSTS,Costs,Coûts,Costi,,,Costos,비용
-MINERAL_UPGRADES,Mineral upgrades,Améliorations minéraux,Miglioramenti minerali,,,Potenciadores minerales,
-MU_DESC,Improve various areas of the game using minerals.,Améliorez différentes parties du jeu en échange de minéraux.,,,,Mejora algunas áreas del juego usando minerales.,
-MV_NAME,Mineral value,Valeur des minéraux,Valore dei minerali,,,Valor del mineral,
-MV_DESC,The amount of money you get per mineral sold.,,,,,La cantidad de dinero que obtienes por mineral vendido.,
-UPGRADE_NOUN,Upgrade,Amélioration,Miglioramento,,,Potenciador,
-EFFECTS,Effects,Effets,Effeti,,,Efectos,
-UPGRADE_COST,Upgrade cost,Coût de l'amélioration,Costo di miglioramento,,,Costo de potenciador,
-NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de minéraux.,Non hai abbastanza minerali.,,,No tienes suficientes minerales.,광물이 부족합니다.
-MSMB_NAME,Mining speed multiplier boost,,Potenziamento molt. di velocità di scavo,,,Multiplicador de velocidad minera,
-MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,Questo moltiplica il moltiplicatore di velocità di scavo (che appare mentre giochi al mini gioco),,,Multiplica la mejora de velocidad de minado que aparece con el minijuego.,
-CRATER,Crater,Cratère,Cratere,,,Cráter,충돌구
-CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.","Les cratères sont formées par des astéroïdes, qui contiennent des ressources de valeur. Lors de son minage, vous trouverez une quantité beaucoup plus importante d'un métal spécifique.",,,,Los cráteres son formados por asteroides ricos en recursos que impactan contra el planeta. Minarlos te rendirá una gran cantidad de un metal específico.,
-PRODUCTION,Production,Production,Produzione,,,Producción,
-PRODUCTION_DESC,These are buildings that transform resources.,,Questi sono edifici che trasformano risorse.,,,Edificios que transforman rcursos.,
-METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,{crater} de {metal},{metal} {crater}
-STONE_CRUSHER,Stone crusher,,,,,Pulverizador de piedra,
-SC_DESC,Crushes stone to bits and extracts usable resources.,Écrase de la pierre et en extrait des ressources.,,,,Rompe la piedra en pedacitos para extraer recursos más útiles.,
-CRUSHES_X,Crushes %s,Écrase %s,,,,Pulveriza %s,
-CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,Puede almacenar hasta %s,%s 까지 저장할수 있음
-TIME,Time,Temps,Tempo,,,Tiempo,시간
-CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,Cliccare per configurare,,,Haz click para configurar,
-STONE_COMPOSITION,Stone composition,Composition de pierre,Composizione di pietra,,,Composición de la piedra,
-START_CRUSHING,Start crushing,Écraser,,,,Iniciar pulverización,
-STOP_CRUSHING,Stop crushing,Arrêter,,,,Detener pulverización,
-EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Resultados esperados,
-RESOURCES_EXTRACTED,Resources extracted,Ressources extraites,Risorse estratte,,,Recursos extraídos,
-NO_STONE,You don't have any stone!,Vous n'avez pas de pierre!,Non hai pietra!,,,No tienes piedra!,
-SILICON,Silicon,Silicium,Silicio,,,Silicio,
-COMP_OF_STONE_BEING_CR,Composition of stone being crushed,Composition de la pierre étant écrasée,,,,Composición de la piedra siendo pulverizada,
-COLDEST_STAR_TEMPERATURE,Coldest star temperature,Température de l'étoile la plus froide,Temperature della stella più fredda,,,,
-CLICK_TO_EDIT,Click to edit,Cliquez pour modifier,Cliccare per modificare,,,Haz click para editar,
-DONE,Done,Terminé,Fatto,,,Listo,
-NUMBER_OF_SYSTEMS,Number of systems,Nombre de systèmes,Numero di sistemi,,,Número de sistemas,
-GALAXY_ENTERED,Galaxy entered,Galaxie visitée,Galassia visitata,,,Galaxia accedida,
-MAGNETIC_FIELD_STRENGTH,Magnetic field strength,Force du champ magnétique,,,,Fuerza del campo magnético,
-DARK_MATTER,Dark matter,Matière noire,,,,Materia oscura,
-CH4_NAME,Methane,Méthane,,,,Metano,
-CO2_NAME,Carbon dioxide,Dioxyde de carbone,,,,Dióxido de carbono,
-O_NAME,Oxygen,Oxygène,Ossigeno,,,,
-H_NAME,Hydrogen,Hydrogène,Idrogeno,,,,
-AURORA,Aurora,Aurore,Aurora,,,,
-AURORA_DESC,Auroras are colorful lights caused by interactions of solar wind with the planet's magnetosphere. They have all sorts of effects on the tile that they happen to shine.,Les aurores sont des faisceaux de lumière créés par l'interaction entre le vent solaire et la magnétosphère de la planète. ,,,,,
-AURORA_INTENSITY,Aurora intensity,Intensité de l'aurore,Intensità dell'aurora,,,,
-COLLECT_ALL_PLANET,Collect all resources on this planet,,Raccogliere tutte le risorse su questo pianeta,,,,
-COLLECT_ALL_SYSTEM,Collect all resources in this system,,Raccogliere tutte le risorse in questo sistema,,,,
-COLLECT_ALL_GALAXY,Collect all resources in this galaxy,,Raccogliere tutte le risorse in questa galassia,,,,
-RESOURCES_COLLECTED,Resources collected,,Risorse raccolte,,,,
-ICE,Ice,Glace,Ghiaccio,,,,얼음
-METAL_COMP,{metal} {comp},{comp} en {metal},{comp} di {metal},,,,{metal} {comp}
-ARMOR,Armor,Blindage,Armatura,,,,
-WHEELS,Wheels,Roues,Ruote,,,, 바퀴
-CC,Cargo container,Conteneur,Contenitore,,,,
-HEALTH_POINTS,Health points,Points de vie,Punti di vita,,,,
-ATTACK,Attack,Attaque,Attacco,,Angriff,Ataque,공격력
-DEFENSE,Defense,Défense,Difesa,,Abwehr,Defensa,방어력
-CARGO_CAPACITY,Cargo capacity,Capacité cargo,Capacità carica,,,,
-MOVEMENT_SPEED,Movement speed,Vitesse du mouvement,Velocità di movimento,,,,
-SELECT,Select,Sélectionner,Selezionare,,,,선택하기
-SELECT_X,{select} {something},{select} {something},{select} {something},,,,{something} {select}
-CLICK_TO_CHANGE,Click to change,Cliquez pour changer,Cliccare per cambiare,,,,
-RED_LASER,Red {laser},{laser} rouge,{laser} rosso,,,,
-ORANGE_LASER,Orange {laser},{laser} orange,{laser} arancione,,,,
-YELLOW_LASER,Yellow {laser},{laser} jaune,{laser} giallo,,,,
-GREEN_LASER,Green {laser},{laser} vert,{laser} verde,,,,
-BLUE_LASER,Blue {laser},,,,,,
-PURPLE_LASER,Purple {laser},,,,,,
-UV_LASER,Ultraviolet {laser},,,,,,
-XRAY_LASER,X-ray {laser},,,,,,
-GAMMARAY_LASER,Gamma-ray {laser},,,,,,
-ULTRAGAMMARAY_LASER,Ultragamma-ray {laser},,,,,,
-MACRO_ENGINEERING,Macro Engineering,,,,,,
-CHEMICAL_DRIVE,Chemical Drive,,,,,,
-ION_DRIVE,Ion Drive,,,,,,
-FTL_DRIVE,FTL drive,,,,,,
-FUSION_DRIVE,Fusion Drive,,,,,,
-PHOTON_DRIVE,Photon Drive,,,,,,
-WEAPONS,Weapons,Armes,Armi,,,,
-MINING_TOOLS,Mining tools,Outils de minage,,,,,
-ARMOR_DESC,Armor protects the rover from cave hazards.,L'armure protège le rover contre les dangers dans les grottes.,,,,,
-WHEELS_DESC,Wheels allow the rover to move.,Les roues permettent au rover de se déplacer.,,,,,
-CC_DESC,Cargo containers expand the rover's inventory capacity.,,,,,,
-X_TO_REMOVE,Press X to remove,Appuyez sur X pour enlever,,,,,
-RANGE,Range,Portée,Raggio,,,,
-REMOVE_WHEELS_ATTEMPT,You can't remove wheels! (how else would your rover be able to move?),Impossible de retirer les roues (il se déplacerait comment sinon?),,,,,
-OL_DESC,Red lasers too weak? Maybe decreasing the wavelength will help!,Lasers rouges pas assez forts? Et si on diminuait la longueur d'onde?,,,,,
-YL_DESC,Orange lasers too weak? Why not decrease the wavelength even more?,Lasers oranges pas assez forts? Et si on diminuait la période?,,,,,
-GL_DESC,Yellow lasers too weak? Decreasing the wavelength once again turns it to green!,Lasers jaunes pas assez forts? Et si on augmentait la fréquence?,,,,,
-BL_DESC,Green lasers too weak? Just keep shrinking that wavelength!,Lasers verts pas assez forts? Et si on augmentait la pulsation?,,,,,
-PL_DESC,Blue lasers too weak? Make that wavelength even smaller!,Lasers bleus pas assez forts? Et si on augmentait le vecteur d'onde?,,,,,
-UVL_DESC,Purple lasers too weak? Maybe try going outside the visible range?,Lasers violets pas assez forts? Une seule solution: sortir du domaine du visible!,,,,,
-XRL_DESC,Ultraviolet lasers too weak? You know the drill.,,,,,,
-GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,,,,,,
-UGRL_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,,,,,,
-MAE_DESC,"Base science for constructing megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,,
-CD_DESC,Allows all sorts of exotic chemical reactions in the ship's engines to speed up travel.\nThis unlocks the drive menu in the ship panel.,,,,,,
-FTL_DESC,Divides travel times by 10.,,,,,,
-ID_DESC,Ionizes noble gases to speed up travel even further.,,,,,,
-FD_DESC,Fuse elements together for even more speed and efficiency.,,,,,,
-PD_DESC,Uses light itself for maximum travel speed.\nThis halves ship travelling times.,,,,,,
-GLASS_FACTORY,Glass factory,Usine de verre,,,,,
-GF_DESC,Produces glass from sand,Produit du verre à partir du sable,,,,,
-SELL_MINERALS,Sell all your minerals for money,Vendre tous les minéraux pour de l'argent,,,,,
-START,Start,Commencer,Avviare,,,,
-NO_SAND,You don't have any sand!,Tu n'as pas de sable!,Non hai sabbia!,,,,
-STOP,Stop,Arrêter,,,,,
-RESOURCES_PRODUCED,Resources produced,Ressources produites,Risorse prodotte,,,,
-REMAINING,remaining,restant(e)s,rimanenti,,,,
-SHIP_CONTROL,Ship control,,,,,,
-SCT_DESC,This science is needed to gain control of abandoned ships scattered across the universe.,,,,,,
-ABANDONED_SHIP,"A spaceship abandoned by... someone. Research the necessary science to take control of this ship. You'll want this ship to discover, conquer and explore other planets.","Un vaisseau spatial abandonné par... quelqu'un. Recherchez la science correspondante pour prendre le contrôle de ce vaisseau. Il faudra le faire pour pouvoir découvrir, conquérir et explorer d'autres planètes.",,,,,
-SHIP_CONTROL_SUCCESS,Ship control success!,,,,,,
-SHIP_CONTROL_FAIL,"You haven't researched ""Ship control"" yet!",,,,,,
-SHIP_CONTROL_HELP,Construct a research lab to start producing science points.,,,,,,
-RESEARCH_NEEDED,Research needed,,,,,,
-CLICK_TO_CONTROL_SHIP,Click to take control of this ship,,,,,,
-SEND_SHIPS,Send ships,Envoyer des vaisseaux,,,,,
-SEND_SHIPS_DESC,Send ships to this planet to attack the enemies and conquer the planet!,Envoyez vos vaisseaux à cette planète pour attaquer les ennemis et conquérir la planète!,,,,,
-ENEMIES,Enemies,Ennemis,,,,,
-LESS_ENERGY,Less energy,Moins d'énergie,,,,,
-FASTER_TRAVEL,Faster travel,Voyage plus rapide,,,,,
-SEND,Send,Envoyer,,,,,
-PLANET_EE_COST,Planet entry/exit cost,Coût d'entrée/sortie planétaire,,,,,
-PLANET_EE_COST_DESC,"To travel between planets, ships must first escape the departing planet's gravity and go through its atmosphere. The destination planet's gravity and atmosphere also influences the energy cost, but not as much as the departing planet.",,,,,,
-ATMOSPHERE_EXIT,Atmosphere exit,Sortie atmosphère,,,,,
-ATMOSPHERE_ENTRY,Atmosphere entry,Entrée atmosphère,,,,,
-GRAVITY_EXIT,Gravity exit,Sortie gravité,,,,,
-GRAVITY_ENTRY,Gravity entry,Entrée gravité,,,,,
-NOT_ENOUGH_ENERGY,You don't have enough energy.,Vous n'avez pas assez d'énergie!,Non hai abbastanza energia!,,,,
-TIME_LEFT,Time left,Temps restant,Tempo rimanente,,,,
-PLAY_SHIP_MINIGAME,Click to accelerate ship travel by playing a minigame.,,,,,,
-TRAVEL_ACCELERATED_BY,Travel accelerated by %s,,,,,,
-MOVE_SHIP_WITH_MOUSE,The ship follows your cursor. Dodge the obstacles!,,,,,,
-CLICK_ANYWHERE_TO_CONTINUE,Click anywhere to continue,,,,,,
-PRESS_ANY_KEY_TO_CONTINUE,Press any key to continue,,,,,,
-STM_AFTER_PATTERN_1,"The ship's hitbox is only a pixel, right at the tip of your cursor. Makes life easier for both you and the developer!",,,,,,
-STM_AFTER_PATTERN_2,"Each level consists of a variety of ""patterns"". You just went through 2 patterns. If you go through 3 patterns without being hit once, you go up a level!",,,,,,
-STM_LEVEL_2,"You went up a level! Waves become more difficult as you gain levels, but ship travel is accelerated more.",,,,,,
-STM_LEVEL_3,Obstacles don't always come from the right. They can come from all 4 sides!,,,,,,
-STM_LEVEL_4,Look out for crates. They contain all sorts of useful things! (not yet in the game),,,,,,
-NO_SHIPS,No ships,Pas de vaisseaux,,,,,
-NO_SHIPS_DESC,You need to have a ship to be able to attack the enemies on this planet.,Il faut avoir un vaisseau pour pouvoir attaquer les ennemis sur cette planète.,,,,,
-CLOSE_BUTTON_DESC1,You can also right click anywhere to close panels.,Un clic droit n'importe où ferme aussi les fenêtres.,,,,,
-CLOSE_BUTTON_DESC2,You can also right click anywhere to cancel actions.,Un clic droit n'importe où annule aussi les actions.,,,,,
-CLICK_TO_BATTLE,Click to initiate battle,,,,,,
-MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피
-CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타
-ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률
-EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율
-BATTLE_HELP,Dodge enemy attacks by moving the ship yourself with your keyboard!\n%s or %s: go up\n%s or %s: go down\nHold %s to move the ship faster,,,,,,
-SHOW_WEAPON_XPS,Show weapon XPs,,,,,,
-BULLET,Bullet,,,,,,
-BULLET_DESC,Average damage and accuracy weapon.,,,,,,
-LASER_DESC,Highly accurate but low damage.,,,,,,
-BOMB,Bomb,,,,,,
-BOMB_DESC,Very powerful but easy for enemies to dodge.,,,,,,
-LIGHT,Light,,,,,,
-LIGHT_DESC,Very low damage but hits all enemies and has good accuracy.,,,,,,
-BASE_DAMAGE,Base damage,,,,,,
-BASE_ACCURACY,Base accuracy,,,,,,
-BATTLE_LOST,Battle lost,,,,,,
-BATTLE_LOST_DESC,"You lost the battle! But you didn't lose anything, even your ships are fully repaired.",,,,,,
-TRAVEL_COSTS,Travel costs,,,,,,
-AUTOSAVE_LIGHT_DESC,This light glows green when the game just autosaved.,,,,,,
-AUTOSAVE_INTERVAL,Autosave interval,,,,,,
-AUTOSAVE_LIGHT,Autosave light,,,,,,
-CLICK_TO_FERTILIZE,Click a plant to fertilize,,,,,,
-CLICK_TO_GO_HOME,Click to go to your home planet,,,,,,
-AURORA_MULTIPLIER,Aurora multiplier,,,,,,
-AURORA_MULT_INFO,"An aurora is blessing this tile! Mining here will give you %sx more materials and metals, and will appear %sx more often.",,,,,,
-HOLD_SHIFT_TO_SELECT_SIMILAR,Hold shift to select all other buildings of this type,Appuyez et tenez Maj pour sélectionner tous les autres bâtiments de ce type,,,,,
-VARIES,Varies,Varie,,,,,
-VARYING_LEVELS,Varying levels,Niveaux variés,,,,,
-DESTROY_X_BUILDINGS,Destroy %s buildings? You don't get anything back.,Détruire %s bâtiments? Vous ne récupérerez rien.,,,,,
-AIE_NAME,Aurora intensity exponent,,,,,,
-AIE_DESC,"All aurora multipliers are equal to (1 + aurora intensity)^exponent, where exponent is the value of this upgrade.\nException: caves always have an exponent of 1.5.",,,,,,
-TOTAL_ENERGY_COST,Total energy cost,,,,,,
-WARNING,Warning,,,,,,
-HIGH_PRESSURE_PLANET,"This planet has a very high atmospheric pressure. Your ship will have an easy time going in, but it will\nneed immense amounts of energy (in the millions!) to get out. Send anyway?",,,,,,
-IS_NAME,Inventory slots,,,,,,
-IS_DESC,Number of slots you have in your inventory.,,,,,,
-X_SLOTS,%s slots,,,,,,
-ENABLE_AUTOSAVE,Enable autosave,,,,,,
-STEAM_ENGINE,Steam engine,Machine à vapeur,,,,,
-SE_DESC,Steam engines burn coal to produce energy.,Les machines à vapeurs brûlent du charbon pour produire de l'énergie.,,,,,
-M_DS_NAME,Dyson sphere,,,,,,
-STAGE_X_X,stage %s/%s,,,,,,
-M_DS_DESC,Captures energy by surrounding a star.\nCosts scale with the star's size.\nOutput scales with the star's luminosity.\nAll planets in the system must be conquered before construction is possible.,,,,,,
-DS1_DESC,Dyson spheres are structures designed to capture all energy coming from a star.\nThis science unlocks the first construction stage of Dyson spheres.,,,,,,
-DS2_DESC,Unlocks the second construction stage of Dyson spheres.,,,,,,
-DS3_DESC,Unlocks the third construction stage of Dyson spheres.,,,,,,
-DS4_DESC,Unlocks the 4th and final construction stage of Dyson spheres.,,,,,,
-M_SE_NAME,Space elevator,,,,,,
-M_SE_DESC,"Allows vehicles to enter/exit a planet for free, and reduces travel costs. Costs scale with the planet's size and atmospheric pressure.",,,,,,
-SE1_DESC,"Space elevators let ships and other vehicles enter or exit a planet with no energy cost, and also give a respectable discount to travel costs.\nThis science unlocks the first construction stage of space elevators.",,,,,,
-SE2_DESC,Unlocks the second construction stage of space elevators.,,,,,,
-SE3_DESC,Unlocks the third and final construction stage of space elevators.,,,,,,
-SC_TREE_ZOOM,You can drag the view around and use the scroll wheel to zoom in/out!,,,,,,
-MEGASTRUCTURES,Megastructures,,,,,,
-MEGASTRUCTURES_DESC,Construct the base stages of megastructures.,,,,,,
-CLICK_PLANET_TO_CONSTRUCT,Click a planet to construct,,,,,,
-CLICK_STAR_TO_CONSTRUCT,Click a star to construct,,,,,,
-CONSTRUCTION_COSTS,Construction costs,,,,,,
-RESET_TO_DEFAULT,Reset to default min/max values,,,,,,
-BIGGEST_STAR_SIZE,Biggest star size,,,,,,
-BRIGHTEST_STAR_LUMINOSITY,Brightest star luminosity,,,,,,
-PLATINUM,Platinum,Platine,,,,,
-TITANIUM,Titanium,Titane,,,,,
-DIAMOND,Diamond,Diamant,,,,,
-NANOCRYSTAL,Nanocrystal,Nanocristal,,,,,
-MYTHRIL,Mythril,Mithril,,,,,
-PRODUCTION_PER_SECOND,Production per second:,,,,,,
-MS_ALREADY_PRESENT,There's already a megastructure around this star!,,,,,,
-MS_ALREADY_PRESENT_PLANET,There's already a megastructure around this planet!,,,,,,
-PRESS_F_TO_CONTINUE_CONSTR,Press F to continue construction,,,,,,
-MINING_MACHINE,Mining machine,Machine de minage,,,,,
-MM_DESC,Automatically mines tiles for you.\nThis building does not play the minigame.,Mine automatiquement les tuiles.,,,,,
-X_M_PER_SECOND,Mines %s m/%s,Mine %s m/%s,,,,,
-X_M_AT_ONCE,Can mine %s m at once,Peut miner %s m à la fois,,,,,
-AUTO_MINING,Auto mining,Minage automatique,,,,,
-AM_DESC,Unlocks a building that automatically mines tiles.,Débloque un bâtiment qui mine automatiquement les tuiles.,,,,,
-INFINITE_RESEARCH,Infinite research,Recherche infinie,Ricerca infinita,,,,
-MEE_X,Mineral extractor efficiency %s,,,,,,
-MEE_DESC,Each research multiplies all mineral extractors' speed and capacity by 1.2.,,,,,,
-EPE_X,Energy production efficiency %s,,,,,,
-EPE_DESC,Each research multiplies energy production speed of all power plants and solar panels and their capacity by 1.2.,,,,,,
-RLE_X,Research lab efficiency %s,,,,,,
-RLE_DESC,Each research multiplies all research lab's speed by 1.2.,,,,,,
-MSE_X,Mineral silo expansion %s,,,,,,
-MSE_DESC,Each research multiplies all mineral silos' capacity by 1.2.,,,,,,
-MMS_X,Manual mining speed %s,,,,,,
-MMS_DESC,Each research multiplies manual mining speed by 1.2.,,,,,,
-CURRENT_MULT,Current multiplier,,,,,,
-HX_CORE_DESC,Gives 3 XP to a ship.,,,,,,
-CLICK_SHIP_TO_GIVE_XP,Click a ship to give it XP,,,,,,
-NO_SHIPS_2,You don't have any ships!,,,,,,
-HOLD_SHIFT_TO_MASS_BUILD,Hold shift and drag to place many buildings at once,,,,,,
-LONG_TRAVEL,"Your ships will be travelling for a long time. Even though there are ways to speed up travel, there is\nno way to cancel it. It's probably better to upgrade your energy production buildings first. Send anyway?",,,,,,
-ALUMINIUM_PICKAXE,Aluminium pickaxe,,,,,,
-SILVER_PICKAXE,Silver pickaxe,,,,,,
-GOLD_PICKAXE,Gold pickaxe,,,,,,
-GEMSTONE_PICKAXE,Gemstone pickaxe,,,,,,
-GEMSTONE_PICKAXE_DESC,Pretty!,,,,,,
-STAR_MS_ERROR,All planets in this system must be conquered before building a megastructure around stars.,,,,,,
-PLANET_MS_ERROR,This planet must be conquered before building a megastructure on it.,,,,,,
-VICTORY,Victory,,,,,,
-SYSTEM_CONQUERED,System conquered,,,,,,
-M_SE_0_BENEFITS,Planet entry/exit costs -10%\nTravel costs -5%,,,,,,
-M_SE_1_BENEFITS,Planet entry/exit costs -40%\nTravel costs -20%,,,,,,
-M_SE_2_BENEFITS,Planet entry/exit costs -70%\nTravel costs -35%,,,,,,
-M_SE_3_BENEFITS,Planet entry/exit costs -100%\nTravel costs -50%,,,,,,
-F_TO_CONFIRM,Press F to confirm,,,,,,
-SHIP_SIGNAL,You detect a signal coming from somewhere on this planet...,,,,,,
-SIGNAL_DETECTED,Signal detected,,,,,,
-RELIC_TEXT,"Stuck in this cave, unable to find my way out\nMy ship probably ran out of fuel on some other planet\nNot too sure what to do here anymore\nIf someone's reading this, I guess you can have my ship\nI hid a ship locator device just south of this cave, just dig a few meters there\nHope you can make good use of it.\nI'm running out of ink, so I don't think I can write much more\n - David",,,,,,
-SHIP_LOCATOR,Ship locator,,,,,,
-LOCATE_SHIP,Locate ship,,,,,,
-SHIP_LOCATOR_ERROR,Go to galaxy view in order to use this device!,,,,,,
-LOCATE_SHIP_HELP,Move mouse to locate ship,,,,,,
-GEMSTONE,Gemstone,,,,,,
-OUTPUT_MULTIPLIER,x%s output multiplier,,,,,,
-START_NEW_GAME,Start a new game? Your current save will be erased.,Commencer une nouvelle partie? Votre partie sauvegardée sera écrasée.,,,,,
-IRON_SEEDS,Iron seeds,Graines de fer,,,,,
-SHIPS_ALREADY_TRAVELLING,Your ships are already travelling!,,,,,,
-CTRL_CLICK_TO_SEND_SHIPS,Ctrl click to send ships here,,,,,,
-PRESS_E_TO_SPRINT,Your rover can sprint (movement speed greater than 1)! Press E to toggle sprint mode.,Votre rover peut sprinter (vitesse de déplacement supérieure à 1)! Appuyez sur E pour (dés)activer le mode sprint.,,,,,
-SPRINT_MODE,Sprint mode,Mode sprint,,,,,
-NO_COAL,You don't have any coal!,Vous n'avez pas de charbon!,,,,,
-GREENHOUSE,Greenhouse,Serre,,,,,
-GH_DESC,Buildings that protect plants from the harsh environment.\nEnergy costs scale with how far the planet temperature is away from 0°C.,,,,,,
-EXTRA_GREENHOUSES,Extraterrestrial greenhouses,,,,,,
-EGH_DESC,Unlocks greenhouses that increase plant growth speed and yield.,,,,,,
-SUPPORT,Support,,,,,,
-SUPPORT_DESC,"Buildings that boost other buildings, plants etc.",,,,,,
-X_PLANT_GROWTH,x %s growth speed,,,,,,
-X_PLANT_PRODUCE,x %s yield,,,,,,
-YOU_COLLECTED,You collected:,,,,,,
-SOLAR_PANELS,Solar panels,,,,,,
-SP_DESC,Transforms stellar light into usable energy.\nEnergy generation is proportional to planet temperature.,,,,,,
-OPEN_DRIVE_MENU,Open drive menu,,,,,,
-CLOSE_DRIVE_MENU,Close drive menu,,,,,,
-DRIVE_TECHNOLOGY_REQUIRED,Drive technology required,,,,,,
-FUEL,Fuel,,,,,,
-TIME_REDUCTION,Time reduction,,,,,,
-SPEED_UP_SHIPS,Speed up ships,,,,,,
-SHIPS_NEED_TO_BE_TRAVELLING,Ships need to be travelling,,,,,,
-DRIVE_SUCESSFULLY_ACTIVATED,Drive successfully activated,,,,,,
-TOO_FAST,Too fast,,,,,,
-GO_TO_SHIPS,Click to view the star system where your ships are in,,,,,,
-INACTIVE_WORMHOLE,Inactive wormhole,,,,,,
-ACTIVE_WORMHOLE,Active wormhole,,,,,,
-INACTIVE_WORMHOLE_DESC,"A mysterious wormhole, that probably does what you think it does.\nInvestigate (click) this wormhole to learn how to use it!",,,,,,
-ACTIVE_WORMHOLE_DESC,"This wormhole is usable! Send your ships to this planet (Ctrl click a planet in system view), then click on this tile to send them to a random planet in this galaxy.",,,,,,
-INVESTIGATION_COSTS,Investigation costs,,,,,,
-INVESTIGATION_STARTED,Wormhole investigation started,,,,,,
-TRAVEL_ETA,Travel ETA,,,,,,
-CLICK_DRIVE_TO_USE,Click on one of the drives below to use it,,,,,,
-ATOMS,Atoms,,,,,,
-NE_NAME,Neon,,,,,,
-XE_NAME,Xenon,,,,,,
-INV_ATOMS_DESC,Atoms are what constitute the entire universe. Being able to manipulate these lets you make practically anything.,,,,,,
-ATMOSPHERE_COMPOSITION,Atmospheric composition,,,,,,
-ATMOSPHERE,Atmosphere,,,,,,
-ATOM_MANIPULATION,Atom manipulation,,,,,,
-ATM_DESC,"Allows you to collect, store and manipulate individual atoms. Also unlocks two buildings: atmosphere extractor and atom manipulator.",,,,,,
-ATMOSPHERE_EXTRACTOR,Atmosphere extractor,,,,,,
-AE_DESC,Extracts atoms from the planet's atmosphere.\nExtraction speed is proportional to atmospheric pressure.,,,,,,
-C_NAME,Carbon,,,,,,
-N_NAME,Nitrogen,,,,,,
-PARTICLES,Particles,,,,,,
-PROTON,Proton,,,,,,
-PROTON_DESC,Stable subatomic particles. They do not decay and do not require special storage buildings.,,,,,,
-NEUTRON,Neutron,,,,,,
-NEUTRON_DESC,"Unstable subatomic particles. If not stored in a special storage building, they decay into either protons or electrons (50% chance) with a half-time of 15 minutes.",,,,,,
-ELECTRON,Electron,,,,,,
-ELECTRON_DESC,"Stable subatomic particles. However, due to all the ways electrons can interact with matter, special storage buildings are required to properly store them as free electrons.",,,,,,
-SUBATOMIC_PARTICLES,Subatomic particles,,,,,,
-SAP_DESC,"Break down any atom into protons, neutrons and electrons.\nUnlocks the subatomic particle reactor as well as buildings that collect these particles from the natural background radiation.",,,,,,
-INV_PARTICLES_DESC,Make exciting things with these particles.,,,,,,
-AMN_NAME,Atom manipulator,,,,,,
-AMN_DESC,Can transform atoms into metals and vice versa.,,,,,,
-BASE_SPEED,Base speed,,,,,,
-REACTIONS_PANEL_DESC,Select a recipe at the left to choose what to transform into what.\nMore recipes can be unlocked with research.,,,,,,
-TRANSFORM,Transform,,,,,,
-STMB_NAME,Ship travel minigame boost,,,,,,
-STMB_DESC,Accelerate ship travel even more while playing the minigame.,,,,,,
-SHSR_NAME,Ship hitbox size reduction,,,,,,
-SHSR_DESC,"While in battle, makes the hitbox of all ships smaller to more easily dodge attacks.",,,,,,
-SI_NAME,Silicon,,,,,,
-F_NAME,Fluorine,,,,,,
-FE_NAME,Iron,,,,,,
-AL_NAME,Aluminium,,,,,,
-GAS_GIANT,Gas giant,,,,,,
-HELIUM,Helium,,,,,,
-HE_NAME,Helium,,,,,,
-K_NAME,Potassium,,,,,,
-MG_NAME,Magnesium,,,,,,
-NA_NAME,Sodium,,,,,,
-TI_NAME,Titanium,,,,,,
-CA_NAME,Calcium,,,,,,
-NI_NAME,Nickel,,,,,,
-SPR_NAME,Subatomic particle reactor,,,,,,
-SPR_DESC,Can transform atoms into particles and vice versa.,,,,,,
-NO_ACTIVITY_ON_GAS_GIANT,Impossible to explore/build on/mine/farm on gas giants!,,,,,,
-M_MME_NAME,Mega mineral extractor,,,,,,
-M_MME_DESC,Extracts minerals from gas giants.\nCosts scale with the planet's size.\nOutput scales with the planet's size and atmospheric pressure.,,,,,,
-MME1_DESC,Mega mineral extractors are built around gas giants designed to filter out all the minerals from the atmosphere.\nThis science unlocks the first construction stage of mega mineral extractors.,,,,,,
-MME2_DESC,Unlocks the second construction stage of mega mineral extractors.,,,,,,
-MME3_DESC,Unlocks the third and final construction stage of mega mineral extractors.,,,,,,
-ONLY_GAS_GIANT,This megastructure can only be built around gas giants.,,,,,,
-XP_HELP,Every $100 spent constructing/upgrading buildings = 1 XP,,,,,,
-LOOT_XP_BONUS,Loot/XP multiplier,,,,,,
-LOOT,Loot,,,,,,
-LOOT_XP_BONUS_DESC,Multiplier for:\nDodging all attacks: 1.5x\nGetting hit once: 1.25x\nGetting hit twice: 1.1x\nGetting hit more than twice: 1x,,,,,,
-LV_18_NEEDED_DESC,You need to unlock galaxy view first (reach level 18).,,,,,,
-LV_18_NEEDED,Level 18 needed,,,,,,
-CAVE_DIFF_INFO,Enemy stats and resources you get from mining and from treasure are multiplied by this value.,,,,,,
-STAR_SYSTEM_DIFFICULTY,Star system difficulty,,,,,,
-FLOOR_MULTIPLIER,Floor multiplier,,,,,,
-USE_SPEEDUP_MS,Click a megastructure to accelerate construction (%s%% efficiency),,,,,,
-U_NAME,Uranium,,,,,,
-TERRAFORM,Terraform,,,,,,
-TERRAFORM_DESC,"Click on a task the planet should specialize in. Everything on the planet will be wiped. Once terraformed, planets cannot be entered.",,,,,,
-MINERAL_STORAGE,Mineral storage,,,,,,
-TERRAFORMING,Terraforming,,,,,,
-TRR_DESC,"Unlocks terraforming planets. A terraformed planet specializes in a certain task, like storing minerals.\nInstead of constructing only one type of building on a planet, terraforming may be preferred to reduce save file sizes and reduce lag when clicking the collect all button.",,,,,,
-T_OR_NO_T,Tutorial or no tutorial?,Voulez-vous un tutoriel?,,,,,
-GUIDE_ME,Guiding me would be nice,Ce serait bien de me guider,,,,,
-FIGURE_OUT_MYSELF,I'll figure everything out myself,Je vais apprendre tout seul,,,,,
-NOT_OBVIOUS_GAMEPLAY,(some gameplay elements may not be intuitive),(certains éléments de jeu peuvent être non intuitifs),,,,,
-TUTORIAL_1,Welcome to Helixteus 3!\nYour objective is to make as much money as possible.,,,,,,
-TUTORIAL_2,Click this button to construct a building\n(or press C on your keyboard),,,,,,
-TUTORIAL_3,Start by constructing these to produce minerals.,,,,,,
-TUTORIAL_4,You have no more energy! Constructing buildings also uses energy most of the time.\nBuild a power plant to start generating energy.,,,,,,
-TUTORIAL_6,Press Esc or right click anywhere to exit building mode.\nYou can also press the close button at the bottom of the screen.,,,,,,
-TUTORIAL_7,Click this button to collect all the\nresources produced by your buildings.,,,,,,
-TUTORIAL_8,You now have some minerals!\nPress this button to sell all of them\nfor $5 each.,,,,,,
-TUTORIAL_9,You earned some money! Use that money\nto construct 4 more power plants.,,,,,,
-TUTORIAL_10,Now you have a good energy supply.\nIt's time to increase mineral production for even more money!,,,,,,
-TUTORIAL_11,"While you wait for the buildings to generate resources,\nyou can go mining rocks yourself to get other useful things.\nClick this button to open the shop menu to buy a pickaxe.",,,,,,
-TUTORIAL_14,Click this button to pick a tile to mine.,,,,,,
-TUTORIAL_15,Click this back button to go back to your planet.,,,,,,
-TUTORIAL_16,A good way of investing money is in research\nto unlock new features and boost resource production.\n,,,,,,
-TUTORIAL_17,Save up $2000 and 600 energy to construct a research lab.\nDon't hesitate to build more mineral extractors\nand power plants.,,,,,,
-TUTORIAL_18,Research labs take over 2 minutes to build.\nLet's speed that up. Go to your inventory.,,,,,,
-TUTORIAL_19,This item speeds up construction of\none building by 2 minutes. You can buy more\nof these in the shop. Click to use it.,,,,,,
-TUTORIAL_20,Research labs are pretty slow compared to other\nbuildings. Let's overclock it. Open your inventory again.,,,,,,
-TUTORIAL_22,There we go! Now it's a little faster.,,,,,,
-TUTORIAL_23,Labs produce science points (SP) that can\nbe spent in the science tree.\nSave up 5 SP to do your first research.\n,,,,,,
-TUTORIAL_24,You are ready to do your first research!\nClick this to open the science tree.,,,,,,
-TUTORIAL_25,"Look for the ""Rover construction"" science\nand click to research it.",,,,,,
-TUTORIAL_26,Now it's time to try doing things on your own.\nThe game will still give you objectives to guide you\na little bit. Experiment with things and have fun!\nThe game now auto-saves every 10 seconds.\n,,,,,,
-TUTORIAL_27,You have unlocked the star system view!\nThis is where you can see other planets in this star system\nand conquer them. Your planets have a green glow.,,,,,,
-TUTORIAL_28,You can move/zoom the view like you do in planet view.,,,,,,
-TUTORIAL_29,You don't seem to have a ship yet. You need to take control\nof the ship that you can find in your home planet.\nCome back here once you have it!,,,,,,
-TUTORIAL_30,Click a planet with a red glow to send ships over there\nand engage in battle.,,,,,,
-BUILD_OBJECTIVE,Build {num} {bldg}{s},,,,,,
-BUILD_OBJECTIVE_2,Build {num} {bldg}s,Construire: {num}x {bldg},Costruire: {num}x {bldg},,,,{bldg} {num}개 건설하기
-MINE_OBJECTIVE,Mine %s tiles,,,,,,
-SAVE_OBJECTIVE,Save up {num} {rsrc},,,,,,
-SAVE_W_OBJECTIVE,Save up {num} kg of {rsrc},,,,,,
-CONQUER_OBJECTIVE,Conquer {num} {object},,,,,,
-TUTORIAL_OVERCLOCK,This overclock will be used later in the tutorial. Don't use it yet!,,,,,,
-FULL_MINERALS,You have reached your maximum mineral storage capacity. Build mineral silos to increase it!,,,,,,
-IMPROVED_STONE_CRUSHER,Improved stone crusher,,,,,,
-ISC_DESC,Allows stone crushers to extract metals.,,,,,,
-CAVE_CONTROLS,Controls:\nWASD: move rover\nScroll wheel: Change active item\nHold left click: use active item\nM: toggle minimap,,,,,,
-CRUST_OBJECTIVE,Reach the crust in mining,,,,,,
-CAVE_OBJECTIVE,Enter a cave,,,,,,
-LEVEL_OBJECTIVE,Reach level %s,,,,,,
-NO_SAVING_IN_TUT,(saving possible only after finishing tutorial (~8 minutes long)),,,,,,
-HOW2SILICON,Silicon can be obtained by crushing stone with the stone crusher building.,,,,,,
-CLICK_CAVE_TO_EXPLORE,Click to explore this cave,,,,,,
-WORMHOLE_OBJECTIVE,Find a wormhole on a planet,,,,,,
-SIGNAL_OBJECTIVE,Locate the signal,,,,,,
-DAVID_OBJECTIVE,Take control of David's ship,,,,,,
-OP_GALAXY_DESC,"The game is about to generate a galaxy with many star systems. A galaxy of this size\ntakes up several megabytes of storage space, CPU-intensive, and not necessary for game progression.\nNevertheless, they are great for people who love exploring. Continue?",,,,,,
-OP_GALAXY,Large galaxy,,,,,,
+,en,fr,it,ru,de,es,ko,sv
+NEW_GAME,New game,Nouvelle partie,Nuova partita,Новая игра,Neues Spiel,Nueva partida,새 게임,Nytt spel
+LOAD_GAME,Load game,Charger une partie,Caricare una partita,,,,불러오기,Ladda spel
+MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈,Pengar
+MINERALS,Minerals,Minéraux,Minerali,,Mineralien,Minerales,광물,Mineraler
+STONE,Stone,Pierre,Pietra,,Stein,Piedra,돌,Sten
+ENERGY,Energy,Énergie,Energia,,Energie,Energía,에너지,Energi
+SP,Science points,Points de science,Punti di scienza,,Forschungspunkte,Puntos de ciencia,과학 포인트,Vetenskapspoäng
+MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,,Stummschalten,(Des)Activar la musica,음악 켜기/끄기,(O)dämpa
+BACK,Back,Retour,Indietro,,Zurück,Atrás,뒤로,Tillbaka
+SHOP,Shop,Boutique,Negozio,Магазин,Shop,Tienda,상점,Butik
+INVENTORY,Inventory,Inventaire,Inventario,,Inventar,Inventario,소지품,Förråd
+CONSTRUCT,Construct,Construire,Costruire,,Bauen,Construir,건설하기,Konstruera
+BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기,Köp
+VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem betrachten,Ver sistema estelar,항성계 보기,Granska stjärnsystem
+MINE,Mine,Miner,Minare,,Abbauen,Minar,,Gräva
+START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,,Klicka en ruta för att gräva
+MINE_HELP,Click and hold the tile to mine!,Cliquez et maintenez la tuile pour miner!,,,Die Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,,Klicka och tryck för att gräva!
+LAYER,Layer,Couche,Strato,,Ebene,Capa,계층,Lager
+SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,,Yta
+CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각,Skorpa
+CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,,Krustenzusammensetzung,Composición de la corteza,지각 구성,Skorpkomposition
+MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀,Mantel
+MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composición del manto,맨틀 구성,Mantelkompositon
+CORE,Core,Noyau,Nucleo,,Kern,Núcleo,핵,Kärna
+CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composición del núcleo,핵 구성,Kärnkomposition
+TRACE,Trace,Autres,Altri,,Spuren,Otros,,Spår
+TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Otros elementos,,Spårämne
+NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,,Du har inte en hacka! Köp en i butiken.
+NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음,Ingen hacka
+BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기,Köp en
+LATER,Later,Plus tard,Più tardi,,Später,Más tarde,나중에,Senare
+CLICK_TILE_TO_CONSTRUCT,Click on an empty tile to construct,Cliquez sur une tuile vide pour construire,,,,,,Klicka på en tom ruta för att konstruera
+HOME_PLANET,Home planet,Planète originelle,,,Heimatplanet,Planeta hogar,,Hem planet
+SOLAR_SYSTEM,Solar system,Système solaire,Sistema solare,,Sonnensystem,Sistema solar,태양계,Solsystem
+MILKY_WAY,Milky Way,Voie lactée,Via Lattea,,Milchstraße,Via Láctea,우리은하,Vintergatan
+LOCAL_GROUP,Local Group,Groupe local,Gruppo Locale,,Lokale Gruppe,Grupo Local,,Lokalgrupp
+LANIAKEA,Laniakea Supercluster,Laniakea,Laniakea,,Laniakea Supergalaxienhaufen,Supercúmulo de Laniakea,,Laniakea superkluster
+PLANET,Planet,Planète,Pianeta,,Planet,Planeta,행성,Planet
+PLANETS,Planets,Planètes,Pianeti,,Planeten,Planetas,행성,Planeter
+SYSTEM,System,Système stellaire,Sistema stellare,,Sternsystem,Sistema estelar,항성계,System
+SYSTEMS,Systems,Systèmes,Sistemi,,,,,System
+GALAXY,Galaxy,Galaxie,Galassia,,Galaxie,Galaxia,은하,Galax
+GALAXIES,Galaxies,Galaxies,Galassie,,,,,Galaxer
+GALAXY_GROUP,Galaxy group,Groupe de galaxies,Gruppo di galassie,,Galaxiengruppe,Grupo galáctico,,Galaxgrupp
+GALAXY_CLUSTER,Galaxy cluster,Amas de galaxies,Ammasso di galassie,,Galaxienhaufen,Clúster galáctico,,Galaxkluster
+CLUSTERS,Clusters,Amas,Ammassi,,,,,Kluster
+SUPERCLUSTER,Supercluster,Superamas,Superammasso,,Supergalaxienhaufen,Supercúmulo,,Superkluster
+SUPERCLUSTERS,Superclusters,Superamas,Superammassi,,,,,Superkluster
+UNIVERSE,Universe,Univers,Universo,,Universum,Universo,우주,Universum
+DIMENSION,Dimension,Dimension,Dimensione,,Dimensionen,Dimensión,차원,Dimention
+VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce système,Visualizzare la galassia contenendo questo sistema,,Entdeckte Galaxien in diesem System Anzeigen,Ver la galaxia en donde se encuentra este sistema,,Granska systemets galax
+VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizzare l'ammasso contenendo questa galassia,,Entdeckte Cluster in dieser GalaxieAnzeigen,Ver el cúmulo en donde se encuentra esta galaxia,,Granska galaxens kluster
+VIEW_SUPERCLUSTER,View the supercluster this cluster is in,Voir le superamas contenant cet amas,Vlisualizzare il superammasso contenendo questo ammasso,,Entdeckte Cluster in diesem Supercluster Anzeigen,Ver el supercúmulo en donde se encuentra este cúmulo,,Granska klustrets superkluster
+VIEW_UNIVERSE,View the universe this supercluster is in,Voir l'univers contenant ce superamas,Visualizzare l'universo contenendo questo superammasso,,Entdeckte Supercluster in diesem Universen Anzeigen,Ver el universo en donde se encuentra este supercúmulo,,Granska supersklustrets universum
+VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizzare gli universi scoperti in questa dimensione,,Entdeckte Universen in dieser dimension Anzeigen,Ver universos descubiertos en esta dimensión,,Granska upptäkta universum i denna dimmention
+GENERATING_CLUSTER,Generating cluster... (%s / %s galaxies),Génération de l'amas (%s / %s galaxies),Generazione dell'ammasso (%s / %s galassie),,Generiere Cluster... (%s / %s Galaxien),Generando clúster... (%s / %s galaxias),,Genererar kluster... (%s / %s galaxer)
+GENERATING_GALAXY,Generating galaxy... (%s / %s systems),Génération de la galaxie (%s / %s systèmes),Generazione della galassia (%s / %s sistemi),,Generiere Galaxie ... (%s / %s Systemen),Generando galaxia... (%s / %s sistemas solares) ,은하 로딩 중... (%s / %s 항성계),Genererar galax... (%s / %s system)
+MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다,Du sålde %s mineraler för $%s!
+DIAMETER,Diameter,Diamètre,Diametro,,Durchmesser,Diámetro,,Diameter
+DISTANCE_FROM_STAR,Distance from star,Distance de l'étoile,Distanza dalla stella,,Entfernung zum Stem,Distancia de la estrella,,Distans från stjärna
+SURFACE_TEMPERATURE,Surface temperature,Température de surface,Temperatura superficiale,,Oberflächentemperatur,Temperatura en la superficie,,Yttemperatur
+ATMOSPHERE_PRESSURE,Atmospheric pressure,Pression atmosphérique,Pressione atmosferica,,Atmosphärendruck,Presión atmosférica,,Atmosfärstryck
+MORE_DETAILS,Shift click to view more details,Maj + clic pour voir plus de détails,Shift + clic per vedere più dettagli,,Shift Klick für mehr details,Shift click para ver más detalles,,"Klicka ""Shift"" för att se mer detaljer"
+DARK_ENERGY,Dark energy,Énergie noire,Energia oscura,,,,,Mörk energi
+DARK_MATTER,Dark matter,Matière noire,Materia oscura,,,,,Mörk materia
+B_STRENGTH,Magnetic field strength,Intensité du champ magnétique,Intensità del campo magnetico,,,,,Magnetfältstyrka 
+DIFFICULTY,Difficulty,Difficulté,Difficoltà,,,,난이도,Svårhetsgrad
+DISCOVERED_UNIVERSES,Discovered universes,Univers découverts,Universi scoperti,,Entdeckte Universen,Universos descubiertos,발견한 우주들,Upptäkta universum
+UNIVERSE_INFO,Click to view more details\nDouble click to enter this universe,Cliquer pour voir plus de détails\nDouble clic pour entrer dans cet univers,Cliccare per vedere più dettagli\nDoppio clic per entrare nel universo,,Anklicken für weiter details \n Doppelklick um das Universum zu betreten,Haz click para ver más detalles\nDoble click para entrar a este universo,정보 보기: 클릭\n우주 들어가기: 더블 클릭,Klicka för att se mer detaljer\nDubbelclicka åka till detta universum.
+DR_TITLE,Dimension remnants (DRs),Résidu-dimension (RD),Rimanenze dimensionali (RD),,Dimensionenreste (DR),Residuos dimensionales (RD),,Dimensionella rester (DR)
+DR,DRs,RD,RD,,DR,RD,,DR
+NEW_DIMENSION,New dimension,Nouvelle dimension,Nuova dimensione,,Neue Dimension,Nueva dimensión,새로운 차원,Ny dimension
+MATHS,Mathematics,Mathématiques,Matematica,,Mathematik,Matemáticas,수학,Matematik
+PHYSICS,Physics,Physique,Fisica,,Physik,Física,물리학,Fysik
+CHEMISTRY,Chemistry,Chimie,Chimica,,Chemie,Química,화학,Kemi
+BIOLOGY,Biology,Biologie,Biologia,,Biologie,Biología,생물학,Biologi
+PHILOSOPHY,Philosophy,Philosophie,Filosofia,,Philosophie,Filosofía,철학,Filosofi
+ENGINEERING,Engineering,Ingénierie,Ingegneria,,Ingineurswesen,Ingeniería,공학,Teknik
+DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,,Dimensionale Kräfte,Poder dimensional,차원력,Dimensionell kraft
+LV,Lv,Nv,Lv,,Lvl,Nvl,Lv,Lvl
+INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자,Investera
+INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricación, agricultura espacial y conversión de recursos.",,"Material krävs för att utföra olika uppgifter i spelet, inklusive hantverk, rymdjordbruk och resursomvandling. "
+MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료,Matrial
+SPEEDUPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업,Speed-ups
+SPEEDUPS_DESC2,Accelerates by %s,Accélère de %s,Accelera di %s,,,Acelera por %s,%s 가속화,Accelerar med %s
+SPEEDUP,Speed-up,Speed-up,Speed-up,,,Acelerador ,스피드업,Speed-up
+OVERCLOCKS,Overclocks,Overclocks,Overclock,,Übertaktung,Overclocks,오버클럭,Överklockningar
+OVERCLOCK,Overclock,Overclock,Overclock,,,Overclock,오버클럭,Överklocka
+OVERCLOCKS_DESC2,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,,,Multiplicador de producción: %s\nDuración: %s,생산 승수: %s\n기간: %s,Produktionsmultiplikator:% s \ nLängd:% s
+PICKAXES,Pickaxes,Pioches,Picconi,,Spitzhacken,Picos,곡괭이,Hackor
+SPEEDUPS_DESC,Speed-up items instantly accelerate construction of a building.,Les speed-ups accélèrent la construction d'un bâtiment.,I speed-up accelerano la costruzione di un edificio.,,Beschleuniger sind Gegenstände die sofort die Konstruktion eines Gebäudes vorrantreiben.,Los aceleradores instantaneamente aceleran la construcción de un edificio.,,Speed_up föremål påskyndar omedelbart konstruktionen av en byggnad. 
+OVERCLOCKS_DESC,Overclock items temporarily boost resource production of the affected buildings.,Les overclocks accélèrent la production des ressources d'un bâtiment pendant un certain temps.,I overclock accelerano temporaneamente la produzione delle risorse di un edificio.,,Übertakter Gegenstände erhöhen temporär die resourcen produktion des betroffenen gebäudes,Los Overclocks temporalmente aumentan la producción de recursos de los edificios seleccionados.,,Överklockningsföremål ökar tillfälligt resursproduktionen av de drabbade byggnaderna. 
+PICKAXES_DESC,Pickaxes allow you to mine a planet for various resources.,Les pioches permettent de miner une planète pour des ressources.,I picconi ti permettono di minare un pianeta per varie risorse.,,Spitzhacken erlauben es einen Planeten für verschiedene resourcen zu Schürfen,Los picos te permiten minar un planeta por varios recursos.,,Hackor låter dig bryta olika resurser ur en planet.
+STICK,Stick,Bâton,Bastone,,Stock,Palo,,Pinne
+STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usare un bastone per minare le prime rocce.,,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para minar tus primeras piedras.,,Use a stick to mine your very first rocks.
+NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.,Använd en pinne för att bryta dina allra första stenar.
+REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Sostituire %s con %s?,,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?,Ersätt din% s med en %s?
+BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un(a) %s!,,Du hast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.,Du köpte en %s!
+PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,,Deine Spitzhacke ist Zerbrochen,Tu pico se rompió!,곡괭이가 부서졌습니다.,Din hacka gick sönder!
+AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,,Automatisches ersetzen,Reemplazar automáticamente,자동 교체,Autoersätt
+AUTO_REPLACE_DESC,"Checking this will make the game automatically buy the same pickaxe once the current one breaks, if you have the money.","Cocher pour racheter automatiquement la même pioche si la pioche actuelle casse, à condition d'avoir assez d'argent.",Il gioco proverà a comprare automaticamente lo stesso piccone una volta quello attuale si rompe.,,Mit dieser Auswahl wird das Spiel automatisch die gleiche Spitzhacke erneut kaufen wenn das Geld ausreicht,"Anotar esta casilla hará que el juego automáticamente compre el pico que tenías cuando se rompa, si tienes dinero suficiente.",,"Om du checkar i detta kommer spelet automatiskt att köpa samma hacka när den nuvarande går sönder, om du har pengar. "
+MINING_SPEED,Mining speed,Vitesse de minage,Velocità di scavo,,Abbaugeschwindigkeit,Velocidad de picado,,Grävhastighet
+DURABILITY,Durability,Durabilité,Durabilità,,Haltbarkeit,Durabilidad,내구성,Hållbarhet
+COAL,Coal,Charbon,Carbone,,Kohle,Carbón,석탄,Kol
+GLASS,Glass,Verre,Vetro,,Glas,Vidrio,유리,Glas
+SAND,Sand,Sable,Sabbia,,Sand,Arena,모래,Sand
+CLAY,Clay,Argile,Argilla,,Lehm,Arcilla,점토,Lera
+SOIL,Soil,Terre,Terra,,Erde,Tierra,흙,Jord
+CELLULOSE,Cellulose,Cellulose,Cellulosa,,Zellulose,Celulosa,셀룰로오스,Cellulosa 
+ENTER_PLANET_NAME,Enter planet name,Entrer nom de planète,Inserire nome di pianeta,,Planetenname eingeben,Introduce el nombre del planeta,행성 이름 입력하기,Fyll i planetnamnet
+DEPTHS,Depths,Profondeurs,Profondità,,Tiefe,Profundidades,깊이,Djup
+MAIN_SEQUENCE,Main sequence,De la séquence principale,Di sequenza principale,,Hauptsequenz,Secuencia Principal,,Huvudsekvens
+GIANT,Giant,Géante,Gigante,,Gigant,Gigante,,Jätte
+SUPERGIANT,Supergiant,Supergéante,Supergigante,,Supergigant,Supergigante,,Superjätte
+HYPERGIANT,Hypergiant,Hypergéante,Ipergigante,,Hypergigant,Hipergigante,,Hyperjätte
+WHITE_DWARF,White dwarf,Naine blanche,Nana bianca,,Weißer Zwerg,Enana blanca,,Vit dvärj
+BROWN_DWARF,Brown dwarf,Naine brune,Nana bruna,,Brauner Zwerg,Enana marrón,,Brun dvärj
+STAR_TITLE,Class {class} {type} star,Étoile {type} de classe {class},Stella {type} di classe {class},,{class} Klasse {type} Stern,Estrella {type} de clase {class},,Klass {class} {type} stjärna
+STAR_TEMPERATURE,Temperature: %s K,Température: %s K,Temperatura: %s K,,Temperatur: %s in Kelvin,Temperatura: %s K,온도: %s K,Temperatur: %s K
+STAR_SIZE,Radius: %s solar radii,Rayon: %s rayons solaires,Raggio: %s raggi solari,,Radius: %s Sonnen radien,Radio: %s radios solares,,Radie: %s solradier
+STAR_MASS,Mass: %s solar masses,Masse: %s masses solaires,Massa: %s masse solari,,Masse: %s Sonnenmassen,Masa: %s masas solares,,Massa: %s solmassor
+STAR_LUMINOSITY,Luminosity: %s solar luminosity,Luminosité: %s luminosités solaires,Luminosità: %s luminosità solari,,Helligkeit: %s Sonnenhelligkeit,Luminosidad: %s luminosidades solares,,Ljusstyrka: %s sollysstyrkor
+METALS,Metals,Métaux,Metalli,,Metalle,Metales,금속,Mettaler
+INV_MET_DESC,Metals are used in crafting and constructing higher level buildings.,Les métaux sont nécessaires à la fabrication des objets et à la construction des bâtiments de haut niveau.,I metalli sono usati per creare oggetti e per costruire edifici più avanzati.,,Metalle werden zum Herstellen von Items und Bauen von einigen Gebäuden benötigt.,Los metales son usados en la fabricación y construcción de edificios de mayor nivel.,,Mettaler används i hantvärk och i konstruktion av advanserade byggnader.
+WOODEN_PICKAXE,Wooden pickaxe,Pioche en bois,Piccone di legno,,Holzspitzhacke,Pico de madera,나무 곡괭이,Trähacka
+WOODEN_PICKAXE_DESC,,,,,,,,
+STONE_PICKAXE,Stone pickaxe,Pioche en pierre,Piccone di pietra,,Steinspitzhacke,Pico de piedra,돌 곡괭이,Stenhacka
+STONE_PICKAXE_DESC,,,,,,,,
+LEAD_PICKAXE,Lead pickaxe,Pioche en plomb,Piccone di piombo,,Bleispitzhacke,Pico de plomo,납 곡괭이,Blyhacka
+LEAD_PICKAXE_DESC,,,,,,,,
+COPPER_PICKAXE,Copper pickaxe,Pioche en cuivre,Piccone di rame,,Kupferspitzhacke,Pico de cobre,구리 곡괭이,Kopparhacka
+COPPER_PICKAXE_DESC,,,,,,,,
+IRON_PICKAXE,Iron pickaxe,Pioche en fer,Piccone di ferro,,Eisenspitzhacke,Pico de hierro,철 곡괭이,Järnhacka
+IRON_PICKAXE_DESC,,,,,,,,
+SURFACE_DESC,It is the uppermost layer of a planet. You can find materials in this layer.,C'est la couche la plus externe d'une planète. On peut y trouver des matériaux.,Lo strato più esterno di un pianeta. Si trovano materiali qui.,,"Die oberste Schicht eines Planete, in welcher Metalle abgebaut werden können.","Es la parte más superficial de un planeta, puedes encontrar materiales en esta capa.",,Det är det översta lagret på en planet. Du hittar material i detta lager. 
+CRUST_DESC,The crust is rich in metals that are important for game progression.,La croûte est riche en métaux qui sont importants pour progresser dans le jeu.,"La crosta è ricca di metalli, importanti per avanzare nel gioco.",,Die Kruste ist reich an Metallen welche für den Spielfortschritt wichtig sind.,La corteza es rica en minerales que son importantes en la progresión del juego.,,Skorpan är rik på metaller som är viktiga för spelets progression.
+BASIC,Basic,Base,Base,,Basis,Básico,기본,Grundläggande
+BASIC_DESC,Construct buildings that generate the most basic resources.,Les bâtiments qui produisent des ressources de base se trouvent ici.,Gli edifici che producono risorse di base si trovano qui.,,Basisgebäude bauen,Construye edificios que generan los recursos más basicos.,,Konstruera byggnader som genererar de mest grundläggande resurserna.
+STORAGE,Storage,Stockage,,,Lager,Almacenamiento,보관,Lager
+STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,,,Gebäude welche die Lagerkapazität von bestimmten Ressourcen erhöhen können hier gefunden werden.,Los edificios que aumentan el almacenamiento de un recurso en particular se encuentran aquí.,,Byggnader som ökar lagringen av en viss resurs finns här.
+MINERAL_EXTRACTOR,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,,Mineralienextraktor,Extractor de minerales,광물 추출기,Mineralextraherare
+ME_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per una fornitura costante di minerali.,,Extrahiert Mineralien aus der Planetenoberfläche um eine stetige Versorgung zu ermöglichen.,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",,"Extraherar mineraler från planets yta, vilket ger dig en konstant tillförsel av mineraler."
+POWER_PLANT,Power plant,Centrale électrique,Centrale elettrica,,Kraftwerk,Planta de energía,발전소,Kraftvärk
+PP_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,,,Generiert Energie,Genera energía de la nada,,Genererar energi ur luften
+PRESS_F_TO_UPGRADE,Press F to upgrade,Appuyer sur F pour améliorer,Premere F per migliorare,,"Drücke ""F"" zum upgraden",Presiona F para mejorar,F 누르면 업그레이드,Klicka F för att uppgradera
+PRESS_Q_TO_DUPLICATE,Press Q to duplicate,Appuyer sur Q pour dupliquer,Premere Q per duplicare,,"Drücke ""Q"" zum duplizieren",Presiona Q para duplicar,Q 누르면 복제,Klicka Q för att dubblisera
+PRESS_X_TO_DESTROY,Press X to destroy (no refunds),Appuyer sur X pour détruire (pas de remboursements),,,,,,Kilcka X för att förstöra (inga återbetalningar)
+UPGRADE,Upgrade,Améliorer,Migliorare,,Upgraden,Mejorar,업그레이드,Uppgradera
+LEVEL,Level,Niveau,Livello,,Level,Nivel,레벨,Level
+SECOND,second,seconde,secondo,,Sekunde,segundo,초,Sekund
+S_SECOND,s,s,s,,S,s,초,s
+X_CAPACITY,%s capacity,Capacité de %s,,,Lager %s,Almacena %s,저장 용량: %s,%s Kapasitet
+STORES_X,Stores %s,Stocke %s,,,Lager %s,Almacena %s,저장 용량: %s,Lagrar %s
+PATH,Path,Voie,Via,,Pfad,Camino,,Väg
+CLICK_TO_BUY_SELL,Click to buy/sell,Cliquer pour acheter/vendre,Cliccare per comprare/vendere,,Klicken zum Kaufen/Verkaufen,Click para comprar/vender,클릭하면 팔거나 살 수 있습니다,Klicka för att köpa/sälja
+COAL_DESC,,,,,,,,
+SAND_DESC,,,,,,,,
+CLAY_DESC,,,,,,,,
+SOIL_DESC,,,,,,,,
+CELLULOSE_DESC,,,,,,,,
+LEAD_DESC,,,,,,,,
+COPPER_DESC,,,,,,,,
+IRON_DESC,,,,,,,,
+MATHS_DESC,"Increases exponential growth of building upgrades, permanent upgrades and rare item tiers\nReduces exponential growth of costs",,,,,,,
+PHYSICS_DESC,"Changes to planet/system/etc. generation\nCelestial bodies further from the center are more adversely modified (difficulty, rarer loot bonus etc.)\nAdds a new fundamental force at the 10th level\nIncreases exponential growth of all sciences related to physics",,,,,,,
+CHEMISTRY_DESC,Each dimension remnant invested into chemistry adds a completely new atom (and its antimatter form) which unlocks interdimensional buildings and items. Caps at 50 DRs\nIncreases exponential growth of all sciences related to chemistry,,,,,,,
+BIOLOGY_DESC,Plants grow faster and have higher yields\nReduces enemy strength\nIncreases exponential growth of all sciences related to biology,,,,,,,
+PHILOSOPHY_DESC,Enemies and treasure chests drop better and rarer loot.\nMore enemy attack patterns,,,,,,,
+ENGINEERING_DESC,"Reduces the initial cost of buildings, megastructures and gigastructures (minimum of 1 gram)\nIncreases pickaxe durability and speed, decreases cost\nMore lenient building restrictions",,,,,,,
+DIMENSIONAL_POWER_DESC,Affects the average “universe value” property of universes\nDetermines the number of dimension remnants you get from renewing dimensions,,,,,,,
+LEAD,Lead,Plomb,Piombo,,Blei,Plomo,납,Bly
+COPPER,Copper,Cuivre,Rame,,Kupfer,Cobre,구리,Koppar
+IRON,Iron,Fer,Ferro,,Eisen,Hierro,철,Järn
+ALUMINIUM,Aluminium,Aluminium,Alluminio,,Aluminium,Aluminio,알류미늄,Aluminium
+SILVER,Silver,Argent,Argento,,Silber,Plata,은,Sliver
+GOLD,Gold,Or,Oro,,Gold,Oro,금,Guld
+AMETHYST,Amethyst,Améthyste,Ametista,,Amethyst,Amatista,자수정,Amytist
+EMERALD,Emerald,Émeraude,Smeraldo,,Smaragd,Esmeralda,에메랄드,Emerald
+QUARTZ,Quartz,Quartz,Quarzo,,Quarz,Cuarzo,석영,Kvarts
+TOPAZ,Topaz,Topaze,Topazio,,Topas,Topacio,황옥,Topas
+RUBY,Ruby,Rubis,Rubino,,Rubin,Rubí,루비,Rubin
+SAPPHIRE,Sapphire,Saphir,Zaffiro,,Saphir,Zafiro,사파이어,Safir
+OVERLAY,Overlay,,,,,Capa,오버레이,Överläggning
+OVERLAY_DESC,"Overlays let you see various properties at a glance, using color.",,,,,"Las capas te permiten ver varias propiedades a la vez, usando colores.",오버레이는 다양한 형질들을 바로 볼 수 있게 하는 도구입니다.,"Överlägg gör att du kan se olika egenskaper enkelt, med hjälp av färg. "
+TOGGLE,Toggle,Afficher/masquer,(Dis)attivare,,Umschalten,(Des)Activar,표시하기/숨기기,Växla
+NUMBER_OF_PLANETS,Number of planets,Nombre de planètes,Numero di pianeti,,Menge der Planeten,Número de planetas,행성 수,Nummer av planeter
+SYSTEM_ENTERED,System entered,Système visité,Sistema visitato,,System betreten,Sistema visitado,항성계 들어갔음,System åkt till
+YES,Yes,Oui,Sì,,Ja,Sí,네,Ja
+NO,No,Non,No,,Nein,No,아니요,Nej
+CIRCLE_SIZE,Circle size,Taille des cercles,Dimensione dei cerchi,,Ausgewählter Bereich,Tamaño del círculo,원 크기,Cirkel storlek
+SELECTED_BLDGS_UNDER_CONSTR,All selected buildings are under construction.,Tous les bâtiments sélectionnés sont en construction.,Tutti gli edifici selezionati sono in costruzione.,,Alle ausgewählten Gebäude sind in Bau.,Todos los edificios seleccionados están en construcción.,선택한 빌딩들이 모두 건설 중입니다.,Alla utvalda byggnader är under konstruktion.
+H2O_NAME,Water,Eau,Acqua,,Wasser,Agua,물,Vatten
+NH3_NAME,Ammonia,Ammoniac,Ammoniaca,,Ammoniak,Amoniaco,암모니아,Ammoniak
+LIQUID,Liquid,Liquide,Liquido/a,,Flüssigkeit,Líquido,액체,Flytande
+SOLID,Solid,Solide,Solido/a,,Feststoff,Sólido,고체,Fast
+SUPERCRITICAL,Supercritical,Supercritique,Supercritico/a,,,Supercrítico,초임계유체,Superkritisk
+BOULDER_DESC,A big boulder. Requires energy and time to mine it for heaps of resources.,"Un bloc très grand. Il faut de l'énergie et du temps pour le miner, donnant beaucoup de ressources une fois miné.","Una roccia molto grande. Ci vogliono energia e tempo per minarla, dando un sacco di risorse una volta minata.",,"Ein großer Stein. Benötigt zum Abbauen Energie,Zeit und einige Ressourcen.",Una gran roca. Requiere energía y tiempo para extraerla por su gran cantidad de recursos.,,En stor sten. Kräver energi och tid för att bryta den för massor av resurser.
+LAKE_CONTENTS,{state} {contents},{contents} {state},{contents} {state},,{state} {contents},{state} {contents},{state} {contents},{state} {contents}
+SEEDS,Seeds,Graines,Semi,,Pflanzensamen,Semillas,씨앗,Frön
+AGRICULTURE,Agriculture,Agriculture,Agricoltura,,,Agricultura,농업,Jordbruk
+AGRICULTURE_DESC,Everything you need to farm metals.,,,,,Todo lo que neceistas para producir metales.,,Allt du behöver för att odla metaller.
+CRAFT,Craft,Fabrication,Fabbricazione,,Herstellen,Fabricar,제작,Fabrikation
+GROWTH_TIME,Growth time,Temps de croissance,Tempo di crescita,,Wachstumszeit,Tiempo de crecimiento,,Tillväxttid
+GROWS_NEXT_TO,Grows next to %s,Grandit à côté de %s,Cresce accanto a %s,,Wächst neben %s,Crece adyacente a %s,,Gror brevid %s
+INV_ITEMS_DESC,All one-use items are found here.,Tous les objets à usage unique se trouvent ici.,,,AlleVerbauchbaren nutzbaren Items gibt es hier.,Todos los objetos de un solo uso se encuentran aquí.,일회용 아이템들은 여기 있습니다.,Alla engångs föremål finns här.
+PLACE_SOIL,Place/remove soil,Placer/enlever terre,Piazzare terra,,Erde Platzieren,Poner tierra,,Placera/ta bort jord
+PLACE_SOIL_INFO,Click a tile to place or remove soil (10 kg per tile),Cliquez une tuile pour placer ou enlever de la terre (10 kg par tuile),,,Klicke auf ein Feld um 10 kg Erde zu platzieren oder zu entfernen,Haz click en una casilla para poner tierra (10 kg por casilla),,Klicka på en ruta för att placera eller ta bort jord (10 kg per ruta)
+NOT_ENOUGH_RESOURCES,You don't have enough resources.,Vous n'avez pas assez de ressources.,Non hai abbastanza risorse.,,Nicht genug Ressourcen,No tienes recursos suficientes.,자원이 부족합니다.,Du har inte tillräkligt med resurser.
+NOT_ENOUGH_SOIL,You don't have enough soil.,Vous n'avez pas assez de terre.,Non hai abbastanza terra.,,Du hast nicht genügend Erde,No tienes tierra suficiente.,흙이 부족합니다.,Du har inte tillräkligt med jord.
+NOT_ENOUGH_SP,You don't have enough science points.,Vous n'avez pas assez de points de science.,Non hai abbastanza punti di scienza.,,,No tienes suficientes puntos de ciencia.,과학 포인트가 부족합니다.,Du har inte tillräkligt med vetenskapspoäng.
+PLANT_TITLE,{metal} plant,Plante en {metal},Pianta di {metal},,{metal} pflanzen,Planta de {metal},{metal} 식물,{metal} planta
+PLANT_STH,Plant something here! (seeds are craftable items),Plantez quelque chose ici! (les graines sont des objets qui se fabriquent),Pianta qualcosa qui! (i semi sono oggetti che si fabbricano),,Pflanze hier etwas (Samen können hergestellt werden),Planta algo aquí! (Las semillas son objetos fabricables) ,여기에 뭔가 심으세요! (씨앗들은 제작할 수 있는 아이템입니다),Plantera något här! (frön är tillverkade föremål)
+CLICK_TO_USE,Click to use,Cliquez pour utiliser,Cliccare per usare,,,Click para usar,클릭: 아이템 쓰기,Klicka för att använda
+SHIFT_CLICK_TO_USE_ALL,Shift click to use all,Maj + clic pour tout utiliser,Shift + click per usare tutto,,,Shift click para usarlo todo,Shift 클릭: 이 아이템 모두 쓰기,"Klicka ""shift"" för att använda alla"
+X_TO_THROW_ONE,Press X to throw one,Appuyer sur X pour jeter,Premere X per buttare,,,Presiona X para deshacerte de uno,X: 하나 버리기,Klicka X för att kasta en
+SHIFT_X_TO_THROW_STACK,Press Shift X to throw this stack,Appuyez sur Maj X pour jeter cette pile,Premere Shift X per buttare questa pila,,,Presiona Shift X para deshacerte de un grupo,Shift X: 이 스택 버리기,Tryck på Skift X för att kasta denna stack
+H_FOR_HOTBAR,Press H to add/remove from hotbar,,,,,Presiona H para añadir/remover de la barra de acceso rápido,,
+H_FOR_HOTBAR_REMOVE,Press H to remove from hotbar,,,,,Presiona H para remover de la barra de acceso rápido,,
+PLANT_SEED_INFO,Click on a tile with dirt to plant the seeds,Cliquez une tuile avec de la terre pour planter les graines,,,,Haz click en una casilla con tierra para plantar las semillas,씨앗 심을라면 흙 있는 타일을 클릭하세요,
+YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à votre inventaire. Vous avez aussi débloqué la fabrication.,Hai minato materiali! Da' un'occhiata al tuo inventario. Hai anche sbloccato la fabbricazione.,,,Haz minado materiales! Revísalos en tu inventario. También has desbloqueado la fabricación.,,
+YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai minato metalli! Da' un'occhiata al tuo inventario.,,,Haz minado metales! Revísalos en tu inventario.,,
+NOT_ADJACENT_TO_LAKE,Not adjacent to a %s lake,Non adjacent à un lac de %s,Non è adiacente a un lago di %s,,,No adyacente a un lago %s,%s 호수 옆에만 심을수 있습니다.,
+LEAD_SEEDS,Lead seeds,Graines de plomb,Semi di piombo,,Bleisamen,Semillas de plomo,납 씨앗,
+COPPER_SEEDS,Copper seeds,Graines de cuivre,Semi di rame,,,,구리 씨앗,
+SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,,,Cultiva @i %s kg,@i %s kg를 자랍니다 ,
+FERTILIZER,Fertilizer,Engrais,Fertilizzante,,,Fertilizante,비료,
+FERTILIZER_DESC,Fertilizers accelerate growth of plants by 1 hour.,Les engrais accélèrent la croissance des plantes d'une heure.,I fertilizzanti accelerano la crescita delle piante di un'ora.,,,El fertilizante acelera el crecimiento de las plantas por una hora.,비료는 식물의 성장을 1시간 가속화합니다.,
+NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non possono essere fabbricati,,,Inventario lleno: no todos los objetos fueron fabricados,,
+NOT_ENOUGH_INV_SPACE_BUY,Inventory full: not all items were bought,Inventaire plein: pas tous les objets étaient achetés,Inventario pieno: alcuni oggetti non possono essere comprati,,,Inventario lleno: no todos los objetos fueron comprados,,
+NOT_ENOUGH_INV_SPACE_COLLECT,Inventory full: not all items were collected,Inventaire plein: pas tous les objets étaient collectés,Inventario pieno: alcuni oggetti non possono essere raccolti,,,,,
+HIDE_HELP,Press J to not show this information again,Appuyez sur J pour ne plus afficher cette information,Premere J per non mostrare più questa informazione,,,Presiona J para no volver a mostrar este mensaje,,
+HIDE_SHORTCUTS,Press J to hide this shortcut information,Appuyez sur J pour ne plus afficher cette liste de raccourcis,Premere J per non mostrare più questa lista di scorciatoie,,,Presiona J para ocultar esta información,단축키 정보 숨길려면 J 누르세요,
+EXTRACTS_X,Extracts %s,Extrait %s,Estrae %s,,,Extrae %s,추출 속도: %s,
+GENERATES_X,Generates %s,Produit %s,Produce %s,,,Genera %s,발전 속도: %s,
+PRODUCES_X,Produces %s,Produit %s,Produce %s,,,Produce %s,생산 속도: %s,
+ITEMS,Items,Objets,Oggetti,,,Componentes,아이템,
+SALE_SUCCESS,Sale successful,Vendu avec succès,Vendita riuscita,,,Vendido exitosamente,판매 성공,
+PURCHASE_SUCCESS,Purchase successful,Acheté avec succès,Acquista riuscita,,,Comprado exitosamente,구매 성공,
+SELL,Sell,Vendre,Vendere,,,Vender,팔기,
+PURCHASE_SALE_IMPOSSIBLE,Purchase/sale impossible,Achat/vente impossible,Acquista/vendita impossibile,,,Compra/venta imposible,구매/판매 불가,
+CANT_BUY,Can't buy,Achat impossible,Acquista impossibile,,,Compra imposible,구매 불가,
+CANT_SELL,Can't sell,Vente impossible,Vendita impossibile,,,Venta imposible,판매 불가,
+CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Cliccare per raccogliere,,,Haz click para recolectar,클릭하면 수확,
+CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,,,Fabricación exitosa,제작 성공,
+SCIENCE_TREE,Science tree,Arbre de science,Albero di scienza,,,Árbol científico,,
+SPACE_AGRICULTURE,Space agriculture,Agriculture spatiale,Agricoltura spaziale,,,Agricultura espacial,,
+SA_DESC,Allows you to farm basic metals.,,,,,Te permite cultivar metales.,,
+RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca fatta,,,Investigación completa,연구 완료,
+USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,Haz click en un edificio para acelerar la construcción,가속화할 빌딩을 클릭하세요,
+USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,Haz click en un edificio para hacer overclock,오버클럭할 빌딩을 클릭하세요,
+RESEARCH_LAB,Research lab,Labo de recherche,Laboratorio di ricerca,,,Laboratorio de investigación,연구 실험실,
+RL_DESC,Does research on its own,Fait de la recherche en autonomie,Fa ricerca da solo,,,Investiga por su cuenta,자기 혼자서 조사합니다,
+MINERAL_SILO,Mineral silo,,Magazzino di minerali,,,Silo de minerales,광물 사일로,
+MS_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de minéraux,Aumenta la capacità massima di minerali,,,Incrementa el almacenamiento máximo de minerales,광물 저장 용량을 올립니다,
+REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungere %s per sbloccare,,,Alcanza %s para desbloquear,,
+GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,,,Juego guardado,게임 저장했습니다,
+CAVE,Cave,Grotte,Grotta,,,Cueva,동굴,
+CAVE_DESC,"You will need a rover to explore this cave. Start by constructing a research lab, then research the Rover construction science!","Il faut avoir un rover pour explorer cette grotte. D'abord il faut construire un labo de recherche, puis rechercher ""Construction des rovers"".","Ti serve un rover per esplorare questa grotta. Innanzitutto devi costruire un labo di ricerca, poi devi ricercare ""Costruzione dei rover"".",,,Necesitas un rover para explorar esta cueva. Empieza por construir un laboratorio y luego investiga construcción de rover!,,
+TAKE_ALL,Press F to take all,Appuyez sur F pour tout prendre,Premere F per prendere tutto,,,Presiona F para tomarlo todo,F 누르면 모두 가져갑니다,
+F_TO_EXIT,Press F to exit cave,Appuyez sur F pour sortir de la grotte,Premere F per uscire dalla grotta,,,Presiona F para salir de la cueva,F 누르면 둥굴에서 나갑니다,
+F_TO_GO_DOWN,Press F to go down,Appuyez sur F pour descendre,Premere F per scendere,,,Presiona F para bajar,F 누르면 내려갑니다,
+F_TO_GO_UP,Press F to go up,Appuyez sur F pour monter,Premere F per salire,,,Presiona F para subir,F 누르면 올라갑니다,
+WEIGHT_INV_FULL_CHEST,The rover is unable to take everything in the chest.,,,,,Este rover es incapaz de llevárselo todo en el cofre.,,
+WEIGHT_INV_FULL_MINING,The rover is unable to take everything you just mined.,,Il rover non può più prendere tutto quello che hai appena scavato.,,,,,
+CAVE_FLOOR,Floor B%s,Étage B%s,Piano B%s,,,Piso B%s,지하 %s층,
+NUM_FLOORS,%s floors,%s étages,%s piani,,,%s pisos,층 수: %s,
+FLOOR_SIZE,Floor size: {size}x{size},Dimensions des étages: {size}x{size},Dimensioni dei piani: {size}x{size},,,Tamaño del piso: {size}x{size},층 크기: {size}x{size},
+VEHICLES_ON_PLANET,Vehicles on this planet,Véhicules sur cette planète,Veicoli su questo pianeta,,,Vehículos en este planeta,이 행성에 있는 차량,
+VEHICLES,Vehicles,Véhicules,Veicoli,,,Vehículos,차량,
+ROVERS,Rovers,Rovers,Rover,,,Rovers,,
+SHIPS,Ships,Vaisseaux,Navicelle,,,Naves,,
+SATELLITES,Satellites,Satellites,Satelliti,,,Satélites,위성,
+VEHICLES_DESC,"Vehicles help you interact with the universe, such as exploring caves and conquering planets.","Les véhicules te permettent d'interagir avec l'univers (exploration des grottes, conquête des planètes etc.)","I veicoli ti permettono di interagire con l'universo (esplorazione delle grotte, conquista dei pianeti ecc.)",,,"Los vehículos te permiten interactuar con el universo, ya sea explorando cuevas o conquistando planetas.",,
+ROVER_CONSTRUCTION,Rover construction,Construction des rovers,Costruzione dei rover,,,Construcción de rover,,
+ROVER_CONSTR_CENTER,Rover construction center,Centre de construction des rovers,Centro di costruzione dei rover,,,Centro de construcción de rovers,,
+RC_DESC,Explore caves with rovers!,Explorez des grottes avec des rovers!,Esplora grotte con i rover!,,,Explora cuevas con rovers!,,
+MULT_ROVER_STAT_BY,Multiplies rovers' stats by %s,Multiplie les stats des rovers par %s,Moltiplica le stat dei rover per %s,,,Mulitplica las estadísticas de los rovers por %s,,
+SA_DONE,You unlocked space agriculture! You can now craft seeds and fertilizers.,,,,,Haz desbloqueado agricultura espacial!,,
+RC_DONE,You unlocked rover construction! You can now construct the rover construction center.,,,,,Haz desbloqueado construcción de rover! Ahora puedes construir el rover en su centro de construcción.,,
+CONSTRUCT_ROVER,Construct a rover,Construire un rover,Costruire un rover,,,Construir un rover,,
+STATS,Stats,Stats,Stat,,,Estadísticas,,
+LASER_WEAPON_DESC,Allows the rover to attack enemies with lasers.,Permet au rover d'attaquer les ennemis avec des lasers.,,,,Permite al rover atacar enemigos con lasers.,,
+MINING_LASER_DESC,Allows the rover to mine rocks in caves.,Permet au rover de miner les roches dans les grottes.,,,,Le permite al rover minar rocas en las cuevas.,,
+CLICK_TO_REMOVE,Click to remove,Cliquer pour retirer,Cliccare per togliere,,,Click para remover,클릭: 제거하기,
+CLICK_TO_ADD_COMP,Click to add a component,Cliquer pour ajouter un composant,Cliccare per aggiungere una componente,,,Click para añadir un componente,,
+ROVER_UNDER_CONSTR,The rover is under construction!,Le rover est en construction!,Il rover è in costruzione!,,,Este rover está siendo construido!,,
+LASER,Laser,Laser,Laser,,,Láser,레이저,
+MINING_LASER,Mining laser,Laser de minage,Laser di scavo,,,Láser de minería,,
+COOLDOWN,Cooldown,,,,,Cooldown,,
+DAMAGE,Damage,Dégâts,Danno,,,Daño,,
+CLICK_TO_USE_ROVER,Click to use this rover to explore a cave,Cliquez pour utiliser ce rover comme explorateur de grotte,,,,Haz click en este rover para explorar una cueva,,
+CLICK_A_CAVE_TO_EXPLORE,Click a cave to explore,Cliquez une grotte à explorer,Cliccare una grotta da esplorare,,,Haz click en una cueva para explorarla,,
+RCC_DESC,Build rovers with this building.,Construisez des rovers avec ce bâtiment.,,,,Construye rovers en este edificio.,,
+SHIFT_CLICK_TO_LOOT_ROVER,Shift click to take everything from the rover,Maj + clic pour prendre tout ce que le rover possède,,,,Shift click para descargar todo del rover,,
+ROVER_REKT_TITLE,Rover destroyed,Rover détruit,Rover distrutto,,,Rover destruido,,
+ROVER_REKT,Your rover got wrecked by enemies! It lost half of each resource as a result (rounded down).,,,,,"Tu rover fue destruido por enemigos! como resultado, perdió la mitad de sus recursos (Redondeado).",,
+YOU_MINED,You mined:,Vous avez miné: ,Hai minato:,,,Minaste:,,
+TIER_X_CHEST,Tier %s chest,Coffre de rang %s,Forziere rango %s,,,Cofre de rango %s,,
+HX_CORE,Helix core,Noyau Helix,Nucleo Helix,,,Núcleo Helix,핼릭스 핵,
+ITEMS_COLLECTED,Items collected,,Oggetti raccolti,,,Objetos recogidos,,
+SETTINGS,Settings,Paramètres,Impostazioni,,,Ajustes,설정,
+MASTER,Master,Principal,Principale,,,Todo,,
+MUSIC,Music,Musique,Musica,,,Música,음악,
+SFX,Sounds,Sons,Suoni,,,Sonidos,,
+HOLE_DEPTH,Hole depth,Profondeur du trou,Profondità del buco,,,Profundidad,구멍 크기,
+SPEED_MULTIPLIER,Speed multiplier,Multiplicateur de vitesse,Moltiplicatore di velocità,,,Multiplicador de velocidad,속도 승수,
+COSTS,Costs,Coûts,Costi,,,Costos,비용,
+MINERAL_UPGRADES,Mineral upgrades,Améliorations minéraux,Miglioramenti minerali,,,Potenciadores minerales,,
+MU_DESC,Improve various areas of the game using minerals.,Améliorez différentes parties du jeu en échange de minéraux.,,,,Mejora algunas áreas del juego usando minerales.,,
+MV_NAME,Mineral value,Valeur des minéraux,Valore dei minerali,,,Valor del mineral,,
+MV_DESC,The amount of money you get per mineral sold.,,,,,La cantidad de dinero que obtienes por mineral vendido.,,
+UPGRADE_NOUN,Upgrade,Amélioration,Miglioramento,,,Potenciador,,
+EFFECTS,Effects,Effets,Effeti,,,Efectos,,
+UPGRADE_COST,Upgrade cost,Coût de l'amélioration,Costo di miglioramento,,,Costo de potenciador,,
+NOT_ENOUGH_MINERALS,You don't have enough minerals.,Vous n'avez pas assez de minéraux.,Non hai abbastanza minerali.,,,No tienes suficientes minerales.,광물이 부족합니다.,
+MSMB_NAME,Mining speed multiplier boost,,Potenziamento molt. di velocità di scavo,,,Multiplicador de velocidad minera,,
+MSMB_DESC,This multiplies the speed multiplier in mining (that appears when playing the minigame).,,Questo moltiplica il moltiplicatore di velocità di scavo (che appare mentre giochi al mini gioco),,,Multiplica la mejora de velocidad de minado que aparece con el minijuego.,,
+CRATER,Crater,Cratère,Cratere,,,Cráter,충돌구,
+CRATER_DESC,"Craters are formed by asteroids, containing valuable resources, that hit planets. Mining craters gives you much more of a specific metal.","Les cratères sont formées par des astéroïdes, qui contiennent des ressources de valeur. Lors de son minage, vous trouverez une quantité beaucoup plus importante d'un métal spécifique.",,,,Los cráteres son formados por asteroides ricos en recursos que impactan contra el planeta. Minarlos te rendirá una gran cantidad de un metal específico.,,
+PRODUCTION,Production,Production,Produzione,,,Producción,,
+PRODUCTION_DESC,These are buildings that transform resources.,,Questi sono edifici che trasformano risorse.,,,Edificios que transforman rcursos.,,
+METAL_CRATER,{metal} {crater},{crater} en {metal},{crater} di {metal},,,{crater} de {metal},{metal} {crater},
+STONE_CRUSHER,Stone crusher,,,,,Pulverizador de piedra,,
+SC_DESC,Crushes stone to bits and extracts usable resources.,Écrase de la pierre et en extrait des ressources.,,,,Rompe la piedra en pedacitos para extraer recursos más útiles.,,
+CRUSHES_X,Crushes %s,Écrase %s,,,,Pulveriza %s,,
+CAN_STORE_UP_TO,Can store up to %s,Peut stocker jusqu'à %s,,,,Puede almacenar hasta %s,%s 까지 저장할수 있음,
+TIME,Time,Temps,Tempo,,,Tiempo,시간,
+CLICK_TO_CONFIGURE,Click to configure,Cliquez pour configurer,Cliccare per configurare,,,Haz click para configurar,,
+STONE_COMPOSITION,Stone composition,Composition de pierre,Composizione di pietra,,,Composición de la piedra,,
+START_CRUSHING,Start crushing,Écraser,,,,Iniciar pulverización,,
+STOP_CRUSHING,Stop crushing,Arrêter,,,,Detener pulverización,,
+EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Resultados esperados,,
+RESOURCES_EXTRACTED,Resources extracted,Ressources extraites,Risorse estratte,,,Recursos extraídos,,
+NO_STONE,You don't have any stone!,Vous n'avez pas de pierre!,Non hai pietra!,,,No tienes piedra!,,
+SILICON,Silicon,Silicium,Silicio,,,Silicio,,
+COMP_OF_STONE_BEING_CR,Composition of stone being crushed,Composition de la pierre étant écrasée,,,,Composición de la piedra siendo pulverizada,,
+COLDEST_STAR_TEMPERATURE,Coldest star temperature,Température de l'étoile la plus froide,Temperature della stella più fredda,,,,,
+CLICK_TO_EDIT,Click to edit,Cliquez pour modifier,Cliccare per modificare,,,Haz click para editar,,
+DONE,Done,Terminé,Fatto,,,Listo,,
+NUMBER_OF_SYSTEMS,Number of systems,Nombre de systèmes,Numero di sistemi,,,Número de sistemas,,
+GALAXY_ENTERED,Galaxy entered,Galaxie visitée,Galassia visitata,,,Galaxia accedida,,
+MAGNETIC_FIELD_STRENGTH,Magnetic field strength,Force du champ magnétique,,,,Fuerza del campo magnético,,
+DARK_MATTER,Dark matter,Matière noire,,,,Materia oscura,,
+CH4_NAME,Methane,Méthane,,,,Metano,,
+CO2_NAME,Carbon dioxide,Dioxyde de carbone,,,,Dióxido de carbono,,
+O_NAME,Oxygen,Oxygène,Ossigeno,,,,,
+H_NAME,Hydrogen,Hydrogène,Idrogeno,,,,,
+AURORA,Aurora,Aurore,Aurora,,,,,
+AURORA_DESC,Auroras are colorful lights caused by interactions of solar wind with the planet's magnetosphere. They have all sorts of effects on the tile that they happen to shine.,Les aurores sont des faisceaux de lumière créés par l'interaction entre le vent solaire et la magnétosphère de la planète. ,,,,,,
+AURORA_INTENSITY,Aurora intensity,Intensité de l'aurore,Intensità dell'aurora,,,,,
+COLLECT_ALL_PLANET,Collect all resources on this planet,,Raccogliere tutte le risorse su questo pianeta,,,,,
+COLLECT_ALL_SYSTEM,Collect all resources in this system,,Raccogliere tutte le risorse in questo sistema,,,,,
+COLLECT_ALL_GALAXY,Collect all resources in this galaxy,,Raccogliere tutte le risorse in questa galassia,,,,,
+RESOURCES_COLLECTED,Resources collected,,Risorse raccolte,,,,,
+ICE,Ice,Glace,Ghiaccio,,,,얼음,
+METAL_COMP,{metal} {comp},{comp} en {metal},{comp} di {metal},,,,{metal} {comp},
+ARMOR,Armor,Blindage,Armatura,,,,,
+WHEELS,Wheels,Roues,Ruote,,,, 바퀴,
+CC,Cargo container,Conteneur,Contenitore,,,,,
+HEALTH_POINTS,Health points,Points de vie,Punti di vita,,,,,
+ATTACK,Attack,Attaque,Attacco,,Angriff,Ataque,공격력,
+DEFENSE,Defense,Défense,Difesa,,Abwehr,Defensa,방어력,
+CARGO_CAPACITY,Cargo capacity,Capacité cargo,Capacità carica,,,,,
+MOVEMENT_SPEED,Movement speed,Vitesse du mouvement,Velocità di movimento,,,,,
+SELECT,Select,Sélectionner,Selezionare,,,,선택하기,
+SELECT_X,{select} {something},{select} {something},{select} {something},,,,{something} {select},
+CLICK_TO_CHANGE,Click to change,Cliquez pour changer,Cliccare per cambiare,,,,,
+RED_LASER,Red {laser},{laser} rouge,{laser} rosso,,,,,
+ORANGE_LASER,Orange {laser},{laser} orange,{laser} arancione,,,,,
+YELLOW_LASER,Yellow {laser},{laser} jaune,{laser} giallo,,,,,
+GREEN_LASER,Green {laser},{laser} vert,{laser} verde,,,,,
+BLUE_LASER,Blue {laser},,,,,,,
+PURPLE_LASER,Purple {laser},,,,,,,
+UV_LASER,Ultraviolet {laser},,,,,,,
+XRAY_LASER,X-ray {laser},,,,,,,
+GAMMARAY_LASER,Gamma-ray {laser},,,,,,,
+ULTRAGAMMARAY_LASER,Ultragamma-ray {laser},,,,,,,
+MACRO_ENGINEERING,Macro Engineering,,,,,,,
+CHEMICAL_DRIVE,Chemical Drive,,,,,,,
+ION_DRIVE,Ion Drive,,,,,,,
+FTL_DRIVE,FTL drive,,,,,,,
+FUSION_DRIVE,Fusion Drive,,,,,,,
+PHOTON_DRIVE,Photon Drive,,,,,,,
+WEAPONS,Weapons,Armes,Armi,,,,,
+MINING_TOOLS,Mining tools,Outils de minage,,,,,,
+ARMOR_DESC,Armor protects the rover from cave hazards.,L'armure protège le rover contre les dangers dans les grottes.,,,,,,
+WHEELS_DESC,Wheels allow the rover to move.,Les roues permettent au rover de se déplacer.,,,,,,
+CC_DESC,Cargo containers expand the rover's inventory capacity.,,,,,,,
+X_TO_REMOVE,Press X to remove,Appuyez sur X pour enlever,,,,,,
+RANGE,Range,Portée,Raggio,,,,,
+REMOVE_WHEELS_ATTEMPT,You can't remove wheels! (how else would your rover be able to move?),Impossible de retirer les roues (il se déplacerait comment sinon?),,,,,,
+OL_DESC,Red lasers too weak? Maybe decreasing the wavelength will help!,Lasers rouges pas assez forts? Et si on diminuait la longueur d'onde?,,,,,,
+YL_DESC,Orange lasers too weak? Why not decrease the wavelength even more?,Lasers oranges pas assez forts? Et si on diminuait la période?,,,,,,
+GL_DESC,Yellow lasers too weak? Decreasing the wavelength once again turns it to green!,Lasers jaunes pas assez forts? Et si on augmentait la fréquence?,,,,,,
+BL_DESC,Green lasers too weak? Just keep shrinking that wavelength!,Lasers verts pas assez forts? Et si on augmentait la pulsation?,,,,,,
+PL_DESC,Blue lasers too weak? Make that wavelength even smaller!,Lasers bleus pas assez forts? Et si on augmentait le vecteur d'onde?,,,,,,
+UVL_DESC,Purple lasers too weak? Maybe try going outside the visible range?,Lasers violets pas assez forts? Une seule solution: sortir du domaine du visible!,,,,,,
+XRL_DESC,Ultraviolet lasers too weak? You know the drill.,,,,,,,
+GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,,,,,,,
+UGRL_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,,,,,,,
+MAE_DESC,"Base science for constructing megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,,,
+CD_DESC,Allows all sorts of exotic chemical reactions in the ship's engines to speed up travel.\nThis unlocks the drive menu in the ship panel.,,,,,,,
+FTL_DESC,Divides travel times by 10.,,,,,,,
+ID_DESC,Ionizes noble gases to speed up travel even further.,,,,,,,
+FD_DESC,Fuse elements together for even more speed and efficiency.,,,,,,,
+PD_DESC,Uses light itself for maximum travel speed.\nThis halves ship travelling times.,,,,,,,
+GLASS_FACTORY,Glass factory,Usine de verre,,,,,,
+GF_DESC,Produces glass from sand,Produit du verre à partir du sable,,,,,,
+SELL_MINERALS,Sell all your minerals for money,Vendre tous les minéraux pour de l'argent,,,,,,
+START,Start,Commencer,Avviare,,,,,
+NO_SAND,You don't have any sand!,Tu n'as pas de sable!,Non hai sabbia!,,,,,
+STOP,Stop,Arrêter,,,,,,
+RESOURCES_PRODUCED,Resources produced,Ressources produites,Risorse prodotte,,,,,
+REMAINING,remaining,restant(e)s,rimanenti,,,,,
+SHIP_CONTROL,Ship control,,,,,,,
+SCT_DESC,This science is needed to gain control of abandoned ships scattered across the universe.,,,,,,,
+ABANDONED_SHIP,"A spaceship abandoned by... someone. Research the necessary science to take control of this ship. You'll want this ship to discover, conquer and explore other planets.","Un vaisseau spatial abandonné par... quelqu'un. Recherchez la science correspondante pour prendre le contrôle de ce vaisseau. Il faudra le faire pour pouvoir découvrir, conquérir et explorer d'autres planètes.",,,,,,
+SHIP_CONTROL_SUCCESS,Ship control success!,,,,,,,
+SHIP_CONTROL_FAIL,"You haven't researched ""Ship control"" yet!",,,,,,,
+SHIP_CONTROL_HELP,Construct a research lab to start producing science points.,,,,,,,
+RESEARCH_NEEDED,Research needed,,,,,,,
+CLICK_TO_CONTROL_SHIP,Click to take control of this ship,,,,,,,
+SEND_SHIPS,Send ships,Envoyer des vaisseaux,,,,,,
+SEND_SHIPS_DESC,Send ships to this planet to attack the enemies and conquer the planet!,Envoyez vos vaisseaux à cette planète pour attaquer les ennemis et conquérir la planète!,,,,,,
+ENEMIES,Enemies,Ennemis,,,,,,
+LESS_ENERGY,Less energy,Moins d'énergie,,,,,,
+FASTER_TRAVEL,Faster travel,Voyage plus rapide,,,,,,
+SEND,Send,Envoyer,,,,,,
+PLANET_EE_COST,Planet entry/exit cost,Coût d'entrée/sortie planétaire,,,,,,
+PLANET_EE_COST_DESC,"To travel between planets, ships must first escape the departing planet's gravity and go through its atmosphere. The destination planet's gravity and atmosphere also influences the energy cost, but not as much as the departing planet.",,,,,,,
+ATMOSPHERE_EXIT,Atmosphere exit,Sortie atmosphère,,,,,,
+ATMOSPHERE_ENTRY,Atmosphere entry,Entrée atmosphère,,,,,,
+GRAVITY_EXIT,Gravity exit,Sortie gravité,,,,,,
+GRAVITY_ENTRY,Gravity entry,Entrée gravité,,,,,,
+NOT_ENOUGH_ENERGY,You don't have enough energy.,Vous n'avez pas assez d'énergie!,Non hai abbastanza energia!,,,,,
+TIME_LEFT,Time left,Temps restant,Tempo rimanente,,,,,
+PLAY_SHIP_MINIGAME,Click to accelerate ship travel by playing a minigame.,,,,,,,
+TRAVEL_ACCELERATED_BY,Travel accelerated by %s,,,,,,,
+MOVE_SHIP_WITH_MOUSE,The ship follows your cursor. Dodge the obstacles!,,,,,,,
+CLICK_ANYWHERE_TO_CONTINUE,Click anywhere to continue,,,,,,,
+PRESS_ANY_KEY_TO_CONTINUE,Press any key to continue,,,,,,,
+STM_AFTER_PATTERN_1,"The ship's hitbox is only a pixel, right at the tip of your cursor. Makes life easier for both you and the developer!",,,,,,,
+STM_AFTER_PATTERN_2,"Each level consists of a variety of ""patterns"". You just went through 2 patterns. If you go through 3 patterns without being hit once, you go up a level!",,,,,,,
+STM_LEVEL_2,"You went up a level! Waves become more difficult as you gain levels, but ship travel is accelerated more.",,,,,,,
+STM_LEVEL_3,Obstacles don't always come from the right. They can come from all 4 sides!,,,,,,,
+STM_LEVEL_4,Look out for crates. They contain all sorts of useful things! (not yet in the game),,,,,,,
+NO_SHIPS,No ships,Pas de vaisseaux,,,,,,
+NO_SHIPS_DESC,You need to have a ship to be able to attack the enemies on this planet.,Il faut avoir un vaisseau pour pouvoir attaquer les ennemis sur cette planète.,,,,,,
+CLOSE_BUTTON_DESC1,You can also right click anywhere to close panels.,Un clic droit n'importe où ferme aussi les fenêtres.,,,,,,
+CLOSE_BUTTON_DESC2,You can also right click anywhere to cancel actions.,Un clic droit n'importe où annule aussi les actions.,,,,,,
+CLICK_TO_BATTLE,Click to initiate battle,,,,,,,
+MISSED,Missed,Raté,Mancato,,Verfehlt,Fallo,회피,
+CRITICAL,Critical,Critique,Critico,,Kritisch,CrÍtico,치명타,
+ACCURACY,Accuracy,Précision,Precisione,,Genauigkeit,Precisión,명중률,
+EVADE,Evade,Esquive,Evasione,,Ausweichrate,Evasión,회피율,
+BATTLE_HELP,Dodge enemy attacks by moving the ship yourself with your keyboard!\n%s or %s: go up\n%s or %s: go down\nHold %s to move the ship faster,,,,,,,
+SHOW_WEAPON_XPS,Show weapon XPs,,,,,,,
+BULLET,Bullet,,,,,,,
+BULLET_DESC,Average damage and accuracy weapon.,,,,,,,
+LASER_DESC,Highly accurate but low damage.,,,,,,,
+BOMB,Bomb,,,,,,,
+BOMB_DESC,Very powerful but easy for enemies to dodge.,,,,,,,
+LIGHT,Light,,,,,,,
+LIGHT_DESC,Very low damage but hits all enemies and has good accuracy.,,,,,,,
+BASE_DAMAGE,Base damage,,,,,,,
+BASE_ACCURACY,Base accuracy,,,,,,,
+BATTLE_LOST,Battle lost,,,,,,,
+BATTLE_LOST_DESC,"You lost the battle! But you didn't lose anything, even your ships are fully repaired.",,,,,,,
+TRAVEL_COSTS,Travel costs,,,,,,,
+AUTOSAVE_LIGHT_DESC,This light glows green when the game just autosaved.,,,,,,,
+AUTOSAVE_INTERVAL,Autosave interval,,,,,,,
+AUTOSAVE_LIGHT,Autosave light,,,,,,,
+CLICK_TO_FERTILIZE,Click a plant to fertilize,,,,,,,
+CLICK_TO_GO_HOME,Click to go to your home planet,,,,,,,
+AURORA_MULTIPLIER,Aurora multiplier,,,,,,,
+AURORA_MULT_INFO,"An aurora is blessing this tile! Mining here will give you %sx more materials and metals, and will appear %sx more often.",,,,,,,
+HOLD_SHIFT_TO_SELECT_SIMILAR,Hold shift to select all other buildings of this type,Appuyez et tenez Maj pour sélectionner tous les autres bâtiments de ce type,,,,,,
+VARIES,Varies,Varie,,,,,,
+VARYING_LEVELS,Varying levels,Niveaux variés,,,,,,
+DESTROY_X_BUILDINGS,Destroy %s buildings? You don't get anything back.,Détruire %s bâtiments? Vous ne récupérerez rien.,,,,,,
+AIE_NAME,Aurora intensity exponent,,,,,,,
+AIE_DESC,"All aurora multipliers are equal to (1 + aurora intensity)^exponent, where exponent is the value of this upgrade.\nException: caves always have an exponent of 1.5.",,,,,,,
+TOTAL_ENERGY_COST,Total energy cost,,,,,,,
+WARNING,Warning,,,,,,,
+HIGH_PRESSURE_PLANET,"This planet has a very high atmospheric pressure. Your ship will have an easy time going in, but it will\nneed immense amounts of energy (in the millions!) to get out. Send anyway?",,,,,,,
+IS_NAME,Inventory slots,,,,,,,
+IS_DESC,Number of slots you have in your inventory.,,,,,,,
+X_SLOTS,%s slots,,,,,,,
+ENABLE_AUTOSAVE,Enable autosave,,,,,,,
+STEAM_ENGINE,Steam engine,Machine à vapeur,,,,,,
+SE_DESC,Steam engines burn coal to produce energy.,Les machines à vapeurs brûlent du charbon pour produire de l'énergie.,,,,,,
+M_DS_NAME,Dyson sphere,,,,,,,
+STAGE_X_X,stage %s/%s,,,,,,,
+M_DS_DESC,Captures energy by surrounding a star.\nCosts scale with the star's size.\nOutput scales with the star's luminosity.\nAll planets in the system must be conquered before construction is possible.,,,,,,,
+DS1_DESC,Dyson spheres are structures designed to capture all energy coming from a star.\nThis science unlocks the first construction stage of Dyson spheres.,,,,,,,
+DS2_DESC,Unlocks the second construction stage of Dyson spheres.,,,,,,,
+DS3_DESC,Unlocks the third construction stage of Dyson spheres.,,,,,,,
+DS4_DESC,Unlocks the 4th and final construction stage of Dyson spheres.,,,,,,,
+M_SE_NAME,Space elevator,,,,,,,
+M_SE_DESC,"Allows vehicles to enter/exit a planet for free, and reduces travel costs. Costs scale with the planet's size and atmospheric pressure.",,,,,,,
+SE1_DESC,"Space elevators let ships and other vehicles enter or exit a planet with no energy cost, and also give a respectable discount to travel costs.\nThis science unlocks the first construction stage of space elevators.",,,,,,,
+SE2_DESC,Unlocks the second construction stage of space elevators.,,,,,,,
+SE3_DESC,Unlocks the third and final construction stage of space elevators.,,,,,,,
+SC_TREE_ZOOM,You can drag the view around and use the scroll wheel to zoom in/out!,,,,,,,
+MEGASTRUCTURES,Megastructures,,,,,,,
+MEGASTRUCTURES_DESC,Construct the base stages of megastructures.,,,,,,,
+CLICK_PLANET_TO_CONSTRUCT,Click a planet to construct,,,,,,,
+CLICK_STAR_TO_CONSTRUCT,Click a star to construct,,,,,,,
+CONSTRUCTION_COSTS,Construction costs,,,,,,,
+RESET_TO_DEFAULT,Reset to default min/max values,,,,,,,
+BIGGEST_STAR_SIZE,Biggest star size,,,,,,,
+BRIGHTEST_STAR_LUMINOSITY,Brightest star luminosity,,,,,,,
+PLATINUM,Platinum,Platine,,,,,,
+TITANIUM,Titanium,Titane,,,,,,
+DIAMOND,Diamond,Diamant,,,,,,
+NANOCRYSTAL,Nanocrystal,Nanocristal,,,,,,
+MYTHRIL,Mythril,Mithril,,,,,,
+PRODUCTION_PER_SECOND,Production per second:,,,,,,,
+MS_ALREADY_PRESENT,There's already a megastructure around this star!,,,,,,,
+MS_ALREADY_PRESENT_PLANET,There's already a megastructure around this planet!,,,,,,,
+PRESS_F_TO_CONTINUE_CONSTR,Press F to continue construction,,,,,,,
+MINING_MACHINE,Mining machine,Machine de minage,,,,,,
+MM_DESC,Automatically mines tiles for you.\nThis building does not play the minigame.,Mine automatiquement les tuiles.,,,,,,
+X_M_PER_SECOND,Mines %s m/%s,Mine %s m/%s,,,,,,
+X_M_AT_ONCE,Can mine %s m at once,Peut miner %s m à la fois,,,,,,
+AUTO_MINING,Auto mining,Minage automatique,,,,,,
+AM_DESC,Unlocks a building that automatically mines tiles.,Débloque un bâtiment qui mine automatiquement les tuiles.,,,,,,
+INFINITE_RESEARCH,Infinite research,Recherche infinie,Ricerca infinita,,,,,
+MEE_X,Mineral extractor efficiency %s,,,,,,,
+MEE_DESC,Each research multiplies all mineral extractors' speed and capacity by 1.2.,,,,,,,
+EPE_X,Energy production efficiency %s,,,,,,,
+EPE_DESC,Each research multiplies energy production speed of all power plants and solar panels and their capacity by 1.2.,,,,,,,
+RLE_X,Research lab efficiency %s,,,,,,,
+RLE_DESC,Each research multiplies all research lab's speed by 1.2.,,,,,,,
+MSE_X,Mineral silo expansion %s,,,,,,,
+MSE_DESC,Each research multiplies all mineral silos' capacity by 1.2.,,,,,,,
+MMS_X,Manual mining speed %s,,,,,,,
+MMS_DESC,Each research multiplies manual mining speed by 1.2.,,,,,,,
+CURRENT_MULT,Current multiplier,,,,,,,
+HX_CORE_DESC,Gives 3 XP to a ship.,,,,,,,
+CLICK_SHIP_TO_GIVE_XP,Click a ship to give it XP,,,,,,,
+NO_SHIPS_2,You don't have any ships!,,,,,,,
+HOLD_SHIFT_TO_MASS_BUILD,Hold shift and drag to place many buildings at once,,,,,,,
+LONG_TRAVEL,"Your ships will be travelling for a long time. Even though there are ways to speed up travel, there is\nno way to cancel it. It's probably better to upgrade your energy production buildings first. Send anyway?",,,,,,,
+ALUMINIUM_PICKAXE,Aluminium pickaxe,,,,,,,
+SILVER_PICKAXE,Silver pickaxe,,,,,,,
+GOLD_PICKAXE,Gold pickaxe,,,,,,,
+GEMSTONE_PICKAXE,Gemstone pickaxe,,,,,,,
+GEMSTONE_PICKAXE_DESC,Pretty!,,,,,,,
+STAR_MS_ERROR,All planets in this system must be conquered before building a megastructure around stars.,,,,,,,
+PLANET_MS_ERROR,This planet must be conquered before building a megastructure on it.,,,,,,,
+VICTORY,Victory,,,,,,,
+SYSTEM_CONQUERED,System conquered,,,,,,,
+M_SE_0_BENEFITS,Planet entry/exit costs -10%\nTravel costs -5%,,,,,,,
+M_SE_1_BENEFITS,Planet entry/exit costs -40%\nTravel costs -20%,,,,,,,
+M_SE_2_BENEFITS,Planet entry/exit costs -70%\nTravel costs -35%,,,,,,,
+M_SE_3_BENEFITS,Planet entry/exit costs -100%\nTravel costs -50%,,,,,,,
+F_TO_CONFIRM,Press F to confirm,,,,,,,
+SHIP_SIGNAL,You detect a signal coming from somewhere on this planet...,,,,,,,
+SIGNAL_DETECTED,Signal detected,,,,,,,
+RELIC_TEXT,"Stuck in this cave, unable to find my way out\nMy ship probably ran out of fuel on some other planet\nNot too sure what to do here anymore\nIf someone's reading this, I guess you can have my ship\nI hid a ship locator device just south of this cave, just dig a few meters there\nHope you can make good use of it.\nI'm running out of ink, so I don't think I can write much more\n - David",,,,,,,
+SHIP_LOCATOR,Ship locator,,,,,,,
+LOCATE_SHIP,Locate ship,,,,,,,
+SHIP_LOCATOR_ERROR,Go to galaxy view in order to use this device!,,,,,,,
+LOCATE_SHIP_HELP,Move mouse to locate ship,,,,,,,
+GEMSTONE,Gemstone,,,,,,,
+OUTPUT_MULTIPLIER,x%s output multiplier,,,,,,,
+START_NEW_GAME,Start a new game? Your current save will be erased.,Commencer une nouvelle partie? Votre partie sauvegardée sera écrasée.,,,,,,
+IRON_SEEDS,Iron seeds,Graines de fer,,,,,,
+SHIPS_ALREADY_TRAVELLING,Your ships are already travelling!,,,,,,,
+CTRL_CLICK_TO_SEND_SHIPS,Ctrl click to send ships here,,,,,,,
+PRESS_E_TO_SPRINT,Your rover can sprint (movement speed greater than 1)! Press E to toggle sprint mode.,Votre rover peut sprinter (vitesse de déplacement supérieure à 1)! Appuyez sur E pour (dés)activer le mode sprint.,,,,,,
+SPRINT_MODE,Sprint mode,Mode sprint,,,,,,
+NO_COAL,You don't have any coal!,Vous n'avez pas de charbon!,,,,,,
+GREENHOUSE,Greenhouse,Serre,,,,,,
+GH_DESC,Buildings that protect plants from the harsh environment.\nEnergy costs scale with how far the planet temperature is away from 0°C.,,,,,,,
+EXTRA_GREENHOUSES,Extraterrestrial greenhouses,,,,,,,
+EGH_DESC,Unlocks greenhouses that increase plant growth speed and yield.,,,,,,,
+SUPPORT,Support,,,,,,,
+SUPPORT_DESC,"Buildings that boost other buildings, plants etc.",,,,,,,
+X_PLANT_GROWTH,x %s growth speed,,,,,,,
+X_PLANT_PRODUCE,x %s yield,,,,,,,
+YOU_COLLECTED,You collected:,,,,,,,
+SOLAR_PANELS,Solar panels,,,,,,,
+SP_DESC,Transforms stellar light into usable energy.\nEnergy generation is proportional to planet temperature.,,,,,,,
+OPEN_DRIVE_MENU,Open drive menu,,,,,,,
+CLOSE_DRIVE_MENU,Close drive menu,,,,,,,
+DRIVE_TECHNOLOGY_REQUIRED,Drive technology required,,,,,,,
+FUEL,Fuel,,,,,,,
+TIME_REDUCTION,Time reduction,,,,,,,
+SPEED_UP_SHIPS,Speed up ships,,,,,,,
+SHIPS_NEED_TO_BE_TRAVELLING,Ships need to be travelling,,,,,,,
+DRIVE_SUCESSFULLY_ACTIVATED,Drive successfully activated,,,,,,,
+TOO_FAST,Too fast,,,,,,,
+GO_TO_SHIPS,Click to view the star system where your ships are in,,,,,,,
+INACTIVE_WORMHOLE,Inactive wormhole,,,,,,,
+ACTIVE_WORMHOLE,Active wormhole,,,,,,,
+INACTIVE_WORMHOLE_DESC,"A mysterious wormhole, that probably does what you think it does.\nInvestigate (click) this wormhole to learn how to use it!",,,,,,,
+ACTIVE_WORMHOLE_DESC,"This wormhole is usable! Send your ships to this planet (Ctrl click a planet in system view), then click on this tile to send them to a random planet in this galaxy.",,,,,,,
+INVESTIGATION_COSTS,Investigation costs,,,,,,,
+INVESTIGATION_STARTED,Wormhole investigation started,,,,,,,
+TRAVEL_ETA,Travel ETA,,,,,,,
+CLICK_DRIVE_TO_USE,Click on one of the drives below to use it,,,,,,,
+ATOMS,Atoms,,,,,,,
+NE_NAME,Neon,,,,,,,
+XE_NAME,Xenon,,,,,,,
+INV_ATOMS_DESC,Atoms are what constitute the entire universe. Being able to manipulate these lets you make practically anything.,,,,,,,
+ATMOSPHERE_COMPOSITION,Atmospheric composition,,,,,,,
+ATMOSPHERE,Atmosphere,,,,,,,
+ATOM_MANIPULATION,Atom manipulation,,,,,,,
+ATM_DESC,"Allows you to collect, store and manipulate individual atoms. Also unlocks two buildings: atmosphere extractor and atom manipulator.",,,,,,,
+ATMOSPHERE_EXTRACTOR,Atmosphere extractor,,,,,,,
+AE_DESC,Extracts atoms from the planet's atmosphere.\nExtraction speed is proportional to atmospheric pressure.,,,,,,,
+C_NAME,Carbon,,,,,,,
+N_NAME,Nitrogen,,,,,,,
+PARTICLES,Particles,,,,,,,
+PROTON,Proton,,,,,,,
+PROTON_DESC,Stable subatomic particles. They do not decay and do not require special storage buildings.,,,,,,,
+NEUTRON,Neutron,,,,,,,
+NEUTRON_DESC,"Unstable subatomic particles. If not stored in a special storage building, they decay into either protons or electrons (50% chance) with a half-time of 15 minutes.",,,,,,,
+ELECTRON,Electron,,,,,,,
+ELECTRON_DESC,"Stable subatomic particles. However, due to all the ways electrons can interact with matter, special storage buildings are required to properly store them as free electrons.",,,,,,,
+SUBATOMIC_PARTICLES,Subatomic particles,,,,,,,
+SAP_DESC,"Break down any atom into protons, neutrons and electrons.\nUnlocks the subatomic particle reactor as well as buildings that collect these particles from the natural background radiation.",,,,,,,
+INV_PARTICLES_DESC,Make exciting things with these particles.,,,,,,,
+AMN_NAME,Atom manipulator,,,,,,,
+AMN_DESC,Can transform atoms into metals and vice versa.,,,,,,,
+BASE_SPEED,Base speed,,,,,,,
+REACTIONS_PANEL_DESC,Select a recipe at the left to choose what to transform into what.\nMore recipes can be unlocked with research.,,,,,,,
+TRANSFORM,Transform,,,,,,,
+STMB_NAME,Ship travel minigame boost,,,,,,,
+STMB_DESC,Accelerate ship travel even more while playing the minigame.,,,,,,,
+SHSR_NAME,Ship hitbox size reduction,,,,,,,
+SHSR_DESC,"While in battle, makes the hitbox of all ships smaller to more easily dodge attacks.",,,,,,,
+SI_NAME,Silicon,,,,,,,
+F_NAME,Fluorine,,,,,,,
+FE_NAME,Iron,,,,,,,
+AL_NAME,Aluminium,,,,,,,
+GAS_GIANT,Gas giant,,,,,,,
+HELIUM,Helium,,,,,,,
+HE_NAME,Helium,,,,,,,
+K_NAME,Potassium,,,,,,,
+MG_NAME,Magnesium,,,,,,,
+NA_NAME,Sodium,,,,,,,
+TI_NAME,Titanium,,,,,,,
+CA_NAME,Calcium,,,,,,,
+NI_NAME,Nickel,,,,,,,
+SPR_NAME,Subatomic particle reactor,,,,,,,
+SPR_DESC,Can transform atoms into particles and vice versa.,,,,,,,
+NO_ACTIVITY_ON_GAS_GIANT,Impossible to explore/build on/mine/farm on gas giants!,,,,,,,
+M_MME_NAME,Mega mineral extractor,,,,,,,
+M_MME_DESC,Extracts minerals from gas giants.\nCosts scale with the planet's size.\nOutput scales with the planet's size and atmospheric pressure.,,,,,,,
+MME1_DESC,Mega mineral extractors are built around gas giants designed to filter out all the minerals from the atmosphere.\nThis science unlocks the first construction stage of mega mineral extractors.,,,,,,,
+MME2_DESC,Unlocks the second construction stage of mega mineral extractors.,,,,,,,
+MME3_DESC,Unlocks the third and final construction stage of mega mineral extractors.,,,,,,,
+ONLY_GAS_GIANT,This megastructure can only be built around gas giants.,,,,,,,
+XP_HELP,Every $100 spent constructing/upgrading buildings = 1 XP,,,,,,,
+LOOT_XP_BONUS,Loot/XP multiplier,,,,,,,
+LOOT,Loot,,,,,,,
+LOOT_XP_BONUS_DESC,Multiplier for:\nDodging all attacks: 1.5x\nGetting hit once: 1.25x\nGetting hit twice: 1.1x\nGetting hit more than twice: 1x,,,,,,,
+LV_18_NEEDED_DESC,You need to unlock galaxy view first (reach level 18).,,,,,,,
+LV_18_NEEDED,Level 18 needed,,,,,,,
+CAVE_DIFF_INFO,Enemy stats and resources you get from mining and from treasure are multiplied by this value.,,,,,,,
+STAR_SYSTEM_DIFFICULTY,Star system difficulty,,,,,,,
+FLOOR_MULTIPLIER,Floor multiplier,,,,,,,
+USE_SPEEDUP_MS,Click a megastructure to accelerate construction (%s%% efficiency),,,,,,,
+U_NAME,Uranium,,,,,,,
+TERRAFORM,Terraform,,,,,,,
+TERRAFORM_DESC,"Click on a task the planet should specialize in. Everything on the planet will be wiped. Once terraformed, planets cannot be entered.",,,,,,,
+MINERAL_STORAGE,Mineral storage,,,,,,,
+TERRAFORMING,Terraforming,,,,,,,
+TRR_DESC,"Unlocks terraforming planets. A terraformed planet specializes in a certain task, like storing minerals.\nInstead of constructing only one type of building on a planet, terraforming may be preferred to reduce save file sizes and reduce lag when clicking the collect all button.",,,,,,,
+T_OR_NO_T,Tutorial or no tutorial?,Voulez-vous un tutoriel?,,,,,,
+GUIDE_ME,Guiding me would be nice,Ce serait bien de me guider,,,,,,
+FIGURE_OUT_MYSELF,I'll figure everything out myself,Je vais apprendre tout seul,,,,,,
+NOT_OBVIOUS_GAMEPLAY,(some gameplay elements may not be intuitive),(certains éléments de jeu peuvent être non intuitifs),,,,,,
+TUTORIAL_1,Welcome to Helixteus 3!\nYour objective is to make as much money as possible.,,,,,,,
+TUTORIAL_2,Click this button to construct a building\n(or press C on your keyboard),,,,,,,
+TUTORIAL_3,Start by constructing these to produce minerals.,,,,,,,
+TUTORIAL_4,You have no more energy! Constructing buildings also uses energy most of the time.\nBuild a power plant to start generating energy.,,,,,,,
+TUTORIAL_6,Press Esc or right click anywhere to exit building mode.\nYou can also press the close button at the bottom of the screen.,,,,,,,
+TUTORIAL_7,Click this button to collect all the\nresources produced by your buildings.,,,,,,,
+TUTORIAL_8,You now have some minerals!\nPress this button to sell all of them\nfor $5 each.,,,,,,,
+TUTORIAL_9,You earned some money! Use that money\nto construct 4 more power plants.,,,,,,,
+TUTORIAL_10,Now you have a good energy supply.\nIt's time to increase mineral production for even more money!,,,,,,,
+TUTORIAL_11,"While you wait for the buildings to generate resources,\nyou can go mining rocks yourself to get other useful things.\nClick this button to open the shop menu to buy a pickaxe.",,,,,,,
+TUTORIAL_14,Click this button to pick a tile to mine.,,,,,,,
+TUTORIAL_15,Click this back button to go back to your planet.,,,,,,,
+TUTORIAL_16,A good way of investing money is in research\nto unlock new features and boost resource production.\n,,,,,,,
+TUTORIAL_17,Save up $2000 and 600 energy to construct a research lab.\nDon't hesitate to build more mineral extractors\nand power plants.,,,,,,,
+TUTORIAL_18,Research labs take over 2 minutes to build.\nLet's speed that up. Go to your inventory.,,,,,,,
+TUTORIAL_19,This item speeds up construction of\none building by 2 minutes. You can buy more\nof these in the shop. Click to use it.,,,,,,,
+TUTORIAL_20,Research labs are pretty slow compared to other\nbuildings. Let's overclock it. Open your inventory again.,,,,,,,
+TUTORIAL_22,There we go! Now it's a little faster.,,,,,,,
+TUTORIAL_23,Labs produce science points (SP) that can\nbe spent in the science tree.\nSave up 5 SP to do your first research.\n,,,,,,,
+TUTORIAL_24,You are ready to do your first research!\nClick this to open the science tree.,,,,,,,
+TUTORIAL_25,"Look for the ""Rover construction"" science\nand click to research it.",,,,,,,
+TUTORIAL_26,Now it's time to try doing things on your own.\nThe game will still give you objectives to guide you\na little bit. Experiment with things and have fun!\nThe game now auto-saves every 10 seconds.\n,,,,,,,
+TUTORIAL_27,You have unlocked the star system view!\nThis is where you can see other planets in this star system\nand conquer them. Your planets have a green glow.,,,,,,,
+TUTORIAL_28,You can move/zoom the view like you do in planet view.,,,,,,,
+TUTORIAL_29,You don't seem to have a ship yet. You need to take control\nof the ship that you can find in your home planet.\nCome back here once you have it!,,,,,,,
+TUTORIAL_30,Click a planet with a red glow to send ships over there\nand engage in battle.,,,,,,,
+BUILD_OBJECTIVE,Build {num} {bldg}{s},,,,,,,
+BUILD_OBJECTIVE_2,Build {num} {bldg}s,Construire: {num}x {bldg},Costruire: {num}x {bldg},,,,{bldg} {num}개 건설하기,
+MINE_OBJECTIVE,Mine %s tiles,Miner %s tuiles,,,,,,
+SAVE_OBJECTIVE,Save up {num} {rsrc},,,,,,,
+SAVE_W_OBJECTIVE,Save up {num} kg of {rsrc},,,,,,,
+CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,,,,,
+TUTORIAL_OVERCLOCK,This overclock will be used later in the tutorial. Don't use it yet!,,,,,,,
+FULL_MINERALS,You have reached your maximum mineral storage capacity. Build mineral silos to increase it!\nYou can also enable mineral auto-sell in the settings.,,,,,,,
+IMPROVED_STONE_CRUSHER,Improved stone crusher,,,,,,,
+ISC_DESC,Allows stone crushers to extract metals.,,,,,,,
+CAVE_CONTROLS,Controls:\nWASD: move rover\nScroll wheel: Change active item\nHold left click: use active item\nM: toggle minimap,,,,,,,
+CRUST_OBJECTIVE,Reach the crust in mining,Atteindre la croûte dans les mines,,,,,,
+CAVE_OBJECTIVE,Enter a cave,Aller dans une grotte,,,,,,
+LEVEL_OBJECTIVE,Reach level %s,Atteindre niveau %s,,,,,,
+NO_SAVING_IN_TUT,(saving possible only after finishing tutorial (~8 minutes long)),(sauvegarde possible après avoir fini le tutoriel (~8 minutes)),,,,,,
+HOW2SILICON,Silicon can be obtained by crushing stone with the stone crusher building.,,,,,,,
+CLICK_CAVE_TO_EXPLORE,Click to explore this cave,Cliquez pour explorer cette grotte,,,,,,
+WORMHOLE_OBJECTIVE,Find a wormhole on a planet,Trouver un trou de ver sur une planète,,,,,,
+SIGNAL_OBJECTIVE,Locate the signal,,,,,,,
+DAVID_OBJECTIVE,Take control of David's ship,,,,,,,
+OP_GALAXY_DESC,"The game is about to generate a galaxy with many star systems. A galaxy of this size\ntakes up several megabytes of storage space, CPU-intensive, and not necessary for game progression.\nNevertheless, they are great for people who love exploring. Continue?",,,,,,,
+OP_GALAXY,Large galaxy,,,,,,,
+AUTOSELL_MINERALS,Auto-sell minerals,,,,,,,
+AUTOSELL_MINERALS_DESC,Auto-sell all your minerals once you reach the mineral cap.,,,,,,,
+HOLD_SHIFT_FOR_10,Hold shift to buy/craft 10,,,,,,,

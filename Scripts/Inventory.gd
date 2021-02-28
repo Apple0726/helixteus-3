@@ -107,15 +107,12 @@ func on_slot_press(name:String):
 		if name == "hx_core":
 			if len(game.ship_data) > 0:
 				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
-				if not game.ship_panel.visible:
-					game.toggle_panel(game.ship_panel)
+				game.toggle_panel(game.ship_panel)
 			else:
 				game.popup(tr("NO_SHIPS_2"), 1.5)
 				return
-	if visible:
+	if game.active_panel == game.inventory:
 		game.toggle_panel(game.inventory)
-	if game.shop_panel.visible:
-		game.toggle_panel(game.shop_panel)
 	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
 	game.show_item_cursor(texture)
 
@@ -186,8 +183,6 @@ func show_buy_sell(type:String, obj:String):
 			buy_sell.is_selling = false
 	buy_sell.visible = true
 	buy_sell.refresh(type, obj)
-	if not game.panels.has(buy_sell):
-		game.panels.push_front(buy_sell)
 
 func show_mat(mat:String):
 	game.show_tooltip(get_str(mat) + "\n" + get_str(mat, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))

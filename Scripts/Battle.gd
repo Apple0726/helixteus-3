@@ -312,22 +312,22 @@ func _process(delta):
 		if remove_weapon_b:
 			weapon.remove_from_group("weapon")
 			remove_child(weapon)
-	for weapon in get_tree().get_nodes_in_group("w_1_1"):
+	for weapon in get_tree().get_nodes_in_group("w_1_1"):#Fireballs
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			if not HX_w_c_d[weapon.name].has("v"):
 				HX_w_c_d[weapon.name].v = (weapon.position - self["ship%s" % tgt_sh].position) / 150.0
 				weapon.visible = true
 			weapon.position -= HX_w_c_d[weapon.name].v * delta * 60
-			HX_w_c_d[weapon.name].v *= 0.07 * delta * 60 + 1
+			HX_w_c_d[weapon.name].v *= 0.05 * delta * 60 + 1
 			if weapon.position.x < -100:
 				remove_weapon(weapon, "w_1_1")
-	for weapon in get_tree().get_nodes_in_group("w_1_2"):
+	for weapon in get_tree().get_nodes_in_group("w_1_2"):#Laser
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			if HX_w_c_d[weapon.name].stage == 0:
 				weapon.visible = true
-				weapon.scale.y += 0.005 * delta * 60
+				weapon.scale.y += 0.004 * delta * 60
 				if weapon.scale.y > 0.2:
 					HX_w_c_d[weapon.name].stage = 1
 			elif HX_w_c_d[weapon.name].stage == 1:
@@ -343,7 +343,7 @@ func _process(delta):
 				weapon.modulate.a -= 0.02 * delta * 60
 				if weapon.modulate.a <= 0:
 					remove_weapon(weapon, "w_1_2")
-	for weapon in get_tree().get_nodes_in_group("w_1_3"):
+	for weapon in get_tree().get_nodes_in_group("w_1_3"):#Red bullets
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			if HX_w_c_d[weapon.name].stage == 0:
@@ -358,13 +358,13 @@ func _process(delta):
 				HX_w_c_d[weapon.name].v *= 0.02 * delta * 60 + 1
 				if weapon.position.x < -100:
 					remove_weapon(weapon, "w_1_3")
-	for weapon in get_tree().get_nodes_in_group("w_2_1"):
+	for weapon in get_tree().get_nodes_in_group("w_2_1"):#green spikes?
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			weapon.position.x -= 14 * delta * 60
 			if weapon.position.x < -100:
 				remove_weapon(weapon, "w_2_1")
-	for weapon in get_tree().get_nodes_in_group("w_2_2"):
+	for weapon in get_tree().get_nodes_in_group("w_2_2"):#light balls?
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			if HX_w_c_d[weapon.name].stage == 0:
@@ -486,6 +486,7 @@ func on_target_pressed(target:int):
 	curr_sh += 1
 
 func _on_weapon_pressed(_weapon_type:String):
+	game.hide_tooltip()
 	weapon_type = _weapon_type
 	$FightPanel.visible = false
 	if weapon_type == "light":
@@ -605,7 +606,7 @@ func atk_1_2(id:int):
 
 func atk_1_3(id:int):
 	for i in 5:
-		for j in 18:
+		for j in 16:
 			var bullet = w_1_3.instance()
 			var target:Vector2 = Vector2(1100, rand_range(0, 720))
 			var pos = HXs[id].position
@@ -623,9 +624,9 @@ func atk_2_1(id:int):
 		var pillar = w_2_1.instance()
 		if i % 2 == 0:
 			pillar.scale.y *= -1
-			pillar.position.y = rand_range(-50, 260)
+			pillar.position.y = rand_range(-50, 230)
 		else:
-			pillar.position.y = rand_range(460, 770)
+			pillar.position.y = rand_range(490, 770)
 		pillar.position.x = 1400
 		add_child(pillar)
 		pillar.add_to_group("w_2_1")
@@ -639,6 +640,7 @@ func atk_2_2(id:int):
 			ball.position.y = -200
 		else:
 			ball.position.y = 920
+		ball.scale *= 0.8
 		var y_target = rand_range(280, 440)
 		var y_target2 = rand_range(-50, 770)
 		while abs(y_target2 - y_target) < 100:
@@ -657,7 +659,7 @@ func atk_2_3(id:int):
 		mine.scale *= rand_range(0.6, 0.9)
 		if mine.position.y > 360:
 			v.y *= -1
-		v *= 1.8 - mine.scale.x
+		v *= 1.7 - mine.scale.x
 		mine.rotation = rand_range(0, 2 * PI)
 		add_child(mine)
 		mine.add_to_group("w_2_3")
@@ -666,7 +668,7 @@ func atk_2_3(id:int):
 func atk_3_1(id:int):
 	a_p_c_d.clear()
 	var y_poses = []
-	for i in 6:
+	for i in 6:#orange spikes
 		var y_pos = rand_range(100, 620)
 		y_poses.append(y_pos)
 		var proj_num:int = 7 if id % 2 == 0 else 11
@@ -675,7 +677,7 @@ func atk_3_1(id:int):
 			var spike = w_3_1.instance()
 			spike.rotation = (j - proj_num / 2) * spread
 			spike.position = Vector2(HXs[id].position.x, y_pos)
-			var v = -Vector2(cos(spike.rotation), sin(spike.rotation)) * 8
+			var v = -Vector2(cos(spike.rotation), sin(spike.rotation)) * 6
 			spike.visible = false
 			add_child(spike)
 			spike.add_to_group("w_3_1")
@@ -692,7 +694,7 @@ func atk_3_2(id:int):
 	var dir_bool = true
 	for i in 50:
 		for j in 16:
-			if j >= path and j <= path + 4:
+			if j >= path and j <= path + 5:
 				continue
 			var diamond = w_3_2.instance()
 			diamond.position = Vector2(1350 + i * 48, j * 48)
@@ -722,7 +724,7 @@ func atk_3_3(id:int):
 		platform.add_to_group("w_3_3")
 		var platform_delay:float = i * 1.5 + 0.5
 		HX_w_c_d[platform.name] = {"group":"w_3_3", "id":id, "damage":10, "delay":platform_delay}
-		var interval:float = rand_range(0.65, 0.7)
+		var interval:float = rand_range(0.7, 0.75)
 		for j in 14:
 			var bullet = w_3_3_2.instance()
 			bullet.position = Vector2(1400, platform.position.y)

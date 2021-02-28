@@ -51,14 +51,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_GoToShips_pressed():
-	game.c_sc = game.ships_dest_coords.sc
-	game.c_c_g = game.ships_dest_g_coords.c
-	game.c_c = game.ships_dest_coords.c
-	game.c_g_g = game.ships_dest_g_coords.g
-	game.c_g = game.ships_dest_coords.g
-	game.c_s_g = game.ships_dest_g_coords.s
-	game.c_s = game.ships_dest_coords.s
-	game.switch_view("system")
+	game.switch_view("system", false, "set_to_ship_coords")
 	_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():

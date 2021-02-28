@@ -64,7 +64,7 @@ anchor_right = 0.5
 margin_left = -320.0
 margin_top = 52.0
 margin_right = 320.0
-margin_bottom = 96.0
+margin_bottom = 76.0
 text = "Select"
 align = 1
 __meta__ = {
@@ -113,11 +113,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="."]
-margin_left = 32.0
-margin_top = 112.0
-margin_right = 608.0
-margin_bottom = 152.0
+[node name="ScrollContainer2" type="ScrollContainer" parent="."]
+margin_left = 44.0
+margin_top = 100.0
+margin_right = 596.0
+margin_bottom = 168.0
+scroll_vertical_enabled = false
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="ScrollContainer2"]
+margin_right = 552.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]

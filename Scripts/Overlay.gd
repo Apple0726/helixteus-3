@@ -9,6 +9,7 @@ func _ready():
 	$Panel/HBoxContainer/CheckBox.text = tr("TOGGLE") + " (F3)"
 
 func refresh_overlay():
+	$Panel/HBoxContainer/HSlider.value = game.overlay_CS
 	option_btn.clear()
 	match game.c_v:
 		"galaxy":
@@ -209,6 +210,7 @@ func _on_mouse_exited():
 
 func _on_HSlider_value_changed(value):
 	if game.view.obj:
+		game.overlay_CS = value
 		Helper.change_circle_size(value, game.view.obj.overlays)
 
 func _on_num_mouse_entered(type:String):

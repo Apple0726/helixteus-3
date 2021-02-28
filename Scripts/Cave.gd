@@ -25,7 +25,7 @@ onready var rover_light = $Rover/Light2D
 onready var camera = $Camera2D
 onready var exit = $Exit
 onready var hole = $Hole
-onready var hbox = $UI2/HBoxContainer
+onready var inventory_slots = $UI2/InventorySlots
 onready var ray = $Rover/RayCast2D
 onready var mining_laser = $Rover/MiningLaser
 onready var mining_p = $MiningParticles
@@ -124,7 +124,7 @@ func set_rover_data():
 		inventory_ready.append(true)
 	for i in range(0, len(inventory)):
 		var slot = slot_scene.instance()
-		hbox.add_child(slot)
+		inventory_slots.add_child(slot)
 		var rsrc = inventory[i].type
 		slots.append(slot)
 		if rsrc == "":
@@ -179,9 +179,9 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
-	$UI2/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), game.clever_round(difficulty, 3)]
+	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), game.clever_round(difficulty, 3)]
 	var rng = RandomNumberGenerator.new()
-	$UI2/Floor.text = "B%sF" % [cave_floor]
+	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
 	var first_time:bool = cave_floor > len(seeds)
 	if first_time:
@@ -451,8 +451,8 @@ func on_relic_exited(_body):
 	$UI2/Relic.visible = false
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
-	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.2)),
-						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.1)),
+	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.25)),
+						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.2)),
 						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
 	for met in game.met_info:
 		var met_value = game.met_info[met]
@@ -626,16 +626,16 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				difficulty *= 2
-				light_amount = clamp((9 - cave_floor) * 0.125, 0.2, 1)
-				rover_light.energy = 1 - light_amount
+				light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
 				difficulty /= 2
-				light_amount = clamp((9 - cave_floor) * 0.125, 0.2, 1)
-				rover_light.energy = 1 - light_amount
+				light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
 			$UI2/Panel.visible = false
@@ -704,6 +704,9 @@ func _process(delta):
 			update_ray()
 	if aurora:
 		canvas_mod.color = aurora_mod.modulate * light_amount
+		canvas_mod.color.a = 1
+	else:
+		canvas_mod.color = Color.white * light_amount
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):

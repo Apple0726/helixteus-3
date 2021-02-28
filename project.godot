@@ -371,7 +371,7 @@ battle_down={
 [locale]
 
 locale_filter=[ 0, [  ] ]
-translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation" )
+translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation" )
 translation_remaps={
 
 }

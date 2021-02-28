@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ultragamma_ray_mining_laser.png-76dd8382d33ff706b262cfd652c458c7.stex"
+path="res://.import/gammaray_laser.png-a743417ba76d3db200f6da07f0e84c9c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/Mining/ultragamma_ray_mining_laser.png"
-dest_files=[ "res://.import/ultragamma_ray_mining_laser.png-76dd8382d33ff706b262cfd652c458c7.stex" ]
+source_file="res://Graphics/Cave/Weapons/gammaray_laser.png"
+dest_files=[ "res://.import/gammaray_laser.png-a743417ba76d3db200f6da07f0e84c9c.stex" ]
 
 [params]
 

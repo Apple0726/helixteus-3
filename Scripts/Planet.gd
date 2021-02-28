@@ -113,6 +113,7 @@ func _ready():
 					if tile.wormhole.has("investigation_length"):
 						add_time_bar(id2, "wormhole")
 					$Obstacles.set_cell(i, j, 9)
+				p_i.wormhole = true
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -161,7 +162,7 @@ func show_tooltip(tile):
 			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
 			"ME", "PP", "SP", "AE":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, round(path_2_value * IR_mult)]
+				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, Helper.format_num(round(path_2_value * IR_mult), 6)]
 				adv = true
 			"MM":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
@@ -536,11 +537,8 @@ func _input(event):
 				add_shadows()
 			elif new_y < old_y:
 				add_shadows()
-		if len(game.panels) > 0:
-			var i = 0
-			while not game.panels[i].polygon:
-				i += 1
-			if Geometry.is_point_in_polygon(event.position, game.panels[i].polygon):
+		if game.active_panel:
+			if game.active_panel.polygon and Geometry.is_point_in_polygon(event.position, game.active_panel.polygon):
 				if tile_over != -1:
 					tile_over = -1
 					game.hide_tooltip()
@@ -597,12 +595,8 @@ func _input(event):
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
-		if len(game.panels) > 0:
-			var i = 0
-			while not game.panels[i].polygon:
-				i += 1
-			if Geometry.is_point_in_polygon(to_global(mouse_pos), game.panels[i].polygon):
-				return
+		if game.active_panel and game.active_panel.polygon and Geometry.is_point_in_polygon(to_global(mouse_pos), game.active_panel.polygon):
+			return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = get_tile_id_from_pos(mouse_pos)
@@ -610,8 +604,8 @@ func _input(event):
 		if bldg_to_construct != "":
 			if available_to_build(tile):
 				constr_bldg(tile_id, curr_time)
-		if about_to_mine and available_for_mining(tile):
-			mine_tile(tile_id)
+		if about_to_mine and available_for_mining(tile) or tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "":
+			game.mine_tile(tile_id)
 		if placing_soil and available_for_plant(tile):
 			if game.check_enough({"soil":10}):
 				game.deduct_resources({"soil":10})
@@ -798,12 +792,12 @@ func available_to_build(tile):
 	if bldg_to_construct == "GH":
 		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
-
-func mine_tile(id2:int):
-	game.c_t = id2
-	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
-		game.objective = {"type":game.ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
-	game.switch_view("mining")
+#
+#func mine_tile(id2:int):
+#	game.c_t = id2
+#	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
+#		game.objective = {"type":game.ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
+#	game.switch_view("mining")
 
 func check_lake(local_id:int):
 # warning-ignore:integer_division

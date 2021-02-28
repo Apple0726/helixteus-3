@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ultragamma_ray_laser.png-13a9ce8ec9c8d9952d83cb3f4fc98ec2.stex"
+path="res://.import/nanocrystal_wheels.png-75954bd6ec22aee96bb959f1926a1bd7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/Weapons/ultragamma_ray_laser.png"
-dest_files=[ "res://.import/ultragamma_ray_laser.png-13a9ce8ec9c8d9952d83cb3f4fc98ec2.stex" ]
+source_file="res://Graphics/Cave/Wheels/nanocrystal_wheels.png"
+dest_files=[ "res://.import/nanocrystal_wheels.png-75954bd6ec22aee96bb959f1926a1bd7.stex" ]
 
 [params]
 

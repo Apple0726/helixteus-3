@@ -29,3 +29,11 @@ func _on_SmallButton_pressed():
 			else:
 				game[parent].amount_node.value = 1
 	game[parent].get_item(item_name, item_type, item_dir)
+
+func _on_SmallButton_mouse_entered():
+	game.help.mass_buy = true
+	if game.help.mass_buy:
+		game.show_tooltip("%s\n%s" % [tr("HOLD_SHIFT_FOR_10"), tr("HIDE_HELP")])
+
+func _on_SmallButton_mouse_exited():
+	game.hide_tooltip()

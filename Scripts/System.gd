@@ -55,7 +55,10 @@ func refresh_planets():
 		planet_glow.rect_position = Vector2(-100, -100)
 		planet_glow.rect_scale *= p_i["distance"] / 1200.0
 		if p_i.conquered:
-			planet_glow.modulate = Color(0, 1, 0, 1)
+			if p_i.has("wormhole"):
+				planet_glow.modulate = Color(0.74, 0.6, 0.78, 1)
+			else:
+				planet_glow.modulate = Color(0, 1, 0, 1)
 		else:
 			planet_glow.modulate = Color(1, 0, 0, 1)
 		if p_i.has("MS"):
@@ -151,13 +154,7 @@ func show_M_MME_costs(p_i:Dictionary):
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-		Helper.put_rsrc(vbox, 32, {"minerals":get_MME_output(p_i, 1)}, false)
-
-func get_MME_output(p_i:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
-
-func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1)}, false)
 
 func show_planet_info(id:int, l_id:int):
 	var p_i = game.planet_data[l_id]
@@ -177,7 +174,7 @@ func show_planet_info(id:int, l_id:int):
 			Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
 		elif p_i.MS == "M_MME":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"minerals":get_MME_output(p_i)}, false)
+			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
 		if not p_i.is_constructing:
 			if p_i.MS_lv < 3 and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
 				MS_constr_data.obj = p_i
@@ -334,14 +331,14 @@ func on_star_over (id:int):
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
-		Helper.put_rsrc(vbox, 32, {"energy":get_DS_output(star)}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String = "%s (%s)" % [tr("%s_NAME" % star.MS), tr("STAGE_X_X") % [star.MS_lv, 4]]
 		Helper.add_label(stage)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-		Helper.put_rsrc(vbox, 32, {"energy":get_DS_output(star)}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
 		if not star.is_constructing:
 			if star.MS == "M_DS" and star.MS_lv < 4 and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -354,19 +351,6 @@ func on_star_pressed (id:int):
 		if game.system_data[game.c_s].conquered:
 			if not star.has("MS"):
 				build_MS(star, "M_DS")
-				if game.check_enough(bldg_costs):
-					game.deduct_resources(bldg_costs)
-					star.MS = "M_DS"
-					star.MS_lv = 0
-					star.is_constructing = true
-					star.construction_date = curr_time
-					star.construction_length = bldg_costs.time * 1000
-					star.stored = 0
-					star.collect_date = star.construction_date + star.construction_length
-					star.XP = round(bldg_costs.money / 100.0)
-					refresh_stars()
-				else:
-					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			else:
 				game.popup(tr("MS_ALREADY_PRESENT"), 2.0)
 		else:
@@ -440,34 +424,20 @@ func _process(_delta):
 		var star = stars_info[rsrc_obj.id]
 		if star.is_constructing:
 			continue
+		var value = Helper.update_MS_rsrc(star)
 		var rsrc = rsrc_obj.node
-		var prod = 1000.0 / get_DS_output(star)
-		var stored = star.stored
-		var c_d = star.collect_date
-		var c_t = curr_time
 		var current_bar = rsrc.get_node("Control/CurrentBar")
-		current_bar.value = min((c_t - c_d) / prod, 1)
-		if c_t - c_d > prod:
-			var rsrc_num = floor((c_t - c_d) / prod)
-			star.stored += rsrc_num
-			star.collect_date += prod * rsrc_num
-		rsrc.get_node("Control/Label").text = Helper.format_num(stored, 4)
+		current_bar.value = value
+		rsrc.get_node("Control/Label").text = Helper.format_num(star.stored, 4)
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
 		if planet.is_constructing:
 			continue
+		var value = Helper.update_MS_rsrc(planet)
 		var rsrc = rsrc_obj.node
-		var prod = 1000.0 / get_MME_output(planet)
-		var stored = planet.stored
-		var c_d = planet.collect_date
-		var c_t = curr_time
 		var current_bar = rsrc.get_node("Control/CurrentBar")
-		current_bar.value = min((c_t - c_d) / prod, 1)
-		if c_t - c_d > prod:
-			var rsrc_num = floor((c_t - c_d) / prod)
-			planet.stored += rsrc_num
-			planet.collect_date += prod * rsrc_num
-		rsrc.get_node("Control/Label").text = Helper.format_num(stored, 4)
+		current_bar.value = value
+		rsrc.get_node("Control/Label").text = Helper.format_num(planet.stored, 4)
 
 func _on_System_tree_exited():
 	queue_free()

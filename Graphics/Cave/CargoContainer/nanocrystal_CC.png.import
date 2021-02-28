@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ultra_violet_mining_laser.png-d5c99e31e32c6398c194ca5b311ca615.stex"
+path="res://.import/nanocrystal_CC.png-b7b47e8f4d9d743d25be448d7ab906a9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/Mining/ultra_violet_mining_laser.png"
-dest_files=[ "res://.import/ultra_violet_mining_laser.png-d5c99e31e32c6398c194ca5b311ca615.stex" ]
+source_file="res://Graphics/Cave/CargoContainer/nanocrystal_CC.png"
+dest_files=[ "res://.import/nanocrystal_CC.png-b7b47e8f4d9d743d25be448d7ab906a9.stex" ]
 
 [params]
 

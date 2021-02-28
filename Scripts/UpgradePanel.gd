@@ -113,7 +113,7 @@ func update():
 			icon.rsrc.visible = false
 
 func bldg_value(base_value, lv:int, pw:float = 1.15):
-	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, pw * pw) * pow(pw, lv - 1), 3)
+	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1

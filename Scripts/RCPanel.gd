@@ -77,14 +77,10 @@ func _on_Slot_mouse_exited():
 	game.hide_tooltip()
 
 func _on_InvSlot_pressed(index:int):
-	if not game.panels.has(select_comp):
-		game.panels.push_front(select_comp)
 	select_comp.visible = true
 	select_comp.refresh(inventory[index].type, inventory[index].name if inventory[index].has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):
-	if not game.panels.has(select_comp):
-		game.panels.push_front(select_comp)
 	select_comp.visible = true
 	if type == "rover_armor":
 		select_comp.refresh(type, armor)

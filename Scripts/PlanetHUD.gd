@@ -41,14 +41,7 @@ func _on_Construct_pressed():
 
 func _on_Mine_pressed():
 	click_sound.play()
-	if not game.pickaxe.empty():
-		if game.shop_panel.visible:
-			game.toggle_panel(game.shop_panel)
-		if game.tutorial and game.tutorial.visible and game.tutorial.tut_num == 14:
-			game.tutorial.fade(0.4, false)
-		game.put_bottom_info(tr("START_MINE"), "about_to_mine")
-	else:
-		game.long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
+	game.mine_tile()
 
 func _on_PlaceSoil_pressed():
 	click_sound.play()

@@ -312,7 +312,7 @@ func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Ar
 	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id, obj_info.l_id])
 	overlay.rect_position = Vector2(-300 / 2, -300 / 2)
 	overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
-	overlay.rect_scale *= 2
+	#overlay.rect_scale *= 2
 
 func toggle_overlay(obj_btns, overlays):
 	for obj_btn in obj_btns:
@@ -815,6 +815,7 @@ func update_ship_travel():
 		return 1
 	var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
 	if progress >= 1:
+		game.get_node("Ship").mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 		game.ships_travel_view = "-"
 		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
@@ -853,3 +854,25 @@ func update_MS(tile):
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
+
+func update_MS_rsrc(dict:Dictionary):
+	var curr_time = OS.get_system_time_msecs()
+	var prod
+	if dict.MS == "M_DS":
+		prod = 1000.0 / Helper.get_DS_output(dict)
+	elif dict.MS == "M_MME":
+		prod = 1000.0 / Helper.get_MME_output(dict)
+	var stored = dict.stored
+	var c_d = dict.collect_date
+	var c_t = curr_time
+	if c_t - c_d > prod:
+		var rsrc_num = floor((c_t - c_d) / prod)
+		dict.stored += rsrc_num
+		dict.collect_date += prod * rsrc_num
+	return min((c_t - c_d) / prod, 1)
+
+func get_DS_output(star:Dictionary, next_lv:int = 0):
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity
+
+func get_MME_output(p_i:Dictionary, next_lv:int = 0):
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/gamma_ray_laser.png-99c4de81721a10cef2fcddbfc00f2511.stex"
+path="res://.import/mythril_armor.png-da2d276a853c22dda76443782db99099.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Cave/Weapons/gamma_ray_laser.png"
-dest_files=[ "res://.import/gamma_ray_laser.png-99c4de81721a10cef2fcddbfc00f2511.stex" ]
+source_file="res://Graphics/Cave/Armor/mythril_armor.png"
+dest_files=[ "res://.import/mythril_armor.png-da2d276a853c22dda76443782db99099.stex" ]
 
 [params]
 

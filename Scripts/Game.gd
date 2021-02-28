@@ -70,7 +70,7 @@ var space_HUD
 #Stores individual tile nodes
 var tiles = []
 var bldg_blueprints = []#ids of tiles where things will be constructed
-var panels = []#Mainly for removing panels in a specific order
+var active_panel
 
 #The base node containing things that can be moved/zoomed in/out
 var view
@@ -175,7 +175,7 @@ enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SI
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 ############ End save data ############
-
+var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
@@ -190,7 +190,7 @@ var STM
 var battle
 
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
-					"glass":{"value":45},
+					"glass":{"value":100},
 					"sand":{"value":4},
 					#"clay":{"value":12},
 					"soil":{"value":6},
@@ -269,7 +269,12 @@ var autosell:bool = true
 
 var music_player = AudioStreamPlayer.new()
 
+var dialog:AcceptDialog
+
 func _ready():
+	dialog = AcceptDialog.new()
+	dialog.theme = load("res://Resources/default_theme.tres")
+	dialog.popup_exclusive = true
 	if TranslationServer.get_locale() != "fr":
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
@@ -624,6 +629,7 @@ func new_game(tut:bool):
 			"inventory_shortcuts":true,
 			"hotbar_shortcuts":true,
 			"rover_shortcuts":true,
+			"mass_buy":true,
 			"rover_inventory_shortcuts":true,
 			"planet_details":true,
 			"mass_build":true,
@@ -872,18 +878,11 @@ func popup(txt, dur):
 		tween.interpolate_property(node, "rect_position", Vector2(x_pos, 80), Vector2(x_pos, 83), 0.15)
 		tween.start()
 
-var dialog:AcceptDialog
 
 func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
 	hide_adv_tooltip()
 	hide_tooltip()
-	if dialog:
-		$UI.remove_child(dialog)
-		dialog = null
-		return
-	dialog = AcceptDialog.new()
-	dialog.theme = load("res://Resources/default_theme.tres")
-	dialog.popup_exclusive = true
+	dialog.visible = true
 	$UI/PopupBackground.visible = true
 	$UI.add_child(dialog)
 	dialog.window_title = title
@@ -898,17 +897,19 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 
 func popup_close():
 	$UI/PopupBackground.visible = false
-	if dialog:
-		$UI.remove_child(dialog)
-		dialog = null
+	dialog.visible = false
+	if dialog.is_connected("custom_action", self, "popup_action"):
+		dialog.disconnect("custom_action", self, "popup_action")
+	if dialog.is_connected("popup_hide", self, "popup_close"):
+		dialog.disconnect("popup_hide", self, "popup_close")
 
 func popup_action(action:String):
 	call(action)
+	popup_close()
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
-		panels.push_front(shop_panel)
-		fade_in_panel(shop_panel)
+		toggle_panel(shop_panel)
 	shop_panel._on_btn_pressed("Pickaxes")
 
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
@@ -956,27 +957,28 @@ func add_upgrade_panel(ids:Array):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
 	upgrade_panel.ids = ids.duplicate(true)
-	panels.push_front(upgrade_panel)
+	active_panel = upgrade_panel
 	if upgrade_panel:
 		$Panels/Control.add_child(upgrade_panel)
 
 func remove_upgrade_panel():
 	if upgrade_panel:
 		$Panels/Control.remove_child(upgrade_panel)
-	panels.erase(upgrade_panel)
+	active_panel = null
 	upgrade_panel = null
 	if view:
 		view.scroll_view = true
 		view.move_view = true
 
-func toggle_panel(panel):
-	if not panel.visible:
-		panels.push_front(panel)
-		fade_in_panel(panel)
-		panel.refresh()
-	else:
-		fade_out_panel(panel)
-		panels.erase(panel)
+func toggle_panel(_panel):
+	if active_panel:
+		fade_out_panel(active_panel)
+		if active_panel == _panel:
+			active_panel = null
+			return
+	active_panel = _panel
+	fade_in_panel(_panel)
+	_panel.refresh()
 
 func set_home_coords():
 	c_u = 0
@@ -989,6 +991,15 @@ func set_home_coords():
 	c_s_g = 0
 	c_p = 2
 	c_p_g = 2
+
+func set_to_ship_coords():
+	c_sc = ships_dest_coords.sc
+	c_c_g = ships_dest_g_coords.c
+	c_c = ships_dest_coords.c
+	c_g_g = ships_dest_g_coords.g
+	c_g = ships_dest_coords.g
+	c_s_g = ships_dest_g_coords.s
+	c_s = ships_dest_coords.s
 
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
@@ -1873,7 +1884,7 @@ func generate_systems(id:int):
 			else:
 				star_type = "brown_dwarf"
 			
-			if mass > 0.2 and mass < 1.3 and randf() < 0.02:
+			if mass > 0.2 and mass < 1.3 and randf() < 0.05:
 				star_type = "white_dwarf"
 				temp = 4000 + exp(10 * randf())
 				star_size = rand_range(0.008, 0.02)
@@ -1983,7 +1994,7 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = p_i.size >= max(18000, 45000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = p_i.size >= max(18000, 42000 * pow(combined_star_mass, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2185,7 +2196,7 @@ func generate_tiles(id:int):
 				tile_data[t_id].cave = {}
 				tile_data[t_id].cave.id = len(cave_data)
 				var floor_size:int = Helper.rand_int(25, 50)
-				var num_floors:int = Helper.rand_int(1, wid / 4) + 2
+				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
 				if wid > 15:
 					floor_size *= 1.2
 				if wid > 30:
@@ -2227,11 +2238,13 @@ func generate_tiles(id:int):
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#						local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
+		p_i.wormhole = true
 	elif c_s_g != 0 and not second_ship_cave_placed and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
+		p_i.wormhole = true
 	if lake_1_phase == "G":#								new: whether the wormhole should generate a new wormhole on another planet
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
@@ -2816,17 +2829,17 @@ func _input(event):
 				item_to_use.num = 0
 				update_item_cursor()
 		elif not tutorial or tutorial.tut_num >= 26:
-			if len(panels) != 0:
+			if active_panel:
 				if c_v != "":
-					if not panels[0].polygon:
-						panels[0].visible = false
-						panels.pop_front()
-					elif panels[0] == upgrade_panel:
+					if not active_panel.polygon:
+						active_panel.visible = false
+					elif active_panel == upgrade_panel:
 						remove_upgrade_panel()
 					else:
-						toggle_panel(panels[0])
+						fade_out_panel(active_panel)
+					active_panel = null
 				else:
-					toggle_panel(panels[0])
+					toggle_panel(active_panel)
 				hide_tooltip()
 				hide_adv_tooltip()
 	
@@ -3241,3 +3254,19 @@ func _on_ConfirmationDialog_popup_hide():
 	yield(get_tree().create_timer(0), "timeout")
 	if YN_panel.is_connected("confirmed", self, "%s_confirm" % YN_str):
 		YN_panel.disconnect("confirmed", self, "%s_confirm" % YN_str)
+
+func mine_tile(tile_id:int = -1):
+	if not pickaxe.empty():
+		if shop_panel.visible:
+			toggle_panel(shop_panel)
+		if tutorial and tutorial.visible and tutorial.tut_num == 14:
+			tutorial.fade(0.4, false)
+		if tile_id == -1:
+			put_bottom_info(tr("START_MINE"), "about_to_mine")
+		else:
+			if tutorial and tutorial.tut_num == 15 and objective.empty():
+				objective = {"type":ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
+			c_t = tile_id
+			switch_view("mining")
+	else:
+		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))

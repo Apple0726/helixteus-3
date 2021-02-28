@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -27,6 +27,7 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
+[ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 15.0
@@ -582,9 +583,18 @@ texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 4
 
-[node name="ko" type="TextureButton" parent="Title/Languages"]
+[node name="sv" type="TextureButton" parent="Title/Languages"]
 margin_left = 350.0
 margin_right = 410.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 28 )
+expand = true
+stretch_mode = 4
+
+[node name="ko" type="TextureButton" parent="Title/Languages"]
+margin_left = 420.0
+margin_right = 480.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 18 )
@@ -692,6 +702,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~30%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
+[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "Svenska (~30%)" ]]
+[connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
 [connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~30%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
