@@ -38,7 +38,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SC":{"money":900, "energy":150, "time":50.0},
 				"GF":{"money":1500, "energy":1000, "time":120.0},
 				"SE":{"money":1500, "energy":500, "time":120.0},
-				"MM":{"money":13000, "energy":7000, "time":400.0},
+				"MM":{"money":13000, "energy":7000, "time":200.0},
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"GH":{"money":10000, "energy":1500, "glass":500, "time":75.0},
 				"SP":{"money":4000, "time":90.0},
@@ -159,35 +159,36 @@ var science_unlocks = {
 						"GL":{"cost":70000, "parents":["YL"]},
 						"BL":{"cost":350000, "parents":["GL"]},
 						"PL":{"cost":2400000, "parents":["BL"]},
-						"UVL":{"cost":28000000, "parents":["PL"]},
-						"XRL":{"cost":405000000, "parents":["UVL"]},
-						"GRL":{"cost":6500000000, "parents":["XRL"]},
-						"UGRL":{"cost":100000000000, "parents":["GRL"]},
+						"UVL":{"cost":e(2.8, 7), "parents":["PL"]},
+						"XRL":{"cost":e(4.05, 8), "parents":["UVL"]},
+						"GRL":{"cost":e(6.5, 9), "parents":["XRL"]},
+						"UGRL":{"cost":e(1, 11), "parents":["GRL"]},
 						
 						#Ship sciences
 						"SCT":{"cost":350, "parents":["RC"]},
 						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
+						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
-						"FD":{"cost":15000000, "parents":["ID"]},
-						"PD":{"cost":120000000, "parents":["FD"]},
+						"FD":{"cost":e(1.5, 7), "parents":["ID"]},
+						"PD":{"cost":e(1.2, 9), "parents":["FD"]},
 						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":["SCT"]},
 						#Dyson sphere
-						"DS1":{"cost":1200000000, "parents":["MAE"]},
-						"DS2":{"cost":2500000000, "parents":["DS1"]},
-						"DS3":{"cost":5000000000, "parents":["DS2"]},
-						"DS4":{"cost":7500000000, "parents":["DS3"]},
+						"DS1":{"cost":e(1.2, 10), "parents":["MAE"]},
+						"DS2":{"cost":e(2.5, 10), "parents":["DS1"]},
+						"DS3":{"cost":e(5, 10), "parents":["DS2"]},
+						"DS4":{"cost":e(7.5, 10), "parents":["DS3"]},
 						#Space elevator
 						"SE1":{"cost":150000, "parents":["MAE"]},
 						"SE2":{"cost":300000, "parents":["SE1"]},
 						"SE3":{"cost":500000, "parents":["SE2"]},
 						
 						#Mega mineral extractor
-						"MME1":{"cost":170000000, "parents":["MAE"]},
-						"MME2":{"cost":400000000, "parents":["MME1"]},
-						"MME3":{"cost":720000000, "parents":["MME2"]},
+						"MME1":{"cost":e(1.7, 9), "parents":["MAE"]},
+						"MME2":{"cost":e(4.0, 9), "parents":["MME1"]},
+						"MME3":{"cost":e(7.2, 9), "parents":["MME2"]},
 						
 }
 var infinite_research_sciences = {	"MEE":{"cost":50, "pw":6.2, "value":1.2},

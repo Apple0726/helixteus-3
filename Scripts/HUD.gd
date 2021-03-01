@@ -38,6 +38,8 @@ func _process(delta):
 func refresh():
 	if not game:
 		return
+	$CollectProgress.visible = false
+	$CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
 		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
@@ -308,7 +310,11 @@ func _on_CollectAll_mouse_entered():
 	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
 
 func _on_CollectAll_pressed():
-	game.view.obj.collect_all()
+	if not $CollectProgress.visible:
+		$CollectProgress.visible = true
+		$CollectProgress.value = 0
+		$CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
+		game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():
 	on_button = true

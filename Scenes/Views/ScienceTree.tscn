@@ -242,6 +242,18 @@ margin_top = 528.0
 margin_right = 2016.0
 margin_bottom = 592.0
 
+[node name="L_IGD" type="Line2D" parent="."]
+position = Vector2( 2048, 540 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+antialiased = true
+
+[node name="IGD" parent="." instance=ExtResource( 1 )]
+margin_left = 2176.0
+margin_top = 528.0
+margin_right = 2432.0
+margin_bottom = 592.0
+
 [node name="L_GL" type="Line2D" parent="."]
 position = Vector2( 1984, 700 )
 points = PoolVector2Array( 0, 20, 96, 20 )

@@ -28,6 +28,7 @@ func _ready():
 		#$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
 		$Autosave.value = autosave_interval
 		$FPS/FPS.value = max_fps
+		$CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
 
 func _on_Main_audio_value_changed(value):
 	update_volumes(0, value)
@@ -105,13 +106,22 @@ func _on_FPS_value_changed(value):
 func _on_AutosellMinerals_mouse_entered():
 	game.show_tooltip(tr("AUTOSELL_MINERALS_DESC"))
 
-
 func _on_mouse_exited():
 	game.hide_tooltip()
-
 
 func _on_AutosellMinerals_toggled(button_pressed):
 	if err == OK:
 		config.set_value("game", "autosell", button_pressed)
 		game.autosell = button_pressed
+		config.save("user://settings.cfg")
+
+
+func _on_CollectSpeed_mouse_entered():
+	game.show_tooltip(tr("COLLECT_SPEED_DESC"))
+
+
+func _on_CollectSpeedSlider_value_changed(value):
+	if err == OK:
+		config.set_value("game", "collect_speed", value)
+		game.collect_speed_lag_ratio = value
 		config.save("user://settings.cfg")

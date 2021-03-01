@@ -46,7 +46,7 @@ func refresh():
 		distance *= depart_pos.distance_to(dest_pos)
 	elif game.c_c == coords.c:
 		travel_view = "cluster"
-		distance = 5454
+		distance = 45454
 		depart_id = coords.g
 		dest_id = game.system_data[game.planet_data[dest_p_id].parent].parent
 		depart_pos = game.galaxy_data[depart_id].pos
@@ -183,6 +183,8 @@ func calc_costs():
 	time_cost = 5000 / slider_factor * distance
 	if game.science_unlocked.FTL:
 		time_cost /= 10.0
+	if game.science_unlocked.IGD:
+		time_cost /= 100.0
 	$EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))

@@ -134,7 +134,7 @@ var show:Dictionary
 var universe_data:Array
 var supercluster_data:Array
 var cluster_data:Array
-var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array
 var planet_data:Array
 var tile_data:Array
@@ -179,6 +179,7 @@ var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
+var collect_speed_lag_ratio:int = 1
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -211,10 +212,10 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 					"ruby":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.6, "density":4.01, "value":660},
 					"sapphire":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.9, "density":3.99, "value":700},
 					"platinum":{"min_depth":1000, "max_depth":4000, "amount":14, "rarity":20.0, "density":21.45, "value":1000},
-					"titanium":{"min_depth":1400, "max_depth":5000, "amount":14, "rarity":28.5, "density":4.51, "value":1450},
-					"diamond":{"min_depth":1800, "max_depth":6000, "amount":14, "rarity":42.0, "density":4.20, "value":2200},
-					"nanocrystal":{"min_depth":2400, "max_depth":8000, "amount":12, "rarity":67.5, "density":1.5, "value":3000},
-					"mythril":{"min_depth":3000, "max_depth":10000, "amount":12, "rarity":99.4, "density":13.4, "value":4000},
+					"titanium":{"min_depth":1400, "max_depth":6000, "amount":14, "rarity":28.5, "density":4.51, "value":1450},
+					"diamond":{"min_depth":1800, "max_depth":9000, "amount":14, "rarity":42.0, "density":4.20, "value":2200},
+					"nanocrystal":{"min_depth":2400, "max_depth":14000, "amount":12, "rarity":67.5, "density":1.5, "value":3000},
+					"mythril":{"min_depth":3000, "max_depth":20000, "amount":12, "rarity":99.4, "density":13.4, "value":4000},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -225,8 +226,13 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"iron_pickaxe":{"speed":5.9, "durability":1100, "costs":{"money":840000}},
 					"aluminium_pickaxe":{"speed":8.8, "durability":1400, "costs":{"money":3500000}},
 					"silver_pickaxe":{"speed":12.7, "durability":1700, "costs":{"money":15000000}},
-					"gold_pickaxe":{"speed":50.0, "durability":140, "costs":{"money":32500000}},
-					"gemstone_pickaxe":{"speed":35.0, "durability":2000, "costs":{"money":156000000}},
+					"gold_pickaxe":{"speed":90.0, "durability":140, "costs":{"money":32500000}},
+					"gemstone_pickaxe":{"speed":55.0, "durability":2000, "costs":{"money":e(1.56, 8)}},
+					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(5.5, 8)}},
+					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.25, 9)}},
+					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(5.4, 9)}},
+					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(1.8, 10)}},
+					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(9, 10)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -301,6 +307,7 @@ func _ready():
 			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", false)
+		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
@@ -481,7 +488,7 @@ func load_game():
 			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
 			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
@@ -679,7 +686,7 @@ func new_game(tut:bool):
 	universe_data = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	supercluster_data = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":pow10(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
@@ -753,11 +760,11 @@ func new_game(tut:bool):
 	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	for u_i in universe_data:
-		u_i["epsilon_zero"] = pow10(8.854, -12)#F/m
-		u_i["mu_zero"] = pow10(1.257, -6)#H/m
-		u_i["planck"] = pow10(6.626, -34)#J.s
-		u_i["gravitational"] = pow10(6.674, -11)#m^3/kg/s^2
-		u_i["charge"] = pow10(1.602, -19)#C
+		u_i["epsilon_zero"] = e(8.854, -12)#F/m
+		u_i["mu_zero"] = e(1.257, -6)#H/m
+		u_i["planck"] = e(6.626, -34)#J.s
+		u_i["gravitational"] = e(6.674, -11)#m^3/kg/s^2
+		u_i["charge"] = e(1.602, -19)#C
 		u_i["strong_force"] = 1.0
 		u_i["weak_force"] = 1.0
 		u_i["dark_matter"] = 1.0
@@ -1508,7 +1515,7 @@ func generate_galaxies(id:int):
 		g_i["type"] = Helper.rand_int(0, 6)
 		if g_i.type == 6:
 			g_i["system_num"] = Helper.rand_int(5000, 20000)
-			g_i["B_strength"] = clever_round(pow10(1, -9) * rand_range(2, 10), 3)#Influences star classes
+			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
@@ -1517,7 +1524,7 @@ func generate_galaxies(id:int):
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
-			g_i["B_strength"] = clever_round(pow10(1, -9) * rand_range(0.2, 5), 3)
+			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.2, 5), 3)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 		var rand = randf()
 		if rand < 0.02:
@@ -1837,7 +1844,7 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
-			a *= pow(pow10(1, -9) / B, 0.3)
+			a *= pow(e(1, -9) / B, 0.3)
 			#Solar masses
 			var mass:float = -log(1 - randf()) / a
 			var star_size = 1
@@ -1909,7 +1916,7 @@ func generate_systems(id:int):
 							star_size *= 1.2
 			
 			star_class = get_star_class(temp)
-			star["luminosity"] = clever_round(4 * PI * pow(star_size * pow10(6.957, 8), 2) * pow10(5.67, -8) * pow(temp, 4) / pow10(3.828, 26))
+			star["luminosity"] = clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * pow(temp, 4) / e(3.828, 26))
 			star["mass"] = clever_round(mass)
 			star["size"] = clever_round(star_size)
 			star["type"] = star_type
@@ -1990,8 +1997,8 @@ func generate_planets(id:int):
 		p_i["l_id"] = p_id
 		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
 		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
-		var dist_in_km = p_i.distance / 569.0 * pow10(1.5, 8)
-		var star_size_in_km = max_star_size * pow10(6.957, 5)#                             V bond albedo
+		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)
+		var star_size_in_km = max_star_size * e(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
 		var gas_giant:bool = p_i.size >= max(18000, 42000 * pow(combined_star_mass, 0.3))
@@ -2039,10 +2046,10 @@ func generate_planets(id:int):
 			var def = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
-			var money = round(rand_range(0.4, 2) * pow(1.2, lv - 1) * 50000)
-			var XP = round(pow(1.2, lv - 1) * 5)
-			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
-			power -= floor(pow(1.2, lv))
+			var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
+			var XP = round(pow(1.25, lv - 1) * 5)
+			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
+			power -= floor(pow(1.15, lv))
 			if power <= 1:
 				break
 		p_i.HX_data.shuffle()
@@ -2758,7 +2765,7 @@ func clever_round (num:float, sd:int = 4):#sd: significant digits
 		return round(num)
 	return stepify(num, pow(10, e - sd + 1))
 
-func pow10(n, e):
+func e(n, e):
 	return n * pow(10, e)
 
 var quadrant_top_left:PoolVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector2(640, 360), Vector2(0, 360)]

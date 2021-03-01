@@ -106,6 +106,7 @@ func _on_IonDrive_pressed():
 	$Panel/Drives/ID.modulate.a = 1
 
 func _on_FusionDrive_pressed():
+	return
 	op.clear()
 	op.add_icon_item(he3mix_texture, "Helium-3 Mix")
 	op.set_item_metadata(0, "he3mix")
@@ -115,6 +116,7 @@ func _on_FusionDrive_pressed():
 	$Panel/Drives/FD.modulate.a = 1
 
 func _on_ParticleDrive_pressed():
+	return
 	op.clear()
 	op.add_icon_item(graviton_texture, "Graviton")
 	op.set_item_metadata(0, "graviton")

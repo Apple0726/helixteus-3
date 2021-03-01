@@ -55,39 +55,38 @@ func refresh_aurora_bonus():
 func update_info():
 	var upper_depth
 	var lower_depth 
+	var unit:String = "m"
 	if tile.has("crater"):
 		layer = "crater"
 		upper_depth = tile.crater.init_depth
 		lower_depth = 3 * tile.crater.init_depth
-		$LayerInfo/Upper.text = String(upper_depth) + " m"
-		$LayerInfo/Lower.text = String(lower_depth) + " m"
 	elif tile.depth <= p_i.crust_start_depth:
 		layer = "surface"
 		upper_depth = 0
 		lower_depth = p_i.crust_start_depth
-		$LayerInfo/Upper.text = String(upper_depth) + " m"
-		$LayerInfo/Lower.text = String(lower_depth) + " m"
 	elif tile.depth <= p_i.mantle_start_depth:
 		layer = "crust"
 		upper_depth = p_i.crust_start_depth + 1
 		lower_depth = p_i.mantle_start_depth
-		$LayerInfo/Upper.text = String(upper_depth) + " m"
-		$LayerInfo/Lower.text = String(lower_depth) + " m"
 	elif tile.depth <= p_i.core_start_depth:
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
 		lower_depth = floor(p_i.core_start_depth / 1000.0)
-		$LayerInfo/Upper.text = String(upper_depth) + " km"
-		$LayerInfo/Lower.text = String(lower_depth) + " km"
+		unit = "km"
 	else:
 		layer = "core"
 		upper_depth = floor(p_i.core_start_depth / 1000.0)
 		lower_depth = floor(p_i.size / 2.0)
-		$LayerInfo/Upper.text = String(upper_depth) + " km"
-		$LayerInfo/Lower.text = String(lower_depth) + " km"
+		unit = "km"
+	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
+	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
 	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr(layer.to_upper())
-	$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
-	$LayerInfo/Depth/Label.text = String(tile.depth) + " m"
+	if unit == "m":
+		$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
+	else:
+		$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]	
@@ -192,13 +191,21 @@ func pickaxe_hit():
 	game.pickaxe.durability -= 1
 	tile.mining_progress = progress
 	var rock_gen:bool = false
-	while progress >= 100:
+	if progress >= 1000:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
-		progress -= 100
-		if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
-			game.objective.current += 1
+		game.add_resources(Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100))
+		tile.depth += int(progress / 100)
+		progress = fmod(progress, 100)
 		rock_gen = true
 		generate_rock(true)
+	else:
+		while progress >= 100:
+			Helper.get_rsrc_from_rock(contents, tile, p_i)
+			progress -= 100
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
+				game.objective.current += 1
+			rock_gen = true
+			generate_rock(true)
 	if rock_gen:
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()

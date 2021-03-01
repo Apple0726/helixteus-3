@@ -174,8 +174,8 @@ func refresh_options(index:int, recalculate:bool = true):
 				3:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
-						c_vl.left = min_max._min * game.pow10(1, 9)
-						c_vl.right = min_max._max * game.pow10(1, 9)
+						c_vl.left = min_max._min * e(1, 9)
+						c_vl.right = min_max._max * e(1, 9)
 					editable = true
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
@@ -198,6 +198,9 @@ func refresh_options(index:int, recalculate:bool = true):
 	$Panel/RightNumEdit.rounded = is_int
 	game.overlay_data[game.c_v].overlay = index
 	send_overlay_info(index)
+
+func e(n, e):
+	return n * pow(10, e)
 
 func send_overlay_info(index):
 	game.view.obj.change_overlay(index, $Panel/TextureRect.texture.gradient)

@@ -158,10 +158,10 @@ __meta__ = {
 }
 
 [node name="AutosellMinerals" type="CheckButton" parent="."]
-margin_left = 123.293
-margin_top = 361.731
-margin_right = 351.293
-margin_bottom = 401.731
+margin_left = 124.184
+margin_top = 274.423
+margin_right = 352.184
+margin_bottom = 314.423
 text = "AUTOSELL_MINERALS"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -209,6 +209,44 @@ rounded = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CollectSpeed" type="Control" parent="."]
+margin_left = 126.189
+margin_top = 380.664
+margin_right = 166.189
+margin_bottom = 420.664
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollectSpeedSlider" type="HSlider" parent="CollectSpeed"]
+margin_left = 7.41623
+margin_top = 30.4259
+margin_right = 177.416
+margin_bottom = 46.4259
+max_value = 5.0
+
+[node name="CollectSpeed" type="Label" parent="CollectSpeed"]
+margin_left = 30.5846
+margin_top = 1.88776
+margin_right = 162.585
+margin_bottom = 15.8878
+mouse_filter = 1
+text = "COLLECT_SPEED"
+
+[node name="Label2" type="Label" parent="CollectSpeed"]
+margin_left = -75.0
+margin_top = 31.0
+margin_right = -10.0
+margin_bottom = 45.0
+text = "FAST"
+
+[node name="Label3" type="Label" parent="CollectSpeed"]
+margin_left = 195.649
+margin_top = 30.0172
+margin_right = 292.649
+margin_bottom = 44.0172
+text = "SLOW"
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
@@ -220,3 +258,6 @@ __meta__ = {
 [connection signal="toggled" from="AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="value_changed" from="FPS/FPS" to="." method="_on_FPS_value_changed"]
+[connection signal="value_changed" from="CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
+[connection signal="mouse_entered" from="CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
+[connection signal="mouse_exited" from="CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]

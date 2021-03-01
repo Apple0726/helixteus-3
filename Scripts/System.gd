@@ -463,7 +463,12 @@ var items_collected = {}
 
 func collect_all():
 	items_collected.clear()
-	for p_ids in game.system_data[game.c_s].planets:
+	var planets = game.system_data[game.c_s].planets
+	var progress:TextureProgress = game.HUD.get_node("CollectProgress")
+	progress.max_value = len(planets)
+	for p_ids in planets:
+		if game.c_v != "system":
+			break
 		game.tile_data = game.open_obj("Planets", p_ids.global)
 		var i:int
 		for tile in game.tile_data:
@@ -471,5 +476,9 @@ func collect_all():
 				Helper.collect_rsrc(items_collected, game.planet_data[p_ids.local], tile, i)
 			i += 1
 		Helper.save_obj("Planets", p_ids.global, game.tile_data)
+		progress.value += 1
+		if game.collect_speed_lag_ratio != 0:
+			yield(get_tree().create_timer(0.01 * game.collect_speed_lag_ratio), "timeout")
+	progress.visible = false
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()

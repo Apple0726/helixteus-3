@@ -105,8 +105,15 @@ var items_collected = {}
 func collect_all():
 	items_collected.clear()
 	var curr_time = OS.get_system_time_msecs()
-	for s_ids in game.galaxy_data[game.c_g].systems:
+	var systems = game.galaxy_data[game.c_g].systems
+	var progress:TextureProgress = game.HUD.get_node("CollectProgress")
+	progress.max_value = len(systems)
+	var cond = game.collect_speed_lag_ratio != 0
+	for s_ids in systems:
+		if game.c_v != "galaxy":
+			break
 		if not game.system_data[s_ids.local].discovered:
+			progress.value += 1
 			continue
 		game.planet_data = game.open_obj("Systems", s_ids.global)
 		for star in game.system_data[s_ids.local].stars:
@@ -117,13 +124,17 @@ func collect_all():
 					star.stored = 0
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
-			if p_ids.local >= len(game.planet_data) or not planet.discovered:
+			if p_ids.local >= len(game.planet_data):
 				continue
 			if planet.has("MS"):
 				if planet.MS == "M_MME":
 					Helper.update_MS_rsrc(planet)
+					Helper.add_minerals(planet.stored)
 					Helper.add_item_to_coll(items_collected, "minerals", planet.stored)
 					planet.stored = 0
+					continue
+			if not planet.discovered:
+				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)
 			var i:int
 			for tile in game.tile_data:
@@ -131,5 +142,9 @@ func collect_all():
 					Helper.collect_rsrc(items_collected, planet, tile, i)
 				i += 1
 			Helper.save_obj("Planets", p_ids.global, game.tile_data)
+		Helper.save_obj("Systems", s_ids.global, game.planet_data)
+		if cond:
+			progress.value += 1
+			yield(get_tree().create_timer(0.02 * game.collect_speed_lag_ratio), "timeout")
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()

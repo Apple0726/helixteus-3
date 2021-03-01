@@ -23,6 +23,7 @@ var w_3_1 = preload("res://Scenes/HX/Weapons/3_1.tscn")
 var w_3_2 = preload("res://Scenes/HX/Weapons/3_2.tscn")
 var w_3_3_1 = preload("res://Scenes/HX/Weapons/3_3_1.tscn")
 var w_3_3_2 = preload("res://Scenes/HX/Weapons/3_3_2.tscn")
+var w_4_1 = preload("res://Scenes/HX/Weapons/4_1.tscn")
 
 var star:Sprite#Shown right before HX magic
 
@@ -41,6 +42,7 @@ var wave:int = 0
 var weapon_XPs:Array = []
 var tgt_sh:int = -1#target_ship
 var hit_amount:int#Number of times your ships got hit (combined)
+var pattern:String = "" #"1_1", "2_3" etc.
 
 var victory_panel
 
@@ -66,7 +68,7 @@ func _ready():
 			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
 			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
-			HX_data.append({"type":Helper.rand_int(1, 2), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+			HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
@@ -75,6 +77,7 @@ func _ready():
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
 	for i in len(ship_data):
+		ship_data[i].HP = ship_data[i].total_HP
 		get_node("Ship%s" % i).visible = true
 		get_node("Ship%s/CollisionShape2D" % i).disabled = false
 		weapon_XPs.append({"bullet":0, "laser":0, "bomb":0, "light":0})
@@ -203,6 +206,13 @@ func hitbox_size():
 		return 0.5
 
 func _process(delta):
+	if star:
+		star.scale += Vector2(0.12, 0.12) * delta * 60
+		star.modulate.a -= 0.03 * delta * 60
+		star.rotation += 0.04 * delta * 60
+		if star.modulate.a <= 0:
+			remove_child(star)
+			star = null
 	var battle_lost:bool = true
 	for i in len(ship_data):
 		if ship_data[i].HP <= 0:
@@ -312,82 +322,10 @@ func _process(delta):
 		if remove_weapon_b:
 			weapon.remove_from_group("weapon")
 			remove_child(weapon)
-	for weapon in get_tree().get_nodes_in_group("w_1_1"):#Fireballs
+	for weapon in get_tree().get_nodes_in_group("w_%s" % pattern):#Fireballs
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
-			if not HX_w_c_d[weapon.name].has("v"):
-				HX_w_c_d[weapon.name].v = (weapon.position - self["ship%s" % tgt_sh].position) / 150.0
-				weapon.visible = true
-			weapon.position -= HX_w_c_d[weapon.name].v * delta * 60
-			HX_w_c_d[weapon.name].v *= 0.05 * delta * 60 + 1
-			if weapon.position.x < -100:
-				remove_weapon(weapon, "w_1_1")
-	for weapon in get_tree().get_nodes_in_group("w_1_2"):#Laser
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			if HX_w_c_d[weapon.name].stage == 0:
-				weapon.visible = true
-				weapon.scale.y += 0.004 * delta * 60
-				if weapon.scale.y > 0.2:
-					HX_w_c_d[weapon.name].stage = 1
-			elif HX_w_c_d[weapon.name].stage == 1:
-				weapon.scale.y = 2
-				weapon.modulate.a = 1
-				HX_w_c_d[weapon.name].stage = 2
-				HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].knockback = Vector2(35, 0)
-				HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_dur = 0.5
-				HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_spd = 2
-				HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_rot = PI / 8
-				weapon.get_node("CollisionShape2D").disabled = false
-			elif HX_w_c_d[weapon.name].stage == 2:
-				weapon.modulate.a -= 0.02 * delta * 60
-				if weapon.modulate.a <= 0:
-					remove_weapon(weapon, "w_1_2")
-	for weapon in get_tree().get_nodes_in_group("w_1_3"):#Red bullets
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			if HX_w_c_d[weapon.name].stage == 0:
-				weapon.visible = true
-				weapon.position = weapon.position.move_toward(HX_w_c_d[weapon.name].target, weapon.position.distance_to(HX_w_c_d[weapon.name].target) * delta * 5)
-				if HX_w_c_d[weapon.name].delay < -1:
-					HX_w_c_d[weapon.name].stage = 1
-				if HX_w_c_d[weapon.name].delay < -0.3:
-					weapon.rotation = move_toward(weapon.rotation, 0, 0.12)
-			else:
-				weapon.position += HX_w_c_d[weapon.name].v * delta * 60
-				HX_w_c_d[weapon.name].v *= 0.02 * delta * 60 + 1
-				if weapon.position.x < -100:
-					remove_weapon(weapon, "w_1_3")
-	for weapon in get_tree().get_nodes_in_group("w_2_1"):#green spikes?
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position.x -= 14 * delta * 60
-			if weapon.position.x < -100:
-				remove_weapon(weapon, "w_2_1")
-	for weapon in get_tree().get_nodes_in_group("w_2_2"):#light balls?
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			if HX_w_c_d[weapon.name].stage == 0:
-				weapon.position.y = move_toward(weapon.position.y, HX_w_c_d[weapon.name].y_target, abs(HX_w_c_d[weapon.name].y_target - weapon.position.y) * delta * 4)
-				if HX_w_c_d[weapon.name].delay < -1.2:
-					HX_w_c_d[weapon.name].stage = 1
-			else:
-				weapon.position -= (Vector2(HX_w_c_d[weapon.name].init_x, HX_w_c_d[weapon.name].y_target) - Vector2(-100, HX_w_c_d[weapon.name].y_target2)) * delta * 0.8
-				if weapon.position.x < -100:
-					remove_weapon(weapon, "w_2_2")
-	for weapon in get_tree().get_nodes_in_group("w_2_3"):
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position += HX_w_c_d[weapon.name].v * delta * 60
-			if weapon.position.x < -100:
-				remove_weapon(weapon, "w_2_3")
-	for weapon in get_tree().get_nodes_in_group("w_3_1"):
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.visible = true
-			weapon.position += HX_w_c_d[weapon.name].v * delta * 60
-			if weapon.position.x < -100:
-				remove_weapon(weapon, "w_3_1")
+			call("process_%s" % pattern, weapon, delta * 60)
 	if a_p_c_d.has("pattern") and a_p_c_d.pattern == "3_1":
 		a_p_c_d.delay -= delta
 		HX_c_d[HXs[a_p_c_d.HX_id].name].position.y = a_p_c_d.y_poses[a_p_c_d.i]
@@ -397,32 +335,97 @@ func _process(delta):
 				a_p_c_d.clear()
 			else:
 				a_p_c_d.i += 1
-	for weapon in get_tree().get_nodes_in_group("w_3_2"):
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position -= Vector2(10, 0) * delta * 60
-			if weapon.position.x < 300:
-				weapon.get_node("CollisionPolygon2D").disabled = false
-			if weapon.position.x < -100:
-				remove_weapon(weapon, "w_3_2")
-	for weapon in get_tree().get_nodes_in_group("w_3_3"):
-		HX_w_c_d[weapon.name].delay -= delta
-		if HX_w_c_d[weapon.name].delay < 0:
-			weapon.position.x -= 5 * delta * 60
-			if HX_w_c_d[weapon.name].has("vy"):
-				HX_w_c_d[weapon.name].delay2 -= delta
-				if HX_w_c_d[weapon.name].delay2 < 0:
-					weapon.visible = true
-					weapon.position.y += HX_w_c_d[weapon.name].vy * delta * 60
-			if weapon.position.x < -150 or weapon.position.y < -20 or weapon.position.y > 740:
-				remove_weapon(weapon, "w_3_3")
-	if star:
-		star.scale += Vector2(0.12, 0.12) * delta * 60
-		star.modulate.a -= 0.03 * delta * 60
-		star.rotation += 0.04 * delta * 60
-		if star.modulate.a <= 0:
-			remove_child(star)
-			star = null
+
+func process_1_1(weapon, delta):
+	if not HX_w_c_d[weapon.name].has("v"):
+		HX_w_c_d[weapon.name].v = (weapon.position - self["ship%s" % tgt_sh].position) / 150.0
+		weapon.visible = true
+	weapon.position -= HX_w_c_d[weapon.name].v * delta
+	HX_w_c_d[weapon.name].v *= 0.05 * delta + 1
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_1_1")
+
+func process_1_2(weapon, delta):
+	if HX_w_c_d[weapon.name].stage == 0:
+		weapon.visible = true
+		weapon.scale.y += 0.004 * delta
+		if weapon.scale.y > 0.2:
+			HX_w_c_d[weapon.name].stage = 1
+	elif HX_w_c_d[weapon.name].stage == 1:
+		weapon.scale.y = 2
+		weapon.modulate.a = 1
+		HX_w_c_d[weapon.name].stage = 2
+		HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].knockback = Vector2(35, 0)
+		HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_dur = 0.5
+		HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_spd = 2
+		HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_rot = PI / 8
+		weapon.get_node("CollisionShape2D").disabled = false
+	elif HX_w_c_d[weapon.name].stage == 2:
+		weapon.modulate.a -= 0.02 * delta
+		if weapon.modulate.a <= 0:
+			remove_weapon(weapon, "w_1_2")
+
+func process_1_3(weapon, delta):
+	if HX_w_c_d[weapon.name].stage == 0:
+		weapon.visible = true
+		weapon.position = weapon.position.move_toward(HX_w_c_d[weapon.name].target, weapon.position.distance_to(HX_w_c_d[weapon.name].target) * delta * 5 / 60.0)
+		if HX_w_c_d[weapon.name].delay < -1:
+			HX_w_c_d[weapon.name].stage = 1
+		if HX_w_c_d[weapon.name].delay < -0.3:
+			weapon.rotation = move_toward(weapon.rotation, 0, 0.12)
+	else:
+		weapon.position += HX_w_c_d[weapon.name].v * delta
+		HX_w_c_d[weapon.name].v *= 0.02 * delta + 1
+		if weapon.position.x < -100:
+			remove_weapon(weapon, "w_1_3")
+
+func process_2_1(weapon, delta):
+	weapon.position.x -= 14 * delta
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_2_1")
+	
+func process_2_2(weapon, delta):
+	if HX_w_c_d[weapon.name].stage == 0:
+		weapon.position.y = move_toward(weapon.position.y, HX_w_c_d[weapon.name].y_target, abs(HX_w_c_d[weapon.name].y_target - weapon.position.y) * delta * 4 / 60.0)
+		if HX_w_c_d[weapon.name].delay < -1.2:
+			HX_w_c_d[weapon.name].stage = 1
+	else:
+		weapon.position -= (Vector2(HX_w_c_d[weapon.name].init_x, HX_w_c_d[weapon.name].y_target) - Vector2(-100, HX_w_c_d[weapon.name].y_target2)) * delta * 0.8 / 60.0
+		if weapon.position.x < -100:
+			remove_weapon(weapon, "w_2_2")
+
+func process_2_3(weapon, delta):
+	weapon.position += HX_w_c_d[weapon.name].v * delta
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_2_3")
+
+func process_3_1(weapon, delta):
+	weapon.visible = true
+	weapon.position += HX_w_c_d[weapon.name].v * delta
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_3_1")
+
+func process_3_2(weapon, delta):
+	weapon.position -= Vector2(10, 0) * delta
+	if weapon.position.x < 300:
+		weapon.get_node("CollisionPolygon2D").disabled = false
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_3_2")
+
+func process_3_3(weapon, delta):
+	weapon.position.x -= 5 * delta
+	if HX_w_c_d[weapon.name].has("vy"):
+		HX_w_c_d[weapon.name].delay2 -= delta / 60.0
+		if HX_w_c_d[weapon.name].delay2 < 0:
+			weapon.visible = true
+			weapon.position.y += HX_w_c_d[weapon.name].vy * delta
+	if weapon.position.x < -150 or weapon.position.y < -20 or weapon.position.y > 740:
+		remove_weapon(weapon, "w_3_3")
+
+func process_4_1(weapon, delta):
+	weapon.position += HX_w_c_d[weapon.name].v * delta
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_4_1")
 
 func remove_weapon(weapon, group:String):
 	weapon.remove_from_group(group)
@@ -732,6 +735,19 @@ func atk_3_3(id:int):
 			add_child(bullet)
 			bullet.add_to_group("w_3_3")
 			HX_w_c_d[bullet.name] = {"group":"w_3_3", "vy":3 if j % 2 == 0 else -3, "id":id, "damage":4.5, "delay":platform_delay, "delay2":interval * (j / 2)}
+
+func atk_4_1(id:int):
+	for i in 20:
+		var light = w_4_1.instance()
+		light.position = HXs[id].position
+		light.scale *= 0.7
+		var min_angle = atan2(light.position.y, light.position.x)
+		var max_angle = atan2(720 - light.position.y, light.position.x)
+		light.rotation = rand_range(min_angle, max_angle)
+		var v = -Vector2(cos(light.rotation), sin(light.rotation))
+		add_child(light)
+		light.add_to_group("w_4_1")
+		HX_w_c_d[light.name] = {"group":"w_4_1", "id":id, "v":v, "damage":4, "delay":0.2 * i}
 
 func _on_Ship_area_entered(area, ship_id:int):
 	if immune or self["ship%s" % ship_id].modulate.a != 1.0:

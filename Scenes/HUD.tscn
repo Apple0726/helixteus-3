@@ -484,6 +484,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="CollectProgress" type="TextureProgress" parent="."]
+visible = false
+margin_left = 1232.0
+margin_top = 658.0
+margin_right = 1272.0
+margin_bottom = 698.0
+mouse_filter = 2
+value = 99.0
+texture_progress = ExtResource( 14 )
+fill_mode = 4
+nine_patch_stretch = true
+
 [node name="ConvertMinerals" type="TextureButton" parent="."]
 visible = false
 margin_left = 1176.0

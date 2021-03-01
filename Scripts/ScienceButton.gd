@@ -58,6 +58,8 @@ func get_science_name(sc:String):
 			return tr("CHEMICAL_DRIVE")
 		"FTL":
 			return tr("FTL_DRIVE")
+		"IGD":
+			return tr("INTERGALACTIC_DRIVE")
 		"ID":
 			return tr("ION_DRIVE")
 		"FD":

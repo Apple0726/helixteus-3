@@ -32,9 +32,12 @@ func _ready():
 		Helper.toggle_overlay(obj_btns, overlays)
 	game.overlay.refresh_overlay()
 
+func e(n, e):
+	return n * pow(10, e)
+
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [g_i.name, tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * game.pow10(1, 9), tr("DARK_MATTER"), g_i.dark_matter])
+	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [g_i.name, tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter])
 
 func on_galaxy_out ():
 	game.hide_tooltip()
@@ -69,7 +72,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				overlay.circle.modulate = gradient.interpolate(offset)
 		3:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * game.pow10(1, 9))
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
 				overlay.circle.modulate = gradient.interpolate(offset)
 		4:
 			for overlay in overlays:
