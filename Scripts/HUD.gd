@@ -99,6 +99,8 @@ func refresh():
 		game.xp_to_lv = round(game.xp_to_lv * 1.5)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
+		if game.lv == 30:
+			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 	if OS.get_latin_keyboard_variant() == "QWERTZ":

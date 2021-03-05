@@ -228,11 +228,11 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"silver_pickaxe":{"speed":12.7, "durability":1700, "costs":{"money":15000000}},
 					"gold_pickaxe":{"speed":90.0, "durability":140, "costs":{"money":32500000}},
 					"gemstone_pickaxe":{"speed":55.0, "durability":2000, "costs":{"money":e(1.56, 8)}},
-					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(5.5, 8)}},
-					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.25, 9)}},
-					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(5.4, 9)}},
-					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(1.8, 10)}},
-					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(9, 10)}},
+					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(6.5, 8)}},
+					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.45, 9)}},
+					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(8.4, 9)}},
+					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(7.2, 10)}},
+					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 11)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -281,6 +281,8 @@ func _ready():
 	dialog = AcceptDialog.new()
 	dialog.theme = load("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
+	dialog.visible = false
+	$UI.add_child(dialog)
 	if TranslationServer.get_locale() != "fr":
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
@@ -891,7 +893,6 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	hide_tooltip()
 	dialog.visible = true
 	$UI/PopupBackground.visible = true
-	$UI.add_child(dialog)
 	dialog.window_title = title
 	dialog.dialog_text = txt
 	dialog.popup_centered()
@@ -1576,8 +1577,8 @@ func generate_galaxies(id:int):
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
 			cluster_data[id]["galaxies"].append(0)
 		else:
-			if id == 0:
-				g_i.diff = clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 100, 3)
+			if id == 0:#if the galaxies are in starting cluster
+				g_i.diff = clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70, 3)
 			else:
 				g_i.diff = clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
 			cluster_data[id]["galaxies"].append(g_id)

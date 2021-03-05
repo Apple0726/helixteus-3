@@ -24,6 +24,8 @@ var w_3_2 = preload("res://Scenes/HX/Weapons/3_2.tscn")
 var w_3_3_1 = preload("res://Scenes/HX/Weapons/3_3_1.tscn")
 var w_3_3_2 = preload("res://Scenes/HX/Weapons/3_3_2.tscn")
 var w_4_1 = preload("res://Scenes/HX/Weapons/4_1.tscn")
+var w_4_2 = preload("res://Scenes/HX/Weapons/4_2.tscn")
+var w_4_3 = preload("res://Scenes/HX/Weapons/4_3.tscn")
 
 var star:Sprite#Shown right before HX magic
 
@@ -59,7 +61,7 @@ func _ready():
 	else:
 		HX_data = []
 		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
-		for k in 3:
+		for k in 4:
 			var lv = 1
 			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
 			var atk = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
@@ -68,7 +70,7 @@ func _ready():
 			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
 			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
-			HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
@@ -203,7 +205,7 @@ func hitbox_size():
 	if game:
 		return 1 - (game.MUs.SHSR - 1) * 0.01
 	else:
-		return 0.5
+		return 1
 
 func _process(delta):
 	if star:
@@ -322,15 +324,15 @@ func _process(delta):
 		if remove_weapon_b:
 			weapon.remove_from_group("weapon")
 			remove_child(weapon)
-	for weapon in get_tree().get_nodes_in_group("w_%s" % pattern):#Fireballs
+	for weapon in get_tree().get_nodes_in_group("w_%s" % pattern):
 		HX_w_c_d[weapon.name].delay -= delta
 		if HX_w_c_d[weapon.name].delay < 0:
 			call("process_%s" % pattern, weapon, delta * 60)
-	if a_p_c_d.has("pattern") and a_p_c_d.pattern == "3_1":
+	if a_p_c_d.has("pattern"):
 		a_p_c_d.delay -= delta
 		HX_c_d[HXs[a_p_c_d.HX_id].name].position.y = a_p_c_d.y_poses[a_p_c_d.i]
 		if a_p_c_d.delay < 0:
-			a_p_c_d.delay = 0.8
+			a_p_c_d.delay = a_p_c_d.init_delay
 			if a_p_c_d.i >= len(a_p_c_d.y_poses) - 1:
 				a_p_c_d.clear()
 			else:
@@ -423,9 +425,23 @@ func process_3_3(weapon, delta):
 		remove_weapon(weapon, "w_3_3")
 
 func process_4_1(weapon, delta):
+	weapon.visible = true
 	weapon.position += HX_w_c_d[weapon.name].v * delta
 	if weapon.position.x < -100:
 		remove_weapon(weapon, "w_4_1")
+
+func process_4_2(weapon, delta):
+	weapon.visible = true
+	weapon.rotation += 0.1
+	weapon.position += HX_w_c_d[weapon.name].v * delta
+	HX_w_c_d[weapon.name].v.x += 0.27
+	if weapon.position.x > 1400:
+		remove_weapon(weapon, "w_4_2")
+
+func process_4_3(weapon, delta):
+	weapon.position.x -= delta * 18
+	if weapon.position.x < -100:
+		remove_weapon(weapon, "w_4_3")
 
 func remove_weapon(weapon, group:String):
 	weapon.remove_from_group(group)
@@ -489,7 +505,8 @@ func on_target_pressed(target:int):
 	curr_sh += 1
 
 func _on_weapon_pressed(_weapon_type:String):
-	game.hide_tooltip()
+	if game:
+		game.hide_tooltip()
 	weapon_type = _weapon_type
 	$FightPanel.visible = false
 	if weapon_type == "light":
@@ -565,7 +582,8 @@ func enemy_attack():
 			$Back.visible = true
 			$Current.visible = true
 		else:
-			call("atk_%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)], curr_en)
+			pattern = "%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)]
+			call("atk_%s" % pattern, curr_en)
 			curr_en += 1
 
 func put_magic(id:int):
@@ -686,7 +704,7 @@ func atk_3_1(id:int):
 			spike.add_to_group("w_3_1")
 			HX_w_c_d[spike.name] = {"group":"w_3_1", "id":id, "v":v, "damage":5, "delay":i * 0.8 + 0.5}
 	y_poses.append(HXs[id].position.y)
-	a_p_c_d = {"pattern":"3_1", "HX_id":id, "y_poses":y_poses, "i":0, "delay":0.8}
+	a_p_c_d = {"pattern":"3_1", "HX_id":id, "y_poses":y_poses, "i":0, "delay":0.8, "init_delay":0.8}
 
 func atk_3_2(id:int):
 	put_magic(id)
@@ -737,17 +755,53 @@ func atk_3_3(id:int):
 			HX_w_c_d[bullet.name] = {"group":"w_3_3", "vy":3 if j % 2 == 0 else -3, "id":id, "damage":4.5, "delay":platform_delay, "delay2":interval * (j / 2)}
 
 func atk_4_1(id:int):
-	for i in 20:
+	for i in 15:
 		var light = w_4_1.instance()
 		light.position = HXs[id].position
-		light.scale *= 0.7
-		var min_angle = atan2(light.position.y, light.position.x)
-		var max_angle = atan2(720 - light.position.y, light.position.x)
+		light.scale *= 0.6
+		var min_angle = atan2(light.position.y, light.position.x) + 0.2
+		var max_angle = atan2(light.position.y - 720, light.position.x) - 0.2
 		light.rotation = rand_range(min_angle, max_angle)
-		var v = -Vector2(cos(light.rotation), sin(light.rotation))
+		light.visible = false
+		var v = -Vector2(cos(light.rotation), sin(light.rotation)) * 8
+		if HXs[id].position.x > 853:
+			v *= 1.3
 		add_child(light)
 		light.add_to_group("w_4_1")
 		HX_w_c_d[light.name] = {"group":"w_4_1", "id":id, "v":v, "damage":4, "delay":0.2 * i}
+
+func atk_4_2(id:int):
+	a_p_c_d.clear()
+	var y_poses = []
+	for i in 5:
+		var y_pos = rand_range(50, 670)
+		y_poses.append(y_pos)
+		var boomerang = w_4_2.instance()
+		boomerang.position = Vector2(HXs[id].position.x, y_pos)
+		var v = Vector2(-25, 0)
+		if HXs[id].position.x > 853:
+			v *= 1.3
+		boomerang.visible = false
+		add_child(boomerang)
+		boomerang.add_to_group("w_4_2")
+		HX_w_c_d[boomerang.name] = {"group":"w_4_2", "id":id, "v":v, "damage":5, "delay":i * 0.6 + 0.5}
+	y_poses.append(HXs[id].position.y)
+	a_p_c_d = {"pattern":"4_2", "HX_id":id, "y_poses":y_poses, "i":0, "delay":0.6, "init_delay":0.6}
+
+func atk_4_3(id:int):
+	put_magic(id)
+	for i in 6:
+		var y_poses = [stepify(rand_range(0, 600), 120) + 64, stepify(rand_range(0, 600), 120) + 64, stepify(rand_range(0, 600), 120) + 64]
+		while y_poses[1] == y_poses[0]:
+			y_poses[1] = stepify(rand_range(0, 600), 120) + 64
+		while y_poses[2] == y_poses[0] or y_poses[2] == y_poses[1]:
+			y_poses[2] = stepify(rand_range(0, 600), 120) + 64
+		for j in 3:
+			var slab = w_4_3.instance()
+			slab.position = Vector2(1350, y_poses[j])
+			add_child(slab)
+			slab.add_to_group("w_4_3")
+			HX_w_c_d[slab.name] = {"group":"w_4_3", "id":id, "damage":6, "delay":0.6 * i + 0.5}
 
 func _on_Ship_area_entered(area, ship_id:int):
 	if immune or self["ship%s" % ship_id].modulate.a != 1.0:

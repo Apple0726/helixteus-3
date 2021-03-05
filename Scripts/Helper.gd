@@ -623,6 +623,8 @@ func update_rsrc(p_i, tile, rsrc = null):
 		if tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
 			return
 	update_bldg_constr(tile)
+	if tile.bldg.is_constructing:
+		return
 	match tile.bldg.name:
 		"ME", "PP", "MM", "SP", "AE":
 			#Number of seconds needed per mineral

@@ -96,20 +96,21 @@ func _on_Send_pressed():
 
 func send_ships():
 	if game.ships_travel_view == "-":
-		if game.energy >= total_energy_cost:
-			game.energy -= round(total_energy_cost)
-			game.ships_depart_pos = depart_pos
-			game.ships_dest_pos = dest_pos
-			game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
-			game.ships_dest_g_coords = {"c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
-			game.ships_travel_view = travel_view
-			game.ships_travel_start_date = OS.get_system_time_msecs()
-			game.ships_travel_length = time_cost
-			game.toggle_panel(self)
-			game.view.refresh()
-			game.HUD.refresh()
-		else:
-			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+		if time_cost != 0:
+			if game.energy >= total_energy_cost:
+				game.energy -= round(total_energy_cost)
+				game.ships_depart_pos = depart_pos
+				game.ships_dest_pos = dest_pos
+				game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
+				game.ships_dest_g_coords = {"c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
+				game.ships_travel_view = travel_view
+				game.ships_travel_start_date = OS.get_system_time_msecs()
+				game.ships_travel_length = time_cost
+				game.toggle_panel(self)
+				game.view.refresh()
+				game.HUD.refresh()
+			else:
+				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 	

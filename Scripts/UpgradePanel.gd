@@ -5,6 +5,7 @@ var bldg:String#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
+var auto_speedup:bool = false
 
 onready var path1 = $UpgradePanel/PathButtons/Path1
 onready var path2 = $UpgradePanel/PathButtons/Path2
@@ -26,6 +27,7 @@ func _ready():
 	path1.text = tr("PATH") + " 1"
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
+	$UpgradePanel/AutoSpeedup.visible = game.lv >= 30
 
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))
@@ -40,6 +42,7 @@ func get_min_lv():
 	return min_lv
 
 func update():
+	auto_speedup = $UpgradePanel/AutoSpeedup.pressed
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "time":0.0}
 	var same_lv = true
 	var first_tile = game.tile_data[ids[0]].bldg
@@ -60,6 +63,9 @@ func update():
 		var base_metal_costs = Data[path_str][tile_bldg].metal_costs
 		costs.money += round(base_costs.money * geo_seq(1.25, lv_curr, lv_to))
 		costs.time = round(base_costs.time * geo_seq(1.24, lv_curr, lv_to))
+		if auto_speedup:
+			costs.money += costs.time * 10
+			costs.time = 0
 		if base_costs.has("energy"):
 			costs.energy += round(base_costs.energy * geo_seq(1.2, lv_curr, lv_to))
 		if lv_curr <= 10 and lv_to >= 11:
@@ -161,6 +167,8 @@ func _on_Upgrade_pressed():
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
 			var base_costs = Data.costs[tile.bldg.name]
 			var cost_time = round(base_costs.time * geo_seq(1.24, tile.bldg[path_str], next_lv.value))
+			if auto_speedup:
+				cost_time = 1
 			var cost_money = round(base_costs.money * geo_seq(1.25, tile.bldg[path_str], next_lv.value))
 			if tile.bldg.has("collect_date"):
 				var prod_ratio
@@ -187,6 +195,15 @@ func _on_Upgrade_pressed():
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
-
 func _on_close_button_pressed():
 	game.remove_upgrade_panel()
+
+func _on_AutoSpeedup_mouse_entered():
+	game.show_tooltip(tr("AUTO_SPEEDUP_DESC"))
+
+func _on_AutoSpeedup_pressed():
+	update()
+
+
+func _on_AutoSpeedup_mouse_exited():
+	game.hide_tooltip()

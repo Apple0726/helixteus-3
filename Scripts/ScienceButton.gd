@@ -13,6 +13,7 @@ func _ready():
 	refresh()
 	if not infinite_research:
 		#rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
+		#game.science_unlocked.IGD = true
 		if game.science_unlocked[name]:
 			$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 	else:

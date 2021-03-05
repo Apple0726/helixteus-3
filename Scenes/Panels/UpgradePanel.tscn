@@ -24,9 +24,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -320.0
-margin_top = -144.0
+margin_top = -152.0
 margin_right = 320.0
-margin_bottom = 136.0
+margin_bottom = 144.0
 grow_horizontal = 0
 rect_min_size = Vector2( 576, 280 )
 mouse_filter = 1
@@ -36,9 +36,9 @@ __meta__ = {
 
 [node name="Upgrade" type="Button" parent="UpgradePanel"]
 margin_left = 456.0
-margin_top = 240.0
+margin_top = 256.0
 margin_right = 640.0
-margin_bottom = 280.0
+margin_bottom = 296.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
@@ -48,10 +48,10 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
-margin_left = 19.0
-margin_top = 232.0
-margin_right = 440.0
-margin_bottom = 280.0
+margin_left = 16.0
+margin_top = 248.0
+margin_right = 437.0
+margin_bottom = 296.0
 rect_min_size = Vector2( 200, 40 )
 theme = ExtResource( 3 )
 scroll_vertical_enabled = false
@@ -220,6 +220,18 @@ anchor_right = 1.0
 margin_left = -40.0
 margin_right = 0.0
 margin_bottom = 40.0
+
+[node name="AutoSpeedup" type="CheckBox" parent="UpgradePanel"]
+margin_left = 232.0
+margin_top = 200.0
+margin_right = 440.0
+margin_bottom = 228.0
+theme = ExtResource( 3 )
+pressed = true
+text = "AUTO_SPEEDUP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="UpgradePanel/Upgrade" to="." method="_on_Upgrade_pressed"]
 [connection signal="resized" from="UpgradePanel/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
 [connection signal="value_changed" from="UpgradePanel/Control2/NextLv" to="." method="_on_NextLv_value_changed"]
@@ -227,3 +239,6 @@ margin_bottom = 40.0
 [connection signal="pressed" from="UpgradePanel/PathButtons/Path2" to="." method="_on_Path2_pressed"]
 [connection signal="pressed" from="UpgradePanel/PathButtons/Path3" to="." method="_on_Path3_pressed"]
 [connection signal="close_button_pressed" from="UpgradePanel/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_entered"]
+[connection signal="mouse_exited" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_exited"]
+[connection signal="pressed" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_pressed"]

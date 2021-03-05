@@ -341,6 +341,8 @@ func on_star_over (id:int):
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
 		if not star.is_constructing:
 			if star.MS == "M_DS" and star.MS_lv < 4 and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
+				MS_constr_data.obj = star
+				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 	game.show_tooltip(tooltip)
 
@@ -466,14 +468,31 @@ func collect_all():
 	var planets = game.system_data[game.c_s].planets
 	var progress:TextureProgress = game.HUD.get_node("CollectProgress")
 	progress.max_value = len(planets)
+	for star in game.system_data[game.c_s].stars:
+		if star.has("MS"):
+			if star.MS == "M_DS":
+				Helper.update_MS_rsrc(star)
+				Helper.add_item_to_coll(items_collected, "energy", star.stored)
+				star.stored = 0
 	for p_ids in planets:
 		if game.c_v != "system":
 			break
+		var planet = game.planet_data[p_ids.local]
+		if planet.has("MS"):
+			if planet.MS == "M_MME":
+				Helper.update_MS_rsrc(planet)
+				var collect_data:Dictionary = Helper.add_minerals(planet.stored)
+				Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
+				planet.stored = collect_data.remainder
+				continue
+		if not planet.discovered:
+			progress.value += 1
+			continue
 		game.tile_data = game.open_obj("Planets", p_ids.global)
 		var i:int
 		for tile in game.tile_data:
 			if tile:
-				Helper.collect_rsrc(items_collected, game.planet_data[p_ids.local], tile, i)
+				Helper.collect_rsrc(items_collected, planet, tile, i)
 			i += 1
 		Helper.save_obj("Planets", p_ids.global, game.tile_data)
 		progress.value += 1

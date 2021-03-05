@@ -129,9 +129,9 @@ func collect_all():
 			if planet.has("MS"):
 				if planet.MS == "M_MME":
 					Helper.update_MS_rsrc(planet)
-					Helper.add_minerals(planet.stored)
-					Helper.add_item_to_coll(items_collected, "minerals", planet.stored)
-					planet.stored = 0
+					var collect_data:Dictionary = Helper.add_minerals(planet.stored)
+					Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
+					planet.stored = collect_data.remainder
 					continue
 			if not planet.discovered:
 				continue
