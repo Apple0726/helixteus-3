@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=11 format=2]
+[gd_resource type="TileSet" load_steps=13 format=2]
 
 [ext_resource path="res://Graphics/Tiles/cave.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Tiles/Crater/1.png" type="Texture" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://Graphics/Tiles/abandoned_ship2.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Tiles/Wormhole.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Tiles/InactiveWormhole.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Tiles/abandoned_ship3.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Tiles/BuriedShipPart.png" type="Texture" id=12]
 
 [resource]
 0/name = "rock_terrain.png 0"
@@ -170,3 +172,31 @@
 9/shape_one_way_margin = 0.0
 9/shapes = [  ]
 9/z_index = 0
+10/name = "abandoned_ship3.png 10"
+10/texture = ExtResource( 11 )
+10/tex_offset = Vector2( 0, 0 )
+10/modulate = Color( 1, 1, 1, 1 )
+10/region = Rect2( 0, 0, 200, 200 )
+10/tile_mode = 0
+10/occluder_offset = Vector2( 0, 0 )
+10/navigation_offset = Vector2( 0, 0 )
+10/shape_offset = Vector2( 0, 0 )
+10/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+10/shape_one_way = false
+10/shape_one_way_margin = 0.0
+10/shapes = [  ]
+10/z_index = 0
+11/name = "BuriedShipPart.png 11"
+11/texture = ExtResource( 12 )
+11/tex_offset = Vector2( 0, 0 )
+11/modulate = Color( 1, 1, 1, 1 )
+11/region = Rect2( 0, 0, 200, 200 )
+11/tile_mode = 0
+11/occluder_offset = Vector2( 0, 0 )
+11/navigation_offset = Vector2( 0, 0 )
+11/shape_offset = Vector2( 0, 0 )
+11/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+11/shape_one_way = false
+11/shape_one_way_margin = 0.0
+11/shapes = [  ]
+11/z_index = 0

@@ -25,3 +25,4 @@ func _physics_process(_delta):
 				if cave_ref.HP >= 0:
 					Helper.show_dmg(int(dmg), target_coll.position, cave_ref)
 		get_parent().remove_child(self)
+		queue_free()

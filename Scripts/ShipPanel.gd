@@ -14,6 +14,7 @@ func refresh():
 		panel.refresh()
 	$GridContainer/Panel1.visible = len(game.ship_data) >= 1
 	$GridContainer/Panel2.visible = len(game.ship_data) >= 2
+	$GridContainer/Panel3.visible = len(game.ship_data) >= 3
 	$Drives.refresh()
 	set_process(game.ships_travel_view != "-")
 

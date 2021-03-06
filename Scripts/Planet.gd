@@ -53,6 +53,7 @@ func _ready():
 		if lake_1_phase != "G":
 			$Lakes1.modulate = phase_1.colors[lake_1_phase]
 			#$Lakes1.modulate = Color(0.3, 0.3, 0.3, 1)
+		phase_1.free()
 	if p_i.has("lake_2"):
 		$Lakes2.tile_set = game.lake_TS
 		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
@@ -61,6 +62,7 @@ func _ready():
 		if lake_2_phase != "G":
 			$Lakes2.modulate = phase_2.colors[lake_2_phase]
 			#$Lakes2.modulate = Color(0.3, 0.3, 0.3, 1)
+		phase_2.free()
 	
 	for i in wid:
 		for j in wid:
@@ -106,6 +108,8 @@ func _ready():
 					$Obstacles.set_cell(i, j, 5)
 				elif len(game.ship_data) == 1:
 					$Obstacles.set_cell(i, j, 7)
+				elif len(game.ship_data) == 2:
+					$Obstacles.set_cell(i, j, 10)
 			if tile.has("wormhole"):
 				if tile.wormhole.active:
 					$Obstacles.set_cell(i, j, 8)
@@ -114,6 +118,8 @@ func _ready():
 						add_time_bar(id2, "wormhole")
 					$Obstacles.set_cell(i, j, 9)
 				p_i.wormhole = true
+			if tile.has("ship_part") and not tile.has("depth"):
+				$Obstacles.set_cell(i, j, 11)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -240,11 +246,15 @@ func show_tooltip(tile):
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
 	if tile.has("cave"):
+		var cave = game.cave_data[tile.cave.id]
 		tooltip = tr("CAVE")
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":cave.floor_size})
+		if cave.has("special_cave") and cave.special_cave == 1:
+			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
 		if not game.science_unlocked.RC:
-			tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
+			tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
 		else:
-			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % game.cave_data[tile.cave.id].num_floors, tr("FLOOR_SIZE").format({"size":game.cave_data[tile.cave.id].floor_size})]
+			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora") and tooltip == "":
@@ -673,12 +683,15 @@ func _input(event):
 						game.vehicle_panel.tile_id = tile_id
 			elif tile.has("ship"):
 				if game.science_unlocked.SCT:
-					game.tile_data[tile_id].erase("ship")
-					$Obstacles.set_cell(x_pos, y_pos, -1)
-					game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 					if len(game.ship_data) == 0:
+						game.tile_data[tile_id].erase("ship")
+						$Obstacles.set_cell(x_pos, y_pos, -1)
+						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
+						game.tile_data[tile_id].erase("ship")
+						$Obstacles.set_cell(x_pos, y_pos, -1)
+						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":12, "current":game.lv, "goal":35}
 						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":7, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
@@ -687,6 +700,19 @@ func _input(event):
 						Helper.add_weapon_XP(1, "laser", 50)
 						Helper.add_weapon_XP(1, "bomb", 50)
 						Helper.add_weapon_XP(1, "light", 60)
+					elif len(game.ship_data) == 2:
+						if game.third_ship_hints.parts[0] and game.third_ship_hints.parts[1] and game.third_ship_hints.parts[2] and game.third_ship_hints.parts[3] and game.third_ship_hints.parts[4]:
+							game.tile_data[tile_id].erase("ship")
+							$Obstacles.set_cell(x_pos, y_pos, -1)
+							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
+							game.ship_data.append({"lv":1, "HP":14, "total_HP":14, "atk":12, "def":8, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+							Helper.add_ship_XP(2, 20000)
+							Helper.add_weapon_XP(2, "bullet", 140)
+							Helper.add_weapon_XP(2, "laser", 140)
+							Helper.add_weapon_XP(2, "bomb", 140)
+							Helper.add_weapon_XP(2, "light", 180)
+						else:
+							game.popup(tr("MISSING_PARTS"), 2.5)
 				else:
 					if game.show.SP:
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)

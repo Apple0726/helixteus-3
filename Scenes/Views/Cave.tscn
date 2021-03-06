@@ -1,4 +1,4 @@
-[gd_scene load_steps=144 format=2]
+[gd_scene load_steps=145 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -31,6 +31,7 @@
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=29]
 [ext_resource path="res://Graphics/Misc/Glow.png" type="Texture" id=30]
 [ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=31]
+[ext_resource path="res://Scenes/Ship2Map.tscn" type="PackedScene" id=32]
 
 [sub_resource type="TileSet" id=1]
 0/name = "3.jpg 0"
@@ -1054,6 +1055,18 @@ light_mask = -2147483647
 position = Vector2( 636, 360 )
 texture = ExtResource( 15 )
 
+[node name="Error" type="Label" parent="UI"]
+visible = false
+margin_left = 1072.0
+margin_top = 100.0
+margin_right = 1236.0
+margin_bottom = 165.0
+text = "Error: high-energy electromagnetic waves in this cave are disrupting the rover's radar."
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Minimap" type="Node2D" parent="UI"]
 light_mask = -2147483647
 
@@ -1091,6 +1104,10 @@ __meta__ = {
 
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
+
+[node name="Ship2Map" parent="UI2" instance=ExtResource( 32 )]
+visible = false
+light_mask = 0
 
 [node name="InventorySlots" type="HBoxContainer" parent="UI2"]
 margin_top = 660.0
@@ -1336,9 +1353,9 @@ anims/RoverSprint = SubResource( 112 )
 [node name="AuroraModulate" type="Node2D" parent="."]
 modulate = Color( 0.784314, 1, 0.784314, 1 )
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
-[connection signal="body_exited" from="Exit" to="." method="_on_Exit_body_exited"]
+[connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
-[connection signal="body_exited" from="Hole" to="." method="_on_Hole_body_exited"]
+[connection signal="body_exited" from="Hole" to="." method="_on_body_exited"]
 [connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]

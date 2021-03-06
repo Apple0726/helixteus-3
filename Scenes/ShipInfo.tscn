@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/XP.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/ShipInfo.gd" type="Script" id=9]
@@ -28,6 +29,16 @@ __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
 }
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color( 1, 1, 1, 0.560784 )
+margin_left = 20.0
+margin_top = 100.0
+margin_right = 204.0
+margin_bottom = 144.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
 
 [node name="Ship" type="TextureButton" parent="."]
 margin_left = 28.0

@@ -22,6 +22,7 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
 var tween:Tween
+var ship2map
 
 func _on_Button_pressed():
 	click_sound.play()
@@ -93,6 +94,7 @@ func refresh():
 	MU.visible = game.show.minerals
 	$ConvertMinerals.visible = game.show.minerals
 	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
+	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
 	if game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv
@@ -181,6 +183,8 @@ func refresh():
 			$Objectives/Label.text = tr("SIGNAL_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.DAVID:
 			$Objectives/Label.text = tr("DAVID_OBJECTIVE")
+		elif game.objective.type == game.ObjectiveType.COLLECT_PARTS:
+			$Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
 		$Objectives/Label.visible = true
 		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
 		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position
@@ -340,10 +344,6 @@ func _on_AutosaveLight_mouse_entered():
 		game.help_str = "autosave_light_desc"
 		game.show_tooltip("%s\n%s" % [tr("AUTOSAVE_LIGHT_DESC"), tr("HIDE_HELP")])
 
-func _on_AutosaveLight_mouse_exited():
-	game.hide_tooltip()
-
-
 func _on_ShipLocator_pressed():
 	if game.c_v == "galaxy":
 		game.put_bottom_info(tr("LOCATE_SHIP_HELP"), "locating_ship", "hide_ship_locator")
@@ -359,5 +359,15 @@ func _on_ShipLocator_mouse_entered():
 func _on_MineralsText_mouse_entered():
 	game.show_tooltip(tr("FULL_MINERALS"))
 
-func _on_MineralsText_mouse_exited():
-	game.hide_tooltip()
+func _on_Ship2Map_mouse_entered():
+	game.show_tooltip(tr("GALAXY_MAP"))
+
+
+func _on_Ship2Map_pressed():
+	if ship2map:
+		remove_child(ship2map)
+		ship2map = null
+	else:
+		ship2map = load("res://Scenes/Ship2Map.tscn").instance()
+		add_child(ship2map)
+		ship2map.refresh()

@@ -69,6 +69,12 @@ func update_info():
 		upper_depth = p_i.crust_start_depth + 1
 		lower_depth = p_i.mantle_start_depth
 	elif tile.depth <= p_i.core_start_depth:
+		if layer == "crust" and tile.has("ship_part"):
+			tile.erase("ship_part")
+			if not game.objective.empty():
+				game.objective.current += 1
+			game.popup(tr("SHIP_PART_FOUND"), 2.5)
+			game.third_ship_hints.parts[4] = true
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
 		lower_depth = floor(p_i.core_start_depth / 1000.0)
@@ -115,7 +121,7 @@ func generate_rock(new:bool):
 		var amount = contents[met]
 		for i in clamp(round(amount / 2.0), 1, 40):
 			var met_sprite = Sprite.new()
-			met_sprite.texture = load("res://Graphics/Metals/" + met + ".png")
+			met_sprite.texture = game.metal_textures[met]
 			met_sprite.centered = true
 			met_sprite.scale *= rand_range(0.15, 0.2)
 			var half_size_in_px = met_sprite.scale.x * 128

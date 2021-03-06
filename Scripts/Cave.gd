@@ -47,6 +47,8 @@ var id:int#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
 var light_amount:float = 1.0
+var dont_gen_anything:bool = false
+var wormhole
 
 #Rover stats
 var atk:float = 5.0
@@ -100,6 +102,9 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
+	if cave_data.has("special_cave") and cave_data.special_cave in [1, 3]:
+		$UI/Error.visible = true
+		$UI/Minimap.visible = false
 	if game.help.cave_controls:
 		$UI2/Controls.visible = true
 		game.help_str = "cave_controls"
@@ -158,22 +163,35 @@ func remove_cave():
 	cave_wall.clear()
 	minimap_cave.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy.remove_from_group("enemies")
 		remove_child(enemy)
-	for relic in get_tree().get_nodes_in_group("relic"):
-		relic.remove_from_group("relic")
-		remove_child(relic)
+		enemy.free()
+	for object in get_tree().get_nodes_in_group("misc_objects"):
+		object.remove_from_group("misc_objects")
+		remove_child(object)
+		object.free()
+	for light in get_tree().get_nodes_in_group("lights"):
+		light.remove_from_group("lights")
+		remove_child(light)
+		light.free()
 	for enemy_icon in get_tree().get_nodes_in_group("enemy_icons"):
+		enemy_icon.remove_from_group("enemy_icons")
 		MM.remove_child(enemy_icon)
+		enemy_icon.free()
 	for proj in get_tree().get_nodes_in_group("projectiles"):
 		proj.remove_from_group("projectiles")
 		if is_a_parent_of(proj):
 			remove_child(proj)
+			proj.free()
 	for deposit in deposits:
 		remove_child(deposits[deposit])
+		deposits[deposit].free()
 	for chest_str in chests:
 		remove_child(chests[chest_str].node)
+		chests[chest_str].node.free()
 	for tile in tiles_touched_by_laser:
 		remove_child(tiles_touched_by_laser[tile].bar)
+		tiles_touched_by_laser[tile].bar.free()
 	tiles_touched_by_laser.clear()
 	chests.clear()
 	deposits.clear()
@@ -200,8 +218,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 	noise.octaves = 1
 	if cave_size == 20 and num_floors == 3:
 		noise.period = 20
+	elif cave_data.has("special_cave"):
+		if cave_data.special_cave == 3:
+			noise.period = 35
+		elif cave_data.special_cave == 2:
+			noise.period = 150
+		elif cave_data.special_cave == 1:
+			if cave_floor == 30:
+				noise.period = 65
+				cave_size = 16
+			else:
+				noise.period = 50 - cave_floor
+				cave_size = 16 + cave_floor / 2
+		else:
+			noise.period = 65
 	else:
 		noise.period = 65
+	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
@@ -211,7 +244,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if rng.randf() < 0.005 * min(5, cave_floor):
+				if not dont_gen_anything and rng.randf() < 0.005 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
@@ -219,6 +252,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
 					HX_node.def = round(6 * pow(difficulty, 0.85) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
+						HX.free()
 						continue
 					HX.get_node("Info").visible = false
 					HX_node.total_HP = HX_node.HP
@@ -238,25 +272,26 @@ func generate_cave(first_floor:bool, going_up:bool):
 					enemy_icon.add_to_group("enemy_icons")
 			else:
 				cave_wall.set_cell(i, j, 0)
-				var rand:float = rng.randf()
-				var rand2:float = rng.randf()
-				var ch = 0.02 * pow(difficulty / 3.0, 0.4)
-				if rand < ch:
-					var met_spawned:String = "lead"
-					for met in game.met_info:
-						var rarity = game.met_info[met].rarity
-						if rarity > difficulty:
-							break
-						if rand2 < 1 / (rarity + 1):
-							met_spawned = met
-					if met_spawned != "":
-						var deposit = deposit_scene.instance()
-						deposit.dir = "Metals"
-						deposit.rsrc_name = met_spawned
-						deposit.amount = int(rng.randf_range(0.1, 0.15) * game.met_info[met_spawned].amount * min(5, pow(difficulty, 0.3)))
-						add_child(deposit)
-						deposit.position = cave_wall.map_to_world(Vector2(i, j))
-						deposits[String(tile_id)] = deposit
+				if not dont_gen_anything:
+					var rand:float = rng.randf()
+					var rand2:float = rng.randf()
+					var ch = 0.02 * pow(pow(2, cave_floor - 1) / 3.0, 0.4)
+					if rand < ch:
+						var met_spawned:String = "lead"
+						for met in game.met_info:
+							var rarity = game.met_info[met].rarity
+							if rarity > difficulty:
+								break
+							if rand2 < 1 / (rarity + 1):
+								met_spawned = met
+						if met_spawned != "":
+							var deposit = deposit_scene.instance()
+							deposit.rsrc_texture = game.metal_textures[met_spawned]
+							deposit.rsrc_name = met_spawned
+							deposit.amount = int(rng.randf_range(0.1, 0.15) * game.met_info[met_spawned].amount * min(5, pow(difficulty, 0.3)))
+							add_child(deposit)
+							deposit.position = cave_wall.map_to_world(Vector2(i, j))
+							deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, -1, 1)
@@ -278,36 +313,37 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
 	#Generate treasure chests
-	for room in rooms:
-		var n = room.size
-		for tile in room.tiles:
-			var rand = rng.randf()
-			var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8)
-			if rand < formula:
-				var tier:int = int(clamp(pow(formula / rand * aurora_mult, 0.2), 1, 5))
-				var contents:Dictionary = generate_treasure(tier, rng)
-				if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
-					continue
-				if partially_looted_chests[cave_floor - 1].has(String(tile)):
-					contents = partially_looted_chests[cave_floor - 1][String(tile)].duplicate(true)
-				var chest = object_scene.instance()
-				if tier == 1:
-					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
-				elif tier == 2:
-					chest.modulate = Color(0, 0.79, 0.0, 1.0)
-				elif tier == 3:
-					chest.modulate = Color(0, 0.5, 0.79, 1.0)
-				elif tier == 4:
-					chest.modulate = Color(0.7, 0, 0.79, 1.0)
-				elif tier == 5:
-					chest.modulate = Color(0.85, 1.0, 0, 1.0)
-				chest.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Chest.png")
-				chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
-				chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
-				chest.scale *= 0.8
-				chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
-				chests[String(tile)] = {"node":chest, "contents":contents, "tier":tier}
-				add_child(chest)
+	if not dont_gen_anything:
+		for room in rooms:
+			var n = room.size
+			for tile in room.tiles:
+				var rand = rng.randf()
+				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8)
+				if rand < formula:
+					var tier:int = int(clamp(pow(formula / rand * aurora_mult, 0.2), 1, 5))
+					var contents:Dictionary = generate_treasure(tier, rng)
+					if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
+						continue
+					if partially_looted_chests[cave_floor - 1].has(String(tile)):
+						contents = partially_looted_chests[cave_floor - 1][String(tile)].duplicate(true)
+					var chest = object_scene.instance()
+					if tier == 1:
+						chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
+					elif tier == 2:
+						chest.modulate = Color(0, 0.79, 0.0, 1.0)
+					elif tier == 3:
+						chest.modulate = Color(0, 0.5, 0.79, 1.0)
+					elif tier == 4:
+						chest.modulate = Color(0.7, 0, 0.79, 1.0)
+					elif tier == 5:
+						chest.modulate = Color(0.85, 1.0, 0, 1.0)
+					chest.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Chest.png")
+					chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
+					chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
+					chest.scale *= 0.8
+					chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
+					chests[String(tile)] = {"node":chest, "contents":contents, "tier":tier}
+					add_child(chest)
 	#Remove already-mined tiles
 	for i in cave_size:
 		for j in cave_size:
@@ -401,7 +437,72 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var relic_tile = rooms[0].tiles[0]
 		relic.position = cave.map_to_world(get_tile_pos(relic_tile)) + Vector2(100, 100)
 		add_child(relic)
-		relic.add_to_group("relic")
+		relic.add_to_group("misc_objects")
+	
+	#Wormhole
+	if cave_floor == num_floors:
+		wormhole = object_scene.instance()
+		wormhole.get_node("Sprite").texture = load("res://Graphics/Tiles/Wormhole.png")
+		wormhole.get_node("Area2D").connect("body_entered", self, "on_WH_entered")
+		wormhole.get_node("Area2D").connect("body_exited", self, "_on_body_exited")
+		var wormhole_tile = rooms[0].tiles[1]
+		wormhole.position = cave.map_to_world(get_tile_pos(wormhole_tile)) + Vector2(100, 100)
+		add_child(wormhole)
+		add_light(wormhole.position)
+	
+	#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
+	if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
+		if cave_data.has("special_cave") and not game.third_ship_hints.parts[cave_data.special_cave] and cave_floor == num_floors:
+			var part = object_scene.instance()
+			part.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/ShipPart.png")
+			part.get_node("Area2D").connect("body_entered", self, "on_ShipPart_entered")
+			var part_tile = rooms[0].tiles[0]
+			part.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
+			add_child(part)
+			part.add_to_group("misc_objects")
+			add_light(part.position, "misc_objects")
+		if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
+			var map = object_scene.instance()
+			map.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Map.png")
+			map.get_node("Area2D").connect("body_entered", self, "on_map_entered")
+			map.get_node("Area2D").connect("body_exited", self, "on_map_exited")
+			var map_tile:Vector2
+			if game.third_ship_hints.map_found_at == -1:
+				map_tile = pos
+				if map_tile.x < 400:
+					map_tile.x += 400
+				elif map_tile.x > cave_size * 200 - 400:
+					map_tile.x -= 400
+				else:
+					map_tile.x += sign(rand_range(-1, 1)) * 400
+				if map_tile.y < 400:
+					map_tile.y += 400
+				elif map_tile.y > cave_size * 200 - 400:
+					map_tile.y -= 400
+				else:
+					map_tile.y += sign(rand_range(-1, 1)) * 400
+				game.third_ship_hints.map_found_at = id
+				game.third_ship_hints.map_pos = map_tile
+				game.third_ship_hints.ship_sys_id = Helper.rand_int(1, game.galaxy_data[game.c_g].system_num) - 1
+				game.third_ship_hints.ship_part_id = Helper.rand_int(1, game.galaxy_data[game.c_g].system_num) - 1
+				game.third_ship_hints.g_g_id = game.c_g_g
+				game.third_ship_hints.g_l_id = game.c_g
+			else:
+				map_tile = game.third_ship_hints.map_pos
+			$UI2/Ship2Map.refresh()
+			map.position = map_tile
+			add_child(map)
+			add_light(map.position, "misc_objects")
+			map.add_to_group("misc_objects")
+			cave.set_cellv(cave.world_to_map(map_tile), tile_type)
+			cave_wall.set_cellv(cave_wall.world_to_map(map_tile), -1)
+			minimap_cave.set_cellv(minimap_cave.world_to_map(map_tile), tile_type)
+			cave_wall.update_bitmask_region()
+			var st = String(get_tile_index(cave.world_to_map(map_tile)))
+			if deposits.has(st):
+				var deposit = deposits[st]
+				remove_child(deposit)
+				deposits.erase(st)
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
@@ -419,6 +520,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.get_node("HX").set_rand()
 
+func add_light(pos:Vector2, group:String = "lights"):
+	var light = Light2D.new()
+	light.texture = load("res://Graphics/Stars/Star.png")
+	light.position = pos
+	add_child(light)
+	light.add_to_group(group)
+	
 func on_chest_entered(_body, tile:String):
 	var chest_rsrc = chests[tile].contents
 	active_chest = tile
@@ -442,6 +550,20 @@ func on_chest_entered(_body, tile:String):
 func on_relic_entered(_body):
 	$UI2/Relic.visible = true
 
+func on_ShipPart_entered(_body):
+	if not game.third_ship_hints.parts[cave_data.special_cave]:
+		game.objective.current += 1
+		game.popup(tr("SHIP_PART_FOUND"), 2.5)
+		game.third_ship_hints.parts[cave_data.special_cave] = true
+		for object in get_tree().get_nodes_in_group("misc_objects"):
+			object.visible = false
+
+func on_map_entered(_body):
+	$UI2/Ship2Map.visible = true
+	$UI2/Ship2Map/AnimationPlayer.play("Map fade")
+	active_type = "map"
+	show_right_info(tr("TAKE_ALL"))
+
 func on_chest_exited(_body):
 	active_chest = "-1"
 	active_type = ""
@@ -449,6 +571,11 @@ func on_chest_exited(_body):
 
 func on_relic_exited(_body):
 	$UI2/Relic.visible = false
+
+func on_map_exited(_body):
+	$UI2/Ship2Map.visible = false
+	$UI2/Panel.visible = false
+	active_type = ""
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.25)),
@@ -555,7 +682,8 @@ func _input(event):
 				curr_slot = 0
 			set_border(curr_slot)
 		if Input.is_action_just_released("M"):
-			$UI/Minimap.visible = not $UI/Minimap.visible
+			if not $UI/Error.visible:
+				$UI/Minimap.visible = not $UI/Minimap.visible
 			$UI/Rover.visible = not $UI/Rover.visible
 			$UI/MinimapBG.visible = not $UI/MinimapBG.visible
 		elif Input.is_action_just_released("1") and curr_slot != 0:
@@ -626,7 +754,13 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				difficulty *= 2
-				light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+				if dont_gen_anything:
+					if cave_floor < 19:
+						light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
+					else:
+						light_amount = clamp((23 - cave_floor) * 0.05, 0, 0.2)
+				else:
+					light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
 				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = true
 				generate_cave(false, false)
@@ -634,10 +768,23 @@ func _input(event):
 				remove_cave()
 				cave_floor -= 1
 				difficulty /= 2
-				light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+				if dont_gen_anything:
+					if cave_floor < 19:
+						light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
+					else:
+						light_amount = clamp((20 - cave_floor) * 0.05, 0, 0.1)
+				else:
+					light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
 				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
+			elif active_type == "map":
+				game.third_ship_hints.erase("map_found_at")
+				game.third_ship_hints.erase("map_pos")
+				for object in get_tree().get_nodes_in_group("misc_objects"):
+					object.remove_from_group("misc_objects")
+					remove_child(object)
+				game.long_popup(tr("MAP_COLLECTED_DESC"), tr("MAP_COLLECTED"))
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.5
@@ -694,6 +841,7 @@ func cooldown():
 func on_timeout(slot, timer):
 	inventory_ready[slot] = true
 	remove_child(timer)
+	timer.queue_free()
 
 func _process(delta):
 	if Input.is_action_pressed("left_click") and inventory_ready[curr_slot]:
@@ -734,12 +882,13 @@ func hit_rock(delta):
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
 			var rsrc = {"stone":Helper.rand_int(150, 200)}
 			#var wall_type = cave_wall.get_cellv(map_pos)
-			for mat in p_i.surface.keys():
-				if randf() < p_i.surface[mat].chance / 2.5:
-					var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.85), 3)
-					if amount < 1:
-						continue
-					rsrc[mat] = amount
+			if not dont_gen_anything:
+				for mat in p_i.surface.keys():
+					if randf() < p_i.surface[mat].chance / 2.5:
+						var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.85), 3)
+						if amount < 1:
+							continue
+						rsrc[mat] = amount
 			if deposits.has(st):
 				var deposit = deposits[st]
 				rsrc[deposit.rsrc_name] = game.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.75), 3)
@@ -892,8 +1041,8 @@ func get_connected_tiles(_id:int):#Returns the list of all tiles connected to ti
 func get_tile_index(pt:Vector2):
 	return pt.x + cave_size * pt.y
 
+#returns unit positions
 func get_tile_pos(_id:int):
-# warning-ignore:integer_division
 	return Vector2(_id % cave_size, _id / cave_size)
 
 var velocity = Vector2.ZERO
@@ -938,6 +1087,10 @@ func _on_Exit_body_entered(_body):
 		show_right_info(tr("F_TO_GO_UP"))
 		active_type = "go_up"
 
+func on_WH_entered(_body):
+	show_right_info(tr("F_TO_EXIT"))
+	active_type = "exit"
+
 func _on_Hole_body_entered(_body):
 	show_right_info(tr("F_TO_GO_DOWN"))
 	active_type = "go_down"
@@ -952,11 +1105,7 @@ func show_right_info(txt:String):
 	vbox.add_child(info)
 	$UI2/Panel.visible = true
 
-func _on_Exit_body_exited(_body):
-	$UI2/Panel.visible = false
-	active_type = ""
-
-func _on_Hole_body_exited(_body):
+func _on_body_exited(_body):
 	$UI2/Panel.visible = false
 	active_type = ""
 

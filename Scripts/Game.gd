@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -144,6 +144,7 @@ var cave_data:Array
 var rover_data:Array
 var ship_data:Array
 var second_ship_hints:Dictionary
+var third_ship_hints:Dictionary
 var ships_c_coords:Dictionary#Local coords of the planet that the ships are on
 var ships_c_g_coords:Dictionary#ship global coordinates (current)
 var ships_dest_coords:Dictionary#Local coords of the destination planet
@@ -171,7 +172,7 @@ var c_num:int
 
 var stats:Dictionary
 
-enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID}
+enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS}
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 ############ End save data ############
@@ -276,8 +277,10 @@ var autosell:bool = true
 var music_player = AudioStreamPlayer.new()
 
 var dialog:AcceptDialog
-
+var metal_textures:Dictionary = {}
 func _ready():
+	for metal in met_info:
+		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	dialog = AcceptDialog.new()
 	dialog.theme = load("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
@@ -369,9 +372,9 @@ func _ready():
 		atoms.Xe = 100
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
 		items[3] = {"name":"lead_seeds", "num":10}
-		pickaxe = {"name":"stick", "speed":10, "durability":700}
-		rover_data = [{"c_p":2, "ready":true, "HP":200.0, "atk":5.0, "def":50.0, "spd":3.0, "weight_cap":8000.0, "inventory":[{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"green_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		pickaxe = {"name":"stick", "speed":3400, "durability":700}
+		rover_data = [{"c_p":2, "ready":true, "HP":20000.0, "atk":50.0, "def":5000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
+		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		add_panels()
 		$Autosave.start()
 	else:
@@ -457,6 +460,7 @@ func load_game():
 		rover_data = save_game.get_var()
 		ship_data = save_game.get_var()
 		second_ship_hints = save_game.get_var()
+		third_ship_hints = save_game.get_var()
 		ships_c_coords = save_game.get_var()
 		ships_dest_coords = save_game.get_var()
 		ships_depart_pos = save_game.get_var()
@@ -698,6 +702,7 @@ func new_game(tut:bool):
 	rover_data = []
 	ship_data = []
 	second_ship_hints = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
+	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_sys_generated":false, "ship_part_generated":false, "parts":[false, false, false, false, false]}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
 	ships_dest_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
@@ -758,7 +763,7 @@ func new_game(tut:bool):
 	supercluster_data[0].name = tr("LANIAKEA")
 	
 	generate_tiles(2)
-	cave_data.append({"num_floors":5, "floor_size":30})
+	cave_data.append({"num_floors":5, "floor_size":88})
 	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	for u_i in universe_data:
@@ -891,10 +896,11 @@ func popup(txt, dur):
 func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
 	hide_adv_tooltip()
 	hide_tooltip()
-	dialog.visible = true
 	$UI/PopupBackground.visible = true
 	dialog.window_title = title
 	dialog.dialog_text = txt
+	dialog.visible = true
+	dialog.rect_size = Vector2.ZERO
 	dialog.popup_centered()
 	for i in range(0, len(other_buttons)):
 		dialog.add_button(other_buttons[i], false, other_functions[i])
@@ -1379,7 +1385,7 @@ func remove_planet(save_zooms:bool = true):
 	_on_BottomInfo_close_button_pressed()
 	#$UI/BottomInfo.visible = false
 	remove_child(planet_HUD)
-	planet_HUD = null
+	planet_HUD.queue_free()
 
 #Collision detection of systems, galaxies etc.
 var obj_shapes = []
@@ -1929,7 +1935,7 @@ func generate_systems(id:int):
 		for star in stars:
 			combined_star_mass += star.mass
 		var dark_matter = galaxy_data[c_g].dark_matter
-		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 12) * dark_matter), 2)
+		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 9) * dark_matter), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
 		if planet_num > 40:
@@ -1947,6 +1953,9 @@ func generate_systems(id:int):
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
 	galaxy_data[id]["discovered"] = true
+	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and total_sys_num < 2000:
+		third_ship_hints.spawn_galaxy = c_g
+		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
 
 func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0
@@ -2171,10 +2180,12 @@ func generate_tiles(id:int):
 		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
 		var phase_1 = phase_1_scene.instance()
 		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
+		phase_1.free()
 	if p_i.has("lake_2"):
 		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
 		var phase_2 = phase_2_scene.instance()
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
+		phase_2.free()
 	var second_ship_cave_placed:bool = false
 	var relic_cave_id:int = -1
 	for i in wid:
@@ -2203,14 +2214,8 @@ func generate_tiles(id:int):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].cave = {}
 				tile_data[t_id].cave.id = len(cave_data)
-				var floor_size:int = Helper.rand_int(25, 50)
+				var floor_size:int = Helper.rand_int(25, 35) * rand_range(1, 1 + wid / 50.0)
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
-				if wid > 15:
-					floor_size *= 1.2
-				if wid > 30:
-					floor_size *= 1.2
-				if wid > 45:
-					floor_size *= 1.2
 				if ship_cond:
 					relic_cave_id = t_id
 					second_ship_cave_placed = true
@@ -2241,6 +2246,35 @@ func generate_tiles(id:int):
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		tile_data[random_tile].ship = true
+	elif len(ship_data) == 2:
+		if third_ship_hints.ship_sys_id == c_s and not third_ship_hints.ship_sys_generated:
+			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
+				random_tile = Helper.rand_int(1, len(tile_data)) - 1
+			objective = {"type":ObjectiveType.COLLECT_PARTS, "id":-1, "current":0, "goal":5}
+			if third_ship_hints.parts[4]:
+				objective.current = 1
+			erase_tile(random_tile)
+			tile_data[random_tile].ship = true
+			erase_tile(random_tile - wid)
+			tile_data[random_tile - wid].cave = {"id":len(cave_data)}
+			cave_data.append({"floor_size":36, "num_floors":9, "special_cave":0})#Not very special
+			erase_tile(random_tile + wid)
+			tile_data[random_tile + wid].cave = {"id":len(cave_data)}
+			cave_data.append({"floor_size":16, "num_floors":30, "special_cave":1})#A super deep cave devoid of everything
+			erase_tile(random_tile - 1)
+			tile_data[random_tile - 1].cave = {"id":len(cave_data)}
+			cave_data.append({"floor_size":77, "num_floors":3, "special_cave":2})#Huge cave
+			erase_tile(random_tile + 1)
+			tile_data[random_tile + 1].cave = {"id":len(cave_data)}
+			cave_data.append({"floor_size":50, "num_floors":5, "special_cave":3})#Big maze cave where minimap is disabled
+			third_ship_hints.ship_sys_generated = true
+		elif third_ship_hints.ship_part_id == c_s and not third_ship_hints.ship_part_generated:
+			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+			erase_tile(random_tile)
+			tile_data[random_tile].ship_part = true
+			third_ship_hints.ship_part_generated = true
+			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
 	elif p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -2344,6 +2378,7 @@ func make_atmosphere_composition(temp:float, pressure:float):
 			rand *= 0.05
 		atm[el] = rand
 		S += rand
+		phase.free()
 	for el in atm:
 		atm[el] /= S
 	return atm
@@ -3021,6 +3056,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(rover_data)
 	save_game.store_var(ship_data)
 	save_game.store_var(second_ship_hints)
+	save_game.store_var(third_ship_hints)
 	save_game.store_var(ships_c_coords)
 	save_game.store_var(ships_dest_coords)
 	save_game.store_var(ships_depart_pos)

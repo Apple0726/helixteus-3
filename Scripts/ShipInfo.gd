@@ -15,6 +15,7 @@ func _ready():
 	$Ship.texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 
 func set_visibility():
+	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	$Bullet.visible = show_weapon_XPs
 	$Laser.visible = show_weapon_XPs
 	$Bomb.visible = show_weapon_XPs

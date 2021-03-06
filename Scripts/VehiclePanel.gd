@@ -23,6 +23,7 @@ func refresh():
 	var hbox = $HBox/VBox1/Rovers/HBox
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
+		rov.free()
 	for i in len(game.rover_data):
 		var rov = game.rover_data[i]
 		if not rov:
