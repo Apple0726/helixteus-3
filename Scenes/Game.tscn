@@ -235,7 +235,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.15:"
+text = "Alpha v0.15: 7 Mar 2021"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -547,21 +547,21 @@ texture_normal = ExtResource( 12 )
 expand = true
 stretch_mode = 4
 
-[node name="fr" type="TextureButton" parent="Title/Languages"]
+[node name="es" type="TextureButton" parent="Title/Languages"]
 margin_left = 70.0
 margin_right = 130.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 9 )
+texture_normal = ExtResource( 16 )
 expand = true
 stretch_mode = 4
 
-[node name="es" type="TextureButton" parent="Title/Languages"]
+[node name="fr" type="TextureButton" parent="Title/Languages"]
 margin_left = 140.0
 margin_right = 200.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
+texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 4
 
@@ -690,12 +690,12 @@ __meta__ = {
 [connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
+[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~90%)" ]]
+[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
 [connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~55%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~50%)" ]]
-[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
 [connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~45%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]

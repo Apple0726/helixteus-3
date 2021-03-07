@@ -28,6 +28,7 @@ func _ready():
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
 	$UpgradePanel/AutoSpeedup.visible = game.lv >= 30
+	$UpgradePanel/AutoSpeedup.pressed = $UpgradePanel/AutoSpeedup.visible
 
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))

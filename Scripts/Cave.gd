@@ -483,10 +483,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 					map_tile.y += sign(rand_range(-1, 1)) * 400
 				game.third_ship_hints.map_found_at = id
 				game.third_ship_hints.map_pos = map_tile
-				game.third_ship_hints.ship_sys_id = Helper.rand_int(1, game.galaxy_data[game.c_g].system_num) - 1
-				game.third_ship_hints.ship_part_id = Helper.rand_int(1, game.galaxy_data[game.c_g].system_num) - 1
-				game.third_ship_hints.g_g_id = game.c_g_g
-				game.third_ship_hints.g_l_id = game.c_g
 			else:
 				map_tile = game.third_ship_hints.map_pos
 			$UI2/Ship2Map.refresh()
@@ -586,7 +582,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if met_value.rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 1.5) * pow(difficulty, 1.1), 3)
+			contents[met] = game.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):

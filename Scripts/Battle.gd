@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
+onready var ship2 = $Ship2
 const DEF_EXPO = 0.7
 var victory_panel_scene = preload("res://Scenes/Panels/VictoryPanel.tscn")
 var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
@@ -246,6 +247,7 @@ func _process(delta):
 	if stage == BattleStages.CHOOSING:
 		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0.position.distance_to(Vector2(200, 200)) * delta * 5)
 		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1.position.distance_to(Vector2(400, 200)) * delta * 5)
+		ship2.position = ship2.position.move_toward(Vector2(200, 400), ship2.position.distance_to(Vector2(200, 400)) * delta * 5)
 		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -45)
 		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):

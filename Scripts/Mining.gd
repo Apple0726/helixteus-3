@@ -21,7 +21,6 @@ var speed_mult:float = 1.0
 var aurora_mult:float = 1.0
 
 func _ready():
-	$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
 	if p_i.temperature > 1000:
 		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
 	else:
@@ -36,7 +35,9 @@ func _ready():
 	if not tile.has("depth"):
 		tile.depth = 0
 	progress = tile.mining_progress
-	update_info()
+	if not game.pickaxe.empty():
+		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
+		update_info()
 	generate_rock(false)
 	$Help.visible = game.help.mining
 	circ.visible = not game.help.mining

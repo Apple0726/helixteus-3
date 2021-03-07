@@ -14,10 +14,9 @@ func _ready():
 		money += round(HX.money * mult)
 		XP += round(HX.XP * mult)
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
-	for i in 2:
+	for i in 3:
 		if i >= len(ship_data):
 			$Grid.get_node("Panel%s" % (i + 1)).visible = false
-			break
 		else:
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
 			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:

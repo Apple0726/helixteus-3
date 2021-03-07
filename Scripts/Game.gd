@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -344,7 +344,7 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = 2000000
+		energy = 200000000
 		SP = 200000000
 		science_unlocked.RC = true
 		science_unlocked.CD = true
@@ -353,6 +353,7 @@ func _ready():
 		science_unlocked.EGH = true
 		science_unlocked.ATM = true
 		science_unlocked.MAE = true
+		science_unlocked.FTL = true
 		stone.O = 800000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
@@ -480,9 +481,8 @@ func load_game():
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
-			if c_v in ["cave", "planet"]:
-				tile_data = open_obj("Planets", c_p_g)
-			elif c_v == "mining":
+			tile_data = open_obj("Planets", c_p_g)
+			if c_v == "mining":
 				c_v = "planet"
 			add_child(HUD)
 			view.set_process(true)
@@ -763,7 +763,7 @@ func new_game(tut:bool):
 	supercluster_data[0].name = tr("LANIAKEA")
 	
 	generate_tiles(2)
-	cave_data.append({"num_floors":5, "floor_size":88})
+	cave_data.append({"num_floors":5, "floor_size":30})
 	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	for u_i in universe_data:
@@ -1955,10 +1955,14 @@ func generate_systems(id:int):
 	galaxy_data[id]["discovered"] = true
 	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and total_sys_num < 2000:
 		third_ship_hints.spawn_galaxy = c_g
+		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+		third_ship_hints.g_g_id = c_g_g
+		third_ship_hints.g_l_id = c_g
 		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
 
 func get_max_star_prop(s_id:int, prop:String):
-	var max_star_prop = 0
+	var max_star_prop = 0	
 	for star in system_data[s_id].stars:
 		if star[prop] > max_star_prop:
 			max_star_prop = star[prop]
