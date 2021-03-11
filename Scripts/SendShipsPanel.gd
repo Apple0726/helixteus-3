@@ -73,17 +73,18 @@ func refresh():
 	calc_costs()
 	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
 		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
-	for HX_data in game.planet_data[dest_p_id].HX_data:
-		var HX_data_node = HX_data_scene.instance()
-		HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s.png" % [HX_data.type])
-		HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, 4), Helper.format_num(HX_data.total_HP, 4)]
-		HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
-		HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, 4)
-		HX_data_node.get_node("VBoxContainer/Acc/Label").text = Helper.format_num(HX_data.acc, 4)
-		HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, 4)
-		HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
-		$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
-		HX_data_node.rect_min_size.y = 70
+	if game.planet_data[dest_p_id].has("HX_data"):
+		for HX_data in game.planet_data[dest_p_id].HX_data:
+			var HX_data_node = HX_data_scene.instance()
+			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s.png" % [HX_data.type])
+			HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, 4), Helper.format_num(HX_data.total_HP, 4)]
+			HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
+			HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, 4)
+			HX_data_node.get_node("VBoxContainer/Acc/Label").text = Helper.format_num(HX_data.acc, 4)
+			HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, 4)
+			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
+			$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
+			HX_data_node.rect_min_size.y = 70
 	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].conquered
 
 func _on_Send_pressed():

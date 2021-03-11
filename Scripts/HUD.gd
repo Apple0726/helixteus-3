@@ -95,7 +95,7 @@ func refresh():
 	$ConvertMinerals.visible = game.show.minerals
 	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
 	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
-	if game.xp >= game.xp_to_lv:
+	while game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv
 		game.xp_to_lv = round(game.xp_to_lv * 1.5)
@@ -103,6 +103,8 @@ func refresh():
 			game.objective.current += 1
 		if game.lv == 30:
 			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
+		if game.lv == 32:
+			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 	if OS.get_latin_keyboard_variant() == "QWERTZ":

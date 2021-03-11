@@ -13,6 +13,7 @@ func _ready():
 	if game.science_unlocked.SA:
 		_on_btn_pressed("Agriculture")
 	buy_btn.text = tr("CRAFT")
+	buy_btn.icon = load("res://Graphics/Icons/craft.png")
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()

@@ -434,7 +434,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
 		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")
 		relic.get_node("Area2D").connect("body_exited", self, "on_relic_exited")
-		var relic_tile = rooms[0].tiles[0]
+		var relic_tile = rooms[0].tiles[-1]
 		relic.position = cave.map_to_world(get_tile_pos(relic_tile)) + Vector2(100, 100)
 		add_child(relic)
 		relic.add_to_group("misc_objects")
@@ -442,13 +442,18 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#Wormhole
 	if cave_floor == num_floors:
 		wormhole = object_scene.instance()
-		wormhole.get_node("Sprite").texture = load("res://Graphics/Tiles/Wormhole.png")
+		wormhole.get_node("Sprite").texture = null
+		var wormhole_texture = load("res://Scenes/Wormhole.tscn").instance()
+		wormhole.add_child(wormhole_texture)
 		wormhole.get_node("Area2D").connect("body_entered", self, "on_WH_entered")
 		wormhole.get_node("Area2D").connect("body_exited", self, "_on_body_exited")
 		var wormhole_tile = rooms[0].tiles[1]
 		wormhole.position = cave.map_to_world(get_tile_pos(wormhole_tile)) + Vector2(100, 100)
 		add_child(wormhole)
-		add_light(wormhole.position)
+		add_light(wormhole)
+	else:
+		if wormhole:
+			remove_child(wormhole)
 	
 	#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
 	if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
@@ -460,7 +465,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			part.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
 			add_child(part)
 			part.add_to_group("misc_objects")
-			add_light(part.position, "misc_objects")
+			add_light(part)
 		if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
 			var map = object_scene.instance()
 			map.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Map.png")
@@ -488,7 +493,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			$UI2/Ship2Map.refresh()
 			map.position = map_tile
 			add_child(map)
-			add_light(map.position, "misc_objects")
+			add_light(map)
 			map.add_to_group("misc_objects")
 			cave.set_cellv(cave.world_to_map(map_tile), tile_type)
 			cave_wall.set_cellv(cave_wall.world_to_map(map_tile), -1)
@@ -516,12 +521,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.get_node("HX").set_rand()
 
-func add_light(pos:Vector2, group:String = "lights"):
+func add_light(node):
 	var light = Light2D.new()
 	light.texture = load("res://Graphics/Stars/Star.png")
-	light.position = pos
-	add_child(light)
-	light.add_to_group(group)
+	node.add_child(light)
+	node.get_node("Shadow").visible = false
 	
 func on_chest_entered(_body, tile:String):
 	var chest_rsrc = chests[tile].contents
@@ -576,7 +580,12 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.25)),
 						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.2)),
-						"hx_core":rng.randi_range(1, 5 * pow(tier, 1.5))}
+						"hx_core":int(rng.randi_range(1, 5) * pow(tier, 1.5) * pow(difficulty, 0.3))}
+	if contents.hx_core > 8:
+		contents.hx_core2 = floor(contents.hx_core / 8.0)
+		contents.hx_core %= 8
+		if contents.hx_core == 0:
+			contents.erase("hx_core")
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		if met_value.rarity > difficulty:
@@ -721,6 +730,8 @@ func _input(event):
 					else:
 						for i in len(inventory):
 							if inventory[i].has("name") and rsrc != inventory[i].name:
+								if i == len(inventory) - 1:
+									remainders[rsrc] = contents[rsrc]
 								continue
 							var slot = slots[i]
 							if inventory[i].type == "":

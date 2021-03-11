@@ -28,6 +28,7 @@ func _ready():
 		var btn = Button.new()
 		btn.name = _name
 		btn.rect_min_size.y = 30
+		btn.expand_icon = true
 		btn.text = tr(_name.to_upper())
 		btn.connect("pressed", self, "_on_%s_pressed" % _name, [_name, reactions[_name]])
 		$ScrollContainer/VBoxContainer.add_child(btn)
@@ -60,8 +61,8 @@ func _on_amethyst_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
 	metal = "amethyst"
-	energy_cost = 15000
-	difficulty = 20.0
+	energy_cost = 1500
+	difficulty = 2.0
 	refresh()
 
 func _on_emerald_pressed(_name:String, dict:Dictionary):
@@ -71,8 +72,8 @@ func _on_emerald_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"emerald":0})
 	metal = "emerald"
-	energy_cost = 15000
-	difficulty = 20.0
+	energy_cost = 1500
+	difficulty = 2.0
 	refresh()
 
 func _on_quartz_pressed(_name:String, dict:Dictionary):
@@ -82,8 +83,8 @@ func _on_quartz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"quartz":0})
 	metal = "quartz"
-	energy_cost = 16000
-	difficulty = 22.0
+	energy_cost = 1600
+	difficulty = 2.0
 	refresh()
 
 func _on_topaz_pressed(_name:String, dict:Dictionary):
@@ -93,8 +94,8 @@ func _on_topaz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"topaz":0})
 	metal = "topaz"
-	energy_cost = 15000
-	difficulty = 20.0
+	energy_cost = 1500
+	difficulty = 2.0
 	refresh()
 
 func _on_ruby_pressed(_name:String, dict:Dictionary):
@@ -104,8 +105,8 @@ func _on_ruby_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"ruby":0})
 	metal = "ruby"
-	energy_cost = 16000
-	difficulty = 22.0
+	energy_cost = 1600
+	difficulty = 2.0
 	refresh()
 
 func _on_sapphire_pressed(_name:String, dict:Dictionary):
@@ -115,8 +116,8 @@ func _on_sapphire_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
 	metal = "sapphire"
-	energy_cost = 17000
-	difficulty = 24.0
+	energy_cost = 1700
+	difficulty = 2.0
 	refresh()
 
 func refresh():

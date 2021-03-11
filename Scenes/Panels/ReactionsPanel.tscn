@@ -12,13 +12,13 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=12]
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_top = 7.0
 content_margin_bottom = 6.0
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
@@ -45,11 +45,11 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
-[sub_resource type="InputEventAction" id=7]
+[sub_resource type="InputEventAction" id=5]
 action = "G"
 
-[sub_resource type="ShortCut" id=8]
-shortcut = SubResource( 7 )
+[sub_resource type="ShortCut" id=6]
+shortcut = SubResource( 5 )
 
 [node name="ReactionsPanel" type="Control"]
 margin_right = 1067.0
@@ -77,7 +77,7 @@ margin_right = 0.0
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
 margin_bottom = 64.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 1 )
 align = 1
 valign = 1
 __meta__ = {
@@ -88,7 +88,7 @@ __meta__ = {
 margin_top = 60.0
 margin_right = 1064.0
 margin_bottom = 124.0
-custom_styles/normal = SubResource( 6 )
+custom_styles/normal = SubResource( 2 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -287,7 +287,7 @@ margin_top = 564.0
 margin_right = 1064.0
 margin_bottom = 600.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 8 )
+shortcut = SubResource( 6 )
 text = "TRANSFORM"
 __meta__ = {
 "_edit_use_anchors_": false

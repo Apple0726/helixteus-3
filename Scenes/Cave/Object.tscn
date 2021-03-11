@@ -1,11 +1,18 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Graphics/Cave/Objects/Chest.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 60.0
 
 [node name="Node2D" type="Node2D"]
+
+[node name="Shadow" type="Sprite" parent="."]
+modulate = Color( 0, 0, 0, 0.45098 )
+position = Vector2( 0, 48 )
+scale = Vector2( 0.44, 0.166771 )
+texture = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

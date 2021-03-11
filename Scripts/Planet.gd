@@ -32,6 +32,7 @@ onready var planet_bounds:PoolVector2Array = [Vector2.ZERO, Vector2(0, wid * 200
 
 var mass_build_rect:NinePatchRect
 var mass_build_rect_size:Vector2
+var wormhole
 
 func _ready():
 	mass_build_rect = game.mass_build_rect.instance()
@@ -109,17 +110,18 @@ func _ready():
 				elif len(game.ship_data) == 1:
 					$Obstacles.set_cell(i, j, 7)
 				elif len(game.ship_data) == 2:
-					$Obstacles.set_cell(i, j, 10)
-			if tile.has("wormhole"):
-				if tile.wormhole.active:
 					$Obstacles.set_cell(i, j, 8)
-				else:
-					if tile.wormhole.has("investigation_length"):
-						add_time_bar(id2, "wormhole")
-					$Obstacles.set_cell(i, j, 9)
+			if tile.has("wormhole"):
+				wormhole = load("res://Scenes/Wormhole.tscn").instance()
+				wormhole.get_node("Active").visible = tile.wormhole.active
+				wormhole.get_node("Inactive").visible = not tile.wormhole.active
+				wormhole.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				add_child(wormhole)
+				if tile.wormhole.has("investigation_length"):
+					add_time_bar(id2, "wormhole")
 				p_i.wormhole = true
 			if tile.has("ship_part") and not tile.has("depth"):
-				$Obstacles.set_cell(i, j, 11)
+				$Obstacles.set_cell(i, j, 9)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -775,8 +777,11 @@ func _input(event):
 							game.tile_data = game.open_obj("Planets", game.c_p_g)
 							game.planet_data = game.open_obj("Systems", game.c_s_g)
 						game.ships_c_coords.p = game.c_p
+						game.ships_dest_coords.p = game.c_p
 						game.ships_c_coords.s = game.c_s
+						game.ships_dest_coords.s = game.c_s
 						game.ships_c_g_coords.s = game.c_s_g
+						game.ships_dest_g_coords.s = game.c_s_g
 						game.switch_view("planet", false, "", [], false)
 					elif game.ships_travel_view == "-":
 						game.send_ships_panel.dest_p_id = id

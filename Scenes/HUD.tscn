@@ -20,6 +20,7 @@
 [ext_resource path="res://Graphics/Misc/bullet.png" type="Texture" id=18]
 [ext_resource path="res://Graphics/Items/Others/ship_locator.png" type="Texture" id=19]
 [ext_resource path="res://Graphics/Cave/Objects/Map.png" type="Texture" id=20]
+[ext_resource path="res://Graphics/Misc/HUD.png" type="Texture" id=21]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 14.0
@@ -55,58 +56,53 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
-[sub_resource type="InputEventAction" id=5]
+[sub_resource type="InputEventAction" id=4]
 action = "Y"
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="ShortCut" id=5]
+shortcut = SubResource( 4 )
 
-[sub_resource type="InputEventAction" id=7]
+[sub_resource type="InputEventAction" id=6]
 action = "T"
 
-[sub_resource type="ShortCut" id=8]
-shortcut = SubResource( 7 )
+[sub_resource type="ShortCut" id=7]
+shortcut = SubResource( 6 )
 
-[sub_resource type="InputEventAction" id=9]
+[sub_resource type="InputEventAction" id=8]
 action = "E"
 
-[sub_resource type="ShortCut" id=10]
-shortcut = SubResource( 9 )
+[sub_resource type="ShortCut" id=9]
+shortcut = SubResource( 8 )
 
-[sub_resource type="InputEventAction" id=11]
+[sub_resource type="InputEventAction" id=10]
 action = "R"
 
-[sub_resource type="ShortCut" id=12]
-shortcut = SubResource( 11 )
+[sub_resource type="ShortCut" id=11]
+shortcut = SubResource( 10 )
 
-[sub_resource type="InputEventAction" id=13]
+[sub_resource type="InputEventAction" id=12]
 action = "U"
 
-[sub_resource type="ShortCut" id=14]
-shortcut = SubResource( 13 )
+[sub_resource type="ShortCut" id=13]
+shortcut = SubResource( 12 )
 
-[sub_resource type="InputEventAction" id=15]
+[sub_resource type="InputEventAction" id=14]
 action = "I"
 
-[sub_resource type="ShortCut" id=16]
-shortcut = SubResource( 15 )
+[sub_resource type="ShortCut" id=15]
+shortcut = SubResource( 14 )
 
-[sub_resource type="InputEventAction" id=17]
+[sub_resource type="InputEventAction" id=16]
 action = "."
 
-[sub_resource type="ShortCut" id=18]
-shortcut = SubResource( 17 )
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
 
-[sub_resource type="InputEventAction" id=19]
+[sub_resource type="InputEventAction" id=18]
 action = ","
 
-[sub_resource type="ShortCut" id=20]
-shortcut = SubResource( 19 )
+[sub_resource type="ShortCut" id=19]
+shortcut = SubResource( 18 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -190,10 +186,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="Panel" parent="."]
+[node name="ColorRect" type="TextureRect" parent="."]
 margin_right = 1280.0
 margin_bottom = 40.0
-custom_styles/panel = SubResource( 4 )
+texture = ExtResource( 21 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -225,11 +221,13 @@ __meta__ = {
 
 [node name="Texture" type="TextureButton" parent="Resources/Money"]
 margin_left = 10.0
-margin_top = 3.0
-margin_right = 42.0
-margin_bottom = 35.0
+margin_top = 4.0
+margin_right = 40.0
+margin_bottom = 36.0
 rect_scale = Vector2( 0.8, 0.8 )
 texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -370,8 +368,10 @@ __meta__ = {
 }
 
 [node name="Texture" type="TextureRect" parent="Resources/SP"]
+margin_left = -6.0
+margin_top = 2.0
 margin_right = 32.0
-margin_bottom = 32.0
+margin_bottom = 28.0
 texture = ExtResource( 12 )
 expand = true
 stretch_mode = 6
@@ -398,7 +398,7 @@ margin_bottom = 240.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 6 )
+shortcut = SubResource( 5 )
 texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 5
@@ -410,7 +410,7 @@ margin_bottom = 288.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 8 )
+shortcut = SubResource( 7 )
 texture_normal = ExtResource( 1 )
 expand = true
 stretch_mode = 5
@@ -421,7 +421,7 @@ margin_right = 48.0
 margin_bottom = 336.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 10 )
+shortcut = SubResource( 9 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
@@ -432,7 +432,7 @@ margin_right = 48.0
 margin_bottom = 384.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 12 )
+shortcut = SubResource( 11 )
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5
@@ -443,7 +443,7 @@ margin_right = 48.0
 margin_bottom = 432.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 14 )
+shortcut = SubResource( 13 )
 texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
@@ -454,7 +454,7 @@ margin_right = 48.0
 margin_bottom = 480.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 16 )
+shortcut = SubResource( 15 )
 texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
@@ -477,7 +477,7 @@ margin_top = 656.0
 margin_right = 1272.0
 margin_bottom = 700.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 18 )
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
@@ -504,7 +504,7 @@ margin_top = 656.0
 margin_right = 1216.0
 margin_bottom = 700.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 20 )
+shortcut = SubResource( 19 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5

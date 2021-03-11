@@ -101,12 +101,12 @@ func _on_Button_pressed():
 		var append:bool = true
 		for i in len(game.rover_data):
 			if game.rover_data[i] == null:
-				game.rover_data[i] = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.5)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory, "i_w_w":{}}
+				game.rover_data[i] = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.5)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory.duplicate(true), "i_w_w":{}}
 				tile.bldg.rover_id = i
 				append = false
 				break
 		if append:
-			game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.5)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory, "i_w_w":{}})
+			game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * pow(mult, 0.5)), "spd":spd_bonus * pow(mult, 0.25), "inventory":inventory.duplicate(true), "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:

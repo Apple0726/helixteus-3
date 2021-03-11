@@ -3,7 +3,7 @@
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Buttons/settings.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Decoratives/Title screen BG.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Title screen/Background.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Title screen/Godot.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Title screen/GitHub.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
@@ -235,7 +235,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.15: 7 Mar 2021"
+text = "Alpha v0.16:"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -271,10 +271,10 @@ __meta__ = {
 [node name="Tween" type="Tween" parent="UI/Popup"]
 
 [node name="Settings" type="TextureButton" parent="UI"]
-visible = false
-margin_left = 1248.0
-margin_right = 1280.0
-margin_bottom = 32.0
+margin_left = 1244.0
+margin_top = 4.0
+margin_right = 1276.0
+margin_bottom = 36.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 5 )
 texture_normal = ExtResource( 3 )
@@ -406,6 +406,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Title"]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

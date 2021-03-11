@@ -5,7 +5,8 @@ onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
 onready var ship2 = $Ship2
-const DEF_EXPO = 0.7
+const DEF_EXPO_SHIP = 0.85
+const DEF_EXPO_ENEMY = 0.7
 var victory_panel_scene = preload("res://Scenes/Panels/VictoryPanel.tscn")
 var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 var target_scene = preload("res://Scenes/TargetButton.tscn")
@@ -58,7 +59,10 @@ func _ready():
 	randomize()
 	if game:
 		ship_data = game.ship_data
-		HX_data = game.planet_data[game.c_p].HX_data
+		if game.is_conquering_all:
+			HX_data = Helper.get_conquer_all_data().HX_data
+		else:
+			HX_data = game.planet_data[game.c_p].HX_data
 	else:
 		HX_data = []
 		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
@@ -300,7 +304,7 @@ func _process(delta):
 					if HX_data[i].HP <= 0:
 						continue
 					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[i].eva):
-						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[i].def, DEF_EXPO)
+						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[i].def, DEF_EXPO_ENEMY)
 						var crit = randf() < 0.1
 						if crit:
 							dmg *= 1.5
@@ -312,7 +316,7 @@ func _process(delta):
 					weapon_XPs[sh].light += 1
 			else:
 				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[t].eva):
-					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[w_c_d[weapon.name].target].def, DEF_EXPO)
+					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[w_c_d[weapon.name].target].def, DEF_EXPO_ENEMY)
 					var crit = randf() < 0.1
 					if crit:
 						dmg *= 1.5
@@ -810,7 +814,7 @@ func _on_Ship_area_entered(area, ship_id:int):
 		return
 	var HX = HX_data[HX_w_c_d[area.name].id]
 	if randf() < hit_formula(HX.acc, ship_data[ship_id].eva):
-		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def, DEF_EXPO)
+		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def, DEF_EXPO_SHIP)
 		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
 		ship_data[ship_id].HP -= dmg
 	else:

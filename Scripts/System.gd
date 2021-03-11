@@ -297,6 +297,7 @@ func on_planet_click (id:int, l_id:int):
 			if Helper.ships_on_planet(l_id) and not p_i.conquered:
 				game.c_p = l_id
 				game.c_p_g = id
+				game.is_conquering_all = false
 				game.switch_view("battle")
 			else:
 				if len(game.ship_data) > 0:

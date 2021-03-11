@@ -90,7 +90,6 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -131,11 +130,13 @@ __meta__ = {
 [node name="TextureRect2" type="TextureRect" parent="Control"]
 margin_left = 580.0
 margin_top = 376.0
-margin_right = 612.0
+margin_right = 608.0
 margin_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }

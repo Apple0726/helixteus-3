@@ -190,6 +190,7 @@ var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 var STM
 var battle
+var is_conquering_all:bool = false
 
 var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					"glass":{"value":100},
@@ -257,7 +258,7 @@ var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20},
 							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
-var other_items_info = {"hx_core":{}, "ship_locator":{}}
+var other_items_info = {"hx_core":{"XP":3}, "hx_core2":{"XP":25}, "ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
@@ -322,15 +323,15 @@ func _ready():
 	settings.visible = false
 	$Panels/Control.add_child(settings)
 	var bg = $Title/Background
-	var bg_area = $Title/Background/AllowedStarArea.polygon
-	for i in 80:
-		var star = star_scene.instance()
-		star.scale *= rand_range(0.04, 0.06)
-		star.rotation = rand_range(-7, 7)
-		star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
-		while not Geometry.is_point_in_polygon(star.position, bg_area):
-			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
-		bg.add_child(star)
+#	var bg_area = $Title/Background/AllowedStarArea.polygon
+#	for i in 80:
+#		var star = star_scene.instance()
+#		star.scale *= rand_range(0.04, 0.06)
+#		star.rotation = rand_range(-7, 7)
+#		star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
+#		while not Geometry.is_point_in_polygon(star.position, bg_area):
+#			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
+#		bg.add_child(star)
 	if TEST:
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
@@ -1223,6 +1224,7 @@ func add_space_HUD():
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -3235,7 +3237,7 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	YN_panel.window_title = title
 	YN_panel.popup_centered()
 	YN_str = type
-	if type in ["buy_pickaxe", "destroy_buildings", "op_galaxy"]:
+	if type in ["buy_pickaxe", "destroy_buildings", "op_galaxy", "conquer_all"]:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
@@ -3264,6 +3266,22 @@ func op_galaxy_confirm(l_id:int, g_id:int):
 	switch_view("galaxy")
 	YN_panel.disconnect("confirmed", self, "op_galaxy_confirm")
 
+func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
+	if energy >= energy_cost:
+		energy -= energy_cost
+		if insta_conquer:
+			for planet in planet_data:
+				if not planet.conquered:
+					planet.conquered = true
+					planet.erase("HX_data")
+					stats.planets_conquered += 1
+			system_data[c_s].conquered = true
+			view.obj.refresh_planets()
+			space_HUD.get_node("ConquerAll").visible = false
+		else:
+			is_conquering_all = true
+			switch_view("battle")
+		
 func show_collect_info(info:Dictionary):
 	if info.has("stone") and Helper.get_sum_of_dict(info.stone) == 0:
 		info.erase("stone")

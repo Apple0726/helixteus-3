@@ -44,14 +44,22 @@ func _on_close_button_pressed():
 		Helper.add_ship_XP(i, XP)
 		for weapon in ["bullet", "laser", "bomb", "light"]:
 			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult))
-	game.planet_data[p_id].conquered = true
 	var all_conquered = true
-	for planet in game.planet_data:
-		if not planet.conquered:
-			all_conquered = false
-	game.stats.planets_conquered += 1
-	if not game.objective.empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
-		game.objective.current += 1
+	if not game.is_conquering_all:
+		game.planet_data[p_id].conquered = true
+		game.planet_data[p_id].erase("HX_data")
+		for planet in game.planet_data:
+			if not planet.conquered:
+				all_conquered = false
+		game.stats.planets_conquered += 1
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
+			game.objective.current += 1
+	else:
+		for planet in game.planet_data:
+			if not planet.conquered:
+				planet.conquered = true
+				planet.erase("HX_data")
+				game.stats.planets_conquered += 1
 	game.system_data[game.c_s].conquered = all_conquered
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	game.switch_view("system")

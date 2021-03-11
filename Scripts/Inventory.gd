@@ -54,7 +54,8 @@ func _on_Items_pressed():
 func on_slot_over (_name:String, num:int, slot:int):
 	var st:String = Helper.get_item_name(_name)
 	if game.other_items_info.has(_name):
-		st += "\n%s" % [tr("%s_DESC" % _name.to_upper())]
+		if _name.substr(0, 7) == "hx_core":
+			st += "\n%s" % [tr("HX_CORE_DESC") % game.other_items_info[_name].XP]
 	item_slot = slot
 	item_hovered = _name
 	item_stack = num
@@ -104,7 +105,7 @@ func on_slot_press(name:String):
 			if game.tutorial and game.tutorial.tut_num == 21:
 				game.tutorial.fade(0.4, false)
 	elif type == "other_items_info":
-		if name == "hx_core":
+		if name.substr(0, 7) == "hx_core":
 			if len(game.ship_data) > 0:
 				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
 				game.toggle_panel(game.ship_panel)

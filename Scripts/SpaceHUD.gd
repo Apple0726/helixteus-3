@@ -25,3 +25,10 @@ func _on_Megastructures_pressed():
 
 func _on_Megastructures_mouse_entered():
 	game.show_tooltip(tr("MEGASTRUCTURES") + " (C)")
+
+func _on_ConquerAll_mouse_entered():
+	game.show_tooltip(tr("CONQUER_ALL_DESC"))
+
+func _on_ConquerAll_pressed():
+	var info = Helper.get_conquer_all_data()
+	game.show_YN_panel("conquer_all", tr("CONQUER_ALL_INFO") % [len(info.HX_data), info.energy_cost], [info.energy_cost, len(info.HX_data) == 0])
