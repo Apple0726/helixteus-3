@@ -18,6 +18,7 @@ func _ready():
 		if i >= len(ship_data):
 			$Grid.get_node("Panel%s" % (i + 1)).visible = false
 		else:
+			$Grid.get_node("Panel%s" % (i + 1)).visible = true
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
 			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [round(weapon_XPs[i][weapon.to_lower()] * mult)]

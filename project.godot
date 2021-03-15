@@ -405,4 +405,5 @@ limits/message_queue/max_size_kb=2048
 
 [rendering]
 
+quality/2d/use_pixel_snap=true
 environment/default_clear_color=Color( 0, 0, 0, 1 )

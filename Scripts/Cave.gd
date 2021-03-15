@@ -222,7 +222,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if cave_data.special_cave == 3:
 			noise.period = 35
 		elif cave_data.special_cave == 2:
-			noise.period = 150
+			noise.period = 100
 		elif cave_data.special_cave == 1:
 			if cave_floor == 30:
 				noise.period = 65
@@ -240,9 +240,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
+			cave.set_cell(i, j, tile_type)
 			if level > 0:
-				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
+				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if not dont_gen_anything and rng.randf() < 0.005 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
@@ -301,7 +302,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		cave_wall.set_cell(-1, i, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(cave_size, i, 1)
-	tiles = cave.get_used_cells_by_id(tile_type)
+	#tiles = cave_wall.get_used_cells_by_id(-1)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
 	var tiles_remaining = astar_node.get_points()
@@ -355,6 +356,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave_wall.set_cell(i, j, -1)
 				if deposits.has(String(tile_id)):
 					remove_child(deposits[String(tile_id)])
+					deposits[String(tile_id)].queue_free()
 					deposits.erase(String(tile_id))
 	cave_wall.update_bitmask_region()
 	#Assigns each enemy the room number they're in
@@ -424,9 +426,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#No treasure chests at spawn/hole
 	if chests.has(String(rand_hole)):
 		remove_child(chests[String(rand_hole)].node)
+		chests[String(rand_hole)].node.queue_free()
 		chests.erase(String(rand_hole))
 	if chests.has(String(rand_spawn)):
 		remove_child(chests[String(rand_spawn)].node)
+		chests[String(rand_spawn)].node.queue_free()
 		chests.erase(String(rand_spawn))
 	#A way to check whether cave has the relic for 2nd ship
 	if cave_size == 20 and num_floors == 3 and cave_floor == 3:
@@ -454,6 +458,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	else:
 		if wormhole:
 			remove_child(wormhole)
+			wormhole.free()
 	
 	#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
 	if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
@@ -504,6 +509,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var deposit = deposits[st]
 				remove_child(deposit)
 				deposits.erase(st)
+				deposit.free()
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
@@ -525,6 +531,7 @@ func add_light(node):
 	var light = Light2D.new()
 	light.texture = load("res://Graphics/Stars/Star.png")
 	node.add_child(light)
+	light.shadow_enabled = true
 	node.get_node("Shadow").visible = false
 	
 func on_chest_entered(_body, tile:String):
@@ -535,6 +542,7 @@ func on_chest_entered(_body, tile:String):
 	reset_panel_anim()
 	for child in vbox.get_children():
 		vbox.remove_child(child)
+		child.free()
 	var tier_txt = Label.new()
 	tier_txt.align = Label.ALIGN_CENTER
 	tier_txt.text = tr("TIER_X_CHEST") % [chests[tile].tier]
@@ -610,7 +618,7 @@ func connect_points(tile:Vector2, bidir:bool = false):
 		var neighbor_tile_index = get_tile_index(neighbor_tile)
 		if not astar_node.has_point(neighbor_tile_index):
 			continue
-		if cave.get_cellv(neighbor_tile) != -1:
+		if cave_wall.get_cellv(neighbor_tile) == -1:
 			astar_node.connect_points(tile_index, neighbor_tile_index, bidir)
 
 func update_health_bar(_HP):
@@ -753,6 +761,7 @@ func _input(event):
 				else:
 					var temp = active_chest
 					remove_child(chests[active_chest].node)
+					chests[temp].node.queue_free()
 					chests.erase(temp)
 					chests_looted[cave_floor - 1].append(int(temp))
 			elif active_type == "exit":
@@ -791,6 +800,7 @@ func _input(event):
 				for object in get_tree().get_nodes_in_group("misc_objects"):
 					object.remove_from_group("misc_objects")
 					remove_child(object)
+					object.free()
 				game.long_popup(tr("MAP_COLLECTED_DESC"), tr("MAP_COLLECTED"))
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
@@ -900,6 +910,7 @@ func hit_rock(delta):
 				var deposit = deposits[st]
 				rsrc[deposit.rsrc_name] = game.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.75), 3)
 				remove_child(deposit)
+				deposit.queue_free()
 				deposits.erase(st)
 			var remainder:float = 0
 			for r in rsrc:
@@ -925,6 +936,7 @@ func hit_rock(delta):
 			astar_node.add_point(tile_highlighted, Vector2(map_pos.x, map_pos.y))
 			connect_points(map_pos, true)
 			remove_child(tiles_touched_by_laser[st].bar)
+			tiles_touched_by_laser[st].bar.queue_free()
 			tiles_touched_by_laser.erase(st)
 			cave.set_cellv(map_pos, tile_type)
 			tiles_mined[cave_floor - 1].append(tile_highlighted)
@@ -990,7 +1002,9 @@ func set_border(i:int):
 			slot.add_child(border)
 			border.name = "border"
 		elif slot.has_node("border"):
-			slot.remove_child(slot.get_node("border"))
+			var border = slot.get_node("border")
+			slot.remove_child(border)
+			border.queue_free()
 	if inventory[i].type == "rover_mining":
 		mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed

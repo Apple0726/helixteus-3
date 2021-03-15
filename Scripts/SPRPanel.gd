@@ -7,10 +7,10 @@ var energy_cost:float
 var reaction:String = ""
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":100, "difficulty":0.1},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":80, "difficulty":0.1},
 								"He":{"Z":2, "energy_cost":200, "difficulty":0.15},
-								"Ne":{"Z":10, "energy_cost":800, "difficulty":1},
-								"Xe":{"Z":54, "energy_cost":10000, "difficulty":20},
+								"Ne":{"Z":10, "energy_cost":8000, "difficulty":5},
+								"Xe":{"Z":54, "energy_cost":350000, "difficulty":40},
 }
 
 func _ready():
@@ -22,6 +22,7 @@ func _ready():
 		var btn = Button.new()
 		btn.name = _name
 		btn.rect_min_size.y = 30
+		btn.expand_icon = true
 		btn.text = tr("%s_NAME" % _name.to_upper())
 		btn.connect("pressed", self, "_on_Atom_pressed", [_name])
 		$ScrollContainer/VBoxContainer.add_child(btn)
@@ -77,10 +78,10 @@ func reset_poses(_name:String, _Z:int):
 	$ScrollContainer/VBoxContainer.get_node(_name)["custom_colors/font_color_disabled"] = Color(0, 1, 1, 1)
 	reaction = _name
 	Z = _Z
-	atom_to_p = true
+	#atom_to_p = true
 	$Control2.visible = true
-	$Control2/From.rect_position = Vector2(480, 240)
-	$Control2/To.rect_position = Vector2(772, 240)
+	#$Control2/From.rect_position = Vector2(480, 240)
+	#$Control2/To.rect_position = Vector2(772, 240)
 	$Control3.visible = tile.bldg.has("qty") and tile.bldg.reaction == reaction
 	$Control.visible = not $Control3.visible
 	if $Control3.visible and not tile.bldg.atom_to_p:
@@ -105,7 +106,7 @@ func _on_HSlider_value_changed(value):
 	Helper.put_rsrc($Control2/From, 32, atom_dict, true, atom_to_p)
 	Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * value))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000 / tile.bldg.path_1_value)
 	#refresh(false)
 
 func _on_Transform_pressed():
@@ -188,7 +189,7 @@ func _process(delta):
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
 	Helper.put_rsrc($Control2/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

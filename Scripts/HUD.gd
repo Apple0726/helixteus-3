@@ -264,6 +264,7 @@ func _on_mouse_exited():
 func update_hotbar():
 	for child in $Hotbar.get_children():
 		$Hotbar.remove_child(child)
+		child.free()
 	var i:int = 0
 	for item in game.hotbar:
 		var slot = slot_scene.instance()

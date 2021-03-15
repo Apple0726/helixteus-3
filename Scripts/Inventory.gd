@@ -39,6 +39,7 @@ func _on_Items_pressed():
 	$Contents/Control/GridContainer.visible = false
 	for item in inventory_grid.get_children():
 		inventory_grid.remove_child(item)
+		item.free()
 	var i:int = 0
 	for item in game.items:
 		var slot = game.slot_scene.instance()

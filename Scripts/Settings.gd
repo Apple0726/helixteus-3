@@ -125,3 +125,46 @@ func _on_CollectSpeedSlider_value_changed(value):
 		config.set_value("game", "collect_speed", value)
 		game.collect_speed_lag_ratio = value
 		config.save("user://settings.cfg")
+
+
+func _on_Easy_mouse_entered():
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1])
+
+
+func _on_Normal_mouse_entered():
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.25])
+
+
+func _on_Hard_mouse_entered():
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5])
+
+
+func set_difficulty():
+	$HBoxContainer/Easy.pressed = false
+	$HBoxContainer/Normal.pressed = false
+	$HBoxContainer/Hard.pressed = false
+	if err == OK:
+		var diff = config.get_value("game", "e_diff", 1)
+		if diff == 0:
+			$HBoxContainer/Easy.pressed = true
+		elif diff == 1:
+			$HBoxContainer/Normal.pressed = true
+		else:
+			$HBoxContainer/Hard.pressed = true
+
+func _on_Easy_pressed():
+	if err == OK:
+		config.set_value("game", "e_diff", 0)
+		set_difficulty()
+
+func _on_Normal_pressed():
+	if err == OK:
+		config.set_value("game", "e_diff", 1)
+		set_difficulty()
+
+func _on_Hard_pressed():
+	if err == OK:
+		config.set_value("game", "e_diff", 2)
+		set_difficulty()
+
+

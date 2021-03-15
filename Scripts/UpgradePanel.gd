@@ -208,3 +208,7 @@ func _on_AutoSpeedup_pressed():
 
 func _on_AutoSpeedup_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_Control_tree_exited():
+	queue_free()

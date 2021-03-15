@@ -40,6 +40,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 	if remove:
 		for child in container.get_children():
 			container.remove_child(child)
+			child.free()
 	var data = []
 	for obj in objs:
 		var rsrc = game.rsrc_scene.instance()
@@ -382,7 +383,9 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	yield(tween, "tween_all_completed")
 	if parent:
 		parent.remove_child(lb)
+		lb.queue_free()
 		remove_child(tween)
+		tween.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
 	var mineral_space_available:float = round(game.mineral_capacity) - round(game.minerals)
@@ -890,7 +893,7 @@ func get_conquer_all_data():
 		if not planet.has("HX_data"):
 			continue
 		for HX in planet.HX_data:
-			if HX.lv > max_ship_lv - 3:
+			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
-	var energy_cost = round(700 * game.planet_data[-1].distance)
+	var energy_cost = round(14000 * game.planet_data[-1].distance)
 	return {"HX_data":HX_data, "energy_cost":energy_cost}

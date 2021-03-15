@@ -69,7 +69,7 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 }
 
-var MS_output = {	"M_DS_0":450000000,
+var MS_output = {	"M_DS_0":150000000,
 					"M_MME_0":3600,
 					"M_MME_1":167000,
 					"M_MME_2":e(4.6, 7),
@@ -182,8 +182,8 @@ var science_unlocks = {
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
-						"FD":{"cost":e(1.5, 7), "parents":["ID"]},
-						"PD":{"cost":e(1.2, 9), "parents":["FD"]},
+						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
+						"PD":{"cost":e(1.2, 12), "parents":["FD"]},
 						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":["SCT"]},

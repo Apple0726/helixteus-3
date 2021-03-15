@@ -51,6 +51,8 @@ var pattern:String = "" #"1_1", "2_3" etc.
 var victory_panel
 
 enum BattleStages {CHOOSING, PLAYER, ENEMY}
+enum EDiff {EASY, NORMAL, HARD}
+var e_diff:int = 0
 
 var stage = BattleStages.CHOOSING
 
@@ -75,7 +77,7 @@ func _ready():
 			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
 			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
-			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+			HX_data.append({"type":Helper.rand_int(1, 1), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
@@ -346,7 +348,12 @@ func _process(delta):
 
 func process_1_1(weapon, delta):
 	if not HX_w_c_d[weapon.name].has("v"):
-		HX_w_c_d[weapon.name].v = (weapon.position - self["ship%s" % tgt_sh].position) / 150.0
+		var div:float = 150.0
+		if e_diff == EDiff.EASY:
+			div = 250
+		elif e_diff == EDiff.HARD:
+			div = 80
+		HX_w_c_d[weapon.name].v = (weapon.position - self["ship%s" % tgt_sh].position) / div
 		weapon.visible = true
 	weapon.position -= HX_w_c_d[weapon.name].v * delta
 	HX_w_c_d[weapon.name].v *= 0.05 * delta + 1
@@ -369,7 +376,7 @@ func process_1_2(weapon, delta):
 		HX_c_d[HXs[HX_w_c_d[weapon.name].id].name].kb_rot = PI / 8
 		weapon.get_node("CollisionShape2D").disabled = false
 	elif HX_w_c_d[weapon.name].stage == 2:
-		weapon.modulate.a -= 0.02 * delta
+		weapon.modulate.a -= 0.03 * delta
 		if weapon.modulate.a <= 0:
 			remove_weapon(weapon, "w_1_2")
 
@@ -573,10 +580,10 @@ func enemy_attack():
 	if game and game.help.battle:
 		tween = Tween.new()
 		add_child(tween)
-		$Help.modulate.a = 0
-		$Help.visible = true
-		tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
-		tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
+		$UI/Help2.modulate.a = 0
+		$UI/Help2.visible = true
+		tween.interpolate_property($UI/Help2, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
+		tween.interpolate_property($UI/Help2, "rect_position", Vector2(448, 263), Vector2(448, 248), 0.5)
 		tween.start()
 	else:
 		if curr_en == min((wave + 1) * 4, len(HX_data)):
@@ -600,18 +607,36 @@ func put_magic(id:int):
 	add_child(star)
 
 func atk_1_1(id:int):
-	for i in 10:
+	var num:int = 10
+	var delay_mult:float = 0.3
+	if e_diff == EDiff.EASY:
+		num = 8
+		delay_mult = 0.4
+	elif e_diff == EDiff.HARD:
+		num = 15
+		delay_mult = 0.2
+	for i in num:
 		var fireball = w_1_1.instance()
 		fireball.position = HXs[id].position
 		fireball.visible = false
 		fireball.add_to_group("w_1_1")
 		add_child(fireball)
-		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":5, "id":id, "delay":i * 0.3}
+		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":5, "id":id, "delay":i * delay_mult}
 
 func atk_1_2(id:int):
-	for i in 4:
+	var delay_mult:float = 1.2
+	var num = 4
+	var num2 = 2
+	if e_diff == EDiff.EASY:
+		num = 3
+		delay_mult = 1.8
+	elif e_diff == EDiff.HARD:
+		num = 6
+		delay_mult = 0.8
+		num2 = 3
+	for i in num:
 		var y_pos:int = 0
-		for j in 2:
+		for j in num2:
 			var beam = w_1_2.instance()
 			var target:Vector2 = Vector2(0, rand_range(0, 720))
 			if j == 0:
@@ -629,11 +654,22 @@ func atk_1_2(id:int):
 			beam.get_node("CollisionShape2D").disabled = true
 			beam.add_to_group("w_1_2")
 			add_child(beam)
-			HX_w_c_d[beam.name] = {"group":"w_1_2", "damage":6, "stage":0, "id":id, "delay":i * 1.2}
+			HX_w_c_d[beam.name] = {"group":"w_1_2", "damage":6, "stage":0, "id":id, "delay":i * delay_mult}
 
 func atk_1_3(id:int):
-	for i in 5:
-		for j in 16:
+	var num1:int = 5
+	var num2:int = 20
+	var delay_mult:float = 0.8
+	if e_diff == EDiff.EASY:
+		num1 = 4
+		num2 = 15
+		delay_mult = 1.2
+	elif e_diff == EDiff.HARD:
+		num1 = 7
+		num2 = 30
+		delay_mult = 0.6
+	for i in num1:
+		for j in num2:
 			var bullet = w_1_3.instance()
 			var target:Vector2 = Vector2(1100, rand_range(0, 720))
 			var pos = HXs[id].position
@@ -643,7 +679,7 @@ func atk_1_3(id:int):
 			bullet.scale *= 0.8
 			bullet.add_to_group("w_1_3")
 			add_child(bullet)
-			HX_w_c_d[bullet.name] = {"group":"w_1_3", "v":Vector2(-1, 0), "target":target, "damage":4.5, "stage":0, "id":id, "delay":i * 0.8}
+			HX_w_c_d[bullet.name] = {"group":"w_1_3", "v":Vector2(-1, 0), "target":target, "damage":4.5, "stage":0, "id":id, "delay":i * delay_mult}
 
 func atk_2_1(id:int):
 	put_magic(id)
@@ -840,3 +876,34 @@ func _on_weapon_mouse_entered(weapon:String):
 func _on_weapon_mouse_exited():
 	if game:
 		game.hide_tooltip()
+
+func _on_Easy_mouse_entered():
+	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1]
+
+func _on_diff_mouse_exited():
+	$Help2/Loot.text = ""
+
+func _on_Normal_mouse_entered():
+	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.25]
+
+
+func _on_Hard_mouse_entered():
+	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5]
+
+
+func _on_diff_pressed(diff:int):
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		config.set_value("game", "e_diff", diff)
+		e_diff = diff
+	$UI/Help2.visible = false
+	tween.stop_all()
+	tween.free()
+	tween = Tween.new()
+	add_child(tween)
+	$Help.modulate.a = 0
+	$Help.visible = true
+	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
+	tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
+	tween.start()

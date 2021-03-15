@@ -10,6 +10,7 @@ var MM:String
 var reaction:String = ""
 var atom_costs:Dictionary = {}
 var reactions:Dictionary = {	"diamond":{"MM":"mets", "atoms":["C"]},
+								"aluminium":{"MM":"mets", "atoms":["Al"]},
 								"silicon":{"MM":"mats", "atoms":["Si"]},
 								"amethyst":{"MM":"mets", "atoms":["Si", "O"]},
 								"emerald":{"MM":"mets", "atoms":["Al", "Si", "O"]},
@@ -40,7 +41,7 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
-	energy_cost = 5000
+	energy_cost = 500
 	difficulty = 1.0
 	refresh()
 
@@ -52,6 +53,16 @@ func _on_silicon_pressed(_name:String, dict:Dictionary):
 	metal = "silicon"
 	energy_cost = 500
 	difficulty = 0.2
+	refresh()
+
+func _on_aluminium_pressed(_name:String, dict:Dictionary):
+	reset_poses(_name, dict)
+	ratios = {"Al":1000.0 / 26.982}
+	Helper.put_rsrc($Control2/From, 32, atom_costs, true, true)
+	Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
+	metal = "aluminium"
+	energy_cost = 50
+	difficulty = 0.1
 	refresh()
 
 func _on_amethyst_pressed(_name:String, dict:Dictionary):
@@ -191,7 +202,7 @@ func _on_HSlider_value_changed(value):
 	Helper.put_rsrc($Control2/From, 32, atom_costs, true, atom_to_MM)
 	Helper.put_rsrc($Control2/To, 32, MM_dict, true, not atom_to_MM)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * value))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000 / tile.bldg.path_1_value)
 	refresh()
 
 func _on_Transform_pressed():
@@ -262,7 +273,7 @@ func _process(delta):
 			atom_dict[atom] = game.clever_round(MM_value * ratios[atom])
 	Helper.put_rsrc($Control2/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))
 
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)

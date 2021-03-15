@@ -453,6 +453,73 @@ margin_top = 324.0
 margin_right = 1280.0
 margin_bottom = 348.0
 align = 1
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Help2" type="Panel" parent="UI"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -192.0
+margin_top = -112.0
+margin_right = 192.0
+margin_bottom = 32.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Help2"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 372.0
+margin_bottom = 68.0
+text = "CHOOSE_DIFF"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Loot" type="Label" parent="UI/Help2"]
+margin_left = 12.0
+margin_top = 108.0
+margin_right = 372.0
+margin_bottom = 132.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2"]
+margin_left = 4.0
+margin_top = 76.0
+margin_right = 380.0
+margin_bottom = 104.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Easy" type="Button" parent="UI/Help2/HBoxContainer"]
+margin_right = 122.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+text = "EASY"
+
+[node name="Normal" type="Button" parent="UI/Help2/HBoxContainer"]
+margin_left = 126.0
+margin_right = 249.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+text = "NORMAL"
+
+[node name="Hard" type="Button" parent="UI/Help2/HBoxContainer"]
+margin_left = 253.0
+margin_right = 376.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+text = "HARD"
 [connection signal="tree_exited" from="." to="." method="_on_Battle_tree_exited"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
 [connection signal="area_entered" from="Ship0" to="." method="_on_Ship_area_entered" binds= [ 0 ]]
@@ -472,3 +539,12 @@ align = 1
 [connection signal="pressed" from="FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_pressed" binds= [ "light" ]]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ImmuneTimer" to="." method="_on_ImmuneTimer_timeout"]
+[connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
+[connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_mouse_exited"]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_pressed" binds= [ 0 ]]
+[connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
+[connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_diff_mouse_exited"]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_diff_pressed" binds= [ 1 ]]
+[connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
+[connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_mouse_exited"]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [ 2 ]]

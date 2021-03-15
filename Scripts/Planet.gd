@@ -372,6 +372,7 @@ func harvest_plant(tile, tile_id:int):
 		Helper.add_item_to_coll(items_collected, plant, produce)
 		tile.plant.clear()
 		remove_child(plant_sprites[String(tile_id)])
+		plant_sprites[String(tile_id)].queue_free()
 
 func speedup_bldg(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
@@ -439,7 +440,9 @@ func destroy_bldg(id2:int):
 	items_collected.clear()
 	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	remove_child(bldgs[id2])
+	bldgs[id2].queue_free()
 	remove_child(hboxes[id2])
+	hboxes[id2].queue_free()
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
 			game.mineral_capacity -= (tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade) * tile.bldg.IR_mult
@@ -453,6 +456,7 @@ func destroy_bldg(id2:int):
 func add_shadows():
 	for sh in shadows:
 		remove_child(sh)
+		sh.queue_free()
 	shadows.clear()
 	var poly:Rect2 = Rect2(mass_build_rect.rect_position, Vector2.ZERO)
 	poly.end = mouse_pos
@@ -469,6 +473,7 @@ func remove_selected_tiles():
 	tiles_selected.clear()
 	for white_rect in get_tree().get_nodes_in_group("white_rects"):
 		remove_child(white_rect)
+		white_rect.queue_free()
 		white_rect.remove_from_group("white_rects")
 
 var prev_tile_over = -1
@@ -587,6 +592,7 @@ func _input(event):
 		for i in len(shadows):
 			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, true)
 			remove_child(shadows[i])
+			shadows[i].queue_free()
 		shadows.clear()
 		view.move_view = true
 		view.scroll_view = true
@@ -1012,6 +1018,7 @@ func _process(_delta):
 		if type == "bldg":
 			if not tile or not tile.has("bldg") or not tile.bldg.is_constructing:
 				remove_child(time_bar)
+				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
 			start_date = tile.bldg.construction_date
@@ -1026,6 +1033,7 @@ func _process(_delta):
 		elif type == "plant":
 			if not tile or not tile.has("plant") or tile.plant.empty() or not tile.plant.is_growing:
 				remove_child(time_bar)
+				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
 			start_date = tile.plant.plant_date
@@ -1038,6 +1046,7 @@ func _process(_delta):
 		elif type == "overclock":
 			if not tile or not tile.bldg.has("overclock_date"):
 				remove_child(time_bar)
+				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
 			start_date = tile.bldg.overclock_date
@@ -1053,6 +1062,7 @@ func _process(_delta):
 			if tile.wormhole.active:
 				$Obstacles.set_cell(id2 % wid, int(id2 / wid), 8)
 				remove_child(time_bar)
+				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
 			start_date = tile.wormhole.investigation_date
@@ -1067,6 +1077,7 @@ func _process(_delta):
 		var rsrc = rsrc_obj.node
 		if not tile or not tile.has("bldg"):
 			remove_child(rsrc_obj.node)
+			rsrc_obj.node.queue_free()
 			rsrcs.erase(rsrc_obj)
 			continue
 		if tile.bldg.is_constructing:
@@ -1100,11 +1111,12 @@ func finish_construct():
 	if shadow:
 		bldg_to_construct = ""
 		remove_child(shadow)
-		shadow = null
+		shadow.free()
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
 			remove_child(shadows[i])
+			shadows[i].queue_free()
 		shadows.clear()
 		view.move_view = true
 		view.scroll_view = true
@@ -1124,6 +1136,7 @@ func collect_all():
 	game.HUD.refresh()
 	if game.tutorial and game.tutorial.tut_num == 7 and not game.tutorial.tween.is_active():
 		game.tutorial.fade(0.4, game.minerals > 0)
+	print_stray_nodes()
 
 func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)

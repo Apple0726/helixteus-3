@@ -53,6 +53,7 @@ func remove_costs():
 	for child in vbox.get_children():
 		if not child is Label and not child is RichTextLabel:
 			vbox.remove_child(child)
+			child.free()
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()

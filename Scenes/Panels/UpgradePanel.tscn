@@ -232,6 +232,7 @@ text = "AUTO_SPEEDUP"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
 [connection signal="pressed" from="UpgradePanel/Upgrade" to="." method="_on_Upgrade_pressed"]
 [connection signal="resized" from="UpgradePanel/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
 [connection signal="value_changed" from="UpgradePanel/Control2/NextLv" to="." method="_on_NextLv_value_changed"]

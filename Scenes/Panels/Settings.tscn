@@ -233,6 +233,9 @@ margin_right = 162.585
 margin_bottom = 15.8878
 mouse_filter = 1
 text = "COLLECT_SPEED"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label2" type="Label" parent="CollectSpeed"]
 margin_left = -75.0
@@ -247,6 +250,47 @@ margin_top = 30.0172
 margin_right = 292.649
 margin_bottom = 44.0172
 text = "SLOW"
+
+[node name="Difficulty" type="Label" parent="."]
+margin_left = 93.0
+margin_top = 455.0
+margin_right = 321.0
+margin_bottom = 469.0
+mouse_filter = 1
+text = "ENEMY_DIFFICULTY"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 48.0
+margin_top = 479.0
+margin_right = 354.0
+margin_bottom = 519.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Easy" type="CheckBox" parent="HBoxContainer"]
+margin_left = 45.0
+margin_right = 103.0
+margin_bottom = 40.0
+text = "EASY"
+
+[node name="Normal" type="CheckBox" parent="HBoxContainer"]
+margin_left = 107.0
+margin_right = 192.0
+margin_bottom = 40.0
+pressed = true
+text = "NORMAL"
+
+[node name="Hard" type="CheckBox" parent="HBoxContainer"]
+margin_left = 196.0
+margin_right = 261.0
+margin_bottom = 40.0
+text = "HARD"
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
@@ -261,3 +305,14 @@ text = "SLOW"
 [connection signal="value_changed" from="CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
 [connection signal="mouse_entered" from="CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
 [connection signal="mouse_exited" from="CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Difficulty" to="." method="_on_CollectSpeed_mouse_entered"]
+[connection signal="mouse_exited" from="Difficulty" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Easy" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer/Easy" to="." method="_on_Easy_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Normal" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer/Normal" to="." method="_on_Normal_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Hard" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer/Hard" to="." method="_on_Hard_pressed"]

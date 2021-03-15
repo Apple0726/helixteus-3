@@ -36,7 +36,11 @@ func _ready():
 	check_distance_timer.start(0.2)
 	check_distance_timer.autostart = true
 	check_distance_timer.connect("timeout", self, "check_distance")
-	
+	connect("tree_exited", self, "on_tree_exited")
+
+func on_tree_exited():
+	queue_free()
+
 func is_aggr():
 	return aggressive_timer and not aggressive_timer.is_stopped()
 
@@ -123,6 +127,8 @@ func hit(damage:float):
 	if HP <= 0:
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
 		cave_ref.get_node("UI/Minimap").remove_child(MM_icon)
+		MM_icon.queue_free()
 		cave_ref.remove_child(pr)
+		pr.queue_free()
 	else:
 		chase_player()

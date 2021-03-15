@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -394,6 +394,7 @@ func _ready():
 		tween.start()
 		yield(tween, "tween_all_completed")
 		remove_child(tween)
+		tween.queue_free()
 
 func switch_music(src, pitch:float = 1.0):
 	#Music fading
@@ -408,6 +409,9 @@ func switch_music(src, pitch:float = 1.0):
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
+	yield(tween, "tween_all_completed")
+	remove_child(tween)
+	tween.queue_free()
 
 func load_game():
 	var save_sc = File.new()
@@ -1224,7 +1228,7 @@ func add_space_HUD():
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -1235,12 +1239,12 @@ func add_overlay():
 func remove_overlay():
 	if overlay and is_a_parent_of(overlay):
 		remove_child(overlay)
-	overlay = null
+		overlay.free()
 
 func remove_space_HUD():
 	if space_HUD and is_a_parent_of(space_HUD):
 		remove_child(space_HUD)
-	space_HUD = null
+		space_HUD.queue_free()
 	remove_overlay()
 
 func add_dimension():
@@ -1349,35 +1353,35 @@ func remove_dimension():
 
 func remove_universe():
 	remove_child(change_view_btn)
-	change_view_btn = null
+	change_view_btn.queue_free()
 	view.remove_obj("universe")
 
 func remove_supercluster():
 	view.remove_obj("supercluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	remove_child(change_view_btn)
-	change_view_btn = null
+	change_view_btn.queue_free()
 
 func remove_cluster():
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	remove_child(change_view_btn)
-	change_view_btn = null
+	change_view_btn.queue_free()
 
 func remove_galaxy():
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	remove_child(change_view_btn)
-	change_view_btn = null
+	change_view_btn.queue_free()
 
 func remove_system():
 	view.remove_obj("system")
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	remove_child(change_view_btn)
-	change_view_btn = null
+	change_view_btn.queue_free()
 
 func remove_planet(save_zooms:bool = true):
 	view.remove_obj("planet", save_zooms)
@@ -2220,7 +2224,7 @@ func generate_tiles(id:int):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].cave = {}
 				tile_data[t_id].cave.id = len(cave_data)
-				var floor_size:int = Helper.rand_int(25, 35) * rand_range(1, 1 + wid / 50.0)
+				var floor_size:int = Helper.rand_int(25, int(40 * rand_range(1, 1 + wid / 50.0)))
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
 				if ship_cond:
 					relic_cave_id = t_id
@@ -2565,8 +2569,9 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		RTL.rect_min_size.x = max_width + 20
 		RTL.rect_size.x = max_width + 20
 	yield(get_tree().create_timer(0), "timeout")
-	RTL.rect_min_size.y = RTL.get_content_height()
-	RTL.rect_size.y = RTL.get_content_height()
+	if RTL:
+		RTL.rect_min_size.y = RTL.get_content_height()
+		RTL.rect_size.y = RTL.get_content_height()
 
 var change_view_btn
 
@@ -3200,6 +3205,7 @@ func fade_out_title(fn:String):
 	tween.start()
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
+	tween.queue_free()
 	$Title.visible = false
 	$UI/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
