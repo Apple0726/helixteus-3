@@ -135,7 +135,9 @@ func make_pie_chart(arr:Array, name:String):
 
 func remove_pie_chart(_name:String):
 	if $ScrollContainer/VBoxContainer.has_node(_name):
-		$ScrollContainer/VBoxContainer.remove_child($ScrollContainer/VBoxContainer.get_node(_name))
+		var node = $ScrollContainer/VBoxContainer.get_node(_name)
+		$ScrollContainer/VBoxContainer.remove_child(node)
+		node.queue_free()
 
 func on_crust_exit():
 	game.hide_tooltip()
@@ -220,3 +222,7 @@ func _on_Atmosphere_pressed():
 	else:
 		popup += "default"
 	game.popup(popup, 1.5)
+
+
+func _on_Control_tree_exited():
+	queue_free()

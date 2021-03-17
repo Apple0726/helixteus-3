@@ -150,6 +150,7 @@ __meta__ = {
 [node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 5 )]
 visible = false
 margin_bottom = 328.0
+[connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
 [connection signal="mouse_entered" from="Atmosphere" to="." method="_on_Atmosphere_mouse_entered"]
 [connection signal="mouse_exited" from="Atmosphere" to="." method="_on_Atmosphere_mouse_exited"]
 [connection signal="pressed" from="Atmosphere" to="." method="_on_Atmosphere_pressed"]

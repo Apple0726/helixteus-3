@@ -20,7 +20,7 @@ func _physics_process(_delta):
 				Helper.show_dmg(int(dmg), target_coll.position, cave_ref)
 				target.hit(dmg)
 			else:
-				var dmg:float = damage / pow(cave_ref.def, cave_ref.DEF_EXPO)
+				var dmg:float = damage / pow(cave_ref.def, cave_ref.DEF_EXPO) / cave_ref.rover_size
 				cave_ref.hit_player(dmg)
 				if cave_ref.HP >= 0:
 					Helper.show_dmg(int(dmg), target_coll.position, cave_ref)

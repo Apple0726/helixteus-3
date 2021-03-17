@@ -69,11 +69,11 @@ func _on_Ship_mouse_exited():
 
 func _on_Ship_pressed():
 	if game.bottom_info_action == "use_hx_core":
-		if game.get_item_num("hx_core") >= game.item_to_use.num:
-			game.remove_items("hx_core", game.item_to_use.num)
+		if game.get_item_num(game.item_to_use.name) >= game.item_to_use.num:
+			game.remove_items(game.item_to_use.name, game.item_to_use.num)
 			Helper.add_ship_XP(id, game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num)
 			refresh()
-			if game.get_item_num("hx_core") > 0:
+			if game.get_item_num(game.item_to_use.name) > 0:
 				_on_Ship_mouse_entered()
 			else:
 				game.item_to_use.num = 0

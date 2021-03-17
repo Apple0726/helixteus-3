@@ -774,7 +774,7 @@ height = 151.187
 radius = 52.0
 
 [sub_resource type="CircleShape2D" id=99]
-radius = 52.1536
+radius = 68.1175
 
 [sub_resource type="ParticlesMaterial" id=100]
 flag_disable_z = true

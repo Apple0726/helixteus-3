@@ -39,6 +39,7 @@ func _input(event):
 func change_tab(btn_str:String):
 	for item in $Contents/HBoxContainer/Items/Items.get_children():
 		$Contents/HBoxContainer/Items/Items.remove_child(item)
+		item.free()
 	item_name = ""
 	_on_BuyAmount_value_changed(1)
 	remove_costs()

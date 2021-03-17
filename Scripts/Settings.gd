@@ -13,6 +13,7 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 	if err == OK:
+		set_difficulty()
 		$Master.value = config.get_value("audio", "master", -42)
 		update_volumes(0, config.get_value("audio", "master", 0))
 		$Music.value = config.get_value("audio", "music", 0)
@@ -60,6 +61,7 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	set_difficulty()
 
 func _on_Vsync_toggled(button_pressed):
 	if err == OK:
@@ -155,16 +157,19 @@ func set_difficulty():
 func _on_Easy_pressed():
 	if err == OK:
 		config.set_value("game", "e_diff", 0)
+		config.save("user://settings.cfg")
 		set_difficulty()
 
 func _on_Normal_pressed():
 	if err == OK:
 		config.set_value("game", "e_diff", 1)
+		config.save("user://settings.cfg")
 		set_difficulty()
 
 func _on_Hard_pressed():
 	if err == OK:
 		config.set_value("game", "e_diff", 2)
+		config.save("user://settings.cfg")
 		set_difficulty()
 
 

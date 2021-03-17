@@ -110,7 +110,7 @@ func _ready():
 				elif len(game.ship_data) == 1:
 					$Obstacles.set_cell(i, j, 7)
 				elif len(game.ship_data) == 2:
-					$Obstacles.set_cell(i, j, 8)
+					$Obstacles.set_cell(i, j, 10)
 			if tile.has("wormhole"):
 				wormhole = load("res://Scenes/Wormhole.tscn").instance()
 				wormhole.get_node("Active").visible = tile.wormhole.active
@@ -121,7 +121,7 @@ func _ready():
 					add_time_bar(id2, "wormhole")
 				p_i.wormhole = true
 			if tile.has("ship_part") and not tile.has("depth"):
-				$Obstacles.set_cell(i, j, 9)
+				$Obstacles.set_cell(i, j, 11)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -714,7 +714,7 @@ func _input(event):
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 							game.ship_data.append({"lv":1, "HP":14, "total_HP":14, "atk":12, "def":8, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-							Helper.add_ship_XP(2, 20000)
+							Helper.add_ship_XP(2, 25000)
 							Helper.add_weapon_XP(2, "bullet", 140)
 							Helper.add_weapon_XP(2, "laser", 140)
 							Helper.add_weapon_XP(2, "bomb", 140)

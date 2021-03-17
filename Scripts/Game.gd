@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -287,7 +287,7 @@ func _ready():
 	dialog.popup_exclusive = true
 	dialog.visible = false
 	$UI.add_child(dialog)
-	if TranslationServer.get_locale() != "fr":
+	if TranslationServer.get_locale() != "es":
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
@@ -2068,7 +2068,7 @@ func generate_planets(id:int):
 			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
 			var XP = round(pow(1.25, lv - 1) * 5)
-			p_i.HX_data.append({"type":Helper.rand_int(1, 3), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
+			p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
 			power -= floor(pow(1.15, lv))
 			if power <= 1:
 				break
@@ -2268,7 +2268,7 @@ func generate_tiles(id:int):
 			tile_data[random_tile].ship = true
 			erase_tile(random_tile - wid)
 			tile_data[random_tile - wid].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":36, "num_floors":9, "special_cave":0})#Not very special
+			cave_data.append({"floor_size":36, "num_floors":9, "special_cave":0})#Normal cave, except... you're tiny
 			erase_tile(random_tile + wid)
 			tile_data[random_tile + wid].cave = {"id":len(cave_data)}
 			cave_data.append({"floor_size":16, "num_floors":30, "special_cave":1})#A super deep cave devoid of everything
@@ -2285,7 +2285,7 @@ func generate_tiles(id:int):
 			tile_data[random_tile].ship_part = true
 			third_ship_hints.ship_part_generated = true
 			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
-	elif p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
+	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#						local_destination_system_id		global_dest_s_id

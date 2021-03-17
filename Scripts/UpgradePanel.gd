@@ -44,7 +44,7 @@ func get_min_lv():
 
 func update():
 	auto_speedup = $UpgradePanel/AutoSpeedup.pressed
-	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "time":0.0}
+	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
 	var same_lv = true
 	var first_tile = game.tile_data[ids[0]].bldg
 	bldg = first_tile.name
@@ -81,6 +81,8 @@ func update():
 			costs.silver += base_metal_costs.silver
 		if lv_curr <= 60 and lv_to >= 61:
 			costs.gold += base_metal_costs.gold
+		if lv_curr <= 71 and lv_to >= 71 and base_metal_costs.has("platinum"):
+			costs.platinum += base_metal_costs.platinum
 	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]

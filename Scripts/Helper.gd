@@ -588,7 +588,7 @@ func add_ship_XP(id:int, XP:float):
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
 	ship_data[id][weapon].XP += XP
-	if ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 7:
+	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 7:
 		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
 		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[id][weapon].lv - 1]
 		ship_data[id][weapon].lv += 1

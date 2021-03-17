@@ -105,12 +105,14 @@ func generate_rock(new:bool):
 	contents = {}
 	if tween:
 		remove_child(tween)
+		tween.free()
 	tween = Tween.new()
 	add_child(tween)
 	tween.interpolate_property(tile_sprite, "rect_scale", Vector2(0.3, 0.3), Vector2(1, 1), 0.4, Tween.TRANS_CIRC, Tween.EASE_OUT)
 	tween.start()
 	for met_sprite in metal_sprites:
 		tile_sprite.remove_child(met_sprite)
+		met_sprite.free()
 	metal_sprites = []
 	if not tile.has("contents") or new:
 		contents = Helper.generate_rock(tile, p_i).duplicate(true)
@@ -173,6 +175,7 @@ func hide_help():
 	tween.start()
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
+	tween.free()
 
 var help_counter = 0
 func pickaxe_hit():
@@ -244,6 +247,7 @@ func _process(delta):
 		cr.sprite.rotation += cr.angular_velocity * delta * 60
 		if cr.sprite.position.y > 1000:
 			remove_child(cr.sprite)
+			cr.sprite.free()
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
 		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60

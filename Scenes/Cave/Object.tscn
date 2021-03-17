@@ -23,3 +23,11 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )
+
+[node name="Light2D" type="Light2D" parent="."]
+visible = false
+enabled = false
+texture = ExtResource( 2 )
+energy = 0.8
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_buffer_size = 512

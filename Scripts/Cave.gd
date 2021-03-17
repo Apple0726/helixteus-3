@@ -50,6 +50,12 @@ var light_amount:float = 1.0
 var dont_gen_anything:bool = false
 var wormhole
 
+var velocity = Vector2.ZERO
+var max_speed = 1000
+var acceleration = 12000
+var friction = 12000
+var rover_size = 1.0
+
 #Rover stats
 var atk:float = 5.0
 var def:float = 5.0
@@ -222,7 +228,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if cave_data.special_cave == 3:
 			noise.period = 35
 		elif cave_data.special_cave == 2:
-			noise.period = 100
+			noise.period = 150
 		elif cave_data.special_cave == 1:
 			if cave_floor == 30:
 				noise.period = 65
@@ -232,6 +238,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave_size = 16 + cave_floor / 2
 		else:
 			noise.period = 65
+			$Camera2D.zoom = Vector2.ONE
+			$Rover.scale = Vector2(0.4, 0.4)
+			rover_size = 0.4
 	else:
 		noise.period = 65
 	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
@@ -400,7 +409,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		exit.get_node("ExitColl").disabled = false
 		var rot = spawn_edge_tiles[0].dir
 		exit.get_node("GoUpColl").disabled = true
-		while rand_hole == rand_spawn:
+		var breaker:int = 0
+		while rand_hole == rand_spawn and breaker < 10:
+			breaker += 1
 			var rand_id = rng.randi_range(0, len(spawn_edge_tiles) - 1)
 			rand_spawn = spawn_edge_tiles[rand_id].id
 			rot = spawn_edge_tiles[rand_id].dir
@@ -528,10 +539,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		enemy.get_node("HX").set_rand()
 
 func add_light(node):
-	var light = Light2D.new()
-	light.texture = load("res://Graphics/Stars/Star.png")
-	node.add_child(light)
-	light.shadow_enabled = true
+	#node.get_node("Light2D").enabled = true
 	node.get_node("Shadow").visible = false
 	
 func on_chest_entered(_body, tile:String):
@@ -650,7 +658,7 @@ func update_ray():
 		var holding_left_click = Input.is_action_pressed("left_click")
 		if coll is TileMap:
 			var pos = ray.get_collision_point() + ray.cast_to / 200.0
-			laser_reach = rover.position.distance_to(pos)
+			laser_reach = rover.position.distance_to(pos) / rover_size
 			tile_highlighted = get_tile_index(cave_wall.world_to_map(pos))
 			var is_minable = cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
 			if tile_highlighted != -1 and is_minable:
@@ -878,7 +886,7 @@ func _process(delta):
 			enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom
 
 func attack():
-	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), Data.rover_weapons[inventory[curr_slot].name].damage * atk, get_color(inventory[curr_slot].name.split("_")[0]))
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), load("res://Graphics/Cave/Projectiles/laser.png"), Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size, get_color(inventory[curr_slot].name.split("_")[0]))
 	cooldown()
 
 func hit_rock(delta):
@@ -893,7 +901,7 @@ func hit_rock(delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60
+		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2)
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
@@ -986,6 +994,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
 	else:
+		proj.scale *= rover_size
 		proj.collision_layer = 8
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
@@ -1008,8 +1017,8 @@ func set_border(i:int):
 	if inventory[i].type == "rover_mining":
 		mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed
-		mining_p.amount = int(25 * pow(speed, 0.7))
-		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7))
+		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
+		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
 		$UI2/ActiveItem.text = Helper.get_rover_mining_name(inventory[i].name)
 	elif inventory[i].type == "rover_weapons":
 		$UI2/ActiveItem.text = Helper.get_rover_weapon_name(inventory[i].name)
@@ -1066,17 +1075,11 @@ func get_tile_index(pt:Vector2):
 func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
-var velocity = Vector2.ZERO
-var max_speed = 1000#1000
-var acceleration = 12000
-var friction = 12000
 func _physics_process(delta):
-	var speed_mult2 = speed_mult if moving_fast else 1.0
+	var speed_mult2 = (speed_mult if moving_fast else 1.0) * rover_size
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
-#		input_vector.x = Input.get_action_strength("D") - Input.get_action_strength("A")
-#		input_vector.y = Input.get_action_strength("S") - Input.get_action_strength("W")
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
 		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))

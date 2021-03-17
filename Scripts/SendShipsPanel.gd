@@ -73,6 +73,7 @@ func refresh():
 	calc_costs()
 	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
 		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
+		child.free()
 	if game.planet_data[dest_p_id].has("HX_data"):
 		for HX_data in game.planet_data[dest_p_id].HX_data:
 			var HX_data_node = HX_data_scene.instance()
