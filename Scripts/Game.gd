@@ -177,7 +177,7 @@ var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":
 
 ############ End save data ############
 var overlay_CS:float = 0.5
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
 var collect_speed_lag_ratio:int = 1
@@ -258,7 +258,7 @@ var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20},
 							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
-var other_items_info = {"hx_core":{"XP":3}, "hx_core2":{"XP":25}, "ship_locator":{}}
+var other_items_info = {"hx_core":{"XP":3}, "hx_core2":{"XP":25}, "hx_core3":{"XP":220}, "ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
@@ -1135,12 +1135,12 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		fn_save_game(true)
 
 func add_science_tree():
-	HUD.get_node("CollectAll").visible = false
+	HUD.get_node("Panel/CollectAll").visible = false
 	HUD.get_node("Hotbar").visible = false
 	add_obj("science_tree")
 
 func add_mining():
-	HUD.get_node("CollectAll").visible = false
+	HUD.get_node("Panel/CollectAll").visible = false
 	HUD.get_node("Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instance()
 	add_child(mining_HUD)
@@ -1149,7 +1149,7 @@ func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	if tutorial and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
-	HUD.get_node("CollectAll").visible = true
+	HUD.get_node("Panel/CollectAll").visible = true
 	HUD.get_node("Hotbar").visible = true
 	remove_child(mining_HUD)
 	mining_HUD = null
@@ -1296,7 +1296,7 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
-	HUD.get_node("CollectAll").visible = false
+	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_galaxy():
 	var view_str:String = tr("VIEW_CLUSTER")
@@ -1310,7 +1310,7 @@ func add_galaxy():
 	if not galaxy_data[c_g]["discovered"]:
 		yield(start_system_generation(), "completed")
 	add_obj("galaxy")
-	HUD.get_node("CollectAll").visible = true
+	HUD.get_node("Panel/CollectAll").visible = true
 
 func start_system_generation():
 	yield(get_tree(), "idle_frame")
@@ -1334,7 +1334,7 @@ func add_system():
 			planet_data.clear()
 		generate_planets(c_s)
 	add_obj("system")
-	HUD.get_node("CollectAll").visible = true
+	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_planet():
 	planet_data = open_obj("Systems", c_s_g)
@@ -1344,7 +1344,7 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	add_child(planet_HUD)
-	HUD.get_node("CollectAll").visible = true
+	HUD.get_node("Panel/CollectAll").visible = true
 
 func remove_dimension():
 	add_child(HUD)
@@ -1857,7 +1857,7 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
-			a *= pow(e(1, -9) / B, 0.3)
+			a *= pow(e(1, -9) / B, 0.3)#Higher B: hotter stars
 			#Solar masses
 			var mass:float = -log(1 - randf()) / a
 			var star_size = 1
@@ -2000,7 +2000,7 @@ func generate_planets(id:int):
 			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3))
 		else:
-			p_i["size"] = int((2000 + rand_range(0, 10000) * (i + 1) / 2.0) * dark_matter)
+			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter)
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
@@ -2021,7 +2021,7 @@ func generate_planets(id:int):
 		var star_size_in_km = max_star_size * e(6.957, 5)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = p_i.size >= max(18000, 42000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = p_i.size >= max(18000, 40000 * pow(combined_star_mass, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0

@@ -39,8 +39,8 @@ func _process(delta):
 func refresh():
 	if not game:
 		return
-	$CollectProgress.visible = false
-	$CollectAll.modulate = Color.white
+	$Panel/CollectProgress.visible = false
+	$Panel/CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
 		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
@@ -92,7 +92,7 @@ func refresh():
 	craft.visible = game.show.materials
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
-	$ConvertMinerals.visible = game.show.minerals
+	$Panel.visible = game.show.minerals
 	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
 	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
 	while game.xp >= game.xp_to_lv:
@@ -319,10 +319,10 @@ func _on_CollectAll_mouse_entered():
 	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
 
 func _on_CollectAll_pressed():
-	if not $CollectProgress.visible:
-		$CollectProgress.visible = true
-		$CollectProgress.value = 0
-		$CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
+	if not $Panel/CollectProgress.visible:
+		$Panel/CollectProgress.visible = true
+		$Panel/CollectProgress.value = 0
+		$Panel/CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
 		game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():

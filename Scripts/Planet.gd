@@ -1062,6 +1062,8 @@ func _process(_delta):
 			if tile.wormhole.active:
 				$Obstacles.set_cell(id2 % wid, int(id2 / wid), 8)
 				remove_child(time_bar)
+				wormhole.get_node("Active").visible = true
+				wormhole.get_node("Inactive").visible = false
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue

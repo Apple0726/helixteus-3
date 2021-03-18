@@ -20,6 +20,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("COLDEST_STAR_TEMPERATURE"))
 			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
 			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
+			option_btn.add_item(tr("HAS_MEGASTRUCTURE"))
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
@@ -108,7 +109,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				1, 2:
+				1, 2, 7:
 					editable = false
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")

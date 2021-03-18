@@ -95,7 +95,12 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				var temp = game.get_brightest_star_luminosity(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-
+		7:
+			for overlay in overlays:
+				if game.system_data[overlay.id].has("has_MS"):
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
 
 func _on_Galaxy_tree_exited():
 	queue_free()
@@ -106,7 +111,7 @@ func collect_all():
 	items_collected.clear()
 	var curr_time = OS.get_system_time_msecs()
 	var systems = game.galaxy_data[game.c_g].systems
-	var progress:TextureProgress = game.HUD.get_node("CollectProgress")
+	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
 	progress.max_value = len(systems)
 	var cond = game.collect_speed_lag_ratio != 0
 	for s_ids in systems:

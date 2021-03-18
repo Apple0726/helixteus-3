@@ -7,7 +7,7 @@ var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 5.0
 var weight_cap:float = 3000.0
-var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}]
+var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}, {"type":""}]
 var tile
 var rover_costs:Dictionary
 var slot_over:int = -1

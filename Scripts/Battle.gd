@@ -5,7 +5,7 @@ onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
 onready var ship2 = $Ship2
-const DEF_EXPO_SHIP = 0.85
+const DEF_EXPO_SHIP = 0.75
 const DEF_EXPO_ENEMY = 0.7
 
 enum EDiff {EASY, NORMAL, HARD}

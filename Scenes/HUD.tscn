@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -91,6 +91,14 @@ action = "I"
 
 [sub_resource type="ShortCut" id=15]
 shortcut = SubResource( 14 )
+
+[sub_resource type="StyleBoxFlat" id=20]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.403922, 0.403922, 0.403922, 1 )
 
 [sub_resource type="InputEventAction" id=16]
 action = "."
@@ -471,11 +479,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectAll" type="TextureButton" parent="."]
-margin_left = 1232.0
-margin_top = 656.0
-margin_right = 1272.0
-margin_bottom = 700.0
+[node name="Panel" type="Panel" parent="."]
+margin_left = 1170.0
+margin_top = 654.0
+margin_right = 1276.0
+margin_bottom = 702.0
+custom_styles/panel = SubResource( 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollectAll" type="TextureButton" parent="Panel"]
+margin_left = 62.0
+margin_top = 2.0
+margin_right = 102.0
+margin_bottom = 46.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 17 )
 texture_normal = ExtResource( 14 )
@@ -485,24 +503,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectProgress" type="TextureProgress" parent="."]
-visible = false
-margin_left = 1232.0
-margin_top = 658.0
-margin_right = 1272.0
-margin_bottom = 698.0
+[node name="CollectProgress" type="TextureProgress" parent="Panel"]
+margin_left = 62.0
+margin_top = 4.0
+margin_right = 102.0
+margin_bottom = 44.0
 mouse_filter = 2
 value = 99.0
 texture_progress = ExtResource( 14 )
 fill_mode = 4
 nine_patch_stretch = true
 
-[node name="ConvertMinerals" type="TextureButton" parent="."]
-visible = false
-margin_left = 1176.0
-margin_top = 656.0
-margin_right = 1216.0
-margin_bottom = 700.0
+[node name="ConvertMinerals" type="TextureButton" parent="Panel"]
+margin_left = 6.0
+margin_top = 2.0
+margin_right = 46.0
+margin_bottom = 46.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 19 )
 texture_normal = ExtResource( 15 )
@@ -581,12 +597,12 @@ __meta__ = {
 [connection signal="mouse_entered" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/ScienceTree" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_pressed"]
-[connection signal="mouse_entered" from="CollectAll" to="." method="_on_CollectAll_mouse_entered"]
-[connection signal="mouse_exited" from="CollectAll" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="CollectAll" to="." method="_on_CollectAll_pressed"]
-[connection signal="mouse_entered" from="ConvertMinerals" to="." method="_on_ConvertMinerals_mouse_entered"]
-[connection signal="mouse_exited" from="ConvertMinerals" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ConvertMinerals" to="." method="_on_ConvertMinerals_pressed"]
+[connection signal="mouse_entered" from="Panel/CollectAll" to="." method="_on_CollectAll_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/CollectAll" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Panel/CollectAll" to="." method="_on_CollectAll_pressed"]
+[connection signal="mouse_entered" from="Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/ConvertMinerals" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_pressed"]
 [connection signal="mouse_entered" from="ShipLocator" to="." method="_on_ShipLocator_mouse_entered"]
 [connection signal="mouse_exited" from="ShipLocator" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ShipLocator" to="." method="_on_ShipLocator_pressed"]

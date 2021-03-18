@@ -480,3 +480,4 @@ margin_top = 432.0
 margin_right = 3264.0
 margin_bottom = 496.0
 size_flags_horizontal = 13
+[connection signal="tree_exited" from="." to="." method="_on_ScienceTree_tree_exited"]

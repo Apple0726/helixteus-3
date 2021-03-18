@@ -31,3 +31,7 @@ func refresh():
 				sc.get_node("Texture").modulate = Color.black
 				sc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			sc.refresh()
+
+
+func _on_ScienceTree_tree_exited():
+	queue_free()

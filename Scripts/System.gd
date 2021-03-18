@@ -57,11 +57,17 @@ func refresh_planets():
 		if p_i.conquered:
 			if p_i.has("wormhole"):
 				planet_glow.modulate = Color(0.74, 0.6, 0.78, 1)
+			elif p_i.type in [11, 12]:
+				planet_glow.modulate = Color.burlywood
 			else:
 				planet_glow.modulate = Color(0, 1, 0, 1)
 		else:
-			planet_glow.modulate = Color(1, 0, 0, 1)
+			if p_i.type in [11, 12]:
+				planet_glow.modulate = Color.burlywood
+			else:
+				planet_glow.modulate = Color(1, 0, 0, 1)
 		if p_i.has("MS"):
+			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS = Sprite.new()
 			if p_i.MS == "M_SE":
 				MS.texture = load("res://Graphics/Megastructures/M_SE_%s.png" % p_i.MS_lv)
@@ -214,6 +220,7 @@ func build_MS(obj:Dictionary, MS:String):
 		else:
 			obj.MS = MS
 			obj.MS_lv = 0
+		game.system_data[game.c_s].has_MS = true
 		obj.is_constructing = true
 		obj.construction_date = curr_time
 		obj.construction_length = bldg_costs.time * 1000
@@ -467,7 +474,7 @@ var items_collected = {}
 func collect_all():
 	items_collected.clear()
 	var planets = game.system_data[game.c_s].planets
-	var progress:TextureProgress = game.HUD.get_node("CollectProgress")
+	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
 	progress.max_value = len(planets)
 	for star in game.system_data[game.c_s].stars:
 		if star.has("MS"):
