@@ -3342,3 +3342,4 @@ func mine_tile(tile_id:int = -1):
 			switch_view("mining")
 	else:
 		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
+#april fools lol
