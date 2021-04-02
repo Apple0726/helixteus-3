@@ -4,6 +4,18 @@ onready var game = self.get_parent()
 onready var ship:TextureButton = game.get_node("Ship")
 var obj_scene
 var obj
+var shapes = []
+var shapes_data = []
+var drawing_shape = false#For annotation
+var annotate_icon:Sprite
+var annotate_icons = []
+var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
+
+#Dragging variables
+var dragged = false
+var drag_position = Vector2.ZERO
+var drag_initial_position = Vector2.ZERO
+var drag_delta = Vector2.ZERO
 
 #Whether the view should be moved when dragging
 var move_view = true
@@ -43,6 +55,8 @@ func _ready():
 	green_line.default_color = Color.green
 	green_line.antialiased = true
 	refresh()
+	annotate_icon = Sprite.new()
+	add_child(annotate_icon)
 
 func _process(_delta):
 	if not Input.is_action_pressed("left_click"):
@@ -66,6 +80,81 @@ func _process(_delta):
 			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
 			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
+	if game.annotator:
+		annotate_icon.position = to_local(mouse_position)
+		annotate_icon.modulate = game.annotator.shape_color
+		annotate_icon.scale = Vector2.ONE * game.annotator.thickness / 10.0
+		if game.annotator.mode == "eraser":
+			for icon_data in annotate_icons:
+				var icon = icon_data.node
+				if icon.get_rect().has_point(to_local(mouse_position) - icon.position):
+					remove_child(icon)
+					icon.queue_free()
+					annotate_icons.erase(icon_data)
+					shapes_data.remove(icon_data.index)
+	if Input.is_action_pressed("1"):
+		annotate_icon.rotation -= 0.03
+	if Input.is_action_pressed("3"):
+		annotate_icon.rotation += 0.03
+	if drawing_shape:
+		update()
+
+func _draw():
+	if game.annotator:
+		for shape in shapes_data:
+			if shape.shape == "line":
+				draw_line(shape.points.start, shape.points.end, shape.color, shape.width, true)
+			elif shape.shape == "rect":
+				var rect = Rect2(shape.points.start, Vector2.ZERO)
+				rect.end = shape.points.end
+				draw_rect(rect, shape.color, false, shape.width, true)
+			elif shape.shape == "circ":
+				draw_arc(shape.points.start, shape.points.end, 0, 2*PI, 100, shape.color, shape.width, true)
+		var shift = Input.is_action_pressed("shift")
+		if drawing_shape:
+			var lmp:Vector2 = to_local(mouse_position)
+			if game.annotator.mode == "line":
+				if shift:
+					var angle = atan2(mouse_position.y - drag_initial_position.y, mouse_position.x - drag_initial_position.x)
+					if abs(angle) < PI / 4 or PI - abs(angle) < PI / 4:
+						line_points.end = Vector2(mouse_position.x, drag_initial_position.y)
+					else:
+						line_points.end = Vector2(drag_initial_position.x, mouse_position.y)
+				else:
+					line_points.end = lmp
+				draw_line(line_points.start, line_points.end, game.annotator.shape_color, game.annotator.thickness, true)
+			elif game.annotator.mode == "rect":
+				var rect = Rect2(line_points.start, Vector2.ZERO)
+				rect.end = to_local(mouse_position)
+				if shift:
+					if rect.size.x > rect.size.y:
+						rect.size.y = rect.size.x
+					else:
+						rect.size.x = rect.size.y
+				else:
+					rect.end = to_local(mouse_position)
+				line_points.end = rect.end
+				draw_rect(rect, game.annotator.shape_color, false, game.annotator.thickness, true)
+			elif game.annotator.mode == "circ":
+				line_points.end = line_points.start.distance_to(lmp)
+				draw_arc(line_points.start, line_points.end, 0, 2*PI, 100, game.annotator.shape_color, game.annotator.thickness, true)
+			elif game.annotator.mode == "eraser":
+				for shape in shapes_data:
+					if shape.shape == "line":
+						if Geometry.segment_intersects_segment_2d(shape.points.start, shape.points.end, to_local(drag_initial_position), lmp):
+							shapes_data.erase(shape)
+					elif shape.shape == "rect":
+						var top_right = Vector2(shape.points.end.x, shape.points.start.y)
+						var bottom_left = Vector2(shape.points.start.x, shape.points.end.y)
+						var bool1 = Geometry.segment_intersects_segment_2d(shape.points.start, top_right, to_local(drag_initial_position), lmp)
+						var bool2 = Geometry.segment_intersects_segment_2d(top_right, shape.points.end, to_local(drag_initial_position), lmp)
+						var bool3 = Geometry.segment_intersects_segment_2d(bottom_left, shape.points.end, to_local(drag_initial_position), lmp)
+						var bool4 = Geometry.segment_intersects_segment_2d(shape.points.start, bottom_left, to_local(drag_initial_position), lmp)
+						if bool1 or bool2 or bool3 or bool4:
+							shapes_data.erase(shape)
+					elif shape.shape == "circ":
+						if Geometry.segment_intersects_circle(to_local(drag_initial_position), lmp, shape.points.start, shape.points.end) != -1:
+							shapes_data.erase(shape)
 
 func refresh():
 	if game.c_v == "":
@@ -106,6 +195,23 @@ func refresh():
 			ship.rect_scale.x = -1
 		else:
 			ship.rect_scale.x = 1
+	for icon_data in annotate_icons:
+		var icon = icon_data.node
+		remove_child(icon)
+		icon.queue_free()
+	annotate_icons.clear()
+	if game.annotator:
+		for i in len(shapes_data):
+			var shape = shapes_data[i]
+			if shape.shape == "icon":
+				var icon = Sprite.new()
+				icon.texture = load(shape.texture)
+				icon.scale = shape.scale
+				icon.modulate = shape.color
+				icon.rotation = shape.rotation
+				icon.position = shape.position
+				annotate_icons.append({"node":icon, "index":i})
+				add_child(icon)
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale_mult = s_m
@@ -127,6 +233,7 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 	obj = null
 	red_line.visible = false
 	green_line.visible = false
+	annotate_icon.texture = null
 
 func save_zooms(obj_str:String):
 	match obj_str:
@@ -214,11 +321,7 @@ func _physics_process(_delta):
 			obj.icons_hidden = false
 			obj.set_process(true)
 
-#Dragging variables
-var dragged = false
-var drag_position = Vector2.ZERO
-var drag_initial_position = Vector2.ZERO
-var drag_delta = Vector2.ZERO
+
 
 #Executed once the receives any kind of input
 func _input(event):
@@ -247,7 +350,10 @@ func _input(event):
 		if Input.is_action_just_pressed("left_click"):
 			drag_initial_position = event.position
 			drag_position = event.position
-		if Input.is_action_pressed("left_click"):
+			if game.annotator and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
+				line_points.start = to_local(drag_initial_position)
+				drawing_shape = true
+		if Input.is_action_pressed("left_click") and (not game.annotator or not game.annotator.visible):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
@@ -255,6 +361,25 @@ func _input(event):
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position
+	if Input.is_action_just_released("left_click") and drawing_shape:
+		if game.annotator.mode != "eraser":
+			var size
+			if game.annotator.mode == "circ":
+				size = line_points.end
+			else:
+				size = line_points.start.distance_to(line_points.end)
+			if game.annotator.mode == "icon" and not game.annotator.mouse_in_panel:
+				shapes_data.append({"shape":"icon", "texture":annotate_icon.texture.resource_path, "rotation":annotate_icon.rotation, "scale":annotate_icon.scale, "color":game.annotator.shape_color, "position":annotate_icon.position})
+				refresh()
+			elif size >= game.annotator.thickness / 3.0:#Prevent players from drawing very thick figures compared to their size, which means they'll have a hard time erasing them
+				shapes_data.append({"shape":game.annotator.mode, "width":game.annotator.thickness, "color":game.annotator.shape_color, "points":line_points.duplicate(true)})
+		drawing_shape = false
+		update()
+	if Input.is_action_just_released("right_click") and drawing_shape:
+		drawing_shape = false
+		update()
+	if Input.is_action_just_pressed("2"):
+		annotate_icon.rotation = 0
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):

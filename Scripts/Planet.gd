@@ -1138,7 +1138,7 @@ func collect_all():
 	game.HUD.refresh()
 	if game.tutorial and game.tutorial.tut_num == 7 and not game.tutorial.tween.is_active():
 		game.tutorial.fade(0.4, game.minerals > 0)
-	print_stray_nodes()
+	#print_stray_nodes()
 
 func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)

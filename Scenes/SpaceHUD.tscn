@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Graphics/Buttons/Megastructures.png" type="Texture" id=4]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://Graphics/Buttons/Annotate.png" type="Texture" id=7]
 
 [sub_resource type="InputEventAction" id=1]
 action = "O"
@@ -14,12 +15,18 @@ action = "O"
 shortcut = SubResource( 1 )
 
 [sub_resource type="InputEventAction" id=3]
-action = "C"
+action = "N"
 
 [sub_resource type="ShortCut" id=4]
 shortcut = SubResource( 3 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="InputEventAction" id=5]
+action = "C"
+
+[sub_resource type="ShortCut" id=6]
+shortcut = SubResource( 5 )
+
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.137255, 0.137255, 0.137255, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -27,7 +34,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -35,7 +42,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=9]
 size = 20
 use_mipmaps = true
 use_filter = true
@@ -45,6 +52,7 @@ fallback/0 = ExtResource( 6 )
 [node name="SpaceHUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -75,13 +83,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Annotate" type="TextureButton" parent="VBoxContainer"]
+visible = false
+margin_top = 312.0
+margin_right = 48.0
+margin_bottom = 360.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 4 )
+texture_normal = ExtResource( 7 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Megastructures" type="TextureButton" parent="VBoxContainer"]
 margin_top = 336.0
 margin_right = 48.0
 margin_bottom = 384.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 4 )
+shortcut = SubResource( 6 )
 texture_normal = ExtResource( 4 )
 expand = true
 stretch_mode = 5
@@ -106,10 +129,10 @@ margin_left = 168.0
 margin_top = 688.0
 margin_right = 392.0
 margin_bottom = 724.0
-custom_styles/hover = SubResource( 5 )
-custom_styles/pressed = SubResource( 6 )
-custom_styles/normal = SubResource( 6 )
-custom_fonts/font = SubResource( 7 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 text = "CONQUER_ALL"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -117,6 +140,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Annotate" to="." method="_on_Annotate_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Annotate" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Annotate" to="." method="_on_Annotate_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/Megastructures" to="." method="_on_Megastructures_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Megastructures" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Megastructures" to="." method="_on_Megastructures_pressed"]

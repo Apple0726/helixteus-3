@@ -1,0 +1,251 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scenes/AnnotatorShape.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Annotator.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=5]
+
+[sub_resource type="InputEventAction" id=2]
+action = "V"
+
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.513726, 0.513726, 0.513726, 1 )
+
+[node name="Annotator" type="Panel"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -384.0
+margin_top = -64.0
+margin_right = 384.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 48.0
+margin_top = 16.0
+margin_right = 720.0
+margin_bottom = 76.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_constants/separation = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line" parent="HBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+
+[node name="Rectangle" parent="HBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 62.0
+margin_right = 122.0
+margin_bottom = 60.0
+
+[node name="Circle" parent="HBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 124.0
+margin_right = 184.0
+margin_bottom = 60.0
+
+[node name="Icons" parent="HBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 186.0
+margin_right = 246.0
+margin_bottom = 60.0
+
+[node name="Eraser" parent="HBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 248.0
+margin_right = 308.0
+margin_bottom = 60.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+margin_left = 141.498
+margin_top = -287.064
+margin_right = 201.498
+margin_bottom = 316.936
+grow_vertical = 0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_constants/separation = 2
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SP" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 110.0
+margin_right = 60.0
+margin_bottom = 170.0
+
+[node name="Energy" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 172.0
+margin_right = 60.0
+margin_bottom = 232.0
+
+[node name="Stone" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 234.0
+margin_right = 60.0
+margin_bottom = 294.0
+
+[node name="Minerals" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 296.0
+margin_right = 60.0
+margin_bottom = 356.0
+
+[node name="Money" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 358.0
+margin_right = 60.0
+margin_bottom = 418.0
+
+[node name="Arrow" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 420.0
+margin_right = 60.0
+margin_bottom = 480.0
+
+[node name="Cross" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 482.0
+margin_right = 60.0
+margin_bottom = 542.0
+
+[node name="Check" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 544.0
+margin_right = 60.0
+margin_bottom = 604.0
+
+[node name="CloseButton" parent="." instance=ExtResource( 4 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -32.0
+margin_right = 0.0
+margin_bottom = 32.0
+
+[node name="ColorPickerBtn" type="TextureButton" parent="."]
+margin_left = 524.0
+margin_top = 20.0
+margin_right = 548.0
+margin_bottom = 44.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 3 )
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 524.0
+margin_top = 20.0
+margin_right = 548.0
+margin_bottom = 44.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorPicker" type="Panel" parent="."]
+visible = false
+margin_left = 404.0
+margin_top = -484.0
+margin_right = 768.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorPicker" type="ColorPicker" parent="ColorPicker"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -174.0
+margin_top = -476.0
+margin_right = 173.0
+margin_bottom = -4.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Thickness" type="HSlider" parent="."]
+margin_left = 240.0
+margin_top = 24.0
+margin_right = 480.0
+margin_bottom = 40.0
+min_value = 1.0
+max_value = 1000.0
+value = 10.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ThicknessLabel" type="Label" parent="."]
+visible = false
+margin_left = 488.0
+margin_top = 20.0
+margin_right = 548.0
+margin_bottom = 44.0
+text = "10"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+visible = false
+polygon = PoolVector2Array( 0, 0, 768, 0, 768, 64, 0, 64 )
+
+[node name="Polygon2D2" type="Polygon2D" parent="."]
+visible = false
+polygon = PoolVector2Array( 140, -232, 172, -232, 172, 0, 140, 0 )
+
+[node name="Polygon2D3" type="Polygon2D" parent="."]
+visible = false
+polygon = PoolVector2Array( 404, -484, 768, -484, 768, 0, 404, 0 )
+[connection signal="mouse_entered" from="HBoxContainer/Icons" to="." method="_on_Icons_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Icons" to="." method="_on_mouse_exited"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="ColorPickerBtn" to="." method="_on_ColorPickerBtn_mouse_entered"]
+[connection signal="mouse_exited" from="ColorPickerBtn" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ColorPickerBtn" to="." method="_on_ColorPickerBtn_pressed"]
+[connection signal="color_changed" from="ColorPicker/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
+[connection signal="mouse_entered" from="Thickness" to="." method="_on_Thickness_mouse_entered"]
+[connection signal="mouse_exited" from="Thickness" to="." method="_on_Thickness_mouse_exited"]
+[connection signal="value_changed" from="Thickness" to="." method="_on_Thickness_value_changed"]

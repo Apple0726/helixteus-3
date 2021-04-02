@@ -1,7 +1,7 @@
 extends Control
 
-onready var click_sound = get_node("../click")
-onready var game = get_parent()
+onready var game = get_node("/root/Game")
+onready var click_sound = game.get_node("click")
 onready var money_text = $Resources/Money/Text
 onready var minerals_text = $Resources/Minerals/Text
 onready var stone_text = $Resources/Stone/Text

@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -13,6 +13,7 @@ var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 var overlay_scene = preload("res://Scenes/Overlay.tscn")
+var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
 var cave_scene = preload("res://Scenes/Views/Cave.tscn")
@@ -51,6 +52,7 @@ var settings:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
+var annotator:Control
 onready var tooltip:Control = $Tooltips/Tooltip
 onready var adv_tooltip:Control = $Tooltips/AdvTooltip
 onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
@@ -489,7 +491,7 @@ func load_game():
 			tile_data = open_obj("Planets", c_p_g)
 			if c_v == "mining":
 				c_v = "planet"
-			add_child(HUD)
+			$UI.add_child(HUD)
 			view.set_process(true)
 			var file = Directory.new()
 			if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
@@ -499,7 +501,7 @@ func load_game():
 			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
 			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
@@ -694,10 +696,10 @@ func new_game(tut:bool):
 		show[particle] = false
 
 	#Stores information of all objects discovered
-	universe_data = [{"id":0, "l_id":0, "type":0, "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	supercluster_data = [{"id":0, "l_id":0, "type":0, "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "type":0, "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	supercluster_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	cluster_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
@@ -788,6 +790,7 @@ func new_game(tut:bool):
 		u_i["radiation"] = 1.0
 		u_i["antimatter"] = 1.0
 		u_i["value"] = 1.0
+		u_i["shapes"] = []
 	c_v = "planet"
 	if tut:
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
@@ -801,7 +804,7 @@ func new_game(tut:bool):
 	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
-	add_child(HUD)
+	$UI.add_child(HUD)
 	add_planet()
 	$Autosave.start()
 	var init_time = OS.get_system_time_msecs()
@@ -1036,7 +1039,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			"planet_details":
 				remove_child(planet_details)
 				planet_details = null
-				add_child(HUD)
+				$UI.add_child(HUD)
 			"system":
 				remove_system()
 				remove_space_HUD()
@@ -1060,16 +1063,16 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				$UI/Help.visible = false
 				remove_science_tree()
 			"cave":
-				add_child(HUD)
+				$UI.add_child(HUD)
 				remove_child(cave)
 				cave = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 			"STM":
-				add_child(HUD)
+				$UI.add_child(HUD)
 				remove_child(STM)
 				STM = null
 			"battle":
-				add_child(HUD)
+				$UI.add_child(HUD)
 				HUD.refresh()
 				remove_child(battle)
 				battle = null
@@ -1087,7 +1090,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		"planet_details":
 			planet_details = planet_details_scene.instance()
 			add_child(planet_details)
-			remove_child(HUD)
+			$UI.remove_child(HUD)
 		"system":
 			add_space_HUD()
 			add_system()
@@ -1115,7 +1118,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				view.obj.get_node("Help").visible = true
 				help.science_tree = false
 		"cave":
-			remove_child(HUD)
+			$UI.remove_child(HUD)
 			cave = cave_scene.instance()
 			add_child(cave)
 			cave.rover_data = rover_data[rover_id]
@@ -1123,12 +1126,12 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			switch_music(load("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 		"STM":
 			$Ship.visible = false
-			remove_child(HUD)
+			$UI.remove_child(HUD)
 			STM = STM_scene.instance()
 			add_child(STM)
 		"battle":
 			$Ship.visible = false
-			remove_child(HUD)
+			$UI.remove_child(HUD)
 			battle = battle_scene.instance()
 			add_child(battle)
 	if not first_time:
@@ -1190,12 +1193,16 @@ func add_obj(view_str):
 		"system":
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 		"galaxy":
+			view.shapes_data = galaxy_data[c_g].shapes
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 		"cluster":
+			view.shapes_data = cluster_data[c_c].shapes
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 		"supercluster":
+			view.shapes_data = supercluster_data[c_sc].shapes
 			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
 		"universe":
+			view.shapes_data = universe_data[c_u].shapes
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
 		"science_tree":
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
@@ -1213,6 +1220,7 @@ func add_obj(view_str):
 			back_btn.rect_position = Vector2(0, 680)
 			back_btn.connect("pressed", self, "on_science_back_pressed")
 			Helper.set_back_btn(back_btn)
+	view.update()
 
 func on_science_back_pressed():
 	switch_view("planet")
@@ -1223,10 +1231,13 @@ func on_science_back_pressed():
 func add_space_HUD():
 	if not space_HUD or not is_a_parent_of(space_HUD):
 		space_HUD = space_HUD_scene.instance()
-		add_child(space_HUD)
+		$UI.add_child(space_HUD)
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
+		if c_v == "galaxy":
+			space_HUD.get_node("VBoxContainer/Annotate").visible = true
+			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
 
@@ -1234,21 +1245,33 @@ func add_overlay():
 	overlay = overlay_scene.instance()
 	overlay.visible = false
 	overlay.rect_position = Vector2(640, 720)
-	add_child(overlay)
+	$UI.add_child(overlay)
 
 func remove_overlay():
 	if overlay and is_a_parent_of(overlay):
-		remove_child(overlay)
+		$UI.remove_child(overlay)
 		overlay.free()
+
+func add_annotator():
+	annotator = annotator_scene.instance()
+	annotator.visible = false
+	#annotator.rect_position += Vector2(640, 720)
+	$UI.add_child(annotator)
+
+func remove_annotator():
+	if annotator and is_a_parent_of(annotator):
+		$UI.remove_child(annotator)
+		annotator.free()
 
 func remove_space_HUD():
 	if space_HUD and is_a_parent_of(space_HUD):
-		remove_child(space_HUD)
+		$UI.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
+	remove_annotator()
 
 func add_dimension():
-	remove_child(HUD)
+	$UI.remove_child(HUD)
 	if dimension:
 		dimension.visible = true
 	else:
@@ -1347,40 +1370,40 @@ func add_planet():
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func remove_dimension():
-	add_child(HUD)
+	$UI.add_child(HUD)
 	dimension.visible = false
 	view.dragged = true
 
 func remove_universe():
-	remove_child(change_view_btn)
+	$UI.remove_child(change_view_btn)
 	change_view_btn.queue_free()
 	view.remove_obj("universe")
 
 func remove_supercluster():
 	view.remove_obj("supercluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
-	remove_child(change_view_btn)
+	$UI.remove_child(change_view_btn)
 	change_view_btn.queue_free()
 
 func remove_cluster():
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
-	remove_child(change_view_btn)
+	$UI.remove_child(change_view_btn)
 	change_view_btn.queue_free()
 
 func remove_galaxy():
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
-	remove_child(change_view_btn)
+	$UI.remove_child(change_view_btn)
 	change_view_btn.queue_free()
 
 func remove_system():
 	view.remove_obj("system")
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
-	remove_child(change_view_btn)
+	$UI.remove_child(change_view_btn)
 	change_view_btn.queue_free()
 
 func remove_planet(save_zooms:bool = true):
@@ -1436,6 +1459,7 @@ func generate_superclusters(id:int):
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
 		sc_i["clusters"] = []
+		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
 		sc_i["discovered"] = false
 		var pos
@@ -1472,6 +1496,7 @@ func generate_clusters(id:int):
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
 		c_i["galaxies"] = []
+		c_i["shapes"] = []
 		c_i["discovered"] = false
 		var c_id = cluster_data.size()
 		if c_i["class"] == "group":
@@ -1525,6 +1550,7 @@ func generate_galaxies(id:int):
 		g_i["parent"] = id
 		g_i["systems"] = []
 		g_i["discovered"] = false
+		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
 		if g_i.type == 6:
 			g_i["system_num"] = Helper.rand_int(5000, 20000)
@@ -2579,7 +2605,7 @@ func put_change_view_btn (info_str, icon_str):
 	change_view_btn = TextureButton.new()
 	var change_view_icon = load(icon_str)
 	change_view_btn.texture_normal = change_view_icon
-	add_child(change_view_btn)
+	$UI.add_child(change_view_btn)
 	change_view_btn.shortcut = ShortCut.new()
 	change_view_btn.shortcut.shortcut = InputEventAction.new()
 	Helper.set_back_btn(change_view_btn, false)
@@ -3342,4 +3368,3 @@ func mine_tile(tile_id:int = -1):
 			switch_view("mining")
 	else:
 		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
-#april fools lol

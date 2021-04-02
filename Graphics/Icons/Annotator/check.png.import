@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Wormhole.png-91c761278b480502319795d145e20887.stex"
+path="res://.import/check.png-30e06e3cd3a4268ad04d02817bffc9b2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Wormhole.png"
-dest_files=[ "res://.import/Wormhole.png-91c761278b480502319795d145e20887.stex" ]
+source_file="res://Graphics/Icons/Annotator/check.png"
+dest_files=[ "res://.import/check.png-30e06e3cd3a4268ad04d02817bffc9b2.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/InactiveWormhole.png-354453b466ac289cb9dc14ecf2e49e77.stex"
+path="res://.import/cross.png-d434d2a9784be10adce833d06205a9d8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/InactiveWormhole.png"
-dest_files=[ "res://.import/InactiveWormhole.png-354453b466ac289cb9dc14ecf2e49e77.stex" ]
+source_file="res://Graphics/Icons/Annotator/cross.png"
+dest_files=[ "res://.import/cross.png-d434d2a9784be10adce833d06205a9d8.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

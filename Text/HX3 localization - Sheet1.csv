@@ -16,16 +16,6 @@ VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema s
 MINE,Mine,Miner,Minare,,Abbauen,Excavar,,Gräva
 START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,,Klicka en ruta för att gräva
 MINE_HELP,Click and hold the tile to mine!,Cliquez et maintenez la tuile pour miner!,,,Die Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,,Klicka och tryck för att gräva!
-LAYER,Layer,Couche,Strato,,Ebene,Capa,계층,Lager
-SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,,Yta
-CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각,Skorpa
-CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,,Krustenzusammensetzung,Composición de la corteza,지각 구성,Skorpkomposition
-MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀,Mantel
-MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composición del manto,맨틀 구성,Mantelkompositon
-CORE,Core,Noyau,Nucleo,,Kern,Núcleo,핵,Kärna
-CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composición del núcleo,핵 구성,Kärnkomposition
-TRACE,Trace,Autres,Altri,,Spuren,Otros,,Spår
-TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Otros elementos,,Spårämne
 NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,,Du har inte en hacka! Köp en i butiken.
 NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음,Ingen hacka
 BUY_ONE,Buy one,Acheter,Comprarne uno,,Eine Kaufen,Comprar uno,하나 사기,Köp en
@@ -80,6 +70,16 @@ ENGINEERING,Engineering,Ingénierie,Ingegneria,,Ingineurswesen,Ingeniería,공�
 DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,,Dimensionale Kräfte,Poder dimensional,차원력,Dimensionell kraft
 LV,Lv,Nv,Lv,,Lvl,Nvl,Lv,Lvl
 INVEST,Invest,Investir,Investire,,Investieren,Invertir,투자,Investera
+LAYER,Layer,Couche,Strato,,Ebene,Capa,계층,Lager
+SURFACE,Surface,Surface,Superficie,,Oberfläche,Superficie,,Yta
+CRUST,Crust,Croûte,Crosta,,Kruste,Corteza,지각,Skorpa
+CRUST_COMPOSITION,Crust composition,Composition de la croûte,Composizione della crosta,,Krustenzusammensetzung,Composición de la corteza,지각 구성,Skorpkomposition
+MANTLE,Mantle,Manteau,Mantello,,Mantel,Manto,맨틀,Mantel
+MANTLE_COMPOSITION,Mantle composition,Composition du manteau,Composizione del mantello,,Mantelzusammensetzung,Composición del manto,맨틀 구성,Mantelkompositon
+CORE,Core,Noyau,Nucleo,,Kern,Núcleo,핵,Kärna
+CORE_COMPOSITION,Core composition,Composition du noyau,Composizione del nucleo,,Kernzusammensetzung,Composición del núcleo,핵 구성,Kärnkomposition
+TRACE,Trace,Autres,Altri,,Spuren,Otros,,Spår
+TRACE_ELEMENTS,Trace elements,Autres éléments,Altri elementi,,Spurenelemente,Otros elementos,,Spårämne
 INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","Si servono materiali per varie cose: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",,"Materialen werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen,einschießlich Handwerk,weltraum Landwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricación, agricultura espacial y conversión de recursos.",,"Material krävs för att utföra olika uppgifter i spelet, inklusive hantverk, rymdjordbruk och resursomvandling. "
 MATERIALS,Materials,Matériaux,Materiali,,Materialien,Materiales,재료,Matrial
 SPEEDUPS,Speed-ups,Speed-ups,Speed-up,,Beschleuniger,Aceleradores,스피드업,Speed-ups
@@ -372,19 +372,19 @@ RED_LASER,Red {laser},{laser} rouge,{laser} rosso,,,{laser} rojo,,
 ORANGE_LASER,Orange {laser},{laser} orange,{laser} arancione,,,{laser} naranjo,,
 YELLOW_LASER,Yellow {laser},{laser} jaune,{laser} giallo,,,{laser} amarillo,,
 GREEN_LASER,Green {laser},{laser} vert,{laser} verde,,,{laser} verde,,
-BLUE_LASER,Blue {laser},,,,,{laser} azul,,
-PURPLE_LASER,Purple {laser},,,,,{laser} morado,,
-UV_LASER,Ultraviolet {laser},,,,,{laser} ultravioleta,,
-XRAY_LASER,X-ray {laser},,,,,{laser} de rayos X,,
-GAMMARAY_LASER,Gamma-ray {laser},,,,,{laser} de rayos Gamma,,
-ULTRAGAMMARAY_LASER,Ultragamma-ray {laser},,,,,{laser} de rayos Ultragamma,,
-MACRO_ENGINEERING,Macro Engineering,,,,,Macro ingeniería,,
-CHEMICAL_DRIVE,Chemical Drive,,,,,Combustión química,,
-ION_DRIVE,Ion Drive,,,,,Propulsión iónica,,
+BLUE_LASER,Blue {laser},{laser} bleu,,,,{laser} azul,,
+PURPLE_LASER,Purple {laser},{laser} violet,,,,{laser} morado,,
+UV_LASER,Ultraviolet {laser},{laser} ultraviolet,,,,{laser} ultravioleta,,
+XRAY_LASER,X-ray {laser},{laser} rayon X,,,,{laser} de rayos X,,
+GAMMARAY_LASER,Gamma-ray {laser},{laser} rayon gamma,,,,{laser} de rayos Gamma,,
+ULTRAGAMMARAY_LASER,Ultragamma-ray {laser},{laser} rayon ultragamma,,,,{laser} de rayos Ultragamma,,
+MACRO_ENGINEERING,Macro Engineering,Méga-ingénierie,,,,Macro ingeniería,,
+CHEMICAL_DRIVE,Chemical drive,,,,,Combustión química,,
+ION_DRIVE,Ion drive,,,,,Propulsión iónica,,
 FTL_DRIVE,FTL drive,,,,,Propulsión FTL,,
 INTERGALACTIC_DRIVE,Intergalactic drive,,,,,Vuelo intergaláctico,,
-FUSION_DRIVE,Fusion Drive,,,,,Propulsión de fusión,,
-PHOTON_DRIVE,Photon Drive,,,,,Propulsión fotónica,,
+FUSION_DRIVE,Fusion drive,,,,,Propulsión de fusión,,
+PHOTON_DRIVE,Photon drive,,,,,Propulsión fotónica,,
 WEAPONS,Weapons,Armes,Armi,,,Armas,,
 MINING_TOOLS,Mining tools,Outils de minage,,,,Herramientas de minería,,
 ARMOR_DESC,Armor protects the rover from cave hazards.,L'armure protège le rover contre les dangers dans les grottes.,,,,La armadura protege al rover de los peligros presentes en cuevas.,,
@@ -399,15 +399,15 @@ GL_DESC,Yellow lasers too weak? Decreasing the wavelength once again turns it to
 BL_DESC,Green lasers too weak? Just keep shrinking that wavelength!,Lasers verts pas assez forts? Et si on augmentait la pulsation?,,,,¿Los láseres verdes son muy débiles? ¡Solo sigue disminuyendo la longitud de onda!,,
 PL_DESC,Blue lasers too weak? Make that wavelength even smaller!,Lasers bleus pas assez forts? Et si on augmentait le vecteur d'onde?,,,,¿Los láseres azules son muy débiles? ¡Haz la longitud de onda aún más pequeña!,,
 UVL_DESC,Purple lasers too weak? Maybe try going outside the visible range?,Lasers violets pas assez forts? Une seule solution: sortir du domaine du visible!,,,,¿Los láseres morados son muy débiles? Intenta saliéndote del rango visible.,,
-XRL_DESC,Ultraviolet lasers too weak? You know the drill.,,,,,¿Los láseres ultravioleta son muy débiles? Ya sabes qué hacer.,,
-GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,,,,,¿Los láseres de rayos X son muy débiles? ¡Disminuye una vez más la longitud de onda!,,
+XRL_DESC,Ultraviolet lasers too weak? You know the drill.,Le rayon X est plus fort que l'ultraviolet.,,,,¿Los láseres ultravioleta son muy débiles? Ya sabes qué hacer.,,
+GRL_DESC,Xray lasers too weak? Decrease that wavelength once more!,Les rayons gamma sont les ondes électromagnétiques les plus énergétiques.,,,,¿Los láseres de rayos X son muy débiles? ¡Disminuye una vez más la longitud de onda!,,
 UGRL_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,,,,,¿Los láseres son muy débiles? ¡Simplemente vaporiza toda la materia y antimateria conocida!,,
 MAE_DESC,"Base science for constructing megastructures.\nMegastructures are enormous buildings that provide unimaginable amounts of resources or other benefits.\nDue to their size and complexity, they have multiple stages of construction, all of which must be researched separately.\nThis science unlocks the base construction stage of all megastructures.",,,,,La base para la construcción de megaestructuras.\nLas megaestructuras son construcciones enormes que te proveen de cantidades inimaginables de recursos u otros beneficios.\nDebido a su tamaño y complejidad tienen múltiples fases de construcción que deben ser investigadas individualmente.\nEsta investigación desbloquea la fase inicial de todas las megaestructuras.,,
 CD_DESC,Allows all sorts of exotic chemical reactions in the ship's engines to speed up travel.\nThis unlocks the drive menu in the ship panel.,,,,,Le permite a tu nave usar todo tipo de exóticas reacciones químicas para acelerar el vuelo.\nDesbloquea el menú de propulsores en el panel de naves.,,
-FTL_DESC,Divides travel times by 10.,,,,,Divide el tiempo de vuelo por 10.,,
+FTL_DESC,Divides travel times by 10.,Divise les temps de voyage par 10.,,,,Divide el tiempo de vuelo por 10.,,
 ID_DESC,Ionizes noble gases to speed up travel even further.,,,,,Ioniza gases nobles para acelerar el vuelo aún más,,
 FD_DESC,Fuse elements together for even more speed and efficiency.,,,,,Fusiona elementos para obtener más velocidad y eficiencia,,
-IGD_DESC,Divides travel times by 100.,,,,,Divide el tiempo de vuelo por 100.,,
+IGD_DESC,Divides travel times by 100.,Divise les temps de voyage par 100.,,,,Divide el tiempo de vuelo por 100.,,
 PD_DESC,Uses light itself for maximum travel speed.,,,,,Utiliza la luz misma para una máxima velocidad de vuelo.,,
 GLASS_FACTORY,Glass factory,Usine de verre,,,,Fábrica de cristal,,
 GF_DESC,Produces glass from sand,Produit du verre à partir du sable,,,,Produce cristal a partir de arena,,
@@ -417,7 +417,7 @@ NO_SAND,You don't have any sand!,Tu n'as pas de sable!,Non hai sabbia!,,,¡No ti
 STOP,Stop,Arrêter,,,,Detener,,
 RESOURCES_PRODUCED,Resources produced,Ressources produites,Risorse prodotte,,,Recursos producidos,,
 REMAINING,remaining,restant(e)s,rimanenti,,,restante(s),,
-SHIP_CONTROL,Ship control,,,,,Conducción de astronaves,,
+SHIP_CONTROL,Ship control,Contrôle de vaisseaux,,,,Conducción de astronaves,,
 SCT_DESC,This science is needed to gain control of abandoned ships scattered across the universe.,,,,,Esta investigación es necesaria para obtener el control de astronaves abandonadas a través del universo.,,
 ABANDONED_SHIP,"A spaceship abandoned by... someone. Research the necessary science to take control of this ship. You'll want this ship to discover, conquer and explore other planets.","Un vaisseau spatial abandonné par... quelqu'un. Recherchez la science correspondante pour prendre le contrôle de ce vaisseau. Il faudra le faire pour pouvoir découvrir, conquérir et explorer d'autres planètes.",,,,"Una astronave abandonada por...alguien. Haz la investigación necesaria para obtener el control de ella. La necesitarás para descubrir, conquistar y explorar otros planetas.",,
 SHIP_CONTROL_SUCCESS,Ship control success!,,,,,¡Astronave capturada exitosamente!,,
@@ -626,7 +626,7 @@ NEUTRON_DESC,"Unstable subatomic particles. If not stored in a special storage b
 ELECTRON,Electron,,,,,Electrón,,
 ELECTRON_DESC,"Stable subatomic particles. However, due to all the ways electrons can interact with matter, special storage buildings are required to properly store them as free electrons.",,,,,"Partículas subatómicas estables. Sin embargo, debido a todas las formas en las cuales los electrones interactúan con la materia, se necesitan edificios de almacenamiento especiales para conservarlos como electrones libres.",,
 SUBATOMIC_PARTICLES,Subatomic particles,,,,,Partículas subatómicas,,
-SAP_DESC,"Break down any atom into protons, neutrons and electrons.\nUnlocks the subatomic particle reactor as well as buildings that collect these particles from the natural background radiation.",,,,,"Descompone cualquier átomo en protones, neutrones y electrones.\nDesbloquea el reactor de partículas subatómicas a la vez de edificios que recolectan estas partículas de la radioactividad natural.",,
+SAP_DESC,"Break down any atom into protons, neutrons and electrons.\nUnlocks the subatomic particle reactor as well as buildings that collect these particles from the natural background radiation.","Décomposer n'importe quel atome en protons, électrons et neutrons\n.Débloque les bâtiments qui collectent ces particules depuis le rayonnement de fond.",,,,"Descompone cualquier átomo en protones, neutrones y electrones.\nDesbloquea el reactor de partículas subatómicas a la vez de edificios que recolectan estas partículas de la radioactividad natural.",,
 INV_PARTICLES_DESC,Make exciting things with these particles.,,,,,Fabrica cosas emocionantes con estas partículas.,,
 AMN_NAME,Atom manipulator,,,,,Manipulador de átomos,,
 AMN_DESC,Can transform atoms into metals and vice versa.,,,,,Puede transformar átomos en metales y viceversa.,,
@@ -747,15 +747,21 @@ MINIMAP_ERROR,Error: high-energy electromagnetic waves in this cave are disrupti
 SHIP_PART_FOUND,Ship component found!,Composant du vaisseau trouvé!,,,,¡Componente de la nave econtrado!,,
 TELEGRAM,Telegram,,,,,Telegrama,,
 TELEGRAM_TEXT,"Upon inspection of this galaxy, your communication devices detect another signal.\nAfter doing some signal processing, it turns out to be an audio telegram. You play it back and hear\na weak, female voice: ""Help me... David...""\nYou also hear some reverb effects, which suggests that the telegram came from deep inside a cave.",,,,,"Al investigar esta galaxia, tu aparato de comunicación ha detectado otra señal.\nDespués de procesarlo, resultó ser un telegrama de voz. Al reproducirlo esuchas una voz femenina y débil:\n""David...ayúdame...""\nTambién se escucha con eco, sugiriendo que el telegrama fue grabado desde las profundidades de una cueva.",,
-CONQUER_ALL,Conquer all,Conquérir tout,,,,,,
-CONQUER_ALL_DESC,Conquer all planets in this system.\nEvery enemy 5 levels under your strongest ship and weaker will be ignored and not participate in battle.,,,,,,,
-LEVEL_32_REACHED,You reached level 32! You unlocked the system conquer all feature.,,,,,,,
-CONQUER_ALL_INFO,You will battle %s enemies and will cost %s energy. Continue?,,,,,,,
-CHOOSE_DIFF,Choose enemy attack pattern difficulty\n(this can be changed later in settings),Choisir la difficulté d'attaque des ennemis\n(elle peut être changée plus tard dans les paramètres),,,,,,
-ENEMY_DIFFICULTY,Enemy attack pattern difficulty,Difficulté d'attaque des ennemis,,,,,,
-EASY,Easy,Facile,,,,,,
-NORMAL,Normal,Moyenne,,,,,,
-HARD,Hard,Difficile,,,,,,
-PERFORMANCE_MULTIPLIER,Performance multiplier,,,,,,,
-PERFORMANCE_MULTIPLIER_VALUES,Performance multiplier values,,,,,,,
-HAS_MEGASTRUCTURE,Has megastructure,,,,,,,
+CONQUER_ALL,Conquer all,Conquérir tout,,,,Conquistar todo,,
+CONQUER_ALL_DESC,Conquer all planets in this system.\nEvery enemy 5 levels under your strongest ship and weaker will be ignored and not participate in battle.,,,,,Conquista todos los planetas en este sistema.\nCada enemigo 5 niveles más débil que tu nave más fuerte será ignorado y no participará en la batalla.,,
+LEVEL_32_REACHED,You reached level 32! You unlocked the system conquer all feature.,,,,,"¡Haz alcanzado el nivel 32! Haz desbloqueado la habilidad ""Conquistar todo"".",,
+CONQUER_ALL_INFO,You will battle %s enemies and will cost %s energy. Continue?,,,,,Combatirás contra %s enemigos y te costará %s de energía. ¿Continuar?,,
+CHOOSE_DIFF,Choose enemy attack pattern difficulty\n(this can be changed later in settings),Choisir la difficulté d'attaque des ennemis\n(elle peut être changée plus tard dans les paramètres),,,,Elige la dificultad de los patrones de ataque\n(Puede ser cambiado más tarde en ajustes),,
+ENEMY_DIFFICULTY,Enemy attack pattern difficulty,Difficulté d'attaque des ennemis,,,,Dificultad de patrones de ataque,,
+EASY,Easy,Facile,Facile,,,Fácil,,
+NORMAL,Normal,Moyenne,Media,,,Normal,,
+HARD,Hard,Difficile,Difficile,,,Difícil,,
+PERFORMANCE_MULTIPLIER,Performance multiplier,Multiplicateur performance,,,,,,
+PERFORMANCE_MULTIPLIER_VALUES,Performance multiplier values,Valeurs du multiplicateur performance,,,,,,
+HAS_MEGASTRUCTURE,Has megastructures,Contient mégastructures,Ha megastrutture,,,,,
+ANNOTATE,Annotate,Annoter,Annotare,,,,,
+SHAPE_COLOR,Shape color,Couleur de la forme,Colore della forma,,,,,
+OUTLINE_THICKNESS,Outline thickness/icon size,Épaisseur du contour/taille des icônes,Spessore del contorno/dimensione delle icone,,,,,
+CLICK_TWICE_TO_CHANGE,Click twice to change icon,,,,,,,
+ANNOTATE_SHORTCUTS,1: rotate left\n2: reset rotation\n3: rotate right,,,,,,,
+KEYBOARD_SHORTCUTS,Keyboard shortcuts,Raccourcis clavier,,,,,,
