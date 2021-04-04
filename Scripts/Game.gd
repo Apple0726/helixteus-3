@@ -45,6 +45,7 @@ var MU_panel:Control
 var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
+var terraform_panel:Control
 var AMN_panel:Control
 var SPR_panel:Control
 var inventory:Control
@@ -324,16 +325,6 @@ func _ready():
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
-	var bg = $Title/Background
-#	var bg_area = $Title/Background/AllowedStarArea.polygon
-#	for i in 80:
-#		var star = star_scene.instance()
-#		star.scale *= rand_range(0.04, 0.06)
-#		star.rotation = rand_range(-7, 7)
-#		star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
-#		while not Geometry.is_point_in_polygon(star.position, bg_area):
-#			star.position = Vector2(rand_range(0, 1280), rand_range(0, 720))
-#		bg.add_child(star)
 	if TEST:
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
@@ -347,7 +338,7 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = 200000000
+		energy = 2000000000
 		SP = 200000000
 		science_unlocked.RC = true
 		science_unlocked.CD = true
@@ -357,6 +348,7 @@ func _ready():
 		science_unlocked.ATM = true
 		science_unlocked.MAE = true
 		science_unlocked.FTL = true
+		science_unlocked.TF = true
 		stone.O = 800000000
 		mats.silicon = 40000
 		mats.cellulose = 1000
@@ -667,7 +659,7 @@ func new_game(tut:bool):
 			"IS":1,
 			"AIE":1,
 			"STMB":1,
-				"SHSR":1,
+			"SHSR":1,
 	}#Levels of mineral upgrades
 
 	#Measures to not overwhelm beginners. false: not visible
@@ -708,8 +700,8 @@ func new_game(tut:bool):
 	#Vehicle data
 	rover_data = []
 	ship_data = []
-	second_ship_hints = {"spawned_at":-1, "signal_emitted":false, "ship_locator":false}
-	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_sys_generated":false, "ship_part_generated":false, "parts":[false, false, false, false, false]}
+	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
+	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
 	ships_dest_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
@@ -831,6 +823,7 @@ func add_panels():
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
+	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
 	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
@@ -844,6 +837,9 @@ func add_panels():
 	
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
+	
+	terraform_panel.visible = false
+	$Panels/Control.add_child(terraform_panel)
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
@@ -974,11 +970,14 @@ func on_fade_complete(panel:Control):
 		view.scroll_view = true
 		view.move_view = true
 
-func add_upgrade_panel(ids:Array):
+func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
-	upgrade_panel.ids = ids.duplicate(true)
+	if planet.empty():
+		upgrade_panel.ids = ids.duplicate(true)
+	else:
+		upgrade_panel.planet = planet
 	active_panel = upgrade_panel
 	if upgrade_panel:
 		$Panels/Control.add_child(upgrade_panel)
@@ -2175,9 +2174,9 @@ func generate_tiles(id:int):
 	var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 50.0)
 	var pulsation:float = rand_range(0.4, 1)
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
-	var ship_signal:bool = not second_ship_hints.signal_emitted and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
+	var ship_signal:bool = second_ship_hints.spawned_at_p == -1 and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
 	for i in 2:
-		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.1) or ship_signal):
+		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal):
 			#au_int: aurora_intensity
 			var au_int = clever_round(rand_range(80000, 160000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			var au_type = Helper.rand_int(1, 2)
@@ -2283,7 +2282,7 @@ func generate_tiles(id:int):
 		erase_tile(random_tile)
 		tile_data[random_tile].ship = true
 	elif len(ship_data) == 2:
-		if third_ship_hints.ship_sys_id == c_s and not third_ship_hints.ship_sys_generated:
+		if third_ship_hints.ship_sys_id == c_s and third_ship_hints.ship_spawned_at_p == -1:
 			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
 				random_tile = Helper.rand_int(1, len(tile_data)) - 1
@@ -2304,17 +2303,17 @@ func generate_tiles(id:int):
 			erase_tile(random_tile + 1)
 			tile_data[random_tile + 1].cave = {"id":len(cave_data)}
 			cave_data.append({"floor_size":50, "num_floors":5, "special_cave":3})#Big maze cave where minimap is disabled
-			third_ship_hints.ship_sys_generated = true
-		elif third_ship_hints.ship_part_id == c_s and not third_ship_hints.ship_part_generated:
+			third_ship_hints.ship_spawned_at_p = c_p_g
+		elif third_ship_hints.ship_part_id == c_s and not third_ship_hints.part_spawned_at_p:
 			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 			erase_tile(random_tile)
 			tile_data[random_tile].ship_part = true
-			third_ship_hints.ship_part_generated = true
+			third_ship_hints.part_spawned_at_p = c_p_g
 			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
-		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#						local_destination_system_id		global_dest_s_id
+		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#				local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
 		p_i.wormhole = true
 	elif c_s_g != 0 and not second_ship_cave_placed and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
@@ -2322,8 +2321,8 @@ func generate_tiles(id:int):
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
-		p_i.wormhole = true
-	if lake_1_phase == "G":#								new: whether the wormhole should generate a new wormhole on another planet
+		p_i.wormhole = true#								new: whether the wormhole should generate a new wormhole on another planet
+	if lake_1_phase == "G":
 		p_i.erase("lake_1")
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
@@ -2391,7 +2390,7 @@ func generate_tiles(id:int):
 	if ship_signal:
 		objective = {"type":ObjectiveType.SIGNAL, "id":10, "current":0, "goal":1}
 		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
-		second_ship_hints.signal_emitted = true
+		second_ship_hints.spawned_at_p = c_p_g
 
 func erase_tile(random_tile:int):
 	if not tile_data[random_tile] or not tile_data[random_tile].has("aurora"):

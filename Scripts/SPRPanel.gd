@@ -190,6 +190,3 @@ func _process(delta):
 	Helper.put_rsrc($Control2/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

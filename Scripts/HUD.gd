@@ -158,10 +158,7 @@ func refresh():
 	if $Objectives.visible:
 		$Objectives/Label.visible = false
 		if game.objective.type == game.ObjectiveType.BUILD:
-			if TranslationServer.get_locale() == "en":
-				$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "s":"" if game.objective.goal == 1 else "s", "bldg":Helper.get_item_name(game.objective.data).to_lower()})
-			else:
-				$Objectives/Label.text = tr("BUILD_OBJECTIVE_2").format({"num":game.objective.goal, "bldg":Helper.get_item_name(game.objective.data)})
+			$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":Helper.get_item_name(game.objective.data, "" if game.objective.goal == 1 else "S").to_lower()})
 		elif game.objective.type == game.ObjectiveType.SAVE:
 			var split:Array = game.objective.data.split("/")
 			var primary_resource = len(split) == 1

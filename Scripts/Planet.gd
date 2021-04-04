@@ -933,40 +933,7 @@ func add_bldg(id2:int, st:String):
 				add_rsrc(v, Color.white, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
 				add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
-	var hbox = HBoxContainer.new()
-	hbox.alignment = hbox.ALIGN_CENTER
-	hbox.theme = load("res://Resources/panel_theme.tres")
-	hbox["custom_constants/separation"] = -1
-	var path_1 = Label.new()
-	path_1.name = "Path1"
-	path_1.text = String(tile.bldg.path_1)
-	path_1.connect("mouse_entered", self, "on_path_enter", ["1", tile])
-	path_1.connect("mouse_exited", self, "on_path_exit")
-	path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
-	hbox.add_child(path_1)
-	hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
-	path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
-	if tile.bldg.has("path_2"):
-		var path_2 = Label.new()
-		path_2.name = "Path2"
-		path_2.text = String(tile.bldg.path_2)
-		path_2.connect("mouse_entered", self, "on_path_enter", ["2", tile])
-		path_2.connect("mouse_exited", self, "on_path_exit")
-		path_2["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
-		path_2.mouse_filter = path_2.MOUSE_FILTER_PASS
-		hbox.add_child(path_2)
-	if tile.bldg.has("path_3"):
-		var path_3 = Label.new()
-		path_3.name = "Path3"
-		path_3.text = String(tile.bldg.path_3)
-		path_3.connect("mouse_entered", self, "on_path_enter", ["3", tile])
-		path_3.connect("mouse_exited", self, "on_path_exit")
-		path_3["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
-		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
-		hbox.add_child(path_3)
-	hbox.rect_size.x = 200
-	hbox.rect_position = v - Vector2(100, 90)
-	hbox.visible = get_parent().scale.x >= 0.25
+	var hbox = Helper.add_lv_boxes(tile, v)
 	add_child(hbox)
 	hboxes[id2] = hbox
 	if tile.bldg.has("overclock_mult"):
@@ -978,13 +945,6 @@ func add_bldg(id2:int, st:String):
 
 func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]
-
-func on_path_enter(path:String, tile):
-	game.hide_adv_tooltip()
-	game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), tile.bldg["path_" + path]])
-
-func on_path_exit():
-	game.hide_tooltip()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	var rsrc = game.rsrc_stocked_scene.instance()

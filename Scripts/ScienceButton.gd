@@ -37,36 +37,6 @@ func refresh():
 
 func get_science_name(sc:String):
 	match sc:
-		"AM":
-			return tr("AUTO_MINING")
-		"ISC":
-			return tr("IMPROVED_STONE_CRUSHER")
-		"ATM":
-			return tr("ATOM_MANIPULATION")
-		"SAP":
-			return tr("SUBATOMIC_PARTICLES")
-		"SA":
-			return tr("SPACE_AGRICULTURE")
-		"EGH":
-			return tr("EXTRA_GREENHOUSES")
-		"RC":
-			return tr("ROVER_CONSTRUCTION")
-		"SCT":
-			return tr("SHIP_CONTROL")
-		"SUP":
-			return tr("SHIP_UPGRADE")
-		"CD":
-			return tr("CHEMICAL_DRIVE")
-		"FTL":
-			return tr("FTL_DRIVE")
-		"IGD":
-			return tr("INTERGALACTIC_DRIVE")
-		"ID":
-			return tr("ION_DRIVE")
-		"FD":
-			return tr("FUSION_DRIVE")
-		"PD":
-			return tr("PHOTON_DRIVE")
 		"OL":
 			return tr("ORANGE_LASER").format({"laser":tr("LASER")})
 		"YL":
@@ -85,14 +55,13 @@ func get_science_name(sc:String):
 			return tr("GAMMARAY_LASER").format({"laser":tr("LASER")})
 		"UGRL":
 			return tr("ULTRAGAMMARAY_LASER").format({"laser":tr("LASER")})
-		"MAE":
-			return tr("MACRO_ENGINEERING")
 	if sc.substr(0, 2) == "DS":
 		return "%s %s" % [tr("M_DS_NAME"), sc[2]]
 	elif sc.substr(0, 2) == "SE":
 		return "%s %s" % [tr("M_SE_NAME"), sc[2]]
 	elif sc.substr(0, 3) == "MME":
 		return "%s %s" % [tr("M_MME_NAME"), sc[3]]
+	return tr("%s_SC" % sc)
 
 func on_mouse_entered():
 	is_over = true

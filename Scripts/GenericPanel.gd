@@ -99,6 +99,3 @@ func _on_BuyAmount_value_changed(value):
 
 func refresh():
 	pass
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

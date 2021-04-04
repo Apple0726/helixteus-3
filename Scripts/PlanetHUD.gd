@@ -10,6 +10,7 @@ func refresh():
 	$VBoxContainer/Construct.visible = game.show.construct_button
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
+	$VBoxContainer/Terraform.visible = game.science_unlocked.TF
 	$VBoxContainer/Mine.visible = game.show.mining
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
@@ -79,3 +80,21 @@ func _on_Vehicles_mouse_entered():
 func _on_mouse_exited():
 	on_button = false
 	game.hide_tooltip()
+
+
+func _on_Terraform_pressed():
+	if game.c_p_g in [2, game.second_ship_hints.spawned_at_p, game.third_ship_hints.ship_spawned_at_p, game.third_ship_hints.part_spawned_at_p]:
+		game.popup(tr("NO_TF"), 1.5)
+	else:
+		game.terraform_panel.pressure = game.planet_data[game.c_p].pressure
+		game.terraform_panel.tile_num = len(game.tile_data)
+		var lake_num:int = 0
+		for tile in game.tile_data:
+			if tile:
+				if tile.has("lake"):
+					lake_num += 1
+		game.terraform_panel.lake_num = lake_num
+		game.toggle_panel(game.terraform_panel)
+
+func _on_Terraform_mouse_entered():
+	game.show_tooltip(tr("TERRAFORM"))

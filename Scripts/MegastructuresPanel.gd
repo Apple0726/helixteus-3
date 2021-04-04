@@ -42,6 +42,3 @@ func get_item(_name, _type, _dir):
 	elif _name == "M_MME":
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
 	game.view.obj.construct(_name)
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

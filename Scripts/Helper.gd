@@ -126,36 +126,36 @@ func set_visibility(node):
 		other_node.visible = false
 	node.visible = true
 
-func get_item_name (_name:String):
+func get_item_name (_name:String, s:String = ""):
 	if _name.substr(0, 7) == "speedup":
 		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
 	match _name:
 		"ME":
-			return tr("MINERAL_EXTRACTOR")
+			return tr("MINERAL_EXTRACTOR%s" % s)
 		"PP":
-			return tr("POWER_PLANT")
+			return tr("POWER_PLANT%s" % s)
 		"RL":
-			return tr("RESEARCH_LAB")
+			return tr("RESEARCH_LAB%s" % s)
 		"MM":
-			return tr("MINING_MACHINE")
+			return tr("MINING_MACHINE%s" % s)
 		"MS":
-			return tr("MINERAL_SILO")
+			return tr("MINERAL_SILO%s" % s)
 		"RCC":
-			return tr("ROVER_CONSTR_CENTER")
+			return tr("ROVER_CONSTR_CENTER%s" % s)
 		"SC":
-			return tr("STONE_CRUSHER")
+			return tr("STONE_CRUSHER%s" % s)
 		"GF":
-			return tr("GLASS_FACTORY")
+			return tr("GLASS_FACTORY%s" % s)
 		"SE":
-			return tr("STEAM_ENGINE")
+			return tr("STEAM_ENGINE%s" % s)
 		"GH":
-			return tr("GREENHOUSE")
+			return tr("GREENHOUSE%s" % s)
 		"SP":
 			return tr("SOLAR_PANELS")
 		"AE":
-			return tr("ATMOSPHERE_EXTRACTOR")
+			return tr("ATMOSPHERE_EXTRACTOR%s" % s)
 		"AMN":
 			return tr("AMN_NAME")
 		"SPR":
@@ -754,48 +754,66 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			add_item_to_coll(rsrc_collected, "energy", stored)
 			tile.bldg.stored = 0
 		"AE":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value):
-				tile.bldg.collect_date = curr_time
-			#game.energy += stored
-			for el in p_i.atmosphere:
-				if el == "NH3":
-					add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
-				elif el == "CO2":
-					add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
-				elif el == "CH4":
-					add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
-				elif el == "H2O":
-					add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
-					add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
-				else:
-					add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
-			tile.bldg.stored = 0
+			collect_AE(p_i, tile, rsrc_collected, curr_time)
 		"RL":
 			#game.SP += tile.bldg.stored
 			add_item_to_coll(rsrc_collected, "SP", tile.bldg.stored)
 			tile.bldg.stored = 0
 		"MM":
-			if tile.bldg.stored >= 1 and not tile.has("depth"):
-				tile.depth = 0
-			if tile.bldg.stored >= 3:
-				var contents:Dictionary = mass_generate_rock(tile, p_i, tile.bldg.stored)
-				tile.depth += tile.bldg.stored
-				tile.erase("contents")
-				for content in contents:
-					add_item_to_coll(rsrc_collected, content, contents[content])
-			else:
-				for i in tile.bldg.stored:
-					var contents:Dictionary = generate_rock(tile, p_i)
-					get_rsrc_from_rock(contents, tile, p_i, true)
-					for content in contents:
-						add_item_to_coll(rsrc_collected, content, contents[content])
-			if tile.bldg.stored == tile.bldg.path_2_value:
-				tile.bldg.collect_date = curr_time
-			tile.bldg.stored = 0
+			collect_MM(p_i, tile, rsrc_collected, curr_time)
+
+func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+	if dict.bldg.stored >= 1 and not dict.has("depth"):
+		dict.depth = 0
+	if dict.bldg.stored >= 3:
+		var contents:Dictionary = mass_generate_rock(dict, p_i, dict.bldg.stored)
+		dict.depth += dict.bldg.stored
+		dict.erase("contents")
+		for content in contents:
+			if n > 1:
+				if contents[content] is Dictionary:
+					for el in contents[content]:
+						contents[content][el] *= n
+				else:
+					contents[content] *= n
+			add_item_to_coll(rsrc_collected, content, contents[content])
+	else:
+		for i in dict.bldg.stored:
+			var contents:Dictionary = generate_rock(dict, p_i)
+			get_rsrc_from_rock(contents, dict, p_i, true)
+			for content in contents:
+				if n > 1:
+					if contents[content] is Dictionary:
+						for el in contents[content]:
+							contents[content][el] *= n
+					else:
+						contents[content] *= n
+				add_item_to_coll(rsrc_collected, content, contents[content])
+	if dict.bldg.stored == dict.bldg.path_2_value:
+		dict.bldg.collect_date = curr_time
+	dict.bldg.stored = 0
+	
+func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+	var stored = dict.bldg.stored
+	if stored == round(dict.bldg.path_2_value):
+		dict.bldg.collect_date = curr_time
+	stored *= n
+	for el in p_i.atmosphere:
+		if el == "NH3":
+			add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
+			add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
+		elif el == "CO2":
+			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
+			add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
+		elif el == "CH4":
+			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
+			add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
+		elif el == "H2O":
+			add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
+			add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
+		else:
+			add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
+	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
 	if num is float:
@@ -865,17 +883,24 @@ func get_reaction_info(tile):
 func update_MS_rsrc(dict:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
 	var prod
-	if dict.MS == "M_DS":
-		prod = 1000.0 / Helper.get_DS_output(dict)
-	elif dict.MS == "M_MME":
-		prod = 1000.0 / Helper.get_MME_output(dict)
-	var stored = dict.stored
-	var c_d = dict.collect_date
+	if dict.has("MS"):
+		if dict.MS == "M_DS":
+			prod = 1000.0 / Helper.get_DS_output(dict)
+		elif dict.MS == "M_MME":
+			prod = 1000.0 / Helper.get_MME_output(dict)
+	else:
+		if dict.bldg.name == "AE":
+			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value)
+		else:
+			prod = 1000 / dict.bldg.path_1_value
+		prod /= dict.tile_num
+	var stored = dict.bldg.stored
+	var c_d = dict.bldg.collect_date
 	var c_t = curr_time
 	if c_t - c_d > prod:
 		var rsrc_num = floor((c_t - c_d) / prod)
-		dict.stored += rsrc_num
-		dict.collect_date += prod * rsrc_num
+		dict.bldg.stored += rsrc_num
+		dict.bldg.collect_date += prod * rsrc_num
 	return min((c_t - c_d) / prod, 1)
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
@@ -897,3 +922,47 @@ func get_conquer_all_data():
 				HX_data.append(HX)
 	var energy_cost = round(14000 * game.planet_data[-1].distance)
 	return {"HX_data":HX_data, "energy_cost":energy_cost}
+
+func add_lv_boxes(obj:Dictionary, v:Vector2):
+	var hbox = HBoxContainer.new()
+	hbox.alignment = hbox.ALIGN_CENTER
+	hbox.theme = load("res://Resources/panel_theme.tres")
+	hbox["custom_constants/separation"] = -1
+	var path_1 = Label.new()
+	path_1.name = "Path1"
+	path_1.text = String(obj.bldg.path_1)
+	path_1.connect("mouse_entered", self, "on_path_enter", ["1", obj])
+	path_1.connect("mouse_exited", self, "on_path_exit")
+	path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+	hbox.add_child(path_1)
+	hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
+	path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
+	if obj.bldg.has("path_2"):
+		var path_2 = Label.new()
+		path_2.name = "Path2"
+		path_2.text = String(obj.bldg.path_2)
+		path_2.connect("mouse_entered", self, "on_path_enter", ["2", obj])
+		path_2.connect("mouse_exited", self, "on_path_exit")
+		path_2["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		path_2.mouse_filter = path_2.MOUSE_FILTER_PASS
+		hbox.add_child(path_2)
+	if obj.bldg.has("path_3"):
+		var path_3 = Label.new()
+		path_3.name = "Path3"
+		path_3.text = String(obj.bldg.path_3)
+		path_3.connect("mouse_entered", self, "on_path_enter", ["3", obj])
+		path_3.connect("mouse_exited", self, "on_path_exit")
+		path_3["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
+		hbox.add_child(path_3)
+	hbox.rect_size.x = 200
+	hbox.rect_position = v - Vector2(100, 90)
+	#hbox.visible = get_parent().scale.x >= 0.25
+	return hbox
+
+func on_path_enter(path:String, obj):
+	game.hide_adv_tooltip()
+	game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
+
+func on_path_exit():
+	game.hide_tooltip()

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/RCC.png-75b40928fbbf15d13ad846da88550622.stex"
+path="res://.import/TF.png-61bfc8fb7b5c8225a2c673309a7ddf8d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/RCC.png"
-dest_files=[ "res://.import/RCC.png-75b40928fbbf15d13ad846da88550622.stex" ]
+source_file="res://Graphics/Science/TF.png"
+dest_files=[ "res://.import/TF.png-61bfc8fb7b5c8225a2c673309a7ddf8d.stex" ]
 
 [params]
 

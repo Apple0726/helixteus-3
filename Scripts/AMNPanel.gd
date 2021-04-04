@@ -278,6 +278,3 @@ func _process(delta):
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

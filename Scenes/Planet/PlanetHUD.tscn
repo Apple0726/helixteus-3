@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Graphics/Buttons/ConstructBuildings.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/PlanetHUD.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Graphics/Buttons/StarSystemView.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Buttons/Mine.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Buttons/Vehicles.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Buttons/Terraform.png" type="Texture" id=7]
 
 [sub_resource type="InputEventAction" id=1]
 action = "L"
@@ -55,10 +56,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlaceSoil" type="TextureButton" parent="VBoxContainer"]
-margin_top = 240.0
+[node name="Terraform" type="TextureButton" parent="VBoxContainer"]
+margin_top = 216.0
 margin_right = 48.0
-margin_bottom = 288.0
+margin_bottom = 264.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 7 )
+expand = true
+stretch_mode = 5
+
+[node name="PlaceSoil" type="TextureButton" parent="VBoxContainer"]
+margin_top = 264.0
+margin_right = 48.0
+margin_bottom = 312.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 2 )
@@ -67,9 +78,9 @@ expand = true
 stretch_mode = 5
 
 [node name="Mine" type="TextureButton" parent="VBoxContainer"]
-margin_top = 288.0
+margin_top = 312.0
 margin_right = 48.0
-margin_bottom = 336.0
+margin_bottom = 360.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 4 )
@@ -81,9 +92,9 @@ __meta__ = {
 }
 
 [node name="Construct" type="TextureButton" parent="VBoxContainer"]
-margin_top = 336.0
+margin_top = 360.0
 margin_right = 48.0
-margin_bottom = 384.0
+margin_bottom = 408.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 6 )
@@ -95,9 +106,9 @@ __meta__ = {
 }
 
 [node name="Vehicles" type="TextureButton" parent="VBoxContainer"]
-margin_top = 384.0
+margin_top = 408.0
 margin_right = 48.0
-margin_bottom = 432.0
+margin_bottom = 456.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 8 )
@@ -106,9 +117,9 @@ expand = true
 stretch_mode = 5
 
 [node name="StarSystem" type="TextureButton" parent="VBoxContainer"]
-margin_top = 432.0
+margin_top = 456.0
 margin_right = 48.0
-margin_bottom = 480.0
+margin_bottom = 504.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 10 )
@@ -118,6 +129,9 @@ stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Terraform" to="." method="_on_Terraform_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/PlaceSoil" to="." method="_on_PlaceSoil_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/PlaceSoil" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/PlaceSoil" to="." method="_on_PlaceSoil_pressed"]

@@ -187,6 +187,7 @@ var science_unlocks = {
 						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":["SCT"]},
+						"TF":{"cost":e(5.6, 8), "parents":["MAE"]},
 						#Dyson sphere
 						"DS1":{"cost":e(1.2, 11), "parents":["MAE"]},
 						"DS2":{"cost":e(4.8, 12), "parents":["DS1"]},

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/RCC.png-75b40928fbbf15d13ad846da88550622.stex"
+path="res://.import/Terraform.png-b54a37932dd668efa124d2f9c13a220d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/RCC.png"
-dest_files=[ "res://.import/RCC.png-75b40928fbbf15d13ad846da88550622.stex" ]
+source_file="res://Graphics/Buttons/Terraform.png"
+dest_files=[ "res://.import/Terraform.png-b54a37932dd668efa124d2f9c13a220d.stex" ]
 
 [params]
 

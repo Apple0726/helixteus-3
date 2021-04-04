@@ -94,9 +94,6 @@ func _on_Label_mouse_entered(MU:String):
 func _on_Label_mouse_exited():
 	game.hide_tooltip()
 
-func _on_close_button_pressed():
-	game.toggle_panel(self)
-
 func _on_Upgrade_mouse_entered(MU:String):
 	set_upg_text(MU, 1) 
 
