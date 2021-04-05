@@ -5,6 +5,9 @@ onready var view = game.view
 onready var id = game.c_p
 onready var p_i = game.planet_data[id]
 
+#Used to prevent view from moving outside viewport
+var dimensions:float
+
 #For exploring a cave
 var rover_selected:int = -1
 #The building you selected in construct panel
@@ -42,6 +45,7 @@ func _ready():
 	bldgs.resize(wid * wid)
 	hboxes = []
 	hboxes.resize(wid * wid)
+	dimensions = wid * 200
 	$TileMap.tile_set = game.planet_TS
 	$Obstacles.tile_set = game.obstacles_TS
 	var lake_1_phase = "G"
@@ -366,7 +370,6 @@ func harvest_plant(tile, tile_id:int):
 		produce *= Helper.get_au_mult(tile)
 		if tile.has("bldg") and tile.bldg.name == "GH":
 			produce *= tile.bldg.path_2_value
-		#game.mets[plant] += produce
 		game.show[plant] = true
 		game.show.metals = true
 		Helper.add_item_to_coll(items_collected, plant, produce)

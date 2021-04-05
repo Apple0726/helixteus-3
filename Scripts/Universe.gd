@@ -2,7 +2,9 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 onready var view = self.get_parent()
-#onready var superclusters_id = game.universe_data[game.c_u]["superclusters"]
+
+var dimensions:float
+
 var superclusters_info = []
 var btns = []
 
@@ -23,6 +25,7 @@ func _ready():
 		supercluster_btn.rect_scale.x = radius
 		supercluster_btn.rect_scale.y = radius
 		supercluster.position = sc_i["pos"]
+		dimensions = max(dimensions, sc_i.pos.length())
 		btns.append(supercluster_btn)
 
 func on_supercluster_over (id:int):

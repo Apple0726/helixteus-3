@@ -2,6 +2,8 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 onready var view = self.get_parent()
+
+var dimensions:float
 var btns = []
 
 func _ready():
@@ -21,6 +23,7 @@ func _ready():
 		cluster_btn.rect_scale.x = radius
 		cluster_btn.rect_scale.y = radius
 		cluster.position = c_i["pos"]
+		dimensions = max(dimensions, c_i.pos.length())
 		btns.append(cluster_btn)
 
 func on_cluster_over (id:int):

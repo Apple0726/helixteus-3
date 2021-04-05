@@ -5,11 +5,15 @@ onready var stars_info = game.system_data[game.c_s]["stars"]
 onready var star_graphic = preload("res://Graphics/Stars/Star.png")
 onready var view = get_parent()
 
+#Used to prevent view from moving outside viewport
+var dimensions:float
+
 const PLANET_SCALE_DIV = 6400000.0 / 2.0
 const STAR_SCALE_DIV = 300.0/2.63
 var glows = []
 var star_time_bars = []
 var planet_time_bars = []
+var planet_plant_bars = []
 var star_rsrcs = []
 var planet_rsrcs = []
 var planet_hovered:int = -1
@@ -72,6 +76,7 @@ func refresh_planets():
 			else:
 				planet_glow.modulate = Color(1, 0, 0, 1)
 		var v:Vector2 = polar2cartesian(p_i.distance, p_i.angle)
+		dimensions = p_i.distance
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS = Sprite.new()
@@ -99,6 +104,12 @@ func refresh_planets():
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false)
 				"MM":
 					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false)
+			if p_i.has("plant") and p_i.plant.is_growing:
+				var time_bar = game.time_scene.instance()
+				time_bar.rect_position = Vector2(0, -80)
+				planet.add_child(time_bar)
+				time_bar.modulate = Color(105/255.0, 65/255.0, 40/255.0, 1)
+				planet_plant_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
 		planet.position = polar2cartesian(p_i.distance, p_i.angle)
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
@@ -135,7 +146,7 @@ func refresh_stars():
 			MS.position = Vector2(300, 300)
 			star.add_child(MS)
 			add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true)
-			if star_info.is_constructing:
+			if star_info.bldg.is_constructing:
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)
 				add_child(time_bar)
@@ -300,12 +311,34 @@ func on_planet_click (id:int, l_id:int):
 				game.update_item_cursor()
 				return
 		elif p_i.has("bldg"):
-			var rsrc_collected = {}
-			if p_i.bldg.name == "MM":
-				Helper.collect_MM(p_i, p_i, rsrc_collected, OS.get_system_time_msecs(), p_i.tile_num)
-			elif p_i.bldg.name == "AE":
-				Helper.collect_AE(p_i, p_i, rsrc_collected, OS.get_system_time_msecs(), p_i.tile_num)
-			game.show_collect_info(rsrc_collected)
+			if p_i.bldg.name == "GH":
+				if p_i.has("plant"):
+					if not p_i.plant.is_growing:
+						items_collected.clear()
+						var plant:String = Helper.get_plant_produce(p_i.plant.name)
+						var produce:float = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
+						produce *= p_i.bldg.path_2_value
+						game.show[plant] = true
+						Helper.add_item_to_coll(items_collected, plant, produce)
+						game.show_collect_info(items_collected)
+						p_i.erase("plant")
+					else:
+						game.greenhouse_panel.tile_num = p_i.tile_num
+						game.greenhouse_panel.p_i = p_i
+						game.greenhouse_panel.fertilizer = true
+						game.toggle_panel(game.greenhouse_panel)
+				else:
+					game.greenhouse_panel.tile_num = p_i.tile_num
+					game.greenhouse_panel.p_i = p_i
+					game.greenhouse_panel.fertilizer = false
+					game.toggle_panel(game.greenhouse_panel)
+			else:
+				items_collected.clear()
+				if p_i.bldg.name == "MM":
+					Helper.collect_MM(p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
+				elif p_i.bldg.name == "AE":
+					Helper.collect_AE(p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
+				game.show_collect_info(items_collected)
 		if Input.is_action_pressed("shift"):
 			game.c_p = l_id
 			game.c_p_g = id
@@ -376,7 +409,7 @@ func on_star_over (id:int):
 		Helper.add_label(stage)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
-		if not star.is_constructing:
+		if not star.bldg.is_constructing:
 			if star.MS == "M_DS" and star.MS_lv < 4 and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
@@ -401,15 +434,15 @@ func on_star_pressed (id:int):
 				game.energy += star.stored
 				star.stored = 0
 				game.HUD.refresh()
-		elif star.is_constructing:
+		elif star.bldg.is_constructing:
 			var orig_num:int = game.item_to_use.num
 			var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0
-			var time_remaining = star.construction_date + star.construction_length - curr_time
+			var time_remaining = star.bldg.construction_date + star.bldg.construction_length - curr_time
 			var num_needed = min(game.item_to_use.num, ceil((time_remaining) / float(speedup_time)))
-			star.construction_date -= speedup_time * num_needed
+			star.bldg.construction_date -= speedup_time * num_needed
 			var time_sped_up = min(speedup_time * num_needed, time_remaining)
-			if star.has("collect_date"):
-				star.collect_date -= time_sped_up
+			if star.bldg.has("collect_date"):
+				star.bldg.collect_date -= time_sped_up
 			game.item_to_use.num -= num_needed
 			game.remove_items(game.item_to_use.name, num_needed)
 			game.update_item_cursor()
@@ -457,8 +490,21 @@ func _process(_delta):
 				game.xp += p_i.bldg.XP
 				game.HUD.refresh()
 			time_bar_obj.parent.remove_child(time_bar)
+			time_bar.queue_free()
 			planet_time_bars.erase(time_bar_obj)
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+	for time_bar_obj in planet_plant_bars:
+		var time_bar = time_bar_obj.node
+		var p_i = time_bar_obj.p_i
+		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
+		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
+		time_bar.get_node("Bar").value = progress
+		if progress > 1:
+			if p_i.plant.is_growing:
+				p_i.plant.is_growing = false
+			time_bar_obj.parent.remove_child(time_bar)
+			time_bar.queue_free()
+			planet_plant_bars.erase(time_bar_obj)
 	for rsrc_obj in star_rsrcs:
 		var star = stars_info[rsrc_obj.id]
 		if star.bldg.is_constructing:

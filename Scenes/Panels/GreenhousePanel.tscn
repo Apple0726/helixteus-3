@@ -1,0 +1,84 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/GreenhousePanel.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=5]
+
+[node name="GreenhousePanel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -136.0
+margin_right = 320.0
+margin_bottom = 120.0
+theme = ExtResource( 4 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -320.0
+margin_top = 16.0
+margin_right = 320.0
+margin_bottom = 40.0
+text = "Select"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CostLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -296.0
+margin_top = 212.0
+margin_right = 8.0
+margin_bottom = 236.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Plant" type="Button" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -144.0
+margin_top = -40.0
+text = "PLANT_V"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = 44.0
+margin_top = 100.0
+margin_right = 596.0
+margin_bottom = 168.0
+scroll_vertical_enabled = false
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
+margin_right = 552.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = -2
+
+[node name="CloseButton" parent="." instance=ExtResource( 3 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+[connection signal="pressed" from="Plant" to="." method="_on_Plant_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

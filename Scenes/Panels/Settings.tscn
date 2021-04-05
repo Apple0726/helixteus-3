@@ -147,6 +147,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Fullscreen" type="CheckButton" parent="."]
+margin_left = 556.621
+margin_top = 108.119
+margin_right = 784.621
+margin_bottom = 148.119
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AutosaveLight" type="CheckButton" parent="."]
 margin_left = 558.876
 margin_top = 265.869
@@ -296,6 +306,7 @@ text = "HARD"
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
 [connection signal="value_changed" from="Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
+[connection signal="toggled" from="Fullscreen" to="." method="_on_Fullscreen_toggled"]
 [connection signal="toggled" from="AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="mouse_entered" from="AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
 [connection signal="mouse_exited" from="AutosellMinerals" to="." method="_on_mouse_exited"]

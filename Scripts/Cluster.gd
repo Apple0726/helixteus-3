@@ -2,6 +2,8 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 
+var dimensions:float
+
 const DIST_MULT = 200.0
 var obj_btns:Array = []
 var overlays:Array = []
@@ -27,6 +29,7 @@ func _ready():
 		if g_i.has("modulate"):
 			galaxy_btn.modulate = g_i.modulate
 		galaxy.position = g_i["pos"]
+		dimensions = max(dimensions, g_i.pos.length())
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays)

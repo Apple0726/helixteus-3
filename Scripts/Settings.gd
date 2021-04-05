@@ -1,17 +1,16 @@
-extends Panel
+extends "Panel.gd"
 
-onready var game = get_node("/root/Game")
 """
 audio sliders are set to each bus
 (you can find the buses by looking at the bottom of the screen and clicking Audio)
 """
-var tween
-var polygon = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
 var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
 func _ready():
+	set_polygon(rect_size)
 	tween = Tween.new()
 	add_child(tween)
+	$Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	if err == OK:
 		set_difficulty()
 		$Master.value = config.get_value("audio", "master", -42)
@@ -26,7 +25,7 @@ func _ready():
 		$AutosellMinerals.pressed = config.get_value("game", "autosell", false)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
-		#$Label3.text = "%s %s" % [autosave_interval, tr("S_SECOND")]
+		$Fullscreen.pressed = OS.window_fullscreen
 		$Autosave.value = autosave_interval
 		$FPS/FPS.value = max_fps
 		$CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
@@ -172,4 +171,5 @@ func _on_Hard_pressed():
 		config.save("user://settings.cfg")
 		set_difficulty()
 
-
+func _on_Fullscreen_toggled(button_pressed):
+	OS.window_fullscreen = button_pressed

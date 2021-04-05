@@ -46,6 +46,7 @@ var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
 var terraform_panel:Control
+var greenhouse_panel:Panel
 var AMN_panel:Control
 var SPR_panel:Control
 var inventory:Control
@@ -330,9 +331,9 @@ func _ready():
 		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game(false)
 		lv = 100
-		money = 10000000000
-		mats.soil = 50
-		mats.glass = 1000
+		money = 100000000000
+		mats.soil = 50000
+		mats.glass = 1000000
 		show.plant_button = true
 		show.mining = true
 		show.shop = true
@@ -350,9 +351,8 @@ func _ready():
 		science_unlocked.FTL = true
 		science_unlocked.TF = true
 		stone.O = 800000000
-		mats.silicon = 40000
+		mats.silicon = 400000
 		mats.cellulose = 1000
-		mats.soil = 1000
 		mats.coal = 100
 		mets.copper = 250000
 		mets.iron = 1600000
@@ -363,11 +363,13 @@ func _ready():
 		show.stone = true
 		show.glass = true
 		show.materials = true
+		show.metals = true
 		show.atoms = true
 		atoms.C = 100
 		atoms.Xe = 100
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
-		items[3] = {"name":"lead_seeds", "num":10}
+		items[3] = {"name":"lead_seeds", "num":500}
+		items[4] = {"name":"fertilizer", "num":500}
 		pickaxe = {"name":"stick", "speed":3400, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":20000.0, "atk":50.0, "def":5000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
@@ -824,6 +826,7 @@ func add_panels():
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
+	greenhouse_panel = load("res://Scenes/Panels/GreenhousePanel.tscn").instance()
 	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
@@ -840,6 +843,9 @@ func add_panels():
 	
 	terraform_panel.visible = false
 	$Panels/Control.add_child(terraform_panel)
+	
+	greenhouse_panel.visible = false
+	$Panels/Control.add_child(greenhouse_panel)
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
@@ -2849,6 +2855,7 @@ onready var fps_text = $UI/FPS
 func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
+		$UI.move_child($UI/Settings, $UI.get_child_count())
 
 var mouse_pos = Vector2.ZERO
 onready var item_cursor = $UI/ItemCursor
@@ -2892,6 +2899,7 @@ func _input(event):
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
 		OS.window_fullscreen = not OS.window_fullscreen
+		settings.get_node("Fullscreen").pressed = OS.window_fullscreen
 
 	#Press Z to view galaxy the system is in, etc. or go back
 	if OS.get_latin_keyboard_variant() == "QWERTY" and Input.is_action_just_released("Z") or OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_released("W"):

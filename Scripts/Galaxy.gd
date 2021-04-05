@@ -2,6 +2,8 @@ extends Node2D
 
 onready var game = self.get_parent().get_parent()
 
+var dimensions:float
+
 var stars
 
 const DIST_MULT = 200.0
@@ -27,6 +29,7 @@ func _ready():
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]
+		dimensions = max(dimensions, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 	if game.galaxy_data[game.c_g].has("wormholes"):
 		for wh_data in game.galaxy_data[game.c_g].wormholes:

@@ -10,6 +10,9 @@ var drawing_shape = false#For annotation
 var annotate_icon:Sprite
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
+var limit_to_viewport
+
+var rect:Sprite
 
 #Dragging variables
 var dragged = false
@@ -57,10 +60,16 @@ func _ready():
 	refresh()
 	annotate_icon = Sprite.new()
 	add_child(annotate_icon)
+	rect = Sprite.new()
+	rect.texture = load("res://Graphics/Tiles/Highlight.jpg")
+	rect.visible = false
+	add_child(rect)
 
 func _process(_delta):
 	if not Input.is_action_pressed("left_click"):
 		dragged = false
+	if not limit_to_viewport:
+		return
 	if game.ships_travel_view == game.c_v:
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos
@@ -98,6 +107,30 @@ func _process(_delta):
 		annotate_icon.rotation += 0.03
 	if drawing_shape:
 		update()
+	if obj and obj.dimensions:
+		var margin = obj.dimensions * scale.x
+		var right_margin = global_position.x + margin
+		var bottom_margin = global_position.y + margin
+		if game.c_v == "planet":
+			if global_position.x > 1180:
+				global_position.x = 1180
+			elif right_margin < 100:
+				global_position.x = 100 - margin
+			if global_position.y > 620:
+				global_position.y = 620
+			elif bottom_margin < 100:
+				global_position.y = 100 - margin
+		else:
+			var left_margin = global_position.x - margin
+			var top_margin = global_position.y - margin
+			if left_margin > 1180:
+				global_position.x = 1180 + margin
+			elif right_margin < 100:
+				global_position.x = 100 - margin
+			if top_margin > 620:
+				global_position.y = 620 + margin
+			elif bottom_margin < 100:
+				global_position.y = 100 - margin
 
 func _draw():
 	if game.annotator:
@@ -224,6 +257,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale = Vector2(sc, sc)
 	position *= sc
 	refresh()
+	limit_to_viewport = game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 
 func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
@@ -383,6 +417,8 @@ func _input(event):
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
+	if limit_to_viewport and obj and obj.dimensions and scale.x < 250 / obj.dimensions:
+		return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
 	var delta_y = (center.y - global_position.y) * (zoom_change - 1)
