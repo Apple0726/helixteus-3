@@ -4,7 +4,7 @@ var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE"]
 var storage_bldgs:Array = ["MS"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
 var support_bldgs:Array = ["GH"]
-var vehicles_bldgs:Array = ["RCC"]
+var vehicles_bldgs:Array = ["RCC", "SY"]
 
 func _ready():
 	type = PanelType.CONSTRUCT
@@ -70,6 +70,8 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.science_unlocked.ATM
 		if bldg.item_name == "SPR":
 			bldg.visible = game.science_unlocked.SAP
+		if bldg.item_name == "SY":
+			bldg.visible = game.science_unlocked.FG
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = game.science_unlocked.EGH
 	$Tabs/Vehicles.visible = game.show.vehicles_button

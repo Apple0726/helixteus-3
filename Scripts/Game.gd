@@ -47,6 +47,7 @@ var production_panel:Control
 var send_ships_panel:Control
 var terraform_panel:Control
 var greenhouse_panel:Panel
+var shipyard_panel:Panel
 var AMN_panel:Control
 var SPR_panel:Control
 var inventory:Control
@@ -146,6 +147,7 @@ var cave_data:Array
 
 #Vehicle data
 var rover_data:Array
+var fighter_data:Array
 var ship_data:Array
 var second_ship_hints:Dictionary
 var third_ship_hints:Dictionary
@@ -340,7 +342,7 @@ func _ready():
 		show.vehicles_button = true
 		show.minerals = true
 		energy = 2000000000
-		SP = 200000000
+		SP = 2000000000000
 		science_unlocked.RC = true
 		science_unlocked.CD = true
 		science_unlocked.SCT = true
@@ -460,6 +462,7 @@ func load_game():
 		STM_lv = save_game.get_64()
 		rover_id = save_game.get_64()
 		rover_data = save_game.get_var()
+		fighter_data = save_game.get_var()
 		ship_data = save_game.get_var()
 		second_ship_hints = save_game.get_var()
 		third_ship_hints = save_game.get_var()
@@ -701,6 +704,7 @@ func new_game(tut:bool):
 
 	#Vehicle data
 	rover_data = []
+	fighter_data = []
 	ship_data = []
 	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
 	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
@@ -827,6 +831,7 @@ func add_panels():
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
 	greenhouse_panel = load("res://Scenes/Panels/GreenhousePanel.tscn").instance()
+	shipyard_panel = load("res://Scenes/Panels/ShipyardPanel.tscn").instance()
 	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
@@ -846,6 +851,9 @@ func add_panels():
 	
 	greenhouse_panel.visible = false
 	$Panels/Control.add_child(greenhouse_panel)
+	
+	shipyard_panel.visible = false
+	$Panels/Control.add_child(shipyard_panel)
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
@@ -977,6 +985,8 @@ func on_fade_complete(panel:Control):
 		view.move_view = true
 
 func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
+	if active_panel != upgrade_panel:
+		fade_out_panel(active_panel)
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
@@ -1027,6 +1037,13 @@ func set_to_ship_coords():
 	c_g = ships_dest_coords.g
 	c_s_g = ships_dest_g_coords.s
 	c_s = ships_dest_coords.s
+
+func set_to_fighter_coords(i:int):
+	c_sc = fighter_data[i].c_sc
+	c_c_g = fighter_data[i].c_c_g
+	c_c = fighter_data[i].c_c
+	c_g_g = fighter_data[i].c_g_g
+	c_g = fighter_data[i].c_g
 
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
@@ -2374,18 +2391,13 @@ func generate_tiles(id:int):
 			tile_data[110].bldg.IR_mult = 1
 			tile_data[111] = {}
 			tile_data[111].bldg = {}
-			tile_data[111].bldg.name = "MM"
+			tile_data[111].bldg.name = "SY"
 			tile_data[111].bldg.is_constructing = false
 			tile_data[111].bldg.construction_date = curr_time
 			tile_data[111].bldg.construction_length = 10
 			tile_data[111].bldg.XP = 0
 			tile_data[111].bldg.path_1 = 1
-			tile_data[111].bldg.path_1_value = Data.path_1.MM.value
-			tile_data[111].bldg.path_2 = 1
-			tile_data[111].bldg.path_2_value = Data.path_2.MM.value
-			tile_data[111].bldg.collect_date = curr_time
-			tile_data[111].bldg.stored = 0
-			tile_data[111].depth = 0
+			tile_data[111].bldg.path_1_value = Data.path_1.SY.value
 			tile_data[111].bldg.IR_mult = 1
 		else:
 			tile_data[112] = {}
@@ -3098,6 +3110,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_64(STM_lv)
 	save_game.store_64(rover_id)
 	save_game.store_var(rover_data)
+	save_game.store_var(fighter_data)
 	save_game.store_var(ship_data)
 	save_game.store_var(second_ship_hints)
 	save_game.store_var(third_ship_hints)

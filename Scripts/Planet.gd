@@ -187,7 +187,7 @@ func show_tooltip(tile):
 			"MS":
 				tooltip = (Data.path_1[bldg].desc) % [round(path_1_value)]
 				adv = true
-			"RCC":
+			"RCC", "SY":
 				tooltip = (Data.path_1[bldg].desc) % [tile.bldg.path_1_value]
 			"GH":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
@@ -420,6 +420,8 @@ func click_tile(tile, tile_id:int):
 			match bldg:
 				"RCC":
 					game.toggle_panel(game.RC_panel)
+				"SY":
+					game.toggle_panel(game.shipyard_panel)
 				"SC":
 					game.toggle_panel(game.SC_panel)
 					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value

@@ -160,6 +160,8 @@ func get_item_name (_name:String, s:String = ""):
 			return tr("AMN_NAME")
 		"SPR":
 			return tr("SPR_NAME")
+		"SY":
+			return tr("SY_NAME")
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
