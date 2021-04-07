@@ -25,6 +25,8 @@ func _on_Construct_pressed():
 		game.popup(tr("FIGHTERS_CONSTRUCTED"), 3)
 		game.fighter_data.append({"c_sc":game.c_sc, "c_c_g":game.c_c_g, "c_c":game.c_c, "c_g_g":game.c_g_g, "c_g":game.c_g, "c_s_g":game.c_s_g, "c_p":game.c_p, "strength":strength, "number":$SpinBox.value})
 		_on_close_button_pressed()
+	else:
+		game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 
 func _on_Strength_mouse_entered():
 	game.show_tooltip(tr("FLEET_STRENGTH_INFO"))

@@ -65,7 +65,7 @@ func _ready():
 	rect.visible = false
 	add_child(rect)
 
-func _process(_delta):
+func _process(delta):
 	if not Input.is_action_pressed("left_click"):
 		dragged = false
 	if not limit_to_viewport:
@@ -102,9 +102,9 @@ func _process(_delta):
 					annotate_icons.erase(icon_data)
 					shapes_data.remove(icon_data.index)
 	if Input.is_action_pressed("1"):
-		annotate_icon.rotation -= 0.03
+		annotate_icon.rotation -= 0.03 * delta * 60
 	if Input.is_action_pressed("3"):
-		annotate_icon.rotation += 0.03
+		annotate_icon.rotation += 0.03 * delta * 60
 	if drawing_shape:
 		update()
 	if obj and obj.dimensions:
@@ -417,7 +417,7 @@ func _input(event):
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
-	if limit_to_viewport and obj and obj.dimensions and scale.x < 250 / obj.dimensions:
+	if limit_to_viewport and obj and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1:
 		return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)

@@ -61,6 +61,8 @@ func refresh_planets():
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
 		planet_glow.rect_scale *= p_i["distance"] / 1200.0
+		if game.system_data[game.c_s].conquered:
+			p_i.conquered = true
 		if p_i.conquered:
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)

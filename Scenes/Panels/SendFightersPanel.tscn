@@ -1,0 +1,233 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/SendFightersPanel.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/Slider.gd" type="Script" id=6]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=7]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=9]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
+
+[node name="SendFightersPanel" type="Control"]
+margin_right = 1067.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 3 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 8 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "SEND_FIGHTERS"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 60.0
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="RichTextLabel" parent="."]
+margin_left = 52.0
+margin_top = 96.0
+margin_right = 1016.0
+margin_bottom = 308.0
+custom_constants/line_separation = 8
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Send" type="Button" parent="."]
+margin_left = 892.0
+margin_top = 560.0
+margin_right = 1064.0
+margin_bottom = 600.0
+text = "SEND"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="Control"]
+margin_left = 44.0
+margin_top = 352.0
+margin_right = 329.0
+margin_bottom = 380.0
+pressed = true
+text = "LEAST_DIFFICULT_FIRST"
+
+[node name="CheckBox2" type="CheckBox" parent="Control"]
+margin_left = 44.0
+margin_top = 400.0
+margin_right = 325.0
+margin_bottom = 428.0
+text = "MOST_DIFFICULT_FIRST"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Control"]
+margin_left = 452.0
+margin_top = 372.0
+margin_right = 596.0
+margin_bottom = 396.0
+text = "LESS_ENERGY"
+align = 2
+
+[node name="EnergyCost" type="Label" parent="Control"]
+margin_left = 608.0
+margin_top = 532.0
+margin_right = 752.0
+margin_bottom = 556.0
+text = "1111"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label5" type="Label" parent="Control"]
+margin_left = 192.0
+margin_top = 532.0
+margin_right = 512.0
+margin_bottom = 556.0
+text = "TOTAL_ENERGY_COST"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="Control"]
+margin_left = 876.0
+margin_top = 372.0
+margin_right = 1040.0
+margin_bottom = 396.0
+text = "FASTER_TRAVEL"
+
+[node name="HSlider" type="HSlider" parent="Control"]
+margin_left = 616.0
+margin_top = 376.0
+margin_right = 856.0
+margin_bottom = 392.0
+value = 50.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+margin_left = 544.0
+margin_top = 524.0
+margin_right = 612.0
+margin_bottom = 560.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control2" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control2"]
+margin_left = 96.0
+margin_top = 196.0
+margin_right = 576.0
+margin_bottom = 220.0
+color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureProgress" type="TextureProgress" parent="Control2"]
+modulate = Color( 0.396078, 0.396078, 0.396078, 1 )
+margin_left = 96.0
+margin_top = 196.0
+margin_right = 576.0
+margin_bottom = 220.0
+step = 0.0
+value = 50.0
+texture_progress = ExtResource( 9 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Control2"]
+margin_left = 248.0
+margin_top = 232.0
+margin_right = 284.0
+margin_bottom = 272.0
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 6
+
+[node name="TimeLeft" type="Label" parent="Control2"]
+margin_left = 304.0
+margin_top = 240.0
+margin_right = 468.0
+margin_bottom = 264.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeLeft2" type="Label" parent="Control2"]
+margin_left = 96.0
+margin_top = 156.0
+margin_right = 576.0
+margin_bottom = 180.0
+text = "TIME_TO_NEXT_CONQUER"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
+[connection signal="pressed" from="Control/CheckBox" to="." method="_on_CheckBox_pressed"]
+[connection signal="pressed" from="Control/CheckBox2" to="." method="_on_CheckBox2_pressed"]
+[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]

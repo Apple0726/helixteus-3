@@ -6,7 +6,6 @@ const SYS_NUM:int = 400
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
-var send_ships_panel_scene = preload("res://Scenes/Panels/SendShipsPanel.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
 var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
@@ -45,6 +44,7 @@ var MU_panel:Control
 var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
+var send_fighters_panel:Control
 var terraform_panel:Control
 var greenhouse_panel:Panel
 var shipyard_panel:Panel
@@ -341,7 +341,7 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = 2000000000
+		energy = 2000000000000
 		SP = 2000000000000
 		science_unlocked.RC = true
 		science_unlocked.CD = true
@@ -352,6 +352,7 @@ func _ready():
 		science_unlocked.MAE = true
 		science_unlocked.FTL = true
 		science_unlocked.TF = true
+		science_unlocked.FG = true
 		stone.O = 800000000
 		mats.silicon = 400000
 		mats.cellulose = 1000
@@ -829,6 +830,7 @@ func add_panels():
 	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
+	send_fighters_panel = load("res://Scenes/Panels/SendFightersPanel.tscn").instance()
 	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
 	greenhouse_panel = load("res://Scenes/Panels/GreenhousePanel.tscn").instance()
 	shipyard_panel = load("res://Scenes/Panels/ShipyardPanel.tscn").instance()
@@ -845,6 +847,9 @@ func add_panels():
 	
 	send_ships_panel.visible = false
 	$Panels/Control.add_child(send_ships_panel)
+	
+	send_fighters_panel.visible = false
+	$Panels/Control.add_child(send_fighters_panel)
 	
 	terraform_panel.visible = false
 	$Panels/Control.add_child(terraform_panel)
@@ -1262,11 +1267,12 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG
 
 func add_overlay():
 	overlay = overlay_scene.instance()
 	overlay.visible = false
-	overlay.rect_position = Vector2(640, 720)
+	#overlay.rect_position = Vector2(640, 720)
 	$UI.add_child(overlay)
 
 func remove_overlay():
@@ -2041,7 +2047,7 @@ func generate_planets(id:int):
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
-		p_i["conquered"] = false
+		p_i["conquered"] = system_data[id].conquered
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets

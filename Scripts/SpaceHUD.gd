@@ -38,3 +38,7 @@ func _on_Annotate_pressed():
 
 func _on_Annotate_mouse_entered():
 	game.show_tooltip(tr("ANNOTATE") + " (N)")
+
+
+func _on_SendFighters_pressed():
+	game.toggle_panel(game.send_fighters_panel)
