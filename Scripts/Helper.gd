@@ -156,12 +156,8 @@ func get_item_name (_name:String, s:String = ""):
 			return tr("SOLAR_PANELS")
 		"AE":
 			return tr("ATMOSPHERE_EXTRACTOR%s" % s)
-		"AMN":
-			return tr("AMN_NAME")
-		"SPR":
-			return tr("SPR_NAME")
-		"SY":
-			return tr("SY_NAME")
+		"AMN", "SPR", "SY", "PCC":
+			return tr("%s_NAME" % _name)
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -930,15 +926,16 @@ func add_lv_boxes(obj:Dictionary, v:Vector2):
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = load("res://Resources/panel_theme.tres")
 	hbox["custom_constants/separation"] = -1
-	var path_1 = Label.new()
-	path_1.name = "Path1"
-	path_1.text = String(obj.bldg.path_1)
-	path_1.connect("mouse_entered", self, "on_path_enter", ["1", obj])
-	path_1.connect("mouse_exited", self, "on_path_exit")
-	path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
-	hbox.add_child(path_1)
-	hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
-	path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
+	if obj.bldg.has("path_1"):
+		var path_1 = Label.new()
+		path_1.name = "Path1"
+		path_1.text = String(obj.bldg.path_1)
+		path_1.connect("mouse_entered", self, "on_path_enter", ["1", obj])
+		path_1.connect("mouse_exited", self, "on_path_exit")
+		path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		hbox.add_child(path_1)
+		hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
+		path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
 	if obj.bldg.has("path_2"):
 		var path_2 = Label.new()
 		path_2.name = "Path2"

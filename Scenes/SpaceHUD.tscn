@@ -151,6 +151,20 @@ text = "SEND_FIGHTERS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="SendProbes" type="Button" parent="."]
+margin_left = 168.0
+margin_top = 688.0
+margin_right = 392.0
+margin_bottom = 724.0
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
+text = "SEND_PROBES"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]
@@ -167,3 +181,4 @@ __meta__ = {
 [connection signal="mouse_exited" from="ConquerAll" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ConquerAll" to="." method="_on_ConquerAll_pressed"]
 [connection signal="pressed" from="SendFighters" to="." method="_on_SendFighters_pressed"]
+[connection signal="pressed" from="SendProbes" to="." method="_on_SendProbes_pressed"]

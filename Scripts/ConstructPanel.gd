@@ -4,7 +4,7 @@ var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE"]
 var storage_bldgs:Array = ["MS"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
 var support_bldgs:Array = ["GH"]
-var vehicles_bldgs:Array = ["RCC", "SY"]
+var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
 
 func _ready():
 	type = PanelType.CONSTRUCT
@@ -29,13 +29,14 @@ func _on_btn_pressed(btn_str:String):
 		item.get_node("SmallButton").text = tr("CONSTRUCT")
 		item.item_name = bldg
 		item.item_dir = "Buildings"
-		var txt
+		var txt:String = ""
 		if bldg == "SP":
 			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
 		elif bldg == "AE":
 			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
 		else:
-			txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg), 3)]
+			if Data.path_1.has(bldg):
+				txt = (Data.path_1[bldg].desc + "\n") % [game.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg), 3)]
 		if Data.path_2.has(bldg):
 			var txt2:String
 			if Data.path_2[bldg].is_value_integer:
@@ -72,6 +73,8 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.science_unlocked.SAP
 		if bldg.item_name == "SY":
 			bldg.visible = game.science_unlocked.FG
+		if bldg.item_name == "PCC":
+			bldg.visible = game.lv >= 50
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = game.science_unlocked.EGH
 	$Tabs/Vehicles.visible = game.show.vehicles_button

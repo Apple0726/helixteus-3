@@ -3,11 +3,13 @@ extends Node2D
 onready var game = self.get_parent().get_parent()
 onready var view = self.get_parent()
 
-var dimensions:float
+var dimensions:float = 100
 var btns = []
 
 func _ready():
 	for c_i in game.cluster_data:
+		if not c_i.visible:
+			continue
 		var cluster_btn = TextureButton.new()
 		var cluster = Sprite.new()
 		var cluster_texture = load("res://Graphics/Clusters/" + String(c_i["type"]) + ".png")

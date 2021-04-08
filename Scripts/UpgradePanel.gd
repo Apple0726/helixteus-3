@@ -36,7 +36,11 @@ func _ready():
 	path1.text = tr("PATH") + " 1"
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
-	_on_Path1_pressed()
+	if game.tile_data[ids[0]].bldg.has("path_1"):
+		_on_Path1_pressed()
+	else:
+		game.popup(tr("NO_UPGRADE"), 1.5)
+		game.remove_upgrade_panel()
 
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))

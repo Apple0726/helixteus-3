@@ -45,9 +45,11 @@ var SC_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
 var send_fighters_panel:Control
+var send_probes_panel:Control
 var terraform_panel:Control
 var greenhouse_panel:Panel
 var shipyard_panel:Panel
+var PC_panel:Panel
 var AMN_panel:Control
 var SPR_panel:Control
 var inventory:Control
@@ -148,6 +150,7 @@ var cave_data:Array
 #Vehicle data
 var rover_data:Array
 var fighter_data:Array
+var probe_data:Array
 var ship_data:Array
 var second_ship_hints:Dictionary
 var third_ship_hints:Dictionary
@@ -333,9 +336,10 @@ func _ready():
 		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game(false)
 		lv = 100
-		money = 100000000000
+		money = 1000000000000
 		mats.soil = 50000
 		mats.glass = 1000000
+		mets.nanocrystal = 10000000
 		show.plant_button = true
 		show.mining = true
 		show.shop = true
@@ -369,7 +373,7 @@ func _ready():
 		show.metals = true
 		show.atoms = true
 		atoms.C = 100
-		atoms.Xe = 100
+		atoms.Xe = 10000
 		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
 		items[3] = {"name":"lead_seeds", "num":500}
 		items[4] = {"name":"fertilizer", "num":500}
@@ -464,6 +468,7 @@ func load_game():
 		rover_id = save_game.get_64()
 		rover_data = save_game.get_var()
 		fighter_data = save_game.get_var()
+		probe_data = save_game.get_var()
 		ship_data = save_game.get_var()
 		second_ship_hints = save_game.get_var()
 		third_ship_hints = save_game.get_var()
@@ -696,7 +701,7 @@ func new_game(tut:bool):
 	#Stores information of all objects discovered
 	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	supercluster_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
@@ -706,6 +711,7 @@ func new_game(tut:bool):
 	#Vehicle data
 	rover_data = []
 	fighter_data = []
+	probe_data = []
 	ship_data = []
 	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
 	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
@@ -831,9 +837,11 @@ func add_panels():
 	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	send_fighters_panel = load("res://Scenes/Panels/SendFightersPanel.tscn").instance()
+	send_probes_panel = load("res://Scenes/Panels/SendProbesPanel.tscn").instance()
 	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
 	greenhouse_panel = load("res://Scenes/Panels/GreenhousePanel.tscn").instance()
 	shipyard_panel = load("res://Scenes/Panels/ShipyardPanel.tscn").instance()
+	PC_panel = load("res://Scenes/Panels/PCPanel.tscn").instance()
 	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
@@ -851,6 +859,9 @@ func add_panels():
 	send_fighters_panel.visible = false
 	$Panels/Control.add_child(send_fighters_panel)
 	
+	send_probes_panel.visible = false
+	$Panels/Control.add_child(send_probes_panel)
+	
 	terraform_panel.visible = false
 	$Panels/Control.add_child(terraform_panel)
 	
@@ -859,6 +870,9 @@ func add_panels():
 	
 	shipyard_panel.visible = false
 	$Panels/Control.add_child(shipyard_panel)
+	
+	PC_panel.visible = false
+	$Panels/Control.add_child(PC_panel)
 	
 	construct_panel.visible = false
 	$Panels/Control.add_child(construct_panel)
@@ -1049,6 +1063,9 @@ func set_to_fighter_coords(i:int):
 	c_c = fighter_data[i].c_c
 	c_g_g = fighter_data[i].c_g_g
 	c_g = fighter_data[i].c_g
+
+func set_to_probe_coords(sc:int):
+	c_sc = sc
 
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
@@ -1268,6 +1285,7 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG
+		space_HUD.get_node("SendProbes").visible = c_v == "supercluster"
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -1523,6 +1541,7 @@ func generate_clusters(id:int):
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
+		c_i["visible"] = false
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
 		c_i["discovered"] = false
@@ -2365,6 +2384,14 @@ func generate_tiles(id:int):
 		tile_data[215].cave.id = 1
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
+			tile_data[107] = {}
+			tile_data[107].bldg = {}
+			tile_data[107].bldg.name = "PCC"
+			tile_data[107].bldg.is_constructing = false
+			tile_data[107].bldg.construction_date = curr_time
+			tile_data[107].bldg.construction_length = 10
+			tile_data[107].bldg.XP = 0
+			tile_data[107].bldg.IR_mult = 1
 			tile_data[108] = {}
 			tile_data[108].bldg = {}
 			tile_data[108].bldg.name = "RCC"
@@ -3117,6 +3144,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_64(rover_id)
 	save_game.store_var(rover_data)
 	save_game.store_var(fighter_data)
+	save_game.store_var(probe_data)
 	save_game.store_var(ship_data)
 	save_game.store_var(second_ship_hints)
 	save_game.store_var(third_ship_hints)

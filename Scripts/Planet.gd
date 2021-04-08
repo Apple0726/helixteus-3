@@ -162,7 +162,7 @@ func show_tooltip(tile):
 			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, Helper.get_au_mult(tile))
 		elif bldg == "AE":
 			path_1_value = Helper.get_AE_production(p_i.pressure, tile.bldg.path_1_value * mult)
-		else:
+		elif bldg != "PCC":
 			path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
 		var path_2_value
 		var path_3_value
@@ -304,8 +304,9 @@ func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs.time * 1000
 		tile.bldg.XP = round(constr_costs.money / 100.0)
-		tile.bldg.path_1 = 1
-		tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
+		if bldg_to_construct != "PCC":
+			tile.bldg.path_1 = 1
+			tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
 		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
@@ -422,6 +423,8 @@ func click_tile(tile, tile_id:int):
 					game.toggle_panel(game.RC_panel)
 				"SY":
 					game.toggle_panel(game.shipyard_panel)
+				"PCC":
+					game.toggle_panel(game.PC_panel)
 				"SC":
 					game.toggle_panel(game.SC_panel)
 					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
@@ -990,7 +993,8 @@ func _process(_delta):
 			length = tile.bldg.construction_length
 			progress = (curr_time - start_date) / float(length)
 			if Helper.update_bldg_constr(tile):
-				hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
+				if tile.bldg.has("path_1"):
+					hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
 				if tile.bldg.has("path_2"):
 					hboxes[id2].get_node("Path2").text = String(tile.bldg.path_2)
 				if tile.bldg.has("path_3"):

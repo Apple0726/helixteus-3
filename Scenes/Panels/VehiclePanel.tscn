@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/VehiclePanel.gd" type="Script" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Graphics/Ships/Fighter.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
@@ -75,7 +74,7 @@ custom_constants/separation = -2
 
 [node name="Rovers" type="Panel" parent="HBox/VBox1"]
 margin_right = 532.0
-margin_bottom = 540.0
+margin_bottom = 254.0
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 2 )
 
@@ -100,40 +99,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Satellites" type="Panel" parent="HBox/VBox1"]
-visible = false
-margin_top = 269.0
+[node name="Fighters" type="Label" parent="HBox/VBox1"]
+margin_top = 252.0
 margin_right = 532.0
-margin_bottom = 540.0
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 2 )
-
-[node name="Label" type="Label" parent="HBox/VBox1/Satellites"]
-anchor_right = 1.0
-margin_bottom = 36.0
-custom_styles/normal = SubResource( 2 )
-text = "SATELLITES"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBox2" type="VBoxContainer" parent="HBox"]
-margin_left = 530.0
-margin_right = 1063.0
-margin_bottom = 540.0
-size_flags_horizontal = 3
-
-[node name="Satellites" type="Label" parent="HBox/VBox2"]
-margin_right = 533.0
-margin_bottom = 36.0
+margin_bottom = 288.0
 custom_styles/normal = SubResource( 2 )
 text = "FG_SC"
 align = 1
 
-[node name="GridContainer" type="GridContainer" parent="HBox/VBox2"]
-margin_top = 40.0
-margin_right = 533.0
+[node name="GridContainer" type="GridContainer" parent="HBox/VBox1"]
+margin_top = 286.0
+margin_right = 532.0
 margin_bottom = 540.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -141,8 +117,36 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 5
 
-[node name="TextureButton" type="TextureButton" parent="HBox/VBox2/GridContainer"]
-texture_normal = ExtResource( 5 )
-expand = true
-stretch_mode = 5
+[node name="VBox2" type="VBoxContainer" parent="HBox"]
+margin_left = 530.0
+margin_right = 1063.0
+margin_bottom = 540.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Probes" type="Panel" parent="HBox/VBox2"]
+margin_right = 533.0
+margin_bottom = 540.0
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="HBox/VBox2/Probes"]
+anchor_right = 1.0
+margin_bottom = 36.0
+custom_styles/normal = SubResource( 2 )
+text = "PROBES"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="HBox/VBox2/Probes"]
+margin_left = 26.0
+margin_top = 56.0
+margin_right = 506.0
+margin_bottom = 540.0
+columns = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]

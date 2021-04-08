@@ -47,6 +47,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"AMN":{"money":580000, "energy":8200, "time":490.0},
 				"SPR":{"money":6500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
+				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
 }
 
 func e(n, e):

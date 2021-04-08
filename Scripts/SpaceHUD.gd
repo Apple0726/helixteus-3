@@ -42,3 +42,7 @@ func _on_Annotate_mouse_entered():
 
 func _on_SendFighters_pressed():
 	game.toggle_panel(game.send_fighters_panel)
+
+
+func _on_SendProbes_pressed():
+	game.toggle_panel(game.send_probes_panel)
