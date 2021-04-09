@@ -131,6 +131,8 @@ func get_item_name (_name:String, s:String = ""):
 		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
+	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
+		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
 	match _name:
 		"ME":
 			return tr("MINERAL_EXTRACTOR%s" % s)
@@ -579,7 +581,6 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.15)
 		ship_data[id].HP = ship_data[id].total_HP
 		ship_data[id].atk = round(ship_data[id].atk * 1.15)
-		ship_data[id].def = round(ship_data[id].def * 1.15)
 		ship_data[id].acc = round(ship_data[id].acc * 1.15)
 		ship_data[id].eva = round(ship_data[id].eva * 1.15)
 
@@ -711,8 +712,6 @@ func update_rsrc(p_i, tile, rsrc = null):
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
-		"MS":
-			update_MS(tile)
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult
@@ -862,17 +861,9 @@ func update_bldg_constr(tile):
 			if game.c_v == "planet":
 				update_boxes = true
 			if tile.bldg.name == "MS":
-				game.mineral_capacity += tile.bldg.mineral_cap_upgrade * tile.bldg.IR_mult
-				update_MS(tile)
+				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
 			game.HUD.refresh()
 	return update_boxes
-
-func update_MS(tile):
-	var new_IR_mult:float = get_IR_mult(tile.bldg.name)
-	if tile.bldg.IR_mult != new_IR_mult:
-		game.mineral_capacity += tile.bldg.path_1_value * (new_IR_mult - tile.bldg.IR_mult)
-		tile.bldg.IR_mult = new_IR_mult
-	
 
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)

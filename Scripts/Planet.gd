@@ -353,8 +353,9 @@ func seeds_plant(tile, tile_id:int):
 		tile.plant.is_growing = true
 		add_plant(tile_id, game.item_to_use.name)
 		game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
+		game.remove_items(game.item_to_use.name, 1)
 	else:
-		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [game.craft_agriculture_info[game.item_to_use.name].lake], 2)
+		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [tr("%s_NAME" % game.craft_agriculture_info[game.item_to_use.name].lake)], 2)
 
 func fertilizer_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
@@ -453,9 +454,9 @@ func destroy_bldg(id2:int):
 	hboxes[id2].queue_free()
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
-			game.mineral_capacity -= (tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade) * tile.bldg.IR_mult
+			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
 		else:
-			game.mineral_capacity -= tile.bldg.path_1_value * tile.bldg.IR_mult
+			game.mineral_capacity -= tile.bldg.path_1_value
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -671,7 +672,6 @@ func _input(event):
 								harvest_plant(game.tile_data[_tile], _tile)
 					elif t == "seeds" and tile.plant.empty():
 						seeds_plant(tile, tile_id)
-						game.remove_items(game.item_to_use.name, 1)
 					game.update_item_cursor()
 			if tile.has("bldg"):
 				if t in ["speedup", "overclock"]:
@@ -703,14 +703,14 @@ func _input(event):
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":5, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":12, "current":game.lv, "goal":35}
-						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":7, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
 						Helper.add_weapon_XP(1, "laser", 50)
@@ -721,7 +721,7 @@ func _input(event):
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.ship_data.append({"lv":1, "HP":14, "total_HP":14, "atk":12, "def":8, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+							game.ship_data.append({"lv":1, "HP":14, "total_HP":14, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 							Helper.add_ship_XP(2, 25000)
 							Helper.add_weapon_XP(2, "bullet", 140)
 							Helper.add_weapon_XP(2, "laser", 140)
@@ -884,7 +884,7 @@ func add_time_bar(id2:int, type:String):
 func add_plant(id2:int, st:String):
 	var plant:AnimatedSprite = AnimatedSprite.new()
 	plant.frames = SpriteFrames.new()
-	for i in 5:
+	for i in 3:
 		plant.frames.add_frame("default", load("res://Graphics/Plants/%s/%s.png" % [st, i]))
 	var local_id = id2
 	var v = Vector2.ZERO
@@ -900,7 +900,7 @@ func add_plant(id2:int, st:String):
 	if tile.plant.is_growing:
 		add_time_bar(id2, "plant")
 	else:
-		plant.frame = 4
+		plant.frame = 2
 
 func add_bldg(id2:int, st:String):
 	var bldg = Sprite.new()
@@ -941,6 +941,13 @@ func add_bldg(id2:int, st:String):
 				add_rsrc(v, Color.white, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
 				add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
+	var curr_time = OS.get_system_time_msecs()
+	var IR_mult = Helper.get_IR_mult(tile.bldg.name)
+	if tile.bldg.IR_mult != IR_mult:
+		var diff:float = IR_mult / tile.bldg.IR_mult
+		tile.bldg.IR_mult = IR_mult
+		if not tile.bldg.is_constructing and tile.bldg.has("collect_date"):
+			tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
 	var hbox = Helper.add_lv_boxes(tile, v)
 	add_child(hbox)
 	hboxes[id2] = hbox
@@ -962,16 +969,6 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrc.rect_position = v + Vector2(0, 70)
 	rsrc.get_node("Control").modulate = mod
 	rsrcs.append({"node":rsrc, "id":id2})
-	var tile = game.tile_data[id2]
-	var curr_time = OS.get_system_time_msecs()
-	if tile.bldg.IR_mult != 0:
-		var IR_mult = Helper.get_IR_mult(tile.bldg.name)
-		if tile.bldg.IR_mult != IR_mult:
-			var diff:float = IR_mult / tile.bldg.IR_mult
-			tile.bldg.IR_mult = IR_mult
-			if not tile.bldg.is_constructing:
-				tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
-	#Helper.update_rsrc(p_i, game.tile_data[id2], rsrc)
 
 func _process(_delta):
 	var curr_time = OS.get_system_time_msecs()
@@ -1009,7 +1006,7 @@ func _process(_delta):
 			length = tile.plant.grow_time
 			progress = (curr_time - start_date) / float(length)
 			var plant:AnimatedSprite = plant_sprites[String(id2)]
-			plant.frame = min(4, int(progress * 4))
+			plant.frame = min(2, int(progress * 2))
 			if progress > 1:
 				tile.plant.is_growing = false
 		elif type == "overclock":

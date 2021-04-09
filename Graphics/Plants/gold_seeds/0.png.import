@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/3.png-ceca8ce846c5c3a09aa458df91922458.stex"
+path="res://.import/0.png-559559a1b8391ee17aa87762d1a8ba27.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/lead_seeds/3.png"
-dest_files=[ "res://.import/3.png-ceca8ce846c5c3a09aa458df91922458.stex" ]
+source_file="res://Graphics/Plants/gold_seeds/0.png"
+dest_files=[ "res://.import/0.png-559559a1b8391ee17aa87762d1a8ba27.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

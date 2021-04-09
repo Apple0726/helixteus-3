@@ -9,7 +9,6 @@ func _ready():
 func refresh():
 	$VBoxContainer/Construct.visible = game.show.construct_button
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
-	$VBoxContainer/Vehicles.visible = game.show.vehicles_button
 	$VBoxContainer/Terraform.visible = game.science_unlocked.TF
 	$VBoxContainer/Mine.visible = game.show.mining
 	if OS.get_latin_keyboard_variant() == "AZERTY":
@@ -49,11 +48,6 @@ func _on_PlaceSoil_pressed():
 	game.HUD.get_node("Resources/Soil").visible = true
 	game.put_bottom_info(tr("PLACE_SOIL_INFO"), "place_soil", "cancel_place_soil")
 
-func _on_Vehicles_pressed():
-	if not Input.is_action_pressed("shift"):
-		click_sound.play()
-		game.toggle_panel(game.vehicle_panel)
-
 func _on_Construct_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("CONSTRUCT") + " (C)")
@@ -72,10 +66,6 @@ func _on_Mine_mouse_entered():
 func _on_PlaceSoil_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("PLACE_SOIL") + " (L)")
-
-func _on_Vehicles_mouse_entered():
-	on_button = true
-	game.show_tooltip(tr("VEHICLES") + " (V)")
 
 func _on_mouse_exited():
 	on_button = false

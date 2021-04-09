@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -265,9 +265,12 @@ var overclocks_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "durat
 var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":60},
 							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":60},
 							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":60},
+							"aluminium_seeds":{"costs":{"cellulose":10, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":60},
+							"silver_seeds":{"costs":{"cellulose":10, "silver":20}, "grow_time":14000000, "lake":"He", "produce":60},
+							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
-var other_items_info = {"hx_core":{"XP":3}, "hx_core2":{"XP":25}, "hx_core3":{"XP":220}, "ship_locator":{}}
+var other_items_info = {"hx_core":{"XP":6}, "hx_core2":{"XP":50}, "hx_core3":{"XP":480}, "ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
@@ -797,11 +800,6 @@ func new_game(tut:bool):
 		u_i["value"] = 1.0
 		u_i["shapes"] = []
 	c_v = "planet"
-	if tut:
-		tutorial = load("res://Scenes/Tutorial.tscn").instance()
-		tutorial.visible = false
-		tutorial.tut_num = 1
-		$UI.add_child(tutorial)
 	Helper.save_obj("Galaxies", 0, system_data)
 	Helper.save_obj("Clusters", 0, galaxy_data)
 	Helper.save_obj("Superclusters", 0, cluster_data)
@@ -810,6 +808,11 @@ func new_game(tut:bool):
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
 	$UI.add_child(HUD)
+	if tut:
+		tutorial = load("res://Scenes/Tutorial.tscn").instance()
+		tutorial.visible = false
+		tutorial.tut_num = 1
+		$UI.add_child(tutorial)
 	add_planet()
 	$Autosave.start()
 	var init_time = OS.get_system_time_msecs()
@@ -2135,8 +2138,8 @@ func generate_planets(id:int):
 			if num == 12:
 				lv = ceil(0.9 * log(power) / log(1.2))
 			var HP = round(rand_range(0.8, 1.2) * 20 * pow(1.15, lv - 1))
-			var atk = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
-			var def = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+			var def = Helper.rand_int(3, 10)
+			var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
 			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
 			var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)

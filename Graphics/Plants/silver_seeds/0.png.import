@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/2.png-f8ff6156173f6badcfcb1b808bf34a12.stex"
+path="res://.import/0.png-6cc4ee5e6f6cb0564d12fa7ef267d5d8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/iron_seeds/2.png"
-dest_files=[ "res://.import/2.png-f8ff6156173f6badcfcb1b808bf34a12.stex" ]
+source_file="res://Graphics/Plants/silver_seeds/0.png"
+dest_files=[ "res://.import/0.png-6cc4ee5e6f6cb0564d12fa7ef267d5d8.stex" ]
 
 [params]
 

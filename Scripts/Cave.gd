@@ -596,7 +596,9 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.25)),
 						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.2)),
-						"hx_core":int(rng.randi_range(1, 5) * pow(tier, 1.5) * pow(difficulty, 0.4))}
+						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.6))}
+	if contents.hx_core == 0:
+		contents.erase("hx_core")
 	if contents.hx_core > 8:
 		contents.hx_core2 = int(contents.hx_core / 8.0)
 		contents.hx_core %= 8

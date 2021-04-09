@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/4.png-005cde889376d178a5e24ea5785fadd0.stex"
+path="res://.import/silver_seeds.png-03369adbe646a9ff9b057c3c204c46f3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/iron_seeds/4.png"
-dest_files=[ "res://.import/4.png-005cde889376d178a5e24ea5785fadd0.stex" ]
+source_file="res://Graphics/Agriculture/silver_seeds.png"
+dest_files=[ "res://.import/silver_seeds.png-03369adbe646a9ff9b057c3c204c46f3.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

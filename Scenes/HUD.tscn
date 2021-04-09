@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://Graphics/Items/Others/ship_locator.png" type="Texture" id=19]
 [ext_resource path="res://Graphics/Cave/Objects/Map.png" type="Texture" id=20]
 [ext_resource path="res://Graphics/Misc/HUD.png" type="Texture" id=21]
+[ext_resource path="res://Graphics/Buttons/Vehicles.png" type="Texture" id=22]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 14.0
@@ -63,36 +64,42 @@ action = "Y"
 shortcut = SubResource( 4 )
 
 [sub_resource type="InputEventAction" id=6]
-action = "T"
+action = "V"
 
 [sub_resource type="ShortCut" id=7]
 shortcut = SubResource( 6 )
 
 [sub_resource type="InputEventAction" id=8]
-action = "E"
+action = "T"
 
 [sub_resource type="ShortCut" id=9]
 shortcut = SubResource( 8 )
 
 [sub_resource type="InputEventAction" id=10]
-action = "R"
+action = "E"
 
 [sub_resource type="ShortCut" id=11]
 shortcut = SubResource( 10 )
 
 [sub_resource type="InputEventAction" id=12]
-action = "U"
+action = "R"
 
 [sub_resource type="ShortCut" id=13]
 shortcut = SubResource( 12 )
 
 [sub_resource type="InputEventAction" id=14]
-action = "I"
+action = "U"
 
 [sub_resource type="ShortCut" id=15]
 shortcut = SubResource( 14 )
 
-[sub_resource type="StyleBoxFlat" id=16]
+[sub_resource type="InputEventAction" id=16]
+action = "I"
+
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
+
+[sub_resource type="StyleBoxFlat" id=18]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -100,17 +107,17 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.403922, 0.403922, 0.403922, 1 )
 
-[sub_resource type="InputEventAction" id=17]
-action = "."
-
-[sub_resource type="ShortCut" id=18]
-shortcut = SubResource( 17 )
-
 [sub_resource type="InputEventAction" id=19]
-action = ","
+action = "."
 
 [sub_resource type="ShortCut" id=20]
 shortcut = SubResource( 19 )
+
+[sub_resource type="InputEventAction" id=21]
+action = ","
+
+[sub_resource type="ShortCut" id=22]
+shortcut = SubResource( 21 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -400,9 +407,9 @@ __meta__ = {
 }
 
 [node name="Ships" type="TextureButton" parent="Buttons"]
-margin_top = 192.0
+margin_top = 168.0
 margin_right = 48.0
-margin_bottom = 240.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
@@ -411,58 +418,70 @@ texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 5
 
-[node name="Craft" type="TextureButton" parent="Buttons"]
-margin_top = 240.0
+[node name="Vehicles" type="TextureButton" parent="Buttons"]
+margin_top = 216.0
 margin_right = 48.0
-margin_bottom = 288.0
+margin_bottom = 264.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
 shortcut = SubResource( 7 )
+texture_normal = ExtResource( 22 )
+expand = true
+stretch_mode = 5
+
+[node name="Craft" type="TextureButton" parent="Buttons"]
+margin_top = 264.0
+margin_right = 48.0
+margin_bottom = 312.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+keep_pressed_outside = true
+shortcut = SubResource( 9 )
 texture_normal = ExtResource( 1 )
 expand = true
 stretch_mode = 5
 
 [node name="Inventory" type="TextureButton" parent="Buttons"]
-margin_top = 288.0
+margin_top = 312.0
 margin_right = 48.0
-margin_bottom = 336.0
+margin_bottom = 360.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 9 )
+shortcut = SubResource( 11 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
 
 [node name="Shop" type="TextureButton" parent="Buttons"]
-margin_top = 336.0
+margin_top = 360.0
 margin_right = 48.0
-margin_bottom = 384.0
+margin_bottom = 408.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 11 )
+shortcut = SubResource( 13 )
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5
 
 [node name="MineralUpgrades" type="TextureButton" parent="Buttons"]
-margin_top = 384.0
+margin_top = 408.0
 margin_right = 48.0
-margin_bottom = 432.0
+margin_bottom = 456.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 13 )
+shortcut = SubResource( 15 )
 texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
 
 [node name="ScienceTree" type="TextureButton" parent="Buttons"]
-margin_top = 432.0
+margin_top = 456.0
 margin_right = 48.0
-margin_bottom = 480.0
+margin_bottom = 504.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 15 )
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
@@ -484,7 +503,7 @@ margin_left = 1170.0
 margin_top = 654.0
 margin_right = 1276.0
 margin_bottom = 702.0
-custom_styles/panel = SubResource( 16 )
+custom_styles/panel = SubResource( 18 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -495,7 +514,7 @@ margin_top = 2.0
 margin_right = 102.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 18 )
+shortcut = SubResource( 20 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
@@ -520,7 +539,7 @@ margin_top = 2.0
 margin_right = 46.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 20 )
+shortcut = SubResource( 22 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5
@@ -582,6 +601,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="Buttons/Ships" to="." method="_on_Ships_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/Ships" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/Ships" to="." method="_on_Ships_pressed"]
+[connection signal="mouse_entered" from="Buttons/Vehicles" to="." method="_on_Vehicles_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/Vehicles" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Buttons/Vehicles" to="." method="_on_Vehicles_pressed"]
 [connection signal="mouse_entered" from="Buttons/Craft" to="." method="_on_Craft_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/Craft" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/Craft" to="." method="_on_Craft_pressed"]

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/3.png-f5f0192beaf9b452525a27de4c9bf10f.stex"
+path="res://.import/2.png-4e7cf61100d3c949b53adc3f132f889e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/copper_seeds/3.png"
-dest_files=[ "res://.import/3.png-f5f0192beaf9b452525a27de4c9bf10f.stex" ]
+source_file="res://Graphics/Plants/silver_seeds/2.png"
+dest_files=[ "res://.import/2.png-4e7cf61100d3c949b53adc3f132f889e.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

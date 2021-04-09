@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/2.png-f8ff6156173f6badcfcb1b808bf34a12.stex"
+path="res://.import/aluminium_seeds.png-daed11c8b61a5435dba8046e3ebb8d13.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/iron_seeds/2.png"
-dest_files=[ "res://.import/2.png-f8ff6156173f6badcfcb1b808bf34a12.stex" ]
+source_file="res://Graphics/Agriculture/aluminium_seeds.png"
+dest_files=[ "res://.import/aluminium_seeds.png-daed11c8b61a5435dba8046e3ebb8d13.stex" ]
 
 [params]
 

@@ -175,7 +175,7 @@ func hide_help():
 	tween.start()
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
-	tween.free()
+	tween.queue_free()
 
 var help_counter = 0
 func pickaxe_hit():

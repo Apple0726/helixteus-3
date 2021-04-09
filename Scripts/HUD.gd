@@ -71,8 +71,9 @@ func refresh():
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money), 6)
 		energy_text.text = Helper.format_num(game.energy, 6)
-	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(round(game.mineral_capacity), 6)]
-	if round(game.minerals) == round(game.mineral_capacity):
+	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
+	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(min_cap, 6)]
+	if round(game.minerals) == min_cap:
 		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 		minerals_text["custom_colors/font_color"] = Color.red
@@ -89,6 +90,7 @@ func refresh():
 	shop.visible = game.show.shop
 	SP.visible = game.show.SP
 	sc_tree.visible = game.show.SP
+	$Buttons/Vehicles.visible = game.show.vehicles_button
 	craft.visible = game.show.materials
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
@@ -218,6 +220,7 @@ func _on_Inventory_pressed():
 	if game.tutorial and game.tutorial.visible:
 		if not game.inventory.visible and game.tutorial.tut_num in [18, 20, 21]:
 			game.tutorial.fade(0.15)
+			game.inventory._on_Items_pressed()
 			game.toggle_panel(game.inventory)
 		if not game.tutorial.tut_num in [18, 19, 20, 21]:
 			game.toggle_panel(game.inventory)
@@ -371,3 +374,12 @@ func _on_Ship2Map_pressed():
 		ship2map = load("res://Scenes/Ship2Map.tscn").instance()
 		add_child(ship2map)
 		ship2map.refresh()
+
+func _on_Vehicles_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("VEHICLES") + " (V)")
+
+func _on_Vehicles_pressed():
+	if not Input.is_action_pressed("shift"):
+		click_sound.play()
+		game.toggle_panel(game.vehicle_panel)
