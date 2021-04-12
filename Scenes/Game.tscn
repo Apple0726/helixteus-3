@@ -222,13 +222,6 @@ grow_vertical = 0
 rect_min_size = Vector2( 35, 35 )
 close_button_type = 2
 
-[node name="FPS" type="Label" parent="UI"]
-margin_right = 74.0
-margin_bottom = 14.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Version" type="Label" parent="UI"]
 margin_left = 944.0
 margin_top = 704.0
@@ -372,6 +365,13 @@ text = "Tooltip
 a
 a
 a"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPS" type="Label" parent="Tooltips"]
+margin_right = 74.0
+margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -332,7 +332,11 @@ func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 		add_bldg(tile_id, bldg_to_construct)
 		add_time_bar(tile_id, "bldg")
 	elif not mass_build:
-		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
+		var tooltip = tr("NOT_ENOUGH_RESOURCES")
+		if game.tutorial and game.tutorial.tut_num < 15 and game.tutorial.tut_num > 6:
+			game.popup("%s %s" % [tooltip, tr("COLLECT_REMINDER")], 3)
+		else:
+			game.popup(tooltip, 1.2)
 
 func seeds_plant(tile, tile_id:int):
 	#Plants can't grow when not adjacent to lakes

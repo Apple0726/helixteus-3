@@ -5,6 +5,7 @@ onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
 onready var ship2 = $Ship2
+var star_texture = preload("res://Graphics/Effects/spotlight_8.png")
 const DEF_EXPO_SHIP = 1
 const DEF_EXPO_ENEMY = 1
 
@@ -67,18 +68,34 @@ func _ready():
 			HX_data = Helper.get_conquer_all_data().HX_data
 		else:
 			HX_data = game.planet_data[game.c_p].HX_data
+		$Star.texture = load("res://Graphics/Effects/spotlight_%s.png" % [game.c_s % 3 + 4])
+		$Star.modulate = game.get_star_modulate(game.system_data[game.c_s].stars[0].class)
+		$Star.position.x = range_lerp(game.planet_data[game.c_p].angle, 0, 2 * PI, 0, 1280)
+		$Star.position.y = 200 * cos(game.c_p * 10) + 300
+		$Star.scale *= 0.5 * game.system_data[game.c_s].stars[0].size / (game.planet_data[game.c_p].distance / 500)
+		$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % game.planet_data[game.c_p].type)
+		for i in 1000:
+			var star:Sprite = Sprite.new()
+			star.texture = star_texture
+			star.scale *= pow(rand_range(0.4, 0.7), 2)
+			star.modulate = game.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+			star.modulate.a = rand_range(0, 1)
+			star.rotation = rand_range(0, 2*PI)
+			star.position.x = rand_range(0, 1280)
+			star.position.y = rand_range(0, 720)
+			add_child_below_node($Star, star)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
 		if err == OK:
 			e_diff = config.get_value("game", "e_diff", 1)
 	else:
 		HX_data = []
-		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":5, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		for k in 4:
 			var lv = 1
 			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
 			var atk = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
-			var def = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var def = 5
 			var acc = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
 			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
 			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
@@ -641,7 +658,7 @@ func atk_1_1(id:int):
 		fireball.visible = false
 		fireball.add_to_group("w_1_1")
 		add_child(fireball)
-		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":5, "id":id, "delay":i * delay_mult, "spd_growth":spd_growth}
+		HX_w_c_d[fireball.name] = {"group":"w_1_1", "damage":2.5, "id":id, "delay":i * delay_mult, "spd_growth":spd_growth}
 
 func atk_1_2(id:int):
 	var delay_mult:float = 1.2
@@ -676,7 +693,7 @@ func atk_1_2(id:int):
 			beam.get_node("CollisionShape2D").disabled = true
 			beam.add_to_group("w_1_2")
 			add_child(beam)
-			HX_w_c_d[beam.name] = {"group":"w_1_2", "damage":6, "stage":0, "id":id, "delay":i * delay_mult, "grow_spd":grow_spd}
+			HX_w_c_d[beam.name] = {"group":"w_1_2", "damage":3, "stage":0, "id":id, "delay":i * delay_mult, "grow_spd":grow_spd}
 
 func atk_1_3(id:int):
 	var num1:int = 5
@@ -701,7 +718,7 @@ func atk_1_3(id:int):
 			bullet.scale *= 0.8
 			bullet.add_to_group("w_1_3")
 			add_child(bullet)
-			HX_w_c_d[bullet.name] = {"group":"w_1_3", "v":Vector2(-1, 0), "target":target, "damage":4.5, "stage":0, "id":id, "delay":i * delay_mult}
+			HX_w_c_d[bullet.name] = {"group":"w_1_3", "v":Vector2(-1, 0), "target":target, "damage":2.5, "stage":0, "id":id, "delay":i * delay_mult}
 
 func atk_2_1(id:int):
 	put_magic(id)
@@ -727,7 +744,7 @@ func atk_2_1(id:int):
 		pillar.position.x = 1400
 		add_child(pillar)
 		pillar.add_to_group("w_2_1")
-		HX_w_c_d[pillar.name] = {"group":"w_2_1", "damage":6, "id":id, "delay":i * delay_mult + 0.5}
+		HX_w_c_d[pillar.name] = {"group":"w_2_1", "damage":3, "id":id, "delay":i * delay_mult + 0.5}
 
 func atk_2_2(id:int):
 	put_magic(id)
@@ -756,7 +773,7 @@ func atk_2_2(id:int):
 		ball.position.x = rand_range(900, 1250)
 		add_child(ball)
 		ball.add_to_group("w_2_2")
-		HX_w_c_d[ball.name] = {"group":"w_2_2", "init_x":ball.position.x, "y_target":y_target, "y_target2":y_target2, "stage":0, "damage":5.5, "id":id, "delay":i * delay_mult + 0.5}
+		HX_w_c_d[ball.name] = {"group":"w_2_2", "init_x":ball.position.x, "y_target":y_target, "y_target2":y_target2, "stage":0, "damage":2.5, "id":id, "delay":i * delay_mult + 0.5}
 
 func atk_2_3(id:int):
 	put_magic(id)
@@ -782,7 +799,7 @@ func atk_2_3(id:int):
 		mine.rotation = rand_range(0, 2 * PI)
 		add_child(mine)
 		mine.add_to_group("w_2_3")
-		HX_w_c_d[mine.name] = {"group":"w_2_3", "v":v, "damage":4.5, "id":id, "delay":i * delay_mult + 0.5}
+		HX_w_c_d[mine.name] = {"group":"w_2_3", "v":v, "damage":2.5, "id":id, "delay":i * delay_mult + 0.5}
 
 func atk_3_1(id:int):
 	a_p_c_d.clear()
@@ -813,7 +830,7 @@ func atk_3_1(id:int):
 			spike.visible = false
 			add_child(spike)
 			spike.add_to_group("w_3_1")
-			HX_w_c_d[spike.name] = {"group":"w_3_1", "id":id, "v":v, "damage":5, "delay":i * delay + 0.5}
+			HX_w_c_d[spike.name] = {"group":"w_3_1", "id":id, "v":v, "damage":2.5, "delay":i * delay + 0.5}
 	y_poses.append(HXs[id].position.y)
 	a_p_c_d = {"pattern":"3_1", "HX_id":id, "y_poses":y_poses, "i":0, "delay":delay, "init_delay":delay}
 
@@ -839,7 +856,7 @@ func atk_3_2(id:int):
 			add_child(diamond)
 			diamond.add_to_group("w_3_2")
 			diamond.modulate = Color(rand_range(0.5, 1), rand_range(0.5, 1), rand_range(0.5, 1), 1)
-			HX_w_c_d[diamond.name] = {"group":"w_3_2", "id":id, "damage":4.8, "delay":0.5}
+			HX_w_c_d[diamond.name] = {"group":"w_3_2", "id":id, "damage":2.4, "delay":0.5}
 		if randf() < 0.6:
 			if dir_bool and randf() < dir or not dir_bool and randf() > dir:
 				path -= 1
@@ -865,7 +882,7 @@ func atk_3_3(id:int):
 		add_child(platform)
 		platform.add_to_group("w_3_3")
 		var platform_delay:float = i * 1.5 + 0.5
-		HX_w_c_d[platform.name] = {"group":"w_3_3", "id":id, "damage":10, "delay":platform_delay}
+		HX_w_c_d[platform.name] = {"group":"w_3_3", "id":id, "damage":6, "delay":platform_delay}
 		var interval:float = rand_range(0.65, 0.7) * int_mult
 		for j in 14:
 			var bullet = w_3_3_2.instance()
@@ -873,7 +890,7 @@ func atk_3_3(id:int):
 			bullet.visible = false
 			add_child(bullet)
 			bullet.add_to_group("w_3_3")
-			HX_w_c_d[bullet.name] = {"group":"w_3_3", "vy":3 if j % 2 == 0 else -3, "id":id, "damage":4.5, "delay":platform_delay, "delay2":interval * (j / 2)}
+			HX_w_c_d[bullet.name] = {"group":"w_3_3", "vy":3 if j % 2 == 0 else -3, "id":id, "damage":2.5, "delay":platform_delay, "delay2":interval * (j / 2)}
 
 func atk_4_1(id:int):
 	var num:int = 15
@@ -900,7 +917,7 @@ func atk_4_1(id:int):
 			v *= 1.3
 		add_child(light)
 		light.add_to_group("w_4_1")
-		HX_w_c_d[light.name] = {"group":"w_4_1", "id":id, "v":v, "damage":4, "delay":delay_mult * i}
+		HX_w_c_d[light.name] = {"group":"w_4_1", "id":id, "v":v, "damage":2, "delay":delay_mult * i}
 
 func atk_4_2(id:int):
 	a_p_c_d.clear()
@@ -915,7 +932,7 @@ func atk_4_2(id:int):
 		delay = 0.9
 		acc = 0.16
 	elif e_diff == EDiff.HARD:
-		num = 8
+		num = 7
 		v_mult = 25
 		acc = 0.27
 	for i in num:
@@ -929,7 +946,7 @@ func atk_4_2(id:int):
 		boomerang.visible = false
 		add_child(boomerang)
 		boomerang.add_to_group("w_4_2")
-		HX_w_c_d[boomerang.name] = {"group":"w_4_2", "id":id, "v":v, "damage":5, "delay":i * delay + 0.5, "acc":acc}
+		HX_w_c_d[boomerang.name] = {"group":"w_4_2", "id":id, "v":v, "damage":3, "delay":i * delay + 0.5, "acc":acc}
 	y_poses.append(HXs[id].position.y)
 	a_p_c_d = {"pattern":"4_2", "HX_id":id, "y_poses":y_poses, "i":0, "delay":delay, "init_delay":delay}
 
@@ -957,7 +974,7 @@ func atk_4_3(id:int):
 			slab.position = Vector2(1350, y_poses[j])
 			add_child(slab)
 			slab.add_to_group("w_4_3")
-			HX_w_c_d[slab.name] = {"group":"w_4_3", "id":id, "damage":6, "delay":delay_mult * i + 0.5, "v_mult":v_mult}
+			HX_w_c_d[slab.name] = {"group":"w_4_3", "id":id, "damage":4, "delay":delay_mult * i + 0.5, "v_mult":v_mult}
 
 func _on_Ship_area_entered(area, ship_id:int):
 	if immune or self["ship%s" % ship_id].modulate.a != 1.0:
@@ -992,17 +1009,17 @@ func _on_weapon_mouse_exited():
 		game.hide_tooltip()
 
 func _on_Easy_mouse_entered():
-	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1]
+	$UI/Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1]
 
 func _on_diff_mouse_exited():
-	$Help2/Loot.text = ""
+	$UI/Help2/Loot.text = ""
 
 func _on_Normal_mouse_entered():
-	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.25]
+	$UI/Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.25]
 
 
 func _on_Hard_mouse_entered():
-	$Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5]
+	$UI/Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5]
 
 
 func _on_diff_pressed(diff:int):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Scripts/FloatAnim.gd" type="Script" id=5]
 [ext_resource path="res://Graphics/Ships/Ship1.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Ships/Ship2.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Effects/spotlight_5.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Planets/BGs/10.png" type="Texture" id=9]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
 [ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=11]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=12]
@@ -81,6 +83,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Star" type="Sprite" parent="."]
+modulate = Color( 1, 0.960784, 0.564706, 1 )
+position = Vector2( 888, 184 )
+scale = Vector2( 0.3125, 0.3125 )
+texture = ExtResource( 8 )
+
+[node name="BG" type="Sprite" parent="."]
+position = Vector2( 604, 692 )
+texture = ExtResource( 9 )
+
 [node name="Back" type="Button" parent="."]
 margin_top = 684.0
 margin_right = 136.0
@@ -140,9 +152,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Icon" type="Sprite" parent="Ship0"]
-position = Vector2( -56, 64 )
-scale = Vector2( 0.25, 0.25 )
+[node name="Icon" type="TextureRect" parent="Ship0"]
+margin_left = -72.0
+margin_top = 52.0
+margin_right = -48.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 24, 24 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Ship1" type="Area2D" parent="."]
 visible = false
@@ -193,9 +213,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Icon" type="Sprite" parent="Ship1"]
-position = Vector2( -56, 64 )
-scale = Vector2( 0.25, 0.25 )
+[node name="Icon" type="TextureRect" parent="Ship1"]
+margin_left = -72.0
+margin_top = 52.0
+margin_right = -48.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 24, 24 )
+expand = true
+stretch_mode = 6
 
 [node name="Ship2" type="Area2D" parent="."]
 visible = false
@@ -246,9 +271,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Icon" type="Sprite" parent="Ship2"]
-position = Vector2( -56, 64 )
-scale = Vector2( 0.25, 0.25 )
+[node name="Icon" type="TextureRect" parent="Ship2"]
+margin_left = -72.0
+margin_top = 52.0
+margin_right = -48.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 24, 24 )
+expand = true
+stretch_mode = 6
 
 [node name="Current" type="Node2D" parent="."]
 
@@ -465,7 +495,8 @@ anchor_bottom = 0.5
 margin_left = -192.0
 margin_top = -112.0
 margin_right = 192.0
-margin_bottom = 32.0
+margin_bottom = 60.0
+theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -483,9 +514,9 @@ __meta__ = {
 
 [node name="Loot" type="Label" parent="UI/Help2"]
 margin_left = 12.0
-margin_top = 108.0
+margin_top = 132.0
 margin_right = 372.0
-margin_bottom = 132.0
+margin_bottom = 156.0
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -493,9 +524,9 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2"]
 margin_left = 4.0
-margin_top = 76.0
+margin_top = 92.0
 margin_right = 380.0
-margin_bottom = 104.0
+margin_bottom = 120.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false

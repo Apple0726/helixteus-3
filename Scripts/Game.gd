@@ -207,7 +207,7 @@ var mat_info = {	"coal":{"value":10},#One kg of coal = $10
 					#"clay":{"value":12},
 					"soil":{"value":6},
 					"cellulose":{"value":30},
-					"silicon":{"value":10},
+					"silicon":{"value":50},
 }
 #Changing length of met_info changes cave rng!
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
@@ -294,11 +294,6 @@ var metal_textures:Dictionary = {}
 func _ready():
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
-	dialog = AcceptDialog.new()
-	dialog.theme = load("res://Resources/default_theme.tres")
-	dialog.popup_exclusive = true
-	dialog.visible = false
-	$UI.add_child(dialog)
 	if TranslationServer.get_locale() != "es":
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
@@ -936,6 +931,14 @@ func popup(txt, dur):
 func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
 	hide_adv_tooltip()
 	hide_tooltip()
+	if dialog and $UI.is_a_parent_of(dialog):
+		$UI.remove_child(dialog)
+		dialog.queue_free()
+	dialog = AcceptDialog.new()
+	dialog.theme = load("res://Resources/default_theme.tres")
+	dialog.popup_exclusive = true
+	dialog.visible = false
+	$UI.add_child(dialog)
 	$UI/PopupBackground.visible = true
 	dialog.window_title = title
 	dialog.dialog_text = txt
@@ -951,11 +954,12 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 
 func popup_close():
 	$UI/PopupBackground.visible = false
-	dialog.visible = false
-	if dialog.is_connected("custom_action", self, "popup_action"):
-		dialog.disconnect("custom_action", self, "popup_action")
-	if dialog.is_connected("popup_hide", self, "popup_close"):
-		dialog.disconnect("popup_hide", self, "popup_close")
+	if dialog:
+		dialog.visible = false
+		if dialog.is_connected("custom_action", self, "popup_action"):
+			dialog.disconnect("custom_action", self, "popup_action")
+		if dialog.is_connected("popup_hide", self, "popup_close"):
+			dialog.disconnect("popup_hide", self, "popup_close")
 
 func popup_action(action:String):
 	call(action)
@@ -970,6 +974,7 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	if $UI/BottomInfo.visible:
 		_on_BottomInfo_close_button_pressed()
 	$UI/BottomInfo.visible = true
+	$UI.move_child($UI/BottomInfo, $UI.get_child_count())
 	var more_info = $UI/BottomInfo/Text
 	more_info.visible = false
 	more_info.text = txt
@@ -1007,7 +1012,7 @@ func on_fade_complete(panel:Control):
 		view.move_view = true
 
 func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
-	if active_panel != upgrade_panel:
+	if active_panel and active_panel != upgrade_panel:
 		fade_out_panel(active_panel)
 	if upgrade_panel and is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
@@ -2898,7 +2903,7 @@ var quadrant_top_left:PoolVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector
 var quadrant_top_right:PoolVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]
 var quadrant_bottom_left:PoolVector2Array = [Vector2(0, 360), Vector2(640, 360), Vector2(640, 720), Vector2(0, 720)]
 var quadrant_bottom_right:PoolVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
-onready var fps_text = $UI/FPS
+onready var fps_text = $Tooltips/FPS
 
 func _process(delta):
 	if delta != 0:

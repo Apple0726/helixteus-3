@@ -90,6 +90,7 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 

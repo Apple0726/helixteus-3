@@ -6,13 +6,13 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=5]
 
-[sub_resource type="InputEventAction" id=2]
-action = "V"
+[sub_resource type="InputEventAction" id=1]
+action = "C"
 
-[sub_resource type="ShortCut" id=3]
-shortcut = SubResource( 2 )
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.619608, 0.619608, 0.619608, 1 )
 draw_center = false
 border_width_left = 1
@@ -94,6 +94,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Plant" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 48.0
+margin_right = 60.0
+margin_bottom = 108.0
+
 [node name="SP" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -163,7 +170,7 @@ margin_top = 20.0
 margin_right = 548.0
 margin_bottom = 44.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 3 )
+shortcut = SubResource( 2 )
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 5
@@ -177,7 +184,7 @@ margin_top = 20.0
 margin_right = 548.0
 margin_bottom = 44.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -234,11 +241,12 @@ polygon = PoolVector2Array( 0, 0, 768, 0, 768, 64, 0, 64 )
 
 [node name="Polygon2D2" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 140, -232, 172, -232, 172, 0, 140, 0 )
+polygon = PoolVector2Array( 140, -264, 172, -264, 172, 0, 140, 0 )
 
 [node name="Polygon2D3" type="Polygon2D" parent="."]
 visible = false
 polygon = PoolVector2Array( 404, -484, 768, -484, 768, 0, 404, 0 )
+[connection signal="visibility_changed" from="." to="." method="_on_Annotator_visibility_changed"]
 [connection signal="mouse_entered" from="HBoxContainer/Icons" to="." method="_on_Icons_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/Icons" to="." method="_on_mouse_exited"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

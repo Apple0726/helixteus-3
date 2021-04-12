@@ -93,18 +93,21 @@ func _process(delta):
 		annotate_icon.position = to_local(mouse_position)
 		annotate_icon.modulate = game.annotator.shape_color
 		annotate_icon.scale = Vector2.ONE * game.annotator.thickness / 10.0
-		if game.annotator.mode == "eraser":
+		if game.annotator.mode == "eraser" and drawing_shape and not game.annotator.mouse_in_panel:
 			for icon_data in annotate_icons:
 				var icon = icon_data.node
-				if icon.get_rect().has_point(to_local(mouse_position) - icon.position):
+				var size = icon.get_rect().size * icon.scale
+				var rect2 = Rect2(-size / 2, size)
+				if rect2.has_point(to_local(mouse_position) - icon.position):
 					remove_child(icon)
 					icon.queue_free()
 					annotate_icons.erase(icon_data)
-					shapes_data.remove(icon_data.index)
-	if Input.is_action_pressed("1"):
-		annotate_icon.rotation -= 0.03 * delta * 60
-	if Input.is_action_pressed("3"):
-		annotate_icon.rotation += 0.03 * delta * 60
+					shapes_data.erase(icon_data.data)
+	if game.annotator:
+		if Input.is_action_pressed("1"):
+			annotate_icon.rotation -= 0.03 * delta * 60
+		if Input.is_action_pressed("3"):
+			annotate_icon.rotation += 0.03 * delta * 60
 	if drawing_shape:
 		update()
 	if obj and obj.dimensions:
@@ -146,13 +149,14 @@ func _draw():
 		var shift = Input.is_action_pressed("shift")
 		if drawing_shape:
 			var lmp:Vector2 = to_local(mouse_position)
+			var init:Vector2 = to_local(drag_initial_position)
 			if game.annotator.mode == "line":
 				if shift:
-					var angle = atan2(mouse_position.y - drag_initial_position.y, mouse_position.x - drag_initial_position.x)
+					var angle = atan2(lmp.y - init.y, lmp.x - init.x)
 					if abs(angle) < PI / 4 or PI - abs(angle) < PI / 4:
-						line_points.end = Vector2(mouse_position.x, drag_initial_position.y)
+						line_points.end = Vector2(lmp.x, init.y)
 					else:
-						line_points.end = Vector2(drag_initial_position.x, mouse_position.y)
+						line_points.end = Vector2(init.x, lmp.y)
 				else:
 					line_points.end = lmp
 				draw_line(line_points.start, line_points.end, game.annotator.shape_color, game.annotator.thickness, true)
@@ -236,14 +240,14 @@ func refresh():
 	if game.annotator:
 		for i in len(shapes_data):
 			var shape = shapes_data[i]
-			if shape.shape == "icon":
+			if shape and shape.shape == "icon":
 				var icon = Sprite.new()
 				icon.texture = load(shape.texture)
 				icon.scale = shape.scale
 				icon.modulate = shape.color
 				icon.rotation = shape.rotation
 				icon.position = shape.position
-				annotate_icons.append({"node":icon, "index":i})
+				annotate_icons.append({"node":icon, "data":shapes_data[i]})
 				add_child(icon)
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
@@ -400,9 +404,11 @@ func _input(event):
 			var size
 			if game.annotator.mode == "circ":
 				size = line_points.end
-			else:
+			elif game.annotator.mode != "icon":
 				size = line_points.start.distance_to(line_points.end)
 			if game.annotator.mode == "icon" and not game.annotator.mouse_in_panel:
+				print(mouse_position)
+				print(annotate_icon.position)
 				shapes_data.append({"shape":"icon", "texture":annotate_icon.texture.resource_path, "rotation":annotate_icon.rotation, "scale":annotate_icon.scale, "color":game.annotator.shape_color, "position":annotate_icon.position})
 				refresh()
 			elif size >= game.annotator.thickness / 3.0:#Prevent players from drawing very thick figures compared to their size, which means they'll have a hard time erasing them

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Title screen BG.png-cef7a9da8d592e06a8620e58d839a0f3.stex"
+path="res://.import/spotlight_5.png-efddbf51b433fc1bfe468b30f7a52802.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Decoratives/Title screen BG.png"
-dest_files=[ "res://.import/Title screen BG.png-cef7a9da8d592e06a8620e58d839a0f3.stex" ]
+source_file="res://Graphics/Effects/spotlight_5.png"
+dest_files=[ "res://.import/spotlight_5.png-efddbf51b433fc1bfe468b30f7a52802.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

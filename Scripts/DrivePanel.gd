@@ -31,10 +31,10 @@ func refresh():
 	match meta:
 		"cellulose":
 			$Control/TextureRect.texture = cellulose_texture
-			speed = 2000
+			speed = 4000
 		"coal":
 			$Control/TextureRect.texture = coal_texture
-			speed = 300
+			speed = 600
 		"He":
 			$Control/TextureRect.texture = helium_texture
 			speed = 3000

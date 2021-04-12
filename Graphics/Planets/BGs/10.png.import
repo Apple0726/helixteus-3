@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/floaty_32.png-638a202e91febe9076d351c84b800cb7.stex"
+path="res://.import/10.png-73b95af5cac65b9728c99af5aa95e452.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Effects/floaty_32.png"
-dest_files=[ "res://.import/floaty_32.png-638a202e91febe9076d351c84b800cb7.stex" ]
+source_file="res://Graphics/Planets/BGs/10.png"
+dest_files=[ "res://.import/10.png-73b95af5cac65b9728c99af5aa95e452.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

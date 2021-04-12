@@ -23,6 +23,7 @@ func _ready():
 	$VBoxContainer/Minerals/TextureRect.texture = load("res://Graphics/Icons/minerals.png")
 	$VBoxContainer/Energy/TextureRect.texture = load("res://Graphics/Icons/energy.png")
 	$VBoxContainer/SP/TextureRect.texture = load("res://Graphics/Icons/SP.png")
+	$VBoxContainer/Plant/TextureRect.texture = load("res://Graphics/Science/SA.png")
 	$VBoxContainer/Stone/TextureRect.texture = load("res://Graphics/Icons/stone.png")
 	$VBoxContainer/Arrow/TextureRect.texture = load("res://Graphics/Icons/Arrow.png")
 	for node in $VBoxContainer.get_children():
@@ -47,6 +48,7 @@ func on_Line_pressed():
 	mode = "line"
 	game.get_node("UI/Panel").visible = false
 	game.view.annotate_icon.texture = null
+	$VBoxContainer.visible = false
 
 func on_Rectangle_pressed():
 	for node in $HBoxContainer.get_children():
@@ -55,6 +57,7 @@ func on_Rectangle_pressed():
 	mode = "rect"
 	game.get_node("UI/Panel").visible = false
 	game.view.annotate_icon.texture = null
+	$VBoxContainer.visible = false
 
 func on_Circle_pressed():
 	for node in $HBoxContainer.get_children():
@@ -63,6 +66,7 @@ func on_Circle_pressed():
 	mode = "circ"
 	game.get_node("UI/Panel").visible = false
 	game.view.annotate_icon.texture = null
+	$VBoxContainer.visible = false
 
 func on_Eraser_pressed():
 	for node in $HBoxContainer.get_children():
@@ -71,6 +75,7 @@ func on_Eraser_pressed():
 	mode = "eraser"
 	game.get_node("UI/Panel").visible = false
 	game.view.annotate_icon.texture = null
+	$VBoxContainer.visible = false
 
 func on_Icons_pressed():
 	for node in $HBoxContainer.get_children():
@@ -86,11 +91,10 @@ func on_Icons_pressed():
 	game.view.annotate_icon.texture = $HBoxContainer/Icons/TextureRect.texture
 
 func _on_close_button_pressed():
-	game.view.annotate_icon.texture = null
 	visible = false
 
 func _on_ColorPickerBtn_mouse_entered():
-	game.show_tooltip("%s (V)" % tr("SHAPE_COLOR"))
+	game.show_tooltip("%s (C)" % tr("SHAPE_COLOR"))
 
 func _on_mouse_exited():
 	game.hide_tooltip()
@@ -124,3 +128,12 @@ func _on_Thickness_mouse_exited():
 
 func _on_Icons_mouse_entered():
 	game.show_tooltip(tr("CLICK_TWICE_TO_CHANGE"))
+
+
+func _on_Annotator_visibility_changed():
+	if visible:
+		if mode == "icon":
+			on_Icons_pressed()
+	else:
+		game.view.annotate_icon.texture = null
+		game.get_node("UI/Panel").visible = false

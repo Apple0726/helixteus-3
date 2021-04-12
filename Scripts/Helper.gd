@@ -388,7 +388,8 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		tween.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
-	var mineral_space_available:float = round(game.mineral_capacity) - round(game.minerals)
+	var min_cap = game.mineral_capacity * get_IR_mult("MS")
+	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
 			game.minerals += amount
@@ -397,12 +398,12 @@ func add_minerals(amount:float, add:bool = true):
 		if game.autosell:
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
-				game.minerals = fmod(diff, round(game.mineral_capacity))
-				game.money += ceil(diff / game.mineral_capacity) * round(game.mineral_capacity) * (game.MUs.MV + 4)
+				game.minerals = fmod(diff, round(min_cap))
+				game.money += ceil(diff / min_cap) * round(min_cap) * (game.MUs.MV + 4)
 			return {"added":amount, "remainder":0}
 		else:
 			if add:
-				game.minerals = game.mineral_capacity
+				game.minerals = min_cap
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):

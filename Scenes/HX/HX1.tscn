@@ -51,11 +51,19 @@ collision_mask = 3
 position = Vector2( -20, 128 )
 scale = Vector2( 2.3, 2.3 )
 
-[node name="Icon" type="Sprite" parent="Info"]
+[node name="Icon" type="TextureRect" parent="Info"]
 visible = false
-position = Vector2( -18, 0 )
-scale = Vector2( 0.23, 0.23 )
+margin_left = -24.3478
+margin_top = -12.1739
+margin_right = -0.347828
+margin_bottom = 11.8261
+rect_min_size = Vector2( 24, 24 )
 texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="Info"]
 margin_left = 8.0

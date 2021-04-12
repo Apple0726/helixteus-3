@@ -16,7 +16,11 @@ func refresh():
 	$GridContainer/Panel2.visible = len(game.ship_data) >= 2
 	$GridContainer/Panel3.visible = len(game.ship_data) >= 3
 	$Drives.refresh()
-	set_process(game.ships_travel_view != "-")
+	if game.ships_travel_view != "-":
+		set_process(true)
+	else:
+		set_process(false)
+		$Panel/TravelETA.text = ""
 
 func _process(delta):
 	$Panel/TravelETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date)]

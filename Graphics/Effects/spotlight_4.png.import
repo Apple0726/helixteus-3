@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/random_selection.png-5dde624d0c74895b05ae2caaf1d7e884.stex"
+path="res://.import/spotlight_4.png-19a46c548a65582b5241ec44257d46e5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Effects/random_selection.png"
-dest_files=[ "res://.import/random_selection.png-5dde624d0c74895b05ae2caaf1d7e884.stex" ]
+source_file="res://Graphics/Effects/spotlight_4.png"
+dest_files=[ "res://.import/spotlight_4.png-19a46c548a65582b5241ec44257d46e5.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

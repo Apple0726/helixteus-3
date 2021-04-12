@@ -1,4 +1,6 @@
 ,en,fr,it,ru,de,es,ko,sv
+TRANSLATORS_CREDITS,,"Apple0726,",Apple0726,,,,Apple0726,
+TRANSLATORS_DISCORD,,"Apple0726, <ZHxPro>Mataeragon, Plexus Du Menton ",Apple0726,cheffplayer,RobotFK,"Limenoalik, modo chancho",Apple0726,Agecher
 NEW_GAME,New game,Nouvelle partie,Nuova partita,Новая игра,Neues Spiel,Nueva partida,새 게임,Nytt spel
 LOAD_GAME,Load game,Charger une partie,Caricare una partita,,,Cargar partida,불러오기,Ladda spel
 MONEY,Money,Argent,Soldi,Деньги,Geld,Dinero,돈,Pengar
@@ -14,7 +16,7 @@ CONSTRUCT,Construct,Construire,Costruire,,Bauen,Construir,건설하기,Konstruer
 BUY,Buy,Acheter,Comprare,Покупать,Kaufen,Comprar,구입하기,Köp
 VIEW_STAR_SYSTEM,View star system,Voir système stellaire,Visualizzare sistema stellare,,Sternsystem betrachten,Ver sistema estelar,항성계 보기,Granska stjärnsystem
 MINE,Mine,Miner,Minare,,Abbauen,Excavar,,Gräva
-START_MINE,Click a tile to mine,Cliquez une tuile à miner,,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,,Klicka en ruta för att gräva
+START_MINE,Click a tile to mine,Cliquez une tuile pour miner,Cliccare una tile per minare,,Eine Kachel anklicken um Abzubauen,Dale click a una casilla para minar,,Klicka en ruta för att gräva
 MINE_HELP,Click and hold the tile to mine!,Cliquez et maintenez la tuile pour miner!,,,Die Kachel anklickenhalten um Abzubauen!,Mantén click para minar!,,Klicka och tryck för att gräva!
 NO_PICKAXE,You don't have a pickaxe to mine! Buy one from the shop.,Vous n'avez pas de pioche pour miner! Achetez-en une dans la boutique.,Non hai un piccone per minare! Comprarlo al negozio.,,"Du hast keine Spitzhacke,kaufe eine im Shop",No tienes un pico para minar! Compra uno de la tienda,,Du har inte en hacka! Köp en i butiken.
 NO_PICKAXE_TITLE,No pickaxe,Pas de pioche,Manca un piccone,,Keine Spitzhacke,No hay pico,곡괭이 없음,Ingen hacka
@@ -250,6 +252,7 @@ RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca fatta,,,Investigació
 USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Cliccare un edificio per accelerare la sua costruzione,,,Haz clic en un edificio para acelerar la construcción,가속화할 빌딩을 클릭하세요,
 USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Cliccare un edificio per overcloccare,,,Haz clic en un edificio para hacer overclock,오버클럭할 빌딩을 클릭하세요,
 RESEARCH_LAB,Research lab,Labo de recherche,Laboratorio di ricerca,,,Laboratorio de investigación,연구 실험실,
+RESEARCH_LABS,Research labs,Labos de recherche,Laboratori di ricerca,,,,연구 실험실,
 RL_DESC,Does research on its own,Fait de la recherche en autonomie,Fa ricerca da solo,,,Investiga por su cuenta,자기 혼자서 조사합니다,
 MINERAL_SILO,Mineral silo,,Magazzino di minerali,,,Silo de minerales,광물 사일로,
 MINERAL_SILOS,Mineral silos,,Magazzini di minerali,,,,광물 사일로,
@@ -301,7 +304,7 @@ HX_CORE,Helix core,Noyau Helix,Nucleo Helix,,,Núcleo Helix,핼릭스 핵,
 HX_CORE2,Green Helix core,Noyau Helix vert,Nucleo Helix verde,,,,초록 핼릭스 핵,
 HX_CORE3,Blue Helix core,Noyau Helix bleu,Nucleo Helix blu,,,,파란 핼릭스 핵,
 ITEMS_COLLECTED,Items collected,,Oggetti raccolti,,,Objetos recogidos,,
-SETTINGS,Settings,Paramètres,Impostazioni,,,Ajustes,설정,
+SETTINGS,Settings,Paramètres,Impostazioni,,Einstellungen,Ajustes,설정,
 MASTER,Master,Principal,Principale,,,Todo,,
 MUSIC,Music,Musique,Musica,,,Música,음악,
 SFX,Sounds,Sons,Suoni,,,Sonidos,,
@@ -336,7 +339,7 @@ EXPECTED_RESOURCES,Expected resources,Ressources attendues,Risorse previste,,,Re
 RESOURCES_EXTRACTED,Resources extracted,Ressources extraites,Risorse estratte,,,Recursos extraídos,,
 NO_STONE,You don't have any stone!,Vous n'avez pas de pierre!,Non hai pietra!,,,No tienes piedra!,,
 SILICON,Silicon,Silicium,Silicio,,,Silicio,,
-COMP_OF_STONE_BEING_CR,Composition of stone being crushed,Composition de la pierre étant écrasée,,,,Compocisión de la piedra en proceso de pulverización,,
+COMP_OF_STONE_BEING_CR,Composition of stone being crushed,Composition de la pierre écrasée,,,,Compocisión de la piedra en proceso de pulverización,,
 COLDEST_STAR_TEMPERATURE,Coldest star temperature,Température de l'étoile la plus froide,Temperature della stella più fredda,,,Temperatura estelar más baja,,
 CLICK_TO_EDIT,Click to edit,Cliquez pour modifier,Cliccare per modificare,,,Haz clic para editar,,
 DONE,Done,Terminé,Fatto,,,Listo,,
@@ -792,7 +795,7 @@ FG_DESC,A new type of vehicle that allows automatic planet conquest.,,,,,,,
 CONSTRUCT_FIGHTERS,Construct fighters,,,,,,,
 FLEET_STRENGTH,Fleet strength,,,,,,,
 FIGHTERS_CONSTRUCTED,Fighters constructed. Check them out in the vehicles panel.,,,,,,,
-FLEET_STRENGTH_INFO,"Every time a fleet of fighters conquers a star system, their strength is reduced by the system's difficulty.\nConsequences:\n- The fleet cannot conquer star systems where their difficulty is higher than this number.\n- The strength required to completely conquer a galaxy is the sum of the difficulties of all star systems in it. This sum can be seen by clicking the ""send fighters"" button in galaxy view.",,,,,,,
+FLEET_STRENGTH_INFO,"Every time a fleet of fighters conquers a star system, their strength is reduced by the system's difficulty.\nConsequences:\n- The fleet cannot conquer star systems where their difficulty is higher than this number.\n- The strength required to completely conquer a galaxy is the sum of the difficulties of all star systems in it.",,,,,,,
 CLICK_TO_VIEW_GALAXY,Click to view the galaxy this fighter is in,,,,,,,
 SEND_FIGHTERS,Send fighters,,,,,,,
 COMBINED_STRENGTH,Combined strength of all fleets in this galaxy,,,,,,,
@@ -823,3 +826,4 @@ PROBE_SENT,Probe sent!,,,,,,,
 NO_PROBES,You don't have any probes! Build them with the probe construction center building.,,,,,,,
 CLUSTER_DISCOVERED_BY_PROBE,One of your probes just discovered a new cluster!,,,,,,,
 X_SEEDS,%s seeds,Graines de %s,Semi di %s,,,,%s 씨앗,
+COLLECT_REMINDER,Don't forget to collect resources from your buildings first.,,,,,,,
