@@ -139,11 +139,19 @@ texture = ExtResource( 12 )
 expand = true
 stretch_mode = 6
 
-[node name="From" type="VBoxContainer" parent="Control2"]
-margin_left = 480.0
-margin_top = 240.0
-margin_right = 520.0
-margin_bottom = 280.0
+[node name="ScrollContainer" type="ScrollContainer" parent="Control2"]
+margin_left = 500.0
+margin_top = 236.0
+margin_right = 624.0
+margin_bottom = 436.0
+rect_min_size = Vector2( 0, 200 )
+scroll_horizontal_enabled = false
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="From" type="VBoxContainer" parent="Control2/ScrollContainer"]
 __meta__ = {
 "_edit_use_anchors_": false
 }

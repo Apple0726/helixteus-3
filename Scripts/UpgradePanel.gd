@@ -161,6 +161,7 @@ func _on_Path1_pressed():
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path1)
+	next_lv.allow_greater = true
 	update()
 
 func _on_Path2_pressed():
@@ -168,6 +169,7 @@ func _on_Path2_pressed():
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path2)
+	next_lv.allow_greater = true
 	update()
 
 func _on_Path3_pressed():
@@ -175,6 +177,9 @@ func _on_Path3_pressed():
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path3)
+	if Data.path_3[bldg].has("cap"):
+		next_lv.max_value = Data.path_3[bldg].cap
+		next_lv.allow_greater = false
 	update()
 
 

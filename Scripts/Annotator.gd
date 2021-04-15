@@ -24,6 +24,7 @@ func _ready():
 	$VBoxContainer/Energy/TextureRect.texture = load("res://Graphics/Icons/energy.png")
 	$VBoxContainer/SP/TextureRect.texture = load("res://Graphics/Icons/SP.png")
 	$VBoxContainer/Plant/TextureRect.texture = load("res://Graphics/Science/SA.png")
+	$VBoxContainer/Cave/TextureRect.texture = load("res://Graphics/Tiles/cave.png")
 	$VBoxContainer/Stone/TextureRect.texture = load("res://Graphics/Icons/stone.png")
 	$VBoxContainer/Arrow/TextureRect.texture = load("res://Graphics/Icons/Arrow.png")
 	for node in $VBoxContainer.get_children():
@@ -77,12 +78,12 @@ func on_Eraser_pressed():
 	game.view.annotate_icon.texture = null
 	$VBoxContainer.visible = false
 
-func on_Icons_pressed():
+func on_Icons_pressed(manual:bool = false):
 	for node in $HBoxContainer.get_children():
 		if node.name != "Icons":
 			node.get_node("Button").pressed = false
 	mode = "icon"
-	if not $HBoxContainer/Icons/Button.pressed:
+	if not manual and not $HBoxContainer/Icons/Button.pressed:
 		$VBoxContainer.visible = not $VBoxContainer.visible
 	game.get_node("UI/Panel").visible = true
 	Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
@@ -133,7 +134,7 @@ func _on_Icons_mouse_entered():
 func _on_Annotator_visibility_changed():
 	if visible:
 		if mode == "icon":
-			on_Icons_pressed()
+			on_Icons_pressed(true)
 	else:
 		game.view.annotate_icon.texture = null
 		game.get_node("UI/Panel").visible = false

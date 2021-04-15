@@ -93,13 +93,13 @@ func refresh_planets():
 				MS.scale *= 0.05
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false)
 			planet.add_child(MS)
-			if p_i.is_constructing:
+			if p_i.bldg.is_constructing:
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = Vector2(0, -80)
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
-		if p_i.has("bldg"):
+		if p_i.has("bldg") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO))
 			match p_i.bldg.name:
 				"AE":
@@ -208,7 +208,7 @@ func show_planet_info(id:int, l_id:int):
 		elif p_i.MS == "M_MME":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
-		if not p_i.is_constructing:
+		if not p_i.bldg.is_constructing:
 			if p_i.MS_lv < 3 and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
@@ -293,21 +293,21 @@ func on_planet_click (id:int, l_id:int):
 			var t:String = game.item_to_use.type
 			if t == "":
 				if p_i.MS == "M_MME":
-					var stored = p_i.stored
+					var stored = p_i.bldg.stored
 					var min_info:Dictionary = Helper.add_minerals(stored)
-					p_i.stored = min_info.remainder
+					p_i.bldg.stored = min_info.remainder
 					game.HUD.refresh()
 					return
-			elif p_i.is_constructing:
+			elif p_i.bldg.is_constructing:
 				var curr_time = OS.get_system_time_msecs()
 				var orig_num:int = game.item_to_use.num
 				var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0
-				var time_remaining = p_i.construction_date + p_i.construction_length - curr_time
+				var time_remaining = p_i.bldg.construction_date + p_i.bldg.construction_length - curr_time
 				var num_needed = min(game.item_to_use.num, ceil((time_remaining) / float(speedup_time)))
-				p_i.construction_date -= speedup_time * num_needed
+				p_i.bldg.construction_date -= speedup_time * num_needed
 				var time_sped_up = min(speedup_time * num_needed, time_remaining)
-				if p_i.has("collect_date"):
-					p_i.collect_date -= time_sped_up
+				if p_i.bldg.has("collect_date"):
+					p_i.bldg.collect_date -= time_sped_up
 				game.item_to_use.num -= num_needed
 				game.remove_items(game.item_to_use.name, num_needed)
 				game.update_item_cursor()
@@ -433,8 +433,8 @@ func on_star_pressed (id:int):
 		var t:String = game.item_to_use.type
 		if t == "":
 			if star.MS == "M_DS":
-				game.energy += star.stored
-				star.stored = 0
+				game.energy += star.bldg.stored
+				star.bldg.stored = 0
 				game.HUD.refresh()
 		elif star.bldg.is_constructing:
 			var orig_num:int = game.item_to_use.num
@@ -557,8 +557,8 @@ func collect_all():
 		if star.has("MS"):
 			if star.MS == "M_DS":
 				Helper.update_MS_rsrc(star)
-				Helper.add_item_to_coll(items_collected, "energy", star.stored)
-				star.stored = 0
+				Helper.add_item_to_coll(items_collected, "energy", star.bldg.stored)
+				star.bldg.stored = 0
 	for p_ids in planets:
 		if game.c_v != "system":
 			break
@@ -566,9 +566,9 @@ func collect_all():
 		if planet.has("MS"):
 			if planet.MS == "M_MME":
 				Helper.update_MS_rsrc(planet)
-				var collect_data:Dictionary = Helper.add_minerals(planet.stored)
+				var collect_data:Dictionary = Helper.add_minerals(planet.bldg.stored)
 				Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
-				planet.stored = collect_data.remainder
+				planet.bldg.stored = collect_data.remainder
 				continue
 		elif planet.has("bldg"):
 			if planet.bldg.name == "MM":

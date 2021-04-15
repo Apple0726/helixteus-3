@@ -13,7 +13,7 @@ func _ready():
 	$Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	if err == OK:
 		set_difficulty()
-		$Master.value = config.get_value("audio", "master", -42)
+		$Master.value = config.get_value("audio", "master", 0)
 		update_volumes(0, config.get_value("audio", "master", 0))
 		$Music.value = config.get_value("audio", "music", 0)
 		update_volumes(1, config.get_value("audio", "music", 0))

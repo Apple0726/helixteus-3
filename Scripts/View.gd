@@ -103,11 +103,23 @@ func _process(delta):
 					icon.queue_free()
 					annotate_icons.erase(icon_data)
 					shapes_data.erase(icon_data.data)
-	if game.annotator:
+	if game.annotator and game.annotator.visible:
 		if Input.is_action_pressed("1"):
-			annotate_icon.rotation -= 0.03 * delta * 60
+			annotate_icon.rotation -= 0.04 * delta * 60
 		if Input.is_action_pressed("3"):
-			annotate_icon.rotation += 0.03 * delta * 60
+			annotate_icon.rotation += 0.04 * delta * 60
+		if Input.is_action_just_released("Q"):
+			for icon_data in annotate_icons:
+				var icon = icon_data.node
+				var size = icon.get_rect().size * icon.scale
+				var rect2 = Rect2(-size / 2, size)
+				if rect2.has_point(to_local(mouse_position) - icon.position):
+					game.annotator.shape_color = icon_data.data.color
+					game.annotator.get_node("Thickness").value = icon_data.data.scale.x * 10
+					game.annotator.on_icon_pressed(load(icon_data.data.texture))
+					game.annotator.on_Icons_pressed(true)
+					game.annotator.mode == "icon"
+					break
 	if drawing_shape:
 		update()
 	if obj and obj.dimensions:

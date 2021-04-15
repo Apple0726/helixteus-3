@@ -101,6 +101,13 @@ margin_top = 48.0
 margin_right = 60.0
 margin_bottom = 108.0
 
+[node name="Cave" parent="VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 48.0
+margin_right = 60.0
+margin_bottom = 108.0
+
 [node name="SP" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -203,10 +210,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -174.0
-margin_top = -476.0
-margin_right = 173.0
-margin_bottom = -4.0
+margin_left = -166.0
+margin_top = -468.0
+margin_right = 181.0
+margin_bottom = 4.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

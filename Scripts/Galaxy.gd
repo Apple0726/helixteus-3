@@ -128,8 +128,8 @@ func collect_all():
 			if star.has("MS"):
 				if star.MS == "M_DS":
 					Helper.update_MS_rsrc(star)
-					Helper.add_item_to_coll(items_collected, "energy", star.stored)
-					star.stored = 0
+					Helper.add_item_to_coll(items_collected, "energy", star.bldg.stored)
+					star.bldg.stored = 0
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
 			if p_ids.local >= len(game.planet_data):
@@ -137,9 +137,9 @@ func collect_all():
 			if planet.has("MS"):
 				if planet.MS == "M_MME":
 					Helper.update_MS_rsrc(planet)
-					var collect_data:Dictionary = Helper.add_minerals(planet.stored)
+					var collect_data:Dictionary = Helper.add_minerals(planet.bldg.stored)
 					Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
-					planet.stored = collect_data.remainder
+					planet.bldg.stored = collect_data.remainder
 					continue
 			if not planet.discovered:
 				continue

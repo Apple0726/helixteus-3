@@ -243,7 +243,7 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.45, 9)}},
 					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(8.4, 9)}},
 					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(7.2, 10)}},
-					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 11)}},
+					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 12)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -454,6 +454,7 @@ func load_game():
 		mats = save_game.get_var()
 		mets = save_game.get_var()
 		atoms = save_game.get_var()
+		atoms.Na = 0
 		particles = save_game.get_var()
 		help = save_game.get_var()
 		show = save_game.get_var()
@@ -621,10 +622,28 @@ func new_game(tut:bool):
 				"O":0,
 				"F":0,
 				"Ne":0,
+				"Na":0,
+				#"Mg":0,
 				"Al":0,
 				"Si":0,
+				#"P":0,
+				#"S":0,
+				#"K":0,
+				#"Ca":0,
+				"Ti":0,
+				#"Cr":0,
+				#"Mn":0,
 				"Fe":0,
+				#"Co":0,
+				#"Ni":0,
 				"Xe":0,
+				#"Ta":0,
+				#"W":0,
+				#"Os":0,
+				#"Ir":0,
+				#"U":0,
+				#"Np":0,
+				#"Pu":0,
 	}
 
 	particles = {	"proton":0,
@@ -1287,7 +1306,7 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
-		if c_v == "galaxy":
+		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE

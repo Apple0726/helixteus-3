@@ -26,8 +26,8 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":60, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 }
-var path_3 = {	"SC":{"value":1.0, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":600, "copper":600, "iron":600, "aluminium":600, "silver":600, "gold":600}},
-				"GF":{"value":1.0, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1000, "iron":1400, "aluminium":2000, "silver":2500, "gold":3500}},
+var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
+				"GF":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
 				"SE":{"value":1.0, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1400, "iron":2800, "aluminium":5600, "silver":11200, "gold":22400}},
 }
 
@@ -72,11 +72,11 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 }
 
-var MS_output = {	"M_DS_0":150000000,
-					"M_MME_0":3600,
-					"M_MME_1":167000,
-					"M_MME_2":e(4.6, 7),
-					"M_MME_3":e(1.8, 9),
+var MS_output = {	"M_DS_0":100000000,
+					"M_MME_0":2400,
+					"M_MME_1":127000,
+					"M_MME_2":e(4.0, 7),
+					"M_MME_3":e(1.5, 9),
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
@@ -185,7 +185,7 @@ var science_unlocks = {
 						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
-						"FG":{"cost":e(2.45, 10), "parents":["IGD"]},
+						"FG":{"cost":e(2.45, 11), "parents":["IGD"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
 						"PD":{"cost":e(1.2, 12), "parents":["FD"]},

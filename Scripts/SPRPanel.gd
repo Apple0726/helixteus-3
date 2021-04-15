@@ -7,10 +7,10 @@ var energy_cost:float
 var reaction:String = ""
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":80, "difficulty":0.1},
-								"He":{"Z":2, "energy_cost":200, "difficulty":0.15},
-								"Ne":{"Z":10, "energy_cost":8000, "difficulty":5},
-								"Xe":{"Z":54, "energy_cost":350000, "difficulty":40},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":200, "difficulty":0.01},
+								"He":{"Z":2, "energy_cost":1000, "difficulty":0.015},
+								"Ne":{"Z":10, "energy_cost":40000, "difficulty":2},
+								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":40},
 }
 
 func _ready():
@@ -90,8 +90,8 @@ func reset_poses(_name:String, _Z:int):
 
 func _on_Switch_pressed(refresh:bool = true):
 	var pos = $Control2/To.rect_position
-	$Control2/To.rect_position = $Control2/From.rect_position
-	$Control2/From.rect_position = pos
+	$Control2/To.rect_position = $Control2/ScrollContainer.rect_position
+	$Control2/ScrollContainer.rect_position = pos
 	atom_to_p = not atom_to_p
 	if refresh:
 		#_on_HSlider_value_changed($Control/HSlider.value)
@@ -103,7 +103,7 @@ func _on_HSlider_value_changed(value):
 	for particle in p_costs:
 		p_costs[particle] *= Z
 	atom_dict[reaction] = value
-	Helper.put_rsrc($Control2/From, 32, atom_dict, true, atom_to_p)
+	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
 	Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * value))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000 / tile.bldg.path_1_value)
@@ -187,6 +187,6 @@ func _process(delta):
 		num = max(0, tile.bldg.qty - MM_value) * Z
 		atom_dict[reaction] = MM_value
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
-	Helper.put_rsrc($Control2/From, 32, atom_dict)
+	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))

@@ -73,8 +73,11 @@ func _ready():
 		$Star.position.x = range_lerp(game.planet_data[game.c_p].angle, 0, 2 * PI, 0, 1280)
 		$Star.position.y = 200 * cos(game.c_p * 10) + 300
 		$Star.scale *= 0.5 * game.system_data[game.c_s].stars[0].size / (game.planet_data[game.c_p].distance / 500)
-		$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % game.planet_data[game.c_p].type)
-		for i in 1000:
+		if not game.planet_data[game.c_p].type in [11, 12]:
+			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % game.planet_data[game.c_p].type)
+		else:
+			$BG.texture = null
+		for i in int(game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2)):
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
@@ -83,7 +86,8 @@ func _ready():
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
 			star.position.y = rand_range(0, 720)
-			add_child_below_node($Star, star)
+			add_child(star)
+			move_child(star, 0)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
 		if err == OK:

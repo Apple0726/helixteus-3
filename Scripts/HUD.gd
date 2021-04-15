@@ -294,6 +294,7 @@ func on_slot_out():
 
 func on_slot_press(i:int):
 	var name = game.hotbar[i]
+	on_button = false
 	game.inventory.on_slot_press(name)
 
 func _on_Label_mouse_entered():

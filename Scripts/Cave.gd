@@ -607,7 +607,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 			contents.hx_core2 %= 8
 			if contents.hx_core2 == 0:
 				contents.erase("hx_core2")
-	if contents.hx_core == 0:
+	if contents.has("hx_core") and contents.hx_core == 0:
 		contents.erase("hx_core")
 	for met in game.met_info:
 		var met_value = game.met_info[met]
@@ -1083,7 +1083,7 @@ func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
 func _physics_process(delta):
-	var speed_mult2 = (speed_mult if moving_fast else 1.0) * rover_size
+	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size)
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO

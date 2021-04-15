@@ -89,10 +89,13 @@ func refresh():
 	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].conquered
 
 func _on_Send_pressed():
-	if game.c_g_g == 0 and game.planet_data[dest_p_id].pressure > 30:
-		game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
-	elif time_cost > 4 * 60 * 60 * 1000:
-		game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])
+	if game.lv < 35:
+		if game.c_g_g == 0 and game.planet_data[dest_p_id].pressure > 30:
+			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
+		elif time_cost > 4 * 60 * 60 * 1000:
+			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])
+		else:
+			send_ships()
 	else:
 		send_ships()
 
