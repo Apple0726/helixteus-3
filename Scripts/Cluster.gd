@@ -48,12 +48,12 @@ func on_galaxy_out ():
 func on_galaxy_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
-		if game.galaxy_data[l_id].system_num > 9000:
+		if not game.galaxy_data[l_id].discovered and game.galaxy_data[l_id].system_num > 9000:
 			game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))
 		else:
 			game.c_g_g = id
 			game.c_g = l_id
-			game.switch_view("galaxy")
+			game.switch_view("galaxy", false, "set_g_id", [l_id, id])
 	view.dragged = false
 
 func change_overlay(overlay_id:int, gradient:Gradient):

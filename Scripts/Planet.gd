@@ -68,7 +68,6 @@ func _ready():
 			$Lakes2.modulate = phase_2.colors[lake_2_phase]
 			#$Lakes2.modulate = Color(0.3, 0.3, 0.3, 1)
 		phase_2.free()
-	
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
@@ -707,14 +706,14 @@ func _input(event):
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						game.ship_data.append({"lv":1, "HP":20, "total_HP":20, "atk":10, "def":5, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":12, "current":game.lv, "goal":35}
-						game.ship_data.append({"lv":1, "HP":16, "total_HP":16, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
 						Helper.add_weapon_XP(1, "laser", 50)
@@ -725,8 +724,8 @@ func _input(event):
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.ship_data.append({"lv":1, "HP":14, "total_HP":14, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-							Helper.add_ship_XP(2, 25000)
+							game.ship_data.append({"lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+							Helper.add_ship_XP(2, 40000)
 							Helper.add_weapon_XP(2, "bullet", 140)
 							Helper.add_weapon_XP(2, "laser", 140)
 							Helper.add_weapon_XP(2, "bomb", 140)

@@ -241,7 +241,7 @@ func _input(event):
 				Helper.add_label(tr("F_TO_CONFIRM"))
 			else:
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
-		elif planet_hovered != -1:
+		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
 			game.add_upgrade_panel([], game.planet_data[planet_hovered])
 
 func build_MS(obj:Dictionary, MS:String):
@@ -348,22 +348,22 @@ func on_planet_click (id:int, l_id:int):
 		elif (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
 			if not p_i.conquered:
 				game.stats.planets_conquered += 1
-			game.planet_data[l_id].conquered = true
-			var all_conquered = true
-			for planet in game.planet_data:
-				if not planet.conquered:
-					all_conquered = false
+				game.planet_data[l_id].conquered = true
+				var all_conquered = true
+				for planet in game.planet_data:
+					if not planet.conquered:
+						all_conquered = false
+				if game.system_data[game.c_s].conquered != all_conquered:
+					game.system_data[game.c_s].conquered = all_conquered
+					Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 			if not p_i.type in [11, 12]:
-				if not p_i.has("bldg"):
+				if not p_i.has("bldg") or not p_i.bldg.has("name"):
 					game.c_p = l_id
 					game.c_p_g = id
 					game.switch_view("planet")
 					Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 			else:
 				game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
-			if game.system_data[game.c_s].conquered != all_conquered:
-				game.system_data[game.c_s].conquered = all_conquered
-				Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 		else:
 			if Helper.ships_on_planet(l_id) and not p_i.conquered:
 				game.c_p = l_id
@@ -476,7 +476,7 @@ func _process(_delta):
 		if progress > 1:
 			if star.bldg.is_constructing:
 				star.bldg.is_constructing = false
-				game.xp += star.XP
+				game.xp += star.bldg.XP
 				game.HUD.refresh()
 			remove_child(time_bar)
 			star_time_bars.erase(time_bar_obj)
@@ -497,6 +497,8 @@ func _process(_delta):
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	for time_bar_obj in planet_plant_bars:
 		var time_bar = time_bar_obj.node
+		if not time_bar:
+			continue
 		var p_i = time_bar_obj.p_i
 		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
 		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
@@ -520,11 +522,24 @@ func _process(_delta):
 		var planet = game.planet_data[rsrc_obj.id]
 		if planet.bldg.is_constructing:
 			continue
-		var value = Helper.update_MS_rsrc(planet)
 		var rsrc = rsrc_obj.node
 		var current_bar = rsrc.get_node("Control/CurrentBar")
-		current_bar.value = value
-		rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored, 4)
+		var capacity_bar = rsrc.get_node("Control/CapacityBar")
+		var value = Helper.update_MS_rsrc(planet)
+		if not value:
+			continue
+		if planet.bldg.has("name") and planet.bldg.name == "MM":
+			var cap = round(planet.bldg.path_2_value * planet.bldg.IR_mult)
+			if planet.bldg.stored >= cap:
+				current_bar.value = 0
+				capacity_bar.value = 1
+			else:
+				current_bar.value = value
+				capacity_bar.value = min(planet.bldg.stored / float(cap), 1)
+			rsrc.get_node("Control/Label").text = "%s / %s m" % [planet.depth + planet.bldg.stored, planet.depth + cap]
+		else:
+			current_bar.value = value
+			rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored, 4)
 
 func _on_System_tree_exited():
 	queue_free()

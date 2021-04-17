@@ -203,6 +203,17 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	if dont_gen_anything:
+		if cave_floor < 19:
+			light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
+		else:
+			light_amount = clamp((23 - cave_floor) * 0.05, 0, 0.2)
+	else:
+		light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+		if game.science_unlocked.RMK2:
+			light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
+		if game.science_unlocked.RMK3:
+			light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), game.clever_round(difficulty, 3)]
 	var rng = RandomNumberGenerator.new()
 	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
@@ -785,30 +796,16 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				difficulty *= 2
-				if dont_gen_anything:
-					if cave_floor < 19:
-						light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
-					else:
-						light_amount = clamp((23 - cave_floor) * 0.05, 0, 0.2)
-				else:
-					light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
-				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = true
 				generate_cave(false, false)
+				rover_light.energy = (1 - light_amount) * 1.4
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
 				difficulty /= 2
-				if dont_gen_anything:
-					if cave_floor < 19:
-						light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
-					else:
-						light_amount = clamp((20 - cave_floor) * 0.05, 0, 0.1)
-				else:
-					light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
-				rover_light.energy = (1 - light_amount) * 1.4
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
+				rover_light.energy = (1 - light_amount) * 1.4
 			elif active_type == "map":
 				game.third_ship_hints.erase("map_found_at")
 				game.third_ship_hints.erase("map_pos")

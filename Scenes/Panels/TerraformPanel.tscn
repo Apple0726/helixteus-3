@@ -243,8 +243,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_MineralStorage_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/AtmosphereExtraction" to="." method="_on_AtmosphereExtraction_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/Mining" to="." method="_on_Mining_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_SpaceAgriculture_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_MS_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/AtmosphereExtraction" to="." method="_on_AE_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Mining" to="." method="_on_MM_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]
 [connection signal="pressed" from="Control/Terraform" to="." method="_on_Terraform_pressed"]

@@ -47,7 +47,7 @@ func refresh():
 			type = "atoms"
 		"Xe":
 			$Control/TextureRect.texture = xenon_texture
-			speed = 75000000
+			speed = 7500000
 			unit = "mol"
 			type = "atoms"
 		"he3mix":

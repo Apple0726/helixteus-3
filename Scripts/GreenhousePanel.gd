@@ -47,7 +47,7 @@ func on_slot_out():
 func on_slot_press(_name:String):
 	seeds_to_plant = _name
 	$Plant.visible = true
-	$CostLabel.text = tr("YOU_WILL_NEED_X_SEEDS").format({"num":tile_num, "seeds":tr(seeds_to_plant.to_upper()).to_lower()})
+	$CostLabel.text = tr("YOU_WILL_NEED_X_SEEDS").format({"num":tile_num, "seeds":tr("X_SEEDS") % tr(seeds_to_plant.split("_")[0].to_upper()).to_lower()})
 
 func _on_Plant_pressed():
 	if game.get_item_num(seeds_to_plant) >= tile_num:

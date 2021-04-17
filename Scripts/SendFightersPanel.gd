@@ -29,6 +29,7 @@ func refresh():
 		var combined_strength2:float = 0
 		var strength_required:float = 0
 		var planet_exit_costs:float = 0
+		var travel_costs:float = 0
 		var unconquered_sys:int = 0
 		combined_strength = 0
 		for sys in game.system_data:
@@ -43,10 +44,13 @@ func refresh():
 				combined_strength += fighter.strength
 				fighter_num += fighter.number
 				planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number
+				travel_costs += 1000000 * fighter.number * slider_factor * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
 		combined_strength2 = combined_strength
 		sort_systems($Control/CheckBox2.pressed)
 		sys_num = 0
 		for system in sorted_systems:
+			if system.conquered:
+				continue
 			if combined_strength2 < system.diff:
 				if sys_num == 0:
 					continue
@@ -56,9 +60,12 @@ func refresh():
 				combined_strength2 -= system.diff
 				sys_num += 1
 		time_for_one_sys = 2 * 60000.0 / slider_factor
+		travel_costs *= sys_num
 		game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), sys_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_sys, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_sys * sys_num)], [Data.energy_icon, Data.time_icon], 19)
-		total_energy_cost = 10000000 * fighter_num * sys_num * slider_factor + planet_exit_costs
+		total_energy_cost = travel_costs + planet_exit_costs
 		$Control/EnergyCost.text = Helper.format_num(total_energy_cost)
+		if unconquered_sys == 0:
+			game.galaxy_data[game.c_g].conquered = true
 
 func sort_systems(invert:bool):
 	sorted_systems = game.system_data.duplicate(true)
@@ -72,16 +79,16 @@ func diff_sort(a:Dictionary, b:Dictionary):
 	return false
 
 func has_SE(p_i:Dictionary):
-	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.is_constructing
+	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.is_constructing
 
 func get_atm_exit_cost(p_i:Dictionary):
-	var res:float = pow(p_i.pressure * 10, 1.5) * 3000000
+	var res:float = pow(p_i.pressure * 10, 1.5) * 300000
 	if has_SE(p_i):
 		res *= get_entry_exit_multiplier(p_i.MS_lv)
 	return round(res)
 
 func get_grav_exit_cost(p_i:Dictionary):
-	var res:float = pow(p_i.size / 180.0, 2.5) * 10000
+	var res:float = pow(p_i.size / 180.0, 2.5) * 1000
 	if has_SE(p_i):
 		res *= get_entry_exit_multiplier(p_i.MS_lv)
 	return round(res)
@@ -96,6 +103,17 @@ func get_entry_exit_multiplier(lv:int):
 			return 0.3
 		3:
 			return 0
+
+func get_travel_cost_multiplier(lv:int):
+	match lv:
+		0:
+			return 0.95
+		1:
+			return 0.8
+		2:
+			return 0.65
+		3:
+			return 0.5
 
 func _on_CheckBox_pressed():
 	$Control/CheckBox.pressed = true
@@ -132,6 +150,9 @@ func _on_Send_pressed():
 		refresh()
 
 func _process(delta):
+	if not game.galaxy_data[game.c_g].has("conquer_start_date"):
+		set_process(false)
+		return
 	progress.value = (OS.get_system_time_msecs() - game.galaxy_data[game.c_g].conquer_start_date) / game.galaxy_data[game.c_g].time_for_one_sys * 100
 	var fighters_rekt = game.galaxy_data[game.c_g].combined_strength <= 0
 	if not fighters_rekt and progress.value >= 100:

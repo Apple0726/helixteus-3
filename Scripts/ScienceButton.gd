@@ -100,6 +100,16 @@ func _input(event):
 					game.show.atoms = true
 				elif name == "SAP":
 					game.show.particles = true
+				elif name == "CI":
+					game.stack_size = 32
+				elif name == "CI2":
+					game.stack_size = 64
+				elif name == "CI3":
+					game.stack_size = 128
+				elif name == "RMK2":
+					game.RC_panel.inventory.append({"type":""})
+				elif name == "RMK3":
+					game.RC_panel.inventory.append({"type":""})
 				game.HUD.refresh()
 				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 				main_tree.refresh()

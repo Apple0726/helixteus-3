@@ -761,6 +761,7 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			collect_MM(p_i, tile, rsrc_collected, curr_time)
 
 func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+	update_MS_rsrc(p_i)
 	if dict.bldg.stored >= 1 and not dict.has("depth"):
 		dict.depth = 0
 	if dict.bldg.stored >= 3:
@@ -787,11 +788,12 @@ func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 					else:
 						contents[content] *= n
 				add_item_to_coll(rsrc_collected, content, contents[content])
-	if dict.bldg.stored == dict.bldg.path_2_value:
+	if dict.bldg.stored == round(dict.bldg.path_2_value):
 		dict.bldg.collect_date = curr_time
 	dict.bldg.stored = 0
 	
 func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+	update_MS_rsrc(p_i)
 	var stored = dict.bldg.stored
 	if stored == round(dict.bldg.path_2_value):
 		dict.bldg.collect_date = curr_time
@@ -878,20 +880,35 @@ func update_MS_rsrc(dict:Dictionary):
 			prod = 1000.0 / Helper.get_DS_output(dict)
 		elif dict.MS == "M_MME":
 			prod = 1000.0 / Helper.get_MME_output(dict)
-	else:
+		if prod:
+			var stored = dict.bldg.stored
+			var c_d = dict.bldg.collect_date
+			var c_t = curr_time
+			if c_t - c_d > prod:
+				var rsrc_num = floor((c_t - c_d) / prod)
+				dict.bldg.stored += rsrc_num
+				dict.bldg.collect_date += prod * rsrc_num
+			return min((c_t - c_d) / prod, 1)
+	elif dict.has("bldg"):
 		if dict.bldg.name == "AE":
 			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value)
 		else:
 			prod = 1000 / dict.bldg.path_1_value
-		prod /= dict.tile_num
-	var stored = dict.bldg.stored
-	var c_d = dict.bldg.collect_date
-	var c_t = curr_time
-	if c_t - c_d > prod:
-		var rsrc_num = floor((c_t - c_d) / prod)
-		dict.bldg.stored += rsrc_num
-		dict.bldg.collect_date += prod * rsrc_num
-	return min((c_t - c_d) / prod, 1)
+		if dict.bldg.name != "MM":
+			prod /= dict.tile_num
+		var stored = dict.bldg.stored
+		var c_d = dict.bldg.collect_date
+		var c_t = curr_time
+		if dict.bldg.has("path_2_value"):
+			var cap = round(dict.bldg.path_2_value * dict.bldg.IR_mult)
+			if stored < cap:
+				if c_t - c_d > prod:
+					var rsrc_num = floor((c_t - c_d) / prod)
+					dict.bldg.stored += rsrc_num
+					dict.bldg.collect_date += prod * rsrc_num
+					if dict.bldg.stored >= cap:
+						dict.bldg.stored = cap
+		return min((c_t - c_d) / prod, 1)
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity

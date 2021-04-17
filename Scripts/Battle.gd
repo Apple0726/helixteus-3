@@ -5,7 +5,7 @@ onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
 onready var ship2 = $Ship2
-var star_texture = preload("res://Graphics/Effects/spotlight_8.png")
+var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 const DEF_EXPO_SHIP = 1
 const DEF_EXPO_ENEMY = 1
 
@@ -77,7 +77,7 @@ func _ready():
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % game.planet_data[game.c_p].type)
 		else:
 			$BG.texture = null
-		for i in int(game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2)):
+		for i in int(min(10000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))):
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
@@ -86,8 +86,7 @@ func _ready():
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
 			star.position.y = rand_range(0, 720)
-			add_child(star)
-			move_child(star, 0)
+			$Stars.add_child(star)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
 		if err == OK:

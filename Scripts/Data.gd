@@ -164,6 +164,11 @@ var science_unlocks = {
 						#Improved stone crusher
 						"ISC":{"cost":250, "parents":[]},
 						
+						#Compact items
+						"CI":{"cost":4800, "parents":[]},
+						"CI2":{"cost":e(4.8, 6), "parents":[]},
+						"CI3":{"cost":e(4.8, 9), "parents":[]},
+						
 						#Atom manipulation
 						"ATM":{"cost":200000, "parents":[]},
 						"SAP":{"cost":12500000, "parents":["ATM"]},
@@ -178,14 +183,17 @@ var science_unlocks = {
 						"UVL":{"cost":e(2.8, 7), "parents":["PL"]},
 						"XRL":{"cost":e(4.05, 8), "parents":["UVL"]},
 						"GRL":{"cost":e(6.5, 9), "parents":["XRL"]},
-						"UGRL":{"cost":e(1, 11), "parents":["GRL"]},
+						"UGRL":{"cost":e(1, 12), "parents":["GRL"]},
+						
+						"RMK2":{"cost":e(5, 6), "parents":["RC"]},
+						"RMK3":{"cost":e(5, 10), "parents":["RMK2"]},
 						
 						#Ship sciences
 						"SCT":{"cost":350, "parents":["RC"]},
 						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
-						"FG":{"cost":e(2.45, 11), "parents":["IGD"]},
+						"FG":{"cost":e(2.45, 10), "parents":["IGD"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
 						"PD":{"cost":e(1.2, 12), "parents":["FD"]},

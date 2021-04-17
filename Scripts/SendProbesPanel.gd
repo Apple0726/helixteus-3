@@ -41,7 +41,9 @@ func refresh():
 		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
 	costs.energy = 1000000000000 * slider_factor * dist_mult
 	costs.Xe = 10000 * slider_factor * dist_mult
-	costs.time = 15 / pow(slider_factor, 0.3) * dist_mult
+	costs.time = 150 / pow(slider_factor, 0.3) * dist_mult
+	if game.TEST:
+		costs.time /= 100
 	Helper.put_rsrc($Control/Costs, 36, costs, true, true)
 
 func dist_sort(a:Dictionary, b:Dictionary):

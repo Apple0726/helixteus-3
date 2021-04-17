@@ -29,6 +29,9 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 var orbit_scene = preload("res://Scenes/Orbit.tscn")
+var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
+var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
+var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
 
 var tutorial:Node2D
 
@@ -239,11 +242,11 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"silver_pickaxe":{"speed":12.7, "durability":1700, "costs":{"money":15000000}},
 					"gold_pickaxe":{"speed":90.0, "durability":140, "costs":{"money":32500000}},
 					"gemstone_pickaxe":{"speed":55.0, "durability":2000, "costs":{"money":e(1.56, 8)}},
-					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(6.5, 8)}},
+					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(5.5, 8)}},
 					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.45, 9)}},
-					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(8.4, 9)}},
-					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(7.2, 10)}},
-					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 12)}},
+					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(4.4, 9)}},
+					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(2.2, 10)}},
+					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 11)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -450,11 +453,18 @@ func load_game():
 		auto_replace = save_game.get_8()
 		pickaxe = save_game.get_var()
 		science_unlocked = save_game.get_var()
+		if science_unlocked.CI:
+			stack_size = 32
+		if science_unlocked.CI2:
+			stack_size = 64
+		if science_unlocked.CI3:
+			stack_size = 128
+		science_unlocked.RMK2 = true
+		science_unlocked.RMK3 = true
 		infinite_research = save_game.get_var()
 		mats = save_game.get_var()
 		mets = save_game.get_var()
 		atoms = save_game.get_var()
-		atoms.Na = 0
 		particles = save_game.get_var()
 		help = save_game.get_var()
 		show = save_game.get_var()
@@ -1097,6 +1107,10 @@ func set_to_probe_coords(sc:int):
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
 	c_p_g = g_id
+
+func set_g_id(l_id:int, g_id:int):
+	c_g = l_id
+	c_g_g = g_id
 #															V function to execute after removing objects but before adding new ones
 func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true):
 	hide_tooltip()
@@ -1311,7 +1325,7 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].has("conquered")
 		space_HUD.get_node("SendProbes").visible = c_v == "supercluster"
 
 func add_overlay():
@@ -1360,6 +1374,7 @@ func add_universe():
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
+	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_supercluster():
 	var view_str:String = tr("VIEW_UNIVERSE")
@@ -1374,6 +1389,7 @@ func add_supercluster():
 			cluster_data.clear()
 		generate_clusters(c_sc)
 	add_obj("supercluster")
+	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_cluster():
 	var view_str:String = tr("VIEW_SUPERCLUSTER")
@@ -2161,7 +2177,7 @@ func generate_planets(id:int):
 				lv = 3
 			if num == 12:
 				lv = ceil(0.9 * log(power) / log(1.2))
-			var HP = round(rand_range(0.8, 1.2) * 20 * pow(1.15, lv - 1))
+			var HP = round(rand_range(0.8, 1.2) * 25 * pow(1.16, lv - 1))
 			var def = Helper.rand_int(3, 10)
 			var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
 			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
@@ -2379,7 +2395,7 @@ func generate_tiles(id:int):
 			tile_data[random_tile + 1].cave = {"id":len(cave_data)}
 			cave_data.append({"floor_size":50, "num_floors":5, "special_cave":3})#Big maze cave where minimap is disabled
 			third_ship_hints.ship_spawned_at_p = c_p_g
-		elif third_ship_hints.ship_part_id == c_s and not third_ship_hints.part_spawned_at_p:
+		elif third_ship_hints.ship_part_id == c_s and third_ship_hints.part_spawned_at_p == -1:
 			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 			erase_tile(random_tile)
 			tile_data[random_tile].ship_part = true
@@ -2833,18 +2849,18 @@ func check_enough(costs):
 	var enough = true
 	for cost in costs:
 		if cost == "money" and money < costs[cost]:
-			enough = false
+			return false
 		if cost == "energy" and energy < costs[cost]:
-			enough = false
+			return false
 		if mats.has(cost) and mats[cost] < costs[cost]:
-			enough = false
+			return false
 		if mets.has(cost) and mets[cost] < costs[cost]:
-			enough = false
+			return false
+		if atoms.has(cost) and atoms[cost] < atoms[cost]:
+			return false
 		if cost == "stone" and Helper.get_sum_of_dict(stone) < costs.stone:
-			enough = false
-		if not enough:
-			break
-	return enough
+			return false
+	return true
 
 func deduct_resources(costs):
 	for cost in costs:
@@ -3108,7 +3124,7 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not upgrade_panel and not overlay:
+	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel and not overlay:
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]

@@ -103,7 +103,7 @@ func _process(delta):
 		bar.get_node("Bar").value = progress
 		if progress >= 1:
 			var cluster_data:Array
-			if game.c_v == "supercluster":
+			if game.c_v == "supercluster" or game.c_sc == probe.c_sc:
 				cluster_data = game.cluster_data
 				cluster_data[probe.cluster_to_discover].visible = true
 			else:

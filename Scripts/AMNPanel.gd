@@ -328,6 +328,9 @@ func _on_Transform_pressed():
 		else:
 			rsrc_to_deduct[metal] = rsrc
 		rsrc_to_deduct.energy = round(energy_cost * rsrc)
+		if not game.check_enough(rsrc_to_deduct):
+			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+			return
 		game.deduct_resources(rsrc_to_deduct)
 		tile.bldg.qty = rsrc
 		tile.bldg.AMN_stone = game.stone.duplicate(true)
@@ -355,7 +358,7 @@ func _process(delta):
 	if tile.bldg.atom_to_MM:
 		MM_dict[metal] = MM_value
 		for atom in atom_dict:
-			atom_dict[atom] = game.clever_round(MM_value * ratios[atom])
+			atom_dict[atom] = game.clever_round(max(0, tile.bldg.qty - MM_value) * ratios[atom])
 	else:
 		MM_dict[metal] = max(0, tile.bldg.qty - MM_value)
 		if metal == "stone":

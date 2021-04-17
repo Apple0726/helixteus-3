@@ -8,6 +8,7 @@ onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + 
 var progress = 0#Mining tile progress
 var contents:Dictionary
 var tween:Tween
+var BG_tween:Tween
 var layer:String
 onready var met_info = game.met_info
 var metal_sprites = []
@@ -37,7 +38,8 @@ func _ready():
 	progress = tile.mining_progress
 	if not game.pickaxe.empty():
 		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
-		update_info()
+		update_pickaxe()
+	update_info(true)
 	generate_rock(false)
 	$Help.visible = game.help.mining
 	circ.visible = not game.help.mining
@@ -47,13 +49,15 @@ func _ready():
 		$LayerAnim.play("Layer fade")
 		$LayerAnim.seek(1, true)
 	$AutoReplace.pressed = game.auto_replace
+	BG_tween = Tween.new()
+	add_child(BG_tween)
 
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
 	aurora_mult = game.clever_round(Helper.get_au_mult(tile))
 	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
 	
-func update_info():
+func update_info(first_time:bool = false):
 	var upper_depth
 	var lower_depth 
 	var unit:String = "m"
@@ -66,21 +70,44 @@ func update_info():
 		upper_depth = 0
 		lower_depth = p_i.crust_start_depth
 	elif tile.depth <= p_i.mantle_start_depth:
+		if layer != "crust":
+			if first_time:
+				$SurfaceBG.modulate.a = 0
+				$CrustBG.modulate.a = 0.25
+			else:
+				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				BG_tween.start()
 		layer = "crust"
 		upper_depth = p_i.crust_start_depth + 1
 		lower_depth = p_i.mantle_start_depth
 	elif tile.depth <= p_i.core_start_depth:
-		if layer == "crust" and tile.has("ship_part"):
+		if tile.has("ship_part"):
 			tile.erase("ship_part")
 			if not game.objective.empty():
 				game.objective.current += 1
 			game.popup(tr("SHIP_PART_FOUND"), 2.5)
 			game.third_ship_hints.parts[4] = true
+		if layer != "mantle":
+			if first_time:
+				$SurfaceBG.modulate.a = 0
+				$CrustBG.modulate.a = 0
+				$MantleBG.modulate.a = 0.25
+			else:
+				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				BG_tween.start()
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
 		lower_depth = floor(p_i.core_start_depth / 1000.0)
 		unit = "km"
 	else:
+		if tile.has("ship_part"):
+			tile.erase("ship_part")
+			if not game.objective.empty():
+				game.objective.current += 1
+			game.popup(tr("SHIP_PART_FOUND"), 2.5)
+			game.third_ship_hints.parts[4] = true
 		layer = "core"
 		upper_depth = floor(p_i.core_start_depth / 1000.0)
 		lower_depth = floor(p_i.size / 2.0)
@@ -96,6 +123,8 @@ func update_info():
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
+
+func update_pickaxe():
 	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]	
 	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
@@ -227,13 +256,14 @@ func pickaxe_hit():
 		place_crumbles(15, 0.2, 2)
 		game.HUD.refresh()
 	update_info()
+	update_pickaxe()
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
 		if $AutoReplace.pressed and game.check_enough(costs):
 			game.deduct_resources(costs)
 			game.pickaxe.durability = curr_pick_info.durability
-			update_info()
+			update_pickaxe()
 		else:
 			game.pickaxe.clear()
 			circ_disabled = true

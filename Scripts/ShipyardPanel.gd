@@ -12,7 +12,7 @@ func refresh():
 	_on_SpinBox_value_changed($SpinBox.value)
 
 func _on_SpinBox_value_changed(value):
-	costs = {"money":500000000}
+	costs = {"money":1500000000}
 	for cost in costs:
 		costs[cost] *= value
 	strength = value * strength_mult

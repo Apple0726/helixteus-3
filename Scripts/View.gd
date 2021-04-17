@@ -419,8 +419,6 @@ func _input(event):
 			elif game.annotator.mode != "icon":
 				size = line_points.start.distance_to(line_points.end)
 			if game.annotator.mode == "icon" and not game.annotator.mouse_in_panel:
-				print(mouse_position)
-				print(annotate_icon.position)
 				shapes_data.append({"shape":"icon", "texture":annotate_icon.texture.resource_path, "rotation":annotate_icon.rotation, "scale":annotate_icon.scale, "color":game.annotator.shape_color, "position":annotate_icon.position})
 				refresh()
 			elif size >= game.annotator.thickness / 3.0:#Prevent players from drawing very thick figures compared to their size, which means they'll have a hard time erasing them

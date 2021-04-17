@@ -10,6 +10,10 @@ var lake_num:int
 func _ready():
 	set_polygon($Background.rect_size)
 
+func refresh():
+	if tf_type != "":
+		call("_on_%s_pressed" % tf_type)
+
 func update_info():
 	tf_costs = {"energy":1000000, "SP":10000}
 	var pressure_mult = max(1, pressure)
@@ -24,28 +28,28 @@ func update_info():
 	Helper.put_rsrc($Control/BCVBox, 32, costs, true, true)
 	$Control.visible = true
 
-func _on_MineralStorage_pressed():
+func _on_MS_pressed():
 	tf_type = "MS"
 	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("MINERAL_SILOS").to_lower()]
 	costs = Data.costs.MS.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
-func _on_AtmosphereExtraction_pressed():
+func _on_AE_pressed():
 	tf_type = "AE"
 	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("ATMOSPHERE_EXTRACTORS").to_lower()]
 	costs = Data.costs.AE.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
-func _on_Mining_pressed():
+func _on_MM_pressed():
 	tf_type = "MM"
 	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("MINING_MACHINES").to_lower()]
 	costs = Data.costs.MM.duplicate(true)
 	$Control/Note.visible = true
 	update_info()
 
-func _on_SpaceAgriculture_pressed():
+func _on_GH_pressed():
 	tf_type = "GH"
 	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("GREENHOUSES").to_lower()]
 	costs = Data.costs.GH.duplicate(true)

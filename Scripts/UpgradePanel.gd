@@ -26,6 +26,7 @@ func _ready():
 		$UpgradePanel/AutoSpeedup.visible = false
 		$UpgradePanel/AutoSpeedup.pressed = true
 		auto_speedup = true
+		_on_Path1_pressed()
 	else:
 		if game.tile_data[ids[0]].bldg.has("path_2"):
 			path2.visible = true
@@ -33,14 +34,14 @@ func _ready():
 			path3.visible = true
 		$UpgradePanel/AutoSpeedup.visible = game.lv >= 30
 		$UpgradePanel/AutoSpeedup.pressed = $UpgradePanel/AutoSpeedup.visible
+		if game.tile_data[ids[0]].bldg.has("path_1"):
+			_on_Path1_pressed()
+		else:
+			game.popup(tr("NO_UPGRADE"), 1.5)
+			game.remove_upgrade_panel()
 	path1.text = tr("PATH") + " 1"
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
-	if game.tile_data[ids[0]].bldg.has("path_1"):
-		_on_Path1_pressed()
-	else:
-		game.popup(tr("NO_UPGRADE"), 1.5)
-		game.remove_upgrade_panel()
 
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))
@@ -91,6 +92,7 @@ func update():
 	var first_tile_bldg_info
 	var lv_to = next_lv.value
 	var all_tiles_constructing = true
+	var num:int = 1
 	if planet.empty():
 		first_tile = game.tile_data[ids[0]].bldg
 		bldg = first_tile.name
@@ -108,6 +110,7 @@ func update():
 	else:
 		first_tile = planet.bldg
 		bldg = first_tile.name
+		num = 1 if bldg in ["GH", "MM"] else planet.tile_num
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
 		calc_costs(planet.bldg.name, planet.bldg[path_str], planet.tile_num)
@@ -125,7 +128,7 @@ func update():
 		else:
 			curr_value = game.clever_round(curr_value, 3)
 		if not planet.empty():
-			curr_value *= planet.tile_num
+			curr_value *= num
 		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], rsrc_icon, 20)
 	else:
 		costs.erase("time")
@@ -146,7 +149,7 @@ func update():
 	else:
 		next_value = game.clever_round(next_value, 3)
 	if not planet.empty():
-		next_value *= planet.tile_num
+		next_value *= num
 	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], rsrc_icon, 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs)
 	for icon in icons:

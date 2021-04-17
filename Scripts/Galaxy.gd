@@ -141,6 +141,11 @@ func collect_all():
 					Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
 					planet.bldg.stored = collect_data.remainder
 					continue
+			elif planet.has("bldg"):
+				if planet.bldg.name == "MM":
+					Helper.collect_MM(planet, planet, items_collected, curr_time, planet.tile_num)
+				elif planet.bldg.name == "AE":
+					Helper.collect_AE(planet, planet, items_collected, curr_time, planet.tile_num)
 			if not planet.discovered:
 				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)
