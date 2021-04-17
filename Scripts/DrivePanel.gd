@@ -8,8 +8,10 @@ var cellulose_texture = preload("res://Graphics/Materials/cellulose.png")
 var helium_texture = preload("res://Graphics/Atoms/He.png")
 var neon_texture = preload("res://Graphics/Atoms/Ne.png")
 var xenon_texture = preload("res://Graphics/Atoms/Xe.png")
-var he3mix_texture = preload("res://Graphics/Icons/he3mix.png")
-var graviton_texture = preload("res://Graphics/Icons/graviton.png")
+var hydrogen_texture = preload("res://Graphics/Atoms/H.png")
+var electron_texture = preload("res://Graphics/Particles/electron.png")
+var proton_texture = preload("res://Graphics/Particles/proton.png")
+var neutron_texture = preload("res://Graphics/Particles/neutron.png")
 
 var cost = float(0)
 var meta = ""
@@ -35,29 +37,41 @@ func refresh():
 		"coal":
 			$Control/TextureRect.texture = coal_texture
 			speed = 600
-		"He":
-			$Control/TextureRect.texture = helium_texture
-			speed = 3000
-			unit = "mol"
-			type = "atoms"
 		"Ne":
 			$Control/TextureRect.texture = neon_texture
-			speed = 800000
+			speed = 80000
 			unit = "mol"
 			type = "atoms"
 		"Xe":
 			$Control/TextureRect.texture = xenon_texture
-			speed = 7500000
+			speed = 750000
 			unit = "mol"
 			type = "atoms"
-		"he3mix":
-			$Control/TextureRect.texture = he3mix_texture
-			speed = 8000000
+		"H":
+			$Control/TextureRect.texture = hydrogen_texture
+			speed = 300000
 			unit = "mol"
-		"graviton":
-			$Control/TextureRect.texture = graviton_texture
-			speed = 100000000
+			type = "atoms"
+		"He":
+			$Control/TextureRect.texture = helium_texture
+			speed = 1000000
 			unit = "mol"
+			type = "atoms"
+		"electron":
+			$Control/TextureRect.texture = electron_texture
+			speed = 50000
+			unit = "mol"
+			type = "particles"
+		"proton":
+			$Control/TextureRect.texture = proton_texture
+			speed = 100000
+			unit = "mol"
+			type = "particles"
+		"neutron":
+			$Control/TextureRect.texture = neutron_texture
+			speed = 25000
+			unit = "mol"
+			type = "particles"
 	if meta:
 		if game[type][meta] == 0:
 			$Control/HSlider.visible = false
@@ -94,32 +108,34 @@ func _on_ChemicalDrive_pressed():
 
 func _on_IonDrive_pressed():
 	op.clear()
-	op.add_item(tr("HE_NAME"))
 	op.add_item(tr("NE_NAME"))
 	op.add_item(tr("XE_NAME"))
-	op.set_item_metadata(0, "He")
-	op.set_item_metadata(1, "Ne")
-	op.set_item_metadata(2, "Xe")
+	op.set_item_metadata(0, "Ne")
+	op.set_item_metadata(1, "Xe")
 	$Control.visible = true
 	refresh()
 	refresh_drive_modulate()
 	$Panel/Drives/ID.modulate.a = 1
 
 func _on_FusionDrive_pressed():
-	return
 	op.clear()
-	op.add_icon_item(he3mix_texture, "Helium-3 Mix")
-	op.set_item_metadata(0, "he3mix")
+	op.add_item(tr("HE_NAME"))
+	op.add_item(tr("H_NAME"))
+	op.set_item_metadata(0, "He")
+	op.set_item_metadata(1, "H")
 	$Control.visible = true
 	refresh()
 	refresh_drive_modulate()
 	$Panel/Drives/FD.modulate.a = 1
 
 func _on_ParticleDrive_pressed():
-	return
 	op.clear()
-	op.add_icon_item(graviton_texture, "Graviton")
-	op.set_item_metadata(0, "graviton")
+	op.add_item(tr("ELECTRON"))
+	op.add_item(tr("PROTON"))
+	op.add_item(tr("NEUTRON"))
+	op.set_item_metadata(0, "electron")
+	op.set_item_metadata(1, "proton")
+	op.set_item_metadata(2, "neutron")
 	$Control.visible = true
 	refresh()
 	refresh_drive_modulate()
