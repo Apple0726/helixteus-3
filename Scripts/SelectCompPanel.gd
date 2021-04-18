@@ -51,7 +51,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 	s_cmp = curr_cmp
 	Helper.put_rsrc($ScrollContainer/Cost, 36, {})
 	for cmp in Data[type]:
-		var metal = tr(cmp.split("_")[0].to_upper())
+		var metal = cmp.split("_")[0].to_upper()
 		if type in ["rover_weapons", "rover_mining"]:
 			var laser_color = cmp.split("_")[0]
 			if laser_color == "orange" and not game.science_unlocked.OL:
