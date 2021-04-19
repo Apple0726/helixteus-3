@@ -20,6 +20,7 @@ func _ready():
 		var sc_lv:int = game.infinite_research[name]
 		var st:String = tr("%s_X" % name) % sc_lv
 		#rect_min_size.x = font.get_string_size(st).x + 80
+	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
 
 func refresh():
 	if infinite_research:

@@ -125,6 +125,8 @@ func _ready():
 				p_i.wormhole = true
 			if tile.has("ship_part") and not tile.has("depth"):
 				$Obstacles.set_cell(i, j, 11)
+			if tile.has("ruins"):
+				$Obstacles.set_cell(i, j, 12)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -257,7 +259,7 @@ func show_tooltip(tile):
 		if cave.has("special_cave") and cave.special_cave == 1:
 			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
 		if not game.science_unlocked.RC:
-			tooltip += "\n%s\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("HIDE_HELP"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
 		else:
 			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
@@ -268,6 +270,8 @@ func show_tooltip(tile):
 			game.help_str = "aurora_desc"
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
+	if tile.has("ruins"):
+		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
 	if adv:
 		if not game.get_node("Tooltips/Tooltip").visible:
 			game.show_adv_tooltip(tooltip, icons)
@@ -691,11 +695,14 @@ func _input(event):
 				else:
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
-			elif tile.has("cave"):
+			elif tile.has("cave") or tile.has("ruins"):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
 					game.rover_id = rover_selected
-					game.switch_view("cave")
+					if tile.has("cave"):
+						game.switch_view("cave")
+					else:
+						game.switch_view("ruins")
 				else:
 					if (game.show.vehicles_button or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
 						game.toggle_panel(game.vehicle_panel)

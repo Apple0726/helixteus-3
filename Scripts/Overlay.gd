@@ -25,7 +25,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
-			option_btn.add_item(tr("MAGNETIC_FIELD_STRENGTH"))
+			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
 	$Panel/HBoxContainer/CheckBox.pressed = game.overlay_data[game.c_v].visible
 	option_btn.selected = game.overlay_data[game.c_v].overlay

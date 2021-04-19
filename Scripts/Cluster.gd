@@ -40,7 +40,7 @@ func e(n, e):
 
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [g_i.name, tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter])
+	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [g_i.name, tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter])
 
 func on_galaxy_out ():
 	game.hide_tooltip()

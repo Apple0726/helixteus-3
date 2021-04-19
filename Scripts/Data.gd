@@ -166,8 +166,8 @@ var science_unlocks = {
 						
 						#Compact items
 						"CI":{"cost":4800, "parents":[]},
-						"CI2":{"cost":e(4.8, 6), "parents":[]},
-						"CI3":{"cost":e(4.8, 9), "parents":[]},
+						"CI2":{"cost":e(4.8, 6), "parents":["CI"]},
+						"CI3":{"cost":e(4.8, 9), "parents":["CI2"]},
 						
 						#Atom manipulation
 						"ATM":{"cost":200000, "parents":[]},

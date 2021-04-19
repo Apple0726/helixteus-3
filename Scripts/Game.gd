@@ -16,6 +16,7 @@ var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
 var cave_scene = preload("res://Scenes/Views/Cave.tscn")
+var ruins_scene = preload("res://Scenes/Views/Ruins.tscn")
 var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
 var battle_scene = preload("res://Scenes/Views/Battle.tscn")
 var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
@@ -157,6 +158,7 @@ var probe_data:Array
 var ship_data:Array
 var second_ship_hints:Dictionary
 var third_ship_hints:Dictionary
+var fourth_ship_hints:Dictionary
 var ships_c_coords:Dictionary#Local coords of the planet that the ships are on
 var ships_c_g_coords:Dictionary#ship global coordinates (current)
 var ships_dest_coords:Dictionary#Local coords of the destination planet
@@ -200,6 +202,7 @@ var item_to_use = {"name":"", "type":"", "num":0}
 var mining_HUD
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
+var ruins
 var STM
 var battle
 var is_conquering_all:bool = false
@@ -481,6 +484,7 @@ func load_game():
 		ship_data = save_game.get_var()
 		second_ship_hints = save_game.get_var()
 		third_ship_hints = save_game.get_var()
+		#fourth_ship_hints = save_game.get_var()
 		ships_c_coords = save_game.get_var()
 		ships_dest_coords = save_game.get_var()
 		ships_depart_pos = save_game.get_var()
@@ -742,6 +746,9 @@ func new_game(tut:bool):
 	ship_data = []
 	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
 	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
+	fourth_ship_hints = {	"ruins_spawned":false,
+							"hypergiant_system_spawned":false,
+	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
 	ships_dest_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
@@ -1152,6 +1159,11 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				remove_child(cave)
 				cave = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+			"ruins":
+				$UI.add_child(HUD)
+				remove_child(ruins)
+				ruins = null
+				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 			"STM":
 				$UI.add_child(HUD)
 				remove_child(STM)
@@ -1209,6 +1221,12 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			cave.rover_data = rover_data[rover_id]
 			cave.set_rover_data()
 			switch_music(load("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
+		"ruins":
+			$UI.remove_child(HUD)
+			ruins = ruins_scene.instance()
+			add_child(ruins)
+			ruins.rover_data = rover_data[rover_id]
+			switch_music(load("res://Audio/cave1.ogg"), 0.9)
 		"STM":
 			$Ship.visible = false
 			$UI.remove_child(HUD)
@@ -1325,7 +1343,7 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].has("conquered")
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].conquered
 		space_HUD.get_node("SendProbes").visible = c_v == "supercluster"
 
 func add_overlay():
@@ -1584,7 +1602,7 @@ func generate_clusters(id:int):
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
-		c_i["visible"] = false
+		c_i["visible"] = TEST
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
 		c_i["discovered"] = false
@@ -1643,7 +1661,7 @@ func generate_galaxies(id:int):
 		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
 		if g_i.type == 6:
-			g_i["system_num"] = Helper.rand_int(5000, 20000)
+			g_i["system_num"] = int(5000 + 15000 * pow(randf(), 2))
 			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
@@ -2401,6 +2419,10 @@ func generate_tiles(id:int):
 			tile_data[random_tile].ship_part = true
 			third_ship_hints.part_spawned_at_p = c_p_g
 			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
+	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 10000 and not fourth_ship_hints.ruins_spawned:
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		tile_data[random_tile].ruins = true
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -3191,6 +3213,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(ship_data)
 	save_game.store_var(second_ship_hints)
 	save_game.store_var(third_ship_hints)
+	#save_game.store_var(fourth_ship_hints)
 	save_game.store_var(ships_c_coords)
 	save_game.store_var(ships_dest_coords)
 	save_game.store_var(ships_depart_pos)
