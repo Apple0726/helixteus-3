@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 onready var rover = $Rover
 onready var camera = $Camera2D
 
+var ruins_id:int
 var velocity = Vector2.ZERO
 var max_speed = 1000
 var acceleration = 12000
@@ -14,11 +15,27 @@ var rover_data:Dictionary = {"spd":1}
 var moving_fast:bool = false
 var NPC_id:int = -1
 var dialogue_id:int = -1
-var dialogue_lengths:Array = [5, 3]
+var dialogue_lengths:Array = [5, 3, 3, 1]
 
 func _ready():
 	speed_mult = rover_data.spd
 	set_process(false)
+	var ruins = load("res://Scenes/Ruins/%s.tscn"  % ruins_id).instance()
+	add_child(ruins)
+	if ruins_id == 1:
+		if game.planet_data[game.c_p].has("MS") and game.planet_data[game.c_p].MS == "M_SE" and game.planet_data[game.c_p].MS_lv == 3:
+			$Ruins/Letter.connect("body_entered", self, "_on_Letter_body_entered")
+			$Ruins/Letter.connect("body_exited", self, "_on_Letter_body_exited")
+		else:
+			$Ruins/NPC1.connect("body_entered", self, "_on_NPC_body_entered", [1])
+			$Ruins/NPC1.connect("body_exited", self, "_on_NPC_body_exited")
+			$Ruins/NPC2.connect("body_entered", self, "_on_NPC_body_entered", [2])
+			$Ruins/NPC2.connect("body_exited", self, "_on_NPC_body_exited")
+	else:
+		$Ruins/NPC1.connect("body_entered", self, "_on_NPC_body_entered", [3])
+		$Ruins/NPC1.connect("body_exited", self, "_on_NPC_body_exited")
+		$Ruins/NPC2.connect("body_entered", self, "_on_NPC_body_entered", [4])
+		$Ruins/NPC2.connect("body_exited", self, "_on_NPC_body_exited")
 
 func _physics_process(delta):
 	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size)
@@ -37,11 +54,9 @@ func _physics_process(delta):
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
 
-
 func _on_NPC_body_entered(body, id:int):
 	NPC_id = id
 	$UI/HBox.visible = true
-
 
 func _on_NPC_body_exited(body):
 	if $UI/Dialogue.visible:
@@ -80,19 +95,18 @@ func _process(delta):
 
 
 func _on_Letter_body_entered(body):
-	if $Letter.visible:
+	if $Ruins/Letter.visible:
 		$UI/Letter.visible = true
 		$UI/LetterText.visible = true
 
 
 func _on_Letter_body_exited(body):
-	if $Letter.visible:
+	if $Ruins/Letter.visible:
 		$UI/Letter.visible = false
 		$UI/LetterText.visible = false
 
 
 func _on_Exit_body_entered(body):
-	print(body.name)
 	call_deferred("exit_ruins")
 
 func exit_ruins():

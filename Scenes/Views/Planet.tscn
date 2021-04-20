@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scenes/WhiteRect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Resources/LakeTileSet.tres" type="TileSet" id=2]
 [ext_resource path="res://Scripts/Planet.gd" type="Script" id=3]
+[ext_resource path="res://Resources/PlanetTileSet.tres" type="TileSet" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Tiles/SoilSpritesheet.png" type="Texture" id=16]
 
@@ -51,6 +53,7 @@ shader = SubResource( 2 )
 script = ExtResource( 3 )
 
 [node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 4 )
 cell_size = Vector2( 200, 200 )
 format = 1
 
@@ -61,7 +64,7 @@ cell_quadrant_size = 100
 format = 1
 
 [node name="Lakes1" type="TileMap" parent="."]
-modulate = Color( 1, 0.333333, 0.333333, 1 )
+tile_set = ExtResource( 2 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1

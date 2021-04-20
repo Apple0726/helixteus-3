@@ -178,6 +178,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.left = min_max._min * e(1, 9)
 						c_vl.right = min_max._max * e(1, 9)
 					editable = true
+					is_int = false
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
 				4:

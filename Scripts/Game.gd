@@ -24,8 +24,7 @@ var time_scene = preload("res://Scenes/TimeLeft.tscn")
 var planet_TS = preload("res://Resources/PlanetTileSet.tres")
 var lake_TS = preload("res://Resources/LakeTileSet.tres")
 var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
-var aurora1_texture = preload("res://Graphics/Tiles/Aurora1.png")
-var aurora2_texture = preload("res://Graphics/Tiles/Aurora2.png")
+var aurora_scene = preload("res://Scenes/Aurora.tscn")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
@@ -484,7 +483,7 @@ func load_game():
 		ship_data = save_game.get_var()
 		second_ship_hints = save_game.get_var()
 		third_ship_hints = save_game.get_var()
-		#fourth_ship_hints = save_game.get_var()
+		fourth_ship_hints = save_game.get_var()
 		ships_c_coords = save_game.get_var()
 		ships_dest_coords = save_game.get_var()
 		ships_depart_pos = save_game.get_var()
@@ -747,7 +746,8 @@ func new_game(tut:bool):
 	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
 	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
 	fourth_ship_hints = {	"ruins_spawned":false,
-							"hypergiant_system_spawned":false,
+							"hypergiant_system_spawn_galaxy":-1,
+							"hypergiant_system_spawn_system":-1,
 	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
@@ -1224,6 +1224,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		"ruins":
 			$UI.remove_child(HUD)
 			ruins = ruins_scene.instance()
+			ruins.ruins_id = tile_data[c_t].ruins
 			add_child(ruins)
 			ruins.rover_data = rover_data[rover_id]
 			switch_music(load("res://Audio/cave1.ogg"), 0.9)
@@ -1614,7 +1615,11 @@ func generate_clusters(id:int):
 			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
 			c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
 		var pos
-		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
+		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
+		if id == 0 and _i == 1:
+			dist_from_center = 150
+			c_i.class = "group"
+			c_i.galaxy_num = Helper.rand_int(80, 100)
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
@@ -1671,7 +1676,9 @@ func generate_galaxies(id:int):
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
-			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.2, 5), 3)
+				if c_c_g == 1 and i != 0 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
+					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
+			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 		var rand = randf()
 		if rand < 0.02:
@@ -1949,7 +1956,7 @@ func systems_collision_detection(id:int, N_init:int):
 		else:
 			s_i["pos"] = pos
 			s_i.diff = get_sys_diff(pos, id, s_i)
-	if id != 0 and N_fin == total_sys_num:
+	if c_g_g != 0 and N_fin == total_sys_num:
 		var view_zoom = 500.0 / max_outer_radius
 		galaxy_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 
@@ -1988,6 +1995,7 @@ func generate_systems(id:int):
 #		while randf() < 0.3 / float(num_stars):
 #			num_stars += 1
 		var stars = []
+		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
@@ -2061,7 +2069,12 @@ func generate_systems(id:int):
 							tier += 1
 							star_type = "hypergiant " + get_roman_num(tier)
 							star_size *= 1.2
-			
+			if hypergiant_system:
+				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
+				star_type = "hypergiant XV"
+				mass = rand_range(10, 10.5)
+				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
+				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
 			star["luminosity"] = clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * pow(temp, 4) / e(3.828, 26))
 			star["mass"] = clever_round(mass)
@@ -2080,6 +2093,8 @@ func generate_systems(id:int):
 			planet_num -= floor((planet_num - 30) / 2)
 		if planet_num > 40:
 			planet_num -= floor((planet_num - 40) / 2)
+		if hypergiant_system:
+			planet_num = 5
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -2108,12 +2123,13 @@ func get_max_star_prop(s_id:int, prop:String):
 			max_star_prop = star[prop]
 	return max_star_prop
 
-func generate_planets(id:int):
+func generate_planets(id:int):#local id
 	randomize()
 	var combined_star_size = 0
 	var combined_star_mass = 0
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
+	var star_size_in_km = max_star_size * e(6.957, 5)
 	for star in system_data[id]["stars"]:
 		combined_star_size += star["size"]
 		combined_star_mass += star.mass
@@ -2124,6 +2140,7 @@ func generate_planets(id:int):
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	system_data[id]["planets"].clear()
+	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -2135,10 +2152,30 @@ func generate_planets(id:int):
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3))
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter)
-			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
+			if hypergiant_system:
+				if i == 1:
+					p_i.size = 6000
+					p_i.pressure = rand_range(400, 500)
+				elif i == 2:
+					p_i.size = 11000
+					p_i.pressure = rand_range(150, 200)
+				elif i == 3:
+					p_i.size = 17000
+					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
+				elif i == 4:
+					p_i.size = 25000
+					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
+				elif i == 5:
+					p_i.size = 33000
+					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
+				p_i.conquered = true
+			else:
+				p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
+		if hypergiant_system:
+			p_i.distance *= 150
 		#1 solar radius = 2.63 px = 0.0046 AU
 		#569 px = 1 AU = 215.6 solar radii
 		max_distance = p_i["distance"]
@@ -2150,9 +2187,7 @@ func generate_planets(id:int):
 		p_i["id"] = p_id + p_num
 		p_i["l_id"] = p_id
 		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
-		#var temp = 1 / pow(p_i.distance - max_star_size * 2.63, 0.5) * max_star_temp * pow(max_star_size, 0.5)
-		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)
-		var star_size_in_km = max_star_size * e(6.957, 5)#                             V bond albedo
+		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
 		var gas_giant:bool = p_i.size >= max(18000, 40000 * pow(combined_star_mass, 0.3))
@@ -2185,28 +2220,32 @@ func generate_planets(id:int):
 		elif p_i.temperature <= 1000:
 			p_i.lake_1 = get_random_element(lakes)
 			p_i.lake_2 = get_random_element(lakes)
+			if hypergiant_system and i == 1:
+				p_i.lake_1 = "Xe"
+				p_i.lake_2 = "Xe"
 		p_i.HX_data = []
 		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
 		var num:int = 0
-		while num < 12:
-			num += 1
-			var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
-			if p_num == 0 and lv > 3:
-				lv = 3
-			if num == 12:
-				lv = ceil(0.9 * log(power) / log(1.2))
-			var HP = round(rand_range(0.8, 1.2) * 25 * pow(1.16, lv - 1))
-			var def = Helper.rand_int(3, 10)
-			var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
-			var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
-			var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
-			var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
-			var XP = round(pow(1.25, lv - 1) * 5)
-			p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
-			power -= floor(pow(1.15, lv))
-			if power <= 1:
-				break
-		p_i.HX_data.shuffle()
+		if not p_i.conquered:
+			while num < 12:
+				num += 1
+				var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
+				if p_num == 0 and lv > 3:
+					lv = 3
+				if num == 12:
+					lv = ceil(0.9 * log(power) / log(1.2))
+				var HP = round(rand_range(0.8, 1.2) * 25 * pow(1.16, lv - 1))
+				var def = Helper.rand_int(3, 10)
+				var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
+				var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+				var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+				var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
+				var XP = round(pow(1.25, lv - 1) * 5)
+				p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
+				power -= floor(pow(1.15, lv))
+				if power <= 1:
+					break
+			p_i.HX_data.shuffle()
 		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
 			if p_i.type in [11, 12]:
 				planet_data[0].second_ship = true
@@ -2216,7 +2255,7 @@ func generate_planets(id:int):
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 		planet_data.append(p_i)
-	if id != 0:
+	if c_s_g != 0:
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
 	system_data[id]["discovered"] = true
@@ -2284,11 +2323,16 @@ func generate_tiles(id:int):
 	var pulsation:float = rand_range(0.4, 1)
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	var ship_signal:bool = second_ship_hints.spawned_at_p == -1 and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
+	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
+	var op_aurora:bool = hypergiant_system and id == 3
+	if op_aurora:
+		thiccness += 1
 	for i in 2:
-		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal):
+		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora):
 			#au_int: aurora_intensity
 			var au_int = clever_round(rand_range(80000, 160000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
-			var au_type = Helper.rand_int(1, 2)
+			if op_aurora:
+				au_int = clever_round(rand_range(50, 70))
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, 1 if ship_signal else wid)
 				tile_to = Helper.rand_int(0, wid)
@@ -2300,7 +2344,7 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						tile_data[k + j * wid] = {}
-						tile_data[k + j * wid].aurora = {"au_int":au_int, "type":au_type}
+						tile_data[k + j * wid].aurora = {"au_int":au_int}
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness / 1.2 * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2309,7 +2353,7 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						tile_data[j + k * wid] = {}
-						tile_data[j + k * wid].aurora = {"au_int":au_int, "type":au_type}
+						tile_data[j + k * wid].aurora = {"au_int":au_int}
 			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
@@ -2352,7 +2396,7 @@ func generate_tiles(id:int):
 #				continue
 			if c_p_g == 2:
 				continue
-			var normal_cond:bool = randf() < 0.1 / pow(wid, 0.9)
+			var normal_cond:bool = randf() < 0.1 / pow(wid, 0.9) or op_aurora and tile_data[t_id] and tile_data[t_id].has("aurora")
 			var ship_cond:bool = (ship_signal and not second_ship_cave_placed and tile_data[t_id] and tile_data[t_id].has("aurora"))
 			if normal_cond or ship_cond:
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
@@ -2390,7 +2434,7 @@ func generate_tiles(id:int):
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		tile_data[random_tile].ship = true
-	elif len(ship_data) == 2:
+	elif len(ship_data) == 2 and c_c_g == 0:
 		if third_ship_hints.ship_sys_id == c_s and third_ship_hints.ship_spawned_at_p == -1:
 			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
@@ -2419,10 +2463,15 @@ func generate_tiles(id:int):
 			tile_data[random_tile].ship_part = true
 			third_ship_hints.part_spawned_at_p = c_p_g
 			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
-	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 10000 and not fourth_ship_hints.ruins_spawned:
+	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 20000 and p_i.pressure > 50 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
-		tile_data[random_tile].ruins = true
+		tile_data[random_tile].ruins = 1
+		long_popup(tr("UNIQUE_STRUCTURE_NOTICE"), tr("UNIQUE_STRUCTURE"))
+	elif hypergiant_system and id == 1:
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		tile_data[random_tile].ruins = 2
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -3213,7 +3262,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(ship_data)
 	save_game.store_var(second_ship_hints)
 	save_game.store_var(third_ship_hints)
-	#save_game.store_var(fourth_ship_hints)
+	save_game.store_var(fourth_ship_hints)
 	save_game.store_var(ships_c_coords)
 	save_game.store_var(ships_dest_coords)
 	save_game.store_var(ships_depart_pos)

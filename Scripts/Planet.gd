@@ -81,14 +81,12 @@ func _ready():
 			if tile.has("bldg"):
 				add_bldg(id2, tile.bldg.name)
 			if tile.has("aurora"):
-				var aurora = Sprite.new()
+				var aurora = game.aurora_scene.instance()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				if tile.aurora.type == 1:
-					aurora.texture = game.aurora1_texture
-					aurora.modulate = Color(rand_range(0.7, 1), 0, rand_range(0.7, 1))
-				else:
-					aurora.texture = game.aurora2_texture
-					aurora.modulate = Color(1, 1, rand_range(0.7, 1))
+				aurora.get_node("Particles2D").amount = min(10 + int(tile.aurora.au_int * 10), 50)
+				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.25) - pow(4, 0.25)) / 10
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
+				aurora.modulate.a = 0.5
 				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()

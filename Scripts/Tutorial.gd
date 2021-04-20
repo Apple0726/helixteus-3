@@ -46,7 +46,7 @@ func begin():
 	if node.has_node("Label"):
 		node_label = node.get_node("Label")
 		if click_anywhere:
-			node_label.text = "%s (%s)" % [tr("TUTORIAL_%s" % tut_num), tr("CLICK_ANYWHERE_TO_CONTINUE")]
+			node_label.text = "%s\n(%s)" % [tr("TUTORIAL_%s" % tut_num), tr("CLICK_ANYWHERE_TO_CONTINUE")]
 		else:
 			node_label.text = tr("TUTORIAL_%s" % tut_num)
 		node_label.visible = true
