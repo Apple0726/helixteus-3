@@ -122,7 +122,6 @@ func make_pie_chart(arr:Array, name:String):
 	pie.other_str = tr("TRACE_ELEMENTS")
 	pie.other_str_short = tr("TRACE")
 	for obj in arr:
-		var file = File.new()
 		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
 		var texture
 		if ResourceLoader.exists(dir_str):

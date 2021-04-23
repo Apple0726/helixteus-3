@@ -89,7 +89,7 @@ func _process(delta):
 			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
 			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
-	if game.annotator:
+	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
 		annotate_icon.modulate = game.annotator.shape_color
 		annotate_icon.scale = Vector2.ONE * game.annotator.thickness / 10.0
@@ -103,7 +103,7 @@ func _process(delta):
 					icon.queue_free()
 					annotate_icons.erase(icon_data)
 					shapes_data.erase(icon_data.data)
-	if game.annotator and game.annotator.visible:
+	if is_instance_valid(game.annotator) and game.annotator.visible:
 		if Input.is_action_pressed("1"):
 			annotate_icon.rotation -= 0.04 * delta * 60
 		if Input.is_action_pressed("3"):
@@ -400,10 +400,10 @@ func _input(event):
 		if Input.is_action_just_pressed("left_click"):
 			drag_initial_position = event.position
 			drag_position = event.position
-			if game.annotator and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
+			if is_instance_valid(game.annotator) and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
 				line_points.start = to_local(drag_initial_position)
 				drawing_shape = true
-		if Input.is_action_pressed("left_click") and (not game.annotator or not game.annotator.visible):
+		if Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true

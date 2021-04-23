@@ -381,7 +381,7 @@ func _ready():
 		items[3] = {"name":"lead_seeds", "num":500}
 		items[4] = {"name":"fertilizer", "num":500}
 		pickaxe = {"name":"stick", "speed":3400, "durability":700}
-		rover_data = [{"c_p":2, "ready":true, "HP":20000.0, "atk":50.0, "def":5000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
+		rover_data = [{"c_p":2, "ready":true, "HP":200000.0, "atk":5000.0, "def":50000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
 		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		add_panels()
 		$Autosave.start()
@@ -748,6 +748,9 @@ func new_game(tut:bool):
 	fourth_ship_hints = {	"ruins_spawned":false,
 							"hypergiant_system_spawn_galaxy":-1,
 							"hypergiant_system_spawn_system":-1,
+							"SE_constructed":true,
+							"op_grill_planet":-1,
+							"op_grill_cave_spawn":-1,
 	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
@@ -1254,7 +1257,7 @@ func add_mining():
 
 func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
-	if tutorial and tutorial.tut_num == 15 and objective.empty():
+	if is_instance_valid(tutorial) and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
 	HUD.get_node("Panel/CollectAll").visible = true
 	HUD.get_node("Hotbar").visible = true
@@ -1328,12 +1331,12 @@ func add_obj(view_str):
 
 func on_science_back_pressed():
 	switch_view("planet")
-	if tutorial and tutorial.tut_num == 26:
+	if is_instance_valid(tutorial) and tutorial.tut_num == 26:
 		tutorial.begin()
 	remove_child(get_node("ScienceBackBtn"))
 
 func add_space_HUD():
-	if not space_HUD or not is_a_parent_of(space_HUD):
+	if not is_instance_valid(space_HUD) or not is_a_parent_of(space_HUD):
 		space_HUD = space_HUD_scene.instance()
 		$UI.add_child(space_HUD)
 		if c_v in ["galaxy", "cluster"]:
@@ -1354,7 +1357,7 @@ func add_overlay():
 	$UI.add_child(overlay)
 
 func remove_overlay():
-	if overlay and is_a_parent_of(overlay):
+	if is_instance_valid(overlay) and is_a_parent_of(overlay):
 		$UI.remove_child(overlay)
 		overlay.free()
 
@@ -1365,12 +1368,12 @@ func add_annotator():
 	$UI.add_child(annotator)
 
 func remove_annotator():
-	if annotator and is_a_parent_of(annotator):
+	if is_instance_valid(annotator) and is_a_parent_of(annotator):
 		$UI.remove_child(annotator)
 		annotator.free()
 
 func remove_space_HUD():
-	if space_HUD and is_a_parent_of(space_HUD):
+	if is_instance_valid(space_HUD) and is_a_parent_of(space_HUD):
 		$UI.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
@@ -1378,7 +1381,7 @@ func remove_space_HUD():
 
 func add_dimension():
 	$UI.remove_child(HUD)
-	if dimension:
+	if is_instance_valid(dimension):
 		dimension.visible = true
 	else:
 		dimension = load("res://Scenes/Views/Dimension.tscn").instance()
@@ -2326,13 +2329,14 @@ func generate_tiles(id:int):
 	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
 	var op_aurora:bool = hypergiant_system and id == 3
 	if op_aurora:
+		fourth_ship_hints.op_grill_planet = c_p_g
 		thiccness += 1
 	for i in 2:
 		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora):
 			#au_int: aurora_intensity
 			var au_int = clever_round(rand_range(80000, 160000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
-				au_int = clever_round(rand_range(50, 70))
+				au_int = clever_round(rand_range(30, 35))
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, 1 if ship_signal else wid)
 				tile_to = Helper.rand_int(0, wid)
@@ -3067,7 +3071,7 @@ func _input(event):
 	if c_v == "science_tree":
 		Helper.set_back_btn(get_node("ScienceBackBtn"))
 
-	if change_view_btn:
+	if is_instance_valid(change_view_btn):
 		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
 		if bottom_info_action != "":

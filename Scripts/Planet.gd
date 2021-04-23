@@ -84,7 +84,7 @@ func _ready():
 				var aurora = game.aurora_scene.instance()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				aurora.get_node("Particles2D").amount = min(10 + int(tile.aurora.au_int * 10), 50)
-				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.25) - pow(4, 0.25)) / 10
+				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
 				aurora.modulate.a = 0.5
 				add_child(aurora)

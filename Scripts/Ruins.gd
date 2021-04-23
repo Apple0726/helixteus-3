@@ -13,9 +13,6 @@ var rover_size:float = 1.0
 var speed_mult:float = 1.0
 var rover_data:Dictionary = {"spd":1}
 var moving_fast:bool = false
-var NPC_id:int = -1
-var dialogue_id:int = -1
-var dialogue_lengths:Array = [5, 3, 3, 1]
 
 func _ready():
 	speed_mult = rover_data.spd
@@ -24,18 +21,22 @@ func _ready():
 	add_child(ruins)
 	if ruins_id == 1:
 		if game.planet_data[game.c_p].has("MS") and game.planet_data[game.c_p].MS == "M_SE" and game.planet_data[game.c_p].MS_lv == 3:
+			$Ruins/NPC1.visible = false
+			$Ruins/NPC2.visible = false
+			$Ruins/Letter.visible = true
 			$Ruins/Letter.connect("body_entered", self, "_on_Letter_body_entered")
 			$Ruins/Letter.connect("body_exited", self, "_on_Letter_body_exited")
+			game.fourth_ship_hints.SE_constructed = true
 		else:
-			$Ruins/NPC1.connect("body_entered", self, "_on_NPC_body_entered", [1])
-			$Ruins/NPC1.connect("body_exited", self, "_on_NPC_body_exited")
-			$Ruins/NPC2.connect("body_entered", self, "_on_NPC_body_entered", [2])
-			$Ruins/NPC2.connect("body_exited", self, "_on_NPC_body_exited")
+			$Ruins/NPC1.connect_events(1, $UI/Dialogue)
+			$Ruins/NPC2.connect_events(1, $UI/Dialogue)
 	else:
-		$Ruins/NPC1.connect("body_entered", self, "_on_NPC_body_entered", [3])
-		$Ruins/NPC1.connect("body_exited", self, "_on_NPC_body_exited")
-		$Ruins/NPC2.connect("body_entered", self, "_on_NPC_body_entered", [4])
-		$Ruins/NPC2.connect("body_exited", self, "_on_NPC_body_exited")
+		if game.fourth_ship_hints.SE_constructed:
+			$Ruins/NPC1.connect_events(2, $UI/Dialogue)
+			$Ruins/NPC2.connect_events(2, $UI/Dialogue)
+		else:
+			$Ruins/NPC1.visible = false
+			$Ruins/NPC2.visible = false
 
 func _physics_process(delta):
 	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size)
@@ -54,45 +55,17 @@ func _physics_process(delta):
 	velocity = rover.move_and_slide(velocity)
 	camera.position = rover.position
 
-func _on_NPC_body_entered(body, id:int):
-	NPC_id = id
-	$UI/HBox.visible = true
+func _on_NPC_body_entered(body, _NPC_id:int, _dialogue_id:int):
+	$UI/Dialogue.NPC_id = _NPC_id
+	$UI/Dialogue.dialogue_id = _dialogue_id
+	$UI/Dialogue/HBox.visible = true
 
 func _on_NPC_body_exited(body):
 	if $UI/Dialogue.visible:
-		$UI/Dialogue.visible = false
-		dialogue_id = -1
-	NPC_id = -1
-	$UI/HBox.visible = false
-
-func _input(event):
-	var F_released = Input.is_action_just_released("F")
-	if (Input.is_action_just_released("left_click") or F_released) and $UI/Dialogue.visible:
-		if dialogue_id >= dialogue_lengths[NPC_id - 1] and $UI/Dialogue.visible_characters >= len($UI/Dialogue.text):
-			$UI/Dialogue.visible = false
-			dialogue_id = -1
-			set_process(false)
-		else:
-			if $UI/Dialogue.visible_characters < len($UI/Dialogue.text):
-				$UI/Dialogue.visible_characters = len($UI/Dialogue.text)
-			else:
-				dialogue_id += 1
-				set_dialogue_text()
-	elif F_released:
-		if NPC_id != -1 and not $UI/Dialogue.visible:
-			$UI/Dialogue.visible = true
-			dialogue_id = 1
-			set_dialogue_text()
-			set_process(true)
-
-func set_dialogue_text():
-	$UI/Dialogue.visible_characters = 0
-	$UI/Dialogue.text = tr("NPC_%s_%s" % [NPC_id, dialogue_id])
-	
-func _process(delta):
-	if $UI/Dialogue.visible_characters < len($UI/Dialogue.text):
-		$UI/Dialogue.visible_characters += ceil(delta * 30)
-
+		$UI/Dialogue.dialogue_id = -1
+		$UI/Dialogue.dialogue_part_id = -1
+	$UI/Dialogue.NPC_id = -1
+	$UI/Dialogue/HBox.visible = false
 
 func _on_Letter_body_entered(body):
 	if $Ruins/Letter.visible:

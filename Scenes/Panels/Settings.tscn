@@ -1,15 +1,16 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=5]
+use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 3 )
+font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=2]
-use_filter = true
-font_data = ExtResource( 3 )
+[sub_resource type="Theme" id=6]
+default_font = SubResource( 5 )
 
 [sub_resource type="DynamicFont" id=3]
 use_filter = true
@@ -19,6 +20,7 @@ font_data = ExtResource( 3 )
 size = 38
 use_filter = true
 font_data = ExtResource( 3 )
+fallback/0 = ExtResource( 4 )
 
 [node name="Panel" type="Panel"]
 anchor_left = 0.5
@@ -29,6 +31,7 @@ margin_left = -448.0
 margin_top = -288.0
 margin_right = 448.0
 margin_bottom = 288.0
+theme = SubResource( 6 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -36,9 +39,9 @@ __meta__ = {
 
 [node name="Master" type="HSlider" parent="."]
 margin_left = 64.0
-margin_top = 56.0
+margin_top = 80.0
 margin_right = 384.0
-margin_bottom = 120.0
+margin_bottom = 144.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
@@ -48,15 +51,17 @@ __meta__ = {
 [node name="Label" type="Label" parent="Master"]
 margin_right = 320.0
 margin_bottom = 24.0
-custom_fonts/font = SubResource( 1 )
 text = "MASTER"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Music" type="HSlider" parent="."]
 margin_left = 64.0
-margin_top = 120.0
+margin_top = 144.0
 margin_right = 384.0
-margin_bottom = 184.0
+margin_bottom = 208.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
@@ -66,15 +71,14 @@ __meta__ = {
 [node name="Label" type="Label" parent="Music"]
 margin_right = 320.0
 margin_bottom = 24.0
-custom_fonts/font = SubResource( 2 )
 text = "MUSIC"
 align = 1
 
 [node name="SFX" type="HSlider" parent="."]
 margin_left = 64.0
-margin_top = 184.0
+margin_top = 208.0
 margin_right = 384.0
-margin_bottom = 248.0
+margin_bottom = 272.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
@@ -84,7 +88,6 @@ __meta__ = {
 [node name="Label" type="Label" parent="SFX"]
 margin_right = 320.0
 margin_bottom = 24.0
-custom_fonts/font = SubResource( 3 )
 text = "SFX"
 align = 1
 __meta__ = {
@@ -92,11 +95,10 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="."]
-margin_left = 498.0
-margin_top = 186.0
-margin_right = 818.0
-margin_bottom = 210.0
-custom_fonts/font = SubResource( 3 )
+margin_left = 492.0
+margin_top = 288.0
+margin_right = 812.0
+margin_bottom = 312.0
 text = "AUTOSAVE_INTERVAL"
 align = 1
 __meta__ = {
@@ -104,10 +106,10 @@ __meta__ = {
 }
 
 [node name="Label3" type="Label" parent="."]
-margin_left = 775.113
-margin_top = 217.715
-margin_right = 929.113
-margin_bottom = 241.715
+margin_left = 769.113
+margin_top = 319.715
+margin_right = 923.113
+margin_bottom = 343.715
 custom_fonts/font = SubResource( 3 )
 text = "30 s"
 __meta__ = {
@@ -115,10 +117,10 @@ __meta__ = {
 }
 
 [node name="Autosave" type="HSlider" parent="."]
-margin_left = 524.0
-margin_top = 196.0
-margin_right = 764.0
-margin_bottom = 260.0
+margin_left = 518.0
+margin_top = 298.0
+margin_right = 758.0
+margin_bottom = 362.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
@@ -128,8 +130,9 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="."]
+margin_top = 12.0
 margin_right = 896.0
-margin_bottom = 56.0
+margin_bottom = 68.0
 custom_fonts/font = SubResource( 4 )
 text = "SETTINGS"
 align = 1
@@ -138,50 +141,50 @@ __meta__ = {
 }
 
 [node name="Vsync" type="CheckButton" parent="."]
-margin_left = 556.621
-margin_top = 62.9289
-margin_right = 685.621
-margin_bottom = 102.929
+margin_left = 520.0
+margin_top = 76.0
+margin_right = 806.0
+margin_bottom = 116.0
 text = "Vsync (requires restart)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Fullscreen" type="CheckButton" parent="."]
-margin_left = 556.621
-margin_top = 108.119
-margin_right = 784.621
-margin_bottom = 148.119
+margin_left = 576.0
+margin_top = 152.0
+margin_right = 804.0
+margin_bottom = 192.0
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AutosaveLight" type="CheckButton" parent="."]
-margin_left = 558.876
-margin_top = 265.869
-margin_right = 786.876
-margin_bottom = 305.869
+margin_left = 540.0
+margin_top = 372.0
+margin_right = 793.0
+margin_bottom = 412.0
 text = "AUTOSAVE_LIGHT"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AutosellMinerals" type="CheckButton" parent="."]
-margin_left = 124.184
-margin_top = 274.423
-margin_right = 352.184
-margin_bottom = 314.423
+margin_left = 76.0
+margin_top = 296.0
+margin_right = 367.0
+margin_bottom = 336.0
 text = "AUTOSELL_MINERALS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="EnableAutosave" type="CheckButton" parent="."]
-margin_left = 558.035
-margin_top = 318.432
-margin_right = 786.035
-margin_bottom = 358.432
+margin_left = 524.0
+margin_top = 412.0
+margin_right = 795.0
+margin_bottom = 452.0
 text = "ENABLE_AUTOSAVE"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -194,24 +197,24 @@ margin_right = 573.954
 margin_bottom = 428.871
 
 [node name="Label" type="Label" parent="FPS"]
-margin_left = 71.6436
-margin_top = -3.23785
-margin_right = 123.644
-margin_bottom = 10.7621
+margin_left = 77.6896
+margin_top = 99.129
+margin_right = 159.69
+margin_bottom = 123.129
 text = "Max FPS"
 
 [node name="Label2" type="Label" parent="FPS"]
-margin_left = 211.825
-margin_top = 27.4903
-margin_right = 263.825
-margin_bottom = 41.4903
+margin_left = 222.046
+margin_top = 127.129
+margin_right = 274.046
+margin_bottom = 151.129
 text = "60"
 
 [node name="FPS" type="HSlider" parent="FPS"]
-margin_left = -20.0
-margin_top = 26.0
-margin_right = 200.0
-margin_bottom = 42.0
+margin_left = -13.954
+margin_top = 128.367
+margin_right = 206.046
+margin_bottom = 144.367
 min_value = 1.0
 max_value = 144.0
 value = 1.0
@@ -237,12 +240,13 @@ margin_bottom = 46.4259
 max_value = 5.0
 
 [node name="CollectSpeed" type="Label" parent="CollectSpeed"]
-margin_left = 30.5846
-margin_top = 1.88776
-margin_right = 162.585
-margin_bottom = 15.8878
+margin_left = -74.189
+margin_top = -0.664001
+margin_right = 265.811
+margin_bottom = 23.336
 mouse_filter = 1
 text = "COLLECT_SPEED"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -262,10 +266,10 @@ margin_bottom = 44.0172
 text = "SLOW"
 
 [node name="Difficulty" type="Label" parent="."]
-margin_left = 93.0
-margin_top = 455.0
-margin_right = 321.0
-margin_bottom = 469.0
+margin_left = 36.0
+margin_top = 476.0
+margin_right = 388.0
+margin_bottom = 500.0
 mouse_filter = 1
 text = "ENEMY_DIFFICULTY"
 align = 1
@@ -274,33 +278,34 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 48.0
-margin_top = 479.0
-margin_right = 354.0
-margin_bottom = 519.0
+margin_left = 46.2182
+margin_top = 513.745
+margin_right = 375.218
+margin_bottom = 553.745
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Easy" type="CheckBox" parent="HBoxContainer"]
-margin_left = 45.0
-margin_right = 103.0
+margin_left = 38.0
+margin_right = 110.0
 margin_bottom = 40.0
 text = "EASY"
 
 [node name="Normal" type="CheckBox" parent="HBoxContainer"]
-margin_left = 107.0
-margin_right = 192.0
+margin_left = 114.0
+margin_right = 211.0
 margin_bottom = 40.0
 pressed = true
 text = "NORMAL"
 
 [node name="Hard" type="CheckBox" parent="HBoxContainer"]
-margin_left = 196.0
-margin_right = 261.0
+margin_left = 215.0
+margin_right = 290.0
 margin_bottom = 40.0
 text = "HARD"
+
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
@@ -316,8 +321,6 @@ text = "HARD"
 [connection signal="value_changed" from="CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
 [connection signal="mouse_entered" from="CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
 [connection signal="mouse_exited" from="CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Difficulty" to="." method="_on_CollectSpeed_mouse_entered"]
-[connection signal="mouse_exited" from="Difficulty" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/Easy" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer/Easy" to="." method="_on_Easy_pressed"]

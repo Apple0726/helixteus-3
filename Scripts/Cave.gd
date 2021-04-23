@@ -269,9 +269,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
-					HX_node.HP = round(10 * pow(difficulty, 0.8) * rng.randf_range(0.8, 1.2))
+					HX_node.HP = round(15 * pow(difficulty, 0.75) * rng.randf_range(0.8, 1.2))
 					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
-					HX_node.def = round(6 * pow(difficulty, 0.85) * rng.randf_range(0.9, 1.1))
+					HX_node.def = round(6 * pow(difficulty, 0.75) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						HX.free()
 						continue
@@ -490,8 +490,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 			part.get_node("Area2D").connect("body_entered", self, "on_ShipPart_entered")
 			var part_tile = rooms[0].tiles[0]
 			part.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
-			add_child(part)
 			part.add_to_group("misc_objects")
+			add_child(part)
 			add_light(part)
 		if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
 			var map = object_scene.instance()
@@ -532,6 +532,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 				remove_child(deposit)
 				deposits.erase(st)
 				deposit.free()
+	elif game.c_p_g == game.fourth_ship_hints.op_grill_planet and cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id):
+		var op_grill = load("res://Scenes/NPC.tscn").instance()
+		op_grill.NPC_id = 3
+		op_grill.connect_events(1 if game.fourth_ship_hints.op_grill_cave_spawn == -1 else 2, $UI2/Dialogue)
+		var part_tile = rooms[0].tiles[5]
+		op_grill.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
+		add_child(op_grill)
+		op_grill.name = "OPGrill"
+		op_grill.add_to_group("misc_objects")
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
@@ -1150,3 +1159,10 @@ func _on_Difficulty_mouse_entered():
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
 	else:
 		game.show_tooltip(tooltip)
+
+func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
+	if _NPC_id == 3 and _dialogue_id == 1:
+		game.fourth_ship_hints.op_grill_cave_spawn = id
+		get_node("OPGrill/Label").text = tr("NPC_3_NAME")
+		$UI2/Dialogue.dialogue_id = 2
+		get_node("OPGrill").connect_events(2, $UI2/Dialogue)

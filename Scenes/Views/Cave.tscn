@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://Resources/Lava.tres" type="Texture" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://Graphics/Cave/MMIcons/Exit.png" type="Texture" id=21]
 [ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=22]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=23]
+[ext_resource path="res://Scenes/Dialogue.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Graphics/Icons/Inventory.png" type="Texture" id=25]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=26]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=27]
@@ -734,6 +735,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Dialogue" parent="UI2" instance=ExtResource( 24 )]
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Aurora = SubResource( 14 )
 anims/RoverSprint = SubResource( 15 )
@@ -746,6 +749,7 @@ anims/RoverSprint = SubResource( 17 )
 
 [node name="AuroraModulate" type="Node2D" parent="."]
 modulate = Color( 0.784314, 1, 0.784314, 1 )
+
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
@@ -755,3 +759,4 @@ modulate = Color( 0.784314, 1, 0.784314, 1 )
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Difficulty" to="." method="_on_Difficulty_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Difficulty" to="." method="_on_mouse_exited"]
+[connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
