@@ -23,6 +23,7 @@ var on_button = false
 var config = ConfigFile.new()
 var tween:Tween
 var ship2map
+var emma_cave_shortcut:bool = false
 
 func _on_Button_pressed():
 	click_sound.play()
@@ -144,6 +145,8 @@ func refresh():
 				game.objective = {"type":game.ObjectiveType.LEVEL, "id":9, "current":game.lv, "goal":18}
 			elif game.objective.id == 10:
 				game.objective = {"type":game.ObjectiveType.DAVID, "id":11, "current":0, "goal":1}
+			elif game.objective.id == 12:
+				game.objective = {"type":game.ObjectiveType.EMMA, "id":13, "current":0, "goal":1}
 			else:
 				game.objective.clear()
 				if game.tutorial:
@@ -186,6 +189,10 @@ func refresh():
 			$Objectives/Label.text = tr("DAVID_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.COLLECT_PARTS:
 			$Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
+		elif game.objective.type == game.ObjectiveType.MANIPULATORS:
+			$Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
+		elif game.objective.type == game.ObjectiveType.EMMA:
+			$Objectives/Label.text = tr("SELECT_EMMA_CAVE")
 		$Objectives/Label.visible = true
 		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
 		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position
@@ -304,6 +311,7 @@ func _on_Label_mouse_entered():
 
 func _on_Label_mouse_exited():
 	on_button = false
+	emma_cave_shortcut = false
 	game.hide_tooltip()
 
 func _input(_event):
@@ -314,6 +322,12 @@ func _input(_event):
 		slot_over = -1
 		update_hotbar()
 		refresh()
+	if Input.is_action_just_released("left_click") and emma_cave_shortcut and game.c_v == "planet":
+		for i in len(game.tile_data):
+			if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave.id == game.fourth_ship_hints.op_grill_cave_spawn:
+				game.toggle_panel(game.vehicle_panel)
+				game.vehicle_panel.tile_id = i
+				break
 
 func _on_CollectAll_mouse_entered():
 	on_button = true
@@ -384,3 +398,8 @@ func _on_Vehicles_pressed():
 	if not Input.is_action_pressed("shift"):
 		click_sound.play()
 		game.toggle_panel(game.vehicle_panel)
+
+func _on_ObjectivesLabel_mouse_entered():
+	on_button = true
+	if game.objective.type == game.ObjectiveType.EMMA:
+		emma_cave_shortcut = true

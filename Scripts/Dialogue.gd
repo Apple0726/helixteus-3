@@ -5,7 +5,7 @@ signal dialogue_finished;
 var NPC_id:int = -1
 var dialogue_id:int = -1
 var dialogue_part_id:int = -1
-var dialogue_lengths:Array = [[5, 3], [3, 1], [12, 1]]
+var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1]]
 
 func _ready():
 	pass # Replace with function body.

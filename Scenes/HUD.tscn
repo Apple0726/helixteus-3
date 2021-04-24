@@ -134,6 +134,7 @@ margin_left = 640.0
 margin_top = 4.0
 margin_right = 680.0
 margin_bottom = 44.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -157,6 +158,7 @@ modulate = Color( 1, 1, 1, 0.305882 )
 margin_left = -44.0
 margin_right = 100.0
 margin_bottom = 32.0
+mouse_filter = 2
 texture_progress = ExtResource( 16 )
 nine_patch_stretch = true
 
@@ -583,6 +585,9 @@ stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[connection signal="mouse_entered" from="Objectives/Label" to="." method="_on_ObjectivesLabel_mouse_entered"]
+[connection signal="mouse_exited" from="Objectives/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="mouse_entered" from="Lv/Label" to="." method="_on_Label_mouse_entered"]
 [connection signal="mouse_exited" from="Lv/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="mouse_entered" from="Resources/Money/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MONEY" ]]

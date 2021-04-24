@@ -17,12 +17,12 @@ func _ready():
 func connect_events(dialogue_id:int, dialogue_ref):
 	if is_connected("body_entered", self, "_on_NPC_body_entered"):
 		disconnect("body_entered", self, "_on_NPC_body_entered")
-	connect("body_entered", self, "_on_NPC_body_entered", [NPC_id, dialogue_id, dialogue_ref])
+	connect("body_entered", self, "_on_NPC_body_entered", [dialogue_id, dialogue_ref])
 	if not is_connected("body_exited", self, "_on_NPC_body_exited"):
 		connect("body_exited", self, "_on_NPC_body_exited", [dialogue_ref])
 
-func _on_NPC_body_entered(_body, _NPC_id:int, _dialogue_id:int, dialogue_ref):
-	dialogue_ref.NPC_id = _NPC_id
+func _on_NPC_body_entered(_body,  _dialogue_id:int, dialogue_ref):
+	dialogue_ref.NPC_id = NPC_id
 	dialogue_ref.dialogue_id = _dialogue_id
 	dialogue_ref.get_node("HBox").visible = true
 	

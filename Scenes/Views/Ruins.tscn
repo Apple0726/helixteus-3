@@ -27,6 +27,7 @@ tile_data = PoolIntArray( -196615, 2, 0, -196614, 2, 0, -196613, 2, 0, -196612, 
 [node name="Rover" type="KinematicBody2D" parent="."]
 position = Vector2( 2192, 2764 )
 collision_layer = 2
+collision_mask = 33
 
 [node name="Glow" type="Sprite" parent="Rover"]
 visible = false

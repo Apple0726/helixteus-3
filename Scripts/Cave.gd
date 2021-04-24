@@ -7,7 +7,7 @@ onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p]
 onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t]
-onready var aurora = tile.has("aurora")
+onready var aurora:bool = tile.has("aurora")
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = game.clever_round(pow(1 + au_int, 1.5), 3)
@@ -255,17 +255,18 @@ func generate_cave(first_floor:bool, going_up:bool):
 	else:
 		noise.period = 65
 	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
+	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			cave.set_cell(i, j, tile_type)
-			if level > 0:
+			if level > 0 or boss_cave:
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if not dont_gen_anything and rng.randf() < 0.005 * min(5, cave_floor):
+				if not dont_gen_anything and not boss_cave and rng.randf() < 0.005 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
@@ -334,7 +335,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
 	#Generate treasure chests
-	if not dont_gen_anything:
+	if not dont_gen_anything and not boss_cave:
 		for room in rooms:
 			var n = room.size
 			for tile in room.tiles:
@@ -466,7 +467,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		relic.add_to_group("misc_objects")
 	
 	#Wormhole
-	if cave_floor == num_floors:
+	if cave_floor == num_floors and not boss_cave:
 		wormhole = object_scene.instance()
 		wormhole.get_node("Sprite").texture = null
 		var wormhole_texture = load("res://Scenes/Wormhole.tscn").instance()
@@ -478,7 +479,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		add_child(wormhole)
 		add_light(wormhole)
 	else:
-		if wormhole:
+		if is_instance_valid(wormhole):
 			remove_child(wormhole)
 			wormhole.free()
 	
@@ -532,15 +533,33 @@ func generate_cave(first_floor:bool, going_up:bool):
 				remove_child(deposit)
 				deposits.erase(st)
 				deposit.free()
-	elif game.c_p_g == game.fourth_ship_hints.op_grill_planet and cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id):
-		var op_grill = load("res://Scenes/NPC.tscn").instance()
-		op_grill.NPC_id = 3
-		op_grill.connect_events(1 if game.fourth_ship_hints.op_grill_cave_spawn == -1 else 2, $UI2/Dialogue)
-		var part_tile = rooms[0].tiles[5]
-		op_grill.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
-		add_child(op_grill)
-		op_grill.name = "OPGrill"
-		op_grill.add_to_group("misc_objects")
+	elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
+		if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id):
+			var op_grill = load("res://Scenes/NPC.tscn").instance()
+			op_grill.NPC_id = 3
+			op_grill.connect_events(1 if game.fourth_ship_hints.op_grill_cave_spawn == -1 else 2, $UI2/Dialogue)
+			var part_tile = rooms[0].tiles[5]
+			op_grill.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
+			add_child(op_grill)
+			op_grill.name = "OPGrill"
+			op_grill.add_to_group("misc_objects")
+		elif game.fourth_ship_hints.op_grill_cave_spawn != -1 and game.fourth_ship_hints.op_grill_cave_spawn != id:
+			var gems = ["Amethyst", "Emerald", "Quartz", "Topaz", "Ruby", "Sapphire"]
+			for i in 6:
+				if cave_floor == i + 2 and not game.fourth_ship_hints.manipulators[i]:
+					var manip = object_scene.instance()
+					manip.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/%sManipulator.png" % gems[i])
+					manip.get_node("Area2D").connect("body_entered", self, "on_Manipulator_entered", [i, gems[i]])
+					var manip_tile
+					if len(rooms) > 1:
+						manip_tile = rooms[1].tiles[0]
+					else:
+						manip_tile = rooms[0].tiles[5]
+					manip.position = cave.map_to_world(get_tile_pos(manip_tile)) + Vector2(100, 100)
+					manip.add_to_group("misc_objects")
+					add_child(manip)
+					add_light(manip)
+					break
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
@@ -591,6 +610,14 @@ func on_ShipPart_entered(_body):
 		game.objective.current += 1
 		game.popup(tr("SHIP_PART_FOUND"), 2.5)
 		game.third_ship_hints.parts[cave_data.special_cave] = true
+		for object in get_tree().get_nodes_in_group("misc_objects"):
+			object.visible = false
+
+func on_Manipulator_entered(_body, gem:int, gem_str:String):
+	if not game.fourth_ship_hints.manipulators[gem]:
+		game.objective.current += 6
+		game.popup(tr("MANIPULATOR_FOUND") % tr(gem_str.to_upper()), 2.5)
+		game.fourth_ship_hints.manipulators[gem] = true
 		for object in get_tree().get_nodes_in_group("misc_objects"):
 			object.visible = false
 
@@ -1162,6 +1189,7 @@ func _on_Difficulty_mouse_entered():
 
 func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 	if _NPC_id == 3 and _dialogue_id == 1:
+		game.objective = {"type":game.ObjectiveType.MANIPULATORS, "id":12, "current":0, "goal":6}
 		game.fourth_ship_hints.op_grill_cave_spawn = id
 		get_node("OPGrill/Label").text = tr("NPC_3_NAME")
 		$UI2/Dialogue.dialogue_id = 2

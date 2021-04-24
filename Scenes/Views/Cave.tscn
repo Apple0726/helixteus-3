@@ -292,7 +292,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1, 2, 3, 4, 5, 6 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 0.784314, 1, 0.784314, 1 ), Color( 0.784314, 1, 1, 1 ), Color( 0.784314, 0.784314, 1, 1 ), Color( 1, 0.784314, 1, 1 ), Color( 1, 0.784314, 0.784314, 1 ), Color( 1, 1, 0.784314, 1 ), Color( 0.784314, 1, 0.784314, 1 ) ]
+"values": [ Color( 0.705882, 1, 0.705882, 1 ), Color( 0.705882, 1, 1, 1 ), Color( 0.705882, 0.705882, 1, 1 ), Color( 1, 0.705882, 1, 1 ), Color( 1, 0.705882, 0.705882, 1 ), Color( 1, 1, 0.705882, 1 ), Color( 0.705882, 1, 0.705882, 1 ) ]
 }
 
 [sub_resource type="Animation" id=17]
@@ -748,7 +748,7 @@ anims/RoverSprint = SubResource( 17 )
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 
 [node name="AuroraModulate" type="Node2D" parent="."]
-modulate = Color( 0.784314, 1, 0.784314, 1 )
+modulate = Color( 0.705882, 1, 0.705882, 1 )
 
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
