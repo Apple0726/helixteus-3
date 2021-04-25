@@ -14,9 +14,13 @@ func _physics_process(_delta):
 	if target_coll != null:
 		var target = target_coll.get_collider()
 		if target is KinematicBody2D:
-			if not enemy:
-				var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
-				var dmg:float = damage / dmg_penalty / pow(target.def, cave_ref.DEF_EXPO)
+			if not enemy:#if the shooter of the projectile is not the enemy (i.e. the player)
+				var dmg:float
+				if target is CaveBoss:
+					dmg = 1
+				else:
+					var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
+					dmg = damage / dmg_penalty / pow(target.def, cave_ref.DEF_EXPO)
 				Helper.show_dmg(int(dmg), target_coll.position, cave_ref)
 				target.hit(dmg)
 			else:

@@ -1680,11 +1680,12 @@ func generate_galaxies(id:int):
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
+			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
 				if c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
 					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
-			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
+					g_i.B_strength = e(5, -9)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 		var rand = randf()
 		if rand < 0.02:
@@ -2078,7 +2079,7 @@ func generate_systems(id:int):
 			if hypergiant_system:
 				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
 				star_type = "hypergiant XV"
-				mass = rand_range(10, 10.2)
+				mass = rand_range(4, 4.05)
 				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
@@ -2181,7 +2182,7 @@ func generate_planets(id:int):#local id
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
 		if hypergiant_system:
-			p_i.distance *= 150
+			p_i.distance *= 60
 		#1 solar radius = 2.63 px = 0.0046 AU
 		#569 px = 1 AU = 215.6 solar radii
 		max_distance = p_i["distance"]
@@ -2346,9 +2347,9 @@ func generate_tiles(id:int):
 	for i in num_auroras:
 		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
 			#au_int: aurora_intensity
-			var au_int = clever_round(rand_range(80000, 160000) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
-				au_int = clever_round(rand_range(30, 35))
+				au_int = clever_round(rand_range(25, 26))
 			if tile_from == -1:
 				if cross_aurora:
 					tile_from = wid / 2
@@ -2438,7 +2439,8 @@ func generate_tiles(id:int):
 					floor_size = 20
 					num_floors = 3
 				if boss_cave:
-					floor_size = 30
+					tile_data[t_id].aurora.au_int *= tile_data[t_id].aurora.au_int
+					floor_size = 25
 					num_floors = 5
 				cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
 				continue

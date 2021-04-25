@@ -571,6 +571,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = hole_pos
 		camera.position = hole_pos
 	else:
+		if boss_cave:
+			pos = Vector2(2000, 2900)
+			MM_exit.position = pos * minimap_zoom
+			var boss = load("res://Scenes/Cave/CaveBoss.tscn").instance()
+			add_child(boss)
+			boss.position = Vector2(2000, 2000)
 		rover.position = pos
 		camera.position = pos
 	exit.position = pos

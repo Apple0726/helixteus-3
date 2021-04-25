@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "CaveBoss",
+"language": "GDScript",
+"path": "res://Scripts/HXs_Cave/CaveBoss.gd"
+} ]
 _global_script_class_icons={
-
+"CaveBoss": ""
 }
 
 [application]
@@ -401,7 +406,6 @@ battle_down={
 locale_filter=[ 1, [ "de", "en", "es", "fr", "it", "ko", "ru", "sv", "zh" ] ]
 translations=PoolStringArray( "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.ru.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation", "res://Text/HX3 localization - Sheet1.zh.translation" )
 translation_remaps={
-
 }
 
 [memory]
@@ -410,5 +414,6 @@ limits/message_queue/max_size_kb=2048
 
 [rendering]
 
-quality/2d/use_pixel_snap=true
+2d/snapping/use_gpu_pixel_snap=true
 environment/default_clear_color=Color( 0, 0, 0, 1 )
+quality/2d/use_pixel_snap=true
