@@ -19,4 +19,4 @@ func on_time_out():
 		var rand_rot = rand_range(0, PI/2)
 		for i in range(0, 4):
 			var rot = i * PI/2 + rand_rot
-			cave_ref.add_proj(true, pr.position, 12.0, rot, load("res://Graphics/Cave/Projectiles/enemy_bullet.png"), atk * 2.0)
+			cave_ref.add_proj(true, pr.position, 12.0, rot, cave_ref.bullet_texture, atk * 2.0)

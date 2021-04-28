@@ -5,7 +5,7 @@ signal dialogue_finished;
 var NPC_id:int = -1
 var dialogue_id:int = -1
 var dialogue_part_id:int = -1
-var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1]]
+var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1, 3, 5], [1]]
 
 func _ready():
 	pass # Replace with function body.
@@ -28,11 +28,14 @@ func _input(event):
 				set_dialogue_text()
 	elif F_released:
 		if NPC_id != -1 and not $Text.visible:
-			$Text.visible = true
-			dialogue_part_id = 1
-			set_dialogue_text()
-			set_process(true)
+			show_dialogue()
 
+func show_dialogue():
+	$Text.visible = true
+	dialogue_part_id = 1
+	set_dialogue_text()
+	set_process(true)
+	
 func set_dialogue_text():
 	$Text.visible_characters = 0
 	$Text.text = tr("NPC_%s_%s_%s" % [NPC_id, dialogue_id, dialogue_part_id])

@@ -974,3 +974,9 @@ func on_path_enter(path:String, obj):
 
 func on_path_exit():
 	game.hide_tooltip()
+
+func clever_round (num:float, sd:int = 4):#sd: significant digits
+	var e = floor(log10(abs(num)))
+	if sd < e + 1:
+		return round(num)
+	return stepify(num, pow(10, e - sd + 1))

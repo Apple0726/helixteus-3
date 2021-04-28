@@ -9,13 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "Cave",
+"language": "GDScript",
+"path": "res://Scripts/Cave.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "CaveBoss",
 "language": "GDScript",
 "path": "res://Scripts/HXs_Cave/CaveBoss.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://Scripts/Projectile.gd"
 } ]
 _global_script_class_icons={
-"CaveBoss": ""
+"Cave": "",
+"CaveBoss": "",
+"Projectile": ""
 }
 
 [application]
