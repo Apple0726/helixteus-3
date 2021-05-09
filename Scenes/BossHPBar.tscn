@@ -90,7 +90,7 @@ __meta__ = {
 }
 
 [node name="Particles2D" type="Particles2D" parent="."]
-position = Vector2( -17.0389, 54.8335 )
+position = Vector2( -0.167139, 13.067 )
 emitting = false
 amount = 50
 lifetime = 3.0

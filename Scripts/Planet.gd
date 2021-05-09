@@ -594,7 +594,7 @@ func _input(event):
 				tile_over = -1
 				prev_tile_over = -1
 			game.hide_adv_tooltip()
-		if shadow:
+		if is_instance_valid(shadow):
 			shadow.visible = mouse_on_tiles and not mass_build
 			shadow.modulate.a = 0.5
 			shadow.position.x = floor(mouse_pos.x / 200) * 200 + 100

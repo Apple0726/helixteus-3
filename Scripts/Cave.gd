@@ -588,7 +588,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = hole_pos
 		camera.position = hole_pos
 	else:
-		if boss_cave:
+		if boss_cave and (not game or not game.fourth_ship_hints.boss_rekt):
 			pos = Vector2(2000, 2900)
 			MM_exit.position = pos * minimap_zoom
 			boss = load("res://Scenes/Cave/CaveBoss.tscn").instance()
@@ -1051,7 +1051,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color(1, 1, 1, 1)):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1060,6 +1060,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.damage = damage
 	proj.enemy = enemy
 	proj.modulate = mod
+	if collision_shape == 2:
+		proj.get_node("Round").disabled = true
+		proj.get_node("Line").disabled = false
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
@@ -1224,16 +1227,29 @@ func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 		get_node("OPGrill/Label").text = tr("NPC_3_NAME")
 		$UI2/Dialogue.dialogue_id = 2
 		get_node("OPGrill").connect_events(2, $UI2/Dialogue)
-	if _NPC_id == 4 and _dialogue_id == 1:
-		$UI2/InventorySlots.visible = true
-		$UI2/ActiveItem.visible = true
-		$UI2/HP.visible = true
-		$UI2/Inventory.visible = true
-		var bossHPBar = load("res://Scenes/BossHPBar.tscn").instance()
-		$UI2.add_child(bossHPBar)
-		bossHPBar.set_anchors_and_margins_preset(Control.PRESET_CENTER_TOP)
-		boss.HPBar = bossHPBar
-		bossHPBar.get_node("HPBar").max_value = boss.total_HP
-		boss.refresh_bar()
-		boss.next_attack = 1
-		boss.set_process(true)
+	if _NPC_id == 4:
+		if _dialogue_id == 1:
+			if not game or game.money >= 50000000000000:#50T
+				$UI2/Dialogue.dialogue_id = 2
+				$UI2/Dialogue.show_dialogue()
+			else:
+				init_boss()
+		elif _dialogue_id == 2:
+			init_boss()
+		elif _dialogue_id == 3:
+			boss.fade_away()
+
+func init_boss():
+	$UI2/InventorySlots.visible = true
+	$UI2/ActiveItem.visible = true
+	$UI2/HP.visible = true
+	$UI2/Inventory.visible = true
+	var bossHPBar = load("res://Scenes/BossHPBar.tscn").instance()
+	$UI2.add_child(bossHPBar)
+	bossHPBar.set_anchors_and_margins_preset(Control.PRESET_CENTER_TOP)
+	boss.HPBar = bossHPBar
+	bossHPBar.get_node("HPBar").max_value = boss.total_HP
+	boss.refresh_bar()
+	boss.next_attack = 1
+	boss.set_process(true)
+	

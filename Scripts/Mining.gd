@@ -121,6 +121,7 @@ func update_info(first_time:bool = false):
 	else:
 		$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
+	print(progress)
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 
@@ -228,7 +229,6 @@ func pickaxe_hit():
 	place_crumbles(5, 0.1, 1)
 	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
 	game.pickaxe.durability -= 1
-	tile.mining_progress = progress
 	var rock_gen:bool = false
 	if progress >= 1000:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
@@ -245,6 +245,7 @@ func pickaxe_hit():
 				game.objective.current += 1
 			rock_gen = true
 			generate_rock(true)
+	tile.mining_progress = progress
 	if rock_gen:
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()
