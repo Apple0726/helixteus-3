@@ -382,9 +382,9 @@ func _on_Ship2Map_mouse_entered():
 
 
 func _on_Ship2Map_pressed():
-	if ship2map:
+	if is_instance_valid(ship2map):
 		remove_child(ship2map)
-		ship2map = null
+		ship2map.queue_free()
 	else:
 		ship2map = load("res://Scenes/Ship2Map.tscn").instance()
 		add_child(ship2map)
@@ -403,3 +403,22 @@ func _on_ObjectivesLabel_mouse_entered():
 	on_button = true
 	if game.objective.type == game.ObjectiveType.EMMA:
 		emma_cave_shortcut = true
+
+func _on_Emma_mouse_entered():
+	game.show_tooltip(tr("TALK_TO_OP_GRILL"))
+
+
+func _on_Emma_pressed():
+	$Dialogue.visible = true
+	$Dialogue.NPC_id = 3
+	if game.c_c_g == 3:
+		if game.c_v == "cluster" or game.c_v == "galaxy" and game.c_g != game.fourth_ship_hints.dark_matter_spawn_galaxy:
+			$Dialogue.dialogue_id = 8
+		if game.c_g == game.fourth_ship_hints.dark_matter_spawn_galaxy:
+			if game.c_v in ["galaxy", "system"]:
+				$Dialogue.dialogue_id = 9
+			elif game.c_v == "planet" and game.c_s_g == game.fourth_ship_hints.dark_matter_spawn_system:
+				$Dialogue.dialogue_id = 10
+	else:
+		$Dialogue.dialogue_id = 7
+	$Dialogue.show_dialogue()

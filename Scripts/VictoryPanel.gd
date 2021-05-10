@@ -64,6 +64,8 @@ func _on_close_button_pressed():
 				game.stats.planets_conquered += 1
 	game.system_data[game.c_s].conquered = all_conquered
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+	if all_conquered:
+		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	game.switch_view("system")
 
 func _on_Bonus_mouse_entered():

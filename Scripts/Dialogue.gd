@@ -6,7 +6,7 @@ onready var game = get_node("/root/Game")
 var NPC_id:int = -1
 var dialogue_id:int = -1
 var dialogue_part_id:int = -1
-var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1, 3, 5], [4, 3, 2]]
+var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1, 3, 5, 5, 4, 1, 2, 1, 1], [4, 3, 2]]
 var choices:Dictionary = {"4_2_3":2}
 onready var vbox = $PanelContainer/VBoxContainer
 

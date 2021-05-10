@@ -465,13 +465,20 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.SIGNAL:
 				game.objective.current += 1
 			game.second_ship_hints.ship_locator = true
+			tile.erase("ship_locator_depth")
 		else:
 			game[content] += amount
+		if tile.has("artifact") and tile.depth >= 5000:
+			game.fourth_ship_hints.artifact_found = true
+			tile.erase("artifact")
+			if game.fourth_ship_hints.boss_rekt:
+				game.long_popup("%s\n%s" % [tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND_DESC2")], tr("ARTIFACT_FOUND"))
+			else:
+				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if game.show.has(content):
 			game.show[content] = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
-	tile.depth += 1
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
 		tile.erase("crater")
 
@@ -512,7 +519,6 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth"):
 		contents.ship_locator = 1
-		tile.erase("ship_locator_depth")
 	return contents
 
 func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
@@ -556,9 +562,8 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
-	if tile.has("ship_locator_depth") and tile.depth == tile.ship_locator_depth:
+	if tile.has("ship_locator_depth") and tile.depth >= tile.ship_locator_depth:
 		contents.ship_locator = 1
-		tile.erase("ship_locator_depth")
 	return contents
 
 func get_IR_mult(bldg_name:String):
@@ -766,6 +771,7 @@ func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 		dict.depth = 0
 	if dict.bldg.stored >= 3:
 		var contents:Dictionary = mass_generate_rock(dict, p_i, dict.bldg.stored)
+		get_rsrc_from_rock(contents, dict, p_i, true)
 		dict.depth += dict.bldg.stored
 		dict.erase("contents")
 		for content in contents:
@@ -780,6 +786,7 @@ func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 		for i in dict.bldg.stored:
 			var contents:Dictionary = generate_rock(dict, p_i)
 			get_rsrc_from_rock(contents, dict, p_i, true)
+			dict.depth += 1
 			for content in contents:
 				if n > 1:
 					if contents[content] is Dictionary:

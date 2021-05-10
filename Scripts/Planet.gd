@@ -121,10 +121,16 @@ func _ready():
 				if tile.wormhole.has("investigation_length"):
 					add_time_bar(id2, "wormhole")
 				p_i.wormhole = true
-			if tile.has("ship_part") and not tile.has("depth"):
+			if (tile.has("ship_part") or tile.has("artifact")) and not tile.has("depth"):
 				$Obstacles.set_cell(i, j, 11)
 			if tile.has("ruins"):
 				$Obstacles.set_cell(i, j, 12)
+			if tile.has("diamond_tower"):
+				var tower = Sprite.new()
+				tower.texture = load("res://Graphics/Tiles/diamond_tower.png")
+				tower.scale *= 0.4
+				add_child(tower)
+				tower.position = Vector2(i, j) * 200 + Vector2(100, 0)
 			if tile.has("lake"):
 				if tile.lake.state == "l":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
@@ -221,18 +227,18 @@ func show_tooltip(tile):
 			game.help_str = "crater_desc"
 		else:
 			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-	if tile.has("rock"):
+	elif tile.has("rock"):
 		if game.help.boulder_desc:
 			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
 			game.help_str = "boulder_desc"
-	if tile.has("ship"):
+	elif tile.has("ship"):
 		if game.science_unlocked.SCT:
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
 			if game.help.abandoned_ship:
 				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
 				game.help_str = "abandoned_ship"
-	if tile.has("wormhole"):
+	elif tile.has("wormhole"):
 		if tile.wormhole.active:
 			if game.help.active_wormhole:
 				tooltip = "%s\n%s\n%s" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
@@ -250,7 +256,7 @@ func show_tooltip(tile):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP, 6), Helper.time_to_str(wh_costs.time * 1000)]
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
-	if tile.has("cave"):
+	elif tile.has("cave"):
 		var cave = game.cave_data[tile.cave.id]
 		tooltip = tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":cave.floor_size})
@@ -260,6 +266,9 @@ func show_tooltip(tile):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
 		else:
 			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+	elif tile.has("diamond_tower"):
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
+		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
 		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
 	elif tile.has("aurora") and tooltip == "":
@@ -694,6 +703,15 @@ func _input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("cave") or tile.has("ruins"):
+				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].has("special_cave"):
+					if not game.fourth_ship_hints.barrier_broken:
+						var rsrc = {"sapphire":1000000, "emerald":1000000, "ruby":1000000, "topaz":1000000, "amethyst":1000000, "quartz":1000000}
+						if game.check_enough(rsrc):
+							game.deduct_resources(rsrc)
+							game.fourth_ship_hints.barrier_broken = true
+						else:
+							game.popup(tr("CAVE_BLOCKED"), 2.0)
+							return
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
 					game.rover_id = rover_selected

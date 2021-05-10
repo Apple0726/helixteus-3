@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -747,13 +747,17 @@ func new_game(tut:bool):
 	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
 	fourth_ship_hints = {	"ruins_spawned":false,
 							"hypergiant_system_spawn_galaxy":-1,
+							"dark_matter_spawn_galaxy":-1,
 							"hypergiant_system_spawn_system":-1,
+							"dark_matter_spawn_system":-1,
 							"SE_constructed":true,
 							"op_grill_planet":-1,
 							"op_grill_cave_spawn":-1,
 							"manipulators":[false, false, false, false, false, false],
 							"boss_planet":-1,
+							"barrier_broken":false,
 							"boss_rekt":false,
+							"artifact_found":false,
 	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
@@ -1626,6 +1630,11 @@ func generate_clusters(id:int):
 			dist_from_center = 150
 			c_i.class = "group"
 			c_i.galaxy_num = Helper.rand_int(80, 100)
+		if id == 0 and _i == 3:
+			dist_from_center = 300
+			c_i.name = "%s 3" % tr("CLUSTER")
+			c_i.class = "group"
+			c_i.galaxy_num = Helper.rand_int(80, 100)
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
@@ -1671,6 +1680,7 @@ func generate_galaxies(id:int):
 		g_i["discovered"] = false
 		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
+		var rand = randf()
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 15000 * pow(randf(), 2))
 			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
@@ -1681,13 +1691,16 @@ func generate_galaxies(id:int):
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
+			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
 				if c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
 					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
 					g_i.B_strength = e(5, -9)
-			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
-		var rand = randf()
+				if c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == -1:
+					fourth_ship_hints.dark_matter_spawn_galaxy = i
+					g_i.dark_matter = 2.7
+					rand = 1
 		if rand < 0.02:
 			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
 		elif rand < 0.2:
@@ -2003,6 +2016,7 @@ func generate_systems(id:int):
 #			num_stars += 1
 		var stars = []
 		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
+		var dark_matter_system:bool = c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
@@ -2052,30 +2066,30 @@ func generate_systems(id:int):
 				star_type = "main_sequence"
 			else:
 				star_type = "brown_dwarf"
-			
-			if mass > 0.2 and mass < 1.3 and randf() < 0.05:
-				star_type = "white_dwarf"
-				temp = 4000 + exp(10 * randf())
-				star_size = rand_range(0.008, 0.02)
-				mass = rand_range(0.4, 0.8)
-			else:
-				if mass > 0.25 and randf() < 0.08:
-					star_type = "giant"
-					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
-				if star_type == "main_sequence":
-					if randf() < 0.01:
-						mass = rand_range(10, 50)
-						star_type = "supergiant"
-						star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
-					elif randf() < 0.0015:
-						mass = rand_range(5, 30)
-						star_type = "hypergiant"
-						star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
-						var tier = 1
-						while randf() < 0.2:
-							tier += 1
-							star_type = "hypergiant " + get_roman_num(tier)
-							star_size *= 1.2
+			if not dark_matter_system:
+				if mass > 0.2 and mass < 1.3 and randf() < 0.05:
+					star_type = "white_dwarf"
+					temp = 4000 + exp(10 * randf())
+					star_size = rand_range(0.008, 0.02)
+					mass = rand_range(0.4, 0.8)
+				else:
+					if mass > 0.25 and randf() < 0.08:
+						star_type = "giant"
+						star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
+					if star_type == "main_sequence":
+						if randf() < 0.01:
+							mass = rand_range(10, 50)
+							star_type = "supergiant"
+							star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
+						elif randf() < 0.0015:
+							mass = rand_range(5, 30)
+							star_type = "hypergiant"
+							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
+							var tier = 1
+							while randf() < 0.2:
+								tier += 1
+								star_type = "hypergiant " + get_roman_num(tier)
+								star_size *= 1.2
 			if hypergiant_system:
 				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
 				star_type = "hypergiant XV"
@@ -2102,6 +2116,9 @@ func generate_systems(id:int):
 			planet_num -= floor((planet_num - 40) / 2)
 		if hypergiant_system:
 			planet_num = 5
+		elif dark_matter_system:
+			fourth_ship_hints.dark_matter_spawn_system = system_data.size() + s_num
+			planet_num = 1
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -2147,6 +2164,7 @@ func generate_planets(id:int):#local id
 	var dark_matter = galaxy_data[c_g].dark_matter
 	system_data[id]["planets"].clear()
 	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
+	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -2176,7 +2194,9 @@ func generate_planets(id:int):#local id
 					p_i.type = 8
 					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 				p_i.conquered = true
-			else:
+			elif dark_matter_system:
+				p_i.size = 1000
+				p_i.conquered = true
 				p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
@@ -2332,6 +2352,7 @@ func generate_tiles(id:int):
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	var ship_signal:bool = second_ship_hints.spawned_at_p == -1 and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
 	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
+	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
 	var op_aurora:bool = hypergiant_system and id == 3
 	var cross_aurora:bool = hypergiant_system and id == 4
 	var num_auroras:int = 2
@@ -2344,6 +2365,8 @@ func generate_tiles(id:int):
 		pulsation = 0.5
 		thiccness = 1
 		amplitude = 1.3
+	if dark_matter_system:
+		num_auroras = 0
 	for i in num_auroras:
 		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
 			#au_int: aurora_intensity
@@ -2440,9 +2463,9 @@ func generate_tiles(id:int):
 					num_floors = 3
 				if boss_cave:
 					tile_data[t_id].aurora.au_int *= tile_data[t_id].aurora.au_int
-					floor_size = 25
-					num_floors = 5
-				cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
+					cave_data.append({"num_floors":5, "floor_size":25, "special_cave":4})
+				else:
+					cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if not cross_aurora and randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
@@ -2496,6 +2519,13 @@ func generate_tiles(id:int):
 			tile_data[random_tile].ship_part = true
 			third_ship_hints.part_spawned_at_p = c_p_g
 			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
+	elif hypergiant_system and id == 2:
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		tile_data[random_tile].artifact = true
+	elif dark_matter_system:
+		erase_tile(12)
+		tile_data[12].diamond_tower = true
 	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 20000 and p_i.pressure > 50 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)

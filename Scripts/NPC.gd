@@ -1,3 +1,4 @@
+class_name NPC
 extends Area2D
 
 export var NPC_id:int

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -22,6 +22,8 @@
 [ext_resource path="res://Graphics/Cave/Objects/Map.png" type="Texture" id=20]
 [ext_resource path="res://Graphics/Misc/HUD.png" type="Texture" id=21]
 [ext_resource path="res://Graphics/Buttons/Vehicles.png" type="Texture" id=22]
+[ext_resource path="res://Scenes/Dialogue.tscn" type="PackedScene" id=23]
+[ext_resource path="res://Graphics/NPCs/3_btn.png" type="Texture" id=24]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 14.0
@@ -574,6 +576,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Dialogue" parent="." instance=ExtResource( 23 )]
+
+[node name="Emma" type="TextureButton" parent="."]
+margin_left = 1112.0
+margin_top = 656.0
+margin_right = 1152.0
+margin_bottom = 700.0
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 24 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AutosaveLight" type="TextureRect" parent="."]
 modulate = Color( 0, 0.301961, 0, 1 )
 margin_left = 1184.0
@@ -636,5 +653,8 @@ __meta__ = {
 [connection signal="mouse_entered" from="Ship2Map" to="." method="_on_Ship2Map_mouse_entered"]
 [connection signal="mouse_exited" from="Ship2Map" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ship2Map" to="." method="_on_Ship2Map_pressed"]
+[connection signal="mouse_entered" from="Emma" to="." method="_on_Emma_mouse_entered"]
+[connection signal="mouse_exited" from="Emma" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Emma" to="." method="_on_Emma_pressed"]
 [connection signal="mouse_entered" from="AutosaveLight" to="." method="_on_AutosaveLight_mouse_entered"]
 [connection signal="mouse_exited" from="AutosaveLight" to="." method="_on_mouse_exited"]

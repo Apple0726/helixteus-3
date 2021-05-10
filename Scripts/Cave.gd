@@ -271,7 +271,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	else:
 		noise.period = 65
 	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
-	var boss_cave = true#game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
+	var boss_cave = not game or game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
@@ -552,9 +552,18 @@ func generate_cave(first_floor:bool, going_up:bool):
 					deposit.free()
 		elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
 			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id):
-				var op_grill = load("res://Scenes/NPC.tscn").instance()
+				var op_grill:NPC = load("res://Scenes/NPC.tscn").instance()
 				op_grill.NPC_id = 3
-				op_grill.connect_events(1 if game.fourth_ship_hints.op_grill_cave_spawn == -1 else 2, $UI2/Dialogue)
+				if game.fourth_ship_hints.op_grill_cave_spawn == -1:
+					op_grill.connect_events(1, $UI2/Dialogue)
+				elif not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
+					op_grill.connect_events(2, $UI2/Dialogue)
+				elif game.mets.amethyst < 1000000 or game.mets.sapphire < 1000000 or game.mets.topaz < 1000000 or game.mets.quartz < 1000000 or game.mets.ruby < 1000000 or game.mets.emerald < 1000000:
+					op_grill.connect_events(3, $UI2/Dialogue)
+				elif not game.fourth_ship_hints.boss_rekt:
+					op_grill.connect_events(4, $UI2/Dialogue)
+				else:
+					op_grill.connect_events(5, $UI2/Dialogue)
 				var part_tile = rooms[0].tiles[5]
 				op_grill.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
 				add_child(op_grill)
