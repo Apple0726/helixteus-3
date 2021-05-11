@@ -702,7 +702,7 @@ func _input(event):
 				else:
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
-			elif tile.has("cave") or tile.has("ruins"):
+			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
 				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].has("special_cave"):
 					if not game.fourth_ship_hints.barrier_broken:
 						var rsrc = {"sapphire":1000000, "emerald":1000000, "ruby":1000000, "topaz":1000000, "amethyst":1000000, "quartz":1000000}
@@ -715,7 +715,7 @@ func _input(event):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
 					game.rover_id = rover_selected
-					if tile.has("cave"):
+					if tile.has("cave") or tile.has("diamond_tower"):
 						game.switch_view("cave")
 					else:
 						game.switch_view("ruins")

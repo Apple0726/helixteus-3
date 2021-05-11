@@ -50,6 +50,7 @@ func refresh():
 			$AutosaveLight.modulate.g = 0.3
 			set_process(false)
 		$AutosaveLight.visible = autosave_light
+	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
 	var planet = game.view.obj
 	if game.c_v == "planet" and planet and planet.bldg_to_construct != "":
 		var money_cost = game.view.obj.constr_costs.money
@@ -406,7 +407,6 @@ func _on_ObjectivesLabel_mouse_entered():
 
 func _on_Emma_mouse_entered():
 	game.show_tooltip(tr("TALK_TO_OP_GRILL"))
-
 
 func _on_Emma_pressed():
 	$Dialogue.visible = true

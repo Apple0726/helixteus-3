@@ -6,9 +6,10 @@ const DEF_EXPO = 0.7
 
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p] if game else {"type":3}
-onready var tile_type = p_i.type - 3
 onready var tile = game.tile_data[game.c_t] if game else {"cave":{"id":-1}}
 onready var aurora:bool = tile.has("aurora")
+onready var tower:bool = tile.has("diamond_tower")
+onready var tile_type = 10 if tower else p_i.type - 3
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5), 3)
@@ -101,7 +102,7 @@ var boss:CaveBoss
 var shaking:Vector2 = Vector2.ZERO
 
 func _ready():
-	id = tile.cave.id
+	id = tile.cave.id if tile.has("cave") else tile.diamond_tower
 	cave_data = game.cave_data[id] if game else {"num_floors":5, "floor_size":25}
 	num_floors = cave_data.num_floors
 	cave_size = cave_data.floor_size
@@ -118,6 +119,12 @@ func _ready():
 	if not game:
 		rover_data = {"HP":100, "total_HP":100, "atk":100, "def":100, "spd":2.5, "weight_cap":10000, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}
 		set_rover_data()
+	if tower:
+		$Walls.tile_set = load("res://Resources/DiamondWalls.tres")
+		$Hole/Sprite.texture = load("res://Graphics/Tiles/diamond_stairs.png")
+		$TileMap.modulate.a = 1
+		$UI/Minimap/Hole.rotation_degrees = 180
+		rover_size = 0.4
 	generate_cave(true, false)
 	if cave_data.has("special_cave") and cave_data.special_cave in [1, 3]:
 		$UI/Error.visible = true
@@ -208,31 +215,39 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	rover_size = 0.7
 	if dont_gen_anything:
 		if cave_floor < 19:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
 		else:
 			light_amount = clamp((23 - cave_floor) * 0.05, 0, 0.2)
 	else:
-		light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
-		if game:
-			if game.science_unlocked.RMK2:
-				light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
-			if game.science_unlocked.RMK3:
-				light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
-			if game.help.cave_controls:
-				$UI2/Controls.visible = true
-				game.help_str = "cave_controls"
-				$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-			if not game.objective.empty() and game.objective.id == 2:
-				game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
+		if tower:
+			light_amount = 1
 		else:
-			light_amount = 0.4
-			rover_light.visible = true
+			light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+			if game:
+				if game.science_unlocked.RMK2:
+					light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
+				if game.science_unlocked.RMK3:
+					light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
+				if game.help.cave_controls:
+					$UI2/Controls.visible = true
+					game.help_str = "cave_controls"
+					$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
+				if not game.objective.empty() and game.objective.id == 2:
+					game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
+			else:
+				light_amount = 0.4
+				rover_light.visible = true
 	rover_light.energy = (1 - light_amount) * 1.4
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.clever_round(difficulty, 3)]
 	var rng = RandomNumberGenerator.new()
-	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
+	if tower:
+		$UI2/CaveInfo/Floor.text = "%sF" % [cave_floor]
+		cave_size = 41 - cave_floor
+	else:
+		$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
 	var first_time:bool = cave_floor > len(seeds)
 	if first_time:
@@ -265,24 +280,25 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave_size = 16 + cave_floor / 2
 		else:
 			noise.period = 65
-			$Camera2D.zoom = Vector2.ONE
-			$Rover.scale = Vector2(0.4, 0.4)
 			rover_size = 0.4
 	else:
 		noise.period = 65
+	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
+	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
 	var boss_cave = not game or game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
+	var top_of_the_tower = tower and cave_floor == num_floors
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
-			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
+			var level = rng.randf_range(-0.25, 1) if tower else noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			cave.set_cell(i, j, tile_type)
-			if level > 0 or boss_cave:
+			if level > 0 or boss_cave or top_of_the_tower:
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if not dont_gen_anything and not boss_cave and rng.randf() < 0.005 * min(5, cave_floor):
+				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.005 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
@@ -310,7 +326,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					enemy_icon.add_to_group("enemy_icons")
 			else:
 				cave_wall.set_cell(i, j, 0)
-				if not dont_gen_anything:
+				if not dont_gen_anything and not tower:
 					var rand:float = rng.randf()
 					var rand2:float = rng.randf()
 					var ch = 0.02 * pow(pow(2, cave_floor - 1) / 3.0, 0.4)
@@ -351,7 +367,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(self, "sort_size")
 	#Generate treasure chests
-	if not dont_gen_anything and not boss_cave:
+	if not dont_gen_anything and not boss_cave and not top_of_the_tower:
 		for room in rooms:
 			var n = room.size
 			for tile in room.tiles:
@@ -433,10 +449,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 					elif bottom:
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
-		exit.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/exit.png")
-		exit.get_node("ExitColl").disabled = false
+		$Exit/Sprite.texture = load("res://Graphics/Cave/Objects/exit.png")
+		$Exit/ExitColl.disabled = false
 		var rot = spawn_edge_tiles[0].dir
-		exit.get_node("GoUpColl").disabled = true
+		$Exit/GoUpColl.disabled = true
 		var breaker:int = 0
 		while rand_hole == rand_spawn and breaker < 10:
 			breaker += 1
@@ -447,10 +463,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 		exit.rotation = rot
 		MM_exit.rotation = rot
 	else:
-		MM_exit.rotation = 0
-		exit.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/go_up.png")
-		exit.get_node("ExitColl").disabled = true
-		exit.get_node("GoUpColl").disabled = false
+		exit.rotation = 0
+		MM_exit.rotation_degrees = 180 if tower else 0
+		if tower:
+			$Exit/Sprite.texture = load("res://Graphics/Tiles/diamond_stairs.png")
+		else:
+			$Exit/Sprite.texture = load("res://Graphics/Cave/Objects/go_up.png")
+		$Exit/ExitColl.disabled = true
+		$Exit/GoUpColl.disabled = false
 		while rand_hole == rand_spawn:
 			rand_spawn = get_tile_index(tiles[rng.randi_range(0, len(tiles) - 1)])
 		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
@@ -551,7 +571,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					deposits.erase(st)
 					deposit.free()
 		elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
-			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id):
+			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id) and not game.fourth_ship_hints.emma_joined:
 				var op_grill:NPC = load("res://Scenes/NPC.tscn").instance()
 				op_grill.NPC_id = 3
 				if game.fourth_ship_hints.op_grill_cave_spawn == -1:
@@ -871,13 +891,13 @@ func _input(event):
 			elif active_type == "go_down":
 				remove_cave()
 				cave_floor += 1
-				difficulty *= 2
+				difficulty *= 1.2 if tower else 2
 				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
-				difficulty /= 2
+				difficulty /= 1.2 if tower else 2
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
 			elif active_type == "map":
@@ -1222,7 +1242,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), pow(2, cave_floor - 1)]
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.clever_round(pow(1.2 if tower else 2, cave_floor - 1), 3)]
 	if game.help.cave_diff_info:
 		game.help_str = "cave_diff_info"
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
@@ -1230,12 +1250,16 @@ func _on_Difficulty_mouse_entered():
 		game.show_tooltip(tooltip)
 
 func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
-	if _NPC_id == 3 and _dialogue_id == 1:
-		game.objective = {"type":game.ObjectiveType.MANIPULATORS, "id":12, "current":0, "goal":6}
-		game.fourth_ship_hints.op_grill_cave_spawn = id
-		get_node("OPGrill/Label").text = tr("NPC_3_NAME")
-		$UI2/Dialogue.dialogue_id = 2
-		get_node("OPGrill").connect_events(2, $UI2/Dialogue)
+	if _NPC_id == 3:
+		if _dialogue_id == 1:
+			game.objective = {"type":game.ObjectiveType.MANIPULATORS, "id":12, "current":0, "goal":6}
+			game.fourth_ship_hints.op_grill_cave_spawn = id
+			get_node("OPGrill/Label").text = tr("NPC_3_NAME")
+			$UI2/Dialogue.dialogue_id = 2
+			get_node("OPGrill").connect_events(2, $UI2/Dialogue)
+		elif _dialogue_id == 6:
+			game.fourth_ship_hints.emma_joined = true
+			remove_child(get_node("OPGrill"))
 	if _NPC_id == 4:
 		if _dialogue_id == 1:
 			if not game or game.money >= 50000000000000:#50T

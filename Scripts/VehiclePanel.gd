@@ -184,7 +184,7 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			game.c_t = tile_id
 			tile_id = -1
 			game.rover_id = rov_id
-			if game.tile_data[game.c_t].has("cave"):
+			if game.tile_data[game.c_t].has("cave") or game.tile_data[game.c_t].has("diamond_tower"):
 				game.switch_view("cave")
 			else:
 				game.switch_view("ruins")

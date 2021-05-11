@@ -758,6 +758,7 @@ func new_game(tut:bool):
 							"barrier_broken":false,
 							"boss_rekt":false,
 							"artifact_found":false,
+							"emma_joined":false,
 	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
@@ -2525,7 +2526,8 @@ func generate_tiles(id:int):
 		tile_data[random_tile].artifact = true
 	elif dark_matter_system:
 		erase_tile(12)
-		tile_data[12].diamond_tower = true
+		tile_data[12].diamond_tower = len(cave_data)
+		cave_data.append({"floor_size":40, "num_floors":25})
 	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 20000 and p_i.pressure > 50 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
