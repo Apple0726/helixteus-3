@@ -421,7 +421,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				enemy.get_node("HX").room = i
 			i += 1
 	var pos:Vector2
-	var rand_hole:int = rooms[0].tiles[rng.randi_range(0, len(rooms[0]) - 1)]
+	var rand_hole:int = rooms[0].tiles[rng.randi_range(0, len(rooms[0].tiles) - 1)]
 	var rand_spawn:int
 	if first_time:
 		rand_spawn = rand_hole
@@ -631,11 +631,32 @@ func generate_cave(first_floor:bool, going_up:bool):
 			$UI2/Dialogue.NPC_id = 4
 			$UI2/Dialogue.dialogue_id = 1
 			$UI2/Dialogue.show_dialogue()
+		if top_of_the_tower and len(game.ship_data) != 4:
+			pos = Vector2(500, 500)
+			MM_exit.position = pos * minimap_zoom
+			var ship = object_scene.instance()
+			ship.get_node("Sprite").texture = load("res://Graphics/Ships/Ship3.png")
+			ship.get_node("Area2D").connect("body_entered", self, "on_Ship4_entered")
+			add_child(ship)
+			ship.position = Vector2(1000, 1000)
+			if game.fourth_ship_hints.emma_joined and not game.fourth_ship_hints.ship_spotted:
+				$UI2/Dialogue.NPC_id = 3
+				$UI2/Dialogue.dialogue_id = 11
+				$UI2/Dialogue.show_dialogue()
 		rover.position = pos
 		camera.position = pos
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.get_node("HX").set_rand()
+
+func on_Ship4_entered(_body):
+	if game.fourth_ship_hints.emma_joined:
+		$UI2/Dialogue.NPC_id = 3
+		$UI2/Dialogue.dialogue_id = 12
+	else:
+		$UI2/Dialogue.NPC_id = 5
+		$UI2/Dialogue.dialogue_id = 1
+	$UI2/Dialogue.show_dialogue()
 
 func add_light(node):
 	#node.get_node("Light2D").enabled = true
@@ -891,13 +912,13 @@ func _input(event):
 			elif active_type == "go_down":
 				remove_cave()
 				cave_floor += 1
-				difficulty *= 1.2 if tower else 2
+				difficulty *= 1.25 if tower else 2
 				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
-				difficulty /= 1.2 if tower else 2
+				difficulty /= 1.25 if tower else 2
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
 			elif active_type == "map":
@@ -1000,7 +1021,7 @@ func hit_rock(delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2)
+		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1)
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
@@ -1013,6 +1034,8 @@ func hit_rock(delta):
 						if amount < 1:
 							continue
 						rsrc[mat] = amount
+			if tower:
+				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
 			if deposits.has(st):
 				var deposit = deposits[st]
 				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.75), 3)
@@ -1210,7 +1233,10 @@ func _on_Exit_body_entered(_body):
 		show_right_info(tr("F_TO_EXIT"))
 		active_type = "exit"
 	else:
-		show_right_info(tr("F_TO_GO_UP"))
+		if tower:
+			show_right_info(tr("F_TO_GO_DOWN"))
+		else:
+			show_right_info(tr("F_TO_GO_UP"))
 		active_type = "go_up"
 
 func on_WH_entered(_body):
@@ -1218,7 +1244,10 @@ func on_WH_entered(_body):
 	active_type = "exit"
 
 func _on_Hole_body_entered(_body):
-	show_right_info(tr("F_TO_GO_DOWN"))
+	if tower:
+		show_right_info(tr("F_TO_GO_UP"))
+	else:
+		show_right_info(tr("F_TO_GO_DOWN"))
 	active_type = "go_down"
 
 func show_right_info(txt:String):
@@ -1242,7 +1271,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.clever_round(pow(1.2 if tower else 2, cave_floor - 1), 3)]
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.clever_round(pow(1.25 if tower else 2, cave_floor - 1), 3)]
 	if game.help.cave_diff_info:
 		game.help_str = "cave_diff_info"
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
@@ -1260,6 +1289,11 @@ func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 		elif _dialogue_id == 6:
 			game.fourth_ship_hints.emma_joined = true
 			remove_child(get_node("OPGrill"))
+		elif _dialogue_id == 11:
+			game.fourth_ship_hints.ship_spotted = true
+			$UI2/Dialogue.NPC_id = -1
+		elif _dialogue_id == 12:
+			game.game_fade(["switch_view", "get_4th_ship"], [["planet"], []])
 	if _NPC_id == 4:
 		if _dialogue_id == 1:
 			if not game or game.money >= 50000000000000:#50T

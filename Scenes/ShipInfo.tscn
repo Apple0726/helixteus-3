@@ -589,6 +589,7 @@ text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]

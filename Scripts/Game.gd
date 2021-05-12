@@ -296,7 +296,10 @@ var music_player = AudioStreamPlayer.new()
 
 var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
+var game_tween:Tween
 func _ready():
+	game_tween = Tween.new()
+	add_child(game_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	if TranslationServer.get_locale() != "es":
@@ -461,8 +464,6 @@ func load_game():
 			stack_size = 64
 		if science_unlocked.CI3:
 			stack_size = 128
-		science_unlocked.RMK2 = true
-		science_unlocked.RMK3 = true
 		infinite_research = save_game.get_var()
 		mats = save_game.get_var()
 		mets = save_game.get_var()
@@ -759,6 +760,7 @@ func new_game(tut:bool):
 							"boss_rekt":false,
 							"artifact_found":false,
 							"emma_joined":false,
+							"ship_spotted":false,
 	}
 	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
@@ -3602,3 +3604,24 @@ func mine_tile(tile_id:int = -1):
 			switch_view("mining")
 	else:
 		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
+
+func game_fade(fn, args:Array = []):
+	game_tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0), 0.5)
+	game_tween.start()
+	yield(game_tween, "tween_all_completed")
+	if fn is Array:
+		for i in len(fn):
+			callv(fn[i], args[i])
+	else:
+		callv(fn, args)
+	game_tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 1), 0.5)
+	game_tween.start()
+
+func get_4th_ship():
+	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
+	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+	Helper.add_ship_XP(3, 150000)
+	Helper.add_weapon_XP(3, "bullet", 400)
+	Helper.add_weapon_XP(3, "laser", 400)
+	Helper.add_weapon_XP(3, "bomb", 400)
+	Helper.add_weapon_XP(3, "light", 450)

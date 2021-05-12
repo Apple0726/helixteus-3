@@ -5,6 +5,7 @@ onready var current = $Current
 onready var ship0 = $Ship0
 onready var ship1 = $Ship1
 onready var ship2 = $Ship2
+onready var ship3 = $Ship3
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 const DEF_EXPO_SHIP = 1
 const DEF_EXPO_ENEMY = 1
@@ -241,7 +242,7 @@ func hitbox_size():
 		return 1
 
 func _process(delta):
-	if star:
+	if is_instance_valid(star):
 		star.scale += Vector2(0.12, 0.12) * delta * 60
 		star.modulate.a -= 0.03 * delta * 60
 		star.rotation += 0.04 * delta * 60
@@ -280,6 +281,7 @@ func _process(delta):
 		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0.position.distance_to(Vector2(200, 200)) * delta * 5)
 		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1.position.distance_to(Vector2(400, 200)) * delta * 5)
 		ship2.position = ship2.position.move_toward(Vector2(200, 400), ship2.position.distance_to(Vector2(200, 400)) * delta * 5)
+		ship3.position = ship3.position.move_toward(Vector2(400, 400), ship3.position.distance_to(Vector2(400, 400)) * delta * 5)
 		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -45)
 		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):
