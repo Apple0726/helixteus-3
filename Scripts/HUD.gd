@@ -85,7 +85,7 @@ func refresh():
 		minerals_text["custom_colors/font_color"] = Color.white
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
-	soil_text.text = Helper.format_num(game.clever_round(game.mats.soil, 3), 6) + " kg"
+	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil, 3), 6) + " kg"
 	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone

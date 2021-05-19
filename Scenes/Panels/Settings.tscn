@@ -4,13 +4,13 @@
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=1]
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 4 )
 
-[sub_resource type="Theme" id=6]
-default_font = SubResource( 5 )
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
 
 [sub_resource type="DynamicFont" id=3]
 use_filter = true
@@ -31,7 +31,7 @@ margin_left = -448.0
 margin_top = -288.0
 margin_right = 448.0
 margin_bottom = 288.0
-theme = SubResource( 6 )
+theme = SubResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -95,10 +95,10 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="."]
-margin_left = 492.0
-margin_top = 288.0
-margin_right = 812.0
-margin_bottom = 312.0
+margin_left = 484.0
+margin_top = 208.0
+margin_right = 804.0
+margin_bottom = 232.0
 text = "AUTOSAVE_INTERVAL"
 align = 1
 __meta__ = {
@@ -106,10 +106,10 @@ __meta__ = {
 }
 
 [node name="Label3" type="Label" parent="."]
-margin_left = 769.113
-margin_top = 319.715
-margin_right = 923.113
-margin_bottom = 343.715
+margin_left = 761.113
+margin_top = 239.715
+margin_right = 915.113
+margin_bottom = 263.715
 custom_fonts/font = SubResource( 3 )
 text = "30 s"
 __meta__ = {
@@ -117,10 +117,10 @@ __meta__ = {
 }
 
 [node name="Autosave" type="HSlider" parent="."]
-margin_left = 518.0
-margin_top = 298.0
-margin_right = 758.0
-margin_bottom = 362.0
+margin_left = 510.0
+margin_top = 218.0
+margin_right = 750.0
+margin_bottom = 282.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
@@ -161,10 +161,10 @@ __meta__ = {
 }
 
 [node name="AutosaveLight" type="CheckButton" parent="."]
-margin_left = 540.0
-margin_top = 372.0
-margin_right = 793.0
-margin_bottom = 412.0
+margin_left = 532.0
+margin_top = 292.0
+margin_right = 785.0
+margin_bottom = 332.0
 text = "AUTOSAVE_LIGHT"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -181,20 +181,23 @@ __meta__ = {
 }
 
 [node name="EnableAutosave" type="CheckButton" parent="."]
-margin_left = 524.0
-margin_top = 412.0
-margin_right = 795.0
-margin_bottom = 452.0
+margin_left = 516.0
+margin_top = 332.0
+margin_right = 787.0
+margin_bottom = 372.0
 text = "ENABLE_AUTOSAVE"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="FPS" type="Control" parent="."]
-margin_left = 533.954
-margin_top = 388.871
-margin_right = 573.954
-margin_bottom = 428.871
+margin_left = 525.954
+margin_top = 308.871
+margin_right = 565.954
+margin_bottom = 348.871
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="FPS"]
 margin_left = 77.6896
@@ -202,6 +205,9 @@ margin_top = 99.129
 margin_right = 159.69
 margin_bottom = 123.129
 text = "Max FPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label2" type="Label" parent="FPS"]
 margin_left = 222.046
@@ -209,6 +215,9 @@ margin_top = 127.129
 margin_right = 274.046
 margin_bottom = 151.129
 text = "60"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="FPS" type="HSlider" parent="FPS"]
 margin_left = -13.954
@@ -277,6 +286,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Difficulty2" type="Label" parent="."]
+margin_left = 452.0
+margin_top = 476.0
+margin_right = 804.0
+margin_bottom = 500.0
+mouse_filter = 1
+text = "LARGE_NUMBER_NOTATION"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 46.2182
 margin_top = 513.745
@@ -306,6 +327,29 @@ margin_right = 290.0
 margin_bottom = 40.0
 text = "HARD"
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_left = 460.0
+margin_top = 516.0
+margin_right = 789.0
+margin_bottom = 556.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Standard" type="CheckBox" parent="HBoxContainer2"]
+margin_left = 81.0
+margin_right = 200.0
+margin_bottom = 40.0
+text = "STANDARD"
+
+[node name="SI" type="CheckBox" parent="HBoxContainer2"]
+margin_left = 204.0
+margin_right = 247.0
+margin_bottom = 40.0
+pressed = true
+text = "SI"
+
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
@@ -330,3 +374,9 @@ text = "HARD"
 [connection signal="mouse_entered" from="HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/Hard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/SI" to="." method="_on_SI_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/SI" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/SI" to="." method="_on_SI_pressed"]

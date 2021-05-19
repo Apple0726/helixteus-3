@@ -163,9 +163,9 @@ func generate_rock(new:bool):
 			met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
 			metal_sprites.append(met_sprite)
 			tile_sprite.add_child(met_sprite)
-	var contents2 = contents.duplicate(true)
-	contents2.stone = Helper.get_sum_of_dict(contents.stone)
-	Helper.put_rsrc(vbox, 42, contents2)
+	#var contents2 = contents.duplicate(true)
+	#contents2.stone = Helper.get_sum_of_dict(contents.stone)
+	Helper.put_rsrc(vbox, 42, contents)
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 

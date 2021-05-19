@@ -62,6 +62,8 @@ func get_science_name(sc:String):
 		return "%s %s" % [tr("M_SE_NAME"), sc[2]]
 	elif sc.substr(0, 3) == "MME":
 		return "%s %s" % [tr("M_MME_NAME"), sc[3]]
+	elif sc.substr(0, 2) == "PK":
+		return "%s %s" % [tr("M_PK_NAME"), sc[2]]
 	return tr("%s_SC" % sc)
 
 func on_mouse_entered():

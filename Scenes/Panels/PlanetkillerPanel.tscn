@@ -1,0 +1,228 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
+[ext_resource path="res://Scripts/PlanetkillerPanel.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Resources/PanelBG.tres" type="StyleBox" id=9]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[node name="SendShipsPanel" type="Control"]
+margin_right = 1067.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 3 )
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 8 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "M_PK_NAME"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="."]
+margin_top = 60.0
+margin_right = 1064.0
+margin_bottom = 100.0
+custom_styles/normal = ExtResource( 9 )
+text = "PK_DESC"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_top = 98.0
+margin_right = 452.0
+margin_bottom = 138.0
+custom_styles/normal = ExtResource( 9 )
+text = "PLANETS"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+margin_top = 136.0
+margin_right = 452.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 450, 0 )
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Planets" type="VBoxContainer" parent="Scroll"]
+margin_right = 452.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="Control"]
+margin_left = 758.0
+margin_top = 468.0
+margin_right = 998.0
+margin_bottom = 484.0
+max_value = 1.0
+step = 0.01
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LessEnergy" type="Label" parent="Control"]
+margin_left = 454.0
+margin_top = 462.0
+margin_right = 722.0
+margin_bottom = 486.0
+text = "ACCELERATE_CHARGING"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyCost" type="Label" parent="Control"]
+margin_left = 802.0
+margin_top = 504.0
+margin_right = 986.0
+margin_bottom = 528.0
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChargingTime" type="Label" parent="Control"]
+margin_left = 502.0
+margin_top = 416.0
+margin_right = 722.0
+margin_bottom = 440.0
+mouse_filter = 1
+text = "CHARGING_TIME"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChargingTime2" type="Label" parent="Control"]
+margin_left = 480.0
+margin_top = 114.0
+margin_right = 720.0
+margin_bottom = 138.0
+mouse_filter = 1
+text = "EXPECTED_RESOURCES"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeCost" type="Label" parent="Control"]
+margin_left = 800.0
+margin_top = 416.0
+margin_right = 984.0
+margin_bottom = 440.0
+text = "30:00"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartCharging" type="Button" parent="Control"]
+margin_left = 796.0
+margin_top = 560.0
+margin_right = 1062.0
+margin_bottom = 600.0
+text = "START_CHARGING"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyIcon" type="TextureRect" parent="Control"]
+margin_left = 756.0
+margin_top = 500.0
+margin_right = 788.0
+margin_bottom = 532.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeIcon" type="TextureRect" parent="Control"]
+margin_left = 756.0
+margin_top = 412.0
+margin_right = 788.0
+margin_bottom = 444.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+margin_left = 478.0
+margin_top = 156.0
+margin_right = 1046.0
+margin_bottom = 396.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
+columns = 4
+
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Control/StartCharging" to="." method="_on_Send_pressed"]

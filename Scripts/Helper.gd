@@ -3,6 +3,7 @@ extends Node
 onready var game = get_node("/root/Game")
 #var game
 #A place to put frequently used functions
+var SI:bool = true
 
 func set_btn_color(btn):
 	if not btn.get_parent_control():
@@ -23,13 +24,15 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	if show_available:
 		if path == "Icons/stone":
 			rsrc_available = get_sum_of_dict(rsrc_available)
-		text = "%s/%s" % [format_num(game.clever_round(rsrc_available, 3), threshold / 2), format_num(game.clever_round(rsrc_cost, 3), threshold / 2)] + mass_str
+		text = "%s/%s" % [format_num(clever_round(rsrc_available, 3), threshold / 2), format_num(clever_round(rsrc_cost, 3), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(game.clever_round(rsrc_cost, 3), threshold)
+		if path == "Icons/stone":
+			rsrc_cost = get_sum_of_dict(rsrc_cost)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = num_str + mass_str
@@ -174,7 +177,7 @@ func get_wid(size:float):
 func e_notation(num:float):#e notation
 	var e = floor(log10(num))
 	var n = num * pow(10, -e)
-	return "%se%s" %  [game.clever_round(n), e]
+	return "%se%s" %  [clever_round(n), e]
 
 func get_dir_from_name(_name:String):
 	if _name.substr(0, 7) == "speedup":
@@ -236,12 +239,18 @@ func format_num(num:float, threshold:int = 6):
 		elif p < 9:
 			suff = "M"
 		elif p < 12:
-			suff = "G"
+			suff = "G" if SI else "B"
 		elif p < 15:
 			suff = "T"
 		elif p < 18:
-			suff = "P"
-		return "%s%s" % [game.clever_round(num / div, 3), suff]
+			suff = "P" if SI else "q"
+		elif p < 21:
+			suff = "E" if SI else "Q"
+		elif p < 24:
+			suff = "Z" if SI else "s"
+		elif p < 27:
+			suff = "Y" if SI else "S"
+		return "%s%s" % [clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
@@ -296,8 +305,8 @@ func get_crush_info(tile_obj):
 func get_prod_info(tile_obj):
 	var time = OS.get_system_time_msecs()
 	var spd = tile_obj.bldg.path_1_value#qty1: resource being used. qty2: resource being produced
-	var qty_left = game.clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio), 3)
-	var qty_made = game.clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd), 3)
+	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio), 3)
+	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd), 3)
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
@@ -483,7 +492,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		tile.erase("crater")
 
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
-	var aurora_mult = game.clever_round(get_au_mult(tile))
+	var aurora_mult = clever_round(get_au_mult(tile))
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -528,7 +537,7 @@ func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
 	return stone
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
-	var aurora_mult = game.clever_round(get_au_mult(tile))
+	var aurora_mult = clever_round(get_au_mult(tile))
 	var contents = {}
 	var other_volume = 0#in m^3
 	#We assume all materials have a density of 1.5g/cm^3 to simplify things
@@ -538,7 +547,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	if depth_limit_mult > 0.01:
 		for mat in p_i.surface.keys():
 			if randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
-				var amount = game.clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
+				var amount = clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
 				if amount < 1:
 					continue
 				contents[mat] = amount
@@ -555,12 +564,12 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			var size = tile.current_deposit.size
 			var progress2 = tile.current_deposit.progress
 			var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-			var amount = game.clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult, 3)
+			var amount = clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult, 3)
 			contents[met] = amount
 			other_volume += amount / game.met_info[met].density / 1000
 			tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = game.clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
+	var stone_amount = clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth") and tile.depth >= tile.ship_locator_depth:
 		contents.ship_locator = 1
@@ -614,11 +623,11 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 
 #solar panels
 func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
-	return game.clever_round(value * temp * au_mult / 273.0, 3)
+	return clever_round(value * temp * au_mult / 273.0, 3)
 
 #atm extractor
 func get_AE_production(pressure:float, value:float):
-	return game.clever_round(value * pressure, 3)
+	return clever_round(value * pressure, 3)
 
 func update_rsrc(p_i, tile, rsrc = null):
 	var curr_time = OS.get_system_time_msecs()
@@ -714,7 +723,7 @@ func update_rsrc(p_i, tile, rsrc = null):
 				var reaction_info = get_reaction_info(tile)
 				var MM_value = reaction_info.MM_value
 				capacity_bar.value = reaction_info.progress
-				rsrc_text.text = "%s mol" % [game.clever_round(MM_value, 2)]
+				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
@@ -919,6 +928,9 @@ func update_MS_rsrc(dict:Dictionary):
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity
+
+func get_MB_output(star:Dictionary):
+	return Data.MS_output.M_MB * star.luminosity
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))

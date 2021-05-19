@@ -173,3 +173,38 @@ func _on_Hard_pressed():
 
 func _on_Fullscreen_toggled(button_pressed):
 	OS.window_fullscreen = button_pressed
+
+
+func _on_Standard_pressed():
+	if err == OK:
+		config.set_value("game", "notation", "standard")
+		config.save("user://settings.cfg")
+		set_notation()
+
+func _on_Standard_mouse_entered():
+	game.show_tooltip("k < M < B < T < q < Q < s < S")
+
+
+func _on_SI_pressed():
+	if err == OK:
+		config.set_value("game", "notation", "SI")
+		config.save("user://settings.cfg")
+		set_notation()
+
+
+func _on_SI_mouse_entered():
+	game.show_tooltip("k < M < G < T < P < E < Z < Y")
+
+func set_notation():
+	$HBoxContainer2/Standard.pressed = false
+	$HBoxContainer2/SI.pressed = false
+	if err == OK:
+		var notation = config.get_value("game", "notation", "SI")
+		if notation == "standard":
+			$HBoxContainer2/Standard.pressed = true
+			Helper.SI = false
+		else:
+			$HBoxContainer2/SI.pressed = true
+			Helper.SI = true
+	if is_instance_valid(game.HUD):
+		game.HUD.refresh()

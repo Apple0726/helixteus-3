@@ -15,7 +15,7 @@ func refresh():
 		call("_on_%s_pressed" % tf_type)
 
 func update_info():
-	tf_costs = {"energy":1000000, "SP":10000}
+	tf_costs = {"energy":100, "SP":1}
 	var pressure_mult = max(1, pressure)
 	var lake_mult = 1 + 9 * lake_num / float(tile_num)
 	for cost in tf_costs:
@@ -23,35 +23,35 @@ func update_info():
 	costs.erase("time")
 	for cost in costs:
 		costs[cost] *= tile_num
-	$Control/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("NUMBER_OF_TILES"), tile_num, tr("ATMOSPHERE_PRESSURE"), game.clever_round(pressure_mult, 3), tr("LAKES"), game.clever_round(lake_mult, 3)]
+	$Control/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(tile_num), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
 	Helper.put_rsrc($Control/TCVBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Control/BCVBox, 32, costs, true, true)
 	$Control.visible = true
 
 func _on_MS_pressed():
 	tf_type = "MS"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("MINERAL_SILOS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("MINERAL_SILOS").to_lower()]
 	costs = Data.costs.MS.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("ATMOSPHERE_EXTRACTORS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("ATMOSPHERE_EXTRACTORS").to_lower()]
 	costs = Data.costs.AE.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_MM_pressed():
 	tf_type = "MM"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("MINING_MACHINES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("MINING_MACHINES").to_lower()]
 	costs = Data.costs.MM.duplicate(true)
 	$Control/Note.visible = true
 	update_info()
 
 func _on_GH_pressed():
 	tf_type = "GH"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), tile_num, tr("GREENHOUSES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("GREENHOUSES").to_lower()]
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
 	$Control/Note.visible = false

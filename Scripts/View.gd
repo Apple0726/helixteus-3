@@ -371,7 +371,7 @@ func _physics_process(_delta):
 			obj.icons_hidden = false
 			obj.set_process(true)
 
-
+var dragging:bool = false
 
 #Executed once the receives any kind of input
 func _input(event):
@@ -379,7 +379,7 @@ func _input(event):
 		if first_zoom and modulate.a == 1:
 			first_zoom = false
 			zooming = ""
-	if scroll_view:
+	if scroll_view and not game.block_scroll:
 		if event.is_action_released("scroll_down"):
 			if event is InputEventMouse:
 				zoom_factor = 1.1
@@ -397,13 +397,14 @@ func _input(event):
 			progress = 0
 			check_change_scale()
 	if event is InputEventMouse and move_view:
-		if Input.is_action_just_pressed("left_click"):
+		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
 			drag_position = event.position
+			dragging = true
 			if is_instance_valid(game.annotator) and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
 				line_points.start = to_local(drag_initial_position)
 				drawing_shape = true
-		if Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
+		if dragging and Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
@@ -411,6 +412,8 @@ func _input(event):
 			move_and_collide(drag_delta)
 			drag_position = event.position
 		mouse_position = event.position
+		if Input.is_action_just_released("left_click"):
+			dragging = false
 	if Input.is_action_just_released("left_click") and drawing_shape:
 		if game.annotator.mode != "eraser":
 			var size

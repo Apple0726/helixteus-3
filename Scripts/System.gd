@@ -41,9 +41,8 @@ func refresh_planets():
 		var planet_btn = TextureButton.new()
 		var planet_glow = TextureButton.new()
 		var planet = Sprite.new()
-		var planet_texture = load("res://Graphics/Planets/" + String(p_i["type"]) + ".png")
 		var planet_glow_texture = preload("res://Graphics/Misc/Glow.png")
-		planet_btn.texture_normal = planet_texture
+		planet_btn.texture_normal = game.planet_textures[p_i.type - 3]
 		planet_glow.texture_normal = planet_glow_texture
 		self.add_child(planet)
 		planet.add_child(planet_glow)
@@ -147,7 +146,11 @@ func refresh_stars():
 			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
 			MS.position = Vector2(300, 300)
 			star.add_child(MS)
-			add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true)
+			if star_info.MS in ["M_DS", "M_MB"]:
+				if star_info.MS == "M_DS":
+					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true)
+				elif star_info.MS == "M_MB":
+					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true)
 			if star_info.bldg.is_constructing:
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)
@@ -219,14 +222,14 @@ func show_planet_info(id:int, l_id:int):
 		var tooltip:String
 		if game.help.planet_details:
 			game.help_str = "planet_details"
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure), tr("MORE_DETAILS")]
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure), tr("MORE_DETAILS")]
 			if p_i.conquered:
 				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
 				if p_i.has("bldg"):
 					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
 			tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
 		else:
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), game.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), game.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), game.clever_round(p_i.pressure)]
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure)]
 		game.show_tooltip(tooltip)
 
 var MS_constr_data:Dictionary = {}
@@ -248,18 +251,21 @@ func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
-		if obj.has("MS"):
-			obj.MS_lv += 1
+		if MS != "M_MB":
+			if obj.has("MS"):
+				obj.MS_lv += 1
+			else:
+				obj.MS_lv = 0
 		else:
-			obj.MS = MS
-			obj.MS_lv = 0
+			game.energy += obj.bldg.stored
+		obj.MS = MS
 		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
 		obj.bldg.is_constructing = true
 		obj.bldg.construction_date = curr_time
 		obj.bldg.construction_length = bldg_costs.time * 1000
 		obj.bldg.XP = round(bldg_costs.money / 100.0)
-		if MS in ["M_DS", "M_MME"]:
+		if MS in ["M_DS", "M_MME", "M_MB"]:
 			obj.bldg.stored = 0
 			obj.bldg.collect_date = obj.bldg.construction_date + obj.bldg.construction_length
 		game.get_node("UI/Panel").visible = false
@@ -392,10 +398,10 @@ func on_star_over (id:int):
 										tr("STAR_SIZE") % [star.size],
 										tr("STAR_MASS") % [star.mass],
 										tr("STAR_LUMINOSITY") % [Helper.e_notation(star.luminosity) if star.luminosity < 0.0001 else star.luminosity]]
-	var building:bool = game.bottom_info_action == "building_DS"
+	#var building:bool = game.bottom_info_action == "building_DS"
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
-	if building:
+	if game.bottom_info_action == "building_DS":
 		game.get_node("UI/Panel").visible = true
 		bldg_costs = Data.MS_costs.M_DS_0.duplicate(true)
 		for cost in bldg_costs:
@@ -404,15 +410,43 @@ func on_star_over (id:int):
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
+	elif game.bottom_info_action == "building_MB":
+		game.get_node("UI/Panel").visible = true
+		bldg_costs = Data.MS_costs.M_MB.duplicate(true)
+		for cost in bldg_costs:
+			bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
+		Helper.put_rsrc(vbox, 32, {"SP":Helper.get_DS_output(star)}, false)
+	elif game.bottom_info_action == "building_PK":
+		game.get_node("UI/Panel").visible = true
+		bldg_costs = Data.MS_costs.M_PK_0.duplicate(true)
+		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+		Helper.add_label(tr("PK0_POWER"), -1, true, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		var stage:String = "%s (%s)" % [tr("%s_NAME" % star.MS), tr("STAGE_X_X") % [star.MS_lv, 4]]
+		var num_stages = 4
+		if star.MS == "M_PK":
+			num_stages = 2
+		var stage:String = "%s (%s)" % [tr("%s_NAME" % star.MS), tr("STAGE_X_X") % [star.MS_lv, num_stages]]
 		Helper.add_label(stage)
-		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
-		if not star.bldg.is_constructing:
-			if star.MS == "M_DS" and star.MS_lv < 4 and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
+		if star.MS == "M_DS":
+			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
+		elif star.MS == "M_MB":
+			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_MB_output(star)}, false)
+		elif star.MS == "M_PK":
+			Helper.add_label(tr("PK%s_POWER" % star.MS_lv), -1, true, true)
+		if not star.bldg.is_constructing and star.MS_lv < num_stages:
+			if star.MS == "M_DS" and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
+				MS_constr_data.obj = star
+				MS_constr_data.confirm = false
+				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+			elif star.MS == "M_PK" and game.science_unlocked["PK%s" % (star.MS_lv + 1)]:
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -421,12 +455,26 @@ func on_star_over (id:int):
 func on_star_pressed (id:int):
 	var curr_time = OS.get_system_time_msecs()
 	var star = stars_info[id]
-	if game.bottom_info_action == "building_DS":
+	if game.bottom_info_action in ["building_DS", "building_PK"]:
 		if game.system_data[game.c_s].conquered:
 			if not star.has("MS"):
-				build_MS(star, "M_DS")
+				if game.bottom_info_action == "building_DS":
+					build_MS(star, "M_DS")
+				elif game.bottom_info_action == "building_PK":
+					build_MS(star, "M_PK")
 			else:
 				game.popup(tr("MS_ALREADY_PRESENT"), 2.0)
+		else:
+			game.popup(tr("STAR_MS_ERROR"), 3.0)
+	elif game.bottom_info_action == "building_MB":
+		if game.system_data[game.c_s].conquered:
+			if not star.has("MS") or star.MS != "M_DS":
+				game.popup(tr("MB_ERROR_1"), 3.0)
+			else:
+				if star.MS_lv == 4:
+					build_MS(star, "M_MB")
+				else:
+					game.popup(tr("MB_ERROR_2"), 3.0)
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif star.has("MS"):
@@ -436,6 +484,13 @@ func on_star_pressed (id:int):
 				game.energy += star.bldg.stored
 				star.bldg.stored = 0
 				game.HUD.refresh()
+			elif star.MS == "M_MB":
+				game.SP += star.bldg.stored
+				star.bldg.stored = 0
+				game.HUD.refresh()
+			elif star.MS == "M_PK" and not star.bldg.is_constructing:
+				game.planetkiller_panel.star = star.duplicate(true)
+				game.toggle_panel(game.planetkiller_panel)
 		elif star.bldg.is_constructing:
 			var orig_num:int = game.item_to_use.num
 			var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0

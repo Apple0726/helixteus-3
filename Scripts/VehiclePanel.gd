@@ -116,7 +116,7 @@ func _process(delta):
 
 func on_rover_enter(rov:Dictionary, rov_id:int):
 	rover_over_id = rov_id
-	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [rov.HP, rov.atk, rov.def, rov.weight_cap, game.clever_round(rov.spd, 3)]
+	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [rov.HP, rov.atk, rov.def, rov.weight_cap, Helper.clever_round(rov.spd, 3)]
 	if game.help.rover_shortcuts:
 		rover_has_items = false
 		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]

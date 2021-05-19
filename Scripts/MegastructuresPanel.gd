@@ -10,7 +10,7 @@ func _ready():
 		MS.get_node("SmallButton").text = tr("CONSTRUCT")
 		MS.item_name = MS.name
 		MS.item_dir = "Icons/Megastructures"
-		MS.item_desc = tr(MS.name.to_upper() + "_DESC")
+		MS.item_desc = tr(MS.name + "_DESC")
 		MS.costs = {}
 		MS.parent = "megastructures_panel"
 		MS.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/" + MS.name + ".png")
@@ -37,6 +37,10 @@ func get_item(_name, _type, _dir):
 	game.toggle_panel(game.megastructures_panel)
 	if _name == "M_DS":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+	elif _name == "M_MB":
+		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
+	elif _name == "M_PK":
+		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
 	elif _name == "M_SE":
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_SE", "cancel_building_MS")
 	elif _name == "M_MME":

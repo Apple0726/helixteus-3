@@ -168,7 +168,7 @@ func show_tooltip(tile):
 		elif bldg == "AE":
 			path_1_value = Helper.get_AE_production(p_i.pressure, tile.bldg.path_1_value * mult)
 		elif bldg != "PCC":
-			path_1_value = game.clever_round(tile.bldg.path_1_value * mult, 3)
+			path_1_value = Helper.clever_round(tile.bldg.path_1_value * mult, 3)
 		var path_2_value
 		var path_3_value
 		if tile.bldg.has("path_2_value"):
@@ -176,7 +176,7 @@ func show_tooltip(tile):
 			if Data.path_2[bldg].is_value_integer:
 				path_2_value = round(path_2_value)
 		if tile.bldg.has("path_3_value"):
-			path_3_value = game.clever_round(tile.bldg.path_3_value, 3)
+			path_3_value = Helper.clever_round(tile.bldg.path_3_value, 3)
 		match bldg:
 			"ME", "PP", "SP", "AE":
 				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, Helper.format_num(round(path_2_value * IR_mult), 6)]

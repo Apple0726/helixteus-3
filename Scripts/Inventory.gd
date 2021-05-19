@@ -110,6 +110,7 @@ func on_slot_press(name:String):
 			if len(game.ship_data) > 0:
 				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
 				game.toggle_panel(game.ship_panel)
+				game.ship_panel._on_BackButton_pressed()
 			else:
 				game.popup(tr("NO_SHIPS_2"), 1.5)
 				return

@@ -128,7 +128,7 @@ func make_pie_chart(arr:Array, name:String):
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
-		var pie_text = "%s\n%s%%" % [tr("%s_NAME" % obj.element.to_upper()), game.clever_round(obj.fraction * 100.0, 2)]
+		var pie_text = "%s\n%s%%" % [tr("%s_NAME" % obj.element.to_upper()), Helper.clever_round(obj.fraction * 100.0, 2)]
 		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
 	$ScrollContainer/VBoxContainer.add_child(pie)
 

@@ -44,7 +44,7 @@ func refresh():
 		pie.set_fill_mode(pie.FILL_CLOCKWISE)
 		$Pies.add_child(pie)
 	if trace_fraction != 0.0:
-		add_pie_text(other_str_short + "\n" + String(game.clever_round((1 - trace_fraction) * 100, 2)) + "%", (1 - (1 - trace_fraction) / 2.0) * 2 * PI - PI / 2.0)
+		add_pie_text(other_str_short + "\n" + String(Helper.clever_round((1 - trace_fraction) * 100, 2)) + "%", (1 - (1 - trace_fraction) / 2.0) * 2 * PI - PI / 2.0)
 	for txt in txts:
 		$Pies.move_child(txt, $Pies.get_child_count())
 	small_elements.invert()

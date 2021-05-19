@@ -32,6 +32,7 @@ var orbit_scene = preload("res://Scenes/Orbit.tscn")
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
+var planet_textures:Array
 
 var tutorial:Node2D
 
@@ -55,6 +56,7 @@ var shipyard_panel:Panel
 var PC_panel:Panel
 var AMN_panel:Control
 var SPR_panel:Control
+var planetkiller_panel:Control
 var inventory:Control
 var settings:Control
 var dimension:Control
@@ -84,6 +86,7 @@ var active_panel
 
 #The base node containing things that can be moved/zoomed in/out
 var view
+var block_scroll:bool = false
 
 
 ############ Save data ############
@@ -298,6 +301,8 @@ var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 func _ready():
+	for i in range(3, 13):
+		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 	game_tween = Tween.new()
 	add_child(game_tween)
 	for metal in met_info:
@@ -329,6 +334,7 @@ func _ready():
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", false)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
+		Helper.SI = config.get_value("game", "notation", "SI") == "SI"
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
@@ -341,6 +347,14 @@ func _ready():
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game(false)
+		system_data[0].stars[0].MS = "M_PK"
+		system_data[0].stars[0].MS_lv = 1
+		system_data[0].stars[0].bldg = {}
+		system_data[0].stars[0].bldg.is_constructing = true
+		system_data[0].stars[0].bldg.construction_date = OS.get_system_time_msecs()
+		system_data[0].stars[0].bldg.construction_length = 1000
+		system_data[0].stars[0].bldg.XP = 0
+		Helper.save_obj("Galaxies", 0, system_data)
 		lv = 100
 		money = 1000000000000
 		mats.soil = 50000
@@ -363,13 +377,13 @@ func _ready():
 		science_unlocked.FTL = true
 		science_unlocked.TF = true
 		science_unlocked.FG = true
-		stone.O = 800000000
+		stone.O = 8000000000
 		mats.silicon = 400000
 		mats.cellulose = 1000
 		mats.coal = 100
 		mets.copper = 250000
-		mets.iron = 1600000
-		mets.aluminium = 500000
+		mets.iron = 1600000000
+		mets.aluminium = 50000000
 		mets.titanium = 50000
 		mets.topaz = 50
 		show.SP = true
@@ -796,7 +810,7 @@ func new_game(tut:bool):
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
 	planet_data[2]["conquered"] = true
-	planet_data[2]["size"] = rand_range(12000, 12100)
+	planet_data[2]["size"] = round(rand_range(12000, 12100))
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
 	planet_data[2]["discovered"] = false
@@ -893,6 +907,10 @@ func add_panels():
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
+	planetkiller_panel = load("res://Scenes/Panels/PlanetkillerPanel.tscn").instance()
+	
+	planetkiller_panel.visible = false
+	$Panels/Control.add_child(planetkiller_panel)
 	
 	AMN_panel.visible = false
 	$Panels/Control.add_child(AMN_panel)
@@ -1587,12 +1605,12 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
-		sc_i.dark_energy = clever_round(max(pow(dist_from_center / 1000.0, 0.1), 1))
+		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 1000.0, 0.1), 1))
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
 		sc_i["discovered"] = false
-		sc_i.diff = clever_round(universe_data[id].difficulty * pos.length(), 3)
+		sc_i.diff = Helper.clever_round(universe_data[id].difficulty * pos.length(), 3)
 		universe_data[id]["superclusters"].append(sc_id)
 		supercluster_data.append(sc_i)
 	if id != 0:
@@ -1644,9 +1662,9 @@ func generate_clusters(id:int):
 		c_i["l_id"] = c_id
 		c_i["discovered"] = false
 		if id == 0:
-			c_i.diff = clever_round(1 + pos.length(), 3)
+			c_i.diff = Helper.clever_round(1 + pos.length(), 3)
 		else:
-			c_i.diff = clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2), 3)
+			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2), 3)
 		supercluster_data[id]["clusters"].append(c_id)
 		cluster_data.append(c_i)
 	if id != 0:
@@ -1686,14 +1704,14 @@ func generate_galaxies(id:int):
 		var rand = randf()
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 15000 * pow(randf(), 2))
-			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
@@ -1708,7 +1726,7 @@ func generate_galaxies(id:int):
 			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
 		elif rand < 0.2:
 			g_i.dark_matter = pow(g_i.dark_matter, 1.8)
-		g_i.dark_matter = clever_round(g_i.dark_matter, 3)
+		g_i.dark_matter = Helper.clever_round(g_i.dark_matter, 3)
 		g_i["rotation"] = rand_range(0, 2 * PI)
 		g_i["view"] = {"pos":Vector2(640, 360), "zoom":0.2}
 		var pos
@@ -1754,9 +1772,9 @@ func generate_galaxies(id:int):
 			cluster_data[id]["galaxies"].append(0)
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i.diff = clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70, 3)
+				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70, 3)
 			else:
-				g_i.diff = clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
+				g_i.diff = Helper.clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
 			cluster_data[id]["galaxies"].append(g_id)
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -1989,9 +2007,9 @@ func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
 	for star in stars:
 		combined_star_mass += star.mass
 	if c_g_g == 0:
-		return clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000, 3)
+		return Helper.clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000, 3)
 	else:
-		return clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
+		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
 	
 func generate_systems(id:int):
 	randomize()
@@ -2100,12 +2118,12 @@ func generate_systems(id:int):
 				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
-			star["luminosity"] = clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * pow(temp, 4) / e(3.828, 26))
-			star["mass"] = clever_round(mass)
-			star["size"] = clever_round(star_size)
+			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * pow(temp, 4) / e(3.828, 26))
+			star["mass"] = Helper.clever_round(mass)
+			star["size"] = Helper.clever_round(star_size)
 			star["type"] = star_type
 			star["class"] = star_class
-			star["temperature"] = clever_round(temp)
+			star["temperature"] = Helper.clever_round(temp)
 			star["pos"] = Vector2.ZERO
 			stars.append(star)
 		var combined_star_mass = 0
@@ -2179,6 +2197,7 @@ func generate_planets(id:int):#local id
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3))
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter)
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 			if hypergiant_system:
 				if i == 1:
 					p_i.size = 6000
@@ -2188,19 +2207,15 @@ func generate_planets(id:int):#local id
 					p_i.pressure = rand_range(150, 200)
 				elif i == 3:
 					p_i.size = 17000
-					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 				elif i == 4:
 					p_i.size = 25000
-					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 				elif i == 5:
 					p_i.size = 32000
 					p_i.type = 8
-					p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 				p_i.conquered = true
 			elif dark_matter_system:
 				p_i.size = 1000
 				p_i.conquered = true
-				p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
 		p_i["angle"] = rand_range(0, 2 * PI)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
@@ -2373,9 +2388,9 @@ func generate_tiles(id:int):
 	for i in num_auroras:
 		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
 			#au_int: aurora_intensity
-			var au_int = clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
-				au_int = clever_round(rand_range(25, 26))
+				au_int = Helper.clever_round(rand_range(25, 26))
 			if tile_from == -1:
 				if cross_aurora:
 					tile_from = wid / 2
@@ -2770,8 +2785,8 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	elif sand_glass_ratio == 1:
 		surface_mat_info.erase("sand")
 	for mat in surface_mat_info:
-		surface_mat_info[mat].chance = clever_round(surface_mat_info[mat].chance, 3)
-		surface_mat_info[mat].amount = clever_round(surface_mat_info[mat].amount, 3)
+		surface_mat_info[mat].chance = Helper.clever_round(surface_mat_info[mat].chance, 3)
+		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount, 3)
 	return surface_mat_info
 
 func show_tooltip(txt:String, hide:bool = true):
@@ -3062,12 +3077,6 @@ func get_roman_num(num:int):
 		res = strs[c][int(num_str[n - c - 1])] + res
 		c += 1
 	return res
-
-func clever_round (num:float, sd:int = 4):#sd: significant digits
-	var e = floor(Helper.log10(abs(num)))
-	if sd < e + 1:
-		return round(num)
-	return stepify(num, pow(10, e - sd + 1))
 
 func e(n, e):
 	return n * pow(10, e)
@@ -3576,7 +3585,13 @@ func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.modulate.a = 1.0
 
 func _on_Ship_pressed():
-	switch_view("STM")#Ship travel minigame
+	if Input.is_action_pressed("shift"):
+		switch_view("STM")#Ship travel minigame
+	else:
+		if science_unlocked.CD:
+			if not ship_panel.visible:
+				toggle_panel(ship_panel)
+				ship_panel._on_DriveButton_pressed()
 
 func _on_Ship_mouse_entered():
 	show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(ships_travel_length - OS.get_system_time_msecs() + ships_travel_start_date), tr("PLAY_SHIP_MINIGAME")])
@@ -3620,7 +3635,7 @@ func game_fade(fn, args:Array = []):
 func get_4th_ship():
 	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-	Helper.add_ship_XP(3, 150000)
+	Helper.add_ship_XP(3, 250000)
 	Helper.add_weapon_XP(3, "bullet", 400)
 	Helper.add_weapon_XP(3, "laser", 400)
 	Helper.add_weapon_XP(3, "bomb", 400)

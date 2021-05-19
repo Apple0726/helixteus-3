@@ -124,7 +124,7 @@ func _ready():
 		$Hole/Sprite.texture = load("res://Graphics/Tiles/diamond_stairs.png")
 		$TileMap.modulate.a = 1
 		$UI/Minimap/Hole.rotation_degrees = 180
-		rover_size = 0.4
+		rover_size = 0.7
 	generate_cave(true, false)
 	if cave_data.has("special_cave") and cave_data.special_cave in [1, 3]:
 		$UI/Error.visible = true
@@ -215,7 +215,6 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
-	rover_size = 0.7
 	if dont_gen_anything:
 		if cave_floor < 19:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
