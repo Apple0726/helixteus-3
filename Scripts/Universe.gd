@@ -10,6 +10,8 @@ var btns = []
 
 func _ready():
 	for sc_i in game.supercluster_data:
+		if not sc_i.visible:
+			continue
 		var supercluster_btn = TextureButton.new()
 		var supercluster = Sprite.new()
 		var supercluster_texture = load("res://Graphics/Clusters/" + String(sc_i["type"]) + ".png")
@@ -41,9 +43,9 @@ func on_supercluster_click (id:int):
 		game.switch_view("supercluster")
 
 var change_alpha = 0.05
-func _process(_delta):
+func _process(delta):
 	if modulate.a < 1:
-		modulate.a += change_alpha
+		modulate.a += change_alpha * delta * 60
 	if modulate.a <= 0:
 		game.hide_tooltip()
 		for i in range(0, btns.size()):
@@ -52,7 +54,6 @@ func _process(_delta):
 			btns[i].rect_scale.y = radius
 		change_alpha *= -1
 		modulate.a = change_alpha
-
 
 func _on_Cluster_tree_exited():
 	queue_free()

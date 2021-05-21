@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/3.png-6bedef446f992a25eea23e32e89ed007.stex"
+path="res://.import/TPCC.png-8add45ed10a2c727310e6a6b682f69ca.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Ships/3.png"
-dest_files=[ "res://.import/3.png-6bedef446f992a25eea23e32e89ed007.stex" ]
+source_file="res://Graphics/Science/TPCC.png"
+dest_files=[ "res://.import/TPCC.png-8add45ed10a2c727310e6a6b682f69ca.stex" ]
 
 [params]
 

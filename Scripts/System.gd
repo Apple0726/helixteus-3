@@ -81,15 +81,14 @@ func refresh_planets():
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS = Sprite.new()
+			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [p_i.MS, p_i.MS_lv])
+			MS.scale *= 0.2
 			if p_i.MS == "M_SE":
-				MS.texture = load("res://Graphics/Megastructures/M_SE_%s.png" % p_i.MS_lv)
-				MS.scale *= 0.2
 				MS.position.x = -50 * cos(p_i.angle)
 				MS.position.y = -50 * sin(p_i.angle)
 				MS.rotation = p_i.angle + PI / 2
-			else:
-				MS.texture = load("res://Graphics/Megastructures/M_MME_%s.png" % p_i.MS_lv)
-				MS.scale *= 0.05
+			elif p_i.MS == "M_MME":
+				MS.scale *= 0.25
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false)
 			planet.add_child(MS)
 			if p_i.bldg.is_constructing:
@@ -178,7 +177,7 @@ func show_M_SE_costs(p_i:Dictionary):
 			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 12000.0 * pow(max(0.25, p_i.pressure), 1.1))
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
-	
+
 func show_M_MME_costs(p_i:Dictionary):
 	if p_i.type in [11, 12]:
 		var vbox = game.get_node("UI/Panel/VBox")
@@ -191,11 +190,18 @@ func show_M_MME_costs(p_i:Dictionary):
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1)}, false)
 
+func show_M_MPCC_costs(p_i:Dictionary):
+	var vbox = game.get_node("UI/Panel/VBox")
+	game.get_node("UI/Panel").visible = true
+	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
+	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+
 func show_planet_info(id:int, l_id:int):
 	planet_hovered = l_id
 	var p_i = game.planet_data[l_id]
 	var wid:int = Helper.get_wid(p_i.size)
-	var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]
+	var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME", "building-M_MPCC"]
 	var has_MS:bool = p_i.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if building:
@@ -204,7 +210,10 @@ func show_planet_info(id:int, l_id:int):
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		var stage:String = "%s (%s)" % [tr("%s_NAME" % p_i.MS), tr("STAGE_X_X") % [p_i.MS_lv, 3]]
+		var num_stages = 3
+		if p_i.MS == "M_MPCC":
+			num_stages = 0
+		var stage:String = "%s (%s)" % [tr("%s_NAME" % p_i.MS), tr("STAGE_X_X") % [p_i.MS_lv, num_stages]]
 		Helper.add_label(stage)
 		if p_i.MS == "M_SE":
 			Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
@@ -212,7 +221,7 @@ func show_planet_info(id:int, l_id:int):
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
 		if not p_i.bldg.is_constructing:
-			if p_i.MS_lv < 3 and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
+			if p_i.MS_lv < num_stages and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -281,7 +290,7 @@ func on_planet_click (id:int, l_id:int):
 		return
 	var p_i = game.planet_data[l_id]
 	if not view.dragged:
-		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]
+		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME", "building-M_MPCC"]
 		if building:
 			if p_i.conquered:
 				if not p_i.has("MS"):
@@ -303,6 +312,14 @@ func on_planet_click (id:int, l_id:int):
 					var min_info:Dictionary = Helper.add_minerals(stored)
 					p_i.bldg.stored = min_info.remainder
 					game.HUD.refresh()
+					return
+				elif p_i.MS == "M_MPCC":
+					game.PC_panel.id = id
+					game.PC_panel.l_id = l_id
+					game.PC_panel.probe_tier = 1
+					game.toggle_panel(game.PC_panel)
+					game.get_node("UI/Panel/VBox").visible = false
+					game.hide_tooltip()
 					return
 			elif p_i.bldg.is_constructing:
 				var curr_time = OS.get_system_time_msecs()

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Probe.png-3bca58b838baea152a8cc28a68b6e116.stex"
+path="res://.import/M_MPCC_0.png-5ab39b819f7bd3efcb9ea4c676e12f4b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Ships/Probe.png"
-dest_files=[ "res://.import/Probe.png-3bca58b838baea152a8cc28a68b6e116.stex" ]
+source_file="res://Graphics/Megastructures/M_MPCC_0.png"
+dest_files=[ "res://.import/M_MPCC_0.png-5ab39b819f7bd3efcb9ea4c676e12f4b.stex" ]
 
 [params]
 

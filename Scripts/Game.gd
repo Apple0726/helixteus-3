@@ -38,6 +38,7 @@ var tutorial:Node2D
 
 var construct_panel:Control
 var megastructures_panel:Control
+var gigastructures_panel:Control
 var shop_panel:Control
 var ship_panel:Control
 var upgrade_panel:Control
@@ -334,7 +335,13 @@ func _ready():
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", false)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
-		Helper.SI = config.get_value("game", "notation", "SI") == "SI"
+		var notation:String =  config.get_value("game", "notation", "SI")
+		if notation == "standard":
+			Helper.notation = 0
+		elif notation == "SI":
+			Helper.notation = 1
+		else:
+			Helper.notation = 2
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
@@ -354,9 +361,16 @@ func _ready():
 		system_data[0].stars[0].bldg.construction_date = OS.get_system_time_msecs()
 		system_data[0].stars[0].bldg.construction_length = 1000
 		system_data[0].stars[0].bldg.XP = 0
+		planet_data[2].MS = "M_MPCC"
+		planet_data[2].MS_lv = 0
+		planet_data[2].bldg = {}
+		planet_data[2].bldg.is_constructing = true
+		planet_data[2].bldg.construction_date = OS.get_system_time_msecs()
+		planet_data[2].bldg.construction_length = 1000
+		planet_data[2].bldg.XP = 0
 		Helper.save_obj("Galaxies", 0, system_data)
 		lv = 100
-		money = 1000000000000
+		money = e(2, 19)
 		mats.soil = 50000
 		mats.glass = 1000000
 		mets.nanocrystal = 10000000
@@ -366,7 +380,7 @@ func _ready():
 		show.vehicles_button = true
 		show.minerals = true
 		energy = 2000000000000
-		SP = 2000000000000
+		SP = e(2, 19)
 		science_unlocked.RC = true
 		science_unlocked.CD = true
 		science_unlocked.SCT = true
@@ -745,7 +759,7 @@ func new_game(tut:bool):
 
 	#Stores information of all objects discovered
 	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	supercluster_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
@@ -889,6 +903,7 @@ func add_panels():
 	construct_panel = generic_panel_scene.instance()
 	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
 	megastructures_panel = load("res://Scenes/Panels/MegastructuresPanel.tscn").instance()
+	gigastructures_panel = load("res://Scenes/Panels/GigastructuresPanel.tscn").instance()
 	craft_panel = generic_panel_scene.instance()
 	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
 	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
@@ -944,6 +959,9 @@ func add_panels():
 
 	megastructures_panel.visible = false
 	$Panels/Control.add_child(megastructures_panel)
+
+	gigastructures_panel.visible = false
+	$Panels/Control.add_child(gigastructures_panel)
 
 	shop_panel.visible = false
 	$Panels/Control.add_child(shop_panel)
@@ -1374,14 +1392,14 @@ func add_space_HUD():
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
+		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.GS
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].conquered
-		space_HUD.get_node("SendProbes").visible = c_v == "supercluster"
+		space_HUD.get_node("SendProbes").visible = c_v in ["supercluster", "universe"]
 
 func add_overlay():
 	overlay = overlay_scene.instance()
 	overlay.visible = false
-	#overlay.rect_position = Vector2(640, 720)
 	$UI.add_child(overlay)
 
 func remove_overlay():
@@ -1392,7 +1410,6 @@ func remove_overlay():
 func add_annotator():
 	annotator = annotator_scene.instance()
 	annotator.visible = false
-	#annotator.rect_position += Vector2(640, 720)
 	$UI.add_child(annotator)
 
 func remove_annotator():
@@ -1597,6 +1614,7 @@ func generate_superclusters(id:int):
 		sc_i["conquered"] = false
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
+		sc_i["visible"] = TEST
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
@@ -1736,7 +1754,7 @@ func generate_galaxies(id:int):
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.7), N - 1)
 			min_dist_from_center = obj_shapes[0]["outer_radius"]
 		
-		var radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.7)
+		var radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 		var circle
 		var colliding = true
 		if min_dist_from_center == 0:
@@ -1767,7 +1785,7 @@ func generate_galaxies(id:int):
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
 			g_i = galaxy_data[0]
-			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.7)
+			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
 			cluster_data[id]["galaxies"].append(0)
 		else:
@@ -2952,22 +2970,23 @@ func get_star_class (temp):
 		cl = "Z"
 	return cl
 
+const Y9 = Color(25, 0, 0, 255) / 255.0
+const Y0 = Color(66, 0, 0, 255) / 255.0
+const T0 = Color(117, 0, 0, 255) / 255.0
+const L0 = Color(189, 32, 23, 255) / 255.0
+const M0 = Color(255, 181, 108, 255) / 255.0
+const K0 = Color(255, 218, 181, 255) / 255.0
+const G0 = Color(255, 237, 227, 255) / 255.0
+const F0 = Color(249, 245, 255, 255) / 255.0
+const A0 = Color(213, 224, 255, 255) / 255.0
+const B0 = Color(162, 192, 255, 255) / 255.0
+const O0 = Color(140, 177, 255, 255) / 255.0
+const Q0 = Color(134, 255, 117, 255) / 255.0
+const R0 = Color(255, 151, 255, 255) / 255.0
+
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps
-	var m
-	var Y9 = Color(25, 0, 0, 255) / 255.0
-	var Y0 = Color(66, 0, 0, 255) / 255.0
-	var T0 = Color(117, 0, 0, 255) / 255.0
-	var L0 = Color(189, 32, 23, 255) / 255.0
-	var M0 = Color(255, 181, 108, 255) / 255.0
-	var K0 = Color(255, 218, 181, 255) / 255.0
-	var G0 = Color(255, 237, 227, 255) / 255.0
-	var F0 = Color(249, 245, 255, 255) / 255.0
-	var A0 = Color(213, 224, 255, 255) / 255.0
-	var B0 = Color(162, 192, 255, 255) / 255.0
-	var O0 = Color(140, 177, 255, 255) / 255.0
-	var Q0 = Color(134, 255, 117, 255) / 255.0
-	var R0 = Color(255, 151, 255, 255) / 255.0
+	var m:Color
 	match star_class[0]:
 		"Y":
 			m = lerp(Y0, Y9, w)

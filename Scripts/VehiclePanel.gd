@@ -66,14 +66,14 @@ func refresh():
 	for i in len(game.probe_data):
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = TextureButton.new()
-		probe.texture_normal = load("res://Graphics/Ships/Probe.png")
+		probe.texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
 		probe.expand = true
 		probe.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		probe.rect_min_size = Vector2(80, 80)
 		hbox3.add_child(probe)
 		probe.connect("mouse_entered", self, "on_probe_enter")
 		probe.connect("mouse_exited", self, "on_fighter_exit")
-		probe.connect("pressed", self, "on_probe_press", [probe_info.c_sc])
+		probe.connect("pressed", self, "on_probe_press", [probe_info.tier])
 		if probe_info.has("start_date"):
 			var time_bar:Control = game.time_scene.instance()
 			time_bar.rect_scale *= 0.5
@@ -102,15 +102,30 @@ func _process(delta):
 		bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		bar.get_node("Bar").value = progress
 		if progress >= 1:
-			var cluster_data:Array
-			if game.c_v == "supercluster" or game.c_sc == probe.c_sc:
-				cluster_data = game.cluster_data
-				cluster_data[probe.cluster_to_discover].visible = true
-			else:
-				cluster_data = game.open_obj("Superclusters", probe.c_sc)
-				cluster_data[probe.cluster_to_discover].visible = true
-				Helper.save_obj("Superclusters", probe.c_sc, cluster_data)
-			game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+			if probe.tier == 0:
+				var cluster_data:Array
+				if game.c_v == "supercluster" or game.c_sc == 0:
+					cluster_data = game.cluster_data
+					cluster_data[probe.obj_to_discover].visible = true
+				else:
+					cluster_data = game.open_obj("Superclusters", 0)
+					cluster_data[probe.obj_to_discover].visible = true
+					Helper.save_obj("Superclusters", 0, cluster_data)
+				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+			elif probe.tier == 1:
+				var supercluster_data:Array
+				if game.c_v == "universe":
+					supercluster_data = game.supercluster_data
+					supercluster_data[probe.obj_to_discover].visible = true
+				else:
+					var save_sc = File.new()
+					save_sc.open("user://Save1/supercluster_data.hx3", File.READ_WRITE)
+					supercluster_data = save_sc.get_var()
+					supercluster_data[probe.obj_to_discover].visible = true
+					save_sc.seek(0)
+					save_sc.store_var(supercluster_data)
+					save_sc.close()
+				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			game.probe_data.remove(i)
 			refresh()
 
@@ -142,9 +157,12 @@ func on_fighter_press(i:int):
 	_on_close_button_pressed()
 	game.switch_view("galaxy", false, "set_to_fighter_coords", [i])
 
-func on_probe_press(sc:int):
+func on_probe_press(tier:int):
 	_on_close_button_pressed()
-	game.switch_view("supercluster", false, "set_to_probe_coords", [sc])
+	if tier == 0:
+		game.switch_view("supercluster", false, "set_to_probe_coords", [0])
+	elif tier == 1:
+		game.switch_view("universe")
 
 func on_rover_exit():
 	rover_over_id = -1

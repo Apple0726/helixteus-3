@@ -64,6 +64,7 @@ margin_left = 52.0
 margin_top = 96.0
 margin_right = 1016.0
 margin_bottom = 308.0
+autowrap = true
 
 [node name="Control" type="Control" parent="."]
 margin_right = 40.0
@@ -116,6 +117,7 @@ text = "SEND_A_PROBE"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Control/Send" to="." method="_on_Send_pressed"]

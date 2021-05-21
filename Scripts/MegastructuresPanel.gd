@@ -15,6 +15,9 @@ func _ready():
 		MS.parent = "megastructures_panel"
 		MS.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/" + MS.name + ".png")
 
+func refresh():
+	$GridContainer/M_MPCC.visible = game.science_unlocked.MPCC
+		
 func get_MS_name(_name:String):
 	return tr("%s_NAME" % _name)
 
@@ -45,4 +48,6 @@ func get_item(_name, _type, _dir):
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_SE", "cancel_building_MS")
 	elif _name == "M_MME":
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
+	elif _name == "M_MPCC":
+		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MPCC", "cancel_building_MS")
 	game.view.obj.construct(_name)

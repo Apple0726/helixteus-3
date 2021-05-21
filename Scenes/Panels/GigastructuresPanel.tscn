@@ -1,0 +1,267 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Ships/Probe2.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
+[ext_resource path="res://Scripts/GigastructuresPanel.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=8]
+[ext_resource path="res://Graphics/Buildings/MS.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Buildings/ME.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Buildings/PP.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Buildings/RL.png" type="Texture" id=12]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+fallback/0 = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 50.0
+content_margin_right = 50.0
+content_margin_top = 7.0
+content_margin_bottom = 6.0
+bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id=3]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+
+[sub_resource type="Theme" id=4]
+Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+Button/constants/hseparation = 2
+Button/fonts/font = null
+Button/styles/disabled = null
+Button/styles/focus = null
+Button/styles/hover = null
+Button/styles/normal = null
+Button/styles/pressed = null
+
+[sub_resource type="InputEventAction" id=5]
+action = "G"
+
+[sub_resource type="ShortCut" id=6]
+shortcut = SubResource( 5 )
+
+[node name="TerraformPanel" type="Control"]
+margin_right = 1067.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 533, 300 )
+theme = ExtResource( 6 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 600.0 ],
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="."]
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="Background" instance=ExtResource( 5 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -48.0
+margin_right = 0.0
+
+[node name="Title" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 64.0
+custom_fonts/font = SubResource( 1 )
+text = "GS_SC"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="."]
+margin_top = 60.0
+margin_right = 1064.0
+margin_bottom = 124.0
+custom_styles/normal = SubResource( 2 )
+text = "GS_DESC"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_top = 124.0
+margin_right = 384.0
+margin_bottom = 600.0
+custom_styles/bg = SubResource( 3 )
+scroll_horizontal_enabled = false
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 374.0
+margin_bottom = 476.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = SubResource( 4 )
+
+[node name="MineralExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_right = 364.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+text = "MINERAL_EXTRACTION"
+icon = ExtResource( 10 )
+align = 0
+expand_icon = true
+
+[node name="EnergyProduction" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 44.0
+margin_right = 364.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+text = "ENERGY_PRODUCTION"
+icon = ExtResource( 11 )
+align = 0
+expand_icon = true
+
+[node name="MineralStorage" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 88.0
+margin_right = 364.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 40 )
+text = "MINERAL_STORAGE"
+icon = ExtResource( 9 )
+align = 0
+expand_icon = true
+
+[node name="Research" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 132.0
+margin_right = 364.0
+margin_bottom = 172.0
+rect_min_size = Vector2( 0, 40 )
+text = "RESEARCH"
+icon = ExtResource( 12 )
+align = 0
+expand_icon = true
+
+[node name="SpaceAgriculture" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 176.0
+margin_right = 364.0
+margin_bottom = 216.0
+rect_min_size = Vector2( 0, 40 )
+text = "SA_SC"
+icon = ExtResource( 3 )
+align = 0
+expand_icon = true
+
+[node name="TriangulumProbe" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 220.0
+margin_right = 364.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 0, 40 )
+text = "TRIANGULUM_PROBE"
+icon = ExtResource( 4 )
+align = 0
+expand_icon = true
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 380.0
+margin_top = 124.0
+margin_right = 1064.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GalaxyInfo" type="Label" parent="Control"]
+margin_left = 424.0
+margin_top = 156.0
+margin_right = 976.0
+margin_bottom = 248.0
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Costs" type="Label" parent="Control"]
+margin_left = 428.0
+margin_top = 256.0
+margin_right = 1016.0
+margin_bottom = 280.0
+text = "COSTS"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProductionPerSec" type="Label" parent="Control"]
+margin_left = 424.0
+margin_top = 376.0
+margin_right = 1012.0
+margin_bottom = 400.0
+text = "PRODUCTION_PER_SECOND"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CostsHBox" type="HBoxContainer" parent="Control"]
+margin_left = 416.0
+margin_top = 292.0
+margin_right = 456.0
+margin_bottom = 332.0
+
+[node name="Production" type="VBoxContainer" parent="Control"]
+margin_left = 416.0
+margin_top = 408.0
+margin_right = 456.0
+margin_bottom = 448.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Convert" type="Button" parent="Control"]
+margin_left = 860.0
+margin_top = 564.0
+margin_right = 1064.0
+margin_bottom = 600.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 6 )
+text = "CONVERT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= [ "ME" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= [ "PP" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GS_pressed" binds= [ "GH" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
+[connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]

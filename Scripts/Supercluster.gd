@@ -42,9 +42,9 @@ func on_cluster_click (id:int, l_id:int):
 		game.switch_view("cluster")
 
 var change_alpha = 0.05
-func _process(_delta):
+func _process(delta):
 	if modulate.a < 1:
-		modulate.a += change_alpha
+		modulate.a += change_alpha * delta * 60
 	if modulate.a <= 0:
 		game.hide_tooltip()
 		for i in range(0, btns.size()):

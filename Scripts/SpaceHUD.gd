@@ -46,3 +46,11 @@ func _on_SendFighters_pressed():
 
 func _on_SendProbes_pressed():
 	game.toggle_panel(game.send_probes_panel)
+
+
+func _on_Gigastructures_pressed():
+	game.toggle_panel(game.gigastructures_panel)
+
+
+func _on_Gigastructures_mouse_entered():
+	game.show_tooltip(tr("CONVERT_TO_GS") + " (C)")

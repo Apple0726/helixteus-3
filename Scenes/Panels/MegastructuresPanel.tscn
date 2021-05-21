@@ -119,6 +119,14 @@ margin_top = 228.0
 margin_right = 192.0
 margin_bottom = 458.0
 
+[node name="M_MPCC" parent="GridContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 190.0
+margin_top = 228.0
+margin_right = 382.0
+margin_bottom = 458.0
+
 [node name="ItemInfo" type="Panel" parent="."]
 visible = false
 margin_left = 760.0

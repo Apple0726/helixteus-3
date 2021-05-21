@@ -1,9 +1,9 @@
 extends Node
+#A place to put frequently used functions
 
 onready var game = get_node("/root/Game")
 #var game
-#A place to put frequently used functions
-var SI:bool = true
+var notation:int = 1#0: standard, 1: SI, 2: scientific
 
 func set_btn_color(btn):
 	if not btn.get_parent_control():
@@ -174,10 +174,16 @@ func get_plant_produce(name:String):
 func get_wid(size:float):
 	return min(round(pow(size / 6000.0, 0.7) * 8.0) + 3, 100)
 
-func e_notation(num:float):#e notation
+func e_notation(num:float, sd:int = 4):#e notation
+	if num == 0:
+		return "0"
 	var e = floor(log10(num))
 	var n = num * pow(10, -e)
-	return "%se%s" %  [clever_round(n), e]
+	var n2 = clever_round(n, sd)
+	if n2 == 10:
+		n2 = 1
+		e += 1
+	return "%se%s" %  [n2, e]
 
 func get_dir_from_name(_name:String):
 	if _name.substr(0, 7) == "speedup":
@@ -234,22 +240,24 @@ func format_num(num:float, threshold:int = 6):
 		else:
 			p = int(p)
 		var div = max(pow(10, stepify(p - 1, 3)), 1)
+		if notation == 2 and p >= 3 or p >= 27:
+			return e_notation(num, 3)
 		if p >= 3 and p < 6:
 			suff = "k"
 		elif p < 9:
 			suff = "M"
 		elif p < 12:
-			suff = "G" if SI else "B"
+			suff = "G" if notation == 1 else "B"
 		elif p < 15:
 			suff = "T"
 		elif p < 18:
-			suff = "P" if SI else "q"
+			suff = "P" if notation == 1 else "q"
 		elif p < 21:
-			suff = "E" if SI else "Q"
+			suff = "E" if notation == 1 else "Q"
 		elif p < 24:
-			suff = "Z" if SI else "s"
+			suff = "Z" if notation == 1 else "s"
 		elif p < 27:
-			suff = "Y" if SI else "S"
+			suff = "Y" if notation == 1 else "S"
 		return "%s%s" % [clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers

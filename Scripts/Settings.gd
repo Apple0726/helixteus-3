@@ -191,20 +191,30 @@ func _on_SI_pressed():
 		config.save("user://settings.cfg")
 		set_notation()
 
-
 func _on_SI_mouse_entered():
 	game.show_tooltip("k < M < G < T < P < E < Z < Y")
 
 func set_notation():
 	$HBoxContainer2/Standard.pressed = false
 	$HBoxContainer2/SI.pressed = false
+	$HBoxContainer2/Scientific.pressed = false
 	if err == OK:
 		var notation = config.get_value("game", "notation", "SI")
 		if notation == "standard":
 			$HBoxContainer2/Standard.pressed = true
-			Helper.SI = false
-		else:
+			Helper.notation = 0
+		elif notation == "SI":
 			$HBoxContainer2/SI.pressed = true
-			Helper.SI = true
+			Helper.notation = 1
+		else:
+			$HBoxContainer2/Scientific.pressed = true
+			Helper.notation = 2
 	if is_instance_valid(game.HUD):
 		game.HUD.refresh()
+
+
+func _on_Scientific_pressed():
+	if err == OK:
+		config.set_value("game", "notation", "scientific")
+		config.save("user://settings.cfg")
+		set_notation()

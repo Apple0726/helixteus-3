@@ -41,6 +41,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SE":{"money":1500, "energy":500, "time":120.0},
 				"MM":{"money":13000, "energy":7000, "time":200.0},
 				"rover":{"money":2000, "energy":400, "time":50.0},
+				"TP":{"money":2000, "energy":400, "time":50.0},#Triangulum probe
 				"GH":{"money":10000, "energy":1500, "glass":500, "time":75.0},
 				"SP":{"money":4000, "time":90.0},
 				"AE":{"money":41500, "energy":15000, "time":180.0},
@@ -71,9 +72,10 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_MB":{"money":e(5.5, 16), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 12), "aluminium":e(2, 11), "nanocrystal":e(8, 10), "time":120 * 86400},
-					"M_PK_0":{"money":e(2, 15), "stone":e(8, 14), "iron":e(2, 13), "aluminium":e(4.25, 12), "time":5},#24 * 3600
+					"M_PK_0":{"money":e(2, 15), "stone":e(8, 14), "iron":e(2, 13), "aluminium":e(4.25, 12), "time":24 * 86400},
 					"M_PK_1":{"money":e(9.5, 16), "stone":e(1, 17), "iron":e(8.5, 15), "aluminium":e(8, 14), "time":48 * 86400},
 					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 18), "aluminium":e(1.5, 17), "time":96 * 86400},
+					"M_MPCC_0":{"money":e(4.4, 16), "stone":e(7.1, 13), "energy":e(9, 15), "quartz":e(4.8, 12), "nanocrystal":e(3.1, 12), "time":10 * 86400},
 }
 
 var MS_output = {	"M_DS_0":e(1, 8),
@@ -227,8 +229,18 @@ var science_unlocks = {
 						"MME2":{"cost":e(6.0, 11), "parents":["MME1"]},
 						"MME3":{"cost":e(2.4, 13), "parents":["MME2"]},
 						
+						#Planetkiller
 						"PK1":{"cost":e(5.25, 16), "parents":["MAE"]},
-						"PK2":{"cost":e(3.4, 19), "parents":["PK1"]},
+						"PK2":{"cost":e(3.4, 18), "parents":["PK1"]},
+						
+						#Mega probe construction center
+						"MPCC":{"cost":e(2.9, 16), "parents":["MAE"]},
+						
+						#Gigastructures
+						"GS":{"cost":e(1, 19), "parents":["MB"]},
+						
+						#Triangulum probe
+						"TPCC":{"cost":e(1, 21), "parents":["GS"]},
 }
 var infinite_research_sciences = {	"MEE":{"cost":50, "pw":6.2, "value":1.2},
 									"EPE":{"cost":80, "pw":6.2, "value":1.2},

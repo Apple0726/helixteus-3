@@ -338,17 +338,23 @@ __meta__ = {
 }
 
 [node name="Standard" type="CheckBox" parent="HBoxContainer2"]
-margin_left = 81.0
-margin_right = 200.0
+margin_left = 20.0
+margin_right = 139.0
 margin_bottom = 40.0
 text = "STANDARD"
 
 [node name="SI" type="CheckBox" parent="HBoxContainer2"]
-margin_left = 204.0
-margin_right = 247.0
+margin_left = 143.0
+margin_right = 186.0
 margin_bottom = 40.0
 pressed = true
 text = "SI"
+
+[node name="Scientific" type="CheckBox" parent="HBoxContainer2"]
+margin_left = 190.0
+margin_right = 308.0
+margin_bottom = 40.0
+text = "SCIENTIFIC"
 
 [connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
@@ -380,3 +386,4 @@ text = "SI"
 [connection signal="mouse_entered" from="HBoxContainer2/SI" to="." method="_on_SI_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer2/SI" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer2/SI" to="." method="_on_SI_pressed"]
+[connection signal="pressed" from="HBoxContainer2/Scientific" to="." method="_on_Scientific_pressed"]
