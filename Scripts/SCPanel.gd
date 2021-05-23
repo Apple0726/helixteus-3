@@ -79,7 +79,7 @@ func refresh():
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
-		var pie_text = obj.element + "\n" + String(game.clever_round(obj.fraction * 100.0, 2)) + "%"
+		var pie_text = "%s\n%s%%" % [obj.element, Helper.clever_round(obj.fraction * 100.0, 2)]
 		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
 	pie.refresh()
 	$Control/HBoxContainer/Label.text = "%s kg" % [round(hslider.value)]

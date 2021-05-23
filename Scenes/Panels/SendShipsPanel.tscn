@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -6,10 +6,8 @@
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/SendShipsPanel.gd" type="Script" id=6]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Resources/PanelBG.tres" type="StyleBox" id=9]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -116,7 +114,6 @@ margin_bottom = 502.0
 rect_min_size = Vector2( 450, 0 )
 size_flags_vertical = 3
 custom_styles/bg = SubResource( 2 )
-script = ExtResource( 10 )
 
 [node name="Enemies" type="VBoxContainer" parent="VBox/HBox/VBox/Scroll"]
 margin_right = 416.0
@@ -131,7 +128,6 @@ margin_top = 312.0
 margin_right = 868.0
 margin_bottom = 328.0
 value = 50.0
-script = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -291,6 +287,7 @@ stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="mouse_entered" from="EnergyCost2" to="." method="_on_EnergyCost2_mouse_entered"]

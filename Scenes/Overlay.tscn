@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=5]
 
@@ -121,7 +120,6 @@ value = 0.5
 scrollable = false
 tick_count = 20
 ticks_on_borders = true
-script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -182,6 +180,7 @@ stretch_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="mouse_entered" from="Panel/LeftNum" to="." method="_on_num_mouse_entered" binds= [ "left" ]]
 [connection signal="mouse_exited" from="Panel/LeftNum" to="." method="_on_num_mouse_exited"]
 [connection signal="mouse_entered" from="Panel/RightNum" to="." method="_on_num_mouse_entered" binds= [ "right" ]]

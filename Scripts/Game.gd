@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -189,7 +189,7 @@ var c_num:int
 
 var stats:Dictionary
 
-enum ObjectiveType {BUILD, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA}
+enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 ############ End save data ############
@@ -239,20 +239,20 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
-					"wooden_pickaxe":{"speed":1.5, "durability":300, "costs":{"money":1200}},
-					"stone_pickaxe":{"speed":2.1, "durability":500, "costs":{"money":5000}},
-					"lead_pickaxe":{"speed":2.9, "durability":650, "costs":{"money":35000}},
-					"copper_pickaxe":{"speed":4.3, "durability":800, "costs":{"money":180000}},
-					"iron_pickaxe":{"speed":5.9, "durability":1100, "costs":{"money":840000}},
-					"aluminium_pickaxe":{"speed":8.8, "durability":1400, "costs":{"money":3500000}},
-					"silver_pickaxe":{"speed":12.7, "durability":1700, "costs":{"money":15000000}},
-					"gold_pickaxe":{"speed":90.0, "durability":140, "costs":{"money":32500000}},
-					"gemstone_pickaxe":{"speed":55.0, "durability":2000, "costs":{"money":e(1.56, 8)}},
-					"platinum_pickaxe":{"speed":95.0, "durability":1500, "costs":{"money":e(5.5, 8)}},
-					"titanium_pickaxe":{"speed":150.0, "durability":2500, "costs":{"money":e(1.45, 9)}},
-					"diamond_pickaxe":{"speed":375.0, "durability":3000, "costs":{"money":e(4.4, 9)}},
-					"nanocrystal_pickaxe":{"speed":980.0, "durability":770, "costs":{"money":e(2.2, 10)}},
-					"mythril_pickaxe":{"speed":3400.0, "durability":5000, "costs":{"money":e(6.4, 11)}},
+					"wooden_pickaxe":{"speed":1.8, "durability":300, "costs":{"money":2700}},
+					"stone_pickaxe":{"speed":3.0, "durability":500, "costs":{"money":12000}},
+					"lead_pickaxe":{"speed":4.9, "durability":600, "costs":{"money":95000}},
+					"copper_pickaxe":{"speed":7.4, "durability":600, "costs":{"money":580000}},
+					"iron_pickaxe":{"speed":11.2, "durability":900, "costs":{"money":2840000}},
+					"aluminium_pickaxe":{"speed":17.8, "durability":800, "costs":{"money":10200000}},
+					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":60000000}},
+					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(4.25, 8)}},
+					"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
+					"platinum_pickaxe":{"speed":175.0, "durability":1200, "costs":{"money":e(8.2, 9)}},
+					"titanium_pickaxe":{"speed":180.0, "durability":2500, "costs":{"money":e(1.45, 10)}},
+					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(4.4, 11)}},
+					"nanocrystal_pickaxe":{"speed":2980.0, "durability":770, "costs":{"money":e(9.25, 12)}},
+					"mythril_pickaxe":{"speed":9200.0, "durability":4000, "costs":{"money":e(6.4, 14)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -279,6 +279,8 @@ var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20},
 							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
+var craft_mining_info = {"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400}}
+
 var other_items_info = {"hx_core":{"XP":6}, "hx_core2":{"XP":50}, "hx_core3":{"XP":480}, "ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
@@ -301,11 +303,14 @@ var music_player = AudioStreamPlayer.new()
 var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
 var game_tween:Tween
+var b_i_tween:Tween#bottom_info_tween
 func _ready():
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 	game_tween = Tween.new()
 	add_child(game_tween)
+	b_i_tween = Tween.new()
+	add_child(b_i_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	if TranslationServer.get_locale() != "es":
@@ -1056,8 +1061,9 @@ func open_shop_pickaxe():
 	shop_panel._on_btn_pressed("Pickaxes")
 
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
+	b_i_tween.stop_all()
 	if $UI/BottomInfo.visible:
-		_on_BottomInfo_close_button_pressed()
+		_on_BottomInfo_close_button_pressed(true)
 	$UI/BottomInfo.visible = true
 	$UI.move_child($UI/BottomInfo, $UI.get_child_count())
 	var more_info = $UI/BottomInfo/Text
@@ -1070,6 +1076,8 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	more_info.modulate.a = 1
 	bottom_info_action = action
 	$UI/BottomInfo/CloseButton.on_close = on_close
+	b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 684), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
+	b_i_tween.start()
 
 func fade_in_panel(panel:Control):
 	panel.visible = true
@@ -1092,14 +1100,11 @@ func fade_out_panel(panel:Control):
 func on_fade_complete(panel:Control):
 	hide_tooltip()
 	panel.visible = false
-	if view:
-		view.scroll_view = true
-		view.move_view = true
 
 func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
 	if active_panel and active_panel != upgrade_panel:
 		fade_out_panel(active_panel)
-	if upgrade_panel and is_a_parent_of(upgrade_panel):
+	if is_instance_valid(upgrade_panel) and is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
 	if planet.empty():
@@ -1107,17 +1112,15 @@ func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
 	else:
 		upgrade_panel.planet = planet
 	active_panel = upgrade_panel
-	if upgrade_panel:
+	if is_instance_valid(upgrade_panel):
 		$Panels/Control.add_child(upgrade_panel)
 
 func remove_upgrade_panel():
-	if upgrade_panel:
+	if is_instance_valid(upgrade_panel):
 		$Panels/Control.remove_child(upgrade_panel)
 	active_panel = null
 	upgrade_panel = null
-	if view:
-		view.scroll_view = true
-		view.move_view = true
+	block_scroll = false
 
 func toggle_panel(_panel):
 	if active_panel:
@@ -2177,6 +2180,7 @@ func generate_systems(id:int):
 		third_ship_hints.g_g_id = c_g_g
 		third_ship_hints.g_l_id = c_g
 		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
+		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
 
 func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0	
@@ -2235,6 +2239,8 @@ func generate_planets(id:int):#local id
 				p_i.size = 1000
 				p_i.conquered = true
 		p_i["angle"] = rand_range(0, 2 * PI)
+		if p_num == 0 and i == 2:
+			p_i.angle = rand_range(PI/4, 3*PI/4)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
 		if hypergiant_system:
@@ -2293,8 +2299,11 @@ func generate_planets(id:int):#local id
 			while num < 12:
 				num += 1
 				var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
-				if p_num == 0 and lv > 3:
-					lv = 3
+				if p_num == 0:
+					if lv > 4:
+						lv = 4
+					if i == 2:
+						lv = 1
 				if num == 12:
 					lv = ceil(0.9 * log(power) / log(1.2))
 				var HP = round(rand_range(0.8, 1.2) * 25 * pow(1.16, lv - 1))
@@ -2653,7 +2662,7 @@ func generate_tiles(id:int):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
 	if ship_signal:
-		objective = {"type":ObjectiveType.SIGNAL, "id":10, "current":0, "goal":1}
+		objective = {"type":ObjectiveType.SIGNAL, "id":11, "current":0, "goal":1}
 		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
 		second_ship_hints.spawned_at_p = c_p_g
 
@@ -2859,7 +2868,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		RTL.rect_min_size.x = max_width + 20
 		RTL.rect_size.x = max_width + 20
 	yield(get_tree().create_timer(0), "timeout")
-	if RTL:
+	if is_instance_valid(RTL):
 		RTL.rect_min_size.y = RTL.get_content_height()
 		RTL.rect_size.y = RTL.get_content_height()
 
@@ -3461,11 +3470,10 @@ func _on_Settings_pressed():
 func _on_Title_Button_pressed(URL:String):
 	OS.shell_open(URL)
 
-func _on_BottomInfo_close_button_pressed():
+func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
 	if $UI/BottomInfo.visible:
 		hide_tooltip()
-		$UI/BottomInfo.visible = false
 		if $UI/BottomInfo/CloseButton.on_close != "":
 			call($UI/BottomInfo/CloseButton.on_close)
 		$UI/BottomInfo/CloseButton.on_close = ""
@@ -3474,6 +3482,14 @@ func _on_BottomInfo_close_button_pressed():
 			tutorial.fade(0.4, false)
 			tutorial.get_node("RsrcCheckTimer").start()
 		HUD.refresh()
+		if not direct:
+			b_i_tween.stop_all()
+			b_i_tween.remove_all()
+			b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 720), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
+			b_i_tween.start()
+			print(b_i_tween.get_runtime())
+			yield(b_i_tween, "tween_all_completed")
+		$UI/BottomInfo.visible = false
 
 func cancel_place_soil():
 	HUD.get_node("Resources/Soil").visible = false
@@ -3624,7 +3640,7 @@ func _on_ConfirmationDialog_popup_hide():
 		YN_panel.disconnect("confirmed", self, "%s_confirm" % YN_str)
 
 func mine_tile(tile_id:int = -1):
-	if not pickaxe.empty():
+	if pickaxe.has("name"):
 		if shop_panel.visible:
 			toggle_panel(shop_panel)
 		if tutorial and tutorial.visible and tutorial.tut_num == 14:

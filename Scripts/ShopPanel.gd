@@ -52,7 +52,7 @@ func get_item(_name, _type, _dir):
 	item_dir = _dir
 	if game.check_enough(item_total_costs):
 		if tab == "Pickaxes":
-			if not game.pickaxe.empty():
+			if game.pickaxe.has("name"):
 				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(_name).to_lower()], [item_total_costs.duplicate(true)])
 			else:
 				buy_pickaxe(item_total_costs)
@@ -67,12 +67,14 @@ func buy_pickaxe(_costs:Dictionary):
 		return
 	game.deduct_resources(_costs)
 	game.show.mining = true
-	if game.planet_HUD:
+	if is_instance_valid(game.planet_HUD):
 		game.planet_HUD.refresh()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
 		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
-	game.pickaxe = {"name":item_name, "speed":game.pickaxes_info[item_name].speed, "durability":game.pickaxes_info[item_name].durability}
+	game.pickaxe.name = item_name
+	game.pickaxe.speed = game.pickaxes_info[item_name].speed
+	game.pickaxe.durability = game.pickaxes_info[item_name].durability
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
 	if game.tutorial and game.tutorial.tut_num == 13 and not game.tutorial.tween.is_active():
 		game.tutorial.fade()

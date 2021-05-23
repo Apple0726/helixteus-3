@@ -735,7 +735,7 @@ func _input(event):
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":12, "current":game.lv, "goal":35}
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":14, "current":game.lv, "goal":35}
 						game.ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
@@ -747,6 +747,7 @@ func _input(event):
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
+							game.objective = {"type":game.ObjectiveType.TERRAFORM, "id":12, "current":0, "goal":1}
 							game.ship_data.append({"lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 							Helper.add_ship_XP(2, 40000)
 							Helper.add_weapon_XP(2, "bullet", 140)
@@ -1102,7 +1103,7 @@ func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):
 	return spr
 	
 func finish_construct():
-	if shadow:
+	if is_instance_valid(shadow):
 		bldg_to_construct = ""
 		remove_child(shadow)
 		shadow.free()

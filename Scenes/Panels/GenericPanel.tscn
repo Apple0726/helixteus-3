@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -100,7 +99,6 @@ margin_right = 762.0
 margin_bottom = 460.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 6 )
 
 [node name="Items" type="GridContainer" parent="Contents/HBoxContainer/Items"]
 margin_right = 762.0
@@ -176,6 +174,7 @@ margin_top = 54.0
 margin_right = 264.0
 margin_bottom = 54.0
 text = "b"
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount" to="." method="_on_BuyAmount_value_changed"]
 [connection signal="pressed" from="Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy" to="." method="_on_Buy_pressed"]

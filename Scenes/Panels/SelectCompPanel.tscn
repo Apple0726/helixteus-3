@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/SelectCompPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=5]
 
 [node name="SelectCompPanel" type="Panel"]
 anchor_left = 0.5
@@ -90,7 +89,6 @@ margin_top = 204.0
 margin_right = 480.0
 margin_bottom = 236.0
 scroll_vertical_enabled = false
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -119,7 +117,6 @@ margin_top = 100.0
 margin_right = 596.0
 margin_bottom = 168.0
 scroll_vertical_enabled = false
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -136,6 +133,7 @@ anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -48.0
 margin_right = 0.0
+
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Select" to="." method="_on_Select_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

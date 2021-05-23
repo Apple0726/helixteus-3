@@ -29,7 +29,7 @@ func begin():
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":-1, "current":0, "goal":1}
 		game.HUD.refresh()
 	elif tut_num == 26:
-		game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":0, "current":0, "goal":10}
+		game.objective = {"type":game.ObjectiveType.UPGRADE, "id":0, "current":0, "goal":1}
 #		game.show.construct_button = true
 #		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
 #		game.stats.bldgs_built = 20

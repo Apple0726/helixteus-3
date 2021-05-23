@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -6,8 +6,6 @@
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=8]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=9]
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=12]
@@ -100,7 +98,6 @@ margin_right = 384.0
 margin_bottom = 600.0
 custom_styles/bg = SubResource( 3 )
 scroll_horizontal_enabled = false
-script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -146,7 +143,6 @@ margin_right = 624.0
 margin_bottom = 436.0
 rect_min_size = Vector2( 0, 200 )
 scroll_horizontal_enabled = false
-script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -173,7 +169,6 @@ margin_top = 200.0
 margin_right = 916.0
 margin_bottom = 216.0
 step = 0.0
-script = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -300,6 +295,7 @@ text = "TRANSFORM"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Control/Switch" to="." method="_on_Switch_pressed"]

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/convert_minerals.png-f2351ab4ee2fbc1155a5cc8267138ad0.stex"
+path="res://.import/mining_liquid.png-66ff61d21d8500f6ca6c07e92234ce81.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/convert_minerals.png"
-dest_files=[ "res://.import/convert_minerals.png-f2351ab4ee2fbc1155a5cc8267138ad0.stex" ]
+source_file="res://Graphics/Mining/mining_liquid.png"
+dest_files=[ "res://.import/mining_liquid.png-66ff61d21d8500f6ca6c07e92234ce81.stex" ]
 
 [params]
 

@@ -90,7 +90,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 
 func _on_Slot_mouse_entered(type:String, cmp:String, metal:String):
 	var txt
-	var metal_comp:String = tr("METAL_COMP").format({"metal":metal, "comp":tr(g_cmp.to_upper())})
+	var metal_comp:String = tr("METAL_COMP").format({"metal":tr(metal), "comp":tr(g_cmp.to_upper())})
 	if type == "rover_armor":
 		txt = "%s\n+%s %s\n+%s %s" % [metal_comp, Data.rover_armor[cmp].HP, tr("HEALTH_POINTS"), Data.rover_armor[cmp].defense, tr("DEFENSE")]
 	elif type == "rover_wheels":

@@ -1,10 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/ProductionPanel.gd" type="Script" id=6]
 [ext_resource path="res://Graphics/Materials/sand.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Materials/glass.png" type="Texture" id=8]
@@ -126,7 +125,6 @@ margin_bottom = 28.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 0.0
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -166,6 +164,7 @@ margin_left = 506.0
 margin_right = 536.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 30, 0 )
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Control/Start" to="." method="_on_Start_pressed"]
 [connection signal="value_changed" from="Control/HBox/HSlider" to="." method="_on_HSlider_value_changed"]

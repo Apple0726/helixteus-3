@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/SendProbesPanel.gd" type="Script" id=5]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=1]
@@ -97,7 +96,6 @@ margin_top = 372.0
 margin_right = 628.0
 margin_bottom = 388.0
 value = 50.0
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

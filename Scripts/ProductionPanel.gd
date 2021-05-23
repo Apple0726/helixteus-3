@@ -18,11 +18,11 @@ func _ready():
 
 func _on_HSlider_value_changed(value):
 	if input_type in ["mats", "mets"]:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [game.clever_round(value), input_unit]
+		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.clever_round(value), input_unit]
 	else:
 		$Control/HBox/AmountInStorage.text = "%s %s" % [round(value), input_unit]
 	if output_type in ["mats", "mets"]:
-		$Control/AmountProduced.text = "%s %s" % [game.clever_round(value * ratio), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.clever_round(value * ratio), output_unit]
 	else:
 		$Control/AmountProduced.text = "%s %s" % [round(value * ratio), output_unit]
 

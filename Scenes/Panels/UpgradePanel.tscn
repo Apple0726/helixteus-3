@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 content_margin_left = 5.0
@@ -15,6 +14,7 @@ content_margin_right = 5.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -23,21 +23,22 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -320.0
+margin_left = -384.0
 margin_top = -152.0
-margin_right = 320.0
+margin_right = 384.0
 margin_bottom = 144.0
 grow_horizontal = 0
 rect_min_size = Vector2( 576, 280 )
 mouse_filter = 1
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Upgrade" type="Button" parent="UpgradePanel"]
-margin_left = 456.0
+margin_left = 584.0
 margin_top = 256.0
-margin_right = 640.0
+margin_right = 768.0
 margin_bottom = 296.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
@@ -50,26 +51,25 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
 margin_left = 16.0
 margin_top = 248.0
-margin_right = 437.0
+margin_right = 592.0
 margin_bottom = 296.0
 rect_min_size = Vector2( 200, 40 )
 theme = ExtResource( 3 )
 scroll_vertical_enabled = false
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Costs" type="HBoxContainer" parent="UpgradePanel/ScrollContainer"]
-margin_right = 421.0
+margin_right = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_constants/separation = 20
 
 [node name="Current" type="RichTextLabel" parent="UpgradePanel"]
-margin_left = 32.0
+margin_left = 72.0
 margin_top = 152.0
-margin_right = 266.0
+margin_right = 306.0
 margin_bottom = 178.0
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -83,10 +83,11 @@ __meta__ = {
 }
 
 [node name="Arrow" type="TextureRect" parent="UpgradePanel"]
-margin_left = 272.0
-margin_top = 152.0
-margin_right = 362.0
-margin_bottom = 178.0
+modulate = Color( 1, 1, 1, 0.635294 )
+margin_left = 344.0
+margin_top = 144.0
+margin_right = 434.0
+margin_bottom = 184.0
 rect_min_size = Vector2( 90, 26 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -98,9 +99,9 @@ __meta__ = {
 }
 
 [node name="Next" type="RichTextLabel" parent="UpgradePanel"]
-margin_left = 384.0
+margin_left = 483.0
 margin_top = 152.0
-margin_right = 608.0
+margin_right = 707.0
 margin_bottom = 178.0
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -113,25 +114,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control2" type="Control" parent="UpgradePanel"]
-margin_top = 72.0
-margin_right = 640.0
-margin_bottom = 132.0
-rect_min_size = Vector2( 0, 60 )
-size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CurrentLv" type="Label" parent="UpgradePanel/Control2"]
+[node name="CurrentLv" type="Label" parent="UpgradePanel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -200.0
-margin_top = -14.0
-margin_right = -136.0
-margin_bottom = 18.0
+margin_left = -224.0
+margin_top = -60.0
+margin_right = -160.0
+margin_bottom = -28.0
 text = "Level 1"
 align = 1
 valign = 1
@@ -139,15 +130,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CurrentLv2" type="Label" parent="UpgradePanel/Control2"]
+[node name="CurrentLv2" type="Label" parent="UpgradePanel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 37.0
-margin_top = -14.0
-margin_right = 139.0
-margin_bottom = 18.0
+margin_left = 72.0
+margin_top = -60.0
+margin_right = 174.0
+margin_bottom = -28.0
 text = "LEVEL"
 align = 2
 valign = 1
@@ -155,15 +146,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NextLv" type="SpinBox" parent="UpgradePanel/Control2"]
+[node name="NextLv" type="SpinBox" parent="UpgradePanel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 144.0
-margin_top = -14.0
-margin_right = 234.0
-margin_bottom = 18.0
+margin_left = 179.0
+margin_top = -60.0
+margin_right = 269.0
+margin_bottom = -28.0
 value = 2.0
 rounded = true
 allow_greater = true
@@ -173,8 +164,8 @@ __meta__ = {
 }
 
 [node name="PathButtons" type="HBoxContainer" parent="UpgradePanel"]
-margin_top = 40.0
-margin_right = 640.0
+margin_top = 38.0
+margin_right = 768.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
@@ -184,8 +175,8 @@ __meta__ = {
 }
 
 [node name="Path1" type="Button" parent="UpgradePanel/PathButtons"]
-margin_right = 640.0
-margin_bottom = 35.0
+margin_right = 768.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 
 [node name="Path2" type="Button" parent="UpgradePanel/PathButtons"]
@@ -203,7 +194,7 @@ margin_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="UpgradePanel"]
-margin_right = 640.0
+margin_right = 768.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 38 )
 size_flags_vertical = 3
@@ -222,9 +213,9 @@ margin_right = 0.0
 margin_bottom = 40.0
 
 [node name="AutoSpeedup" type="CheckBox" parent="UpgradePanel"]
-margin_left = 232.0
+margin_left = 280.0
 margin_top = 200.0
-margin_right = 440.0
+margin_right = 488.0
 margin_bottom = 228.0
 theme = ExtResource( 3 )
 pressed = true
@@ -232,10 +223,11 @@ text = "AUTO_SPEEDUP"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
 [connection signal="pressed" from="UpgradePanel/Upgrade" to="." method="_on_Upgrade_pressed"]
 [connection signal="resized" from="UpgradePanel/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
-[connection signal="value_changed" from="UpgradePanel/Control2/NextLv" to="." method="_on_NextLv_value_changed"]
+[connection signal="value_changed" from="UpgradePanel/NextLv" to="." method="_on_NextLv_value_changed"]
 [connection signal="pressed" from="UpgradePanel/PathButtons/Path1" to="." method="_on_Path1_pressed"]
 [connection signal="pressed" from="UpgradePanel/PathButtons/Path2" to="." method="_on_Path2_pressed"]
 [connection signal="pressed" from="UpgradePanel/PathButtons/Path3" to="." method="_on_Path3_pressed"]

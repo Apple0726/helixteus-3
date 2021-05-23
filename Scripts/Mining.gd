@@ -36,7 +36,7 @@ func _ready():
 	if not tile.has("depth"):
 		tile.depth = 0
 	progress = tile.mining_progress
-	if not game.pickaxe.empty():
+	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
 		update_pickaxe()
 	update_info(true)
@@ -54,7 +54,7 @@ func _ready():
 
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
-	aurora_mult = game.clever_round(Helper.get_au_mult(tile))
+	aurora_mult = Helper.clever_round(Helper.get_au_mult(tile))
 	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info(first_time:bool = false):
@@ -121,13 +121,18 @@ func update_info(first_time:bool = false):
 	else:
 		$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
-	print(progress)
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 
 func update_pickaxe():
-	$Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]	
-	$Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
+	$HBox/Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]
+	if game.pickaxe.has("liquid_name"):
+		$HBox/Liquid.visible = true
+		$HBox/Liquid/Numbers.text = "%s / %s" % [game.pickaxe.liquid_dur, game.craft_mining_info[game.pickaxe.liquid_name].durability]
+		$HBox/Liquid/Bar.value = game.pickaxe.liquid_dur / float(game.craft_mining_info[game.pickaxe.liquid_name].durability) * 100
+	else:
+		$HBox/Liquid.visible = false
+	$HBox/Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):
 	var tile_sprite = $Tile
@@ -209,7 +214,7 @@ func hide_help():
 
 var help_counter = 0
 func pickaxe_hit():
-	if not game.pickaxe:
+	if not game.pickaxe.has("name"):
 		return
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
@@ -227,8 +232,14 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(5, 0.1, 1)
-	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS)
+	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	game.pickaxe.durability -= 1
+	if game.pickaxe.has("liquid_dur"):
+		game.pickaxe.liquid_dur -= 1
+		if game.pickaxe.liquid_dur <= 0:
+			game.pickaxe.erase("liquid_dur")
+			game.pickaxe.erase("liquid_name")
+			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
 	if progress >= 1000:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
@@ -244,6 +255,7 @@ func pickaxe_hit():
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
 				game.objective.current += 1
 			rock_gen = true
+			tile.depth += 1
 			generate_rock(true)
 	tile.mining_progress = progress
 	if rock_gen:
@@ -266,7 +278,9 @@ func pickaxe_hit():
 			game.pickaxe.durability = curr_pick_info.durability
 			update_pickaxe()
 		else:
-			game.pickaxe.clear()
+			game.pickaxe.erase("name")
+			game.pickaxe.erase("durability")
+			game.pickaxe.erase("speed")
 			circ_disabled = true
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
@@ -295,9 +309,9 @@ func _process(delta):
 			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = game.clever_round(points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1)
+			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0))
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
-		spd_mult_node.visible = bool(points)
+		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
 			points += delta * 60.0
 			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
@@ -307,7 +321,7 @@ func _process(delta):
 				spd_mult_node["custom_colors/font_color"] = Color(1, 0, 0, 1)
 
 func _on_Button_button_down():
-	if not game.pickaxe.empty():
+	if game.pickaxe.has("name"):
 		circ_disabled = false
 		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
 		$PickaxeAnim.play("Pickaxe swing")

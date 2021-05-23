@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/ShipyardPanel.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Ships/Fighter.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/Scroll.gd" type="Script" id=5]
 
 [node name="ShipyardPanel" type="Panel"]
 anchor_left = 0.5
@@ -52,7 +51,6 @@ margin_top = 168.0
 margin_right = 468.0
 margin_bottom = 236.0
 scroll_vertical_enabled = false
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -101,6 +99,7 @@ custom_colors/font_color = Color( 1, 1, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="SpinBox" to="." method="_on_SpinBox_value_changed"]

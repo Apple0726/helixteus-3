@@ -164,7 +164,9 @@ func set_rover_data():
 	$UI2/HP/Bar.max_value = total_HP
 	$Rover/Bar.max_value = total_HP
 	$UI2/Inventory/Bar.max_value = weight_cap
+	$Rover/InvBar.max_value = weight_cap
 	$UI2/Inventory/Bar.value = weight
+	$Rover/InvBar.value = weight
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
 	if game and game.help.sprint_mode and speed_mult > 1:
@@ -234,8 +236,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					$UI2/Controls.visible = true
 					game.help_str = "cave_controls"
 					$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-				if not game.objective.empty() and game.objective.id == 2:
-					game.objective = {"type":game.ObjectiveType.MINE, "id":3, "current":0, "goal":3}
+				if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
+					game.objective.current += 1
 			else:
 				light_amount = 0.4
 				rover_light.visible = true
@@ -1085,6 +1087,7 @@ func add_weight_rsrc(r, rsrc_amount):
 		weight -= float_error
 		i_w_w[r] -= float_error
 	$UI2/Inventory/Bar.value = weight
+	$Rover/InvBar.value = weight
 	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
 	return max(diff, 0.0)
 

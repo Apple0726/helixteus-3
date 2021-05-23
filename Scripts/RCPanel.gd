@@ -202,7 +202,7 @@ func refresh():
 	$Stats/AtkText.text = String(round(atk * mult))
 	$Stats/DefText.text = String(round((def + def_bonus) * mult))
 	$Stats/CargoText.text = "%s kg" % [round((weight_cap + cargo_bonus) * pow(mult, 0.75))]
-	$Stats/SpeedText.text = String(game.clever_round(spd_bonus * pow(mult, 0.25), 3))
+	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus * pow(mult, 0.25), 3))
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -247,4 +247,4 @@ func _on_CargoText_mouse_entered():
 	game.show_tooltip("(%s + %s) * %s^0.75 = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus) * pow(mult, 0.75))])
 
 func _on_SpeedText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s^0.25 = %s" % [0, spd_bonus, mult, game.clever_round((spd_bonus) * pow(mult, 0.25), 3)])
+	game.show_tooltip("(%s + %s) * %s^0.25 = %s" % [0, spd_bonus, mult, Helper.clever_round((spd_bonus) * pow(mult, 0.25), 3)])

@@ -468,6 +468,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LiquidMult" type="Label" parent="Mults"]
+visible = false
+margin_top = 28.0
+margin_right = 240.0
+margin_bottom = 52.0
+mouse_filter = 0
+custom_colors/font_color = Color( 0, 0.670588, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AuroraMult" type="Label" parent="Mults"]
 visible = false
 margin_top = 28.0
@@ -635,51 +646,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Durability" type="Control" parent="."]
-margin_left = 640.0
-margin_top = 664.0
-margin_right = 640.0
-margin_bottom = 664.0
-
-[node name="Title" type="Label" parent="Durability"]
-margin_left = -96.0
-margin_top = -40.0
-margin_right = 104.0
-margin_bottom = -16.0
-text = "DURABILITY"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Numbers" type="Label" parent="Durability"]
-margin_left = -96.0
-margin_top = 8.0
-margin_right = 104.0
-margin_bottom = 32.0
-text = "0 / 10"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar" type="TextureProgress" parent="Durability"]
-margin_left = -96.0
-margin_top = -8.0
-margin_right = 104.0
-texture_under = ExtResource( 4 )
-texture_progress = ExtResource( 4 )
-tint_under = Color( 0, 0.403922, 0, 1 )
-tint_progress = Color( 0, 1, 0, 1 )
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="AutoReplace" type="CheckBox" parent="."]
-margin_left = 864.0
+margin_left = 968.0
 margin_top = 648.0
-margin_right = 1064.0
+margin_right = 1168.0
 margin_bottom = 676.0
 text = "AUTO_REPLACE"
 __meta__ = {
@@ -699,6 +669,105 @@ bus = "SFX"
 stream = ExtResource( 9 )
 volume_db = -10.0
 bus = "SFX"
+
+[node name="HBox" type="HBoxContainer" parent="."]
+margin_left = 536.0
+margin_top = 656.0
+margin_right = 940.0
+margin_bottom = 696.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Durability" type="Control" parent="HBox"]
+margin_right = 220.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 220, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="HBox/Durability"]
+margin_left = -96.0
+margin_top = -40.0
+margin_right = 104.0
+margin_bottom = -16.0
+text = "DURABILITY"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Numbers" type="Label" parent="HBox/Durability"]
+margin_left = -96.0
+margin_top = 8.0
+margin_right = 104.0
+margin_bottom = 32.0
+text = "0 / 10"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar" type="TextureProgress" parent="HBox/Durability"]
+margin_left = -96.0
+margin_top = -8.0
+margin_right = 104.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 4 )
+tint_under = Color( 0, 0.403922, 0, 1 )
+tint_progress = Color( 0, 1, 0, 1 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Liquid" type="Control" parent="HBox"]
+margin_left = 224.0
+margin_right = 444.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 220, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="HBox/Liquid"]
+margin_left = -96.0
+margin_top = -40.0
+margin_right = 104.0
+margin_bottom = -16.0
+text = "MINING_LIQUID"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Numbers" type="Label" parent="HBox/Liquid"]
+margin_left = -96.0
+margin_top = 8.0
+margin_right = 104.0
+margin_bottom = 32.0
+text = "0 / 10"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar" type="TextureProgress" parent="HBox/Liquid"]
+margin_left = -96.0
+margin_top = -8.0
+margin_right = 104.0
+value = 50.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 4 )
+tint_under = Color( 0, 0.364706, 0.403922, 1 )
+tint_progress = Color( 0, 0.835294, 1, 1 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
 [connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
 [connection signal="mouse_entered" from="Mults/AuroraMult" to="." method="_on_AuroraMult_mouse_entered"]

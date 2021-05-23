@@ -128,26 +128,36 @@ func refresh():
 			game.objective.current = game.mining_HUD.tile.depth
 			game.objective.goal = game.planet_data[game.c_p].crust_start_depth + 1
 		if game.objective.current >= game.objective.goal:
-			if game.objective.id == 0:
-				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":1, "current":0, "goal":1}
-			elif game.objective.id == 1:
-				game.objective = {"type":game.ObjectiveType.CAVE, "id":2, "current":0, "goal":1}
-			elif game.objective.id == 3:
-				game.objective = {"type":game.ObjectiveType.CRUST, "id":4, "current":game.mining_HUD.tile.depth, "goal":game.planet_data[game.c_p].crust_start_depth + 1}
-			elif game.objective.id == 4:
-				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":5, "current":0, "goal":4}
-			elif game.objective.id == 5:
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":6, "current":game.lv, "goal":8}
-			elif game.objective.id == 6:
-				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":7, "current":0, "goal":1}
-			elif game.objective.id == 7:
-				game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":8, "current":0, "goal":1}
-			elif game.objective.id == 8:
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":9, "current":game.lv, "goal":18}
-			elif game.objective.id == 10:
-				game.objective = {"type":game.ObjectiveType.DAVID, "id":11, "current":0, "goal":1}
+			if game.objective.id == 0:#Build 10 mineral silos
+				game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":1, "current":0, "goal":10}
+			elif game.objective.id == 1:#Purchase a mineral upgrade
+				game.objective = {"type":game.ObjectiveType.MINERAL_UPG, "id":2, "current":0, "goal":1}
+			elif game.objective.id == 2:#Build 1 rover constr center
+				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":3, "current":0, "goal":1}
+			elif game.objective.id == 3:##Explore a cave
+				game.objective = {"type":game.ObjectiveType.CAVE, "id":4, "current":0, "goal":1}
+			elif game.objective.id == 4:#Mine 3 tiles
+				game.objective = {"type":game.ObjectiveType.MINE, "id":5, "current":0, "goal":3}
+			elif game.objective.id == 5:#Reach the crust
+				game.objective = {"type":game.ObjectiveType.CRUST, "id":6, "current":game.mining_HUD.tile.depth, "goal":game.planet_data[game.c_p].crust_start_depth + 1}
+			elif game.objective.id == 6:#Build 4 research labs
+				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":7, "current":0, "goal":4}
+			elif game.objective.id == 7:#Reach level 8
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.lv, "goal":8}
+			elif game.objective.id == 8:#Conquer a planet
+				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":9, "current":0, "goal":1}
+			elif game.objective.id == 9:#Find wormhole
+				game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":10, "current":0, "goal":1}
+			elif game.objective.id == 10:#Reach level 18
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":18}
+			elif game.objective.id == 11:
+				game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
 			elif game.objective.id == 12:
-				game.objective = {"type":game.ObjectiveType.EMMA, "id":13, "current":0, "goal":1}
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":35}
+			elif game.objective.id == 14:
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":50}
+			elif game.objective.id == 15:
+				game.objective = {"type":game.ObjectiveType.EMMA, "id":16, "current":0, "goal":1}
 			else:
 				game.objective.clear()
 				if game.tutorial:
@@ -194,6 +204,10 @@ func refresh():
 			$Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
 		elif game.objective.type == game.ObjectiveType.EMMA:
 			$Objectives/Label.text = tr("SELECT_EMMA_CAVE")
+		elif game.objective.type == game.ObjectiveType.UPGRADE:
+			$Objectives/Label.text = tr("UPGRADE_BLDG")
+		elif game.objective.type == game.ObjectiveType.MINERAL_UPG:
+			$Objectives/Label.text = tr("PURCHASE_MIN_UPG")
 		$Objectives/Label.visible = true
 		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
 		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position

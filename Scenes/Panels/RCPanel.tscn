@@ -28,7 +28,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
+border_color = Color( 0.4, 0.501961, 1, 1 )
 
 [node name="RCPanel" type="Control"]
 margin_right = 1067.0
@@ -253,7 +253,7 @@ __meta__ = {
 }
 
 [node name="Inventory" type="Panel" parent="."]
-margin_top = 336.0
+margin_top = 334.0
 margin_right = 532.0
 margin_bottom = 600.0
 mouse_filter = 1
@@ -322,6 +322,7 @@ __meta__ = {
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered" binds= [ "HEALTH_POINTS" ]]
 [connection signal="mouse_exited" from="Stats/HP" to="." method="_on_icon_mouse_exited"]

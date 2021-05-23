@@ -22,7 +22,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	var text:String
 	var color:Color = Color(1.0, 1.0, 1.0, 1.0)
 	if show_available:
-		if path == "Icons/stone":
+		if path == "Icons/stone" and rsrc_available is Dictionary:
 			rsrc_available = get_sum_of_dict(rsrc_available)
 		text = "%s/%s" % [format_num(clever_round(rsrc_available, 3), threshold / 2), format_num(clever_round(rsrc_cost, 3), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
@@ -30,7 +30,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 		else:
 			color = Color(1.0, 0.0, 0.0, 1.0)
 	else:
-		if path == "Icons/stone":
+		if path == "Icons/stone" and rsrc_cost is Dictionary:
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
 		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3), threshold)
 		if rsrc_cost == 0:
@@ -195,6 +195,8 @@ func get_dir_from_name(_name:String):
 	match _name:
 		"fertilizer":
 			return "Agriculture"
+		"mining_liquid":
+			return "Mining"
 		"money":
 			return "Icons"
 		"minerals":
@@ -213,6 +215,8 @@ func get_type_from_name(_name:String):
 	match _name:
 		"fertilizer":
 			return "craft_agriculture_info"
+		"mining_liquid":
+			return "craft_mining_info"
 	if _name.split("_")[1] == "seeds":
 		return "craft_agriculture_info"
 	return ""
@@ -405,7 +409,7 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		tween.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
-	var min_cap = game.mineral_capacity * get_IR_mult("MS")
+	var min_cap = 200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS")
 	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
@@ -479,7 +483,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
 		elif content == "ship_locator":
-			if not game.objective.empty() and game.objective.type == game.ObjectiveType.SIGNAL:
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.SIGNAL and game.objective.id == 11:
 				game.objective.current += 1
 			game.second_ship_hints.ship_locator = true
 			tile.erase("ship_locator_depth")

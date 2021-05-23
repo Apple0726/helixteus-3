@@ -78,6 +78,8 @@ func _on_Upgrade_pressed(MU:String):
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
 		refresh()
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
+			game.objective.current += 1
 		game.HUD.refresh()
 		if MU == "AIE" and game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
 			game.mining_HUD.refresh_aurora_bonus()

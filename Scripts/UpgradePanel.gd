@@ -11,8 +11,8 @@ var auto_speedup:bool = false
 onready var path1 = $UpgradePanel/PathButtons/Path1
 onready var path2 = $UpgradePanel/PathButtons/Path2
 onready var path3 = $UpgradePanel/PathButtons/Path3
-onready var next_lv = $UpgradePanel/Control2/NextLv
-onready var current_lv = $UpgradePanel/Control2/CurrentLv
+onready var next_lv = $UpgradePanel/NextLv
+onready var current_lv = $UpgradePanel/CurrentLv
 onready var next = $UpgradePanel/Next
 onready var current = $UpgradePanel/Current
 onready var cost_icons = $UpgradePanel/ScrollContainer/Costs
@@ -126,7 +126,7 @@ func update():
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		else:
-			curr_value = game.clever_round(curr_value, 3)
+			curr_value = Helper.clever_round(curr_value, 3)
 		if not planet.empty():
 			curr_value *= num
 		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], rsrc_icon, 20)
@@ -147,17 +147,17 @@ func update():
 	if first_tile_bldg_info.is_value_integer:
 		next_value = round(next_value)
 	else:
-		next_value = game.clever_round(next_value, 3)
+		next_value = Helper.clever_round(next_value, 3)
 	if not planet.empty():
 		next_value *= num
 	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], rsrc_icon, 20)
-	var icons = Helper.put_rsrc(cost_icons, 32, costs)
+	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 
 func bldg_value(base_value, lv:int, pw:float = 1.15):
-	return game.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1), 3)
+	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1), 3)
 
 func _on_Path1_pressed():
 	path_selected = 1
@@ -235,6 +235,8 @@ func _on_Upgrade_pressed():
 				tile.bldg.construction_length = cost_time * 1000.0
 				tile.bldg.is_constructing = true
 				game.view.obj.add_time_bar(id, "bldg")
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.UPGRADE:
+				game.objective.current += 1
 		else:
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
 			var base_costs = Data.costs[planet.bldg.name]
@@ -253,8 +255,7 @@ func _on_Upgrade_pressed():
 			planet.bldg[path_str + "_value"] = new_value
 			game.xp += round(cost_money / 100.0)
 			game.view.obj.refresh_planets()
-			game.HUD.refresh()
-			
+		game.HUD.refresh()
 		game.remove_upgrade_panel()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)

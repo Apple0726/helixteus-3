@@ -3,15 +3,14 @@ extends "GenericPanel.gd"
 func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
-	for btn_str in ["Agriculture"]:
+	for btn_str in ["Mining", "Agriculture"]:
 		var btn = Button.new()
 		btn.name = btn_str
 		btn.text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$Tabs.add_child(btn)
-	if game.science_unlocked.SA:
-		_on_btn_pressed("Agriculture")
+	_on_btn_pressed("Mining")
 	buy_btn.text = tr("CRAFT")
 	buy_btn.icon = load("res://Graphics/Icons/craft.png")
 
@@ -33,6 +32,9 @@ func _on_btn_pressed(btn_str:String):
 			if craft_info.has("grow_time"):
 				desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time)]
 				desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
+		elif btn_str == "Mining":
+			desc += "\n%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
+			desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
 		item.item_desc = desc
 		item.costs = craft_info.costs
 		item.parent = "craft_panel"
@@ -40,7 +42,7 @@ func _on_btn_pressed(btn_str:String):
 
 func refresh():
 	$Tabs/Agriculture.visible = game.science_unlocked.SA
-	if tab == "agriculture" and item_name != "":
+	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name), item_costs, item_type, item_dir)
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
@@ -72,3 +74,4 @@ func get_item_desc(item:String):
 			return tr("FERTILIZER_DESC")
 	if item.split("_")[1] == "seeds":
 		return tr("SEEDS_DESC") % [game.craft_agriculture_info[item].produce]
+	return ""

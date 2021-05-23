@@ -34,7 +34,7 @@ func _on_Construct_pressed():
 			if game.tutorial.visible and not game.construct_panel.visible and game.tutorial.tut_num in [2, 3, 4]:
 				game.tutorial.fade(0.15)
 				game.toggle_panel(game.construct_panel)
-			if not game.tutorial.tut_num in [2, 3, 4, 5]:
+			if not game.tutorial.tut_num in [2, 3, 4, 5] or not game.tutorial.visible and game.tutorial.tut_num == 4 and game.bottom_info_action == "":
 				game.toggle_panel(game.construct_panel)
 		else:
 			game.toggle_panel(game.construct_panel)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -10,7 +10,6 @@
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=10]
-[ext_resource path="res://Scripts/Slider.gd" type="Script" id=11]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=12]
 
 [sub_resource type="DynamicFont" id=1]
@@ -132,7 +131,6 @@ margin_bottom = 40.0
 focus_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-script = ExtResource( 11 )
 
 [node name="TextureRect" type="TextureRect" parent="Control/HBoxContainer"]
 margin_left = 312.0
@@ -238,6 +236,7 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Control/Button" to="." method="_on_Button_pressed"]
 [connection signal="value_changed" from="Control/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]

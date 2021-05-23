@@ -94,6 +94,8 @@ func _on_Terraform_pressed():
 		var dir = Directory.new()
 		dir.remove("user://Save1/Planets/%s.hx3" % [game.c_p_g])
 		game.popup(tr("TF_SUCCESS"), 2)
+		if not game.objective.empty() and game.objective.type == game.ObjectiveTypes.TERRAFORM:
+			game.objective.current += 1
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)

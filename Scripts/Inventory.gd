@@ -88,6 +88,15 @@ func on_slot_press(name:String):
 		elif game.craft_agriculture_info[name].has("speed_up_time"):
 			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
 			game.item_to_use.type = "fertilizer"
+	elif type == "craft_mining_info":
+		game.remove_items(name)
+		game.pickaxe.speed_mult = game.craft_mining_info[name].speed_mult
+		game.pickaxe.liquid_dur = game.craft_mining_info[name].durability
+		game.pickaxe.liquid_name = name
+		if game.active_panel == self:
+			game.toggle_panel(self)
+		game.popup("SUCCESSFULLY_APPLIED", 1.5)
+		return
 	elif type == "speedups_info":
 		if game.c_v == "system" and game.science_unlocked.MAE:
 			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
@@ -114,8 +123,8 @@ func on_slot_press(name:String):
 			else:
 				game.popup(tr("NO_SHIPS_2"), 1.5)
 				return
-	if game.active_panel == game.inventory:
-		game.toggle_panel(game.inventory)
+	if game.active_panel == self:
+		game.toggle_panel(self)
 	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
 	game.show_item_cursor(texture)
 
