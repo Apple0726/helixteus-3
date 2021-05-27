@@ -6,6 +6,7 @@ var metal:String
 var ratios:Dictionary
 var difficulty:float#Amount of time per unit of atom/metal
 var energy_cost:float
+var au_mult:float
 var MM:String
 var reaction:String = ""
 var atom_costs:Dictionary = {}
@@ -73,7 +74,7 @@ func _on_stone_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"stone":0})
 	metal = "stone"
-	energy_cost = 500
+	energy_cost = 100
 	difficulty = 0.01
 	_on_Switch_pressed()
 	$Control/Switch.visible = false
@@ -198,6 +199,9 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 
 func refresh():
 	tile = game.tile_data[game.c_t]
+	au_mult = Helper.get_au_mult(tile)
+	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult))
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / tile.bldg.path_1_value)
 	for reaction_name in reactions:
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
@@ -280,8 +284,6 @@ func _on_HSlider_value_changed(value):
 	MM_dict[metal] = value
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, atom_to_MM)
 	Helper.put_rsrc($Control2/To, 32, MM_dict, true, not atom_to_MM)
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * value))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * value * 1000 / tile.bldg.path_1_value)
 	refresh()
 
 func _on_Transform_pressed():
@@ -307,7 +309,7 @@ func _on_Transform_pressed():
 					rsrc_to_add[metal][atom] = max(0, tile.bldg.qty - MM_value) * tile.bldg.AMN_stone[atom] / sum
 			else:
 				rsrc_to_add[metal] = max(0, tile.bldg.qty - MM_value)
-		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile.bldg.qty)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult * tile.bldg.qty)
 		game.add_resources(rsrc_to_add)
 		tile.bldg.erase("qty")
 		tile.bldg.erase("start_date")
@@ -327,7 +329,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct = atom_costs.duplicate(true)
 		else:
 			rsrc_to_deduct[metal] = rsrc
-		rsrc_to_deduct.energy = round(energy_cost * rsrc)
+		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
@@ -358,17 +360,17 @@ func _process(delta):
 	if tile.bldg.atom_to_MM:
 		MM_dict[metal] = MM_value
 		for atom in atom_dict:
-			atom_dict[atom] = game.clever_round(max(0, tile.bldg.qty - MM_value) * ratios[atom])
+			atom_dict[atom] = Helper.clever_round(max(0, tile.bldg.qty - MM_value) * ratios[atom])
 	else:
 		MM_dict[metal] = max(0, tile.bldg.qty - MM_value)
 		if metal == "stone":
 			var sum = Helper.get_sum_of_dict(tile.bldg.AMN_stone)
 			for atom in atom_costs:
 				if game.stone.has(atom):
-					atom_dict[atom] = game.clever_round(MM_value * ratios[atom] * tile.bldg.AMN_stone[atom] / sum)
+					atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom] * tile.bldg.AMN_stone[atom] / sum)
 		else:
 			for atom in atom_dict:
-				atom_dict[atom] = game.clever_round(MM_value * ratios[atom])
+				atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom])
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))

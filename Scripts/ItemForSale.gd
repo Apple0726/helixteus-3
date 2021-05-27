@@ -18,7 +18,7 @@ func _on_Button_pressed():
 	game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 
 func _on_SmallButton_pressed():
-	#var total_costs = costs.duplicate(true)
+	game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 	game[parent].item_costs = costs.duplicate(true)
 	if not parent in ["construct_panel", "megastructures_panel"]:
 		if parent == "shop_panel" and game[parent].tab == "Pickaxes":

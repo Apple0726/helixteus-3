@@ -7,8 +7,8 @@
 [ext_resource path="res://Scripts/FloatAnim.gd" type="Script" id=5]
 [ext_resource path="res://Graphics/Ships/Ship1.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Ships/Ship2.png" type="Texture" id=7]
-[ext_resource path="res://Graphics/Effects/spotlight_5.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Planets/BGs/10.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Planets/BGs/9.png" type="Texture" id=9]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
 [ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=11]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=12]
@@ -86,7 +86,7 @@ __meta__ = {
 
 [node name="Star" type="Sprite" parent="."]
 modulate = Color( 1, 0.960784, 0.564706, 1 )
-position = Vector2( 888, 184 )
+position = Vector2( 1048, 420 )
 scale = Vector2( 0.3125, 0.3125 )
 texture = ExtResource( 8 )
 

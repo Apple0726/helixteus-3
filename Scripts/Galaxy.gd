@@ -1,6 +1,7 @@
 extends Node2D
 
 onready var game = self.get_parent().get_parent()
+var star_texture = preload("res://Graphics/Stars/Star.png")
 
 var dimensions:float
 
@@ -15,9 +16,8 @@ func _ready():
 		var star = s_i["stars"][0]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
-		var star_texture = preload("res://Graphics/Stars/Star.png")
 		star_btn.texture_normal = star_texture
-		star_btn.modulate = game.get_star_modulate(star["class"])
+		star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
@@ -42,7 +42,7 @@ func _ready():
 			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays)
-	if game.overlay:
+	if is_instance_valid(game.overlay):
 		game.overlay.refresh_overlay()
 
 func on_system_over (l_id:int):
@@ -161,3 +161,49 @@ func collect_all():
 			yield(get_tree().create_timer(0.02 * game.collect_speed_lag_ratio), "timeout")
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()
+
+const Y9 = Color(25, 0, 0, 255) / 255.0
+const Y0 = Color(66, 0, 0, 255) / 255.0
+const T0 = Color(117, 0, 0, 255) / 255.0
+const L0 = Color(189, 32, 23, 255) / 255.0
+const M0 = Color(255, 181, 108, 255) / 255.0
+const K0 = Color(255, 218, 181, 255) / 255.0
+const G0 = Color(255, 237, 227, 255) / 255.0
+const F0 = Color(249, 245, 255, 255) / 255.0
+const A0 = Color(213, 224, 255, 255) / 255.0
+const B0 = Color(162, 192, 255, 255) / 255.0
+const O0 = Color(140, 177, 255, 255) / 255.0
+const Q0 = Color(134, 255, 117, 255) / 255.0
+const R0 = Color(255, 151, 255, 255) / 255.0
+
+func get_star_modulate (star_class:String):
+	var w = int(star_class[1]) / 10.0#weight for lerps
+	var m:Color
+	match star_class[0]:
+		"Y":
+			m = lerp(Y0, Y9, w)
+		"T":
+			m = lerp(T0, Y0, w)
+		"L":
+			m = lerp(L0, T0, w)
+		"M":
+			m = lerp(M0, L0, w)
+		"K":
+			m = lerp(K0, M0, w)
+		"G":
+			m = lerp(G0, K0, w)
+		"F":
+			m = lerp(F0, G0, w)
+		"A":
+			m = lerp(A0, F0, w)
+		"B":
+			m = lerp(B0, A0, w)
+		"O":
+			m = lerp(O0, B0, w)
+		"Q":
+			m = lerp(Q0, O0, w)
+		"R":
+			m = lerp(R0, Q0, w)
+		"Z":
+			m = Color(0.05, 0.05, 0.05, 1)
+	return m

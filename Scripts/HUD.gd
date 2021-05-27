@@ -7,6 +7,7 @@ onready var minerals_text = $Resources/Minerals/Text
 onready var stone_text = $Resources/Stone/Text
 onready var soil_text = $Resources/Soil/Text
 onready var energy_text = $Resources/Energy/Text
+onready var glass_text = $Resources/Glass/Text
 onready var SP_text = $Resources/SP/Text
 onready var minerals = $Resources/Minerals
 onready var stone = $Resources/Stone
@@ -86,6 +87,12 @@ func refresh():
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil, 3), 6) + " kg"
+	if $Resources/Glass.visible:
+		if game.mats.glass >= Data.costs.GH.glass:
+			glass_text["custom_colors/font_color"] = Color.green
+		else:
+			glass_text["custom_colors/font_color"] = Color.red
+		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass, 3), 6), Data.costs.GH.glass]
 	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
@@ -436,3 +443,11 @@ func _on_Emma_pressed():
 	else:
 		$Dialogue.dialogue_id = 7
 	$Dialogue.show_dialogue()
+
+
+func _on_Wiki_mouse_entered():
+	game.show_tooltip(tr("INGAME_WIKI"))
+
+
+func _on_Wiki_pressed():
+	game.toggle_panel(game.wiki)

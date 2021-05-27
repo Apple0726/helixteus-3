@@ -73,10 +73,10 @@ __meta__ = {
 [node name="CostLabel" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -296.0
-margin_top = 212.0
-margin_right = -176.0
-margin_bottom = 236.0
+margin_left = -320.0
+margin_top = 208.0
+margin_right = -200.0
+margin_bottom = 232.0
 text = "Cost"
 align = 1
 __meta__ = {
@@ -84,7 +84,7 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 128.0
+margin_left = 104.0
 margin_top = 204.0
 margin_right = 480.0
 margin_bottom = 236.0
@@ -96,7 +96,7 @@ __meta__ = {
 [node name="Cost" parent="ScrollContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 352.0
+margin_right = 376.0
 margin_bottom = 32.0
 
 [node name="Select" type="Button" parent="."]

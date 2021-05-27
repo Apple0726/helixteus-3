@@ -31,7 +31,7 @@ var icons_hidden:bool = false#To save performance
 
 onready var wid:int = round(Helper.get_wid(p_i.size))
 #A rectangle enclosing all tiles
-onready var planet_bounds:PoolVector2Array = [Vector2.ZERO, Vector2(0, wid * 200), Vector2(wid * 200, wid * 200), Vector2(wid * 200, 0)]
+onready var planet_bounds:PoolVector2Array = [Vector2.ONE, Vector2(1, wid * 200), Vector2(wid * 200, wid * 200), Vector2(wid * 200, 1)]
 
 var mass_build_rect:NinePatchRect
 var mass_build_rect_size:Vector2
@@ -83,7 +83,7 @@ func _ready():
 			if tile.has("aurora"):
 				var aurora = game.aurora_scene.instance()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.get_node("Particles2D").amount = min(10 + int(tile.aurora.au_int * 10), 50)
+				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
 				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
 				aurora.modulate.a = 0.5
@@ -113,7 +113,7 @@ func _ready():
 				elif len(game.ship_data) == 2:
 					$Obstacles.set_cell(i, j, 10)
 			if tile.has("wormhole"):
-				wormhole = load("res://Scenes/Wormhole.tscn").instance()
+				wormhole = game.wormhole_scene.instance()
 				wormhole.get_node("Active").visible = tile.wormhole.active
 				wormhole.get_node("Inactive").visible = not tile.wormhole.active
 				wormhole.position = Vector2(i, j) * 200 + Vector2(100, 100)
@@ -393,8 +393,7 @@ func harvest_plant(tile, tile_id:int):
 		remove_child(plant_sprites[String(tile_id)])
 		plant_sprites[String(tile_id)].queue_free()
 
-func speedup_bldg(tile, tile_id:int):
-	var curr_time = OS.get_system_time_msecs()
+func speedup_bldg(tile, tile_id:int, curr_time):
 	if tile.bldg.is_constructing:
 		var speedup_time = game.speedups_info[game.item_to_use.name].time
 		#Time remaining to finish construction
@@ -412,14 +411,14 @@ func speedup_bldg(tile, tile_id:int):
 			tile.bldg.start_date -= time_sped_up
 		game.item_to_use.num -= num_needed
 
-func overclock_bldg(tile, tile_id:int):
-	var curr_time = OS.get_system_time_msecs()
-	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing:
+func overclock_bldg(tile, tile_id:int, curr_time):
+	var mult:float = game.overclocks_info[game.item_to_use.name].mult
+	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult <= mult):
 		if not tile.bldg.has("overclock_mult"):
 			add_time_bar(tile_id, "overclock")
 		tile.bldg.overclock_date = curr_time
 		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration
-		tile.bldg.overclock_mult = game.overclocks_info[game.item_to_use.name].mult
+		tile.bldg.overclock_mult = mult
 		var coll_date = tile.bldg.collect_date
 		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
@@ -691,10 +690,10 @@ func _input(event):
 				if t in ["speedup", "overclock"]:
 					var orig_num:int = game.item_to_use.num
 					if tiles_selected.empty():
-						call("%s_bldg" % [t], tile, tile_id)
+						call("%s_bldg" % [t], tile, tile_id, curr_time)
 					else:
 						for _tile in tiles_selected:
-							call("%s_bldg" % [t], game.tile_data[_tile], _tile)
+							call("%s_bldg" % [t], game.tile_data[_tile], _tile, curr_time)
 							if game.item_to_use.num <= 0:
 								break
 					game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
@@ -769,7 +768,6 @@ func _input(event):
 					Helper.update_ship_travel()
 					if Helper.ships_on_planet(id):
 						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
-							tile.wormhole.new = false
 							visible = false
 							if game.galaxy_data[game.c_g].has("wormholes"):
 								game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
@@ -799,6 +797,7 @@ func _input(event):
 							game.planet_data[wh_planet.l_id].conquered = true
 							game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 							game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
+							game.tile_data[tile_id].wormhole.new = false
 							Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
 							game.c_p = wh_planet.l_id
 							game.c_p_g = wh_planet.id
@@ -864,12 +863,6 @@ func available_to_build(tile):
 	if bldg_to_construct == "GH":
 		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
-#
-#func mine_tile(id2:int):
-#	game.c_t = id2
-#	if game.tutorial and game.tutorial.tut_num == 15 and game.objective.empty():
-#		game.objective = {"type":game.ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
-#	game.switch_view("mining")
 
 func check_lake(local_id:int):
 # warning-ignore:integer_division
@@ -1091,6 +1084,8 @@ func construct(st:String, costs:Dictionary):
 	constr_costs = costs
 	shadow = Sprite.new()
 	put_shadow(shadow)
+	if st == "GH":
+		game.HUD.get_node("Resources/Glass").visible = true
 	game.HUD.refresh()
 
 func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):

@@ -231,7 +231,7 @@ func pickaxe_hit():
 		help_counter += 1
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
-	place_crumbles(5, 0.1, 1)
+	place_crumbles(3, 0.1, 1)
 	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_dur"):
@@ -266,7 +266,7 @@ func pickaxe_hit():
 			game.show.mining_layer = true
 			$LayerAnim.play("Layer fade")
 			$LayerInfo.visible = true
-		place_crumbles(15, 0.2, 2)
+		place_crumbles(10, 0.2, 2)
 		game.HUD.refresh()
 	update_info()
 	update_pickaxe()
@@ -287,7 +287,7 @@ func pickaxe_hit():
 
 func _process(delta):
 	for cr in crumbles:
-		cr.sprite.position += cr.velocity
+		cr.sprite.position += cr.velocity * delta * 60
 		cr.velocity.y += 0.6 * delta * 60
 		cr.sprite.rotation += cr.angular_velocity * delta * 60
 		if cr.sprite.position.y > 1000:

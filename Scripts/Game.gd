@@ -29,6 +29,7 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 var orbit_scene = preload("res://Scenes/Orbit.tscn")
+var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
@@ -64,6 +65,7 @@ var dimension:Control
 var planet_details:Control
 var overlay:Control
 var annotator:Control
+var wiki:Control
 onready var tooltip:Control = $Tooltips/Tooltip
 onready var adv_tooltip:Control = $Tooltips/AdvTooltip
 onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
@@ -210,13 +212,13 @@ var STM
 var battle
 var is_conquering_all:bool = false
 
-var mat_info = {	"coal":{"value":10},#One kg of coal = $10
-					"glass":{"value":100},
-					"sand":{"value":4},
+var mat_info = {	"coal":{"value":15},#One kg of coal = $10
+					"glass":{"value":1000},
+					"sand":{"value":8},
 					#"clay":{"value":12},
-					"soil":{"value":6},
-					"cellulose":{"value":30},
-					"silicon":{"value":50},
+					"soil":{"value":14},
+					"cellulose":{"value":100},
+					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
 var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
@@ -240,13 +242,13 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
 					"wooden_pickaxe":{"speed":1.8, "durability":300, "costs":{"money":2700}},
-					"stone_pickaxe":{"speed":3.0, "durability":500, "costs":{"money":12000}},
-					"lead_pickaxe":{"speed":4.9, "durability":600, "costs":{"money":95000}},
+					"stone_pickaxe":{"speed":3.0, "durability":500, "costs":{"money":24000}},
+					"lead_pickaxe":{"speed":4.9, "durability":600, "costs":{"money":115000}},
 					"copper_pickaxe":{"speed":7.4, "durability":600, "costs":{"money":580000}},
-					"iron_pickaxe":{"speed":11.2, "durability":900, "costs":{"money":2840000}},
-					"aluminium_pickaxe":{"speed":17.8, "durability":800, "costs":{"money":10200000}},
-					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":60000000}},
-					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(4.25, 8)}},
+					"iron_pickaxe":{"speed":11.2, "durability":900, "costs":{"money":4350000}},
+					"aluminium_pickaxe":{"speed":17.8, "durability":800, "costs":{"money":20500000}},
+					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":e(8, 7)}},
+					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(6.25, 8)}},
 					"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
 					"platinum_pickaxe":{"speed":175.0, "durability":1200, "costs":{"money":e(8.2, 9)}},
 					"titanium_pickaxe":{"speed":180.0, "durability":2500, "costs":{"money":e(1.45, 10)}},
@@ -928,6 +930,10 @@ func add_panels():
 	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
 	planetkiller_panel = load("res://Scenes/Panels/PlanetkillerPanel.tscn").instance()
+	wiki = load("res://Scenes/Panels/Wiki.tscn").instance()
+	
+	wiki.visible = false
+	$Panels/Control.add_child(wiki)
 	
 	planetkiller_panel.visible = false
 	$Panels/Control.add_child(planetkiller_panel)
@@ -1571,7 +1577,6 @@ func remove_planet(save_zooms:bool = true):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
-	#$UI/BottomInfo.visible = false
 	remove_child(planet_HUD)
 	planet_HUD.queue_free()
 
@@ -2306,11 +2311,11 @@ func generate_planets(id:int):#local id
 						lv = 1
 				if num == 12:
 					lv = ceil(0.9 * log(power) / log(1.2))
-				var HP = round(rand_range(0.8, 1.2) * 25 * pow(1.16, lv - 1))
+				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
 				var def = Helper.rand_int(3, 10)
 				var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
-				var acc = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
-				var eva = round(rand_range(0.8, 1.2) * 10 * pow(1.15, lv - 1))
+				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
+				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
 				p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
@@ -2979,52 +2984,6 @@ func get_star_class (temp):
 		cl = "Z"
 	return cl
 
-const Y9 = Color(25, 0, 0, 255) / 255.0
-const Y0 = Color(66, 0, 0, 255) / 255.0
-const T0 = Color(117, 0, 0, 255) / 255.0
-const L0 = Color(189, 32, 23, 255) / 255.0
-const M0 = Color(255, 181, 108, 255) / 255.0
-const K0 = Color(255, 218, 181, 255) / 255.0
-const G0 = Color(255, 237, 227, 255) / 255.0
-const F0 = Color(249, 245, 255, 255) / 255.0
-const A0 = Color(213, 224, 255, 255) / 255.0
-const B0 = Color(162, 192, 255, 255) / 255.0
-const O0 = Color(140, 177, 255, 255) / 255.0
-const Q0 = Color(134, 255, 117, 255) / 255.0
-const R0 = Color(255, 151, 255, 255) / 255.0
-
-func get_star_modulate (star_class:String):
-	var w = int(star_class[1]) / 10.0#weight for lerps
-	var m:Color
-	match star_class[0]:
-		"Y":
-			m = lerp(Y0, Y9, w)
-		"T":
-			m = lerp(T0, Y0, w)
-		"L":
-			m = lerp(L0, T0, w)
-		"M":
-			m = lerp(M0, L0, w)
-		"K":
-			m = lerp(K0, M0, w)
-		"G":
-			m = lerp(G0, K0, w)
-		"F":
-			m = lerp(F0, G0, w)
-		"A":
-			m = lerp(A0, F0, w)
-		"B":
-			m = lerp(B0, A0, w)
-		"O":
-			m = lerp(O0, B0, w)
-		"Q":
-			m = lerp(Q0, O0, w)
-		"R":
-			m = lerp(R0, Q0, w)
-		"Z":
-			m = Color(0.05, 0.05, 0.05, 1)
-	return m
-
 #Checks if player has enough resources to buy/craft/build something
 func check_enough(costs):
 	var enough = true
@@ -3299,7 +3258,7 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel and not overlay:
+	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not is_instance_valid(upgrade_panel) and not is_instance_valid(overlay):
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
@@ -3432,6 +3391,7 @@ func hide_item_cursor():
 	
 func cancel_building():
 	view.obj.finish_construct()
+	HUD.get_node("Resources/Glass").visible = false
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
@@ -3487,7 +3447,6 @@ func _on_BottomInfo_close_button_pressed(direct:bool = false):
 			b_i_tween.remove_all()
 			b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 720), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
 			b_i_tween.start()
-			print(b_i_tween.get_runtime())
 			yield(b_i_tween, "tween_all_completed")
 		$UI/BottomInfo.visible = false
 

@@ -61,7 +61,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		elif obj == "SP":
 			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
 		elif obj == "time":
-			texture.texture_normal = load("res://Graphics/Icons/Time.png")
+			texture.texture_normal = Data.time_icon
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
 			if obj == "silicon" and not game.show.silicon:
@@ -322,8 +322,9 @@ func get_prod_info(tile_obj):
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
+var overlay_rsrc = preload("res://Graphics/Elements/Default.png")
 func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
-	var overlay_texture = preload("res://Graphics/Elements/Default.png")
+	var overlay_texture = overlay_rsrc
 	var overlay = TextureButton.new()
 	overlay.texture_normal = overlay_texture
 	overlay.visible = false
@@ -378,9 +379,10 @@ func set_back_btn(back_btn, set_text:bool = true):
 	if set_text:
 		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
 
+var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
 func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
-	lb["custom_fonts/font"] = load("res://Resources/DamageText.tres")
+	lb["custom_fonts/font"] = dmg_txt_rsrc
 	if missed:
 		lb["custom_colors/font_color"] = Color(1, 1, 0, 1)
 		lb.text = tr("MISSED")
@@ -961,10 +963,12 @@ func get_conquer_all_data():
 	var energy_cost = round(14000 * game.planet_data[-1].distance)
 	return {"HX_data":HX_data, "energy_cost":energy_cost}
 
+var hbox_theme = preload("res://Resources/panel_theme.tres")
+var text_border_theme = preload("res://Resources/TextBorder.tres")
 func add_lv_boxes(obj:Dictionary, v:Vector2):
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
-	hbox.theme = load("res://Resources/panel_theme.tres")
+	hbox.theme = hbox_theme
 	hbox["custom_constants/separation"] = -1
 	if obj.bldg.has("path_1"):
 		var path_1 = Label.new()
@@ -972,7 +976,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2):
 		path_1.text = String(obj.bldg.path_1)
 		path_1.connect("mouse_entered", self, "on_path_enter", ["1", obj])
 		path_1.connect("mouse_exited", self, "on_path_exit")
-		path_1["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		path_1["custom_styles/normal"] = text_border_theme
 		hbox.add_child(path_1)
 		hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
 		path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
@@ -982,7 +986,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2):
 		path_2.text = String(obj.bldg.path_2)
 		path_2.connect("mouse_entered", self, "on_path_enter", ["2", obj])
 		path_2.connect("mouse_exited", self, "on_path_exit")
-		path_2["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		path_2["custom_styles/normal"] = text_border_theme
 		path_2.mouse_filter = path_2.MOUSE_FILTER_PASS
 		hbox.add_child(path_2)
 	if obj.bldg.has("path_3"):
@@ -991,7 +995,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2):
 		path_3.text = String(obj.bldg.path_3)
 		path_3.connect("mouse_entered", self, "on_path_enter", ["3", obj])
 		path_3.connect("mouse_exited", self, "on_path_exit")
-		path_3["custom_styles/normal"] = load("res://Resources/TextBorder.tres")
+		path_3["custom_styles/normal"] = text_border_theme
 		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
 		hbox.add_child(path_3)
 	hbox.rect_size.x = 200
@@ -1011,3 +1015,49 @@ func clever_round (num:float, sd:int = 4):#sd: significant digits
 	if sd < e + 1:
 		return round(num)
 	return stepify(num, pow(10, e - sd + 1))
+
+const Y9 = Color(25, 0, 0, 255) / 255.0
+const Y0 = Color(66, 0, 0, 255) / 255.0
+const T0 = Color(117, 0, 0, 255) / 255.0
+const L0 = Color(189, 32, 23, 255) / 255.0
+const M0 = Color(255, 181, 108, 255) / 255.0
+const K0 = Color(255, 218, 181, 255) / 255.0
+const G0 = Color(255, 237, 227, 255) / 255.0
+const F0 = Color(249, 245, 255, 255) / 255.0
+const A0 = Color(213, 224, 255, 255) / 255.0
+const B0 = Color(162, 192, 255, 255) / 255.0
+const O0 = Color(140, 177, 255, 255) / 255.0
+const Q0 = Color(134, 255, 117, 255) / 255.0
+const R0 = Color(255, 151, 255, 255) / 255.0
+
+func get_star_modulate (star_class:String):
+	var w = int(star_class[1]) / 10.0#weight for lerps
+	var m:Color
+	match star_class[0]:
+		"Y":
+			m = lerp(Y0, Y9, w)
+		"T":
+			m = lerp(T0, Y0, w)
+		"L":
+			m = lerp(L0, T0, w)
+		"M":
+			m = lerp(M0, L0, w)
+		"K":
+			m = lerp(K0, M0, w)
+		"G":
+			m = lerp(G0, K0, w)
+		"F":
+			m = lerp(F0, G0, w)
+		"A":
+			m = lerp(A0, F0, w)
+		"B":
+			m = lerp(B0, A0, w)
+		"O":
+			m = lerp(O0, B0, w)
+		"Q":
+			m = lerp(Q0, O0, w)
+		"R":
+			m = lerp(R0, Q0, w)
+		"Z":
+			m = Color(0.05, 0.05, 0.05, 1)
+	return m

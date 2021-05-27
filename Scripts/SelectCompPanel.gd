@@ -116,7 +116,7 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 			border.name = "border"
 		elif slot.has_node("border"):
 			slot.remove_child(slot.get_node("border"))
-	Helper.put_rsrc($ScrollContainer/Cost, 36, Data[type][cmp].costs)
+	Helper.put_rsrc($ScrollContainer/Cost, 36, Data[type][cmp].costs, true, true)
 	s_cmp = cmp
 
 func _input(event):

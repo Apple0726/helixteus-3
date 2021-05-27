@@ -23,4 +23,3 @@ func _on_TextureButton_mouse_entered():
 func _on_TextureButton_mouse_exited():
 	emit_signal("close_button_out")
 	game.hide_tooltip()
-

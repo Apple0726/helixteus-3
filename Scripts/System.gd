@@ -138,7 +138,7 @@ func refresh_stars():
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
 		star.connect("pressed", self, "on_star_pressed", [i])
-		star.modulate = game.get_star_modulate(star_info["class"])
+		star.modulate = Helper.get_star_modulate(star_info["class"])
 		star.add_to_group("stars")
 		if star_info.has("MS"):
 			var MS = Sprite.new()
@@ -174,7 +174,7 @@ func show_M_SE_costs(p_i:Dictionary):
 		if cost != "energy":
 			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0)
 		else:
-			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 12000.0 * pow(max(0.25, p_i.pressure), 1.1))
+			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1))
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 

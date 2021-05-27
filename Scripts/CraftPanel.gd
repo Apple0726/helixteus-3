@@ -27,14 +27,7 @@ func _on_btn_pressed(btn_str:String):
 		item.item_name = craft
 		item.item_dir = btn_str
 		item.item_type = info
-		var desc:String = get_item_desc(craft)
-		if btn_str == "Agriculture":
-			if craft_info.has("grow_time"):
-				desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time)]
-				desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
-		elif btn_str == "Mining":
-			desc += "\n%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
-			desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
+		var desc:String = get_item_desc(craft, btn_str, craft_info)
 		item.item_desc = desc
 		item.costs = craft_info.costs
 		item.parent = "craft_panel"
@@ -43,7 +36,7 @@ func _on_btn_pressed(btn_str:String):
 func refresh():
 	$Tabs/Agriculture.visible = game.science_unlocked.SA
 	if item_name != "":
-		set_item_info(item_name, get_item_desc(item_name), item_costs, item_type, item_dir)
+		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, _desc, costs, _type, _dir)
@@ -68,10 +61,19 @@ func get_item(_name, _type, _dir):
 func _on_Buy_pressed():
 	get_item(item_name, item_type, item_dir)
 
-func get_item_desc(item:String):
-	match item:
-		"fertilizer":
-			return tr("FERTILIZER_DESC")
-	if item.split("_")[1] == "seeds":
-		return tr("SEEDS_DESC") % [game.craft_agriculture_info[item].produce]
-	return ""
+func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
+	var desc:String = ""
+	if item == "fertilizer":
+		desc = tr("FERTILIZER_DESC")
+	else:
+		var item_arr = item.split("_")
+		if len(item_arr) > 1 and item_arr[1] == "seeds":
+			desc = tr("SEEDS_DESC") % [game.craft_agriculture_info[item].produce]
+	if btn_str == "Agriculture":
+		if craft_info.has("grow_time"):
+			desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time)]
+			desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
+	elif btn_str == "Mining":
+		desc += "%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
+		desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
+	return desc

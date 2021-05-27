@@ -2,7 +2,6 @@ extends KinematicBody2D
 
 onready var game = self.get_parent()
 onready var ship:TextureButton = game.get_node("Ship")
-var obj_scene
 var obj
 var shapes = []
 var shapes_data = []
@@ -74,8 +73,12 @@ func _process(delta):
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos
 		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
-		green_line.points[1] = pos
-		ship.rect_position = to_global(pos) - Vector2(32, 22)
+		if game.ships_travel_view == "-":
+			green_line.visible = false
+			red_line.visible = false
+		else:
+			green_line.points[1] = pos
+			ship.rect_position = to_global(pos) - Vector2(32, 22)
 	else:
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
@@ -122,7 +125,7 @@ func _process(delta):
 					break
 	if drawing_shape:
 		update()
-	if obj and obj.dimensions:
+	if is_instance_valid(obj) and obj.dimensions:
 		var margin = obj.dimensions * scale.x
 		var right_margin = global_position.x + margin
 		var bottom_margin = global_position.y + margin
@@ -148,7 +151,7 @@ func _process(delta):
 				global_position.y = 100 - margin
 
 func _draw():
-	if game.annotator:
+	if is_instance_valid(game.annotator):
 		for shape in shapes_data:
 			if shape.shape == "line":
 				draw_line(shape.points.start, shape.points.end, shape.color, shape.width, true)
@@ -221,7 +224,7 @@ func refresh():
 		show_ship = game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
 		show_ship = game.ships_c_g_coords.s == game.c_s_g
-	var show_lines = show_ship and game.ships_travel_view == game.c_v
+	var show_lines = show_ship and game.ships_travel_view == game.c_v and game.ships_travel_view != ""
 	red_line.visible = show_lines
 	green_line.visible = show_lines
 	ship.visible = show_ship and len(game.ship_data) >= 1
@@ -266,8 +269,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale_mult = s_m
 	scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
 	scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
-	obj_scene = load("res://Scenes/Views/" + obj_str + ".tscn")
-	obj = obj_scene.instance()
+	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instance()
 	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
@@ -279,8 +281,7 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
 		save_zooms(obj_str)
 	self.remove_child(obj)
-	obj_scene = null
-	obj = null
+	obj.queue_free()
 	red_line.visible = false
 	green_line.visible = false
 	annotate_icon.texture = null
@@ -314,7 +315,7 @@ func save_zooms(obj_str:String):
 var first_zoom:bool = false
 #Executed every tick
 func _physics_process(_delta):
-	if not obj:
+	if not is_instance_valid(obj):
 		return
 	#Moving tiles code
 	var input_vector = Vector2.ZERO
@@ -436,7 +437,7 @@ func _input(event):
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
-	if limit_to_viewport and obj and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1:
+	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1:
 		return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)

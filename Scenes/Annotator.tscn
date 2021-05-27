@@ -97,72 +97,71 @@ __meta__ = {
 [node name="Plant" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 48.0
 margin_right = 60.0
-margin_bottom = 108.0
+margin_bottom = 60.0
 
 [node name="Cave" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 48.0
+margin_top = 62.0
 margin_right = 60.0
-margin_bottom = 108.0
+margin_bottom = 122.0
 
 [node name="SP" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 110.0
+margin_top = 124.0
 margin_right = 60.0
-margin_bottom = 170.0
+margin_bottom = 184.0
 
 [node name="Energy" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 172.0
+margin_top = 186.0
 margin_right = 60.0
-margin_bottom = 232.0
+margin_bottom = 246.0
 
 [node name="Stone" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 234.0
+margin_top = 248.0
 margin_right = 60.0
-margin_bottom = 294.0
+margin_bottom = 308.0
 
 [node name="Minerals" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 296.0
+margin_top = 310.0
 margin_right = 60.0
-margin_bottom = 356.0
+margin_bottom = 370.0
 
 [node name="Money" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 358.0
+margin_top = 372.0
 margin_right = 60.0
-margin_bottom = 418.0
+margin_bottom = 432.0
 
 [node name="Arrow" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 420.0
+margin_top = 434.0
 margin_right = 60.0
-margin_bottom = 480.0
+margin_bottom = 494.0
 
 [node name="Cross" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 482.0
+margin_top = 496.0
 margin_right = 60.0
-margin_bottom = 542.0
+margin_bottom = 556.0
 
 [node name="Check" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 544.0
+margin_top = 558.0
 margin_right = 60.0
-margin_bottom = 604.0
+margin_bottom = 618.0
 
 [node name="CloseButton" parent="." instance=ExtResource( 4 )]
 anchor_left = 1.0
@@ -210,10 +209,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -166.0
-margin_top = -468.0
-margin_right = 181.0
-margin_bottom = 4.0
+margin_left = -170.0
+margin_top = -472.0
+margin_right = 177.0
+margin_bottom = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -248,11 +247,12 @@ polygon = PoolVector2Array( 0, 0, 768, 0, 768, 64, 0, 64 )
 
 [node name="Polygon2D2" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 140, -264, 172, -264, 172, 0, 140, 0 )
+polygon = PoolVector2Array( 140, -300, 172, -300, 172, 0, 140, 0 )
 
 [node name="Polygon2D3" type="Polygon2D" parent="."]
 visible = false
 polygon = PoolVector2Array( 404, -484, 768, -484, 768, 0, 404, 0 )
+
 [connection signal="visibility_changed" from="." to="." method="_on_Annotator_visibility_changed"]
 [connection signal="mouse_entered" from="HBoxContainer/Icons" to="." method="_on_Icons_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/Icons" to="." method="_on_mouse_exited"]

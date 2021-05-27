@@ -70,7 +70,7 @@ func _ready():
 		else:
 			HX_data = game.planet_data[game.c_p].HX_data
 		$Star.texture = load("res://Graphics/Effects/spotlight_%s.png" % [game.c_s % 3 + 4])
-		$Star.modulate = game.get_star_modulate(game.system_data[game.c_s].stars[0].class)
+		$Star.modulate = Helper.get_star_modulate(game.system_data[game.c_s].stars[0].class)
 		$Star.position.x = range_lerp(game.planet_data[game.c_p].angle, 0, 2 * PI, 0, 1280)
 		$Star.position.y = 200 * cos(game.c_p * 10) + 300
 		$Star.scale *= 0.5 * game.system_data[game.c_s].stars[0].size / (game.planet_data[game.c_p].distance / 500)
@@ -82,7 +82,7 @@ func _ready():
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
-			star.modulate = game.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
 			star.modulate.a = rand_range(0, 1)
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
@@ -93,6 +93,17 @@ func _ready():
 		if err == OK:
 			e_diff = config.get_value("game", "e_diff", 1)
 	else:
+		$Star.modulate = Helper.get_star_modulate("G2")
+		for i in 1000:
+			var star:Sprite = Sprite.new()
+			star.texture = star_texture
+			star.scale *= pow(rand_range(0.4, 0.7), 2)
+			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+			star.modulate.a = rand_range(0, 1)
+			star.rotation = rand_range(0, 2*PI)
+			star.position.x = rand_range(0, 1280)
+			star.position.y = rand_range(0, 720)
+			$Stars.add_child(star)
 		HX_data = []
 		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":5, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		for k in 4:
@@ -106,9 +117,9 @@ func _ready():
 			var XP = round(pow(1.3, lv) * 5)
 			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
-		$Help.text = "%s\n%s" % [tr("BATTLE_HELP") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
@@ -417,7 +428,7 @@ func process_1_3(weapon, delta):
 		if HX_w_c_d[weapon.name].delay < -1:
 			HX_w_c_d[weapon.name].stage = 1
 		if HX_w_c_d[weapon.name].delay < -0.3:
-			weapon.rotation = move_toward(weapon.rotation, 0, 0.12)
+			weapon.rotation = move_toward(weapon.rotation, 0, 0.12 * delta)
 	else:
 		weapon.position += HX_w_c_d[weapon.name].v * delta
 		HX_w_c_d[weapon.name].v *= 0.02 * delta + 1
@@ -475,9 +486,9 @@ func process_4_1(weapon, delta):
 
 func process_4_2(weapon, delta):
 	weapon.visible = true
-	weapon.rotation += 0.1
+	weapon.rotation += 0.1 * delta
 	weapon.position += HX_w_c_d[weapon.name].v * delta
-	HX_w_c_d[weapon.name].v.x += HX_w_c_d[weapon.name].acc
+	HX_w_c_d[weapon.name].v.x += HX_w_c_d[weapon.name].acc * delta
 	if weapon.position.x > 1400:
 		remove_weapon(weapon, "w_4_2")
 
@@ -755,14 +766,14 @@ func atk_2_2(id:int):
 	put_magic(id)
 	var delay_mult:float = 0.4
 	var scale_mult:float = 0.8
-	var num:int = 14
+	var num:int = 10
 	if e_diff == EDiff.EASY:
 		num = 8
 		delay_mult = 0.7
 		scale_mult = 0.7
 	elif e_diff == EDiff.HARD:
 		delay_mult = 0.2
-		num = 20
+		num = 16
 		scale_mult = 1.0
 	for i in num:
 		var ball = w_2_2.instance()
