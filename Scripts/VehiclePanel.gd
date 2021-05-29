@@ -104,13 +104,12 @@ func _process(delta):
 		if progress >= 1:
 			if probe.tier == 0:
 				var cluster_data:Array
-				if game.c_v == "supercluster" or game.c_sc == 0:
+				if game.c_v == "supercluster" and game.c_sc == 0:
 					cluster_data = game.cluster_data
-					cluster_data[probe.obj_to_discover].visible = true
 				else:
 					cluster_data = game.open_obj("Superclusters", 0)
-					cluster_data[probe.obj_to_discover].visible = true
-					Helper.save_obj("Superclusters", 0, cluster_data)
+				cluster_data[probe.obj_to_discover].visible = true
+				Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			elif probe.tier == 1:
 				var supercluster_data:Array

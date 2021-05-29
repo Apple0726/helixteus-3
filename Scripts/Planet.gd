@@ -90,7 +90,7 @@ func _ready():
 				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()
-				metal.texture = load("res://Graphics/Metals/%s.png" % [tile.crater.metal])
+				metal.texture = game.metal_textures[tile.crater.metal]
 				metal.scale *= 0.4
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
@@ -158,44 +158,8 @@ func show_tooltip(tile):
 	if not tile:
 		return
 	if tile.has("bldg"):
-		var bldg:String = tile.bldg.name
-		icons = Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else []
-		var mult:float = Helper.get_prod_mult(tile)
-		var IR_mult:float = tile.bldg.IR_mult#Helper.get_IR_mult(tile.bldg.name)
-		var path_1_value
-		if bldg == "SP":
-			path_1_value = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, Helper.get_au_mult(tile))
-		elif bldg == "AE":
-			path_1_value = Helper.get_AE_production(p_i.pressure, tile.bldg.path_1_value * mult)
-		elif bldg != "PCC":
-			path_1_value = Helper.clever_round(tile.bldg.path_1_value * mult, 3)
-		var path_2_value
-		var path_3_value
-		if tile.bldg.has("path_2_value"):
-			path_2_value = tile.bldg.path_2_value
-			if Data.path_2[bldg].is_value_integer:
-				path_2_value = round(path_2_value)
-		if tile.bldg.has("path_3_value"):
-			path_3_value = Helper.clever_round(tile.bldg.path_3_value, 3)
-		match bldg:
-			"ME", "PP", "SP", "AE":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, Helper.format_num(round(path_2_value * IR_mult), 6)]
-				adv = true
-			"MM":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
-			"SC", "GF", "SE":
-				tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % path_1_value, Data.path_2[bldg].desc % path_2_value, Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
-				adv = true
-			"RL", "AMN", "SPR":
-				tooltip = (Data.path_1[bldg].desc) % [path_1_value]
-				adv = true
-			"MS":
-				tooltip = (Data.path_1[bldg].desc) % [round(path_1_value)]
-				adv = true
-			"RCC", "SY":
-				tooltip = (Data.path_1[bldg].desc) % [tile.bldg.path_1_value]
-			"GH":
-				tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [path_1_value, path_2_value]
+		tooltip += Helper.get_bldg_tooltip(p_i, tile, icons)
+		adv = len(icons) > 0
 		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
 			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
@@ -292,8 +256,8 @@ func show_tooltip(tile):
 func get_wh_costs():
 	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2)}
 
-func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
-	if bldg_to_construct == "":
+func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
+	if _bldg_to_construct == "":
 		return
 	var tile = game.tile_data[tile_id]
 	if game.check_enough(constr_costs):
@@ -304,43 +268,42 @@ func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 		if game.tutorial:
 			if game.tutorial.tut_num in [9, 10, 11] and game.tutorial.visible:
 				game.tutorial.fade(0.4, false)
-			elif game.tutorial.tut_num == 18 and bldg_to_construct == "RL":
+			elif game.tutorial.tut_num == 18 and _bldg_to_construct == "RL":
 				game.tutorial.begin()
 		tile.bldg = {}
-		tile.bldg.name = bldg_to_construct
-		if not game.show.minerals and bldg_to_construct == "ME":
+		tile.bldg.name = _bldg_to_construct
+		if not game.show.minerals and _bldg_to_construct == "ME":
 			game.show.minerals = true
 		tile.bldg.is_constructing = true
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs.time * 1000
 		tile.bldg.XP = round(constr_costs.money / 100.0)
-		if bldg_to_construct != "PCC":
+		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
-			tile.bldg.path_1_value = Data.path_1[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE"]:
+			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
+		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE"]:
 			tile.bldg.path_2 = 1
-			tile.bldg.path_2_value = Data.path_2[bldg_to_construct].value
-		if bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:
+			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
+		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
-		if bldg_to_construct in ["SC", "GF", "SE"]:
+		if _bldg_to_construct in ["SC", "GF", "SE"]:
 			tile.bldg.path_3 = 1
-			tile.bldg.path_3_value = Data.path_3[bldg_to_construct].value
-		if bldg_to_construct == "RL":
+			tile.bldg.path_3_value = Data.path_3[_bldg_to_construct].value
+		if _bldg_to_construct == "RL":
 			game.show.SP = true
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
-		if bldg_to_construct == "MS":
+		if _bldg_to_construct == "MS":
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
-		if bldg_to_construct == "MM" and not tile.has("depth"):
+		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
-		if Helper.has_IR(bldg_to_construct):
+		if Helper.has_IR(_bldg_to_construct):
 			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
 		else:
 			tile.bldg.IR_mult = 1
 		game.tile_data[tile_id] = tile
-		add_bldg(tile_id, bldg_to_construct)
-		add_time_bar(tile_id, "bldg")
+		add_bldg(tile_id, _bldg_to_construct)
 	elif not mass_build:
 		var tooltip = tr("NOT_ENOUGH_RESOURCES")
 		if game.tutorial and game.tutorial.tut_num < 15 and game.tutorial.tut_num > 6:
@@ -348,11 +311,10 @@ func constr_bldg(tile_id:int, curr_time:int, mass_build:bool = false):
 		else:
 			game.popup(tooltip, 1.2)
 
-func seeds_plant(tile, tile_id:int):
+func seeds_plant(tile, tile_id:int, curr_time, mass_plant:bool = false):
 	#Plants can't grow when not adjacent to lakes
 	var check_lake = check_lake(tile_id)
 	if check_lake[0]:
-		var curr_time = OS.get_system_time_msecs()
 		tile.plant.name = game.item_to_use.name
 		game.item_to_use.num -= 1
 		tile.plant.plant_date = curr_time
@@ -368,7 +330,7 @@ func seeds_plant(tile, tile_id:int):
 		add_plant(tile_id, game.item_to_use.name)
 		game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
 		game.remove_items(game.item_to_use.name, 1)
-	else:
+	elif not mass_plant:
 		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [tr("%s_NAME" % game.craft_agriculture_info[game.item_to_use.name].lake)], 2)
 
 func fertilizer_plant(tile, tile_id:int):
@@ -475,6 +437,25 @@ func destroy_bldg(id2:int):
 		game.tile_data[id2] = null
 	game.show_collect_info(items_collected)
 
+func destroy_bldgs(arr:Array):
+	items_collected.clear()
+	for id2 in arr:
+		var tile = game.tile_data[id2]
+		var bldg:String = tile.bldg.name
+		Helper.collect_rsrc(items_collected, p_i, tile, id2)
+		remove_child(bldgs[id2])
+		bldgs[id2].queue_free()
+		remove_child(hboxes[id2])
+		hboxes[id2].queue_free()
+		if bldg == "MS":
+			if tile.bldg.is_constructing:
+				game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
+			else:
+				game.mineral_capacity -= tile.bldg.path_1_value
+		tile.erase("bldg")
+		if tile.empty():
+			game.tile_data[id2] = null
+
 func add_shadows():
 	for sh in shadows:
 		remove_child(sh)
@@ -500,6 +481,9 @@ func remove_selected_tiles():
 
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
+var thread:Thread
+var mutex:Mutex
+
 func _input(event):
 	if game.tutorial and game.tutorial.BG_blocked:
 		return
@@ -611,11 +595,10 @@ func _input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = OS.get_system_time_msecs()
-		for i in len(shadows):
-			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, true)
-			remove_child(shadows[i])
-			shadows[i].queue_free()
-		shadows.clear()
+		mutex = Mutex.new()
+		thread = Thread.new()
+		thread.start(self, "test", bldg_to_construct)
+		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		return
@@ -643,7 +626,7 @@ func _input(event):
 		var tile = game.tile_data[tile_id]
 		if bldg_to_construct != "":
 			if available_to_build(tile):
-				constr_bldg(tile_id, curr_time)
+				constr_bldg(tile_id, curr_time, bldg_to_construct)
 		if about_to_mine and available_for_mining(tile) or tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "":
 			game.mine_tile(tile_id)
 		if placing_soil and available_for_plant(tile):
@@ -683,8 +666,17 @@ func _input(event):
 						else:
 							for _tile in tiles_selected:
 								harvest_plant(game.tile_data[_tile], _tile)
-					elif t == "seeds" and tile.plant.empty():
-						seeds_plant(tile, tile_id)
+					elif t == "seeds":
+						if tiles_selected.empty():
+							if tile.plant.empty():
+								seeds_plant(tile, tile_id, curr_time)
+						else:
+							for _tile_id in tiles_selected:
+								var _tile = game.tile_data[_tile_id]
+								if _tile.has("plant") and _tile.plant.empty():
+									seeds_plant(_tile, _tile_id, curr_time, true)
+									if game.item_to_use.num <= 0:
+										break
 					game.update_item_cursor()
 			if tile.has("bldg"):
 				if t in ["speedup", "overclock"]:
@@ -702,8 +694,11 @@ func _input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
-				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].has("special_cave"):
+				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].special_cave == 4:
 					if not game.fourth_ship_hints.barrier_broken:
+						if not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
+							game.popup(tr("CAVE_BLOCKED"), 2.0)
+							return
 						var rsrc = {"sapphire":1000000, "emerald":1000000, "ruby":1000000, "topaz":1000000, "amethyst":1000000, "quartz":1000000}
 						if game.check_enough(rsrc):
 							game.deduct_resources(rsrc)
@@ -734,7 +729,7 @@ func _input(event):
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":14, "current":game.lv, "goal":35}
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":35}
 						game.ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
@@ -746,7 +741,7 @@ func _input(event):
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.objective = {"type":game.ObjectiveType.TERRAFORM, "id":12, "current":0, "goal":1}
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":50}
 							game.ship_data.append({"lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 							Helper.add_ship_XP(2, 40000)
 							Helper.add_weapon_XP(2, "bullet", 140)
@@ -845,6 +840,23 @@ func _input(event):
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
 
+func test(_bldg_to_construct:String):
+	mutex.lock()
+	var curr_time = OS.get_system_time_msecs()
+	for i in len(shadows):
+		if not is_inside_tree():
+			mutex.unlock()
+			return
+		constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
+		call_deferred("remove_child", shadows[i])
+		shadows[i].queue_free()
+	shadows.clear()
+	mutex.unlock()
+
+func _exit_tree():
+	if thread and thread.is_active():
+		thread.wait_to_finish()
+
 func available_for_plant(tile):
 	if not tile:
 		return true
@@ -924,7 +936,7 @@ func add_plant(id2:int, st:String):
 
 func add_bldg(id2:int, st:String):
 	var bldg = Sprite.new()
-	bldg.texture = load("res://Graphics/Buildings/" + st + ".png")
+	bldg.texture = game.bldg_textures[st]
 	bldg.scale *= 0.4
 	var local_id = id2
 	var v = Vector2.ZERO
@@ -1089,7 +1101,7 @@ func construct(st:String, costs:Dictionary):
 	game.HUD.refresh()
 
 func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):
-	spr.texture = load("res://Graphics/Buildings/%s.png" % bldg_to_construct)
+	spr.texture = game.bldg_textures[bldg_to_construct]
 	spr.scale *= 0.4
 	spr.modulate.a = 0.5
 	spr.position.x = floor(pos.x / 200) * 200 + 100
@@ -1126,7 +1138,6 @@ func collect_all():
 	game.HUD.refresh()
 	if game.tutorial and game.tutorial.tut_num == 7 and not game.tutorial.tween.is_active():
 		game.tutorial.fade(0.4, game.minerals > 0)
-	#print_stray_nodes()
 
 func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)

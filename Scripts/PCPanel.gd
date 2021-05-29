@@ -12,6 +12,7 @@ func refresh():
 	_on_SpinBox_value_changed($SpinBox.value)
 	if probe_tier == 0:
 		$Label.text = tr("PCC_NAME")
+		$ViewPlanet.visible = false
 	elif probe_tier == 1:
 		$Label.text = tr("M_MPCC_NAME")
 		$ViewPlanet.visible = true
@@ -24,7 +25,7 @@ func _on_SpinBox_value_changed(value):
 	if probe_tier == 0:
 		costs = {"money":e(2, 11), "nanocrystal":2700000}
 	elif probe_tier == 1:
-		costs = {"money":e(5, 16), "nanocrystal":e(8, 12)}
+		costs = {"money":e(5, 17), "nanocrystal":e(8, 13)}
 	for cost in costs:
 		costs[cost] *= value
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs, true, true)

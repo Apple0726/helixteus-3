@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -7,8 +7,11 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 [ext_resource path="res://Scripts/TerraformPanel.gd" type="Script" id=7]
+[ext_resource path="res://Graphics/Buildings/ME.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Buildings/MS.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Buildings/AE.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Buildings/PP.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Buildings/RL.png" type="Texture" id=12]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -119,9 +122,39 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 4 )
 
-[node name="MineralStorage" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="MineralExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_right = 364.0
 margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+text = "MINERAL_EXTRACTION"
+icon = ExtResource( 8 )
+align = 0
+expand_icon = true
+
+[node name="EnergyProduction" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 44.0
+margin_right = 364.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+text = "ENERGY_PRODUCTION"
+icon = ExtResource( 11 )
+align = 0
+expand_icon = true
+
+[node name="Research" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 88.0
+margin_right = 364.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 40 )
+text = "RESEARCH"
+icon = ExtResource( 12 )
+align = 0
+expand_icon = true
+
+[node name="MineralStorage2" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 132.0
+margin_right = 364.0
+margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 text = "MINERAL_STORAGE"
 icon = ExtResource( 9 )
@@ -129,9 +162,9 @@ align = 0
 expand_icon = true
 
 [node name="AtmosphereExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 44.0
+margin_top = 176.0
 margin_right = 364.0
-margin_bottom = 84.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 text = "ATMOSPHERE_EXTRACTION"
 icon = ExtResource( 10 )
@@ -139,9 +172,9 @@ align = 0
 expand_icon = true
 
 [node name="Mining" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 88.0
+margin_top = 220.0
 margin_right = 364.0
-margin_bottom = 128.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 text = "MINING"
 icon = ExtResource( 4 )
@@ -149,9 +182,9 @@ align = 0
 expand_icon = true
 
 [node name="SpaceAgriculture" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 132.0
+margin_top = 264.0
 margin_right = 364.0
-margin_bottom = 172.0
+margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
 text = "SA_SC"
 icon = ExtResource( 3 )
@@ -242,7 +275,10 @@ __meta__ = {
 }
 
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_MS_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_ME_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_PP_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_RL_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage2" to="." method="_on_MS_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/AtmosphereExtraction" to="." method="_on_AE_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Mining" to="." method="_on_MM_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]

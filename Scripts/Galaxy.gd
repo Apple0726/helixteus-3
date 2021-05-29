@@ -132,6 +132,8 @@ func collect_all():
 					star.bldg.stored = 0
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
+			if planet.empty():
+				continue
 			if p_ids.local >= len(game.planet_data):
 				continue
 			if planet.has("MS"):
@@ -142,10 +144,8 @@ func collect_all():
 					planet.bldg.stored = collect_data.remainder
 					continue
 			elif planet.has("bldg"):
-				if planet.bldg.name == "MM":
-					Helper.collect_MM(planet, planet, items_collected, curr_time, planet.tile_num)
-				elif planet.bldg.name == "AE":
-					Helper.collect_AE(planet, planet, items_collected, curr_time, planet.tile_num)
+				if planet.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
+					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
 			if not planet.discovered:
 				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)

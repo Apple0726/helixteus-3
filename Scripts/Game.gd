@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -34,6 +34,7 @@ var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
 var planet_textures:Array
+var bldg_textures:Dictionary
 
 var tutorial:Node2D
 
@@ -95,7 +96,7 @@ var block_scroll:bool = false
 ############ Save data ############
 
 #Current view
-var c_v:String
+var c_v:String = ""
 var l_v:String
 
 #Player resources
@@ -197,7 +198,7 @@ var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":
 ############ End save data ############
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
 var collect_speed_lag_ratio:int = 1
 
@@ -251,10 +252,10 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(6.25, 8)}},
 					"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
 					"platinum_pickaxe":{"speed":175.0, "durability":1200, "costs":{"money":e(8.2, 9)}},
-					"titanium_pickaxe":{"speed":180.0, "durability":2500, "costs":{"money":e(1.45, 10)}},
-					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(4.4, 11)}},
-					"nanocrystal_pickaxe":{"speed":2980.0, "durability":770, "costs":{"money":e(9.25, 12)}},
-					"mythril_pickaxe":{"speed":9200.0, "durability":4000, "costs":{"money":e(6.4, 14)}},
+					"titanium_pickaxe":{"speed":230.0, "durability":2500, "costs":{"money":e(1.45, 10)}},
+					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(7.4, 10)}},
+					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":e(9.25, 11)}},
+					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 13)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -281,7 +282,9 @@ var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20},
 							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":60},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
-var craft_mining_info = {"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400}}
+var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
+							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
+}
 
 var other_items_info = {"hx_core":{"XP":6}, "hx_core2":{"XP":50}, "hx_core3":{"XP":480}, "ship_locator":{}}
 
@@ -309,6 +312,10 @@ var b_i_tween:Tween#bottom_info_tween
 func _ready():
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
+	for bldg in Data.costs:
+		var dir_str = "res://Graphics/Buildings/%s.png" % bldg
+		if ResourceLoader.exists(dir_str):
+			bldg_textures[bldg] = load(dir_str)
 	game_tween = Tween.new()
 	add_child(game_tween)
 	b_i_tween = Tween.new()
@@ -386,7 +393,7 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = 2000000000000
+		energy = e(2, 19)
 		SP = e(2, 19)
 		science_unlocked.RC = true
 		science_unlocked.CD = true
@@ -536,6 +543,7 @@ func load_game():
 		stats = save_game.get_var()
 		objective = save_game.get_var()
 		save_game.close()
+		fourth_ship_hints.boss_rekt = false
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -552,7 +560,7 @@ func load_game():
 			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
 			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+				galaxy_data = Data.starting_galaxy_data.duplicate(true)
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
@@ -593,7 +601,6 @@ func new_game(tut:bool):
 	dir.make_dir("user://Save1/Galaxies")
 	dir.make_dir("user://Save1/Clusters")
 	dir.make_dir("user://Save1/Superclusters")
-	c_v = ""
 	l_v = ""
 
 	#Player resources
@@ -767,8 +774,8 @@ func new_game(tut:bool):
 	#Stores information of all objects discovered
 	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 3, 360 * 3), "zoom":0.333}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280, 7500 + 720), "zoom":0.5}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
+	galaxy_data = Data.starting_galaxy_data.duplicate(true)
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
@@ -1110,7 +1117,7 @@ func on_fade_complete(panel:Control):
 func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
 	if active_panel and active_panel != upgrade_panel:
 		fade_out_panel(active_panel)
-	if is_instance_valid(upgrade_panel) and is_a_parent_of(upgrade_panel):
+	if is_instance_valid(upgrade_panel) and $Panels/Control.is_a_parent_of(upgrade_panel):
 		remove_upgrade_panel()
 	upgrade_panel = upgrade_panel_scene.instance()
 	if planet.empty():
@@ -1391,7 +1398,7 @@ func on_science_back_pressed():
 	remove_child(get_node("ScienceBackBtn"))
 
 func add_space_HUD():
-	if not is_instance_valid(space_HUD) or not is_a_parent_of(space_HUD):
+	if not is_instance_valid(space_HUD) or not $UI.is_a_parent_of(space_HUD):
 		space_HUD = space_HUD_scene.instance()
 		$UI.add_child(space_HUD)
 		if c_v in ["galaxy", "cluster"]:
@@ -1412,9 +1419,9 @@ func add_overlay():
 	$UI.add_child(overlay)
 
 func remove_overlay():
-	if is_instance_valid(overlay) and is_a_parent_of(overlay):
+	if is_instance_valid(overlay) and $UI.is_a_parent_of(overlay):
 		$UI.remove_child(overlay)
-		overlay.free()
+		overlay.queue_free()
 
 func add_annotator():
 	annotator = annotator_scene.instance()
@@ -1422,12 +1429,12 @@ func add_annotator():
 	$UI.add_child(annotator)
 
 func remove_annotator():
-	if is_instance_valid(annotator) and is_a_parent_of(annotator):
+	if is_instance_valid(annotator) and $UI.is_a_parent_of(annotator):
 		$UI.remove_child(annotator)
 		annotator.free()
 
 func remove_space_HUD():
-	if is_instance_valid(space_HUD) and is_a_parent_of(space_HUD):
+	if is_instance_valid(space_HUD) and $UI.is_a_parent_of(space_HUD):
 		$UI.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
@@ -1699,6 +1706,10 @@ func generate_clusters(id:int):
 	supercluster_data[id]["discovered"] = true
 	c_num += total_clust_num
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
+	var save_sc = File.new()
+	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+	save_sc.store_var(supercluster_data)
+	save_sc.close()
 
 func generate_galaxy_part():
 	var progress = 0.0
@@ -2186,6 +2197,7 @@ func generate_systems(id:int):
 		third_ship_hints.g_l_id = c_g
 		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
 		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
+		HUD.refresh()
 
 func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0	
@@ -2422,7 +2434,7 @@ func generate_tiles(id:int):
 			#au_int: aurora_intensity
 			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
-				au_int = Helper.clever_round(rand_range(25, 26))
+				au_int = Helper.clever_round(rand_range(12, 13))
 			if tile_from == -1:
 				if cross_aurora:
 					tile_from = wid / 2
@@ -2558,7 +2570,7 @@ func generate_tiles(id:int):
 			cave_data.append({"floor_size":16, "num_floors":30, "special_cave":1})#A super deep cave devoid of everything
 			erase_tile(random_tile - 1)
 			tile_data[random_tile - 1].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":77, "num_floors":3, "special_cave":2})#Huge cave
+			cave_data.append({"floor_size":88, "num_floors":3, "special_cave":2})#Huge cave
 			erase_tile(random_tile + 1)
 			tile_data[random_tile + 1].cave = {"id":len(cave_data)}
 			cave_data.append({"floor_size":50, "num_floors":5, "special_cave":3})#Big maze cave where minimap is disabled
@@ -2577,7 +2589,7 @@ func generate_tiles(id:int):
 		erase_tile(12)
 		tile_data[12].diamond_tower = len(cave_data)
 		cave_data.append({"floor_size":40, "num_floors":25})
-	elif c_c_g != 0 and p_i.temperature < 500 and p_i.size < 20000 and p_i.pressure > 50 and not fourth_ship_hints.ruins_spawned:
+	elif c_c_g != 0 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		tile_data[random_tile].ruins = 1
@@ -3020,7 +3032,6 @@ func deduct_resources(costs):
 			atoms[cost] = max(0, atoms[cost] - costs[cost])
 		if particles.has(cost):
 			particles[cost] = max(0, particles[cost] - costs[cost])
-	HUD.refresh()
 
 func add_resources(costs):
 	for cost in costs:
@@ -3049,7 +3060,6 @@ func add_resources(costs):
 			particles[cost] += costs[cost]
 		if show.has(cost):
 			show[cost] = true
-	HUD.refresh()
 
 func get_roman_num(num:int):
 	if num > 3999:
@@ -3078,6 +3088,8 @@ func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
 		$UI.move_child($UI/Settings, $UI.get_child_count())
+#		if galaxy_data and len(galaxy_data) > 0:
+#			print(galaxy_data[0].view)
 
 var mouse_pos = Vector2.ZERO
 onready var item_cursor = $UI/ItemCursor
@@ -3265,7 +3277,8 @@ func _input(event):
 				if get_item_num(_name) > 0:
 					inventory.on_slot_press(_name)
 	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
-		fn_save_game(false)
+		if c_v != "":
+			fn_save_game(false)
 
 func fn_save_game(autosave:bool):
 	var save_game = File.new()
@@ -3342,7 +3355,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(stats)
 	save_game.store_var(objective)
 	save_game.close()
-	if view.obj:
+	if is_instance_valid(view.obj) and is_a_parent_of(view.obj):
 		view.save_zooms(c_v)
 	if c_v in ["planet", "mining"]:
 		Helper.save_obj("Planets", c_p_g, tile_data)
@@ -3518,8 +3531,7 @@ func buy_pickaxe_confirm(_costs:Dictionary):
 	YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
 
 func destroy_buildings_confirm(arr:Array):
-	for tile in arr:
-		view.obj.destroy_bldg(tile)
+	view.obj.destroy_bldgs(arr)
 	HUD.refresh()
 	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
 

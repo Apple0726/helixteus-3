@@ -252,7 +252,7 @@ func refresh():
 		remove_child(icon)
 		icon.queue_free()
 	annotate_icons.clear()
-	if game.annotator:
+	if is_instance_valid(game.annotator):
 		for i in len(shapes_data):
 			var shape = shapes_data[i]
 			if shape and shape.shape == "icon":
@@ -355,7 +355,7 @@ func _physics_process(_delta):
 			for rsrc in obj.rsrcs:
 				rsrc.node.visible = false
 			for hbox in obj.hboxes:
-				if not hbox:
+				if not hbox or not is_instance_valid(hbox):
 					continue
 				hbox.visible = false
 			obj.icons_hidden = true
@@ -366,7 +366,7 @@ func _physics_process(_delta):
 			for rsrc in obj.rsrcs:
 				rsrc.node.visible = true
 			for hbox in obj.hboxes:
-				if not hbox:
+				if not hbox or not is_instance_valid(hbox):
 					continue
 				hbox.visible = true
 			obj.icons_hidden = false

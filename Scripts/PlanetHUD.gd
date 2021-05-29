@@ -77,14 +77,14 @@ func _on_Terraform_pressed():
 		game.popup(tr("NO_TF"), 1.5)
 	else:
 		game.terraform_panel.pressure = game.planet_data[game.c_p].pressure
-		var tile_num = int(4 * PI * pow(game.planet_data[game.c_p].size * 1000 / 2.0, 2))
-		game.terraform_panel.tile_num = tile_num
+		var surface = 4 * PI * pow(game.planet_data[game.c_p].size / 2.0, 2)
+		game.terraform_panel.surface = surface
 		var lake_num:int = 0
 		for tile in game.tile_data:
-			if tile:
-				if tile.has("lake"):
-					lake_num += 1
-		game.terraform_panel.lake_num = int(lake_num / len(game.tile_data) * tile_num)
+			if tile and tile.has("lake"):
+				lake_num += 1
+		game.terraform_panel.lake_num = lake_num
+		game.terraform_panel.tile_num = len(game.tile_data)
 		game.toggle_panel(game.terraform_panel)
 
 func _on_Terraform_mouse_entered():

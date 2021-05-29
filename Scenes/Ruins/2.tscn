@@ -18,5 +18,5 @@ position = Vector2( 2872, 1936 )
 NPC_id = 1
 
 [node name="NPC2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 3312, 1840 )
+position = Vector2( 3272, 672 )
 NPC_id = 2

@@ -101,10 +101,10 @@ func time_to_str (time:float):
 	var hours = int(floor(time / 3600000)) % 24
 	var days = int(floor (time / 86400000)) % 365
 	var years = int(floor (time / 31536000000))
-	var year_str = "" if years == 0 else String(years) + "y "
-	var day_str = "" if days == 0 else String(days) + "d "
-	var hour_str = "" if hours == 0 else String(hours) + ":"
-	return year_str + day_str + hour_str + minute_zero + String(minutes) + ":" + second_zero + String(seconds)
+	var year_str = "" if years == 0 else ("%s%s " % [years, tr("YEARS")])
+	var day_str = "" if days == 0 else ("%s%s " % [days, tr("DAYS")])
+	var hour_str = "" if hours == 0 else ("%s:" % hours)
+	return "%s%s%s%s%s:%s%s" % [year_str, day_str, hour_str, minute_zero, minutes, second_zero, seconds]
 
 #Returns a random integer between low and high inclusive
 func rand_int(low:int, high:int):
@@ -195,7 +195,7 @@ func get_dir_from_name(_name:String):
 	match _name:
 		"fertilizer":
 			return "Agriculture"
-		"mining_liquid":
+		"mining_liquid", "purple_mining_liquid":
 			return "Mining"
 		"money":
 			return "Icons"
@@ -215,7 +215,7 @@ func get_type_from_name(_name:String):
 	match _name:
 		"fertilizer":
 			return "craft_agriculture_info"
-		"mining_liquid":
+		"mining_liquid", "purple_mining_liquid":
 			return "craft_mining_info"
 	if _name.split("_")[1] == "seeds":
 		return "craft_agriculture_info"
@@ -759,36 +759,23 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 	update_rsrc(p_i, tile)
 	match bldg:
 		"ME":
-			var stored = tile.bldg.stored
-			var min_info:Dictionary = add_minerals(stored)
-			tile.bldg.stored = min_info.remainder
-			add_item_to_coll(rsrc_collected, "minerals", min_info.added)
-			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
-				tile.bldg.collect_date = curr_time
+			collect_ME(p_i, tile, rsrc_collected, curr_time)
 		"PP":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
-				tile.bldg.collect_date = curr_time
-			#game.energy += stored
-			add_item_to_coll(rsrc_collected, "energy", stored)
-			tile.bldg.stored = 0
+			collect_PP(p_i, tile, rsrc_collected, curr_time)
 		"SP":
 			var stored = tile.bldg.stored
 			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
 				tile.bldg.collect_date = curr_time
-			#game.energy += stored
 			add_item_to_coll(rsrc_collected, "energy", stored)
 			tile.bldg.stored = 0
 		"AE":
 			collect_AE(p_i, tile, rsrc_collected, curr_time)
 		"RL":
-			#game.SP += tile.bldg.stored
-			add_item_to_coll(rsrc_collected, "SP", tile.bldg.stored)
-			tile.bldg.stored = 0
+			collect_RL(p_i, tile, rsrc_collected, curr_time)
 		"MM":
 			collect_MM(p_i, tile, rsrc_collected, curr_time)
 
-func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
 	if dict.bldg.stored >= 1 and not dict.has("depth"):
 		dict.depth = 0
@@ -821,8 +808,30 @@ func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 	if dict.bldg.stored == round(dict.bldg.path_2_value):
 		dict.bldg.collect_date = curr_time
 	dict.bldg.stored = 0
-	
-func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:int = 1):
+
+func collect_ME(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
+	update_MS_rsrc(p_i)
+	var stored = dict.bldg.stored
+	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
+		dict.bldg.collect_date = curr_time
+	var min_info:Dictionary = add_minerals(stored)
+	dict.bldg.stored = min_info.remainder
+	add_item_to_coll(rsrc_collected, "minerals", min_info.added)
+
+func collect_PP(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
+	update_MS_rsrc(p_i)
+	var stored = dict.bldg.stored
+	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
+		dict.bldg.collect_date = curr_time
+	add_item_to_coll(rsrc_collected, "energy", stored)
+	dict.bldg.stored = 0
+
+func collect_RL(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
+	update_MS_rsrc(p_i)
+	add_item_to_coll(rsrc_collected, "SP", dict.bldg.stored)
+	dict.bldg.stored = 0
+
+func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
 	var stored = dict.bldg.stored
 	if stored == round(dict.bldg.path_2_value):
@@ -895,7 +904,6 @@ func update_bldg_constr(tile):
 				update_boxes = true
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
-			game.HUD.refresh()
 	return update_boxes
 
 func get_reaction_info(tile):
@@ -904,7 +912,7 @@ func get_reaction_info(tile):
 
 func update_MS_rsrc(dict:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
-	var prod
+	var prod:float
 	if dict.has("MS"):
 		if dict.MS == "M_DS":
 			prod = 1000.0 / Helper.get_DS_output(dict)
@@ -924,13 +932,18 @@ func update_MS_rsrc(dict:Dictionary):
 			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value)
 		else:
 			prod = 1000 / dict.bldg.path_1_value
-		if dict.bldg.name != "MM":
-			prod /= dict.tile_num
+			if dict.bldg.name != "MM":
+				prod /= dict.tile_num
+				prod /= get_prod_mult(dict)
 		var stored = dict.bldg.stored
 		var c_d = dict.bldg.collect_date
 		var c_t = curr_time
 		if dict.bldg.has("path_2_value"):
-			var cap = round(dict.bldg.path_2_value * dict.bldg.IR_mult)
+			var cap = dict.bldg.path_2_value * dict.bldg.IR_mult
+			if dict.bldg.name != "MM":
+				cap = round(cap * dict.tile_num)
+			else:
+				cap = round(cap)
 			if stored < cap:
 				if c_t - c_d > prod:
 					var rsrc_num = floor((c_t - c_d) / prod)
@@ -938,6 +951,11 @@ func update_MS_rsrc(dict:Dictionary):
 					dict.bldg.collect_date += prod * rsrc_num
 					if dict.bldg.stored >= cap:
 						dict.bldg.stored = cap
+		else:
+			if c_t - c_d > prod:
+				var rsrc_num = floor((c_t - c_d) / prod)
+				dict.bldg.stored += rsrc_num
+				dict.bldg.collect_date += prod * rsrc_num
 		return min((c_t - c_d) / prod, 1)
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
@@ -1061,3 +1079,45 @@ func get_star_modulate (star_class:String):
 		"Z":
 			m = Color(0.05, 0.05, 0.05, 1)
 	return m
+
+func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1):
+	var tooltip:String = ""
+	var bldg:String = dict.bldg.name
+	icons.append_array(Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else [])
+	var mult:float = Helper.get_prod_mult(dict)
+	var IR_mult:float = dict.bldg.IR_mult
+	var path_1_value
+	if bldg == "SP":
+		path_1_value = Helper.get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, Helper.get_au_mult(dict))
+	elif bldg == "AE":
+		path_1_value = Helper.get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
+	elif bldg != "PCC":
+		path_1_value = Helper.clever_round(dict.bldg.path_1_value * mult, 3)
+	var path_2_value
+	var path_3_value
+	if dict.bldg.has("path_2_value"):
+		path_2_value = dict.bldg.path_2_value
+		if Data.path_2[bldg].is_value_integer:
+			path_2_value = round(path_2_value)
+	if dict.bldg.has("path_3_value"):
+		path_3_value = Helper.clever_round(dict.bldg.path_3_value, 3)
+	if path_1_value:
+		path_1_value *= n
+	if path_2_value:
+		path_2_value *= n
+	match bldg:
+		"ME", "PP", "SP", "AE":
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(round(path_2_value * IR_mult), 6)]
+		"MM":
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
+		"SC", "GF", "SE":
+			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % Helper.format_num(path_1_value), Data.path_2[bldg].desc % Helper.format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+		"RL", "AMN", "SPR":
+			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(path_1_value)]
+		"MS":
+			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(round(path_1_value))]
+		"RCC", "SY":
+			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(path_1_value)]
+		"GH":
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
+	return tooltip

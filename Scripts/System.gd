@@ -28,12 +28,15 @@ func _ready():
 			game.tutorial.begin()
 
 func refresh_planets():
+	var curr_time = OS.get_system_time_msecs()
 	for planet_thing in get_tree().get_nodes_in_group("planet_stuff"):
 		planet_thing.remove_from_group("planet_stuff")
 		remove_child(planet_thing)
 		planet_thing.queue_free()
 	glows.clear()
 	for p_i in game.planet_data:
+		if p_i.empty():
+			continue
 		var orbit = game.orbit_scene.instance()
 		orbit.radius = p_i["distance"]
 		self.add_child(orbit)
@@ -100,6 +103,14 @@ func refresh_planets():
 		if p_i.has("bldg") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO))
 			match p_i.bldg.name:
+				"ME":
+					add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, p_i.l_id, false)
+				"PP":
+					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, p_i.l_id, false)
+				"RL":
+					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, p_i.l_id, false)
+				"ME":
+					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.ME, p_i.l_id, false)
 				"AE":
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false)
 				"MM":
@@ -110,6 +121,12 @@ func refresh_planets():
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(105/255.0, 65/255.0, 40/255.0, 1)
 				planet_plant_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
+			var IR_mult = Helper.get_IR_mult(p_i.bldg.name)
+			if p_i.bldg.IR_mult != IR_mult:
+				var diff:float = IR_mult / p_i.bldg.IR_mult
+				p_i.bldg.IR_mult = IR_mult
+				if p_i.bldg.has("collect_date"):
+					p_i.bldg.collect_date = curr_time - (curr_time - p_i.bldg.collect_date) / diff
 		planet.position = polar2cartesian(p_i.distance, p_i.angle)
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
@@ -166,6 +183,25 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 	glow_over = glow
 	show_planet_info(id, l_id)
 
+func show_M_DS_costs(star:Dictionary):
+	var vbox = game.get_node("UI/Panel/VBox")
+	game.get_node("UI/Panel").visible = true
+	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
+	for cost in bldg_costs:
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
+	Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1)}, false)
+
+func show_M_PK_costs(star:Dictionary):
+	var vbox = game.get_node("UI/Panel/VBox")
+	game.get_node("UI/Panel").visible = true
+	bldg_costs = Data.MS_costs["M_PK_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
+	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	Helper.add_label(tr("PK0_POWER"), -1, true, true)
+	
 func show_M_SE_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
@@ -228,18 +264,27 @@ func show_planet_info(id:int, l_id:int):
 	if Helper.ships_on_planet(l_id) and not p_i.conquered:
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
-		var tooltip:String
-		if game.help.planet_details:
-			game.help_str = "planet_details"
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure), tr("MORE_DETAILS")]
-			if p_i.conquered:
-				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
-				if p_i.has("bldg"):
-					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
-			tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
+		var tooltip:String = ""
+		var icons = []
+		var adv = false
+		if p_i.has("tile_num"):
+			tooltip += Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)
+			adv = len(icons) > 0
 		else:
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure)]
-		game.show_tooltip(tooltip)
+			if game.help.planet_details:
+				game.help_str = "planet_details"
+				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure), tr("MORE_DETAILS")]
+				if p_i.conquered:
+					tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
+					if p_i.has("bldg"):
+						tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
+				tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
+			else:
+				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure)]
+		if adv:
+			game.show_adv_tooltip(tooltip, icons)
+		else:
+			game.show_tooltip(tooltip)
 
 var MS_constr_data:Dictionary = {}
 
@@ -318,7 +363,7 @@ func on_planet_click (id:int, l_id:int):
 					game.PC_panel.l_id = l_id
 					game.PC_panel.probe_tier = 1
 					game.toggle_panel(game.PC_panel)
-					game.get_node("UI/Panel/VBox").visible = false
+					game.get_node("UI/Panel").visible = false
 					game.hide_tooltip()
 					return
 			elif p_i.bldg.is_constructing:
@@ -359,10 +404,8 @@ func on_planet_click (id:int, l_id:int):
 					game.toggle_panel(game.greenhouse_panel)
 			else:
 				items_collected.clear()
-				if p_i.bldg.name == "MM":
-					Helper.collect_MM(p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
-				elif p_i.bldg.name == "AE":
-					Helper.collect_AE(p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
+				if p_i.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
+					Helper.call("collect_%s" % p_i.bldg.name, p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
 				game.show_collect_info(items_collected)
 		if Input.is_action_pressed("shift"):
 			game.c_p = l_id
@@ -400,6 +443,8 @@ func on_planet_click (id:int, l_id:int):
 						game.toggle_panel(game.send_ships_panel)
 				else:
 					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
+	if game.is_a_parent_of(game.HUD):
+		game.HUD.refresh()
 
 var bldg_costs:Dictionary
 
@@ -419,14 +464,7 @@ func on_star_over (id:int):
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if game.bottom_info_action == "building_DS":
-		game.get_node("UI/Panel").visible = true
-		bldg_costs = Data.MS_costs.M_DS_0.duplicate(true)
-		for cost in bldg_costs:
-			bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
-		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
-		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
+		show_M_DS_costs(star)
 	elif game.bottom_info_action == "building_MB":
 		game.get_node("UI/Panel").visible = true
 		bldg_costs = Data.MS_costs.M_MB.duplicate(true)
@@ -437,11 +475,7 @@ func on_star_over (id:int):
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 		Helper.put_rsrc(vbox, 32, {"SP":Helper.get_DS_output(star)}, false)
 	elif game.bottom_info_action == "building_PK":
-		game.get_node("UI/Panel").visible = true
-		bldg_costs = Data.MS_costs.M_PK_0.duplicate(true)
-		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
-		Helper.add_label(tr("PK0_POWER"), -1, true, true)
+		show_M_PK_costs(star)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
@@ -467,6 +501,7 @@ func on_star_over (id:int):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+				print(len(vbox.get_children()))
 	game.show_tooltip(tooltip)
 
 func on_star_pressed (id:int):
@@ -506,7 +541,7 @@ func on_star_pressed (id:int):
 				star.bldg.stored = 0
 				game.HUD.refresh()
 			elif star.MS == "M_PK" and not star.bldg.is_constructing:
-				game.planetkiller_panel.star = star.duplicate(true)
+				game.planetkiller_panel.star = star
 				game.toggle_panel(game.planetkiller_panel)
 		elif star.bldg.is_constructing:
 			var orig_num:int = game.item_to_use.num
@@ -523,9 +558,11 @@ func on_star_pressed (id:int):
 			return
 
 func on_btn_out ():
+	planet_hovered = -1
 	glow_over = null
 	game.get_node("UI/Panel").visible = false
 	game.hide_tooltip()
+	game.hide_adv_tooltip()
 	MS_constr_data.clear()
 
 func _process(_delta):
@@ -554,6 +591,8 @@ func _process(_delta):
 			star_time_bars.erase(time_bar_obj)
 	for time_bar_obj in planet_time_bars:
 		var time_bar = time_bar_obj.node
+		if not is_instance_valid(time_bar):
+			continue
 		var p_i = time_bar_obj.p_i
 		var progress = (curr_time - p_i.bldg.construction_date) / float(p_i.bldg.construction_length)
 		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.bldg.construction_length - curr_time + p_i.bldg.construction_date)
@@ -569,7 +608,7 @@ func _process(_delta):
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	for time_bar_obj in planet_plant_bars:
 		var time_bar = time_bar_obj.node
-		if not time_bar:
+		if not is_instance_valid(time_bar):
 			continue
 		var p_i = time_bar_obj.p_i
 		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
@@ -597,18 +636,23 @@ func _process(_delta):
 		var rsrc = rsrc_obj.node
 		var current_bar = rsrc.get_node("Control/CurrentBar")
 		var capacity_bar = rsrc.get_node("Control/CapacityBar")
-		var value = Helper.update_MS_rsrc(planet)
+		var value:float = Helper.update_MS_rsrc(planet)
 		if not value:
 			continue
-		if planet.bldg.has("name") and planet.bldg.name == "MM":
+		if planet.bldg.has("name") and planet.bldg.name in ["MM", "PP", "ME"]:
 			var cap = round(planet.bldg.path_2_value * planet.bldg.IR_mult)
+			if planet.bldg.name != "MM":
+				cap = round(cap * planet.tile_num)
 			if planet.bldg.stored >= cap:
 				current_bar.value = 0
 				capacity_bar.value = 1
 			else:
 				current_bar.value = value
 				capacity_bar.value = min(planet.bldg.stored / float(cap), 1)
-			rsrc.get_node("Control/Label").text = "%s / %s m" % [planet.depth + planet.bldg.stored, planet.depth + cap]
+			if planet.bldg.name == "MM":
+				rsrc.get_node("Control/Label").text = "%s / %s m" % [planet.depth + planet.bldg.stored, planet.depth + cap]
+			else:
+				rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored)
 		else:
 			current_bar.value = value
 			rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored, 4)
@@ -650,6 +694,8 @@ func collect_all():
 		if game.c_v != "system":
 			break
 		var planet = game.planet_data[p_ids.local]
+		if planet.empty():
+			continue
 		if planet.has("MS"):
 			if planet.MS == "M_MME":
 				Helper.update_MS_rsrc(planet)
@@ -658,10 +704,8 @@ func collect_all():
 				planet.bldg.stored = collect_data.remainder
 				continue
 		elif planet.has("bldg"):
-			if planet.bldg.name == "MM":
-				Helper.collect_MM(planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
-			elif planet.bldg.name == "AE":
-				Helper.collect_AE(planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
+			if planet.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
+				Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
 		if not planet.discovered:
 			progress.value += 1
 			continue

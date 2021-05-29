@@ -1,10 +1,10 @@
-extends Control
-onready var game = get_node("/root/Game")
+extends "Panel.gd"
 var editable:bool = false
 var hovered_over:String = ""
 onready var option_btn = $Panel/HBoxContainer/OptionButton
 
 func _ready():
+	set_polygon($Panel.rect_size, Vector2(0, 308))
 	$Panel/Done.text = "%s (Enter)" % [tr("DONE")]
 	$Panel/HBoxContainer/CheckBox.text = tr("TOGGLE") + " (F3)"
 
@@ -24,6 +24,7 @@ func refresh_overlay():
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
+			option_btn.add_item(tr("GALAXY_CONQUERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
@@ -159,11 +160,11 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				1:
+				1, 2:
 					editable = false
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
-				2:
+				3:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "diff")
 						c_vl.left = min_max._min
@@ -172,7 +173,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				3:
+				4:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
 						c_vl.left = min_max._min * e(1, 9)
@@ -181,7 +182,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
-				4:
+				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "dark_matter")
 						c_vl.left = min_max._min

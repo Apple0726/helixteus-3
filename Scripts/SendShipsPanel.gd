@@ -112,8 +112,11 @@ func send_ships():
 				game.ships_travel_start_date = OS.get_system_time_msecs()
 				game.ships_travel_length = time_cost
 				game.toggle_panel(self)
-				game.view.refresh()
-				game.HUD.refresh()
+				if game.c_v == travel_view:
+					game.view.refresh()
+					game.HUD.refresh()
+				else:
+					game.switch_view(travel_view)
 			else:
 				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:

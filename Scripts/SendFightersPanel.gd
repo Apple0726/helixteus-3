@@ -20,11 +20,17 @@ func refresh():
 		$Control.visible = false
 		$Control2.visible = true
 	else:
+		if game.galaxy_data[game.c_g].conquered:
+			$Control.visible = false
+			$Control2.visible = false
+			$Send.visible = false
+			$Label.text = tr("GALAXY_FULLY_CONQUERED")
+			return
 		$Control.visible = true
 		$Control2.visible = false
 		$Send.text = tr("SEND")
 		set_process(false)
-		var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
+		var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
 		var fighter_num:int = 0
 		var combined_strength2:float = 0
 		var strength_required:float = 0
@@ -44,7 +50,7 @@ func refresh():
 				combined_strength += fighter.strength
 				fighter_num += fighter.number
 				planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number
-				travel_costs += 1000000 * fighter.number * slider_factor * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
+				travel_costs += 50000000 * fighter.number * slider_factor * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
 		combined_strength2 = combined_strength
 		sort_systems($Control/CheckBox2.pressed)
 		sys_num = 0
@@ -59,7 +65,7 @@ func refresh():
 			else:
 				combined_strength2 -= system.diff
 				sys_num += 1
-		time_for_one_sys = 2 * 60000.0 / slider_factor
+		time_for_one_sys = 2 * 1200.0 / slider_factor
 		travel_costs *= sys_num
 		game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), sys_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_sys, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_sys * sys_num)], [Data.energy_icon, Data.time_icon], 19)
 		total_energy_cost = travel_costs + planet_exit_costs
@@ -147,6 +153,12 @@ func _on_Send_pressed():
 		game.galaxy_data[game.c_g].erase("sys_conquered")
 		game.galaxy_data[game.c_g].erase("combined_strength")
 		game.galaxy_data[game.c_g].erase("conquer_order")
+		var galaxy_conquered = true
+		for system in sorted_systems:
+			if not system.conquered:
+				galaxy_conquered = false
+				break
+		game.galaxy_data[game.c_g].conquered = galaxy_conquered
 		refresh()
 
 func _process(delta):
@@ -155,12 +167,14 @@ func _process(delta):
 		return
 	progress.value = (OS.get_system_time_msecs() - game.galaxy_data[game.c_g].conquer_start_date) / game.galaxy_data[game.c_g].time_for_one_sys * 100
 	var fighters_rekt = game.galaxy_data[game.c_g].combined_strength <= 0
+	var galaxy_conquered = true
 	if not fighters_rekt and progress.value >= 100:
 		if sorted_systems.empty():
 			sort_systems(not game.galaxy_data[game.c_g].conquer_order)
 		for system in sorted_systems:
 			if system.conquered:
 				continue
+			galaxy_conquered = false
 			if game.galaxy_data[game.c_g].combined_strength < system.diff:
 				game.galaxy_data[game.c_g].combined_strength = 0
 				fighters_rekt = true
@@ -175,6 +189,9 @@ func _process(delta):
 	RTL.text = "%s: %s / %s" % [tr("SYSTEMS_CONQUERED"), game.galaxy_data[game.c_g].sys_conquered, game.galaxy_data[game.c_g].sys_num]
 	if fighters_rekt:
 		RTL.text += "\n%s" % tr("ALL_FIGHTERS_REKT")
+		$Control2.visible = false
+	elif galaxy_conquered:
+		RTL.text += "\n%s" % tr("CONQUERED_GALAXY")
 		$Control2.visible = false
 	else:
 		time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - OS.get_system_time_msecs() + game.galaxy_data[game.c_g].conquer_start_date)

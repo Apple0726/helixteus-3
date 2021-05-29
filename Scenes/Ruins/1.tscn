@@ -21,6 +21,7 @@ tile_data = PoolIntArray( 0, 0, 4, 1, 0, 196609, 2, 0, 196609, 3, 0, 196609, 4, 
 NPC_id = 1
 
 [node name="NPC2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 2908, 1440 )
 NPC_id = 2
 
 [node name="Letter" type="Area2D" parent="."]

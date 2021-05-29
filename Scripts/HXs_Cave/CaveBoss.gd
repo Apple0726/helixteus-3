@@ -3,8 +3,8 @@ extends KinematicBody2D
 
 var cave_ref
 var HPBar
-var HP:int = 150
-var total_HP:int = 150
+var HP:int = 200
+var total_HP:int = 200
 var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
 var laser_texture = preload("res://Graphics/Cave/Boss/Laser.png")
 var bomb_scene = preload("res://Scenes/Cave/Bomb.tscn")
@@ -79,7 +79,7 @@ func _process(delta):
 				colliding = true
 				break
 		if colliding:
-			var dmg:float = 1.0
+			var dmg:float = 2000.0 * delta * 60
 			cave_ref.hit_player(dmg)
 			if cave_ref.HP >= 0:
 				Helper.show_dmg(int(dmg), cave_ref.rover.position, cave_ref)
@@ -129,13 +129,13 @@ func attack_1():
 	var rot:float = 0;
 	for i in 15:
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-108, -108), 3 if phase == 6 else 10, deg2rad(-125 - j * 10 + rot), bullet_texture, 5)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-108, -108), 3 if phase == 6 else 10, deg2rad(-125 - j * 10 + rot), bullet_texture, 5000000)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(108, 108), 3 if phase == 6 else 10, deg2rad(35 + j * 10 + rot), bullet_texture, 5)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(108, 108), 3 if phase == 6 else 10, deg2rad(35 + j * 10 + rot), bullet_texture, 5000000)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-108, 108), 3 if phase == 6 else 10, deg2rad(125 + j * 10 + rot), bullet_texture, 5)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-108, 108), 3 if phase == 6 else 10, deg2rad(125 + j * 10 + rot), bullet_texture, 5000000)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(108, -108), 3 if phase == 6 else 10, deg2rad(-35 - j * 10 + rot), bullet_texture, 5)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(108, -108), 3 if phase == 6 else 10, deg2rad(-35 - j * 10 + rot), bullet_texture, 5000000)
 		#rot += 15
 		yield(get_tree().create_timer(0.2 if phase == 6 else 0.1), "timeout")
 	next_attack = 2 if phase >= 5 else 5
@@ -147,13 +147,13 @@ func attack_2():
 	var spread:float = 0.5 if phase == 6 else 1.0
 	for i in 25:
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-244, -60), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-244, -60), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(244, -56), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(244, -56), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-244, 60), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-244, 60), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(244, 60), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(244, 60), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		yield(get_tree().create_timer(0.1 if phase == 6 else 0.07), "timeout")
 	$AnimationPlayer.play("Bullets", -1, -1.0 if phase == 6 else -1.5, true)
 	yield($AnimationPlayer, "animation_finished")
@@ -181,7 +181,7 @@ func attack_5():
 	speed = 0.0
 	for i in 8:
 		for j in 36:
-			cave_ref.add_proj(true, cave_ref.boss.position, 9 if phase == 4 else 13, deg2rad(j * 10 + (5 if i % 2 == 0 else 0)), bullet_texture, 5)
+			cave_ref.add_proj(true, cave_ref.boss.position, 9 if phase == 4 else 13, deg2rad(j * 10 + (5 if i % 2 == 0 else 0)), bullet_texture, 5000000)
 		yield(get_tree().create_timer(0.7 if phase == 4 else 0.4), "timeout")
 	next_attack = 6
 
@@ -212,9 +212,9 @@ func attack_7():
 	var spread:float = 1.0 if phase == 4 else 1.3
 	for i in 40:
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, rand_range(-PI/2 - spread, -PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		for j in 3:
-			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 5, Color.white, 2)
+			cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, rand_range(PI/2 - spread, PI/2 + spread), laser_texture, 2000000, Color.white, 2)
 		yield(get_tree().create_timer(0.07 if phase == 4 else 0.04), "timeout")
 	next_attack = 8
 
@@ -230,10 +230,10 @@ func attack_9():
 	$AnimationPlayer.play("LaserBeams", -1, 2.0)
 	yield($AnimationPlayer, "animation_finished")
 	for i in 50:
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-324, 0), 30, PI, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(324, 0), 30, 0, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, -PI/2, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, PI/2, laser_texture, 5, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-324, 0), 30, PI, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(324, 0), 30, 0, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, -PI/2, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, PI/2, laser_texture, 2000000, Color.red, 2)
 		yield(get_tree().create_timer(0.03), "timeout")
 		if rekt:
 			return
@@ -249,10 +249,10 @@ func attack_9():
 	tween2.start()
 	yield(tween2, "tween_all_completed")
 	for i in 50:
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-324, 0), 30, PI, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(324, 0), 30, 0, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, -PI/2, laser_texture, 5, Color.red, 2)
-		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, PI/2, laser_texture, 5, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(-324, 0), 30, PI, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(324, 0), 30, 0, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, -124), 30, -PI/2, laser_texture, 2000000, Color.red, 2)
+		cave_ref.add_proj(true, cave_ref.boss.position + Vector2(0, 124), 30, PI/2, laser_texture, 2000000, Color.red, 2)
 		yield(get_tree().create_timer(0.03), "timeout")
 		if rekt:
 			return
@@ -265,7 +265,7 @@ func attack_10():
 			break
 		var bomb = bomb_scene.instance()
 		bomb.velocity = Vector2(cos(deg2rad(i * 10)), sin(deg2rad(i * 10)))
-		bomb.speed = 40 if i < 36 else 10
+		bomb.speed = 20 if i < 36 else 5
 		bomb.cave_ref = cave_ref
 		bomb.laser_texture = laser_texture
 		bomb.position = position

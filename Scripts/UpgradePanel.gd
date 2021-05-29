@@ -129,7 +129,7 @@ func update():
 			curr_value = Helper.clever_round(curr_value, 3)
 		if not planet.empty():
 			curr_value *= num
-		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [curr_value], rsrc_icon, 20)
+		game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value)], rsrc_icon, 20)
 	else:
 		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
@@ -150,7 +150,7 @@ func update():
 		next_value = Helper.clever_round(next_value, 3)
 	if not planet.empty():
 		next_value *= num
-	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [next_value], rsrc_icon, 20)
+	game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(next_value)], rsrc_icon, 20)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
 	for icon in icons:
 		if costs[icon.name] == 0:
@@ -240,7 +240,7 @@ func _on_Upgrade_pressed():
 		else:
 			var new_value = bldg_value(bldg_info.value, next_lv.value, bldg_info.pw)
 			var base_costs = Data.costs[planet.bldg.name]
-			var cost_money = round(base_costs.money * geo_seq(1.25, planet.bldg[path_str], next_lv.value))
+			var cost_money = base_costs.money * geo_seq(1.25, planet.bldg[path_str], next_lv.value) * planet.tile_num
 			if planet.bldg.name == "MS":
 				game.mineral_capacity += (new_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.has("collect_date"):

@@ -82,7 +82,7 @@ func refresh():
 		var pie_text = "%s\n%s%%" % [obj.element, Helper.clever_round(obj.fraction * 100.0, 2)]
 		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
 	pie.refresh()
-	$Control/HBoxContainer/Label.text = "%s kg" % [round(hslider.value)]
+	$Control/HBoxContainer/Label.text = "%s kg" % [Helper.format_num(round(hslider.value))]
 	$Desc.text = tr("SC_DESC")
 	$Control.visible = true
 	hbox.visible = not is_crushing

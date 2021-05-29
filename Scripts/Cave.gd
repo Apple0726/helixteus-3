@@ -279,7 +279,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				noise.period = 50 - cave_floor
 				cave_size = 16 + cave_floor / 2
-		else:
+		elif cave_data.special_cave == 0:
 			noise.period = 65
 			rover_size = 0.4
 	else:
@@ -660,7 +660,7 @@ func on_Ship4_entered(_body):
 	$UI2/Dialogue.show_dialogue()
 
 func add_light(node):
-	#node.get_node("Light2D").enabled = true
+	node.get_node("Light2D").enabled = true
 	node.get_node("Shadow").visible = false
 	
 func on_chest_entered(_body, tile:String):
@@ -697,7 +697,7 @@ func on_ShipPart_entered(_body):
 
 func on_Manipulator_entered(_body, gem:int, gem_str:String):
 	if not game.fourth_ship_hints.manipulators[gem]:
-		game.objective.current += 6
+		game.objective.current += 1
 		game.popup(tr("MANIPULATOR_FOUND") % tr(gem_str.to_upper()), 2.5)
 		game.fourth_ship_hints.manipulators[gem] = true
 		for object in get_tree().get_nodes_in_group("misc_objects"):
@@ -1031,7 +1031,7 @@ func hit_rock(delta):
 			if not dont_gen_anything:
 				for mat in p_i.surface.keys():
 					if randf() < p_i.surface[mat].chance / 2.5:
-						var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.85), 3)
+						var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.9), 3)
 						if amount < 1:
 							continue
 						rsrc[mat] = amount
@@ -1039,7 +1039,7 @@ func hit_rock(delta):
 				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.75), 3)
+				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.9), 3)
 				remove_child(deposit)
 				deposit.queue_free()
 				deposits.erase(st)

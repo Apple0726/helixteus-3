@@ -116,6 +116,8 @@ func refresh():
 			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
 		if game.lv == 32:
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
+		if game.lv == 50:
+			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
@@ -160,11 +162,7 @@ func refresh():
 			elif game.objective.id == 11:
 				game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
 			elif game.objective.id == 12:
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":35}
-			elif game.objective.id == 14:
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":50}
-			elif game.objective.id == 15:
-				game.objective = {"type":game.ObjectiveType.EMMA, "id":16, "current":0, "goal":1}
+				game.objective = {"type":game.ObjectiveType.EMMA, "id":-1, "current":0, "goal":1}
 			else:
 				game.objective.clear()
 				if game.tutorial:

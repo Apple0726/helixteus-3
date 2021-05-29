@@ -5,6 +5,7 @@ var tf_type = ""
 var costs:Dictionary = {}
 var pressure:float
 var tile_num:int
+var surface:float
 var lake_num:int
 
 func _ready():
@@ -19,39 +20,39 @@ func update_info():
 	var pressure_mult = max(1, pressure)
 	var lake_mult = 1 + 9 * lake_num / float(tile_num)
 	for cost in tf_costs:
-		tf_costs[cost] *= tile_num * pressure_mult * lake_mult
+		tf_costs[cost] *= surface * pressure_mult * lake_mult
 	costs.erase("time")
 	for cost in costs:
-		costs[cost] *= tile_num
-	$Control/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(tile_num), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
+		costs[cost] *= surface
+	$Control/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
 	Helper.put_rsrc($Control/TCVBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Control/BCVBox, 32, costs, true, true)
 	$Control.visible = true
 
 func _on_MS_pressed():
 	tf_type = "MS"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("MINERAL_SILOS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINERAL_SILOS").to_lower()]
 	costs = Data.costs.MS.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("ATMOSPHERE_EXTRACTORS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ATMOSPHERE_EXTRACTORS").to_lower()]
 	costs = Data.costs.AE.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_MM_pressed():
 	tf_type = "MM"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("MINING_MACHINES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINING_MACHINES").to_lower()]
 	costs = Data.costs.MM.duplicate(true)
 	$Control/Note.visible = true
 	update_info()
 
 func _on_GH_pressed():
 	tf_type = "GH"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(tile_num), tr("GREENHOUSES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GREENHOUSES").to_lower()]
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
 	$Control/Note.visible = false
@@ -69,21 +70,21 @@ func _on_Terraform_pressed():
 		game.toggle_panel(self)
 		game.deduct_resources(total_costs)
 		var planet = game.planet_data[game.c_p]
-		planet.tile_num = tile_num
+		planet.tile_num = surface
 		planet.bldg = {}
 		planet.bldg.name = tf_type
 		planet.bldg.is_constructing = false
 		game.xp += round(total_costs.money / 100.0)
 		planet.bldg.path_1 = 1
 		planet.bldg.path_1_value = Data.path_1[tf_type].value
-		if tf_type in ["MM", "GH", "AE"]:
+		if tf_type in ["MM", "GH", "AE", "ME", "PP"]:
 			planet.bldg.path_2 = 1
 			planet.bldg.path_2_value = Data.path_2[tf_type].value
-		if tf_type in ["MM", "AE"]:
+		if tf_type in ["MM", "AE", "PP", "ME", "RL"]:
 			planet.bldg.collect_date = OS.get_system_time_msecs()
 			planet.bldg.stored = 0
 		if tf_type == "MS":
-			game.mineral_capacity += Data.path_1.MS.value * tile_num
+			game.mineral_capacity += Data.path_1.MS.value * surface
 		if tf_type == "MM" and not planet.has("depth"):
 			planet.depth = 0
 		if Helper.has_IR(tf_type):
@@ -94,8 +95,32 @@ func _on_Terraform_pressed():
 		var dir = Directory.new()
 		dir.remove("user://Save1/Planets/%s.hx3" % [game.c_p_g])
 		game.popup(tr("TF_SUCCESS"), 2)
-		if not game.objective.empty() and game.objective.type == game.ObjectiveTypes.TERRAFORM:
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
 			game.objective.current += 1
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
+
+
+func _on_PP_pressed():
+	tf_type = "PP"
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("POWER_PLANTS").to_lower()]
+	costs = Data.costs.PP.duplicate(true)
+	$Control/Note.visible = false
+	update_info()
+
+
+func _on_ME_pressed():
+	tf_type = "ME"
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINERAL_EXTRACTORS").to_lower()]
+	costs = Data.costs.ME.duplicate(true)
+	$Control/Note.visible = false
+	update_info()
+
+
+func _on_RL_pressed():
+	tf_type = "RL"
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RESEARCH_LABS").to_lower()]
+	costs = Data.costs.RL.duplicate(true)
+	$Control/Note.visible = false
+	update_info()

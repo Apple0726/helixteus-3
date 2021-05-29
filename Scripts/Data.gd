@@ -54,6 +54,8 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 func e(n, e):
 	return n * pow(10, e)
 
+var starting_galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+
 var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"notachicken_star":{"money":e(4.3, 7), "chickens":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"moon_but_not":{"money":e(8, 24), "moon_lords":e(2.1, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
@@ -73,7 +75,7 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_MB":{"money":e(5.5, 16), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 12), "aluminium":e(2, 11), "nanocrystal":e(8, 10), "time":120 * 86400},
 					"M_PK_0":{"money":e(2, 15), "stone":e(8, 14), "iron":e(2, 13), "aluminium":e(4.25, 12), "time":24 * 86400},
-					"M_PK_1":{"money":e(9.5, 16), "stone":e(1, 17), "iron":e(8.5, 15), "aluminium":e(8, 14), "time":48 * 86400},
+					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 15), "aluminium":e(8, 14), "time":48 * 86400},
 					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 18), "aluminium":e(1.5, 17), "time":96 * 86400},
 					"M_MPCC_0":{"money":e(4.4, 16), "stone":e(7.1, 13), "energy":e(9, 15), "quartz":e(4.8, 12), "nanocrystal":e(3.1, 12), "time":10 * 86400},
 }
@@ -204,7 +206,7 @@ var science_unlocks = {
 						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
-						"FG":{"cost":e(2.45, 10), "parents":["IGD"]},
+						"FG":{"cost":e(3.45, 9), "parents":["IGD"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
 						"PD":{"cost":e(1.2, 12), "parents":["FD"]},
@@ -230,11 +232,11 @@ var science_unlocks = {
 						"MME3":{"cost":e(2.4, 13), "parents":["MME2"]},
 						
 						#Planetkiller
-						"PK1":{"cost":e(5.25, 16), "parents":["MAE"]},
-						"PK2":{"cost":e(3.4, 18), "parents":["PK1"]},
+						"PK1":{"cost":e(5.25, 13), "parents":["MAE"]},
+						"PK2":{"cost":e(3.4, 15), "parents":["PK1"]},
 						
 						#Mega probe construction center
-						"MPCC":{"cost":e(2.9, 16), "parents":["MAE"]},
+						"MPCC":{"cost":e(2.9, 14), "parents":["MAE"]},
 						
 						#Gigastructures
 						"GS":{"cost":e(1, 19), "parents":["MB"]},
@@ -298,10 +300,10 @@ var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":
 						"green_laser":{"damage":68, "cooldown":0.185, "costs":{"money":950000, "silicon":20, "time":1500}},
 						"blue_laser":{"damage":150, "cooldown":0.18, "costs":{"money":e(5.2, 6), "silicon":50, "quartz":25, "time":4500}},
 						"purple_laser":{"damage":285, "cooldown":0.175, "costs":{"money":e(3.7, 7), "silicon":100, "quartz":50, "time":9000}},
-						"UV_laser":{"damage":550, "cooldown":0.17, "costs":{"money":e(6.5, 8), "silicon":200, "quartz":100, "time":18000}},
-						"xray_laser":{"damage":1400, "cooldown":0.165, "costs":{"money":e(9.8, 9), "silicon":500, "quartz":200, "time":30000}},
-						"gammaray_laser":{"damage":3250, "cooldown":0.16, "costs":{"money":e(1.4, 11), "silicon":1000, "quartz":500, "time":65000}},
-						"ultragammaray_laser":{"damage":30000, "cooldown":0.4, "costs":{"money":e(7.5, 12), "silicon":2500, "quartz":1000, "time":100000}},
+						"UV_laser":{"damage":550, "cooldown":0.165, "costs":{"money":e(3.1, 8), "silicon":200, "quartz":100, "time":18000}},
+						"xray_laser":{"damage":1400, "cooldown":0.155, "costs":{"money":e(9.8, 9), "silicon":500, "quartz":200, "time":30000}},
+						"gammaray_laser":{"damage":3250, "cooldown":0.14, "costs":{"money":e(2.5, 11), "silicon":1000, "quartz":500, "time":65000}},
+						"ultragammaray_laser":{"damage":9002, "cooldown":0.1, "costs":{"money":e(1.5, 13), "silicon":2500, "quartz":1000, "time":100000}},
 }#														rnge: mining range
 var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money":1000, "silicon":10, "time":10}},
 						"orange_mining_laser":{"speed":1.4, "rnge":260, "costs":{"money":17000, "silicon":12, "time":60}},
@@ -309,10 +311,10 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"green_mining_laser":{"speed":2.5, "rnge":285, "costs":{"money":950000, "silicon":20, "time":1500}},
 						"blue_mining_laser":{"speed":3.3, "rnge":300, "costs":{"money":e(5.2, 6), "silicon":50, "quartz":25, "time":4500}},
 						"purple_mining_laser":{"speed":4.3, "rnge":315, "costs":{"money":e(3.7, 7), "silicon":100, "quartz":50, "time":9000}},
-						"UV_mining_laser":{"speed":6, "rnge":330, "costs":{"money":e(6.5, 8), "silicon":200, "quartz":100, "time":18000}},
-						"xray_mining_laser":{"speed":9.1, "rnge":350, "costs":{"money":e(9.8, 9), "silicon":500, "quartz":200, "time":30000}},
-						"gammaray_mining_laser":{"speed":12, "rnge":380, "costs":{"money":e(1.4, 11), "silicon":1000, "quartz":500, "time":65000}},
-						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(7.5, 12), "silicon":2500, "quartz":1000, "time":100000}},
+						"UV_mining_laser":{"speed":6, "rnge":330, "costs":{"money":e(3.1, 8), "silicon":200, "quartz":100, "time":18000}},
+						"xray_mining_laser":{"speed":9.1, "rnge":350, "costs":{"money":e(4.0, 9), "silicon":500, "quartz":200, "time":30000}},
+						"gammaray_mining_laser":{"speed":12, "rnge":380, "costs":{"money":e(9.4, 10), "silicon":1000, "quartz":500, "time":65000}},
+						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000, "time":100000}},
 }
 var bullet_data = [{"damage":3.5, "accuracy":1.0}, {"damage":5, "accuracy":1.05}, {"damage":9, "accuracy":1.1}]
 var laser_data = [{"damage":2.5, "accuracy":1.8}, {"damage":3.5, "accuracy":2.2}, {"damage":6.5, "accuracy":2.7}]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/PlanetkillerPanel.gd" type="Script" id=6]
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=7]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Resources/PanelBG.tres" type="StyleBox" id=9]
 
@@ -86,6 +87,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="StartCharging" type="Button" parent="."]
+visible = false
+margin_left = 796.0
+margin_top = 560.0
+margin_right = 1062.0
+margin_bottom = 600.0
+text = "START_CHARGING"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Scroll" type="ScrollContainer" parent="."]
 margin_top = 136.0
 margin_right = 452.0
@@ -105,6 +117,7 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -159,7 +172,7 @@ __meta__ = {
 [node name="ChargingTime2" type="Label" parent="Control"]
 margin_left = 480.0
 margin_top = 114.0
-margin_right = 720.0
+margin_right = 1042.0
 margin_bottom = 138.0
 mouse_filter = 1
 text = "EXPECTED_RESOURCES"
@@ -173,16 +186,6 @@ margin_top = 416.0
 margin_right = 984.0
 margin_bottom = 440.0
 text = "30:00"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StartCharging" type="Button" parent="Control"]
-margin_left = 796.0
-margin_top = 560.0
-margin_right = 1062.0
-margin_bottom = 600.0
-text = "START_CHARGING"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -223,6 +226,66 @@ __meta__ = {
 [node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
 columns = 4
 
+[node name="Control2" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeCost" type="Label" parent="Control2"]
+margin_left = 728.0
+margin_top = 268.0
+margin_right = 912.0
+margin_bottom = 292.0
+text = "30:00"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Charging" type="Label" parent="Control2"]
+margin_left = 498.0
+margin_top = 176.0
+margin_right = 1024.0
+margin_bottom = 232.0
+text = "30:00"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeIcon" type="TextureRect" parent="Control2"]
+margin_left = 678.0
+margin_top = 264.0
+margin_right = 710.0
+margin_bottom = 296.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control2"]
+margin_left = 496.0
+margin_top = 240.0
+margin_right = 1024.0
+margin_bottom = 256.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="TextureProgress" type="TextureProgress" parent="Control2"]
+modulate = Color( 0.737255, 0.737255, 0.737255, 1 )
+margin_left = 496.0
+margin_top = 240.0
+margin_right = 1024.0
+margin_bottom = 256.0
+max_value = 1.0
+step = 0.0
+texture_progress = ExtResource( 7 )
+nine_patch_stretch = true
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="StartCharging" to="." method="_on_StartCharging_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="pressed" from="Control/StartCharging" to="." method="_on_Send_pressed"]

@@ -559,6 +559,8 @@ func on_target_pressed(target:int):
 	w_c_d[weapon.name].has_hit = false
 	remove_targets()
 	curr_sh += 1
+	while curr_sh < len(ship_data) and ship_data[curr_sh].HP <= 0:
+		curr_sh += 1
 
 func _on_weapon_pressed(_weapon_type:String):
 	if game:
