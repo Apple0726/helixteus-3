@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -345,7 +345,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
-			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
+			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\nNo multithreading (mass-build will generate a lag spike)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", false)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
@@ -387,7 +387,7 @@ func _ready():
 		money = e(2, 19)
 		mats.soil = 50000
 		mats.glass = 1000000
-		mets.nanocrystal = 10000000
+		mets.nanocrystal = e(1, 14)
 		show.plant_button = true
 		show.mining = true
 		show.shop = true
@@ -405,6 +405,12 @@ func _ready():
 		science_unlocked.FTL = true
 		science_unlocked.TF = true
 		science_unlocked.FG = true
+		science_unlocked.DS1 = true
+		science_unlocked.DS2 = true
+		science_unlocked.DS3 = true
+		science_unlocked.DS4 = true
+		science_unlocked.MB = true
+		science_unlocked.GS = true
 		stone.O = 8000000000
 		mats.silicon = 400000
 		mats.cellulose = 1000
@@ -543,7 +549,6 @@ func load_game():
 		stats = save_game.get_var()
 		objective = save_game.get_var()
 		save_game.close()
-		fourth_ship_hints.boss_rekt = false
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -699,7 +704,7 @@ func new_game(tut:bool):
 				#"Ir":0,
 				#"U":0,
 				#"Np":0,
-				#"Pu":0,
+				"Pu":0,
 	}
 
 	particles = {	"proton":0,
@@ -1411,7 +1416,12 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.GS
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].conquered
-		space_HUD.get_node("SendProbes").visible = c_v in ["supercluster", "universe"]
+		if c_v == "supercluster":
+			space_HUD.get_node("SendProbes").visible = c_sc == 0
+		elif c_v == "universe":
+			space_HUD.get_node("SendProbes").visible = true
+		else:
+			space_HUD.get_node("SendProbes").visible = false
 
 func add_overlay():
 	overlay = overlay_scene.instance()
@@ -1629,7 +1639,7 @@ func generate_superclusters(id:int):
 		sc_i["conquered"] = false
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
-		sc_i["visible"] = TEST
+		sc_i["visible"] = false
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
@@ -1667,7 +1677,7 @@ func generate_clusters(id:int):
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
-		c_i["visible"] = TEST
+		c_i["visible"] = TEST or c_sc != 0
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
 		c_i["discovered"] = false
@@ -2747,9 +2757,9 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"H":0.1 * big_planet_factor,
 									"C":0.1 * big_planet_factor,
 									"Ti":0.05,
+									"Pu":0.05,
 									"He":0.03 * big_planet_factor,
 									"P":0.02,
-									"Pu":0.01
 								}
 		else:
 			common_elements["Fe"] = rand_range(0.5, 0.95)

@@ -49,7 +49,10 @@ func _on_SendProbes_pressed():
 
 
 func _on_Gigastructures_pressed():
-	game.toggle_panel(game.gigastructures_panel)
+	if game.c_g_g == 0:
+		game.popup(tr("GS_ERROR"), 1.5)
+	else:
+		game.toggle_panel(game.gigastructures_panel)
 
 
 func _on_Gigastructures_mouse_entered():

@@ -111,6 +111,7 @@ func _on_StartCharging_pressed():
 		star.erase("rsrc")
 		set_process(false)
 		rekt_planet = false
+		game.HUD.refresh()
 	elif star.has("charging_time"):
 		star.erase("charging_time")
 		star.erase("charge_start_date")

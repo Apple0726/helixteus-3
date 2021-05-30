@@ -595,9 +595,17 @@ func _input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = OS.get_system_time_msecs()
-		mutex = Mutex.new()
-		thread = Thread.new()
-		thread.start(self, "test", bldg_to_construct)
+		if OS.get_name() == "HTML5":
+			for i in len(shadows):
+				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
+				remove_child(shadows[i])
+				shadows[i].queue_free()
+		else:
+			mutex = Mutex.new()
+			if thread:
+				thread.wait_to_finish()
+			thread = Thread.new()
+			thread.start(self, "test", bldg_to_construct)
 		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
@@ -847,7 +855,7 @@ func test(_bldg_to_construct:String):
 		if not is_inside_tree():
 			mutex.unlock()
 			return
-		constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
+		call_deferred("constr_bldg", get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
 		call_deferred("remove_child", shadows[i])
 		shadows[i].queue_free()
 	shadows.clear()

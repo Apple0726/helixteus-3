@@ -228,11 +228,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CostsHBox" type="HBoxContainer" parent="Control"]
+[node name="CostsHBox" type="GridContainer" parent="Control"]
 margin_left = 416.0
 margin_top = 292.0
 margin_right = 456.0
 margin_bottom = 332.0
+columns = 3
 
 [node name="Production" type="VBoxContainer" parent="Control"]
 margin_left = 416.0

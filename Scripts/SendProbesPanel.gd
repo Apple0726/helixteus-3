@@ -9,7 +9,7 @@ func _ready():
 	set_polygon($Background.rect_size)
 
 func refresh():
-	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
+	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
 	var probe_num:int = 0
 	exploring_probe_num = 0
 	if game.c_v == "supercluster":
@@ -61,7 +61,7 @@ func refresh():
 		for i in len(scs):
 			if not scs[i].visible:
 				if exploring_probe_offset == 0:
-					obj_to_discover = scs[i].l_id
+					obj_to_discover = scs[i].id
 					break
 				else:
 					exploring_probe_offset -= 1
@@ -71,9 +71,9 @@ func refresh():
 		else:
 			$Control.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
-		costs.energy = 1000000000000000000 * slider_factor * dist_mult
-		costs.Xe = 10000000000 * slider_factor * dist_mult
-		costs.time = 1500 / pow(slider_factor, 0.3) * dist_mult
+		costs.energy = 10000000000000000000000.0 * slider_factor * dist_mult
+		costs.Pu = 100 * slider_factor * dist_mult
+		costs.time = 150000 / pow(slider_factor, 0.3) * dist_mult
 		pass
 	if game.TEST:
 		costs.time /= 100

@@ -230,7 +230,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.18:"
+text = "Alpha v0.18: 30 May 2021"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -550,9 +550,18 @@ texture_normal = ExtResource( 12 )
 expand = true
 stretch_mode = 4
 
-[node name="de" type="TextureButton" parent="Title/Languages"]
+[node name="zh" type="TextureButton" parent="Title/Languages"]
 margin_left = 70.0
 margin_right = 130.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 29 )
+expand = true
+stretch_mode = 4
+
+[node name="de" type="TextureButton" parent="Title/Languages"]
+margin_left = 140.0
+margin_right = 200.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 17 )
@@ -560,20 +569,11 @@ expand = true
 stretch_mode = 4
 
 [node name="es" type="TextureButton" parent="Title/Languages"]
-margin_left = 140.0
-margin_right = 200.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
-expand = true
-stretch_mode = 4
-
-[node name="zh" type="TextureButton" parent="Title/Languages"]
 margin_left = 210.0
 margin_right = 270.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 29 )
+texture_normal = ExtResource( 16 )
 expand = true
 stretch_mode = 4
 
@@ -595,21 +595,21 @@ texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 4
 
-[node name="sv" type="TextureButton" parent="Title/Languages"]
+[node name="ko" type="TextureButton" parent="Title/Languages"]
 margin_left = 420.0
 margin_right = 480.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 28 )
+texture_normal = ExtResource( 18 )
 expand = true
 stretch_mode = 4
 
-[node name="ko" type="TextureButton" parent="Title/Languages"]
+[node name="sv" type="TextureButton" parent="Title/Languages"]
 margin_left = 490.0
 margin_right = 550.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 18 )
+texture_normal = ExtResource( 28 )
 expand = true
 stretch_mode = 4
 
@@ -703,27 +703,27 @@ __meta__ = {
 [connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch" ]]
-[connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~90%)" ]]
-[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "中文 (~65%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "中文" ]]
 [connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
-[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~55%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~95%)" ]]
+[connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
+[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~80%)" ]]
+[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
+[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~50%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~45%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~40%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "Svenska (~30%)" ]]
-[connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
-[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~30%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~25%)" ]]
 [connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
+[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "Svenska (~25%)" ]]
+[connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
 [connection signal="mouse_entered" from="Title/Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "Русский (4 lines)" ]]
 [connection signal="mouse_exited" from="Title/Languages/ru" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]

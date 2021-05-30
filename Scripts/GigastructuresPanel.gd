@@ -20,6 +20,8 @@ func refresh():
 func update_info():
 	var error:bool = false
 	costs = Data.costs[bldg].duplicate(true)
+	costs.stone = PI / 100.0
+	costs.mythril = 1 / 1000000.0
 	costs.erase("time")
 	$Control/ProductionPerSec.visible = bldg != "TP"
 	$Control/Production.visible = bldg != "TP"
@@ -31,17 +33,26 @@ func update_info():
 			$Control/GalaxyInfo.text = tr("TP_ERROR")
 			error = true
 	if bldg == "ME":
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MINERAL_EXTRACTORS").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
 		Helper.put_rsrc($Control/Production, 32, {"minerals":Data.path_1.ME.value * surface * Helper.get_IR_mult("ME")})
 	elif bldg == "PP":
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("POWER_PLANTS").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
 		Helper.put_rsrc($Control/Production, 32, {"energy":Data.path_1.PP.value * surface * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("RESEARCH_LABS").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
 		Helper.put_rsrc($Control/Production, 32, {"energy":Data.path_1.RL.value * surface * Helper.get_IR_mult("RL")})
 	elif bldg == "MS":
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MINERAL_SILOS").to_lower()]
 		$Control/ProductionPerSec.text = "STORAGE"
 		Helper.put_rsrc($Control/Production, 32, {"minerals":Data.path_1.MS.value * surface * Helper.get_IR_mult("MS")})
+	elif bldg == "GH":
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("GREENHOUSES").to_lower()]
+		$Control/ProductionPerSec.text = ""
+		Helper.put_rsrc($Control/Production, 32, {})
+		costs.soil = 10 * surface
 	$Control/Convert.visible = not error
 	Helper.put_rsrc($Control/CostsHBox, 32, costs, true, true)
 	$Control.visible = true
@@ -51,10 +62,11 @@ func _on_GS_pressed(extra_arg_0):
 	update_info()
 
 func _on_Convert_pressed():
-	if game.check_enough(costs):
-		game.deduct_resources(costs)
-		game.toggle_panel(self)
-		game.popup(tr("CONVERT_SUCCESS"), 2.0)
-		game.switch_view("cluster")
-	else:
-		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+	pass
+#	if game.check_enough(costs):
+#		game.deduct_resources(costs)
+#		game.toggle_panel(self)
+#		game.popup(tr("CONVERT_SUCCESS"), 2.0)
+#		game.switch_view("cluster")
+#	else:
+#		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

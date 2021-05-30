@@ -11,6 +11,7 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":200, "difficulty":0.01},
 								"He":{"Z":2, "energy_cost":1000, "difficulty":0.015},
 								"Ne":{"Z":10, "energy_cost":40000, "difficulty":2},
 								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":40},
+								"Pu":{"Z":94, "energy_cost":14000000000, "difficulty":8000},
 }
 
 func _ready():
