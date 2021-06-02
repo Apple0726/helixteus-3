@@ -82,6 +82,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 		$Control/Start.text = "%s (G)" % tr("START")
 		if has_rsrc:
 			$Control/HBox/HSlider.max_value = rsrc
+			$Control/HBox/HSlider.step = int(rsrc / 100)
 			$Control/HBox/HSlider.value = rsrc
 
 func _on_Start_pressed():
@@ -102,6 +103,7 @@ func _on_Start_pressed():
 		tile.bldg.erase("start_date")
 		tile.bldg.erase("ratio")
 		tile.bldg.erase("qty2")
+		_on_HSlider_value_changed($Control/HBox/HSlider.value)
 		refresh2(bldg_type, input, output, input_type, output_type)
 	else:
 		var rsrc = $Control/HBox/HSlider.value

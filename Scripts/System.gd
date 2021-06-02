@@ -268,7 +268,7 @@ func show_planet_info(id:int, l_id:int):
 		var icons = []
 		var adv = false
 		if p_i.has("tile_num"):
-			tooltip += Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)
+			tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
 			adv = len(icons) > 0
 		else:
 			if game.help.planet_details:

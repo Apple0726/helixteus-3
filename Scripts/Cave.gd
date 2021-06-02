@@ -743,7 +743,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if met_value.rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(rng.randf_range(0.2, 0.35) * met_value.amount * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
+			contents[met] = Helper.clever_round(rng.randf_range(0.4, 0.7) * met_value.amount * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):

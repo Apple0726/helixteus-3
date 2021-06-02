@@ -44,7 +44,7 @@ func refresh():
 			type = "atoms"
 		"Xe":
 			$Control/TextureRect.texture = xenon_texture
-			speed = 8500000
+			speed = 85000000
 			unit = "mol"
 			type = "atoms"
 		"H":
@@ -79,6 +79,7 @@ func refresh():
 		else:
 			$Control/HSlider.visible = true
 			$Control/HSlider.max_value = game[type][meta]
+			$Control/HSlider.step = int(game[type][meta] / 100)
 			$Control/HSlider.value = min($Control/HSlider.value, game[type][meta])
 		cost = $Control/HSlider.value
 		$Control/Label.text = "%s %s" % [Helper.clever_round(cost, 3), unit]

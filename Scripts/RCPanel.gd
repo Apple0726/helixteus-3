@@ -82,10 +82,12 @@ func _on_Slot_mouse_exited():
 
 func _on_InvSlot_pressed(index:int):
 	select_comp.visible = true
+	game.sub_panel = select_comp
 	select_comp.refresh(inventory[index].type, inventory[index].name if inventory[index].has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):
 	select_comp.visible = true
+	game.sub_panel = select_comp
 	if type == "rover_armor":
 		select_comp.refresh(type, armor)
 	elif type == "rover_wheels":
@@ -201,7 +203,7 @@ func refresh():
 	$Stats/HPText.text = String(round((HP + HP_bonus) * mult))
 	$Stats/AtkText.text = String(round(atk * mult))
 	$Stats/DefText.text = String(round((def + def_bonus) * mult))
-	$Stats/CargoText.text = "%s kg" % [round(weight_cap + cargo_bonus)]
+	$Stats/CargoText.text = "%s kg" % [round(weight_cap + cargo_bonus) * mult]
 	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus, 3))
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
@@ -244,7 +246,7 @@ func _on_DefText_mouse_entered():
 	game.show_tooltip("(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)])
 
 func _on_CargoText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus))])
+	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus) * mult)])
 
 func _on_SpeedText_mouse_entered():
 	game.show_tooltip("%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus), 3)])

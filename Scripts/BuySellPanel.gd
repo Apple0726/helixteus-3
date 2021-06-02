@@ -108,3 +108,4 @@ func _on_TextureButton_pressed():
 
 func _on_close_button_pressed():
 	visible = false
+	game.sub_panel = null

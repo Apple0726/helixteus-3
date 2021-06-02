@@ -60,7 +60,10 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	remove_costs()
 	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = true
 	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
-	vbox.get_node("Name").text = Helper.get_item_name(name)
+	if _dir == "Buildings":
+		vbox.get_node("Name").text = tr("%s_NAME" % name)
+	else:
+		vbox.get_node("Name").text = Helper.get_item_name(name)
 	desc_txt.text = desc + "\n"
 	item_costs = costs
 	item_total_costs = costs.duplicate(true)

@@ -129,40 +129,13 @@ func set_visibility(node):
 		other_node.visible = false
 	node.visible = true
 
-func get_item_name (_name:String, s:String = ""):
+func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
 		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
 		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
-	match _name:
-		"ME":
-			return tr("MINERAL_EXTRACTOR%s" % s)
-		"PP":
-			return tr("POWER_PLANT%s" % s)
-		"RL":
-			return tr("RESEARCH_LAB%s" % s)
-		"MM":
-			return tr("MINING_MACHINE%s" % s)
-		"MS":
-			return tr("MINERAL_SILO%s" % s)
-		"RCC":
-			return tr("ROVER_CONSTR_CENTER%s" % s)
-		"SC":
-			return tr("STONE_CRUSHER%s" % s)
-		"GF":
-			return tr("GLASS_FACTORY%s" % s)
-		"SE":
-			return tr("STEAM_ENGINE%s" % s)
-		"GH":
-			return tr("GREENHOUSE%s" % s)
-		"SP":
-			return tr("SOLAR_PANELS")
-		"AE":
-			return tr("ATMOSPHERE_EXTRACTOR%s" % s)
-		"AMN", "SPR", "SY", "PCC":
-			return tr("%s_NAME" % _name)
 	return tr(_name.to_upper())
 
 func get_plant_name(name:String):
@@ -430,7 +403,7 @@ func add_minerals(amount:float, add:bool = true):
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_AIE(next_lv:int = 0):
-	return 0.48 + (game.MUs.AIE + next_lv) / 50.0
+	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
 
 func get_au_mult(tile:Dictionary):
 	if tile.has("aurora"):

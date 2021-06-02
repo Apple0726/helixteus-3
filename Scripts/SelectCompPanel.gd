@@ -147,3 +147,4 @@ func _on_OptionButton_item_selected(_index):
 
 func _on_close_button_pressed():
 	visible = false
+	game.sub_panel = null

@@ -129,19 +129,19 @@ func has_SE(p_i:Dictionary):
 	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.is_constructing
 
 func get_atm_exit_cost(pressure:float):
-	var res:float = pow(pressure * 10, 1.5) * 300
+	var res:float = pow(pressure * 10, 2) * 150
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
 
 func get_grav_exit_cost(size:float):
-	var res:float = pow(size / 180.0, 2.5)
+	var res:float = pow(size / 200.0, 2.5)
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
 
 func get_atm_entry_cost(pressure:float):
-	var res:float = 1000 / clamp(pressure, 0.1, 10)
+	var res:float = 500 / clamp(pressure, 0.1, 10)
 	if has_SE(game.planet_data[dest_p_id]):
 		res *= get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv)
 	return round(res)

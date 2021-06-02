@@ -230,6 +230,7 @@ func refresh():
 		else:
 			max_value = game[MM][metal]
 	$Control/HSlider.max_value = max_value
+	$Control/HSlider.step = int(max_value / 100)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
 		$Transform.visible = true

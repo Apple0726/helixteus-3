@@ -31,28 +31,28 @@ func update_info():
 
 func _on_MS_pressed():
 	tf_type = "MS"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINERAL_SILOS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
 	costs = Data.costs.MS.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ATMOSPHERE_EXTRACTORS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AE_NAME_S").to_lower()]
 	costs = Data.costs.AE.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
 
 func _on_MM_pressed():
 	tf_type = "MM"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINING_MACHINES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MM_NAME_S").to_lower()]
 	costs = Data.costs.MM.duplicate(true)
 	$Control/Note.visible = true
 	update_info()
 
 func _on_GH_pressed():
 	tf_type = "GH"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GREENHOUSES").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
 	$Control/Note.visible = false
@@ -104,7 +104,7 @@ func _on_Terraform_pressed():
 
 func _on_PP_pressed():
 	tf_type = "PP"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("POWER_PLANTS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("PP_NAME_S").to_lower()]
 	costs = Data.costs.PP.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
@@ -112,7 +112,7 @@ func _on_PP_pressed():
 
 func _on_ME_pressed():
 	tf_type = "ME"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MINERAL_EXTRACTORS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ME_NAME_S").to_lower()]
 	costs = Data.costs.ME.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
@@ -120,7 +120,7 @@ func _on_ME_pressed():
 
 func _on_RL_pressed():
 	tf_type = "RL"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RESEARCH_LABS").to_lower()]
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RL_NAME_S").to_lower()]
 	costs = Data.costs.RL.duplicate(true)
 	$Control/Note.visible = false
 	update_info()

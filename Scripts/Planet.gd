@@ -600,13 +600,14 @@ func _input(event):
 				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
 				remove_child(shadows[i])
 				shadows[i].queue_free()
+			shadows.clear()
+			game.HUD.refresh()
 		else:
 			mutex = Mutex.new()
 			if thread:
 				thread.wait_to_finish()
 			thread = Thread.new()
 			thread.start(self, "test", bldg_to_construct)
-		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		return
@@ -626,7 +627,7 @@ func _input(event):
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
-		if game.active_panel and game.active_panel.polygon and Geometry.is_point_in_polygon(to_global(mouse_pos), game.active_panel.polygon):
+		if game.block_scroll:
 			return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -645,6 +646,7 @@ func _input(event):
 				game.tile_data[tile_id].plant = {}
 				$Soil.set_cell(x_pos, y_pos, 0)
 				$Soil.update_bitmask_region()
+				game.HUD.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
 			return
@@ -769,6 +771,9 @@ func _input(event):
 						game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
 						return
 					Helper.update_ship_travel()
+					if game.ships_travel_view != "-":
+						game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
+						return
 					if Helper.ships_on_planet(id):
 						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 							visible = false
@@ -826,7 +831,7 @@ func _input(event):
 						game.ships_c_g_coords.s = game.c_s_g
 						game.ships_dest_g_coords.s = game.c_s_g
 						game.switch_view("planet", false, "", [], false)
-					elif game.ships_travel_view == "-":
+					else:
 						game.send_ships_panel.dest_p_id = id
 						game.toggle_panel(game.send_ships_panel)
 				else:
@@ -859,6 +864,7 @@ func test(_bldg_to_construct:String):
 		call_deferred("remove_child", shadows[i])
 		shadows[i].queue_free()
 	shadows.clear()
+	game.HUD.call_deferred("refresh")
 	mutex.unlock()
 
 func _exit_tree():
@@ -1012,6 +1018,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 
 func _process(_delta):
 	var curr_time = OS.get_system_time_msecs()
+	var update_XP:bool = false
 	for time_bar_obj in time_bars:
 		var time_bar = time_bar_obj.node
 		var id2 = time_bar_obj.id
@@ -1036,6 +1043,7 @@ func _process(_delta):
 					hboxes[id2].get_node("Path2").text = String(tile.bldg.path_2)
 				if tile.bldg.has("path_3"):
 					hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
+				update_XP = true
 		elif type == "plant":
 			if not tile or not tile.has("plant") or tile.plant.empty() or not tile.plant.is_growing:
 				remove_child(time_bar)
@@ -1091,6 +1099,9 @@ func _process(_delta):
 		if tile.bldg.is_constructing:
 			continue
 		Helper.update_rsrc(p_i, tile, rsrc)
+	if update_XP:
+		game.HUD.update_XP()
+		game.HUD.update_minerals()
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()

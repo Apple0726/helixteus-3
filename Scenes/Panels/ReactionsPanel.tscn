@@ -168,7 +168,6 @@ margin_left = 508.0
 margin_top = 200.0
 margin_right = 916.0
 margin_bottom = 216.0
-step = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

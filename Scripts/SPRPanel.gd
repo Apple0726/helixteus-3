@@ -57,6 +57,7 @@ func refresh():
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
 	$Control/HSlider.max_value = max_value
+	$Control/HSlider.step = int(max_value / 100)
 	$Control/HSlider.visible = $Control/HSlider.max_value != 0
 	if $Control3.visible:
 		$Transform.visible = true

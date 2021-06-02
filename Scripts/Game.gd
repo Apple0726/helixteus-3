@@ -322,7 +322,7 @@ func _ready():
 	add_child(b_i_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
-	if TranslationServer.get_locale() != "es":
+	if not TranslationServer.get_locale() in ["de", "zh", "es"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
@@ -345,7 +345,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
-			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\nNo multithreading (mass-build will generate a lag spike)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
+			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - No multithreading (mass-build will generate a lag spike)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", false)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
@@ -555,6 +555,8 @@ func load_game():
 			tile_data = open_obj("Planets", c_p_g)
 			if c_v == "mining":
 				c_v = "planet"
+			elif c_v == "science_tree":
+				c_v = l_v
 			$UI.add_child(HUD)
 			view.set_process(true)
 			var file = Directory.new()
@@ -1312,9 +1314,14 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		fn_save_game(true)
 
 func add_science_tree():
-	HUD.get_node("Panel/CollectAll").visible = false
+	HUD.get_node("Buttons").visible = false
+	HUD.get_node("Panel").visible = false
 	HUD.get_node("Hotbar").visible = false
+	HUD.get_node("Lv").modulate.a = 0.5
 	add_obj("science_tree")
+	for rsrc in HUD.get_node("Resources").get_children():
+		if rsrc.name != "SP":
+			rsrc.modulate.a = 0.5
 
 func add_mining():
 	HUD.get_node("Panel/CollectAll").visible = false
@@ -1332,8 +1339,13 @@ func remove_mining():
 	mining_HUD = null
 
 func remove_science_tree():
+	HUD.get_node("Buttons").visible = true
+	HUD.get_node("Panel").visible = true
 	HUD.get_node("Hotbar").visible = true
+	HUD.get_node("Lv").modulate.a = 1.0
 	view.remove_obj("science_tree")
+	for rsrc in HUD.get_node("Resources").get_children():
+		rsrc.modulate.a = 1.0
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
@@ -2335,7 +2347,7 @@ func generate_planets(id:int):#local id
 					lv = ceil(0.9 * log(power) / log(1.2))
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
 				var def = Helper.rand_int(3, 10)
-				var atk = round(rand_range(0.8, 1.2) * (18 - def) * pow(1.15, lv - 1))
+				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
 				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
@@ -3114,6 +3126,7 @@ func sell_all_minerals():
 
 var cmd_history:Array = []
 var cmd_history_index:int = -1
+var sub_panel
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -3162,13 +3175,15 @@ func _input(event):
 		elif not tutorial or tutorial.tut_num >= 26:
 			if active_panel:
 				if c_v != "":
-					if not active_panel.polygon:
-						active_panel.visible = false
+					if sub_panel:
+						sub_panel.visible = false
+						sub_panel = null
 					elif active_panel == upgrade_panel:
 						remove_upgrade_panel()
+						active_panel = null
 					else:
 						fade_out_panel(active_panel)
-					active_panel = null
+						active_panel = null
 				else:
 					toggle_panel(active_panel)
 				hide_tooltip()

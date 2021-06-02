@@ -29,6 +29,7 @@ func _ready():
 		$Autosave.value = autosave_interval
 		$FPS/FPS.value = max_fps
 		$CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
+		set_notation()
 
 func _on_Main_audio_value_changed(value):
 	update_volumes(0, value)

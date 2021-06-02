@@ -59,6 +59,7 @@ func get_item(_name, _type, _dir):
 		else:
 			game.deduct_resources(item_total_costs)
 			add_items(tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
+			game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 

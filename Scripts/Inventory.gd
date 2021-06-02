@@ -194,6 +194,7 @@ func show_buy_sell(type:String, obj:String):
 		if type == "Metals" and game.mets[obj] <= 0:
 			buy_sell.is_selling = false
 	buy_sell.visible = true
+	game.sub_panel = buy_sell
 	buy_sell.refresh(type, obj)
 
 func show_mat(mat:String):

@@ -38,6 +38,36 @@ func _ready():
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 
+func update_XP():
+	while game.xp >= game.xp_to_lv:
+		game.lv += 1
+		game.xp -= game.xp_to_lv
+		game.xp_to_lv = round(game.xp_to_lv * 1.5)
+		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
+			game.objective.current += 1
+		if game.lv == 30:
+			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
+		if game.lv == 32:
+			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
+		if game.lv == 50:
+			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
+	lv_txt.text = tr("LV") + " %s" % [game.lv]
+	lv_progress.value = game.xp / float(game.xp_to_lv)
+
+func update_minerals():
+	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
+		return
+	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
+	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(min_cap, 6)]
+	if round(game.minerals) == min_cap:
+		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		minerals_text["custom_colors/font_color"] = Color.red
+	else:
+		if $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			 $Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		minerals_text["custom_colors/font_color"] = Color.white
+
 func refresh():
 	if not game:
 		return
@@ -74,16 +104,7 @@ func refresh():
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money), 6)
 		energy_text.text = Helper.format_num(game.energy, 6)
-	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
-	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(min_cap, 6)]
-	if round(game.minerals) == min_cap:
-		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
-			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
-		minerals_text["custom_colors/font_color"] = Color.red
-	else:
-		if $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
-			 $Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
-		minerals_text["custom_colors/font_color"] = Color.white
+	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil, 3), 6) + " kg"
@@ -103,23 +124,10 @@ func refresh():
 	craft.visible = game.show.materials
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
-	$Panel.visible = game.show.minerals
+	$Panel.visible = game.show.minerals and game.c_v != "science_tree"
 	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
 	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
-	while game.xp >= game.xp_to_lv:
-		game.lv += 1
-		game.xp -= game.xp_to_lv
-		game.xp_to_lv = round(game.xp_to_lv * 1.5)
-		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
-			game.objective.current += 1
-		if game.lv == 30:
-			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
-		if game.lv == 32:
-			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
-		if game.lv == 50:
-			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
-	lv_txt.text = tr("LV") + " %s" % [game.lv]
-	lv_progress.value = game.xp / float(game.xp_to_lv)
+	update_XP()
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		$Buttons/Ships.shortcut.shortcut.action = "Z"
 	else:
@@ -179,7 +187,7 @@ func refresh():
 	if $Objectives.visible:
 		$Objectives/Label.visible = false
 		if game.objective.type == game.ObjectiveType.BUILD:
-			$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":Helper.get_item_name(game.objective.data, "" if game.objective.goal == 1 else "S").to_lower()})
+			$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":tr("%s_NAME%s" % [game.objective.data.to_upper(), "" if game.objective.goal == 1 else "_S"]).to_lower()})
 		elif game.objective.type == game.ObjectiveType.SAVE:
 			var split:Array = game.objective.data.split("/")
 			var primary_resource = len(split) == 1
