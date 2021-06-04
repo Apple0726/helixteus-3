@@ -18,13 +18,13 @@ func _ready():
 
 func _on_HSlider_value_changed(value):
 	if input_type in ["mats", "mets"]:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.clever_round(value), input_unit]
+		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num(value), input_unit]
 	else:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [round(value), input_unit]
+		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num(value), input_unit]
 	if output_type in ["mats", "mets"]:
-		$Control/AmountProduced.text = "%s %s" % [Helper.clever_round(value * ratio), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(value * ratio), output_unit]
 	else:
-		$Control/AmountProduced.text = "%s %s" % [round(value * ratio), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(value * ratio), output_unit]
 
 func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
@@ -67,9 +67,11 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 		$Control/Texture.texture = load("res://Graphics/Materials/%s.png" % [output])
 	elif output_type == "mets":
 		$Control/Texture.texture = load("res://Graphics/Metals/%s.png" % [output])
-	
 	if tile.bldg.has("qty1"):
 		set_process(true)
+		var has_rsrc:bool = rsrc > 0
+		$Control.visible = has_rsrc
+		$NoRsrc.visible = not has_rsrc
 		$Control/Start.text = "%s (G)" % tr("STOP")
 		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
 	else:
@@ -127,13 +129,13 @@ func _process(delta):
 		return
 	var prod_i = Helper.get_prod_info(tile)
 	if input_type in ["mats", "mets"]:
-		storage_txt.text = "%s %s" % [prod_i.qty_left, input_unit]
+		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
 	else:
-		storage_txt.text = "%s %s" % [round(prod_i.qty_left), input_unit]
+		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
 	if output_type in ["mats", "mets"]:
-		amount_produced_txt.text = "%s %s" % [prod_i.qty_made, output_unit]
+		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made), output_unit]
 	else:
-		amount_produced_txt.text = "%s %s" % [round(prod_i.qty_made), output_unit]
+		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made), output_unit]
 
 
 func _on_close_button_pressed():

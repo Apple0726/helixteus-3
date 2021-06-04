@@ -11,7 +11,7 @@ var MM:String
 var reaction:String = ""
 var atom_costs:Dictionary = {}
 var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "K", "Ca", "Ti", "Cr", "Mn", "Fe", "Co", "Ni", "Xe", "Ta", "W", "Os", "Ir", "U", "Np", "Pu"]},
-								"diamond":{"MM":"mets", "atoms":["C"]},
+								"iron":{"MM":"mets", "atoms":["Fe"]},
 								"aluminium":{"MM":"mets", "atoms":["Al"]},
 								"silicon":{"MM":"mats", "atoms":["Si"]},
 								"amethyst":{"MM":"mets", "atoms":["Si", "O"]},
@@ -21,6 +21,7 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 								"ruby":{"MM":"mets", "atoms":["Al", "O"]},
 								"sapphire":{"MM":"mets", "atoms":["Al", "O"]},
 								"titanium":{"MM":"mets", "atoms":["Ti"]},
+								"diamond":{"MM":"mets", "atoms":["C"]},
 }
 
 func _ready():
@@ -75,7 +76,7 @@ func _on_stone_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/To, 32, {"stone":0})
 	metal = "stone"
 	energy_cost = 100
-	difficulty = 0.01
+	difficulty = 0.001
 	_on_Switch_pressed()
 	$Control/Switch.visible = false
 	
@@ -88,6 +89,18 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	metal = "diamond"
 	energy_cost = 25000
 	difficulty = 1.0
+	refresh()
+	$Control/Switch.visible = true
+
+func _on_iron_pressed(_name:String, dict:Dictionary):
+	reset_poses(_name, dict)
+	ratios = {"Fe":1000.0 / 55.845}
+	atom_costs = {"Fe":0}
+	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	Helper.put_rsrc($Control2/To, 32, {"iron":0})
+	metal = "iron"
+	energy_cost = 300
+	difficulty = 0.2
 	refresh()
 	$Control/Switch.visible = true
 
@@ -200,6 +213,9 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 func refresh():
 	tile = game.tile_data[game.c_t]
 	au_mult = Helper.get_au_mult(tile)
+	$Control3.visible = tile.bldg.has("qty") and reaction == tile.bldg.reaction
+	$Control.visible = not $Control3.visible and reaction != ""
+	refresh_icon()
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / tile.bldg.path_1_value)
 	for reaction_name in reactions:
@@ -319,7 +335,7 @@ func _on_Transform_pressed():
 		$Control.visible = true
 		$Control3.visible = false
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
-		$ScrollContainer/VBoxContainer.get_node(reaction).icon = null
+		refresh_icon()
 		_on_HSlider_value_changed($Control/HSlider.value)
 	else:
 		var rsrc = $Control/HSlider.value
@@ -344,12 +360,19 @@ func _on_Transform_pressed():
 		$Control.visible = false
 		$Control3.visible = true
 		$Transform.text = "%s (G)" % tr("STOP")
-		$ScrollContainer/VBoxContainer.get_node(reaction).icon = Data.time_icon
+		refresh_icon()
 	game.HUD.refresh()
+
+func refresh_icon():
+	for r in $ScrollContainer/VBoxContainer.get_children():
+		r.icon = Data.time_icon if tile.bldg.has("reaction") and r.name == tile.bldg.reaction else null
 
 func _process(delta):
 	if not tile or tile.empty():
 		_on_close_button_pressed()
+		set_process(false)
+		return
+	if not tile.bldg.has("start_date"):
 		set_process(false)
 		return
 	var reaction_info = get_reaction_info(tile)

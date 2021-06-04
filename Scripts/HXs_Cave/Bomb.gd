@@ -11,7 +11,7 @@ func _ready():
 func _process(delta):
 	position += speed * velocity
 	speed *= 0.98 * delta * 60
-	if speed < 0.5:
+	if speed < 0.8:
 		for j in 9:
 			cave_ref.add_proj(true, position, 10, deg2rad(j * 40), laser_texture, 2000000, Color.white, 2)
 		set_process(false)

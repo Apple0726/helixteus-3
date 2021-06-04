@@ -26,13 +26,13 @@ func refresh():
 	var hbox3 = $HBox/VBox2/Probes/GridContainer
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
-		rov.free()
+		rov.queue_free()
 	for fgh in hbox2.get_children():
 		hbox2.remove_child(fgh)
-		fgh.free()
+		fgh.queue_free()
 	for probe in hbox3.get_children():
 		hbox3.remove_child(probe)
-		probe.free()
+		probe.queue_free()
 	probe_time_bars.clear()
 	for i in len(game.rover_data):
 		var rov = game.rover_data[i]
@@ -104,12 +104,13 @@ func _process(delta):
 		if progress >= 1:
 			if probe.tier == 0:
 				var cluster_data:Array
-				if game.c_v == "supercluster" and game.c_sc == 0:
+				if game.c_sc == 0 and game.c_v in ["supercluster", "cluster"]:
 					cluster_data = game.cluster_data
+					cluster_data[probe.obj_to_discover].visible = true
 				else:
 					cluster_data = game.open_obj("Superclusters", 0)
-				cluster_data[probe.obj_to_discover].visible = true
-				Helper.save_obj("Superclusters", 0, cluster_data)
+					cluster_data[probe.obj_to_discover].visible = true
+					Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			elif probe.tier == 1:
 				var supercluster_data:Array

@@ -37,8 +37,8 @@ func _ready():
 			add_child(blue_line)
 			blue_line.add_point(game.system_data[wh_data.from].pos)
 			blue_line.add_point(game.system_data[wh_data.to].pos)
-			blue_line.width = 1
-			blue_line.default_color = Color(0.4, 0.2, 1.0, 1.0)
+			blue_line.width = 2
+			blue_line.default_color = Color(0.6, 0.4, 1.0, 1.0)
 			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays)

@@ -12,8 +12,8 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_c
 				"GH":{"value":1.5, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
 				"SP":{"value":2.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":0.2, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"AMN":{"value":1.0, "pw":1.14, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
-				"SPR":{"value":1.0, "pw":1.14, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
+				"AMN":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -74,10 +74,10 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_MB":{"money":e(5.5, 16), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 12), "aluminium":e(2, 11), "nanocrystal":e(8, 10), "time":120 * 86400},
-					"M_PK_0":{"money":e(2, 15), "stone":e(8, 14), "iron":e(2, 13), "aluminium":e(4.25, 12), "time":24 * 86400},
-					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 15), "aluminium":e(8, 14), "time":48 * 86400},
-					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 18), "aluminium":e(1.5, 17), "time":96 * 86400},
-					"M_MPCC_0":{"money":e(4.4, 16), "stone":e(7.1, 13), "energy":e(9, 15), "quartz":e(4.8, 12), "nanocrystal":e(3.1, 12), "time":10 * 86400},
+					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
+					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 14), "aluminium":e(8, 13), "time":48 * 86400},
+					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 17), "aluminium":e(1.5, 16), "time":96 * 86400},
+					"M_MPCC_0":{"money":e(4.4, 17), "stone":e(7.1, 14), "energy":e(9, 16), "quartz":e(4.8, 13), "nanocrystal":e(3.1, 13), "time":10 * 86400},
 }
 
 var MS_output = {	"M_DS_0":e(1, 8),
@@ -236,7 +236,7 @@ var science_unlocks = {
 						"PK2":{"cost":e(3.4, 15), "parents":["PK1"]},
 						
 						#Mega probe construction center
-						"MPCC":{"cost":e(2.9, 14), "parents":["MAE"]},
+						"MPCC":{"cost":e(2.9, 15), "parents":["MAE"]},
 						
 						#Gigastructures
 						"GS":{"cost":e(1, 19), "parents":["MB"]},

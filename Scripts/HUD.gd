@@ -436,6 +436,7 @@ func _on_Emma_mouse_entered():
 	game.show_tooltip(tr("TALK_TO_OP_GRILL"))
 
 func _on_Emma_pressed():
+	game.objective.clear()
 	$Dialogue.visible = true
 	$Dialogue.NPC_id = 3
 	if game.c_c_g == 3:
@@ -457,3 +458,7 @@ func _on_Wiki_mouse_entered():
 
 func _on_Wiki_pressed():
 	game.toggle_panel(game.wiki)
+
+
+func _on_Dialogue_dialogue_finished(_NPC_id:int, _dialogue_id:int):
+	$Dialogue.NPC_id = -1

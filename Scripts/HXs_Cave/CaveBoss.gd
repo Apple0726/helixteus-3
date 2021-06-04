@@ -265,7 +265,7 @@ func attack_10():
 			break
 		var bomb = bomb_scene.instance()
 		bomb.velocity = Vector2(cos(deg2rad(i * 10)), sin(deg2rad(i * 10)))
-		bomb.speed = 20 if i < 36 else 5
+		bomb.speed = 10 if i < 36 else 5
 		bomb.cave_ref = cave_ref
 		bomb.laser_texture = laser_texture
 		bomb.position = position

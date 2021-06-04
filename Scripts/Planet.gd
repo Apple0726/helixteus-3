@@ -860,7 +860,8 @@ func test(_bldg_to_construct:String):
 		if not is_inside_tree():
 			mutex.unlock()
 			return
-		call_deferred("constr_bldg", get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
+		constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
+		#call_deferred("constr_bldg", get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
 		call_deferred("remove_child", shadows[i])
 		shadows[i].queue_free()
 	shadows.clear()

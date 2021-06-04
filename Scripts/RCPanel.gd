@@ -119,6 +119,7 @@ func _on_Button_pressed():
 			game.show.vehicles_button = true
 			if game.planet_HUD:
 				game.planet_HUD.get_node("VBoxContainer/Vehicles").visible = true
+		game.HUD.refresh()
 	else:
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
 

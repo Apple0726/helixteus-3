@@ -17,6 +17,7 @@ func _ready():
 
 func refresh():
 	$GridContainer/M_MPCC.visible = game.science_unlocked.MPCC
+	$GridContainer/M_MB.visible = game.science_unlocked.MB
 		
 func get_MS_name(_name:String):
 	return tr("%s_NAME" % _name)

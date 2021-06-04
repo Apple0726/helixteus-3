@@ -252,10 +252,10 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(6.25, 8)}},
 					"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
 					"platinum_pickaxe":{"speed":175.0, "durability":1200, "costs":{"money":e(8.2, 9)}},
-					"titanium_pickaxe":{"speed":230.0, "durability":2500, "costs":{"money":e(1.45, 10)}},
-					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(7.4, 10)}},
-					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":e(9.25, 11)}},
-					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 13)}},
+					"titanium_pickaxe":{"speed":230.0, "durability":2500, "costs":{"money":e(1.15, 10)}},
+					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(5.4, 10)}},
+					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":e(3.25, 11)}},
+					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 12)}},
 }
 
 var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
@@ -549,6 +549,8 @@ func load_game():
 		stats = save_game.get_var()
 		objective = save_game.get_var()
 		save_game.close()
+		if not fourth_ship_hints.has("emma_free"):
+			fourth_ship_hints.emma_free = false
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -807,6 +809,7 @@ func new_game(tut:bool):
 							"boss_planet":-1,
 							"barrier_broken":false,
 							"boss_rekt":false,
+							"emma_free":false,
 							"artifact_found":false,
 							"emma_joined":false,
 							"ship_spotted":false,
@@ -1472,8 +1475,8 @@ func add_dimension():
 
 func add_universe():
 	var view_str:String = tr("VIEW_DIMENSION")
-	if lv < 100:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 100"]]
+	if true:
+		view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
 	put_change_view_btn(view_str, "res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u]["discovered"]:
 		reset_collisions()
@@ -2456,7 +2459,7 @@ func generate_tiles(id:int):
 			#au_int: aurora_intensity
 			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
-				au_int = Helper.clever_round(rand_range(12, 13))
+				au_int = Helper.clever_round(rand_range(8, 8.5))
 			if tile_from == -1:
 				if cross_aurora:
 					tile_from = wid / 2
@@ -2546,7 +2549,7 @@ func generate_tiles(id:int):
 					floor_size = 20
 					num_floors = 3
 				if boss_cave:
-					tile_data[t_id].aurora.au_int *= tile_data[t_id].aurora.au_int
+					tile_data[t_id].aurora.au_int *= 2 * tile_data[t_id].aurora.au_int
 					cave_data.append({"num_floors":5, "floor_size":25, "special_cave":4})
 				else:
 					cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
@@ -2833,7 +2836,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	#temp in K
 	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(50, 150)},
-								"glass":{"chance":0.1, "amount":1},
+								"glass":{"chance":0.1, "amount":4},
 								"sand":{"chance":0.8, "amount":50},
 								#"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
@@ -2843,7 +2846,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 		surface_mat_info.erase("cellulose")
 		surface_mat_info.erase("coal")
 	surface_mat_info.sand.chance = pow(crust_comp.Si + crust_comp.O, 0.1) if crust_comp.has_all(["Si", "O"]) else 0.0
-	var sand_glass_ratio = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 1/2, 0, 1)
+	var sand_glass_ratio:float = clamp(atan(0.01 * (temp + 273 - 1500)) * 1.05 / PI + 0.5, 0, 1)
 	surface_mat_info.glass.chance = surface_mat_info.sand.chance * sand_glass_ratio
 	surface_mat_info.sand.chance *= (1 - sand_glass_ratio)
 	if sand_glass_ratio == 0:
@@ -3388,6 +3391,8 @@ func fn_save_game(autosave:bool):
 	elif c_v == "system":
 		Helper.save_obj("Galaxies", c_g_g, system_data)
 	elif c_v == "galaxy":
+		if send_probes_panel.is_processing():
+			Helper.save_obj("Galaxies", c_g_g, system_data)
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	elif c_v == "cluster":
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
@@ -3666,7 +3671,7 @@ func game_fade(fn, args:Array = []):
 func get_4th_ship():
 	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-	Helper.add_ship_XP(3, 250000)
+	Helper.add_ship_XP(3, 350000)
 	Helper.add_weapon_XP(3, "bullet", 400)
 	Helper.add_weapon_XP(3, "laser", 400)
 	Helper.add_weapon_XP(3, "bomb", 400)

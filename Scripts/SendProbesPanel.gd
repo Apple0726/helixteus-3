@@ -3,15 +3,16 @@ extends "Panel.gd"
 var costs:Dictionary = {}
 var exploring_probe_num:int = 0
 var obj_to_discover:int = -1
+var dist_mult:float = 1
 
 func _ready():
 	set_process(false)
 	set_polygon($Background.rect_size)
 
 func refresh():
-	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
 	var probe_num:int = 0
 	exploring_probe_num = 0
+	costs.clear()
 	if game.c_v == "supercluster":
 		var undiscovered_clusters:int = 0
 		var n:int = len(game.cluster_data)
@@ -23,7 +24,7 @@ func refresh():
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		var dist_mult:float = pow(1.01, n - undiscovered_clusters + exploring_probe_num)
+		dist_mult = pow(1.01, n - undiscovered_clusters + exploring_probe_num)
 		var clusters:Array = game.cluster_data.duplicate(true)
 		clusters.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
@@ -40,9 +41,7 @@ func refresh():
 		else:
 			$Control.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
-		costs.energy = 1000000000000 * slider_factor * dist_mult
-		costs.Xe = 10000 * slider_factor * dist_mult
-		costs.time = 150 / pow(slider_factor, 0.3) * dist_mult
+		refresh_energy()
 	elif game.c_v == "universe":
 		var undiscovered_sc:int = 0
 		var n:int = len(game.supercluster_data)
@@ -54,7 +53,7 @@ func refresh():
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		var dist_mult:float = pow(1.01, n - undiscovered_sc + exploring_probe_num)
+		dist_mult = pow(1.01, n - undiscovered_sc + exploring_probe_num)
 		var scs:Array = game.supercluster_data.duplicate(true)
 		scs.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
@@ -71,14 +70,20 @@ func refresh():
 		else:
 			$Control.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
+			refresh_energy()
+
+func refresh_energy():
+	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
+	if game.c_v == "supercluster":
+		costs.energy = 1000000000000 * slider_factor * dist_mult
+		costs.Xe = 10000 * slider_factor * dist_mult
+		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult
+	elif game.c_v == "universe":
 		costs.energy = 10000000000000000000000.0 * slider_factor * dist_mult
 		costs.Pu = 100 * slider_factor * dist_mult
-		costs.time = 150000 / pow(slider_factor, 0.3) * dist_mult
-		pass
-	if game.TEST:
-		costs.time /= 100
+		costs.time = 150000 / pow(slider_factor, 0.4) * dist_mult
 	Helper.put_rsrc($Control/Costs, 36, costs, true, true)
-
+	
 func dist_sort(a:Dictionary, b:Dictionary):
 	if a.pos.length() < b.pos.length():
 		return true
@@ -106,4 +111,4 @@ func _on_Send_pressed():
 		refresh()
 
 func _on_HSlider_value_changed(value):
-	refresh()
+	refresh_energy()

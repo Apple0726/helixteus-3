@@ -99,6 +99,7 @@ var hole_exits:Array = []#id of hole and exit on each floor
 ### End cave save data ###
 
 var boss:CaveBoss
+var bossHPBar
 var shaking:Vector2 = Vector2.ZERO
 
 func _ready():
@@ -174,6 +175,12 @@ func set_rover_data():
 		game.help.sprint_mode = false
 
 func remove_cave():
+	if is_instance_valid(boss):
+		remove_child(boss)
+		boss.queue_free()
+	if is_instance_valid(bossHPBar):
+		$UI2.remove_child(bossHPBar)
+		bossHPBar.queue_free()
 	astar_node.clear()
 	rooms.clear()
 	tiles = []
@@ -579,12 +586,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 					op_grill.connect_events(1, $UI2/Dialogue)
 				elif not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
 					op_grill.connect_events(2, $UI2/Dialogue)
-				elif game.mets.amethyst < 1000000 or game.mets.sapphire < 1000000 or game.mets.topaz < 1000000 or game.mets.quartz < 1000000 or game.mets.ruby < 1000000 or game.mets.emerald < 1000000:
+				elif (game.mets.amethyst < 1000000 or game.mets.sapphire < 1000000 or game.mets.topaz < 1000000 or game.mets.quartz < 1000000 or game.mets.ruby < 1000000 or game.mets.emerald < 1000000) and not game.fourth_ship_hints.boss_rekt:
 					op_grill.connect_events(3, $UI2/Dialogue)
 				elif not game.fourth_ship_hints.boss_rekt:
 					op_grill.connect_events(4, $UI2/Dialogue)
-				else:
+				elif not game.fourth_ship_hints.emma_free or not game.fourth_ship_hints.artifact_found:
 					op_grill.connect_events(5, $UI2/Dialogue)
+				else:
+					op_grill.connect_events(6, $UI2/Dialogue)
 				var part_tile = rooms[0].tiles[5]
 				op_grill.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
 				add_child(op_grill)
@@ -1288,14 +1297,18 @@ func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 			get_node("OPGrill/Label").text = tr("NPC_3_NAME")
 			$UI2/Dialogue.dialogue_id = 2
 			get_node("OPGrill").connect_events(2, $UI2/Dialogue)
+		elif _dialogue_id == 5:
+			game.fourth_ship_hints.emma_free = true
 		elif _dialogue_id == 6:
 			game.fourth_ship_hints.emma_joined = true
 			remove_child(get_node("OPGrill"))
+			game.objective.clear()
 		elif _dialogue_id == 11:
 			game.fourth_ship_hints.ship_spotted = true
 			$UI2/Dialogue.NPC_id = -1
 		elif _dialogue_id == 12:
-			game.game_fade(["switch_view", "get_4th_ship"], [["planet"], []])
+			exit_cave()
+			game.get_4th_ship()
 	if _NPC_id == 4:
 		if _dialogue_id == 1:
 			if not game or game.money >= 50000000000000:#50T
@@ -1307,13 +1320,14 @@ func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 			init_boss()
 		elif _dialogue_id == 3:
 			boss.fade_away()
+		$UI2/Dialogue.NPC_id = -1
 
 func init_boss():
 	$UI2/InventorySlots.visible = true
 	$UI2/ActiveItem.visible = true
 	$UI2/HP.visible = true
 	$UI2/Inventory.visible = true
-	var bossHPBar = load("res://Scenes/BossHPBar.tscn").instance()
+	bossHPBar = load("res://Scenes/BossHPBar.tscn").instance()
 	$UI2.add_child(bossHPBar)
 	bossHPBar.set_anchors_and_margins_preset(Control.PRESET_CENTER_TOP)
 	boss.HPBar = bossHPBar

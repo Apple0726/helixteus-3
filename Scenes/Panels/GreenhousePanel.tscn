@@ -32,17 +32,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CostLabel" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -296.0
-margin_top = 212.0
-margin_right = 8.0
-margin_bottom = 236.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Plant" type="Button" parent="."]
 visible = false
 anchor_left = 1.0
@@ -78,6 +67,15 @@ anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -48.0
 margin_right = 0.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 36.0
+margin_top = 192.0
+margin_right = 408.0
+margin_bottom = 232.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Plant" to="." method="_on_Plant_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

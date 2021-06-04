@@ -680,6 +680,7 @@ __meta__ = {
 [connection signal="mouse_entered" from="Ship2Map" to="." method="_on_Ship2Map_mouse_entered"]
 [connection signal="mouse_exited" from="Ship2Map" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ship2Map" to="." method="_on_Ship2Map_pressed"]
+[connection signal="dialogue_finished" from="Dialogue" to="." method="_on_Dialogue_dialogue_finished"]
 [connection signal="mouse_entered" from="Emma" to="." method="_on_Emma_mouse_entered"]
 [connection signal="mouse_exited" from="Emma" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Emma" to="." method="_on_Emma_pressed"]

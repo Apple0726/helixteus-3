@@ -33,7 +33,10 @@ func refresh_planets():
 		planet_thing.remove_from_group("planet_stuff")
 		remove_child(planet_thing)
 		planet_thing.queue_free()
+	for rsrc in planet_rsrcs:
+		remove_child(rsrc.node)
 	glows.clear()
+	planet_rsrcs.clear()
 	for p_i in game.planet_data:
 		if p_i.empty():
 			continue
@@ -62,7 +65,8 @@ func refresh_planets():
 		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
 		planet_glow.rect_pivot_offset = Vector2(100, 100)
 		planet_glow.rect_position = Vector2(-100, -100)
-		planet_glow.rect_scale *= p_i["distance"] / 1200.0
+		var sc:float = p_i["distance"] / 1200.0
+		planet_glow.rect_scale *= sc
 		if game.system_data[game.c_s].conquered:
 			p_i.conquered = true
 		if p_i.conquered:
@@ -92,7 +96,7 @@ func refresh_planets():
 				MS.rotation = p_i.angle + PI / 2
 			elif p_i.MS == "M_MME":
 				MS.scale *= 0.25
-				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false)
+				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 			planet.add_child(MS)
 			if p_i.bldg.is_constructing:
 				var time_bar = game.time_scene.instance()
@@ -100,21 +104,21 @@ func refresh_planets():
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
-		if p_i.has("bldg") and p_i.bldg.has("name"):
-			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO))
+		if p_i.has("tile_num"):
+			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
 			match p_i.bldg.name:
 				"ME":
-					add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, p_i.l_id, false)
+					add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, p_i.l_id, false, sc)
 				"PP":
-					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, p_i.l_id, false)
+					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, p_i.l_id, false, sc)
 				"RL":
-					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, p_i.l_id, false)
+					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, p_i.l_id, false, sc)
 				"ME":
-					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.ME, p_i.l_id, false)
+					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.ME, p_i.l_id, false, sc)
 				"AE":
-					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false)
+					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false, sc)
 				"MM":
-					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false)
+					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc)
 			if p_i.has("plant") and p_i.plant.is_growing:
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = Vector2(0, -80)
@@ -268,7 +272,10 @@ func show_planet_info(id:int, l_id:int):
 		var icons = []
 		var adv = false
 		if p_i.has("tile_num"):
-			tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
+			if p_i.bldg.name == "MM":
+				tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, 1)]
+			else:
+				tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
 			adv = len(icons) > 0
 		else:
 			if game.help.planet_details:
@@ -330,11 +337,22 @@ func build_MS(obj:Dictionary, MS:String):
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
+func toggle_GH(p_i:Dictionary, fertilizer:bool):
+	game.greenhouse_panel.tile_num = p_i.tile_num
+	game.greenhouse_panel.p_i = p_i
+	game.greenhouse_panel.fertilizer = fertilizer
+	game.toggle_panel(game.greenhouse_panel)
+
 func on_planet_click (id:int, l_id:int):
 	if game.tutorial and game.tutorial.visible:
 		return
 	var p_i = game.planet_data[l_id]
 	if not view.dragged:
+		if Input.is_action_pressed("shift"):
+			game.c_p = l_id
+			game.c_p_g = id
+			game.switch_view("planet_details")
+			return
 		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME", "building-M_MPCC"]
 		if building:
 			if p_i.conquered:
@@ -349,7 +367,7 @@ func on_planet_click (id:int, l_id:int):
 			else:
 				game.popup(tr("PLANET_MS_ERROR"), 2.5)
 			return
-		elif p_i.has("MS"):
+		elif p_i.has("MS") and p_i.MS != "M_SE":
 			var t:String = game.item_to_use.type
 			if t == "":
 				if p_i.MS == "M_MME":
@@ -380,7 +398,7 @@ func on_planet_click (id:int, l_id:int):
 				game.remove_items(game.item_to_use.name, num_needed)
 				game.update_item_cursor()
 				return
-		elif p_i.has("bldg"):
+		elif p_i.has("tile_num"):
 			if p_i.bldg.name == "GH":
 				if p_i.has("plant"):
 					if not p_i.plant.is_growing:
@@ -393,24 +411,14 @@ func on_planet_click (id:int, l_id:int):
 						game.show_collect_info(items_collected)
 						p_i.erase("plant")
 					else:
-						game.greenhouse_panel.tile_num = p_i.tile_num
-						game.greenhouse_panel.p_i = p_i
-						game.greenhouse_panel.fertilizer = true
-						game.toggle_panel(game.greenhouse_panel)
+						toggle_GH(p_i, true)
 				else:
-					game.greenhouse_panel.tile_num = p_i.tile_num
-					game.greenhouse_panel.p_i = p_i
-					game.greenhouse_panel.fertilizer = false
-					game.toggle_panel(game.greenhouse_panel)
+					toggle_GH(p_i, false)
 			else:
 				items_collected.clear()
 				if p_i.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
 					Helper.call("collect_%s" % p_i.bldg.name, p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
 				game.show_collect_info(items_collected)
-		if Input.is_action_pressed("shift"):
-			game.c_p = l_id
-			game.c_p_g = id
-			game.switch_view("planet_details")
 		elif (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
 			if not p_i.conquered:
 				game.stats.planets_conquered += 1
@@ -475,7 +483,8 @@ func on_star_over (id:int):
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 		Helper.put_rsrc(vbox, 32, {"SP":Helper.get_DS_output(star)}, false)
 	elif game.bottom_info_action == "building_PK":
-		show_M_PK_costs(star)
+		if not has_MS:
+			show_M_PK_costs(star)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
@@ -501,7 +510,6 @@ func on_star_over (id:int):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-				print(len(vbox.get_children()))
 	game.show_tooltip(tooltip)
 
 func on_star_pressed (id:int):
@@ -625,6 +633,7 @@ func _process(_delta):
 		if star.bldg.is_constructing:
 			continue
 		var value = Helper.update_MS_rsrc(star)
+		#print(value)
 		var rsrc = rsrc_obj.node
 		var current_bar = rsrc.get_node("Control/CurrentBar")
 		current_bar.value = value
@@ -637,8 +646,8 @@ func _process(_delta):
 		var current_bar = rsrc.get_node("Control/CurrentBar")
 		var capacity_bar = rsrc.get_node("Control/CapacityBar")
 		var value:float = Helper.update_MS_rsrc(planet)
-		if not value:
-			continue
+#		if not value:
+#			continue
 		if planet.bldg.has("name") and planet.bldg.name in ["MM", "PP", "ME"]:
 			var cap = round(planet.bldg.path_2_value * planet.bldg.IR_mult)
 			if planet.bldg.name != "MM":
@@ -666,11 +675,12 @@ func construct(_name:String):
 func finish_construct():
 	pass
 
-func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool):
+func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1):
 	var rsrc = game.rsrc_stocked_scene.instance()
 	add_child(rsrc)
 	rsrc.get_node("TextureRect").texture = icon
-	rsrc.rect_position = v + Vector2(0, 70)
+	rsrc.rect_scale *= sc
+	rsrc.rect_position = v + Vector2(0, 70 * sc)
 	rsrc.get_node("Control").modulate = mod
 	if is_star:
 		star_rsrcs.append({"node":rsrc, "id":id})

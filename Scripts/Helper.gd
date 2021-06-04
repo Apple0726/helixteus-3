@@ -190,7 +190,7 @@ func get_type_from_name(_name:String):
 			return "craft_agriculture_info"
 		"mining_liquid", "purple_mining_liquid":
 			return "craft_mining_info"
-	if _name.split("_")[1] == "seeds":
+	if len(_name.split("_")) > 0 and _name.split("_")[1] == "seeds":
 		return "craft_agriculture_info"
 	return ""
 
@@ -377,7 +377,7 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 	#lb.light_mask = 2
 	parent.add_child(lb)
 	yield(tween, "tween_all_completed")
-	if parent:
+	if is_instance_valid(parent):
 		parent.remove_child(lb)
 		lb.queue_free()
 		remove_child(tween)
@@ -533,7 +533,11 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	var depth_limit_mult = max(1, 1 + (tile.depth - p_i.crust_start_depth) / float(p_i.crust_start_depth))
 	if depth_limit_mult > 0.01:
 		for mat in p_i.surface.keys():
-			if randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
+			if p_i.has("tile_num"):
+				var amount = p_i.surface[mat].amount * p_i.surface[mat].chance / depth_limit_mult
+				contents[mat] = amount
+				other_volume += amount / rho / 1000
+			elif randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
 				var amount = clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult, 3)
 				if amount < 1:
 					continue
@@ -556,8 +560,9 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			other_volume += amount / game.met_info[met].density / 1000
 			tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3)
-	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
+	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0), 3))
+	if stone_amount != 0:
+		contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth") and tile.depth >= tile.ship_locator_depth:
 		contents.ship_locator = 1
 	return contents
@@ -809,7 +814,6 @@ func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 	var stored = dict.bldg.stored
 	if stored == round(dict.bldg.path_2_value):
 		dict.bldg.collect_date = curr_time
-	stored *= n
 	for el in p_i.atmosphere:
 		if el == "NH3":
 			add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
@@ -877,6 +881,8 @@ func update_bldg_constr(tile):
 				update_boxes = true
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+			if game.tutorial:
+				game.HUD.refresh()
 	return update_boxes
 
 func get_reaction_info(tile):
@@ -902,7 +908,7 @@ func update_MS_rsrc(dict:Dictionary):
 			return min((c_t - c_d) / prod, 1)
 	elif dict.has("bldg"):
 		if dict.bldg.name == "AE":
-			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value)
+			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num
 		else:
 			prod = 1000 / dict.bldg.path_1_value
 			if dict.bldg.name != "MM":
@@ -956,7 +962,7 @@ func get_conquer_all_data():
 
 var hbox_theme = preload("res://Resources/panel_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
-func add_lv_boxes(obj:Dictionary, v:Vector2):
+func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	var hbox = HBoxContainer.new()
 	hbox.alignment = hbox.ALIGN_CENTER
 	hbox.theme = hbox_theme
@@ -990,13 +996,15 @@ func add_lv_boxes(obj:Dictionary, v:Vector2):
 		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
 		hbox.add_child(path_3)
 	hbox.rect_size.x = 200
-	hbox.rect_position = v - Vector2(100, 90)
+	hbox.rect_scale *= sc
+	hbox.rect_position = v - Vector2(100, 90) * sc
 	#hbox.visible = get_parent().scale.x >= 0.25
 	return hbox
 
-func on_path_enter(path:String, obj):
+func on_path_enter(path:String, obj:Dictionary):
 	game.hide_adv_tooltip()
-	game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
+	if not obj.empty():
+		game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
 
 func on_path_exit():
 	game.hide_tooltip()
