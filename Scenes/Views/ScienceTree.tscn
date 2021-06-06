@@ -51,38 +51,51 @@ __meta__ = {
 }
 
 [node name="MEE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -432.0
+margin_left = -464.0
 margin_top = 156.0
 margin_right = -128.0
 margin_bottom = 220.0
+rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="EPE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -432.0
+margin_left = -464.0
 margin_top = 252.0
 margin_right = -128.0
 margin_bottom = 316.0
+rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="RLE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -432.0
+margin_left = -464.0
 margin_top = 348.0
 margin_right = -128.0
 margin_bottom = 412.0
+rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="MSE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -432.0
+margin_left = -464.0
 margin_top = 444.0
 margin_right = -128.0
 margin_bottom = 508.0
+rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="MMS" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -432.0
+margin_left = -464.0
 margin_top = 540.0
 margin_right = -128.0
 margin_bottom = 604.0
+rect_min_size = Vector2( 336, 0 )
+infinite_research = true
+
+[node name="PME" parent="InfiniteResearch" instance=ExtResource( 1 )]
+margin_left = -464.0
+margin_top = 636.0
+margin_right = -128.0
+margin_bottom = 700.0
+rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="AM" parent="." instance=ExtResource( 1 )]

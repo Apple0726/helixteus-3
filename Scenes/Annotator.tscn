@@ -202,24 +202,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorPicker" type="Panel" parent="."]
+[node name="ColorPicker" type="PanelContainer" parent="."]
 visible = false
-margin_left = 404.0
-margin_top = -484.0
-margin_right = 768.0
+anchor_left = 0.698
+anchor_right = 0.698
+margin_left = -132.064
+margin_top = -500.0
+margin_right = 231.936
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorPicker"]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -166.0
-margin_top = -468.0
-margin_right = 181.0
-margin_bottom = 28.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 362.0
+margin_bottom = 498.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

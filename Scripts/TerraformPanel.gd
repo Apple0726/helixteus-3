@@ -124,3 +124,19 @@ func _on_RL_pressed():
 	costs = Data.costs.RL.duplicate(true)
 	$Control/Note.visible = false
 	update_info()
+
+
+func _on_AMN_pressed():
+	tf_type = "AMN"
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AMN_NAME_S").to_lower()]
+	costs = Data.costs.AMN.duplicate(true)
+	$Control/Note.visible = false
+	update_info()
+
+
+func _on_SPR_pressed():
+	tf_type = "SPR"
+	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("SPR_NAME_S").to_lower()]
+	costs = Data.costs.SPR.duplicate(true)
+	$Control/Note.visible = false
+	update_info()

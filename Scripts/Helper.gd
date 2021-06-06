@@ -572,6 +572,8 @@ func get_IR_mult(bldg_name:String):
 	var sc:String
 	if bldg_name in ["PP", "SP"]:
 		sc = "EPE"
+	elif bldg_name in ["AMN", "SPR"]:
+		sc = "PME"
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
@@ -727,7 +729,7 @@ func get_prod_mult(tile):
 	return mult
 
 func has_IR(bldg_name:String):
-	return bldg_name in ["ME", "PP", "RL", "MS", "SP"]
+	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
 
 func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int):
 	if not tile.has("bldg"):
@@ -886,7 +888,7 @@ func update_bldg_constr(tile):
 	return update_boxes
 
 func get_reaction_info(tile):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value, 0, tile.bldg.qty)
+	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name), 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func update_MS_rsrc(dict:Dictionary):
@@ -895,6 +897,8 @@ func update_MS_rsrc(dict:Dictionary):
 	if dict.has("MS"):
 		if dict.MS == "M_DS":
 			prod = 1000.0 / Helper.get_DS_output(dict)
+		elif dict.MS == "M_MB":
+			prod = 1000.0 / Helper.get_MB_output(dict)
 		elif dict.MS == "M_MME":
 			prod = 1000.0 / Helper.get_MME_output(dict)
 		if prod:
@@ -1102,3 +1106,13 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 		"GH":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
 	return tooltip
+
+func collect_from_star(star:Dictionary, items_collected:Dictionary):
+	if star.MS == "M_DS":
+		update_MS_rsrc(star)
+		add_item_to_coll(items_collected, "energy", star.bldg.stored)
+		star.bldg.stored = 0
+	elif star.MS == "M_MB":
+		update_MS_rsrc(star)
+		add_item_to_coll(items_collected, "SP", star.bldg.stored)
+		star.bldg.stored = 0

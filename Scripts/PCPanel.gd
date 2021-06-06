@@ -25,7 +25,7 @@ func _on_SpinBox_value_changed(value):
 	if probe_tier == 0:
 		costs = {"money":e(2, 11), "nanocrystal":2700000}
 	elif probe_tier == 1:
-		costs = {"money":e(5, 17), "nanocrystal":e(8, 13)}
+		costs = {"money":e(5, 18), "nanocrystal":e(4, 13)}
 	for cost in costs:
 		costs[cost] *= value
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs, true, true)

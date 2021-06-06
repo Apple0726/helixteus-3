@@ -400,6 +400,7 @@ func click_tile(tile, tile_id:int):
 				"SY":
 					game.toggle_panel(game.shipyard_panel)
 				"PCC":
+					game.PC_panel.probe_tier = 0
 					game.toggle_panel(game.PC_panel)
 				"SC":
 					game.toggle_panel(game.SC_panel)

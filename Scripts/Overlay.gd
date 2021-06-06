@@ -269,3 +269,10 @@ func _on_Reset_mouse_entered():
 func _on_Reset_pressed():
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = false
 	refresh_options(option_btn.selected, true)
+
+
+func _on_Overlay_visibility_changed():
+	if visible:
+		game.sub_panel = self
+	else:
+		game.sub_panel = null

@@ -23,20 +23,21 @@ func refresh():
 	var depart_id:int
 	var dest_id:int
 	var coords:Dictionary = game.ships_c_coords
+	var g_coords:Dictionary = game.ships_c_g_coords
 	var g_s:int = game.ships_c_g_coords.s
 	var file = File.new()
 	file.open("user://Save1/Systems/%s.hx3" % [g_s], File.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
 	depart_planet_data = planets_in_depart_system[coords.p]
-	if game.c_s == coords.s:
+	if game.c_s_g == g_coords.s:
 		travel_view = "system"
 		depart_id = coords.p
 		dest_id = dest_p_id
 		depart_pos = polar2cartesian(depart_planet_data.distance, depart_planet_data.angle)
 		dest_pos = polar2cartesian(game.planet_data[dest_id].distance, game.planet_data[dest_id].angle)
 		distance = depart_pos.distance_to(dest_pos)
-	elif game.c_g == coords.g:
+	elif game.c_g_g == g_coords.g:
 		travel_view = "galaxy"
 		distance = 73
 		depart_id = coords.s
@@ -44,7 +45,7 @@ func refresh():
 		depart_pos = game.system_data[depart_id].pos
 		dest_pos = game.system_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-	elif game.c_c == coords.c:
+	elif game.c_c_g == g_coords.c:
 		travel_view = "cluster"
 		distance = 45454
 		depart_id = coords.g

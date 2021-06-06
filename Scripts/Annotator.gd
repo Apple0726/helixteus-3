@@ -134,8 +134,10 @@ func _on_Icons_mouse_entered():
 
 func _on_Annotator_visibility_changed():
 	if visible:
+		game.sub_panel = self
 		if mode == "icon":
 			on_Icons_pressed(true)
 	else:
+		game.sub_panel = null
 		game.view.annotate_icon.texture = null
 		game.get_node("UI/Panel").visible = false

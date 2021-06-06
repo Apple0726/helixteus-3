@@ -75,8 +75,8 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_MB":{"money":e(5.5, 16), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 12), "aluminium":e(2, 11), "nanocrystal":e(8, 10), "time":120 * 86400},
 					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
-					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 14), "aluminium":e(8, 13), "time":48 * 86400},
-					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 17), "aluminium":e(1.5, 16), "time":96 * 86400},
+					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":48 * 86400},
+					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 16), "aluminium":e(1.5, 15), "time":96 * 86400},
 					"M_MPCC_0":{"money":e(4.4, 17), "stone":e(7.1, 14), "energy":e(9, 16), "quartz":e(4.8, 13), "nanocrystal":e(3.1, 13), "time":10 * 86400},
 }
 
@@ -89,7 +89,7 @@ var MS_output = {	"M_DS_0":e(1, 8),
 					"M_MME_1":127000,
 					"M_MME_2":e(4.0, 7),
 					"M_MME_3":e(1.5, 9),
-					"M_MB":e(5, 14),
+					"M_MB":e(1, 14),
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":2.3},
@@ -250,6 +250,7 @@ var infinite_research_sciences = {	"MEE":{"cost":50, "pw":6.2, "value":1.2},
 									"RLE":{"cost":250, "pw":6.8, "value":1.2},
 									"MSE":{"cost":70, "pw":6.2, "value":1.2},
 									"MMS":{"cost":30, "pw":6.0, "value":1.2},
+									"PME":{"cost":100000, "pw":6.0, "value":1.2},
 }
 
 var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},

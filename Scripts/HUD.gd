@@ -51,6 +51,8 @@ func update_XP():
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.lv == 50:
 			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
+		if game.lv == 75:
+			game.long_popup(tr("LEVEL_65_REACHED"), "%s 65" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 

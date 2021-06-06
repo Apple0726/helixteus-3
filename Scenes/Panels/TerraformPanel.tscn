@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://Graphics/Buildings/AE.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Buildings/PP.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Buildings/RL.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Buildings/SPR.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Buildings/AMN.png" type="Texture" id=14]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -191,6 +193,26 @@ icon = ExtResource( 3 )
 align = 0
 expand_icon = true
 
+[node name="AtomManipulation" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 308.0
+margin_right = 364.0
+margin_bottom = 348.0
+rect_min_size = Vector2( 0, 40 )
+text = "ATM_SC"
+icon = ExtResource( 14 )
+align = 0
+expand_icon = true
+
+[node name="SubatomicParticles" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 352.0
+margin_right = 364.0
+margin_bottom = 392.0
+rect_min_size = Vector2( 0, 40 )
+text = "SAP_SC"
+icon = ExtResource( 13 )
+align = 0
+expand_icon = true
+
 [node name="Panel" type="Panel" parent="."]
 margin_left = 380.0
 margin_top = 124.0
@@ -282,4 +304,6 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/AtmosphereExtraction" to="." method="_on_AE_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Mining" to="." method="_on_MM_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/AtomManipulation" to="." method="_on_AMN_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/SubatomicParticles" to="." method="_on_SPR_pressed"]
 [connection signal="pressed" from="Control/Terraform" to="." method="_on_Terraform_pressed"]

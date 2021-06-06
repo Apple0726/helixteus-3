@@ -180,6 +180,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="visibility_changed" from="." to="." method="_on_Overlay_visibility_changed"]
 [connection signal="mouse_entered" from="Panel/LeftNum" to="." method="_on_num_mouse_entered" binds= [ "left" ]]
 [connection signal="mouse_exited" from="Panel/LeftNum" to="." method="_on_num_mouse_exited"]
 [connection signal="mouse_entered" from="Panel/RightNum" to="." method="_on_num_mouse_entered" binds= [ "right" ]]

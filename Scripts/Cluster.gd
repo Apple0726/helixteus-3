@@ -33,7 +33,6 @@ func _ready():
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays)
-	game.overlay.refresh_overlay()
 
 func e(n, e):
 	return n * pow(10, e)

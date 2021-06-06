@@ -252,6 +252,7 @@ func refresh():
 		remove_child(icon)
 		icon.queue_free()
 	annotate_icons.clear()
+	yield(get_tree().create_timer(0.0), "timeout")#This yield is needed to display annotations
 	if is_instance_valid(game.annotator):
 		for i in len(shapes_data):
 			var shape = shapes_data[i]

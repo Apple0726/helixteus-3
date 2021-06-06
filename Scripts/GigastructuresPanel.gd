@@ -4,7 +4,7 @@ var GS_costs:Dictionary = {}
 var costs:Dictionary = {}
 var g_i:Dictionary
 var tile_num:int
-var bldg:String
+var bldg:String = ""
 var surface:float
 
 func _ready():
@@ -13,15 +13,17 @@ func _ready():
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.TPCC
-	var planet_num:float = round(g_i.system_num * 40000000 * pow(g_i.dark_matter, 1.1))
+	var planet_num:float = round(g_i.system_num * 4000 * pow(g_i.dark_matter, 1.1))
 	#							 1.3 ~= E(X^2)/E(X)^2
 	surface = round(planet_num * 1.3 * 4 * PI * pow((1000000 + 6000000 * 2.5) * g_i.dark_matter, 2))
+	if bldg != "":
+		update_info()
 
 func update_info():
 	var error:bool = false
 	costs = Data.costs[bldg].duplicate(true)
-	costs.stone = PI / 100.0
-	costs.mythril = 1 / 1000000.0
+	costs.stone = PI / 10.0
+	costs.mythril = 1 / 10000000.0
 	costs.erase("time")
 	$Control/ProductionPerSec.visible = bldg != "TP"
 	$Control/Production.visible = bldg != "TP"
@@ -33,23 +35,23 @@ func update_info():
 			$Control/GalaxyInfo.text = tr("TP_ERROR")
 			error = true
 	if bldg == "ME":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MINERAL_EXTRACTORS").to_lower()]
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("ME_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
 		Helper.put_rsrc($Control/Production, 32, {"minerals":Data.path_1.ME.value * surface * Helper.get_IR_mult("ME")})
 	elif bldg == "PP":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("POWER_PLANTS").to_lower()]
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("PP_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
 		Helper.put_rsrc($Control/Production, 32, {"energy":Data.path_1.PP.value * surface * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("RESEARCH_LABS").to_lower()]
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("RL_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = "PRODUCTION_PER_SECOND"
-		Helper.put_rsrc($Control/Production, 32, {"energy":Data.path_1.RL.value * surface * Helper.get_IR_mult("RL")})
+		Helper.put_rsrc($Control/Production, 32, {"SP":Data.path_1.RL.value * surface * Helper.get_IR_mult("RL")})
 	elif bldg == "MS":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MINERAL_SILOS").to_lower()]
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = "STORAGE"
 		Helper.put_rsrc($Control/Production, 32, {"minerals":Data.path_1.MS.value * surface * Helper.get_IR_mult("MS")})
 	elif bldg == "GH":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("GREENHOUSES").to_lower()]
+		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = ""
 		Helper.put_rsrc($Control/Production, 32, {})
 		costs.soil = 10 * surface

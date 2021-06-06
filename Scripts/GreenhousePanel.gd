@@ -62,9 +62,9 @@ func _on_Plant_pressed():
 			p_i.plant.plant_date -= game.craft_agriculture_info[seeds_to_plant].speed_up_time
 			if curr_time > p_i.plant.plant_date + p_i.plant.grow_time:
 				_on_close_button_pressed()
+				Helper.put_rsrc($HBoxContainer, 32, {})
+				seeds_to_plant = ""
 			game.popup("FERTILIZERS_USED", 1.5)
-			Helper.put_rsrc($HBoxContainer, 32, {})
-			seeds_to_plant = ""
 		else:
 			p_i.plant = {}
 			p_i.plant.name = seeds_to_plant

@@ -42,8 +42,6 @@ func _ready():
 			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays)
-	if is_instance_valid(game.overlay):
-		game.overlay.refresh_overlay()
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
@@ -126,10 +124,7 @@ func collect_all():
 		game.planet_data = game.open_obj("Systems", s_ids.global)
 		for star in game.system_data[s_ids.local].stars:
 			if star.has("MS"):
-				if star.MS == "M_DS":
-					Helper.update_MS_rsrc(star)
-					Helper.add_item_to_coll(items_collected, "energy", star.bldg.stored)
-					star.bldg.stored = 0
+				Helper.collect_from_star(star, items_collected)
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
 			if planet.empty():

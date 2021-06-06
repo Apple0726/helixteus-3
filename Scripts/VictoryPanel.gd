@@ -15,7 +15,7 @@ func _ready():
 		money += round(HX.money * mult * diff_mult)
 		XP += round(HX.XP * mult * diff_mult)
 	Helper.put_rsrc($HBoxContainer, 42, {"money":money})
-	for i in 3:
+	for i in 4:
 		if i >= len(ship_data):
 			$Grid.get_node("Panel%s" % (i + 1)).visible = false
 		else:

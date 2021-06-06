@@ -549,6 +549,8 @@ func load_game():
 		stats = save_game.get_var()
 		objective = save_game.get_var()
 		save_game.close()
+		if not infinite_research.has("PME"):
+			infinite_research.PME = 0
 		if not fourth_ship_hints.has("emma_free"):
 			fourth_ship_hints.emma_free = false
 		if help.tutorial >= 1 and help.tutorial <= 25:
@@ -559,6 +561,8 @@ func load_game():
 				c_v = "planet"
 			elif c_v == "science_tree":
 				c_v = l_v
+			elif c_v == "battle":
+				c_v = "system"
 			$UI.add_child(HUD)
 			view.set_process(true)
 			var file = Directory.new()
@@ -1264,20 +1268,20 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			add_child(planet_details)
 			$UI.remove_child(HUD)
 		"system":
-			add_space_HUD()
 			add_system()
+			add_space_HUD()
 		"galaxy":
-			add_space_HUD()
 			add_galaxy()
+			add_space_HUD()
 		"cluster":
-			add_space_HUD()
 			add_cluster()
+			add_space_HUD()
 		"supercluster":
-			add_space_HUD()
 			add_supercluster()
-		"universe":
 			add_space_HUD()
+		"universe":
 			add_universe()
+			add_space_HUD()
 		"dimension":
 			add_dimension()
 		"mining":
@@ -1442,6 +1446,7 @@ func add_overlay():
 	overlay = overlay_scene.instance()
 	overlay.visible = false
 	$UI.add_child(overlay)
+	overlay.refresh_overlay()
 
 func remove_overlay():
 	if is_instance_valid(overlay) and $UI.is_a_parent_of(overlay):
@@ -3191,6 +3196,9 @@ func _input(event):
 					toggle_panel(active_panel)
 				hide_tooltip()
 				hide_adv_tooltip()
+			elif sub_panel:
+				sub_panel.visible = false
+				sub_panel = null
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
@@ -3389,12 +3397,14 @@ func fn_save_game(autosave:bool):
 		Helper.save_obj("Planets", c_p_g, tile_data)
 		Helper.save_obj("Systems", c_s_g, planet_data)
 	elif c_v == "system":
+		Helper.save_obj("Systems", c_s_g, planet_data)
 		Helper.save_obj("Galaxies", c_g_g, system_data)
 	elif c_v == "galaxy":
 		if send_probes_panel.is_processing():
 			Helper.save_obj("Galaxies", c_g_g, system_data)
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	elif c_v == "cluster":
+		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
@@ -3671,7 +3681,7 @@ func game_fade(fn, args:Array = []):
 func get_4th_ship():
 	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-	Helper.add_ship_XP(3, 350000)
+	Helper.add_ship_XP(3, 1000000)
 	Helper.add_weapon_XP(3, "bullet", 400)
 	Helper.add_weapon_XP(3, "laser", 400)
 	Helper.add_weapon_XP(3, "bomb", 400)

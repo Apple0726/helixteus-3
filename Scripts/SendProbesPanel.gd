@@ -80,8 +80,8 @@ func refresh_energy():
 		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult
 	elif game.c_v == "universe":
 		costs.energy = 10000000000000000000000.0 * slider_factor * dist_mult
-		costs.Pu = 100 * slider_factor * dist_mult
-		costs.time = 150000 / pow(slider_factor, 0.4) * dist_mult
+		costs.Pu = 1000000 * slider_factor * dist_mult
+		costs.time = 15000 / pow(slider_factor, 0.4) * dist_mult
 	Helper.put_rsrc($Control/Costs, 36, costs, true, true)
 	
 func dist_sort(a:Dictionary, b:Dictionary):

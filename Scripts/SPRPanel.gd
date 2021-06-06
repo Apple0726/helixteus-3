@@ -11,6 +11,7 @@ var atom_costs:Dictionary = {}
 var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":200, "difficulty":0.01},
 								"He":{"Z":2, "energy_cost":1000, "difficulty":0.015},
 								"Ne":{"Z":10, "energy_cost":40000, "difficulty":2},
+								"Fe":{"Z":26, "energy_cost":10000, "difficulty":0.1},
 								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":40},
 								"Pu":{"Z":94, "energy_cost":14000000000, "difficulty":8000},
 }
@@ -40,7 +41,7 @@ func refresh():
 	tile = game.tile_data[game.c_t]
 	au_mult = Helper.get_au_mult(tile)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / tile.bldg.path_1_value)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / tile.bldg.path_1_value / Helper.get_IR_mult("SPR"))
 	for reaction_name in reactions:
 		var disabled:bool = false
 		if game.particles.proton == 0 or game.particles.neutron == 0 or game.particles.electron == 0:
@@ -68,7 +69,14 @@ func refresh():
 	else:
 		$Transform.visible = $Control/HSlider.max_value != 0 and not tile.bldg.has("qty")
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
-	#$Control/HSlider.value = $Control/HSlider.max_value
+	var value = $Control/HSlider.value
+	var atom_dict = {}
+	var p_costs = {"proton":value, "neutron":value, "electron":value}
+	for particle in p_costs:
+		p_costs[particle] *= Z
+	atom_dict[reaction] = value
+	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
+	Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
 
 func reset_poses(_name:String, _Z:int):
 	for btn in $ScrollContainer/VBoxContainer.get_children():
@@ -102,13 +110,6 @@ func _on_Switch_pressed(refresh:bool = true):
 		refresh()
 
 func _on_HSlider_value_changed(value):
-	var atom_dict = {}
-	var p_costs = {"proton":value, "neutron":value, "electron":value}
-	for particle in p_costs:
-		p_costs[particle] *= Z
-	atom_dict[reaction] = value
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
 	refresh()
 
 func _on_Transform_pressed():
@@ -194,7 +195,7 @@ func _process(delta):
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value / Helper.get_IR_mult("SPR")))
 
 func refresh_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():

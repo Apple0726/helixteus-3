@@ -8,6 +8,7 @@ var additional_energy:float
 var charging_time:float
 var rekt_planet:bool = false
 var rsrc:Dictionary
+var c_s_g:int = -1
 
 func _ready():
 	set_process(false)
@@ -24,6 +25,10 @@ func select_planet(p_i:Dictionary, id:int, btn):
 	refresh_planet_info()
 
 func refresh():
+	if c_s_g != game.c_s_g:
+		$Control.visible = false
+		$StartCharging.visible = false
+		c_s_g = game.c_s_g
 	for child in $Scroll/Planets.get_children():
 		$Scroll/Planets.remove_child(child)
 		child.free()
@@ -42,21 +47,21 @@ func refresh():
 		set_process(true)
 		$Control.visible = false
 		$Control2.visible = true
+		$StartCharging.text = tr("CANCEL_CHARGING")
 	else:
 		set_process(false)
-		$Control.visible = true
 		$Control2.visible = false
+		$StartCharging.text = tr("START_CHARGING")
 
 func refresh_planet_info():
 	var value = $Control/HSlider.value
-	var cost = pow(target.size / 10000.0, 3) * 10000
-	var time_base = cost / star.luminosity * 50
+	var energy_cost = pow(target.size / 10000.0, 3) * 10000000000000000.0
+	var time_base = energy_cost / star.luminosity / 1000000000.0
 	charging_time = time_base * (1 - value)
-	additional_energy = 100000000000000 * time_base * value
+	additional_energy = time_base * star.luminosity * value * 1000000000000.0
 	$Control.visible = true
 	$StartCharging.visible = true
 	$Control/EnergyCost.text = Helper.format_num(additional_energy)
-	charging_time *= 1800 / 10.0
 	if charging_time <= 1000:
 		charging_time = 1000
 	$Control/TimeCost.text = Helper.time_to_str(charging_time)
@@ -78,8 +83,8 @@ func refresh_planet_info():
 
 #get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
-	outer /= 200.0#I have to reduce the size of planets otherwise it's too OP
-	inner /= 200.0
+	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
+	inner /= 150.0
 	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
 
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
@@ -103,7 +108,6 @@ func _on_StartCharging_pressed():
 			dir.remove("user://Save1/Planets/%s.hx3" % target.id)
 		target.clear()
 		game.view.obj.refresh_planets()
-		game.toggle_panel(self)
 		game.add_resources(star.rsrc)
 		star.erase("charging_time")
 		star.erase("charge_start_date")
@@ -112,14 +116,24 @@ func _on_StartCharging_pressed():
 		set_process(false)
 		rekt_planet = false
 		game.HUD.refresh()
+		refresh()
 	elif star.has("charging_time"):
 		star.erase("charging_time")
 		star.erase("charge_start_date")
+		star.erase("p_id")
+		star.erase("rsrc")
 		$Control.visible = true
 		$Control2.visible = false
 		set_process(false)
 		$StartCharging.text = tr("START_CHARGING")
 	elif star.MS_lv == 0 and target.size <= 3000 or star.MS_lv == 1 and target.size <= 30000 or star.MS_lv == 2:
+		if c_s_g == game.ships_c_g_coords.s and p_id == game.ships_c_coords.p:
+			game.popup(tr("PK_ERROR"), 2.0)
+			return
+		for fighter in game.fighter_data:
+			if c_s_g == fighter.c_s_g and p_id == fighter.c_p:
+				game.popup(tr("PK_ERROR"), 2.0)
+				return
 		if game.energy >= additional_energy:
 			game.energy -= additional_energy
 			star.charge_start_date = OS.get_system_time_msecs()
@@ -130,6 +144,7 @@ func _on_StartCharging_pressed():
 			$Control2.visible = true
 			$StartCharging.text = tr("CANCEL_CHARGING")
 			set_process(true)
+			game.HUD.refresh()
 		else:
 			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
@@ -152,5 +167,6 @@ func _process(delta):
 		$Control2/TimeCost.text = ""
 		$Control2/Charging.text = tr("PLANET_READY_TO_BE_REKT") % target.name
 		set_process(false)
+		$StartCharging.visible = true
 		$StartCharging.text = tr("FIRE")
 		rekt_planet = true
