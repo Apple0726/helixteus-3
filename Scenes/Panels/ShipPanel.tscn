@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Science/SCT.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Science/CD.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Buttons/Upgrade.png" type="Texture" id=12]
+[ext_resource path="res://Scenes/Upgrade.tscn" type="PackedScene" id=13]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -95,6 +97,9 @@ id = 3
 [node name="Drives" parent="." instance=ExtResource( 8 )]
 visible = false
 
+[node name="Upgrade" parent="." instance=ExtResource( 13 )]
+visible = false
+
 [node name="Panel" type="Panel" parent="."]
 margin_top = 60.0
 margin_right = 1064.0
@@ -122,6 +127,9 @@ margin_bottom = 44.0
 texture_normal = ExtResource( 11 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="BackButton" type="TextureButton" parent="Panel"]
 visible = false
@@ -139,6 +147,18 @@ margin_bottom = 48.0
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpgradeButton" type="TextureButton" parent="Panel"]
+margin_left = 880.0
+margin_top = 4.0
+margin_right = 920.0
+margin_bottom = 44.0
+texture_normal = ExtResource( 12 )
+expand = true
+stretch_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -164,3 +184,4 @@ __meta__ = {
 [connection signal="mouse_entered" from="Panel/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/GoToShips" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/GoToShips" to="." method="_on_GoToShips_pressed"]
+[connection signal="pressed" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_pressed"]
