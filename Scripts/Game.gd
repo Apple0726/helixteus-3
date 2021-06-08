@@ -411,6 +411,7 @@ func _ready():
 		science_unlocked.DS4 = true
 		science_unlocked.MB = true
 		science_unlocked.GS = true
+		science_unlocked.UP1 = true
 		stone.O = 8000000000
 		mats.silicon = 400000
 		mats.cellulose = 1000
@@ -433,7 +434,6 @@ func _ready():
 		items[4] = {"name":"fertilizer", "num":500}
 		pickaxe = {"name":"stick", "speed":3400, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200000.0, "atk":5000.0, "def":50000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 1", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 2", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 3", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
 		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 1", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 2", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 3", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
 		add_panels()
 		$Autosave.start()

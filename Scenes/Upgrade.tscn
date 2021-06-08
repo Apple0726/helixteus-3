@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/UpgradeShips.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
@@ -7,6 +7,11 @@
 [ext_resource path="res://Graphics/Buttons/Down.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Scenes/UpgradeStats.gd" type="Script" id=8]
+[ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=12]
 
 [node name="Upgrade" type="Panel"]
 margin_top = 104.0
@@ -71,10 +76,22 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Ship"]
-margin_left = 112.0
+margin_left = 24.0
 margin_top = 312.0
-margin_right = 272.0
+margin_right = 360.0
 margin_bottom = 344.0
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Points" type="Label" parent="Ship"]
+margin_left = 24.0
+margin_top = 360.0
+margin_right = 360.0
+margin_bottom = 392.0
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -152,17 +169,349 @@ __meta__ = {
 [node name="Label2" type="Label" parent="Upgrades/Hp"]
 margin_left = 112.0
 margin_top = 24.0
-margin_right = 163.0
+margin_right = 169.0
 margin_bottom = 48.0
-text = "Boost"
+text = "Boost:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label3" type="Label" parent="Upgrades/Hp"]
-margin_left = 168.0
+[node name="Boost" type="Label" parent="Upgrades/Hp"]
+margin_left = 176.0
 margin_top = 16.0
-margin_right = 231.0
+margin_right = 239.0
+margin_bottom = 56.0
+text = "+0%"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Atk" type="Control" parent="Upgrades"]
+margin_top = 72.0
+margin_right = 336.0
+margin_bottom = 144.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Up" type="TextureButton" parent="Upgrades/Atk"]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Down" type="TextureButton" parent="Upgrades/Atk"]
+margin_left = 16.0
+margin_top = 40.0
+margin_right = 40.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="Level" type="Label" parent="Upgrades/Atk"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 56.0
+text = "Lv 0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Upgrades/Atk"]
+margin_left = 256.0
+margin_top = 16.0
+margin_right = 283.0
+margin_bottom = 56.0
+text = "Atk"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Upgrades/Atk"]
+margin_left = 288.0
+margin_top = 16.0
+margin_right = 328.0
+margin_bottom = 56.0
+texture = ExtResource( 11 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Upgrades/Atk"]
+margin_left = 112.0
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+text = "Boost:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Label" parent="Upgrades/Atk"]
+margin_left = 176.0
+margin_top = 16.0
+margin_right = 239.0
+margin_bottom = 56.0
+text = "+0%"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Def" type="Control" parent="Upgrades"]
+margin_top = 144.0
+margin_right = 336.0
+margin_bottom = 216.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Up" type="TextureButton" parent="Upgrades/Def"]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Down" type="TextureButton" parent="Upgrades/Def"]
+margin_left = 16.0
+margin_top = 40.0
+margin_right = 40.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="Level" type="Label" parent="Upgrades/Def"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 56.0
+text = "Lv 0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Upgrades/Def"]
+margin_left = 256.0
+margin_top = 16.0
+margin_right = 287.0
+margin_bottom = 56.0
+text = "Def"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Upgrades/Def"]
+margin_left = 288.0
+margin_top = 16.0
+margin_right = 328.0
+margin_bottom = 56.0
+texture = ExtResource( 9 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Upgrades/Def"]
+margin_left = 112.0
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+text = "Boost:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Label" parent="Upgrades/Def"]
+margin_left = 176.0
+margin_top = 16.0
+margin_right = 239.0
+margin_bottom = 56.0
+text = "+0%"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Acc" type="Control" parent="Upgrades"]
+margin_top = 216.0
+margin_right = 336.0
+margin_bottom = 288.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Up" type="TextureButton" parent="Upgrades/Acc"]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Down" type="TextureButton" parent="Upgrades/Acc"]
+margin_left = 16.0
+margin_top = 40.0
+margin_right = 40.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="Level" type="Label" parent="Upgrades/Acc"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 56.0
+text = "Lv 0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Upgrades/Acc"]
+margin_left = 256.0
+margin_top = 16.0
+margin_right = 289.0
+margin_bottom = 56.0
+text = "Acc"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Upgrades/Acc"]
+margin_left = 288.0
+margin_top = 16.0
+margin_right = 328.0
+margin_bottom = 56.0
+texture = ExtResource( 10 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Upgrades/Acc"]
+margin_left = 112.0
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+text = "Boost:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Label" parent="Upgrades/Acc"]
+margin_left = 176.0
+margin_top = 16.0
+margin_right = 239.0
+margin_bottom = 56.0
+text = "+0%"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Eva" type="Control" parent="Upgrades"]
+margin_top = 288.0
+margin_right = 336.0
+margin_bottom = 360.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Up" type="TextureButton" parent="Upgrades/Eva"]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Down" type="TextureButton" parent="Upgrades/Eva"]
+margin_left = 16.0
+margin_top = 40.0
+margin_right = 40.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 5 )
+expand = true
+
+[node name="Level" type="Label" parent="Upgrades/Eva"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 56.0
+text = "Lv 0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Upgrades/Eva"]
+margin_left = 256.0
+margin_top = 16.0
+margin_right = 283.0
+margin_bottom = 56.0
+text = "Eva"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Upgrades/Eva"]
+margin_left = 288.0
+margin_top = 16.0
+margin_right = 328.0
+margin_bottom = 56.0
+texture = ExtResource( 12 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Upgrades/Eva"]
+margin_left = 112.0
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+text = "Boost:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Label" parent="Upgrades/Eva"]
+margin_left = 176.0
+margin_top = 16.0
+margin_right = 239.0
 margin_bottom = 56.0
 text = "+0%"
 valign = 1
@@ -178,9 +527,72 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Stats" type="Panel" parent="Upgrades"]
-margin_left = 336.0
-margin_right = 680.0
-margin_bottom = 448.0
+[node name="Stats" type="Panel" parent="."]
+margin_left = 720.0
+margin_top = 48.0
+margin_right = 1064.0
+margin_bottom = 496.0
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
+[node name="Label" type="Label" parent="Stats"]
+margin_right = 344.0
+margin_bottom = 40.0
+text = "CURRENT_LEVEL:"
+align = 1
+valign = 1
+
+[node name="Cost" type="Label" parent="Stats"]
+margin_left = 88.0
+margin_top = 40.0
+margin_right = 256.0
+margin_bottom = 64.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Label" parent="Stats"]
+margin_left = 88.0
+margin_top = 64.0
+margin_right = 256.0
+margin_bottom = 88.0
+
+[node name="Label2" type="Label" parent="Stats"]
+margin_top = 88.0
+margin_right = 344.0
+margin_bottom = 128.0
+text = "NEXT_LEVEL:"
+align = 1
+valign = 1
+
+[node name="Cost2" type="Label" parent="Stats"]
+margin_left = 88.0
+margin_top = 128.0
+margin_right = 256.0
+margin_bottom = 152.0
+
+[node name="Boost2" type="Label" parent="Stats"]
+margin_left = 88.0
+margin_top = 152.0
+margin_right = 256.0
+margin_bottom = 176.0
+
+[connection signal="item_selected" from="OptionButton" to="Upgrades/Hp" method="_on_OptionButton_item_selected"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="mouse_entered" from="Upgrades/Hp" to="Stats" method="_on_Hp_mouse_entered"]
+[connection signal="pressed" from="Upgrades/Hp/Up" to="Upgrades/Hp" method="_on_Up_pressed"]
+[connection signal="pressed" from="Upgrades/Hp/Down" to="Upgrades/Hp" method="_on_Down_pressed"]
+[connection signal="mouse_entered" from="Upgrades/Atk" to="Stats" method="_on_Atk_mouse_entered"]
+[connection signal="pressed" from="Upgrades/Atk/Up" to="Upgrades/Atk" method="_on_Up_pressed"]
+[connection signal="pressed" from="Upgrades/Atk/Down" to="Upgrades/Atk" method="_on_Down_pressed"]
+[connection signal="mouse_entered" from="Upgrades/Def" to="Stats" method="_on_Def_mouse_entered"]
+[connection signal="pressed" from="Upgrades/Def/Up" to="Upgrades/Def" method="_on_Up_pressed"]
+[connection signal="pressed" from="Upgrades/Def/Down" to="Upgrades/Def" method="_on_Down_pressed"]
+[connection signal="mouse_entered" from="Upgrades/Acc" to="Stats" method="_on_Acc_mouse_entered"]
+[connection signal="pressed" from="Upgrades/Acc/Up" to="Upgrades/Acc" method="_on_Up_pressed"]
+[connection signal="pressed" from="Upgrades/Acc/Down" to="Upgrades/Acc" method="_on_Down_pressed"]
+[connection signal="mouse_entered" from="Upgrades/Eva" to="Stats" method="_on_Eva_mouse_entered"]
+[connection signal="pressed" from="Upgrades/Eva/Up" to="Upgrades/Eva" method="_on_Up_pressed"]
+[connection signal="pressed" from="Upgrades/Eva/Down" to="Upgrades/Eva" method="_on_Down_pressed"]

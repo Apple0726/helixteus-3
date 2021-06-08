@@ -1,7 +1,34 @@
 extends Node
 
-func _ready():
-	pass
+onready var game = get_node("/root/Game")
 
-#Didn't have time to add to this script, just know there will be a cost function in the near future that is calculated as such, 2^(n1)+(2^(n-1)-1), n being the level of the upgrade.
-#Each level requires exponetialy more points to reach but provide a linear benefit to stats, each level I plan to only provide a 10% bonus, and I plan to add ~7 upgrade points.
+var lv = 0
+var boost = 0
+
+func get_type(name):
+	match name:
+		"Hp":
+			return 0
+		"Atk":
+			return 1
+		"Def":
+			return 2
+		"Acc":
+			return 3
+		"Eva":
+			return 4
+
+func _refresh(i):
+	boost = int((game.ship_data[i].upgrades[get_type(self.name)]-1)*100)
+	lv = boost / 10
+	$Level.text = "Lv " + String(lv)
+	$Boost.text = "+" + String(boost) + "%"
+
+func _on_OptionButton_item_selected(i):
+	_refresh(i)
+
+func _on_Up_pressed():
+	get_parent().get_parent()._upgrade(get_type(self.name))
+
+func _on_Down_pressed():
+	get_parent().get_parent()._downgrade(get_type(self.name))

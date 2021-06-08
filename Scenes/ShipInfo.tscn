@@ -594,9 +594,9 @@ __meta__ = {
 }
 
 [node name="TextEdit" type="TextEdit" parent="."]
-margin_left = 40.0
+margin_left = 24.0
 margin_top = 152.0
-margin_right = 176.0
+margin_right = 200.0
 margin_bottom = 184.0
 __meta__ = {
 "_edit_use_anchors_": false
