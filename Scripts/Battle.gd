@@ -124,11 +124,11 @@ func _ready():
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
 	for i in len(ship_data):
-		ship_data[i].HP = ship_data[i].total_HP
+		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		get_node("Ship%s" % i).visible = true
 		get_node("Ship%s/CollisionShape2D" % i).disabled = false
 		weapon_XPs.append({"bullet":0, "laser":0, "bomb":0, "light":0})
-		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP
+		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		get_node("Ship%s/HP" % i).value = ship_data[i].HP
 		get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
 	refresh_fight_panel()
@@ -229,9 +229,9 @@ func display_stats(type:String):
 		get_node("Ship%s/Icon" % i).visible = true
 		get_node("Ship%s/Icon" % i).texture = self["%s_icon" % [type]]
 		if type == "HP":
-			get_node("Ship%s/Label" % i).text = "%s / %s" % [ship_data[i].HP, ship_data[i].total_HP]
+			get_node("Ship%s/Label" % i).text = "%s / %s" % [ship_data[i].HP, (ship_data[i].total_HP * ship_data[i].upgrades[0])]
 		else:
-			get_node("Ship%s/Label" % i).text = String(ship_data[i][type])
+			get_node("Ship%s/Label" % i).text = String(ship_data[i][type] * ship_data[i].upgrades[get_type(type)])
 
 func _on_Back_pressed():
 	game.switch_view("system")
@@ -268,7 +268,7 @@ func _process(delta):
 			battle_lost = false
 	if battle_lost:
 		for i in len(ship_data):
-			ship_data[i].HP = ship_data[i].total_HP
+			ship_data[i].HP = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		game.switch_view("system")
 		game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return
@@ -1057,3 +1057,16 @@ func _on_diff_pressed(diff:int):
 	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
 	tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
 	tween.start()
+
+func get_type(type):
+	match type:
+		"HP":
+			return 0
+		"atk":
+			return 1
+		"def":
+			return 2
+		"acc":
+			return 3
+		"eva":
+			return 4

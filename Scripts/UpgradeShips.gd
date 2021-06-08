@@ -10,6 +10,7 @@ var Ship3_texture = preload("res://Graphics/Ships/Ship3.png")
 var points = 0
 
 var costs = [0,1,2,4,8]
+var totals = [0,1,3,7,15]
 var lvs = [0,0,0,0,0]
 
 onready var Ship_textures = [Ship0_texture, Ship1_texture, Ship2_texture, Ship3_texture]
@@ -57,5 +58,5 @@ func _on_OptionButton_item_selected(i):
 		points = points + 1
 	if game.science_unlocked.UP4:
 		points = points + 1
-	points = points - costs[lvs[0]] - costs[lvs[1]] - costs[lvs[2]] - costs[lvs[3]] - costs[lvs[4]]
+	points = points - totals[lvs[0]] - totals[lvs[1]] - totals[lvs[2]] - totals[lvs[3]] - totals[lvs[4]]
 	$Ship/Points.text = tr("YOU_HAVE_%s_POINTS_REMAINING" % points)

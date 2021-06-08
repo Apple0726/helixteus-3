@@ -7,7 +7,7 @@
 [ext_resource path="res://Graphics/Buttons/Down.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Scenes/UpgradeStats.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/UpgradeStats.gd" type="Script" id=8]
 [ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=11]
@@ -579,6 +579,10 @@ margin_top = 152.0
 margin_right = 256.0
 margin_bottom = 176.0
 
+[connection signal="item_selected" from="OptionButton" to="Upgrades/Acc" method="_on_OptionButton_item_selected"]
+[connection signal="item_selected" from="OptionButton" to="Upgrades/Atk" method="_on_OptionButton_item_selected"]
+[connection signal="item_selected" from="OptionButton" to="Upgrades/Eva" method="_on_OptionButton_item_selected"]
+[connection signal="item_selected" from="OptionButton" to="Upgrades/Def" method="_on_OptionButton_item_selected"]
 [connection signal="item_selected" from="OptionButton" to="Upgrades/Hp" method="_on_OptionButton_item_selected"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="mouse_entered" from="Upgrades/Hp" to="Stats" method="_on_Hp_mouse_entered"]

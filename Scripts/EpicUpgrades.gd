@@ -24,11 +24,11 @@ func _refresh(i):
 	$Level.text = "Lv " + String(lv)
 	$Boost.text = "+" + String(boost) + "%"
 
-func _on_OptionButton_item_selected(i):
-	_refresh(i)
-
 func _on_Up_pressed():
 	get_parent().get_parent()._upgrade(get_type(self.name))
 
 func _on_Down_pressed():
 	get_parent().get_parent()._downgrade(get_type(self.name))
+
+func _on_OptionButton_item_selected(i):
+	_refresh(i)
