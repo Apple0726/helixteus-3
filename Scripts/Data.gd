@@ -211,6 +211,11 @@ var science_unlocks = {
 						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
 						"PD":{"cost":e(1.2, 12), "parents":["FD"]},
 						
+						"UP1":{"cost":e(5, 7), "parents":["SCT"]},
+						"UP2":{"cost":e(5, 10), "parents":["UP1"]},
+						"UP3":{"cost":e(5, 13), "parents":["UP2"]},
+						"UP4":{"cost":e(5, 16), "parents":["UP3"]},
+						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":["SCT"]},
 						"TF":{"cost":e(5.6, 8), "parents":["MAE"]},

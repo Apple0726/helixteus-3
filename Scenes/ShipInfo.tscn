@@ -39,6 +39,9 @@ margin_bottom = 144.0
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Ship" type="TextureButton" parent="."]
 margin_left = 28.0
@@ -590,6 +593,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TextEdit" type="TextEdit" parent="."]
+margin_left = 24.0
+margin_top = 152.0
+margin_right = 200.0
+margin_bottom = 184.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
@@ -611,3 +623,4 @@ __meta__ = {
 [connection signal="mouse_exited" from="Stats/AccIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/EvaIcon" to="." method="_on_icon_mouse_entered" binds= [ "EVADE" ]]
 [connection signal="mouse_exited" from="Stats/EvaIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="text_changed" from="TextEdit" to="." method="_on_TextEdit_text_changed"]

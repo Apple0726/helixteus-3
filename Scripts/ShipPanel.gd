@@ -17,6 +17,7 @@ func refresh():
 	$GridContainer/Panel3.visible = len(game.ship_data) >= 3
 	$GridContainer/Panel4.visible = len(game.ship_data) >= 4
 	$Drives.refresh()
+	$Upgrade._refresh()
 	if game.ships_travel_view != "-":
 		set_process(true)
 	else:
@@ -40,15 +41,30 @@ func _on_DriveButton_pressed():
 		$Panel/CheckBox.visible = false
 		$Panel/DriveButton.visible = false
 		$Panel/BackButton.visible = true
+		$Panel/UpgradeButton.visible = false
 	else:
 		game.popup(tr("DRIVE_TECHNOLOGY_REQUIRED"), 1.5)
 
 func _on_BackButton_pressed():
 	$GridContainer.visible = true
 	$Drives.visible = false
+	$Upgrade.visible = false
 	$Panel/CheckBox.visible = true
 	$Panel/DriveButton.visible = true
 	$Panel/BackButton.visible = false
+	$Panel/UpgradeButton.visible = true
+
+func _on_UpgradeButton_pressed():
+	if game.science_unlocked.UP1:
+		$GridContainer.visible = false
+		$Drives.visible = false
+		$Upgrade.visible = true
+		$Panel/CheckBox.visible = false
+		$Panel/DriveButton.visible = false
+		$Panel/BackButton.visible = true
+		$Panel/UpgradeButton.visible = false
+	else:
+		game.popup(tr("UPGRADE_TECHNOLOGY_REQURED"), 1.5)
 
 func _on_GoToShips_mouse_entered():
 	game.show_tooltip(tr("GO_TO_SHIPS"))
@@ -64,4 +80,4 @@ func _on_DriveButton_mouse_entered():
 	game.show_tooltip(tr("OPEN_DRIVE_MENU"))
 
 func _on_BackButton_mouse_entered():
-	game.show_tooltip(tr("CLOSE_DRIVE_MENU"))
+	game.show_tooltip(tr("GO_BACK"))

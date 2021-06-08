@@ -37,7 +37,7 @@ var w_4_3 = preload("res://Scenes/HX/Weapons/4_3.tscn")
 
 var star:Sprite#Shown right before HX magic
 
-var ship_data# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+var ship_data# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???" "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
 var HX_data
 var HXs = []
 var HX_c_d:Dictionary = {}#HX_custom_data
@@ -105,7 +105,7 @@ func _ready():
 			star.position.y = rand_range(0, 720)
 			$Stars.add_child(star)
 		HX_data = []
-		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":5, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		ship_data = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":5, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
 		for k in 4:
 			var lv = 1
 			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
@@ -124,11 +124,11 @@ func _ready():
 	$Current/Current.float_height = 5
 	$Current/Current.float_speed = 0.25
 	for i in len(ship_data):
-		ship_data[i].HP = ship_data[i].total_HP
+		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		get_node("Ship%s" % i).visible = true
 		get_node("Ship%s/CollisionShape2D" % i).disabled = false
 		weapon_XPs.append({"bullet":0, "laser":0, "bomb":0, "light":0})
-		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP
+		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		get_node("Ship%s/HP" % i).value = ship_data[i].HP
 		get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
 	refresh_fight_panel()
@@ -229,9 +229,9 @@ func display_stats(type:String):
 		get_node("Ship%s/Icon" % i).visible = true
 		get_node("Ship%s/Icon" % i).texture = self["%s_icon" % [type]]
 		if type == "HP":
-			get_node("Ship%s/Label" % i).text = "%s / %s" % [ship_data[i].HP, ship_data[i].total_HP]
+			get_node("Ship%s/Label" % i).text = "%s / %s" % [ship_data[i].HP, (ship_data[i].total_HP * ship_data[i].upgrades[0])]
 		else:
-			get_node("Ship%s/Label" % i).text = String(ship_data[i][type])
+			get_node("Ship%s/Label" % i).text = String(ship_data[i][type] * ship_data[i].upgrades[get_type(type)])
 
 func _on_Back_pressed():
 	game.switch_view("system")
@@ -268,7 +268,7 @@ func _process(delta):
 			battle_lost = false
 	if battle_lost:
 		for i in len(ship_data):
-			ship_data[i].HP = ship_data[i].total_HP
+			ship_data[i].HP = ship_data[i].total_HP * ship_data[i].upgrades[0]
 		game.switch_view("system")
 		game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return
@@ -345,8 +345,8 @@ func _process(delta):
 				for i in len(HXs):
 					if HX_data[i].HP <= 0:
 						continue
-					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[i].eva):
-						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[i].def, DEF_EXPO_ENEMY)
+					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult * ship_data[sh].upgrades[3], HX_data[i].eva):
+						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].upgrades[1] / pow(HX_data[i].def, DEF_EXPO_ENEMY)
 						var crit = randf() < 0.1
 						if crit:
 							dmg *= 1.5
@@ -357,8 +357,8 @@ func _process(delta):
 				if light_hit:
 					weapon_XPs[sh].light += 1
 			else:
-				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult, HX_data[t].eva):
-					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage / pow(HX_data[w_c_d[weapon.name].target].def, DEF_EXPO_ENEMY)
+				if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult * ship_data[sh].upgrades[3], HX_data[t].eva):
+					var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].upgrades[1] / pow(HX_data[w_c_d[weapon.name].target].def, DEF_EXPO_ENEMY)
 					var crit = randf() < 0.1
 					if crit:
 						dmg *= 1.5
@@ -998,8 +998,8 @@ func _on_Ship_area_entered(area, ship_id:int):
 	if immune or self["ship%s" % ship_id].modulate.a != 1.0:
 		return
 	var HX = HX_data[HX_w_c_d[area.name].id]
-	if randf() < hit_formula(HX.acc, ship_data[ship_id].eva):
-		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def, DEF_EXPO_SHIP)
+	if randf() < hit_formula(HX.acc, ship_data[ship_id].eva * ship_data[ship_id].upgrades[4]):
+		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def * ship_data[ship_id].upgrades[2], DEF_EXPO_SHIP)
 		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
 		ship_data[ship_id].HP -= dmg
 	else:
@@ -1057,3 +1057,16 @@ func _on_diff_pressed(diff:int):
 	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
 	tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
 	tween.start()
+
+func get_type(type):
+	match type:
+		"HP":
+			return 0
+		"atk":
+			return 1
+		"def":
+			return 2
+		"acc":
+			return 3
+		"eva":
+			return 4

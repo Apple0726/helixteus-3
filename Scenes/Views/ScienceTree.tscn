@@ -175,7 +175,7 @@ antialiased = true
 
 [node name="L_CD2" type="Line2D" parent="L_SCT2"]
 position = Vector2( 1568, 140 )
-points = PoolVector2Array( 80, -284, 80, 324 )
+points = PoolVector2Array( 80, -284, 80, 420 )
 width = 2.0
 begin_cap_mode = 1
 end_cap_mode = 1
@@ -192,6 +192,10 @@ position = Vector2( 1560, -188 )
 points = PoolVector2Array( 88, 44, 168, 44 )
 width = 2.0
 antialiased = true
+
+[node name="L_UP1" type="Line2D" parent="L_SCT2"]
+points = PoolVector2Array( 1648, 560, 1728, 560 )
+width = 2.0
 
 [node name="SCT" parent="." instance=ExtResource( 1 )]
 margin_left = 1280.0
@@ -249,18 +253,18 @@ margin_bottom = -160.0
 
 [node name="OL" parent="." instance=ExtResource( 1 )]
 margin_left = 1280.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 1536.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="YL" parent="." instance=ExtResource( 1 )]
 margin_left = 1696.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 1952.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="L_FTL" type="Line2D" parent="."]
-position = Vector2( 1568, 556 )
+position = Vector2( 1568, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
@@ -296,106 +300,106 @@ margin_right = 2848.0
 margin_bottom = 496.0
 
 [node name="L_GL" type="Line2D" parent="."]
-position = Vector2( 1984, 556 )
+position = Vector2( 1984, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="GL" parent="." instance=ExtResource( 1 )]
 margin_left = 2112.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 2368.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="L_BL" type="Line2D" parent="."]
-position = Vector2( 2400, 556 )
+position = Vector2( 2400, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="BL" parent="." instance=ExtResource( 1 )]
 margin_left = 2528.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 2784.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="L_PL" type="Line2D" parent="."]
-position = Vector2( 2816, 556 )
+position = Vector2( 2816, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="PL" parent="." instance=ExtResource( 1 )]
 margin_left = 2944.0
-margin_top = 544.447
+margin_top = 628.447
 margin_right = 3200.0
-margin_bottom = 608.447
+margin_bottom = 692.447
 
 [node name="L_UVL" type="Line2D" parent="."]
-position = Vector2( 3232, 556 )
+position = Vector2( 3232, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="UVL" parent="." instance=ExtResource( 1 )]
 margin_left = 3364.0
-margin_top = 540.0
+margin_top = 624.0
 margin_right = 3620.0
-margin_bottom = 604.0
+margin_bottom = 688.0
 
 [node name="L_XRL" type="Line2D" parent="."]
-position = Vector2( 3648, 556 )
+position = Vector2( 3648, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="XRL" parent="." instance=ExtResource( 1 )]
 margin_left = 3776.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 4032.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="L_GRL" type="Line2D" parent="."]
-position = Vector2( 4064, 556 )
+position = Vector2( 4064, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="GRL" parent="." instance=ExtResource( 1 )]
 margin_left = 4192.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 4448.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="L_UGRL" type="Line2D" parent="."]
-position = Vector2( 4480, 556 )
+position = Vector2( 4480, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="UGRL" parent="." instance=ExtResource( 1 )]
 margin_left = 4608.0
-margin_top = 544.0
+margin_top = 628.0
 margin_right = 4864.0
-margin_bottom = 608.0
+margin_bottom = 692.0
 
 [node name="RMK2" parent="." instance=ExtResource( 1 )]
 margin_left = 1280.0
-margin_top = 736.0
+margin_top = 820.0
 margin_right = 1536.0
-margin_bottom = 800.0
+margin_bottom = 884.0
 
 [node name="L_RMK3" type="Line2D" parent="."]
-position = Vector2( 1568, 748 )
+position = Vector2( 1568, 832 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 antialiased = true
 
 [node name="RMK3" parent="." instance=ExtResource( 1 )]
 margin_left = 1696.0
-margin_top = 736.0
+margin_top = 820.0
 margin_right = 1952.0
-margin_bottom = 800.0
+margin_bottom = 884.0
 
 [node name="L_MAE2" type="Node2D" parent="."]
 
@@ -641,6 +645,47 @@ margin_right = 3264.0
 margin_bottom = 152.0
 size_flags_horizontal = 13
 
+[node name="UP1" parent="." instance=ExtResource( 1 )]
+margin_left = 1760.0
+margin_top = 528.0
+margin_right = 2016.0
+margin_bottom = 592.0
+size_flags_horizontal = 13
+
+[node name="L_UP2" type="Line2D" parent="."]
+points = PoolVector2Array( 2048, 560, 2144, 560 )
+width = 2.0
+
+[node name="UP2" parent="." instance=ExtResource( 1 )]
+margin_left = 2176.0
+margin_top = 528.0
+margin_right = 2432.0
+margin_bottom = 592.0
+size_flags_horizontal = 13
+
+[node name="L_UP3" type="Line2D" parent="."]
+points = PoolVector2Array( 2464, 560, 2560, 560 )
+width = 2.0
+
+[node name="UP3" parent="." instance=ExtResource( 1 )]
+margin_left = 2592.0
+margin_top = 528.0
+margin_right = 2848.0
+margin_bottom = 592.0
+size_flags_horizontal = 13
+
+[node name="L_UP4" type="Line2D" parent="."]
+position = Vector2( 416, 0 )
+points = PoolVector2Array( 2464, 560, 2560, 560 )
+width = 2.0
+
+[node name="UP4" parent="." instance=ExtResource( 1 )]
+margin_left = 3008.0
+margin_top = 528.0
+margin_right = 3264.0
+margin_bottom = 592.0
+size_flags_horizontal = 13
+
 [node name="Node2D" type="Node2D" parent="."]
 
 [node name="L_SCT" type="Line2D" parent="Node2D"]
@@ -651,21 +696,25 @@ antialiased = true
 
 [node name="L_OL" type="Line2D" parent="Node2D"]
 position = Vector2( 1086, 542 )
-points = PoolVector2Array( 2, 34, 162, 34 )
+points = PoolVector2Array( 2, 34, 81.5562, 34 )
 width = 2.0
 antialiased = true
 
 [node name="L_OL2" type="Line2D" parent="Node2D"]
 position = Vector2( 1086, 542 )
-points = PoolVector2Array( 82, -382, 82, 226 )
+points = PoolVector2Array( 82, -382, 82, 306 )
 width = 2.0
 begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
+[node name="L_OL3" type="Line2D" parent="Node2D"]
+points = PoolVector2Array( 1168, 664, 1248, 664 )
+width = 2.0
+
 [node name="L_RMK2" type="Line2D" parent="Node2D"]
 position = Vector2( 1080, 564 )
-points = PoolVector2Array( 88, 204, 168, 204 )
+points = PoolVector2Array( 88, 284, 168, 284 )
 width = 2.0
 antialiased = true
 

@@ -40,11 +40,12 @@ func refresh():
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
 	$XP/Label2.text = "%s / %s" % [game.ship_data[id].XP, game.ship_data[id].XP_to_lv]
 	set_visibility()
-	$Stats/HP.text = String(game.ship_data[id].total_HP)
-	$Stats/Atk.text = String(game.ship_data[id].atk)
-	$Stats/Def.text = String(game.ship_data[id].def)
-	$Stats/Acc.text = String(game.ship_data[id].acc)
-	$Stats/Eva.text = String(game.ship_data[id].eva)
+	$Stats/HP.text = String(game.ship_data[id].total_HP * game.ship_data[id].upgrades[0])
+	$Stats/Atk.text = String(game.ship_data[id].atk * game.ship_data[id].upgrades[1])
+	$Stats/Def.text = String(game.ship_data[id].def * game.ship_data[id].upgrades[2])
+	$Stats/Acc.text = String(game.ship_data[id].acc * game.ship_data[id].upgrades[3])
+	$Stats/Eva.text = String(game.ship_data[id].eva * game.ship_data[id].upgrades[4])
+	$TextEdit.text = game.ship_data[id].name
 	
 func _on_icon_mouse_entered(stat:String):
 	game.show_tooltip(tr(stat))
@@ -79,3 +80,7 @@ func _on_Ship_pressed():
 				game.item_to_use.num = 0
 				game.update_item_cursor()
 				_on_Ship_mouse_exited()
+
+
+func _on_TextEdit_text_changed():
+	game.ship_data[id].name = $TextEdit.text
