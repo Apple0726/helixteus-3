@@ -412,6 +412,7 @@ func click_tile(tile, tile_id:int):
 					game.toggle_panel(game.production_panel)
 					game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
 				"AMN":
+					game.AMN_panel.tf = false
 					game.toggle_panel(game.AMN_panel)
 				"SPR":
 					game.toggle_panel(game.SPR_panel)

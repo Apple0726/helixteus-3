@@ -75,6 +75,7 @@ const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
 const CLUSTER_SCALE_DIV = 1600.0
 const SC_SCALE_DIV = 400.0
+const STAR_SCALE_DIV = 300.0/2.63
 
 #HUD shows the player resources at the top
 var HUD
@@ -197,7 +198,7 @@ var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":
 
 ############ End save data ############
 var overlay_CS:float = 0.5
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
 var collect_speed_lag_ratio:int = 1
@@ -266,12 +267,12 @@ var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60000},
 }
 
-var overclocks_info = {	"overclock1":{"costs":{"money":1400}, "mult":1.5, "duration":10*60000},
-						"overclock2":{"costs":{"money":8500}, "mult":2, "duration":30*60000},
-						"overclock3":{"costs":{"money":50000}, "mult":3, "duration":60*60000},
-						"overclock4":{"costs":{"money":170000}, "mult":4, "duration":2*60*60000},
-						"overclock5":{"costs":{"money":850000}, "mult":6, "duration":6*60*60000},
-						"overclock6":{"costs":{"money":9000000}, "mult":10, "duration":24*60*60000},
+var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "duration":10*60000},
+						"overclock2":{"costs":{"money":17000}, "mult":2, "duration":30*60000},
+						"overclock3":{"costs":{"money":120000}, "mult":3, "duration":60*60000},
+						"overclock4":{"costs":{"money":540000}, "mult":4, "duration":2*60*60000},
+						"overclock5":{"costs":{"money":4200000}, "mult":6, "duration":6*60*60000},
+						"overclock6":{"costs":{"money":68000000}, "mult":10, "duration":24*60*60000},
 }
 
 var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":60},
@@ -758,6 +759,7 @@ func new_game(tut:bool):
 			"AIE":1,
 			"STMB":1,
 			"SHSR":1,
+			"CHR":1,
 	}#Levels of mineral upgrades
 
 	#Measures to not overwhelm beginners. false: not visible
@@ -788,7 +790,7 @@ func new_game(tut:bool):
 	#Stores information of all objects discovered
 	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "FM":1.0, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
 	galaxy_data = Data.starting_galaxy_data.duplicate(true)
 	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
@@ -890,13 +892,11 @@ func new_game(tut:bool):
 		u_i["charge"] = e(1.602, -19)#C
 		u_i["strong_force"] = 1.0
 		u_i["weak_force"] = 1.0
-		u_i["dark_matter"] = 1.0
+		u_i["dark_energy"] = 1.0
 		u_i["difficulty"] = 1.0
 		u_i["multistar_systems"] = 1.0
 		u_i["rare_stars"] = 1.0
-		u_i["rare_materials"] = 1.0
 		u_i["time_speed"] = 1.0
-		u_i["radiation"] = 1.0
 		u_i["antimatter"] = 1.0
 		u_i["value"] = 1.0
 		u_i["shapes"] = []
@@ -1273,10 +1273,8 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			add_space_HUD()
 		"galaxy":
 			add_galaxy()
-			add_space_HUD()
 		"cluster":
 			add_cluster()
-			add_space_HUD()
 		"supercluster":
 			add_supercluster()
 			add_space_HUD()
@@ -1389,9 +1387,11 @@ func add_obj(view_str):
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g].shapes
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
+			add_space_HUD()
 		"cluster":
 			view.shapes_data = cluster_data[c_c].shapes
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
+			add_space_HUD()
 		"supercluster":
 			view.shapes_data = supercluster_data[c_sc].shapes
 			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
@@ -1660,7 +1660,7 @@ func generate_superclusters(id:int):
 		sc_i["conquered"] = false
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
-		sc_i["visible"] = false
+		sc_i["visible"] = TEST
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
@@ -1725,6 +1725,7 @@ func generate_clusters(id:int):
 		c_i["id"] = c_id + c_num
 		c_i["l_id"] = c_id
 		c_i["discovered"] = false
+		c_i.FM = Helper.clever_round(1 + pos.length() / 1000.0)#Ferromagnetic materials
 		if id == 0:
 			c_i.diff = Helper.clever_round(1 + pos.length(), 3)
 		else:
@@ -1761,6 +1762,7 @@ func generate_galaxies(id:int):
 	var gal_num_to_load = min(500, galaxy_num)
 	var progress = 1 - (galaxy_num - gal_num_to_load) / float(total_gal_num)
 	var dark_energy = supercluster_data[cluster_data[id].parent].dark_energy
+	var FM:float = cluster_data[id].FM
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
 		g_i["conquered"] = false
@@ -1771,15 +1773,15 @@ func generate_galaxies(id:int):
 		g_i["type"] = Helper.rand_int(0, 6)
 		var rand = randf()
 		if g_i.type == 6:
-			g_i["system_num"] = int(5000 + 15000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(2, 10), 3)#Influences star classes
+			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM, 3)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 5) * pow(dark_energy, 2), 3)
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM, 3)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
@@ -2090,6 +2092,7 @@ func generate_systems(id:int):
 
 	#Open clusters are
 	var B = galaxy_data[id].B_strength#Magnetic field strength
+	var dark_matter = galaxy_data[id].dark_matter
 	
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
@@ -2101,8 +2104,8 @@ func generate_systems(id:int):
 		s_i["discovered"] = false
 		
 		var num_stars = 1
-#		while randf() < 0.3 / float(num_stars):
-#			num_stars += 1
+		while randf() < 0.3 * dark_matter / float(num_stars) and num_stars < 5:
+			num_stars += 1
 		var stars = []
 		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
 		var dark_matter_system:bool = c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
@@ -2197,7 +2200,6 @@ func generate_systems(id:int):
 		var combined_star_mass = 0
 		for star in stars:
 			combined_star_mass += star.mass
-		var dark_matter = galaxy_data[c_g].dark_matter
 		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 9) * dark_matter), 2)
 		if planet_num > 30:
 			planet_num -= floor((planet_num - 30) / 2)
@@ -2214,7 +2216,16 @@ func generate_systems(id:int):
 		s_i["id"] = s_id + s_num
 		s_i["l_id"] = s_id
 		s_i["stars"] = stars
-		s_i["name"] = tr("SYSTEM") + " %s" % s_id
+		s_i["name"] = "%s %s" % [tr("SYSTEM"), s_id]
+		match len(stars):
+			2:
+				s_i.name = "%s %s" % [tr("BINARY_SYSTEM"), s_id]
+			3:
+				s_i.name = "%s %s" % [tr("TERNARY_SYSTEM"), s_id]
+			4:
+				s_i.name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), s_id]
+			5:
+				s_i.name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), s_id]
 		s_i["discovered"] = false
 		s_i.pos = Vector2.ZERO
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
@@ -2237,20 +2248,41 @@ func get_max_star_prop(s_id:int, prop:String):
 			max_star_prop = star[prop]
 	return max_star_prop
 
+func star_size_in_pixels(size:float):
+	 return max(24, size * 600.0 / STAR_SCALE_DIV)
+
 func generate_planets(id:int):#local id
 	randomize()
-	var combined_star_size = 0
+	var star_boundary = 0
 	var combined_star_mass = 0
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
 	var star_size_in_km = max_star_size * e(6.957, 5)
-	for star in system_data[id]["stars"]:
-		combined_star_size += star["size"]
-		combined_star_mass += star.mass
-	var planet_num = system_data[id]["planet_num"]
+	var center_star_r_in_pixels:float = star_size_in_pixels(system_data[id].stars[0].size) / 2.0
+	var circles:Array = [{"pos":Vector2.ZERO, "radius":center_star_r_in_pixels}]
+	for i in range(1, len(system_data[id].stars)):
+		var colliding = true
+		var pos:Vector2
+		var star = system_data[id].stars[i]
+		var r_offset:float = 10.0
+		var radius_in_pixels = star_size_in_pixels(star.size) / 2.0
+		while colliding:
+			colliding = false
+			var r:float = center_star_r_in_pixels + radius_in_pixels + r_offset
+			var th:float = rand_range(0, 2 * PI)
+			pos = polar2cartesian(r, th)
+			for circ in circles:
+				if pos.distance_to(circ.pos) < radius_in_pixels + circ.radius:
+					colliding = true
+					r_offset += 10.0
+					break
+		star.pos = pos
+		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
+		circles.append({"pos":pos, "radius":radius_in_pixels})
+	var planet_num = system_data[id].planet_num
 	var max_distance
 	var j = 0
-	while pow(1.3, j) * 240 < combined_star_size * 2.63:
+	while pow(1.3, j) * 240 < star_boundary * 2.63:
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	system_data[id]["planets"].clear()
@@ -2745,12 +2777,13 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 	var common_elements = {}
 	var uncommon_elements = {}
 	var big_planet_factor:float = lerp(1, 5, inverse_lerp(12500, 45000, size))
+	var FM:float = cluster_data[c_c].FM
 	if not gas_giant or depth == "core":
 		if depth == "crust":
 			common_elements["O"] = rand_range(0.1, 0.19)
 			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
 			uncommon_elements = {	"Al":0.5,
-									"Fe":0.35,
+									"Fe":0.35 * FM,
 									"Ca":0.3,
 									"Na":0.25,
 									"Mg":0.2,
@@ -2783,8 +2816,10 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"P":0.02,
 								}
 		else:
-			common_elements["Fe"] = rand_range(0.5, 0.95)
-			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.9)
+			var x:float = rand_range(1, 10) * FM
+			var y:float = rand_range(0, 5) * FM
+			common_elements["Fe"] = x/(x+1)
+			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * y/(y+1)
 			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.19)
 			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
 			uncommon_elements = {	"S":0.5,
@@ -2794,7 +2829,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"Os":0.1,
 									"Ir":0.1,
 									"Ti":0.1,
-									"Co":0.1,
+									"Co":0.1 * FM,
 									"Mn":0.1
 								}
 	else:
@@ -2806,7 +2841,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			common_elements["He"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
 			common_elements["C"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
 			uncommon_elements = {	"Al":0.5,
-									"Fe":0.35,
+									"Fe":0.35 * FM,
 									"Ca":0.3,
 									"Na":0.25,
 									"U":0.25,
@@ -2955,7 +2990,7 @@ func on_change_view_click ():
 			if lv >= 70:
 				switch_view("universe")
 		"universe":
-			if lv >= 100:
+			if false:
 				switch_view("dimension")
 
 func add_items(item:String, num:int = 1):
@@ -3182,9 +3217,9 @@ func _input(event):
 				item_to_use.num = 0
 				update_item_cursor()
 		elif not tutorial or tutorial.tut_num >= 26:
-			if active_panel:
+			if is_instance_valid(active_panel):
 				if c_v != "":
-					if sub_panel:
+					if is_instance_valid(sub_panel):
 						sub_panel.visible = false
 						sub_panel = null
 					elif active_panel == upgrade_panel:
@@ -3197,7 +3232,7 @@ func _input(event):
 					toggle_panel(active_panel)
 				hide_tooltip()
 				hide_adv_tooltip()
-			elif sub_panel:
+			elif is_instance_valid(sub_panel):
 				sub_panel.visible = false
 				sub_panel = null
 	

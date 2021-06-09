@@ -13,7 +13,10 @@ var overlays = []
 
 func _ready():
 	for s_i in game.system_data:
-		var star = s_i["stars"][0]
+		var star:Dictionary = s_i.stars[0]
+		for i in range(1, len(s_i.stars)):
+			if s_i.stars[i].luminosity > star.luminosity:
+				star = s_i.stars[i]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
 		star_btn.texture_normal = star_texture
@@ -67,36 +70,40 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				overlay.circle.modulate = gradient.interpolate(offset)
 		1:
 			for overlay in overlays:
-				if game.system_data[overlay.id].discovered:
-					overlay.circle.modulate = gradient.interpolate(0)
-				else:
-					overlay.circle.modulate = gradient.interpolate(1)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, len(game.system_data[overlay.id].stars))
+				overlay.circle.modulate = gradient.interpolate(offset)
 		2:
 			for overlay in overlays:
-				if game.system_data[overlay.id].conquered:
+				if game.system_data[overlay.id].discovered:
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		3:
 			for overlay in overlays:
+				if game.system_data[overlay.id].conquered:
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
+		4:
+			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		4:
+		5:
 			for overlay in overlays:
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		5:
+		6:
 			for overlay in overlays:
 				var temp = game.get_biggest_star_size(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		6:
+		7:
 			for overlay in overlays:
 				var temp = game.get_brightest_star_luminosity(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		7:
+		8:
 			for overlay in overlays:
 				if game.system_data[overlay.id].has("has_MS"):
 					overlay.circle.modulate = gradient.interpolate(0)

@@ -92,12 +92,13 @@ var MS_output = {	"M_DS_0":e(1, 8),
 					"M_MB":e(1, 14),
 }
 
-var MUs = {	"MV":{"base_cost":100, "pw":2.3},
+var MUs = {	"MV":{"base_cost":100, "pw":1.9},
 			"MSMB":{"base_cost":100, "pw":1.6},
-			"IS":{"base_cost":500, "pw":2.1},
-			"AIE":{"base_cost":1000, "pw":1.9},
-			"STMB":{"base_cost":600, "pw":1.7},
-			"SHSR":{"base_cost":2000, "pw":1.8},
+			"IS":{"base_cost":500, "pw":1.9},
+			"AIE":{"base_cost":1000, "pw":2.3},
+			"STMB":{"base_cost":600, "pw":1.6},
+			"SHSR":{"base_cost":2000, "pw":1.9},
+			"CHR":{"base_cost":2000, "pw":1.7},
 }
 var minerals_icon = load("res://Graphics/Icons/minerals.png")
 var energy_icon = load("res://Graphics/Icons/energy.png")

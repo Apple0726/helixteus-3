@@ -44,6 +44,7 @@ func refresh():
 	$VBoxContainer/MSMB.visible = game.show.mining
 	$VBoxContainer/STMB.visible = game.STM_lv >= 2
 	$VBoxContainer/SHSR.visible = game.stats.planets_conquered >= 2
+	$VBoxContainer/CHR.visible = game.stats.planets_conquered >= 2
 	for hbox in $VBoxContainer.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
@@ -53,17 +54,19 @@ func refresh():
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($VBoxContainer/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [load("res://Graphics/Icons/minerals.png"), load("res://Graphics/Icons/money.png")], 15)
+			game.add_text_icons($VBoxContainer/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, load("res://Graphics/Icons/money.png")], 15)
 		"MSMB":
-			$VBoxContainer/MSMB/Effects.text = "+ %s " % [(game.MUs.MSMB + next_lv - 1) * 10] + "%"
+			$VBoxContainer/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
 			$VBoxContainer/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"AIE":
 			$VBoxContainer/AIE/Effects.text = String(Helper.get_AIE(next_lv))
 		"STMB":
-			$VBoxContainer/STMB/Effects.text = "+ %s " % [(game.MUs.STMB + next_lv - 1) * 15] + "%"
+			$VBoxContainer/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
-			$VBoxContainer/SHSR/Effects.text = "- %s " % [(game.MUs.SHSR + next_lv - 1)] + "%"
+			$VBoxContainer/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
+		"CHR":
+			$VBoxContainer/SHSR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 0.025)
 	if next_lv == 0:
 		get_node("VBoxContainer/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
 	else:

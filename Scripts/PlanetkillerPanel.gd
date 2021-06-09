@@ -75,10 +75,12 @@ func refresh_planet_info():
 	add_stone(stone, target.mantle, mantle_volume * ((5690 + (target.mantle_start_depth + target.core_start_depth) * 0.01) / 2.0))
 	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
 	rsrc = {"stone":stone}
+	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
+	var au_mult = pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
 	for mat in target.surface:
-		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount
+		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult
 	for met in game.met_info:
-		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) * 0.425 * game.met_info[met].amount / game.met_info[met].rarity
+		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) * 0.425 * game.met_info[met].amount / game.met_info[met].rarity * au_mult
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
 
 #get_sphere_volume

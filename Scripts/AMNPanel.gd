@@ -1,6 +1,7 @@
 extends "Panel.gd"
 
 var tile
+var tf:bool = false#whether this panel is opened by clicking a tile or a planet
 var atom_to_MM:bool = true#MM: material or metal
 var metal:String
 var ratios:Dictionary

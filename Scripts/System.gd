@@ -9,7 +9,6 @@ onready var view = get_parent()
 var dimensions:float
 
 const PLANET_SCALE_DIV = 6400000.0 / 2.0
-const STAR_SCALE_DIV = 300.0/2.63
 var glows = []
 var star_time_bars = []
 var planet_time_bars = []
@@ -146,15 +145,15 @@ func refresh_stars():
 	star_time_bars.clear()
 	star_rsrcs.clear()
 	#var combined_star_size = 0
-	for i in range(0, stars_info.size()):
+	for i in len(stars_info):
 		var star_info = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = star_graphic
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(300, 300)
 		#combined_star_size += star_info["size"]
-		star.rect_scale.x = max(0.04, star_info["size"] / STAR_SCALE_DIV)
-		star.rect_scale.y = max(0.04, star_info["size"] / STAR_SCALE_DIV)
+		star.rect_scale.x = max(0.04, star_info["size"] / game.STAR_SCALE_DIV)
+		star.rect_scale.y = max(0.04, star_info["size"] / game.STAR_SCALE_DIV)
 		star.rect_position = star_info["pos"] - Vector2(300, 300)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
@@ -289,7 +288,7 @@ func show_planet_info(id:int, l_id:int):
 		var icons = []
 		var adv = false
 		if p_i.has("tile_num"):
-			if p_i.bldg.name in ["MM", "GH"]:
+			if p_i.bldg.name in ["MM", "GH", "AMN", "SPR"]:
 				tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, 1)]
 			else:
 				tooltip += "%s %s\n%s" %  [Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
@@ -431,6 +430,9 @@ func on_planet_click (id:int, l_id:int):
 						toggle_GH(p_i, true)
 				else:
 					toggle_GH(p_i, false)
+			elif p_i.bldg.name == "AMN":
+				game.AMN_panel.tf = true
+				game.toggle_panel(game.AMN_panel)
 			else:
 				items_collected.clear()
 				if p_i.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:

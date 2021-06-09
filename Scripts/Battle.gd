@@ -347,7 +347,7 @@ func _process(delta):
 						continue
 					if randf() < hit_formula(ship_data[sh].acc * w_c_d[weapon.name].acc_mult * ship_data[sh].upgrades[3], HX_data[i].eva):
 						var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].upgrades[1] / pow(HX_data[i].def, DEF_EXPO_ENEMY)
-						var crit = randf() < 0.1
+						var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.025 if game else 0)
 						if crit:
 							dmg *= 1.5
 						damage_HX(i, dmg, crit)

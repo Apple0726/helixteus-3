@@ -136,10 +136,19 @@ toggle_mode = true
 text = "B_STRENGTH"
 expand_icon = true
 
-[node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="FM" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 176.0
 margin_right = 364.0
 margin_bottom = 216.0
+rect_min_size = Vector2( 0, 40 )
+toggle_mode = true
+text = "FERROMAGNETIC_MATERIALS"
+expand_icon = true
+
+[node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 220.0
+margin_right = 364.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_ENERGY"
@@ -160,4 +169,5 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Aurora" to="." method="_on_Aurora_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/DarkMatter" to="." method="_on_DarkMatter_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/B_strength" to="." method="_on_B_strength_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/FM" to="." method="_on_FM_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/DarkEnergy" to="." method="_on_DarkEnergy_pressed"]
