@@ -196,10 +196,13 @@ var stats:Dictionary
 enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
+var autocollect:Dictionary
+var save_date:int
+
 ############ End save data ############
 var overlay_CS:float = 0.5
-var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
+var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
 }
 var collect_speed_lag_ratio:int = 1
 
@@ -269,10 +272,10 @@ var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
 
 var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "duration":10*60000},
 						"overclock2":{"costs":{"money":17000}, "mult":2, "duration":30*60000},
-						"overclock3":{"costs":{"money":120000}, "mult":3, "duration":60*60000},
-						"overclock4":{"costs":{"money":540000}, "mult":4, "duration":2*60*60000},
-						"overclock5":{"costs":{"money":4200000}, "mult":6, "duration":6*60*60000},
-						"overclock6":{"costs":{"money":68000000}, "mult":10, "duration":24*60*60000},
+						"overclock3":{"costs":{"money":90000}, "mult":2.5, "duration":60*60000},
+						"overclock4":{"costs":{"money":340000}, "mult":3, "duration":2*60*60000},
+						"overclock5":{"costs":{"money":2200000}, "mult":4, "duration":6*60*60000},
+						"overclock6":{"costs":{"money":18000000}, "mult":5, "duration":24*60*60000},
 }
 
 var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":60},
@@ -348,7 +351,7 @@ func _ready():
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
 			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - No multithreading (mass-build will generate a lag spike)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
-		autosell = config.get_value("game", "autosell", false)
+		autosell = config.get_value("game", "autosell", true)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
@@ -550,11 +553,9 @@ func load_game():
 		c_num = save_game.get_64()
 		stats = save_game.get_var()
 		objective = save_game.get_var()
+		autocollect = save_game.get_var()
+		save_date = save_game.get_64()
 		save_game.close()
-		if not infinite_research.has("PME"):
-			infinite_research.PME = 0
-		if not fourth_ship_hints.has("emma_free"):
-			fourth_ship_hints.emma_free = false
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -788,11 +789,11 @@ func new_game(tut:bool):
 		show[particle] = false
 
 	#Stores information of all objects discovered
-	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "discovered":false, "conquered":false, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "discovered":false, "conquered":false, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "FM":1.0, "discovered":false, "conquered":false, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
+	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
 	galaxy_data = Data.starting_galaxy_data.duplicate(true)
-	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "discovered":false, "conquered":false, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -850,7 +851,9 @@ func new_game(tut:bool):
 				}
 
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
-
+	autocollect = {}
+	save_date = OS.get_system_time_msecs()
+	
 	generate_planets(0)
 	#Home planet information
 	planet_data[2]["name"] = tr("HOME_PLANET")
@@ -858,7 +861,6 @@ func new_game(tut:bool):
 	planet_data[2]["size"] = round(rand_range(12000, 12100))
 	planet_data[2]["angle"] = PI / 2
 	planet_data[2]["tiles"] = []
-	planet_data[2]["discovered"] = false
 	planet_data[2].pressure = 1
 	planet_data[2].lake_1 = "H2O"
 	planet_data[2].erase("lake_2")
@@ -1384,17 +1386,25 @@ func add_obj(view_str):
 			view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 		"system":
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
+			if ships_c_g_coords.s == c_s_g:
+				system_data[c_s].explored = true
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g].shapes
 			view.add_obj("Galaxy", galaxy_data[c_g]["view"]["pos"], galaxy_data[c_g]["view"]["zoom"])
 			add_space_HUD()
+			if ships_c_g_coords.g == c_g_g:
+				galaxy_data[c_g].explored = true
 		"cluster":
 			view.shapes_data = cluster_data[c_c].shapes
 			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
 			add_space_HUD()
+			if ships_c_g_coords.c == c_c_g:
+				cluster_data[c_c].explored = true
 		"supercluster":
 			view.shapes_data = supercluster_data[c_sc].shapes
 			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
+			if ships_c_coords.sc == c_sc:
+				supercluster_data[c_sc].explored = true
 		"universe":
 			view.shapes_data = universe_data[c_u].shapes
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
@@ -1434,8 +1444,8 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.GS
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].conquered and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].conquered
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].has("conquered")
 		if c_v == "supercluster":
 			space_HUD.get_node("SendProbes").visible = c_sc == 0
 		elif c_v == "universe":
@@ -1484,7 +1494,7 @@ func add_universe():
 	if true:
 		view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
 	put_change_view_btn(view_str, "res://Graphics/Buttons/DimensionView.png")
-	if not universe_data[c_u]["discovered"]:
+	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
@@ -1497,7 +1507,7 @@ func add_supercluster():
 	put_change_view_btn(view_str, "res://Graphics/Buttons/UniverseView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
-	if not supercluster_data[c_sc]["discovered"]:
+	if not supercluster_data[c_sc].has("discovered"):
 		reset_collisions()
 		if c_sc != 0:
 			cluster_data.clear()
@@ -1514,7 +1524,7 @@ func add_cluster():
 		cluster_data = open_obj("Superclusters", c_sc)
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
-	if not cluster_data[c_c]["discovered"]:
+	if not cluster_data[c_c].has("discovered"):
 		add_loading()
 		reset_collisions()
 		if c_c_g != 0:
@@ -1533,7 +1543,7 @@ func add_galaxy():
 		galaxy_data = open_obj("Clusters", c_c_g)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
-	if not galaxy_data[c_g]["discovered"]:
+	if not galaxy_data[c_g].has("discovered"):
 		yield(start_system_generation(), "completed")
 	add_obj("galaxy")
 	HUD.get_node("Panel/CollectAll").visible = true
@@ -1555,7 +1565,7 @@ func add_system():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
-	if not system_data[c_s]["discovered"] or planet_data.empty():
+	if not system_data[c_s].has("discovered") or planet_data.empty():
 		if c_s_g != 0:
 			planet_data.clear()
 		generate_planets(c_s)
@@ -1564,7 +1574,7 @@ func add_system():
 
 func add_planet():
 	planet_data = open_obj("Systems", c_s_g)
-	if not planet_data[c_p].discovered:
+	if not planet_data[c_p].has("discovered"):
 		generate_tiles(c_p)
 	add_obj("planet")
 	view.obj.icons_hidden = view.scale.x >= 0.25
@@ -1657,14 +1667,12 @@ func generate_superclusters(id:int):
 	max_dist_from_center = pow(total_sc_num, 0.5) * 300
 	for _i in range(1, total_sc_num):
 		var sc_i = {}
-		sc_i["conquered"] = false
 		sc_i["type"] = Helper.rand_int(0, 0)
 		sc_i["parent"] = id
 		sc_i["visible"] = TEST
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
-		sc_i["discovered"] = false
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
@@ -1673,7 +1681,6 @@ func generate_superclusters(id:int):
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
-		sc_i["discovered"] = false
 		sc_i.diff = Helper.clever_round(universe_data[id].difficulty * pos.length(), 3)
 		universe_data[id]["superclusters"].append(sc_id)
 		supercluster_data.append(sc_i)
@@ -1694,14 +1701,12 @@ func generate_clusters(id:int):
 		if id == 0 and _i == 0:
 			continue
 		var c_i = {}
-		c_i["conquered"] = false
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = "group" if randf() < 0.5 else "cluster"
 		c_i["parent"] = id
 		c_i["visible"] = TEST or c_sc != 0
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
-		c_i["discovered"] = false
 		var c_id = cluster_data.size()
 		if c_i["class"] == "group":
 			c_i["galaxy_num"] = Helper.rand_int(10, 100)
@@ -1724,7 +1729,6 @@ func generate_clusters(id:int):
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
 		c_i["l_id"] = c_id
-		c_i["discovered"] = false
 		c_i.FM = Helper.clever_round(1 + pos.length() / 1000.0)#Ferromagnetic materials
 		if id == 0:
 			c_i.diff = Helper.clever_round(1 + pos.length(), 3)
@@ -1765,10 +1769,8 @@ func generate_galaxies(id:int):
 	var FM:float = cluster_data[id].FM
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
-		g_i["conquered"] = false
 		g_i["parent"] = id
 		g_i["systems"] = []
-		g_i["discovered"] = false
 		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
 		var rand = randf()
@@ -1833,7 +1835,6 @@ func generate_galaxies(id:int):
 		g_i["id"] = g_id + g_num
 		g_i["l_id"] = g_id
 		g_i["name"] = tr("GALAXY") + " %s" % [g_id + g_num]
-		g_i["discovered"] = false
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
 			g_i = galaxy_data[0]
@@ -1852,8 +1853,6 @@ func generate_galaxies(id:int):
 		if id != 0:
 			var view_zoom = 500.0 / max_outer_radius
 			cluster_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom}
-	else:
-		cluster_data[id]["discovered"] = false
 	return progress
 
 func update_loading_bar(curr:float, total:float, txt:String):
@@ -2098,10 +2097,8 @@ func generate_systems(id:int):
 		if c_g_g == 0 and i == 0:
 			continue
 		var s_i = {}
-		s_i["conquered"] = false
 		s_i["parent"] = id
 		s_i["planets"] = []
-		s_i["discovered"] = false
 		
 		var num_stars = 1
 		while randf() < 0.3 * dark_matter / float(num_stars) and num_stars < 5:
@@ -2226,7 +2223,6 @@ func generate_systems(id:int):
 				s_i.name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), s_id]
 			5:
 				s_i.name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), s_id]
-		s_i["discovered"] = false
 		s_i.pos = Vector2.ZERO
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
@@ -2291,7 +2287,8 @@ func generate_planets(id:int):#local id
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
-		p_i["conquered"] = system_data[id].conquered
+		if system_data[id].has("conquered"):
+			p_i["conquered"] = true
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets
@@ -2331,7 +2328,6 @@ func generate_planets(id:int):#local id
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
 		p_i["tiles"] = []
-		p_i["discovered"] = false
 		var p_id = planet_data.size()
 		p_i["id"] = p_id + p_num
 		p_i["l_id"] = p_id
@@ -2375,7 +2371,7 @@ func generate_planets(id:int):#local id
 		p_i.HX_data = []
 		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
 		var num:int = 0
-		if not p_i.conquered:
+		if not p_i.has("conquered"):
 			while num < 12:
 				num += 1
 				var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
@@ -3363,6 +3359,7 @@ func fn_save_game(autosave:bool):
 		c_d.chests_looted = cave.chests_looted.duplicate(true)
 		c_d.partially_looted_chests = cave.partially_looted_chests.duplicate(true)
 		c_d.hole_exits = cave.hole_exits.duplicate(true)
+	save_date = OS.get_system_time_msecs()
 	save_game.store_var(c_v)
 	save_game.store_var(l_v)
 	save_game.store_float(money)
@@ -3426,6 +3423,8 @@ func fn_save_game(autosave:bool):
 	save_game.store_64(c_num)
 	save_game.store_var(stats)
 	save_game.store_var(objective)
+	save_game.store_var(autocollect)
+	save_game.store_64(save_date)
 	save_game.close()
 	if is_instance_valid(view.obj) and is_a_parent_of(view.obj):
 		view.save_zooms(c_v)
@@ -3630,7 +3629,7 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 		energy -= energy_cost
 		if insta_conquer:
 			for planet in planet_data:
-				if not planet.conquered:
+				if not planet.has("conquered"):
 					planet.conquered = true
 					planet.erase("HX_data")
 					stats.planets_conquered += 1

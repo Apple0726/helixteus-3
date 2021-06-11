@@ -3,7 +3,7 @@ extends "GenericPanel.gd"
 var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE"]
 var storage_bldgs:Array = ["MS"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
-var support_bldgs:Array = ["GH"]
+var support_bldgs:Array = ["GH", "CBD"]
 var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
 
 func _ready():
@@ -38,15 +38,15 @@ func _on_btn_pressed(btn_str:String):
 			if Data.path_1.has(bldg):
 				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg), 3)]
 		if Data.path_2.has(bldg):
-			var txt2:String
 			if Data.path_2[bldg].is_value_integer:
-				txt2 = (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
+				txt += (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
 			else:
-				txt2 = (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value * Helper.get_IR_mult(bldg)]
-			txt += txt2
+				txt += (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value * Helper.get_IR_mult(bldg)]
 		if Data.path_3.has(bldg):
-			var txt2:String = (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
-			txt += txt2
+			if bldg == "CBD":
+				txt += Data.path_3[bldg].desc.format({"n":Data.path_3[bldg].value}) + "\n"
+			else:
+				txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
 		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
 		item.costs = Data.costs[bldg].duplicate(true)
 		if bldg == "GH":

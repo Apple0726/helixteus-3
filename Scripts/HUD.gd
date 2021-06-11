@@ -70,20 +70,7 @@ func update_minerals():
 			 $Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 		minerals_text["custom_colors/font_color"] = Color.white
 
-func refresh():
-	if not game:
-		return
-	$Panel/CollectProgress.visible = false
-	$Panel/CollectAll.modulate = Color.white
-	if config.load("user://settings.cfg") == OK:
-		var autosave_light = config.get_value("saving", "autosave_light", false)
-		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
-			set_process(autosave_light)
-		else:
-			$AutosaveLight.modulate.g = 0.3
-			set_process(false)
-		$AutosaveLight.visible = autosave_light
-	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
+func update_money_energy_SP():
 	var planet = game.view.obj
 	if game.c_v == "planet" and planet and planet.bldg_to_construct != "":
 		var money_cost = game.view.obj.constr_costs.money
@@ -106,6 +93,23 @@ func refresh():
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money), 6)
 		energy_text.text = Helper.format_num(game.energy, 6)
+	SP_text.text = Helper.format_num(game.SP, 6)
+	
+func refresh():
+	if not game:
+		return
+	$Panel/CollectProgress.visible = false
+	$Panel/CollectAll.modulate = Color.white
+	if config.load("user://settings.cfg") == OK:
+		var autosave_light = config.get_value("saving", "autosave_light", false)
+		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
+			set_process(autosave_light)
+		else:
+			$AutosaveLight.modulate.g = 0.3
+			set_process(false)
+		$AutosaveLight.visible = autosave_light
+	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
+	update_money_energy_SP()
 	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
@@ -116,7 +120,6 @@ func refresh():
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
 		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass, 3), 6), Data.costs.GH.glass]
-	SP_text.text = Helper.format_num(game.SP, 6)
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
 	shop.visible = game.show.shop

@@ -74,36 +74,42 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				overlay.circle.modulate = gradient.interpolate(offset)
 		2:
 			for overlay in overlays:
-				if game.system_data[overlay.id].discovered:
+				if game.system_data[overlay.id].has("discovered"):
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		3:
 			for overlay in overlays:
-				if game.system_data[overlay.id].conquered:
+				if game.system_data[overlay.id].has("explored"):
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		4:
 			for overlay in overlays:
+				if game.system_data[overlay.id].has("conquered"):
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
+		5:
+			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		5:
+		6:
 			for overlay in overlays:
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		6:
+		7:
 			for overlay in overlays:
 				var temp = game.get_biggest_star_size(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		7:
+		8:
 			for overlay in overlays:
 				var temp = game.get_brightest_star_luminosity(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		8:
+		9:
 			for overlay in overlays:
 				if game.system_data[overlay.id].has("has_MS"):
 					overlay.circle.modulate = gradient.interpolate(0)
@@ -125,7 +131,7 @@ func collect_all():
 	for s_ids in systems:
 		if game.c_v != "galaxy":
 			break
-		if not game.system_data[s_ids.local].discovered:
+		if not game.system_data[s_ids.local].has("discovered"):
 			progress.value += 1
 			continue
 		game.planet_data = game.open_obj("Systems", s_ids.global)
@@ -148,7 +154,7 @@ func collect_all():
 			elif planet.has("bldg"):
 				if planet.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
 					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
-			if not planet.discovered:
+			if not planet.has("discovered"):
 				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)
 			var i:int

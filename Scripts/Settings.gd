@@ -22,7 +22,7 @@ func _ready():
 		$Vsync.pressed = config.get_value("graphics", "vsync", true)
 		$AutosaveLight.pressed = config.get_value("saving", "autosave_light", false)
 		$EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
-		$AutosellMinerals.pressed = config.get_value("game", "autosell", false)
+		$AutosellMinerals.pressed = config.get_value("game", "autosell", true)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		$Fullscreen.pressed = OS.window_fullscreen

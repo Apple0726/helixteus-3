@@ -16,6 +16,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("NUMBER_OF_PLANETS"))
 			option_btn.add_item(tr("STAR_NUM"))
 			option_btn.add_item(tr("SYSTEM_ENTERED"))
+			option_btn.add_item(tr("ENTERED_BY_SHIPS"))
 			option_btn.add_item(tr("SYSTEM_CONQUERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("COLDEST_STAR_TEMPERATURE"))
@@ -25,6 +26,7 @@ func refresh_overlay():
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
+			option_btn.add_item(tr("ENTERED_BY_SHIPS"))
 			option_btn.add_item(tr("GALAXY_CONQUERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("B_STRENGTH"))
@@ -130,11 +132,11 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				2, 3, 8:
+				2, 3, 4, 9:
 					editable = false
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
-				4:
+				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("system", "diff")
 						c_vl.left = min_max._min
@@ -143,7 +145,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				5:
+				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_CST_min_max()#CST: coldest star temperature
 						c_vl.left = min_max._min
@@ -152,7 +154,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s K" % [c_vl.left]
 					$Panel/RightNum.text = "%s K" % [c_vl.right]
-				6:
+				7:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSS_min_max()#CST: coldest star temperature
 						c_vl.left = min_max._min
@@ -161,7 +163,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				7:
+				8:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSL_min_max()#CST: coldest star temperature
 						c_vl.left = min_max._min
@@ -180,11 +182,11 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				1, 2:
+				1, 2, 3:
 					editable = false
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")
-				3:
+				4:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "diff")
 						c_vl.left = min_max._min
@@ -193,7 +195,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				4:
+				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
 						c_vl.left = min_max._min * e(1, 9)
@@ -202,7 +204,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					is_int = false
 					$Panel/LeftNum.text = "%s nT" % [c_vl.left]
 					$Panel/RightNum.text = "%s nT" % [c_vl.right]
-				5:
+				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "dark_matter")
 						c_vl.left = min_max._min

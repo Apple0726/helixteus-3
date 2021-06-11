@@ -64,25 +64,31 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				overlay.circle.modulate = gradient.interpolate(offset)
 		1:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].discovered:
+				if game.galaxy_data[overlay.id].has("discovered"):
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		2:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].conquered:
+				if game.galaxy_data[overlay.id].has("explored"):
 					overlay.circle.modulate = gradient.interpolate(0)
 				else:
 					overlay.circle.modulate = gradient.interpolate(1)
 		3:
 			for overlay in overlays:
+				if game.galaxy_data[overlay.id].has("conquered"):
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
+		4:
+			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
 				overlay.circle.modulate = gradient.interpolate(offset)
-		4:
+		5:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
 				overlay.circle.modulate = gradient.interpolate(offset)
-		5:
+		6:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
 				overlay.circle.modulate = gradient.interpolate(offset)

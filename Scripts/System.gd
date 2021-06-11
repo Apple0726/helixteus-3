@@ -66,9 +66,9 @@ func refresh_planets():
 		planet_glow.rect_position = Vector2(-100, -100)
 		var sc:float = p_i["distance"] / 1200.0
 		planet_glow.rect_scale *= sc
-		if game.system_data[game.c_s].conquered:
+		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
-		if p_i.conquered:
+		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)
 			elif p_i.has("wormhole"):
@@ -281,7 +281,7 @@ func show_planet_info(id:int, l_id:int):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-	if Helper.ships_on_planet(l_id) and not p_i.conquered:
+	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		var tooltip:String = ""
@@ -297,7 +297,7 @@ func show_planet_info(id:int, l_id:int):
 			if game.help.planet_details:
 				game.help_str = "planet_details"
 				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure), tr("MORE_DETAILS")]
-				if p_i.conquered:
+				if p_i.has("conquered"):
 					tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
 					if p_i.has("bldg"):
 						tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
@@ -371,7 +371,7 @@ func on_planet_click (id:int, l_id:int):
 			return
 		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME", "building-M_MPCC"]
 		if building:
-			if p_i.conquered:
+			if p_i.has("conquered"):
 				if not p_i.has("MS"):
 					var MS:String = game.bottom_info_action.split("-")[1]
 					if MS == "M_MME" and not p_i.type in [11, 12]:
@@ -438,15 +438,15 @@ func on_planet_click (id:int, l_id:int):
 				if p_i.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
 					Helper.call("collect_%s" % p_i.bldg.name, p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
 				game.show_collect_info(items_collected)
-		if (Input.is_action_pressed("Q") or p_i.conquered) and not Input.is_action_pressed("ctrl"):
-			if not p_i.conquered:
+		if (Input.is_action_pressed("Q") or p_i.has("conquered")) and not Input.is_action_pressed("ctrl"):
+			if not p_i.has("conquered"):
 				game.stats.planets_conquered += 1
 				game.planet_data[l_id].conquered = true
 				var all_conquered = true
 				for planet in game.planet_data:
-					if not planet.conquered:
+					if not planet.has("conquered"):
 						all_conquered = false
-				if game.system_data[game.c_s].conquered != all_conquered:
+				if game.system_data[game.c_s].has("conquered") != all_conquered:
 					game.system_data[game.c_s].conquered = all_conquered
 					Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 			if not p_i.type in [11, 12]:
@@ -458,14 +458,14 @@ func on_planet_click (id:int, l_id:int):
 			else:
 				game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
 		else:
-			if Helper.ships_on_planet(l_id) and not p_i.conquered:
+			if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 				game.c_p = l_id
 				game.c_p_g = id
 				game.is_conquering_all = false
 				game.switch_view("battle")
 			else:
 				if len(game.ship_data) > 0:
-					if not p_i.conquered or Input.is_action_pressed("ctrl"):
+					if not p_i.has("conquered") or Input.is_action_pressed("ctrl"):
 						game.send_ships_panel.dest_p_id = l_id
 						game.toggle_panel(game.send_ships_panel)
 				else:
@@ -538,7 +538,7 @@ func on_star_pressed (id:int):
 	var curr_time = OS.get_system_time_msecs()
 	var star = stars_info[id]
 	if game.bottom_info_action in ["building_DS", "building_PK"]:
-		if game.system_data[game.c_s].conquered:
+		if game.system_data[game.c_s].has("conquered"):
 			if not star.has("MS"):
 				if game.bottom_info_action == "building_DS":
 					build_MS(star, "M_DS")
@@ -549,7 +549,7 @@ func on_star_pressed (id:int):
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif game.bottom_info_action == "building_MB":
-		if game.system_data[game.c_s].conquered:
+		if game.system_data[game.c_s].has("conquered"):
 			if not star.has("MS") or star.MS != "M_DS":
 				game.popup(tr("MB_ERROR_1"), 3.0)
 			else:
@@ -735,7 +735,7 @@ func collect_all():
 		elif planet.has("bldg"):
 			if planet.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
 				Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
-		if not planet.discovered:
+		if not planet.has("discovered"):
 			progress.value += 1
 			continue
 		game.tile_data = game.open_obj("Planets", p_ids.global)

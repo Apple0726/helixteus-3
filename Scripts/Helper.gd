@@ -655,20 +655,24 @@ func update_rsrc(p_i, tile, rsrc = null):
 			var c_t = curr_time
 			if c_t < c_d and not tile.bldg.is_constructing:
 				tile.bldg.collect_date = curr_time
-			if stored < cap:
-				if c_t - c_d > prod:
-					var rsrc_num = floor((c_t - c_d) / prod)
-					tile.bldg.stored += rsrc_num
-					tile.bldg.collect_date += prod * rsrc_num
-					if tile.bldg.stored >= cap:
-						tile.bldg.stored = cap
-			if rsrc:
+			if c_t - c_d > prod:
+				var rsrc_num:float = floor((c_t - c_d) / prod)
+				var auto_rsrc:float = 0
+				if tile.has("auto_collect"):
+					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
+					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
+						auto_rsrc += 1
+					if tile.bldg.name == "ME":
+						auto_rsrc -= add_minerals(auto_rsrc).remainder
+					elif tile.bldg.name in ["PP", "SP"]:
+						game.energy += auto_rsrc
+				tile.bldg.stored += rsrc_num - auto_rsrc
+				tile.bldg.collect_date += prod * rsrc_num
 				if tile.bldg.stored >= cap:
-					current_bar.value = 0
-					capacity_bar.value = 1
-				else:
-					current_bar.value = min((c_t - c_d) / prod, 1)
-					capacity_bar.value = min(stored / float(cap), 1)
+					tile.bldg.stored = cap
+			if rsrc:
+				current_bar.value = min((c_t - c_d) / prod, 1)
+				capacity_bar.value = min(stored / float(cap), 1)
 				if tile.bldg.name == "MM":
 					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
 				else:
@@ -683,7 +687,13 @@ func update_rsrc(p_i, tile, rsrc = null):
 				tile.bldg.collect_date = curr_time
 			if c_t - c_d > prod:
 				var rsrc_num = floor((c_t - c_d) / prod)
-				tile.bldg.stored += rsrc_num
+				var auto_rsrc:float = 0
+				if tile.has("auto_collect"):
+					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
+					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
+						auto_rsrc += 1
+					game.SP += auto_rsrc
+				tile.bldg.stored += rsrc_num - auto_rsrc
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
 				current_bar.value = min((c_t - c_d) / prod, 1)
@@ -883,6 +893,42 @@ func update_bldg_constr(tile):
 				update_boxes = true
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+			elif tile.bldg.name == "CBD":
+				var tile_data:Array
+				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
+				if same_p:
+					tile_data = game.tile_data
+				else:
+					tile_data = game.open_obj("Planets", tile.bldg.c_p_g)
+				var n:int = tile.bldg.path_3_value
+				var wid:int = tile.bldg.wid
+				for i in n:
+					var x:int = tile.bldg.x_pos + i - n / 2
+					if x < 0 or x >= wid:
+						continue
+					for j in n:
+						var y:int = tile.bldg.y_pos + j - n / 2
+						if y < 0 or y >= tile.bldg.wid or x == tile.bldg.x_pos and y == tile.bldg.y_pos:
+							continue
+						var id:int = x % wid + y * wid
+						if not tile_data[id]:
+							tile_data[id] = {}
+						var _tile = tile_data[id]
+						var id_str:String = String(tile_data.find(tile))
+						if not _tile.has("cost_div_dict"):
+							_tile.cost_div = tile.bldg.path_1_value
+							_tile.cost_div_dict = {}
+						else:
+							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
+						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
+						if not _tile.has("auto_collect_dict"):
+							_tile.auto_collect = tile.bldg.path_2_value
+							_tile.auto_collect_dict = {}
+						else:
+							_tile.auto_collect = max(_tile.auto_collect, tile.bldg.path_2_value)
+						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
+				if not same_p:
+					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 			if game.tutorial:
 				game.HUD.refresh()
 	return update_boxes
@@ -1105,6 +1151,11 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(path_1_value)]
 		"GH":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
+		"CBD":
+			tooltip = "%s\n%s\n%s" % [
+				Data.path_1[bldg].desc % path_1_value,
+				Data.path_2[bldg].desc % path_2_value,
+				Data.path_3[bldg].desc.format({"n":path_3_value})]
 	return tooltip
 
 func collect_from_star(star:Dictionary, items_collected:Dictionary):

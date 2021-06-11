@@ -260,8 +260,12 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 	if _bldg_to_construct == "":
 		return
 	var tile = game.tile_data[tile_id]
-	if game.check_enough(constr_costs):
-		game.deduct_resources(constr_costs)
+	var constr_costs2:Dictionary = constr_costs.duplicate(true)
+	if tile and tile.has("cost_div"):
+		for cost in constr_costs2:
+			constr_costs2[cost] /= tile.cost_div
+	if game.check_enough(constr_costs2):
+		game.deduct_resources(constr_costs2)
 		game.stats.bldgs_built += 1
 		if not tile:
 			tile = {}
@@ -276,26 +280,31 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			game.show.minerals = true
 		tile.bldg.is_constructing = true
 		tile.bldg.construction_date = curr_time
-		tile.bldg.construction_length = constr_costs.time * 1000
-		tile.bldg.XP = round(constr_costs.money / 100.0)
+		tile.bldg.construction_length = constr_costs2.time * 1000
+		tile.bldg.XP = round(constr_costs2.money / 100.0)
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
-		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE"]:
+		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE", "CBD"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
 		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
-		if _bldg_to_construct in ["SC", "GF", "SE"]:
+		if _bldg_to_construct in ["SC", "GF", "SE", "CBD"]:
 			tile.bldg.path_3 = 1
 			tile.bldg.path_3_value = Data.path_3[_bldg_to_construct].value
 		if _bldg_to_construct == "RL":
 			game.show.SP = true
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
-		if _bldg_to_construct == "MS":
+		elif _bldg_to_construct == "MS":
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+		elif _bldg_to_construct == "CBD":
+			tile.bldg.x_pos = tile_id % wid
+			tile.bldg.y_pos = tile_id / wid
+			tile.bldg.wid = wid
+			tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
 		if Helper.has_IR(_bldg_to_construct):
@@ -434,6 +443,36 @@ func destroy_bldg(id2:int):
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
+	elif bldg == "CBD":
+		var n:int = tile.bldg.path_3_value
+		var wid:int = tile.bldg.wid
+		for i in n:
+			var x:int = tile.bldg.x_pos + i - n / 2
+			if x < 0 or x >= wid:
+				continue
+			for j in n:
+				var y:int = tile.bldg.y_pos + j - n / 2
+				if y < 0 or y >= tile.bldg.wid or x == tile.bldg.x_pos and y == tile.bldg.y_pos:
+					continue
+				var id:int = x % wid + y * wid
+				game.tile_data[id].cost_div_dict.erase(String(id2))
+				if game.tile_data[id].cost_div_dict.empty():
+					game.tile_data[id].erase("cost_div_dict")
+					game.tile_data[id].erase("cost_div")
+				else:
+					var div:float = 1.0
+					for st in game.tile_data[id].cost_div_dict:
+						div = max(div, game.tile_data[id].cost_div_dict[st])
+					game.tile_data[id].cost_div = div
+				game.tile_data[id].auto_collect_dict.erase(String(id2))
+				if game.tile_data[id].auto_collect_dict.empty():
+					game.tile_data[id].erase("auto_collect_dict")
+					game.tile_data[id].erase("auto_collect")
+				else:
+					var mult:float = 1.0
+					for st in game.tile_data[id].auto_collect_dict:
+						mult = max(mult, game.tile_data[id].auto_collect_dict[st])
+					game.tile_data[id].auto_collect = mult
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -574,13 +613,35 @@ func _input(event):
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
 		$WhiteRect.position.y = floor(mouse_pos.y / 200) * 200
 		if mouse_on_tiles:
-			tile_over = int(mouse_pos.x / 200) % wid + floor(mouse_pos.y / 200) * wid
+			var x_over:int = int(mouse_pos.x / 200)
+			var y_over:int = int(mouse_pos.y / 200)
+			tile_over = x_over % wid + y_over * wid
 			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg:
 				game.hide_tooltip()
 				game.hide_adv_tooltip()
 				if not tiles_selected.empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
-				show_tooltip(game.tile_data[tile_over])
+				var tile = game.tile_data[tile_over]
+				show_tooltip(tile)
+				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
+					remove_child(white_rect)
+					white_rect.queue_free()
+					white_rect.remove_from_group("CBD_white_rects")
+				if tile and tile.has("bldg") and tile.bldg.name == "CBD":
+					var n:int = tile.bldg.path_3_value
+					for i in n:
+						var x:int = x_over + i - n / 2
+						if x < 0 or x >= wid:
+							continue
+						for j in n:
+							var y:int = y_over + j - n / 2
+							if y < 0 or y >= wid or x == x_over and y == y_over:
+								continue
+							var white_rect = game.white_rect_scene.instance()
+							white_rect.position.x = x * 200
+							white_rect.position.y = y * 200
+							add_child(white_rect)
+							white_rect.add_to_group("CBD_white_rects")
 			prev_tile_over = tile_over
 		else:
 			if tile_over != -1 and not_on_button:
@@ -597,19 +658,12 @@ func _input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = OS.get_system_time_msecs()
-		if OS.get_name() == "HTML5":
-			for i in len(shadows):
-				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
-				remove_child(shadows[i])
-				shadows[i].queue_free()
-			shadows.clear()
-			game.HUD.refresh()
-		else:
-			mutex = Mutex.new()
-			if thread:
-				thread.wait_to_finish()
-			thread = Thread.new()
-			thread.start(self, "test", bldg_to_construct)
+		for i in len(shadows):
+			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
+			remove_child(shadows[i])
+			shadows[i].queue_free()
+		shadows.clear()
+		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		return
@@ -1102,9 +1156,10 @@ func _process(_delta):
 		if tile.bldg.is_constructing:
 			continue
 		Helper.update_rsrc(p_i, tile, rsrc)
+	game.HUD.update_money_energy_SP()
+	game.HUD.update_minerals()
 	if update_XP:
 		game.HUD.update_XP()
-		game.HUD.update_minerals()
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
