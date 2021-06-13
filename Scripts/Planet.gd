@@ -297,7 +297,6 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct == "RL":
 			game.show.SP = true
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
-			tile.bldg.stored = 0
 		elif _bldg_to_construct == "MS":
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
 		elif _bldg_to_construct == "CBD":
@@ -390,6 +389,16 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		tile.bldg.overclock_date = curr_time
 		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration
 		tile.bldg.overclock_mult = mult
+		if tile.bldg.name == "RL":
+			game.autocollect.rsrc.SP += tile.bldg.path_1_value * (mult - 1)
+			game.autocollect.rsrc_list[String(game.c_p_g)].SP += tile.bldg.path_1_value * (mult - 1)
+		if tile.has("auto_collect"):
+			if tile.bldg.name in ["PP", "SP"]:
+				game.autocollect.rsrc.energy += tile.bldg.path_1_value * (mult - 1)
+				game.autocollect.rsrc_list[String(game.c_p_g)].energy += tile.bldg.path_1_value * (mult - 1)
+			elif tile.bldg.name == "ME":
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * (mult - 1)
+				game.autocollect.rsrc_list[String(game.c_p_g)].minerals += tile.bldg.path_1_value * (mult - 1)
 		var coll_date = tile.bldg.collect_date
 		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
@@ -429,7 +438,7 @@ func click_tile(tile, tile_id:int):
 						game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
 			game.hide_tooltip()
 
-func destroy_bldg(id2:int):
+func destroy_bldg(id2:int, mass:bool = false):
 	var tile = game.tile_data[id2]
 	var bldg:String = tile.bldg.name
 	items_collected.clear()
@@ -438,11 +447,22 @@ func destroy_bldg(id2:int):
 	bldgs[id2].queue_free()
 	remove_child(hboxes[id2])
 	hboxes[id2].queue_free()
+	var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+	var ac:float = tile.auto_collect if tile.has("auto_collect") else 0.0
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
+	elif bldg == "RL":
+		game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
+		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
+	elif bldg == "ME":
+		game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * mult * ac / 100.0
+		game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * mult * ac / 100.0
+	elif bldg in ["PP", "SP"]:
+		game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
+		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -455,47 +475,38 @@ func destroy_bldg(id2:int):
 				if y < 0 or y >= tile.bldg.wid or x == tile.bldg.x_pos and y == tile.bldg.y_pos:
 					continue
 				var id:int = x % wid + y * wid
-				game.tile_data[id].cost_div_dict.erase(String(id2))
-				if game.tile_data[id].cost_div_dict.empty():
-					game.tile_data[id].erase("cost_div_dict")
-					game.tile_data[id].erase("cost_div")
+				var _tile = game.tile_data[id]
+				_tile.cost_div_dict.erase(String(id2))
+				if _tile.cost_div_dict.empty():
+					_tile.erase("cost_div_dict")
+					_tile.erase("cost_div")
 				else:
 					var div:float = 1.0
-					for st in game.tile_data[id].cost_div_dict:
-						div = max(div, game.tile_data[id].cost_div_dict[st])
-					game.tile_data[id].cost_div = div
-				game.tile_data[id].auto_collect_dict.erase(String(id2))
-				if game.tile_data[id].auto_collect_dict.empty():
-					game.tile_data[id].erase("auto_collect_dict")
-					game.tile_data[id].erase("auto_collect")
+					for st in _tile.cost_div_dict:
+						div = max(div, _tile.cost_div_dict[st])
+					_tile.cost_div = div
+				_tile.auto_collect_dict.erase(String(id2))
+				if _tile.auto_collect_dict.empty():
+					_tile.erase("auto_collect_dict")
+					_tile.erase("auto_collect")
 				else:
-					var mult:float = 1.0
-					for st in game.tile_data[id].auto_collect_dict:
-						mult = max(mult, game.tile_data[id].auto_collect_dict[st])
-					game.tile_data[id].auto_collect = mult
+					var new_value:float = 0
+					for st in _tile.auto_collect_dict:
+						new_value = max(new_value, _tile.auto_collect_dict[st])
+					var diff:float = max(0, _tile.auto_collect - new_value)
+					_tile.auto_collect = new_value
+					if tile.has("bldg"):
+						if tile.bldg.name == "ME":
+							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
+							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
+						elif tile.bldg.name in ["PP", "SP"]:
+							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
+							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
-	game.show_collect_info(items_collected)
-
-func destroy_bldgs(arr:Array):
-	items_collected.clear()
-	for id2 in arr:
-		var tile = game.tile_data[id2]
-		var bldg:String = tile.bldg.name
-		Helper.collect_rsrc(items_collected, p_i, tile, id2)
-		remove_child(bldgs[id2])
-		bldgs[id2].queue_free()
-		remove_child(hboxes[id2])
-		hboxes[id2].queue_free()
-		if bldg == "MS":
-			if tile.bldg.is_constructing:
-				game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
-			else:
-				game.mineral_capacity -= tile.bldg.path_1_value
-		tile.erase("bldg")
-		if tile.empty():
-			game.tile_data[id2] = null
+	if not mass:
+		game.show_collect_info(items_collected)
 
 func add_shadows():
 	for sh in shadows:
@@ -1156,6 +1167,8 @@ func _process(_delta):
 		if tile.bldg.is_constructing:
 			continue
 		Helper.update_rsrc(p_i, tile, rsrc)
+	if game.auto_c_p_g == -1:
+		game.auto_c_p_g = game.c_p_g
 	game.HUD.update_money_energy_SP()
 	game.HUD.update_minerals()
 	if update_XP:

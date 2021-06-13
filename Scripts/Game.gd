@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -197,6 +197,7 @@ enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAV
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 var autocollect:Dictionary
+var auto_c_p_g:int = -1
 var save_date:int
 
 ############ End save data ############
@@ -387,8 +388,8 @@ func _ready():
 		planet_data[2].bldg.construction_length = 1000
 		planet_data[2].bldg.XP = 0
 		Helper.save_obj("Galaxies", 0, system_data)
-		lv = 100
-		money = e(2, 19)
+		lv = 70
+		money = 100000
 		mats.soil = 50000
 		mats.glass = 1000000
 		mets.nanocrystal = e(1, 14)
@@ -397,8 +398,8 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = e(2, 19)
-		SP = e(2, 19)
+		energy = 20000
+		SP = 0#e(2, 19)
 		science_unlocked.RC = true
 		science_unlocked.CD = true
 		science_unlocked.SCT = true
@@ -556,6 +557,12 @@ func load_game():
 		autocollect = save_game.get_var()
 		save_date = save_game.get_64()
 		save_game.close()
+		auto_c_p_g = -1
+		if not autocollect.empty():
+			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
+			Helper.add_minerals(autocollect.minerals * time_elapsed)
+			energy += autocollect.energy * time_elapsed
+			SP += autocollect.SP * time_elapsed
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -851,7 +858,7 @@ func new_game(tut:bool):
 				}
 
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
-	autocollect = {}
+	autocollect = {"rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
 	
 	generate_planets(0)
@@ -3150,8 +3157,21 @@ func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
 		$UI.move_child($UI/Settings, $UI.get_child_count())
-#		if galaxy_data and len(galaxy_data) > 0:
-#			print(galaxy_data[0].view)
+		if autocollect and not autocollect.rsrc_list.empty():
+			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
+			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
+			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
+			if auto_c_p_g == c_p_g:
+				Helper.add_minerals((autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult)
+				energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
+				SP += (autocollect.rsrc.SP - autocollect.rsrc_list[String(c_p_g)].SP) * delta * SP_mult
+			else:
+				Helper.add_minerals(autocollect.rsrc.minerals * delta * min_mult)
+				energy += autocollect.rsrc.energy * delta * energy_mult
+				SP += autocollect.rsrc.SP * delta * SP_mult
+				if is_instance_valid(HUD):
+					HUD.update_minerals()
+					HUD.update_money_energy_SP()
 
 var mouse_pos = Vector2.ZERO
 onready var item_cursor = $UI/ItemCursor
@@ -3606,7 +3626,9 @@ func buy_pickaxe_confirm(_costs:Dictionary):
 	YN_panel.disconnect("confirmed", self, "buy_pickaxe_confirm")
 
 func destroy_buildings_confirm(arr:Array):
-	view.obj.destroy_bldgs(arr)
+	for id in arr:
+		view.obj.destroy_bldg(id, true)
+	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
 	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
 

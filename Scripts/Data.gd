@@ -26,7 +26,7 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 				"GH":{"value":1.1, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
 				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":120, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"CBD":{"value":10, "step":1, "cap":91, "is_value_integer":true},
+				"CBD":{"value":10, "step":2, "cap":46, "is_value_integer":true},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
 				"GF":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},

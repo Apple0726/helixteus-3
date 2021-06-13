@@ -241,6 +241,17 @@ func _on_Upgrade_pressed():
 				if auto_speedup:
 					cost_time = 1
 				if tile.bldg.has("collect_date"):
+					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+					if tile.has("auto_collect"):
+						if tile.bldg.name == "ME":
+							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+						elif tile.bldg.name in ["PP", "SP"]:
+							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					if tile.bldg.name == "RL":
+						game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value
+						game.autocollect.rsrc.SP -= tile.bldg.path_1_value
 					var prod_ratio
 					if path_str == "path_1":
 						prod_ratio = new_value / tile.bldg.path_1_value

@@ -623,7 +623,7 @@ func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
 func get_AE_production(pressure:float, value:float):
 	return clever_round(value * pressure, 3)
 
-func update_rsrc(p_i, tile, rsrc = null):
+func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
 	var current_bar
 	var capacity_bar
@@ -658,14 +658,15 @@ func update_rsrc(p_i, tile, rsrc = null):
 			if c_t - c_d > prod:
 				var rsrc_num:float = floor((c_t - c_d) / prod)
 				var auto_rsrc:float = 0
-				if tile.has("auto_collect"):
+				if tile.has("auto_collect") and tile.bldg.name in ["MM", "PP", "SP"]:
 					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
 					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
 						auto_rsrc += 1
-					if tile.bldg.name == "ME":
-						auto_rsrc -= add_minerals(auto_rsrc).remainder
-					elif tile.bldg.name in ["PP", "SP"]:
-						game.energy += auto_rsrc
+					if game.auto_c_p_g != -1:
+						if tile.bldg.name == "ME":
+							auto_rsrc -= add_minerals(auto_rsrc).remainder
+						elif tile.bldg.name in ["PP", "SP"]:
+							game.energy += auto_rsrc
 				tile.bldg.stored += rsrc_num - auto_rsrc
 				tile.bldg.collect_date += prod * rsrc_num
 				if tile.bldg.stored >= cap:
@@ -680,24 +681,18 @@ func update_rsrc(p_i, tile, rsrc = null):
 		"RL":
 			var prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
-			var stored = tile.bldg.stored
 			var c_d = tile.bldg.collect_date
 			var c_t = curr_time
 			if c_t < c_d:
 				tile.bldg.collect_date = curr_time
 			if c_t - c_d > prod:
 				var rsrc_num = floor((c_t - c_d) / prod)
-				var auto_rsrc:float = 0
-				if tile.has("auto_collect"):
-					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
-					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
-						auto_rsrc += 1
-					game.SP += auto_rsrc
-				tile.bldg.stored += rsrc_num - auto_rsrc
+				if game.auto_c_p_g != -1:
+					game.SP += rsrc_num
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
 				current_bar.value = min((c_t - c_d) / prod, 1)
-				rsrc_text.text = String(stored)
+				rsrc_text.text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = get_crush_info(tile)
@@ -760,8 +755,6 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			tile.bldg.stored = 0
 		"AE":
 			collect_AE(p_i, tile, rsrc_collected, curr_time)
-		"RL":
-			collect_RL(p_i, tile, rsrc_collected, curr_time)
 		"MM":
 			collect_MM(p_i, tile, rsrc_collected, curr_time)
 
@@ -891,8 +884,22 @@ func update_bldg_constr(tile):
 				tile.bldg.erase("rover_id")
 			if game.c_v == "planet":
 				update_boxes = true
+			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+			if tile.has("auto_collect"):
+				if tile.bldg.name == "ME":
+					game.autocollect.rsrc_list[String(game.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc.minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+				elif tile.bldg.name in ["PP", "SP"]:
+					game.autocollect.rsrc_list[String(game.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+			elif tile.bldg.name == "RL":
+				if not game.autocollect.rsrc_list.has(String(game.c_p_g)):
+					game.autocollect.rsrc_list[String(game.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value}
+				else:
+					game.autocollect.rsrc_list[String(game.c_p_g)].SP += tile.bldg.path_1_value * mult
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
@@ -921,11 +928,23 @@ func update_bldg_constr(tile):
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
+						var diff:float = tile.bldg.path_2_value
 						if not _tile.has("auto_collect_dict"):
 							_tile.auto_collect = tile.bldg.path_2_value
 							_tile.auto_collect_dict = {}
 						else:
+							diff = max(0, tile.bldg.path_2_value - _tile.auto_collect)
 							_tile.auto_collect = max(_tile.auto_collect, tile.bldg.path_2_value)
+						if not game.autocollect.rsrc_list.has(String(game.c_p_g)):
+							game.autocollect.rsrc_list[String(game.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
+						if _tile.has("bldg"):
+							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0							
+							if _tile.bldg.name == "ME":
+								game.autocollect.rsrc_list[String(game.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
+								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
+							elif _tile.bldg.name in ["PP", "SP"]:
+								game.autocollect.rsrc_list[String(game.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
+								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
@@ -940,23 +959,7 @@ func get_reaction_info(tile):
 func update_MS_rsrc(dict:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
 	var prod:float
-	if dict.has("MS"):
-		if dict.MS == "M_DS":
-			prod = 1000.0 / Helper.get_DS_output(dict)
-		elif dict.MS == "M_MB":
-			prod = 1000.0 / Helper.get_MB_output(dict)
-		elif dict.MS == "M_MME":
-			prod = 1000.0 / Helper.get_MME_output(dict)
-		if prod:
-			var stored = dict.bldg.stored
-			var c_d = dict.bldg.collect_date
-			var c_t = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num = floor((c_t - c_d) / prod)
-				dict.bldg.stored += rsrc_num
-				dict.bldg.collect_date += prod * rsrc_num
-			return min((c_t - c_d) / prod, 1)
-	elif dict.has("bldg"):
+	if dict.has("bldg"):
 		if dict.bldg.name == "AE":
 			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num
 		else:
@@ -986,6 +989,8 @@ func update_MS_rsrc(dict:Dictionary):
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num
 		return min((c_t - c_d) / prod, 1)
+	else:
+		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity

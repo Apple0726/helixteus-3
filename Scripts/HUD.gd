@@ -92,8 +92,8 @@ func update_money_energy_SP():
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money), 6)
-		energy_text.text = Helper.format_num(game.energy, 6)
-	SP_text.text = Helper.format_num(game.SP, 6)
+		energy_text.text = Helper.format_num(floor(game.energy), 6)
+	SP_text.text = Helper.format_num(floor(game.SP), 6)
 	
 func refresh():
 	if not game:

@@ -328,13 +328,14 @@ func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
-		if MS != "M_MB":
-			if obj.has("MS"):
-				obj.MS_lv += 1
-			else:
-				obj.MS_lv = 0
+		if obj.has("MS"):
+			if obj.MS == "M_DS":
+				game.autocollect.energy -= Helper.get_DS_output(obj)
+			elif obj.MS == "M_MME":
+				game.autocollect.minerals -= Helper.get_MME_output(obj)
+			obj.MS_lv += 1
 		else:
-			game.energy += obj.bldg.stored
+			obj.MS_lv = 0
 		obj.MS = MS
 		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
@@ -342,9 +343,6 @@ func build_MS(obj:Dictionary, MS:String):
 		obj.bldg.construction_date = curr_time
 		obj.bldg.construction_length = bldg_costs.time * 1000
 		obj.bldg.XP = round(bldg_costs.money / 100.0)
-		if MS in ["M_DS", "M_MME", "M_MB"]:
-			obj.bldg.stored = 0
-			obj.bldg.collect_date = obj.bldg.construction_date + obj.bldg.construction_length
 		game.get_node("UI/Panel").visible = false
 		MS_constr_data.clear()
 		Helper.save_obj("Systems", game.c_s_g, game.planet_data)
@@ -616,8 +614,13 @@ func _process(_delta):
 			if star.bldg.is_constructing:
 				star.bldg.is_constructing = false
 				game.xp += star.bldg.XP
+				if star.MS == "M_DS":
+					game.autocollect.energy += Helper.get_DS_output(star)
+				elif star.MS == "M_MB":
+					game.autocollect.SP += Helper.get_MB_output(star)
 				game.HUD.refresh()
 			remove_child(time_bar)
+			time_bar.queue_free()
 			star_time_bars.erase(time_bar_obj)
 	for time_bar_obj in planet_time_bars:
 		var time_bar = time_bar_obj.node
@@ -631,6 +634,9 @@ func _process(_delta):
 			if p_i.bldg.is_constructing:
 				p_i.bldg.is_constructing = false
 				game.xp += p_i.bldg.XP
+				if p_i.has("MS"):
+					if p_i.MS == "M_MME":
+						game.autocollect.minerals += Helper.get_MME_output(p_i)
 				game.HUD.refresh()
 			time_bar_obj.parent.remove_child(time_bar)
 			time_bar.queue_free()
@@ -655,11 +661,15 @@ func _process(_delta):
 		if star.bldg.is_constructing:
 			continue
 		var value = Helper.update_MS_rsrc(star)
-		#print(value)
 		var rsrc = rsrc_obj.node
 		var current_bar = rsrc.get_node("Control/CurrentBar")
 		current_bar.value = value
-		rsrc.get_node("Control/Label").text = Helper.format_num(star.bldg.stored, 4)
+		var prod:float
+		if star.MS == "M_DS":
+			prod = 1000.0 / Helper.get_DS_output(star)
+		elif star.MS == "M_MB":
+			prod = 1000.0 / Helper.get_MB_output(star)
+		rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
 		if planet.bldg.is_constructing:
@@ -668,8 +678,6 @@ func _process(_delta):
 		var current_bar = rsrc.get_node("Control/CurrentBar")
 		var capacity_bar = rsrc.get_node("Control/CapacityBar")
 		var value:float = Helper.update_MS_rsrc(planet)
-#		if not value:
-#			continue
 		if planet.bldg.has("name") and planet.bldg.name in ["MM", "PP", "ME"]:
 			var cap = round(planet.bldg.path_2_value * planet.bldg.IR_mult)
 			if planet.bldg.name != "MM":
@@ -686,7 +694,10 @@ func _process(_delta):
 				rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored)
 		else:
 			current_bar.value = value
-			rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored, 4)
+			var prod:float
+			if planet.MS == "M_MME":
+				prod = 1000.0 / Helper.get_MME_output(planet)
+			rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
 
 func _on_System_tree_exited():
 	queue_free()

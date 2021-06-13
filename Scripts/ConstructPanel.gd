@@ -56,9 +56,11 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name in ["PP", "MS"]:
-			bldg.visible = game.stats.bldgs_built >= 5
+			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 5
 		if bldg.item_name == "RL":
-			bldg.visible = game.stats.bldgs_built >= 18
+			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
+		if bldg.item_name == "CBD":
+			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
 		if bldg.item_name == "GF":
 			bldg.visible = game.show.sand
 		if bldg.item_name == "SE":
@@ -76,7 +78,7 @@ func _on_btn_pressed(btn_str:String):
 		if bldg.item_name == "PCC":
 			bldg.visible = game.lv >= 50
 	$Tabs/Production.visible = game.show.stone
-	$Tabs/Support.visible = game.science_unlocked.EGH
+	$Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
 	$Tabs/Vehicles.visible = game.show.vehicles_button
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
