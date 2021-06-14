@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/6.png-0746bab6bfc5ba98e363f4cdd3c1fad5.stex"
+path="res://.import/NotBookmarked.png-b80483b20b9fd118f2d13912500a7942.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Planets/6.png"
-dest_files=[ "res://.import/6.png-0746bab6bfc5ba98e363f4cdd3c1fad5.stex" ]
+source_file="res://Graphics/Buttons/NotBookmarked.png"
+dest_files=[ "res://.import/NotBookmarked.png-b80483b20b9fd118f2d13912500a7942.stex" ]
 
 [params]
 

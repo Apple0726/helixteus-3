@@ -15,7 +15,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_c
 				"AMN":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
-				"CBD":{"value":1.111111, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":3, "cost_pw":1.4, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -58,7 +58,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 func e(n, e):
 	return n * pow(10, e)
 
-var starting_galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+var starting_galaxy_data:Array = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 
 var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"notachicken_star":{"money":e(4.3, 7), "chickens":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},

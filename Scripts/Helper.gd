@@ -899,7 +899,7 @@ func update_bldg_constr(tile):
 					game.autocollect.rsrc_list[String(game.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value}
 				else:
 					game.autocollect.rsrc_list[String(game.c_p_g)].SP += tile.bldg.path_1_value * mult
-				game.autocollect.rsrc.SP += tile.bldg.path_1_value
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g

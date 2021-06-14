@@ -19,12 +19,21 @@ onready var MU = $Buttons/MineralUpgrades
 onready var sc_tree = $Buttons/ScienceTree
 onready var lv_txt = $Lv/Label
 onready var lv_progress = $Lv/TextureProgress
+onready var planet_grid = $Bookmarks/BookmarksList/Planets/GridContainer
+onready var system_grid = $Bookmarks/BookmarksList/Systems/GridContainer
+onready var galaxy_grid = $Bookmarks/BookmarksList/Galaxies/GridContainer
+onready var cluster_grid = $Bookmarks/BookmarksList/Clusters/GridContainer
+onready var planet_b_btn = $Bookmarks/BookMarkButtons/Planets
+onready var system_b_btn = $Bookmarks/BookMarkButtons/Systems
+onready var galaxy_b_btn = $Bookmarks/BookMarkButtons/Galaxies
+onready var cluster_b_btn = $Bookmarks/BookMarkButtons/Clusters
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
 var tween:Tween
 var ship2map
 var emma_cave_shortcut:bool = false
+var renaming:bool = false
 
 func _on_Button_pressed():
 	click_sound.play()
@@ -33,7 +42,54 @@ func _on_Button_pressed():
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
+	for p_b in game.bookmarks.planet:
+		add_p_b(p_b)
+	for s_b in game.bookmarks.system:
+		add_s_b(s_b)
+	for g_b in game.bookmarks.galaxy:
+		add_g_b(g_b)
+	for c_b in game.bookmarks.cluster:
+		add_c_b(c_b)
 	refresh()
+
+func add_p_b(p_b:Dictionary):
+	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
+	slot.get_node("TextureButton").texture_normal = game.planet_textures[p_b.type - 3]
+	setup_b(slot, p_b, "planet")
+	planet_grid.add_child(slot)
+
+func add_s_b(s_b:Dictionary):
+	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
+	slot.get_node("TextureButton").texture_normal = preload("res://Graphics/Stars/Star.png")
+	slot.get_node("TextureButton").modulate = s_b.modulate
+	setup_b(slot, s_b, "system")
+	system_grid.add_child(slot)
+
+func add_g_b(g_b:Dictionary):
+	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
+	slot.get_node("TextureButton").texture_normal = game.galaxy_textures[g_b.type]
+	setup_b(slot, g_b, "galaxy")
+	galaxy_grid.add_child(slot)
+
+func add_c_b(c_b:Dictionary):
+	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
+	slot.get_node("TextureButton").texture_normal = preload("res://Graphics/Clusters/0.png")
+	setup_b(slot, c_b, "cluster")
+	cluster_grid.add_child(slot)
+
+func setup_b(slot, bookmark:Dictionary, view:String):
+	slot.get_node("TextureButton").connect("mouse_entered", self, "on_bookmark_entered", [bookmark.name])
+	slot.get_node("TextureButton").connect("mouse_exited", self, "on_bookmark_exited")
+	slot.get_node("TextureButton").connect("pressed", self, "on_bookmark_pressed", [view, bookmark])
+	
+func on_bookmark_entered(_name:String):
+	game.show_tooltip(_name)
+
+func on_bookmark_exited():
+	game.hide_tooltip()
+
+func on_bookmark_pressed(view:String, bookmark:Dictionary):
+	game.switch_view(view, false, "set_bookmark_coords", [bookmark])
 
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
@@ -234,7 +290,27 @@ func refresh():
 		tween.start()
 	else:
 		$Objectives.rect_position.y = 4
-		
+	system_b_btn.visible = game.galaxy_data[0].has("discovered")
+	galaxy_b_btn.visible = game.cluster_data[0].has("discovered")
+	cluster_b_btn.visible = game.supercluster_data[0].has("discovered")
+	if game.c_v == "planet":
+		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmark")
+		$Bookmarks/Bookmarked.visible = true
+		$Name/Name.text = game.planet_data[game.c_p].name
+	elif game.c_v == "system":
+		$Bookmarks/Bookmarked.pressed = game.system_data[game.c_s].has("bookmark")
+		$Bookmarks/Bookmarked.visible = true
+		$Name/Name.text = game.system_data[game.c_s].name
+	elif game.c_v == "galaxy":
+		$Bookmarks/Bookmarked.pressed = game.galaxy_data[game.c_g].has("bookmark")
+		$Bookmarks/Bookmarked.visible = true
+		$Name/Name.text = game.galaxy_data[game.c_g].name
+	elif game.c_v == "cluster":
+		$Bookmarks/Bookmarked.pressed = game.cluster_data[game.c_c].has("bookmark")
+		$Bookmarks/Bookmarked.visible = true
+		$Name/Name.text = game.cluster_data[game.c_c].name
+	else:
+		$Bookmarks/Bookmarked.visible = false
 
 func _on_Shop_pressed():
 	click_sound.play()
@@ -347,7 +423,8 @@ func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
 	game.hide_tooltip()
 
-func _input(_event):
+var bookmark_shown:bool = false
+func _input(event):
 	if Input.is_action_just_released("H") and slot_over != -1:
 		game.hotbar.remove(slot_over)
 		game.hide_tooltip()
@@ -355,12 +432,25 @@ func _input(_event):
 		slot_over = -1
 		update_hotbar()
 		refresh()
-	if Input.is_action_just_released("left_click") and emma_cave_shortcut and game.c_v == "planet":
-		for i in len(game.tile_data):
-			if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave.id == game.fourth_ship_hints.op_grill_cave_spawn:
-				game.toggle_panel(game.vehicle_panel)
-				game.vehicle_panel.tile_id = i
-				break
+	if Input.is_action_just_released("left_click"):
+		if emma_cave_shortcut and game.c_v == "planet":
+			for i in len(game.tile_data):
+				if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave.id == game.fourth_ship_hints.op_grill_cave_spawn:
+					game.toggle_panel(game.vehicle_panel)
+					game.vehicle_panel.tile_id = i
+					break
+		elif renaming:
+			if game.c_v == "planet":
+				pass
+	if event is InputEventMouseMotion:
+		if bookmark_shown and not Geometry.is_point_in_polygon(event.position, $MouseOut.polygon):
+			bookmark_shown = false
+			game.block_scroll = false
+			$AnimationPlayer.play_backwards("BookmarkAnim")
+		if not bookmark_shown and Geometry.is_point_in_polygon(event.position, $MouseIn.polygon):
+			bookmark_shown = true
+			game.block_scroll = true
+			$AnimationPlayer.play("BookmarkAnim")
 
 func _on_CollectAll_mouse_entered():
 	on_button = true
@@ -467,3 +557,169 @@ func _on_Wiki_pressed():
 
 func _on_Dialogue_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 	$Dialogue.NPC_id = -1
+
+func _on_Planets_pressed():
+	planet_b_btn.get_node("TextureRect").modulate.a = 1.0
+	system_b_btn.get_node("TextureRect").modulate.a = 0.5
+	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
+	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
+	planet_grid.visible = true
+	system_grid.visible = false
+	galaxy_grid.visible = false
+	cluster_grid.visible = false
+
+func _on_Systems_pressed():
+	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
+	system_b_btn.get_node("TextureRect").modulate.a = 1.0
+	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
+	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
+	planet_grid.visible = false
+	system_grid.visible = true
+	galaxy_grid.visible = false
+	cluster_grid.visible = false
+
+func _on_Galaxies_pressed():
+	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
+	system_b_btn.get_node("TextureRect").modulate.a = 0.5
+	galaxy_b_btn.get_node("TextureRect").modulate.a = 1.0
+	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
+	planet_grid.visible = false
+	system_grid.visible = false
+	galaxy_grid.visible = true
+	cluster_grid.visible = false
+
+func _on_Clusters_pressed():
+	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
+	system_b_btn.get_node("TextureRect").modulate.a = 0.5
+	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
+	cluster_b_btn.get_node("TextureRect").modulate.a = 1.0
+	planet_grid.visible = false
+	system_grid.visible = false
+	galaxy_grid.visible = false
+	cluster_grid.visible = true
+
+func _on_Bookmarked_pressed():
+	if game.c_v == "planet":
+		var p_i:Dictionary = game.planet_data[game.c_p]
+		if p_i.has("bookmark"):
+			game.bookmarks.planet.remove(p_i.bookmark)
+			planet_grid.remove_child(planet_grid.get_child(p_i.bookmark))
+			p_i.erase("bookmark")
+		else:
+			var bookmark:Dictionary = {
+				"type":p_i.type,
+				"name":p_i.name,
+				"c_p":game.c_p,
+				"c_p_g":game.c_p_g,
+				"c_s":game.c_s,
+				"c_s_g":game.c_s_g,
+				"c_g":game.c_g,
+				"c_g_g":game.c_g_g,
+				"c_c":game.c_c,
+				"c_c_g":game.c_c_g,
+				"c_sc":game.c_sc}
+			p_i.bookmark = len(game.bookmarks.planet)
+			game.bookmarks.planet.append(bookmark)
+			add_p_b(bookmark)
+	elif game.c_v == "system":
+		var s_i:Dictionary = game.system_data[game.c_s]
+		if s_i.has("bookmark"):
+			game.bookmarks.system.remove(s_i.bookmark)
+			system_grid.remove_child(system_grid.get_child(s_i.bookmark))
+			s_i.erase("bookmark")
+		else:
+			var star:Dictionary = s_i.stars[0]
+			for i in range(1, len(s_i.stars)):
+				if s_i.stars[i].luminosity > star.luminosity:
+					star = s_i.stars[i]
+			var bookmark:Dictionary = {
+				"modulate":Helper.get_star_modulate(star.class),
+				"name":s_i.name,
+				"c_s":game.c_s,
+				"c_s_g":game.c_s_g,
+				"c_g":game.c_g,
+				"c_g_g":game.c_g_g,
+				"c_c":game.c_c,
+				"c_c_g":game.c_c_g,
+				"c_sc":game.c_sc}
+			game.bookmarks.system.append(bookmark)
+			add_s_b(bookmark)
+	elif game.c_v == "galaxy":
+		var g_i:Dictionary = game.galaxy_data[game.c_g]
+		if g_i.has("bookmark"):
+			game.bookmarks.galaxy.remove(g_i.bookmark)
+			galaxy_grid.remove_child(galaxy_grid.get_child(g_i.bookmark))
+			g_i.erase("bookmark")
+		else:
+			var bookmark:Dictionary = {
+				"type":g_i.type,
+				"name":g_i.name,
+				"c_g":game.c_g,
+				"c_g_g":game.c_g_g,
+				"c_c":game.c_c,
+				"c_c_g":game.c_c_g,
+				"c_sc":game.c_sc}
+			game.bookmarks.galaxy.append(bookmark)
+			add_g_b(bookmark)
+	elif game.c_v == "cluster":
+		var c_i:Dictionary = game.cluster_data[game.c_c]
+		if c_i.has("bookmark"):
+			game.bookmarks.cluster.remove(c_i.bookmark)
+			cluster_grid.remove_child(cluster_grid.get_child(c_i.bookmark))
+			c_i.erase("bookmark")
+		else:
+			var bookmark:Dictionary = {
+				"name":c_i.name,
+				"c_c":game.c_c,
+				"c_c_g":game.c_c_g,
+				"c_sc":game.c_sc}
+			game.bookmarks.cluster.append(bookmark)
+			add_c_b(bookmark)
+
+
+func _on_Bookmarked_mouse_entered():
+	if $Bookmarks/Bookmarked.pressed:
+		game.show_tooltip(tr("REMOVE_FROM_BOOKMARKS"))
+	else:
+		game.show_tooltip(tr("ADD_TO_BOOKMARKS"))
+
+
+func _on_Bookmarked_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_Planets_mouse_entered():
+	game.show_tooltip(tr("PLANETS"))
+
+
+func _on_Systems_mouse_entered():
+	game.show_tooltip(tr("STAR_SYSTEMS"))
+
+
+func _on_Galaxies_mouse_entered():
+	game.show_tooltip(tr("GALAXIES"))
+
+
+func _on_Clusters_mouse_entered():
+	game.show_tooltip(tr("CLUSTERS"))
+
+
+func _on_Name_mouse_entered():
+	renaming = true
+	on_button = true
+
+func _on_Name_mouse_exited():
+	renaming = false
+	on_button = false
+
+
+func _on_Name_text_entered(new_text):
+	$Name/Name.release_focus()
+	if game.c_v == "planet":
+		 game.planet_data[game.c_p].name = new_text
+	elif game.c_v == "system":
+		game.system_data[game.c_s].name = new_text
+	elif game.c_v == "galaxy":
+		game.galaxy_data[game.c_g].name = new_text
+	elif game.c_v == "cluster":
+		game.cluster_data[game.c_c].name = new_text

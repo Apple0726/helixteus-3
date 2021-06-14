@@ -34,6 +34,7 @@ var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
 var planet_textures:Array
+var galaxy_textures:Array
 var bldg_textures:Dictionary
 
 var tutorial:Node2D
@@ -197,10 +198,11 @@ enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAV
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 var autocollect:Dictionary
-var auto_c_p_g:int = -1
 var save_date:int
+var bookmarks:Dictionary
 
 ############ End save data ############
+var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
@@ -317,6 +319,8 @@ var b_i_tween:Tween#bottom_info_tween
 func _ready():
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
+	for i in range(0, 7):
+		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Data.costs:
 		var dir_str = "res://Graphics/Buildings/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
@@ -556,13 +560,14 @@ func load_game():
 		objective = save_game.get_var()
 		autocollect = save_game.get_var()
 		save_date = save_game.get_64()
+		bookmarks = save_game.get_var()
 		save_game.close()
 		auto_c_p_g = -1
 		if not autocollect.empty():
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
-			Helper.add_minerals(autocollect.minerals * time_elapsed)
-			energy += autocollect.energy * time_elapsed
-			SP += autocollect.SP * time_elapsed
+			Helper.add_minerals(autocollect.rsrc.minerals * time_elapsed)
+			energy += autocollect.rsrc.energy * time_elapsed
+			SP += autocollect.rsrc.SP * time_elapsed
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -573,7 +578,6 @@ func load_game():
 				c_v = l_v
 			elif c_v == "battle":
 				c_v = "system"
-			$UI.add_child(HUD)
 			view.set_process(true)
 			var file = Directory.new()
 			if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
@@ -592,6 +596,7 @@ func load_game():
 				tutorial.visible = false
 				tutorial.tut_num = help.tutorial
 				$UI.add_child(tutorial)
+			$UI.add_child(HUD)
 			switch_view(c_v, true)
 	else:
 		popup("load error", 1.5)
@@ -860,6 +865,7 @@ func new_game(tut:bool):
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {"rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
+	bookmarks = {"planet":[], "system":[], "galaxy":[], "cluster":[]}
 	
 	generate_planets(0)
 	#Home planet information
@@ -1200,6 +1206,20 @@ func set_to_fighter_coords(i:int):
 func set_to_probe_coords(sc:int):
 	c_sc = sc
 
+func set_bookmark_coords(bookmark:Dictionary):
+	if bookmark.has("c_p"):
+		c_p = bookmark.c_p
+		c_p_g = bookmark.c_p_g
+	if bookmark.has("c_s"):
+		c_s = bookmark.c_s
+		c_s_g = bookmark.c_s_g
+	if bookmark.has("c_g"):
+		c_g = bookmark.c_g
+		c_g_g = bookmark.c_g_g
+	c_c = bookmark.c_c
+	c_c_g = bookmark.c_c_g
+	c_sc = bookmark.c_sc
+	
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
 	c_p_g = g_id
@@ -1272,7 +1292,6 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	match c_v:
 		"planet":
 			add_planet()
-			HUD.refresh()
 		"planet_details":
 			planet_details = planet_details_scene.instance()
 			add_child(planet_details)
@@ -1325,6 +1344,8 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			$UI.remove_child(HUD)
 			battle = battle_scene.instance()
 			add_child(battle)
+	if c_v in ["planet", "system", "galaxy", "cluster"]:
+		HUD.refresh()
 	if not first_time:
 		fn_save_game(true)
 
@@ -3156,7 +3177,7 @@ onready var fps_text = $Tooltips/FPS
 func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
-		$UI.move_child($UI/Settings, $UI.get_child_count())
+		#$UI.move_child($UI/Settings, $UI.get_child_count())
 		if autocollect and not autocollect.rsrc_list.empty():
 			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
 			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
@@ -3172,6 +3193,9 @@ func _process(delta):
 				if is_instance_valid(HUD):
 					HUD.update_minerals()
 					HUD.update_money_energy_SP()
+			if tutorial and tutorial.tut_num == 24 and objective.has("current"):
+				if objective.current != SP:
+					HUD.refresh()
 
 var mouse_pos = Vector2.ZERO
 onready var item_cursor = $UI/ItemCursor
@@ -3445,6 +3469,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(objective)
 	save_game.store_var(autocollect)
 	save_game.store_64(save_date)
+	save_game.store_var(bookmarks)
 	save_game.close()
 	if is_instance_valid(view.obj) and is_a_parent_of(view.obj):
 		view.save_zooms(c_v)
@@ -3580,7 +3605,7 @@ func fade_out_title(fn:String):
 	remove_child(tween)
 	tween.queue_free()
 	$Title.visible = false
-	$UI/Settings.visible = true
+	$Settings/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = load("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":

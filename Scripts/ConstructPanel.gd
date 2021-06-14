@@ -57,26 +57,28 @@ func _on_btn_pressed(btn_str:String):
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name in ["PP", "MS"]:
 			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 5
-		if bldg.item_name == "RL":
+		elif bldg.item_name == "RL":
 			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
-		if bldg.item_name == "CBD":
+		elif bldg.item_name == "CBD":
 			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
-		if bldg.item_name == "GF":
+		elif bldg.item_name == "GF":
 			bldg.visible = game.show.sand
-		if bldg.item_name == "SE":
+		elif bldg.item_name == "SE":
 			bldg.visible = game.show.coal
-		if bldg.item_name == "MM":
+		elif bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.AM
-		if bldg.item_name == "SP":
+		elif bldg.item_name == "SP":
 			bldg.visible = game.stats.planets_conquered > 1
-		if bldg.item_name in ["AE", "AMN"]:
+		elif bldg.item_name in ["AE", "AMN"]:
 			bldg.visible = game.science_unlocked.ATM
-		if bldg.item_name == "SPR":
+		elif bldg.item_name == "SPR":
 			bldg.visible = game.science_unlocked.SAP
-		if bldg.item_name == "SY":
+		elif bldg.item_name == "SY":
 			bldg.visible = game.science_unlocked.FG
-		if bldg.item_name == "PCC":
+		elif bldg.item_name == "PCC":
 			bldg.visible = game.lv >= 50
+		elif bldg.item_name == "GH":
+			bldg.visible = game.science_unlocked.EGH
 	$Tabs/Production.visible = game.show.stone
 	$Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
 	$Tabs/Vehicles.visible = game.show.vehicles_button

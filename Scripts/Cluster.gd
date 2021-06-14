@@ -12,8 +12,7 @@ func _ready():
 	for g_i in game.galaxy_data:
 		var galaxy_btn = TextureButton.new()
 		var galaxy = Sprite.new()
-		var galaxy_texture = load("res://Graphics/Galaxies/" + String(g_i["type"]) + ".png")
-		galaxy_btn.texture_normal = galaxy_texture
+		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
 		self.add_child(galaxy)
 		galaxy.add_child(galaxy_btn)
 		obj_btns.append(galaxy_btn)

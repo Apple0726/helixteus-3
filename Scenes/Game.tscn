@@ -59,12 +59,6 @@ use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="InputEventAction" id=4]
-action = "P"
-
-[sub_resource type="ShortCut" id=5]
-shortcut = SubResource( 4 )
-
 [sub_resource type="DynamicFont" id=6]
 size = 25
 outline_size = 2
@@ -150,6 +144,12 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
+
+[sub_resource type="InputEventAction" id=4]
+action = "P"
+
+[sub_resource type="ShortCut" id=5]
+shortcut = SubResource( 4 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -264,20 +264,6 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="UI/Popup"]
-
-[node name="Settings" type="TextureButton" parent="UI"]
-margin_left = 1244.0
-margin_top = 4.0
-margin_right = 1276.0
-margin_bottom = 36.0
-shortcut_in_tooltip = false
-shortcut = SubResource( 5 )
-texture_normal = ExtResource( 3 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PopupBackground" type="ColorRect" parent="UI"]
 visible = false
@@ -690,12 +676,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Settings" type="CanvasLayer" parent="."]
+layer = 4
+
+[node name="Settings" type="TextureButton" parent="Settings"]
+margin_left = 1244.0
+margin_top = 4.0
+margin_right = 1276.0
+margin_bottom = 36.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 5 )
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
-[connection signal="mouse_entered" from="UI/Settings" to="." method="_on_Settings_mouse_entered"]
-[connection signal="mouse_exited" from="UI/Settings" to="." method="_on_Settings_mouse_exited"]
-[connection signal="pressed" from="UI/Settings" to="." method="_on_Settings_pressed"]
 [connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
 [connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
 [connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
@@ -736,3 +736,6 @@ __meta__ = {
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
+[connection signal="mouse_entered" from="Settings/Settings" to="." method="_on_Settings_mouse_entered"]
+[connection signal="mouse_exited" from="Settings/Settings" to="." method="_on_Settings_mouse_exited"]
+[connection signal="pressed" from="Settings/Settings" to="." method="_on_Settings_pressed"]

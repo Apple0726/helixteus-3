@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.337255, 1, 0, 1 )
+border_blend = true
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="PanelContainer" type="PanelContainer"]
+margin_right = 20.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 20, 20 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 33.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 32, 32 )
+expand = true
+stretch_mode = 5

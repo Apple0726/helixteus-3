@@ -612,13 +612,12 @@ func _input(event):
 				add_shadows()
 			elif new_y < old_y:
 				add_shadows()
-		if game.active_panel:
-			if game.active_panel.polygon and Geometry.is_point_in_polygon(event.position, game.active_panel.polygon):
-				if tile_over != -1:
-					tile_over = -1
-					game.hide_tooltip()
-					game.hide_adv_tooltip()
-				return
+		if game.block_scroll:
+			if tile_over != -1:
+				tile_over = -1
+				game.hide_tooltip()
+				game.hide_adv_tooltip()
+			return
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
@@ -1136,7 +1135,18 @@ func _process(_delta):
 			progress = 1 - (curr_time - start_date) / float(length)
 			if progress < 0:
 				var coll_date = tile.bldg.collect_date
-				tile.bldg.collect_date = curr_time - (curr_time - coll_date) * tile.bldg.overclock_mult
+				var mult:float = tile.bldg.overclock_mult
+				tile.bldg.collect_date = curr_time - (curr_time - coll_date) * mult
+				if tile.bldg.name == "RL":
+					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * (mult - 1)
+				if tile.has("auto_collect"):
+					if tile.bldg.name in ["PP", "SP"]:
+						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
+						game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * (mult - 1)
+					elif tile.bldg.name == "ME":
+						game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1)
+						game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * (mult - 1)
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
