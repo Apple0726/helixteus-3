@@ -30,6 +30,7 @@ func refresh():
 				sc.modulate = Color(0.5, 0.5, 0.5, 1)
 				sc.get_node("Texture").modulate = Color.black
 				sc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			sc.is_over = false
 			sc.refresh()
 
 

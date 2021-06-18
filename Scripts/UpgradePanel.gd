@@ -8,6 +8,7 @@ var path_selected:int = 1
 var path_str:String
 var auto_speedup:bool = false
 var new_value:float
+var new_base_value:float
 
 onready var path1 = $UpgradePanel/PathButtons/Path1
 onready var path2 = $UpgradePanel/PathButtons/Path2
@@ -166,19 +167,26 @@ func update():
 		return
 	next.text = ""
 	if bldg == "SP" and path_selected == 1:
-		new_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw) * first_tile.IR_mult
+		new_base_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
+		new_value = new_base_value * first_tile.IR_mult
 	elif bldg == "AE" and path_selected == 1:
-		new_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
+		new_base_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
+		new_value = new_base_value
 	else:
 		if first_tile_bldg_info.has("pw"):
-			new_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw) * first_tile.IR_mult
+			new_base_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw)
+			new_value = new_base_value * first_tile.IR_mult
 		elif first_tile_bldg_info.has("step"):
-			new_value = first_tile_bldg_info.value + (lv_to - 1) * first_tile_bldg_info.step
+			new_base_value = first_tile_bldg_info.value + (lv_to - 1) * first_tile_bldg_info.step
+			new_value = new_base_value
 	if first_tile_bldg_info.is_value_integer:
+		new_base_value = round(new_base_value)
 		new_value = round(new_value)
 	else:
+		new_base_value = Helper.clever_round(new_base_value, 3)
 		new_value = Helper.clever_round(new_value, 3)
 	if not planet.empty():
+		new_base_value *= num
 		new_value *= num
 	if bldg == "CBD" and path_selected == 3:
 		game.add_text_icons(next, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(new_value)}), rsrc_icon, 20)
@@ -231,13 +239,23 @@ func _on_Upgrade_pressed():
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
-		var cost_time = costs.time
 		var cost_money = costs.money
 		if planet.empty():
+			var cost_time
+			if costs.has("time"):
+				cost_time = costs.time
 			for id in ids:
 				var tile = game.tile_data[id]
 				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
 					continue
+				if not costs.has("time"):
+					var base_costs = Data.costs[bldg].duplicate(true)
+					if Data[path_str][bldg].has("cost_mult"):
+						base_costs.time *= Data[path_str][bldg].cost_mult
+					if tile.has("cost_div"):
+						base_costs.time /= tile.cost_div
+					var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else 1.25
+					cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value))
 				if auto_speedup:
 					cost_time = 1
 				if tile.bldg.has("collect_date"):
@@ -254,19 +272,19 @@ func _on_Upgrade_pressed():
 						game.autocollect.rsrc.SP -= tile.bldg.path_1_value
 					var prod_ratio
 					if path_str == "path_1":
-						prod_ratio = new_value / tile.bldg.path_1_value
+						prod_ratio = new_base_value / tile.bldg.path_1_value
 					else:
 						prod_ratio = 1.0
 					var coll_date = tile.bldg.collect_date
 					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				elif tile.bldg.name == "MS":
-					tile.bldg.mineral_cap_upgrade = new_value - tile.bldg.path_1_value
+					tile.bldg.mineral_cap_upgrade = new_base_value - tile.bldg.path_1_value
 				if tile.bldg.has("start_date"):
 					tile.bldg.start_date += cost_time * 1000
 				if tile.bldg.has("overclock_mult"):
 					tile.bldg.overclock_date += cost_time * 1000
 				tile.bldg[path_str] = next_lv.value
-				tile.bldg[path_str + "_value"] = new_value
+				tile.bldg[path_str + "_value"] = new_base_value
 				tile.bldg.construction_date = curr_time
 				tile.bldg.XP = round(cost_money / 100.0)
 				tile.bldg.construction_length = cost_time * 1000.0
@@ -276,17 +294,17 @@ func _on_Upgrade_pressed():
 				game.objective.current += 1
 		else:
 			if planet.bldg.name == "MS":
-				game.mineral_capacity += (new_value - planet.bldg.path_1_value) * planet.tile_num
+				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
-					prod_ratio = new_value / planet.bldg.path_1_value
+					prod_ratio = new_base_value / planet.bldg.path_1_value
 				else:
 					prod_ratio = 1.0
 				var coll_date = planet.bldg.collect_date
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
 			planet.bldg[path_str] = next_lv.value
-			planet.bldg[path_str + "_value"] = new_value
+			planet.bldg[path_str + "_value"] = new_base_value
 			game.xp += round(cost_money / 100.0)
 			game.view.obj.refresh_planets()
 		game.HUD.refresh()

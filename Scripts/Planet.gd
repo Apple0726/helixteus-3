@@ -19,10 +19,10 @@ var shadow:Sprite
 var shadows:Array = []
 #Local id of the tile hovered
 var tile_over:int = -1
-var hboxes
+var hboxes:Array
 var time_bars = []
-var rsrcs = []
-var bldgs#Tiles with a bldg
+var rsrcs:Array
+var bldgs:Array#Tiles with a bldg
 var plant_sprites = {}
 var tiles_selected = []
 var items_collected = {}
@@ -45,6 +45,8 @@ func _ready():
 	bldgs.resize(wid * wid)
 	hboxes = []
 	hboxes.resize(wid * wid)
+	rsrcs = []
+	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
 	$TileMap.tile_set = game.planet_TS
 	$Obstacles.tile_set = game.obstacles_TS
@@ -303,7 +305,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			tile.bldg.x_pos = tile_id % wid
 			tile.bldg.y_pos = tile_id / wid
 			tile.bldg.wid = wid
-			tile.bldg.c_p_g = game.c_p_g
+		tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
 		if Helper.has_IR(_bldg_to_construct):
@@ -384,21 +386,25 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 func overclock_bldg(tile, tile_id:int, curr_time):
 	var mult:float = game.overclocks_info[game.item_to_use.name].mult
 	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult <= mult):
+		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
 			add_time_bar(tile_id, "overclock")
+			mult_diff = mult - 1
+		else:
+			mult_diff = mult - tile.bldg.overclock_mult
 		tile.bldg.overclock_date = curr_time
 		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == "RL":
-			game.autocollect.rsrc.SP += tile.bldg.path_1_value * (mult - 1)
-			game.autocollect.rsrc_list[String(game.c_p_g)].SP += tile.bldg.path_1_value * (mult - 1)
+			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff
+			game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult_diff
 		if tile.has("auto_collect"):
 			if tile.bldg.name in ["PP", "SP"]:
-				game.autocollect.rsrc.energy += tile.bldg.path_1_value * (mult - 1)
-				game.autocollect.rsrc_list[String(game.c_p_g)].energy += tile.bldg.path_1_value * (mult - 1)
+				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
+				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
 			elif tile.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * (mult - 1)
-				game.autocollect.rsrc_list[String(game.c_p_g)].minerals += tile.bldg.path_1_value * (mult - 1)
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
+				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
 		var coll_date = tile.bldg.collect_date
 		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
@@ -447,6 +453,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 	bldgs[id2].queue_free()
 	remove_child(hboxes[id2])
 	hboxes[id2].queue_free()
+	remove_child(rsrcs[id2])
+	rsrcs[id2].queue_free()
 	var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 	var ac:float = tile.auto_collect if tile.has("auto_collect") else 0.0
 	if bldg == "MS":
@@ -457,12 +465,6 @@ func destroy_bldg(id2:int, mass:bool = false):
 	elif bldg == "RL":
 		game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
 		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
-	elif bldg == "ME":
-		game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * mult * ac / 100.0
-		game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * mult * ac / 100.0
-	elif bldg in ["PP", "SP"]:
-		game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
-		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -502,6 +504,14 @@ func destroy_bldg(id2:int, mass:bool = false):
 						elif tile.bldg.name in ["PP", "SP"]:
 							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
 							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
+	else:
+		if tile.has("auto_collect"):
+			if bldg == "ME":
+				game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * mult * ac / 100.0
+				game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * mult * ac / 100.0
+			elif bldg in ["PP", "SP"]:
+				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
+				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -568,7 +578,8 @@ func _input(event):
 					continue
 				if tile.has("bldg"):
 					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
-						select = true
+						if not Input.is_action_pressed("alt") or tile2.has("auto_collect"):
+							select = true
 				elif tile.has("plant") and not tile.plant.empty():
 					if tile2.has("plant") and not tile2.plant.empty() and tile2.plant.name == tile.plant.name:
 						select = true
@@ -799,7 +810,7 @@ func _input(event):
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						game.ship_data.append({"lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
@@ -847,7 +858,7 @@ func _input(event):
 								game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
 							else:
 								game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
-							if not game.galaxy_data[game.c_g].discovered:#if galaxy generated systems
+							if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
 								yield(game.start_system_generation(), "completed")
 							else:
 								Helper.save_obj("Clusters", game.c_c_g, game.galaxy_data)
@@ -860,7 +871,7 @@ func _input(event):
 							Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 							game.c_s = tile.wormhole.l_dest_s_id
 							game.c_s_g = tile.wormhole.g_dest_s_id
-							if wh_system.discovered:#if system generated planets
+							if wh_system.has("discovered"):#if system generated planets
 								game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
 							else:
 								game.planet_data.clear()
@@ -875,7 +886,7 @@ func _input(event):
 							Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
 							game.c_p = wh_planet.l_id
 							game.c_p_g = wh_planet.id
-							if not wh_planet.discovered:
+							if not wh_planet.has("discovered"):
 								game.generate_tiles(wh_planet.l_id)
 							game.tile_data = game.open_obj("Planets", wh_planet.id)
 							var wh_tile:int = Helper.rand_int(0, len(game.tile_data) - 1)
@@ -1081,7 +1092,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrc.get_node("TextureRect").texture = icon
 	rsrc.rect_position = v + Vector2(0, 70)
 	rsrc.get_node("Control").modulate = mod
-	rsrcs.append({"node":rsrc, "id":id2})
+	rsrcs[id2] = rsrc
 
 func _process(_delta):
 	var curr_time = OS.get_system_time_msecs()
@@ -1139,14 +1150,14 @@ func _process(_delta):
 				tile.bldg.collect_date = curr_time - (curr_time - coll_date) * mult
 				if tile.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
-					game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP -= tile.bldg.path_1_value * (mult - 1)
 				if tile.has("auto_collect"):
 					if tile.bldg.name in ["PP", "SP"]:
-						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
-						game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * (mult - 1)
+						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
+						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
 					elif tile.bldg.name == "ME":
-						game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1)
-						game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * (mult - 1)
+						game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
+						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
@@ -1166,17 +1177,13 @@ func _process(_delta):
 				tile.wormhole.active = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
-	for rsrc_obj in rsrcs:
-		var tile = game.tile_data[rsrc_obj.id]
-		var rsrc = rsrc_obj.node
+	for i in len(rsrcs):
+		var tile = game.tile_data[i]
 		if not tile or not tile.has("bldg"):
-			remove_child(rsrc_obj.node)
-			rsrc_obj.node.queue_free()
-			rsrcs.erase(rsrc_obj)
 			continue
 		if tile.bldg.is_constructing:
 			continue
-		Helper.update_rsrc(p_i, tile, rsrc)
+		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	if game.auto_c_p_g == -1:
 		game.auto_c_p_g = game.c_p_g
 	game.HUD.update_money_energy_SP()

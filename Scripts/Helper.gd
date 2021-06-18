@@ -384,7 +384,7 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		tween.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
-	var min_cap = 200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS")
+	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
 	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
@@ -496,9 +496,10 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	for met in game.met_info:
 		var met_info = game.met_info[met]
 		var chance_mult:float = 0.25 / met_info.rarity * aurora_mult
+		var amount:float
 		if tile.has("crater") and met == tile.crater.metal:
 			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
-			contents[met] = met_info.amount * rand_range(0.2, 0.225) * aurora_mult * chance_mult * min(depth, 2 * tile.crater.init_depth)
+			amount = met_info.amount * rand_range(0.2, 0.225) * aurora_mult * chance_mult * min(depth, 2 * tile.crater.init_depth)
 		else:
 			chance_mult = min(7.0 / (7.0 + 1 / chance_mult), 1)
 			var end_depth:int = tile.depth + depth
@@ -507,11 +508,13 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles:int = end_depth - met_start_depth
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
-			var amount:float = met_info.amount * rand_range(0.4, 0.45) * aurora_mult * chance_mult * num_tiles3
-			contents[met] = amount
-			other_volume += amount / met_info.density / 1000
+			amount = met_info.amount * rand_range(0.4, 0.45) * aurora_mult * chance_mult * num_tiles3
+		if amount < 1:
+			continue
+		contents[met] = amount
+		other_volume += amount / met_info.density / 1000
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = (depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0)
+	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0), 3))
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth"):
 		contents.ship_locator = 1
@@ -628,7 +631,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var current_bar
 	var capacity_bar
 	var rsrc_text
-	if rsrc:
+	if is_instance_valid(rsrc):
 		current_bar = rsrc.get_node("Control/CurrentBar")
 		capacity_bar = rsrc.get_node("Control/CapacityBar")
 		rsrc_text = rsrc.get_node("Control/Label")
@@ -641,7 +644,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	match tile.bldg.name:
 		"ME", "PP", "MM", "SP", "AE":
 			#Number of seconds needed per mineral
-			var prod
+			var prod:float
 			if tile.bldg.name == "SP":
 				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, get_au_mult(tile))
 			elif tile.bldg.name == "AE":
@@ -658,7 +661,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			if c_t - c_d > prod:
 				var rsrc_num:float = floor((c_t - c_d) / prod)
 				var auto_rsrc:float = 0
-				if tile.has("auto_collect") and tile.bldg.name in ["MM", "PP", "SP"]:
+				if tile.has("auto_collect") and tile.bldg.name in ["ME", "PP", "SP"]:
 					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
 					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
 						auto_rsrc += 1
@@ -692,7 +695,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
 				current_bar.value = min((c_t - c_d) / prod, 1)
-				rsrc_text.text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
+				rsrc_text.text = "%s/%s" % [format_num(clever_round(1000.0 / prod, 3)), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = get_crush_info(tile)
@@ -887,18 +890,18 @@ func update_bldg_constr(tile):
 			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 			if tile.has("auto_collect"):
 				if tile.bldg.name == "ME":
-					game.autocollect.rsrc_list[String(game.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 				elif tile.bldg.name in ["PP", "SP"]:
-					game.autocollect.rsrc_list[String(game.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
 			elif tile.bldg.name == "RL":
-				if not game.autocollect.rsrc_list.has(String(game.c_p_g)):
-					game.autocollect.rsrc_list[String(game.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value}
+				if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value * mult}
 				else:
-					game.autocollect.rsrc_list[String(game.c_p_g)].SP += tile.bldg.path_1_value * mult
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult
 				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
@@ -935,15 +938,15 @@ func update_bldg_constr(tile):
 						else:
 							diff = max(0, tile.bldg.path_2_value - _tile.auto_collect)
 							_tile.auto_collect = max(_tile.auto_collect, tile.bldg.path_2_value)
-						if not game.autocollect.rsrc_list.has(String(game.c_p_g)):
-							game.autocollect.rsrc_list[String(game.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
+						if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
+							game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
 						if _tile.has("bldg"):
 							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0							
 							if _tile.bldg.name == "ME":
-								game.autocollect.rsrc_list[String(game.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
+								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
 							elif _tile.bldg.name in ["PP", "SP"]:
-								game.autocollect.rsrc_list[String(game.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
+								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
@@ -1120,15 +1123,15 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 	var tooltip:String = ""
 	var bldg:String = dict.bldg.name
 	icons.append_array(Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else [])
-	var mult:float = Helper.get_prod_mult(dict)
+	var mult:float = get_prod_mult(dict)
 	var IR_mult:float = dict.bldg.IR_mult
 	var path_1_value
 	if bldg == "SP":
-		path_1_value = Helper.get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, Helper.get_au_mult(dict))
+		path_1_value = get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict))
 	elif bldg == "AE":
-		path_1_value = Helper.get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
+		path_1_value = get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
 	elif bldg != "PCC":
-		path_1_value = Helper.clever_round(dict.bldg.path_1_value * mult, 3)
+		path_1_value = clever_round(dict.bldg.path_1_value * mult, 3)
 	var path_2_value
 	var path_3_value
 	if dict.bldg.has("path_2_value"):
@@ -1136,26 +1139,26 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 		if Data.path_2[bldg].is_value_integer:
 			path_2_value = round(path_2_value)
 	if dict.bldg.has("path_3_value"):
-		path_3_value = Helper.clever_round(dict.bldg.path_3_value, 3)
+		path_3_value = clever_round(dict.bldg.path_3_value, 3)
 	if path_1_value:
 		path_1_value *= n
 	if path_2_value:
 		path_2_value *= n
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(round(path_2_value * IR_mult), 6)]
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
 		"MM":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"SC", "GF", "SE":
-			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % Helper.format_num(path_1_value), Data.path_2[bldg].desc % Helper.format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL", "AMN", "SPR":
-			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(path_1_value)]
+			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
 		"MS":
-			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(round(path_1_value))]
+			tooltip = (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			tooltip = (Data.path_1[bldg].desc) % [Helper.format_num(path_1_value)]
+			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
 		"GH":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [Helper.format_num(path_1_value), Helper.format_num(path_2_value)]
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"CBD":
 			tooltip = "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % path_1_value,

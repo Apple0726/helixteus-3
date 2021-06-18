@@ -1,6 +1,6 @@
 extends Control
-onready var game = self.get_parent()
-onready var click_sound = get_node("../click")
+onready var game = get_node("/root/Game")
+onready var click_sound = game.get_node("click")
 var on_button = false
 
 func _ready():

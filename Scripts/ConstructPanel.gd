@@ -56,7 +56,7 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name in ["PP", "MS"]:
-			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 5
+			bldg.visible = game.stats.bldgs_built >= 5
 		elif bldg.item_name == "RL":
 			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
 		elif bldg.item_name == "CBD":

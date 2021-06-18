@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -29,8 +29,13 @@
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
 [ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
 [ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=29]
+[ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 30 )
+shader_param/amount = 0.0
+
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 15.0
 content_margin_right = 15.0
 content_margin_top = 1.0
@@ -42,7 +47,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 15.0
 content_margin_right = 15.0
 content_margin_top = 0.0
@@ -53,13 +58,13 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.584314, 0.584314, 0.584314, 1 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 22
 use_filter = true
 font_data = ExtResource( 15 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 25
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -68,7 +73,7 @@ use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -80,7 +85,7 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -92,13 +97,13 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=8]
 size = 20
 use_filter = true
 font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -110,14 +115,14 @@ expand_margin_right = 4.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=10]
 size = 50
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
 font_data = ExtResource( 15 )
 
-[sub_resource type="StyleBoxFlat" id=12]
+[sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -129,8 +134,7 @@ expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="Animation" id=13]
-resource_name = "Fade"
+[sub_resource type="Animation" id=12]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("UI/Panel:modulate")
@@ -145,11 +149,11 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="InputEventAction" id=4]
+[sub_resource type="InputEventAction" id=13]
 action = "P"
 
-[sub_resource type="ShortCut" id=5]
-shortcut = SubResource( 4 )
+[sub_resource type="ShortCut" id=14]
+shortcut = SubResource( 13 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -161,6 +165,15 @@ bus = "SFX"
 
 [node name="Panels" type="CanvasLayer" parent="."]
 layer = 2
+
+[node name="ColorRect" type="ColorRect" parent="Panels"]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Control" type="Control" parent="Panels"]
 margin_left = 640.0
@@ -207,7 +220,7 @@ visible = false
 margin_left = 595.0
 margin_right = 652.0
 margin_bottom = 37.0
-custom_styles/normal = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
 text = "dsf"
 align = 1
 valign = 1
@@ -254,8 +267,8 @@ margin_left = 490.0
 margin_top = 83.308
 margin_right = 790.0
 margin_bottom = 118.308
-custom_styles/normal = SubResource( 2 )
-custom_fonts/font = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "Popup information"
 align = 1
 valign = 1
@@ -298,7 +311,7 @@ margin_left = 56.0
 margin_top = 48.0
 margin_right = 96.0
 margin_bottom = 77.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -317,7 +330,7 @@ margin_bottom = 382.0
 grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -335,8 +348,8 @@ layer = 4
 visible = false
 margin_right = 88.0
 margin_bottom = 107.0
-custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 text = "Tooltip
 a
 a
@@ -347,8 +360,8 @@ visible = false
 margin_right = 320.0
 margin_bottom = 300.0
 mouse_filter = 2
-custom_styles/normal = SubResource( 10 )
-custom_fonts/normal_font = SubResource( 9 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/normal_font = SubResource( 8 )
 text = "Tooltip
 a
 a
@@ -371,7 +384,6 @@ margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_group_": true,
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -385,14 +397,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AllowedStarArea" type="Polygon2D" parent="Title/Background"]
-visible = false
-color = Color( 1, 1, 1, 0 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 372, 916, 380, 724, 404, 628, 420, 588, 364, 392, 376, 140, 460, 152, 520, 0, 564 )
-__meta__ = {
-"_edit_lock_": true
-}
-
 [node name="Label" type="Label" parent="Title"]
 visible = false
 anchor_left = 0.5
@@ -403,7 +407,7 @@ margin_left = 456.0
 margin_top = 69.313
 margin_right = 784.0
 margin_bottom = 230.313
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 10 )
 text = "Helixteus 3
 "
 align = 1
@@ -616,7 +620,7 @@ margin_top = 464.0
 margin_right = 232.0
 margin_bottom = 574.0
 theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 12 )
+custom_styles/panel = SubResource( 11 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -661,7 +665,7 @@ align = 0
 one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-anims/Fade = SubResource( 13 )
+anims/Fade = SubResource( 12 )
 
 [node name="Ship" type="TextureButton" parent="."]
 visible = false
@@ -685,7 +689,7 @@ margin_top = 4.0
 margin_right = 1276.0
 margin_bottom = 36.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 5 )
+shortcut = SubResource( 14 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5

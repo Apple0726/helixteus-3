@@ -355,7 +355,8 @@ func _physics_process(_delta):
 			for time_bar in obj.time_bars:
 				time_bar.node.visible = false
 			for rsrc in obj.rsrcs:
-				rsrc.node.visible = false
+				if is_instance_valid(rsrc):
+					rsrc.visible = false
 			for hbox in obj.hboxes:
 				if not hbox or not is_instance_valid(hbox):
 					continue
@@ -367,7 +368,8 @@ func _physics_process(_delta):
 			for time_bar in obj.time_bars:
 				time_bar.node.visible = true
 			for rsrc in obj.rsrcs:
-				rsrc.node.visible = true
+				if is_instance_valid(rsrc):
+					rsrc.visible = true
 			for hbox in obj.hboxes:
 				if not hbox or not is_instance_valid(hbox):
 					continue

@@ -4,7 +4,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_c
 				"PP":{"value":0.6, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
-				"RCC":{"value":1.0, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"RCC":{"value":1.0, "pw":1.06, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 				"SC":{"value":50.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":1, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":40.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
@@ -15,7 +15,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_c
 				"AMN":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
-				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":3, "cost_pw":1.4, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":1.5, "cost_pw":1.4, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -31,7 +31,7 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
 				"GF":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
 				"SE":{"value":1.0, "pw":1.04, "is_value_integer":false, "metal_costs":{"lead":700, "copper":1400, "iron":2800, "aluminium":5600, "silver":11200, "gold":22400}},
-				"CBD":{"value":3, "step":2, "cost_mult":15, "cost_pw":2.5, "is_value_integer":true},
+				"CBD":{"value":3, "step":2, "cost_mult":12, "cost_pw":2.7, "is_value_integer":true},
 }
 
 var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
@@ -331,7 +331,7 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000, "time":100000}},
 }
 var bullet_data = [{"damage":3.5, "accuracy":1.0}, {"damage":5, "accuracy":1.05}, {"damage":9, "accuracy":1.1}]
-var laser_data = [{"damage":2.5, "accuracy":1.8}, {"damage":3.5, "accuracy":2.2}, {"damage":6.5, "accuracy":2.7}]
+var laser_data = [{"damage":2.5, "accuracy":2.2}, {"damage":3.5, "accuracy":2.4}, {"damage":6.5, "accuracy":2.7}]
 var bomb_data = [{"damage":6, "accuracy":0.7}, {"damage":8, "accuracy":0.72}, {"damage":15, "accuracy":0.75}]
 var light_data = [{"damage":1.5, "accuracy":1.3}, {"damage":2.5, "accuracy":1.35}, {"damage":4.5, "accuracy":1.45}]
 

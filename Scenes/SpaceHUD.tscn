@@ -1,8 +1,7 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Buttons/Home.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/Megastructures.png" type="Texture" id=4]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=6]
@@ -129,18 +128,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Home" type="TextureButton" parent="."]
-margin_left = 16.0
-margin_top = 96.0
-margin_right = 88.0
-margin_bottom = 168.0
-texture_normal = ExtResource( 3 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ConquerAll" type="Button" parent="."]
 margin_left = 168.0
 margin_top = 688.0
@@ -195,9 +182,6 @@ __meta__ = {
 [connection signal="mouse_entered" from="VBoxContainer/Gigastructures" to="." method="_on_Gigastructures_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Gigastructures" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Gigastructures" to="." method="_on_Gigastructures_pressed"]
-[connection signal="mouse_entered" from="Home" to="." method="_on_Home_mouse_entered"]
-[connection signal="mouse_exited" from="Home" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Home" to="." method="_on_Home_pressed"]
 [connection signal="mouse_entered" from="ConquerAll" to="." method="_on_ConquerAll_mouse_entered"]
 [connection signal="mouse_exited" from="ConquerAll" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ConquerAll" to="." method="_on_ConquerAll_pressed"]

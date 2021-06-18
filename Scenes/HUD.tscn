@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -33,9 +33,9 @@
 [ext_resource path="res://Graphics/Clusters/0.png" type="Texture" id=31]
 [ext_resource path="res://Graphics/Buttons/Bookmarked.png" type="Texture" id=32]
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=1]
 resource_name = "BookmarkAnim"
-length = 0.4
+length = 0.3
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Bookmarks:rect_position:x")
 tracks/0/interp = 1
@@ -43,8 +43,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( -126, -0.25, 0, 0.119284, 104.667, 2, -0.23, -0.833333, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.4 )
+"points": PoolRealArray( -126, -0.25, 0, 0.11, 76.5, 2, -0.17, -1.5, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3 )
 }
 tracks/1/type = "bezier"
 tracks/1/path = NodePath("Bookmarks:rect_position:y")
@@ -53,11 +53,17 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( 80, -0.25, 0, 0.25, 0 ),
+"points": PoolRealArray( 108, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
 
-[sub_resource type="StyleBoxFlat" id=24]
+[sub_resource type="InputEventAction" id=2]
+action = "B"
+
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -70,7 +76,7 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -83,7 +89,7 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=6]
 content_margin_left = 5.0
 content_margin_right = 5.0
 content_margin_top = 5.0
@@ -96,7 +102,7 @@ border_width_bottom = 2
 border_color = Color( 0.478431, 1, 0, 1 )
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=7]
 content_margin_left = 14.0
 content_margin_right = 12.0
 content_margin_top = 5.0
@@ -108,9 +114,9 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=8]
 content_margin_left = 14.0
-content_margin_right = 12.0
+content_margin_right = 14.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
 bg_color = Color( 0, 0, 0, 1 )
@@ -120,49 +126,60 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 1, 1 )
 
-[sub_resource type="InputEventAction" id=5]
+[sub_resource type="StyleBoxFlat" id=9]
+content_margin_left = 14.0
+content_margin_right = 8.0
+content_margin_bottom = 0.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[sub_resource type="InputEventAction" id=10]
 action = "Y"
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="ShortCut" id=11]
+shortcut = SubResource( 10 )
 
-[sub_resource type="InputEventAction" id=7]
+[sub_resource type="InputEventAction" id=12]
 action = "V"
 
-[sub_resource type="ShortCut" id=8]
-shortcut = SubResource( 7 )
+[sub_resource type="ShortCut" id=13]
+shortcut = SubResource( 12 )
 
-[sub_resource type="InputEventAction" id=9]
+[sub_resource type="InputEventAction" id=14]
 action = "T"
 
-[sub_resource type="ShortCut" id=10]
-shortcut = SubResource( 9 )
+[sub_resource type="ShortCut" id=15]
+shortcut = SubResource( 14 )
 
-[sub_resource type="InputEventAction" id=11]
+[sub_resource type="InputEventAction" id=16]
 action = "E"
 
-[sub_resource type="ShortCut" id=12]
-shortcut = SubResource( 11 )
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
 
-[sub_resource type="InputEventAction" id=13]
+[sub_resource type="InputEventAction" id=18]
 action = "R"
 
-[sub_resource type="ShortCut" id=14]
-shortcut = SubResource( 13 )
+[sub_resource type="ShortCut" id=19]
+shortcut = SubResource( 18 )
 
-[sub_resource type="InputEventAction" id=15]
+[sub_resource type="InputEventAction" id=20]
 action = "U"
 
-[sub_resource type="ShortCut" id=16]
-shortcut = SubResource( 15 )
+[sub_resource type="ShortCut" id=21]
+shortcut = SubResource( 20 )
 
-[sub_resource type="InputEventAction" id=17]
+[sub_resource type="InputEventAction" id=22]
 action = "I"
 
-[sub_resource type="ShortCut" id=18]
-shortcut = SubResource( 17 )
+[sub_resource type="ShortCut" id=23]
+shortcut = SubResource( 22 )
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=24]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -170,17 +187,17 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.403922, 0.403922, 0.403922, 1 )
 
-[sub_resource type="InputEventAction" id=20]
+[sub_resource type="InputEventAction" id=25]
 action = "."
 
-[sub_resource type="ShortCut" id=21]
-shortcut = SubResource( 20 )
+[sub_resource type="ShortCut" id=26]
+shortcut = SubResource( 25 )
 
-[sub_resource type="InputEventAction" id=22]
+[sub_resource type="InputEventAction" id=27]
 action = ","
 
-[sub_resource type="ShortCut" id=23]
-shortcut = SubResource( 22 )
+[sub_resource type="ShortCut" id=28]
+shortcut = SubResource( 27 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -193,32 +210,36 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/BookmarkAnim = SubResource( 25 )
+anims/BookmarkAnim = SubResource( 1 )
 
 [node name="MouseIn" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 0, 82, 30, 82, 30, 204, 0, 204 )
+polygon = PoolVector2Array( 0, 110, 30, 110, 30, 232, 0, 232 )
 
 [node name="MouseOut" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 0, 80, 198, 80, 198, 206, 0, 206 )
+position = Vector2( 0, -6.10526 )
+scale = Vector2( 1, 1.02632 )
+polygon = PoolVector2Array( 0, 80, 198, 80, 198, 232, 0, 232 )
 
 [node name="Bookmarks" type="Control" parent="."]
 margin_left = -126.0
-margin_top = 80.0
+margin_top = 108.0
 margin_right = 28.0
-margin_bottom = 198.0
+margin_bottom = 226.0
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
-margin_left = 162.0
-margin_top = 42.0
-margin_right = 204.0
-margin_bottom = 82.0
+margin_left = 128.0
+margin_top = -28.0
+margin_right = 153.0
+margin_bottom = -4.0
 toggle_mode = true
+shortcut_in_tooltip = false
+shortcut = SubResource( 3 )
 texture_normal = ExtResource( 30 )
 texture_pressed = ExtResource( 32 )
 expand = true
@@ -240,9 +261,9 @@ __meta__ = {
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 24 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/normal = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Planets"]
 margin_left = 5.0
@@ -262,9 +283,9 @@ margin_top = 31.0
 margin_right = 32.0
 margin_bottom = 63.0
 rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 24 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/normal = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Systems"]
 modulate = Color( 1, 1, 1, 0.501961 )
@@ -284,9 +305,9 @@ margin_top = 62.0
 margin_right = 32.0
 margin_bottom = 94.0
 rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 24 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/normal = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Galaxies"]
 modulate = Color( 1, 1, 1, 0.501961 )
@@ -307,9 +328,9 @@ margin_top = 93.0
 margin_right = 32.0
 margin_bottom = 125.0
 rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 24 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/normal = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Clusters"]
 modulate = Color( 1, 1, 1, 0.501961 )
@@ -328,7 +349,7 @@ __meta__ = {
 [node name="BookmarksList" type="PanelContainer" parent="Bookmarks"]
 margin_right = 126.0
 margin_bottom = 124.0
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -350,7 +371,7 @@ visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 121.0
-margin_bottom = 113.0
+margin_bottom = 119.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -363,7 +384,7 @@ visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 121.0
-margin_bottom = 113.0
+margin_bottom = 119.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -376,7 +397,7 @@ visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 121.0
-margin_bottom = 113.0
+margin_bottom = 119.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -401,7 +422,7 @@ margin_right = 48.0
 margin_bottom = 34.0
 grow_horizontal = 2
 mouse_filter = 0
-custom_styles/normal = SubResource( 3 )
+custom_styles/normal = SubResource( 7 )
 text = "Build 5 mineral extractors"
 align = 1
 __meta__ = {
@@ -418,25 +439,25 @@ texture_progress = ExtResource( 16 )
 nine_patch_stretch = true
 
 [node name="Lv" type="VBoxContainer" parent="."]
-margin_top = 38.2322
-margin_right = 68.0
-margin_bottom = 77.2322
+margin_top = 38.0
+margin_right = 70.0
+margin_bottom = 77.0
 custom_constants/separation = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="Lv"]
-margin_right = 68.0
+margin_right = 70.0
 margin_bottom = 34.0
 mouse_filter = 0
-custom_styles/normal = SubResource( 4 )
+custom_styles/normal = SubResource( 8 )
 text = "Lv 1"
 
 [node name="TextureProgress" type="TextureProgress" parent="Lv"]
 modulate = Color( 0, 1, 0, 1 )
 margin_top = 34.0
-margin_right = 68.0
+margin_right = 70.0
 margin_bottom = 37.0
 rect_min_size = Vector2( 0, 3 )
 max_value = 1.0
@@ -458,12 +479,14 @@ __meta__ = {
 }
 
 [node name="Name" type="LineEdit" parent="Name"]
-margin_right = 32.0
+margin_right = 28.0
 margin_bottom = 34.0
-custom_styles/read_only = SubResource( 4 )
-custom_styles/normal = SubResource( 4 )
+custom_styles/read_only = SubResource( 9 )
+custom_styles/focus = SubResource( 9 )
+custom_styles/normal = SubResource( 9 )
+custom_colors/selection_color = Color( 1, 1, 1, 1 )
 custom_colors/cursor_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_selected = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_constants/minimum_spaces = 0
 expand_to_text_length = true
@@ -713,7 +736,7 @@ margin_bottom = 216.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 6 )
+shortcut = SubResource( 11 )
 texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 5
@@ -725,7 +748,7 @@ margin_bottom = 264.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 8 )
+shortcut = SubResource( 13 )
 texture_normal = ExtResource( 22 )
 expand = true
 stretch_mode = 5
@@ -737,7 +760,7 @@ margin_bottom = 312.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 10 )
+shortcut = SubResource( 15 )
 texture_normal = ExtResource( 1 )
 expand = true
 stretch_mode = 5
@@ -748,7 +771,7 @@ margin_right = 48.0
 margin_bottom = 360.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 12 )
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
@@ -759,7 +782,7 @@ margin_right = 48.0
 margin_bottom = 408.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 14 )
+shortcut = SubResource( 19 )
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5
@@ -770,7 +793,7 @@ margin_right = 48.0
 margin_bottom = 456.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 16 )
+shortcut = SubResource( 21 )
 texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
@@ -781,7 +804,7 @@ margin_right = 48.0
 margin_bottom = 504.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 18 )
+shortcut = SubResource( 23 )
 texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
@@ -803,7 +826,7 @@ margin_left = 1170.0
 margin_top = 654.0
 margin_right = 1276.0
 margin_bottom = 702.0
-custom_styles/panel = SubResource( 19 )
+custom_styles/panel = SubResource( 24 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -814,7 +837,7 @@ margin_top = 2.0
 margin_right = 102.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 21 )
+shortcut = SubResource( 26 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
@@ -839,7 +862,7 @@ margin_top = 2.0
 margin_right = 46.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 23 )
+shortcut = SubResource( 28 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5

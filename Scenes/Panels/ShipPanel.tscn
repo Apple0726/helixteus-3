@@ -184,4 +184,6 @@ __meta__ = {
 [connection signal="mouse_entered" from="Panel/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/GoToShips" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/GoToShips" to="." method="_on_GoToShips_pressed"]
+[connection signal="mouse_entered" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/UpgradeButton" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_pressed"]

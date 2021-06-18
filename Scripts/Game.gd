@@ -562,6 +562,7 @@ func load_game():
 		save_date = save_game.get_64()
 		bookmarks = save_game.get_var()
 		save_game.close()
+		bookmarks.system.clear()
 		auto_c_p_g = -1
 		if not autocollect.empty():
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
@@ -790,6 +791,7 @@ func new_game(tut:bool):
 				"atoms":false,
 				"particles":false,
 				"auroras":false,
+				"bookmarks":false,
 	}
 	for mat in mats:
 		show[mat] = false
@@ -1128,6 +1130,7 @@ func fade_in_panel(panel:Control):
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 10), Vector2(-s.x / 2.0, -s.y / 2.0), 0.1)
+	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
 	panel.tween.start()
@@ -1136,6 +1139,7 @@ func fade_out_panel(panel:Control):
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
 	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
+	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 0.0, 0.2)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
@@ -1174,18 +1178,6 @@ func toggle_panel(_panel):
 	active_panel = _panel
 	fade_in_panel(_panel)
 	_panel.refresh()
-
-func set_home_coords():
-	c_u = 0
-	c_sc = 0
-	c_c = 0
-	c_c_g = 0
-	c_g = 0
-	c_g_g = 0
-	c_s = 0
-	c_s_g = 0
-	c_p = 2
-	c_p_g = 2
 
 func set_to_ship_coords():
 	c_sc = ships_dest_coords.sc
@@ -1333,7 +1325,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			ruins.ruins_id = tile_data[c_t].ruins
 			add_child(ruins)
 			ruins.rover_data = rover_data[rover_id]
-			switch_music(load("res://Audio/cave1.ogg"), 0.9)
+			switch_music(load("res://Audio/ruins.mp3"), 0.9)
 		"STM":
 			$Ship.visible = false
 			$UI.remove_child(HUD)
@@ -1354,6 +1346,7 @@ func add_science_tree():
 	HUD.get_node("Panel").visible = false
 	HUD.get_node("Hotbar").visible = false
 	HUD.get_node("Lv").modulate.a = 0.5
+	HUD.get_node("Name").modulate.a = 0.5
 	add_obj("science_tree")
 	for rsrc in HUD.get_node("Resources").get_children():
 		if rsrc.name != "SP":
@@ -1379,6 +1372,7 @@ func remove_science_tree():
 	HUD.get_node("Panel").visible = true
 	HUD.get_node("Hotbar").visible = true
 	HUD.get_node("Lv").modulate.a = 1.0
+	HUD.get_node("Name").modulate.a = 1.0
 	view.remove_obj("science_tree")
 	for rsrc in HUD.get_node("Resources").get_children():
 		rsrc.modulate.a = 1.0
@@ -1597,6 +1591,7 @@ func add_system():
 		if c_s_g != 0:
 			planet_data.clear()
 		generate_planets(c_s)
+	show.bookmarks = true
 	add_obj("system")
 	HUD.get_node("Panel/CollectAll").visible = true
 
@@ -1607,7 +1602,7 @@ func add_planet():
 	add_obj("planet")
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
-	add_child(planet_HUD)
+	$UI.add_child(planet_HUD)
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func remove_dimension():
@@ -1653,7 +1648,7 @@ func remove_planet(save_zooms:bool = true):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
-	remove_child(planet_HUD)
+	$UI.remove_child(planet_HUD)
 	planet_HUD.queue_free()
 
 #Collision detection of systems, galaxies etc.
@@ -2278,7 +2273,7 @@ func star_size_in_pixels(size:float):
 func generate_planets(id:int):#local id
 	randomize()
 	var star_boundary = 0
-	var combined_star_mass = 0
+	var combined_star_mass = system_data[id].stars[0].mass
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
 	var star_size_in_km = max_star_size * e(6.957, 5)
@@ -2288,6 +2283,7 @@ func generate_planets(id:int):#local id
 		var colliding = true
 		var pos:Vector2
 		var star = system_data[id].stars[i]
+		combined_star_mass += star.mass
 		var r_offset:float = 10.0
 		var radius_in_pixels = star_size_in_pixels(star.size) / 2.0
 		while colliding:
@@ -2363,7 +2359,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = p_i.size >= max(18000, 40000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2611,7 +2607,7 @@ func generate_tiles(id:int):
 					floor_size = 20
 					num_floors = 3
 				if boss_cave:
-					tile_data[t_id].aurora.au_int *= 2 * tile_data[t_id].aurora.au_int
+					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
 					cave_data.append({"num_floors":5, "floor_size":25, "special_cave":4})
 				else:
 					cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
@@ -3182,7 +3178,8 @@ func _process(delta):
 			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
 			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
 			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
-			if auto_c_p_g == c_p_g:
+			#print(autocollect.rsrc_list)
+			if auto_c_p_g == c_p_g and autocollect.rsrc_list.has(String(c_p_g)):
 				Helper.add_minerals((autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult)
 				energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
 				SP += (autocollect.rsrc.SP - autocollect.rsrc_list[String(c_p_g)].SP) * delta * SP_mult

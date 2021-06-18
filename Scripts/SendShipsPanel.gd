@@ -87,7 +87,7 @@ func refresh():
 			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
 			$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
 			HX_data_node.rect_min_size.y = 70
-	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].conquered
+	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
 
 func _on_Send_pressed():
 	if game.lv < 35:

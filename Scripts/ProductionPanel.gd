@@ -24,7 +24,7 @@ func _on_HSlider_value_changed(value):
 	if output_type in ["mats", "mets"]:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(value * ratio), output_unit]
 	else:
-		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(value * ratio), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round(value * ratio)), output_unit]
 
 func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
@@ -36,10 +36,10 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	match bldg_type:
 		"GF":
 			ratio = 1 / 15.0
-			$Title.text = tr("GLASS_FACTORY")
+			$Title.text = tr("GF_NAME")
 		"SE":
 			ratio = 40.0
-			$Title.text = tr("STEAM_ENGINE")
+			$Title.text = tr("SE_NAME")
 		_:
 			ratio = 0.0
 	ratio *=  tile.bldg.path_3_value
@@ -70,15 +70,15 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	if tile.bldg.has("qty1"):
 		set_process(true)
 		var has_rsrc:bool = rsrc > 0
-		$Control.visible = has_rsrc
-		$NoRsrc.visible = not has_rsrc
+		$Control/HBox.visible = false
+		$NoRsrc.visible = false
 		$Control/Start.text = "%s (G)" % tr("STOP")
 		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
 	else:
 		set_process(false)
 		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
 		var has_rsrc:bool = rsrc > 0
-		$Control.visible = has_rsrc
+		$Control/HBox.visible = has_rsrc
 		$NoRsrc.text = tr("NO_%s" % input.to_upper())
 		$NoRsrc.visible = not has_rsrc
 		$Control/Start.text = "%s (G)" % tr("START")
@@ -135,7 +135,7 @@ func _process(delta):
 	if output_type in ["mats", "mets"]:
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made), output_unit]
 	else:
-		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made), output_unit]
+		amount_produced_txt.text = "%s %s" % [Helper.format_num(round(prod_i.qty_made)), output_unit]
 
 
 func _on_close_button_pressed():

@@ -16,6 +16,7 @@ func refresh():
 	$GridContainer/Panel2.visible = len(game.ship_data) >= 2
 	$GridContainer/Panel3.visible = len(game.ship_data) >= 3
 	$GridContainer/Panel4.visible = len(game.ship_data) >= 4
+	$Panel/UpgradeButton.visible = game.science_unlocked.UP1
 	$Drives.refresh()
 	$Upgrade._refresh()
 	if game.ships_travel_view != "-":
@@ -55,16 +56,13 @@ func _on_BackButton_pressed():
 	$Panel/UpgradeButton.visible = true
 
 func _on_UpgradeButton_pressed():
-	if game.science_unlocked.UP1:
-		$GridContainer.visible = false
-		$Drives.visible = false
-		$Upgrade.visible = true
-		$Panel/CheckBox.visible = false
-		$Panel/DriveButton.visible = false
-		$Panel/BackButton.visible = true
-		$Panel/UpgradeButton.visible = false
-	else:
-		game.popup(tr("UPGRADE_TECHNOLOGY_REQURED"), 1.5)
+	$GridContainer.visible = false
+	$Drives.visible = false
+	$Upgrade.visible = true
+	$Panel/CheckBox.visible = false
+	$Panel/DriveButton.visible = false
+	$Panel/BackButton.visible = true
+	$Panel/UpgradeButton.visible = false
 
 func _on_GoToShips_mouse_entered():
 	game.show_tooltip(tr("GO_TO_SHIPS"))
@@ -81,3 +79,6 @@ func _on_DriveButton_mouse_entered():
 
 func _on_BackButton_mouse_entered():
 	game.show_tooltip(tr("GO_BACK"))
+
+func _on_UpgradeButton_mouse_entered():
+	game.show_tooltip("UP1_SC")

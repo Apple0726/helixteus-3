@@ -306,7 +306,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.005 * min(5, cave_floor):
+				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor):
 					var HX = HX1_scene.instance()
 					var HX_node = HX.get_node("HX")
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
@@ -337,7 +337,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if not dont_gen_anything and not tower:
 					var rand:float = rng.randf()
 					var rand2:float = rng.randf()
-					var ch = 0.02 * pow(pow(2, cave_floor - 1) / 3.0, 0.4)
+					var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
 					if rand < ch:
 						var met_spawned:String = "lead"
 						for met in game.met_info:

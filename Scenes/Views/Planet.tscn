@@ -7,7 +7,7 @@
 [ext_resource path="res://icon.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Tiles/SoilSpritesheet.png" type="Texture" id=16]
 
-[sub_resource type="TileSet" id=1]
+[sub_resource type="TileSet" id=2]
 0/name = "SoilSpritesheet.png 0"
 0/texture = ExtResource( 16 )
 0/tex_offset = Vector2( 0, 0 )
@@ -32,7 +32,7 @@
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="Shader" id=2]
+[sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;
 
 float rand(vec2 coord) {
@@ -46,8 +46,8 @@ void fragment() {
 	COLOR = vec4(vec3(value), 1.0);
 }"
 
-[sub_resource type="ShaderMaterial" id=3]
-shader = SubResource( 2 )
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
 
 [node name="Planet" type="Node2D"]
 script = ExtResource( 3 )
@@ -70,7 +70,7 @@ cell_quadrant_size = 100
 format = 1
 
 [node name="Soil" type="TileMap" parent="."]
-tile_set = SubResource( 1 )
+tile_set = SubResource( 2 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 format = 1
@@ -84,8 +84,9 @@ format = 1
 
 [node name="icon" type="Sprite" parent="."]
 visible = false
-material = SubResource( 3 )
+material = SubResource( 4 )
 position = Vector2( 396, 400 )
 scale = Vector2( 12.375, 12.5 )
 texture = ExtResource( 12 )
+
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]

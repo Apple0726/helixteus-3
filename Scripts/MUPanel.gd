@@ -33,7 +33,7 @@ func _ready():
 		btn.connect("pressed", self, "_on_Upgrade_pressed", [MU])
 		btn.rect_min_size.x = 178
 		btn.expand_icon = true
-		btn.icon = load("res://Graphics/Icons/minerals.png")
+		btn.icon = Data.minerals_icon
 		btn.align = Button.ALIGN_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
@@ -66,7 +66,7 @@ func set_upg_text(MU:String, next_lv:int = 0):
 		"SHSR":
 			$VBoxContainer/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$VBoxContainer/SHSR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 0.025)
+			$VBoxContainer/CHR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 2.5)
 	if next_lv == 0:
 		get_node("VBoxContainer/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
 	else:
