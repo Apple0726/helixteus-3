@@ -43,6 +43,7 @@ func _on_Gigastructures_pressed():
 	if game.c_g_g == 0:
 		game.popup(tr("GS_ERROR"), 1.5)
 	else:
+		game.gigastructures_panel.g_i = game.galaxy_data[game.c_g]
 		game.toggle_panel(game.gigastructures_panel)
 
 

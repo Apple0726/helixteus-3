@@ -50,11 +50,6 @@ func update_info():
 		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
 		$Control/ProductionPerSec.text = "STORAGE"
 		Helper.put_rsrc($Control/Production, 32, {"minerals":Data.path_1.MS.value * surface * Helper.get_IR_mult("MS")})
-	elif bldg == "GH":
-		$Control/Costs.text = "%s (%s %s)" % [tr("COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
-		$Control/ProductionPerSec.text = ""
-		Helper.put_rsrc($Control/Production, 32, {})
-		costs.soil = 10 * surface
 	$Control/Convert.visible = not error
 	Helper.put_rsrc($Control/CostsHBox, 32, costs, true, true)
 	$Control.visible = true
@@ -64,11 +59,22 @@ func _on_GS_pressed(extra_arg_0):
 	update_info()
 
 func _on_Convert_pressed():
-	pass
-#	if game.check_enough(costs):
-#		game.deduct_resources(costs)
-#		game.toggle_panel(self)
-#		game.popup(tr("CONVERT_SUCCESS"), 2.0)
-#		game.switch_view("cluster")
-#	else:
-#		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+	if game.check_enough(costs):
+		game.deduct_resources(costs)
+		g_i.GS = bldg
+		g_i.surface = surface
+		if bldg == "ME":
+			game.autocollect.MS.minerals += Data.path_1.ME.value * surface
+		elif bldg == "PP":
+			game.autocollect.MS.energy += Data.path_1.PP.value * surface
+		elif bldg == "MS":
+			game.mineral_capacity += Data.path_1.MS.value * surface
+		elif bldg == "RL":
+			game.autocollect.MS.SP += Data.path_1.RL.value * surface
+		elif bldg == "TP":
+			game.show.dimensions = true
+		game.toggle_panel(self)
+		game.popup(tr("CONVERT_SUCCESS"), 2.0)
+		game.switch_view("cluster")
+	else:
+		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

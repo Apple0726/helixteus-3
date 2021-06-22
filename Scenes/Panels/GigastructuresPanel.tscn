@@ -1,8 +1,7 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Ships/Probe2.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
@@ -160,20 +159,10 @@ icon = ExtResource( 12 )
 align = 0
 expand_icon = true
 
-[node name="SpaceAgriculture" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="TriangulumProbe" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 176.0
 margin_right = 364.0
 margin_bottom = 216.0
-rect_min_size = Vector2( 0, 40 )
-text = "SA_SC"
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
-
-[node name="TriangulumProbe" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 220.0
-margin_right = 364.0
-margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 text = "TRIANGULUM_PROBE"
 icon = ExtResource( 4 )
@@ -262,6 +251,5 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= [ "PP" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GS_pressed" binds= [ "GH" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]

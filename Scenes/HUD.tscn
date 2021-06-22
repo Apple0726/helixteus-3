@@ -347,6 +347,7 @@ __meta__ = {
 }
 
 [node name="BookmarksList" type="PanelContainer" parent="Bookmarks"]
+margin_left = 6.0
 margin_right = 126.0
 margin_bottom = 124.0
 custom_styles/panel = SubResource( 6 )
@@ -357,7 +358,7 @@ __meta__ = {
 [node name="Planets" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 121.0
+margin_right = 115.0
 margin_bottom = 119.0
 __meta__ = {
 "_edit_use_anchors_": false

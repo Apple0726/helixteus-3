@@ -98,7 +98,7 @@ func update_XP():
 	while game.xp >= game.xp_to_lv:
 		game.lv += 1
 		game.xp -= game.xp_to_lv
-		game.xp_to_lv = round(game.xp_to_lv * 1.5)
+		game.xp_to_lv = round(game.xp_to_lv * 1.6)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
 		if game.lv == 30:
@@ -107,8 +107,8 @@ func update_XP():
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.lv == 50:
 			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
-		if game.lv == 75:
-			game.long_popup(tr("LEVEL_65_REACHED"), "%s 65" % tr("LEVEL"))
+		if game.lv == 60:
+			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.lv]
 	lv_progress.value = game.xp / float(game.xp_to_lv)
 
@@ -312,6 +312,10 @@ func refresh():
 		$Name/Name.text = game.cluster_data[game.c_c].name
 	else:
 		$Bookmarks/Bookmarked.visible = false
+		if game.c_v == "supercluster":
+			$Name/Name.text = game.supercluster_data[game.c_sc].name
+		elif game.c_v == "universe":
+			$Name/Name.text = game.universe_data[game.c_u].name
 
 func _on_Shop_pressed():
 	click_sound.play()
@@ -372,7 +376,18 @@ func _on_MineralUpgrades_mouse_entered():
 	game.show_tooltip(tr("MINERAL_UPGRADES") + " (U)")
 
 func _on_Texture_mouse_entered(extra_arg_0):
-	game.show_tooltip(tr(extra_arg_0))
+	var tooltip:String = tr(extra_arg_0)
+	if game.autocollect.has("rsrc"):
+		var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, game.infinite_research.MEE)
+		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE)
+		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE)
+		if extra_arg_0 == "MINERALS":
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.minerals * min_mult + game.autocollect.MS.minerals, 3)), tr("S_SECOND")])
+		elif extra_arg_0 == "ENERGY":
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.energy * energy_mult + game.autocollect.MS.energy, 3)), tr("S_SECOND")])
+		elif extra_arg_0 == "SP":
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.SP * SP_mult + game.autocollect.MS.SP, 3)), tr("S_SECOND")])
+	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():
 	on_button = false
@@ -730,3 +745,7 @@ func _on_Name_text_entered(new_text):
 		game.galaxy_data[game.c_g].name = new_text
 	elif game.c_v == "cluster":
 		game.cluster_data[game.c_c].name = new_text
+	elif game.c_v == "supercluster":
+		game.supercluster_data[game.c_sc].name = new_text
+	elif game.c_v == "universe":
+		game.universe_data[game.c_u].name = new_text

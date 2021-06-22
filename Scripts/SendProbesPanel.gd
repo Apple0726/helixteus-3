@@ -109,6 +109,8 @@ func _on_Send_pressed():
 					break
 		game.popup(tr("PROBE_SENT"), 1.5)
 		refresh()
+	else:
+		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func _on_HSlider_value_changed(value):
 	refresh_energy()

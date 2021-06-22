@@ -30,7 +30,7 @@ func refresh():
 		$Control.visible = false
 		$Control2.visible = true
 	else:
-		if game.galaxy_data[game.c_g].conquered:
+		if game.galaxy_data[game.c_g].has("conquered"):
 			$Control.visible = false
 			$Control2.visible = false
 			$Send.visible = false
@@ -48,7 +48,7 @@ func refresh():
 		base_travel_costs = 0
 		combined_strength = 0
 		for sys in game.system_data:
-			if not sys.conquered:
+			if not sys.has("conquered"):
 				strength_required += sys.diff
 				unconquered_sys += 1
 		for fighter in game.fighter_data:
@@ -64,7 +64,7 @@ func refresh():
 		sort_systems($Control/CheckBox2.pressed)
 		sys_num = 0
 		for system in sorted_systems:
-			if system.conquered:
+			if system.has("conquered"):
 				continue
 			if combined_strength2 < system.diff:
 				if sys_num == 0:
@@ -161,10 +161,11 @@ func _on_Send_pressed():
 		game.galaxy_data[game.c_g].erase("conquer_order")
 		var galaxy_conquered = true
 		for system in sorted_systems:
-			if not system.conquered:
+			if not system.has("conquered"):
 				galaxy_conquered = false
 				break
-		game.galaxy_data[game.c_g].conquered = galaxy_conquered
+		if galaxy_conquered:
+			game.galaxy_data[game.c_g].conquered = true
 		refresh()
 
 func _process(delta):
@@ -182,7 +183,7 @@ func _process(delta):
 			if sorted_systems.empty():
 				sort_systems(not game.galaxy_data[game.c_g].conquer_order)
 			for system in sorted_systems:
-				if system.conquered:
+				if system.has("conquered"):
 					continue
 				galaxy_conquered = false
 				if game.galaxy_data[game.c_g].combined_strength < system.diff:
@@ -190,7 +191,7 @@ func _process(delta):
 					fighters_rekt = true
 					breaker = 50
 					break
-				if not system.conquered:
+				if not system.has("conquered"):
 					game.galaxy_data[game.c_g].combined_strength -= system.diff
 					game.system_data[system.l_id].conquered = true
 					system.conquered = true

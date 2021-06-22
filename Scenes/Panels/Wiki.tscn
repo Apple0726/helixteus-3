@@ -118,37 +118,46 @@ toggle_mode = true
 text = "AURORA"
 expand_icon = true
 
-[node name="DarkMatter" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="LevelUnlocks" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 88.0
 margin_right = 364.0
 margin_bottom = 128.0
+rect_min_size = Vector2( 0, 40 )
+toggle_mode = true
+text = "LEVEL_UNLOCKS"
+expand_icon = true
+
+[node name="DarkMatter" type="Button" parent="ScrollContainer/VBoxContainer"]
+margin_top = 132.0
+margin_right = 364.0
+margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_MATTER"
 expand_icon = true
 
 [node name="B_strength" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 132.0
+margin_top = 176.0
 margin_right = 364.0
-margin_bottom = 172.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "B_STRENGTH"
 expand_icon = true
 
 [node name="FM" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 176.0
+margin_top = 220.0
 margin_right = 364.0
-margin_bottom = 216.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "FERROMAGNETIC_MATERIALS"
 expand_icon = true
 
 [node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 220.0
+margin_top = 264.0
 margin_right = 364.0
-margin_bottom = 260.0
+margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_ENERGY"
@@ -167,6 +176,7 @@ __meta__ = {
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/KeyboardShortcuts" to="." method="_on_KeyboardShortcuts_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Aurora" to="." method="_on_Aurora_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/LevelUnlocks" to="." method="_on_LevelUnlocks_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/DarkMatter" to="." method="_on_DarkMatter_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/B_strength" to="." method="_on_B_strength_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/FM" to="." method="_on_FM_pressed"]

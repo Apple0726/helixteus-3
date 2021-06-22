@@ -1,6 +1,7 @@
 extends "Panel.gd"
 
-var tile
+var obj:Dictionary
+var tile_num
 var tf:bool = false#whether this panel is opened by clicking a tile or a planet
 var atom_to_MM:bool = true#MM: material or metal
 var metal:String
@@ -76,7 +77,7 @@ func _on_stone_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"stone":0})
 	metal = "stone"
-	energy_cost = 100
+	energy_cost = 10
 	difficulty = 0.001
 	_on_Switch_pressed()
 	$Control/Switch.visible = false
@@ -212,13 +213,18 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 	$Control/Switch.visible = true
 
 func refresh():
-	tile = game.tile_data[game.c_t]
-	au_mult = Helper.get_au_mult(tile)
-	$Control3.visible = tile.bldg.has("qty") and reaction == tile.bldg.reaction
+	if tf:
+		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
+		au_mult = pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
+	else:
+		tile_num = 1
+		obj = game.tile_data[game.c_t]
+		au_mult = Helper.get_au_mult(obj)
+	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	refresh_icon()
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / tile.bldg.path_1_value / Helper.get_IR_mult("AMN"))
+	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult * tile_num))
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN"))
 	for reaction_name in reactions:
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
@@ -226,9 +232,9 @@ func refresh():
 				disabled = true
 				break
 		if reaction_name == "stone":
-			disabled = disabled and Helper.get_sum_of_dict(game.stone) == 0 and (not tile.bldg.has("qty") or not tile.bldg.reaction == reaction_name)
+			disabled = disabled and Helper.get_sum_of_dict(game.stone) == 0 and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		else:
-			disabled = disabled and game[reactions[reaction_name].MM][reaction_name] == 0 and (not tile.bldg.has("qty") or not tile.bldg.reaction == reaction_name)
+			disabled = disabled and game[reactions[reaction_name].MM][reaction_name] == 0 and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		$ScrollContainer/VBoxContainer.get_node(reaction_name).disabled = disabled
 	if reaction == "":
 		return
@@ -253,7 +259,7 @@ func refresh():
 		$Transform.visible = true
 		$Transform.text = "%s (G)" % tr("STOP")
 	else:
-		$Transform.visible = $Control/HSlider.max_value != 0 and not tile.bldg.has("qty")
+		$Transform.visible = $Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
 
 func reset_poses(_name:String, dict:Dictionary):
@@ -272,9 +278,9 @@ func reset_poses(_name:String, dict:Dictionary):
 	$Control2.visible = true
 	$Control2/ScrollContainer.rect_position = Vector2(480, 240)
 	$Control2/To.rect_position = Vector2(772, 240)
-	$Control3.visible = tile.bldg.has("qty") and tile.bldg.reaction == reaction
+	$Control3.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
 	$Control.visible = not $Control3.visible
-	if $Control3.visible and not tile.bldg.atom_to_MM and reaction != "stone":
+	if $Control3.visible and not obj.bldg.atom_to_MM and reaction != "stone":
 		_on_Switch_pressed(false)
 	atom_costs.clear()
 	for atom in dict.atoms:
@@ -305,34 +311,34 @@ func _on_HSlider_value_changed(value):
 	refresh()
 
 func _on_Transform_pressed():
-	if tile.bldg.has("qty"):
+	if obj.bldg.has("qty"):
 		set_process(false)
-		var reaction_info = get_reaction_info(tile)
+		var reaction_info = get_reaction_info(obj)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
 		var rsrc_to_add:Dictionary = atom_costs.duplicate(true)
-		if tile.bldg.atom_to_MM:
+		if obj.bldg.atom_to_MM:
 			for atom in rsrc_to_add:
-				rsrc_to_add[atom] = max(0, tile.bldg.qty - MM_value) * ratios[atom]
+				rsrc_to_add[atom] = max(0, obj.bldg.qty - MM_value) * ratios[atom]
 			rsrc_to_add[metal] = MM_value
 		else:
-			var sum = Helper.get_sum_of_dict(tile.bldg.AMN_stone)
+			var sum = Helper.get_sum_of_dict(obj.bldg.AMN_stone)
 			for atom in rsrc_to_add:
-				rsrc_to_add[atom] = MM_value * ratios[atom] * tile.bldg.AMN_stone[atom] / sum
+				rsrc_to_add[atom] = MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum
 			if metal == "stone":
 				rsrc_to_add[metal] = {}
 				for atom in rsrc_to_add:
 					if atom == "stone":
 						continue
-					rsrc_to_add[metal][atom] = max(0, tile.bldg.qty - MM_value) * tile.bldg.AMN_stone[atom] / sum
+					rsrc_to_add[metal][atom] = max(0, obj.bldg.qty - MM_value) * obj.bldg.AMN_stone[atom] / sum
 			else:
-				rsrc_to_add[metal] = max(0, tile.bldg.qty - MM_value)
-		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult * tile.bldg.qty)
+				rsrc_to_add[metal] = max(0, obj.bldg.qty - MM_value)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult * obj.bldg.qty)
 		game.add_resources(rsrc_to_add)
-		tile.bldg.erase("qty")
-		tile.bldg.erase("start_date")
-		tile.bldg.erase("reaction")
-		tile.bldg.erase("AMN_stone")
+		obj.bldg.erase("qty")
+		obj.bldg.erase("start_date")
+		obj.bldg.erase("reaction")
+		obj.bldg.erase("AMN_stone")
 		$Control.visible = true
 		$Control3.visible = false
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
@@ -352,11 +358,11 @@ func _on_Transform_pressed():
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
 		game.deduct_resources(rsrc_to_deduct)
-		tile.bldg.qty = rsrc
-		tile.bldg.AMN_stone = game.stone.duplicate(true)
-		tile.bldg.start_date = OS.get_system_time_msecs()
-		tile.bldg.reaction = reaction
-		tile.bldg.atom_to_MM = atom_to_MM
+		obj.bldg.qty = rsrc
+		obj.bldg.AMN_stone = game.stone.duplicate(true)
+		obj.bldg.start_date = OS.get_system_time_msecs()
+		obj.bldg.reaction = reaction
+		obj.bldg.atom_to_MM = atom_to_MM
 		set_process(true)
 		$Control.visible = false
 		$Control3.visible = true
@@ -366,40 +372,40 @@ func _on_Transform_pressed():
 
 func refresh_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
-		r.icon = Data.time_icon if tile.bldg.has("reaction") and r.name == tile.bldg.reaction else null
+		r.icon = Data.time_icon if obj.bldg.has("reaction") and r.name == obj.bldg.reaction else null
 
 func _process(delta):
-	if not tile or tile.empty():
+	if not obj or obj.empty():
 		_on_close_button_pressed()
 		set_process(false)
 		return
-	if not tile.bldg.has("start_date"):
+	if not obj.bldg.has("start_date"):
 		set_process(false)
 		return
-	var reaction_info = get_reaction_info(tile)
+	var reaction_info = get_reaction_info(obj)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
 	$Control3/TextureProgress.value = reaction_info.progress
 	var MM_dict = {}
 	var atom_dict:Dictionary = atom_costs.duplicate(true)
-	if tile.bldg.atom_to_MM:
+	if obj.bldg.atom_to_MM:
 		MM_dict[metal] = MM_value
 		for atom in atom_dict:
-			atom_dict[atom] = Helper.clever_round(max(0, tile.bldg.qty - MM_value) * ratios[atom])
+			atom_dict[atom] = Helper.clever_round(max(0, obj.bldg.qty - MM_value) * ratios[atom])
 	else:
-		MM_dict[metal] = max(0, tile.bldg.qty - MM_value)
+		MM_dict[metal] = max(0, obj.bldg.qty - MM_value)
 		if metal == "stone":
-			var sum = Helper.get_sum_of_dict(tile.bldg.AMN_stone)
+			var sum = Helper.get_sum_of_dict(obj.bldg.AMN_stone)
 			for atom in atom_costs:
 				if game.stone.has(atom):
-					atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom] * tile.bldg.AMN_stone[atom] / sum)
+					atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum)
 		else:
 			for atom in atom_dict:
 				atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom])
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (tile.bldg.qty - MM_value) * 1000 / tile.bldg.path_1_value / Helper.get_IR_mult("AMN")))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN")))
 
-func get_reaction_info(tile):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * difficulty) * tile.bldg.path_1_value * Helper.get_IR_mult("AMN"), 0, tile.bldg.qty)
-	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
+func get_reaction_info(obj):
+	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN"), 0, obj.bldg.qty)
+	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}

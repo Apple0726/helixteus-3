@@ -8,10 +8,12 @@ var reaction:String = ""
 var au_mult:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":200, "difficulty":0.01},
-								"He":{"Z":2, "energy_cost":1000, "difficulty":0.015},
-								"Ne":{"Z":10, "energy_cost":40000, "difficulty":2},
-								"Fe":{"Z":26, "energy_cost":10000, "difficulty":0.1},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":20, "difficulty":0.01},
+								"He":{"Z":2, "energy_cost":100, "difficulty":0.015},
+								"O":{"Z":8, "energy_cost":100, "difficulty":0.02},
+								"Ne":{"Z":10, "energy_cost":4000, "difficulty":2},
+								"Si":{"Z":14, "energy_cost":300, "difficulty":0.05},
+								"Fe":{"Z":26, "energy_cost":1000, "difficulty":0.1},
 								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":40},
 								"Pu":{"Z":94, "energy_cost":14000000000, "difficulty":8000},
 }
@@ -159,9 +161,9 @@ func _on_Transform_pressed():
 		tile.bldg.reaction = reaction
 		tile.bldg.difficulty = difficulty
 		tile.bldg.atom_to_p = atom_to_p
-		for rsrc2 in game.view.obj.rsrcs:
-			if rsrc2.id == game.c_t:
-				rsrc2.node.get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % reaction)
+		for i in len(game.view.obj.rsrcs):
+			if i == game.c_t:
+				game.view.obj.rsrcs[i].get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % reaction)
 				break
 		set_process(true)
 		$Control.visible = false

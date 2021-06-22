@@ -562,7 +562,6 @@ func load_game():
 		save_date = save_game.get_64()
 		bookmarks = save_game.get_var()
 		save_game.close()
-		bookmarks.system.clear()
 		auto_c_p_g = -1
 		if not autocollect.empty():
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
@@ -792,6 +791,7 @@ func new_game(tut:bool):
 				"particles":false,
 				"auroras":false,
 				"bookmarks":false,
+				"dimensions":false,
 	}
 	for mat in mats:
 		show[mat] = false
@@ -865,7 +865,7 @@ func new_game(tut:bool):
 				}
 
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
-	autocollect = {"rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
+	autocollect = {"MS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
 	bookmarks = {"planet":[], "system":[], "galaxy":[], "cluster":[]}
 	
@@ -1336,7 +1336,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			$UI.remove_child(HUD)
 			battle = battle_scene.instance()
 			add_child(battle)
-	if c_v in ["planet", "system", "galaxy", "cluster"]:
+	if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
 		HUD.refresh()
 	if not first_time:
 		fn_save_game(true)
@@ -1483,6 +1483,7 @@ func add_overlay():
 
 func remove_overlay():
 	if is_instance_valid(overlay) and $UI.is_a_parent_of(overlay):
+		$GrayscaleRect.visible = false
 		$UI.remove_child(overlay)
 		overlay.queue_free()
 
@@ -1513,7 +1514,7 @@ func add_dimension():
 
 func add_universe():
 	var view_str:String = tr("VIEW_DIMENSION")
-	if true:
+	if not show.dimensions:
 		view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
 	put_change_view_btn(view_str, "res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u].has("discovered"):
@@ -2268,16 +2269,17 @@ func get_max_star_prop(s_id:int, prop:String):
 	return max_star_prop
 
 func star_size_in_pixels(size:float):
-	 return max(24, size * 600.0 / STAR_SCALE_DIV)
+	 return 5.0 * size * 600.0 / STAR_SCALE_DIV
 
 func generate_planets(id:int):#local id
 	randomize()
-	var star_boundary = 0
-	var combined_star_mass = system_data[id].stars[0].mass
+	var first_star:Dictionary = system_data[id].stars[0]
+	var combined_star_mass = first_star.mass
+	var star_boundary = star_size_in_pixels(first_star.size / 2.0)
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
 	var star_size_in_km = max_star_size * e(6.957, 5)
-	var center_star_r_in_pixels:float = star_size_in_pixels(system_data[id].stars[0].size) / 2.0
+	var center_star_r_in_pixels:float = star_size_in_pixels(first_star.size) / 2.0
 	var circles:Array = [{"pos":Vector2.ZERO, "radius":center_star_r_in_pixels}]
 	for i in range(1, len(system_data[id].stars)):
 		var colliding = true
@@ -3010,7 +3012,7 @@ func on_change_view_click ():
 			if lv >= 70:
 				switch_view("universe")
 		"universe":
-			if false:
+			if show.dimensions:
 				switch_view("dimension")
 
 func add_items(item:String, num:int = 1):
@@ -3094,7 +3096,7 @@ func check_enough(costs):
 			return false
 		if mets.has(cost) and mets[cost] < costs[cost]:
 			return false
-		if atoms.has(cost) and atoms[cost] < atoms[cost]:
+		if atoms.has(cost) and atoms[cost] < costs[cost]:
 			return false
 		if cost == "stone" and Helper.get_sum_of_dict(stone) < costs.stone:
 			return false
@@ -3173,23 +3175,26 @@ onready var fps_text = $Tooltips/FPS
 func _process(delta):
 	if delta != 0:
 		fps_text.text = String(round(1 / delta)) + " FPS"
-		#$UI.move_child($UI/Settings, $UI.get_child_count())
-		if autocollect and not autocollect.rsrc_list.empty():
-			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
-			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
-			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
-			#print(autocollect.rsrc_list)
-			if auto_c_p_g == c_p_g and autocollect.rsrc_list.has(String(c_p_g)):
-				Helper.add_minerals((autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult)
-				energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
-				SP += (autocollect.rsrc.SP - autocollect.rsrc_list[String(c_p_g)].SP) * delta * SP_mult
-			else:
-				Helper.add_minerals(autocollect.rsrc.minerals * delta * min_mult)
-				energy += autocollect.rsrc.energy * delta * energy_mult
-				SP += autocollect.rsrc.SP * delta * SP_mult
-				if is_instance_valid(HUD):
-					HUD.update_minerals()
-					HUD.update_money_energy_SP()
+		if autocollect:
+			var min_to_add:float = autocollect.MS.minerals * delta
+			energy += autocollect.MS.energy * delta
+			SP += autocollect.MS.SP * delta
+			if not autocollect.rsrc_list.empty():
+				var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
+				var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
+				var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
+				if auto_c_p_g == c_p_g and autocollect.rsrc_list.has(String(c_p_g)):
+					min_to_add += (autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult
+					energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
+					SP += (autocollect.rsrc.SP - autocollect.rsrc_list[String(c_p_g)].SP) * delta * SP_mult
+				else:
+					min_to_add += autocollect.rsrc.minerals * delta * min_mult
+					energy += autocollect.rsrc.energy * delta * energy_mult
+					SP += autocollect.rsrc.SP * delta * SP_mult
+			Helper.add_minerals(min_to_add)
+			if is_instance_valid(HUD):
+				HUD.update_minerals()
+				HUD.update_money_energy_SP()
 			if tutorial and tutorial.tut_num == 24 and objective.has("current"):
 				if objective.current != SP:
 					HUD.refresh()
@@ -3275,8 +3280,8 @@ func _input(event):
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
-		if overlay:
-			overlay._on_CheckBox_pressed()
+		if is_instance_valid(overlay):
+			overlay.toggle_btn.pressed = not overlay.toggle_btn.pressed
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help"):
@@ -3759,7 +3764,7 @@ func game_fade(fn, args:Array = []):
 
 func get_4th_ship():
 	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "XP":0, "XP_to_lv":20, "name":"Ship 4", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]})
+	ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "name":"Ship 4", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 	Helper.add_ship_XP(3, 1000000)
 	Helper.add_weapon_XP(3, "bullet", 400)
 	Helper.add_weapon_XP(3, "laser", 400)

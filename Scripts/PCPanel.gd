@@ -16,6 +16,9 @@ func refresh():
 	elif probe_tier == 1:
 		$Label.text = tr("M_MPCC_NAME")
 		$ViewPlanet.visible = true
+	elif probe_tier == 2:
+		$Label.text = tr("TRIANGULUM_PROBE")
+		$ViewPlanet.visible = false
 	$TextureRect.texture = load("res://Graphics/Ships/Probe%s.png" % probe_tier)
 
 func e(n, e):
@@ -26,6 +29,8 @@ func _on_SpinBox_value_changed(value):
 		costs = {"money":e(2, 11), "nanocrystal":2700000}
 	elif probe_tier == 1:
 		costs = {"money":e(5, 18), "nanocrystal":e(4, 13)}
+	elif probe_tier == 2:
+		costs = {"money":e(1, 24), "mythril":e(1, 15)}
 	for cost in costs:
 		costs[cost] *= value
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs, true, true)

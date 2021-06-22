@@ -453,8 +453,9 @@ func destroy_bldg(id2:int, mass:bool = false):
 	bldgs[id2].queue_free()
 	remove_child(hboxes[id2])
 	hboxes[id2].queue_free()
-	remove_child(rsrcs[id2])
-	rsrcs[id2].queue_free()
+	if is_instance_valid(rsrcs[id2]):
+		remove_child(rsrcs[id2])
+		rsrcs[id2].queue_free()
 	var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 	var ac:float = tile.auto_collect if tile.has("auto_collect") else 0.0
 	if bldg == "MS":
@@ -817,7 +818,7 @@ func _input(event):
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":35}
-						game.ship_data.append({"lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
 						Helper.add_weapon_XP(1, "laser", 50)
@@ -829,7 +830,7 @@ func _input(event):
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":50}
-							game.ship_data.append({"lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+							game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 							Helper.add_ship_XP(2, 40000)
 							Helper.add_weapon_XP(2, "bullet", 140)
 							Helper.add_weapon_XP(2, "laser", 140)

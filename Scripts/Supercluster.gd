@@ -7,7 +7,9 @@ var dimensions:float = 100
 var btns = []
 
 func _ready():
-	for c_i in game.cluster_data:
+	btns.resize(len(game.cluster_data))
+	for i in len(game.cluster_data):
+		var c_i:Dictionary = game.cluster_data[i]
 		if not c_i.visible:
 			continue
 		var cluster_btn = TextureButton.new()
@@ -26,7 +28,7 @@ func _ready():
 		cluster_btn.rect_scale.y = radius
 		cluster.position = c_i["pos"]
 		dimensions = max(dimensions, c_i.pos.length())
-		btns.append(cluster_btn)
+		btns[i] = cluster_btn
 
 func on_cluster_over (id:int):
 	var c_i = game.cluster_data[id]
@@ -48,7 +50,10 @@ func _process(delta):
 	if modulate.a <= 0:
 		game.hide_tooltip()
 		for i in range(0, btns.size()):
-			var radius = pow(game.cluster_data[i]["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * view.scale_mult
+			var c_i:Dictionary = game.cluster_data[i]
+			if not c_i.visible:
+				continue
+			var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * view.scale_mult
 			btns[i].rect_scale.x = radius
 			btns[i].rect_scale.y = radius
 		change_alpha *= -1

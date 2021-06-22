@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -21,6 +21,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=3]
+content_margin_left = 15.0
+content_margin_top = 15.0
 
 [node name="VehiclePanel" type="Control"]
 margin_right = 1067.0
@@ -140,13 +144,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GridContainer" type="GridContainer" parent="HBox/VBox2/Probes"]
-margin_left = 26.0
-margin_top = 56.0
-margin_right = 506.0
-margin_bottom = 540.0
-columns = 4
+[node name="ScrollContainer" type="ScrollContainer" parent="HBox/VBox2/Probes"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 38.0
+custom_styles/bg = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="GridContainer" type="GridContainer" parent="HBox/VBox2/Probes/ScrollContainer"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 533.0
+margin_bottom = 502.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 5
+custom_constants/hseparation = 5
+columns = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]

@@ -45,3 +45,10 @@ func _on_FM_pressed():
 	for child in vbox.get_children():
 		if child != $ScrollContainer/VBoxContainer/FM:
 			child.pressed = false
+
+
+func _on_LevelUnlocks_pressed():
+	$Text.text = tr("LEVEL_UNLOCKS_DESC")
+	for child in vbox.get_children():
+		if child != $ScrollContainer/VBoxContainer/LevelUnlocks:
+			child.pressed = false

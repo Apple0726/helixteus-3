@@ -73,11 +73,11 @@ func _on_mouse_exited():
 
 
 func _on_Terraform_pressed():
-	if game.c_p_g in [2, game.second_ship_hints.spawned_at_p, game.third_ship_hints.ship_spawned_at_p, game.third_ship_hints.part_spawned_at_p]:
+	if game.c_p_g in [2, game.second_ship_hints.spawned_at_p, game.third_ship_hints.ship_spawned_at_p, game.third_ship_hints.part_spawned_at_p, game.fourth_ship_hints.op_grill_planet, game.fourth_ship_hints.boss_planet]:
 		game.popup(tr("NO_TF"), 1.5)
 	else:
 		game.terraform_panel.pressure = game.planet_data[game.c_p].pressure
-		var surface = 4 * PI * pow(game.planet_data[game.c_p].size / 2.0, 2)
+		var surface = 4 * PI * pow(game.planet_data[game.c_p].size / 8.0, 2)
 		game.terraform_panel.surface = surface
 		var lake_num:int = 0
 		for tile in game.tile_data:

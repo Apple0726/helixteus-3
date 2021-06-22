@@ -1,8 +1,9 @@
 extends "Panel.gd"
 
+const BASE_PW:float = 1.3
 var ids:Array = []
 var planet:Dictionary#Only for terraformed planets
-var bldg:String#You can mass-upgrade only one type of building
+var bldg:String = ""#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
@@ -64,7 +65,7 @@ func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
 	var lv_to:int = next_lv.value
 	var base_costs = Data.costs[tile_bldg].duplicate(true)
 	var base_metal_costs = Data[path_str][tile_bldg].metal_costs.duplicate(true) if Data[path_str][tile_bldg].has("metal_costs") else {}
-	var base_pw:float = Data[path_str][tile_bldg].cost_pw if Data[path_str][tile_bldg].has("cost_pw") else 1.25
+	var base_pw:float = Data[path_str][tile_bldg].cost_pw if Data[path_str][tile_bldg].has("cost_pw") else BASE_PW
 	if Data[path_str][tile_bldg].has("cost_mult"):
 		var mult:float = Data[path_str][tile_bldg].cost_mult
 		base_costs.money *= mult
@@ -104,15 +105,14 @@ func update():
 	var same_lv = true
 	var first_tile
 	var first_tile_bldg_info
-	var lv_to = next_lv.value
 	var all_tiles_constructing = true
 	var num:int = 1
 	if planet.empty():
 		first_tile = game.tile_data[ids[0]].bldg
 		bldg = first_tile.name
 		if Data[path_str][bldg].has("cap"):
-			next_lv.max_value = Data[path_str][bldg].cap
 			next_lv.allow_greater = false
+			next_lv.max_value = Data[path_str][bldg].cap
 		else:
 			next_lv.allow_greater = true
 		first_tile_bldg_info = Data[path_str][bldg]
@@ -167,17 +167,17 @@ func update():
 		return
 	next.text = ""
 	if bldg == "SP" and path_selected == 1:
-		new_base_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
+		new_base_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), next_lv.value, first_tile_bldg_info.pw)
 		new_value = new_base_value * first_tile.IR_mult
 	elif bldg == "AE" and path_selected == 1:
-		new_base_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv_to, first_tile_bldg_info.pw)
+		new_base_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), next_lv.value, first_tile_bldg_info.pw)
 		new_value = new_base_value
 	else:
 		if first_tile_bldg_info.has("pw"):
-			new_base_value = bldg_value(first_tile_bldg_info.value, lv_to, first_tile_bldg_info.pw)
+			new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
 			new_value = new_base_value * first_tile.IR_mult
 		elif first_tile_bldg_info.has("step"):
-			new_base_value = first_tile_bldg_info.value + (lv_to - 1) * first_tile_bldg_info.step
+			new_base_value = first_tile_bldg_info.value + (next_lv.value - 1) * first_tile_bldg_info.step
 			new_value = new_base_value
 	if first_tile_bldg_info.is_value_integer:
 		new_base_value = round(new_base_value)
@@ -186,7 +186,6 @@ func update():
 		new_base_value = Helper.clever_round(new_base_value, 3)
 		new_value = Helper.clever_round(new_value, 3)
 	if not planet.empty():
-		new_base_value *= num
 		new_value *= num
 	if bldg == "CBD" and path_selected == 3:
 		game.add_text_icons(next, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(new_value)}), rsrc_icon, 20)
@@ -201,6 +200,9 @@ func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1), 3)
 
 func _on_Path1_pressed():
+	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
+		game.popup(tr("MAX_LV_REACHED"), 1.5)
+		return
 	path_selected = 1
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
@@ -208,6 +210,9 @@ func _on_Path1_pressed():
 	update()
 
 func _on_Path2_pressed():
+	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
+		game.popup(tr("MAX_LV_REACHED"), 1.5)
+		return
 	path_selected = 2
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
@@ -215,6 +220,9 @@ func _on_Path2_pressed():
 	update()
 
 func _on_Path3_pressed():
+	if bldg != "" and len(ids) == 1 and Data.path_3[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_3 == Data.path_3[bldg].cap:
+		game.popup(tr("MAX_LV_REACHED"), 1.5)
+		return
 	path_selected = 3
 	path_str = "path_%s" % [path_selected]
 	next_lv.min_value = get_min_lv() + 1
@@ -254,7 +262,7 @@ func _on_Upgrade_pressed():
 						base_costs.time *= Data[path_str][bldg].cost_mult
 					if tile.has("cost_div"):
 						base_costs.time /= tile.cost_div
-					var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else 1.25
+					var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
 					cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value))
 				if auto_speedup:
 					cost_time = 1
@@ -295,6 +303,8 @@ func _on_Upgrade_pressed():
 		else:
 			if planet.bldg.name == "MS":
 				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+			elif planet.bldg.name == "RL":
+				game.autocollect.rsrc.SP += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":

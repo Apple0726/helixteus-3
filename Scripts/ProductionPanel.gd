@@ -22,7 +22,7 @@ func _on_HSlider_value_changed(value):
 	else:
 		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num(value), input_unit]
 	if output_type in ["mats", "mets"]:
-		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(value * ratio), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(Helper.clever_round(value * ratio)), output_unit]
 	else:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round(value * ratio)), output_unit]
 
@@ -133,7 +133,7 @@ func _process(delta):
 	else:
 		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
 	if output_type in ["mats", "mets"]:
-		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made), output_unit]
+		amount_produced_txt.text = "%s %s" % [Helper.format_num(Helper.clever_round(prod_i.qty_made)), output_unit]
 	else:
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(round(prod_i.qty_made)), output_unit]
 

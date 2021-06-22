@@ -23,7 +23,7 @@ func _input(event):
 func refresh():
 	var hbox = $HBox/VBox1/Rovers/HBox
 	var hbox2 = $HBox/VBox1/GridContainer
-	var hbox3 = $HBox/VBox2/Probes/GridContainer
+	var hbox3 = $HBox/VBox2/Probes/ScrollContainer/GridContainer
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
 		rov.queue_free()
@@ -166,6 +166,8 @@ func on_probe_press(tier:int):
 		game.switch_view("supercluster", false, "set_to_probe_coords", [0])
 	elif tier == 1:
 		game.switch_view("universe")
+	elif tier == 2:
+		game.switch_view("dimension")
 
 func on_rover_exit():
 	rover_over_id = -1

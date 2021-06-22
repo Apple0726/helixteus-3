@@ -80,12 +80,14 @@ func _on_Terraform_pressed():
 		if tf_type in ["MM", "GH", "AE", "ME", "PP"]:
 			planet.bldg.path_2 = 1
 			planet.bldg.path_2_value = Data.path_2[tf_type].value
-		if tf_type in ["MM", "AE", "PP", "ME", "RL"]:
+		if tf_type in ["MM", "AE", "PP", "ME"]:
 			planet.bldg.collect_date = OS.get_system_time_msecs()
 			planet.bldg.stored = 0
-		if tf_type == "MS":
+		if tf_type == "RL":
+			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
+		elif tf_type == "MS":
 			game.mineral_capacity += Data.path_1.MS.value * surface
-		if tf_type == "MM" and not planet.has("depth"):
+		elif tf_type == "MM" and not planet.has("depth"):
 			planet.depth = 0
 		if Helper.has_IR(tf_type):
 			planet.bldg.IR_mult = Helper.get_IR_mult(planet.bldg.name)

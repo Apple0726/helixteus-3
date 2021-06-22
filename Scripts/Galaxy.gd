@@ -44,7 +44,7 @@ func _ready():
 			blue_line.default_color = Color(0.6, 0.4, 1.0, 1.0)
 			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
-		Helper.toggle_overlay(obj_btns, overlays)
+		Helper.toggle_overlay(obj_btns, overlays, true)
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
@@ -135,25 +135,15 @@ func collect_all():
 			progress.value += 1
 			continue
 		game.planet_data = game.open_obj("Systems", s_ids.global)
-		for star in game.system_data[s_ids.local].stars:
-			if star.has("MS"):
-				Helper.collect_from_star(star, items_collected)
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
 			if planet.empty():
 				continue
 			if p_ids.local >= len(game.planet_data):
 				continue
-			if planet.has("MS"):
-				if planet.MS == "M_MME":
-					Helper.update_MS_rsrc(planet)
-					var collect_data:Dictionary = Helper.add_minerals(planet.bldg.stored)
-					Helper.add_item_to_coll(items_collected, "minerals", collect_data.added)
-					planet.bldg.stored = collect_data.remainder
-					continue
-			elif planet.has("bldg"):
-				if planet.bldg.name in ["ME", "PP", "RL", "MM", "AE"]:
-					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, OS.get_system_time_msecs(), planet.tile_num)
+			if planet.has("tile_num"):
+				if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
+					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
 			if not planet.has("discovered"):
 				continue
 			game.tile_data = game.open_obj("Planets", p_ids.global)

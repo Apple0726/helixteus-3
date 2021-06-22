@@ -106,6 +106,7 @@ rect_min_size = Vector2( 450, 0 )
 size_flags_vertical = 3
 custom_styles/bg = SubResource( 2 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -117,7 +118,6 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -126,9 +126,9 @@ __meta__ = {
 
 [node name="HSlider" type="HSlider" parent="Control"]
 margin_left = 758.0
-margin_top = 468.0
+margin_top = 418.0
 margin_right = 998.0
-margin_bottom = 484.0
+margin_bottom = 434.0
 max_value = 1.0
 step = 0.01
 __meta__ = {
@@ -137,9 +137,9 @@ __meta__ = {
 
 [node name="LessEnergy" type="Label" parent="Control"]
 margin_left = 454.0
-margin_top = 462.0
+margin_top = 412.0
 margin_right = 722.0
-margin_bottom = 486.0
+margin_bottom = 436.0
 text = "ACCELERATE_CHARGING"
 align = 2
 valign = 1
@@ -149,9 +149,9 @@ __meta__ = {
 
 [node name="EnergyCost" type="Label" parent="Control"]
 margin_left = 802.0
-margin_top = 504.0
+margin_top = 454.0
 margin_right = 986.0
-margin_bottom = 528.0
+margin_bottom = 478.0
 text = "100"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -159,12 +159,23 @@ __meta__ = {
 
 [node name="ChargingTime" type="Label" parent="Control"]
 margin_left = 502.0
-margin_top = 416.0
+margin_top = 366.0
 margin_right = 722.0
-margin_bottom = 440.0
+margin_bottom = 390.0
 mouse_filter = 1
 text = "CHARGING_TIME"
 align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MMM" type="Label" parent="Control"]
+margin_left = 518.0
+margin_top = 492.0
+margin_right = 738.0
+margin_bottom = 516.0
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -182,9 +193,9 @@ __meta__ = {
 
 [node name="TimeCost" type="Label" parent="Control"]
 margin_left = 800.0
-margin_top = 416.0
+margin_top = 366.0
 margin_right = 984.0
-margin_bottom = 440.0
+margin_bottom = 390.0
 text = "30:00"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -192,9 +203,9 @@ __meta__ = {
 
 [node name="EnergyIcon" type="TextureRect" parent="Control"]
 margin_left = 756.0
-margin_top = 500.0
+margin_top = 450.0
 margin_right = 788.0
-margin_bottom = 532.0
+margin_bottom = 482.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -204,9 +215,9 @@ __meta__ = {
 
 [node name="TimeIcon" type="TextureRect" parent="Control"]
 margin_left = 756.0
-margin_top = 412.0
+margin_top = 362.0
 margin_right = 788.0
-margin_bottom = 444.0
+margin_bottom = 394.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6
@@ -216,9 +227,9 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Control"]
 margin_left = 478.0
-margin_top = 156.0
+margin_top = 146.0
 margin_right = 1046.0
-margin_bottom = 396.0
+margin_bottom = 354.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -289,3 +300,5 @@ nine_patch_stretch = true
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="StartCharging" to="." method="_on_StartCharging_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="mouse_entered" from="Control/MMM" to="." method="_on_MMM_mouse_entered"]
+[connection signal="mouse_exited" from="Control/MMM" to="." method="_on_MMM_mouse_exited"]

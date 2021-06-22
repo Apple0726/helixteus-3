@@ -1,12 +1,16 @@
 extends "Panel.gd"
 var editable:bool = false
 var hovered_over:String = ""
-onready var option_btn = $Panel/HBoxContainer/OptionButton
+onready var option_btn = $Panel/HBoxContainer2/OptionButton
+onready var toggle_btn = $Panel/HBoxContainer/CheckBox
+onready var colorblind_btn = $Panel/HBoxContainer/Colorblind
+var config = ConfigFile.new()
+var err = config.load("user://settings.cfg")
 
 func _ready():
 	set_polygon($Panel.rect_size, Vector2(0, 308))
 	$Panel/Done.text = "%s (Enter)" % [tr("DONE")]
-	$Panel/HBoxContainer/CheckBox.text = tr("TOGGLE") + " (F3)"
+	toggle_btn.text = tr("TOGGLE") + " (F3)"
 
 func refresh_overlay():
 	$Panel/HBoxContainer/HSlider.value = game.overlay_CS
@@ -31,16 +35,15 @@ func refresh_overlay():
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
-	$Panel/HBoxContainer/CheckBox.pressed = game.overlay_data[game.c_v].visible
+	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	if err == OK:
+		colorblind_btn.pressed = config.get_value("misc", "colorblind", false)
+		if colorblind_btn.pressed:
+			$Panel/TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
+		else:
+			$Panel/TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
-
-func _on_CheckBox_pressed():
-	game.overlay_data[game.c_v].visible = not game.overlay_data[game.c_v].visible
-	if game.overlay_data[game.c_v].visible:
-		send_overlay_info(game.overlay_data[game.c_v].overlay)
-	$Panel/HBoxContainer/CheckBox.pressed = game.overlay_data[game.c_v].visible
-	Helper.toggle_overlay(game.view.obj.obj_btns, game.view.obj.overlays)
 
 func _on_OptionButton_item_selected(index):
 	refresh_options(index)
@@ -298,3 +301,24 @@ func _on_Overlay_visibility_changed():
 		game.sub_panel = self
 	else:
 		game.sub_panel = null
+
+
+func _on_Colorblind_toggled(button_pressed):
+	game.get_node("GrayscaleRect").visible = $Panel/HBoxContainer/Colorblind.pressed and toggle_btn.pressed
+	if button_pressed:
+		$Panel/TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
+	else:
+		$Panel/TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+	if err == OK:
+		config.set_value("misc", "colorblind", button_pressed)
+		config.save("user://settings.cfg")
+	send_overlay_info(game.overlay_data[game.c_v].overlay)
+
+
+func _on_CheckBox_toggled(button_pressed):
+	game.get_node("GrayscaleRect").visible = colorblind_btn.pressed and button_pressed
+	game.overlay_data[game.c_v].visible = button_pressed
+	if game.overlay_data[game.c_v].visible:
+		send_overlay_info(game.overlay_data[game.c_v].overlay)
+	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	Helper.toggle_overlay(game.view.obj.obj_btns, game.view.obj.overlays, button_pressed)

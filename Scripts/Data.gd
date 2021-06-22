@@ -1,6 +1,6 @@
 extends Node
 
-var path_1 = {	"ME":{"value":0.36, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
+var path_1 = {	"ME":{"value":0.36, "pw":1.15, "cost_pw":1.35, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
@@ -240,9 +240,9 @@ var science_unlocks = {
 						"SE3":{"cost":500000, "parents":["SE2"]},
 						
 						#Mega mineral extractor
-						"MME1":{"cost":e(1.7, 10), "parents":["MAE"]},
-						"MME2":{"cost":e(6.0, 11), "parents":["MME1"]},
-						"MME3":{"cost":e(2.4, 13), "parents":["MME2"]},
+						"MME1":{"cost":e(1.7, 9), "parents":["MAE"]},
+						"MME2":{"cost":e(6.0, 10), "parents":["MME1"]},
+						"MME3":{"cost":e(2.4, 12), "parents":["MME2"]},
 						
 						#Planetkiller
 						"PK1":{"cost":e(5.25, 13), "parents":["MAE"]},
@@ -258,12 +258,12 @@ var science_unlocks = {
 						"TPCC":{"cost":e(1, 21), "parents":["GS"]},
 }
 
-var infinite_research_sciences = {	"MEE":{"cost":50, "pw":6.2, "value":1.2},
-									"EPE":{"cost":80, "pw":6.2, "value":1.2},
-									"RLE":{"cost":250, "pw":6.8, "value":1.2},
-									"MSE":{"cost":70, "pw":6.2, "value":1.2},
-									"MMS":{"cost":30, "pw":6.0, "value":1.2},
-									"PME":{"cost":100000, "pw":6.0, "value":1.2},
+var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2, "value":1.2},
+									"EPE":{"cost":400, "pw":6.2, "value":1.2},
+									"RLE":{"cost":1250, "pw":6.8, "value":1.2},
+									"MSE":{"cost":350, "pw":6.2, "value":1.2},
+									"MMS":{"cost":150, "pw":6.0, "value":1.2},
+									"PME":{"cost":10000000, "pw":6.0, "value":1.2},
 }
 
 var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},

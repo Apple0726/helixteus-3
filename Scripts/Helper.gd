@@ -308,13 +308,12 @@ func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Ar
 	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id, obj_info.l_id])
 	overlay.rect_position = Vector2(-300 / 2, -300 / 2)
 	overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
-	#overlay.rect_scale *= 2
 
-func toggle_overlay(obj_btns, overlays):
+func toggle_overlay(obj_btns, overlays, overlay_visible):
 	for obj_btn in obj_btns:
-		obj_btn.visible = not obj_btn.visible
+		obj_btn.visible = not overlay_visible
 	for overlay in overlays:
-		overlay.circle.visible = not overlay.circle.visible
+		overlay.circle.visible = overlay_visible
 
 func change_circle_size(value, overlays):
 	for overlay in overlays:
@@ -663,7 +662,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				var auto_rsrc:float = 0
 				if tile.has("auto_collect") and tile.bldg.name in ["ME", "PP", "SP"]:
 					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
-					if randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
+					if auto_rsrc < 5 and randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
 						auto_rsrc += 1
 					if game.auto_c_p_g != -1:
 						if tile.bldg.name == "ME":
@@ -962,7 +961,7 @@ func get_reaction_info(tile):
 func update_MS_rsrc(dict:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
 	var prod:float
-	if dict.has("bldg"):
+	if dict.has("tile_num"):
 		if dict.bldg.name == "AE":
 			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num
 		else:
@@ -1165,13 +1164,3 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
 	return tooltip
-
-func collect_from_star(star:Dictionary, items_collected:Dictionary):
-	if star.MS == "M_DS":
-		update_MS_rsrc(star)
-		add_item_to_coll(items_collected, "energy", star.bldg.stored)
-		star.bldg.stored = 0
-	elif star.MS == "M_MB":
-		update_MS_rsrc(star)
-		add_item_to_coll(items_collected, "SP", star.bldg.stored)
-		star.bldg.stored = 0

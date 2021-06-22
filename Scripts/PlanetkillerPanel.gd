@@ -76,7 +76,8 @@ func refresh_planet_info():
 	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-	var au_mult = pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
+	var au_mult = 1 + pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
+	$Control/MMM.text = "%s: %s" % [tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult))]
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult
 	for met in game.met_info:
@@ -172,3 +173,11 @@ func _process(delta):
 		$StartCharging.visible = true
 		$StartCharging.text = tr("FIRE")
 		rekt_planet = true
+
+
+func _on_MMM_mouse_entered():
+	game.show_tooltip(tr("MMM_DESC"))
+
+
+func _on_MMM_mouse_exited():
+	game.hide_tooltip()

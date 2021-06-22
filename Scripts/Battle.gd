@@ -65,17 +65,26 @@ func _ready():
 	randomize()
 	if game:
 		ship_data = game.ship_data
+		var p_i:Dictionary = game.planet_data[game.c_p]
 		if game.is_conquering_all:
 			HX_data = Helper.get_conquer_all_data().HX_data
 		else:
-			HX_data = game.planet_data[game.c_p].HX_data
-		$Star.texture = load("res://Graphics/Effects/spotlight_%s.png" % [game.c_s % 3 + 4])
-		$Star.modulate = Helper.get_star_modulate(game.system_data[game.c_s].stars[0].class)
-		$Star.position.x = range_lerp(game.planet_data[game.c_p].angle, 0, 2 * PI, 0, 1280)
-		$Star.position.y = 200 * cos(game.c_p * 10) + 300
-		$Star.scale *= 0.5 * game.system_data[game.c_s].stars[0].size / (game.planet_data[game.c_p].distance / 500)
-		if not game.planet_data[game.c_p].type in [11, 12]:
-			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % game.planet_data[game.c_p].type)
+			HX_data = p_i.HX_data
+		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2))
+		for star in game.system_data[game.c_s].stars:
+			var shift:float = 0
+			if star.pos != Vector2.ZERO:
+				shift = orbit_vector.dot(star.pos) / 2.0
+			var star_spr = Sprite.new()
+			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
+			star_spr.modulate = Helper.get_star_modulate(star.class)
+			star_spr.position.x = range_lerp(p_i.angle, 0, 2 * PI, 100, 1180) + shift
+			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
+			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
+			add_child(star_spr)
+			move_child(star_spr, 0)
+		if not p_i.type in [11, 12]:
+			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
 			$BG.texture = null
 		for i in int(min(10000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))):
@@ -93,7 +102,6 @@ func _ready():
 		if err == OK:
 			e_diff = config.get_value("game", "e_diff", 1)
 	else:
-		$Star.modulate = Helper.get_star_modulate("G2")
 		for i in 1000:
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
@@ -604,6 +612,8 @@ func _on_Timer_timeout():
 		wave += 1
 		send_HXs()
 		curr_sh = 0
+		while ship_data[curr_sh].HP <= 0:
+			curr_sh += 1
 		curr_en = wave * 4
 		stage = BattleStages.CHOOSING
 		$FightPanel.visible = true
@@ -639,6 +649,8 @@ func enemy_attack():
 	else:
 		if curr_en == min((wave + 1) * 4, len(HX_data)):
 			curr_sh = 0
+			while ship_data[curr_sh].HP <= 0:
+				curr_sh += 1
 			curr_en = wave * 4
 			stage = BattleStages.CHOOSING
 			$Timer.wait_time = 1.0

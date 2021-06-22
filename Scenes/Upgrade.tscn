@@ -391,18 +391,13 @@ __meta__ = {
 }
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="mouse_entered" from="Upgrades/HP" to="Stats" method="_on_Hp_mouse_entered"]
 [connection signal="pressed" from="Upgrades/HP/Up" to="Upgrades/HP" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/HP/Down" to="Upgrades/HP" method="_on_Down_pressed"]
-[connection signal="mouse_entered" from="Upgrades/atk" to="Stats" method="_on_Atk_mouse_entered"]
 [connection signal="pressed" from="Upgrades/atk/Up" to="Upgrades/atk" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/atk/Down" to="Upgrades/atk" method="_on_Down_pressed"]
-[connection signal="mouse_entered" from="Upgrades/def" to="Stats" method="_on_Def_mouse_entered"]
 [connection signal="pressed" from="Upgrades/def/Up" to="Upgrades/def" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/def/Down" to="Upgrades/def" method="_on_Down_pressed"]
-[connection signal="mouse_entered" from="Upgrades/acc" to="Stats" method="_on_Acc_mouse_entered"]
 [connection signal="pressed" from="Upgrades/acc/Up" to="Upgrades/acc" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/acc/Down" to="Upgrades/acc" method="_on_Down_pressed"]
-[connection signal="mouse_entered" from="Upgrades/eva" to="Stats" method="_on_Eva_mouse_entered"]
 [connection signal="pressed" from="Upgrades/eva/Up" to="Upgrades/eva" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/eva/Down" to="Upgrades/eva" method="_on_Down_pressed"]

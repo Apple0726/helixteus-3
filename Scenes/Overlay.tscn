@@ -2,16 +2,12 @@
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
+[ext_resource path="res://Resources/ColorblindOverlay.tres" type="Gradient" id=3]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=5]
 
-[sub_resource type="Gradient" id=1]
-offsets = PoolRealArray( 0, 0.202206, 0.404412, 1 )
-colors = PoolColorArray( 0, 0.765625, 1, 1, 0, 1, 0, 1, 0.968627, 1, 0, 1, 1, 0, 0, 1 )
-
-[sub_resource type="GradientTexture" id=2]
-gradient = SubResource( 1 )
-width = 500
+[sub_resource type="GradientTexture" id=4]
+gradient = ExtResource( 3 )
 
 [sub_resource type="ImageTexture" id=3]
 
@@ -22,8 +18,7 @@ mouse_filter = 2
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_use_anchors_": false,
-"_edit_vertical_guides_": [ 628.0 ]
+"_edit_use_anchors_": false
 }
 
 [node name="Panel" type="Panel" parent="."]
@@ -31,30 +26,30 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -396.0
-margin_top = -108.0
-margin_right = 372.0
+margin_left = -352.0
+margin_top = -136.0
+margin_right = 352.0
 margin_bottom = 4.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
-margin_left = 96.0
-margin_top = 56.0
-margin_right = 672.0
-margin_bottom = 72.0
-texture = SubResource( 2 )
+margin_left = 64.0
+margin_top = 84.0
+margin_right = 640.0
+margin_bottom = 100.0
+texture = SubResource( 4 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="LeftNum" type="Label" parent="Panel"]
-margin_left = 60.0
-margin_top = 76.0
-margin_right = 140.0
-margin_bottom = 104.0
+margin_left = 28.0
+margin_top = 104.0
+margin_right = 108.0
+margin_bottom = 132.0
 mouse_filter = 1
 custom_colors/font_color = Color( 1, 1, 0, 1 )
 text = "2"
@@ -65,10 +60,10 @@ __meta__ = {
 }
 
 [node name="RightNum" type="Label" parent="Panel"]
-margin_left = 632.0
-margin_top = 76.0
-margin_right = 712.0
-margin_bottom = 104.0
+margin_left = 600.0
+margin_top = 104.0
+margin_right = 680.0
+margin_bottom = 132.0
 mouse_filter = 1
 custom_colors/font_color = Color( 1, 1, 0, 1 )
 text = "30+"
@@ -79,36 +74,37 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
-margin_left = 44.0
-margin_top = 12.0
-margin_right = 716.0
-margin_bottom = 44.0
+margin_left = 32.0
+margin_top = 40.0
+margin_right = 672.0
+margin_bottom = 80.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OptionButton" type="OptionButton" parent="Panel/HBoxContainer"]
-margin_right = 207.0
-margin_bottom = 32.0
-text = "Number of planets"
-align = 1
+[node name="Colorblind" type="CheckBox" parent="Panel/HBoxContainer"]
+margin_right = 238.0
+margin_bottom = 40.0
+custom_constants/hseparation = 10
+text = "COLORBLIND_MODE"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CheckBox" type="CheckBox" parent="Panel/HBoxContainer"]
-margin_left = 227.0
-margin_right = 255.0
-margin_bottom = 32.0
+margin_left = 258.0
+margin_right = 286.0
+margin_bottom = 40.0
+custom_constants/hseparation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HSlider" type="HSlider" parent="Panel/HBoxContainer"]
-margin_left = 275.0
-margin_right = 672.0
-margin_bottom = 32.0
+margin_left = 306.0
+margin_right = 640.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 50, 0 )
 focus_mode = 0
 size_flags_horizontal = 3
@@ -123,12 +119,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel"]
+margin_top = 8.0
+margin_right = 704.0
+margin_bottom = 40.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="Panel/HBoxContainer2"]
+margin_left = 248.0
+margin_right = 455.0
+margin_bottom = 32.0
+text = "Number of planets"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="LeftNumEdit" type="SpinBox" parent="Panel"]
 visible = false
-margin_left = 60.0
-margin_top = 76.0
-margin_right = 136.0
-margin_bottom = 104.0
+margin_left = 28.0
+margin_top = 104.0
+margin_right = 104.0
+margin_bottom = 132.0
 focus_mode = 2
 custom_icons/updown = SubResource( 3 )
 step = 0.0
@@ -140,10 +155,10 @@ __meta__ = {
 
 [node name="RightNumEdit" type="SpinBox" parent="Panel"]
 visible = false
-margin_left = 628.0
-margin_top = 76.0
-margin_right = 704.0
-margin_bottom = 104.0
+margin_left = 596.0
+margin_top = 104.0
+margin_right = 672.0
+margin_bottom = 132.0
 focus_mode = 2
 custom_icons/updown = SubResource( 3 )
 step = 0.0
@@ -155,10 +170,10 @@ __meta__ = {
 
 [node name="Done" type="Button" parent="Panel"]
 visible = false
-margin_left = 296.0
-margin_top = 80.0
-margin_right = 472.0
-margin_bottom = 104.0
+margin_left = 264.0
+margin_top = 108.0
+margin_right = 440.0
+margin_bottom = 132.0
 
 [node name="CloseButton" parent="Panel" instance=ExtResource( 4 )]
 anchor_left = 1.0
@@ -169,10 +184,10 @@ margin_bottom = 32.0
 
 [node name="Reset" type="TextureButton" parent="Panel"]
 visible = false
-margin_left = 720.0
-margin_top = 80.0
-margin_right = 740.0
-margin_bottom = 100.0
+margin_left = 676.0
+margin_top = 108.0
+margin_right = 696.0
+margin_bottom = 128.0
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 4
@@ -185,11 +200,12 @@ __meta__ = {
 [connection signal="mouse_exited" from="Panel/LeftNum" to="." method="_on_num_mouse_exited"]
 [connection signal="mouse_entered" from="Panel/RightNum" to="." method="_on_num_mouse_entered" binds= [ "right" ]]
 [connection signal="mouse_exited" from="Panel/RightNum" to="." method="_on_num_mouse_exited"]
-[connection signal="item_selected" from="Panel/HBoxContainer/OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="pressed" from="Panel/HBoxContainer/CheckBox" to="." method="_on_CheckBox_pressed"]
+[connection signal="toggled" from="Panel/HBoxContainer/Colorblind" to="." method="_on_Colorblind_toggled"]
+[connection signal="toggled" from="Panel/HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="mouse_entered" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="item_selected" from="Panel/HBoxContainer2/OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Panel/Done" to="." method="_on_Done_pressed"]
 [connection signal="close_button_pressed" from="Panel/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Panel/Reset" to="." method="_on_Reset_mouse_entered"]
