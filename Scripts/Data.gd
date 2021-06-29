@@ -47,7 +47,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SP":{"money":4000, "time":90.0},
 				"AE":{"money":41500, "energy":15000, "time":180.0},
 				"AMN":{"money":580000, "energy":8200, "time":490.0},
-				"SPR":{"money":6500000, "energy":61300, "time":1400.0},
+				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
 				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
 				"TP":{"money":2000, "energy":400, "time":50.0},#Triangulum probe
@@ -245,8 +245,8 @@ var science_unlocks = {
 						"MME3":{"cost":e(2.4, 12), "parents":["MME2"]},
 						
 						#Planetkiller
-						"PK1":{"cost":e(5.25, 13), "parents":["MAE"]},
-						"PK2":{"cost":e(3.4, 15), "parents":["PK1"]},
+						"PK1":{"cost":e(5.25, 14), "parents":["MAE"]},
+						"PK2":{"cost":e(3.4, 16), "parents":["PK1"]},
 						
 						#Mega probe construction center
 						"MPCC":{"cost":e(2.9, 15), "parents":["MAE"]},

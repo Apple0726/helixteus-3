@@ -3,7 +3,7 @@ extends KinematicBody2D
 onready var game = self.get_parent()
 onready var ship:TextureButton = game.get_node("Ship")
 var obj
-var shapes = []
+#var shapes = []
 var shapes_data = []
 var drawing_shape = false#For annotation
 var annotate_icon:Sprite

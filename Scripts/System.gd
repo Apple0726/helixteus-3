@@ -162,7 +162,10 @@ func refresh_stars():
 		star.add_to_group("stars")
 		if star_info.has("MS"):
 			var MS = Sprite.new()
-			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
+			if star_info.MS == "M_MB":
+				MS.texture = load("res://Graphics/Megastructures/M_MB.png")
+			else:
+				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
 			MS.position = Vector2(300, 300)
 			if star_info.MS == "M_DS":
 				MS.scale *= 0.7
@@ -429,6 +432,11 @@ func on_planet_click (id:int, l_id:int):
 				game.AMN_panel.obj = p_i
 				game.AMN_panel.tile_num = p_i.tile_num
 				game.toggle_panel(game.AMN_panel)
+			elif p_i.bldg.name == "SPR":
+				game.SPR_panel.tf = true
+				game.SPR_panel.obj = p_i
+				game.SPR_panel.tile_num = p_i.tile_num
+				game.toggle_panel(game.SPR_panel)
 			else:
 				items_collected.clear()
 				if p_i.bldg.name in ["ME", "PP", "MM", "AE"]:
@@ -509,7 +517,9 @@ func on_star_over (id:int):
 		var num_stages = 4
 		if star.MS == "M_PK":
 			num_stages = 2
-		var stage:String = "%s (%s)" % [tr("%s_NAME" % star.MS), tr("STAGE_X_X") % [star.MS_lv, num_stages]]
+		var stage:String = tr("%s_NAME" % star.MS)
+		if star.MS != "M_MB":
+			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, num_stages]]
 		Helper.add_label(stage)
 		if star.MS == "M_DS":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)

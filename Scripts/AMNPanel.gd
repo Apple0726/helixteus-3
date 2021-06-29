@@ -101,8 +101,8 @@ func _on_iron_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"iron":0})
 	metal = "iron"
-	energy_cost = 300
-	difficulty = 0.2
+	energy_cost = 30
+	difficulty = 0.05
 	refresh()
 	$Control/Switch.visible = true
 
@@ -124,7 +124,7 @@ func _on_aluminium_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
 	metal = "aluminium"
 	energy_cost = 50
-	difficulty = 0.1
+	difficulty = 0.07
 	refresh()
 	$Control/Switch.visible = true
 
@@ -135,8 +135,8 @@ func _on_amethyst_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
 	metal = "amethyst"
-	energy_cost = 1500
-	difficulty = 2.0
+	energy_cost = 100
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -147,8 +147,8 @@ func _on_emerald_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"emerald":0})
 	metal = "emerald"
-	energy_cost = 1500
-	difficulty = 2.0
+	energy_cost = 100
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -159,8 +159,8 @@ func _on_quartz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"quartz":0})
 	metal = "quartz"
-	energy_cost = 1600
-	difficulty = 2.0
+	energy_cost = 110
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -171,8 +171,8 @@ func _on_topaz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"topaz":0})
 	metal = "topaz"
-	energy_cost = 1500
-	difficulty = 2.0
+	energy_cost = 110
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -183,8 +183,8 @@ func _on_ruby_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"ruby":0})
 	metal = "ruby"
-	energy_cost = 1600
-	difficulty = 2.0
+	energy_cost = 110
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -195,8 +195,8 @@ func _on_sapphire_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
 	metal = "sapphire"
-	energy_cost = 1700
-	difficulty = 2.0
+	energy_cost = 120
+	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 
@@ -207,19 +207,23 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"titanium":0})
 	metal = "titanium"
-	energy_cost = 2500
-	difficulty = 2.5
+	energy_cost = 250
+	difficulty = 0.3
 	refresh()
 	$Control/Switch.visible = true
 
 func refresh():
 	if tf:
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-		au_mult = pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
+		au_mult = 1 + pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
 	else:
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
 		au_mult = Helper.get_au_mult(obj)
+	if au_mult > 1:
+		$Control/EnergyCostText["custom_colors/font_color"] = Color.yellow
+	else:
+		$Control/EnergyCostText["custom_colors/font_color"] = Color.white
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	refresh_icon()
@@ -240,6 +244,7 @@ func refresh():
 		return
 	set_process($Control3.visible)
 	var max_value:float = 0.0
+	$Control/Max.visible = not atom_to_MM
 	if atom_to_MM:
 		for atom in ratios:
 			if ratios[atom] == 0:
@@ -253,7 +258,7 @@ func refresh():
 		else:
 			max_value = game[MM][metal]
 	$Control/HSlider.max_value = max_value
-	$Control/HSlider.step = int(max_value / 100)
+	#$Control/HSlider.step = int(max_value / 100)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
 		$Transform.visible = true
@@ -409,3 +414,21 @@ func _process(delta):
 func get_reaction_info(obj):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN"), 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
+
+
+func _on_Max_pressed():
+	if not atom_to_MM:
+		if reaction == "stone":
+			$Control/HSlider.value = min(game.energy * au_mult / energy_cost / tile_num, Helper.get_sum_of_dict(game.stone))
+		else:
+			$Control/HSlider.value = min(game.energy * au_mult / energy_cost / tile_num, game[reactions[reaction].MM][reaction])
+
+
+func _on_EnergyCostText_mouse_entered():
+	if au_mult > 1:
+		game.show_tooltip(tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
+
+
+func _on_EnergyCostText_mouse_exited():
+	if au_mult > 1:
+		game.hide_tooltip()

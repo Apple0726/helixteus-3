@@ -745,6 +745,11 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 			contents.hx_core2 %= 8
 			if contents.hx_core2 == 0:
 				contents.erase("hx_core2")
+			if contents.hx_core3 > 8:
+				contents.hx_core4 = int(contents.hx_core3 / 8.0)
+				contents.hx_core3 %= 8
+				if contents.hx_core3 == 0:
+					contents.erase("hx_core3")
 	if contents.has("hx_core") and contents.hx_core == 0:
 		contents.erase("hx_core")
 	for met in game.met_info:

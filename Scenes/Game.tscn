@@ -249,7 +249,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.19: 22 Jun 2021"
+text = "Alpha v0.20:"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false

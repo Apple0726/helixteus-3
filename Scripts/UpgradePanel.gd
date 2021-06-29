@@ -129,7 +129,7 @@ func update():
 	else:
 		first_tile = planet.bldg
 		bldg = first_tile.name
-		num = 1 if bldg in ["GH", "MM"] else planet.tile_num
+		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
 		calc_costs(planet.bldg.name, planet.bldg[path_str], 1.0, planet.tile_num)

@@ -106,6 +106,14 @@ func _on_StartCharging_pressed():
 		if game.c_v != "system":
 			return
 		game.popup(tr("PLANET_REKT") % target.name, 2.5)
+		var p_i:Dictionary = game.planet_data[star.p_id]
+		if p_i.has("MS") and p_i.MS == "M_MME":
+			game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
+		if p_i.has("tile_num"):
+			if p_i.bldg.name == "RL":
+				game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
+			elif p_i.bldg.name == "MS":
+				game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
 		var dir = Directory.new()
 		if dir.file_exists("user://Save1/Planets/%s.hx3" % target.id):
 			dir.remove("user://Save1/Planets/%s.hx3" % target.id)

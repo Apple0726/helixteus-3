@@ -291,8 +291,8 @@ func refresh():
 	else:
 		$Objectives.rect_position.y = 4
 	$Bookmarks.visible = game.show.bookmarks
-	system_b_btn.visible = game.galaxy_data[0].has("discovered")
-	galaxy_b_btn.visible = game.cluster_data[0].has("discovered")
+	system_b_btn.visible = game.c_g_g != 0 or game.galaxy_data[0].has("discovered")
+	galaxy_b_btn.visible = game.c_c_g != 0 or game.cluster_data[0].has("discovered")
 	cluster_b_btn.visible = game.supercluster_data[0].has("discovered")
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmark")
@@ -621,7 +621,7 @@ func _on_Bookmarked_pressed():
 	if game.c_v == "planet":
 		var p_i:Dictionary = game.planet_data[game.c_p]
 		if p_i.has("bookmark"):
-			game.bookmarks.planet.remove(p_i.bookmark)
+			game.bookmarks.planet[p_i.bookmark] = null
 			planet_grid.get_node("GridContainer").remove_child(planet_grid.get_node("GridContainer").get_child(p_i.bookmark))
 			p_i.erase("bookmark")
 		else:
@@ -637,13 +637,22 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c,
 				"c_c_g":game.c_c_g,
 				"c_sc":game.c_sc}
-			p_i.bookmark = len(game.bookmarks.planet)
-			game.bookmarks.planet.append(bookmark)
+			var ind:int = -1
+			for i in len(game.bookmarks.planet):
+				if not game.bookmarks.planet[i]:
+					ind = i
+					break
+			if ind == -1:
+				p_i.bookmark = len(game.bookmarks.planet)
+				game.bookmarks.planet.append(bookmark)
+			else:
+				p_i.bookmark = ind
+				game.bookmarks.planet[ind] = bookmark
 			add_p_b(bookmark)
 	elif game.c_v == "system":
 		var s_i:Dictionary = game.system_data[game.c_s]
 		if s_i.has("bookmark"):
-			game.bookmarks.system.remove(s_i.bookmark)
+			game.bookmarks.system[s_i.bookmark] = null
 			system_grid.get_node("GridContainer").remove_child(system_grid.get_node("GridContainer").get_child(s_i.bookmark))
 			s_i.erase("bookmark")
 		else:
@@ -661,13 +670,22 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c,
 				"c_c_g":game.c_c_g,
 				"c_sc":game.c_sc}
-			s_i.bookmark = len(game.bookmarks.system)
-			game.bookmarks.system.append(bookmark)
+			var ind:int = -1
+			for i in len(game.bookmarks.system):
+				if not game.bookmarks.system[i]:
+					ind = i
+					break
+			if ind == -1:
+				s_i.bookmark = len(game.bookmarks.system)
+				game.bookmarks.system.append(bookmark)
+			else:
+				s_i.bookmark = ind
+				game.bookmarks.system[ind] = bookmark
 			add_s_b(bookmark)
 	elif game.c_v == "galaxy":
 		var g_i:Dictionary = game.galaxy_data[game.c_g]
 		if g_i.has("bookmark"):
-			game.bookmarks.galaxy.remove(g_i.bookmark)
+			game.bookmarks.galaxy[g_i.bookmark] = null
 			galaxy_grid.get_node("GridContainer").remove_child(galaxy_grid.get_node("GridContainer").get_child(g_i.bookmark))
 			g_i.erase("bookmark")
 		else:
@@ -679,13 +697,22 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c,
 				"c_c_g":game.c_c_g,
 				"c_sc":game.c_sc}
-			g_i.bookmark = len(game.bookmarks.galaxy)
-			game.bookmarks.galaxy.append(bookmark)
+			var ind:int = -1
+			for i in len(game.bookmarks.galaxy):
+				if not game.bookmarks.galaxy[i]:
+					ind = i
+					break
+			if ind == -1:
+				g_i.bookmark = len(game.bookmarks.galaxy)
+				game.bookmarks.galaxy.append(bookmark)
+			else:
+				g_i.bookmark = ind
+				game.bookmarks.galaxy[ind] = bookmark
 			add_g_b(bookmark)
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.cluster_data[game.c_c]
 		if c_i.has("bookmark"):
-			game.bookmarks.cluster.remove(c_i.bookmark)
+			game.bookmarks.cluster[c_i.bookmark] = null
 			cluster_grid.get_node("GridContainer").remove_child(cluster_grid.get_node("GridContainer").get_child(c_i.bookmark))
 			c_i.erase("bookmark")
 		else:
@@ -694,8 +721,17 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c,
 				"c_c_g":game.c_c_g,
 				"c_sc":game.c_sc}
-			c_i.bookmark = len(game.bookmarks.cluster)
-			game.bookmarks.cluster.append(bookmark)
+			var ind:int = -1
+			for i in len(game.bookmarks.cluster):
+				if not game.bookmarks.cluster[i]:
+					ind = i
+					break
+			if ind == -1:
+				c_i.bookmark = len(game.bookmarks.cluster)
+				game.bookmarks.cluster.append(bookmark)
+			else:
+				c_i.bookmark = ind
+				game.bookmarks.cluster[ind] = bookmark
 			add_c_b(bookmark)
 
 

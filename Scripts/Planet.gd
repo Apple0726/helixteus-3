@@ -439,6 +439,7 @@ func click_tile(tile, tile_id:int):
 					game.AMN_panel.tf = false
 					game.toggle_panel(game.AMN_panel)
 				"SPR":
+					game.SPR_panel.tf = false
 					game.toggle_panel(game.SPR_panel)
 					if tile.bldg.has("reaction"):
 						game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)

@@ -59,7 +59,7 @@ func _on_Plant_pressed():
 		game.deduct_resources(craft_costs)
 		var curr_time = OS.get_system_time_msecs()
 		if fertilizer:
-			p_i.plant.plant_date -= game.craft_agriculture_info[seeds_to_plant].speed_up_time
+			p_i.plant.plant_date -= game.craft_agriculture_info.fertilizer.speed_up_time
 			if curr_time > p_i.plant.plant_date + p_i.plant.grow_time:
 				_on_close_button_pressed()
 				Helper.put_rsrc($HBoxContainer, 32, {})

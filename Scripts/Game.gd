@@ -293,7 +293,12 @@ var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "sp
 							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
 }
 
-var other_items_info = {"hx_core":{"XP":6}, "hx_core2":{"XP":50}, "hx_core3":{"XP":480}, "ship_locator":{}}
+var other_items_info = {
+	"hx_core":{"XP":6},
+	"hx_core2":{"XP":50},
+	"hx_core3":{"XP":480},
+	"hx_core4":{"XP":3200},
+	"ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
@@ -564,10 +569,13 @@ func load_game():
 		save_game.close()
 		auto_c_p_g = -1
 		if not autocollect.empty():
+			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
+			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
+			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
-			Helper.add_minerals(autocollect.rsrc.minerals * time_elapsed)
-			energy += autocollect.rsrc.energy * time_elapsed
-			SP += autocollect.rsrc.SP * time_elapsed
+			Helper.add_minerals((autocollect.rsrc.minerals * min_mult + autocollect.MS.minerals) * time_elapsed)
+			energy += (autocollect.rsrc.energy * energy_mult + autocollect.MS.energy) * time_elapsed
+			SP += (autocollect.rsrc.SP * SP_mult + autocollect.MS.SP) * time_elapsed
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -2674,10 +2682,11 @@ func generate_tiles(id:int):
 		erase_tile(12)
 		tile_data[12].diamond_tower = len(cave_data)
 		cave_data.append({"floor_size":40, "num_floors":25})
-	elif c_c_g != 0 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
+	elif c_c_g == 1 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		tile_data[random_tile].ruins = 1
+		fourth_ship_hints.ruins_spawned = true
 		long_popup(tr("UNIQUE_STRUCTURE_NOTICE"), tr("UNIQUE_STRUCTURE"))
 	elif hypergiant_system and id == 1:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
@@ -2817,7 +2826,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"P":0.02,
 									"U":0.02,
 									"Np":0.004,
-									"Pu":0.0003
+									"Pu":0.00003
 								}
 		elif depth == "mantle":
 			common_elements["O"] = rand_range(0.15, 0.19)
@@ -2833,7 +2842,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"H":0.1 * big_planet_factor,
 									"C":0.1 * big_planet_factor,
 									"Ti":0.05,
-									"Pu":0.05,
+									"Pu":0.005,
 									"He":0.03 * big_planet_factor,
 									"P":0.02,
 								}
@@ -2874,7 +2883,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 									"Ti":0.05,
 									"H":0.02,
 									"P":0.02,
-									"Pu":0.01
+									"Pu":0.001
 								}
 	var remaining = 1 - Helper.get_sum_of_dict(common_elements)
 	var uncommon_element_count = 0
@@ -3488,6 +3497,11 @@ func fn_save_game(autosave:bool):
 	elif c_v == "cluster":
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
+	elif c_v == "supercluster":
+		var save_sc = File.new()
+		save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+		save_sc.store_var(supercluster_data)
+		save_sc.close()
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 

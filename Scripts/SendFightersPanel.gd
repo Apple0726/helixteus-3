@@ -26,6 +26,7 @@ func refresh_energy():
 func refresh():
 	if game.galaxy_data[game.c_g].has("conquer_start_date"):
 		$Send.text = tr("DISBAND")
+		sort_systems(game.galaxy_data[game.c_g].conquer_order)
 		set_process(true)
 		$Control.visible = false
 		$Control2.visible = true
@@ -169,7 +170,7 @@ func _on_Send_pressed():
 		refresh()
 
 func _process(delta):
-	if not game.galaxy_data[game.c_g].has("conquer_start_date"):
+	if game.c_v != "galaxy" or not game.galaxy_data[game.c_g].has("conquer_start_date"):
 		set_process(false)
 		return
 	var curr_time = OS.get_system_time_msecs()
@@ -180,8 +181,6 @@ func _process(delta):
 	while breaker < 50:
 		breaker += 1
 		if not fighters_rekt and progress.value >= 100:
-			if sorted_systems.empty():
-				sort_systems(not game.galaxy_data[game.c_g].conquer_order)
 			for system in sorted_systems:
 				if system.has("conquered"):
 					continue
