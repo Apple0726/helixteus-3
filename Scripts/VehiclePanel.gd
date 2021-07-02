@@ -113,19 +113,8 @@ func _process(delta):
 					Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			elif probe.tier == 1:
-				var supercluster_data:Array
-				if game.c_v == "universe":
-					supercluster_data = game.supercluster_data
-					supercluster_data[probe.obj_to_discover].visible = true
-				else:
-					var save_sc = File.new()
-					save_sc.open("user://Save1/supercluster_data.hx3", File.READ_WRITE)
-					supercluster_data = save_sc.get_var()
-					supercluster_data[probe.obj_to_discover].visible = true
-					save_sc.seek(0)
-					save_sc.store_var(supercluster_data)
-					save_sc.close()
-				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+				game.supercluster_data[probe.obj_to_discover].visible = true
+				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
 			game.probe_data.remove(i)
 			refresh()
 
@@ -152,6 +141,8 @@ func on_probe_enter(tier:int):
 		game.show_tooltip(tr("CLICK_TO_VIEW_SC"))
 	elif tier == 1:
 		game.show_tooltip(tr("CLICK_TO_SEE_DISCOVERED_SC"))
+	elif tier == 2:
+		game.show_tooltip(tr("CLICK_TO_SEE_DISCOVERED_U"))
 
 func on_fighter_exit():
 	game.hide_tooltip()

@@ -12,6 +12,8 @@ var rsrcs:Array = []
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
 	for g_i in game.galaxy_data:
+		if g_i.empty():
+			continue
 		var galaxy_btn = TextureButton.new()
 		var galaxy = Sprite.new()
 		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
@@ -38,15 +40,12 @@ func _ready():
 			match g_i.GS:
 				"ME":
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i.l_id, radius)
-					prod = Data.path_1.ME.value * g_i.surface
 				"PP":
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i.l_id, radius)
-					prod = Data.path_1.PP.value * g_i.surface
 				"RL":
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius)
-					prod = Data.path_1.RL.value * g_i.surface
 			if rsrc:
-				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
+				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num), tr("S_SECOND")]
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 
@@ -129,6 +128,12 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
 				overlay.circle.modulate = gradient.interpolate(offset)
+		7:
+			for overlay in overlays:
+				if game.galaxy_data[overlay.id].has("GS"):
+					overlay.circle.modulate = gradient.interpolate(0)
+				else:
+					overlay.circle.modulate = gradient.interpolate(1)
 
 
 func _on_Galaxy_tree_exited():

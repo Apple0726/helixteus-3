@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -24,6 +24,22 @@ size = 25
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.137255, 0.137255, 0.137255, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.4, 0.501961, 1, 1 )
 
 [node name="Dimension" type="Control"]
 anchor_right = 1.0
@@ -218,4 +234,19 @@ texture_normal = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button" type="Button" parent="."]
+margin_left = 52.0
+margin_top = 688.0
+margin_right = 276.0
+margin_bottom = 724.0
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "SEND_PROBES"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="ExpandUpgs" to="." method="_on_ExpandUpgs_pressed"]

@@ -40,6 +40,7 @@ func refresh():
 		$Control.visible = true
 		$Control2.visible = false
 		$Send.text = tr("SEND")
+		$Send.visible = true
 		set_process(false)
 		var fighter_num:int = 0
 		var combined_strength2:float = 0

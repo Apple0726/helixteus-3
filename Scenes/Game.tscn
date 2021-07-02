@@ -326,6 +326,7 @@ __meta__ = {
 margin_right = 200.0
 margin_bottom = 70.0
 theme = ExtResource( 7 )
+window_title = "Veuillez confirmer…"
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 visible = false

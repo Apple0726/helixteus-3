@@ -1,6 +1,6 @@
 extends Control
 
-onready var game = get_parent()
+onready var game = get_node("/root/Game")
 onready var univs = game.universe_data
 onready var univ_scene = preload("res://Scenes/UniverseIcon.tscn")
 var tween:Tween
@@ -43,7 +43,21 @@ func on_univ_press(id:int):
 		tween.start()
 		tween.connect("tween_all_completed", self, "on_tween_complete")
 	var u_i = game.universe_data[id] #universe_info
-	$UnivInfo/Label.text = u_i["name"] + "\nSuperclusters: " + String(u_i["supercluster_num"]) + "\n\nFundamental properties\nVacuum permittivity constant ε\u2080 = " + Helper.e_notation(u_i["epsilon_zero"]) + " F·m\u207B\u00B9\nVacuum permeability constant μ\u2080 = " + Helper.e_notation(u_i["mu_zero"]) + " H·m\u207B\u00B9\nSpeed of light c = " + Helper.e_notation(pow(u_i["epsilon_zero"] * u_i["mu_zero"], -0.5)) + " m·s\u207B\u00B9\nPlanck constant h = " + Helper.e_notation(u_i["planck"]) + " J·s\nGravitational constant G = " + Helper.e_notation(u_i["gravitational"]) + " m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\nElementary charge e = " + Helper.e_notation(u_i["charge"]) + " C\nStrong force: " + String(u_i["strong_force"]) + "\nWeak force: " + String(u_i["weak_force"])+ "\n\nMultipliers\nDifficulty: " + String(u_i["difficulty"]) + "\nMultistar systems: " + String(u_i["multistar_systems"]) + "\nRare stars: " + String(u_i["rare_stars"]) + "\nDark energy: " + String(u_i["dark_energy"]) + "\nTime speed: " + String(u_i["time_speed"]) + "\nRadiation: " + String(u_i["radiation"]) + "\nAntimatter: " + String(u_i["antimatter"]) + "\nUniverse value: " + String(u_i["value"])
+	$UnivInfo/Label.text = "%s\n%s: %s\n\n%s\n" % [u_i.name, tr("SUPERCLUSTERS"), u_i.supercluster_num, tr("FUNDAMENTAL_PROPERTIES")]
+	$UnivInfo/Label.text += "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n" % [
+		tr("VPC_EPSILON"),
+		tr("VPC_MU"),
+		tr("SPEED_OF_LIGHT"),
+		tr("PLANCK_CTE"),
+		tr("GRAVITATIONAL_CTE"),
+		tr("ELEMENTARY_CHARGE"),
+		tr("STRONG_FORCE"),
+		tr("WEAK_FORCE")]
+	$UnivInfo/Label.text += "%s\n" % tr("MULTIPLIERS")
+	$UnivInfo/Label.text += "%s: %s\n%s: %s\n%s: %s" % [
+		tr("TIME_SPEED"),
+		tr("ANTIMATTER"),
+		tr("UNIVERSE_VALUE")]
 
 func on_univ_double_click(id:int):
 	game.c_u = id

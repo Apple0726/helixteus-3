@@ -49,12 +49,12 @@ func refresh():
 			type = "atoms"
 		"H":
 			$Control/TextureRect.texture = hydrogen_texture
-			speed = 30000
+			speed = 30
 			unit = "mol"
 			type = "atoms"
 		"He":
 			$Control/TextureRect.texture = helium_texture
-			speed = 100000
+			speed = 100
 			unit = "mol"
 			type = "atoms"
 		"electron":

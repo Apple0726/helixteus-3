@@ -50,7 +50,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
 				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
-				"TP":{"money":2000, "energy":400, "time":50.0},#Triangulum probe
+				"TP":{"money":e(2.5, 23), "energy":e(1, 24)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 }
@@ -93,7 +93,7 @@ var MS_output = {	"M_DS_0":e(1, 8),
 					"M_MME_1":127000,
 					"M_MME_2":e(4.0, 7),
 					"M_MME_3":e(1.5, 9),
-					"M_MB":e(1, 14),
+					"M_MB":e(1, 13),
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":1.9},
@@ -255,7 +255,7 @@ var science_unlocks = {
 						"GS":{"cost":e(1, 19), "parents":["MB"]},
 						
 						#Triangulum probe
-						"TPCC":{"cost":e(1, 21), "parents":["GS"]},
+						"TPCC":{"cost":e(1, 23), "parents":["GS"]},
 }
 
 var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2, "value":1.2},

@@ -270,9 +270,11 @@ func show_planet_info(id:int, l_id:int):
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
 		var num_stages = 3
-		if p_i.MS == "M_MPCC":
+		var stage:String = tr("%s_NAME" % p_i.MS)
+		if p_i.MS != "M_MPCC":
+			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, num_stages]]
+		else:
 			num_stages = 0
-		var stage:String = "%s (%s)" % [tr("%s_NAME" % p_i.MS), tr("STAGE_X_X") % [p_i.MS_lv, num_stages]]
 		Helper.add_label(stage)
 		if p_i.MS == "M_SE":
 			Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)

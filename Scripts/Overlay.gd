@@ -35,6 +35,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("DIFFICULTY"))
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
+			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
 	toggle_btn.pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
 		colorblind_btn.pressed = config.get_value("misc", "colorblind", false)
@@ -185,7 +186,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = true
 					$Panel/LeftNum.text = "%s" % [c_vl.left]
 					$Panel/RightNum.text = "%s" % [c_vl.right]
-				1, 2, 3:
+				1, 2, 3, 7:
 					editable = false
 					$Panel/LeftNum.text = tr("YES")
 					$Panel/RightNum.text = tr("NO")

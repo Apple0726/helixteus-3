@@ -205,7 +205,7 @@ var bookmarks:Dictionary
 var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
-						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}]},
+						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}, null]},
 }
 var collect_speed_lag_ratio:int = 1
 
@@ -919,8 +919,6 @@ func new_game(tut:bool):
 		u_i["weak_force"] = 1.0
 		u_i["dark_energy"] = 1.0
 		u_i["difficulty"] = 1.0
-		u_i["multistar_systems"] = 1.0
-		u_i["rare_stars"] = 1.0
 		u_i["time_speed"] = 1.0
 		u_i["antimatter"] = 1.0
 		u_i["value"] = 1.0
@@ -1227,6 +1225,10 @@ func set_planet_ids(l_id:int, g_id:int):
 func set_g_id(l_id:int, g_id:int):
 	c_g = l_id
 	c_g_g = g_id
+
+func delete_galaxy():
+	galaxy_data[c_g].clear()
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 #															V function to execute after removing objects but before adding new ones
 func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true):
 	hide_tooltip()
@@ -1709,7 +1711,7 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
-		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 1000.0, 0.1), 1))
+		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1))
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
@@ -3491,7 +3493,7 @@ func fn_save_game(autosave:bool):
 		Helper.save_obj("Systems", c_s_g, planet_data)
 		Helper.save_obj("Galaxies", c_g_g, system_data)
 	elif c_v == "galaxy":
-		if send_probes_panel.is_processing():
+		if send_probes_panel.is_processing() or send_fighters_panel.is_processing():
 			Helper.save_obj("Galaxies", c_g_g, system_data)
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	elif c_v == "cluster":

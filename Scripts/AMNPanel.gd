@@ -384,7 +384,7 @@ func _process(delta):
 		_on_close_button_pressed()
 		set_process(false)
 		return
-	if not obj.bldg.has("start_date"):
+	if not obj.bldg.has("start_date") or not visible:
 		set_process(false)
 		return
 	var reaction_info = get_reaction_info(obj)

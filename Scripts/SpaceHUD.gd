@@ -42,6 +42,8 @@ func _on_SendProbes_pressed():
 func _on_Gigastructures_pressed():
 	if game.c_g_g == 0:
 		game.popup(tr("GS_ERROR"), 1.5)
+	elif not game.galaxy_data[game.c_g].has("conquered"):
+		game.popup(tr("NO_GS"), 2.0)
 	else:
 		game.gigastructures_panel.g_i = game.galaxy_data[game.c_g]
 		game.toggle_panel(game.gigastructures_panel)

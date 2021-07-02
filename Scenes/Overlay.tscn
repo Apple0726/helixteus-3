@@ -6,10 +6,10 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=5]
 
-[sub_resource type="GradientTexture" id=4]
+[sub_resource type="GradientTexture" id=1]
 gradient = ExtResource( 3 )
 
-[sub_resource type="ImageTexture" id=3]
+[sub_resource type="ImageTexture" id=2]
 
 [node name="Overlay" type="Control"]
 anchor_right = 1.0
@@ -39,7 +39,7 @@ margin_left = 64.0
 margin_top = 84.0
 margin_right = 640.0
 margin_bottom = 100.0
-texture = SubResource( 4 )
+texture = SubResource( 1 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -145,7 +145,7 @@ margin_top = 104.0
 margin_right = 104.0
 margin_bottom = 132.0
 focus_mode = 2
-custom_icons/updown = SubResource( 3 )
+custom_icons/updown = SubResource( 2 )
 step = 0.0
 allow_greater = true
 align = 1
@@ -160,7 +160,7 @@ margin_top = 104.0
 margin_right = 672.0
 margin_bottom = 132.0
 focus_mode = 2
-custom_icons/updown = SubResource( 3 )
+custom_icons/updown = SubResource( 2 )
 step = 0.0
 allow_greater = true
 align = 1
