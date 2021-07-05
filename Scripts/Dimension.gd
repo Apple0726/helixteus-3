@@ -44,20 +44,33 @@ func on_univ_press(id:int):
 		tween.connect("tween_all_completed", self, "on_tween_complete")
 	var u_i = game.universe_data[id] #universe_info
 	$UnivInfo/Label.text = "%s\n%s: %s\n\n%s\n" % [u_i.name, tr("SUPERCLUSTERS"), u_i.supercluster_num, tr("FUNDAMENTAL_PROPERTIES")]
-	$UnivInfo/Label.text += "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n" % [
-		tr("VPC_EPSILON"),
-		tr("VPC_MU"),
+	$UnivInfo/Label.text += "%s: %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
 		tr("SPEED_OF_LIGHT"),
+		#Helper.e_notation(u_i.speed_of_light),
+		Helper.e_notation(300000000),
 		tr("PLANCK_CTE"),
+		Helper.e_notation(u_i.planck),
+		tr("BOLTZMANN_CTE"),
+		#Helper.e_notation(u_i.boltzmann),
+		Helper.e_notation(1),
 		tr("GRAVITATIONAL_CTE"),
+		Helper.e_notation(u_i.gravitational),
 		tr("ELEMENTARY_CHARGE"),
-		tr("STRONG_FORCE"),
-		tr("WEAK_FORCE")]
-	$UnivInfo/Label.text += "%s\n" % tr("MULTIPLIERS")
-	$UnivInfo/Label.text += "%s: %s\n%s: %s\n%s: %s" % [
+		Helper.e_notation(u_i.charge),
+		]
+	$UnivInfo/Label.text += "\n%s\n" % tr("MULTIPLIERS")
+	$UnivInfo/Label.text += "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+		tr("DARK_ENERGY"),
+		u_i.dark_energy,
+		tr("DIFFICULTY"),
+		u_i.difficulty,
 		tr("TIME_SPEED"),
+		u_i.time_speed,
 		tr("ANTIMATTER"),
-		tr("UNIVERSE_VALUE")]
+		u_i.antimatter,
+		tr("UNIVERSE_VALUE"),
+		u_i.value,
+		]
 
 func on_univ_double_click(id:int):
 	game.c_u = id
@@ -71,3 +84,7 @@ func _on_ExpandUpgs_pressed():
 func on_tween_complete():
 	$ExpandUpgs.visible = true
 	tween.disconnect("tween_all_completed", self, "on_tween_complete")
+
+
+func _on_SendProbes_pressed():
+	game.toggle_panel(game.send_probes_panel)

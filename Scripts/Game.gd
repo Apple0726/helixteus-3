@@ -910,13 +910,11 @@ func new_game(tut:bool):
 	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	for u_i in universe_data:
-		u_i["epsilon_zero"] = e(8.854, -12)#F/m
-		u_i["mu_zero"] = e(1.257, -6)#H/m
+		u_i["speed_of_light"] = e(3.0, 8)#m/s
 		u_i["planck"] = e(6.626, -34)#J.s
+		u_i["boltzmann"] = e(1.381, -23)#J/K
 		u_i["gravitational"] = e(6.674, -11)#m^3/kg/s^2
 		u_i["charge"] = e(1.602, -19)#C
-		u_i["strong_force"] = 1.0
-		u_i["weak_force"] = 1.0
 		u_i["dark_energy"] = 1.0
 		u_i["difficulty"] = 1.0
 		u_i["time_speed"] = 1.0
@@ -3395,7 +3393,7 @@ func _input(event):
 		cmd_node.caret_position = cmd_node.text.length()
 	
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", ""] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not is_instance_valid(upgrade_panel) and not is_instance_valid(overlay):
+	if not c_v in ["battle", "cave", "", "dimension"] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not is_instance_valid(upgrade_panel) and not is_instance_valid(overlay):
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]

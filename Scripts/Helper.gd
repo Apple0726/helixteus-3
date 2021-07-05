@@ -1068,6 +1068,8 @@ func on_path_exit():
 
 func clever_round (num:float, sd:int = 4):#sd: significant digits
 	var e = floor(log10(abs(num)))
+	if e < -4:
+		return e_notation(num, sd)
 	if sd < e + 1:
 		return round(num)
 	return stepify(num, pow(10, e - sd + 1))

@@ -5,6 +5,34 @@ var exploring_probe_num:int = 0
 var obj_to_discover:int = -1
 var dist_mult:float = 1
 
+var units:Dictionary = {
+	"speed_of_light":"c",
+	"planck":"h",
+	"boltzmann":"k",
+	"s_b":"\u03C3",
+	"gravitational":"G",
+	"charge":"e",
+	"dark_energy":"",
+	"difficulty":"",
+	"time_speed":"",
+	"antimatter":"",
+	"value":"",
+	}
+
+var point_distribution:Dictionary = {
+	"speed_of_light":0,
+	"planck":0,
+	"boltzmann":0,
+	"gravitational":0,
+	"charge":0,
+	"dark_energy":0,
+	"difficulty":0,
+	"time_speed":0,
+	"antimatter":0,
+	"value":0,
+	}
+
+
 func _ready():
 	set_process(false)
 	set_polygon($Background.rect_size)
@@ -38,8 +66,10 @@ func refresh():
 		if probe_num - exploring_probe_num <= 0:
 			$Label.text = tr("NO_PROBES")
 			$Control.visible = false
+			$Send.visible = false
 		else:
 			$Control.visible = true
+			$Send.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
 		refresh_energy()
 	elif game.c_v == "universe":
@@ -67,10 +97,19 @@ func refresh():
 		if probe_num - exploring_probe_num <= 0:
 			$Label.text = tr("NO_MEGA_PROBES")
 			$Control.visible = false
+			$Send.visible = false
 		else:
 			$Control.visible = true
+			$Send.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 			refresh_energy()
+	elif game.c_v == "dimension":
+		$Control.visible = false
+		$Send.visible = true
+		$TP.visible = true
+		for prop in $TP/VBox.get_children():
+			prop.get_node("Unit").text = units[prop.name]
+		$TP/Points.text = tr("YOU_HAVE_%s_POINTS_REMAINING") % game.lv
 
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
@@ -114,3 +153,45 @@ func _on_Send_pressed():
 
 func _on_HSlider_value_changed(value):
 	refresh_energy()
+
+func e(n, e):
+	return n * pow(10, e)
+
+func _on_TP_value_changed(value:float, prop:String):
+	var text_node:LineEdit = get_node("TP/VBox/%s/Label2" % prop)
+	if get_focus_owner() is HSlider:
+		text_node.text = String(value)
+	else:
+		value = float(text_node.text)
+		get_node("TP/VBox/%s/HSlider" % prop).value = value
+	if prop == "antimatter":
+		point_distribution.antimatter = value * -50
+	else:
+		if value >= 1:
+			point_distribution[prop] = (value - 1) * -50
+		else:
+			point_distribution[prop] = (1 / value - 1) * 50
+	var s_b:float = pow(float($TP/VBox/boltzmann/Label2.text), 4) / pow(float($TP/VBox/planck/Label2.text), 3) / pow(float($TP/VBox/speed_of_light/Label2.text), 2)
+	if s_b >= 1000:
+		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
+	else:
+		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
+	$TP/Points.text = tr("YOU_HAVE_%s_POINTS_REMAINING") % (game.lv + round(Helper.get_sum_of_dict(point_distribution)))
+
+
+func _on_Points_mouse_entered():
+	game.show_tooltip(tr("TP_POINTS_INFO"))
+
+func _on_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_Label_mouse_entered(extra_arg_0):
+	game.show_tooltip(tr(extra_arg_0))
+
+
+func _on_Label2_text_changed(new_text, prop:String):
+	var new_value:float = float(new_text)
+	if prop == "antimatter" and new_value >= 0 or new_value > 0:
+		_on_TP_value_changed(new_value, prop)
+		#get_node("TP/VBox/%s/HSlider" % prop).value = new_value
