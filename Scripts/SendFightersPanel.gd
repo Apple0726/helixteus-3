@@ -56,7 +56,7 @@ func refresh():
 		for fighter in game.fighter_data:
 			if fighter.c_g_g == game.c_g_g:
 				var file = File.new()
-				file.open("user://Save1/Systems/%s.hx3" % [fighter.c_s_g], File.READ)
+				file.open("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], File.READ)
 				var planets_in_depart_system = file.get_var()
 				combined_strength += fighter.strength
 				fighter_num += fighter.number

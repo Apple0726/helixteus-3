@@ -87,10 +87,10 @@ func _on_Convert_pressed():
 				continue
 			var dir = Directory.new()
 			for planet_ids in system.planets:
-				if dir.file_exists("user://Save1/Planets/%s.hx3" % planet_ids.global):
-					dir.remove("user://Save1/Planets/%s.hx3" % planet_ids.global)
-			if dir.file_exists("user://Save1/Systems/%s.hx3" % system.id):
-				dir.remove("user://Save1/Systems/%s.hx3" % system.id)
+				if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global]):
+					dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global])
+			if dir.file_exists("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
+				dir.remove("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
 		if bldg == "TP":
 			game.show.dimensions = true
@@ -99,6 +99,6 @@ func _on_Convert_pressed():
 		else:
 			game.switch_view("cluster")
 		var dir2 = Directory.new()
-		dir2.remove("user://Save1/Galaxies/%s.hx3" % game.c_g_g)
+		dir2.remove("user://Save%s/Univ%s/Galaxies/%s.hx3" % [game.c_sv, game.c_u, game.c_g_g])
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

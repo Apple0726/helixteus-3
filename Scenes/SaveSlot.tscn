@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Graphics/Icons/Annotator/cross.png" type="Texture" id=1]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+margin_right = 816.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_right = 200.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 40 )
+text = "Save 1"
+
+[node name="Created" type="Label" parent="."]
+margin_left = 204.0
+margin_top = 13.0
+margin_right = 490.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+
+[node name="Saved" type="Label" parent="."]
+margin_left = 494.0
+margin_top = 13.0
+margin_right = 780.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+
+[node name="Delete" type="TextureButton" parent="."]
+margin_left = 784.0
+margin_right = 816.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 32, 0 )
+texture_normal = ExtResource( 1 )
+expand = true
+stretch_mode = 5

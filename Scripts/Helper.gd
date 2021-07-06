@@ -322,7 +322,7 @@ func change_circle_size(value, overlays):
 
 func save_obj(type:String, id:int, arr:Array):
 	var save:File = File.new()
-	var file_path:String = "user://Save1/%s/%s.hx3" % [type, id]
+	var file_path:String = "user://Save%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	save.open(file_path, File.WRITE)
 	save.store_var(arr)
 	save.close()
@@ -878,7 +878,7 @@ func update_bldg_constr(tile):
 	if progress > 1:
 		if tile.bldg.is_constructing:
 			tile.bldg.is_constructing = false
-			game.xp += tile.bldg.XP
+			game.universe_data[game.c_u].xp += tile.bldg.XP
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
 			if tile.bldg.has("rover_id"):
@@ -1066,9 +1066,9 @@ func on_path_enter(path:String, obj:Dictionary):
 func on_path_exit():
 	game.hide_tooltip()
 
-func clever_round (num:float, sd:int = 4):#sd: significant digits
+func clever_round (num:float, sd:int = 4, st:bool = false):#sd: significant digits
 	var e = floor(log10(abs(num)))
-	if e < -4:
+	if e < -4 and st:
 		return e_notation(num, sd)
 	if sd < e + 1:
 		return round(num)

@@ -197,7 +197,7 @@ func show_M_DS_costs(star:Dictionary):
 	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
-	if game.lv >= 60:
+	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -209,7 +209,7 @@ func show_M_PK_costs(star:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_PK_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
-	if game.lv >= 60:
+	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -225,7 +225,7 @@ func show_M_SE_costs(p_i:Dictionary):
 			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0)
 		else:
 			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1))
-	if game.lv >= 60:
+	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -238,7 +238,7 @@ func show_M_MME_costs(p_i:Dictionary):
 		bldg_costs = Data.MS_costs["M_MME_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
 		for cost in bldg_costs:
 			bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2))
-		if game.lv >= 60:
+		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
 			bldg_costs.time = 1
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -250,7 +250,7 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
-	if game.lv >= 60:
+	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -503,7 +503,7 @@ func on_star_over (id:int):
 		bldg_costs = Data.MS_costs.M_MB.duplicate(true)
 		for cost in bldg_costs:
 			bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
-		if game.lv >= 60:
+		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
 			bldg_costs.time = 1
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
@@ -615,7 +615,7 @@ func _process(_delta):
 		if progress > 1:
 			if star.bldg.is_constructing:
 				star.bldg.is_constructing = false
-				game.xp += star.bldg.XP
+				game.universe_data[game.c_u].xp += star.bldg.XP
 				if star.MS == "M_DS":
 					game.autocollect.MS.energy += Helper.get_DS_output(star)
 				elif star.MS == "M_MB":
@@ -635,7 +635,7 @@ func _process(_delta):
 		if progress > 1:
 			if p_i.bldg.is_constructing:
 				p_i.bldg.is_constructing = false
-				game.xp += p_i.bldg.XP
+				game.universe_data[game.c_u].xp += p_i.bldg.XP
 				if p_i.has("MS"):
 					if p_i.MS == "M_MME":
 						game.autocollect.MS.minerals += Helper.get_MME_output(p_i)

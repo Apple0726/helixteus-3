@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=64 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -32,6 +32,7 @@
 [ext_resource path="res://Graphics/Buttons/NotBookmarked.png" type="Texture" id=30]
 [ext_resource path="res://Graphics/Clusters/0.png" type="Texture" id=31]
 [ext_resource path="res://Graphics/Buttons/Bookmarked.png" type="Texture" id=32]
+[ext_resource path="res://Graphics/Buttons/DimensionView.png" type="Texture" id=33]
 
 [sub_resource type="Animation" id=1]
 resource_name = "BookmarkAnim"
@@ -198,6 +199,12 @@ action = ","
 
 [sub_resource type="ShortCut" id=28]
 shortcut = SubResource( 27 )
+
+[sub_resource type="InputEventAction" id=29]
+action = "Z"
+
+[sub_resource type="ShortCut" id=30]
+shortcut = SubResource( 29 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -936,6 +943,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DimensionBtn" type="TextureButton" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 48.0
+margin_top = -48.0
+margin_right = 96.0
+texture_normal = ExtResource( 33 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchBtn" type="TextureButton" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -48.0
+margin_right = 48.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 30 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]
 [connection signal="mouse_exited" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_exited"]
 [connection signal="pressed" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_pressed"]
@@ -1015,3 +1048,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="Wiki" to="." method="_on_Wiki_mouse_entered"]
 [connection signal="mouse_exited" from="Wiki" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Wiki" to="." method="_on_Wiki_pressed"]
+[connection signal="mouse_entered" from="DimensionBtn" to="." method="_on_Dimension_mouse_entered"]
+[connection signal="mouse_exited" from="DimensionBtn" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="DimensionBtn" to="." method="_on_Dimension_pressed"]
+[connection signal="mouse_entered" from="SwitchBtn" to="." method="_on_SwitchBtn_mouse_entered"]
+[connection signal="mouse_exited" from="SwitchBtn" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="SwitchBtn" to="." method="_on_SwitchBtn_pressed"]

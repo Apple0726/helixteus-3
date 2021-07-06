@@ -20,9 +20,9 @@ func refresh():
 
 func _on_StarSystem_pressed():
 	click_sound.play()
-	if game.lv < 8:
+	if game.universe_data[game.c_u].lv < 8:
 		return
-	game.switch_view("system")
+	game.call_deferred("switch_view", "system")
 
 func _input(event):
 	refresh()
@@ -55,7 +55,7 @@ func _on_Construct_mouse_entered():
 func _on_StarSystem_mouse_entered():
 	on_button = true
 	var view_str:String = "%s (%s)" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action]
-	if game.lv < 8:
+	if game.universe_data[game.c_u].lv < 8:
 		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 8"]]
 	game.show_tooltip(view_str)
 

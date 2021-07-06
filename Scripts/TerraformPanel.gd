@@ -78,7 +78,7 @@ func _on_Terraform_pressed():
 		planet.bldg = {}
 		planet.bldg.name = tf_type
 		planet.bldg.is_constructing = false
-		game.xp += round(total_costs.money / 100.0)
+		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 		planet.bldg.path_1 = 1
 		planet.bldg.path_1_value = Data.path_1[tf_type].value
 		if tf_type in ["MM", "GH", "AE", "ME", "PP"]:
@@ -99,7 +99,7 @@ func _on_Terraform_pressed():
 			planet.bldg.IR_mult = 1
 		game.switch_view("system")
 		var dir = Directory.new()
-		dir.remove("user://Save1/Planets/%s.hx3" % [game.c_p_g])
+		dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])
 		game.popup(tr("TF_SUCCESS"), 2)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
 			game.objective.current += 1

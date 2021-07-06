@@ -87,6 +87,9 @@ margin_top = 96.0
 margin_right = 1016.0
 margin_bottom = 308.0
 autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Send" type="Button" parent="."]
 margin_left = 816.0
@@ -143,6 +146,7 @@ margin_bottom = 516.0
 [node name="TP" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

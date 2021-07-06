@@ -76,7 +76,7 @@ func _on_btn_pressed(btn_str:String):
 		elif bldg.item_name == "SY":
 			bldg.visible = game.science_unlocked.FG
 		elif bldg.item_name == "PCC":
-			bldg.visible = game.lv >= 50
+			bldg.visible = game.universe_data[game.c_u].lv >= 50
 		elif bldg.item_name == "GH":
 			bldg.visible = game.science_unlocked.EGH
 	$Tabs/Production.visible = game.show.stone

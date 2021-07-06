@@ -35,7 +35,7 @@ func _ready():
 			path2.visible = true
 		if game.tile_data[ids[0]].bldg.has("path_3"):
 			path3.visible = true
-		$UpgradePanel/AutoSpeedup.visible = game.lv >= 30
+		$UpgradePanel/AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
 		$UpgradePanel/AutoSpeedup.pressed = $UpgradePanel/AutoSpeedup.visible
 		if game.tile_data[ids[0]].bldg.has("path_1"):
 			_on_Path1_pressed()
@@ -315,7 +315,7 @@ func _on_Upgrade_pressed():
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
 			planet.bldg[path_str] = next_lv.value
 			planet.bldg[path_str + "_value"] = new_base_value
-			game.xp += round(cost_money / 100.0)
+			game.universe_data[game.c_u].xp += round(cost_money / 100.0)
 			game.view.obj.refresh_planets()
 		game.HUD.refresh()
 		game.remove_upgrade_panel()

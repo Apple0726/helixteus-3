@@ -27,6 +27,8 @@ onready var planet_b_btn = $Bookmarks/BookMarkButtons/Planets
 onready var system_b_btn = $Bookmarks/BookMarkButtons/Systems
 onready var galaxy_b_btn = $Bookmarks/BookMarkButtons/Galaxies
 onready var cluster_b_btn = $Bookmarks/BookMarkButtons/Clusters
+onready var dimension_btn = $DimensionBtn
+onready var switch_btn = $SwitchBtn
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
@@ -50,6 +52,13 @@ func _ready():
 		add_g_b(g_b)
 	for c_b in game.bookmarks.cluster:
 		add_c_b(c_b)
+	if OS.get_latin_keyboard_variant() == "QWERTZ":
+		switch_btn.shortcut.shortcut.action = "Y"
+	elif OS.get_latin_keyboard_variant() == "AZERTY":
+		switch_btn.shortcut.shortcut.action = "W"
+	else:
+		switch_btn.shortcut.shortcut.action = "Z"
+	dimension_btn.visible = len(game.universe_data) > 1
 	refresh()
 
 func add_p_b(p_b:Dictionary):
@@ -95,22 +104,22 @@ func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 
 func update_XP():
-	while game.xp >= game.xp_to_lv:
-		game.lv += 1
-		game.xp -= game.xp_to_lv
-		game.xp_to_lv = round(game.xp_to_lv * 1.6)
+	while game.universe_data[game.c_u].xp >= game.universe_data[game.c_u].xp_to_lv:
+		game.universe_data[game.c_u].lv += 1
+		game.universe_data[game.c_u].xp -= game.universe_data[game.c_u].xp_to_lv
+		game.universe_data[game.c_u].xp_to_lv = round(game.universe_data[game.c_u].xp_to_lv * 1.6)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
-		if game.lv == 30:
+		if game.universe_data[game.c_u].lv == 30:
 			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
-		if game.lv == 32:
+		if game.universe_data[game.c_u].lv == 32:
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
-		if game.lv == 50:
+		if game.universe_data[game.c_u].lv == 50:
 			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
-		if game.lv == 60:
+		if game.universe_data[game.c_u].lv == 60:
 			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
-	lv_txt.text = tr("LV") + " %s" % [game.lv]
-	lv_progress.value = game.xp / float(game.xp_to_lv)
+	lv_txt.text = tr("LV") + " %s" % [game.universe_data[game.c_u].lv]
+	lv_progress.value = game.universe_data[game.c_u].xp / float(game.universe_data[game.c_u].xp_to_lv)
 
 func update_minerals():
 	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
@@ -221,13 +230,13 @@ func refresh():
 			elif game.objective.id == 6:#Build 4 research labs
 				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":7, "current":0, "goal":4}
 			elif game.objective.id == 7:#Reach level 8
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.lv, "goal":8}
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.universe_data[game.c_u].lv, "goal":8}
 			elif game.objective.id == 8:#Conquer a planet
 				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":9, "current":0, "goal":1}
 			elif game.objective.id == 9:#Find wormhole
 				game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":10, "current":0, "goal":1}
 			elif game.objective.id == 10:#Reach level 18
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":18}
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":18}
 			elif game.objective.id == 11:
 				game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
 			elif game.objective.id == 12:
@@ -431,8 +440,7 @@ func on_slot_press(i:int):
 
 func _on_Label_mouse_entered():
 	on_button = true
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.lv, Helper.format_num(game.xp, 4), Helper.format_num(game.xp_to_lv, 4), tr("XP_HELP")])
-
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.universe_data[game.c_u].lv, Helper.format_num(game.universe_data[game.c_u].xp, 4), Helper.format_num(game.universe_data[game.c_u].xp_to_lv, 4), tr("XP_HELP")])
 
 func _on_Label_mouse_exited():
 	on_button = false
@@ -785,3 +793,57 @@ func _on_Name_text_entered(new_text):
 		game.supercluster_data[game.c_sc].name = new_text
 	elif game.c_v == "universe":
 		game.universe_data[game.c_u].name = new_text
+
+
+func _on_Dimension_pressed():
+	game.switch_view("dimension")
+
+
+func _on_Dimension_mouse_entered():
+	on_button = true
+	game.show_tooltip(tr("VIEW_DIMENSION"))
+
+
+func _on_SwitchBtn_mouse_entered():
+	var u_i:Dictionary = game.universe_data[game.c_u]
+	var view_str:String = ""
+	if game.c_v == "universe":
+		view_str = tr("VIEW_DIMENSION")
+		if not game.show.dimensions:
+			view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
+	elif game.c_v == "supercluster":
+		view_str = tr("VIEW_UNIVERSE")
+		if u_i.lv < 70:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 70"]]
+	elif game.c_v == "cluster":
+		view_str = tr("VIEW_SUPERCLUSTER")
+		if u_i.lv < 50:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 50"]]
+	elif game.c_v == "galaxy":
+		view_str = tr("VIEW_CLUSTER")
+		if u_i.lv < 35:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
+	elif game.c_v == "system":
+		view_str = tr("VIEW_GALAXY")
+		if u_i.lv < 18:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 18"]]
+	game.show_tooltip("%s (%s)" % [view_str, switch_btn.shortcut.shortcut.action])
+
+func _on_SwitchBtn_pressed():
+	var u_i:Dictionary = game.universe_data[game.c_u]
+	match game.c_v:
+		"system":
+			if u_i.lv >= 18:
+				game.switch_view("galaxy")
+		"galaxy":
+			if u_i.lv >= 35:
+				game.switch_view("cluster")
+		"cluster":
+			if u_i.lv >= 50:
+				game.switch_view("supercluster")
+		"supercluster":
+			if u_i.lv >= 70:
+				game.switch_view("universe")
+		"universe":
+			if game.show.dimensions:
+				game.switch_view("dimension")

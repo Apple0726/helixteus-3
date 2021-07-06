@@ -115,8 +115,8 @@ func _on_StartCharging_pressed():
 			elif p_i.bldg.name == "MS":
 				game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
 		var dir = Directory.new()
-		if dir.file_exists("user://Save1/Planets/%s.hx3" % target.id):
-			dir.remove("user://Save1/Planets/%s.hx3" % target.id)
+		if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
+			dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 		target.clear()
 		game.view.obj.refresh_planets()
 		game.add_resources(star.rsrc)

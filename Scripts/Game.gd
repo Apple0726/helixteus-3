@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = false
+const TEST:bool = true
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -68,6 +68,7 @@ var planet_details:Control
 var overlay:Control
 var annotator:Control
 var wiki:Control
+var load_panel:Panel
 onready var tooltip:Control = $Tooltips/Tooltip
 onready var adv_tooltip:Control = $Tooltips/AdvTooltip
 onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
@@ -110,9 +111,6 @@ var energy:float
 var SP:float
 #Dimension remnants
 var DRs:float
-var lv:int
-var xp:float
-var xp_to_lv:float
 
 #id of the universe/supercluster/etc. you're viewing the object in
 var c_u:int#c_u: current_universe
@@ -141,7 +139,7 @@ var atoms:Dictionary
 var particles:Dictionary
 
 #Display help when players see/do things for the first time. true: show help
-var help:Dictionary
+var help:Dictionary = {}
 
 var science_unlocked:Dictionary
 var infinite_research:Dictionary
@@ -208,6 +206,8 @@ var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}, null]},
 }
 var collect_speed_lag_ratio:int = 1
+var c_sv:int = -1#current_save
+var save_created:Dictionary
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -373,35 +373,29 @@ func _ready():
 		config.save("user://settings.cfg")
 	Data.reload()
 	var file = Directory.new()
-	if file.file_exists("user://Save1/main.hx3"):
-		$Title/Menu/VBoxContainer/LoadGame.disabled = false
+	file.open("user://")
+	file.list_dir_begin(true)
+	var next_dir:String = file.get_next()
+	while next_dir != "":
+		if next_dir.substr(0, 4) == "Save":
+			$Title/Menu/VBoxContainer/LoadGame.disabled = false
+			break
+		next_dir = file.get_next()
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
+	load_panel = load("res://Scenes/Panels/LoadPanel.tscn").instance()
+	load_panel.visible = false
+	$Panels/Control.add_child(load_panel)
 	if TEST:
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
 		new_game(false)
-		system_data[0].stars[0].MS = "M_PK"
-		system_data[0].stars[0].MS_lv = 1
-		system_data[0].stars[0].bldg = {}
-		system_data[0].stars[0].bldg.is_constructing = true
-		system_data[0].stars[0].bldg.construction_date = OS.get_system_time_msecs()
-		system_data[0].stars[0].bldg.construction_length = 1000
-		system_data[0].stars[0].bldg.XP = 0
-		planet_data[2].MS = "M_MPCC"
-		planet_data[2].MS_lv = 0
-		planet_data[2].bldg = {}
-		planet_data[2].bldg.is_constructing = true
-		planet_data[2].bldg.construction_date = OS.get_system_time_msecs()
-		planet_data[2].bldg.construction_length = 1000
-		planet_data[2].bldg.XP = 0
 		Helper.save_obj("Galaxies", 0, system_data)
-		lv = 70
+		universe_data[0].lv = 90
 		money = 100000
-		mats.soil = 50000
-		mats.glass = 1000000
-		mets.nanocrystal = e(1, 14)
+		probe_data.append({"tier":2})
+		show.dimensions = true
 		show.plant_button = true
 		show.mining = true
 		show.shop = true
@@ -448,7 +442,7 @@ func _ready():
 		items[4] = {"name":"fertilizer", "num":500}
 		pickaxe = {"name":"stick", "speed":3400, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200000.0, "atk":5000.0, "def":50000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 1", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 2", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}, {"lv":1, "HP":30, "total_HP":30, "atk":10, "def":10, "acc":10, "eva":10, "XP":0, "XP_to_lv":20, "name":"Ship 3", "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
+		ship_data = [{"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		add_panels()
 		$Autosave.start()
 	else:
@@ -485,27 +479,21 @@ func switch_music(src, pitch:float = 1.0):
 	remove_child(tween)
 	tween.queue_free()
 
-func load_game():
+func load_univ():
 	var save_sc = File.new()
-	if save_sc.file_exists("user://Save1/supercluster_data.hx3"):
-		save_sc.open("user://Save1/supercluster_data.hx3", File.READ)
+	if save_sc.file_exists("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u]):
+		save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.READ)
 		supercluster_data = save_sc.get_var()
 		save_sc.close()
 	var save_game = File.new()
-	if save_game.file_exists("user://Save1/main.hx3"):
-		save_game.open("user://Save1/main.hx3", File.READ)
-		c_v = save_game.get_var()
-		l_v = save_game.get_var()
+	if save_game.file_exists("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u]):
+		save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.READ)
 		money = save_game.get_float()
 		minerals = save_game.get_float()
 		mineral_capacity = save_game.get_float()
 		stone = save_game.get_var()
 		energy = save_game.get_float()
 		SP = save_game.get_float()
-		DRs = save_game.get_float()
-		xp = save_game.get_float()
-		xp_to_lv = save_game.get_float()
-		c_u = save_game.get_64()
 		c_sc = save_game.get_64()
 		c_c = save_game.get_64()
 		c_c_g = save_game.get_64()
@@ -516,7 +504,6 @@ func load_game():
 		c_p = save_game.get_64()
 		c_p_g = save_game.get_64()
 		c_t = save_game.get_64()
-		lv = save_game.get_64()
 		stack_size = save_game.get_64()
 		auto_replace = save_game.get_8()
 		pickaxe = save_game.get_var()
@@ -532,9 +519,7 @@ func load_game():
 		mets = save_game.get_var()
 		atoms = save_game.get_var()
 		particles = save_game.get_var()
-		help = save_game.get_var()
 		show = save_game.get_var()
-		universe_data = save_game.get_var()
 		cave_data = save_game.get_var()
 		items = save_game.get_var()
 		hotbar = save_game.get_var()
@@ -588,16 +573,16 @@ func load_game():
 				c_v = "system"
 			view.set_process(true)
 			var file = Directory.new()
-			if file.file_exists("user://Save1/Systems/%s.hx3" % [c_s_g]):
+			if file.file_exists("user://Save%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
 				planet_data = open_obj("Systems", c_s_g)
-			if file.file_exists("user://Save1/Galaxies/%s.hx3" % [c_g_g]):
+			if file.file_exists("user://Save%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
 				system_data = open_obj("Galaxies", c_g_g)
-			if file.file_exists("user://Save1/Clusters/%s.hx3" % [c_c_g]):
+			if file.file_exists("user://Save%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
 			else:
 				galaxy_data = Data.starting_galaxy_data.duplicate(true)
 				Helper.save_obj("Clusters", 0, galaxy_data)
-			if file.file_exists("user://Save1/Superclusters/%s.hx3" % [c_sc]):
+			if file.file_exists("user://Save%s/Univ%s/Superclusters/%s.hx3" % [c_sv, c_u, c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
 			if help.tutorial >= 26:
 				tutorial = load("res://Scenes/Tutorial.tscn").instance()
@@ -609,6 +594,19 @@ func load_game():
 	else:
 		popup("load error", 1.5)
 
+func load_game():
+	var save_info = File.new()
+	save_info.open("user://Save%s/save_info.hx3" % [c_sv], File.READ)
+	save_created = save_info.get_var()
+	save_info.get_var()#This does nothing but we need this to get the "help" variable
+	help = save_info.get_var()
+	c_u = save_info.get_var()
+	c_v = save_info.get_var()
+	l_v = save_info.get_var()
+	universe_data = save_info.get_var()
+	save_info.close()
+	load_univ()
+
 func remove_files(dir:Directory):
 	dir.list_dir_begin(true)
 	var file_name = dir.get_next()
@@ -616,27 +614,63 @@ func remove_files(dir:Directory):
 		dir.remove(file_name)
 		file_name = dir.get_next()
 
-func new_game(tut:bool):
+func new_game(tut:bool, univ:int = 0):
 	var file = File.new()
 	var dir = Directory.new()
-	if file.file_exists("user://Save1/supercluster_data.hx3"):
-		dir.remove("user://Save1/supercluster_data.hx3")
-	if dir.open("user://Save1/Planets") == OK:
-		remove_files(dir)
-	if dir.open("user://Save1/Systems") == OK:
-		remove_files(dir)
-	if dir.open("user://Save1/Galaxies") == OK:
-		remove_files(dir)
-	if dir.open("user://Save1/Clusters") == OK:
-		remove_files(dir)
-	if dir.open("user://Save1/Superclusters") == OK:
-		remove_files(dir)
-	dir.make_dir("user://Save1")
-	dir.make_dir("user://Save1/Planets")
-	dir.make_dir("user://Save1/Systems")
-	dir.make_dir("user://Save1/Galaxies")
-	dir.make_dir("user://Save1/Clusters")
-	dir.make_dir("user://Save1/Superclusters")
+	if univ == 0:
+		c_sv = 1
+		while dir.open("user://Save%s" % c_sv) == OK:
+			c_sv += 1
+		dir.make_dir("user://Save%s" % c_sv)
+		save_created = OS.get_datetime()
+		help = {
+				"tutorial":1 if tut else -1,
+				"close_btn1":true,
+				"close_btn2":true,
+				"mining":true,
+				"STM":true,
+				"battle":true,
+				"plant_something_here":true,
+				"boulder_desc":true,
+				"aurora_desc":true,
+				"cave_desc":true,
+				"crater_desc":true,
+				"autosave_light_desc":true,
+				"tile_shortcuts":true,
+				"inventory_shortcuts":true,
+				"hotbar_shortcuts":true,
+				"rover_shortcuts":true,
+				"mass_buy":true,
+				"rover_inventory_shortcuts":true,
+				"planet_details":true,
+				"mass_build":true,
+				"abandoned_ship":true,
+				"science_tree":true,
+				"sprint_mode":true,
+				"cave_controls":true,
+				"active_wormhole":true,
+				"inactive_wormhole":true,
+				"cave_diff_info":true,
+		}
+		universe_data = [{"id":0, "discovered":true, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
+		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
+		universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
+		universe_data[0].charge = 1.0#e(1.602, -19)#C
+		universe_data[0].dark_energy = 1.0
+		universe_data[0].difficulty = 1.0
+		universe_data[0].time_speed = 1.0
+		universe_data[0].antimatter = 0.0
+		universe_data[0].value = 1.0
+	else:
+		universe_data[univ].discovered = true
+	dir.make_dir("user://Save%s/Univ%s" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Planets" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Systems" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Galaxies" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Clusters" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Superclusters" % [c_sv, univ])
 	l_v = ""
 
 	#Player resources
@@ -648,12 +682,9 @@ func new_game(tut:bool):
 	SP = 0
 	#Dimension remnants
 	DRs = 0
-	lv = 1
-	xp = 0
-	xp_to_lv = 10
 
 	#id of the universe/supercluster/etc. you're viewing the object in
-	c_u = 0#c_u: current_universe
+	c_u = univ#c_u: current_universe
 	c_sc = 0#c_sc: current_supercluster
 	c_c = 0#etc.
 	c_c_g = 0#etc.
@@ -744,35 +775,6 @@ func new_game(tut:bool):
 	}
 
 	#Display help when players see/do things for the first time. true: show help
-	help = {
-			"tutorial":1 if tut else -1,
-			"close_btn1":true,
-			"close_btn2":true,
-			"mining":true,
-			"STM":true,
-			"battle":true,
-			"plant_something_here":true,
-			"boulder_desc":true,
-			"aurora_desc":true,
-			"cave_desc":true,
-			"crater_desc":true,
-			"autosave_light_desc":true,
-			"tile_shortcuts":true,
-			"inventory_shortcuts":true,
-			"hotbar_shortcuts":true,
-			"rover_shortcuts":true,
-			"mass_buy":true,
-			"rover_inventory_shortcuts":true,
-			"planet_details":true,
-			"mass_build":true,
-			"abandoned_ship":true,
-			"science_tree":true,
-			"sprint_mode":true,
-			"cave_controls":true,
-			"active_wormhole":true,
-			"inactive_wormhole":true,
-			"cave_diff_info":true,
-	}
 
 	MUs = {	"MV":1,
 			"MSMB":1,
@@ -811,11 +813,10 @@ func new_game(tut:bool):
 		show[particle] = false
 
 	#Stores information of all objects discovered
-	universe_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":"Universe", "diff":1, "supercluster_num":8000, "superclusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	supercluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "name":"Laniakea Supercluster", "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":"Local Group", "pos":Vector2.ZERO, "diff":1, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
+	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":1, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
 	galaxy_data = Data.starting_galaxy_data.duplicate(true)
-	system_data = [{"id":0, "l_id":0, "name":"Solar system", "pos":Vector2(-7500, -7500), "diff":1, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":1, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -900,36 +901,21 @@ func new_game(tut:bool):
 	planet_data[2].surface.cellulose.amount = 10
 	Helper.save_obj("Systems", 0, planet_data)
 	
-	system_data[0].name = tr("SOLAR_SYSTEM")
-	galaxy_data[0].name = tr("MILKY_WAY")
-	cluster_data[0].name = tr("LOCAL_GROUP")
-	supercluster_data[0].name = tr("LANIAKEA")
-	
 	generate_tiles(2)
 	cave_data.append({"num_floors":5, "floor_size":30})
 	cave_data.append({"num_floors":8, "floor_size":35})
 	
-	for u_i in universe_data:
-		u_i["speed_of_light"] = e(3.0, 8)#m/s
-		u_i["planck"] = e(6.626, -34)#J.s
-		u_i["boltzmann"] = e(1.381, -23)#J/K
-		u_i["gravitational"] = e(6.674, -11)#m^3/kg/s^2
-		u_i["charge"] = e(1.602, -19)#C
-		u_i["dark_energy"] = 1.0
-		u_i["difficulty"] = 1.0
-		u_i["time_speed"] = 1.0
-		u_i["antimatter"] = 1.0
-		u_i["value"] = 1.0
-		u_i["shapes"] = []
 	c_v = "planet"
 	Helper.save_obj("Galaxies", 0, system_data)
 	Helper.save_obj("Clusters", 0, galaxy_data)
 	Helper.save_obj("Superclusters", 0, cluster_data)
 	var save_sc = File.new()
-	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, univ], File.WRITE)
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
-	$UI.add_child(HUD)
+	fn_save_game()
+	if univ == 0:
+		$UI.add_child(HUD)
 	if tut:
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
 		tutorial.visible = false
@@ -1346,8 +1332,12 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			add_child(battle)
 	if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
 		HUD.refresh()
+	HUD.switch_btn.visible = c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
+	if c_v == "universe" and HUD.dimension_btn.visible:
+		HUD.switch_btn.visible = false
 	if not first_time:
-		fn_save_game(true)
+		fn_save_game()
+		save_views(true)
 
 func add_science_tree():
 	HUD.get_node("Buttons").visible = false
@@ -1395,7 +1385,7 @@ func add_loading():
 func open_obj(type:String, id:int):
 	var arr:Array = []
 	var save:File = File.new()
-	var file_path:String = "user://Save1/%s/%s.hx3" % [type, id]
+	var file_path:String = "user://Save%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	if save.file_exists(file_path):
 		save.open(file_path, File.READ)
 		arr = save.get_var()
@@ -1404,7 +1394,7 @@ func open_obj(type:String, id:int):
 	
 func obj_exists(type:String, id:int):
 	var save:File = File.new()
-	var file_path:String = "user://Save1/%s/%s.hx3" % [type, id]
+	var file_path:String = "user://Save%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	if save.file_exists(file_path):
 		return true
 	return false
@@ -1474,7 +1464,7 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.GS
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and universe_data[c_u].lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].has("conquered")
 		if c_v == "supercluster":
 			space_HUD.get_node("SendProbes").visible = c_sc == 0
@@ -1521,10 +1511,7 @@ func add_dimension():
 		add_child(dimension)
 
 func add_universe():
-	var view_str:String = tr("VIEW_DIMENSION")
-	if not show.dimensions:
-		view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
-	put_change_view_btn(view_str, "res://Graphics/Buttons/DimensionView.png")
+	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_superclusters(c_u)
@@ -1532,10 +1519,7 @@ func add_universe():
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_supercluster():
-	var view_str:String = tr("VIEW_UNIVERSE")
-	if lv < 70:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 70"]]
-	put_change_view_btn(view_str, "res://Graphics/Buttons/UniverseView.png")
+	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/UniverseView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if not supercluster_data[c_sc].has("discovered"):
@@ -1547,10 +1531,7 @@ func add_supercluster():
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_cluster():
-	var view_str:String = tr("VIEW_SUPERCLUSTER")
-	if lv < 50:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 50"]]
-	put_change_view_btn(view_str, "res://Graphics/Buttons/SuperclusterView.png")
+	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if obj_exists("Clusters", c_c_g):
@@ -1566,10 +1547,7 @@ func add_cluster():
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_galaxy():
-	var view_str:String = tr("VIEW_CLUSTER")
-	if lv < 35:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
-	put_change_view_btn(view_str, "res://Graphics/Buttons/ClusterView.png")
+	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/ClusterView.png")
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
 	if obj_exists("Galaxies", c_g_g):
@@ -1589,10 +1567,7 @@ func start_system_generation():
 	yield(generate_system_part(), "completed")
 	
 func add_system():
-	var view_str:String = tr("VIEW_GALAXY")
-	if lv < 18:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 18"]]
-	put_change_view_btn(view_str, "res://Graphics/Buttons/GalaxyView.png")
+	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/GalaxyView.png")
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1620,36 +1595,26 @@ func remove_dimension():
 	view.dragged = true
 
 func remove_universe():
-	$UI.remove_child(change_view_btn)
-	change_view_btn.queue_free()
 	view.remove_obj("universe")
 
 func remove_supercluster():
 	view.remove_obj("supercluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
-	$UI.remove_child(change_view_btn)
-	change_view_btn.queue_free()
 
 func remove_cluster():
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
-	$UI.remove_child(change_view_btn)
-	change_view_btn.queue_free()
 
 func remove_galaxy():
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
-	$UI.remove_child(change_view_btn)
-	change_view_btn.queue_free()
 
 func remove_system():
 	view.remove_obj("system")
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
-	$UI.remove_child(change_view_btn)
-	change_view_btn.queue_free()
 
 func remove_planet(save_zooms:bool = true):
 	view.remove_obj("planet", save_zooms)
@@ -1700,12 +1665,11 @@ func generate_superclusters(id:int):
 	for _i in range(1, total_sc_num):
 		var sc_i = {}
 		sc_i["type"] = Helper.rand_int(0, 0)
-		sc_i["parent"] = id
 		sc_i["visible"] = TEST
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
 		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
-		var pos
+		var pos:Vector2
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
@@ -1714,14 +1678,13 @@ func generate_superclusters(id:int):
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
 		sc_i.diff = Helper.clever_round(universe_data[id].difficulty * pos.length(), 3)
-		universe_data[id]["superclusters"].append(sc_id)
 		supercluster_data.append(sc_i)
 	if id != 0:
 		var view_zoom = 500.0 / max_dist_from_center
 		universe_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom, "sc_mult":1.0}
 	universe_data[id]["discovered"] = true
 	var save_sc = File.new()
-	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
 
@@ -1775,7 +1738,7 @@ func generate_clusters(id:int):
 	c_num += total_clust_num
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	var save_sc = File.new()
-	save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
 
@@ -2986,44 +2949,6 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		RTL.rect_min_size.y = RTL.get_content_height()
 		RTL.rect_size.y = RTL.get_content_height()
 
-var change_view_btn
-
-func put_change_view_btn (info_str, icon_str):
-	change_view_btn = TextureButton.new()
-	var change_view_icon = load(icon_str)
-	change_view_btn.texture_normal = change_view_icon
-	$UI.add_child(change_view_btn)
-	change_view_btn.shortcut = ShortCut.new()
-	change_view_btn.shortcut.shortcut = InputEventAction.new()
-	Helper.set_back_btn(change_view_btn, false)
-	change_view_btn.shortcut_in_tooltip = false
-	change_view_btn.rect_position = Vector2(-1, 720 - 63)
-	change_view_btn.connect("mouse_entered", self, "on_change_view_over", [info_str])
-	change_view_btn.connect("mouse_exited", self, "hide_tooltip")
-	change_view_btn.connect("pressed", self, "on_change_view_click")
-
-func on_change_view_over (view_str):
-	show_tooltip("%s (%s)" % [view_str, change_view_btn.shortcut.shortcut.action])
-
-func on_change_view_click ():
-	$click.play()
-	match c_v:
-		"system":
-			if lv >= 18:
-				switch_view("galaxy")
-		"galaxy":
-			if lv >= 35:
-				switch_view("cluster")
-		"cluster":
-			if lv >= 50:
-				switch_view("supercluster")
-		"supercluster":
-			if lv >= 70:
-				switch_view("universe")
-		"universe":
-			if show.dimensions:
-				switch_view("dimension")
-
 func add_items(item:String, num:int = 1):
 	var cycles = 0
 	while num > 0 and cycles < 2:
@@ -3253,15 +3178,8 @@ func _input(event):
 		OS.window_fullscreen = not OS.window_fullscreen
 		settings.get_node("Fullscreen").pressed = OS.window_fullscreen
 
-	#Press Z to view galaxy the system is in, etc. or go back
-	if OS.get_latin_keyboard_variant() == "QWERTY" and Input.is_action_just_released("Z") or OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_released("W"):
-		if not has_node("Loading"):
-			on_change_view_click()
 	if c_v == "science_tree":
 		Helper.set_back_btn(get_node("ScienceBackBtn"))
-
-	if is_instance_valid(change_view_btn):
-		Helper.set_back_btn(change_view_btn, false)
 	if Input.is_action_just_released("right_click"):
 		if bottom_info_action != "":
 			if not c_v in ["STM", ""]:
@@ -3363,7 +3281,7 @@ func _input(event):
 			"setmulv":
 				MUs[arr[1].to_upper()] = int(arr[2])
 			"setlv":
-				lv = int(arr[1])
+				universe_data[c_u].lv = int(arr[1])
 			"switchview":
 				if c_v == "cave":
 					cave.exit_cave()
@@ -3401,11 +3319,22 @@ func _input(event):
 					inventory.on_slot_press(_name)
 	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
 		if c_v != "":
-			fn_save_game(false)
+			fn_save_game()
+			save_views(false)
 
-func fn_save_game(autosave:bool):
+func fn_save_game():
+	var save_info = File.new()
+	save_info.open("user://Save%s/save_info.hx3" % [c_sv], File.WRITE)
+	save_info.store_var(save_created)
+	save_info.store_var(OS.get_datetime())
+	save_info.store_var(help)
+	save_info.store_var(c_u)
+	save_info.store_var(c_v)
+	save_info.store_var(l_v)
+	save_info.store_var(universe_data)
+	save_info.close()
 	var save_game = File.new()
-	save_game.open("user://Save1/main.hx3", File.WRITE)
+	save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
 	if c_v == "cave":
 		var c_d = cave_data[cave.id]
 		c_d.seeds = cave.seeds.duplicate(true)
@@ -3415,18 +3344,12 @@ func fn_save_game(autosave:bool):
 		c_d.partially_looted_chests = cave.partially_looted_chests.duplicate(true)
 		c_d.hole_exits = cave.hole_exits.duplicate(true)
 	save_date = OS.get_system_time_msecs()
-	save_game.store_var(c_v)
-	save_game.store_var(l_v)
 	save_game.store_float(money)
 	save_game.store_float(minerals)
 	save_game.store_float(mineral_capacity)
 	save_game.store_var(stone)
 	save_game.store_float(energy)
 	save_game.store_float(SP)
-	save_game.store_float(DRs)
-	save_game.store_float(xp)
-	save_game.store_float(xp_to_lv)
-	save_game.store_64(c_u)
 	save_game.store_64(c_sc)
 	save_game.store_64(c_c)
 	save_game.store_64(c_c_g)
@@ -3437,7 +3360,6 @@ func fn_save_game(autosave:bool):
 	save_game.store_64(c_p)
 	save_game.store_64(c_p_g)
 	save_game.store_64(c_t)
-	save_game.store_64(lv)
 	save_game.store_64(stack_size)
 	save_game.store_8(auto_replace)
 	save_game.store_var(pickaxe)
@@ -3447,9 +3369,7 @@ func fn_save_game(autosave:bool):
 	save_game.store_var(mets)
 	save_game.store_var(atoms)
 	save_game.store_var(particles)
-	save_game.store_var(help)
 	save_game.store_var(show)
-	save_game.store_var(universe_data)
 	save_game.store_var(cave_data)
 	save_game.store_var(items)
 	save_game.store_var(hotbar)
@@ -3482,6 +3402,8 @@ func fn_save_game(autosave:bool):
 	save_game.store_64(save_date)
 	save_game.store_var(bookmarks)
 	save_game.close()
+
+func save_views(autosave:bool):
 	if is_instance_valid(view.obj) and is_a_parent_of(view.obj):
 		view.save_zooms(c_v)
 	if c_v in ["planet", "mining"]:
@@ -3499,7 +3421,7 @@ func fn_save_game(autosave:bool):
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
 	elif c_v == "supercluster":
 		var save_sc = File.new()
-		save_sc.open("user://Save1/supercluster_data.hx3", File.WRITE)
+		save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
 		save_sc.store_var(supercluster_data)
 		save_sc.close()
 	if not autosave:
@@ -3634,21 +3556,20 @@ func fade_out_title(fn:String):
 		$Autosave.start()
 	
 func _on_NewGame_pressed():
-	if $Title/Menu/VBoxContainer/LoadGame.disabled:
-		fade_out_title("new_game")
-	else:
-		show_YN_panel("new_game", tr("START_NEW_GAME"))
+	fade_out_title("new_game")
 
 func _on_LoadGame_pressed():
-	fade_out_title("load_game")
-	$Title/Menu/VBoxContainer/LoadGame.disconnect("pressed", self, "_on_LoadGame_pressed")
+	toggle_panel(load_panel)
+	#fade_out_title("load_game")
+	#$Title/Menu/VBoxContainer/LoadGame.disconnect("pressed", self, "_on_LoadGame_pressed")
 
 func _on_Autosave_timeout():
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
 		if config.get_value("saving", "enable_autosave", true):
-			fn_save_game(true)
+			fn_save_game()
+			save_views(true)
 
 var YN_str:String = ""
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
@@ -3661,6 +3582,10 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
+
+func discover_univ_confirm():
+	send_probes_panel.discover_univ()
+	YN_panel.disconnect("confirmed", self, "discover_univ_confirm")
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)

@@ -465,8 +465,9 @@ func destroy_bldg(id2:int, mass:bool = false):
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
 	elif bldg == "RL":
-		game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
-		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
+		if not tile.bldg.is_constructing:
+			game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
+			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -818,7 +819,7 @@ func _input(event):
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":35}
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":35}
 						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 						Helper.add_ship_XP(1, 2000)
 						Helper.add_weapon_XP(1, "bullet", 50)
@@ -830,7 +831,7 @@ func _input(event):
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.lv, "goal":50}
+							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":50}
 							game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 							Helper.add_ship_XP(2, 40000)
 							Helper.add_weapon_XP(2, "bullet", 140)
@@ -846,7 +847,7 @@ func _input(event):
 						game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 			elif tile.has("wormhole"):
 				if tile.wormhole.active:
-					if game.lv < 18:
+					if game.universe_data[game.c_u].lv < 18:
 						game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
 						return
 					Helper.update_ship_travel()

@@ -26,7 +26,7 @@ func refresh():
 	var g_coords:Dictionary = game.ships_c_g_coords
 	var g_s:int = game.ships_c_g_coords.s
 	var file = File.new()
-	file.open("user://Save1/Systems/%s.hx3" % [g_s], File.READ)
+	file.open("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
 	depart_planet_data = planets_in_depart_system[coords.p]
@@ -90,11 +90,11 @@ func refresh():
 	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
 
 func _on_Send_pressed():
-	if game.lv < 35:
+	if game.universe_data[game.c_u].lv < 35:
 		if game.c_g_g == 0 and game.planet_data[dest_p_id].pressure > 30:
-			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"), [])
+			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
 		elif time_cost > 4 * 60 * 60 * 1000:
-			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"), [])
+			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"))
 		else:
 			send_ships()
 	else:
