@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -30,6 +30,7 @@
 [ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
 [ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=29]
 [ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
+[ext_resource path="res://Shaders/GodRays.shader" type="Shader" id=31]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 30 )
@@ -121,14 +122,30 @@ colors = PoolColorArray( 0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.
 [sub_resource type="GradientTexture" id=11]
 gradient = SubResource( 10 )
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="ShaderMaterial" id=12]
+shader = ExtResource( 31 )
+shader_param/angle = 1.218
+shader_param/position = 0.211
+shader_param/spread = 0.0
+shader_param/cutoff = -1.0
+shader_param/falloff = 1.0
+shader_param/edge_fade = 1.0
+shader_param/speed = 2.0
+shader_param/ray1_density = 8.0
+shader_param/ray2_density = 30.0
+shader_param/ray2_intensity = 0.3
+shader_param/color = Color( 1, 1, 1, 0.0980392 )
+shader_param/hdr = false
+shader_param/seed = 5.0
+
+[sub_resource type="DynamicFont" id=13]
 size = 50
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
 font_data = ExtResource( 15 )
 
-[sub_resource type="StyleBoxFlat" id=13]
+[sub_resource type="StyleBoxFlat" id=14]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -140,7 +157,7 @@ expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("UI/Panel:modulate")
@@ -155,11 +172,11 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="InputEventAction" id=15]
+[sub_resource type="InputEventAction" id=16]
 action = "P"
 
-[sub_resource type="ShortCut" id=16]
-shortcut = SubResource( 15 )
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -178,6 +195,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -403,6 +421,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -416,6 +435,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LightRays" type="ColorRect" parent="Title"]
+material = SubResource( 12 )
+margin_left = -3.0
+margin_top = 284.0
+margin_right = 1282.0
+margin_bottom = 1080.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Label" type="Label" parent="Title"]
 visible = false
 anchor_left = 0.5
@@ -426,7 +456,7 @@ margin_left = 456.0
 margin_top = 69.313
 margin_right = 784.0
 margin_bottom = 230.313
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 13 )
 text = "Helixteus 3
 "
 align = 1
@@ -639,7 +669,7 @@ margin_top = 464.0
 margin_right = 232.0
 margin_bottom = 574.0
 theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 13 )
+custom_styles/panel = SubResource( 14 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -684,7 +714,7 @@ align = 0
 one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-anims/Fade = SubResource( 14 )
+anims/Fade = SubResource( 15 )
 
 [node name="Ship" type="TextureButton" parent="."]
 visible = false
@@ -708,7 +738,7 @@ margin_top = 4.0
 margin_right = 1276.0
 margin_bottom = 36.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 16 )
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5

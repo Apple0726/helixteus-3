@@ -21,14 +21,14 @@ func _ready():
 	add_child(aggressive_timer)
 	
 	ray_length = 1200.0
-	idle_move_speed = 200.0
-	atk_move_speed = 500.0
+	idle_move_speed = 200.0 * cave_ref.time_speed
+	atk_move_speed = 500.0 * cave_ref.time_speed
 
 func set_rand():
 	pass
 
 func on_time_out():
-	shoot_timer.wait_time = 1.0
+	shoot_timer.wait_time = 1.0 / cave_ref.time_speed
 	if sees_player or is_aggr():
 		var rand_rot = rand_range(0, PI/4)
 		for i in range(0, 8):

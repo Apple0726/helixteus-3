@@ -36,7 +36,8 @@ func _on_btn_pressed(btn_str:String):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
 		else:
 			if Data.path_1.has(bldg):
-				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg), 3)]
+				var time_speed:float = game.u_i.time_speed if Data.path_1[bldg].has("time_based") else 1.0
+				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, 3)]
 		if Data.path_2.has(bldg):
 			if Data.path_2[bldg].is_value_integer:
 				txt += (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
@@ -51,6 +52,8 @@ func _on_btn_pressed(btn_str:String):
 		item.costs = Data.costs[bldg].duplicate(true)
 		if bldg == "GH":
 			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
+		if item.costs.has("time"):
+			item.costs.time /= game.u_i.time_speed
 		item.parent = "construct_panel"
 		item.add_to_group("bldgs")
 		grid.add_child(item)

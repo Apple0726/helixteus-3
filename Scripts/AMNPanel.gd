@@ -228,7 +228,7 @@ func refresh():
 	$Control.visible = not $Control3.visible and reaction != ""
 	refresh_icon()
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult * tile_num))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN"))
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)
 	for reaction_name in reactions:
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
@@ -409,10 +409,10 @@ func _process(delta):
 				atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom])
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN")))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN"), 0, obj.bldg.qty)
+	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN") * game.u_i.time_speed, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 

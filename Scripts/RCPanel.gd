@@ -199,6 +199,7 @@ func refresh():
 		slot.get_node("Button").connect("pressed", self, "_on_InvSlot_pressed", [i])
 		hbox.add_child(slot)
 		i += 1
+	rover_costs.time /= game.u_i.time_speed
 	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
 	$Stats/HPText.text = String(round((HP + HP_bonus) * mult))

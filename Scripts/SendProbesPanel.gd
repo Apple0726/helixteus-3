@@ -41,7 +41,7 @@ var weights:Dictionary = {
 	"charge":20,
 	"dark_energy":30,
 	"difficulty":20,
-	"time_speed":50,
+	"time_speed":100,
 	"antimatter":20,
 	"value":100,
 	}
@@ -139,11 +139,11 @@ func refresh_energy():
 	if game.c_v == "supercluster":
 		costs.energy = 1000000000000 * slider_factor * dist_mult
 		costs.Xe = 10000 * slider_factor * dist_mult
-		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult
+		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
 	elif game.c_v == "universe":
 		costs.energy = 10000000000000000000.0 * slider_factor * dist_mult
 		costs.Pu = 1000 * slider_factor * dist_mult
-		costs.time = 15 / pow(slider_factor, 0.4) * dist_mult
+		costs.time = 15 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
 	Helper.put_rsrc($Control/Costs, 36, costs, true, true)
 	
 func dist_sort(a:Dictionary, b:Dictionary):
@@ -168,7 +168,7 @@ func discover_univ():
 
 func _on_Send_pressed():
 	if game.c_v == "dimension":
-		if PP >= 0:
+		if PP >= 0 or true:
 			for prop in $TP/VBox.get_children():
 				if prop.get_node("Label2")["custom_colors/font_color"] == Color.red:
 					game.popup(tr("INVALID_INPUT"), 1.5)
@@ -238,7 +238,7 @@ func _on_TP_value_changed(value:float, prop:String):
 func get_lv_sum():
 	var lv:int = 0
 	for univ in game.universe_data:
-		lv += univ.lv
+		lv += univ.lv * univ.value
 	return lv
 
 func _on_Points_mouse_entered():

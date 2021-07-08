@@ -77,7 +77,7 @@ func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
 		for cost in base_metal_costs:
 			base_metal_costs[cost] /= cost_div
 	costs.money += round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
-	costs.time = round(base_costs.time * geo_seq(base_pw, lv_curr, lv_to))
+	costs.time = round(base_costs.time * geo_seq(base_pw, lv_curr, lv_to) / game.u_i.time_speed)
 	if auto_speedup:
 		costs.money += costs.time * 10 * num
 		costs.time = 0
@@ -151,6 +151,8 @@ func update():
 			curr_value = round(curr_value)
 		else:
 			curr_value = Helper.clever_round(curr_value, 3)
+		if first_tile_bldg_info.has("time_based"):
+			curr_value *= game.u_i.time_speed
 		if not planet.empty():
 			curr_value *= num
 		if bldg == "CBD" and path_selected == 3:
@@ -185,6 +187,9 @@ func update():
 	else:
 		new_base_value = Helper.clever_round(new_base_value, 3)
 		new_value = Helper.clever_round(new_value, 3)
+	if first_tile_bldg_info.has("time_based"):
+		new_base_value *= game.u_i.time_speed
+		new_value *= game.u_i.time_speed
 	if not planet.empty():
 		new_value *= num
 	if bldg == "CBD" and path_selected == 3:
@@ -263,7 +268,7 @@ func _on_Upgrade_pressed():
 					if tile.has("cost_div"):
 						base_costs.time /= tile.cost_div
 					var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-					cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value))
+					cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed)
 				if auto_speedup:
 					cost_time = 1
 				if tile.bldg.has("collect_date"):

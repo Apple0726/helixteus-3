@@ -29,7 +29,9 @@ func _on_btn_pressed(btn_str:String):
 		item.item_type = info
 		var desc:String = get_item_desc(craft, btn_str, craft_info)
 		item.item_desc = desc
-		item.costs = craft_info.costs
+		item.costs = craft_info.costs.duplicate(true)
+		if item.costs.has("time"):
+			item.costs.time /= game.u_i.time_speed
 		item.parent = "craft_panel"
 		grid.add_child(item)
 

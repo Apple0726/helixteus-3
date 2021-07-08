@@ -14,7 +14,7 @@ func set_rand():
 	pass
 
 func on_time_out():
-	shoot_timer.wait_time = 0.3
+	shoot_timer.wait_time = 0.3 / cave_ref.time_speed
 	if sees_player:
 		var rand_rot = rand_range(0, PI/2)
 		for i in range(0, 4):

@@ -86,6 +86,7 @@ func _ready():
 				var aurora = game.aurora_scene.instance()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
+				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
 				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
 				aurora.modulate.a = 0.5
@@ -149,8 +150,9 @@ func _ready():
 	game.HUD.refresh()
 
 func add_particles(pos:Vector2):
-	var particle = game.particles_scene.instance()
+	var particle:Particles2D = game.particles_scene.instance()
 	particle.position = pos + Vector2(30, 30)
+	particle.lifetime = 2.0 / game.u_i.time_speed
 	add_child(particle)
 
 func show_tooltip(tile):
@@ -393,7 +395,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		else:
 			mult_diff = mult - tile.bldg.overclock_mult
 		tile.bldg.overclock_date = curr_time
-		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration
+		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == "RL":
 			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff

@@ -120,7 +120,7 @@ func _on_Button_pressed():
 		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
-		var crush_spd = tile.bldg.path_1_value
+		var crush_spd = tile.bldg.path_1_value * game.u_i.time_speed
 		var qty_left = max(0, round(tile.bldg.stone_qty - (time - tile.bldg.start_date) / 1000.0 * crush_spd))
 		if qty_left > 0:
 			var progress = (time - tile.bldg.start_date) / 1000.0 * crush_spd / tile.bldg.stone_qty

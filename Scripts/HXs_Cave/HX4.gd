@@ -24,14 +24,14 @@ func _ready():
 	add_child(aggressive_timer)
 	
 	ray_length = 1200.0
-	idle_move_speed = 250.0
-	atk_move_speed = 600.0
+	idle_move_speed = 250.0 * cave_ref.time_speed
+	atk_move_speed = 600.0 * cave_ref.time_speed
 
 func set_rand():
 	rot = rand_range(0, 2 * PI / 3)
 
 func on_time_out():
-	shoot_timer.wait_time = 0.04
+	shoot_timer.wait_time = 0.04 / cave_ref.time_speed
 	if (sees_player or is_aggr()) and counter < 5:
 		for i in range(0, 3):
 			cave_ref.add_proj(true, pr.position, 12.0, rot + i * 2*PI/3, cave_ref.bullet_texture, atk * 2.0)

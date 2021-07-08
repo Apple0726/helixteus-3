@@ -20,7 +20,7 @@ var lvpatterns:Array = [[1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12], [13, 14, 15
 var pattern:int = 1
 
 func set_level():
-	$Timer.wait_time = 1.0 / lv / (1 + (game.MUs.STMB - 1) * 0.15)
+	$Timer.wait_time = 1.0 / lv / (1 + (game.MUs.STMB - 1) * 0.15) / game.u_i.time_speed
 	$Level.text = "%s %s" % [tr("LEVEL"), lv]
 	
 func _ready():

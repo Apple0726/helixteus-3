@@ -10,6 +10,7 @@ onready var tile = game.tile_data[game.c_t] if game else {"cave":{"id":-1}}
 onready var aurora:bool = tile.has("aurora")
 onready var tower:bool = tile.has("diamond_tower")
 onready var tile_type = 10 if tower else p_i.type - 3
+onready var time_speed = game.u_i.time_speed
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5), 3)
@@ -788,7 +789,7 @@ func update_health_bar(_HP):
 		for w in i_w_w:
 			i_w_w[w] /= 2
 		var st = tr("ROVER_REKT")
-		if randf() < 1:
+		if randf() < 0.01:
 			st = st.replace("wrecked", "rekt")
 		call_deferred("exit_cave")
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
@@ -994,7 +995,7 @@ func cooldown():
 	inventory_ready[curr_slot] = false
 	var timer = Timer.new()
 	add_child(timer)
-	timer.start(Data.rover_weapons[inventory[curr_slot].name].cooldown)
+	timer.start(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
 	timer.connect("timeout", self, "on_timeout", [curr_slot, timer])
 
 func on_timeout(slot, timer):
@@ -1021,7 +1022,7 @@ func _process(delta):
 
 
 func attack():
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size, get_color(inventory[curr_slot].name.split("_")[0]))
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, get_color(inventory[curr_slot].name.split("_")[0]))
 	cooldown()
 
 func hit_rock(delta):
@@ -1036,7 +1037,7 @@ func hit_rock(delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1)
+		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
@@ -1059,7 +1060,7 @@ func hit_rock(delta):
 				deposits.erase(st)
 			var remainder:float = 0
 			for r in rsrc:
-				remainder += add_weight_rsrc(r, rsrc[r])
+				remainder += add_weight_rsrc(r, rsrc[r] * game.u_i.planck)
 			if remainder != 0:
 				game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
 			cave_wall.set_cellv(map_pos, -1)
@@ -1123,7 +1124,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
-	proj.velocity = polar2cartesian(spd, rot)
+	proj.velocity = polar2cartesian(spd * time_speed, rot)
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
@@ -1160,6 +1161,7 @@ func set_border(i:int):
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
+		mining_p.lifetime = 0.2 / time_speed
 		$UI2/ActiveItem.text = Helper.get_rover_mining_name(inventory[i].name)
 	elif inventory[i].type == "rover_weapons":
 		$UI2/ActiveItem.text = Helper.get_rover_weapon_name(inventory[i].name)
@@ -1217,7 +1219,7 @@ func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
 func _physics_process(delta):
-	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size)
+	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size) * time_speed
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO

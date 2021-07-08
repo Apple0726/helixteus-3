@@ -136,7 +136,7 @@ func get_atm_exit_cost(pressure:float):
 	return round(res)
 
 func get_grav_exit_cost(size:float):
-	var res:float = pow(size / 200.0, 2.5)
+	var res:float = pow(size / 200.0, 2.5) * game.u_i.gravitational
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
@@ -148,7 +148,7 @@ func get_atm_entry_cost(pressure:float):
 	return round(res)
 
 func get_grav_entry_cost(size:float):
-	var res:float = pow(size / 600.0, 2.5) * 3
+	var res:float = pow(size / 600.0, 2.5) * 3 * game.u_i.gravitational
 	if has_SE(game.planet_data[dest_p_id]):
 		res *= get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv)
 	return round(res)
@@ -189,8 +189,8 @@ func calc_costs():
 		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.text = Helper.format_num(entry_exit_cost)
-	travel_energy_cost = slider_factor * distance * 30
-	time_cost = 5000 / slider_factor * distance
+	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light
+	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
 	if game.science_unlocked.FTL:
 		time_cost /= 10.0
 	if game.science_unlocked.IGD:

@@ -168,8 +168,6 @@ func generate_rock(new:bool):
 			met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
 			metal_sprites.append(met_sprite)
 			tile_sprite.add_child(met_sprite)
-	#var contents2 = contents.duplicate(true)
-	#contents2.stone = Helper.get_sum_of_dict(contents.stone)
 	Helper.put_rsrc(vbox, 42, contents)
 	$Panel.visible = false
 	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
@@ -287,15 +285,15 @@ func pickaxe_hit():
 
 func _process(delta):
 	for cr in crumbles:
-		cr.sprite.position += cr.velocity * delta * 60
+		cr.sprite.position += cr.velocity * delta * 60 * game.u_i.time_speed
 		cr.velocity.y += 0.6 * delta * 60
-		cr.sprite.rotation += cr.angular_velocity * delta * 60
+		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed
 		if cr.sprite.position.y > 1000:
 			remove_child(cr.sprite)
 			cr.sprite.free()
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
-		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60
+		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60 * game.u_i.time_speed
 		if circ.position.x < 284:
 			circ_vel.x = -sign(circ_vel.x) * rand_range(1 / 1.2, 1.2)
 			circ.position.x = 284
@@ -313,18 +311,18 @@ func _process(delta):
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
-			points += delta * 60.0
+			points += delta * 60.0 * game.u_i.time_speed
 			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:
-				points = max(points - 3, 0)
+				points = max(points - 3 * delta * 60.0 * game.u_i.time_speed, 0)
 				spd_mult_node["custom_colors/font_color"] = Color(1, 0, 0, 1)
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
 		circ_disabled = false
 		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-		$PickaxeAnim.play("Pickaxe swing")
+		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
 
 func _on_Button_button_up():
 	circ_disabled = true

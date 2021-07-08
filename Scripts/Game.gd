@@ -208,6 +208,8 @@ var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"
 var collect_speed_lag_ratio:int = 1
 var c_sv:int = -1#current_save
 var save_created:Dictionary
+var u_i:Dictionary
+var pitch_affected:bool = false
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -356,6 +358,7 @@ func _ready():
 		switch_music(load("res://Audio/Title.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
+		pitch_affected = config.get_value("audio", "pitch_affected", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
@@ -471,7 +474,7 @@ func switch_music(src, pitch:float = 1.0):
 		tween.start()
 		yield(tween, "tween_all_completed")
 	music_player.stream = src
-	music_player.pitch_scale = pitch
+	music_player.pitch_scale = pitch * u_i.time_speed if u_i and pitch_affected else 1.0
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
@@ -553,6 +556,11 @@ func load_univ():
 		bookmarks = save_game.get_var()
 		save_game.close()
 		auto_c_p_g = -1
+		u_i = universe_data[c_u]
+		for _seed in craft_agriculture_info:
+			if craft_agriculture_info[_seed].has("produce"):
+				craft_agriculture_info[_seed].produce = round(60 * u_i.planck)
+
 		if not autocollect.empty():
 			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
 			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
@@ -580,7 +588,7 @@ func load_univ():
 			if file.file_exists("user://Save%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c_g]):
 				galaxy_data = open_obj("Clusters", c_c_g)
 			else:
-				galaxy_data = Data.starting_galaxy_data.duplicate(true)
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if file.file_exists("user://Save%s/Univ%s/Superclusters/%s.hx3" % [c_sv, c_u, c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
@@ -589,7 +597,6 @@ func load_univ():
 				tutorial.visible = false
 				tutorial.tut_num = help.tutorial
 				$UI.add_child(tutorial)
-			$UI.add_child(HUD)
 			switch_view(c_v, true)
 	else:
 		popup("load error", 1.5)
@@ -665,6 +672,7 @@ func new_game(tut:bool, univ:int = 0):
 		universe_data[0].value = 1.0
 	else:
 		universe_data[univ].discovered = true
+	u_i = universe_data[univ]
 	dir.make_dir("user://Save%s/Univ%s" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Planets" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Systems" % [c_sv, univ])
@@ -813,10 +821,10 @@ func new_game(tut:bool, univ:int = 0):
 		show[particle] = false
 
 	#Stores information of all objects discovered
-	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":1, "dark_energy":1.0, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":1, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
-	galaxy_data = Data.starting_galaxy_data.duplicate(true)
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":1, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -879,26 +887,27 @@ func new_game(tut:bool, univ:int = 0):
 	bookmarks = {"planet":[], "system":[], "galaxy":[], "cluster":[]}
 	
 	generate_planets(0)
-	#Home planet information
-	planet_data[2]["name"] = tr("HOME_PLANET")
-	planet_data[2]["conquered"] = true
-	planet_data[2]["size"] = round(rand_range(12000, 12100))
-	planet_data[2]["angle"] = PI / 2
-	planet_data[2]["tiles"] = []
-	planet_data[2].pressure = 1
-	planet_data[2].lake_1 = "H2O"
-	planet_data[2].erase("lake_2")
-	planet_data[2].liq_seed = 4
-	planet_data[2].liq_period = 100
-	planet_data[2].crust_start_depth = Helper.rand_int(25, 30)
-	planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
-	planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
-	planet_data[2].surface.coal.chance = 0.5
-	planet_data[2].surface.coal.amount = 100
-	planet_data[2].surface.soil.chance = 0.6
-	planet_data[2].surface.soil.amount = 60
-	planet_data[2].surface.cellulose.chance = 0.4
-	planet_data[2].surface.cellulose.amount = 10
+	if univ == 0:
+		#Home planet information
+		planet_data[2]["name"] = tr("HOME_PLANET")
+		planet_data[2]["conquered"] = true
+		planet_data[2]["size"] = round(rand_range(12000, 12100))
+		planet_data[2]["angle"] = PI / 2
+		planet_data[2]["tiles"] = []
+		planet_data[2].pressure = 1
+		planet_data[2].lake_1 = "H2O"
+		planet_data[2].erase("lake_2")
+		planet_data[2].liq_seed = 4
+		planet_data[2].liq_period = 100
+		planet_data[2].crust_start_depth = Helper.rand_int(25, 30)
+		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
+		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
+		planet_data[2].surface.coal.chance = 0.5
+		planet_data[2].surface.coal.amount = 100
+		planet_data[2].surface.soil.chance = 0.6
+		planet_data[2].surface.soil.amount = 60
+		planet_data[2].surface.cellulose.chance = 0.4
+		planet_data[2].surface.cellulose.amount = 10
 	Helper.save_obj("Systems", 0, planet_data)
 	
 	generate_tiles(2)
@@ -1244,6 +1253,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				remove_space_HUD()
 			"dimension":
 				remove_dimension()
+				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 			"mining":
 				remove_mining()
 			"science_tree":
@@ -1503,7 +1513,8 @@ func remove_space_HUD():
 	remove_annotator()
 
 func add_dimension():
-	$UI.remove_child(HUD)
+	if $UI.is_a_parent_of(HUD):
+		$UI.remove_child(HUD)
 	if is_instance_valid(dimension):
 		dimension.visible = true
 	else:
@@ -1590,7 +1601,8 @@ func add_planet():
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func remove_dimension():
-	$UI.add_child(HUD)
+	if not $UI.is_a_parent_of(HUD):
+		$UI.add_child(HUD)
 	dimension.visible = false
 	view.dragged = true
 
@@ -1664,7 +1676,7 @@ func generate_superclusters(id:int):
 	max_dist_from_center = pow(total_sc_num, 0.5) * 300
 	for _i in range(1, total_sc_num):
 		var sc_i = {}
-		sc_i["type"] = Helper.rand_int(0, 0)
+		sc_i["type"] = 0
 		sc_i["visible"] = TEST
 		sc_i["clusters"] = []
 		sc_i["shapes"] = []
@@ -1673,11 +1685,11 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
-		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1))
+		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1) * u_i.dark_energy)
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
-		sc_i.diff = Helper.clever_round(universe_data[id].difficulty * pos.length(), 3)
+		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length(), 3)
 		supercluster_data.append(sc_i)
 	if id != 0:
 		var view_zoom = 500.0 / max_dist_from_center
@@ -1771,14 +1783,14 @@ func generate_galaxies(id:int):
 		var rand = randf()
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM, 3)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge, 3)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM, 3)
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM * u_i.charge, 3)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
@@ -2096,7 +2108,7 @@ func generate_systems(id:int):
 		s_i["planets"] = []
 		
 		var num_stars = 1
-		while randf() < 0.3 * dark_matter / float(num_stars) and num_stars < 5:
+		while randf() < 0.3 * dark_matter / pow(num_stars, 1.1):
 			num_stars += 1
 		var stars = []
 		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
@@ -2157,23 +2169,20 @@ func generate_systems(id:int):
 					star_size = rand_range(0.008, 0.02)
 					mass = rand_range(0.4, 0.8)
 				else:
-					if mass > 0.25 and randf() < 0.08:
+					if mass > 0.25 and randf() < 0.08 * u_i.gravitational:
 						star_type = "giant"
 						star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
 					if star_type == "main_sequence":
-						if randf() < 0.01:
+						if randf() < 0.01 * u_i.gravitational:
 							mass = rand_range(10, 50)
 							star_type = "supergiant"
 							star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
-						elif randf() < 0.0015:
+						elif randf() < 0.0015 * u_i.gravitational:
 							mass = rand_range(5, 30)
 							star_type = "hypergiant"
-							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0))
-							var tier = 1
-							while randf() < 0.2:
-								tier += 1
-								star_type = "hypergiant " + get_roman_num(tier)
-								star_size *= 1.2
+							var tier:int = floor(1 / pow(randf(), 0.35 * pow(u_i.gravitational, 0.25)))
+							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
+							star_type = "hypergiant " + get_roman_num(tier)
 			if hypergiant_system:
 				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
 				star_type = "hypergiant XV"
@@ -2181,7 +2190,8 @@ func generate_systems(id:int):
 				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
-			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * pow(temp, 4) / e(3.828, 26))
+			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
+			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26))
 			star["mass"] = Helper.clever_round(mass)
 			star["size"] = Helper.clever_round(star_size)
 			star["type"] = star_type
@@ -2289,11 +2299,11 @@ func generate_planets(id:int):#local id
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets
-			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0))
-			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3))
+			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * u_i.gravitational)
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
-			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter)
-			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2))
+			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter * u_i.gravitational)
+			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
 			if hypergiant_system:
 				if i == 1:
 					p_i.size = 6000
@@ -2354,7 +2364,7 @@ func generate_planets(id:int):#local id
 		p_i.liq_seed = randi()
 		p_i.liq_period = rand_range(60, 300)
 		var lakes = Data.elements.duplicate(true)
-		if id + s_num == 0:#Only water in solar system
+		if id + s_num == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
 				p_i.lake_1 = "H2O"
 			if randf() < 0.2:
@@ -2455,7 +2465,7 @@ func generate_tiles(id:int):
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
 	tile_data.resize(pow(wid, 2))
-	if p_i.id == 2:
+	if p_i.id == 2 and c_u == 0:
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
 		p_i.type = 5
@@ -2485,8 +2495,9 @@ func generate_tiles(id:int):
 		amplitude = 1.3
 	if dark_matter_system:
 		num_auroras = 0
+	var home_planet:bool = c_p_g == 2 and c_u == 0
 	for i in num_auroras:
-		if c_p_g != 2 and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
+		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
 			#au_int: aurora_intensity
 			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
 			if op_aurora:
@@ -2562,7 +2573,7 @@ func generate_tiles(id:int):
 #				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 #				tile_data[t_id].rock = {}
 #				continue
-			if c_p_g == 2:
+			if home_planet:
 				continue
 			var normal_cond:bool = not op_aurora and not cross_aurora and randf() < 0.1 / pow(wid, 0.9)
 			var op_aurora_cond:bool = op_aurora and tile_data[t_id] and tile_data[t_id].has("aurora")
@@ -2672,7 +2683,7 @@ func generate_tiles(id:int):
 	if lake_2_phase == "G":
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
-	if c_p_g == 2:
+	if home_planet:
 		tile_data[42] = {}
 		tile_data[42].cave = {}
 		tile_data[42].cave.id = 0

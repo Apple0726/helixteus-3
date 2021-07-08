@@ -53,8 +53,8 @@ func refresh():
 		$Control/EnergyCostText["custom_colors/font_color"] = Color.yellow
 	else:
 		$Control/EnergyCostText["custom_colors/font_color"] = Color.white
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num)
+	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge))
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed)
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	for reaction_name in reactions:
@@ -145,7 +145,7 @@ func _on_Transform_pressed():
 		rsrc_to_add.proton = num
 		rsrc_to_add.neutron = num
 		rsrc_to_add.electron = num
-		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult * obj.bldg.qty)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult / game.u_i.charge * obj.bldg.qty)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
@@ -165,7 +165,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct[reaction] = rsrc
 		else:
 			rsrc_to_deduct = {"proton":rsrc * Z, "neutron":rsrc * Z, "electron":rsrc * Z}
-		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult)
+		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult / game.u_i.charge)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
@@ -212,7 +212,7 @@ func _process(delta):
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed))
 
 func refresh_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
@@ -220,14 +220,14 @@ func refresh_icon():
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Control/HSlider.value = min(game.energy * au_mult / energy_cost / tile_num, game.atoms[reaction])
+		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num, game.atoms[reaction])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
 		game.show_tooltip(tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("SPR"), 0, obj.bldg.qty)
+	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("SPR") * game.u_i.time_speed, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_exited():

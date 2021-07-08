@@ -30,7 +30,7 @@ func _on_btn_pressed(btn_str:String):
 			"speedups":
 				item.item_desc = tr("SPEEDUPS_DESC2") % [Helper.time_to_str(obj_info.time)]
 			"overclocks":
-				item.item_desc = tr("OVERCLOCKS_DESC2") % [obj_info.mult, Helper.time_to_str(obj_info.duration)]
+				item.item_desc = tr("OVERCLOCKS_DESC2") % [obj_info.mult, Helper.time_to_str(obj_info.duration / game.u_i.time_speed)]
 			"pickaxes":
 				item.item_desc = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % obj.to_upper()), tr("MINING_SPEED"), obj_info.speed, tr("DURABILITY"), obj_info.durability]
 		item.costs = obj_info.costs

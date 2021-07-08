@@ -197,6 +197,7 @@ func show_M_DS_costs(star:Dictionary):
 	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
@@ -209,6 +210,7 @@ func show_M_PK_costs(star:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_PK_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
+	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
@@ -220,6 +222,7 @@ func show_M_SE_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_SE_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
+	bldg_costs.time /= game.u_i.time_speed
 	for cost in bldg_costs:
 		if cost != "energy":
 			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0)
@@ -238,6 +241,7 @@ func show_M_MME_costs(p_i:Dictionary):
 		bldg_costs = Data.MS_costs["M_MME_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
 		for cost in bldg_costs:
 			bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2))
+		bldg_costs.time /= game.u_i.time_speed
 		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
 			bldg_costs.time = 1
@@ -250,6 +254,7 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
+	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
@@ -503,6 +508,7 @@ func on_star_over (id:int):
 		bldg_costs = Data.MS_costs.M_MB.duplicate(true)
 		for cost in bldg_costs:
 			bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+		bldg_costs.time /= game.u_i.time_speed
 		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
 			bldg_costs.time = 1

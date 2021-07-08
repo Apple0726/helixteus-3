@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
@@ -13,14 +13,16 @@ font_data = ExtResource( 4 )
 default_font = SubResource( 1 )
 
 [sub_resource type="DynamicFont" id=3]
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=4]
 size = 38
 use_filter = true
 font_data = ExtResource( 3 )
 fallback/0 = ExtResource( 4 )
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="DynamicFont" id=5]
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="Panel" type="Panel"]
 anchor_left = 0.5
@@ -34,21 +36,52 @@ margin_bottom = 288.0
 theme = SubResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Master" type="HSlider" parent="."]
+[node name="Title" type="Label" parent="."]
+margin_top = 12.0
+margin_right = 896.0
+margin_bottom = 68.0
+custom_fonts/font = SubResource( 3 )
+text = "SETTINGS"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TabContainer" type="TabContainer" parent="."]
+margin_top = 60.0
+margin_right = 892.0
+margin_bottom = 576.0
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="SFX" type="Tabs" parent="TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 33.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Master" type="HSlider" parent="TabContainer/SFX"]
 margin_left = 64.0
-margin_top = 80.0
+margin_top = 27.0
 margin_right = 384.0
-margin_bottom = 144.0
+margin_bottom = 91.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Master"]
+[node name="Label" type="Label" parent="TabContainer/SFX/Master"]
 margin_right = 320.0
 margin_bottom = 24.0
 text = "MASTER"
@@ -57,35 +90,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Music" type="HSlider" parent="."]
+[node name="Music" type="HSlider" parent="TabContainer/SFX"]
 margin_left = 64.0
-margin_top = 144.0
+margin_top = 91.0
 margin_right = 384.0
-margin_bottom = 208.0
+margin_bottom = 155.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Music"]
+[node name="Label" type="Label" parent="TabContainer/SFX/Music"]
 margin_right = 320.0
 margin_bottom = 24.0
 text = "MUSIC"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="SFX" type="HSlider" parent="."]
+[node name="SFX" type="HSlider" parent="TabContainer/SFX"]
 margin_left = 64.0
-margin_top = 208.0
+margin_top = 155.0
 margin_right = 384.0
-margin_bottom = 272.0
+margin_bottom = 219.0
 min_value = -40.0
 max_value = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="SFX"]
+[node name="Label" type="Label" parent="TabContainer/SFX/SFX"]
 margin_right = 320.0
 margin_bottom = 24.0
 text = "SFX"
@@ -94,136 +130,82 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="."]
-margin_left = 484.0
-margin_top = 208.0
-margin_right = 804.0
-margin_bottom = 232.0
-text = "AUTOSAVE_INTERVAL"
-align = 1
+[node name="MusicPitch" type="CheckButton" parent="TabContainer/SFX"]
+margin_left = 456.0
+margin_top = 31.0
+margin_right = 846.0
+margin_bottom = 71.0
+text = "TIME_SPEED_AFFECTS_PITCH"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label3" type="Label" parent="."]
-margin_left = 761.113
-margin_top = 239.715
-margin_right = 915.113
-margin_bottom = 263.715
-custom_fonts/font = SubResource( 3 )
-text = "30 s"
+[node name="GRAPHICS" type="Tabs" parent="TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 33.0
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Autosave" type="HSlider" parent="."]
-margin_left = 510.0
-margin_top = 218.0
-margin_right = 750.0
-margin_bottom = 282.0
-min_value = 1.0
-max_value = 60.0
-value = 30.0
-rounded = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Title" type="Label" parent="."]
-margin_top = 12.0
-margin_right = 896.0
-margin_bottom = 68.0
-custom_fonts/font = SubResource( 4 )
-text = "SETTINGS"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Vsync" type="CheckButton" parent="."]
-margin_left = 520.0
-margin_top = 76.0
-margin_right = 806.0
-margin_bottom = 116.0
+[node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]
+margin_left = 68.0
+margin_top = 31.0
+margin_right = 356.0
+margin_bottom = 71.0
 text = "Vsync (requires restart)"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Fullscreen" type="CheckButton" parent="."]
-margin_left = 576.0
-margin_top = 152.0
-margin_right = 804.0
-margin_bottom = 192.0
-align = 1
+[node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS"]
+margin_left = 128.0
+margin_top = 95.0
+margin_right = 356.0
+margin_bottom = 135.0
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AutosaveLight" type="CheckButton" parent="."]
-margin_left = 532.0
-margin_top = 292.0
-margin_right = 785.0
-margin_bottom = 332.0
-text = "AUTOSAVE_LIGHT"
+[node name="FPS" type="Control" parent="TabContainer/GRAPHICS"]
+margin_left = 620.0
+margin_top = -1.0
+margin_right = 660.0
+margin_bottom = 39.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AutosellMinerals" type="CheckButton" parent="."]
-margin_left = 76.0
-margin_top = 296.0
-margin_right = 367.0
-margin_bottom = 336.0
-text = "AUTOSELL_MINERALS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EnableAutosave" type="CheckButton" parent="."]
-margin_left = 516.0
-margin_top = 332.0
-margin_right = 787.0
-margin_bottom = 372.0
-text = "ENABLE_AUTOSAVE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="FPS" type="Control" parent="."]
-margin_left = 525.954
-margin_top = 308.871
-margin_right = 565.954
-margin_bottom = 348.871
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="FPS"]
-margin_left = 77.6896
-margin_top = 99.129
-margin_right = 159.69
-margin_bottom = 123.129
+[node name="Label" type="Label" parent="TabContainer/GRAPHICS/FPS"]
+margin_left = 5.68961
+margin_top = 39.129
+margin_right = 87.69
+margin_bottom = 63.129
 text = "Max FPS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="FPS"]
-margin_left = 222.046
-margin_top = 127.129
-margin_right = 274.046
-margin_bottom = 151.129
+[node name="Label2" type="Label" parent="TabContainer/GRAPHICS/FPS"]
+margin_left = 150.046
+margin_top = 67.129
+margin_right = 202.046
+margin_bottom = 91.129
 text = "60"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FPS" type="HSlider" parent="FPS"]
-margin_left = -13.954
-margin_top = 128.367
-margin_right = 206.046
-margin_bottom = 144.367
+[node name="FPS" type="HSlider" parent="TabContainer/GRAPHICS/FPS"]
+margin_left = -85.954
+margin_top = 68.367
+margin_right = 134.046
+margin_bottom = 84.367
 min_value = 1.0
 max_value = 144.0
 value = 1.0
@@ -232,23 +214,67 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectSpeed" type="Control" parent="."]
-margin_left = 126.189
-margin_top = 380.664
-margin_right = 166.189
-margin_bottom = 420.664
+[node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
+margin_left = 104.0
+margin_top = 159.0
+margin_right = 356.0
+margin_bottom = 199.0
+text = "AUTOSAVE_LIGHT"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectSpeedSlider" type="HSlider" parent="CollectSpeed"]
+[node name="GAME" type="Tabs" parent="TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 33.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
+margin_left = 68.0
+margin_top = 87.0
+margin_right = 359.0
+margin_bottom = 127.0
+text = "AUTOSELL_MINERALS"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnableAutosave" type="CheckButton" parent="TabContainer/GAME"]
+margin_left = 88.0
+margin_top = 27.0
+margin_right = 359.0
+margin_bottom = 67.0
+text = "ENABLE_AUTOSAVE"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollectSpeed" type="Control" parent="TabContainer/GAME"]
+margin_left = 126.189
+margin_top = 155.0
+margin_right = 166.189
+margin_bottom = 195.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollectSpeedSlider" type="HSlider" parent="TabContainer/GAME/CollectSpeed"]
 margin_left = 7.41623
 margin_top = 30.4259
 margin_right = 177.416
 margin_bottom = 46.4259
 max_value = 5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="CollectSpeed" type="Label" parent="CollectSpeed"]
+[node name="CollectSpeed" type="Label" parent="TabContainer/GAME/CollectSpeed"]
 margin_left = -74.189
 margin_top = -0.664001
 margin_right = 265.811
@@ -260,25 +286,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="CollectSpeed"]
+[node name="Label2" type="Label" parent="TabContainer/GAME/CollectSpeed"]
 margin_left = -75.0
 margin_top = 31.0
 margin_right = -10.0
 margin_bottom = 45.0
 text = "FAST"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label3" type="Label" parent="CollectSpeed"]
+[node name="Label3" type="Label" parent="TabContainer/GAME/CollectSpeed"]
 margin_left = 195.649
 margin_top = 30.0172
 margin_right = 292.649
 margin_bottom = 44.0172
 text = "SLOW"
 
-[node name="Difficulty" type="Label" parent="."]
-margin_left = 36.0
-margin_top = 476.0
-margin_right = 388.0
-margin_bottom = 500.0
+[node name="Difficulty" type="Label" parent="TabContainer/GAME"]
+margin_left = 480.0
+margin_top = 35.0
+margin_right = 832.0
+margin_bottom = 59.0
 mouse_filter = 1
 text = "ENEMY_DIFFICULTY"
 align = 1
@@ -286,11 +315,113 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Difficulty2" type="Label" parent="."]
-margin_left = 452.0
-margin_top = 476.0
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/GAME"]
+margin_left = 490.218
+margin_top = 72.745
+margin_right = 819.218
+margin_bottom = 112.745
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Easy" type="CheckBox" parent="TabContainer/GAME/HBoxContainer"]
+margin_left = 38.0
+margin_right = 110.0
+margin_bottom = 40.0
+text = "EASY"
+
+[node name="Normal" type="CheckBox" parent="TabContainer/GAME/HBoxContainer"]
+margin_left = 114.0
+margin_right = 211.0
+margin_bottom = 40.0
+pressed = true
+text = "NORMAL"
+
+[node name="Hard" type="CheckBox" parent="TabContainer/GAME/HBoxContainer"]
+margin_left = 215.0
+margin_right = 290.0
+margin_bottom = 40.0
+text = "HARD"
+
+[node name="Autosave" type="HSlider" parent="TabContainer/GAME"]
+margin_left = 510.0
+margin_top = 161.0
+margin_right = 750.0
+margin_bottom = 225.0
+min_value = 1.0
+max_value = 60.0
+value = 30.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="TabContainer/GAME"]
+margin_left = 484.0
+margin_top = 151.0
 margin_right = 804.0
-margin_bottom = 500.0
+margin_bottom = 175.0
+text = "AUTOSAVE_INTERVAL"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="TabContainer/GAME"]
+margin_left = 761.113
+margin_top = 154.715
+margin_right = 915.113
+margin_bottom = 178.715
+custom_fonts/font = SubResource( 5 )
+text = "30 s"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MISC" type="Tabs" parent="TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 33.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC"]
+margin_left = 72.0
+margin_top = 83.0
+margin_right = 401.0
+margin_bottom = 123.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Standard" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2"]
+margin_left = 20.0
+margin_right = 139.0
+margin_bottom = 40.0
+text = "STANDARD"
+
+[node name="SI" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2"]
+margin_left = 143.0
+margin_right = 186.0
+margin_bottom = 40.0
+pressed = true
+text = "SI"
+
+[node name="Scientific" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2"]
+margin_left = 190.0
+margin_right = 308.0
+margin_bottom = 40.0
+text = "SCIENTIFIC"
+
+[node name="Difficulty2" type="Label" parent="TabContainer/MISC"]
+margin_left = 64.0
+margin_top = 43.0
+margin_right = 416.0
+margin_bottom = 67.0
 mouse_filter = 1
 text = "LARGE_NUMBER_NOTATION"
 align = 1
@@ -298,92 +429,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 46.2182
-margin_top = 513.745
-margin_right = 375.218
-margin_bottom = 553.745
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Easy" type="CheckBox" parent="HBoxContainer"]
-margin_left = 38.0
-margin_right = 110.0
-margin_bottom = 40.0
-text = "EASY"
-
-[node name="Normal" type="CheckBox" parent="HBoxContainer"]
-margin_left = 114.0
-margin_right = 211.0
-margin_bottom = 40.0
-pressed = true
-text = "NORMAL"
-
-[node name="Hard" type="CheckBox" parent="HBoxContainer"]
-margin_left = 215.0
-margin_right = 290.0
-margin_bottom = 40.0
-text = "HARD"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-margin_left = 460.0
-margin_top = 516.0
-margin_right = 789.0
-margin_bottom = 556.0
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Standard" type="CheckBox" parent="HBoxContainer2"]
-margin_left = 20.0
-margin_right = 139.0
-margin_bottom = 40.0
-text = "STANDARD"
-
-[node name="SI" type="CheckBox" parent="HBoxContainer2"]
-margin_left = 143.0
-margin_right = 186.0
-margin_bottom = 40.0
-pressed = true
-text = "SI"
-
-[node name="Scientific" type="CheckBox" parent="HBoxContainer2"]
-margin_left = 190.0
-margin_right = 308.0
-margin_bottom = 40.0
-text = "SCIENTIFIC"
-
-[connection signal="value_changed" from="Master" to="." method="_on_Main_audio_value_changed"]
-[connection signal="value_changed" from="Music" to="." method="_on_Music_value_changed"]
-[connection signal="value_changed" from="SFX" to="." method="_on_Sound_Effects_value_changed"]
-[connection signal="value_changed" from="Autosave" to="." method="_on_Autosave_value_changed"]
-[connection signal="toggled" from="Vsync" to="." method="_on_Vsync_toggled"]
-[connection signal="toggled" from="Fullscreen" to="." method="_on_Fullscreen_toggled"]
-[connection signal="toggled" from="AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
-[connection signal="mouse_entered" from="AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
-[connection signal="mouse_exited" from="AutosellMinerals" to="." method="_on_mouse_exited"]
-[connection signal="toggled" from="AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
-[connection signal="toggled" from="EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
-[connection signal="value_changed" from="FPS/FPS" to="." method="_on_FPS_value_changed"]
-[connection signal="value_changed" from="CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
-[connection signal="mouse_entered" from="CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
-[connection signal="mouse_exited" from="CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
-[connection signal="mouse_exited" from="HBoxContainer/Easy" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="HBoxContainer/Easy" to="." method="_on_Easy_pressed"]
-[connection signal="mouse_entered" from="HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
-[connection signal="mouse_exited" from="HBoxContainer/Normal" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="HBoxContainer/Normal" to="." method="_on_Normal_pressed"]
-[connection signal="mouse_entered" from="HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
-[connection signal="mouse_exited" from="HBoxContainer/Hard" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
-[connection signal="mouse_entered" from="HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
-[connection signal="mouse_exited" from="HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]
-[connection signal="mouse_entered" from="HBoxContainer2/SI" to="." method="_on_SI_mouse_entered"]
-[connection signal="mouse_exited" from="HBoxContainer2/SI" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="HBoxContainer2/SI" to="." method="_on_SI_pressed"]
-[connection signal="pressed" from="HBoxContainer2/Scientific" to="." method="_on_Scientific_pressed"]
+[connection signal="value_changed" from="TabContainer/SFX/Master" to="." method="_on_Main_audio_value_changed"]
+[connection signal="value_changed" from="TabContainer/SFX/Music" to="." method="_on_Music_value_changed"]
+[connection signal="value_changed" from="TabContainer/SFX/SFX" to="." method="_on_Sound_Effects_value_changed"]
+[connection signal="mouse_entered" from="TabContainer/SFX/MusicPitch" to="." method="_on_MusicPitch_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/SFX/MusicPitch" to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="TabContainer/SFX/MusicPitch" to="." method="_on_MusicPitch_toggled"]
+[connection signal="toggled" from="TabContainer/GRAPHICS/Vsync" to="." method="_on_Vsync_toggled"]
+[connection signal="toggled" from="TabContainer/GRAPHICS/Fullscreen" to="." method="_on_Fullscreen_toggled"]
+[connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
+[connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
+[connection signal="mouse_entered" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
+[connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
+[connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
+[connection signal="mouse_entered" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_pressed"]
+[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_Normal_pressed"]
+[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
+[connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
+[connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]
+[connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_SI_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_SI_pressed"]
+[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Scientific" to="." method="_on_Scientific_pressed"]

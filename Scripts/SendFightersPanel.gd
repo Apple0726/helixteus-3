@@ -102,7 +102,7 @@ func get_atm_exit_cost(p_i:Dictionary):
 	return round(res)
 
 func get_grav_exit_cost(p_i:Dictionary):
-	var res:float = pow(p_i.size / 180.0, 2.5) * 1000
+	var res:float = pow(p_i.size / 180.0, 2.5) * 1000 * game.u_i.gravitational
 	if has_SE(p_i):
 		res *= get_entry_exit_multiplier(p_i.MS_lv)
 	return round(res)
