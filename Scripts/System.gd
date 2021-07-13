@@ -332,7 +332,9 @@ func _input(event):
 			else:
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
-			game.add_upgrade_panel([], game.planet_data[planet_hovered])
+			game.upgrade_panel.ids = []
+			game.upgrade_panel.planet = game.planet_data[planet_hovered]
+			game.toggle_panel(game.upgrade_panel)
 
 func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()

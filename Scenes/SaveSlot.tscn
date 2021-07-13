@@ -5,29 +5,32 @@
 [node name="HBoxContainer" type="HBoxContainer"]
 margin_right = 816.0
 margin_bottom = 40.0
+custom_constants/separation = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Button" type="Button" parent="."]
-margin_right = 200.0
+margin_right = 150.0
 margin_bottom = 40.0
-rect_min_size = Vector2( 200, 40 )
+rect_min_size = Vector2( 150, 40 )
 text = "Save 1"
 
 [node name="Created" type="Label" parent="."]
-margin_left = 204.0
+margin_left = 155.0
 margin_top = 13.0
-margin_right = 490.0
+margin_right = 464.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
+align = 1
 
 [node name="Saved" type="Label" parent="."]
-margin_left = 494.0
+margin_left = 469.0
 margin_top = 13.0
-margin_right = 780.0
+margin_right = 779.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
+align = 1
 
 [node name="Delete" type="TextureButton" parent="."]
 margin_left = 784.0

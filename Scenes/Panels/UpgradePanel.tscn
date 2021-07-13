@@ -1,17 +1,22 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 
-[sub_resource type="StyleBoxEmpty" id=1]
-content_margin_left = 5.0
-content_margin_right = 5.0
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 10.0
+bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 
 [node name="Control" type="Control"]
-theme = ExtResource( 1 )
+theme = ExtResource( 3 )
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_lock_": true,
@@ -36,8 +41,8 @@ __meta__ = {
 }
 
 [node name="Upgrade" type="Button" parent="UpgradePanel"]
-margin_left = 584.0
-margin_top = 256.0
+margin_left = 590.0
+margin_top = 248.0
 margin_right = 768.0
 margin_bottom = 296.0
 rect_min_size = Vector2( 0, 40 )
@@ -49,21 +54,23 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
-margin_left = 16.0
 margin_top = 248.0
 margin_right = 592.0
 margin_bottom = 296.0
 rect_min_size = Vector2( 200, 40 )
-theme = ExtResource( 3 )
+custom_styles/bg = SubResource( 1 )
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Costs" type="HBoxContainer" parent="UpgradePanel/ScrollContainer"]
-margin_right = 576.0
+margin_left = 10.0
+margin_top = 1.0
+margin_right = 591.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 3
 custom_constants/separation = 20
 
 [node name="Current" type="RichTextLabel" parent="UpgradePanel"]
@@ -73,7 +80,6 @@ margin_right = 306.0
 margin_bottom = 178.0
 grow_vertical = 2
 size_flags_horizontal = 3
-custom_styles/normal = SubResource( 1 )
 bbcode_enabled = true
 bbcode_text = "[center]1 mineral/sec[/center]"
 text = "1 mineral/sec"
@@ -164,7 +170,7 @@ __meta__ = {
 }
 
 [node name="PathButtons" type="HBoxContainer" parent="UpgradePanel"]
-margin_top = 38.0
+margin_top = 40.0
 margin_right = 768.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 0, 35 )
@@ -176,7 +182,7 @@ __meta__ = {
 
 [node name="Path1" type="Button" parent="UpgradePanel/PathButtons"]
 margin_right = 768.0
-margin_bottom = 37.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Path2" type="Button" parent="UpgradePanel/PathButtons"]

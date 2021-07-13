@@ -28,12 +28,18 @@ _global_script_classes=[ {
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://Scripts/Projectile.gd"
+}, {
+"base": "RichTextEffect",
+"class": "TextEffect",
+"language": "GDScript",
+"path": "res://Scripts/TextEffects/TextEffect.gd"
 } ]
 _global_script_class_icons={
 "Cave": "",
 "CaveBoss": "",
 "NPC": "",
-"Projectile": ""
+"Projectile": "",
+"TextEffect": ""
 }
 
 [application]

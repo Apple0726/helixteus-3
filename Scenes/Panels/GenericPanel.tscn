@@ -3,38 +3,48 @@
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 
 [sub_resource type="DynamicFont" id=1]
-size = 30
+size = 25
 use_filter = true
 font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 0.0
+content_margin_top = 0.0
+bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 
 [node name="GenericPanel" type="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -533.5
-margin_top = -300.0
-margin_right = 533.5
-margin_bottom = 300.0
+margin_left = -536.0
+margin_top = -296.0
+margin_right = 536.0
+margin_bottom = 296.0
 rect_pivot_offset = Vector2( 533, 300 )
-theme = ExtResource( 4 )
+theme = ExtResource( 5 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
 }
 
 [node name="Background" type="Panel" parent="."]
-margin_right = 1064.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -47,7 +57,7 @@ margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
-margin_bottom = 64.0
+margin_bottom = 48.0
 custom_fonts/font = SubResource( 1 )
 align = 1
 valign = 1
@@ -56,27 +66,27 @@ __meta__ = {
 }
 
 [node name="Tabs" type="HBoxContainer" parent="."]
-margin_top = 64.0
-margin_right = 1064.0
-margin_bottom = 104.0
-custom_constants/separation = -2
+margin_top = 48.0
+margin_right = 1072.0
+margin_bottom = 88.0
+custom_constants/separation = -1
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Contents" type="VBoxContainer" parent="."]
-visible = false
-margin_top = 104.0
-margin_right = 1064.0
-margin_bottom = 600.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -504.0
 custom_constants/separation = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Info" type="Label" parent="Contents"]
-margin_right = 1064.0
+margin_right = 1072.0
 margin_bottom = 36.0
 custom_styles/normal = SubResource( 2 )
 text = "Information"
@@ -89,39 +99,39 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents"]
 margin_top = 36.0
-margin_right = 1064.0
-margin_bottom = 496.0
+margin_right = 1072.0
+margin_bottom = 504.0
 size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="Items" type="ScrollContainer" parent="Contents/HBoxContainer"]
-margin_right = 762.0
-margin_bottom = 460.0
+margin_right = 767.0
+margin_bottom = 468.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_styles/bg = SubResource( 3 )
 
 [node name="Items" type="GridContainer" parent="Contents/HBoxContainer/Items"]
-margin_right = 762.0
+margin_right = 765.0
 size_flags_horizontal = 3
-custom_constants/vseparation = -2
-custom_constants/hseparation = -2
+custom_constants/vseparation = -1
+custom_constants/hseparation = -1
 columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ItemInfo" type="Panel" parent="Contents/HBoxContainer"]
-margin_left = 760.0
-margin_right = 1064.0
-margin_bottom = 460.0
-rect_min_size = Vector2( 304, 0 )
+margin_left = 765.0
+margin_right = 1072.0
+margin_bottom = 468.0
+rect_min_size = Vector2( 307, 0 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]
-visible = false
-margin_left = 3.0
-margin_top = 420.0
-margin_right = 307.0
-margin_bottom = 458.0
+margin_left = 4.0
+margin_top = 428.0
+margin_right = 308.0
+margin_bottom = 466.0
 custom_constants/separation = 15
 __meta__ = {
 "_edit_use_anchors_": false
@@ -139,14 +149,13 @@ allow_greater = true
 align = 2
 
 [node name="Buy" type="Button" parent="Contents/HBoxContainer/ItemInfo/HBoxContainer"]
-margin_left = 146.0
+margin_left = 161.0
 margin_right = 304.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 theme = ExtResource( 5 )
 shortcut_in_tooltip = false
 text = "BUY"
-align = 0
 expand_icon = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/HBoxContainer/ItemInfo"]

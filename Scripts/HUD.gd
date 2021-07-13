@@ -338,11 +338,9 @@ func _on_Shop_pressed():
 		game.toggle_panel(game.shop_panel)
 
 func _on_Shop_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("SHOP") + " (R)")
 
 func _on_Inventory_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("INVENTORY") + " (E)")
 
 func _on_Inventory_pressed():
@@ -358,7 +356,6 @@ func _on_Inventory_pressed():
 		game.toggle_panel(game.inventory)
 
 func _on_Craft_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("CRAFT") + " (T)")
 
 func _on_Craft_pressed():
@@ -399,7 +396,6 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():
-	on_button = false
 	game.hide_tooltip()
 
 func update_hotbar():
@@ -422,7 +418,6 @@ func update_hotbar():
 var slot_over = -1
 func on_slot_over(i:int):
 	slot_over = i
-	on_button = true
 	game.help_str = "hotbar_shortcuts"
 	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.hotbar_shortcuts else ""
 	var num = " (%s)" % [i + 1] if i < 5 else ""
@@ -430,20 +425,16 @@ func on_slot_over(i:int):
 
 func on_slot_out():
 	slot_over = -1
-	on_button = false
 	game.hide_tooltip()
 
 func on_slot_press(i:int):
 	var name = game.hotbar[i]
-	on_button = false
 	game.inventory.on_slot_press(name)
 
 func _on_Label_mouse_entered():
-	on_button = true
 	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.universe_data[game.c_u].lv, Helper.format_num(game.universe_data[game.c_u].xp, 4), Helper.format_num(game.universe_data[game.c_u].xp_to_lv, 4), tr("XP_HELP")])
 
 func _on_Label_mouse_exited():
-	on_button = false
 	emma_cave_shortcut = false
 	game.hide_tooltip()
 
@@ -452,7 +443,6 @@ func _input(event):
 	if Input.is_action_just_released("H") and slot_over != -1:
 		game.hotbar.remove(slot_over)
 		game.hide_tooltip()
-		on_button = false
 		slot_over = -1
 		update_hotbar()
 		refresh()
@@ -472,15 +462,12 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		if bookmark_shown and not Geometry.is_point_in_polygon(event.position, $MouseOut.polygon):
 			bookmark_shown = false
-			game.block_scroll = false
 			$AnimationPlayer.play_backwards("BookmarkAnim")
 		if not bookmark_shown and Geometry.is_point_in_polygon(event.position, $MouseIn.polygon):
 			bookmark_shown = true
-			game.block_scroll = true
 			$AnimationPlayer.play("BookmarkAnim")
 
 func _on_CollectAll_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
 
 func _on_CollectAll_pressed():
@@ -491,7 +478,6 @@ func _on_CollectAll_pressed():
 		game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("SELL_MINERALS") + " (,)")
 
 func _on_ConvertMinerals_pressed():
@@ -503,7 +489,6 @@ func _on_Ships_pressed():
 	game.toggle_panel(game.ship_panel)
 
 func _on_Ships_mouse_entered():
-	on_button = true
 	game.show_tooltip("%s (%s)" % [tr("SHIPS"), $Buttons/Ships.shortcut.shortcut.action])
 
 
@@ -541,7 +526,6 @@ func _on_Ship2Map_pressed():
 		ship2map.refresh()
 
 func _on_Vehicles_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("VEHICLES") + " (V)")
 
 func _on_Vehicles_pressed():
@@ -550,7 +534,6 @@ func _on_Vehicles_pressed():
 		game.toggle_panel(game.vehicle_panel)
 
 func _on_ObjectivesLabel_mouse_entered():
-	on_button = true
 	if game.objective.type == game.ObjectiveType.EMMA:
 		emma_cave_shortcut = true
 
@@ -772,11 +755,9 @@ func _on_Clusters_mouse_entered():
 
 func _on_Name_mouse_entered():
 	renaming = true
-	on_button = true
 
 func _on_Name_mouse_exited():
 	renaming = false
-	on_button = false
 
 
 func _on_Name_text_entered(new_text):
@@ -800,7 +781,6 @@ func _on_Dimension_pressed():
 
 
 func _on_Dimension_mouse_entered():
-	on_button = true
 	game.show_tooltip(tr("VIEW_DIMENSION"))
 
 

@@ -551,7 +551,7 @@ var mouse_pos = Vector2.ZERO
 var thread:Thread
 var mutex:Mutex
 
-func _input(event):
+func _unhandled_input(event):
 	if game.tutorial and game.tutorial.BG_blocked:
 		return
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
@@ -563,9 +563,10 @@ func _input(event):
 				construct(tile.bldg.name, Data.costs[tile.bldg.name])
 			if Input.is_action_just_released("F"):
 				if tiles_selected.empty():
-					game.add_upgrade_panel([tile_over])
+					game.upgrade_panel.ids = [tile_over]
 				else:
-					game.add_upgrade_panel(tiles_selected)
+					game.upgrade_panel.ids = tiles_selected.duplicate(true)
+				game.toggle_panel(game.upgrade_panel)
 			if Input.is_action_just_released("X"):
 				game.hide_adv_tooltip()
 				game.hide_tooltip()
@@ -628,12 +629,6 @@ func _input(event):
 				add_shadows()
 			elif new_y < old_y:
 				add_shadows()
-		if game.block_scroll:
-			if tile_over != -1:
-				tile_over = -1
-				game.hide_tooltip()
-				game.hide_adv_tooltip()
-			return
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
@@ -709,8 +704,6 @@ func _input(event):
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
-		if game.block_scroll:
-			return
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = get_tile_id_from_pos(mouse_pos)

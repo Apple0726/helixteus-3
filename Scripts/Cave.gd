@@ -351,7 +351,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							var deposit = deposit_scene.instance()
 							deposit.rsrc_texture = game.metal_textures[met_spawned]
 							deposit.rsrc_name = met_spawned
-							deposit.amount = int(rng.randf_range(0.1, 0.15) * game.met_info[met_spawned].amount * min(5, pow(difficulty, 0.3)))
+							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) / game.met_info[met_spawned].rarity * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
 							deposits[String(tile_id)] = deposit
@@ -758,7 +758,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if met_value.rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(rng.randf_range(0.4, 0.7) * met_value.amount * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
+			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) * met_value.rarity * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):

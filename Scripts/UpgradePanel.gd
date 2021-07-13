@@ -23,6 +23,11 @@ onready var upgrade_btn = $UpgradePanel/Upgrade
 
 func _ready():
 	set_polygon($UpgradePanel.rect_size)
+	path1.text = tr("PATH") + " 1"
+	path2.text = tr("PATH") + " 2"
+	path3.text = tr("PATH") + " 3"
+
+func refresh():
 	if not planet.empty():
 		path2.visible = Data.path_2.has(planet.bldg.name)
 		path3.visible = Data.path_3.has(planet.bldg.name)
@@ -41,11 +46,8 @@ func _ready():
 			_on_Path1_pressed()
 		else:
 			game.popup(tr("NO_UPGRADE"), 1.5)
-			game.remove_upgrade_panel()
-	path1.text = tr("PATH") + " 1"
-	path2.text = tr("PATH") + " 2"
-	path3.text = tr("PATH") + " 3"
-
+			game.toggle_panel(self)
+	
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))
 
@@ -165,7 +167,7 @@ func update():
 		current.text = tr("VARIES")
 	if all_tiles_constructing:
 		game.popup(tr("SELECTED_BLDGS_UNDER_CONSTR"), 2)
-		game.remove_upgrade_panel()
+		game.toggle_panel(self)
 		return
 	next.text = ""
 	if bldg == "SP" and path_selected == 1:
@@ -323,12 +325,12 @@ func _on_Upgrade_pressed():
 			game.universe_data[game.c_u].xp += round(cost_money / 100.0)
 			game.view.obj.refresh_planets()
 		game.HUD.refresh()
-		game.remove_upgrade_panel()
+		game.toggle_panel(self)
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
 func _on_close_button_pressed():
-	game.remove_upgrade_panel()
+	game.toggle_panel(self)
 
 func _on_AutoSpeedup_mouse_entered():
 	game.show_tooltip(tr("AUTO_SPEEDUP_DESC"))

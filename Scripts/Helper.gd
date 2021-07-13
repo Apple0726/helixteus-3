@@ -497,7 +497,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		other_volume += amount / rho / 1000
 	for met in game.met_info:
 		var met_info = game.met_info[met]
-		var chance_mult:float = 0.25 / met_info.rarity * aurora_mult
+		var chance_mult:float = 0.25 * aurora_mult
 		var amount:float
 		if tile.has("crater") and met == tile.crater.metal:
 			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
@@ -511,7 +511,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
 			amount = rand_range(0.4, 0.45) * num_tiles3
-		amount *= met_info.amount * chance_mult * aurora_mult * h_mult
+		amount *= 20 * chance_mult * aurora_mult * h_mult
 		if amount < 1:
 			continue
 		contents[met] = amount
@@ -555,14 +555,14 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			for met in game.met_info:
 				var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 				if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
-					if randf() < 0.25 / game.met_info[met].rarity * (6 if crater_metal else 1) * aurora_mult:
+					if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult:
 						tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
 		if tile.has("current_deposit"):
 			var met = tile.current_deposit.met
 			var size = tile.current_deposit.size
 			var progress2 = tile.current_deposit.progress
 			var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-			var amount = clever_round(game.met_info[met].amount * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult, 3)
+			var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult, 3)
 			contents[met] = amount
 			other_volume += amount / game.met_info[met].density / 1000 / h_mult
 			tile.current_deposit.progress += 1

@@ -1,6 +1,6 @@
 extends Node2D
 
-const TEST:bool = true
+const TEST:bool = false
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -93,8 +93,6 @@ var active_panel
 
 #The base node containing things that can be moved/zoomed in/out
 var view
-var block_scroll:bool = false
-
 
 ############ Save data ############
 
@@ -200,6 +198,7 @@ var save_date:int
 var bookmarks:Dictionary
 
 ############ End save data ############
+var block_scroll:bool = false
 var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
@@ -231,23 +230,23 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
-var met_info = {	"lead":{"min_depth":0, "max_depth":500, "amount":20, "rarity":1, "density":11.34, "value":30},
-					"copper":{"min_depth":100, "max_depth":750, "amount":20, "rarity":1.7, "density":8.96, "value":55},
-					"iron":{"min_depth":200, "max_depth":1000, "amount":20, "rarity":2.6, "density":7.87, "value":85},
-					"aluminium":{"min_depth":300, "max_depth":1500, "amount":20, "rarity":4.5, "density":2.7, "value":140},
-					"silver":{"min_depth":400, "max_depth":1750, "amount":20, "rarity":7.2, "density":10.49, "value":200},
-					"gold":{"min_depth":500, "max_depth":2500, "amount":16, "rarity":10.0, "density":19.3, "value":300},
-					"amethyst":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":14.5, "density":2.66, "value":500},
-					"emerald":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":14.7, "density":2.70, "value":540},
-					"quartz":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.0, "density":2.32, "value":580},
-					"topaz":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.3, "density":3.50, "value":620},
-					"ruby":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.6, "density":4.01, "value":660},
-					"sapphire":{"min_depth":600, "max_depth":3000, "amount":16, "rarity":15.9, "density":3.99, "value":700},
-					"platinum":{"min_depth":1000, "max_depth":4000, "amount":14, "rarity":20.0, "density":21.45, "value":1000},
-					"titanium":{"min_depth":1400, "max_depth":6000, "amount":14, "rarity":28.5, "density":4.51, "value":1450},
-					"diamond":{"min_depth":1800, "max_depth":9000, "amount":14, "rarity":42.0, "density":4.20, "value":2200},
-					"nanocrystal":{"min_depth":2400, "max_depth":14000, "amount":12, "rarity":67.5, "density":1.5, "value":3000},
-					"mythril":{"min_depth":3000, "max_depth":20000, "amount":12, "rarity":99.4, "density":13.4, "value":4000},
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":30},
+					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":66},
+					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":140},
+					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":335},
+					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":743},
+					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":1795},
+					"amethyst":{"min_depth":800, "max_depth":3000, "rarity":25.5, "density":2.66, "value":3863},
+					"emerald":{"min_depth":800, "max_depth":3000, "rarity":25.6, "density":2.70, "value":3885},
+					"quartz":{"min_depth":800, "max_depth":3000, "rarity":25.7, "density":2.32, "value":3908},
+					"topaz":{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":3931},
+					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":3954},
+					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":3977},
+					"platinum":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":21.45, "value":9359},
+					"titanium":{"min_depth":3400, "max_depth":7000, "rarity":89.5, "density":4.51, "value":25401},
+					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":59185},
+					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":155027},
+					"mythril":{"min_depth":13000, "max_depth":20000, "rarity":586.4, "density":13.4, "value":426002},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -324,6 +323,7 @@ var metal_textures:Dictionary = {}
 var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
 func _ready():
+	$Title/LightRays.visible = true
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 	for i in range(0, 7):
@@ -613,6 +613,7 @@ func load_game():
 	universe_data = save_info.get_var()
 	save_info.close()
 	load_univ()
+	$UI.add_child(HUD)
 
 func remove_files(dir:Directory):
 	dir.list_dir_begin(true)
@@ -923,7 +924,7 @@ func new_game(tut:bool, univ:int = 0):
 	save_sc.store_var(supercluster_data)
 	save_sc.close()
 	fn_save_game()
-	if univ == 0:
+	if not is_a_parent_of(HUD):
 		$UI.add_child(HUD)
 	if tut:
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
@@ -941,6 +942,7 @@ func new_game(tut:bool, univ:int = 0):
 	view.set_process(true)
 
 func add_panels():
+	upgrade_panel = upgrade_panel_scene.instance()
 	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
 	shop_panel = generic_panel_scene.instance()
 	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
@@ -1039,6 +1041,9 @@ func add_panels():
 	inventory.visible = false
 	$Panels/Control.add_child(inventory)
 
+	upgrade_panel.visible = false
+	$Panels/Control.add_child(upgrade_panel)
+
 func popup(txt, dur):
 	var node = $UI/Popup
 	node.text = txt
@@ -1053,9 +1058,8 @@ func popup(txt, dur):
 	tween.remove_all()
 	tween.interpolate_property(node, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.15)
 	tween.interpolate_property(node, "rect_position", Vector2(x_pos, 83), Vector2(x_pos, 80), 0.15)
-	tween.interpolate_property(node, "rect_rotation", 0, 0, dur)
 	tween.start()
-	yield(tween, "tween_all_completed")
+	yield(get_tree().create_timer(dur), "timeout")
 	if not tween.is_active():
 		tween.interpolate_property(node, "modulate", null, Color(1, 1, 1, 0), 0.15)
 		tween.interpolate_property(node, "rect_position", Vector2(x_pos, 80), Vector2(x_pos, 83), 0.15)
@@ -1144,29 +1148,7 @@ func fade_out_panel(panel:Control):
 		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
 
 func on_fade_complete(panel:Control):
-	hide_tooltip()
 	panel.visible = false
-
-func add_upgrade_panel(ids:Array, planet:Dictionary = {}):
-	if active_panel and active_panel != upgrade_panel:
-		fade_out_panel(active_panel)
-	if is_instance_valid(upgrade_panel) and $Panels/Control.is_a_parent_of(upgrade_panel):
-		remove_upgrade_panel()
-	upgrade_panel = upgrade_panel_scene.instance()
-	if planet.empty():
-		upgrade_panel.ids = ids.duplicate(true)
-	else:
-		upgrade_panel.planet = planet
-	active_panel = upgrade_panel
-	if is_instance_valid(upgrade_panel):
-		$Panels/Control.add_child(upgrade_panel)
-
-func remove_upgrade_panel():
-	if is_instance_valid(upgrade_panel):
-		$Panels/Control.remove_child(upgrade_panel)
-	active_panel = null
-	upgrade_panel = null
-	block_scroll = false
 
 func toggle_panel(_panel):
 	if active_panel:
@@ -1174,6 +1156,8 @@ func toggle_panel(_panel):
 		if active_panel == _panel:
 			active_panel = null
 			return
+	hide_tooltip()
+	hide_adv_tooltip()
 	active_panel = _panel
 	fade_in_panel(_panel)
 	_panel.refresh()
@@ -1342,7 +1326,8 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 			add_child(battle)
 	if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
 		HUD.refresh()
-	HUD.switch_btn.visible = c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
+	if is_instance_valid(HUD) and is_a_parent_of(HUD):
+		HUD.switch_btn.visible = c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
 	if c_v == "universe" and HUD.dimension_btn.visible:
 		HUD.switch_btn.visible = false
 	if not first_time:
@@ -1522,15 +1507,14 @@ func add_dimension():
 		add_child(dimension)
 
 func add_universe():
-	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/DimensionView.png")
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
+	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/DimensionView.png")
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_supercluster():
-	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/UniverseView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if not supercluster_data[c_sc].has("discovered"):
@@ -1540,9 +1524,9 @@ func add_supercluster():
 		generate_clusters(c_sc)
 	add_obj("supercluster")
 	HUD.get_node("Panel/CollectAll").visible = false
+	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/UniverseView.png")
 
 func add_cluster():
-	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
 	if obj_exists("Superclusters", c_sc):
 		cluster_data = open_obj("Superclusters", c_sc)
 	if obj_exists("Clusters", c_c_g):
@@ -1555,10 +1539,10 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
+	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_galaxy():
-	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/ClusterView.png")
 	if obj_exists("Clusters", c_c_g):
 		galaxy_data = open_obj("Clusters", c_c_g)
 	if obj_exists("Galaxies", c_g_g):
@@ -1566,6 +1550,7 @@ func add_galaxy():
 	if not galaxy_data[c_g].has("discovered"):
 		yield(start_system_generation(), "completed")
 	add_obj("galaxy")
+	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func start_system_generation():
@@ -1578,7 +1563,6 @@ func start_system_generation():
 	yield(generate_system_part(), "completed")
 	
 func add_system():
-	HUD.switch_btn.texture_normal = load("res://Graphics/Buttons/GalaxyView.png")
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1588,6 +1572,7 @@ func add_system():
 		generate_planets(c_s)
 	show.bookmarks = true
 	add_obj("system")
+	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/GalaxyView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_planet():
@@ -3137,7 +3122,7 @@ func _process(delta):
 					energy += autocollect.rsrc.energy * delta * energy_mult
 					SP += autocollect.rsrc.SP * delta * SP_mult
 			Helper.add_minerals(min_to_add)
-			if is_instance_valid(HUD):
+			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
 				HUD.update_money_energy_SP()
 			if tutorial and tutorial.tut_num == 24 and objective.has("current"):
@@ -3163,17 +3148,17 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
 		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-			tooltip.rect_position = mouse_pos + Vector2(4, 4)
-			adv_tooltip.rect_position = mouse_pos + Vector2(4, 4)
+			tooltip.rect_position = mouse_pos + Vector2(9, 9)
+			adv_tooltip.rect_position = mouse_pos + Vector2(9, 9)
 		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 4, -4)
-			adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 4, -4)
+			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
+			adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 9, -9)
 		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-			tooltip.rect_position = mouse_pos - Vector2(-4, tooltip.rect_size.y)
-			adv_tooltip.rect_position = mouse_pos - Vector2(-4, adv_tooltip.rect_size.y)
+			tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+			adv_tooltip.rect_position = mouse_pos - Vector2(-9, adv_tooltip.rect_size.y + 9)
 		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-			tooltip.rect_position = mouse_pos - tooltip.rect_size
-			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size
+			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size - Vector2(9, 9)
 		if item_cursor.visible:
 			item_cursor.position = mouse_pos
 		if ship_locator:
@@ -3202,9 +3187,6 @@ func _input(event):
 					if is_instance_valid(sub_panel):
 						sub_panel.visible = false
 						sub_panel = null
-					elif active_panel == upgrade_panel:
-						remove_upgrade_panel()
-						active_panel = null
 					else:
 						fade_out_panel(active_panel)
 						active_panel = null

@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=4 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+draw_center = false
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 0.0784314 )
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 0.156863 )
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+
+[resource]
+Button/styles/focus = SubResource( 1 )
+Button/styles/hover = SubResource( 2 )
+Button/styles/normal = SubResource( 1 )
+Button/styles/pressed = SubResource( 3 )

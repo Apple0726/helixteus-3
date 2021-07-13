@@ -37,7 +37,7 @@ func _on_DarkEnergy_pressed():
 func _on_Aurora_pressed():
 	$Text.text = tr("AURORA_LIST")
 	for child in vbox.get_children():
-		if child != $ScrollContainer/VBoxContainer/DarkEnergy:
+		if child != $ScrollContainer/VBoxContainer/Aurora:
 			child.pressed = false
 
 func _on_FM_pressed():

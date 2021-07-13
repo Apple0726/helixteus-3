@@ -2,12 +2,12 @@
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/Inventory.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
-size = 30
+size = 25
 use_filter = true
 font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 2 )
@@ -21,10 +21,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -533.5
-margin_top = -300.0
-margin_right = 533.5
-margin_bottom = 300.0
+margin_left = -536.0
+margin_top = -296.0
+margin_right = 537.0
+margin_bottom = 296.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 3 )
 script = ExtResource( 4 )
@@ -34,8 +34,8 @@ __meta__ = {
 }
 
 [node name="Background" type="Panel" parent="."]
-margin_right = 1064.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -47,8 +47,8 @@ margin_left = -48.0
 margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 64.0
+margin_right = 1072.0
+margin_bottom = 48.0
 custom_fonts/font = SubResource( 1 )
 text = "INVENTORY"
 align = 1
@@ -58,53 +58,53 @@ __meta__ = {
 }
 
 [node name="Tabs" type="HBoxContainer" parent="."]
-margin_top = 64.0
-margin_right = 1064.0
-margin_bottom = 104.0
-custom_constants/separation = -2
+margin_top = 48.0
+margin_right = 1072.0
+margin_bottom = 88.0
+custom_constants/separation = -1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Items" type="Button" parent="Tabs"]
-margin_right = 214.0
+margin_right = 215.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "ITEMS"
 
 [node name="Materials" type="Button" parent="Tabs"]
-margin_left = 212.0
-margin_right = 426.0
+margin_left = 214.0
+margin_right = 429.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "MATERIALS"
 
 [node name="Metals" type="Button" parent="Tabs"]
-margin_left = 424.0
-margin_right = 639.0
+margin_left = 428.0
+margin_right = 643.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "METALS"
 expand_icon = true
 
 [node name="Atoms" type="Button" parent="Tabs"]
-margin_left = 637.0
-margin_right = 851.0
+margin_left = 642.0
+margin_right = 857.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "ATOMS"
 expand_icon = true
 
 [node name="Particles" type="Button" parent="Tabs"]
-margin_left = 849.0
-margin_right = 1064.0
+margin_left = 856.0
+margin_right = 1072.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "PARTICLES"
 expand_icon = true
 
 [node name="Contents" type="VBoxContainer" parent="."]
-margin_top = 104.0
+margin_top = 88.0
 margin_right = 1064.0
 margin_bottom = 600.0
 custom_constants/separation = 0
@@ -127,7 +127,7 @@ __meta__ = {
 [node name="Control" type="Control" parent="Contents"]
 margin_top = 36.0
 margin_right = 1064.0
-margin_bottom = 496.0
+margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -158,6 +158,7 @@ columns = 15
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Tabs/Items" to="." method="_on_Items_pressed"]
 [connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
