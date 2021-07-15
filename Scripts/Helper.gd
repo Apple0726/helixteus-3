@@ -94,6 +94,8 @@ func on_rsrc_out():
 
 #Converts time in milliseconds to string format
 func time_to_str (time:float):
+	if time < 0:
+		time = 0
 	var seconds = int(floor(time / 1000)) % 60
 	var second_zero = "0" if seconds < 10 else ""
 	var minutes = int(floor(time / 60000)) % 60
@@ -1022,7 +1024,7 @@ func get_conquer_all_data():
 	var energy_cost = round(14000 * game.planet_data[-1].distance)
 	return {"HX_data":HX_data, "energy_cost":energy_cost}
 
-var hbox_theme = preload("res://Resources/panel_theme.tres")
+var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
 func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	var hbox = HBoxContainer.new()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/SendShipsPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Resources/PanelBG.tres" type="StyleBox" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -16,16 +15,13 @@ font_data = ExtResource( 2 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 0.0
-content_margin_right = 0.0
-content_margin_top = 0.0
-content_margin_bottom = 0.0
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
 
 [node name="SendShipsPanel" type="Control"]
 margin_right = 1067.0
@@ -68,7 +64,7 @@ __meta__ = {
 margin_top = 60.0
 margin_right = 1064.0
 margin_bottom = 600.0
-custom_constants/separation = -2
+custom_constants/separation = -1
 __meta__ = {
 "_edit_group_": true,
 "_edit_lock_": true,
@@ -77,16 +73,17 @@ __meta__ = {
 
 [node name="Desc" type="Label" parent="VBox"]
 margin_right = 1064.0
-margin_bottom = 40.0
-custom_styles/normal = ExtResource( 9 )
+margin_bottom = 37.0
+custom_styles/normal = SubResource( 2 )
 text = "SEND_SHIPS_DESC"
 align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
-margin_top = 38.0
+margin_top = 36.0
 margin_right = 1064.0
 margin_bottom = 540.0
 size_flags_vertical = 3
@@ -94,29 +91,32 @@ custom_constants/separation = 0
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox"]
 margin_right = 450.0
-margin_bottom = 502.0
-custom_constants/separation = -2
+margin_bottom = 504.0
+custom_constants/separation = -1
 
 [node name="Label" type="Label" parent="VBox/HBox/VBox"]
 margin_right = 450.0
-margin_bottom = 40.0
-custom_styles/normal = ExtResource( 9 )
+margin_bottom = 37.0
+custom_styles/normal = SubResource( 2 )
 text = "ENEMIES"
 align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Scroll" type="ScrollContainer" parent="VBox/HBox/VBox"]
-margin_top = 38.0
+margin_top = 36.0
 margin_right = 450.0
-margin_bottom = 502.0
+margin_bottom = 504.0
 rect_min_size = Vector2( 450, 0 )
 size_flags_vertical = 3
-custom_styles/bg = SubResource( 2 )
 
 [node name="Enemies" type="VBoxContainer" parent="VBox/HBox/VBox/Scroll"]
-margin_right = 416.0
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 417.0
+margin_bottom = 1.0
 rect_min_size = Vector2( 416, 0 )
 __meta__ = {
 "_edit_use_anchors_": false

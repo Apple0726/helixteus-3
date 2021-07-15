@@ -27,9 +27,10 @@ func refresh():
 		next_dir = file.get_next()
 	
 func on_load(sv:String):
-	game.c_sv = int(sv)
-	game.toggle_panel(self)
-	game.fade_out_title("load_game")
+	if modulate.a == 1:
+		game.c_sv = int(sv)
+		game.toggle_panel(self)
+		game.fade_out_title("load_game")
 
 func on_delete():
 	pass

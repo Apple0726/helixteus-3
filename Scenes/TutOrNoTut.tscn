@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/TutOrNoTut.gd" type="Script" id=3]
 
@@ -109,5 +109,6 @@ text = "FIGURE_OUT_MYSELF"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

@@ -69,6 +69,7 @@ func _process(delta):
 		dragged = false
 	if not limit_to_viewport:
 		return
+	ship.get_node("Fire").visible = game.ships_travel_view != "-"
 	if game.ships_travel_view == game.c_v:
 		var dep_pos = game.ships_depart_pos
 		var dest_pos = game.ships_dest_pos

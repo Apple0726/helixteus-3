@@ -13,9 +13,10 @@ font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 2 )
 
 [sub_resource type="StyleBoxEmpty" id=2]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
 
 [sub_resource type="Theme" id=3]
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
@@ -93,16 +94,15 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 374.0
+margin_right = 384.0
 margin_bottom = 540.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 3 )
+custom_constants/separation = -1
 
 [node name="KeyboardShortcuts" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_right = 364.0
+margin_right = 384.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
@@ -110,54 +110,54 @@ text = "KEYBOARD_SHORTCUTS"
 expand_icon = true
 
 [node name="Aurora" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 44.0
-margin_right = 364.0
-margin_bottom = 84.0
+margin_top = 39.0
+margin_right = 384.0
+margin_bottom = 79.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "AURORA"
 expand_icon = true
 
 [node name="LevelUnlocks" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 88.0
-margin_right = 364.0
-margin_bottom = 128.0
+margin_top = 78.0
+margin_right = 384.0
+margin_bottom = 118.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "LEVEL_UNLOCKS"
 expand_icon = true
 
 [node name="DarkMatter" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 132.0
-margin_right = 364.0
-margin_bottom = 172.0
+margin_top = 117.0
+margin_right = 384.0
+margin_bottom = 157.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_MATTER"
 expand_icon = true
 
 [node name="B_strength" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 176.0
-margin_right = 364.0
-margin_bottom = 216.0
+margin_top = 156.0
+margin_right = 384.0
+margin_bottom = 196.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "B_STRENGTH"
 expand_icon = true
 
 [node name="FM" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 220.0
-margin_right = 364.0
-margin_bottom = 260.0
+margin_top = 195.0
+margin_right = 384.0
+margin_bottom = 235.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "FERROMAGNETIC_MATERIALS"
 expand_icon = true
 
 [node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 264.0
-margin_right = 364.0
-margin_bottom = 304.0
+margin_top = 234.0
+margin_right = 384.0
+margin_bottom = 274.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_ENERGY"

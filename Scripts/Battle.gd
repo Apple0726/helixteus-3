@@ -3,9 +3,13 @@ extends Control
 onready var game = get_node("/root/Game")
 onready var current = $Current
 onready var ship0 = $Ship0
+onready var ship0_engine = $Ship0/Fire
 onready var ship1 = $Ship1
+onready var ship1_engine = $Ship1/Fire
 onready var ship2 = $Ship2
+onready var ship2_engine = $Ship2/Fire
 onready var ship3 = $Ship3
+onready var ship3_engine = $Ship3/Fire
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 const DEF_EXPO_SHIP = 1
 const DEF_EXPO_ENEMY = 1
@@ -130,8 +134,7 @@ func _ready():
 	else:
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
-	$Current/Current.float_height = 5
-	$Current/Current.float_speed = 0.25 / time_speed
+	$Current.material["shader_param/frequency"] = 12.0 / time_speed
 	for i in len(ship_data):
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		get_node("Ship%s" % i).visible = true
@@ -161,8 +164,8 @@ func send_HXs():
 		HX.get_node("HX/HP").max_value = HX_data[k].total_HP
 		HX.get_node("HX/HP").value = HX_data[k].HP
 		HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[k].lv]
-		HX.get_node("HX").set_script(load("res://Scripts/FloatAnim.gd"))
-		HX.get_node("HX").float_speed /= time_speed
+		#HX.get_node("HX").set_script(load("res://Scripts/FloatAnim.gd"))
+		#HX.get_node("HX").float_speed /= time_speed
 		HX.position = Vector2(2000, 360)
 		HX.add_child(btn)
 		btn.connect("mouse_entered", self, "on_HX_over", [k])
@@ -344,11 +347,16 @@ func _process(delta):
 			HX.rotation = move_toward(HX.rotation, 0, kb_rot * delta)
 			HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
 	if stage == BattleStages.CHOOSING:
-		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0.position.distance_to(Vector2(200, 200)) * delta * 5 * time_speed)
+		var ship0_dist:float = ship0.position.distance_to(Vector2(200, 200))
+		ship0_engine.emitting = ship0_dist > 10
+		ship1_engine.emitting = ship0_dist > 10
+		ship2_engine.emitting = ship0_dist > 10
+		ship3_engine.emitting = ship0_dist > 10
+		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0_dist * delta * 5 * time_speed)
 		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1.position.distance_to(Vector2(400, 200)) * delta * 5 * time_speed)
 		ship2.position = ship2.position.move_toward(Vector2(200, 400), ship2.position.distance_to(Vector2(200, 400)) * delta * 5 * time_speed)
 		ship3.position = ship3.position.move_toward(Vector2(400, 400), ship3.position.distance_to(Vector2(400, 400)) * delta * 5 * time_speed)
-		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -45)
+		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -65)
 		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):
 			if ship_data[i].HP <= 0:
@@ -371,8 +379,13 @@ func _process(delta):
 		var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.1
 		if ship_dir == "left":
 			self["ship%s" % tgt_sh].position.y = max(0, self["ship%s" % tgt_sh].position.y - 10 * boost * delta * 60 * time_speed)
+			self["ship%s_engine" % tgt_sh].emitting = true
 		elif ship_dir == "right":
+			self["ship%s_engine" % tgt_sh].modulate.a = 0.2 * boost
+			self["ship%s_engine" % tgt_sh].emitting = true
 			self["ship%s" % tgt_sh].position.y = min(720, self["ship%s" % tgt_sh].position.y + 10 * boost * delta * 60 * time_speed)
+		else:
+			self["ship%s_engine" % tgt_sh].emitting = false
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.scale += Vector2(0.1, 0.1) * delta * 60 * time_speed
 		light.modulate.a -= 0.02 * delta * 60 * time_speed

@@ -15,9 +15,11 @@ fallback/0 = ExtResource( 1 )
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 1
 border_width_top = 1
+border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+border_color = Color( 0.443137, 0.443137, 0.443137, 1 )
 
 [node name="MUPanel" type="Control"]
 anchor_left = 0.5

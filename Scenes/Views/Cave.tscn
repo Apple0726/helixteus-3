@@ -1,7 +1,7 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
+[ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Cave/MiningLaser.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
@@ -46,14 +46,27 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
 
-[sub_resource type="CircleShape2D" id=5]
-radius = 40.0
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 1 )
+shader_param/beams = 2
+shader_param/energy = 8.0
+shader_param/roughness = 3
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.006
+shader_param/outline_thickness = 0.03
+shader_param/beam_difference = 0.0
+shader_param/glow = 3.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
 
-[sub_resource type="DynamicFont" id=6]
-size = 14
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 26 )
+[sub_resource type="CircleShape2D" id=6]
+radius = 40.0
 
 [sub_resource type="DynamicFont" id=7]
 size = 14
@@ -61,7 +74,13 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="DynamicFont" id=8]
+size = 14
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 26 )
+
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -73,7 +92,7 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=10]
 content_margin_left = 7.0
 content_margin_right = 7.0
 bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
@@ -84,21 +103,21 @@ border_width_bottom = 2
 border_color = Color( 0.4, 0.501961, 0.8, 1 )
 expand_margin_right = 2.0
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=11]
 size = 25
 use_mipmaps = true
 use_filter = true
 extra_spacing_char = 2
 font_data = ExtResource( 26 )
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=12]
 size = 18
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 fallback/0 = ExtResource( 27 )
 
-[sub_resource type="StyleBoxFlat" id=12]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.113725, 0.113725, 0.113725, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -110,8 +129,7 @@ expand_margin_right = 10.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="Animation" id=13]
-resource_name = "Aurora"
+[sub_resource type="Animation" id=14]
 length = 6.0
 loop = true
 tracks/0/type = "value"
@@ -127,7 +145,7 @@ tracks/0/keys = {
 "values": [ Color( 0.784314, 1, 0.784314, 1 ), Color( 0.784314, 1, 1, 1 ), Color( 0.784314, 0.784314, 1, 1 ), Color( 1, 0.784314, 1, 1 ), Color( 1, 0.784314, 0.784314, 1 ), Color( 1, 1, 0.784314, 1 ), Color( 0.784314, 1, 0.784314, 1 ) ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Rover/Glow:modulate")
@@ -142,8 +160,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=15]
-resource_name = "Aurora"
+[sub_resource type="Animation" id=16]
 length = 6.0
 loop = true
 tracks/0/type = "value"
@@ -159,8 +176,7 @@ tracks/0/keys = {
 "values": [ Color( 0.705882, 1, 0.705882, 1 ), Color( 0.705882, 1, 1, 1 ), Color( 0.705882, 0.705882, 1, 1 ), Color( 1, 0.705882, 1, 1 ), Color( 1, 0.705882, 0.705882, 1 ), Color( 1, 1, 0.705882, 1 ), Color( 0.705882, 1, 0.705882, 1 ) ]
 }
 
-[sub_resource type="Animation" id=16]
-resource_name = "RoverSprint"
+[sub_resource type="Animation" id=17]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Rover/Glow:modulate")
@@ -302,11 +318,11 @@ __meta__ = {
 
 [node name="MiningLaser" type="Sprite" parent="Rover"]
 visible = false
+material = SubResource( 5 )
+scale = Vector2( 14, 14 )
 texture = ExtResource( 5 )
 centered = false
 offset = Vector2( 0, -8 )
-region_enabled = true
-region_rect = Rect2( 0, 0, 300, 16 )
 
 [node name="Glow" type="Sprite" parent="Rover"]
 modulate = Color( 1, 1, 1, 0 )
@@ -319,7 +335,7 @@ texture = ExtResource( 30 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
@@ -459,7 +475,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.580392, 1, 0.521569, 1 )
 text = "1 / 30"
 align = 1
@@ -515,7 +531,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 1, 0.807812, 0.671875, 1 )
 align = 1
 valign = 1
@@ -532,8 +548,8 @@ margin_bottom = 438.0
 grow_horizontal = 0
 grow_vertical = 2
 rect_pivot_offset = Vector2( -96, 0 )
-theme = ExtResource( 3 )
-custom_styles/panel = SubResource( 8 )
+theme = ExtResource( 29 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -561,8 +577,8 @@ __meta__ = {
 margin_right = 64.0
 margin_bottom = 33.0
 mouse_filter = 1
-custom_styles/normal = SubResource( 9 )
-custom_fonts/font = SubResource( 10 )
+custom_styles/normal = SubResource( 10 )
+custom_fonts/font = SubResource( 11 )
 text = "B1F"
 align = 1
 __meta__ = {
@@ -576,7 +592,7 @@ margin_bottom = 28.0
 mouse_filter = 1
 size_flags_vertical = 0
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
 text = "Difficulty: 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -598,7 +614,7 @@ margin_left = 156.0
 margin_top = 84.0
 margin_right = 432.0
 margin_bottom = 504.0
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 12 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "RELIC_TEXT"
 valign = 1
@@ -616,7 +632,7 @@ margin_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 12 )
+custom_styles/normal = SubResource( 13 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -625,12 +641,12 @@ __meta__ = {
 [node name="Dialogue" parent="UI2" instance=ExtResource( 24 )]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Aurora = SubResource( 13 )
-anims/RoverSprint = SubResource( 14 )
+anims/Aurora = SubResource( 14 )
+anims/RoverSprint = SubResource( 15 )
 
 [node name="AuroraPlayer" type="AnimationPlayer" parent="."]
-anims/Aurora = SubResource( 15 )
-anims/RoverSprint = SubResource( 16 )
+anims/Aurora = SubResource( 16 )
+anims/RoverSprint = SubResource( 17 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 

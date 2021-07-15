@@ -176,7 +176,6 @@ var satellite_data:Array
 
 #Your inventory
 var items:Array
-#var items:Array = [{"name":"lead_seeds", "num":4}, null, null, null, null, null, null, null, null, null]
 
 var hotbar:Array
 
@@ -230,23 +229,23 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
-var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":30},
-					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":66},
-					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":140},
-					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":335},
-					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":743},
-					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":1795},
-					"amethyst":{"min_depth":800, "max_depth":3000, "rarity":25.5, "density":2.66, "value":3863},
-					"emerald":{"min_depth":800, "max_depth":3000, "rarity":25.6, "density":2.70, "value":3885},
-					"quartz":{"min_depth":800, "max_depth":3000, "rarity":25.7, "density":2.32, "value":3908},
-					"topaz":{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":3931},
-					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":3954},
-					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":3977},
-					"platinum":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":21.45, "value":9359},
-					"titanium":{"min_depth":3400, "max_depth":7000, "rarity":89.5, "density":4.51, "value":25401},
-					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":59185},
-					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":155027},
-					"mythril":{"min_depth":13000, "max_depth":20000, "rarity":586.4, "density":13.4, "value":426002},
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":300},
+					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":660},
+					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":1400},
+					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":3350},
+					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":7430},
+					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":17950},
+					"amethyst":{"min_depth":800, "max_depth":3000, "rarity":25.5, "density":2.66, "value":38630},
+					"emerald":{"min_depth":800, "max_depth":3000, "rarity":25.6, "density":2.70, "value":38850},
+					"quartz":{"min_depth":800, "max_depth":3000, "rarity":25.7, "density":2.32, "value":39080},
+					"topaz":{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":39310},
+					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":39540},
+					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":39770},
+					"platinum":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":21.45, "value":93590},
+					"titanium":{"min_depth":3400, "max_depth":7000, "rarity":89.5, "density":4.51, "value":254010},
+					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
+					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
+					"mythril":{"min_depth":13000, "max_depth":20000, "rarity":586.4, "density":13.4, "value":4260020},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -573,7 +572,7 @@ func load_univ():
 			new_game(true)
 		else:
 			tile_data = open_obj("Planets", c_p_g)
-			if c_v == "mining":
+			if c_v == "mining" or c_v == "cave":
 				c_v = "planet"
 			elif c_v == "science_tree":
 				c_v = l_v
@@ -1301,14 +1300,16 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				view.obj.get_node("Help").visible = true
 				help.science_tree = false
 		"cave":
-			$UI.remove_child(HUD)
+			if is_instance_valid(HUD) and is_a_parent_of(HUD):
+				$UI.remove_child(HUD)
 			cave = cave_scene.instance()
 			add_child(cave)
 			cave.rover_data = rover_data[rover_id]
 			cave.set_rover_data()
 			switch_music(load("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 		"ruins":
-			$UI.remove_child(HUD)
+			if is_instance_valid(HUD) and is_a_parent_of(HUD):
+				$UI.remove_child(HUD)
 			ruins = ruins_scene.instance()
 			ruins.ruins_id = tile_data[c_t].ruins
 			add_child(ruins)
@@ -1335,6 +1336,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		save_views(true)
 
 func add_science_tree():
+	$ScienceTreeBG.visible = true
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Panel").visible = false
 	HUD.get_node("Hotbar").visible = false
@@ -1361,6 +1363,7 @@ func remove_mining():
 	mining_HUD = null
 
 func remove_science_tree():
+	$ScienceTreeBG.visible = false
 	HUD.get_node("Buttons").visible = true
 	HUD.get_node("Panel").visible = true
 	HUD.get_node("Hotbar").visible = true
@@ -3303,17 +3306,19 @@ func _input(event):
 		cmd_node.text = cmd_history[cmd_history_index]
 		cmd_node.caret_position = cmd_node.text.length()
 	
+	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
+		if c_v != "":
+			fn_save_game()
+			save_views(false)
+
+func _unhandled_key_input(event):
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
-	if not c_v in ["battle", "cave", "", "dimension"] and not cmd_node.visible and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not is_instance_valid(upgrade_panel) and not is_instance_valid(overlay):
+	if not c_v in ["battle", "cave", "", "dimension"] and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel.visible and not is_instance_valid(overlay):
 		for i in 5:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
 				if get_item_num(_name) > 0:
 					inventory.on_slot_press(_name)
-	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
-		if c_v != "":
-			fn_save_game()
-			save_views(false)
 
 func fn_save_game():
 	var save_info = File.new()
@@ -3702,3 +3707,7 @@ func get_4th_ship():
 	Helper.add_weapon_XP(3, "laser", 400)
 	Helper.add_weapon_XP(3, "bomb", 400)
 	Helper.add_weapon_XP(3, "light", 450)
+
+
+func _on_Command_gui_input(event):
+	get_tree().set_input_as_handled()

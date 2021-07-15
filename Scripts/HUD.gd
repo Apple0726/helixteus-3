@@ -827,3 +827,7 @@ func _on_SwitchBtn_pressed():
 		"universe":
 			if game.show.dimensions:
 				game.switch_view("dimension")
+
+
+func _on_Name_gui_input(event):
+	get_tree().set_input_as_handled()

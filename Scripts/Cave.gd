@@ -522,7 +522,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var wormhole_tile = rooms[0].tiles[1]
 		wormhole.position = cave.map_to_world(get_tile_pos(wormhole_tile)) + Vector2(100, 100)
 		add_child(wormhole)
-		add_light(wormhole)
+		enable_light(wormhole)
 	else:
 		if is_instance_valid(wormhole):
 			remove_child(wormhole)
@@ -539,7 +539,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				part.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
 				part.add_to_group("misc_objects")
 				add_child(part)
-				add_light(part)
+				enable_light(part)
 			if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
 				var map = object_scene.instance()
 				map.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Map.png")
@@ -567,7 +567,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				$UI2/Ship2Map.refresh()
 				map.position = map_tile
 				add_child(map)
-				add_light(map)
+				enable_light(map)
 				map.add_to_group("misc_objects")
 				cave.set_cellv(cave.world_to_map(map_tile), tile_type)
 				cave_wall.set_cellv(cave_wall.world_to_map(map_tile), -1)
@@ -615,7 +615,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						manip.position = cave.map_to_world(get_tile_pos(manip_tile)) + Vector2(100, 100)
 						manip.add_to_group("misc_objects")
 						add_child(manip)
-						add_light(manip)
+						enable_light(manip)
 						break
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
@@ -669,10 +669,10 @@ func on_Ship4_entered(_body):
 		$UI2/Dialogue.dialogue_id = 1
 	$UI2/Dialogue.show_dialogue()
 
-func add_light(node):
+func enable_light(node):
 	node.get_node("Light2D").enabled = true
 	node.get_node("Shadow").visible = false
-	
+
 func on_chest_entered(_body, tile:String):
 	var chest_rsrc = chests[tile].contents
 	active_chest = tile
@@ -828,7 +828,10 @@ func update_ray():
 			mining_p.emitting = false
 		mining_laser.visible = holding_left_click
 		if holding_left_click:
-			mining_laser.region_rect.end = Vector2(laser_reach, 16)
+			mining_laser.scale.x = laser_reach / 16.0
+			mining_laser.scale.y = 16.0
+			#mining_laser.material["shader_param/noise_scale"] = Vector2.ONE * laser_reach / 256.0
+			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 	else:
 		mining_laser.visible = false
@@ -1022,7 +1025,8 @@ func _process(delta):
 
 
 func attack():
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, get_color(inventory[curr_slot].name.split("_")[0]))
+	var laser_color:Color = get_color(inventory[curr_slot].name.split("_")[0])
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color)
 	cooldown()
 
 func hit_rock(delta):
@@ -1120,7 +1124,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1128,7 +1132,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
-	proj.modulate = mod
+	proj.get_node("Sprite").modulate = mod
 	if collision_shape == 2:
 		proj.get_node("Round").disabled = true
 		proj.get_node("Line").disabled = false
@@ -1140,6 +1144,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_layer = 8
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
+	if light_color != Color.black:
+		proj.get_node("Light2D").enabled = true
+		proj.get_node("Light2D").color = mod
 	add_child(proj)
 	proj.add_to_group("projectiles")
 
@@ -1157,7 +1164,7 @@ func set_border(i:int):
 			slot.remove_child(border)
 			border.queue_free()
 	if inventory[i].type == "rover_mining":
-		mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
+		mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
@@ -1177,19 +1184,19 @@ func get_color(color:String):
 		"orange":
 			return Color.orange
 		"yellow":
-			return Color.yellow
+			return Color.lightyellow
 		"green":
-			return Color.green
+			return Color.lightgreen
 		"blue":
-			return Color.blue
+			return Color.lightblue
 		"purple":
-			return Color.purple
+			return Color.lightpink
 		"UV":
-			return Color.violet
+			return Color.lightsteelblue
 		"xray":
 			return Color.lightgray
 		"gammaray":
-			return Color.lightgreen
+			return Color.lightsalmon
 		"ultragammaray":
 			return Color.white
 

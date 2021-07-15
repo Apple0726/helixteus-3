@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/SelectCompPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=1]
 
 [node name="SelectCompPanel" type="Panel"]
 anchor_left = 0.5
@@ -70,24 +72,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CostLabel" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -320.0
-margin_top = 208.0
-margin_right = -200.0
-margin_bottom = 232.0
-text = "Cost"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 104.0
-margin_top = 204.0
-margin_right = 480.0
-margin_bottom = 236.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -48.0
+margin_right = 468.0
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -96,8 +85,11 @@ __meta__ = {
 [node name="Cost" parent="ScrollContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 376.0
-margin_bottom = 32.0
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 467.0
+margin_bottom = 47.0
+size_flags_vertical = 3
 
 [node name="Select" type="Button" parent="."]
 anchor_left = 1.0
@@ -105,7 +97,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -144.0
-margin_top = -40.0
+margin_top = -48.0
 text = "SELECT"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -115,15 +107,15 @@ __meta__ = {
 margin_left = 44.0
 margin_top = 100.0
 margin_right = 596.0
-margin_bottom = 168.0
-scroll_vertical_enabled = false
+margin_bottom = 160.0
+custom_styles/bg = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer2"]
 margin_right = 552.0
-margin_bottom = 68.0
+margin_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -2

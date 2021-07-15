@@ -11,7 +11,6 @@ var index:int = -1
 onready var option_btn = $OptionButton
 
 func _ready():
-	$CostLabel.text = "%s:" % [tr("COSTS")]
 	$Select.text = tr("SELECT") + " (S)"
 	option_btn.add_item(tr("WEAPONS"))
 	option_btn.add_item(tr("MINING_TOOLS"))

@@ -36,8 +36,15 @@ onready var planet_bounds:PoolVector2Array = [Vector2.ONE, Vector2(1, wid * 200)
 var mass_build_rect:NinePatchRect
 var mass_build_rect_size:Vector2
 var wormhole
+var timer:Timer
+var interval:float = 0.1
 
 func _ready():
+	timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = interval
+	timer.start()
+	timer.connect("timeout", self, "on_timeout")
 	mass_build_rect = game.mass_build_rect.instance()
 	mass_build_rect.visible = false
 	add_child(mass_build_rect)
@@ -1092,7 +1099,9 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrc.get_node("Control").modulate = mod
 	rsrcs[id2] = rsrc
 
-func _process(_delta):
+func on_timeout():
+	if not is_processing():
+		return
 	var curr_time = OS.get_system_time_msecs()
 	var update_XP:bool = false
 	for time_bar_obj in time_bars:

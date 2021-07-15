@@ -1,9 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/ShipPanel.gd" type="Script" id=3]
-[ext_resource path="res://Resources/panel_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scenes/ShipInfo.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
@@ -24,7 +23,7 @@ fallback/0 = ExtResource( 1 )
 margin_right = 1067.0
 margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
-theme = ExtResource( 4 )
+theme = ExtResource( 7 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
@@ -110,9 +109,8 @@ __meta__ = {
 
 [node name="CheckBox" type="CheckBox" parent="Panel"]
 margin_left = 48.0
-margin_top = 4.0
 margin_right = 380.0
-margin_bottom = 44.0
+margin_bottom = 48.0
 theme = ExtResource( 7 )
 custom_constants/hseparation = 11
 text = "SHOW_WEAPON_XPS"

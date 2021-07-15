@@ -36,6 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1280.0
 margin_bottom = -720.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -45,6 +46,7 @@ margin_left = -84.0
 margin_top = -24.0
 margin_right = -84.0
 margin_bottom = -24.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -52,6 +54,7 @@ __meta__ = {
 [node name="Panel" type="Panel" parent="Control"]
 margin_right = 48.0
 margin_bottom = 48.0
+mouse_filter = 2
 custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -61,6 +64,7 @@ __meta__ = {
 margin_left = 48.0
 margin_right = 168.0
 margin_bottom = 16.0
+mouse_filter = 2
 custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -71,6 +75,7 @@ margin_left = 48.0
 margin_top = 16.0
 margin_right = 168.0
 margin_bottom = 48.0
+mouse_filter = 2
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -81,6 +86,7 @@ modulate = Color( 1, 1, 1, 0.521569 )
 margin_left = 48.0
 margin_right = 168.0
 margin_bottom = 16.0
+mouse_filter = 2
 max_value = 1.0
 step = 0.0
 texture_progress = ExtResource( 3 )
@@ -95,6 +101,7 @@ margin_left = 48.0
 margin_top = 16.0
 margin_right = 168.0
 margin_bottom = 48.0
+mouse_filter = 2
 max_value = 1.0
 step = 0.0
 texture_progress = ExtResource( 3 )
@@ -118,6 +125,7 @@ margin_left = -80.0
 margin_top = -20.0
 margin_right = -40.0
 margin_bottom = 20.0
+mouse_filter = 2
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
