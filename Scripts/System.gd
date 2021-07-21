@@ -2,8 +2,8 @@ extends Node2D
 
 onready var game = get_node("/root/Game")
 onready var stars_info = game.system_data[game.c_s]["stars"]
-onready var star_graphic = preload("res://Graphics/Stars/Star.png")
 onready var view = get_parent()
+var star_shader = preload("res://Shaders/Star.shader")
 
 #Used to prevent view from moving outside viewport
 var dimensions:float
@@ -148,18 +148,25 @@ func refresh_stars():
 	for i in len(stars_info):
 		var star_info = stars_info[i]
 		var star = TextureButton.new()
-		star.texture_normal = star_graphic
+		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
 		self.add_child(star)
-		star.rect_pivot_offset = Vector2(300, 300)
+		star.rect_pivot_offset = Vector2(512, 512)
 		#combined_star_size += star_info["size"]
 		star.rect_scale.x = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
 		star.rect_scale.y = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
-		star.rect_position = star_info["pos"] - Vector2(300, 300)
+		star.rect_position = star_info["pos"] - Vector2(512, 512)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
 		star.connect("pressed", self, "on_star_pressed", [i])
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		star.add_to_group("stars")
+		if game.enable_shaders:
+			star.material = ShaderMaterial.new()
+			star.material.shader = star_shader
+			star.material.set_shader_param("time_offset", 10.0 * randf())
+			star.material.set_shader_param("brightness_offset", 2.0)
+			star.material.set_shader_param("twinkle_speed", 0.8)
+			star.material.set_shader_param("amplitude", 0.3)
 		if star_info.has("MS"):
 			var MS = Sprite.new()
 			if star_info.MS == "M_MB":

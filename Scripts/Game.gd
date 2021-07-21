@@ -197,6 +197,7 @@ var save_date:int
 var bookmarks:Dictionary
 
 ############ End save data ############
+var enable_shaders:bool = true
 var block_scroll:bool = false
 var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
@@ -322,7 +323,6 @@ var metal_textures:Dictionary = {}
 var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
 func _ready():
-	$Title/LightRays.visible = true
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 	for i in range(0, 7):
@@ -358,6 +358,8 @@ func _ready():
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		pitch_affected = config.get_value("audio", "pitch_affected", true)
+		enable_shaders = config.get_value("graphics", "enable_shaders", true)
+		$Title/LightRays.visible = enable_shaders
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
@@ -612,7 +614,8 @@ func load_game():
 	universe_data = save_info.get_var()
 	save_info.close()
 	load_univ()
-	$UI.add_child(HUD)
+	if not $UI.is_a_parent_of(HUD):
+		$UI.add_child(HUD)
 
 func remove_files(dir:Directory):
 	dir.list_dir_begin(true)
@@ -1131,7 +1134,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
-	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 10), Vector2(-s.x / 2.0, -s.y / 2.0), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 40), Vector2(-s.x / 2.0, -s.y / 2.0 + 30), 0.1)
 	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
@@ -1140,7 +1143,7 @@ func fade_in_panel(panel:Control):
 func fade_out_panel(panel:Control):
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
-	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 40), 0.1)
 	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 0.0, 0.2)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
@@ -1337,6 +1340,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 
 func add_science_tree():
 	$ScienceTreeBG.visible = true
+	$Nebula.visible = false
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Panel").visible = false
 	HUD.get_node("Hotbar").visible = false
@@ -1552,6 +1556,10 @@ func add_galaxy():
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g].has("discovered"):
 		yield(start_system_generation(), "completed")
+	if enable_shaders:
+		$Nebula.fade_in()
+		if galaxy_data[c_g_g].type == 0:
+			$Nebula.change_color(Color.white)
 	add_obj("galaxy")
 	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
@@ -1602,11 +1610,14 @@ func remove_supercluster():
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 
 func remove_cluster():
+	VisualServer
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 
 func remove_galaxy():
+	if enable_shaders:
+		$Nebula.fade_out()
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -3107,7 +3118,7 @@ onready var fps_text = $Tooltips/FPS
 
 func _process(delta):
 	if delta != 0:
-		fps_text.text = String(round(1 / delta)) + " FPS"
+		fps_text.text = "%s FPS" % [round(1 / delta)]
 		if autocollect:
 			var min_to_add:float = autocollect.MS.minerals * delta
 			energy += autocollect.MS.energy * delta
@@ -3175,7 +3186,7 @@ func _input(event):
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
 		OS.window_fullscreen = not OS.window_fullscreen
-		settings.get_node("Fullscreen").pressed = OS.window_fullscreen
+		settings.get_node("TabContainer/GRAPHICS/Fullscreen").pressed = OS.window_fullscreen
 
 	if c_v == "science_tree":
 		Helper.set_back_btn(get_node("ScienceBackBtn"))

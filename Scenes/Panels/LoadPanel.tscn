@@ -34,27 +34,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CloseButton" parent="." instance=ExtResource( 5 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -40.0
-margin_right = 0.0
-margin_bottom = 40.0
-
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 38.0
+margin_left = 24.0
+margin_top = 48.0
+margin_right = -24.0
+margin_bottom = -12.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 815.0
-margin_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 758.0
+margin_bottom = 10.0
 size_flags_horizontal = 3
-custom_constants/separation = -1
+custom_constants/separation = 10
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[node name="TextureButton" parent="." instance=ExtResource( 5 )]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -15,26 +15,45 @@
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=15]
 
-[sub_resource type="InputEventAction" id=1]
+[sub_resource type="Shader" id=21]
+code = "shader_type canvas_item;
 
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+uniform float strength = 0.1;
+uniform float shine_r = 0.5;
+uniform float u = 0.0;
 
-[sub_resource type="ShaderMaterial" id=18]
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	float mult = strength * (1.0 + max(0.0, sqrt(2.0) - length(UV - vec2(u, 0.0)) / shine_r));
+	COLOR.rgb *= mult;
+}"
+
+[sub_resource type="ShaderMaterial" id=22]
+shader = SubResource( 21 )
+shader_param/strength = 0.1
+shader_param/shine_r = 0.5
+shader_param/u = 0.0
+
+[sub_resource type="InputEventAction" id=3]
+
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 15 )
 shader_param/amplitude = 20.0
 shader_param/frequency = 6.0
 
-[sub_resource type="CapsuleShape2D" id=3]
+[sub_resource type="CapsuleShape2D" id=6]
 radius = 12.0
 height = 96.0
 
-[sub_resource type="ShaderMaterial" id=19]
+[sub_resource type="ShaderMaterial" id=7]
 shader = ExtResource( 15 )
 shader_param/amplitude = 8.0
 shader_param/frequency = 12.0
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=8]
 content_margin_left = 5.0
 content_margin_right = 5.0
 content_margin_top = 5.0
@@ -46,7 +65,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 0.360784, 0.360784, 0.360784, 1 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0.235294, 0.235294, 0.235294, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -58,37 +77,37 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=10]
 size = 14
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 10 )
 
-[sub_resource type="InputEventAction" id=7]
-action = "1"
-
-[sub_resource type="ShortCut" id=8]
-shortcut = SubResource( 7 )
-
-[sub_resource type="InputEventAction" id=9]
-action = "2"
-
-[sub_resource type="ShortCut" id=10]
-shortcut = SubResource( 9 )
-
 [sub_resource type="InputEventAction" id=11]
-action = "3"
+action = "1"
 
 [sub_resource type="ShortCut" id=12]
 shortcut = SubResource( 11 )
 
 [sub_resource type="InputEventAction" id=13]
-action = "4"
+action = "2"
 
 [sub_resource type="ShortCut" id=14]
 shortcut = SubResource( 13 )
 
-[sub_resource type="ShaderMaterial" id=15]
+[sub_resource type="InputEventAction" id=15]
+action = "3"
+
+[sub_resource type="ShortCut" id=16]
+shortcut = SubResource( 15 )
+
+[sub_resource type="InputEventAction" id=17]
+action = "4"
+
+[sub_resource type="ShortCut" id=18]
+shortcut = SubResource( 17 )
+
+[sub_resource type="ShaderMaterial" id=19]
 shader = ExtResource( 8 )
 shader_param/beams = 1
 shader_param/energy = 3.0
@@ -96,7 +115,7 @@ shader_param/roughness = 3
 shader_param/frequency = 10
 shader_param/speed = 0.1
 shader_param/thickness = 0.006
-shader_param/outline_thickness = 0.042
+shader_param/outline_thickness = 0.034
 shader_param/beam_difference = 0.0
 shader_param/glow = 0.0
 shader_param/outline_glow = 0.0
@@ -107,8 +126,7 @@ shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
 shader_param/noise_scale = Vector2( 1, 1 )
 
-[sub_resource type="Animation" id=16]
-resource_name = "LaserFade"
+[sub_resource type="Animation" id=20]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Texture:material:shader_param/progress")
 tracks/0/interp = 1
@@ -129,7 +147,9 @@ __meta__ = {
 }
 
 [node name="BG" type="Sprite" parent="."]
-position = Vector2( 620, 692 )
+material = SubResource( 22 )
+position = Vector2( 640.463, 656 )
+scale = Vector2( 0.927, 0.927 )
 texture = ExtResource( 9 )
 
 [node name="Back" type="Button" parent="."]
@@ -137,7 +157,7 @@ margin_top = 684.0
 margin_right = 136.0
 margin_bottom = 720.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
+shortcut = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -152,13 +172,13 @@ collision_mask = 16
 position = Vector2( -60, -4 )
 
 [node name="Sprite" type="Sprite" parent="Ship0"]
-material = SubResource( 18 )
+material = SubResource( 5 )
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship0"]
 rotation = 1.5708
-shape = SubResource( 3 )
+shape = SubResource( 6 )
 disabled = true
 
 [node name="ColorRect" type="ColorRect" parent="Ship0"]
@@ -222,7 +242,7 @@ texture = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship1"]
 rotation = 1.5708
-shape = SubResource( 3 )
+shape = SubResource( 6 )
 disabled = true
 
 [node name="ColorRect" type="ColorRect" parent="Ship1"]
@@ -283,7 +303,7 @@ texture = ExtResource( 7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship2"]
 rotation = 1.5708
-shape = SubResource( 3 )
+shape = SubResource( 6 )
 disabled = true
 
 [node name="ColorRect" type="ColorRect" parent="Ship2"]
@@ -344,7 +364,7 @@ texture = ExtResource( 13 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship3"]
 rotation = 1.5708
-shape = SubResource( 3 )
+shape = SubResource( 6 )
 disabled = true
 
 [node name="ColorRect" type="ColorRect" parent="Ship3"]
@@ -391,7 +411,7 @@ expand = true
 stretch_mode = 6
 
 [node name="Current" type="Sprite" parent="."]
-material = SubResource( 19 )
+material = SubResource( 7 )
 scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 4 )
 
@@ -401,7 +421,7 @@ margin_top = 660.0
 margin_right = 928.0
 margin_bottom = 716.0
 grow_horizontal = 2
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -418,7 +438,7 @@ alignment = 1
 [node name="Bullet" type="PanelContainer" parent="FightPanel/HBox"]
 margin_right = 72.0
 margin_bottom = 46.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Bullet"]
 margin_left = 16.0
@@ -437,7 +457,7 @@ margin_right = 64.0
 margin_bottom = 45.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 text = "            1"
 align = 2
 valign = 2
@@ -450,7 +470,7 @@ margin_right = 71.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 70, 0 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 8 )
+shortcut = SubResource( 12 )
 texture_hover = ExtResource( 11 )
 expand = true
 stretch_mode = 6
@@ -459,7 +479,7 @@ stretch_mode = 6
 margin_left = 87.0
 margin_right = 159.0
 margin_bottom = 46.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Laser"]
 margin_left = 16.0
@@ -478,7 +498,7 @@ margin_right = 64.0
 margin_bottom = 45.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 text = "            2"
 align = 2
 valign = 2
@@ -491,7 +511,7 @@ margin_right = 71.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 70, 0 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 10 )
+shortcut = SubResource( 14 )
 texture_hover = ExtResource( 11 )
 expand = true
 stretch_mode = 6
@@ -500,7 +520,7 @@ stretch_mode = 6
 margin_left = 174.0
 margin_right = 246.0
 margin_bottom = 46.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Bomb"]
 margin_left = 21.0
@@ -519,7 +539,7 @@ margin_right = 64.0
 margin_bottom = 45.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 text = "            3"
 align = 2
 valign = 2
@@ -532,7 +552,7 @@ margin_right = 71.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 70, 0 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 12 )
+shortcut = SubResource( 16 )
 texture_hover = ExtResource( 11 )
 expand = true
 stretch_mode = 6
@@ -541,7 +561,7 @@ stretch_mode = 6
 margin_left = 261.0
 margin_right = 333.0
 margin_bottom = 46.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Light"]
 margin_left = 16.0
@@ -560,7 +580,7 @@ margin_right = 64.0
 margin_bottom = 45.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 text = "            4"
 align = 2
 valign = 2
@@ -573,7 +593,7 @@ margin_right = 71.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 70, 0 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 14 )
+shortcut = SubResource( 18 )
 texture_hover = ExtResource( 11 )
 expand = true
 stretch_mode = 6
@@ -672,7 +692,7 @@ __meta__ = {
 }
 
 [node name="Texture" type="ColorRect" parent="Laser"]
-material = SubResource( 15 )
+material = SubResource( 19 )
 margin_top = -332.0
 margin_right = 664.0
 margin_bottom = 332.0
@@ -681,7 +701,7 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Laser"]
-anims/LaserFade = SubResource( 16 )
+anims/LaserFade = SubResource( 20 )
 
 [connection signal="tree_exited" from="." to="." method="_on_Battle_tree_exited"]
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]

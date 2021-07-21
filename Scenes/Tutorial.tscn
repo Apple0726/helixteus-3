@@ -298,6 +298,7 @@ __meta__ = {
 
 [node name="3" type="Node2D" parent="."]
 visible = false
+position = Vector2( -3.28064, -12.6964 )
 
 [node name="Polygon" type="Polygon2D" parent="3"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -358,6 +359,7 @@ __meta__ = {
 
 [node name="5" type="Node2D" parent="."]
 visible = false
+position = Vector2( 0, -12.7423 )
 
 [node name="Polygon" type="Polygon2D" parent="5"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -516,6 +518,7 @@ __meta__ = {
 
 [node name="12" type="Node2D" parent="."]
 visible = false
+position = Vector2( 5.03973, -11.9692 )
 
 [node name="Polygon" type="Polygon2D" parent="12"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -534,6 +537,7 @@ __meta__ = {
 
 [node name="13" type="Node2D" parent="."]
 visible = false
+position = Vector2( -2.99664, -11.9865 )
 
 [node name="Polygon" type="Polygon2D" parent="13"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -685,6 +689,7 @@ __meta__ = {
 
 [node name="19" type="Node2D" parent="."]
 visible = false
+position = Vector2( -5.2973, -12.9488 )
 
 [node name="Polygon" type="Polygon2D" parent="19"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -732,6 +737,7 @@ __meta__ = {
 
 [node name="21" type="Node2D" parent="."]
 visible = false
+position = Vector2( 0, -11.9055 )
 
 [node name="Polygon" type="Polygon2D" parent="21"]
 color = Color( 0, 0, 0, 0.615686 )
@@ -886,6 +892,7 @@ wait_time = 2.0
 
 [node name="RLCheckTimer2" type="Timer" parent="."]
 wait_time = 2.0
+
 [connection signal="timeout" from="RsrcCheckTimer" to="." method="_on_RsrcCheckTimer_timeout"]
 [connection signal="timeout" from="RsrcCheckTimer2" to="." method="_on_RsrcCheckTimer2_timeout"]
 [connection signal="timeout" from="EnergyCheckTimer" to="." method="_on_EnergyCheckTimer_timeout"]

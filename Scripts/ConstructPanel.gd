@@ -16,7 +16,8 @@ func _ready():
 		btn.text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$Tabs.add_child(btn)
+		$VBox/Tabs.add_child(btn)
+	buy_hbox.visible = false
 	refresh()
 
 func _on_btn_pressed(btn_str:String):
@@ -82,9 +83,9 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.universe_data[game.c_u].lv >= 50
 		elif bldg.item_name == "GH":
 			bldg.visible = game.science_unlocked.EGH
-	$Tabs/Production.visible = game.show.stone
-	$Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
-	$Tabs/Vehicles.visible = game.show.vehicles_button
+	$VBox/Tabs/Production.visible = game.show.stone
+	$VBox/Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
+	$VBox/Tabs/Vehicles.visible = game.show.vehicles_button
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, desc, costs, _type, _dir)

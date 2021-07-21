@@ -11,6 +11,7 @@ onready var ship2_engine = $Ship2/Fire
 onready var ship3 = $Ship3
 onready var ship3_engine = $Ship3/Fire
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
+var star_shader = preload("res://Shaders/Star.shader")
 const DEF_EXPO_SHIP = 1
 const DEF_EXPO_ENEMY = 1
 onready var time_speed = game.u_i.time_speed if game else 2.5
@@ -76,6 +77,7 @@ func _ready():
 		else:
 			HX_data = p_i.HX_data
 		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2))
+		var lum:float = 0.0
 		for star in game.system_data[game.c_s].stars:
 			var shift:float = 0
 			if star.pos != Vector2.ZERO:
@@ -86,6 +88,19 @@ func _ready():
 			star_spr.position.x = range_lerp(p_i.angle, 0, 2 * PI, 100, 1180) + shift
 			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
 			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
+			if game.enable_shaders:
+				star_spr.material = ShaderMaterial.new()
+				star_spr.material.shader = star_shader
+				star_spr.material.set_shader_param("time_offset", 10.0 * randf())
+				star_spr.material.set_shader_param("brightness_offset", 2.0)
+				star_spr.material.set_shader_param("twinkle_speed", 0.8)
+				star_spr.material.set_shader_param("amplitude", 0.3)
+				if star.luminosity > lum:
+					print(star_spr.position.x)
+					$BG.material.set_shader_param("strength", pow(star.luminosity, 0.1))
+					$BG.material.set_shader_param("shine_r", range_lerp(star_spr.scale.x, 0.0, 2.0, 0.0, 1.4))
+					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0) - 0.1)
+					lum = star.luminosity
 			add_child(star_spr)
 			move_child(star_spr, 0)
 		if not p_i.type in [11, 12]:
@@ -101,6 +116,10 @@ func _ready():
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
 			star.position.y = rand_range(0, 720)
+			if game.enable_shaders:
+				star.material = ShaderMaterial.new()
+				star.material.shader = star_shader
+				star.material.set_shader_param("time_offset", 10.0 * randf())
 			$Stars.add_child(star)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
@@ -112,10 +131,13 @@ func _ready():
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
 			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
-			star.modulate.a = rand_range(0, 1)
+			star.modulate.a = pow(rand_range(0.5, 1), 5)
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
 			star.position.y = rand_range(0, 720)
+			star.material = ShaderMaterial.new()
+			star.material.shader = star_shader
+			star.material.set_shader_param("time_offset", 10.0 * randf())
 			$Stars.add_child(star)
 		HX_data = []
 		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
@@ -583,6 +605,13 @@ func on_target_pressed(target:int):
 		else:
 			$Laser.rect_scale.x = 1.4
 		$Laser/Texture.material["shader_param/beams"] = weapon_data.lv
+		$Laser/Texture.material["shader_param/outline_thickness"] = weapon_data.lv * 0.02
+		if weapon_data.lv == 2:
+			$Laser/Texture.material["shader_param/outline_color"] = Color.orange
+		elif weapon_data.lv == 3:
+			$Laser/Texture.material["shader_param/outline_color"] = Color.yellow
+		elif weapon_data.lv == 4:
+			$Laser/Texture.material["shader_param/outline_color"] = Color.green
 		$Laser/AnimationPlayer.play("LaserFade", -1, time_speed)
 		weapon_hit_HX(curr_sh, {
 			"target":target,

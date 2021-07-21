@@ -1,4 +1,4 @@
-extends PanelContainer
+extends Button
 
 signal close_button_pressed
 signal close_button_over
@@ -6,9 +6,6 @@ signal close_button_out
 export var close_button_type = 1
 var on_close:String = ""#This function will be called when clicked
 onready var game = get_node("/root/Game")
-
-func _ready():
-	pass
 
 func _on_TextureButton_pressed():
 	game.hide_tooltip()

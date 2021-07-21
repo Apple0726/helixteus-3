@@ -9,10 +9,11 @@ func _ready():
 		btn.text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$Tabs.add_child(btn)
+		$VBox/Tabs.add_child(btn)
 	_on_btn_pressed("Mining")
 	buy_btn.text = tr("CRAFT")
 	buy_btn.icon = load("res://Graphics/Icons/craft.png")
+	$VBox/HBox/ItemInfo/VBox/HBox.visible = true
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
@@ -36,7 +37,7 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func refresh():
-	$Tabs/Agriculture.visible = game.science_unlocked.SA
+	$VBox/Tabs/Agriculture.visible = game.science_unlocked.SA
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
 
@@ -48,7 +49,6 @@ func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _
 		if agric_info.has("grow_time"):
 			imgs = [load("res://Graphics/Metals/" + Helper.get_plant_produce(_name) + ".png")]
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = true
 
 func get_item(_name, _type, _dir):
 	item_name = _name

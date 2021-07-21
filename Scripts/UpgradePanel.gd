@@ -36,10 +36,8 @@ func refresh():
 		auto_speedup = true
 		_on_Path1_pressed()
 	else:
-		if game.tile_data[ids[0]].bldg.has("path_2"):
-			path2.visible = true
-		if game.tile_data[ids[0]].bldg.has("path_3"):
-			path3.visible = true
+		path2.visible = game.tile_data[ids[0]].bldg.has("path_2")
+		path3.visible = game.tile_data[ids[0]].bldg.has("path_3")
 		$UpgradePanel/AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
 		$UpgradePanel/AutoSpeedup.pressed = $UpgradePanel/AutoSpeedup.visible
 		if game.tile_data[ids[0]].bldg.has("path_1"):

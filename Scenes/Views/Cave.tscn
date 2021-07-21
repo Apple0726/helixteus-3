@@ -198,7 +198,6 @@ __meta__ = {
 }
 
 [node name="TileMap" type="TileMap" parent="."]
-modulate = Color( 1, 1, 1, 0.678431 )
 tile_set = ExtResource( 33 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100

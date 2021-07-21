@@ -1,29 +1,73 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Graphics/Buttons/CloseButton.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/CloseButton.gd" type="Script" id=3]
-[ext_resource path="res://Graphics/Buttons/CloseButtonOver.png" type="Texture" id=4]
 
-[node name="CloseButton" type="PanelContainer"]
-margin_right = 48.0
-margin_bottom = 48.0
+[sub_resource type="StyleBoxFlat" id=35]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.321569, 0.321569, 0.321569, 1 )
+border_width_top = 4
+border_color = Color( 0.721569, 0.721569, 0.721569, 1 )
+border_blend = true
+expand_margin_left = 2.0
+shadow_size = 1
+shadow_offset = Vector2( 0, 2 )
+
+[sub_resource type="StyleBoxFlat" id=36]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+border_width_top = 4
+border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_blend = true
+expand_margin_left = 2.0
+shadow_size = 1
+shadow_offset = Vector2( 0, 4 )
+
+[sub_resource type="StyleBoxEmpty" id=33]
+
+[sub_resource type="StyleBoxEmpty" id=34]
+
+[sub_resource type="StyleBoxFlat" id=37]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+border_width_top = 4
+border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_blend = true
+expand_margin_left = 2.0
+shadow_size = 1
+shadow_offset = Vector2( 0, 4 )
+
+[node name="TextureButton" type="Button"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -30.0
+margin_top = 6.0
+margin_right = -24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
 theme = ExtResource( 1 )
+custom_styles/hover = SubResource( 35 )
+custom_styles/pressed = SubResource( 36 )
+custom_styles/focus = SubResource( 33 )
+custom_styles/disabled = SubResource( 34 )
+custom_styles/normal = SubResource( 37 )
+icon = ExtResource( 2 )
+expand_icon = true
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton" type="TextureButton" parent="."]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 46.0
-margin_bottom = 46.0
-texture_normal = ExtResource( 2 )
-texture_hover = ExtResource( 4 )
-expand = true
-stretch_mode = 5
-
-[connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
-[connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
-[connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
+[connection signal="mouse_entered" from="." to="." method="_on_TextureButton_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_TextureButton_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_TextureButton_pressed"]

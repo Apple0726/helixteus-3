@@ -1,4 +1,4 @@
-extends Control
+extends Panel
 
 onready var game = get_node("/root/Game")
 export var item_name:String = ""
@@ -12,10 +12,11 @@ func _ready():
 	if item_dir != "":
 		$ItemTexture.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
 
-func _on_Button_pressed():
-	if not parent in ["construct_panel", "megastructures_panel"]:
-		game[parent].amount_node.value = 1
-	game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
+func _on_ItemForSale_mouse_entered():
+	if not game[parent].locked:
+		if not parent in ["construct_panel", "megastructures_panel"]:
+			game[parent].amount_node.value = 1
+		game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 
 func _on_SmallButton_pressed():
 	game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
@@ -37,3 +38,18 @@ func _on_SmallButton_mouse_entered():
 
 func _on_SmallButton_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_ItemForSale_mouse_exited():
+	if not game[parent].locked:
+		game[parent].item_info.visible = false
+
+func _on_LockItemInfo_toggled(button_pressed):
+	if button_pressed:
+		for item in game[parent].grid.get_children():
+			if item != self:
+				item.get_node("LockItemInfo").pressed = false
+		_on_ItemForSale_mouse_entered()
+		game[parent].locked = true
+	else:
+		game[parent].locked = false

@@ -44,5 +44,9 @@ void fragment() {
 	vec2 motion = vec2( fbm(coord + vec2(TIME * -fog_mvt_spd, TIME * fog_mvt_spd)) );
 
 	float final = fbm(coord + motion);
-	COLOR = vec4(color.rgb, final * 0.7);
+	COLOR.rgb = color.rgb;
+	COLOR.a = max(final - 0.4, 0.0) * 2.5;
+	COLOR.r = COLOR.a * 1.0;
+	COLOR.rgb *= max(1.0, COLOR.a);
+	
 }

@@ -214,11 +214,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
+[node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 104.0
 margin_top = 159.0
 margin_right = 356.0
 margin_bottom = 199.0
+pressed = true
+text = "ENABLE_SHADERS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
+margin_left = 104.0
+margin_top = 215.0
+margin_right = 356.0
+margin_bottom = 255.0
 text = "AUTOSAVE_LIGHT"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -438,6 +449,9 @@ __meta__ = {
 [connection signal="toggled" from="TabContainer/GRAPHICS/Vsync" to="." method="_on_Vsync_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Fullscreen" to="." method="_on_Fullscreen_toggled"]
 [connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
+[connection signal="mouse_entered" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="mouse_entered" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_mouse_exited"]

@@ -22,6 +22,7 @@ func _ready():
 		$TabContainer/SFX/MusicPitch.pressed = config.get_value("audio", "pitch_affected", true)
 		$TabContainer/GRAPHICS/Vsync.pressed = config.get_value("graphics", "vsync", true)
 		$TabContainer/GRAPHICS/AutosaveLight.pressed = config.get_value("saving", "autosave_light", true)
+		$TabContainer/GRAPHICS/EnableShaders.pressed = config.get_value("graphics", "enable_shaders", true)
 		$TabContainer/GAME/EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		$TabContainer/GAME/AutosellMinerals.pressed = config.get_value("game", "autosell", true)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
@@ -234,4 +235,16 @@ func _on_MusicPitch_toggled(button_pressed):
 		else:
 			game.music_player.pitch_scale = 1.0
 		config.set_value("audio", "pitch_affected", button_pressed)
+		config.save("user://settings.cfg")
+
+
+func _on_EnableShaders_mouse_entered():
+	game.show_tooltip(tr("ENABLE_SHADERS_DESC"))
+
+
+func _on_EnableShaders_toggled(button_pressed):
+	if err == OK:
+		game.enable_shaders = button_pressed
+		game.get_node("Nebula").visible = button_pressed
+		config.set_value("graphics", "enable_shaders", true)
 		config.save("user://settings.cfg")

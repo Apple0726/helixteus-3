@@ -394,10 +394,10 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Planets"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 1.0
-margin_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
 columns = 3
 
 [node name="Systems" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -411,10 +411,10 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Systems"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 1.0
-margin_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
 columns = 3
 
 [node name="Galaxies" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -428,10 +428,10 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Galaxies"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 1.0
-margin_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
 columns = 3
 
 [node name="Clusters" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -445,10 +445,10 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Clusters"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 1.0
-margin_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
 columns = 3
 
 [node name="Objectives" type="Control" parent="."]

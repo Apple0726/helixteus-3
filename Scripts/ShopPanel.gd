@@ -9,7 +9,7 @@ func _ready():
 		btn.text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$Tabs.add_child(btn)
+		$VBox/Tabs.add_child(btn)
 	_on_btn_pressed("Speedups")
 
 func _on_btn_pressed(btn_str:String):
@@ -39,7 +39,8 @@ func _on_btn_pressed(btn_str:String):
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, _desc, costs, _type, _dir)
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = tab in ["Speedups", "Overclocks"]
+	desc_txt.text = _desc
+	$VBox/HBox/ItemInfo/VBox/HBox.visible = tab in ["Speedups", "Overclocks"]
 
 func _on_Buy_pressed():
 	get_item(item_name, item_type, item_dir)

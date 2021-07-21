@@ -828,8 +828,11 @@ func update_ray():
 			mining_p.emitting = false
 		mining_laser.visible = holding_left_click
 		if holding_left_click:
-			mining_laser.scale.x = laser_reach / 16.0
-			mining_laser.scale.y = 16.0
+			if game and game.enable_shaders:
+				mining_laser.scale.x = laser_reach / 16.0
+				mining_laser.scale.y = 16.0
+			else:
+				mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			#mining_laser.material["shader_param/noise_scale"] = Vector2.ONE * laser_reach / 256.0
 			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
@@ -1025,8 +1028,20 @@ func _process(delta):
 
 
 func attack():
-	var laser_color:Color = get_color(inventory[curr_slot].name.split("_")[0])
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color)
+	var laser_name:String = inventory[curr_slot].name.split("_")[0]
+	var laser_color:Color = get_color(laser_name)
+	var light_energy:float = 1.6
+	if laser_name in ["yellow", "green"]:
+		light_energy = 1.9
+	elif laser_name in ["blue", "purple"]:
+		light_energy = 2.5
+	elif laser_name in ["UV", "xray"]:
+		light_energy = 3.1
+	elif laser_name == "gammaray":
+		light_energy = 3.8
+	elif laser_name == "ultragammaray":
+		light_energy = 5.0
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_energy)
 	cooldown()
 
 func hit_rock(delta):
@@ -1124,7 +1139,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black, light_energy:float = 1.8):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1147,6 +1162,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	if light_color != Color.black:
 		proj.get_node("Light2D").enabled = true
 		proj.get_node("Light2D").color = mod
+		proj.get_node("Light2D").energy = light_energy
 	add_child(proj)
 	proj.add_to_group("projectiles")
 
@@ -1164,7 +1180,10 @@ func set_border(i:int):
 			slot.remove_child(border)
 			border.queue_free()
 	if inventory[i].type == "rover_mining":
-		mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
+		if game and game.enable_shaders:
+			mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
+		else:
+			mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))

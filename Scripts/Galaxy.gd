@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var game = self.get_parent().get_parent()
-var star_texture = preload("res://Graphics/Stars/Star.png")
+var star_shader = preload("res://Shaders/Star.shader")
 
 var dimensions:float
 
@@ -19,7 +19,7 @@ func _ready():
 				star = s_i.stars[i]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
-		star_btn.texture_normal = star_texture
+		star_btn.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
 		star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
@@ -27,8 +27,14 @@ func _ready():
 		star_btn.connect("mouse_entered", self, "on_system_over", [s_i.l_id])
 		star_btn.connect("mouse_exited", self, "on_system_out")
 		star_btn.connect("pressed", self, "on_system_click", [s_i.id, s_i.l_id])
-		star_btn.rect_position = Vector2(-600 / 2, -600 / 2)
-		star_btn.rect_pivot_offset = Vector2(600 / 2, 600 / 2)
+		star_btn.rect_rotation = sin(star.temperature) * 180
+		star_btn.rect_position = Vector2(-1024 / 2, -1024 / 2)
+		star_btn.rect_pivot_offset = Vector2(1024 / 2, 1024 / 2)
+		if game.enable_shaders:
+			star_btn.material = ShaderMaterial.new()
+			star_btn.material.shader = star_shader
+			star_btn.material.set_shader_param("time_offset", 10.0 * randf())
+			star_btn.material.set_shader_param("twinkle_speed", 0.5)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]

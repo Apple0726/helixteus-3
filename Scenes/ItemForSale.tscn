@@ -1,49 +1,104 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=11 format=2]
 
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/ItemForSale.gd" type="Script" id=2]
 
-[node name="ItemForSale" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1088.0
-margin_bottom = -490.0
-rect_min_size = Vector2( 192, 230 )
-rect_clip_content = true
-mouse_filter = 2
+[sub_resource type="StyleBoxFlat" id=8]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.231373 )
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxFlat" id=7]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.372549, 0.368627, 0.368627, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[node name="ItemForSale" type="Panel"]
+margin_right = 140.0
+margin_bottom = 212.0
+rect_min_size = Vector2( 140, 212 )
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 8 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ItemTexture" type="TextureRect" parent="."]
-margin_right = 192.0
-margin_bottom = 200.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+anchor_right = 1.0
+margin_bottom = 168.0
+mouse_filter = 2
 expand = true
 stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
-margin_right = 192.0
-margin_bottom = 230.0
+[node name="LockItemInfo" type="Button" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -28.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 4 )
+custom_styles/disabled = SubResource( 5 )
+custom_styles/normal = SubResource( 2 )
+toggle_mode = true
 
 [node name="SmallButton" type="Button" parent="."]
-margin_top = 200.0
-margin_right = 192.0
-margin_bottom = 230.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -34.0
 mouse_filter = 1
+custom_styles/hover = SubResource( 7 )
+custom_styles/normal = SubResource( 6 )
 text = "BUY"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[connection signal="mouse_entered" from="." to="." method="_on_ItemForSale_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_ItemForSale_mouse_exited"]
+[connection signal="toggled" from="LockItemInfo" to="." method="_on_LockItemInfo_toggled"]
 [connection signal="mouse_entered" from="SmallButton" to="." method="_on_SmallButton_mouse_entered"]
 [connection signal="mouse_exited" from="SmallButton" to="." method="_on_SmallButton_mouse_exited"]
 [connection signal="pressed" from="SmallButton" to="." method="_on_SmallButton_pressed"]

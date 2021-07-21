@@ -3,12 +3,15 @@ extends "Panel.gd"
 enum PanelType {SHOP, CRAFT, CONSTRUCT}
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-onready var amount_node = $Contents/HBoxContainer/ItemInfo/HBoxContainer/BuyAmount
-onready var buy_btn = $Contents/HBoxContainer/ItemInfo/HBoxContainer/Buy
-onready var grid = $Contents/HBoxContainer/Items/Items
-onready var desc_txt = $Contents/HBoxContainer/ItemInfo/VBoxContainer/Description
+onready var amount_node = $VBox/HBox/ItemInfo/VBox/HBox/BuyAmount
+onready var buy_btn = $VBox/HBox/ItemInfo/VBox/HBox/Buy
+onready var buy_hbox = $VBox/HBox/ItemInfo/VBox/HBox
+onready var grid = $VBox/HBox/Items/Items
+onready var desc_txt = $VBox/HBox/ItemInfo/VBox/Desc/Desc
+onready var item_info = $VBox/HBox/ItemInfo
 var num:int = 1
 var type:int
+var locked:bool = false
 
 var item_type:String = ""
 var item_dir:String = ""
@@ -18,7 +21,7 @@ var item_total_costs:Dictionary
 var item_name = ""
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func _input(event):
 	if Input.is_action_just_pressed("shift"):
@@ -37,34 +40,32 @@ func _input(event):
 				grid_el.get_node("SmallButton").text = tr("CRAFT")
 
 func change_tab(btn_str:String):
-	for item in $Contents/HBoxContainer/Items/Items.get_children():
-		$Contents/HBoxContainer/Items/Items.remove_child(item)
+	for item in $VBox/HBox/Items/Items.get_children():
+		$VBox/HBox/Items/Items.remove_child(item)
 		item.free()
 	item_name = ""
 	_on_BuyAmount_value_changed(1)
 	remove_costs()
-	$Contents/HBoxContainer/ItemInfo/HBoxContainer.visible = false
-	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = false
-	$Contents.visible = true
-	$Contents/Info.text = tr("%s_DESC" % btn_str.to_upper())
-	Helper.set_btn_color(get_node("Tabs/%s" % btn_str))
+	item_info.visible = false
+	#$VBox/Info.text = tr("%s_DESC" % btn_str.to_upper())
+	Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
+	locked = false
 	
 func remove_costs():
-	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	for child in vbox.get_children():
-		if not child is Label and not child is RichTextLabel:
-			vbox.remove_child(child)
-			child.free()
+		vbox.remove_child(child)
+		child.free()
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
-	$Contents/HBoxContainer/ItemInfo/VBoxContainer.visible = true
-	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
+	item_info.visible = true
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
+	var name_node = $VBox/HBox/ItemInfo/Name
 	if _dir == "Buildings":
-		vbox.get_node("Name").text = tr("%s_NAME" % name)
+		name_node.text = tr("%s_NAME" % name)
 	else:
-		vbox.get_node("Name").text = Helper.get_item_name(name)
-	desc_txt.text = desc + "\n"
+		name_node.text = Helper.get_item_name(name)
 	item_costs = costs
 	item_total_costs = costs.duplicate(true)
 	item_name = name
@@ -73,10 +74,10 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	item_dir = _dir
 	for cost in costs:
 		item_total_costs[cost] = costs[cost] * num
-	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 	yield(get_tree().create_timer(0), "timeout")
-	desc_txt.rect_min_size.y = desc_txt.get_content_height()
-	desc_txt.rect_size.y = desc_txt.get_content_height()
+	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
+	#desc_txt.rect_min_size.y = desc_txt.get_content_height()
+	#desc_txt.rect_size.y = desc_txt.get_content_height()
 
 func add_items(not_enough_inv:String, success:String):
 	var items_left = game.add_items(item_name, amount_node.value)
@@ -97,7 +98,7 @@ func _on_BuyAmount_value_changed(value):
 	remove_costs()
 	for cost in item_costs:
 		item_total_costs[cost] = item_costs[cost] * num
-	var vbox = $Contents/HBoxContainer/ItemInfo/VBoxContainer
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 
 func refresh():
