@@ -176,11 +176,6 @@ margin_right = 440.0
 margin_bottom = 132.0
 
 [node name="CloseButton" parent="Panel" instance=ExtResource( 4 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -32.0
-margin_right = 0.0
-margin_bottom = 32.0
 
 [node name="Reset" type="TextureButton" parent="Panel"]
 visible = false

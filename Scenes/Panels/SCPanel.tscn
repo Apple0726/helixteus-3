@@ -1,7 +1,5 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/PieGraph.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scripts/SCPanel.gd" type="Script" id=6]
@@ -11,28 +9,13 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=10]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=12]
 
-[sub_resource type="DynamicFont" id=3]
-size = 30
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.443137, 0.443137, 0.443137, 1 )
-
-[sub_resource type="InputEventAction" id=4]
+[sub_resource type="InputEventAction" id=3]
 action = "G"
 
-[sub_resource type="ShortCut" id=5]
-shortcut = SubResource( 4 )
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 20
 outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
@@ -61,15 +44,11 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="Background" instance=ExtResource( 12 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 64.0
-custom_fonts/font = SubResource( 3 )
+anchor_right = 1.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 38 )
 text = "SC_NAME"
 align = 1
 valign = 1
@@ -81,7 +60,6 @@ __meta__ = {
 margin_top = 64.0
 margin_right = 1064.0
 margin_bottom = 100.0
-custom_styles/normal = SubResource( 2 )
 align = 1
 valign = 1
 __meta__ = {
@@ -108,7 +86,7 @@ margin_right = 1064.0
 margin_bottom = 600.0
 theme = ExtResource( 5 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 5 )
+shortcut = SubResource( 4 )
 text = "START_CRUSHING"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -229,7 +207,7 @@ margin_left = 36.0
 margin_top = 564.0
 margin_right = 512.0
 margin_bottom = 588.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
 text = "1000 kg"
 align = 1
 __meta__ = {

@@ -17,6 +17,7 @@ margin_bottom = 120.0
 theme = ExtResource( 4 )
 script = ExtResource( 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -24,11 +25,12 @@ __meta__ = {
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -320.0
-margin_top = 16.0
 margin_right = 320.0
 margin_bottom = 40.0
+rect_min_size = Vector2( 0, 38 )
 text = "CONSTRUCT_FIGHTERS"
 align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -38,41 +40,41 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -168.0
-margin_top = -40.0
+margin_left = -176.0
+margin_top = -48.0
+margin_right = -8.0
+margin_bottom = -8.0
 text = "CONSTRUCT"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 44.0
-margin_top = 168.0
-margin_right = 468.0
-margin_bottom = 236.0
+margin_left = 24.0
+margin_top = 184.0
+margin_right = 448.0
+margin_bottom = 248.0
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_right = 424.0
-margin_bottom = 68.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 419.0
+margin_bottom = 59.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 44.0
-margin_top = 64.0
-margin_right = 144.0
-margin_bottom = 128.0
+margin_left = 48.0
+margin_top = 72.0
+margin_right = 148.0
+margin_bottom = 136.0
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -81,13 +83,16 @@ __meta__ = {
 }
 
 [node name="SpinBox" type="SpinBox" parent="."]
-margin_left = 184.0
-margin_top = 84.0
-margin_right = 276.0
-margin_bottom = 112.0
+margin_left = 188.0
+margin_top = 92.0
+margin_right = 280.0
+margin_bottom = 120.0
 value = 1.0
 rounded = true
 allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Strength" type="Label" parent="."]
 margin_left = 320.0

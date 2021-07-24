@@ -1,61 +1,30 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scripts/MUPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
 
-[sub_resource type="DynamicFont" id=3]
-size = 25
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.443137, 0.443137, 0.443137, 1 )
-
-[node name="MUPanel" type="Control"]
+[node name="Background" type="Panel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -536.0
+margin_left = -512.0
 margin_top = -296.0
-margin_right = 536.0
+margin_right = 512.0
 margin_bottom = 296.0
-rect_pivot_offset = Vector2( 533, 300 )
-mouse_filter = 1
 theme = ExtResource( 5 )
 script = ExtResource( 6 )
 __meta__ = {
-"_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
 }
 
-[node name="Background" type="Panel" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CloseButton" parent="Background" instance=ExtResource( 7 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
+[node name="CloseButton" parent="." instance=ExtResource( 7 )]
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 48.0
-custom_fonts/font = SubResource( 3 )
+anchor_right = 1.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 0, 38 )
 text = "MINERAL_UPGRADES"
 align = 1
 valign = 1
@@ -64,10 +33,9 @@ __meta__ = {
 }
 
 [node name="Desc" type="Label" parent="."]
-margin_top = 48.0
-margin_right = 1072.0
-margin_bottom = 84.0
-custom_styles/normal = SubResource( 2 )
+anchor_right = 1.0
+margin_top = 40.0
+margin_bottom = 77.0
 text = "MU_DESC"
 align = 1
 valign = 1
@@ -75,21 +43,34 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 40.0
-margin_top = 112.0
-margin_right = 1032.0
-margin_bottom = 576.0
+[node name="Panel" type="Panel" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 24.0
+margin_top = -496.0
+margin_right = -24.0
+margin_bottom = -24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Titles" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 992.0
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_right = -16.0
+margin_bottom = -24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Titles" type="HBoxContainer" parent="Panel/VBox"]
+margin_right = 944.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 50 )
 
-[node name="Label" type="Label" parent="VBoxContainer/Titles"]
+[node name="Label" type="Label" parent="Panel/VBox/Titles"]
 margin_top = 13.0
 margin_right = 450.0
 margin_bottom = 37.0
@@ -97,28 +78,28 @@ rect_min_size = Vector2( 450, 0 )
 size_flags_horizontal = 3
 text = "UPGRADE_NOUN"
 
-[node name="Lv" type="Label" parent="VBoxContainer/Titles"]
+[node name="Lv" type="Label" parent="Panel/VBox/Titles"]
 margin_left = 454.0
 margin_top = 13.0
-margin_right = 630.0
+margin_right = 614.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 text = "LEVEL"
 
-[node name="Info" type="Label" parent="VBoxContainer/Titles"]
-margin_left = 634.0
+[node name="Info" type="Label" parent="Panel/VBox/Titles"]
+margin_left = 618.0
 margin_top = 13.0
-margin_right = 811.0
+margin_right = 779.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 text = "EFFECTS"
 
-[node name="Lv3" type="Label" parent="VBoxContainer/Titles"]
-margin_left = 815.0
+[node name="Lv3" type="Label" parent="Panel/VBox/Titles"]
+margin_left = 783.0
 margin_top = 13.0
-margin_right = 992.0
+margin_right = 944.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 text = "UPGRADE"
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 	for MU in game.MUs:
 		var hbox = HBoxContainer.new()
 		var title = Label.new()
@@ -37,15 +37,15 @@ func _ready():
 		btn.align = Button.ALIGN_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
-		$VBoxContainer.add_child(hbox)
+		$Panel/VBox.add_child(hbox)
 	
 func refresh():
-	$VBoxContainer/AIE.visible = game.show.auroras
-	$VBoxContainer/MSMB.visible = game.show.mining
-	$VBoxContainer/STMB.visible = game.STM_lv >= 2
-	$VBoxContainer/SHSR.visible = game.stats.planets_conquered >= 2
-	$VBoxContainer/CHR.visible = game.stats.planets_conquered >= 2
-	for hbox in $VBoxContainer.get_children():
+	$Panel/VBox/AIE.visible = game.show.auroras
+	$Panel/VBox/MSMB.visible = game.show.mining
+	$Panel/VBox/STMB.visible = game.STM_lv >= 2
+	$Panel/VBox/SHSR.visible = game.stats.planets_conquered >= 2
+	$Panel/VBox/CHR.visible = game.stats.planets_conquered >= 2
+	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
 			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name), 6)]
@@ -54,23 +54,23 @@ func refresh():
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($VBoxContainer/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, load("res://Graphics/Icons/money.png")], 15)
+			game.add_text_icons($Panel/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, load("res://Graphics/Icons/money.png")], 15)
 		"MSMB":
-			$VBoxContainer/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
+			$Panel/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
-			$VBoxContainer/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
+			$Panel/VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"AIE":
-			$VBoxContainer/AIE/Effects.text = String(Helper.get_AIE(next_lv))
+			$Panel/VBox/AIE/Effects.text = String(Helper.get_AIE(next_lv))
 		"STMB":
-			$VBoxContainer/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
+			$Panel/VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
-			$VBoxContainer/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
+			$Panel/VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$VBoxContainer/CHR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 2.5)
+			$Panel/VBox/CHR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 2.5)
 	if next_lv == 0:
-		get_node("VBoxContainer/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
+		get_node("Panel/VBox/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
 	else:
-		get_node("VBoxContainer/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.green
+		get_node("Panel/VBox/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.green
 			
 func get_min_cost(upg:String):
 	return round(Data.MUs[upg].base_cost * pow(Data.MUs[upg].pw, game.MUs[upg] - 1))

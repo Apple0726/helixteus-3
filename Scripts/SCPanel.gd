@@ -52,10 +52,10 @@ func refresh():
 				var el_num = 0
 				if el.element == "Si":
 					item = "silicon"
-					el_num = hslider.value * el.fraction / 50.0
+					el_num = hslider.value * el.fraction / 30.0
 				elif el.element == "Fe" and game.science_unlocked.ISC:
 					item = "iron"
-					el_num = hslider.value * el.fraction / 50.0
+					el_num = hslider.value * el.fraction / 30.0
 				elif el.element == "Al" and game.science_unlocked.ISC:
 					item = "aluminium"
 					el_num = hslider.value * el.fraction / 50.0
@@ -64,7 +64,7 @@ func refresh():
 					el_num = hslider.value * el.fraction / 2.0
 				elif el.element == "Ti" and game.science_unlocked.ISC:
 					item = "titanium"
-					el_num = hslider.value * el.fraction / 200.0
+					el_num = hslider.value * el.fraction / 500.0
 				el_num = stepify(el_num * tile.bldg.path_3_value, 0.001)
 				if el_num != 0:
 					expected_rsrc[item] = el_num
@@ -117,7 +117,6 @@ func _on_Button_pressed():
 		tile.bldg.stone_qty = stone_qty
 		tile.bldg.start_date = OS.get_system_time_msecs()
 		tile.bldg.expected_rsrc = expected_rsrc
-		game.HUD.refresh()
 	else:
 		var time = OS.get_system_time_msecs()
 		var crush_spd = tile.bldg.path_1_value * game.u_i.time_speed
@@ -137,9 +136,12 @@ func _on_Button_pressed():
 		tile.bldg.erase("start_date")
 		tile.bldg.erase("expected_rsrc")
 		game.popup(tr("RESOURCES_COLLECTED"), 1.5)
+	game.HUD.refresh()
 	refresh()
 
 func _process(delta):
+	if not visible:
+		set_process(false)
 	var c_i = Helper.get_crush_info(tile)
 	CC_bar.value = 1 - c_i.progress
 	CC_stone.text = "%s kg" % [c_i.qty_left]

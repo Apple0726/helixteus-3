@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 	for panel in $GridContainer.get_children():
 		panel.show_weapon_XPs = false
 	refresh()

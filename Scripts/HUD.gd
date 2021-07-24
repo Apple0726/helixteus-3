@@ -45,13 +45,17 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 	for p_b in game.bookmarks.planet:
-		add_p_b(p_b)
+		if p_b:
+			add_p_b(p_b)
 	for s_b in game.bookmarks.system:
-		add_s_b(s_b)
+		if s_b:
+			add_s_b(s_b)
 	for g_b in game.bookmarks.galaxy:
-		add_g_b(g_b)
+		if g_b:
+			add_g_b(g_b)
 	for c_b in game.bookmarks.cluster:
-		add_c_b(c_b)
+		if c_b:
+			add_c_b(c_b)
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		switch_btn.shortcut.shortcut.action = "Y"
 	elif OS.get_latin_keyboard_variant() == "AZERTY":

@@ -11,7 +11,7 @@ var rover_over_id:int = -1
 var probe_time_bars:Array = []
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func _input(event):
 	if modulate.a == 1 and Input.is_action_just_released("X") and rover_over_id != -1:
@@ -21,9 +21,11 @@ func _input(event):
 		refresh()
 
 func refresh():
-	var hbox = $HBox/VBox1/Rovers/HBox
-	var hbox2 = $HBox/VBox1/GridContainer
-	var hbox3 = $HBox/VBox2/Probes/ScrollContainer/GridContainer
+	$Panel.visible = game.science_unlocked.FG
+	$Probes.visible = game.universe_data[game.c_u].lv >= 50
+	var hbox = $Rovers/HBox
+	var hbox2 = $Panel/GridContainer
+	var hbox3 = $Probes/ScrollContainer/GridContainer
 	for rov in hbox.get_children():
 		hbox.remove_child(rov)
 		rov.queue_free()
@@ -80,10 +82,6 @@ func refresh():
 			time_bar.rect_position = Vector2(30, 0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
-	$HBox/VBox1.visible = hbox.get_child_count() != 0
-	$HBox/VBox1/Fighters.visible = hbox2.get_child_count() != 0
-	$HBox/VBox1/GridContainer.visible = hbox2.get_child_count() != 0
-	$HBox/VBox2.visible = hbox3.get_child_count() != 0
 	set_process(false)
 	for probe in game.probe_data:
 		if probe.has("start_date"):

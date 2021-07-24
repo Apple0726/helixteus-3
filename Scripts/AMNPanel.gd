@@ -28,7 +28,7 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 
 func _ready():
 	set_process(false)
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 	$Title.text = tr("AMN_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
@@ -81,18 +81,6 @@ func _on_stone_pressed(_name:String, dict:Dictionary):
 	difficulty = 0.001
 	_on_Switch_pressed()
 	$Control/Switch.visible = false
-	
-func _on_diamond_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"C":1000.0 / 12.011}
-	atom_costs = {"C":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
-	metal = "diamond"
-	energy_cost = 25000
-	difficulty = 1.0
-	refresh()
-	$Control/Switch.visible = true
 
 func _on_iron_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
@@ -102,7 +90,7 @@ func _on_iron_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/To, 32, {"iron":0})
 	metal = "iron"
 	energy_cost = 30
-	difficulty = 0.05
+	difficulty = 0.03
 	refresh()
 	$Control/Switch.visible = true
 
@@ -112,8 +100,8 @@ func _on_silicon_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"silicon":0})
 	metal = "silicon"
-	energy_cost = 500
-	difficulty = 0.2
+	energy_cost = 15
+	difficulty = 0.005
 	refresh()
 	$Control/Switch.visible = true
 
@@ -123,7 +111,7 @@ func _on_aluminium_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
 	metal = "aluminium"
-	energy_cost = 50
+	energy_cost = 60
 	difficulty = 0.07
 	refresh()
 	$Control/Switch.visible = true
@@ -135,7 +123,7 @@ func _on_amethyst_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
 	metal = "amethyst"
-	energy_cost = 100
+	energy_cost = 580
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -147,7 +135,7 @@ func _on_emerald_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"emerald":0})
 	metal = "emerald"
-	energy_cost = 100
+	energy_cost = 580
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -159,7 +147,7 @@ func _on_quartz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"quartz":0})
 	metal = "quartz"
-	energy_cost = 110
+	energy_cost = 590
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -171,7 +159,7 @@ func _on_topaz_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"topaz":0})
 	metal = "topaz"
-	energy_cost = 110
+	energy_cost = 590
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -183,7 +171,7 @@ func _on_ruby_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"ruby":0})
 	metal = "ruby"
-	energy_cost = 110
+	energy_cost = 590
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -195,7 +183,7 @@ func _on_sapphire_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
 	metal = "sapphire"
-	energy_cost = 120
+	energy_cost = 600
 	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
@@ -207,8 +195,20 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	Helper.put_rsrc($Control2/To, 32, {"titanium":0})
 	metal = "titanium"
-	energy_cost = 250
-	difficulty = 0.3
+	energy_cost = 12000
+	difficulty = 0.5
+	refresh()
+	$Control/Switch.visible = true
+
+func _on_diamond_pressed(_name:String, dict:Dictionary):
+	reset_poses(_name, dict)
+	ratios = {"C":1000.0 / 12.011}
+	atom_costs = {"C":0}
+	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
+	metal = "diamond"
+	energy_cost = 45000
+	difficulty = 1.9
 	refresh()
 	$Control/Switch.visible = true
 
@@ -226,6 +226,7 @@ func refresh():
 		$Control/EnergyCostText["custom_colors/font_color"] = Color.white
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
+	$Transform.visible = $Control3.visible or $Control.visible
 	refresh_icon()
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult * tile_num))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)

@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/ItemForSale.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/MegastructuresPanel.gd" type="Script" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
@@ -31,7 +30,6 @@ margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
 mouse_filter = 1
 theme = ExtResource( 4 )
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
@@ -46,8 +44,6 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="Background" instance=ExtResource( 7 )]
-anchor_left = 1.0
-anchor_right = 1.0
 margin_left = -48.0
 margin_right = 0.0
 
@@ -86,49 +82,36 @@ __meta__ = {
 }
 
 [node name="M_DS" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 192.0
-margin_bottom = 230.0
+margin_right = 201.0
+margin_bottom = 251.0
 
 [node name="M_SE" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 190.0
-margin_right = 382.0
-margin_bottom = 230.0
+margin_left = 199.0
+margin_right = 400.0
+margin_bottom = 251.0
 
 [node name="M_MME" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 380.0
-margin_right = 572.0
-margin_bottom = 230.0
+margin_left = 398.0
+margin_right = 599.0
+margin_bottom = 251.0
 
 [node name="M_PK" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 570.0
-margin_right = 762.0
-margin_bottom = 230.0
+margin_left = 597.0
+margin_right = 798.0
+margin_bottom = 251.0
 
 [node name="M_MB" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 228.0
-margin_right = 192.0
-margin_bottom = 458.0
+margin_top = 249.0
+margin_right = 201.0
+margin_bottom = 500.0
 
 [node name="M_MPCC" parent="GridContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 190.0
-margin_top = 228.0
-margin_right = 382.0
-margin_bottom = 458.0
+margin_left = 199.0
+margin_top = 249.0
+margin_right = 400.0
+margin_bottom = 500.0
 
 [node name="ItemInfo" type="Panel" parent="."]
-visible = false
 margin_left = 760.0
 margin_top = 100.0
 margin_right = 1064.0

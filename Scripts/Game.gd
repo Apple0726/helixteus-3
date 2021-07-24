@@ -32,7 +32,6 @@ var orbit_scene = preload("res://Scenes/Orbit.tscn")
 var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
-var mantle_BG = preload("res://Graphics/Decoratives/Mantle.jpg")
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Dictionary
@@ -67,7 +66,7 @@ var dimension:Control
 var planet_details:Control
 var overlay:Control
 var annotator:Control
-var wiki:Control
+var wiki:Panel
 var load_panel:Panel
 onready var tooltip:Control = $Tooltips/Tooltip
 onready var adv_tooltip:Control = $Tooltips/AdvTooltip
@@ -242,8 +241,8 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":1
 					"topaz":{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":39310},
 					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":39540},
 					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":39770},
-					"platinum":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":21.45, "value":93590},
-					"titanium":{"min_depth":3400, "max_depth":7000, "rarity":89.5, "density":4.51, "value":254010},
+					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
+					"platinum":{"min_depth":2400, "max_depth":7000, "rarity":79.5, "density":21.45, "value":212650},
 					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
 					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
 					"mythril":{"min_depth":13000, "max_depth":20000, "rarity":586.4, "density":13.4, "value":4260020},
@@ -259,8 +258,8 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":e(8, 7)}},
 					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(6.25, 8)}},
 					"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
-					"platinum_pickaxe":{"speed":175.0, "durability":1200, "costs":{"money":e(8.2, 9)}},
-					"titanium_pickaxe":{"speed":230.0, "durability":2500, "costs":{"money":e(1.15, 10)}},
+					"titanium_pickaxe":{"speed":175.0, "durability":2500, "costs":{"money":e(8.2, 9)}},
+					"platinum_pickaxe":{"speed":330.0, "durability":1300, "costs":{"money":e(1.15, 10)}},
 					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(5.4, 10)}},
 					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":e(3.25, 11)}},
 					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 12)}},
@@ -742,8 +741,8 @@ func new_game(tut:bool, univ:int = 0):
 				"topaz":0,
 				"ruby":0,
 				"sapphire":0,
-				"platinum":0,
 				"titanium":0,
+				"platinum":0,
 				"diamond":0,
 				"nanocrystal":0,
 				"mythril":0,
@@ -951,7 +950,8 @@ func add_panels():
 	ship_panel = load("res://Scenes/Panels/ShipPanel.tscn").instance()
 	construct_panel = generic_panel_scene.instance()
 	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
-	megastructures_panel = load("res://Scenes/Panels/MegastructuresPanel.tscn").instance()
+	megastructures_panel = generic_panel_scene.instance()
+	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
 	gigastructures_panel = load("res://Scenes/Panels/GigastructuresPanel.tscn").instance()
 	craft_panel = generic_panel_scene.instance()
 	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
@@ -1134,7 +1134,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
-	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 40), Vector2(-s.x / 2.0, -s.y / 2.0 + 30), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 20), Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
 	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
@@ -1143,7 +1143,7 @@ func fade_in_panel(panel:Control):
 func fade_out_panel(panel:Control):
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
-	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 40), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 20), 0.1)
 	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 0.0, 0.2)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
@@ -1277,7 +1277,8 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		"planet_details":
 			planet_details = planet_details_scene.instance()
 			add_child(planet_details)
-			$UI.remove_child(HUD)
+			if is_a_parent_of(HUD):
+				$UI.remove_child(HUD)
 		"system":
 			add_system()
 			add_space_HUD()
@@ -1546,8 +1547,12 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
+	if enable_shaders:
+		$Nebula.fade_in()
+		if galaxy_data[c_g_g].type == 0:
+			$Nebula.change_color(Color.white)
 	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
-	HUD.get_node("Panel/CollectAll").visible = false
+	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_galaxy():
 	if obj_exists("Clusters", c_c_g):
@@ -1556,10 +1561,14 @@ func add_galaxy():
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g].has("discovered"):
 		yield(start_system_generation(), "completed")
-	if enable_shaders:
-		$Nebula.fade_in()
-		if galaxy_data[c_g_g].type == 0:
-			$Nebula.change_color(Color.white)
+	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and galaxy_data[c_g].system_num < 2000 and len(ship_data) == 2:
+		third_ship_hints.spawn_galaxy = c_g
+		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+		third_ship_hints.g_g_id = c_g_g
+		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
+		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
+		HUD.refresh()
 	add_obj("galaxy")
 	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
@@ -1610,14 +1619,13 @@ func remove_supercluster():
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 
 func remove_cluster():
-	VisualServer
+	if enable_shaders:
+		$Nebula.fade_out()
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 
 func remove_galaxy():
-	if enable_shaders:
-		$Nebula.fade_out()
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -1846,13 +1854,13 @@ func generate_galaxies(id:int):
 			g_i = galaxy_data[0]
 			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
-			cluster_data[id]["galaxies"].append(0)
+			cluster_data[id]["galaxies"].append({"global":0, "local":0})
 		else:
 			if id == 0:#if the galaxies are in starting cluster
 				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70, 3)
 			else:
 				g_i.diff = Helper.clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
-			cluster_data[id]["galaxies"].append(g_id)
+			cluster_data[id]["galaxies"].append({"global":g_i.id, "local":g_i.l_id})
 			galaxy_data.append(g_i)
 	if progress == 1:
 		cluster_data[id]["discovered"] = true
@@ -2231,15 +2239,6 @@ func generate_systems(id:int):
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
 	galaxy_data[id]["discovered"] = true
-	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and total_sys_num < 2000:
-		third_ship_hints.spawn_galaxy = c_g
-		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-		third_ship_hints.g_g_id = c_g_g
-		third_ship_hints.g_l_id = c_g
-		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
-		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
-		HUD.refresh()
 
 func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0	
@@ -2389,7 +2388,7 @@ func generate_planets(id:int):#local id
 				if num == 12:
 					lv = ceil(0.9 * log(power) / log(1.2))
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
-				var def = Helper.rand_int(3, 10)
+				var def = round(pow(randf(), 2) * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
 				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
@@ -3219,6 +3218,7 @@ func _input(event):
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help"):
+		print(help_str)
 		help[help_str] = false
 		hide_tooltip()
 		hide_adv_tooltip()

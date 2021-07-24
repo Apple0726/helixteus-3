@@ -76,12 +76,11 @@ func _ready():
 			HX_data = Helper.get_conquer_all_data().HX_data
 		else:
 			HX_data = p_i.HX_data
-		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2))
+		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0)
 		var lum:float = 0.0
 		for star in game.system_data[game.c_s].stars:
 			var shift:float = 0
-			if star.pos != Vector2.ZERO:
-				shift = orbit_vector.dot(star.pos) / 2.0
+			shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
 			var star_spr = Sprite.new()
 			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
 			star_spr.modulate = Helper.get_star_modulate(star.class)
@@ -92,22 +91,26 @@ func _ready():
 				star_spr.material = ShaderMaterial.new()
 				star_spr.material.shader = star_shader
 				star_spr.material.set_shader_param("time_offset", 10.0 * randf())
-				star_spr.material.set_shader_param("brightness_offset", 2.0)
-				star_spr.material.set_shader_param("twinkle_speed", 0.8)
-				star_spr.material.set_shader_param("amplitude", 0.3)
+				star_spr.material.set_shader_param("brightness_offset", 1.3)
+				star_spr.material.set_shader_param("twinkle_speed", 0.4)
+				star_spr.material.set_shader_param("amplitude", 0.1)
+				$BG.material.shader = preload("res://Shaders/PlanetBG.shader")
 				if star.luminosity > lum:
-					print(star_spr.position.x)
-					$BG.material.set_shader_param("strength", pow(star.luminosity, 0.1))
-					$BG.material.set_shader_param("shine_r", range_lerp(star_spr.scale.x, 0.0, 2.0, 0.0, 1.4))
-					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0) - 0.1)
+					$BG.material.set_shader_param("strength", max(0.3, star_spr.scale.x * 3.0))
+					$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
+					$BG.material.set_shader_param("star_mod", star_spr.modulate)
+					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
 					lum = star.luminosity
+			else:
+				$BG.material.shader = null
 			add_child(star_spr)
 			move_child(star_spr, 0)
 		if not p_i.type in [11, 12]:
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
 			$BG.texture = null
-		for i in int(min(10000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))):
+		var num_stars:int = min(10000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))
+		for i in num_stars:
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
@@ -116,7 +119,7 @@ func _ready():
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
 			star.position.y = rand_range(0, 720)
-			if game.enable_shaders:
+			if game.enable_shaders and num_stars < 1000:
 				star.material = ShaderMaterial.new()
 				star.material.shader = star_shader
 				star.material.set_shader_param("time_offset", 10.0 * randf())
@@ -181,13 +184,11 @@ func send_HXs():
 		btn.rect_position = -Vector2(90, 50)
 		btn.rect_size = Vector2(180, 100)
 		var HX = HX1_scene.instance()
-		HX.get_node("HX/Sprite").texture = load("res://Graphics/HX/%s.png" % [HX_data[k].type])
+		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s.png" % [HX_data[k].type])
 		HX.scale *= 0.4
-		HX.get_node("HX/HP").max_value = HX_data[k].total_HP
-		HX.get_node("HX/HP").value = HX_data[k].HP
+		HX.get_node("HP").max_value = HX_data[k].total_HP
+		HX.get_node("HP").value = HX_data[k].HP
 		HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[k].lv]
-		#HX.get_node("HX").set_script(load("res://Scripts/FloatAnim.gd"))
-		#HX.get_node("HX").float_speed /= time_speed
 		HX.position = Vector2(2000, 360)
 		HX.add_child(btn)
 		btn.connect("mouse_entered", self, "on_HX_over", [k])
@@ -275,7 +276,7 @@ var ship_dir:String = ""
 
 func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
-	HXs[id].get_node("HX/HP").value = HX_data[id].HP
+	HXs[id].get_node("HP").value = HX_data[id].HP
 	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
 
 func hit_formula(acc:float, eva:float):
@@ -355,7 +356,7 @@ func _process(delta):
 	for i in len(HXs):
 		var HX = HXs[i]
 		if HX_data[i].HP <= 0 and HX.modulate.a > 0:
-			HX.modulate.a -= 0.03
+			HX.modulate.a -= 0.03 * delta * 60
 		var pos = HX_c_d[HX.name].position
 		var kb_rot = HX_c_d[HX.name].kb_rot
 		if HX_c_d[HX.name].knockback != Vector2.ZERO:
@@ -370,14 +371,17 @@ func _process(delta):
 			HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
 	if stage == BattleStages.CHOOSING:
 		var ship0_dist:float = ship0.position.distance_to(Vector2(200, 200))
+		var ship1_dist:float = ship1.position.distance_to(Vector2(400, 200))
+		var ship2_dist:float = ship2.position.distance_to(Vector2(200, 400))
+		var ship3_dist:float = ship3.position.distance_to(Vector2(400, 400))
 		ship0_engine.emitting = ship0_dist > 10
-		ship1_engine.emitting = ship0_dist > 10
-		ship2_engine.emitting = ship0_dist > 10
-		ship3_engine.emitting = ship0_dist > 10
+		ship1_engine.emitting = ship1_dist > 10
+		ship2_engine.emitting = ship2_dist > 10
+		ship3_engine.emitting = ship3_dist > 10
 		ship0.position = ship0.position.move_toward(Vector2(200, 200), ship0_dist * delta * 5 * time_speed)
-		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1.position.distance_to(Vector2(400, 200)) * delta * 5 * time_speed)
-		ship2.position = ship2.position.move_toward(Vector2(200, 400), ship2.position.distance_to(Vector2(200, 400)) * delta * 5 * time_speed)
-		ship3.position = ship3.position.move_toward(Vector2(400, 400), ship3.position.distance_to(Vector2(400, 400)) * delta * 5 * time_speed)
+		ship1.position = ship1.position.move_toward(Vector2(400, 200), ship1_dist * delta * 5 * time_speed)
+		ship2.position = ship2.position.move_toward(Vector2(200, 400), ship2_dist * delta * 5 * time_speed)
+		ship3.position = ship3.position.move_toward(Vector2(400, 400), ship3_dist * delta * 5 * time_speed)
 		current.position = self["ship%s" % [curr_sh]].position + Vector2(0, -65)
 		var hitbox_size:float = hitbox_size()
 		for i in len(ship_data):
@@ -561,8 +565,10 @@ func remove_targets():
 		target.remove_from_group("targets")
 		remove_child(target)
 		target.queue_free()
-	for HX in HXs:
-		HX.get_node("HX").modulate.a = 1
+	for i in len(HXs):
+		if HX_data[i].HP <= 0:
+			continue
+		HXs[i].modulate.a = 1
 
 func place_targets():
 	remove_targets()
@@ -575,7 +581,7 @@ func place_targets():
 		else:
 			target_id = -2
 		var HX = HXs[i]
-		HX.get_node("HX").modulate.a = 0.5
+		HX.modulate.a = 0.5
 		var target = target_scene.instance()
 		target.position = HX.position
 		add_child(target)
@@ -600,12 +606,9 @@ func on_target_pressed(target:int):
 		$Laser.visible = true
 		$Laser.rect_position = ship_pos
 		$Laser.rect_rotation = rad2deg(atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x))
-		if target % 2 == 0:
-			$Laser.rect_scale.x = 1
-		else:
-			$Laser.rect_scale.x = 1.4
-		$Laser/Texture.material["shader_param/beams"] = weapon_data.lv
-		$Laser/Texture.material["shader_param/outline_thickness"] = weapon_data.lv * 0.02
+		$Laser.rect_scale.x = (HX_pos.x - ship_pos.x) / 650.0
+		$Laser/Texture.material["shader_param/beams"] = weapon_data.lv + 1
+		$Laser/Texture.material["shader_param/outline_thickness"] = (weapon_data.lv + 1) * 0.01
 		if weapon_data.lv == 2:
 			$Laser/Texture.material["shader_param/outline_color"] = Color.orange
 		elif weapon_data.lv == 3:

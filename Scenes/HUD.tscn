@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=2]
+[gd_scene load_steps=64 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -202,31 +202,23 @@ action = "I"
 [sub_resource type="ShortCut" id=24]
 shortcut = SubResource( 23 )
 
-[sub_resource type="StyleBoxFlat" id=25]
-bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.403922, 0.403922, 0.403922, 1 )
-
-[sub_resource type="InputEventAction" id=26]
+[sub_resource type="InputEventAction" id=25]
 action = "."
 
-[sub_resource type="ShortCut" id=27]
-shortcut = SubResource( 26 )
+[sub_resource type="ShortCut" id=26]
+shortcut = SubResource( 25 )
 
-[sub_resource type="InputEventAction" id=28]
+[sub_resource type="InputEventAction" id=27]
 action = ","
 
-[sub_resource type="ShortCut" id=29]
-shortcut = SubResource( 28 )
+[sub_resource type="ShortCut" id=28]
+shortcut = SubResource( 27 )
 
-[sub_resource type="InputEventAction" id=30]
+[sub_resource type="InputEventAction" id=29]
 action = "Z"
 
-[sub_resource type="ShortCut" id=31]
-shortcut = SubResource( 30 )
+[sub_resource type="ShortCut" id=30]
+shortcut = SubResource( 29 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -376,7 +368,7 @@ __meta__ = {
 }
 
 [node name="BookmarksList" type="PanelContainer" parent="Bookmarks"]
-margin_left = 6.0
+margin_left = -2.0
 margin_right = 126.0
 margin_bottom = 124.0
 custom_styles/panel = SubResource( 6 )
@@ -387,17 +379,19 @@ __meta__ = {
 [node name="Planets" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 115.0
+margin_right = 123.0
 margin_bottom = 119.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Planets"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 5.0
+margin_bottom = 5.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 2
 columns = 3
 
 [node name="Systems" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -411,10 +405,12 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Systems"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 5.0
+margin_bottom = 5.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 2
 columns = 3
 
 [node name="Galaxies" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -428,10 +424,12 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Galaxies"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 5.0
+margin_bottom = 5.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 2
 columns = 3
 
 [node name="Clusters" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
@@ -445,10 +443,12 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Clusters"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 5.0
+margin_bottom = 5.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 2
 columns = 3
 
 [node name="Objectives" type="Control" parent="."]
@@ -880,7 +880,6 @@ margin_left = 1170.0
 margin_top = 654.0
 margin_right = 1276.0
 margin_bottom = 702.0
-custom_styles/panel = SubResource( 25 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -891,7 +890,7 @@ margin_top = 2.0
 margin_right = 102.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 27 )
+shortcut = SubResource( 26 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
@@ -916,7 +915,7 @@ margin_top = 2.0
 margin_right = 46.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 29 )
+shortcut = SubResource( 28 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5
@@ -1008,7 +1007,7 @@ anchor_bottom = 1.0
 margin_top = -48.0
 margin_right = 48.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 31 )
+shortcut = SubResource( 30 )
 expand = true
 stretch_mode = 5
 __meta__ = {

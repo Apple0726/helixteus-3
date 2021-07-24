@@ -22,7 +22,7 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.001},
 
 func _ready():
 	set_process(false)
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 	$Title.text = tr("SPR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:

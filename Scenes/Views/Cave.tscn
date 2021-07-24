@@ -81,16 +81,17 @@ use_filter = true
 font_data = ExtResource( 26 )
 
 [sub_resource type="StyleBoxFlat" id=9]
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
 
 [sub_resource type="StyleBoxFlat" id=10]
 content_margin_left = 7.0
@@ -554,10 +555,10 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI2/Panel"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 62.0
-margin_bottom = 44.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 44.0
+margin_bottom = 26.0
 alignment = 1
 
 [node name="Timer" type="Timer" parent="UI2/Panel"]

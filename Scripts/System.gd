@@ -99,7 +99,8 @@ func refresh_planets():
 			planet.add_child(MS)
 			if p_i.bldg.is_constructing:
 				var time_bar = game.time_scene.instance()
-				time_bar.rect_position = Vector2(0, -80)
+				time_bar.rect_position = Vector2(0, -80 * sc)
+				time_bar.rect_scale *= sc
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
@@ -149,6 +150,7 @@ func refresh_stars():
 		var star_info = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
+		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(512, 512)
 		#combined_star_size += star_info["size"]
@@ -173,7 +175,7 @@ func refresh_stars():
 				MS.texture = load("res://Graphics/Megastructures/M_MB.png")
 			else:
 				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
-			MS.position = Vector2(300, 300)
+			MS.position = Vector2(512, 512)
 			if star_info.MS == "M_DS":
 				MS.scale *= 0.7
 			star.add_child(MS)

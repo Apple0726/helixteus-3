@@ -22,6 +22,7 @@ var speed_mult:float = 1.0
 var aurora_mult:float = 1.0
 
 func _ready():
+	Helper.set_back_btn($Back)
 	if p_i.temperature > 1000:
 		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
 	else:
@@ -176,6 +177,8 @@ func _input(event):
 	if event is InputEventMouse:
 		mouse_pos = event.position
 		$Pickaxe.position = mouse_pos - Vector2(512, 576)
+
+func _unhandled_key_input(event):
 	Helper.set_back_btn($Back)
 
 func _on_Back_pressed():

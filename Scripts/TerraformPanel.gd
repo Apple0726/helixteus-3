@@ -9,7 +9,7 @@ var surface:float
 var lake_num:int
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func refresh():
 	if tf_type != "":
@@ -24,38 +24,38 @@ func update_info():
 	costs.erase("time")
 	for cost in costs:
 		costs[cost] *= surface
-	$Control/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
-	Helper.put_rsrc($Control/TCVBox, 32, tf_costs, true, true)
-	Helper.put_rsrc($Control/BCVBox, 32, costs, true, true)
-	$Control.visible = true
+	$Panel/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
+	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
+	Helper.put_rsrc($Panel/BCVBox, 32, costs, true, true)
+	$Panel.visible = true
 
 func _on_MS_pressed():
 	tf_type = "MS"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
 	costs = Data.costs.MS.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AE_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AE_NAME_S").to_lower()]
 	costs = Data.costs.AE.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 func _on_MM_pressed():
 	tf_type = "MM"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MM_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MM_NAME_S").to_lower()]
 	costs = Data.costs.MM.duplicate(true)
-	$Control/Note.visible = true
+	$Panel/Note.visible = true
 	update_info()
 
 func _on_GH_pressed():
 	tf_type = "GH"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 
@@ -110,39 +110,39 @@ func _on_Terraform_pressed():
 
 func _on_PP_pressed():
 	tf_type = "PP"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("PP_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("PP_NAME_S").to_lower()]
 	costs = Data.costs.PP.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 
 func _on_ME_pressed():
 	tf_type = "ME"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ME_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ME_NAME_S").to_lower()]
 	costs = Data.costs.ME.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 
 func _on_RL_pressed():
 	tf_type = "RL"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RL_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RL_NAME_S").to_lower()]
 	costs = Data.costs.RL.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 
 func _on_AMN_pressed():
 	tf_type = "AMN"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AMN_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AMN_NAME_S").to_lower()]
 	costs = Data.costs.AMN.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()
 
 
 func _on_SPR_pressed():
 	tf_type = "SPR"
-	$Control/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("SPR_NAME_S").to_lower()]
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("SPR_NAME_S").to_lower()]
 	costs = Data.costs.SPR.duplicate(true)
-	$Control/Note.visible = false
+	$Panel/Note.visible = false
 	update_info()

@@ -1,4 +1,4 @@
-extends "res://Scripts/FloatAnim.gd"
+extends KinematicBody2D
 
 var HP
 var total_HP
@@ -20,7 +20,6 @@ var move_speed:float = 200.0
 var idle_move_speed:float
 var atk_move_speed:float
 var ray_length:float
-onready var pr = get_parent()
 onready var ray:RayCast2D = $RayCast2D
 
 enum States {IDLE, MOVE}
@@ -58,7 +57,7 @@ func move_HX():
 		move_timer.stop()
 		move_path_v = []
 		var target_tile
-		var curr_tile = cave_ref.get_tile_index(cave_tm.world_to_map(pr.position))
+		var curr_tile = cave_ref.get_tile_index(cave_tm.world_to_map(position))
 		var room_tiles = cave_ref.rooms[room].tiles
 		var n = len(room_tiles)
 		if sees_player or is_aggr():
@@ -83,14 +82,14 @@ func _process(delta):
 	if state == States.MOVE:
 		if len(move_path_v) > 0:
 			var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
-			pr.position = pr.position.move_toward(move_to, delta * move_speed)
-			if pr.position == move_to:
+			position = position.move_toward(move_to, delta * move_speed)
+			if position == move_to:
 				move_path_v.remove(0)
 		else:
 			state = States.IDLE
 			move_timer.start()
 	if ray.enabled and is_not_aggr():
-		ray.cast_to = (cave_ref.rover.position - pr.position).normalized() * ray_length
+		ray.cast_to = (cave_ref.rover.position - position).normalized() * ray_length
 		if ray.get_collider() is KinematicBody2D:
 			if not sees_player:
 				sees_player = true
@@ -111,7 +110,7 @@ func chase_player():
 		move_speed = atk_move_speed
 
 func check_distance():
-	var dist = pr.position.distance_to(cave_ref.rover.position)
+	var dist = position.distance_to(cave_ref.rover.position)
 	if dist < 2000:
 		AI_enabled = true
 		ray.enabled = true
@@ -126,9 +125,9 @@ func hit(damage:float):
 	$HP.value = HP
 	if HP <= 0:
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
-		cave_ref.get_node("UI/Minimap").remove_child(MM_icon)
+		cave_ref.MM.remove_child(MM_icon)
 		MM_icon.queue_free()
-		cave_ref.remove_child(pr)
-		pr.queue_free()
+		cave_ref.remove_child(self)
+		queue_free()
 	else:
 		chase_player()

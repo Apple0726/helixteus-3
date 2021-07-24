@@ -138,3 +138,41 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
+
+var items_collected:Dictionary = {}
+
+func collect_all():
+	items_collected.clear()
+	var curr_time = OS.get_system_time_msecs()
+	var galaxies = game.cluster_data[game.c_c].galaxies
+	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
+	progress.max_value = len(galaxies)
+	var cond = game.collect_speed_lag_ratio != 0
+	for g_ids in galaxies:
+		if game.c_v != "cluster":
+			break
+		if not game.galaxy_data[g_ids.local].has("discovered"):
+			progress.value += 1
+			continue
+		game.system_data = game.open_obj("Galaxies", g_ids.global)
+		for s_ids in game.galaxy_data[g_ids.local].systems:
+			var system:Dictionary = game.system_data[s_ids.local]
+			game.planet_data = game.open_obj("Systems", s_ids.global)
+			for p_ids in system.planets:
+				var planet:Dictionary = game.planet_data[p_ids.local]
+				if planet.empty():
+					continue
+				if p_ids.local >= len(game.planet_data):
+					continue
+				if planet.has("tile_num"):
+					if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
+						Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
+				if not planet.has("discovered"):
+					continue
+			Helper.save_obj("Systems", s_ids.global, game.planet_data)
+		Helper.save_obj("Galaxies", g_ids.global, game.system_data)
+		if cond:
+			progress.value += 1
+			yield(get_tree().create_timer(0.02 * game.collect_speed_lag_ratio), "timeout")
+	game.show_collect_info(items_collected)
+	game.HUD.refresh()

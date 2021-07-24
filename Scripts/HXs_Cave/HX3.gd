@@ -39,7 +39,7 @@ func on_time_out():
 	shoot_timer.wait_time = 0.04 / cave_ref.time_speed
 	if (sees_player or is_aggr()) and counter < 6:
 		for i in range(0, 5):
-			cave_ref.add_proj(true, pr.position, 10.0, rot + i * 2*PI/5 * sign(sgn), cave_ref.bullet_texture, atk * 2.0)
+			cave_ref.add_proj(true, position, 10.0, rot + i * 2*PI/5 * sign(sgn), cave_ref.bullet_texture, atk * 2.0)
 			rot += 0.02
 	counter += 1
 	if counter >= 50:

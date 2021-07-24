@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -15,24 +15,7 @@
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=15]
 
-[sub_resource type="Shader" id=21]
-code = "shader_type canvas_item;
-
-uniform float strength = 0.1;
-uniform float shine_r = 0.5;
-uniform float u = 0.0;
-
-void fragment() {
-	COLOR = texture(TEXTURE, UV);
-	float mult = strength * (1.0 + max(0.0, sqrt(2.0) - length(UV - vec2(u, 0.0)) / shine_r));
-	COLOR.rgb *= mult;
-}"
-
-[sub_resource type="ShaderMaterial" id=22]
-shader = SubResource( 21 )
-shader_param/strength = 0.1
-shader_param/shine_r = 0.5
-shader_param/u = 0.0
+[sub_resource type="ShaderMaterial" id=2]
 
 [sub_resource type="InputEventAction" id=3]
 
@@ -147,9 +130,9 @@ __meta__ = {
 }
 
 [node name="BG" type="Sprite" parent="."]
-material = SubResource( 22 )
-position = Vector2( 640.463, 656 )
-scale = Vector2( 0.927, 0.927 )
+material = SubResource( 2 )
+position = Vector2( 658.397, 658.258 )
+scale = Vector2( 0.952953, 0.952953 )
 texture = ExtResource( 9 )
 
 [node name="Back" type="Button" parent="."]
@@ -210,6 +193,9 @@ margin_left = -28.0
 margin_top = 52.0
 margin_right = 52.0
 margin_bottom = 76.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
 text = "Lv 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -237,6 +223,7 @@ collision_mask = 16
 position = Vector2( -68, -4 )
 
 [node name="Sprite" type="Sprite" parent="Ship1"]
+material = SubResource( 5 )
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 6 )
 
@@ -274,6 +261,9 @@ margin_left = -28.0
 margin_top = 52.0
 margin_right = 52.0
 margin_bottom = 76.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
 text = "Lv 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -298,6 +288,7 @@ collision_mask = 16
 position = Vector2( -60, -4 )
 
 [node name="Sprite" type="Sprite" parent="Ship2"]
+material = SubResource( 5 )
 scale = Vector2( 0.19, 0.19 )
 texture = ExtResource( 7 )
 
@@ -335,6 +326,9 @@ margin_left = -28.0
 margin_top = 52.0
 margin_right = 52.0
 margin_bottom = 76.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
 text = "Lv 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -359,6 +353,7 @@ collision_mask = 16
 position = Vector2( -48, -4 )
 
 [node name="Sprite" type="Sprite" parent="Ship3"]
+material = SubResource( 5 )
 scale = Vector2( 0.19, 0.19 )
 texture = ExtResource( 13 )
 
@@ -396,6 +391,9 @@ margin_left = -28.0
 margin_top = 52.0
 margin_right = 52.0
 margin_bottom = 76.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
 text = "Lv 1"
 __meta__ = {
 "_edit_use_anchors_": false

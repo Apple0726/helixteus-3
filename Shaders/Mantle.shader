@@ -17,6 +17,5 @@ void fragment() {
 	
 	vec3 new_color = vec3(noise_r, noise_g, noise_b);
 	COLOR.rgb = color.rgb;
-	COLOR.a = clamp(new_alpha * 5.0, 0.0, 1.0);
-	
+	COLOR.a = new_alpha * 5.0;
 }

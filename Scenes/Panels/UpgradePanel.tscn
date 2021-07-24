@@ -7,77 +7,70 @@
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 10.0
-bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-draw_center = false
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.270588, 0.270588, 0.270588, 1 )
+content_margin_right = 10.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+border_width_top = 4
+border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_blend = true
+shadow_size = 1
+shadow_offset = Vector2( 0, 4 )
 
-[node name="Control" type="Control"]
+[node name="UpgradePanel" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 256.0
+margin_top = 144.0
+margin_right = -256.0
+margin_bottom = -208.0
+rect_min_size = Vector2( 768, 368 )
+mouse_filter = 1
 theme = ExtResource( 3 )
 script = ExtResource( 4 )
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="UpgradePanel" type="Panel" parent="."]
+[node name="PathButtons" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_left = 8.0
+margin_top = 40.0
+margin_right = -8.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 0, 35 )
+size_flags_horizontal = 3
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Path1" type="Button" parent="PathButtons"]
+margin_right = 752.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+
+[node name="Path2" type="Button" parent="PathButtons"]
+visible = false
+margin_left = 287.0
+margin_right = 576.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+
+[node name="Path3" type="Button" parent="PathButtons"]
+visible = false
+margin_left = 285.0
+margin_right = 572.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+
+[node name="Current" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -384.0
-margin_top = -152.0
-margin_right = 384.0
-margin_bottom = 144.0
-grow_horizontal = 0
-rect_min_size = Vector2( 576, 280 )
-mouse_filter = 1
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Upgrade" type="Button" parent="UpgradePanel"]
-margin_left = 590.0
-margin_top = 248.0
-margin_right = 768.0
-margin_bottom = 296.0
-rect_min_size = Vector2( 0, 40 )
-size_flags_horizontal = 3
-theme = ExtResource( 3 )
-text = "UPGRADE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
-margin_top = 248.0
-margin_right = 592.0
-margin_bottom = 296.0
-rect_min_size = Vector2( 200, 40 )
-custom_styles/bg = SubResource( 1 )
-scroll_vertical_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Costs" type="HBoxContainer" parent="UpgradePanel/ScrollContainer"]
-margin_left = 10.0
-margin_top = 1.0
-margin_right = 591.0
-margin_bottom = 47.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 20
-
-[node name="Current" type="RichTextLabel" parent="UpgradePanel"]
-margin_left = 72.0
-margin_top = 152.0
-margin_right = 306.0
-margin_bottom = 178.0
+margin_bottom = 24.0
 grow_vertical = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
@@ -88,13 +81,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Arrow" type="TextureRect" parent="UpgradePanel"]
+[node name="Arrow" type="TextureRect" parent="."]
 modulate = Color( 1, 1, 1, 0.635294 )
-margin_left = 344.0
-margin_top = 144.0
-margin_right = 434.0
-margin_bottom = 184.0
-rect_min_size = Vector2( 90, 26 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -72.0
+margin_right = 32.0
+margin_bottom = -24.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource( 2 )
@@ -104,11 +100,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Next" type="RichTextLabel" parent="UpgradePanel"]
-margin_left = 483.0
-margin_top = 152.0
-margin_right = 707.0
-margin_bottom = 178.0
+[node name="Next" type="RichTextLabel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_right = 384.0
+margin_bottom = 24.0
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -120,15 +118,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CurrentLv" type="Label" parent="UpgradePanel"]
+[node name="CurrentLv" type="Label" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -224.0
-margin_top = -60.0
+margin_top = -64.0
 margin_right = -160.0
-margin_bottom = -28.0
+margin_bottom = -32.0
 text = "Level 1"
 align = 1
 valign = 1
@@ -136,15 +134,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CurrentLv2" type="Label" parent="UpgradePanel"]
+[node name="CurrentLv2" type="Label" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = 72.0
-margin_top = -60.0
+margin_top = -64.0
 margin_right = 174.0
-margin_bottom = -28.0
+margin_bottom = -32.0
 text = "LEVEL"
 align = 2
 valign = 1
@@ -152,15 +150,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NextLv" type="SpinBox" parent="UpgradePanel"]
+[node name="NextLv" type="SpinBox" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 179.0
-margin_top = -60.0
-margin_right = 269.0
-margin_bottom = -28.0
+margin_left = 184.0
+margin_top = -64.0
+margin_right = 276.0
+margin_bottom = -32.0
 value = 2.0
 rounded = true
 allow_greater = true
@@ -169,39 +167,48 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PathButtons" type="HBoxContainer" parent="UpgradePanel"]
-margin_top = 40.0
-margin_right = 768.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 0, 35 )
-size_flags_horizontal = 3
-custom_constants/separation = -2
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -56.0
+margin_right = 584.0
+margin_bottom = -8.0
+rect_min_size = Vector2( 200, 40 )
+custom_styles/bg = SubResource( 1 )
+scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Path1" type="Button" parent="UpgradePanel/PathButtons"]
-margin_right = 768.0
-margin_bottom = 35.0
+[node name="Costs" type="HBoxContainer" parent="ScrollContainer"]
+margin_left = 10.0
+margin_right = 566.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 20
 
-[node name="Path2" type="Button" parent="UpgradePanel/PathButtons"]
-visible = false
-margin_left = 287.0
-margin_right = 576.0
-margin_bottom = 35.0
+[node name="Upgrade" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -176.0
+margin_top = -56.0
+margin_right = -6.0
+margin_bottom = -8.0
+rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "UPGRADE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Path3" type="Button" parent="UpgradePanel/PathButtons"]
-visible = false
-margin_left = 285.0
-margin_right = 572.0
-margin_bottom = 35.0
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="UpgradePanel"]
-margin_right = 768.0
-margin_bottom = 40.0
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 0, 38 )
 size_flags_vertical = 3
 text = "UPGRADE"
@@ -211,18 +218,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CloseButton" parent="UpgradePanel" instance=ExtResource( 5 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -40.0
-margin_right = 0.0
-margin_bottom = 40.0
+[node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
-[node name="AutoSpeedup" type="CheckBox" parent="UpgradePanel"]
-margin_left = 280.0
-margin_top = 200.0
-margin_right = 488.0
-margin_bottom = 228.0
+[node name="AutoSpeedup" type="CheckBox" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -104.0
+margin_top = 56.0
+margin_right = 104.0
+margin_bottom = 84.0
 theme = ExtResource( 3 )
 pressed = true
 text = "AUTO_SPEEDUP"
@@ -230,14 +236,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
-[connection signal="pressed" from="UpgradePanel/Upgrade" to="." method="_on_Upgrade_pressed"]
-[connection signal="resized" from="UpgradePanel/ScrollContainer" to="." method="_on_ScrollContainer_resized"]
-[connection signal="value_changed" from="UpgradePanel/NextLv" to="." method="_on_NextLv_value_changed"]
-[connection signal="pressed" from="UpgradePanel/PathButtons/Path1" to="." method="_on_Path1_pressed"]
-[connection signal="pressed" from="UpgradePanel/PathButtons/Path2" to="." method="_on_Path2_pressed"]
-[connection signal="pressed" from="UpgradePanel/PathButtons/Path3" to="." method="_on_Path3_pressed"]
-[connection signal="close_button_pressed" from="UpgradePanel/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="mouse_entered" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_entered"]
-[connection signal="mouse_exited" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_exited"]
-[connection signal="pressed" from="UpgradePanel/AutoSpeedup" to="." method="_on_AutoSpeedup_pressed"]
+[connection signal="pressed" from="PathButtons/Path1" to="." method="_on_Path1_pressed"]
+[connection signal="pressed" from="PathButtons/Path2" to="." method="_on_Path2_pressed"]
+[connection signal="pressed" from="PathButtons/Path3" to="." method="_on_Path3_pressed"]
+[connection signal="value_changed" from="NextLv" to="." method="_on_NextLv_value_changed"]
+[connection signal="pressed" from="Upgrade" to="." method="_on_Upgrade_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="AutoSpeedup" to="." method="_on_AutoSpeedup_pressed"]

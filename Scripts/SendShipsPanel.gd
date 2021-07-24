@@ -15,8 +15,8 @@ var depart_planet_data:Dictionary
 
 func _ready():
 	set_polygon($Background.rect_size)
-	$PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
-	$TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
+	$Panel/PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
+	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("TOTAL_ENERGY_COST")]
 
 func refresh():
@@ -72,8 +72,8 @@ func refresh():
 	if TEST:
 		distance = 1
 	calc_costs()
-	for child in $VBox/HBox/VBox/Scroll/Enemies.get_children():
-		$VBox/HBox/VBox/Scroll/Enemies.remove_child(child)
+	for child in $Scroll/Enemies.get_children():
+		$Scroll/Enemies.remove_child(child)
 		child.free()
 	if game.planet_data[dest_p_id].has("HX_data"):
 		for HX_data in game.planet_data[dest_p_id].HX_data:
@@ -85,9 +85,9 @@ func refresh():
 			HX_data_node.get_node("VBoxContainer/Acc/Label").text = Helper.format_num(HX_data.acc, 4)
 			HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, 4)
 			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
-			$VBox/HBox/VBox/Scroll/Enemies.add_child(HX_data_node)
+			$Scroll/Enemies.add_child(HX_data_node)
 			HX_data_node.rect_min_size.y = 70
-	$VBox/HBox/VBox/Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
+	$Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
 
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 35:
@@ -176,7 +176,7 @@ func get_travel_cost_multiplier(lv:int):
 			return 0.5
 
 func calc_costs():
-	var slider_factor = pow(10, $HSlider.value / 25.0 - 2)
+	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 2)
 	var atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	var gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	var atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
@@ -188,17 +188,17 @@ func calc_costs():
 		atm_entry_cost = 0
 		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
-	$EnergyCost2.text = Helper.format_num(entry_exit_cost)
+	$Panel/EnergyCost2.text = Helper.format_num(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light
 	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
 	if game.science_unlocked.FTL:
 		time_cost /= 10.0
 	if game.science_unlocked.IGD:
 		time_cost /= 100.0
-	$EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
+	$Panel/EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
-	$TimeCost.text = Helper.time_to_str(time_cost)
+	$Panel/TimeCost.text = Helper.time_to_str(time_cost)
 
 func _on_EnergyCost2_mouse_entered():
 	var atm_exit_cost = Helper.format_num(get_atm_exit_cost(depart_planet_data.pressure))

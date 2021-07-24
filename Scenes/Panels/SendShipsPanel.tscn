@@ -1,27 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/SendShipsPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
-
-[sub_resource type="DynamicFont" id=1]
-size = 30
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
 
 [node name="SendShipsPanel" type="Control"]
 margin_right = 1067.0
@@ -44,15 +27,11 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="Background" instance=ExtResource( 8 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 64.0
-custom_fonts/font = SubResource( 1 )
+anchor_right = 1.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 38 )
 text = "SEND_SHIPS"
 align = 1
 valign = 1
@@ -60,21 +39,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBox" type="VBoxContainer" parent="."]
-margin_top = 60.0
+[node name="Desc" type="Label" parent="."]
+margin_top = 48.0
 margin_right = 1064.0
-margin_bottom = 600.0
-custom_constants/separation = -1
-__meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Desc" type="Label" parent="VBox"]
-margin_right = 1064.0
-margin_bottom = 37.0
-custom_styles/normal = SubResource( 2 )
+margin_bottom = 85.0
 text = "SEND_SHIPS_DESC"
 align = 1
 valign = 1
@@ -82,22 +50,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="VBox"]
-margin_top = 36.0
-margin_right = 1064.0
-margin_bottom = 540.0
-size_flags_vertical = 3
-custom_constants/separation = 0
-
-[node name="VBox" type="VBoxContainer" parent="VBox/HBox"]
+[node name="Enemies" type="Label" parent="."]
+margin_left = 24.0
+margin_top = 104.0
 margin_right = 450.0
-margin_bottom = 504.0
-custom_constants/separation = -1
-
-[node name="Label" type="Label" parent="VBox/HBox/VBox"]
-margin_right = 450.0
-margin_bottom = 37.0
-custom_styles/normal = SubResource( 2 )
+margin_bottom = 141.0
 text = "ENEMIES"
 align = 1
 valign = 1
@@ -105,51 +62,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Scroll" type="ScrollContainer" parent="VBox/HBox/VBox"]
-margin_top = 36.0
+[node name="Scroll" type="ScrollContainer" parent="."]
+margin_left = 24.0
+margin_top = 144.0
 margin_right = 450.0
-margin_bottom = 504.0
-rect_min_size = Vector2( 450, 0 )
+margin_bottom = 576.0
 size_flags_vertical = 3
-
-[node name="Enemies" type="VBoxContainer" parent="VBox/HBox/VBox/Scroll"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 417.0
-margin_bottom = 1.0
-rect_min_size = Vector2( 416, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HSlider" type="HSlider" parent="."]
-margin_left = 628.0
-margin_top = 312.0
-margin_right = 868.0
-margin_bottom = 328.0
-value = 50.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LessEnergy" type="Label" parent="."]
-margin_left = 448.0
-margin_top = 292.0
-margin_right = 616.0
-margin_bottom = 348.0
-text = "LESS_ENERGY"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TravelCosts" type="Label" parent="."]
-margin_left = 488.0
-margin_top = 360.0
-margin_right = 672.0
-margin_bottom = 384.0
-align = 2
+[node name="Enemies" type="VBoxContainer" parent="Scroll"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 421.0
+margin_bottom = 427.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -165,79 +94,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FasterTravel" type="Label" parent="."]
-margin_left = 880.0
-margin_top = 292.0
-margin_right = 1064.0
-margin_bottom = 348.0
-text = "FASTER_TRAVEL"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EnergyCost" type="Label" parent="."]
-margin_left = 772.0
-margin_top = 360.0
-margin_right = 956.0
-margin_bottom = 384.0
-text = "100"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EnergyCost2" type="Label" parent="."]
-margin_left = 772.0
-margin_top = 232.0
-margin_right = 956.0
-margin_bottom = 256.0
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "100"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PlanetEECost" type="Label" parent="."]
-margin_left = 460.0
-margin_top = 232.0
-margin_right = 706.0
-margin_bottom = 256.0
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TimeCost" type="Label" parent="."]
-margin_left = 772.0
-margin_top = 400.0
-margin_right = 956.0
-margin_bottom = 424.0
-text = "01:12"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Send" type="Button" parent="."]
 margin_left = 940.0
 margin_top = 560.0
 margin_right = 1064.0
 margin_bottom = 600.0
 text = "SEND"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EnergyIcon" type="TextureRect" parent="."]
-margin_left = 720.0
-margin_top = 356.0
-margin_right = 752.0
-margin_bottom = 388.0
-texture = ExtResource( 4 )
-expand = true
-stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -264,11 +126,120 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="EnergyIcon2" type="TextureRect" parent="."]
-margin_left = 724.0
-margin_top = 228.0
-margin_right = 756.0
-margin_bottom = 260.0
+[node name="Panel" type="Panel" parent="."]
+margin_left = 472.0
+margin_top = 144.0
+margin_right = 1040.0
+margin_bottom = 456.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSlider" type="HSlider" parent="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -32.0
+margin_right = 100.0
+margin_bottom = -16.0
+value = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LessEnergy" type="Label" parent="Panel"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -52.0
+margin_right = 168.0
+margin_bottom = 4.0
+text = "LESS_ENERGY"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TravelCosts" type="Label" parent="Panel"]
+margin_left = 16.0
+margin_top = 200.0
+margin_right = 200.0
+margin_bottom = 232.0
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FasterTravel" type="Label" parent="Panel"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -168.0
+margin_top = -52.0
+margin_bottom = 4.0
+text = "FASTER_TRAVEL"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyCost" type="Label" parent="Panel"]
+margin_left = 284.0
+margin_top = 204.0
+margin_right = 468.0
+margin_bottom = 228.0
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyCost2" type="Label" parent="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 20.0
+margin_top = -116.0
+margin_right = 204.0
+margin_bottom = -92.0
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlanetEECost" type="Label" parent="Panel"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -116.0
+margin_right = 246.0
+margin_bottom = -92.0
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeCost" type="Label" parent="Panel"]
+margin_left = 284.0
+margin_top = 244.0
+margin_right = 468.0
+margin_bottom = 268.0
+text = "01:12"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnergyIcon" type="TextureRect" parent="Panel"]
+margin_left = 232.0
+margin_top = 200.0
+margin_right = 264.0
+margin_bottom = 232.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -276,11 +247,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeIcon" type="TextureRect" parent="."]
-margin_left = 720.0
-margin_top = 396.0
-margin_right = 752.0
-margin_bottom = 428.0
+[node name="EnergyIcon2" type="TextureRect" parent="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -28.0
+margin_top = -124.0
+margin_right = 4.0
+margin_bottom = -84.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeIcon" type="TextureRect" parent="Panel"]
+margin_left = 232.0
+margin_top = 240.0
+margin_right = 264.0
+margin_bottom = 272.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6
@@ -289,9 +276,9 @@ __meta__ = {
 }
 
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="mouse_entered" from="EnergyCost2" to="." method="_on_EnergyCost2_mouse_entered"]
-[connection signal="mouse_exited" from="EnergyCost2" to="." method="_on_EnergyCost2_mouse_exited"]
-[connection signal="mouse_entered" from="PlanetEECost" to="." method="_on_PlanetEECost_mouse_entered"]
-[connection signal="mouse_exited" from="PlanetEECost" to="." method="_on_PlanetEECost_mouse_exited"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
+[connection signal="value_changed" from="Panel/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="mouse_entered" from="Panel/EnergyCost2" to="." method="_on_EnergyCost2_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/EnergyCost2" to="." method="_on_EnergyCost2_mouse_exited"]
+[connection signal="mouse_entered" from="Panel/PlanetEECost" to="." method="_on_PlanetEECost_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/PlanetEECost" to="." method="_on_PlanetEECost_mouse_exited"]

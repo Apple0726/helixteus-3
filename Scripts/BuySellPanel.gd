@@ -13,11 +13,7 @@ func _ready():
 	$Resource2/Texture.rect_min_size = Vector2(36, 36)
 	$Resource2/Texture.texture_normal = preload("res://Graphics/Icons/money.png")
 
-func _on_HSlider_mouse_entered():
-	game.view.move_view = false
-
-func _on_HSlider_mouse_exited():
-	game.view.move_view = true
+var max_value:float
 
 func refresh(_type:String = type, _obj:String = obj):
 	type = _type
@@ -29,16 +25,14 @@ func refresh(_type:String = type, _obj:String = obj):
 		obj_node = $Resource
 		money_node = $Resource2
 		if type == "Materials":
-			$HSlider.max_value = game.mats[obj]
+			max_value = game.mats[obj]
 		elif type == "Metals":
-			$HSlider.max_value = game.mets[obj]
-		$HSlider.rounded = false
+			max_value = game.mets[obj]
 		$Buy.text = tr("SELL")
 	else:
 		obj_node = $Resource2
 		money_node = $Resource
-		$HSlider.max_value = game.money
-		$HSlider.rounded = true
+		max_value = game.money
 		$Buy.text = tr("BUY")
 	obj_node.get_node("Texture").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
 	money_node.get_node("Texture").texture_normal = load("res://Graphics/Icons/money.png")
@@ -48,6 +42,7 @@ func refresh(_type:String = type, _obj:String = obj):
 var rounded_value = 0
 var money_value = 0
 func _on_HSlider_value_changed(value):
+	value = value * max_value / 100.0
 	if is_selling:
 		rounded_value = Helper.clever_round(value)
 		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
@@ -58,6 +53,7 @@ func _on_HSlider_value_changed(value):
 			money_value = floor(rounded_value * game.met_info[obj].value)
 			money_node.get_node("Text").text = Helper.format_num(money_value, 6)
 	else:
+		value = round(value)
 		money_value = value
 		money_node.get_node("Text").text = Helper.format_num(value, 6)
 		if type == "Materials":

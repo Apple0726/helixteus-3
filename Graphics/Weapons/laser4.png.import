@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Mantle.jpg-e4dff086eb5c40627710cc12bde487d0.stex"
+path="res://.import/laser4.png-2aa5941be7a975e9d704609d2dc8e3ff.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Decoratives/Mantle.jpg"
-dest_files=[ "res://.import/Mantle.jpg-e4dff086eb5c40627710cc12bde487d0.stex" ]
+source_file="res://Graphics/Weapons/laser4.png"
+dest_files=[ "res://.import/laser4.png-2aa5941be7a975e9d704609d2dc8e3ff.stex" ]
 
 [params]
 

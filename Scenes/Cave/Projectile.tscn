@@ -32,7 +32,6 @@ enabled = false
 texture = ExtResource( 2 )
 texture_scale = 2.5
 color = Color( 1, 0.498039, 0.498039, 1 )
-energy = 2.3
 shadow_enabled = true
 shadow_buffer_size = 1024
 

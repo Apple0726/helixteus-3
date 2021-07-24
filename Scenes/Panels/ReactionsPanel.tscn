@@ -1,7 +1,5 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Graphics/Buttons/Switch.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
@@ -10,27 +8,7 @@
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=12]
 
-[sub_resource type="DynamicFont" id=1]
-size = 30
-use_filter = true
-font_data = ExtResource( 1 )
-fallback/0 = ExtResource( 2 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_top = 7.0
-content_margin_bottom = 6.0
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxEmpty" id=3]
-content_margin_top = 10.0
-
-[sub_resource type="Theme" id=4]
+[sub_resource type="Theme" id=1]
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
 Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
 Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
@@ -43,39 +21,30 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
-[sub_resource type="InputEventAction" id=5]
+[sub_resource type="InputEventAction" id=2]
 action = "G"
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
 
-[node name="ReactionsPanel" type="Control"]
-margin_right = 1067.0
-margin_bottom = 600.0
+[node name="ReactionsPanel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -533.5
+margin_top = -300.0
+margin_right = 533.5
+margin_bottom = 300.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 600.0 ],
-"_edit_use_anchors_": false
-}
 
-[node name="Background" type="Panel" parent="."]
-margin_right = 1064.0
-margin_bottom = 600.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CloseButton" parent="Background" instance=ExtResource( 5 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
+[node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
-margin_bottom = 64.0
-custom_fonts/font = SubResource( 1 )
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 38 )
 align = 1
 valign = 1
 __meta__ = {
@@ -83,38 +52,40 @@ __meta__ = {
 }
 
 [node name="Desc" type="Label" parent="."]
-margin_top = 60.0
-margin_right = 1064.0
-margin_bottom = 124.0
-custom_styles/normal = SubResource( 2 )
+anchor_right = 1.0
+margin_left = -2.0
+margin_top = 52.0
+margin_right = -2.0
+margin_bottom = 100.0
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = 22.0
 margin_top = 124.0
-margin_right = 384.0
-margin_bottom = 600.0
-custom_styles/bg = SubResource( 3 )
+margin_right = 385.0
+margin_bottom = 580.0
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_top = 10.0
-margin_right = 384.0
-margin_bottom = 476.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 358.0
+margin_bottom = 451.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = SubResource( 4 )
+theme = SubResource( 1 )
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 380.0
+margin_left = 406.0
 margin_top = 124.0
-margin_right = 1064.0
-margin_bottom = 600.0
+margin_right = 1046.0
+margin_bottom = 580.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -148,6 +119,10 @@ __meta__ = {
 }
 
 [node name="From" type="VBoxContainer" parent="Control2/ScrollContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 5.0
+margin_bottom = 5.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -159,6 +134,7 @@ margin_right = 812.0
 margin_bottom = 280.0
 
 [node name="Control" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -291,19 +267,18 @@ __meta__ = {
 }
 
 [node name="Transform" type="Button" parent="."]
-visible = false
-margin_left = 860.0
-margin_top = 564.0
-margin_right = 1064.0
-margin_bottom = 600.0
+margin_left = 837.5
+margin_top = 540.0
+margin_right = 1041.5
+margin_bottom = 576.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
+shortcut = SubResource( 3 )
 text = "TRANSFORM"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="mouse_entered" from="Control/EnergyCostText" to="." method="_on_EnergyCostText_mouse_entered"]
 [connection signal="mouse_exited" from="Control/EnergyCostText" to="." method="_on_EnergyCostText_mouse_exited"]

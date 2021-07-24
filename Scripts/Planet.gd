@@ -350,7 +350,7 @@ func seeds_plant(tile, tile_id:int, curr_time, mass_plant:bool = false):
 		game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
 		game.remove_items(game.item_to_use.name, 1)
 	elif not mass_plant:
-		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [tr("%s_NAME" % game.craft_agriculture_info[game.item_to_use.name].lake)], 2)
+		game.popup(tr("NOT_ADJACENT_TO_LAKE") % [tr("%s_NAME" % game.craft_agriculture_info[game.item_to_use.name].lake.to_upper())], 2)
 
 func fertilizer_plant(tile, tile_id:int):
 	var curr_time = OS.get_system_time_msecs()
@@ -490,7 +490,10 @@ func destroy_bldg(id2:int, mass:bool = false):
 					continue
 				var id:int = x % wid + y * wid
 				var _tile = game.tile_data[id]
-				_tile.cost_div_dict.erase(String(id2))
+				if not _tile:
+					continue
+				if _tile.has("cost_div_dict"):
+					_tile.cost_div_dict.erase(String(id2))
 				if _tile.cost_div_dict.empty():
 					_tile.erase("cost_div_dict")
 					_tile.erase("cost_div")
@@ -569,12 +572,13 @@ func _unhandled_input(event):
 				game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 				construct(tile.bldg.name, Data.costs[tile.bldg.name])
 			if Input.is_action_just_released("F"):
+				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():
 					game.upgrade_panel.ids = [tile_over]
 				else:
 					game.upgrade_panel.ids = tiles_selected.duplicate(true)
 				game.toggle_panel(game.upgrade_panel)
-			if Input.is_action_just_released("X"):
+			if Input.is_action_just_released("X") and not game.active_panel:
 				game.hide_adv_tooltip()
 				game.hide_tooltip()
 				if tiles_selected.empty():
@@ -644,7 +648,7 @@ func _unhandled_input(event):
 			var x_over:int = int(mouse_pos.x / 200)
 			var y_over:int = int(mouse_pos.y / 200)
 			tile_over = x_over % wid + y_over * wid
-			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg:
+			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel:
 				game.hide_tooltip()
 				game.hide_adv_tooltip()
 				if not tiles_selected.empty() and not tile_over in tiles_selected:
@@ -895,6 +899,8 @@ func _unhandled_input(event):
 								game.generate_tiles(wh_planet.l_id)
 							game.tile_data = game.open_obj("Planets", wh_planet.id)
 							var wh_tile:int = Helper.rand_int(0, len(game.tile_data) - 1)
+							while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("ship_locator_depth"):
+								wh_tile = Helper.rand_int(0, len(game.tile_data) - 1)
 							game.erase_tile(wh_tile)
 							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
@@ -1143,7 +1149,7 @@ func on_timeout():
 			if progress > 1:
 				tile.plant.is_growing = false
 		elif type == "overclock":
-			if not tile or not tile.bldg.has("overclock_date"):
+			if not tile or not tile.has("bldg") or not tile.bldg.has("overclock_date"):
 				remove_child(time_bar)
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)

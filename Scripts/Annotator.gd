@@ -134,6 +134,7 @@ func _on_Icons_mouse_entered():
 
 func _on_Annotator_visibility_changed():
 	if visible:
+		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self
 		if mode == "icon":
 			on_Icons_pressed(true)

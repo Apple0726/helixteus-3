@@ -3,13 +3,13 @@ extends "Panel.gd"
 var tab:String
 var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
-onready var inventory_grid = $Contents/Control/Inventory
+onready var inventory_grid = $Control/Inventory
 var item_hovered:String = ""
 var item_stack:int = 0
 var item_slot:int = 0
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 	buy_sell = buy_sell_scene.instance()
 	buy_sell.visible = false
 	add_child(buy_sell)
@@ -33,10 +33,10 @@ func refresh():
 
 func _on_Items_pressed():
 	tab = "items"
-	$Contents/Info.text = tr("INV_ITEMS_DESC")
+	$Info.text = tr("INV_ITEMS_DESC")
 	Helper.set_btn_color($Tabs/Items)
 	inventory_grid.visible = true
-	$Contents/Control/GridContainer.visible = false
+	$Control/GridContainer.visible = false
 	for item in inventory_grid.get_children():
 		inventory_grid.remove_child(item)
 		item.free()
@@ -130,11 +130,11 @@ func on_slot_press(name:String):
 
 func _on_Materials_pressed():
 	tab = "materials"
-	$Contents/Info.text = tr("INV_MAT_DESC")
+	$Info.text = tr("INV_MAT_DESC")
 	Helper.set_btn_color($Tabs/Materials)
 	inventory_grid.visible = false
-	$Contents/Control/GridContainer.visible = true
-	var mat_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.mats)
+	$Control/GridContainer.visible = true
+	var mat_data = Helper.put_rsrc($Control/GridContainer, 48, game.mats)
 	for mat in mat_data:
 		if game.show.has(mat.name) and not game.show[mat.name]:
 			mat.rsrc.visible = false
@@ -146,11 +146,11 @@ func _on_Materials_pressed():
 
 func _on_Metals_pressed():
 	tab = "metals"
-	$Contents/Info.text = tr("INV_MET_DESC")
+	$Info.text = tr("INV_MET_DESC")
 	Helper.set_btn_color($Tabs/Metals)
 	inventory_grid.visible = false
-	$Contents/Control/GridContainer.visible = true
-	var met_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.mets)
+	$Control/GridContainer.visible = true
+	var met_data = Helper.put_rsrc($Control/GridContainer, 48, game.mets)
 	for met in met_data:
 		if game.show.has(met.name) and not game.show[met.name]:
 			met.rsrc.visible = false
@@ -162,22 +162,22 @@ func _on_Metals_pressed():
 
 func _on_Atoms_pressed():
 	tab = "atoms"
-	$Contents/Info.text = tr("INV_ATOMS_DESC")
+	$Info.text = tr("INV_ATOMS_DESC")
 	Helper.set_btn_color($Tabs/Atoms)
 	inventory_grid.visible = false
-	$Contents/Control/GridContainer.visible = true
-	var atom_data = Helper.put_rsrc($Contents/Control/GridContainer, 48, game.atoms)
+	$Control/GridContainer.visible = true
+	var atom_data = Helper.put_rsrc($Control/GridContainer, 48, game.atoms)
 	for atom in atom_data:
 		if game.show.has(atom.name) and not game.show[atom.name]:
 			atom.rsrc.visible = false
 
 func _on_Particles_pressed():
 	tab = "particles"
-	$Contents/Info.text = tr("INV_PARTICLES_DESC")
+	$Info.text = tr("INV_PARTICLES_DESC")
 	Helper.set_btn_color($Tabs/Particles)
 	inventory_grid.visible = false
-	$Contents/Control/GridContainer.visible = true
-	Helper.put_rsrc($Contents/Control/GridContainer, 48, game.particles)
+	$Control/GridContainer.visible = true
+	Helper.put_rsrc($Control/GridContainer, 48, game.particles)
 
 func show_buy_sell(type:String, obj:String):
 	if game.money == 0:

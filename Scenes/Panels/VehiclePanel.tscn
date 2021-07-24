@@ -1,52 +1,32 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/VehiclePanel.gd" type="Script" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
-[sub_resource type="DynamicFont" id=1]
-size = 25
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
+[sub_resource type="StyleBoxEmpty" id=3]
 
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-border_width_top = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-
-[node name="VehiclePanel" type="Control"]
-margin_right = 1067.0
-margin_bottom = 600.0
-rect_pivot_offset = Vector2( 533, 300 )
+[node name="Background" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = 512.0
+margin_bottom = 296.0
 theme = ExtResource( 4 )
 script = ExtResource( 3 )
 __meta__ = {
-"_edit_horizontal_guides_": [ 600.0 ],
 "_edit_use_anchors_": false
 }
 
-[node name="Background" type="Panel" parent="."]
-margin_right = 1064.0
-margin_bottom = 600.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CloseButton" parent="Background" instance=ExtResource( 6 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
+[node name="CloseButton" parent="." instance=ExtResource( 6 )]
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 48.0
-custom_fonts/font = SubResource( 1 )
+anchor_right = 1.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 38 )
 text = "VEHICLES"
 align = 1
 valign = 1
@@ -54,31 +34,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="Rovers" type="Panel" parent="."]
+margin_left = 24.0
 margin_top = 48.0
-margin_right = 1064.0
-margin_bottom = 600.0
-custom_constants/separation = -2
+margin_right = 516.0
+margin_bottom = 300.0
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBox1" type="VBoxContainer" parent="HBox"]
-margin_right = 533.0
-margin_bottom = 552.0
-size_flags_horizontal = 3
-custom_constants/separation = -2
-
-[node name="Rovers" type="Panel" parent="HBox/VBox1"]
-margin_right = 533.0
-margin_bottom = 259.0
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="HBox/VBox1/Rovers"]
+[node name="Label" type="Label" parent="Rovers"]
 anchor_right = 1.0
 margin_bottom = 36.0
 size_flags_horizontal = 3
-custom_styles/normal = SubResource( 2 )
 text = "ROVERS"
 align = 1
 valign = 1
@@ -86,7 +55,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="HBox/VBox1/Rovers"]
+[node name="HBox" type="HBoxContainer" parent="Rovers"]
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
@@ -96,41 +65,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Fighters" type="Label" parent="HBox/VBox1"]
-margin_top = 257.0
-margin_right = 533.0
-margin_bottom = 294.0
-custom_styles/normal = SubResource( 2 )
-text = "FG_SC"
-align = 1
-valign = 1
-
-[node name="GridContainer" type="GridContainer" parent="HBox/VBox1"]
-margin_top = 292.0
-margin_right = 533.0
-margin_bottom = 552.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
+[node name="Probes" type="Panel" parent="."]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -488.0
+margin_top = -248.0
+margin_right = -24.0
 size_flags_vertical = 3
-columns = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="VBox2" type="VBoxContainer" parent="HBox"]
-margin_left = 531.0
-margin_right = 1064.0
-margin_bottom = 552.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Probes" type="Panel" parent="HBox/VBox2"]
-margin_right = 533.0
-margin_bottom = 552.0
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="HBox/VBox2/Probes"]
+[node name="Label" type="Label" parent="Probes"]
 anchor_right = 1.0
 margin_bottom = 36.0
-custom_styles/normal = SubResource( 2 )
 text = "PROBES"
 align = 1
 valign = 1
@@ -138,19 +88,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBox/VBox2/Probes"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Probes"]
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 36.0
+margin_top = -216.0
+custom_styles/bg = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GridContainer" type="GridContainer" parent="HBox/VBox2/Probes/ScrollContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 532.0
-margin_bottom = 515.0
+[node name="GridContainer" type="GridContainer" parent="Probes/ScrollContainer"]
+margin_right = 464.0
+margin_bottom = 216.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 5
@@ -160,4 +110,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[node name="Panel" type="Panel" parent="."]
+margin_left = 24.0
+margin_top = 308.0
+margin_right = 516.0
+margin_bottom = 572.0
+
+[node name="Fighters" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_bottom = 37.0
+text = "FG_SC"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -224.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 5

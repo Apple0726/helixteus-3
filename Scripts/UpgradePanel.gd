@@ -11,18 +11,18 @@ var auto_speedup:bool = false
 var new_value:float
 var new_base_value:float
 
-onready var path1 = $UpgradePanel/PathButtons/Path1
-onready var path2 = $UpgradePanel/PathButtons/Path2
-onready var path3 = $UpgradePanel/PathButtons/Path3
-onready var next_lv = $UpgradePanel/NextLv
-onready var current_lv = $UpgradePanel/CurrentLv
-onready var next = $UpgradePanel/Next
-onready var current = $UpgradePanel/Current
-onready var cost_icons = $UpgradePanel/ScrollContainer/Costs
-onready var upgrade_btn = $UpgradePanel/Upgrade
+onready var path1 = $PathButtons/Path1
+onready var path2 = $PathButtons/Path2
+onready var path3 = $PathButtons/Path3
+onready var next_lv = $NextLv
+onready var current_lv = $CurrentLv
+onready var next = $Next
+onready var current = $Current
+onready var cost_icons = $ScrollContainer/Costs
+onready var upgrade_btn = $Upgrade
 
 func _ready():
-	set_polygon($UpgradePanel.rect_size)
+	set_polygon(rect_size)
 	path1.text = tr("PATH") + " 1"
 	path2.text = tr("PATH") + " 2"
 	path3.text = tr("PATH") + " 3"
@@ -31,15 +31,15 @@ func refresh():
 	if not planet.empty():
 		path2.visible = Data.path_2.has(planet.bldg.name)
 		path3.visible = Data.path_3.has(planet.bldg.name)
-		$UpgradePanel/AutoSpeedup.visible = false
-		$UpgradePanel/AutoSpeedup.pressed = true
+		$AutoSpeedup.visible = false
+		$AutoSpeedup.pressed = true
 		auto_speedup = true
 		_on_Path1_pressed()
 	else:
 		path2.visible = game.tile_data[ids[0]].bldg.has("path_2")
 		path3.visible = game.tile_data[ids[0]].bldg.has("path_3")
-		$UpgradePanel/AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
-		$UpgradePanel/AutoSpeedup.pressed = $UpgradePanel/AutoSpeedup.visible
+		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
+		$AutoSpeedup.pressed = $AutoSpeedup.visible
 		if game.tile_data[ids[0]].bldg.has("path_1"):
 			_on_Path1_pressed()
 		else:
@@ -100,7 +100,7 @@ func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
 			costs.platinum += base_metal_costs.platinum * num
 
 func update():
-	auto_speedup = $UpgradePanel/AutoSpeedup.pressed
+	auto_speedup = $AutoSpeedup.pressed
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
 	var same_lv = true
 	var first_tile
@@ -162,7 +162,7 @@ func update():
 	else:
 		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
-		current.text = tr("VARIES")
+		current.bbcode_text = "[center] %s" % tr("VARIES")
 	if all_tiles_constructing:
 		game.popup(tr("SELECTED_BLDGS_UNDER_CONSTR"), 2)
 		game.toggle_panel(self)

@@ -14,20 +14,18 @@ shader_param/frequency = 6.0
 radius = 51.7997
 height = 96.3995
 
-[node name="Node2D" type="Node2D"]
-
-[node name="HX" type="KinematicBody2D" parent="."]
+[node name="HX" type="KinematicBody2D"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="Sprite" type="Sprite" parent="HX"]
+[node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 1 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HX"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
 shape = SubResource( 2 )
 
-[node name="ColorRect" type="ColorRect" parent="HX"]
+[node name="ColorRect" type="ColorRect" parent="."]
 modulate = Color( 0, 0.34902, 0, 1 )
 margin_left = 120.0
 margin_top = -60.0
@@ -37,7 +35,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HP" type="TextureProgress" parent="HX"]
+[node name="HP" type="TextureProgress" parent="."]
 modulate = Color( 0, 1, 0, 1 )
 margin_left = 120.0
 margin_top = -60.0
@@ -51,19 +49,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RayCast2D" type="RayCast2D" parent="HX"]
+[node name="RayCast2D" type="RayCast2D" parent="."]
 collision_mask = 3
 
-[node name="Info" type="Node2D" parent="."]
-position = Vector2( -20, 128 )
-scale = Vector2( 2.3, 2.3 )
+[node name="Info" type="Control" parent="."]
+margin_left = -121.549
+margin_top = 92.7492
+margin_right = -19.5491
+margin_bottom = 118.749
+rect_scale = Vector2( 2.5, 2.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Icon" type="TextureRect" parent="Info"]
 visible = false
-margin_left = -24.3478
-margin_top = -12.1739
-margin_right = -0.347828
-margin_bottom = 11.8261
+margin_right = 24.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 texture = ExtResource( 1 )
 expand = true
@@ -73,11 +75,14 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Info"]
-margin_left = 8.0
-margin_top = -12.0
-margin_right = 66.0
-margin_bottom = 12.0
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -58.0
+margin_bottom = 24.0
 theme = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
 text = "15"
 __meta__ = {
 "_edit_use_anchors_": false

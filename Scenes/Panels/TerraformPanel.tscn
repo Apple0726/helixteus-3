@@ -1,7 +1,5 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buildings/MM.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
@@ -15,31 +13,7 @@
 [ext_resource path="res://Graphics/Buildings/SPR.png" type="Texture" id=13]
 [ext_resource path="res://Graphics/Buildings/AMN.png" type="Texture" id=14]
 
-[sub_resource type="DynamicFont" id=1]
-size = 30
-use_filter = true
-font_data = ExtResource( 1 )
-fallback/0 = ExtResource( 2 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 50.0
-content_margin_right = 50.0
-content_margin_top = 7.0
-content_margin_bottom = 6.0
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxEmpty" id=3]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
-
-[sub_resource type="Theme" id=4]
+[sub_resource type="Theme" id=1]
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
 Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
 Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
@@ -52,40 +26,25 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
-[sub_resource type="InputEventAction" id=5]
+[sub_resource type="InputEventAction" id=2]
 action = "G"
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
 
-[node name="TerraformPanel" type="Control"]
+[node name="TerraformPanel" type="Panel"]
 margin_right = 1067.0
 margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 600.0 ],
-"_edit_use_anchors_": false
-}
 
-[node name="Background" type="Panel" parent="."]
-margin_right = 1064.0
-margin_bottom = 600.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CloseButton" parent="Background" instance=ExtResource( 5 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
+[node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
 [node name="Title" type="Label" parent="."]
-margin_right = 1064.0
-margin_bottom = 64.0
-custom_fonts/font = SubResource( 1 )
+anchor_right = 1.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 38 )
 text = "TERRAFORM"
 align = 1
 valign = 1
@@ -94,10 +53,10 @@ __meta__ = {
 }
 
 [node name="Desc" type="Label" parent="."]
-margin_top = 60.0
-margin_right = 1064.0
-margin_bottom = 124.0
-custom_styles/normal = SubResource( 2 )
+margin_left = 24.0
+margin_top = 48.0
+margin_right = 1040.0
+margin_bottom = 112.0
 text = "TERRAFORM_DESC"
 align = 1
 autowrap = true
@@ -106,26 +65,26 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_top = 124.0
+margin_left = 24.0
+margin_top = 112.0
 margin_right = 384.0
-margin_bottom = 600.0
-custom_styles/bg = SubResource( 3 )
+margin_bottom = 576.0
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 374.0
-margin_bottom = 476.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 355.0
+margin_bottom = 459.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = SubResource( 4 )
+theme = SubResource( 1 )
 
 [node name="MineralExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 text = "MINERAL_EXTRACTION"
@@ -135,7 +94,7 @@ expand_icon = true
 
 [node name="EnergyProduction" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 44.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
 text = "ENERGY_PRODUCTION"
@@ -145,7 +104,7 @@ expand_icon = true
 
 [node name="Research" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 88.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 text = "RESEARCH"
@@ -155,7 +114,7 @@ expand_icon = true
 
 [node name="MineralStorage2" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 132.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 text = "MINERAL_STORAGE"
@@ -165,7 +124,7 @@ expand_icon = true
 
 [node name="AtmosphereExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 176.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 text = "ATMOSPHERE_EXTRACTION"
@@ -175,7 +134,7 @@ expand_icon = true
 
 [node name="Mining" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 220.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 text = "MINING"
@@ -185,7 +144,7 @@ expand_icon = true
 
 [node name="SpaceAgriculture" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 264.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
 text = "SA_SC"
@@ -195,7 +154,7 @@ expand_icon = true
 
 [node name="AtomManipulation" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 308.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 348.0
 rect_min_size = Vector2( 0, 40 )
 text = "ATM_SC"
@@ -205,7 +164,7 @@ expand_icon = true
 
 [node name="SubatomicParticles" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_top = 352.0
-margin_right = 364.0
+margin_right = 350.0
 margin_bottom = 392.0
 rect_min_size = Vector2( 0, 40 )
 text = "SAP_SC"
@@ -214,89 +173,83 @@ align = 0
 expand_icon = true
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 380.0
-margin_top = 124.0
-margin_right = 1064.0
-margin_bottom = 600.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="."]
 visible = false
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 392.0
+margin_top = 112.0
+margin_right = 1040.0
+margin_bottom = 576.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Note" type="Label" parent="Control"]
-margin_left = 424.0
-margin_top = 475.0
-margin_right = 1012.0
-margin_bottom = 499.0
+[node name="Note" type="Label" parent="Panel"]
+margin_left = 44.0
+margin_top = 351.0
+margin_right = 632.0
+margin_bottom = 375.0
 text = "PLANET_MINING_NOTE"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TerraformingCosts" type="Label" parent="Control"]
-margin_left = 424.0
-margin_top = 156.0
-margin_right = 692.0
-margin_bottom = 180.0
+[node name="TerraformingCosts" type="Label" parent="Panel"]
+margin_left = 44.0
+margin_top = 32.0
+margin_right = 312.0
+margin_bottom = 56.0
 text = "TERRAFORMING_COSTS"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TCVBox" type="VBoxContainer" parent="Control"]
-margin_left = 416.0
-margin_top = 188.0
-margin_right = 456.0
-margin_bottom = 228.0
+[node name="TCVBox" type="VBoxContainer" parent="Panel"]
+margin_left = 36.0
+margin_top = 64.0
+margin_right = 76.0
+margin_bottom = 104.0
 
-[node name="BuildingCosts" type="Label" parent="Control"]
-margin_left = 428.0
-margin_top = 316.0
-margin_right = 1016.0
-margin_bottom = 340.0
+[node name="BuildingCosts" type="Label" parent="Panel"]
+margin_left = 48.0
+margin_top = 192.0
+margin_right = 636.0
+margin_bottom = 216.0
 text = "BUILDING_COSTS"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BCVBox" type="VBoxContainer" parent="Control"]
-margin_left = 416.0
-margin_top = 352.0
-margin_right = 456.0
-margin_bottom = 392.0
+[node name="BCVBox" type="VBoxContainer" parent="Panel"]
+margin_left = 36.0
+margin_top = 228.0
+margin_right = 76.0
+margin_bottom = 268.0
 
-[node name="CostMult" type="Label" parent="Control"]
-margin_left = 732.0
-margin_top = 156.0
-margin_right = 958.0
-margin_bottom = 276.0
+[node name="CostMult" type="Label" parent="Panel"]
+margin_left = 352.0
+margin_top = 32.0
+margin_right = 578.0
+margin_bottom = 152.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Terraform" type="Button" parent="Control"]
-margin_left = 860.0
-margin_top = 564.0
-margin_right = 1064.0
-margin_bottom = 600.0
+[node name="Terraform" type="Button" parent="Panel"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -204.0
+margin_top = -36.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
+shortcut = SubResource( 3 )
 text = "TERRAFORM"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_ME_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_PP_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_RL_pressed"]
@@ -306,4 +259,4 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/AtomManipulation" to="." method="_on_AMN_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SubatomicParticles" to="." method="_on_SPR_pressed"]
-[connection signal="pressed" from="Control/Terraform" to="." method="_on_Terraform_pressed"]
+[connection signal="pressed" from="Panel/Terraform" to="." method="_on_Terraform_pressed"]

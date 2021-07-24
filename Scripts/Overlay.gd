@@ -299,6 +299,7 @@ func _on_Reset_pressed():
 
 func _on_Overlay_visibility_changed():
 	if visible:
+		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self
 	else:
 		game.sub_panel = null

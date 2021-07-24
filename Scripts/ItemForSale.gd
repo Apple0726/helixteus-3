@@ -19,7 +19,7 @@ func _on_ItemForSale_mouse_entered():
 		game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 
 func _on_SmallButton_pressed():
-	game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
+	#game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 	game[parent].item_costs = costs.duplicate(true)
 	if not parent in ["construct_panel", "megastructures_panel"]:
 		if parent == "shop_panel" and game[parent].tab == "Pickaxes":
@@ -32,7 +32,7 @@ func _on_SmallButton_pressed():
 	game[parent].get_item(item_name, item_type, item_dir)
 
 func _on_SmallButton_mouse_entered():
-	game.help.mass_buy = true
+	game.help_str = "mass_buy"
 	if game.help.mass_buy:
 		game.show_tooltip("%s\n%s" % [tr("HOLD_SHIFT_FOR_10"), tr("HIDE_HELP")])
 

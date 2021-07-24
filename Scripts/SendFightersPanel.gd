@@ -15,7 +15,7 @@ onready var progress:TextureProgress = $Control2/TextureProgress
 
 func _ready():
 	set_process(false)
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)

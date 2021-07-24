@@ -308,24 +308,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor):
-					var HX = HX1_scene.instance()
-					var HX_node = HX.get_node("HX")
+					var HX_node = HX1_scene.instance()
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
 					HX_node.HP = round(15 * pow(difficulty, 0.75) * rng.randf_range(0.8, 1.2))
 					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
 					HX_node.def = round(6 * pow(difficulty, 0.75) * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
-						HX.free()
+						HX_node.free()
 						continue
-					HX.get_node("Info").visible = false
+					HX_node.get_node("Info").visible = false
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
 					HX_node.cave_tm = cave
 					HX_node.spawn_tile = tile_id
-					HX.add_to_group("enemies")
-					HX.position = Vector2(i, j) * 200 + Vector2(100, 100)
-					add_child(HX)
+					HX_node.add_to_group("enemies")
+					HX_node.position = Vector2(i, j) * 200 + Vector2(100, 100)
+					add_child(HX_node)
 					HX_tiles.append(tile_id)
 					var enemy_icon = Sprite.new()
 					enemy_icon.scale *= 0.08
@@ -351,7 +350,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							var deposit = deposit_scene.instance()
 							deposit.rsrc_texture = game.metal_textures[met_spawned]
 							deposit.rsrc_name = met_spawned
-							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) / game.met_info[met_spawned].rarity * min(5, pow(difficulty, 0.3)))
+							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
 							deposits[String(tile_id)] = deposit
@@ -427,7 +426,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		var i = 0
 		for room in rooms:
 			if _id in room.tiles:
-				enemy.get_node("HX").room = i
+				enemy.room = i
 			i += 1
 	var pos:Vector2
 	var rand_hole:int = rooms[0].tiles[rng.randi_range(0, len(rooms[0].tiles) - 1)]
@@ -658,7 +657,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		camera.position = pos
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		enemy.get_node("HX").set_rand()
+		enemy.set_rand()
 
 func on_Ship4_entered(_body):
 	if game.fourth_ship_hints.emma_joined:
@@ -758,7 +757,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if met_value.rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) * met_value.rarity * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
+			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.5) * pow(tier, 2.0) * pow(difficulty, 1.1), 3)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -831,9 +830,16 @@ func update_ray():
 			if game and game.enable_shaders:
 				mining_laser.scale.x = laser_reach / 16.0
 				mining_laser.scale.y = 16.0
+				if inventory[curr_slot].name == "xray_mining_laser":
+					mining_laser.material["shader_param/beams"] = 3
+					mining_laser.material["shader_param/energy"] = 12
+					mining_laser.material["shader_param/speed"] = 1.2
+				elif inventory[curr_slot].name == "gammaray_mining_laser":
+					mining_laser.material["shader_param/beams"] = 4
+					mining_laser.material["shader_param/energy"] = 15
+					mining_laser.material["shader_param/speed"] = 1.3
 			else:
 				mining_laser.region_rect.end = Vector2(laser_reach, 16)
-			#mining_laser.material["shader_param/noise_scale"] = Vector2.ONE * laser_reach / 256.0
 			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 	else:
@@ -1024,24 +1030,24 @@ func _process(delta):
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
-			enemy.get_node("HX").MM_icon.position = enemy.position * minimap_zoom
+			enemy.MM_icon.position = enemy.position * minimap_zoom
 
 
 func attack():
 	var laser_name:String = inventory[curr_slot].name.split("_")[0]
 	var laser_color:Color = get_color(laser_name)
-	var light_energy:float = 1.6
+	var light_size:float = 2.3
 	if laser_name in ["yellow", "green"]:
-		light_energy = 1.9
+		light_size = 2.8
 	elif laser_name in ["blue", "purple"]:
-		light_energy = 2.5
+		light_size = 4.0
 	elif laser_name in ["UV", "xray"]:
-		light_energy = 3.1
+		light_size = 5.4
 	elif laser_name == "gammaray":
-		light_energy = 3.8
+		light_size = 6.9
 	elif laser_name == "ultragammaray":
-		light_energy = 5.0
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_energy)
+		light_size = 9.5
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_size)
 	cooldown()
 
 func hit_rock(delta):
@@ -1065,7 +1071,7 @@ func hit_rock(delta):
 			if not dont_gen_anything:
 				for mat in p_i.surface.keys():
 					if randf() < p_i.surface[mat].chance / 2.5:
-						var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * pow(difficulty, 0.9), 3)
+						var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty, 3)
 						if amount < 1:
 							continue
 						rsrc[mat] = amount
@@ -1073,7 +1079,7 @@ func hit_rock(delta):
 				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * pow(difficulty, 0.9), 3)
+				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.5), 3)
 				remove_child(deposit)
 				deposit.queue_free()
 				deposits.erase(st)
@@ -1139,7 +1145,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black, light_energy:float = 1.8):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black, light_size:float = 2.5):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1162,7 +1168,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	if light_color != Color.black:
 		proj.get_node("Light2D").enabled = true
 		proj.get_node("Light2D").color = mod
-		proj.get_node("Light2D").energy = light_energy
+		proj.get_node("Light2D").texture_scale = light_size
+		if p_i.type in [5, 6]:
+			proj.get_node("Light2D").energy = 1.6
 	add_child(proj)
 	proj.add_to_group("projectiles")
 
@@ -1207,15 +1215,15 @@ func get_color(color:String):
 		"green":
 			return Color.lightgreen
 		"blue":
-			return Color.lightblue
+			return Color.cornflower
 		"purple":
-			return Color.lightpink
+			return Color.purple
 		"UV":
 			return Color.lightsteelblue
 		"xray":
 			return Color.lightgray
 		"gammaray":
-			return Color.lightsalmon
+			return Color.lightseagreen
 		"ultragammaray":
 			return Color.white
 

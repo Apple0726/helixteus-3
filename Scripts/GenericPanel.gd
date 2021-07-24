@@ -1,6 +1,6 @@
 extends "Panel.gd"
 
-enum PanelType {SHOP, CRAFT, CONSTRUCT}
+enum PanelType {SHOP, CRAFT, CONSTRUCT, MEGASTRUCTURES}
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
 onready var amount_node = $VBox/HBox/ItemInfo/VBox/HBox/BuyAmount
@@ -9,6 +9,7 @@ onready var buy_hbox = $VBox/HBox/ItemInfo/VBox/HBox
 onready var grid = $VBox/HBox/Items/Items
 onready var desc_txt = $VBox/HBox/ItemInfo/VBox/Desc/Desc
 onready var item_info = $VBox/HBox/ItemInfo
+onready var name_node = $VBox/HBox/ItemInfo/Name
 var num:int = 1
 var type:int
 var locked:bool = false
@@ -47,7 +48,7 @@ func change_tab(btn_str:String):
 	_on_BuyAmount_value_changed(1)
 	remove_costs()
 	item_info.visible = false
-	#$VBox/Info.text = tr("%s_DESC" % btn_str.to_upper())
+	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
 	Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
 	locked = false
 	
@@ -61,7 +62,6 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	remove_costs()
 	item_info.visible = true
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
-	var name_node = $VBox/HBox/ItemInfo/Name
 	if _dir == "Buildings":
 		name_node.text = tr("%s_NAME" % name)
 	else:
@@ -75,7 +75,9 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	for cost in costs:
 		item_total_costs[cost] = costs[cost] * num
 	yield(get_tree().create_timer(0), "timeout")
-	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
+	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
+	if not costs.empty():
+		Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 	#desc_txt.rect_min_size.y = desc_txt.get_content_height()
 	#desc_txt.rect_size.y = desc_txt.get_content_height()
 

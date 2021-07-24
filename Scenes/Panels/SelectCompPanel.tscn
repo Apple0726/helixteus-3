@@ -85,10 +85,10 @@ __meta__ = {
 [node name="Cost" parent="ScrollContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 467.0
-margin_bottom = 47.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 463.0
+margin_bottom = 43.0
 size_flags_vertical = 3
 
 [node name="Select" type="Button" parent="."]
@@ -121,10 +121,6 @@ size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Select" to="." method="_on_Select_pressed"]
