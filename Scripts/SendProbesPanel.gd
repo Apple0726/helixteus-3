@@ -49,7 +49,7 @@ var weights:Dictionary = {
 
 func _ready():
 	set_process(false)
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func refresh():
 	var probe_num:int = 0
@@ -137,7 +137,7 @@ func refresh():
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
 	if game.c_v == "supercluster":
-		costs.energy = 1000000000000 * slider_factor * dist_mult
+		costs.energy = 50000000000000.0 * slider_factor * dist_mult
 		costs.Xe = 10000 * slider_factor * dist_mult
 		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
 	elif game.c_v == "universe":
@@ -168,19 +168,18 @@ func discover_univ():
 
 func _on_Send_pressed():
 	if game.c_v == "dimension":
-		if PP >= 0 or true:
+		if PP >= 0:
 			for prop in $TP/VBox.get_children():
 				if prop.get_node("Label2")["custom_colors/font_color"] == Color.red:
 					game.popup(tr("INVALID_INPUT"), 1.5)
-					return
+					return false
 			if PP >= 5:
 				game.show_YN_panel("discover_univ", tr("TP_CONFIRM2"))
 			else:
 				discover_univ()
 		else:
 			game.popup(tr("NOT_ENOUGH_PP"), 2.0)
-			return
-			
+		return false
 	else:
 		if game.check_enough(costs):
 			game.deduct_resources(costs)
@@ -203,6 +202,8 @@ func _on_Send_pressed():
 			refresh()
 		else:
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+			return false
+	return true
 
 func _on_HSlider_value_changed(value):
 	refresh_energy()
@@ -259,3 +260,8 @@ func _on_Label2_text_changed(new_text, prop:String):
 		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.white
 	else:
 		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.red
+
+
+func _on_SendAll_pressed():
+	while _on_Send_pressed():
+		pass

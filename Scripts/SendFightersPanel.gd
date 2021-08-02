@@ -63,7 +63,7 @@ func refresh():
 				planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number
 				base_travel_costs += 50000000 * fighter.number * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
 		combined_strength2 = combined_strength
-		sort_systems($Control/CheckBox2.pressed)
+		sort_systems($Control/CheckBox.pressed)
 		sys_num = 0
 		for system in sorted_systems:
 			if system.has("conquered"):
@@ -81,10 +81,10 @@ func refresh():
 		if unconquered_sys == 0:
 			game.galaxy_data[game.c_g].conquered = true
 
-func sort_systems(invert:bool):
+func sort_systems(ascending:bool):
 	sorted_systems = game.system_data.duplicate(true)
 	sorted_systems.sort_custom(self, "diff_sort")
-	if invert:
+	if not ascending:
 		sorted_systems.invert()
 	
 func diff_sort(a:Dictionary, b:Dictionary):

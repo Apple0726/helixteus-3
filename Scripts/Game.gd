@@ -242,10 +242,10 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":1
 					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":39540},
 					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":39770},
 					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
-					"platinum":{"min_depth":2400, "max_depth":7000, "rarity":79.5, "density":21.45, "value":212650},
+					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
 					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
 					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
-					"mythril":{"min_depth":13000, "max_depth":20000, "rarity":586.4, "density":13.4, "value":4260020},
+					"mythril":{"min_depth":23000, "max_depth":28000, "rarity":1586.4, "density":13.4, "value":18955720},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -321,9 +321,21 @@ var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
+var tile_brightness:Array = []
+
 func _ready():
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
+		if i <= 10:
+			var tile_texture = load("res://Graphics/Tiles/%s.jpg" % i)
+			var tile_img:Image = tile_texture.get_data()
+			tile_img.lock()
+			var brightness:float = 0.0
+			for x in tile_img.get_width():
+				for y in tile_img.get_height():
+					var color:Color = tile_img.get_pixel(x, y)
+					brightness += color.r + color.g + color.b
+			tile_brightness.append(brightness)
 	for i in range(0, 7):
 		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Data.costs:
@@ -770,9 +782,9 @@ func new_game(tut:bool, univ:int = 0):
 				#"Co":0,
 				#"Ni":0,
 				"Xe":0,
-				#"Ta":0,
-				#"W":0,
-				#"Os":0,
+				"Ta":0,
+				"W":0,
+				"Os":0,
 				#"Ir":0,
 				#"U":0,
 				#"Np":0,
@@ -1051,7 +1063,7 @@ func popup(txt, dur):
 	node.text = txt
 	node.visible = true
 	node.modulate.a = 0
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	node.rect_size.x = 0
 	var x_pos = 640 - node.rect_size.x / 2
 	node.rect_position.x = x_pos
@@ -1166,12 +1178,15 @@ func toggle_panel(_panel):
 
 func set_to_ship_coords():
 	c_sc = ships_dest_coords.sc
+	var diff_cluster:bool = c_c_g != ships_dest_g_coords.c
 	c_c_g = ships_dest_g_coords.c
 	c_c = ships_dest_coords.c
 	c_g_g = ships_dest_g_coords.g
 	c_g = ships_dest_coords.g
 	c_s_g = ships_dest_g_coords.s
 	c_s = ships_dest_coords.s
+	if diff_cluster:
+		galaxy_data = open_obj("Clusters", c_c_g)
 
 func set_to_fighter_coords(i:int):
 	c_sc = fighter_data[i].c_sc
@@ -1184,6 +1199,9 @@ func set_to_probe_coords(sc:int):
 	c_sc = sc
 
 func set_bookmark_coords(bookmark:Dictionary):
+	c_c_g = bookmark.c_c_g
+	c_c = bookmark.c_c
+	c_sc = bookmark.c_sc
 	if bookmark.has("c_p"):
 		c_p = bookmark.c_p
 		c_p_g = bookmark.c_p_g
@@ -1193,9 +1211,8 @@ func set_bookmark_coords(bookmark:Dictionary):
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
 		c_g_g = bookmark.c_g_g
-	c_c = bookmark.c_c
-	c_c_g = bookmark.c_c_g
-	c_sc = bookmark.c_sc
+		system_data = open_obj("Galaxies", c_g_g)
+		galaxy_data = open_obj("Clusters", c_c_g)
 	
 func set_planet_ids(l_id:int, g_id:int):
 	c_p = l_id
@@ -1549,7 +1566,7 @@ func add_cluster():
 		add_obj("cluster")
 	if enable_shaders:
 		$Nebula.fade_in()
-		if galaxy_data[c_g_g].type == 0:
+		if galaxy_data[c_g].type == 0:
 			$Nebula.change_color(Color.white)
 	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
@@ -2439,6 +2456,13 @@ func get_coldest_star_temp(s_id):
 			res = system_data[s_id].stars[i].temperature
 	return res
 
+func get_hottest_star_temp(s_id):
+	var res = system_data[s_id].stars[0].temperature
+	for i in range(1, len(system_data[s_id].stars)):
+		if system_data[s_id].stars[i].temperature > res:
+			res = system_data[s_id].stars[i].temperature
+	return res
+
 func get_biggest_star_size(s_id):
 	var res = system_data[s_id].stars[0].size
 	for i in range(1, len(system_data[s_id].stars)):
@@ -2913,9 +2937,9 @@ func show_tooltip(txt:String, hide:bool = true):
 	tooltip.rect_size = Vector2.ZERO
 	if tooltip.rect_size.x > 400:
 		tooltip.autowrap = true
-		yield(get_tree().create_timer(0), "timeout")
+		yield(get_tree(), "idle_frame")
 		tooltip.rect_size.x = 400
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	tooltip.modulate.a = 1
 
 func hide_tooltip():
@@ -2953,7 +2977,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 				max_width = width
 		RTL.rect_min_size.x = max_width + 20
 		RTL.rect_size.x = max_width + 20
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	if is_instance_valid(RTL):
 		RTL.rect_min_size.y = RTL.get_content_height()
 		RTL.rect_size.y = RTL.get_content_height()
@@ -3678,7 +3702,7 @@ func _on_mouse_exited():
 	hide_tooltip()
 
 func _on_ConfirmationDialog_popup_hide():
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	if YN_panel.is_connected("confirmed", self, "%s_confirm" % YN_str):
 		YN_panel.disconnect("confirmed", self, "%s_confirm" % YN_str)
 

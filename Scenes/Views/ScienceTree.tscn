@@ -192,6 +192,12 @@ margin_top = -320.0
 margin_right = 2432.0
 margin_bottom = -256.0
 
+[node name="AMM" parent="." instance=ExtResource( 1 )]
+margin_left = 2176.0
+margin_top = -416.0
+margin_right = 2432.0
+margin_bottom = -352.0
+
 [node name="ID" parent="." instance=ExtResource( 1 )]
 margin_left = 2176.0
 margin_top = -224.0
@@ -763,6 +769,13 @@ antialiased = true
 [node name="L_SAP" type="Line2D" parent="L_ATM"]
 position = Vector2( 2048, -260 )
 points = PoolVector2Array( 0, -28, 96, -28 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="L_AMM" type="Line2D" parent="L_ATM"]
+position = Vector2( 2048, -260 )
+points = PoolVector2Array( 0, -28, 96, -124 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true

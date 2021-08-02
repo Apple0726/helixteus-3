@@ -62,13 +62,13 @@ func get_obj_min_max(obj:String, property:String):
 			_max = prop
 	return {"_min":_min, "_max":_max}
 
-func get_CST_min_max():
+func get_HST_min_max():
 	var overlays = game.view.obj.overlays
-	var _min = game.get_coldest_star_temp(overlays[0].id)
+	var _min = game.get_hottest_star_temp(overlays[0].id)
 	var _max = _min
 	for i in range(1, len(overlays)):
 		var id:int = overlays[i].id
-		var T = game.get_coldest_star_temp(id)
+		var T = game.get_hottest_star_temp(id)
 		if T < _min:
 			_min = T
 		if T > _max:
@@ -151,7 +151,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/RightNum.text = "%s" % [c_vl.right]
 				6:
 					if recalculate and not c_vl.modified:
-						min_max = get_CST_min_max()#CST: coldest star temperature
+						min_max = get_HST_min_max()#HST: hottest star temperature
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -160,7 +160,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/RightNum.text = "%s K" % [c_vl.right]
 				7:
 					if recalculate and not c_vl.modified:
-						min_max = get_BSS_min_max()#CST: coldest star temperature
+						min_max = get_BSS_min_max()
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -169,7 +169,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					$Panel/RightNum.text = "%s" % [c_vl.right]
 				8:
 					if recalculate and not c_vl.modified:
-						min_max = get_BSL_min_max()#CST: coldest star temperature
+						min_max = get_BSL_min_max()
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true

@@ -104,6 +104,23 @@ var bossHPBar
 var shaking:Vector2 = Vector2.ZERO
 
 func _ready():
+	if game.enable_shaders:
+		var brightness:float = game.tile_brightness[p_i.type - 3]
+		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
+		var lum:float = 0.0
+		for star in game.system_data[game.c_s].stars:
+			var sc:float = 0.5 * star.size / (p_i.distance / 500)
+			if star.luminosity > lum:
+				$TileMap.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
+				var strength_mult = 1.0
+				if p_i.temperature >= 500:
+					strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
+				else:
+					strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
+				$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
+				lum = star.luminosity
+	else:
+		$TileMap.material.shader = null
 	id = tile.cave.id if tile.has("cave") else tile.diamond_tower
 	cave_data = game.cave_data[id] if game else {"num_floors":5, "floor_size":25}
 	num_floors = cave_data.num_floors
@@ -838,6 +855,11 @@ func update_ray():
 					mining_laser.material["shader_param/beams"] = 4
 					mining_laser.material["shader_param/energy"] = 15
 					mining_laser.material["shader_param/speed"] = 1.3
+				elif inventory[curr_slot].name == "ultragammaray_mining_laser":
+					mining_laser.material["shader_param/beams"] = 5
+					mining_laser.material["shader_param/roughness"] = 3
+					mining_laser.material["shader_param/energy"] = 20
+					mining_laser.material["shader_param/frequency"] = 15
 			else:
 				mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
@@ -1046,7 +1068,7 @@ func attack():
 	elif laser_name == "gammaray":
 		light_size = 6.9
 	elif laser_name == "ultragammaray":
-		light_size = 9.5
+		light_size = 14.5
 	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_size)
 	cooldown()
 

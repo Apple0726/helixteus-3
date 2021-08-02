@@ -20,14 +20,12 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -320.0
-margin_top = 16.0
-margin_right = 320.0
-margin_bottom = 40.0
+anchor_right = 1.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 38 )
 text = "Select"
 align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -56,17 +54,15 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_right = 552.0
-margin_bottom = 68.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 547.0
+margin_bottom = 63.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -48.0
-margin_right = 0.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 36.0

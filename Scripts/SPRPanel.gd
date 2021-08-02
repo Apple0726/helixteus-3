@@ -10,15 +10,17 @@ var reaction:String = ""
 var au_mult:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.001},
-								"He":{"Z":2, "energy_cost":4, "difficulty":0.0015},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
+								"He":{"Z":2, "energy_cost":4, "difficulty":0.001},
+								"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
 								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
 								"Ne":{"Z":10, "energy_cost":500, "difficulty":2},
-								"Si":{"Z":14, "energy_cost":300, "difficulty":0.005},
-								"Fe":{"Z":26, "energy_cost":200, "difficulty":0.01},
+								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
+								"Fe":{"Z":26, "energy_cost":40, "difficulty":0.01},
 								"Xe":{"Z":54, "energy_cost":300000, "difficulty":40},
 								"Pu":{"Z":94, "energy_cost":14000000000, "difficulty":8000},
 }
+var path_2_value:float = 1.0
 
 func _ready():
 	set_process(false)
@@ -49,14 +51,19 @@ func refresh():
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
 		au_mult = Helper.get_au_mult(obj)
+	if not obj.bldg.has("path_2"):
+		obj.bldg.path_2 = 1
+		obj.bldg.path_2_value = 1.0
+	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("SPR")
 	if au_mult > 1:
 		$Control/EnergyCostText["custom_colors/font_color"] = Color.yellow
 	else:
 		$Control/EnergyCostText["custom_colors/font_color"] = Color.white
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge))
+	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed)
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
+	$Transform.visible = $Control3.visible or $Control.visible
 	for reaction_name in reactions:
 		var disabled:bool = false
 		if game.particles.proton == 0 or game.particles.neutron == 0 or game.particles.electron == 0:
@@ -145,7 +152,7 @@ func _on_Transform_pressed():
 		rsrc_to_add.proton = num
 		rsrc_to_add.neutron = num
 		rsrc_to_add.electron = num
-		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult / game.u_i.charge * obj.bldg.qty)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
@@ -165,7 +172,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct[reaction] = rsrc
 		else:
 			rsrc_to_deduct = {"proton":rsrc * Z, "neutron":rsrc * Z, "electron":rsrc * Z}
-		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult / game.u_i.charge)
+		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult / game.u_i.charge / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
@@ -220,7 +227,7 @@ func refresh_icon():
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num, game.atoms[reaction])
+		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, game.atoms[reaction])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

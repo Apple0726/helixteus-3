@@ -25,6 +25,8 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 				"MM":{"value":4, "pw":1.1, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
 				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				"AMN":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"AE":{"value":120, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"CBD":{"value":10, "step":2, "cap":46, "is_value_integer":true},
 }
@@ -168,6 +170,8 @@ func reload():
 	path_1.CBD.desc = tr("CBD_PATH_1")
 	path_2.CBD.desc = tr("CBD_PATH_2")
 	path_3.CBD.desc = tr("CBD_PATH_3")
+	path_2.AMN.desc = tr("DIVIDES_ENERGY_COSTS_BY")
+	path_2.SPR.desc = tr("DIVIDES_ENERGY_COSTS_BY")
 
 var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 
@@ -190,6 +194,7 @@ var science_unlocks = {
 						
 						#Atom manipulation
 						"ATM":{"cost":200000, "parents":[]},
+						"AMM":{"cost":e(1.0, 13), "parents":["ATM"]},
 						"SAP":{"cost":12500000, "parents":["ATM"]},
 						
 						#Rover sciences
@@ -261,7 +266,7 @@ var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2, "value":1.2},
 									"RLE":{"cost":1250, "pw":6.8, "value":1.2},
 									"MSE":{"cost":350, "pw":6.2, "value":1.2},
 									"MMS":{"cost":150, "pw":6.0, "value":1.2},
-									"PME":{"cost":10000000, "pw":6.0, "value":1.2},
+									"PME":{"cost":10000000, "pw":6.8, "value":1.2},
 }
 
 var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},

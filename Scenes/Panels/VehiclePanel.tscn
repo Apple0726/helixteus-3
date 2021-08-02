@@ -4,7 +4,9 @@
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
 
-[sub_resource type="StyleBoxEmpty" id=3]
+[sub_resource type="StyleBoxEmpty" id=1]
+content_margin_left = 20.0
+content_margin_top = 15.0
 
 [node name="Background" type="Panel"]
 anchor_left = 0.5
@@ -36,8 +38,8 @@ __meta__ = {
 
 [node name="Rovers" type="Panel" parent="."]
 margin_left = 24.0
-margin_top = 48.0
-margin_right = 516.0
+margin_top = 52.0
+margin_right = 512.0
 margin_bottom = 300.0
 size_flags_vertical = 3
 __meta__ = {
@@ -71,8 +73,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_left = -488.0
-margin_top = -248.0
+margin_top = -246.0
 margin_right = -24.0
+margin_bottom = 2.0
 size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -92,20 +95,25 @@ __meta__ = {
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -216.0
-custom_styles/bg = SubResource( 3 )
+margin_left = 16.0
+margin_top = -208.0
+margin_right = -16.0
+margin_bottom = -16.0
+custom_styles/bg = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="GridContainer" type="GridContainer" parent="Probes/ScrollContainer"]
-margin_right = 464.0
-margin_bottom = 216.0
+margin_left = 20.0
+margin_top = 15.0
+margin_right = 432.0
+margin_bottom = 192.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 5
 custom_constants/hseparation = 5
-columns = 6
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -113,7 +121,7 @@ __meta__ = {
 [node name="Panel" type="Panel" parent="."]
 margin_left = 24.0
 margin_top = 308.0
-margin_right = 516.0
+margin_right = 512.0
 margin_bottom = 572.0
 
 [node name="Fighters" type="Label" parent="Panel"]

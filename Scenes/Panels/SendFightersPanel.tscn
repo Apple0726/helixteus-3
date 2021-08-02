@@ -73,6 +73,9 @@ margin_right = 329.0
 margin_bottom = 380.0
 pressed = true
 text = "LEAST_DIFFICULT_FIRST"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CheckBox2" type="CheckBox" parent="Control"]
 margin_left = 44.0
@@ -208,6 +211,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
 [connection signal="pressed" from="Control/CheckBox" to="." method="_on_CheckBox_pressed"]
 [connection signal="pressed" from="Control/CheckBox2" to="." method="_on_CheckBox2_pressed"]

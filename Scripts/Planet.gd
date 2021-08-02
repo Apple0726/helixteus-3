@@ -40,6 +40,23 @@ var timer:Timer
 var interval:float = 0.1
 
 func _ready():
+	if game.enable_shaders:
+		var brightness:float = game.tile_brightness[p_i.type - 3]
+		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
+		var lum:float = 0.0
+		for star in game.system_data[game.c_s].stars:
+			var sc:float = 0.5 * star.size / (p_i.distance / 500)
+			if star.luminosity > lum:
+				$TileMap.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
+				var strength_mult = 1.0
+				if p_i.temperature >= 500:
+					strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
+				else:
+					strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
+				$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
+				lum = star.luminosity
+	else:
+		$TileMap.material.shader = null
 	timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = interval
@@ -81,10 +98,7 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if p_i.temperature > 1000:
-				$TileMap.set_cell(i, j, 8)
-			else:
-				$TileMap.set_cell(i, j, p_i.type - 3)
+			$TileMap.set_cell(i, j, p_i.type - 3)
 			if not tile:
 				continue
 			if tile.has("bldg"):

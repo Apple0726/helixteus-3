@@ -17,7 +17,7 @@ margin_top = 6.0
 margin_right = 422.0
 margin_bottom = 74.0
 rect_min_size = Vector2( 300, 68 )
-custom_constants/separation = 70
+custom_constants/separation = 60
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -34,15 +34,15 @@ __meta__ = {
 }
 
 [node name="Diameter" type="Label" parent="HBoxContainer"]
-margin_left = 140.0
+margin_left = 130.0
 margin_top = 27.0
-margin_right = 196.0
+margin_right = 186.0
 margin_bottom = 41.0
 text = "4000 km"
 
 [node name="Distance" type="Label" parent="HBoxContainer"]
-margin_left = 266.0
+margin_left = 246.0
 margin_top = 27.0
-margin_right = 317.0
+margin_right = 297.0
 margin_bottom = 41.0
 text = "1.05 AU"

@@ -12,7 +12,7 @@ var c_s_g:int = -1
 
 func _ready():
 	set_process(false)
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func select_planet(p_i:Dictionary, id:int, btn):
 	for child in $Scroll/Planets.get_children():
@@ -81,7 +81,7 @@ func refresh_planet_info():
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult
 	for met in game.met_info:
-		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) * 0.425 * game.met_info[met].amount / game.met_info[met].rarity * au_mult
+		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) * 0.425 / game.met_info[met].rarity * au_mult
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
 
 #get_sphere_volume

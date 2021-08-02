@@ -32,12 +32,15 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -533.5
-margin_top = -300.0
-margin_right = 533.5
-margin_bottom = 300.0
+margin_left = -512.0
+margin_top = -296.0
+margin_right = 512.0
+margin_bottom = 296.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
@@ -82,10 +85,10 @@ size_flags_vertical = 3
 theme = SubResource( 1 )
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 406.0
-margin_top = 124.0
-margin_right = 1046.0
-margin_bottom = 580.0
+margin_left = 408.0
+margin_top = 120.0
+margin_right = 1002.0
+margin_bottom = 572.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -134,14 +137,13 @@ margin_right = 812.0
 margin_bottom = 280.0
 
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="HSlider" type="HSlider" parent="Control"]
-margin_left = 508.0
+margin_left = 512.0
 margin_top = 200.0
-margin_right = 916.0
+margin_right = 888.0
 margin_bottom = 216.0
 step = 0.0
 __meta__ = {
@@ -208,10 +210,10 @@ __meta__ = {
 }
 
 [node name="Max" type="Button" parent="Control"]
-margin_left = 940.0
-margin_top = 196.0
-margin_right = 1012.0
-margin_bottom = 220.0
+margin_left = 912.0
+margin_top = 192.0
+margin_right = 984.0
+margin_bottom = 226.0
 text = "Max"
 
 [node name="Control3" type="Control" parent="."]
@@ -267,10 +269,10 @@ __meta__ = {
 }
 
 [node name="Transform" type="Button" parent="."]
-margin_left = 837.5
-margin_top = 540.0
-margin_right = 1041.5
-margin_bottom = 576.0
+margin_left = 784.0
+margin_top = 528.0
+margin_right = 992.0
+margin_bottom = 568.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 3 )
 text = "TRANSFORM"

@@ -1155,11 +1155,13 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 	match bldg:
 		"ME", "PP", "SP", "AE":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
+		"AMN", "SPR":
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value * IR_mult, 3))]
 		"MM":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"SC", "GF", "SE":
 			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
-		"RL", "AMN", "SPR":
+		"RL":
 			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
 		"MS":
 			tooltip = (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
