@@ -56,7 +56,7 @@ func _ready():
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
 	aurora_mult = Helper.clever_round(Helper.get_au_mult(tile))
-	$Mults/AuroraMult.text = "%s: x %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
+	$Mults/AuroraMult.bbcode_text = "[aurora au_int=%s]%s: x %s" % [tile.aurora.au_int, tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info(first_time:bool = false):
 	var upper_depth
@@ -131,8 +131,10 @@ func update_pickaxe():
 		$HBox/Liquid.visible = true
 		$HBox/Liquid/Numbers.text = "%s / %s" % [game.pickaxe.liquid_dur, game.craft_mining_info[game.pickaxe.liquid_name].durability]
 		$HBox/Liquid/Bar.value = game.pickaxe.liquid_dur / float(game.craft_mining_info[game.pickaxe.liquid_name].durability) * 100
+		$Mults/LiquidMult.visible = true
 	else:
 		$HBox/Liquid.visible = false
+		$Mults/LiquidMult.visible = false
 	$HBox/Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):

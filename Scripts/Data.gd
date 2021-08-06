@@ -52,7 +52,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
 				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
-				"TP":{"money":e(2.5, 23), "energy":e(1, 24)},#Triangulum probe
+				"TP":{"money":e(2.5, 23), "energy":e(2.5, 23)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 }
@@ -77,7 +77,7 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_1":{"money":e(6.5, 8), "stone":e(5, 7), "copper":70000, "iron":650000, "aluminium":200000, "titanium":12000, "time":48 * 3600},
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
-					"M_MB":{"money":e(5.5, 16), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 12), "aluminium":e(2, 11), "nanocrystal":e(8, 10), "time":120 * 86400},
+					"M_MB":{"money":e(5.5, 17), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 11), "aluminium":e(2, 12), "nanocrystal":e(8, 11), "time":120 * 86400},
 					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
 					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":48 * 86400},
 					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 16), "aluminium":e(1.5, 15), "time":96 * 86400},
@@ -93,7 +93,7 @@ var MS_output = {	"M_DS_0":e(1, 8),
 					"M_MME_1":127000,
 					"M_MME_2":e(4.0, 7),
 					"M_MME_3":e(1.5, 9),
-					"M_MB":e(1, 13),
+					"M_MB":e(5.0, 12),
 }
 
 var MUs = {	"MV":{"base_cost":100, "pw":1.9},

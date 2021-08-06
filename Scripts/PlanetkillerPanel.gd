@@ -40,7 +40,7 @@ func refresh():
 		$Scroll/Planets.add_child(btn)
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
-		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25, 3)]
+		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
@@ -76,12 +76,13 @@ func refresh_planet_info():
 	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-	var au_mult = 1 + pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
-	$Control/MMM.text = "%s: %s" % [tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult))]
+	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
+	var au_mult = 1 + pow(au_int, Helper.get_AIE())
+	$Control/MMM.bbcode_text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
 	for mat in target.surface:
-		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult
+		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
-		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) * 0.425 / game.met_info[met].rarity * au_mult
+		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
 
 #get_sphere_volume
@@ -93,9 +94,9 @@ func get_sph_V(outer:float, inner:float = 0):
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
 	for comp in layer:
 		if stone.has(comp):
-			stone[comp] += layer[comp] * amount
+			stone[comp] += layer[comp] * amount * game.u_i.planck
 		else:
-			stone[comp] = layer[comp] * amount
+			stone[comp] = layer[comp] * amount * game.u_i.planck
 
 func _on_HSlider_value_changed(value):
 	refresh_planet_info()
@@ -125,6 +126,7 @@ func _on_StartCharging_pressed():
 		star.erase("p_id")
 		star.erase("rsrc")
 		set_process(false)
+		$StartCharging.visible = false
 		rekt_planet = false
 		game.HUD.refresh()
 		refresh()

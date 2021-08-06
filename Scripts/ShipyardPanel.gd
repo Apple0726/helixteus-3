@@ -17,7 +17,7 @@ func _on_SpinBox_value_changed(value):
 		costs[cost] *= value
 	strength = value * strength_mult
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs)
-	$Strength.text = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.clever_round(strength, 3)]
+	$Strength.text = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength)]
 
 func _on_Construct_pressed():
 	if game.check_enough(costs):

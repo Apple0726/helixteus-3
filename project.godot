@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "RichTextEffect",
+"class": "AuroraText",
+"language": "GDScript",
+"path": "res://Scripts/TextEffects/AuroraText.gd"
+}, {
 "base": "Node2D",
 "class": "Cave",
 "language": "GDScript",
@@ -28,18 +33,13 @@ _global_script_classes=[ {
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://Scripts/Projectile.gd"
-}, {
-"base": "RichTextEffect",
-"class": "TextEffect",
-"language": "GDScript",
-"path": "res://Scripts/TextEffects/TextEffect.gd"
 } ]
 _global_script_class_icons={
+"AuroraText": "",
 "Cave": "",
 "CaveBoss": "",
 "NPC": "",
-"Projectile": "",
-"TextEffect": ""
+"Projectile": ""
 }
 
 [application]

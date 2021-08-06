@@ -82,7 +82,7 @@ func refresh():
 			$Control/HSlider.step = int(game[type][meta] / 100)
 			$Control/HSlider.value = min($Control/HSlider.value, game[type][meta])
 		cost = $Control/HSlider.value
-		$Control/Label.text = "%s %s" % [Helper.clever_round(cost, 3), unit]
+		$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
 	
 	$Control/Label2.text = Helper.time_to_str(cost * speed)
 

@@ -32,13 +32,13 @@ func _on_btn_pressed(btn_str:String):
 		item.item_dir = "Buildings"
 		var txt:String = ""
 		if bldg == "SP":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg))]
 		elif bldg == "AE":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), 3)]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg))]
 		else:
 			if Data.path_1.has(bldg):
 				var time_speed:float = game.u_i.time_speed if Data.path_1[bldg].has("time_based") else 1.0
-				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, 3)]
+				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed)]
 		if Data.path_2.has(bldg):
 			if Data.path_2[bldg].is_value_integer:
 				txt += (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
@@ -105,7 +105,7 @@ func get_item(_name, _type, _dir):
 	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	game.view.obj.construct(_name, item_costs)
+	game.view.obj.construct(_name, Data.costs[_name])
 	if game.tutorial and game.tutorial.tut_num in [3, 5]:
 		game.tutorial.fade(0.15, false)
 

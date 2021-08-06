@@ -74,7 +74,7 @@ func on_mouse_entered():
 	is_over = true
 	var tooltip:String = tr(name.to_upper() + "_DESC")
 	if infinite_research:
-		tooltip += "\n%s: %s" % [tr("CURRENT_MULT"), Helper.clever_round(pow(Data.infinite_research_sciences[name].value, game.infinite_research[name]), 3)]
+		tooltip += "\n%s: %s" % [tr("CURRENT_MULT"), Helper.clever_round(pow(Data.infinite_research_sciences[name].value, game.infinite_research[name]))]
 	game.show_tooltip(tooltip)
 
 func on_mouse_exited():

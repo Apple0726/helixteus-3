@@ -16,7 +16,7 @@ func _ready():
 		$TopInfo/Reset.disabled = true
 	if game.DRs == 0:
 		for node in $ScrollContainer2/GridContainer.get_children():
-			node.get_node("VBoxContainer/HBoxContainer/Invest").disabled = true
+			node.get_node("Invest").disabled = true
 	$TopInfo/DimensionN.text = tr("DIMENSION") + " #1"
 	$DiscoveredUnivs/Label.text = tr("DISCOVERED_UNIVERSES")
 
@@ -113,3 +113,11 @@ func on_univ_press(id:int):
 
 func _on_SendProbes_pressed():
 	game.toggle_panel(game.send_probes_panel)
+
+
+func _on_Label_mouse_entered(extra_arg_0):
+	game.show_tooltip(tr(extra_arg_0))
+
+
+func _on_Label_mouse_exited():
+	game.hide_tooltip()

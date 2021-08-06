@@ -23,7 +23,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("ENTERED_BY_SHIPS"))
 			option_btn.add_item(tr("SYSTEM_CONQUERED"))
 			option_btn.add_item(tr("DIFFICULTY"))
-			option_btn.add_item(tr("COLDEST_STAR_TEMPERATURE"))
+			option_btn.add_item(tr("HOTTEST_STAR_TEMPERATURE"))
 			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
 			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
 			option_btn.add_item(tr("HAS_MEGASTRUCTURE"))

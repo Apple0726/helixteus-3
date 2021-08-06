@@ -68,8 +68,7 @@ var overlay:Control
 var annotator:Control
 var wiki:Panel
 var load_panel:Panel
-onready var tooltip:Control = $Tooltips/Tooltip
-onready var adv_tooltip:Control = $Tooltips/AdvTooltip
+var tooltip
 onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
 
 const SYSTEM_SCALE_DIV = 100.0
@@ -321,6 +320,8 @@ var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
+var view_tween:Tween
+var tooltip_tween:Tween
 var tile_brightness:Array = []
 
 func _ready():
@@ -346,6 +347,10 @@ func _ready():
 	add_child(game_tween)
 	b_i_tween = Tween.new()
 	add_child(b_i_tween)
+	view_tween = Tween.new()
+	add_child(view_tween)
+	tooltip_tween = Tween.new()
+	add_child(tooltip_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	if not TranslationServer.get_locale() in ["de", "zh", "es"]:
@@ -609,7 +614,6 @@ func load_univ():
 				tutorial.visible = false
 				tutorial.tut_num = help.tutorial
 				$UI.add_child(tutorial)
-			switch_view(c_v, true)
 	else:
 		popup("load error", 1.5)
 
@@ -625,6 +629,9 @@ func load_game():
 	universe_data = save_info.get_var()
 	save_info.close()
 	load_univ()
+	tile_data[6].ship = true
+	Helper.save_obj("Planets", 2, tile_data)
+	switch_view(c_v, true)
 	if not $UI.is_a_parent_of(HUD):
 		$UI.add_child(HUD)
 
@@ -817,6 +824,8 @@ func new_game(tut:bool, univ:int = 0):
 				"construct_button":not tut,
 				"plant_button":false,
 				"vehicles_button":false,
+				"s_bk_button":false,#system_bookmark_button
+				"g_bk_button":false,#galaxy_bookmark_button
 				"materials":false,
 				"metals":false,
 				"atoms":false,
@@ -838,7 +847,8 @@ func new_game(tut:bool, univ:int = 0):
 	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":1, "pos":Vector2(0, 0)}]}]
+	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -943,7 +953,6 @@ func new_game(tut:bool, univ:int = 0):
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
 		tutorial.visible = false
 		tutorial.tut_num = 1
-		$UI.add_child(tutorial)
 	add_planet()
 	$Autosave.start()
 	var init_time = OS.get_system_time_msecs()
@@ -953,6 +962,8 @@ func new_game(tut:bool, univ:int = 0):
 	view.zoom_factor = 1.03
 	view.zooming = "in"
 	view.set_process(true)
+	if tut:
+		$UI.add_child(tutorial)
 
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instance()
@@ -1224,13 +1235,18 @@ func set_g_id(l_id:int, g_id:int):
 
 func delete_galaxy():
 	galaxy_data[c_g].clear()
-	Helper.save_obj("Clusters", c_c, galaxy_data)
+	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 #															V function to execute after removing objects but before adding new ones
 func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true):
 	hide_tooltip()
 	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
 	$UI/Panel.visible = false
+	if view_tween.is_active():
+		return
+	view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+	view_tween.start()
+	yield(view_tween, "tween_all_completed")
 	if not first_time:
 		match c_v:
 			"planet":
@@ -1264,12 +1280,14 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				remove_science_tree()
 			"cave":
 				$UI.add_child(HUD)
-				remove_child(cave)
+				if is_instance_valid(cave):
+					remove_child(cave)
 				cave = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 			"ruins":
 				$UI.add_child(HUD)
-				remove_child(ruins)
+				if is_instance_valid(ruins):
+					remove_child(ruins)
 				ruins = null
 				switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 			"STM":
@@ -1349,12 +1367,15 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
 		HUD.refresh()
 	if is_instance_valid(HUD) and is_a_parent_of(HUD):
+		HUD.dimension_btn.visible = len(universe_data) > 1 and c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 		HUD.switch_btn.visible = c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
 	if c_v == "universe" and HUD.dimension_btn.visible:
 		HUD.switch_btn.visible = false
 	if not first_time:
 		fn_save_game()
 		save_views(true)
+	view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
+	view_tween.start()
 
 func add_science_tree():
 	$ScienceTreeBG.visible = true
@@ -1381,7 +1402,8 @@ func remove_mining():
 		tutorial.fade()
 	HUD.get_node("Panel/CollectAll").visible = true
 	HUD.get_node("Hotbar").visible = true
-	remove_child(mining_HUD)
+	if is_instance_valid(mining_HUD):
+		remove_child(mining_HUD)
 	mining_HUD = null
 
 func remove_science_tree():
@@ -1394,6 +1416,7 @@ func remove_science_tree():
 	view.remove_obj("science_tree")
 	for rsrc in HUD.get_node("Resources").get_children():
 		rsrc.modulate.a = 1.0
+	remove_child(get_node("ScienceBackBtn"))
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
@@ -1470,7 +1493,6 @@ func on_science_back_pressed():
 	switch_view("planet")
 	if is_instance_valid(tutorial) and tutorial.tut_num == 26:
 		tutorial.begin()
-	remove_child(get_node("ScienceBackBtn"))
 
 func add_space_HUD():
 	if not is_instance_valid(space_HUD) or not $UI.is_a_parent_of(space_HUD):
@@ -1527,6 +1549,7 @@ func add_dimension():
 		$UI.remove_child(HUD)
 	if is_instance_valid(dimension):
 		dimension.visible = true
+		$Ship.visible = false
 	else:
 		dimension = load("res://Scenes/Views/Dimension.tscn").instance()
 		add_child(dimension)
@@ -1564,10 +1587,10 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
-	if enable_shaders:
-		$Nebula.fade_in()
-		if galaxy_data[c_g].type == 0:
-			$Nebula.change_color(Color.white)
+#	if enable_shaders:
+#		$Nebula.fade_in()
+#		if galaxy_data[c_g].type == 0:
+#			$Nebula.change_color(Color.white)
 	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
@@ -1709,20 +1732,17 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
-		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1) * u_i.dark_energy)
+		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1) * u_i.dark_energy, 4)
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
-		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length(), 3)
+		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length())
 		supercluster_data.append(sc_i)
 	if id != 0:
 		var view_zoom = 500.0 / max_dist_from_center
 		universe_data[id]["view"] = {"pos":Vector2(640, 360) / view_zoom, "zoom":view_zoom, "sc_mult":1.0}
 	universe_data[id]["discovered"] = true
-	var save_sc = File.new()
-	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
-	save_sc.store_var(supercluster_data)
-	save_sc.close()
+	save_sc()
 
 func generate_clusters(id:int):
 	randomize()
@@ -1762,9 +1782,9 @@ func generate_clusters(id:int):
 		c_i["l_id"] = c_id
 		c_i.FM = Helper.clever_round(1 + pos.length() / 1000.0)#Ferromagnetic materials
 		if id == 0:
-			c_i.diff = Helper.clever_round(1 + pos.length(), 3)
+			c_i.diff = Helper.clever_round(1 + pos.length())
 		else:
-			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2), 3)
+			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2))
 		supercluster_data[id]["clusters"].append(c_id)
 		cluster_data.append(c_i)
 	if id != 0:
@@ -1773,10 +1793,7 @@ func generate_clusters(id:int):
 	supercluster_data[id]["discovered"] = true
 	c_num += total_clust_num
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
-	var save_sc = File.new()
-	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
-	save_sc.store_var(supercluster_data)
-	save_sc.close()
+	save_sc()
 
 func generate_galaxy_part():
 	var progress = 0.0
@@ -1807,14 +1824,14 @@ func generate_galaxies(id:int):
 		var rand = randf()
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge, 3)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
 			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM * u_i.charge, 3)
+			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM * u_i.charge)
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
@@ -1829,7 +1846,7 @@ func generate_galaxies(id:int):
 			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
 		elif rand < 0.2:
 			g_i.dark_matter = pow(g_i.dark_matter, 1.8)
-		g_i.dark_matter = Helper.clever_round(g_i.dark_matter, 3)
+		g_i.dark_matter = Helper.clever_round(g_i.dark_matter)
 		g_i["rotation"] = rand_range(0, 2 * PI)
 		g_i["view"] = {"pos":Vector2(640, 360), "zoom":0.2}
 		var pos
@@ -1868,15 +1885,16 @@ func generate_galaxies(id:int):
 		g_i["name"] = tr("GALAXY") + " %s" % [g_id + g_num]
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
+			show.g_bk_button = true
 			g_i = galaxy_data[0]
 			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
 			cluster_data[id]["galaxies"].append({"global":0, "local":0})
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70, 3)
+				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70)
 			else:
-				g_i.diff = Helper.clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
+				g_i.diff = Helper.clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 			cluster_data[id]["galaxies"].append({"global":g_i.id, "local":g_i.l_id})
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -2107,9 +2125,9 @@ func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
 	for star in stars:
 		combined_star_mass += star.mass
 	if c_g_g == 0:
-		return Helper.clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000, 3)
+		return Helper.clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000)
 	else:
-		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)), 3)
+		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 	
 func generate_systems(id:int):
 	randomize()
@@ -2126,6 +2144,7 @@ func generate_systems(id:int):
 	
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
+			show.s_bk_button = true
 			continue
 		var s_i = {}
 		s_i["parent"] = id
@@ -2215,12 +2234,12 @@ func generate_systems(id:int):
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26))
-			star["mass"] = Helper.clever_round(mass)
-			star["size"] = Helper.clever_round(star_size)
+			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
+			star["mass"] = Helper.clever_round(mass, 4)
+			star["size"] = Helper.clever_round(star_size, 4)
 			star["type"] = star_type
 			star["class"] = star_class
-			star["temperature"] = Helper.clever_round(temp)
+			star["temperature"] = Helper.clever_round(temp, 4)
 			star["pos"] = Vector2.ZERO
 			stars.append(star)
 		var combined_star_mass = 0
@@ -2424,6 +2443,10 @@ func generate_planets(id:int):#local id
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
+		if c_u != 0 and p_num == 0:
+			p_i.conquered = true
+			p_i.angle = PI / 2
+			p_i.pressure = 1
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		var view_zoom = 400 / max_distance
@@ -2521,7 +2544,7 @@ func generate_tiles(id:int):
 	for i in num_auroras:
 		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
 			#au_int: aurora_intensity
-			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp, 3)
+			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp)
 			if op_aurora:
 				au_int = Helper.clever_round(rand_range(8, 8.5))
 			if tile_from == -1:
@@ -2765,6 +2788,10 @@ func generate_tiles(id:int):
 		else:
 			tile_data[112] = {}
 			tile_data[112].ship = true
+	elif c_p_g == 2:
+		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile)
+		tile_data[random_tile].ship = true
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -2922,41 +2949,74 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	elif sand_glass_ratio == 1:
 		surface_mat_info.erase("sand")
 	for mat in surface_mat_info:
-		surface_mat_info[mat].chance = Helper.clever_round(surface_mat_info[mat].chance, 3)
-		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount, 3)
+		surface_mat_info[mat].chance = Helper.clever_round(surface_mat_info[mat].chance)
+		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount)
 	return surface_mat_info
 
+func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
+	if is_instance_valid(tooltip):
+		$Tooltips.remove_child(tooltip)
+		tooltip.queue_free()
+	tooltip = preload("res://Scenes/AdvTooltip.tscn").instance()
+	tooltip.modulate.a = 0.0
+	$Tooltips.add_child(tooltip)
+	add_text_icons(tooltip, txt, imgs, size, true)
+	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.04)
+	tooltip_tween.start()
+
 func show_tooltip(txt:String, hide:bool = true):
-	if hide:
-		hide_tooltip()
-		hide_adv_tooltip()
+	if is_instance_valid(tooltip):
+		$Tooltips.remove_child(tooltip)
+		tooltip.queue_free()
+	tooltip = preload("res://Scenes/Tooltip.tscn").instance()
+	tooltip.modulate.a = 0.0
 	tooltip.text = txt
-	if hide:
-		tooltip.modulate.a = 0
-	tooltip.visible = true
-	tooltip.rect_size = Vector2.ZERO
+	$Tooltips.add_child(tooltip)
 	if tooltip.rect_size.x > 400:
 		tooltip.autowrap = true
-		yield(get_tree(), "idle_frame")
 		tooltip.rect_size.x = 400
-	yield(get_tree(), "idle_frame")
-	tooltip.modulate.a = 1
+	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.05)
+	tooltip_tween.start()
 
 func hide_tooltip():
-	tooltip.visible = false
-	tooltip.autowrap = false
-
-func show_adv_tooltip(txt:String, imgs:Array, size:int = 17):
-	adv_tooltip.visible = false
-	adv_tooltip.text = ""
-	adv_tooltip.visible = true
-	adv_tooltip.modulate.a = 0
-	add_text_icons(adv_tooltip, txt, imgs, size, true)
-	yield(get_tree().create_timer(0.02), "timeout")
-	adv_tooltip.modulate.a = 1
+	if is_instance_valid(tooltip):
+		tooltip_tween.interpolate_property(tooltip, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.05)
+		tooltip_tween.start()
 
 func hide_adv_tooltip():
-	adv_tooltip.visible = false
+	hide_tooltip()
+
+#func show_tooltip(txt:String, hide:bool = true):
+#	if hide:
+#		hide_tooltip()
+#		hide_adv_tooltip()
+#	tooltip.text = txt
+#	if hide:
+#		tooltip.modulate.a = 0
+#	tooltip.visible = true
+#	tooltip.rect_size = Vector2.ZERO
+#	if tooltip.rect_size.x > 400:
+#		tooltip.autowrap = true
+#		yield(get_tree(), "idle_frame")
+#		tooltip.rect_size.x = 400
+#	yield(get_tree(), "idle_frame")
+#	tooltip.modulate.a = 1
+#
+#func hide_tooltip():
+#	tooltip.visible = false
+#	tooltip.autowrap = false
+#
+#func show_adv_tooltip(txt:String, imgs:Array, size:int = 17):
+#	adv_tooltip.visible = false
+#	adv_tooltip.text = ""
+#	adv_tooltip.visible = true
+#	adv_tooltip.modulate.a = 0
+#	add_text_icons(adv_tooltip, txt, imgs, size, true)
+#	yield(get_tree().create_timer(0.02), "timeout")
+#	adv_tooltip.modulate.a = 1
+#
+#func hide_adv_tooltip():
+#	adv_tooltip.visible = false
 
 func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _tooltip:bool = false):
 	RTL.text = ""
@@ -2972,7 +3032,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		var arr2 = txt.split("\n")
 		var max_width = 0
 		for st in arr2:
-			var width = RTL.get_font("Font").get_string_size(st).x * 1.37
+			var width = min(RTL.get_font("Font").get_string_size(st).x * 1.37, 400)
 			if width > max_width:
 				max_width = width
 		RTL.rect_min_size.x = max_width + 20
@@ -3172,7 +3232,7 @@ onready var item_cursor = $UI/ItemCursor
 func sell_all_minerals():
 	if minerals > 0:
 		money += minerals * (MUs.MV + 4)
-		popup(tr("MINERAL_SOLD") % [round(minerals), round(minerals * (MUs.MV + 4))], 2)
+		popup(tr("MINERAL_SOLD") % [Helper.format_num(minerals), Helper.format_num(minerals * (MUs.MV + 4))], 2)
 		minerals = 0
 		show.shop = true
 		HUD.refresh()
@@ -3184,18 +3244,16 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
-		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-			tooltip.rect_position = mouse_pos + Vector2(9, 9)
-			adv_tooltip.rect_position = mouse_pos + Vector2(9, 9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
-			adv_tooltip.rect_position = mouse_pos - Vector2(adv_tooltip.rect_size.x + 9, -9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-			tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
-			adv_tooltip.rect_position = mouse_pos - Vector2(-9, adv_tooltip.rect_size.y + 9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
-			adv_tooltip.rect_position = mouse_pos - adv_tooltip.rect_size - Vector2(9, 9)
+		yield(get_tree(), "idle_frame")
+		if is_instance_valid(tooltip):
+			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
+				tooltip.rect_position = mouse_pos + Vector2(9, 9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
+				tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
+				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
 		if item_cursor.visible:
 			item_cursor.position = mouse_pos
 		if ship_locator:
@@ -3355,6 +3413,12 @@ func _unhandled_key_input(event):
 				if get_item_num(_name) > 0:
 					inventory.on_slot_press(_name)
 
+func save_sc():
+	var save_sc = File.new()
+	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
+	save_sc.store_var(supercluster_data)
+	save_sc.close()
+
 func fn_save_game():
 	var save_info = File.new()
 	save_info.open("user://Save%s/save_info.hx3" % [c_sv], File.WRITE)
@@ -3453,10 +3517,7 @@ func save_views(autosave:bool):
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
 	elif c_v == "supercluster":
-		var save_sc = File.new()
-		save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
-		save_sc.store_var(supercluster_data)
-		save_sc.close()
+		save_sc()
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 

@@ -24,7 +24,7 @@ func update_info():
 	costs.erase("time")
 	for cost in costs:
 		costs[cost] *= surface
-	$Panel/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult, 3), tr("LAKES"), Helper.clever_round(lake_mult, 3)]
+	$Panel/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), tr("LAKES"), Helper.clever_round(lake_mult)]
 	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Panel/BCVBox, 32, costs, true, true)
 	$Panel.visible = true
@@ -81,7 +81,7 @@ func _on_Terraform_pressed():
 		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 		planet.bldg.path_1 = 1
 		planet.bldg.path_1_value = Data.path_1[tf_type].value
-		if tf_type in ["MM", "GH", "AE", "ME", "PP"]:
+		if tf_type in ["MM", "GH", "AE", "ME", "PP", "AMN", "SPR"]:
 			planet.bldg.path_2 = 1
 			planet.bldg.path_2_value = Data.path_2[tf_type].value
 		if tf_type in ["MM", "AE", "PP", "ME"]:

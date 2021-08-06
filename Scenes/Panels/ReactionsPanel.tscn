@@ -209,15 +209,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Max" type="Button" parent="Control"]
-margin_left = 912.0
-margin_top = 192.0
-margin_right = 984.0
-margin_bottom = 226.0
-text = "Max"
-
 [node name="Control3" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -225,20 +217,20 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="Control3"]
-modulate = Color( 0.231373, 0, 0.360784, 1 )
+modulate = Color( 0.337255, 0, 0.52549, 1 )
 margin_left = 492.0
-margin_top = 200.0
-margin_right = 920.0
-margin_bottom = 216.0
+margin_top = 204.0
+margin_right = 844.0
+margin_bottom = 212.0
 texture = ExtResource( 4 )
 expand = true
 
 [node name="TextureProgress" type="TextureProgress" parent="Control3"]
-modulate = Color( 0.521569, 0, 1, 1 )
+modulate = Color( 0.65098, 0.27451, 1, 1 )
 margin_left = 492.0
-margin_top = 200.0
-margin_right = 920.0
-margin_bottom = 216.0
+margin_top = 204.0
+margin_right = 844.0
+margin_bottom = 212.0
 max_value = 1.0
 step = 0.0
 value = 0.2
@@ -246,9 +238,9 @@ texture_progress = ExtResource( 4 )
 nine_patch_stretch = true
 
 [node name="TimeRemainingIcon" type="TextureRect" parent="Control3"]
-margin_left = 936.0
+margin_left = 864.0
 margin_top = 196.0
-margin_right = 960.0
+margin_right = 888.0
 margin_bottom = 220.0
 texture = ExtResource( 11 )
 expand = true
@@ -258,9 +250,9 @@ __meta__ = {
 }
 
 [node name="TimeRemainingText" type="Label" parent="Control3"]
-margin_left = 972.0
+margin_left = 900.0
 margin_top = 196.0
-margin_right = 1068.0
+margin_right = 996.0
 margin_bottom = 220.0
 text = "0"
 valign = 1
@@ -285,5 +277,4 @@ __meta__ = {
 [connection signal="mouse_entered" from="Control/EnergyCostText" to="." method="_on_EnergyCostText_mouse_entered"]
 [connection signal="mouse_exited" from="Control/EnergyCostText" to="." method="_on_EnergyCostText_mouse_exited"]
 [connection signal="pressed" from="Control/Switch" to="." method="_on_Switch_pressed"]
-[connection signal="pressed" from="Control/Max" to="." method="_on_Max_pressed"]
 [connection signal="pressed" from="Transform" to="." method="_on_Transform_pressed"]

@@ -1,10 +1,15 @@
 extends "Panel.gd"
 
 var costs:Dictionary = {}
+var probe_num:int = 0
 var exploring_probe_num:int = 0
+var sorted_objs:Array = []
+var n:int = 0
+var obj_index:int = -1
 var obj_to_discover:int = -1
 var dist_mult:float = 1
 var PP:float
+var dist_exp:int
 
 var units:Dictionary = {
 	"speed_of_light":"c",
@@ -52,12 +57,12 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
-	var probe_num:int = 0
+	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
 	if game.c_v == "supercluster":
 		var undiscovered_clusters:int = 0
-		var n:int = len(game.cluster_data)
+		n = len(game.cluster_data)
 		for cluster in game.cluster_data:
 			if not cluster.visible:
 				undiscovered_clusters += 1
@@ -66,14 +71,16 @@ func refresh():
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		dist_mult = pow(1.01, n - undiscovered_clusters + exploring_probe_num)
-		var clusters:Array = game.cluster_data.duplicate(true)
-		clusters.sort_custom(self, "dist_sort")
+		dist_exp = n - undiscovered_clusters + exploring_probe_num
+		dist_mult = pow(1.01, dist_exp)
+		sorted_objs = game.cluster_data.duplicate(true)
+		sorted_objs.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
-		for i in len(clusters):
-			if not clusters[i].visible:
+		for i in len(sorted_objs):
+			if not sorted_objs[i].visible:
 				if exploring_probe_offset == 0:
-					obj_to_discover = clusters[i].l_id
+					obj_to_discover = sorted_objs[i].l_id
+					obj_index = i
 					break
 				else:
 					exploring_probe_offset -= 1
@@ -88,7 +95,7 @@ func refresh():
 		refresh_energy()
 	elif game.c_v == "universe":
 		var undiscovered_sc:int = 0
-		var n:int = len(game.supercluster_data)
+		n = len(game.supercluster_data)
 		for sc in game.supercluster_data:
 			if not sc.visible:
 				undiscovered_sc += 1
@@ -97,14 +104,16 @@ func refresh():
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		dist_mult = pow(1.01, n - undiscovered_sc + exploring_probe_num)
-		var scs:Array = game.supercluster_data.duplicate(true)
-		scs.sort_custom(self, "dist_sort")
+		dist_exp = n - undiscovered_sc + exploring_probe_num
+		dist_mult = pow(1.01, dist_exp)
+		sorted_objs = game.supercluster_data.duplicate(true)
+		sorted_objs.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
-		for i in len(scs):
-			if not scs[i].visible:
+		for i in len(sorted_objs):
+			if not sorted_objs[i].visible:
 				if exploring_probe_offset == 0:
-					obj_to_discover = scs[i].id
+					obj_to_discover = sorted_objs[i].id
+					obj_index = i
 					break
 				else:
 					exploring_probe_offset -= 1
@@ -112,9 +121,11 @@ func refresh():
 			$Label.text = tr("NO_MEGA_PROBES")
 			$Control.visible = false
 			$Send.visible = false
+			$SendAll.visible = false
 		else:
 			$Control.visible = true
 			$Send.visible = true
+			$SendAll.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 			refresh_energy()
 	elif game.c_v == "dimension":
@@ -125,6 +136,7 @@ func refresh():
 				ok = true
 		$Control.visible = false
 		$Send.visible = ok
+		$SendAll.visible = false
 		$TP.visible = ok
 		if ok:
 			for prop in $TP/VBox.get_children():
@@ -134,17 +146,18 @@ func refresh():
 		else:
 			$Label.text = tr("NO_TRI_PROBES")
 
-func refresh_energy():
-	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1)
+func refresh_energy(send_all:bool = false):
+	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
 	if game.c_v == "supercluster":
 		costs.energy = 50000000000000.0 * slider_factor * dist_mult
-		costs.Xe = 10000 * slider_factor * dist_mult
-		costs.time = 1500 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
+		costs.Xe = 100000 * slider_factor * dist_mult
+		costs.time = 1200 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
 	elif game.c_v == "universe":
 		costs.energy = 10000000000000000000.0 * slider_factor * dist_mult
-		costs.Pu = 1000 * slider_factor * dist_mult
-		costs.time = 15 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
-	Helper.put_rsrc($Control/Costs, 36, costs, true, true)
+		costs.Pu = 10000 * slider_factor * dist_mult
+		costs.time = 4500 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
+	if not send_all:
+		Helper.put_rsrc($Control/Costs, 36, costs, true, true)
 	
 func dist_sort(a:Dictionary, b:Dictionary):
 	if a.pos.length() < b.pos.length():
@@ -166,7 +179,7 @@ func discover_univ():
 		game.toggle_panel(self)
 	game.dimension.refresh_univs()
 
-func _on_Send_pressed():
+func _on_Send_pressed(send_all:bool = false):
 	if game.c_v == "dimension":
 		if PP >= 0:
 			for prop in $TP/VBox.get_children():
@@ -182,14 +195,15 @@ func _on_Send_pressed():
 		return false
 	else:
 		if game.check_enough(costs):
-			game.deduct_resources(costs)
 			var curr_time = OS.get_system_time_msecs()
+			var probe_sent:bool = false
 			if game.c_v == "supercluster":
 				for probe in game.probe_data:
 					if probe.tier == 0 and not probe.has("start_date"):
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
+						probe_sent = true
 						break
 			elif game.c_v == "universe":
 				for probe in game.probe_data:
@@ -197,11 +211,30 @@ func _on_Send_pressed():
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
+						probe_sent = true
 						break
-			game.popup(tr("PROBE_SENT"), 1.5)
-			refresh()
+			if not probe_sent and send_all:
+				game.popup(tr("PROBE_SENT"), 1.5)
+				refresh()
+				return false
+			game.deduct_resources(costs)
+			if send_all:
+				dist_exp += 1
+				dist_mult = pow(1.01, dist_exp)
+				if obj_index < n:
+					obj_index += 1
+					if game.c_v == "supercluster":
+						obj_to_discover = sorted_objs[obj_index].l_id
+					elif game.c_v == "universe":
+						obj_to_discover = sorted_objs[obj_index].id
+				refresh_energy(true)
+			else:
+				game.popup(tr("PROBE_SENT"), 1.5)
+				refresh()
 		else:
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+			if send_all:
+				refresh()
 			return false
 	return true
 
@@ -263,5 +296,5 @@ func _on_Label2_text_changed(new_text, prop:String):
 
 
 func _on_SendAll_pressed():
-	while _on_Send_pressed():
+	while _on_Send_pressed(true):
 		pass

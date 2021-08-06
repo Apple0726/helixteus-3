@@ -4,7 +4,7 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 20.0
 content_margin_right = 20.0
 content_margin_top = 20.0
@@ -55,7 +55,7 @@ margin_top = -232.0
 margin_right = -8.0
 margin_bottom = 232.0
 rect_clip_content = false
-custom_styles/bg = SubResource( 19 )
+custom_styles/bg = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -79,7 +79,7 @@ margin_top = -232.0
 margin_right = 384.0
 margin_bottom = 232.0
 rect_clip_content = false
-custom_styles/bg = SubResource( 19 )
+custom_styles/bg = SubResource( 1 )
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -92,65 +92,64 @@ margin_right = 356.0
 margin_bottom = 444.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 15
 
 [node name="KeyboardShortcuts" type="Button" parent="ScrollContainer/VBoxContainer"]
 margin_right = 336.0
-margin_bottom = 44.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "KEYBOARD_SHORTCUTS"
 expand_icon = true
 
 [node name="Aurora" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 59.0
+margin_top = 44.0
 margin_right = 336.0
-margin_bottom = 103.0
+margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "AURORA"
 expand_icon = true
 
 [node name="LevelUnlocks" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 118.0
+margin_top = 88.0
 margin_right = 336.0
-margin_bottom = 162.0
+margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "LEVEL_UNLOCKS"
 expand_icon = true
 
 [node name="DarkMatter" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 177.0
+margin_top = 132.0
 margin_right = 336.0
-margin_bottom = 221.0
+margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_MATTER"
 expand_icon = true
 
 [node name="B_strength" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 236.0
+margin_top = 176.0
 margin_right = 336.0
-margin_bottom = 280.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "B_STRENGTH"
 expand_icon = true
 
 [node name="FM" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 295.0
+margin_top = 220.0
 margin_right = 336.0
-margin_bottom = 339.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "FERROMAGNETIC_MATERIALS"
 expand_icon = true
 
 [node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_top = 354.0
+margin_top = 264.0
 margin_right = 336.0
-margin_bottom = 398.0
+margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
 toggle_mode = true
 text = "DARK_ENERGY"

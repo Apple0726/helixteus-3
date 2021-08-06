@@ -315,14 +315,14 @@ func show_planet_info(id:int, l_id:int):
 		else:
 			if game.help.planet_details:
 				game.help_str = "planet_details"
-				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure), tr("MORE_DETAILS")]
+				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4), tr("MORE_DETAILS")]
 				if p_i.has("conquered"):
 					tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
 					if p_i.has("bldg"):
 						tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
 				tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
 			else:
-				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25, 3), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure)]
+				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4)]
 		if adv:
 			game.show_adv_tooltip(tooltip, icons)
 		else:

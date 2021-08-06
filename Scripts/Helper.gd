@@ -24,7 +24,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	if show_available:
 		if path == "Icons/stone" and rsrc_available is Dictionary:
 			rsrc_available = get_sum_of_dict(rsrc_available)
-		text = "%s/%s" % [format_num(clever_round(rsrc_available, 3), threshold / 2), format_num(clever_round(rsrc_cost, 3), threshold / 2)] + mass_str
+		text = "%s/%s" % [format_num(clever_round(rsrc_available), threshold / 2), format_num(clever_round(rsrc_cost), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
@@ -32,7 +32,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	else:
 		if path == "Icons/stone" and rsrc_cost is Dictionary:
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
-		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3), threshold)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = num_str + mass_str
@@ -292,8 +292,8 @@ func get_crush_info(tile_obj):
 func get_prod_info(tile_obj):
 	var time = OS.get_system_time_msecs()
 	var spd = tile_obj.bldg.path_1_value#qty1: resource being used. qty2: resource being produced
-	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio), 3)
-	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd), 3)
+	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio))
+	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd))
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
@@ -519,7 +519,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		contents[met] = amount
 		other_volume += amount / met_info.density / 1000 / h_mult
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0) * h_mult, 3))
+	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0) * h_mult))
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth"):
 		contents.ship_locator = 1
@@ -547,7 +547,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 				contents[mat] = amount
 				other_volume += amount / rho / 1000 / h_mult
 			elif randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
-				var amount = clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult * h_mult, 3)
+				var amount = clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult * h_mult)
 				if amount < 1:
 					continue
 				contents[mat] = amount
@@ -564,12 +564,12 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			var size = tile.current_deposit.size
 			var progress2 = tile.current_deposit.progress
 			var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-			var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult, 3)
+			var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult)
 			contents[met] = amount
 			other_volume += amount / game.met_info[met].density / 1000 / h_mult
 			tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult, 3))
+	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult))
 	if stone_amount != 0:
 		contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	if tile.has("ship_locator_depth") and tile.depth >= tile.ship_locator_depth:
@@ -626,11 +626,11 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 
 #solar panels
 func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
-	return clever_round(value * temp * au_mult / 273.0, 3)
+	return clever_round(value * temp * au_mult / 273.0)
 
 #atm extractor
 func get_AE_production(pressure:float, value:float):
-	return clever_round(value * pressure, 3)
+	return clever_round(value * pressure)
 
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
@@ -1002,10 +1002,10 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity * game.u_i.planck
 
 func get_MB_output(star:Dictionary):
-	return Data.MS_output.M_MB * star.luminosity
+	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
@@ -1073,7 +1073,7 @@ func on_path_enter(path:String, obj:Dictionary):
 func on_path_exit():
 	game.hide_tooltip()
 
-func clever_round (num:float, sd:int = 4, st:bool = false):#sd: significant digits
+func clever_round (num:float, sd:int = 3, st:bool = false):#sd: significant digits
 	var e = floor(log10(abs(num)))
 	if e < -4 and st:
 		return e_notation(num, sd)
@@ -1139,7 +1139,7 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 	elif bldg == "AE":
 		path_1_value = get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
 	elif bldg != "PCC":
-		path_1_value = clever_round(dict.bldg.path_1_value * mult, 3)
+		path_1_value = clever_round(dict.bldg.path_1_value * mult)
 	var path_2_value
 	var path_3_value
 	if dict.bldg.has("path_2_value"):
@@ -1147,7 +1147,7 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 		if Data.path_2[bldg].is_value_integer:
 			path_2_value = round(path_2_value)
 	if dict.bldg.has("path_3_value"):
-		path_3_value = clever_round(dict.bldg.path_3_value, 3)
+		path_3_value = clever_round(dict.bldg.path_3_value)
 	if path_1_value:
 		path_1_value *= n
 	if path_2_value:
@@ -1156,7 +1156,7 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 		"ME", "PP", "SP", "AE":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
 		"AMN", "SPR":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value * IR_mult, 3))]
+			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value * IR_mult))]
 		"MM":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"SC", "GF", "SE":

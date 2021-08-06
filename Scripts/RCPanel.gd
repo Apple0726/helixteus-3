@@ -202,11 +202,11 @@ func refresh():
 	rover_costs.time /= game.u_i.time_speed
 	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
-	$Stats/HPText.text = String(round((HP + HP_bonus) * mult))
-	$Stats/AtkText.text = String(round(atk * mult))
-	$Stats/DefText.text = String(round((def + def_bonus) * mult))
-	$Stats/CargoText.text = "%s kg" % [round(weight_cap + cargo_bonus) * mult]
-	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus, 3))
+	$Stats/HPText.text = Helper.format_num(round(HP + HP_bonus) * mult)
+	$Stats/AtkText.text = Helper.format_num(round(atk * mult))
+	$Stats/DefText.text = Helper.format_num(round((def + def_bonus) * mult))
+	$Stats/CargoText.text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult)]
+	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus))
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -248,7 +248,7 @@ func _on_DefText_mouse_entered():
 	game.show_tooltip("(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)])
 
 func _on_CargoText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, round((weight_cap + cargo_bonus) * mult)])
+	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult)])
 
 func _on_SpeedText_mouse_entered():
-	game.show_tooltip("%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus), 3)])
+	game.show_tooltip("%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))])

@@ -302,13 +302,13 @@ position = Vector2( -3.28064, -12.6964 )
 
 [node name="Polygon" type="Polygon2D" parent="3"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 300, 200, 108, 200, 108, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 300, 432 )
+polygon = PoolVector2Array( 319.281, 208.696, 159.281, 208.696, 159.281, 420.696, 3.28064, 420.696, 0, 0, 1280, 0, 1280, 724, 0, 724, 3.28064, 420.696, 319.281, 420.696 )
 
 [node name="Label" type="Label" parent="3"]
-margin_left = 340.0
-margin_top = 292.0
-margin_right = 398.0
-margin_bottom = 320.0
+margin_left = 355.281
+margin_top = 292.696
+margin_right = 413.281
+margin_bottom = 320.696
 theme = ExtResource( 1 )
 custom_styles/normal = SubResource( 2 )
 text = "dsfsdf"
@@ -317,10 +317,10 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="3"]
-margin_left = 108.0
-margin_top = 200.0
-margin_right = 300.0
-margin_bottom = 432.0
+margin_left = 159.0
+margin_top = 209.0
+margin_right = 319.0
+margin_bottom = 421.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 __meta__ = {
@@ -363,13 +363,13 @@ position = Vector2( 0, -12.7423 )
 
 [node name="Polygon" type="Polygon2D" parent="5"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 488, 200, 296, 200, 296, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 488, 432 )
+polygon = PoolVector2Array( 480, 208.742, 320, 208.742, 320, 420.742, 0, 420.742, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 420.742, 480, 420.742 )
 
 [node name="Panel" type="Panel" parent="5"]
-margin_left = 296.0
-margin_top = 200.0
-margin_right = 488.0
-margin_bottom = 432.0
+margin_left = 320.0
+margin_top = 209.0
+margin_right = 480.0
+margin_bottom = 421.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 __meta__ = {
@@ -522,13 +522,13 @@ position = Vector2( 5.03973, -11.9692 )
 
 [node name="Polygon" type="Polygon2D" parent="12"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 164, 1172, 164, 1172, 124, 812, 124, 812, 164, 1280, 164, 1280, 724, 0, 724 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1278.96, 203.969, 1126.96, 203.969, 1126.96, 163.969, 794.96, 163.969, 794.96, 203.969, 1278.96, 203.969, 1280, 724, 0, 724 )
 
 [node name="Panel" type="Panel" parent="12"]
-margin_left = 812.0
-margin_top = 124.0
-margin_right = 1172.0
-margin_bottom = 164.0
+margin_left = 795.0
+margin_top = 164.0
+margin_right = 1127.0
+margin_bottom = 204.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 7 )
 __meta__ = {
@@ -541,13 +541,13 @@ position = Vector2( -2.99664, -11.9865 )
 
 [node name="Polygon" type="Polygon2D" parent="13"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 300, 200, 108, 200, 108, 432, 0, 432, 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 432, 300, 432 )
+polygon = PoolVector2Array( 318.997, 207.986, 158.997, 207.986, 158.997, 419.987, -1.00336, 419.987, 0, 0, 1280, 0, 1280, 724, 0, 724, -1.00336, 419.987, 318.997, 419.987 )
 
 [node name="Panel" type="Panel" parent="13"]
-margin_left = 108.0
-margin_top = 200.0
-margin_right = 300.0
-margin_bottom = 432.0
+margin_left = 159.0
+margin_top = 208.0
+margin_right = 319.0
+margin_bottom = 420.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 __meta__ = {
@@ -589,7 +589,7 @@ visible = false
 
 [node name="Polygon" type="Polygon2D" parent="15"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 136, 724, 136, 684, 0, 684 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 128, 724, 128, 684, 0, 684 )
 
 [node name="Label" type="Label" parent="15"]
 margin_left = 32.0
@@ -605,7 +605,7 @@ __meta__ = {
 
 [node name="Panel" type="Panel" parent="15"]
 margin_top = 684.0
-margin_right = 132.0
+margin_right = 128.0
 margin_bottom = 720.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 4 )
@@ -693,13 +693,13 @@ position = Vector2( -5.2973, -12.9488 )
 
 [node name="Polygon" type="Polygon2D" parent="19"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 276, 248, 276, 248, 216, 188, 216, 188, 276, 0, 276 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 1.2973, 304.949, 253.297, 304.949, 253.297, 244.949, 193.297, 244.949, 193.297, 304.949, 1.2973, 304.949 )
 
 [node name="Label" type="Label" parent="19"]
-margin_left = 280.0
-margin_top = 220.0
-margin_right = 344.0
-margin_bottom = 248.0
+margin_left = 285.297
+margin_top = 232.949
+margin_right = 349.297
+margin_bottom = 260.949
 theme = ExtResource( 1 )
 custom_styles/normal = SubResource( 2 )
 text = "dsfsdf"
@@ -708,10 +708,10 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="19"]
-margin_left = 188.0
-margin_top = 216.0
-margin_right = 248.0
-margin_bottom = 276.0
+margin_left = 193.297
+margin_top = 244.949
+margin_right = 253.297
+margin_bottom = 304.949
 mouse_filter = 2
 custom_styles/panel = SubResource( 4 )
 __meta__ = {
@@ -736,18 +736,17 @@ __meta__ = {
 }
 
 [node name="21" type="Node2D" parent="."]
-visible = false
 position = Vector2( 0, -11.9055 )
 
 [node name="Polygon" type="Polygon2D" parent="21"]
 color = Color( 0, 0, 0, 0.615686 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 276, 304, 276, 304, 216, 248, 216, 248, 276, 0, 276 )
+polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 724, 0, 724, 0, 303.905, 308, 303.905, 308, 243.906, 248, 243.906, 248, 303.905, 0, 303.905 )
 
 [node name="Panel" type="Panel" parent="21"]
-margin_left = 244.0
-margin_top = 216.0
-margin_right = 304.0
-margin_bottom = 276.0
+margin_left = 248.0
+margin_top = 243.906
+margin_right = 308.0
+margin_bottom = 303.906
 mouse_filter = 2
 custom_styles/panel = SubResource( 4 )
 __meta__ = {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Graphics/Noise/noise_combined.png" type="Texture" id=13]
 [ext_resource path="res://Graphics/Decoratives/Crust.jpg" type="Texture" id=14]
 [ext_resource path="res://Shaders/Mantle.shader" type="Shader" id=15]
+[ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=16]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 15 )
@@ -58,13 +59,16 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="InputEventAction" id=11]
+[sub_resource type="RichTextEffect" id=11]
+script = ExtResource( 16 )
+
+[sub_resource type="InputEventAction" id=12]
 action = "Z"
 
-[sub_resource type="ShortCut" id=12]
-shortcut = SubResource( 11 )
+[sub_resource type="ShortCut" id=13]
+shortcut = SubResource( 12 )
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -93,7 +97,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -127,7 +131,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -167,116 +171,10 @@ tracks/2/keys = {
 "values": [ {
 "args": [  ],
 "method": "pickaxe_hit"
-} ]
-}
-
-[sub_resource type="Animation" id=16]
-length = 0.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("Help:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
-}
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.5 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [  ],
-"method": "hide_help"
 } ]
 }
 
 [sub_resource type="Animation" id=17]
-tracks/0/type = "bezier"
-tracks/0/path = NodePath("LayerInfo:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"points": PoolRealArray( -64.1282, -0.25, 0, 0, 30.6713, 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1 )
-}
-tracks/1/type = "bezier"
-tracks/1/path = NodePath("LayerInfo:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1 )
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("LayerInfo:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[sub_resource type="Animation" id=18]
-length = 0.266667
-loop = true
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/path = NodePath("Pickaxe/Sprite:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.133333, 0.266667 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ 0.0, -90.0, 0.0 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Pickaxe/Sprite:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.133333, 0.266667 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 648, 176 ), Vector2( 504, 416 ), Vector2( 648, 176 ) ]
-}
-tracks/2/type = "method"
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0.133333 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [  ],
-"method": "pickaxe_hit"
-} ]
-}
-
-[sub_resource type="Animation" id=19]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Help:modulate")
@@ -305,7 +203,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id=18]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("LayerInfo:position:x")
 tracks/0/interp = 1
@@ -339,7 +237,7 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=21]
+[sub_resource type="Animation" id=19]
 length = 0.266667
 loop = true
 step = 0.0166667
@@ -382,7 +280,113 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="StyleBoxFlat" id=22]
+[sub_resource type="Animation" id=20]
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Help:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "hide_help"
+} ]
+}
+
+[sub_resource type="Animation" id=21]
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("LayerInfo:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -64.1282, -0.25, 0, 0, 30.6713, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("LayerInfo:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("LayerInfo:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 0.266667
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pickaxe/Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -90.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pickaxe/Sprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 648, 176 ), Vector2( 504, 416 ), Vector2( 648, 176 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.133333 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "pickaxe_hit"
+} ]
+}
+
+[sub_resource type="StyleBoxFlat" id=23]
 content_margin_left = 10.0
 content_margin_right = 10.0
 content_margin_top = 10.0
@@ -478,6 +482,7 @@ margin_left = 272.0
 margin_top = 512.0
 margin_right = 512.0
 margin_bottom = 552.0
+custom_constants/separation = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -500,41 +505,41 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AuroraMult" type="Label" parent="Mults"]
+[node name="AuroraMult" type="RichTextLabel" parent="Mults"]
 visible = false
-margin_top = 28.0
+margin_top = 56.0
 margin_right = 240.0
-margin_bottom = 52.0
-mouse_filter = 0
-custom_colors/font_color = Color( 0.592157, 0, 1, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_bottom = 81.0
+rect_min_size = Vector2( 0, 25 )
+bbcode_enabled = true
+bbcode_text = "[aurora]Aurora multiplier: x 1.230[/aurora]"
+text = "Aurora multiplier: x 1.230"
+custom_effects = [ SubResource( 11 ) ]
 
 [node name="Back" type="Button" parent="."]
 margin_top = 682.0
 margin_right = 128.0
 margin_bottom = 722.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 12 )
+shortcut = SubResource( 13 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PickaxeAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 13 )
-"anims/Layer fade" = SubResource( 14 )
-"anims/Pickaxe swing" = SubResource( 15 )
+"anims/Help fade" = SubResource( 14 )
+"anims/Layer fade" = SubResource( 15 )
+"anims/Pickaxe swing" = SubResource( 16 )
 
 [node name="HelpAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 16 )
-"anims/Layer fade" = SubResource( 17 )
-"anims/Pickaxe swing" = SubResource( 18 )
+"anims/Help fade" = SubResource( 17 )
+"anims/Layer fade" = SubResource( 18 )
+"anims/Pickaxe swing" = SubResource( 19 )
 
 [node name="LayerAnim" type="AnimationPlayer" parent="."]
-"anims/Help fade" = SubResource( 19 )
-"anims/Layer fade" = SubResource( 20 )
-"anims/Pickaxe swing" = SubResource( 21 )
+"anims/Help fade" = SubResource( 20 )
+"anims/Layer fade" = SubResource( 21 )
+"anims/Pickaxe swing" = SubResource( 22 )
 
 [node name="Pickaxe" type="Node2D" parent="."]
 
@@ -549,7 +554,7 @@ margin_top = 361.0
 margin_right = 837.0
 margin_bottom = 407.0
 grow_vertical = 2
-custom_styles/panel = SubResource( 22 )
+custom_styles/panel = SubResource( 23 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

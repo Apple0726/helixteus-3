@@ -37,6 +37,7 @@ func _ready():
 			star_btn.material.set_shader_param("amplitude", 0.1)
 			star_btn.material.set_shader_param("time_offset", 10.0 * randf())
 			star_btn.material.set_shader_param("twinkle_speed", 0.5)
+			star_btn.material.set_shader_param("brightness_offset", 1.1)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]

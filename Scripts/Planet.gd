@@ -269,8 +269,7 @@ func show_tooltip(tile):
 	if tile.has("ruins"):
 		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
 	if adv:
-		if not game.get_node("Tooltips/Tooltip").visible:
-			game.show_adv_tooltip(tooltip, icons)
+		game.show_adv_tooltip(tooltip, icons)
 	else:
 		game.hide_adv_tooltip()
 		if tooltip == "":
@@ -289,6 +288,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 	if tile and tile.has("cost_div"):
 		for cost in constr_costs2:
 			constr_costs2[cost] /= tile.cost_div
+	constr_costs2.time /= game.u_i.time_speed
 	if game.check_enough(constr_costs2):
 		game.deduct_resources(constr_costs2)
 		game.stats.bldgs_built += 1
@@ -310,7 +310,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
-		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE", "CBD"]:
+		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
 		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:

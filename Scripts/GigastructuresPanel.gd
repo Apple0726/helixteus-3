@@ -9,7 +9,7 @@ var surface:float
 var num:float
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon(rect_size)
 
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
@@ -28,34 +28,35 @@ func update_info():
 	if game.c_g_g == game.ships_c_g_coords.g:
 		$Control/GalaxyInfo.text = tr("GS_ERROR")
 		error = true
-	if bldg != "TP":
-		costs.stone = PI * 100
-		costs.mythril = 1 / 10000.0
-		costs.erase("time")
-		for cost in costs:
-			costs[cost] *= surface
-		$Control/GalaxyInfo.text = ""
-	else:
-		if g_i.system_num <= 9000:
-			$Control/GalaxyInfo.text = tr("TP_ERROR")
-			error = true
+	if not error:
+		if bldg != "TP":
+			costs.stone = PI * 100
+			costs.mythril = 1 / 10000.0
+			costs.erase("time")
+			for cost in costs:
+				costs[cost] *= surface
+			$Control/GalaxyInfo.text = ""
 		else:
-			$Control/GalaxyInfo.text = tr("TP_CONFIRM")
+			if g_i.system_num <= 9000:
+				$Control/GalaxyInfo.text = tr("TP_ERROR")
+				error = true
+			else:
+				$Control/GalaxyInfo.text = tr("TP_CONFIRM")
 	if bldg == "ME":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = Data.path_1.ME.value * surface / 1000.0
+		num = surface * 0.2
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num})
 	elif bldg == "PP":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = Data.path_1.PP.value * surface
+		num = surface * 12.0
 		Helper.put_rsrc($Control/Production, 32, {"energy":num})
 	elif bldg == "RL":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = Data.path_1.RL.value * surface
+		num = surface * 1.5
 		Helper.put_rsrc($Control/Production, 32, {"SP":num})
 	elif bldg == "MS":
 		$Control/ProductionPerSec.text = tr("STORAGE")
-		num = Data.path_1.MS.value * surface / 1000.0
+		num = surface * 15.0
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num})
 	$Control/Convert.visible = not error
 	$Control/Costs.visible = not error
@@ -69,6 +70,7 @@ func _on_GS_pressed(extra_arg_0):
 
 func _on_Convert_pressed():
 	if game.check_enough(costs):
+		var dir2 = Directory.new()
 		game.deduct_resources(costs)
 		g_i.GS = bldg
 		g_i.prod_num = num
@@ -92,13 +94,16 @@ func _on_Convert_pressed():
 			if dir.file_exists("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
+		if g_i.has("bookmark"):
+			game.bookmarks.galaxy[g_i.bookmark] = null
 		if bldg == "TP":
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
 			game.switch_view("cluster", false, "delete_galaxy")
 		else:
 			game.switch_view("cluster")
-		var dir2 = Directory.new()
+		yield(game.view_tween, "tween_all_completed")
 		dir2.remove("user://Save%s/Univ%s/Galaxies/%s.hx3" % [game.c_sv, game.c_u, game.c_g_g])
+		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

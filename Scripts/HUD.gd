@@ -62,7 +62,6 @@ func _ready():
 		switch_btn.shortcut.shortcut.action = "W"
 	else:
 		switch_btn.shortcut.shortcut.action = "Z"
-	dimension_btn.visible = len(game.universe_data) > 1
 	refresh()
 
 func add_p_b(p_b:Dictionary):
@@ -182,13 +181,13 @@ func refresh():
 	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
-	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil, 3), 6) + " kg"
+	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil), 6) + " kg"
 	if $Resources/Glass.visible:
 		if game.mats.glass >= Data.costs.GH.glass:
 			glass_text["custom_colors/font_color"] = Color.green
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
-		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass, 3), 6), Data.costs.GH.glass]
+		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass), 6), Data.costs.GH.glass]
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
 	shop.visible = game.show.shop
@@ -304,8 +303,8 @@ func refresh():
 	else:
 		$Objectives.rect_position.y = 4
 	$Bookmarks.visible = game.show.bookmarks
-	system_b_btn.visible = game.c_g_g != 0 or game.galaxy_data[0].has("discovered")
-	galaxy_b_btn.visible = game.c_c_g != 0 or game.cluster_data[0].has("discovered")
+	system_b_btn.visible = game.show.s_bk_button
+	galaxy_b_btn.visible = game.show.g_bk_button
 	cluster_b_btn.visible = game.supercluster_data[0].has("discovered")
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmark")
@@ -392,11 +391,11 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE)
 		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE)
 		if extra_arg_0 == "MINERALS":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.minerals * min_mult + game.autocollect.MS.minerals, 3)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.minerals * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.energy * energy_mult + game.autocollect.MS.energy, 3)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.energy * energy_mult + game.autocollect.MS.energy)), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.SP * SP_mult + game.autocollect.MS.SP, 3)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.SP * SP_mult + game.autocollect.MS.SP)), tr("S_SECOND")])
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():

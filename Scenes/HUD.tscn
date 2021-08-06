@@ -103,11 +103,11 @@ border_width_bottom = 2
 border_color = Color( 0.478431, 1, 0, 1 )
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id=30]
+[sub_resource type="StyleBoxFlat" id=7]
 content_margin_left = 20.0
 content_margin_right = 20.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
 border_width_left = 4
 border_width_top = 4
@@ -116,7 +116,7 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=8]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
@@ -131,7 +131,7 @@ shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=9]
 content_margin_left = 10.0
 content_margin_right = 5.0
 content_margin_top = 5.0
@@ -146,7 +146,7 @@ shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=10]
 content_margin_left = 10.0
 content_margin_right = 5.0
 content_margin_top = 5.0
@@ -161,65 +161,65 @@ shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="InputEventAction" id=10]
+[sub_resource type="InputEventAction" id=11]
 action = "Y"
 
-[sub_resource type="ShortCut" id=11]
-shortcut = SubResource( 10 )
+[sub_resource type="ShortCut" id=12]
+shortcut = SubResource( 11 )
 
-[sub_resource type="InputEventAction" id=12]
+[sub_resource type="InputEventAction" id=13]
 action = "V"
 
-[sub_resource type="ShortCut" id=13]
-shortcut = SubResource( 12 )
+[sub_resource type="ShortCut" id=14]
+shortcut = SubResource( 13 )
 
-[sub_resource type="InputEventAction" id=14]
+[sub_resource type="InputEventAction" id=15]
 action = "T"
 
-[sub_resource type="ShortCut" id=15]
-shortcut = SubResource( 14 )
+[sub_resource type="ShortCut" id=16]
+shortcut = SubResource( 15 )
 
-[sub_resource type="InputEventAction" id=16]
+[sub_resource type="InputEventAction" id=17]
 action = "E"
 
-[sub_resource type="ShortCut" id=17]
-shortcut = SubResource( 16 )
+[sub_resource type="ShortCut" id=18]
+shortcut = SubResource( 17 )
 
-[sub_resource type="InputEventAction" id=18]
+[sub_resource type="InputEventAction" id=19]
 action = "R"
 
-[sub_resource type="ShortCut" id=19]
-shortcut = SubResource( 18 )
+[sub_resource type="ShortCut" id=20]
+shortcut = SubResource( 19 )
 
-[sub_resource type="InputEventAction" id=20]
+[sub_resource type="InputEventAction" id=21]
 action = "U"
 
-[sub_resource type="ShortCut" id=21]
-shortcut = SubResource( 20 )
+[sub_resource type="ShortCut" id=22]
+shortcut = SubResource( 21 )
 
-[sub_resource type="InputEventAction" id=22]
+[sub_resource type="InputEventAction" id=23]
 action = "I"
 
-[sub_resource type="ShortCut" id=23]
-shortcut = SubResource( 22 )
+[sub_resource type="ShortCut" id=24]
+shortcut = SubResource( 23 )
 
-[sub_resource type="InputEventAction" id=24]
+[sub_resource type="InputEventAction" id=25]
 action = "."
 
-[sub_resource type="ShortCut" id=25]
-shortcut = SubResource( 24 )
+[sub_resource type="ShortCut" id=26]
+shortcut = SubResource( 25 )
 
-[sub_resource type="InputEventAction" id=26]
+[sub_resource type="InputEventAction" id=27]
 action = ","
 
-[sub_resource type="ShortCut" id=27]
-shortcut = SubResource( 26 )
+[sub_resource type="ShortCut" id=28]
+shortcut = SubResource( 27 )
 
-[sub_resource type="InputEventAction" id=28]
+[sub_resource type="InputEventAction" id=29]
 action = "Z"
 
-[sub_resource type="ShortCut" id=29]
-shortcut = SubResource( 28 )
+[sub_resource type="ShortCut" id=30]
+shortcut = SubResource( 29 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -469,7 +469,7 @@ margin_right = 48.0
 margin_bottom = 34.0
 grow_horizontal = 2
 mouse_filter = 0
-custom_styles/normal = SubResource( 30 )
+custom_styles/normal = SubResource( 7 )
 text = "Build 5 mineral extractors"
 align = 1
 __meta__ = {
@@ -498,7 +498,7 @@ __meta__ = {
 margin_right = 70.0
 margin_bottom = 34.0
 mouse_filter = 0
-custom_styles/normal = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Lv 1"
 align = 1
@@ -530,8 +530,8 @@ __meta__ = {
 [node name="Name" type="LineEdit" parent="Name"]
 margin_right = 21.0
 margin_bottom = 34.0
-custom_styles/focus = SubResource( 8 )
-custom_styles/normal = SubResource( 9 )
+custom_styles/focus = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
 custom_colors/selection_color = Color( 1, 1, 1, 1 )
 custom_colors/cursor_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
@@ -791,7 +791,7 @@ margin_bottom = 216.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 11 )
+shortcut = SubResource( 12 )
 texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 5
@@ -803,7 +803,7 @@ margin_bottom = 264.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 13 )
+shortcut = SubResource( 14 )
 texture_normal = ExtResource( 22 )
 expand = true
 stretch_mode = 5
@@ -815,7 +815,7 @@ margin_bottom = 312.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
-shortcut = SubResource( 15 )
+shortcut = SubResource( 16 )
 texture_normal = ExtResource( 1 )
 expand = true
 stretch_mode = 5
@@ -826,7 +826,7 @@ margin_right = 48.0
 margin_bottom = 360.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 17 )
+shortcut = SubResource( 18 )
 texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
@@ -837,7 +837,7 @@ margin_right = 48.0
 margin_bottom = 408.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 19 )
+shortcut = SubResource( 20 )
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5
@@ -848,7 +848,7 @@ margin_right = 48.0
 margin_bottom = 456.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 21 )
+shortcut = SubResource( 22 )
 texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
@@ -859,7 +859,7 @@ margin_right = 48.0
 margin_bottom = 504.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
-shortcut = SubResource( 23 )
+shortcut = SubResource( 24 )
 texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
@@ -891,7 +891,7 @@ margin_top = 2.0
 margin_right = 102.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 25 )
+shortcut = SubResource( 26 )
 texture_normal = ExtResource( 14 )
 expand = true
 stretch_mode = 5
@@ -916,7 +916,7 @@ margin_top = 2.0
 margin_right = 46.0
 margin_bottom = 46.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 27 )
+shortcut = SubResource( 28 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5
@@ -1008,7 +1008,7 @@ anchor_bottom = 1.0
 margin_top = -48.0
 margin_right = 48.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 29 )
+shortcut = SubResource( 30 )
 expand = true
 stretch_mode = 5
 __meta__ = {

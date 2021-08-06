@@ -9,6 +9,7 @@ var ratios:Dictionary
 var difficulty:float#Amount of time per unit of atom/metal
 var energy_cost:float
 var au_mult:float
+var au_int:float
 var MM:String
 var reaction:String = ""
 var atom_costs:Dictionary = {}
@@ -242,12 +243,16 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 	$Control/Switch.visible = true
 
 func refresh():
+	for btn in $ScrollContainer/VBoxContainer.get_children():
+		btn.visible = not btn.name in ["nanocrystal", "mythril"] or game.science_unlocked.AMM
 	if tf:
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-		au_mult = 1 + pow(12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp, Helper.get_AIE())
+		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
+		au_mult = 1 + pow(au_int, Helper.get_AIE())
 	else:
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
+		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("AMN")
 	if au_mult > 1:
@@ -257,7 +262,7 @@ func refresh():
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	$Transform.visible = $Control3.visible or $Control.visible
-	refresh_icon()
+	refresh_time_icon()
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult * tile_num / path_2_value))
 	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)
 	for reaction_name in reactions:
@@ -275,7 +280,6 @@ func refresh():
 		return
 	set_process($Control3.visible)
 	var max_value:float = 0.0
-	$Control/Max.visible = not atom_to_MM
 	if atom_to_MM:
 		for atom in ratios:
 			if ratios[atom] == 0:
@@ -288,8 +292,7 @@ func refresh():
 			max_value = Helper.get_sum_of_dict(game.stone)
 		else:
 			max_value = game[MM][metal]
-	$Control/HSlider.max_value = max_value
-	#$Control/HSlider.step = int(max_value / 100)
+	$Control/HSlider.max_value = min(game.energy * au_mult / energy_cost / tile_num * path_2_value, max_value)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
 		$Transform.visible = true
@@ -329,7 +332,6 @@ func _on_Switch_pressed(refresh:bool = true):
 	atom_to_MM = not atom_to_MM
 	if refresh:
 		_on_HSlider_value_changed($Control/HSlider.value)
-		#refresh()
 
 func _on_HSlider_value_changed(value):
 	var MM_dict = {}
@@ -380,7 +382,7 @@ func _on_Transform_pressed():
 		$Control.visible = true
 		$Control3.visible = false
 		$Transform.text = "%s (G)" % tr("TRANSFORM")
-		refresh_icon()
+		refresh_time_icon()
 		_on_HSlider_value_changed($Control/HSlider.value)
 	else:
 		var rsrc = $Control/HSlider.value
@@ -405,10 +407,10 @@ func _on_Transform_pressed():
 		$Control.visible = false
 		$Control3.visible = true
 		$Transform.text = "%s (G)" % tr("STOP")
-		refresh_icon()
+		refresh_time_icon()
 	game.HUD.refresh()
 
-func refresh_icon():
+func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
 		r.icon = Data.time_icon if obj.bldg.has("reaction") and r.name == obj.bldg.reaction else null
 
@@ -448,18 +450,9 @@ func get_reaction_info(obj):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN") * game.u_i.time_speed, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
-
-func _on_Max_pressed():
-	if not atom_to_MM:
-		if reaction == "stone":
-			$Control/HSlider.value = min(game.energy * au_mult / energy_cost / tile_num * path_2_value, Helper.get_sum_of_dict(game.stone))
-		else:
-			$Control/HSlider.value = min(game.energy * au_mult / energy_cost / tile_num * path_2_value, game[reactions[reaction].MM][reaction])
-
-
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
-		game.show_tooltip(tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
+		game.show_adv_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 
 func _on_EnergyCostText_mouse_exited():

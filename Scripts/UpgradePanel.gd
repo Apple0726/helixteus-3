@@ -150,7 +150,7 @@ func update():
 		if first_tile_bldg_info.is_value_integer:
 			curr_value = round(curr_value)
 		else:
-			curr_value = Helper.clever_round(curr_value, 3)
+			curr_value = Helper.clever_round(curr_value)
 		if first_tile_bldg_info.has("time_based"):
 			curr_value *= game.u_i.time_speed
 		if not planet.empty():
@@ -185,8 +185,8 @@ func update():
 		new_base_value = round(new_base_value)
 		new_value = round(new_value)
 	else:
-		new_base_value = Helper.clever_round(new_base_value, 3)
-		new_value = Helper.clever_round(new_value, 3)
+		new_base_value = Helper.clever_round(new_base_value)
+		new_value = Helper.clever_round(new_value)
 	if first_tile_bldg_info.has("time_based"):
 		new_base_value *= game.u_i.time_speed
 		new_value *= game.u_i.time_speed
@@ -202,7 +202,7 @@ func update():
 			icon.rsrc.visible = false
 
 func bldg_value(base_value, lv:int, pw:float = 1.15):
-	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1), 3)
+	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1))
 
 func _on_Path1_pressed():
 	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
