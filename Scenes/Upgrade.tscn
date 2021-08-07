@@ -14,12 +14,11 @@
 
 [node name="Upgrade" type="Panel"]
 margin_top = 104.0
-margin_right = 1064.0
+margin_right = 1024.0
 margin_bottom = 600.0
 theme = ExtResource( 7 )
 script = ExtResource( 1 )
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -373,18 +372,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Abilities" type="Control" parent="Upgrades"]
-margin_top = 360.0
-margin_right = 336.0
-margin_bottom = 448.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Stats" type="Panel" parent="."]
-margin_left = 720.0
+[node name="Specials" type="Panel" parent="."]
+margin_left = 721.0
 margin_top = 48.0
-margin_right = 1064.0
+margin_right = 1024.0
 margin_bottom = 496.0
 __meta__ = {
 "_edit_use_anchors_": false

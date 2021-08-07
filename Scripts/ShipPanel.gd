@@ -54,6 +54,7 @@ func _on_BackButton_pressed():
 	$Panel/DriveButton.visible = true
 	$Panel/BackButton.visible = false
 	$Panel/UpgradeButton.visible = true
+	refresh()
 
 func _on_UpgradeButton_pressed():
 	$GridContainer.visible = false
@@ -63,6 +64,7 @@ func _on_UpgradeButton_pressed():
 	$Panel/DriveButton.visible = false
 	$Panel/BackButton.visible = true
 	$Panel/UpgradeButton.visible = false
+	$Upgrade._refresh()
 
 func _on_GoToShips_mouse_entered():
 	game.show_tooltip(tr("GO_TO_SHIPS"))
