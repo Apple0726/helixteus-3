@@ -131,10 +131,8 @@ func update_pickaxe():
 		$HBox/Liquid.visible = true
 		$HBox/Liquid/Numbers.text = "%s / %s" % [game.pickaxe.liquid_dur, game.craft_mining_info[game.pickaxe.liquid_name].durability]
 		$HBox/Liquid/Bar.value = game.pickaxe.liquid_dur / float(game.craft_mining_info[game.pickaxe.liquid_name].durability) * 100
-		$Mults/LiquidMult.visible = true
 	else:
 		$HBox/Liquid.visible = false
-		$Mults/LiquidMult.visible = false
 	$HBox/Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):

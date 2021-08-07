@@ -1,4 +1,5 @@
 shader_type canvas_item;
+render_mode blend_disabled;
 
 uniform float strength = 0.1;
 uniform float offset = 0.0;

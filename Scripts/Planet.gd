@@ -246,8 +246,11 @@ func show_tooltip(tile):
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
 	elif tile.has("cave"):
+		adv = tile.has("aurora")
+		if adv:
+			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
 		var cave = game.cave_data[tile.cave.id]
-		tooltip = tr("CAVE")
+		tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":cave.floor_size})
 		if cave.has("special_cave") and cave.special_cave == 1:
 			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
@@ -352,7 +355,7 @@ func seeds_plant(tile, tile_id:int, curr_time, mass_plant:bool = false):
 		game.item_to_use.num -= 1
 		tile.plant.plant_date = curr_time
 		tile.plant.grow_time = game.craft_agriculture_info[game.item_to_use.name].grow_time
-		tile.plant.grow_time /= Helper.get_au_mult(tile)
+		tile.plant.grow_time /= Helper.get_au_mult(tile) * game.u_i.time_speed
 		if tile.has("bldg") and tile.bldg.name == "GH":
 			tile.plant.grow_time /= tile.bldg.path_1_value
 		if check_lake[1] == "l":
@@ -875,6 +878,11 @@ func _unhandled_input(event):
 						game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 						return
 					if Helper.ships_on_planet(id):
+						if game.view_tween.is_active():
+							return
+						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+						game.view_tween.start()
+						yield(game.view_tween, "tween_all_completed")
 						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 							visible = false
 							if game.galaxy_data[game.c_g].has("wormholes"):
@@ -919,7 +927,7 @@ func _unhandled_input(event):
 							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
 						else:
-							game.switch_view("")
+							game.switch_view("", false, "", [], true, false)
 							game.c_p = tile.wormhole.l_dest_p_id
 							game.c_p_g = tile.wormhole.g_dest_p_id
 							game.c_s = tile.wormhole.l_dest_s_id
@@ -932,7 +940,9 @@ func _unhandled_input(event):
 						game.ships_dest_coords.s = game.c_s
 						game.ships_c_g_coords.s = game.c_s_g
 						game.ships_dest_g_coords.s = game.c_s_g
-						game.switch_view("planet", false, "", [], false)
+						game.switch_view("planet", false, "", [], false, false)
+						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
+						game.view_tween.start()
 					else:
 						game.send_ships_panel.dest_p_id = id
 						game.toggle_panel(game.send_ships_panel)

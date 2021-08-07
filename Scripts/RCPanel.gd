@@ -202,7 +202,7 @@ func refresh():
 	rover_costs.time /= game.u_i.time_speed
 	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
-	$Stats/HPText.text = Helper.format_num(round(HP + HP_bonus) * mult)
+	$Stats/HPText.text = Helper.format_num(round((HP + HP_bonus) * mult))
 	$Stats/AtkText.text = Helper.format_num(round(atk * mult))
 	$Stats/DefText.text = Helper.format_num(round((def + def_bonus) * mult))
 	$Stats/CargoText.text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult)]

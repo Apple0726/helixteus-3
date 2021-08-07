@@ -494,17 +494,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LiquidMult" type="Label" parent="Mults"]
-visible = false
-margin_top = 28.0
-margin_right = 240.0
-margin_bottom = 52.0
-mouse_filter = 0
-custom_colors/font_color = Color( 0, 0.670588, 1, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="AuroraMult" type="RichTextLabel" parent="Mults"]
 visible = false
 margin_top = 56.0

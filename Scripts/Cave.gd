@@ -102,22 +102,25 @@ var hole_exits:Array = []#id of hole and exit on each floor
 var boss:CaveBoss
 var bossHPBar
 var shaking:Vector2 = Vector2.ZERO
+var tile_mod:Color = Color.white
+var tile_brightness:float
 
 func _ready():
 	if game.enable_shaders:
-		var brightness:float = game.tile_brightness[p_i.type - 3]
+		tile_brightness = game.tile_brightness[p_i.type - 3]
 		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
 		var lum:float = 0.0
 		for star in game.system_data[game.c_s].stars:
 			var sc:float = 0.5 * star.size / (p_i.distance / 500)
 			if star.luminosity > lum:
-				$TileMap.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
+				tile_mod = Helper.get_star_modulate(star.class)
+				$TileMap.material.set_shader_param("star_mod", tile_mod)
 				var strength_mult = 1.0
 				if p_i.temperature >= 500:
 					strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
 				else:
 					strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
-				$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
+				$TileMap.material.set_shader_param("strength", range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
 				lum = star.luminosity
 	else:
 		$TileMap.material.shader = null
@@ -1058,17 +1061,17 @@ func _process(delta):
 func attack():
 	var laser_name:String = inventory[curr_slot].name.split("_")[0]
 	var laser_color:Color = get_color(laser_name)
-	var light_size:float = 2.3
+	var light_size:float = 1.0
 	if laser_name in ["yellow", "green"]:
-		light_size = 2.8
+		light_size = 1.4
 	elif laser_name in ["blue", "purple"]:
-		light_size = 4.0
+		light_size = 2.0
 	elif laser_name in ["UV", "xray"]:
-		light_size = 5.4
+		light_size = 2.7
 	elif laser_name == "gammaray":
-		light_size = 6.9
+		light_size = 3.4
 	elif laser_name == "ultragammaray":
-		light_size = 14.5
+		light_size = 4.5
 	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_size)
 	cooldown()
 
@@ -1107,7 +1110,8 @@ func hit_rock(delta):
 				deposits.erase(st)
 			var remainder:float = 0
 			for r in rsrc:
-				remainder += add_weight_rsrc(r, rsrc[r] * game.u_i.planck)
+				rsrc[r] *= game.u_i.planck
+				remainder += add_weight_rsrc(r, rsrc[r])
 			if remainder != 0:
 				game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
 			cave_wall.set_cellv(map_pos, -1)
@@ -1188,11 +1192,8 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
 	if light_color != Color.black:
-		proj.get_node("Light2D").enabled = true
-		proj.get_node("Light2D").color = mod
-		proj.get_node("Light2D").texture_scale = light_size
-		if p_i.type in [5, 6]:
-			proj.get_node("Light2D").energy = 1.6
+		proj.get_node("Glow").modulate = mod
+		proj.get_node("Glow").scale *= light_size
 	add_child(proj)
 	proj.add_to_group("projectiles")
 
@@ -1233,11 +1234,11 @@ func get_color(color:String):
 		"orange":
 			return Color.orange
 		"yellow":
-			return Color.lightyellow
+			return Color.yellow
 		"green":
 			return Color.lightgreen
 		"blue":
-			return Color.cornflower
+			return Color.blue
 		"purple":
 			return Color.purple
 		"UV":

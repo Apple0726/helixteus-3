@@ -242,4 +242,6 @@ __meta__ = {
 [connection signal="value_changed" from="NextLv" to="." method="_on_NextLv_value_changed"]
 [connection signal="pressed" from="Upgrade" to="." method="_on_Upgrade_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_entered"]
+[connection signal="mouse_exited" from="AutoSpeedup" to="." method="_on_AutoSpeedup_mouse_exited"]
 [connection signal="pressed" from="AutoSpeedup" to="." method="_on_AutoSpeedup_pressed"]

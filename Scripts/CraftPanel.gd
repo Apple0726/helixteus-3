@@ -31,8 +31,6 @@ func _on_btn_pressed(btn_str:String):
 		var desc:String = get_item_desc(craft, btn_str, craft_info)
 		item.item_desc = desc
 		item.costs = craft_info.costs.duplicate(true)
-		if item.costs.has("time"):
-			item.costs.time /= game.u_i.time_speed
 		item.parent = "craft_panel"
 		grid.add_child(item)
 
@@ -73,7 +71,7 @@ func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
 			desc = tr("SEEDS_DESC") % [game.craft_agriculture_info[item].produce]
 	if btn_str == "Agriculture":
 		if craft_info.has("grow_time"):
-			desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time)]
+			desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time / game.u_i.time_speed)]
 			desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
 	elif btn_str == "Mining":
 		desc += "%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]

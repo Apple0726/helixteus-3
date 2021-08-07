@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Scripts/Projectile.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Tiles/6.jpg" type="Texture" id=3]
+[ext_resource path="res://Graphics/Cave/Projectiles/laser.png" type="Texture" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 28.0
@@ -27,12 +27,9 @@ disabled = true
 modulate = Color( 1, 1, 1, 0.635294 )
 texture = ExtResource( 3 )
 
-[node name="Light2D" type="Light2D" parent="."]
-enabled = false
+[node name="Glow" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.635294 )
+scale = Vector2( 4.03057, 4.03057 )
 texture = ExtResource( 2 )
-texture_scale = 2.5
-color = Color( 1, 0.498039, 0.498039, 1 )
-shadow_enabled = true
-shadow_buffer_size = 1024
 
 [connection signal="body_entered" from="." to="." method="_on_Sprite_body_entered"]

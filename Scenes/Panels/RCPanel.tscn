@@ -253,10 +253,10 @@ __meta__ = {
 }
 
 [node name="Costs" type="Label" parent="."]
-margin_left = 573.5
-margin_top = 116.0
-margin_right = 997.5
-margin_bottom = 153.0
+margin_left = 574.0
+margin_top = 60.0
+margin_right = 998.0
+margin_bottom = 92.0
 text = "COSTS"
 align = 1
 valign = 1
@@ -277,9 +277,9 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 margin_left = 574.0
-margin_top = 156.0
+margin_top = 92.0
 margin_right = 998.0
-margin_bottom = 420.0
+margin_bottom = 348.0
 rect_clip_content = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -289,7 +289,7 @@ __meta__ = {
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 419.0
-margin_bottom = 259.0
+margin_bottom = 251.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {

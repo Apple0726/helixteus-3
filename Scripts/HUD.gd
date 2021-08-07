@@ -166,6 +166,8 @@ func update_money_energy_SP():
 func refresh():
 	if not game:
 		return
+	dimension_btn.visible = len(game.universe_data) > 1 and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
+	switch_btn.visible = game.c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
 	$Panel/CollectProgress.visible = false
 	$Panel/CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
@@ -328,6 +330,8 @@ func refresh():
 			$Name/Name.text = game.supercluster_data[game.c_sc].name
 		elif game.c_v == "universe":
 			$Name/Name.text = game.universe_data[game.c_u].name
+	$Name.visible = false
+	$Name.visible = true
 
 func _on_Shop_pressed():
 	click_sound.play()
@@ -387,9 +391,9 @@ func _on_MineralUpgrades_mouse_entered():
 func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if game.autocollect.has("rsrc"):
-		var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, game.infinite_research.MEE)
-		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE)
-		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE)
+		var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, game.infinite_research.MEE) * game.u_i.time_speed
+		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE) * game.u_i.time_speed
+		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE) * game.u_i.time_speed
 		if extra_arg_0 == "MINERALS":
 			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.minerals * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":

@@ -95,10 +95,10 @@ __meta__ = {
 }
 
 [node name="Send" type="Button" parent="."]
-margin_left = 940.0
-margin_top = 560.0
-margin_right = 1064.0
-margin_bottom = 600.0
+margin_left = 936.0
+margin_top = 552.0
+margin_right = 1060.0
+margin_bottom = 592.0
 text = "SEND"
 __meta__ = {
 "_edit_use_anchors_": false

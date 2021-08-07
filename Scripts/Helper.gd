@@ -737,7 +737,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				capacity_bar.value = 0
 
 func get_prod_mult(tile):
-	var mult = tile.bldg.IR_mult * game.u_i.time_speed
+	var mult = tile.bldg.IR_mult * game.u_i.time_speed if Data.path_1[tile.bldg.name].has("time_based") else 1.0
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
@@ -947,7 +947,7 @@ func update_bldg_constr(tile):
 						if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
 							game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
 						if _tile.has("bldg"):
-							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0							
+							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0
 							if _tile.bldg.name == "ME":
 								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult

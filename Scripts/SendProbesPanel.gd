@@ -39,16 +39,16 @@ var point_distribution:Dictionary = {
 	}
 
 var weights:Dictionary = {
-	"speed_of_light":20,
-	"planck":30,
-	"boltzmann":20,
-	"gravitational":30,
-	"charge":20,
-	"dark_energy":30,
-	"difficulty":20,
-	"time_speed":100,
-	"antimatter":20,
-	"value":100,
+	"speed_of_light":10,
+	"planck":20,
+	"boltzmann":10,
+	"gravitational":15,
+	"charge":10,
+	"dark_energy":10,
+	"difficulty":10,
+	"time_speed":50,
+	"antimatter":0,
+	"value":50,
 	}
 
 

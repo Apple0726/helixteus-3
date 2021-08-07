@@ -521,7 +521,7 @@ __meta__ = {
 [node name="Name" type="HBoxContainer" parent="."]
 margin_left = 144.0
 margin_top = 38.0
-margin_right = 316.0
+margin_right = 352.0
 margin_bottom = 72.0
 __meta__ = {
 "_edit_use_anchors_": false

@@ -629,8 +629,6 @@ func load_game():
 	universe_data = save_info.get_var()
 	save_info.close()
 	load_univ()
-	tile_data[6].ship = true
-	Helper.save_obj("Planets", 2, tile_data)
 	switch_view(c_v, true)
 	if not $UI.is_a_parent_of(HUD):
 		$UI.add_child(HUD)
@@ -1237,16 +1235,17 @@ func delete_galaxy():
 	galaxy_data[c_g].clear()
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 #															V function to execute after removing objects but before adding new ones
-func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true):
+func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 	hide_tooltip()
 	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
 	$UI/Panel.visible = false
 	if view_tween.is_active():
 		return
-	view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
-	view_tween.start()
-	yield(view_tween, "tween_all_completed")
+	if fade_anim:
+		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+		view_tween.start()
+		yield(view_tween, "tween_all_completed")
 	if not first_time:
 		match c_v:
 			"planet":
@@ -1367,15 +1366,15 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
 		HUD.refresh()
 	if is_instance_valid(HUD) and is_a_parent_of(HUD):
-		HUD.dimension_btn.visible = len(universe_data) > 1 and c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
-		HUD.switch_btn.visible = c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
+		HUD.refresh()
 	if c_v == "universe" and HUD.dimension_btn.visible:
 		HUD.switch_btn.visible = false
 	if not first_time:
 		fn_save_game()
 		save_views(true)
-	view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
-	view_tween.start()
+	if fade_anim:
+		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
+		view_tween.start()
 
 func add_science_tree():
 	$ScienceTreeBG.visible = true
@@ -2653,8 +2652,10 @@ func generate_tiles(id:int):
 				for met in met_info:
 					if met == "lead":
 						continue
-					if randf() < 0.3 / pow(met_info[met].rarity, 1.3):
-						if c_s_g == 0 and met_info[met].rarity > 6:
+					if randf() < 0.3 / met_info[met].rarity:
+						if c_s_g == 0 and met_info[met].rarity > 8:
+							continue
+						if c_g_g == 0 and met_info[met].rarity > 50:
 							continue
 						tile_data[t_id].crater.metal = met
 	if relic_cave_id != -1:
@@ -2986,38 +2987,6 @@ func hide_tooltip():
 func hide_adv_tooltip():
 	hide_tooltip()
 
-#func show_tooltip(txt:String, hide:bool = true):
-#	if hide:
-#		hide_tooltip()
-#		hide_adv_tooltip()
-#	tooltip.text = txt
-#	if hide:
-#		tooltip.modulate.a = 0
-#	tooltip.visible = true
-#	tooltip.rect_size = Vector2.ZERO
-#	if tooltip.rect_size.x > 400:
-#		tooltip.autowrap = true
-#		yield(get_tree(), "idle_frame")
-#		tooltip.rect_size.x = 400
-#	yield(get_tree(), "idle_frame")
-#	tooltip.modulate.a = 1
-#
-#func hide_tooltip():
-#	tooltip.visible = false
-#	tooltip.autowrap = false
-#
-#func show_adv_tooltip(txt:String, imgs:Array, size:int = 17):
-#	adv_tooltip.visible = false
-#	adv_tooltip.text = ""
-#	adv_tooltip.visible = true
-#	adv_tooltip.modulate.a = 0
-#	add_text_icons(adv_tooltip, txt, imgs, size, true)
-#	yield(get_tree().create_timer(0.02), "timeout")
-#	adv_tooltip.modulate.a = 1
-#
-#func hide_adv_tooltip():
-#	adv_tooltip.visible = false
-
 func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _tooltip:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed
@@ -3032,7 +3001,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		var arr2 = txt.split("\n")
 		var max_width = 0
 		for st in arr2:
-			var width = min(RTL.get_font("Font").get_string_size(st).x * 1.37, 400)
+			var width = min(RTL.get_font("Font").get_string_size(st).x * 1.2, 400)
 			if width > max_width:
 				max_width = width
 		RTL.rect_min_size.x = max_width + 20
@@ -3207,9 +3176,9 @@ func _process(delta):
 			energy += autocollect.MS.energy * delta
 			SP += autocollect.MS.SP * delta
 			if not autocollect.rsrc_list.empty():
-				var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
-				var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
-				var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
+				var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE) * u_i.time_speed
+				var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE) * u_i.time_speed
+				var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE) * u_i.time_speed
 				if auto_c_p_g == c_p_g and autocollect.rsrc_list.has(String(c_p_g)):
 					min_to_add += (autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult
 					energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
@@ -3244,23 +3213,23 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
+	if is_instance_valid(tooltip):
 		yield(get_tree(), "idle_frame")
-		if is_instance_valid(tooltip):
-			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-				tooltip.rect_position = mouse_pos + Vector2(9, 9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-				tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
-		if item_cursor.visible:
-			item_cursor.position = mouse_pos
-		if ship_locator:
-			ship_locator.position = mouse_pos
-			var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
-			var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
-			ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
+		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
+			tooltip.rect_position = mouse_pos + Vector2(9, 9)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
+			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+			tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
+			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+	if item_cursor.visible:
+		item_cursor.position = mouse_pos
+	if ship_locator:
+		ship_locator.position = mouse_pos
+		var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
+		var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
+		ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
 		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
 			STM.move_ship_inst = true
 

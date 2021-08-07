@@ -67,7 +67,8 @@ func _on_close_button_pressed():
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
-	game.switch_view("system")
+	game.battle.remove_child(self)
+	game.switch_view("system", false, "", [], true, false)
 
 func _on_Bonus_mouse_entered():
 	game.show_tooltip("%s: x %s\n%s: x %s\n%s:\n%s" % [tr("PERFORMANCE_MULTIPLIER"), mult, tr("DIFFICULTY"), diff_mult, tr("PERFORMANCE_MULTIPLIER_VALUES"), tr("LOOT_XP_BONUS_DESC")])
