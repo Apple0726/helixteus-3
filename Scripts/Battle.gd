@@ -128,6 +128,10 @@ func _ready():
 		var err = config.load("user://settings.cfg")
 		if err == OK:
 			e_diff = config.get_value("game", "e_diff", 1)
+		$Ship0/Sprite.material.set_shader_param("frequency", 6 * time_speed)
+		$Ship1/Sprite.material.set_shader_param("frequency", 6 * time_speed)
+		$Ship2/Sprite.material.set_shader_param("frequency", 6 * time_speed)
+		$Ship3/Sprite.material.set_shader_param("frequency", 6 * time_speed)
 	else:
 		for i in 1000:
 			var star:Sprite = Sprite.new()
@@ -185,6 +189,7 @@ func send_HXs():
 		btn.rect_size = Vector2(180, 100)
 		var HX = HX1_scene.instance()
 		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s.png" % [HX_data[k].type])
+		HX.get_node("Sprite").material.set_shader_param("frequency", 6 * time_speed)
 		HX.scale *= 0.4
 		HX.get_node("HP").max_value = HX_data[k].total_HP
 		HX.get_node("HP").value = HX_data[k].HP

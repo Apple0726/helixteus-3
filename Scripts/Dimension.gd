@@ -110,6 +110,7 @@ func on_univ_press(id:int):
 		game.new_game(false, id)
 		game.HUD.dimension_btn.visible = true
 		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	game.HUD.refresh_bookmarks()
 
 func _on_SendProbes_pressed():
 	game.toggle_panel(game.send_probes_panel)

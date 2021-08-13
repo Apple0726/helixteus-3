@@ -411,7 +411,7 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 
 func overclock_bldg(tile, tile_id:int, curr_time):
 	var mult:float = game.overclocks_info[game.item_to_use.name].mult
-	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult <= mult):
+	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
 			add_time_bar(tile_id, "overclock")

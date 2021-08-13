@@ -777,7 +777,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if met_value.rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.5) * pow(tier, 2.0) * pow(difficulty, 1.1))
+			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.5) * pow(tier, 2.0) * pow(difficulty, 1.1))
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1192,8 +1192,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
 	if light_color != Color.black:
-		proj.get_node("Glow").modulate = mod
-		proj.get_node("Glow").scale *= light_size
+		proj.get_node("Light2D").enabled = true
+		proj.get_node("Light2D").color = mod
+		proj.get_node("Light2D").texture_scale *= light_size
 	add_child(proj)
 	proj.add_to_group("projectiles")
 

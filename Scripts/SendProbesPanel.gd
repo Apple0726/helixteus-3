@@ -42,7 +42,7 @@ var weights:Dictionary = {
 	"speed_of_light":10,
 	"planck":20,
 	"boltzmann":10,
-	"gravitational":15,
+	"gravitational":25,
 	"charge":10,
 	"dark_energy":10,
 	"difficulty":10,
@@ -93,6 +93,7 @@ func refresh():
 			$Send.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
 		refresh_energy()
+		$TP.visible = false
 	elif game.c_v == "universe":
 		var undiscovered_sc:int = 0
 		n = len(game.supercluster_data)
@@ -128,6 +129,7 @@ func refresh():
 			$SendAll.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 			refresh_energy()
+		$TP.visible = false
 	elif game.c_v == "dimension":
 		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false

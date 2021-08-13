@@ -214,7 +214,7 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
 	energy_cost = 45000
-	difficulty = 1.1
+	difficulty = 2.2
 	refresh()
 	$Control/Switch.visible = true
 
@@ -226,7 +226,7 @@ func _on_nanocrystal_pressed(_name:String, dict:Dictionary):
 	Helper.put_rsrc($Control2/To, 32, {"nanocrystal":0})
 	metal = "nanocrystal"
 	energy_cost = 130000
-	difficulty = 1.7
+	difficulty = 2.5
 	refresh()
 	$Control/Switch.visible = true
 

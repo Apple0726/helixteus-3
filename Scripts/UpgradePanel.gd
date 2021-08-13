@@ -188,7 +188,6 @@ func update():
 		new_base_value = Helper.clever_round(new_base_value)
 		new_value = Helper.clever_round(new_value)
 	if first_tile_bldg_info.has("time_based"):
-		new_base_value *= game.u_i.time_speed
 		new_value *= game.u_i.time_speed
 	if not planet.empty():
 		new_value *= num

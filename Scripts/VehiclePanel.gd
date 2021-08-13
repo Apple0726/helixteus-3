@@ -111,6 +111,8 @@ func _process(delta):
 					Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			elif probe.tier == 1:
+				if probe.obj_to_discover >= len(game.supercluster_data):
+					game.generate_superclusters(game.c_u)
 				game.supercluster_data[probe.obj_to_discover].visible = true
 				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
 				game.save_sc()

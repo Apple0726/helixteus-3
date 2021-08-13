@@ -28,8 +28,16 @@ modulate = Color( 1, 1, 1, 0.635294 )
 texture = ExtResource( 3 )
 
 [node name="Glow" type="Sprite" parent="."]
+visible = false
 modulate = Color( 1, 1, 1, 0.635294 )
 scale = Vector2( 4.03057, 4.03057 )
 texture = ExtResource( 2 )
+
+[node name="Light2D" type="Light2D" parent="."]
+enabled = false
+texture = ExtResource( 2 )
+texture_scale = 1.55
+shadow_enabled = true
+shadow_buffer_size = 1024
 
 [connection signal="body_entered" from="." to="." method="_on_Sprite_body_entered"]

@@ -9,7 +9,14 @@
 [sub_resource type="GradientTexture" id=1]
 gradient = ExtResource( 3 )
 
-[sub_resource type="ImageTexture" id=2]
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.615686, 0.615686, 0.615686, 0 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+border_blend = true
 
 [node name="Overlay" type="Control"]
 anchor_right = 1.0
@@ -45,28 +52,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftNum" type="Label" parent="Panel"]
+[node name="Yes" type="Label" parent="Panel"]
 margin_left = 28.0
 margin_top = 104.0
 margin_right = 108.0
 margin_bottom = 132.0
 mouse_filter = 1
 custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "2"
+text = "YES"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightNum" type="Label" parent="Panel"]
+[node name="No" type="Label" parent="Panel"]
 margin_left = 600.0
 margin_top = 104.0
 margin_right = 680.0
 margin_bottom = 132.0
 mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "30+"
+text = "NO"
 align = 1
 valign = 1
 __meta__ = {
@@ -138,50 +144,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftNumEdit" type="SpinBox" parent="Panel"]
-visible = false
+[node name="LeftNumEdit" type="LineEdit" parent="Panel"]
 margin_left = 28.0
 margin_top = 104.0
 margin_right = 104.0
 margin_bottom = 132.0
-focus_mode = 2
-custom_icons/updown = SubResource( 2 )
-step = 0.0
-allow_greater = true
+custom_styles/normal = SubResource( 2 )
+custom_colors/selection_color = Color( 1, 1, 1, 1 )
+custom_colors/cursor_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 align = 1
+caret_blink = true
+caret_blink_speed = 0.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightNumEdit" type="SpinBox" parent="Panel"]
-visible = false
-margin_left = 596.0
+[node name="RightNumEdit" type="LineEdit" parent="Panel"]
+margin_left = 600.0
 margin_top = 104.0
-margin_right = 672.0
+margin_right = 676.0
 margin_bottom = 132.0
-focus_mode = 2
-custom_icons/updown = SubResource( 2 )
-step = 0.0
-allow_greater = true
+custom_styles/normal = SubResource( 2 )
+custom_colors/selection_color = Color( 1, 1, 1, 1 )
+custom_colors/cursor_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Done" type="Button" parent="Panel"]
-visible = false
-margin_left = 264.0
-margin_top = 108.0
-margin_right = 440.0
-margin_bottom = 132.0
 
 [node name="CloseButton" parent="Panel" instance=ExtResource( 4 )]
 
 [node name="Reset" type="TextureButton" parent="Panel"]
 visible = false
-margin_left = 676.0
+margin_left = 336.589
 margin_top = 108.0
-margin_right = 696.0
+margin_right = 356.589
 margin_bottom = 128.0
 texture_normal = ExtResource( 5 )
 expand = true
@@ -191,17 +192,14 @@ __meta__ = {
 }
 
 [connection signal="visibility_changed" from="." to="." method="_on_Overlay_visibility_changed"]
-[connection signal="mouse_entered" from="Panel/LeftNum" to="." method="_on_num_mouse_entered" binds= [ "left" ]]
-[connection signal="mouse_exited" from="Panel/LeftNum" to="." method="_on_num_mouse_exited"]
-[connection signal="mouse_entered" from="Panel/RightNum" to="." method="_on_num_mouse_entered" binds= [ "right" ]]
-[connection signal="mouse_exited" from="Panel/RightNum" to="." method="_on_num_mouse_exited"]
 [connection signal="toggled" from="Panel/HBoxContainer/Colorblind" to="." method="_on_Colorblind_toggled"]
 [connection signal="toggled" from="Panel/HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="mouse_entered" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="item_selected" from="Panel/HBoxContainer2/OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="pressed" from="Panel/Done" to="." method="_on_Done_pressed"]
+[connection signal="text_entered" from="Panel/LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
+[connection signal="text_entered" from="Panel/RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
 [connection signal="close_button_pressed" from="Panel/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Panel/Reset" to="." method="_on_Reset_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/Reset" to="." method="_on_mouse_exited"]

@@ -46,11 +46,13 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 758.0
-margin_bottom = 10.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 763.0
+margin_bottom = 5.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
 [node name="TextureButton" parent="." instance=ExtResource( 5 )]
+
+[connection signal="close_button_pressed" from="TextureButton" to="." method="_on_close_button_pressed"]

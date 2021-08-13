@@ -17,11 +17,11 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
 								"Ne":{"Z":10, "energy_cost":500, "difficulty":2},
 								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
 								"Fe":{"Z":26, "energy_cost":40, "difficulty":0.01},
-								"Xe":{"Z":54, "energy_cost":300000, "difficulty":40},
+								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":4000},
 								"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
 								"W":{"Z":74, "energy_cost":100000, "difficulty":5},
 								"Os":{"Z":76, "energy_cost":120000, "difficulty":5},
-								"Pu":{"Z":94, "energy_cost":140000000000, "difficulty":8000},
+								"Pu":{"Z":94, "energy_cost":1400000000000, "difficulty":800000},
 }
 var path_2_value:float = 1.0
 

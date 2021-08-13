@@ -38,6 +38,9 @@ margin_bottom = 600.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
 script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
@@ -250,6 +253,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_ME_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_PP_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_RL_pressed"]

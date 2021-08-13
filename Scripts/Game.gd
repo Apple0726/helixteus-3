@@ -2375,7 +2375,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass, 0.3))
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass * u_i.gravitational, 0.3))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2442,7 +2442,8 @@ func generate_planets(id:int):#local id
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80) / view_zoom, "zoom":view_zoom}
-		if c_u != 0 and p_num == 0:
+		if c_u != 0 and p_num == 0 and i == 3:
+			p_i.discovered = true
 			p_i.conquered = true
 			p_i.angle = PI / 2
 			p_i.pressure = 1
@@ -3001,11 +3002,10 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		var arr2 = txt.split("\n")
 		var max_width = 0
 		for st in arr2:
-			var width = min(RTL.get_font("Font").get_string_size(st).x * 1.2, 400)
-			if width > max_width:
-				max_width = width
-		RTL.rect_min_size.x = max_width + 20
-		RTL.rect_size.x = max_width + 20
+			var width = min(RTL.get_font("Font").get_string_size(st).x, 400)
+			max_width = max(width, max_width)
+		RTL.rect_min_size.x = max_width + 50
+		RTL.rect_size.x = max_width + 50
 	yield(get_tree(), "idle_frame")
 	if is_instance_valid(RTL):
 		RTL.rect_min_size.y = RTL.get_content_height()
@@ -3486,6 +3486,9 @@ func save_views(autosave:bool):
 		Helper.save_obj("Clusters", c_c_g, galaxy_data)
 		Helper.save_obj("Superclusters", c_sc, cluster_data)
 	elif c_v == "supercluster":
+		Helper.save_obj("Superclusters", c_sc, cluster_data)
+		save_sc()
+	elif c_v == "universe":
 		save_sc()
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)

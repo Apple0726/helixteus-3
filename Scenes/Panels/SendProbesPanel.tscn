@@ -104,6 +104,7 @@ margin_bottom = 400.0
 custom_constants/separation = 10
 
 [node name="TP" type="Panel" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 24.0

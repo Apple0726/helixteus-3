@@ -280,7 +280,6 @@ margin_left = 574.0
 margin_top = 92.0
 margin_right = 998.0
 margin_bottom = 348.0
-rect_clip_content = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -47,6 +47,8 @@ func _on_OptionButton_item_selected(i):
 	_refresh()
 
 func _pointfix(ship):
+	if not ship.has("max_points"):
+		ship.max_points = 0
 	var change = (2 + int(game.science_unlocked.UP2) + int(game.science_unlocked.UP3) + int(game.science_unlocked.UP4)) - ship.max_points
 	ship.max_points += change
 	ship.points += change

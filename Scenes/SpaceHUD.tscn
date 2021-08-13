@@ -115,9 +115,9 @@ __meta__ = {
 }
 
 [node name="ConquerAll" type="Button" parent="."]
-margin_left = 168.0
+margin_left = 184.0
 margin_top = 680.0
-margin_right = 392.0
+margin_right = 376.0
 margin_bottom = 720.0
 custom_fonts/font = SubResource( 7 )
 text = "CONQUER_ALL"
@@ -126,9 +126,9 @@ __meta__ = {
 }
 
 [node name="SendFighters" type="Button" parent="."]
-margin_left = 168.0
+margin_left = 184.0
 margin_top = 680.0
-margin_right = 392.0
+margin_right = 376.0
 margin_bottom = 720.0
 custom_fonts/font = SubResource( 7 )
 text = "SEND_FIGHTERS"
@@ -137,9 +137,9 @@ __meta__ = {
 }
 
 [node name="SendProbes" type="Button" parent="."]
-margin_left = 168.0
+margin_left = 184.0
 margin_top = 680.0
-margin_right = 392.0
+margin_right = 376.0
 margin_bottom = 720.0
 custom_fonts/font = SubResource( 7 )
 text = "SEND_PROBES"
