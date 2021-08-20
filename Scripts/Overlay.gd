@@ -2,18 +2,20 @@ extends "Panel.gd"
 var editable:bool = false
 var is_int:bool = true
 var hovered_over:String = ""
-onready var option_btn = $Panel/HBoxContainer2/OptionButton
-onready var toggle_btn = $Panel/HBoxContainer/CheckBox
-onready var colorblind_btn = $Panel/HBoxContainer/Colorblind
+onready var option_btn = $HBoxContainer/OptionButton
+onready var toggle_btn = $HBoxContainer/CheckBox
+onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
+onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
 var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
 
 func _ready():
-	set_polygon($Panel.rect_size, Vector2(0, 308))
+	set_polygon(rect_size, Vector2(0, 308))
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
+	$ClickToEdit.visible = not game.show.has("overlay")
 
 func refresh_overlay():
-	$Panel/HBoxContainer/HSlider.value = game.overlay_CS
+	$HBoxContainer/HSlider.value = game.overlay_CS
 	option_btn.clear()
 	match game.c_v:
 		"galaxy":
@@ -39,10 +41,12 @@ func refresh_overlay():
 	toggle_btn.pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
 		colorblind_btn.pressed = config.get_value("misc", "colorblind", false)
+		hide_obj_btn.pressed = config.get_value("misc", "hide_obj", false)
 		if colorblind_btn.pressed:
-			$Panel/TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
+			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
-			$Panel/TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+		#game.get_node("GrayscaleRect").visible = colorblind_btn.pressed and toggle_btn.pressed
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
 
@@ -115,7 +119,7 @@ func get_BSL_min_max():
 func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var min_max:Dictionary
-	$Panel/Reset.visible = false if not c_vl else c_vl.modified
+	$Reset.visible = false if not c_vl else c_vl.modified
 	match game.c_v:
 		"galaxy":
 			match index:
@@ -125,20 +129,20 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				1:
 					if recalculate and not c_vl.modified:
 						min_max = get_star_num_min_max()
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				2, 3, 4, 9:
 					editable = false
-					$Panel/LeftNumEdit.text = tr("YES")
-					$Panel/RightNumEdit.text = tr("NO")
+					$LeftNumEdit.text = tr("YES")
+					$RightNumEdit.text = tr("NO")
 				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("system", "diff")
@@ -146,8 +150,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_HST_min_max()#HST: hottest star temperature
@@ -155,8 +159,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s K" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s K" % [c_vl.right]
+					$LeftNumEdit.text = "%s K" % [c_vl.left]
+					$RightNumEdit.text = "%s K" % [c_vl.right]
 				7:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSS_min_max()
@@ -164,8 +168,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				8:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSL_min_max()
@@ -173,8 +177,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 		"cluster":
 			match index:
 				0:
@@ -183,8 +187,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				1, 2, 3, 7:
 					editable = false
 				4:
@@ -194,8 +198,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
 				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
@@ -203,8 +207,8 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max * e(1, 9)
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s nT" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s nT" % [c_vl.right]
+					$LeftNumEdit.text = "%s nT" % [c_vl.left]
+					$RightNumEdit.text = "%s nT" % [c_vl.right]
 				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "dark_matter")
@@ -212,12 +216,12 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$Panel/LeftNumEdit.text = "%s" % [c_vl.left]
-					$Panel/RightNumEdit.text = "%s" % [c_vl.right]
-	$Panel/LeftNumEdit.visible = editable
-	$Panel/RightNumEdit.visible = editable
-	$Panel/Yes.visible = not editable
-	$Panel/No.visible = not editable
+					$LeftNumEdit.text = "%s" % [c_vl.left]
+					$RightNumEdit.text = "%s" % [c_vl.right]
+	$LeftNumEdit.visible = editable
+	$RightNumEdit.visible = editable
+	$Yes.visible = not editable
+	$No.visible = not editable
 	game.overlay_data[game.c_v].overlay = index
 	send_overlay_info(index)
 
@@ -225,7 +229,7 @@ func e(n, e):
 	return n * pow(10, e)
 
 func send_overlay_info(index):
-	game.view.obj.change_overlay(index, $Panel/TextureRect.texture.gradient)
+	game.view.obj.change_overlay(index, $TextureRect.texture.gradient)
 
 func _on_HSlider_mouse_entered():
 	game.show_tooltip(tr("CIRCLE_SIZE"))
@@ -258,11 +262,11 @@ func _on_Overlay_visibility_changed():
 
 
 func _on_Colorblind_toggled(button_pressed):
-	game.get_node("GrayscaleRect").visible = $Panel/HBoxContainer/Colorblind.pressed and toggle_btn.pressed
+	game.get_node("GrayscaleRect").visible = colorblind_btn.pressed and toggle_btn.pressed
 	if button_pressed:
-		$Panel/TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
+		$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 	else:
-		$Panel/TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+		$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
 	if err == OK:
 		config.set_value("misc", "colorblind", button_pressed)
 		config.save("user://settings.cfg")
@@ -285,6 +289,8 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	game.show.overlay = true
+	$ClickToEdit.visible = false
 
 func _on_RightNumEdit_text_entered(new_text):
 	if is_int:
@@ -293,3 +299,25 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	game.show.overlay = true
+	$ClickToEdit.visible = false
+
+
+func _on_Settings_mouse_entered():
+	game.show_tooltip(tr("OVERLAY_SETTINGS"))
+
+
+func _on_Settings_mouse_exited():
+	game.hide_tooltip()
+
+
+func _on_HideObj_toggled(button_pressed):
+	if err == OK:
+		config.set_value("misc", "hide_obj", button_pressed)
+		config.save("user://settings.cfg")
+	send_overlay_info(game.overlay_data[game.c_v].overlay)
+
+
+func _on_Settings_pressed():
+	game.hide_tooltip()
+	$SettingsPanel.visible = not $SettingsPanel.visible

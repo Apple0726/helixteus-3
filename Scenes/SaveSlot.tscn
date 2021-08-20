@@ -16,16 +16,25 @@ margin_bottom = 40.0
 rect_min_size = Vector2( 150, 40 )
 text = "Save 1"
 
-[node name="Created" type="Label" parent="."]
+[node name="Version" type="Label" parent="."]
 margin_left = 155.0
 margin_top = 13.0
-margin_right = 464.0
+margin_right = 295.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 140, 0 )
+size_flags_horizontal = 5
+align = 1
+
+[node name="Created" type="Label" parent="."]
+margin_left = 300.0
+margin_top = 13.0
+margin_right = 537.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 align = 1
 
 [node name="Saved" type="Label" parent="."]
-margin_left = 469.0
+margin_left = 542.0
 margin_top = 13.0
 margin_right = 779.0
 margin_bottom = 27.0

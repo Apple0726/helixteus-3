@@ -7,15 +7,17 @@ var tut:bool = false
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
-	tween.interpolate_property(self, "modulate", null, Color.white, 0.2)
+	tween.interpolate_property(self, "modulate", Color(1, 1, 1, 0), Color.white, 0.2)
 	tween.start()
 
 func _on_Button_pressed():
-	tut = true
-	disconnect_things()
+	if not tween.is_active():
+		tut = true
+		disconnect_things()
 
 func _on_Button2_pressed():
-	disconnect_things()
+	if not tween.is_active():
+		disconnect_things()
 
 func disconnect_things():
 	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0), 0.2)

@@ -126,22 +126,22 @@ func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 
 func update_XP():
-	while game.universe_data[game.c_u].xp >= game.universe_data[game.c_u].xp_to_lv:
-		game.universe_data[game.c_u].lv += 1
-		game.universe_data[game.c_u].xp -= game.universe_data[game.c_u].xp_to_lv
-		game.universe_data[game.c_u].xp_to_lv = round(game.universe_data[game.c_u].xp_to_lv * 1.6)
+	while game.u_i.xp >= game.u_i.xp_to_lv:
+		game.u_i.lv += 1
+		game.u_i.xp -= game.u_i.xp_to_lv
+		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * 1.6)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
-		if game.universe_data[game.c_u].lv == 30:
+		if game.u_i.lv == 30:
 			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
-		if game.universe_data[game.c_u].lv == 32:
+		if game.u_i.lv == 32:
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
-		if game.universe_data[game.c_u].lv == 50:
+		if game.u_i.lv == 50:
 			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
-		if game.universe_data[game.c_u].lv == 60:
+		if game.u_i.lv == 60:
 			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
-	lv_txt.text = tr("LV") + " %s" % [game.universe_data[game.c_u].lv]
-	lv_progress.value = game.universe_data[game.c_u].xp / float(game.universe_data[game.c_u].xp_to_lv)
+	lv_txt.text = tr("LV") + " %s" % [game.u_i.lv]
+	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
 func update_minerals():
 	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
@@ -254,13 +254,13 @@ func refresh():
 			elif game.objective.id == 6:#Build 4 research labs
 				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":7, "current":0, "goal":4}
 			elif game.objective.id == 7:#Reach level 8
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.universe_data[game.c_u].lv, "goal":8}
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.u_i.lv, "goal":8}
 			elif game.objective.id == 8:#Conquer a planet
 				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":9, "current":0, "goal":1}
 			elif game.objective.id == 9:#Find wormhole
 				game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":10, "current":0, "goal":1}
 			elif game.objective.id == 10:#Reach level 18
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":18}
+				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.u_i.lv, "goal":18}
 			elif game.objective.id == 11:
 				game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
 			elif game.objective.id == 12:
@@ -348,7 +348,7 @@ func refresh():
 		if game.c_v == "supercluster":
 			$Name/Name.text = game.supercluster_data[game.c_sc].name
 		elif game.c_v == "universe":
-			$Name/Name.text = game.universe_data[game.c_u].name
+			$Name/Name.text = game.u_i.name
 	$Name.visible = false
 	$Name.visible = true
 
@@ -458,7 +458,7 @@ func on_slot_press(i:int):
 	game.inventory.on_slot_press(name)
 
 func _on_Label_mouse_entered():
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.universe_data[game.c_u].lv, Helper.format_num(game.universe_data[game.c_u].xp, 4), Helper.format_num(game.universe_data[game.c_u].xp_to_lv, 4), tr("XP_HELP")])
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(game.u_i.xp, 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
 
 func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
@@ -799,7 +799,7 @@ func _on_Name_text_entered(new_text):
 	elif game.c_v == "supercluster":
 		game.supercluster_data[game.c_sc].name = new_text
 	elif game.c_v == "universe":
-		game.universe_data[game.c_u].name = new_text
+		game.u_i.name = new_text
 
 
 func _on_Dimension_pressed():
@@ -811,7 +811,7 @@ func _on_Dimension_mouse_entered():
 
 
 func _on_SwitchBtn_mouse_entered():
-	var u_i:Dictionary = game.universe_data[game.c_u]
+	var u_i:Dictionary = game.u_i
 	var view_str:String = ""
 	if game.c_v == "universe":
 		view_str = tr("VIEW_DIMENSION")
@@ -836,7 +836,7 @@ func _on_SwitchBtn_mouse_entered():
 	game.show_tooltip("%s (%s)" % [view_str, switch_btn.shortcut.shortcut.action])
 
 func _on_SwitchBtn_pressed():
-	var u_i:Dictionary = game.universe_data[game.c_u]
+	var u_i:Dictionary = game.u_i
 	match game.c_v:
 		"system":
 			if u_i.lv >= 18:

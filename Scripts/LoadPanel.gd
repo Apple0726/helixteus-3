@@ -16,11 +16,21 @@ func refresh():
 			if save_info.open("user://%s/save_info.hx3" % [next_dir], File.READ) == OK:
 				var save_created:Dictionary = save_info.get_var()
 				var save_modified:Dictionary = save_info.get_var()
-				save_info.close()
+				save_info.get_var()
+				save_info.get_var()#c_u
+				save_info.get_var()
+				save_info.get_var()#l_v
+				save_info.get_var()
 				var save = save_slot_scene.instance()
+				if save_info.get_len() == save_info.get_position():
+					save.get_node("Version").text = "v0.20"
+				else:
+					save.get_node("Version").text = "v0.20.1"
+				save_info.close()
 				save.get_node("Button").connect("pressed", self, "on_load", [next_dir.substr(4)])
 				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir.substr(4)])
 				save.get_node("Button").text = next_dir
+				save.get_node("Version")["custom_colors/font_color"] = Color.green
 				save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("DATE_FORMAT").format({"day":save_created.day, "month":save_created.month, "year":save_created.year})]
 				save.get_node("Saved").text = "%s %s" % [tr("SAVE_SAVED"), tr("DATE_FORMAT").format({"day":save_modified.day, "month":save_modified.month, "year":save_modified.year})]
 				$ScrollContainer/VBox.add_child(save)

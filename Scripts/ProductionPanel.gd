@@ -70,6 +70,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	if tile.bldg.has("qty1"):
 		set_process(true)
 		var has_rsrc:bool = rsrc > 0
+		$Control.visible = true
 		$Control/HBox.visible = false
 		$NoRsrc.visible = false
 		$Control/Start.text = "%s (G)" % tr("STOP")
@@ -78,6 +79,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 		set_process(false)
 		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
 		var has_rsrc:bool = rsrc > 0
+		$Control.visible = has_rsrc
 		$Control/HBox.visible = has_rsrc
 		$NoRsrc.text = tr("NO_%s" % input.to_upper())
 		$NoRsrc.visible = not has_rsrc

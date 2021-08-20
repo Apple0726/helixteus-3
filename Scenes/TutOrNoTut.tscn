@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
@@ -16,32 +16,7 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.6, 0.6, 0.6, 0.294118 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
 [node name="Control" type="Control"]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
@@ -91,8 +66,6 @@ margin_left = 448.0
 margin_top = 244.0
 margin_right = 832.0
 margin_bottom = 284.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/normal = SubResource( 4 )
 text = "GUIDE_ME"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -103,8 +76,6 @@ margin_left = 448.0
 margin_top = 440.0
 margin_right = 832.0
 margin_bottom = 480.0
-custom_styles/hover = SubResource( 5 )
-custom_styles/normal = SubResource( 4 )
 text = "FIGURE_OUT_MYSELF"
 __meta__ = {
 "_edit_use_anchors_": false

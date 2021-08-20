@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -131,7 +131,20 @@ outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
 font_data = ExtResource( 15 )
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="StyleBoxFlat" id=12]
+content_margin_left = 20.0
+content_margin_right = 20.0
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=13]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("UI/Panel:modulate")
@@ -146,11 +159,11 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="InputEventAction" id=13]
+[sub_resource type="InputEventAction" id=14]
 action = "P"
 
-[sub_resource type="ShortCut" id=14]
-shortcut = SubResource( 13 )
+[sub_resource type="ShortCut" id=15]
+shortcut = SubResource( 14 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -240,7 +253,7 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.20: 7 Aug 2021"
+text = "Alpha v0.20.1: 20 Aug 2021"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -626,6 +639,7 @@ margin_top = 429.0
 margin_right = 307.0
 margin_bottom = 588.0
 theme = ExtResource( 7 )
+custom_styles/panel = SubResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -667,7 +681,7 @@ text = "SETTINGS"
 one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-anims/Fade = SubResource( 12 )
+anims/Fade = SubResource( 13 )
 
 [node name="Ship" type="TextureButton" parent="."]
 visible = false
@@ -696,7 +710,7 @@ margin_top = 4.0
 margin_right = 1276.0
 margin_bottom = 36.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 14 )
+shortcut = SubResource( 15 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5

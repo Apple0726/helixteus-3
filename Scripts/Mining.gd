@@ -289,7 +289,7 @@ func pickaxe_hit():
 func _process(delta):
 	for cr in crumbles:
 		cr.sprite.position += cr.velocity * delta * 60 * game.u_i.time_speed
-		cr.velocity.y += 0.6 * delta * 60
+		cr.velocity.y += 0.6 * delta * 60 * game.u_i.time_speed
 		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed
 		if cr.sprite.position.y > 1000:
 			remove_child(cr.sprite)

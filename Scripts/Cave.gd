@@ -269,6 +269,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				light_amount = 0.4
 				rover_light.visible = true
+	if game.enable_shaders:
+		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, 1 - light_amount))
 	rover_light.energy = (1 - light_amount) * 1.4
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.clever_round(difficulty)]
 	var rng = RandomNumberGenerator.new()

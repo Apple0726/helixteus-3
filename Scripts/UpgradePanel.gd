@@ -254,20 +254,17 @@ func _on_Upgrade_pressed():
 		var cost_money = costs.money
 		if planet.empty():
 			var cost_time
-			if costs.has("time"):
-				cost_time = costs.time
 			for id in ids:
 				var tile = game.tile_data[id]
 				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
 					continue
-				if not costs.has("time"):
-					var base_costs = Data.costs[bldg].duplicate(true)
-					if Data[path_str][bldg].has("cost_mult"):
-						base_costs.time *= Data[path_str][bldg].cost_mult
-					if tile.has("cost_div"):
-						base_costs.time /= tile.cost_div
-					var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-					cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed)
+				var base_costs = Data.costs[bldg].duplicate(true)
+				if Data[path_str][bldg].has("cost_mult"):
+					base_costs.time *= Data[path_str][bldg].cost_mult
+				var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
+				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed)
+				if tile.has("cost_div"):
+					cost_time /= tile.cost_div
 				if auto_speedup:
 					cost_time = 1
 				if tile.bldg.has("collect_date"):

@@ -28,6 +28,8 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 								"nanocrystal":{"MM":"mets", "atoms":["Si", "O", "Na"]},
 								"mythril":{"MM":"mets", "atoms":["W", "Os", "Ta"]},
 }
+var rsrc_nodes_from:Array
+var rsrc_nodes_to:Array
 var path_2_value:float = 1.0
 
 func _ready():
@@ -80,11 +82,10 @@ func _on_stone_pressed(_name:String, dict:Dictionary):
 	for el in ratios:
 		if game.stone.has(el):
 			atom_costs[el] = 0
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"stone":0})
 	metal = "stone"
 	energy_cost = 1
 	difficulty = 0.01
+	_on_HSlider_value_changed(0.0)
 	_on_Switch_pressed()
 	$Control/Switch.visible = false
 
@@ -92,8 +93,8 @@ func _on_iron_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Fe":1000.0 / 55.845}
 	atom_costs = {"Fe":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"iron":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"iron":0})
 	metal = "iron"
 	energy_cost = 30
 	difficulty = 0.03
@@ -103,8 +104,8 @@ func _on_iron_pressed(_name:String, dict:Dictionary):
 func _on_silicon_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Si":1000.0 / 28.085}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"silicon":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"silicon":0})
 	metal = "silicon"
 	energy_cost = 15
 	difficulty = 0.005
@@ -114,8 +115,8 @@ func _on_silicon_pressed(_name:String, dict:Dictionary):
 func _on_aluminium_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Al":1000.0 / 26.982}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
 	metal = "aluminium"
 	energy_cost = 60
 	difficulty = 0.07
@@ -126,8 +127,8 @@ func _on_amethyst_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2)}
 	atom_costs = {"Si":0, "O":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
 	metal = "amethyst"
 	energy_cost = 580
 	difficulty = 0.1
@@ -138,8 +139,8 @@ func _on_emerald_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Al":1000.0 / (26.982 * 2), "Si":1000.0 / (28.085 * 6), "O":1000.0 / (15.999 * 12)}
 	atom_costs = {"Al":0, "Si":0, "O":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"emerald":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"emerald":0})
 	metal = "emerald"
 	energy_cost = 580
 	difficulty = 0.1
@@ -150,8 +151,8 @@ func _on_quartz_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2)}
 	atom_costs = {"Si":0, "O":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"quartz":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"quartz":0})
 	metal = "quartz"
 	energy_cost = 590
 	difficulty = 0.1
@@ -162,8 +163,8 @@ func _on_topaz_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Al":1000.0 / (26.982 * 2), "Si":1000.0 / (28.085), "O":1000.0 / (15.999 * 6), "F":1000.0 / (18.998 * 2), "H":1000.0 / (1.008 * 2)}
 	atom_costs = {"Al":0, "Si":0, "O":0, "F":0, "H":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"topaz":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"topaz":0})
 	metal = "topaz"
 	energy_cost = 590
 	difficulty = 0.1
@@ -174,8 +175,8 @@ func _on_ruby_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Al":1000.0 / (26.982 * 2), "O":1000.0 / (15.999 * 3)}
 	atom_costs = {"Al":0, "O":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"ruby":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"ruby":0})
 	metal = "ruby"
 	energy_cost = 590
 	difficulty = 0.1
@@ -186,8 +187,8 @@ func _on_sapphire_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Al":1000.0 / (26.982 * 2), "O":1000.0 / (15.999 * 3)}
 	atom_costs = {"Al":0, "O":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
 	metal = "sapphire"
 	energy_cost = 600
 	difficulty = 0.1
@@ -198,8 +199,8 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Ti":1000.0 / 47.867}
 	atom_costs = {"Ti":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"titanium":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"titanium":0})
 	metal = "titanium"
 	energy_cost = 12000
 	difficulty = 0.5
@@ -210,8 +211,8 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"C":1000.0 / 12.011}
 	atom_costs = {"C":0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"diamond":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
 	energy_cost = 45000
 	difficulty = 2.2
@@ -222,8 +223,8 @@ func _on_nanocrystal_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2), "Na":1000 / 22.99}
 	atom_costs = {"Si":0.0, "O":0.0, "Na":0.0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"nanocrystal":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"nanocrystal":0})
 	metal = "nanocrystal"
 	energy_cost = 130000
 	difficulty = 2.5
@@ -234,8 +235,8 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"W":1000 / (183.84 * 2.0), "Os":1000 / 190.23, "Ta":1000 / (180.95 * 2.0)}
 	atom_costs = {"W":0.0, "Os":0.0, "Ta":0.0}
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	Helper.put_rsrc($Control2/To, 32, {"mythril":0})
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"mythril":0})
 	metal = "mythril"
 	energy_cost = 270000
 	difficulty = 2.9
@@ -282,7 +283,7 @@ func refresh():
 	var max_value:float = 0.0
 	if atom_to_MM:
 		for atom in ratios:
-			if ratios[atom] == 0:
+			if ratios[atom] == 0 or not game.atoms.has(atom):
 				continue
 			var max_value2 = game.atoms[atom] / ratios[atom]
 			if max_value2 < max_value or max_value == 0.0:
@@ -293,6 +294,7 @@ func refresh():
 		else:
 			max_value = game[MM][metal]
 	$Control/HSlider.max_value = min(game.energy * au_mult / energy_cost / tile_num * path_2_value, max_value)
+	$Control/HSlider.step = int($Control/HSlider.max_value / 500)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
 		$Transform.visible = true
@@ -344,8 +346,8 @@ func _on_HSlider_value_changed(value):
 		for atom in atom_costs:
 			atom_costs[atom] = value * ratios[atom]
 	MM_dict[metal] = value
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, atom_to_MM)
-	Helper.put_rsrc($Control2/To, 32, MM_dict, true, not atom_to_MM)
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, atom_to_MM)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, MM_dict, true, not atom_to_MM)
 	refresh()
 
 func _on_Transform_pressed():
@@ -403,6 +405,10 @@ func _on_Transform_pressed():
 		obj.bldg.start_date = OS.get_system_time_msecs()
 		obj.bldg.reaction = reaction
 		obj.bldg.atom_to_MM = atom_to_MM
+		for hbox in rsrc_nodes_from:
+			hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
+		for hbox in rsrc_nodes_to:
+			hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
 		set_process(true)
 		$Control.visible = false
 		$Control3.visible = true
@@ -442,8 +448,12 @@ func _process(delta):
 		else:
 			for atom in atom_dict:
 				atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom])
-	Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
-	Helper.put_rsrc($Control2/To, 32, MM_dict)
+	for hbox in rsrc_nodes_from:
+		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name])]
+	for hbox in rsrc_nodes_to:
+		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(round(MM_dict[hbox.name]))]
+	#Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
+	#Helper.put_rsrc($Control2/To, 32, MM_dict)
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed))
 
 func get_reaction_info(obj):

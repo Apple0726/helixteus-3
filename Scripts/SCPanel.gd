@@ -147,7 +147,7 @@ func _process(delta):
 	CC_stone.text = "%s kg" % [c_i.qty_left]
 	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd * 1000)
 	for hbox in rsrc_nodes:
-		hbox.rsrc.get_node("Text").text = "%s kg" % [round(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value) * 1000) / 1000]
+		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value)))]
 
 func _on_HSlider_value_changed(value):
 	refresh()

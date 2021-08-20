@@ -413,7 +413,7 @@ func _ready():
 		new_game(false)
 		Helper.save_obj("Galaxies", 0, system_data)
 		universe_data[0].lv = 90
-		money = 100000
+		money = e(1, 24)
 		probe_data.append({"tier":2})
 		show.dimensions = true
 		show.plant_button = true
@@ -421,8 +421,8 @@ func _ready():
 		show.shop = true
 		show.vehicles_button = true
 		show.minerals = true
-		energy = 20000
-		SP = 0#e(2, 19)
+		energy = e(1, 24)
+		SP = e(2, 19)
 		science_unlocked.RC = true
 		science_unlocked.CD = true
 		science_unlocked.SCT = true
@@ -440,15 +440,9 @@ func _ready():
 		science_unlocked.MB = true
 		science_unlocked.GS = true
 		science_unlocked.UP1 = true
-		stone.O = 8000000000
-		mats.silicon = 400000
-		mats.cellulose = 1000
-		mats.coal = 100
-		mets.copper = 250000
-		mets.iron = 1600000000
-		mets.aluminium = 50000000
-		mets.titanium = 50000
-		mets.topaz = 50
+		stone.O = e(1, 24)
+		mets.quartz = e(1, 18)
+		mets.nanocrystal = e(1, 18)
 		show.SP = true
 		show.stone = true
 		show.glass = true
@@ -500,11 +494,11 @@ func switch_music(src, pitch:float = 1.0):
 	tween.queue_free()
 
 func load_univ():
-	var save_sc = File.new()
-	if save_sc.file_exists("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u]):
-		save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.READ)
-		supercluster_data = save_sc.get_var()
-		save_sc.close()
+	var _save_sc = File.new()
+	if _save_sc.file_exists("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u]):
+		_save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.READ)
+		supercluster_data = _save_sc.get_var()
+		_save_sc.close()
 	var save_game = File.new()
 	if save_game.file_exists("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u]):
 		save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.READ)
@@ -678,7 +672,7 @@ func new_game(tut:bool, univ:int = 0):
 				"inactive_wormhole":true,
 				"cave_diff_info":true,
 		}
-		universe_data = [{"id":0, "discovered":true, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+		universe_data = [{"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -846,7 +840,7 @@ func new_game(tut:bool, univ:int = 0):
 	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":1.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640 * 6, 360 * 6), "zoom":1 / 6.0}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":1, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	cave_data = []
@@ -965,35 +959,38 @@ func new_game(tut:bool, univ:int = 0):
 
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instance()
-	inventory = load("res://Scenes/Panels/Inventory.tscn").instance()
+	inventory = preload("res://Scenes/Panels/Inventory.tscn").instance()
 	shop_panel = generic_panel_scene.instance()
 	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
-	ship_panel = load("res://Scenes/Panels/ShipPanel.tscn").instance()
+	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instance()
 	construct_panel = generic_panel_scene.instance()
 	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
 	megastructures_panel = generic_panel_scene.instance()
 	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
-	gigastructures_panel = load("res://Scenes/Panels/GigastructuresPanel.tscn").instance()
+	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instance()
 	craft_panel = generic_panel_scene.instance()
 	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
-	vehicle_panel = load("res://Scenes/Panels/VehiclePanel.tscn").instance()
-	RC_panel = load("res://Scenes/Panels/RCPanel.tscn").instance()
-	MU_panel = load("res://Scenes/Panels/MUPanel.tscn").instance()
-	SC_panel = load("res://Scenes/Panels/SCPanel.tscn").instance()
-	production_panel = load("res://Scenes/Panels/ProductionPanel.tscn").instance()
-	send_ships_panel = load("res://Scenes/Panels/SendShipsPanel.tscn").instance()
-	send_fighters_panel = load("res://Scenes/Panels/SendFightersPanel.tscn").instance()
-	send_probes_panel = load("res://Scenes/Panels/SendProbesPanel.tscn").instance()
-	terraform_panel = load("res://Scenes/Panels/TerraformPanel.tscn").instance()
-	greenhouse_panel = load("res://Scenes/Panels/GreenhousePanel.tscn").instance()
-	shipyard_panel = load("res://Scenes/Panels/ShipyardPanel.tscn").instance()
-	PC_panel = load("res://Scenes/Panels/PCPanel.tscn").instance()
-	AMN_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
+	vehicle_panel = preload("res://Scenes/Panels/VehiclePanel.tscn").instance()
+	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instance()
+	MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instance()
+	SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instance()
+	production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instance()
+	send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instance()
+	send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instance()
+	terraform_panel = preload("res://Scenes/Panels/TerraformPanel.tscn").instance()
+	greenhouse_panel = preload("res://Scenes/Panels/GreenhousePanel.tscn").instance()
+	shipyard_panel = preload("res://Scenes/Panels/ShipyardPanel.tscn").instance()
+	PC_panel = preload("res://Scenes/Panels/PCPanel.tscn").instance()
+	AMN_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
-	SPR_panel = load("res://Scenes/Panels/ReactionsPanel.tscn").instance()
+	SPR_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instance()
 	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
-	planetkiller_panel = load("res://Scenes/Panels/PlanetkillerPanel.tscn").instance()
-	wiki = load("res://Scenes/Panels/Wiki.tscn").instance()
+	planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instance()
+	wiki = preload("res://Scenes/Panels/Wiki.tscn").instance()
+	
+	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instance()
+	send_probes_panel.visible = false
+	$Panels/Control.add_child(send_probes_panel)
 	
 	wiki.visible = false
 	$Panels/Control.add_child(wiki)
@@ -1012,9 +1009,6 @@ func add_panels():
 	
 	send_fighters_panel.visible = false
 	$Panels/Control.add_child(send_fighters_panel)
-	
-	send_probes_panel.visible = false
-	$Panels/Control.add_child(send_probes_panel)
 	
 	terraform_panel.visible = false
 	$Panels/Control.add_child(terraform_panel)
@@ -1096,7 +1090,7 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 		$UI.remove_child(dialog)
 		dialog.queue_free()
 	dialog = AcceptDialog.new()
-	dialog.theme = load("res://Resources/default_theme.tres")
+	dialog.theme = preload("res://Resources/default_theme.tres")
 	dialog.popup_exclusive = true
 	dialog.visible = false
 	$UI.add_child(dialog)
@@ -1474,7 +1468,7 @@ func add_obj(view_str):
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
 			var back_btn = Button.new()
 			back_btn.name = "ScienceBackBtn"
-			back_btn.theme = load("res://Resources/default_theme.tres")
+			back_btn.theme = preload("res://Resources/default_theme.tres")
 			back_btn.margin_left = -640
 			back_btn.margin_top = 320
 			back_btn.margin_right = -512
@@ -1550,7 +1544,7 @@ func add_dimension():
 		dimension.visible = true
 		$Ship.visible = false
 	else:
-		dimension = load("res://Scenes/Views/Dimension.tscn").instance()
+		dimension = preload("res://Scenes/Views/Dimension.tscn").instance()
 		add_child(dimension)
 
 func add_universe():
@@ -1558,7 +1552,7 @@ func add_universe():
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
-	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/DimensionView.png")
+	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_supercluster():
@@ -1571,7 +1565,7 @@ func add_supercluster():
 		generate_clusters(c_sc)
 	add_obj("supercluster")
 	HUD.get_node("Panel/CollectAll").visible = false
-	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/UniverseView.png")
+	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 
 func add_cluster():
 	if obj_exists("Superclusters", c_sc):
@@ -1590,7 +1584,7 @@ func add_cluster():
 #		$Nebula.fade_in()
 #		if galaxy_data[c_g].type == 0:
 #			$Nebula.change_color(Color.white)
-	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/SuperclusterView.png")
+	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_galaxy():
@@ -1609,7 +1603,7 @@ func add_galaxy():
 		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
 		HUD.refresh()
 	add_obj("galaxy")
-	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/ClusterView.png")
+	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func start_system_generation():
@@ -1631,7 +1625,7 @@ func add_system():
 		generate_planets(c_s)
 	show.bookmarks = true
 	add_obj("system")
-	HUD.get_node("SwitchBtn").texture_normal = load("res://Graphics/Buttons/GalaxyView.png")
+	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_planet():
@@ -2234,7 +2228,7 @@ func generate_systems(id:int):
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
-			star["mass"] = Helper.clever_round(mass, 4)
+			star["mass"] = Helper.clever_round(mass * u_i.planck, 4)
 			star["size"] = Helper.clever_round(star_size, 4)
 			star["type"] = star_type
 			star["class"] = star_class
@@ -3004,8 +2998,8 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		for st in arr2:
 			var width = min(RTL.get_font("Font").get_string_size(st).x, 400)
 			max_width = max(width, max_width)
-		RTL.rect_min_size.x = max_width + 50
-		RTL.rect_size.x = max_width + 50
+		RTL.rect_size.x = max_width + 60
+		RTL.rect_min_size.x = max_width + 60
 	yield(get_tree(), "idle_frame")
 	if is_instance_valid(RTL):
 		RTL.rect_min_size.y = RTL.get_content_height()
@@ -3297,6 +3291,8 @@ func _input(event):
 		match cmd:
 			"setmoney":
 				money = float(arr[1])
+			"setstone":
+				stone = {"Si":float(arr[1])}
 			"setmin":
 				minerals = float(arr[1])
 			"setmincap":
@@ -3310,32 +3306,42 @@ func _input(event):
 					mats[arr[1].to_lower()] = float(arr[2])
 				else:
 					popup("No such material", 1.5)
+					return
 			"setmet":
 				if mets.has(arr[1].to_lower()):
 					mets[arr[1].to_lower()] = float(arr[2])
 				else:
 					popup("No such metal", 1.5)
+					return
 			"setatom":
 				if atoms.has(arr[1].capitalize()):
 					atoms[arr[1].capitalize()] = float(arr[2])
 				else:
 					popup("No such atom", 1.5)
+					return
 			"setpart":
 				if particles.has(arr[1].to_lower()):
 					particles[arr[1].to_lower()] = float(arr[2])
 				else:
 					popup("No such particle", 1.5)
+					return
 			"fc":
-				for tile in tile_data:
-					if tile and tile.has("bldg") and tile.bldg.is_constructing:
-						var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - OS.get_system_time_msecs()
-						tile.bldg.construction_length = 1
-						if tile.bldg.has("collect_date"):
-							tile.bldg.collect_date -= diff_time
-						if tile.bldg.has("start_date"):
-							tile.bldg.start_date -= diff_time
-						if tile.bldg.has("overclock_date"):
-							tile.bldg.overclock_date -= diff_time
+				if c_v == "planet":
+					for tile in tile_data:
+						if tile and tile.has("bldg") and tile.bldg.is_constructing:
+							var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - OS.get_system_time_msecs()
+							tile.bldg.construction_length = 1
+							if tile.bldg.has("collect_date"):
+								tile.bldg.collect_date -= diff_time
+							if tile.bldg.has("start_date"):
+								tile.bldg.start_date -= diff_time
+							if tile.bldg.has("overclock_date"):
+								tile.bldg.overclock_date -= diff_time
+				for probe in probe_data:
+					if probe.has("start_date"):
+						var diff_time = probe.start_date + probe.explore_length - OS.get_system_time_msecs()
+						probe.start_date -= diff_time
+						probe.explore_length = 1
 			"setmulv":
 				MUs[arr[1].to_upper()] = int(arr[2])
 			"setlv":
@@ -3345,6 +3351,12 @@ func _input(event):
 					cave.exit_cave()
 				else:
 					switch_view(arr[1])
+			"setunivprop":
+				if universe_data[c_u].has(arr[1]):
+					universe_data[c_u][arr[1]] = float(arr[2])
+				else:
+					popup("Universes do not have a property called \"%s\"" % arr[1], 2.5)
+					return
 			_:
 				fail = true
 		if not fail:
@@ -3383,10 +3395,10 @@ func _unhandled_key_input(event):
 					inventory.on_slot_press(_name)
 
 func save_sc():
-	var save_sc = File.new()
-	save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
-	save_sc.store_var(supercluster_data)
-	save_sc.close()
+	var _save_sc = File.new()
+	_save_sc.open("user://Save%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
+	_save_sc.store_var(supercluster_data)
+	_save_sc.close()
 
 func fn_save_game():
 	var save_info = File.new()
@@ -3398,6 +3410,7 @@ func fn_save_game():
 	save_info.store_var(c_v)
 	save_info.store_var(l_v)
 	save_info.store_var(universe_data)
+	save_info.store_var("v0.20.1")
 	save_info.close()
 	var save_game = File.new()
 	save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
@@ -3496,7 +3509,7 @@ func save_views(autosave:bool):
 var ship_locator
 
 func show_ship_locator():
-	ship_locator = load("res://Scenes/ShipLocator.tscn").instance()
+	ship_locator = preload("res://Scenes/ShipLocator.tscn").instance()
 	add_child(ship_locator)
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
@@ -3611,9 +3624,9 @@ func fade_out_title(fn:String):
 	$Title.visible = false
 	$Settings/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-	HUD = load("res://Scenes/HUD.tscn").instance()
+	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
-		var tut_or_no_tut = load("res://Scenes/TutOrNoTut.tscn").instance()
+		var tut_or_no_tut = preload("res://Scenes/TutOrNoTut.tscn").instance()
 		add_child(tut_or_no_tut)
 		tut_or_no_tut.connect("new_game", self, "new_game")
 	else:
@@ -3644,7 +3657,7 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	YN_panel.window_title = title
 	YN_panel.popup_centered()
 	YN_str = type
-	if type in ["buy_pickaxe", "destroy_buildings", "op_galaxy", "conquer_all"]:
+	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all"]:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
@@ -3663,6 +3676,12 @@ func destroy_buildings_confirm(arr:Array):
 	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
 	YN_panel.disconnect("confirmed", self, "destroy_buildings_confirm")
+
+func destroy_building_confirm(tile_over:int):
+	view.obj.destroy_bldg(tile_over)
+	show_collect_info(view.obj.items_collected)
+	HUD.refresh()
+	YN_panel.disconnect("confirmed", self, "destroy_building_confirm")
 
 func send_ships_confirm():
 	send_ships_panel.send_ships()
@@ -3693,7 +3712,9 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 		else:
 			is_conquering_all = true
 			switch_view("battle")
-		
+	else:
+		popup(tr("NOT_ENOUGH_ENERGY"), 2.0)
+
 func show_collect_info(info:Dictionary):
 	if info.has("stone") and Helper.get_sum_of_dict(info.stone) == 0:
 		info.erase("stone")

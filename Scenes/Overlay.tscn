@@ -1,64 +1,84 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
 [ext_resource path="res://Resources/ColorblindOverlay.tres" type="Gradient" id=3]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=6]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://Graphics/Buttons/settings.png" type="Texture" id=9]
 
 [sub_resource type="GradientTexture" id=1]
 gradient = ExtResource( 3 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.615686, 0.615686, 0.615686, 0 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-border_blend = true
+bg_color = Color( 0.6, 0.6, 0.6, 0.176471 )
 
-[node name="Overlay" type="Control"]
-anchor_right = 1.0
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="DynamicFont" id=5]
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 7 )
+fallback/0 = ExtResource( 8 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[node name="Overlay" type="Panel"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-mouse_filter = 2
+margin_left = -352.0
+margin_top = -108.0
+margin_right = 352.0
+margin_bottom = 4.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -352.0
-margin_top = -136.0
-margin_right = 352.0
-margin_bottom = 4.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TextureRect" type="TextureRect" parent="Panel"]
-margin_left = 64.0
-margin_top = 84.0
-margin_right = 640.0
-margin_bottom = 100.0
+margin_left = -288.0
+margin_top = -60.0
+margin_right = 288.0
+margin_bottom = -44.0
 texture = SubResource( 1 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Yes" type="Label" parent="Panel"]
-margin_left = 28.0
-margin_top = 104.0
-margin_right = 108.0
-margin_bottom = 132.0
+[node name="Yes" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -324.0
+margin_top = -36.0
+margin_right = -244.0
+margin_bottom = -8.0
 mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
 text = "YES"
 align = 1
 valign = 1
@@ -66,11 +86,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="No" type="Label" parent="Panel"]
-margin_left = 600.0
-margin_top = 104.0
-margin_right = 680.0
-margin_bottom = 132.0
+[node name="No" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = 248.0
+margin_top = -36.0
+margin_right = 328.0
+margin_bottom = -8.0
 mouse_filter = 1
 text = "NO"
 align = 1
@@ -79,40 +103,44 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
-margin_left = 32.0
-margin_top = 40.0
-margin_right = 672.0
-margin_bottom = 80.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -296.0
+margin_top = -100.0
+margin_right = 296.0
+margin_bottom = -68.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Colorblind" type="CheckBox" parent="Panel/HBoxContainer"]
-margin_right = 238.0
-margin_bottom = 40.0
-custom_constants/hseparation = 10
-text = "COLORBLIND_MODE"
+[node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
+margin_right = 240.0
+margin_bottom = 34.0
+size_flags_vertical = 4
+text = "Number of planets"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CheckBox" type="CheckBox" parent="Panel/HBoxContainer"]
-margin_left = 258.0
-margin_right = 286.0
-margin_bottom = 40.0
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
+margin_left = 260.0
+margin_right = 288.0
+margin_bottom = 34.0
 custom_constants/hseparation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HSlider" type="HSlider" parent="Panel/HBoxContainer"]
-margin_left = 306.0
-margin_right = 640.0
-margin_bottom = 40.0
+[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+margin_left = 308.0
+margin_right = 592.0
+margin_bottom = 34.0
 rect_min_size = Vector2( 50, 0 )
-focus_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 min_value = 0.1
@@ -125,82 +153,208 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Panel"]
-margin_top = 8.0
-margin_right = 704.0
-margin_bottom = 40.0
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="OptionButton" type="OptionButton" parent="Panel/HBoxContainer2"]
-margin_left = 248.0
-margin_right = 455.0
-margin_bottom = 32.0
-text = "Number of planets"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LeftNumEdit" type="LineEdit" parent="Panel"]
-margin_left = 28.0
-margin_top = 104.0
-margin_right = 104.0
-margin_bottom = 132.0
-custom_styles/normal = SubResource( 2 )
+[node name="LeftNumEdit" type="LineEdit" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -324.0
+margin_top = -36.0
+margin_right = -248.0
+margin_bottom = -8.0
+grow_horizontal = 2
+custom_styles/focus = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
 custom_colors/selection_color = Color( 1, 1, 1, 1 )
 custom_colors/cursor_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 align = 1
+expand_to_text_length = true
 caret_blink = true
 caret_blink_speed = 0.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightNumEdit" type="LineEdit" parent="Panel"]
-margin_left = 600.0
-margin_top = 104.0
-margin_right = 676.0
-margin_bottom = 132.0
-custom_styles/normal = SubResource( 2 )
+[node name="RightNumEdit" type="LineEdit" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = 248.0
+margin_top = -36.0
+margin_right = 324.0
+margin_bottom = -8.0
+grow_horizontal = 2
+custom_styles/focus = SubResource( 2 )
+custom_styles/normal = SubResource( 4 )
 custom_colors/selection_color = Color( 1, 1, 1, 1 )
 custom_colors/cursor_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 align = 1
+expand_to_text_length = true
+caret_blink = true
+caret_blink_speed = 0.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CloseButton" parent="Panel" instance=ExtResource( 4 )]
+[node name="CloseButton" parent="." instance=ExtResource( 4 )]
 
-[node name="Reset" type="TextureButton" parent="Panel"]
-visible = false
-margin_left = 336.589
-margin_top = 108.0
-margin_right = 356.589
-margin_bottom = 128.0
+[node name="ClickToEdit" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -255.0
+margin_top = -46.0
+margin_right = 260.0
+margin_bottom = 2.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="ClickToEdit"]
+modulate = Color( 1, 1, 1, 0.572549 )
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -8.0
+margin_right = 32.0
+margin_bottom = 8.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 6
+flip_h = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect2" type="TextureRect" parent="ClickToEdit"]
+modulate = Color( 1, 1, 1, 0.572549 )
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -33.2599
+margin_top = -8.0
+margin_right = -1.25995
+margin_bottom = 8.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ClickToEdit"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 38.1838
+margin_top = -9.5
+margin_right = 191.184
+margin_bottom = 9.5
+grow_horizontal = 2
+custom_fonts/font = SubResource( 5 )
+text = "CLICK_TO_EDIT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="ClickToEdit"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -194.2
+margin_top = -9.5
+margin_right = -39.1995
+margin_bottom = 9.5
+grow_horizontal = 2
+custom_fonts/font = SubResource( 5 )
+text = "CLICK_TO_EDIT"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reset" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -12.0
+margin_top = -28.0
+margin_right = 12.0
+margin_bottom = -8.0
 texture_normal = ExtResource( 5 )
 expand = true
-stretch_mode = 4
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Settings" type="TextureButton" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 32.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 9 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+visible = false
+margin_top = -92.0
+margin_right = 380.0
+margin_bottom = -6.0
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 370.0
+margin_bottom = 76.0
+custom_constants/separation = 10
+
+[node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox"]
+margin_right = 360.0
+margin_bottom = 28.0
+custom_constants/hseparation = 10
+text = "COLORBLIND_MODE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HideObj" type="CheckBox" parent="SettingsPanel/VBox"]
+margin_top = 38.0
+margin_right = 360.0
+margin_bottom = 66.0
+custom_constants/hseparation = 10
+text = "HIDE_OUT_OF_RANGE_OBJECTS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="visibility_changed" from="." to="." method="_on_Overlay_visibility_changed"]
-[connection signal="toggled" from="Panel/HBoxContainer/Colorblind" to="." method="_on_Colorblind_toggled"]
-[connection signal="toggled" from="Panel/HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
-[connection signal="mouse_entered" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="Panel/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="item_selected" from="Panel/HBoxContainer2/OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="text_entered" from="Panel/LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
-[connection signal="text_entered" from="Panel/RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
-[connection signal="close_button_pressed" from="Panel/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="mouse_entered" from="Panel/Reset" to="." method="_on_Reset_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/Reset" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/Reset" to="." method="_on_Reset_pressed"]
+[connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="toggled" from="HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="mouse_entered" from="HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
+[connection signal="value_changed" from="HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="text_entered" from="LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
+[connection signal="text_entered" from="RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
+[connection signal="mouse_entered" from="Settings" to="." method="_on_Settings_mouse_entered"]
+[connection signal="mouse_exited" from="Settings" to="." method="_on_Settings_mouse_exited"]
+[connection signal="pressed" from="Settings" to="." method="_on_Settings_pressed"]
+[connection signal="toggled" from="SettingsPanel/VBox/Colorblind" to="." method="_on_Colorblind_toggled"]
+[connection signal="toggled" from="SettingsPanel/VBox/HideObj" to="." method="_on_HideObj_toggled"]

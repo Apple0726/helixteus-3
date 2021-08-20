@@ -77,6 +77,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].planet_num)
 				overlay.circle.modulate = gradient.interpolate(offset)
+				overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 		1:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, len(game.system_data[overlay.id].stars))

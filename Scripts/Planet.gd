@@ -599,8 +599,22 @@ func _unhandled_input(event):
 				game.hide_adv_tooltip()
 				game.hide_tooltip()
 				if tiles_selected.empty():
-					destroy_bldg(tile_over)
-					game.HUD.refresh()
+					var bldg:String = tile.bldg.name
+					var money_cost = 0.0
+					if Data.path_1.has(bldg):
+						money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].cost_pw if Data.path_1[bldg].has("cost_pw") else 1.3, tile.bldg.path_1)
+					if Data.path_2.has(bldg):
+						money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].cost_pw if Data.path_2[bldg].has("cost_pw") else 1.3, tile.bldg.path_2)
+					if Data.path_3.has(bldg):
+						money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].cost_pw if Data.path_3[bldg].has("cost_pw") else 1.3, tile.bldg.path_3)
+					if tile.has("cost_div"):
+						money_cost /= tile.cost_div
+					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
+					if money_cost >= total_XP / 100.0:
+						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
+					else:
+						destroy_bldg(tile_over)
+						game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
 		if Input.is_action_just_pressed("shift") and tile:

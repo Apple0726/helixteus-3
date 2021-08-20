@@ -346,6 +346,8 @@ func _input(event):
 			game.toggle_panel(game.upgrade_panel)
 
 func build_MS(obj:Dictionary, MS:String):
+	if bldg_costs.empty():
+		return
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
@@ -715,7 +717,7 @@ func _process(_delta):
 				else:
 					rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored)
 			elif planet.bldg.name == "RL":
-				var prod:float = planet.bldg.path_1_value * planet.bldg.IR_mult * planet.tile_num
+				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.bldg.IR_mult * planet.tile_num * game.u_i.time_speed)
 				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(prod), tr("S_SECOND")]
 		elif planet.has("MS"):
 			current_bar.value = 0
