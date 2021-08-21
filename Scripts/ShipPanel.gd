@@ -19,6 +19,7 @@ func refresh():
 	$Panel/UpgradeButton.visible = game.science_unlocked.UP1
 	$Drives.refresh()
 	$Upgrade._refresh()
+	$Upgrade._refresh_op()
 	if game.ships_travel_view != "-":
 		set_process(true)
 	else:
@@ -65,6 +66,7 @@ func _on_UpgradeButton_pressed():
 	$Panel/BackButton.visible = true
 	$Panel/UpgradeButton.visible = false
 	$Upgrade._refresh()
+	$Upgrade._refresh_op()
 
 func _on_GoToShips_mouse_entered():
 	game.show_tooltip(tr("GO_TO_SHIPS"))
