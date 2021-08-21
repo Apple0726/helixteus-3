@@ -10,7 +10,10 @@ var boost = 0
 func _refresh():
 	var ship = upgrade_panel.ship
 	boost = (ship["%s_mult" % type] * 100) - 100
-	$Boost.text = "Boost: +" + String(boost) + "%"
+	if boost >= 0:
+		$Boost.text = "Boost: +" + String(boost) + "%"
+	else: if boost < 0:
+		$Boost.text = "Boost: " + String(boost) + "%"
 
 func _on_Up_pressed():
 	upgrade_panel._upgrade(type)

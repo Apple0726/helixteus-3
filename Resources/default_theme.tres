@@ -1,7 +1,6 @@
-[gd_resource type="Theme" load_steps=33 format=2]
+[gd_resource type="Theme" load_steps=32 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
-[ext_resource path="res://Graphics/Icons/DropdownArrow.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Buttons/CheckboxChecked.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/CheckboxUnchecked.png" type="Texture" id=4]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=5]
@@ -392,7 +391,7 @@ OptionButton/colors/font_color_pressed = Color( 0.823529, 0.823529, 0.823529, 1 
 OptionButton/constants/arrow_margin = 8
 OptionButton/constants/hseparation = 50
 OptionButton/fonts/font = null
-OptionButton/icons/arrow = ExtResource( 2 )
+OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
 OptionButton/styles/focus = null
 OptionButton/styles/hover = null
