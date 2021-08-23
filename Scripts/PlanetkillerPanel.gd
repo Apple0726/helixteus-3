@@ -139,7 +139,7 @@ func _on_StartCharging_pressed():
 		$Control2.visible = false
 		set_process(false)
 		$StartCharging.text = tr("START_CHARGING")
-	elif star.MS_lv == 0 and target.size <= 4000 or star.MS_lv == 1 and target.size <= 40000 or star.MS_lv == 2:
+	elif star.MS_lv == 0 and target.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and target.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2:
 		if c_s_g == game.ships_c_g_coords.s and p_id == game.ships_c_coords.p:
 			game.popup(tr("PK_ERROR"), 2.0)
 			return

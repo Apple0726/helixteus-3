@@ -225,7 +225,13 @@ func show_M_PK_costs(star:Dictionary):
 		bldg_costs.time = 1
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
-	Helper.add_label(tr("PK%s_POWER" % ((star.MS_lv + 1) if star.has("MS") else 0)), -1, true, true)
+	var max_diameter = 4000
+	if not star.has("MS"):
+		Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
+	elif star.MS_lv == 0:
+		Helper.add_label(tr("PK1_POWER") % int(40000 * sqrt(game.u_i.gravitational)), -1, true, true)
+	elif star.MS_lv == 1:
+		Helper.add_label(tr("PK2_POWER"), -1, true, true)
 	
 func show_M_SE_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -549,7 +555,12 @@ func on_star_over (id:int):
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
 		elif star.MS == "M_PK":
-			Helper.add_label(tr("PK%s_POWER" % star.MS_lv), -1, true, true)
+			if star.MS_lv == 0:
+				Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
+			elif star.MS_lv == 1:
+				Helper.add_label(tr("PK1_POWER") % int(40000 * sqrt(game.u_i.gravitational)), -1, true, true)
+			elif star.MS_lv == 2:
+				Helper.add_label(tr("PK2_POWER"), -1, true, true)
 		if not star.bldg.is_constructing and star.MS_lv < num_stages:
 			if star.MS == "M_DS" and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
 				MS_constr_data.obj = star
@@ -760,20 +771,19 @@ func collect_all():
 		if game.c_v != "system":
 			break
 		var planet = game.planet_data[p_ids.local]
-		if planet.empty():
+		if planet.empty() or not planet.has("discovered"):
+			progress.value += 1
 			continue
 		if planet.has("tile_num"):
 			if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
 				Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-		if not planet.has("discovered"):
-			progress.value += 1
-			continue
-		game.tile_data = game.open_obj("Planets", p_ids.global)
-		var i:int
-		for tile in game.tile_data:
-			if tile:
-				Helper.collect_rsrc(items_collected, planet, tile, i)
-			i += 1
+		else:
+			game.tile_data = game.open_obj("Planets", p_ids.global)
+			var i:int
+			for tile in game.tile_data:
+				if tile:
+					Helper.collect_rsrc(items_collected, planet, tile, i)
+				i += 1
 		Helper.save_obj("Planets", p_ids.global, game.tile_data)
 		progress.value += 1
 		if game.collect_speed_lag_ratio != 0:

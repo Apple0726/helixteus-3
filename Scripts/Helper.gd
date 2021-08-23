@@ -315,7 +315,7 @@ func toggle_overlay(obj_btns, overlays, overlay_visible):
 	for obj_btn in obj_btns:
 		obj_btn.visible = not overlay_visible
 	for overlay in overlays:
-		overlay.circle.visible = overlay_visible
+		overlay.circle.visible = overlay_visible and overlay.circle.modulate.a == 1.0
 
 func change_circle_size(value, overlays):
 	for overlay in overlays:
@@ -737,7 +737,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				capacity_bar.value = 0
 
 func get_prod_mult(tile):
-	var mult = tile.bldg.IR_mult * game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0
+	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
@@ -962,7 +962,7 @@ func update_bldg_constr(tile):
 	return update_boxes
 
 func get_reaction_info(tile):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name), 0, tile.bldg.qty)
+	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func update_MS_rsrc(dict:Dictionary):
@@ -1151,7 +1151,7 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 	if path_1_value:
 		path_1_value = clever_round(path_1_value * n)
 	if path_2_value:
-		path_2_value = clever_round(path_1_value * n)
+		path_2_value = clever_round(path_2_value * n)
 	match bldg:
 		"ME", "PP", "SP", "AE":
 			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
@@ -1175,3 +1175,8 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1)
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
 	return tooltip
+
+func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
+	overlay.circle.modulate = gradient.interpolate(offset)
+	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
+	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0

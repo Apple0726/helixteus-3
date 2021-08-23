@@ -76,12 +76,11 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 		0:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].planet_num)
-				overlay.circle.modulate = gradient.interpolate(offset)
-				overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		1:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, len(game.system_data[overlay.id].stars))
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		2:
 			for overlay in overlays:
 				if game.system_data[overlay.id].has("discovered"):
@@ -103,22 +102,22 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 		5:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in overlays:
 				var temp = game.get_coldest_star_temp(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		7:
 			for overlay in overlays:
 				var temp = game.get_biggest_star_size(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		8:
 			for overlay in overlays:
 				var temp = game.get_brightest_star_luminosity(overlay.id)
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		9:
 			for overlay in overlays:
 				if game.system_data[overlay.id].has("has_MS"):
@@ -147,22 +146,21 @@ func collect_all():
 		game.planet_data = game.open_obj("Systems", s_ids.global)
 		for p_ids in game.system_data[s_ids.local].planets:
 			var planet:Dictionary = game.planet_data[p_ids.local]
-			if planet.empty():
+			if planet.empty() or not planet.has("discovered"):
 				continue
 			if p_ids.local >= len(game.planet_data):
 				continue
 			if planet.has("tile_num"):
 				if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
 					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-			if not planet.has("discovered"):
-				continue
-			game.tile_data = game.open_obj("Planets", p_ids.global)
-			var i:int
-			for tile in game.tile_data:
-				if tile:
-					Helper.collect_rsrc(items_collected, planet, tile, i)
-				i += 1
-			Helper.save_obj("Planets", p_ids.global, game.tile_data)
+			else:
+				game.tile_data = game.open_obj("Planets", p_ids.global)
+				var i:int
+				for tile in game.tile_data:
+					if tile:
+						Helper.collect_rsrc(items_collected, planet, tile, i)
+					i += 1
+				Helper.save_obj("Planets", p_ids.global, game.tile_data)
 		Helper.save_obj("Systems", s_ids.global, game.planet_data)
 		if cond:
 			progress.value += 1

@@ -211,11 +211,14 @@ func show_tooltip(tile):
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 	elif tile.has("crater") and tile.crater.has("init_depth"):
+		adv = tile.has("aurora")
+		if adv:
+			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
 		if game.help.crater_desc:
-			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 			game.help_str = "crater_desc"
 		else:
-			tooltip = tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("rock"):
 		if game.help.boulder_desc:
 			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
@@ -935,7 +938,7 @@ func _unhandled_input(event):
 								game.generate_tiles(wh_planet.l_id)
 							game.tile_data = game.open_obj("Planets", wh_planet.id)
 							var wh_tile:int = Helper.rand_int(0, len(game.tile_data) - 1)
-							while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("ship_locator_depth"):
+							while game.tile_data[wh_tile] and (game.tile_data[wh_tile].has("ship_locator_depth") or game.tile_data[wh_tile].has("cave")):
 								wh_tile = Helper.rand_int(0, len(game.tile_data) - 1)
 							game.erase_tile(wh_tile)
 							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}

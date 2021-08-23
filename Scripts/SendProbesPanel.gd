@@ -88,12 +88,15 @@ func refresh():
 			$Label.text = tr("NO_PROBES")
 			$Control.visible = false
 			$Send.visible = false
+			$SendAll.visible = false
 		else:
 			$Control.visible = true
 			$Send.visible = true
+			$SendAll.visible = true
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
 		refresh_energy()
 		$TP.visible = false
+		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
 	elif game.c_v == "universe":
 		var undiscovered_sc:int = 0
 		n = len(game.supercluster_data)
@@ -130,6 +133,7 @@ func refresh():
 			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 			refresh_energy()
 		$TP.visible = false
+		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
 	elif game.c_v == "dimension":
 		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
@@ -149,17 +153,12 @@ func refresh():
 			$Label.text = tr("NO_TRI_PROBES")
 
 func refresh_energy(send_all:bool = false):
-	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
-	if game.c_v == "supercluster":
-		costs.energy = 50000000000000.0 * slider_factor * dist_mult
-		costs.Xe = 100000 * slider_factor * dist_mult
-		costs.time = 1200 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
-	elif game.c_v == "universe":
-		costs.energy = 10000000000000000000.0 * slider_factor * dist_mult
-		costs.Pu = 10000 * slider_factor * dist_mult
-		costs.time = 4500 / pow(slider_factor, 0.4) * dist_mult / game.u_i.time_speed
+	fill_costs(dist_mult)
+	var costs2:Dictionary = costs.duplicate(true)
+	costs2.erase("time")
 	if not send_all:
-		Helper.put_rsrc($Control/Costs, 36, costs, true, true)
+		Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
+	$Control/Time.text = Helper.time_to_str(costs.time * 1000.0)
 	
 func dist_sort(a:Dictionary, b:Dictionary):
 	if a.pos.length() < b.pos.length():
@@ -300,3 +299,41 @@ func _on_Label2_text_changed(new_text, prop:String):
 func _on_SendAll_pressed():
 	while _on_Send_pressed(true):
 		pass
+
+func fill_costs(_dist_mult:float):
+	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
+	if game.c_v == "supercluster":
+		costs.energy = 50000000000000.0 * slider_factor * _dist_mult
+		costs.Xe = 100000 * slider_factor * _dist_mult
+		costs.time = 1200 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
+	elif game.c_v == "universe":
+		costs.energy = 10000000000000000000.0 * slider_factor * _dist_mult
+		costs.Pu = 10000 * slider_factor * _dist_mult
+		costs.time = 4500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
+	
+func _on_SendAll_mouse_entered():
+	var costs2:Dictionary = {}
+	var min_time:int = 0
+	var max_time:int = 0
+	var temp_dist_exp = dist_exp
+	var temp_dist_mult = pow(1.01, temp_dist_exp)
+	for i in probe_num - exploring_probe_num:
+		fill_costs(temp_dist_mult)
+		temp_dist_exp += 1
+		temp_dist_mult = pow(1.01, temp_dist_exp)
+		if costs2.empty():
+			costs2 = costs.duplicate(true)
+		else:
+			for cost in costs2:
+				if cost != "time":
+					costs2[cost] += costs[cost]
+		if min_time == 0:
+			min_time = costs.time
+		max_time = costs.time
+	costs2.erase("time")
+	Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
+	$Control/Time.text = "%s - %s"% [Helper.time_to_str(min_time * 1000.0), Helper.time_to_str(max_time * 1000.0)]
+
+
+func _on_SendAll_mouse_exited():
+	refresh_energy()

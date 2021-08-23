@@ -97,7 +97,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 		0:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].system_num)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		1:
 			for overlay in overlays:
 				if game.galaxy_data[overlay.id].has("discovered"):
@@ -119,15 +119,15 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 		4:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		5:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
-				overlay.circle.modulate = gradient.interpolate(offset)
+				Helper.set_overlay_visibility(gradient, overlay, offset)
 		7:
 			for overlay in overlays:
 				if game.galaxy_data[overlay.id].has("GS"):

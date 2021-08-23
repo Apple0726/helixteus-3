@@ -16,6 +16,7 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
 								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
 								"Ne":{"Z":10, "energy_cost":500, "difficulty":2},
 								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
+								"Ti":{"Z":22, "energy_cost":60, "difficulty":0.02},
 								"Fe":{"Z":26, "energy_cost":40, "difficulty":0.01},
 								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":4000},
 								"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
@@ -86,6 +87,7 @@ func refresh():
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
 	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, max_value)
+	$Control/HSlider.step = $Control/HSlider.max_value / 500.0
 	$Control/HSlider.visible = $Control/HSlider.max_value != 0
 	if $Control3.visible:
 		$Transform.visible = true
@@ -197,7 +199,6 @@ func _on_Transform_pressed():
 func _process(delta):
 	if not obj or obj.empty():
 		_on_close_button_pressed()
-		set_process(false)
 		return
 	if not obj.bldg.has("start_date") or not visible:
 		set_process(false)

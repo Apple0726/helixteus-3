@@ -9,6 +9,7 @@ var planet_exit_costs:float = 0
 var unconquered_sys:int = 0
 var strength_required:float = 0
 var sorted_systems:Array = []
+var start_index:int = 0
 onready var RTL:RichTextLabel = $Label
 onready var time_left:Label = $Control2/TimeLeft
 onready var progress:TextureProgress = $Control2/TextureProgress
@@ -20,13 +21,14 @@ func _ready():
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1) * 5.0
 	$Control/EnergyCost.text = Helper.format_num(base_travel_costs * slider_factor + planet_exit_costs)
-	time_for_one_sys = 2 * 1200.0 / slider_factor
+	time_for_one_sys = 2 * 1200.0 / slider_factor / game.u_i.time_speed
 	game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), sys_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_sys, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_sys * sys_num)], [Data.energy_icon, Data.time_icon], 19)
 
 func refresh():
 	if game.galaxy_data[game.c_g].has("conquer_start_date"):
 		$Send.text = tr("DISBAND")
 		sort_systems(game.galaxy_data[game.c_g].conquer_order)
+		start_index = 0
 		set_process(true)
 		$Control.visible = false
 		$Control2.visible = true
@@ -182,8 +184,10 @@ func _process(delta):
 	while breaker < 50:
 		breaker += 1
 		if not fighters_rekt and progress.value >= 100:
-			for system in sorted_systems:
+			for i in range(start_index, len(sorted_systems)):
+				var system = sorted_systems[i]
 				if system.has("conquered"):
+					start_index = i
 					continue
 				galaxy_conquered = false
 				if game.galaxy_data[game.c_g].combined_strength < system.diff:
@@ -209,6 +213,8 @@ func _process(delta):
 	elif galaxy_conquered:
 		RTL.text += "\n%s" % tr("CONQUERED_GALAXY")
 		$Control2.visible = false
+		$Send.visible = true
+		game.galaxy_data[game.c_g].conquered = true
 	else:
 		time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - OS.get_system_time_msecs() + game.galaxy_data[game.c_g].conquer_start_date)
 	

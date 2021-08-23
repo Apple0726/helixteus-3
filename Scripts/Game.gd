@@ -2238,11 +2238,9 @@ func generate_systems(id:int):
 		var combined_star_mass = 0
 		for star in stars:
 			combined_star_mass += star.mass
-		var planet_num:int = max(round(pow(combined_star_mass, 0.3) * Helper.rand_int(3, 9) * dark_matter), 2)
-		if planet_num > 30:
-			planet_num -= floor((planet_num - 30) / 2)
-		if planet_num > 40:
-			planet_num -= floor((planet_num - 40) / 2)
+		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.5)), 2)
+		if planet_num >= 30:
+			planet_num = int(25 + sqrt(planet_num))
 		if hypergiant_system:
 			planet_num = 5
 		elif dark_matter_system:
@@ -2326,10 +2324,10 @@ func generate_planets(id:int):#local id
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:#Starting solar system has smaller planets
-			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * u_i.gravitational)
+			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
-			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter * u_i.gravitational)
+			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
 			if hypergiant_system:
 				if i == 1:
@@ -2369,7 +2367,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass * u_i.gravitational, 0.3))
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass * u_i.gravitational, 0.25))
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0

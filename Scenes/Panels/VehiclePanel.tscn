@@ -145,4 +145,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 5
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

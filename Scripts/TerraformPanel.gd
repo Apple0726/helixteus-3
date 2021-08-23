@@ -16,7 +16,7 @@ func refresh():
 		call("_on_%s_pressed" % tf_type)
 
 func update_info():
-	tf_costs = {"energy":100, "SP":1}
+	tf_costs = {"SP":2}
 	var pressure_mult = max(1, pressure)
 	var lake_mult = 1 + 9 * lake_num / float(tile_num)
 	for cost in tf_costs:
@@ -24,7 +24,10 @@ func update_info():
 	costs.erase("time")
 	for cost in costs:
 		costs[cost] *= surface
-	$Panel/CostMult.text = "%s:\n%s: x %s\n%s: x %s\n%s: x %s" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), tr("LAKES"), Helper.clever_round(lake_mult)]
+	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+	var pressure_mult_color = gradient.interpolate(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
+	var lake_mult_color = gradient.interpolate(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
+	$Panel/CostMult.bbcode_text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
 	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Panel/BCVBox, 32, costs, true, true)
 	$Panel.visible = true

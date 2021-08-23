@@ -82,42 +82,11 @@ func refresh():
 			time_bar.rect_position = Vector2(30, 0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
-	set_process(false)
 	for probe in game.probe_data:
 		if probe.has("start_date"):
-			set_process(true)
+			$Timer.start()
+			_on_Timer_timeout()
 			break
-
-func _process(delta):
-	var curr_time = OS.get_system_time_msecs()
-	for dict in probe_time_bars:
-		var i = dict.i
-		var probe = game.probe_data[i]
-		var bar = dict.node
-		var start_date = probe.start_date
-		var length = probe.explore_length
-		var progress = (curr_time - start_date) / float(length)
-		bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
-		bar.get_node("Bar").value = progress
-		if progress >= 1:
-			if probe.tier == 0:
-				var cluster_data:Array
-				if game.c_sc == 0 and game.c_v in ["supercluster", "cluster"]:
-					cluster_data = game.cluster_data
-					cluster_data[probe.obj_to_discover].visible = true
-				else:
-					cluster_data = game.open_obj("Superclusters", 0)
-					cluster_data[probe.obj_to_discover].visible = true
-					Helper.save_obj("Superclusters", 0, cluster_data)
-				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
-			elif probe.tier == 1:
-				if probe.obj_to_discover >= len(game.supercluster_data):
-					game.generate_superclusters(game.c_u)
-				game.supercluster_data[probe.obj_to_discover].visible = true
-				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
-				game.save_sc()
-			game.probe_data.remove(i)
-			refresh()
 
 func on_rover_enter(rov:Dictionary, rov_id:int):
 	rover_over_id = rov_id
@@ -207,3 +176,35 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+
+
+func _on_Timer_timeout():
+	var curr_time = OS.get_system_time_msecs()
+	for dict in probe_time_bars:
+		var i = dict.i
+		var probe = game.probe_data[i]
+		var bar = dict.node
+		var start_date = probe.start_date
+		var length = probe.explore_length
+		var progress = (curr_time - start_date) / float(length)
+		bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
+		bar.get_node("Bar").value = progress
+		if progress >= 1:
+			if probe.tier == 0:
+				var cluster_data:Array
+				if game.c_sc == 0 and game.c_v in ["supercluster", "cluster"]:
+					cluster_data = game.cluster_data
+					cluster_data[probe.obj_to_discover].visible = true
+				else:
+					cluster_data = game.open_obj("Superclusters", 0)
+					cluster_data[probe.obj_to_discover].visible = true
+					Helper.save_obj("Superclusters", 0, cluster_data)
+				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+			elif probe.tier == 1:
+				if probe.obj_to_discover >= len(game.supercluster_data):
+					game.generate_superclusters(game.c_u)
+				game.supercluster_data[probe.obj_to_discover].visible = true
+				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
+				game.save_sc()
+			game.probe_data.remove(i)
+			refresh()

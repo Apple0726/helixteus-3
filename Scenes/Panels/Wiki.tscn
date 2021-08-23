@@ -54,7 +54,6 @@ margin_left = -624.0
 margin_top = -232.0
 margin_right = -8.0
 margin_bottom = 232.0
-rect_clip_content = false
 custom_styles/bg = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

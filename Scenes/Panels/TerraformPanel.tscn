@@ -230,11 +230,12 @@ margin_top = 228.0
 margin_right = 76.0
 margin_bottom = 268.0
 
-[node name="CostMult" type="Label" parent="Panel"]
+[node name="CostMult" type="RichTextLabel" parent="Panel"]
 margin_left = 352.0
 margin_top = 32.0
-margin_right = 578.0
+margin_right = 644.0
 margin_bottom = 152.0
+bbcode_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
