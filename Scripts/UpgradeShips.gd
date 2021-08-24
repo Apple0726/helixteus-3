@@ -12,6 +12,7 @@ var ship:Dictionary
 onready var Ship_textures = [Ship0_texture, Ship1_texture, Ship2_texture, Ship3_texture]
 
 func _ready():
+	_refresh_op()
 	_refresh()
 
 func _refresh():
@@ -21,26 +22,23 @@ func _refresh():
 		$Ship/Ship.texture = Ship_textures[op.get_selected_id()]
 		$Ship/Label.text = ship.name
 		$Ship/Points.text = tr("YOU_HAVE_%s_POINTS_REMAINING") % ship.points
-		op.clear()
-		for i in game.ship_data.size():
-			op.add_item(game.ship_data[i].name, (i))
+		for i in $Upgrades.get_children():
+			i._refresh()
 
 func _upgrade(stat:String):
 	var stat_mult:String = "%s_mult" % stat
 	if ship.points > 0:
 		ship.points -= 1
 		ship[stat_mult] += 0.1
-		$Upgrades.get_node(stat)._refresh()
 		_refresh()
 	else:
 		game.popup(tr("CANT_AFFORD"), 1.5)
 
 func _downgrade(stat:String):
 	var stat_mult:String = "%s_mult" % stat
-	if ship[stat_mult] != 0:
+	if ship[stat_mult] > 0.9:
 		ship.points += 1
 		ship[stat_mult] -= 0.1
-		$Upgrades.get_node(stat)._refresh()
 		_refresh()
 
 func _on_OptionButton_item_selected(i):
@@ -52,3 +50,8 @@ func _pointfix(ship):
 	var change = (2 + int(game.science_unlocked.UP2) + int(game.science_unlocked.UP3) + int(game.science_unlocked.UP4)) - ship.max_points
 	ship.max_points += change
 	ship.points += change
+
+func _refresh_op():
+	op.clear()
+	for i in game.ship_data.size():
+		op.add_item(game.ship_data[i].name, (i))
