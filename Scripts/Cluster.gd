@@ -157,18 +157,16 @@ func collect_all():
 		game.system_data = game.open_obj("Galaxies", g_ids.global)
 		for s_ids in game.galaxy_data[g_ids.local].systems:
 			var system:Dictionary = game.system_data[s_ids.local]
+			if not system.has("discovered"):
+				continue
 			game.planet_data = game.open_obj("Systems", s_ids.global)
 			for p_ids in system.planets:
 				var planet:Dictionary = game.planet_data[p_ids.local]
-				if planet.empty():
-					continue
-				if p_ids.local >= len(game.planet_data):
+				if planet.empty() or p_ids.local >= len(game.planet_data) or not planet.has("discovered"):
 					continue
 				if planet.has("tile_num"):
 					if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
 						Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-				if not planet.has("discovered"):
-					continue
 			Helper.save_obj("Systems", s_ids.global, game.planet_data)
 		Helper.save_obj("Galaxies", g_ids.global, game.system_data)
 		if cond:

@@ -33,9 +33,13 @@ func refresh():
 		"cellulose":
 			$Control/TextureRect.texture = cellulose_texture
 			speed = 4000
+			unit = "kg"
+			type = "mats"
 		"coal":
 			$Control/TextureRect.texture = coal_texture
 			speed = 600
+			unit = "kg"
+			type = "mats"
 		"Ne":
 			$Control/TextureRect.texture = neon_texture
 			speed = 480000

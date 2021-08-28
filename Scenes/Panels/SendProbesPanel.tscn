@@ -64,7 +64,6 @@ margin_top = 56.0
 margin_right = 1000.0
 margin_bottom = 568.0
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -642,13 +641,23 @@ margin_bottom = 72.0
 text = "TP_INFO"
 
 [node name="Label" type="Label" parent="."]
-margin_left = 52.0
-margin_top = 96.0
+margin_left = 56.0
+margin_top = 72.0
 margin_right = 1016.0
-margin_bottom = 308.0
+margin_bottom = 284.0
 autowrap = true
 __meta__ = {
-"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="NoProbes" type="Label" parent="."]
+margin_left = 56.0
+margin_top = 176.0
+margin_right = 992.0
+margin_bottom = 200.0
+custom_colors/font_color = Color( 1, 0.32549, 0.32549, 1 )
+autowrap = true
+__meta__ = {
 "_edit_use_anchors_": false
 }
 

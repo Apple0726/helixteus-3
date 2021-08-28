@@ -45,19 +45,19 @@ func update_info():
 	if bldg == "ME":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.2
-		Helper.put_rsrc($Control/Production, 32, {"minerals":num})
+		Helper.put_rsrc($Control/Production, 32, {"minerals":num * game.u_i.time_speed})
 	elif bldg == "PP":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 12.0
-		Helper.put_rsrc($Control/Production, 32, {"energy":num})
+		Helper.put_rsrc($Control/Production, 32, {"energy":num * game.u_i.time_speed})
 	elif bldg == "RL":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 1.5
-		Helper.put_rsrc($Control/Production, 32, {"SP":num})
+		Helper.put_rsrc($Control/Production, 32, {"SP":num * game.u_i.time_speed})
 	elif bldg == "MS":
 		$Control/ProductionPerSec.text = tr("STORAGE")
-		num = surface * 15.0
-		Helper.put_rsrc($Control/Production, 32, {"minerals":num})
+		num = surface * 0.4
+		Helper.put_rsrc($Control/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
 	$Control/Convert.visible = not error
 	$Control/Costs.visible = not error
 	$Control/CostsHBox.visible = not error
@@ -96,6 +96,8 @@ func _on_Convert_pressed():
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
 		if g_i.has("bookmark"):
 			game.bookmarks.galaxy[g_i.bookmark] = null
+			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_child(g_i.bookmark))
+			g_i.erase("bookmark")
 		if bldg == "TP":
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})

@@ -1,9 +1,13 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/FilterButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Cave/MiningLaser.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
 [ext_resource path="res://Resources/CaveWalls.tres" type="TileSet" id=12]
 [ext_resource path="res://Graphics/Cave/Objects/exit.png" type="Texture" id=13]
@@ -95,16 +99,18 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=11]
-content_margin_left = 7.0
-content_margin_right = 7.0
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
-expand_margin_right = 2.0
+[sub_resource type="StyleBoxFlat" id=19]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
 
 [sub_resource type="DynamicFont" id=12]
 size = 25
@@ -119,18 +125,6 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 fallback/0 = ExtResource( 27 )
-
-[sub_resource type="StyleBoxFlat" id=14]
-bg_color = Color( 0.113725, 0.113725, 0.113725, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.372549, 0.54902, 1, 1 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
 
 [sub_resource type="Animation" id=15]
 length = 6.0
@@ -406,29 +400,93 @@ __meta__ = {
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
 
-[node name="Ship2Map" parent="UI2" instance=ExtResource( 32 )]
+[node name="Filters" type="PanelContainer" parent="UI2"]
 visible = false
-light_mask = 0
-
-[node name="InventorySlots" type="HBoxContainer" parent="UI2"]
-margin_top = 660.0
-margin_right = 1280.0
-margin_bottom = 720.0
-custom_constants/separation = -2
+margin_left = 184.0
+margin_top = 560.0
+margin_right = 332.0
+margin_bottom = 620.0
+grow_vertical = 0
+theme = ExtResource( 29 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActiveItem" type="Label" parent="UI2"]
-margin_top = 628.0
-margin_right = 360.0
-margin_bottom = 652.0
+[node name="Grid" type="GridContainer" parent="UI2/Filters"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 138.0
+margin_bottom = 50.0
+grow_vertical = 0
+columns = 10
+
+[node name="money" parent="UI2/Filters/Grid" instance=ExtResource( 3 )]
+texture = ExtResource( 7 )
+
+[node name="minerals" parent="UI2/Filters/Grid" instance=ExtResource( 3 )]
+margin_left = 44.0
+margin_right = 84.0
+texture = ExtResource( 6 )
+
+[node name="stone" parent="UI2/Filters/Grid" instance=ExtResource( 3 )]
+margin_left = 88.0
+margin_right = 128.0
+texture = ExtResource( 8 )
+
+[node name="BottomLeft" type="Control" parent="UI2"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -96.0
+margin_right = 216.0
 theme = ExtResource( 29 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/BottomLeft"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -88.0
+margin_right = 152.0
+grow_vertical = 0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBoxContainer"]
+margin_right = 152.0
+margin_bottom = 24.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBoxContainer"]
+margin_top = 34.0
+margin_right = 152.0
+margin_bottom = 84.0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 50 )
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Filter" type="Button" parent="UI2/BottomLeft/VBoxContainer/InventorySlots"]
+margin_top = 16.0
+margin_right = 64.0
+margin_bottom = 50.0
+size_flags_vertical = 8
+text = "Filter"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ship2Map" parent="UI2" instance=ExtResource( 32 )]
+visible = false
+light_mask = 0
 
 [node name="HP" type="Control" parent="UI2"]
 margin_top = -52.0
@@ -558,10 +616,10 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI2/Panel"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 44.0
-margin_bottom = 26.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 54.0
+margin_bottom = 36.0
 alignment = 1
 
 [node name="Timer" type="Timer" parent="UI2/Panel"]
@@ -571,16 +629,16 @@ alignment = 1
 [node name="CaveInfo" type="HBoxContainer" parent="UI2"]
 margin_right = 176.0
 margin_bottom = 33.0
-custom_constants/separation = 0
+custom_constants/separation = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Floor" type="Label" parent="UI2/CaveInfo"]
-margin_right = 64.0
-margin_bottom = 33.0
+margin_right = 70.0
+margin_bottom = 39.0
 mouse_filter = 1
-custom_styles/normal = SubResource( 11 )
+custom_styles/normal = SubResource( 19 )
 custom_fonts/font = SubResource( 12 )
 text = "B1F"
 align = 1
@@ -589,13 +647,13 @@ __meta__ = {
 }
 
 [node name="Difficulty" type="Label" parent="UI2/CaveInfo"]
-margin_left = 64.0
-margin_right = 176.0
-margin_bottom = 28.0
+margin_left = 72.0
+margin_right = 190.0
+margin_bottom = 34.0
 mouse_filter = 1
 size_flags_vertical = 0
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 11 )
+custom_styles/normal = SubResource( 19 )
 text = "Difficulty: 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -627,7 +685,6 @@ __meta__ = {
 }
 
 [node name="Controls" type="Label" parent="UI2"]
-visible = false
 margin_left = 544.0
 margin_top = 128.0
 margin_right = 736.0
@@ -635,7 +692,7 @@ margin_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 14 )
+custom_styles/normal = SubResource( 19 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -660,6 +717,13 @@ modulate = Color( 0.705882, 1, 0.705882, 1 )
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
 [connection signal="body_exited" from="Hole" to="." method="_on_body_exited"]
+[connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= [ "money" ]]
+[connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]
+[connection signal="mouse_entered" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_entered" binds= [ "minerals" ]]
+[connection signal="mouse_exited" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_exited"]
+[connection signal="mouse_entered" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_entered" binds= [ "stone" ]]
+[connection signal="mouse_exited" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_exited"]
+[connection signal="pressed" from="UI2/BottomLeft/VBoxContainer/InventorySlots/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]

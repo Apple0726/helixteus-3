@@ -19,7 +19,7 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=2]
 size = 25
 use_mipmaps = true
 use_filter = true
@@ -626,7 +626,7 @@ margin_right = 480.0
 margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 2 )
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false

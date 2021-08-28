@@ -219,6 +219,12 @@ var STM
 var battle
 var is_conquering_all:bool = false
 
+var cave_filters = {
+	"money":false,
+	"minerals":false,
+	"stone":false,
+}
+
 var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"glass":{"value":1000},
 					"sand":{"value":8},
@@ -456,7 +462,7 @@ func _ready():
 		items[4] = {"name":"fertilizer", "num":500}
 		pickaxe = {"name":"stick", "speed":3400, "durability":700}
 		rover_data = [{"c_p":2, "ready":true, "HP":200000.0, "atk":5000.0, "def":50000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+		ship_data = [{"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":100, "def":5, "acc":100, "eva":100, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 		add_panels()
 		$Autosave.start()
 	else:
@@ -672,7 +678,7 @@ func new_game(tut:bool, univ:int = 0):
 				"inactive_wormhole":true,
 				"cave_diff_info":true,
 		}
-		universe_data = [{"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
+		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -684,7 +690,7 @@ func new_game(tut:bool, univ:int = 0):
 		universe_data[0].antimatter = 0.0
 		universe_data[0].value = 1.0
 	else:
-		universe_data[univ].discovered = true
+		universe_data[univ].generated = true
 	u_i = universe_data[univ]
 	dir.make_dir("user://Save%s/Univ%s" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Planets" % [c_sv, univ])
@@ -1371,7 +1377,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		view_tween.start()
 
 func add_science_tree():
-	$ScienceTreeBG.visible = true
+	$ScienceTreeBG.visible = enable_shaders
 	$Nebula.visible = false
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Panel").visible = false
@@ -1725,7 +1731,7 @@ func generate_superclusters(id:int):
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		sc_i["pos"] = pos
-		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.1), 1) * u_i.dark_energy, 4)
+		sc_i.dark_energy = Helper.clever_round(max(pow(dist_from_center / 500.0, 0.12), 1) * u_i.dark_energy, 4)
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
 		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
@@ -2238,6 +2244,7 @@ func generate_systems(id:int):
 		var combined_star_mass = 0
 		for star in stars:
 			combined_star_mass += star.mass
+		stars.sort_custom(self, "sort_by_density")
 		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.5)), 2)
 		if planet_num >= 30:
 			planet_num = int(25 + sqrt(planet_num))
@@ -2266,6 +2273,11 @@ func generate_systems(id:int):
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
 	galaxy_data[id]["discovered"] = true
+
+func sort_by_density(star1:Dictionary, star2:Dictionary):
+	if star1.mass / star1.size > star2.mass / star2.size:
+		return true
+	return false
 
 func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0	
@@ -2757,7 +2769,9 @@ func generate_tiles(id:int):
 			tile_data[109].bldg.construction_length = 10
 			tile_data[109].bldg.XP = 0
 			tile_data[109].bldg.path_1 = 1
+			tile_data[109].bldg.path_2 = 1
 			tile_data[109].bldg.path_1_value = Data.path_1.SPR.value
+			tile_data[109].bldg.path_2_value = Data.path_2.SPR.value
 			tile_data[109].bldg.IR_mult = 1
 			tile_data[110] = {}
 			tile_data[110].bldg = {}
@@ -2767,7 +2781,9 @@ func generate_tiles(id:int):
 			tile_data[110].bldg.construction_length = 10
 			tile_data[110].bldg.XP = 0
 			tile_data[110].bldg.path_1 = 1
+			tile_data[110].bldg.path_2 = 1
 			tile_data[110].bldg.path_1_value = Data.path_1.AMN.value
+			tile_data[110].bldg.path_2_value = Data.path_2.AMN.value
 			tile_data[110].bldg.IR_mult = 1
 			tile_data[111] = {}
 			tile_data[111].bldg = {}
@@ -3162,7 +3178,7 @@ onready var fps_text = $Tooltips/FPS
 
 func _process(delta):
 	if delta != 0:
-		fps_text.text = "%s FPS" % [round(1 / delta)]
+		fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
 		if autocollect:
 			var min_to_add:float = autocollect.MS.minerals * delta
 			energy += autocollect.MS.energy * delta
@@ -3408,7 +3424,7 @@ func fn_save_game():
 	save_info.store_var(c_v)
 	save_info.store_var(l_v)
 	save_info.store_var(universe_data)
-	save_info.store_var("v0.20.1")
+	save_info.store_var("v0.20.2")
 	save_info.close()
 	var save_game = File.new()
 	save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)

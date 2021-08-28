@@ -62,7 +62,7 @@ __meta__ = {
 }
 
 [node name="StartCharging" type="Button" parent="."]
-margin_left = 736.0
+margin_left = 750.0
 margin_top = 528.0
 margin_right = 1002.0
 margin_bottom = 568.0
@@ -147,7 +147,7 @@ __meta__ = {
 margin_left = 456.0
 margin_top = 472.0
 margin_right = 888.0
-margin_bottom = 496.0
+margin_bottom = 500.0
 mouse_filter = 1
 bbcode_enabled = true
 custom_effects = [ SubResource( 1 ) ]
@@ -277,6 +277,7 @@ step = 0.0
 texture_progress = ExtResource( 7 )
 nine_patch_stretch = true
 
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="StartCharging" to="." method="_on_StartCharging_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="mouse_entered" from="Control/MMM" to="." method="_on_MMM_mouse_entered"]

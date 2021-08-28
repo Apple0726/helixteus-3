@@ -25,7 +25,7 @@ func refresh():
 				if save_info.get_len() == save_info.get_position():
 					save.get_node("Version").text = "v0.20"
 				else:
-					save.get_node("Version").text = "v0.20.1"
+					save.get_node("Version").text = save_info.get_var()
 				save_info.close()
 				save.get_node("Button").connect("pressed", self, "on_load", [next_dir.substr(4)])
 				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir.substr(4)])

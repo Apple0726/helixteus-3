@@ -7,7 +7,7 @@
 [ext_resource path="res://Scripts/VictoryPanel.gd" type="Script" id=11]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=13]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=3]
 size = 30
 use_filter = true
 font_data = ExtResource( 2 )
@@ -32,11 +32,12 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="Background" instance=ExtResource( 13 )]
+shortcut_in_tooltip = false
 
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
 margin_bottom = 64.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 3 )
 text = "VICTORY"
 align = 1
 valign = 1

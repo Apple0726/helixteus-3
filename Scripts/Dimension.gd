@@ -90,7 +90,7 @@ func e(n, e):
 
 func on_univ_press(id:int):
 	var u_i:Dictionary = game.universe_data[id]
-	if u_i.has("discovered"):
+	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
 		game.load_univ()
 		if u_i.lv >= 70:

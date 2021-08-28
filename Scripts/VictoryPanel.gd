@@ -40,6 +40,10 @@ func _process(delta):
 		XP_node.value = move_toward(XP_node.value, XP_node.value + XP, (XP + ship_data[i].XP - XP_node.value) * delta * 2)
 		XP_text_node.text = "%s / %s" % [round(XP_node.value), ship_data[i].XP_to_lv]
 
+func _input(event):
+	if Input.is_action_just_released("right_click"):
+		_on_close_button_pressed()
+
 func _on_close_button_pressed():
 	game.money += money
 	for i in len(ship_data):

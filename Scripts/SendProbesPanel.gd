@@ -85,15 +85,17 @@ func refresh():
 				else:
 					exploring_probe_offset -= 1
 		if probe_num - exploring_probe_num <= 0:
-			$Label.text = tr("NO_PROBES")
+			$NoProbes.text = tr("NO_PROBES")
+			$NoProbes.visible = true
 			$Control.visible = false
 			$Send.visible = false
 			$SendAll.visible = false
 		else:
+			$NoProbes.visible = false
 			$Control.visible = true
 			$Send.visible = true
 			$SendAll.visible = true
-			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
+		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
 		refresh_energy()
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
@@ -122,16 +124,18 @@ func refresh():
 				else:
 					exploring_probe_offset -= 1
 		if probe_num - exploring_probe_num <= 0:
-			$Label.text = tr("NO_MEGA_PROBES")
+			$NoProbes.text = tr("NO_MEGA_PROBES")
+			$NoProbes.visible = true
 			$Control.visible = false
 			$Send.visible = false
 			$SendAll.visible = false
 		else:
+			$NoProbes.visible = false
 			$Control.visible = true
 			$Send.visible = true
 			$SendAll.visible = true
-			$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 			refresh_energy()
+		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
 	elif game.c_v == "dimension":
@@ -144,13 +148,15 @@ func refresh():
 		$Send.visible = ok
 		$SendAll.visible = false
 		$TP.visible = ok
+		$Label.text = ""
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
 			$TP/Points.text = "%s: %s" % [tr("PROBE_POINTS"), PP]
-			$Label.text = ""
+			$NoProbes.visible = false
 		else:
-			$Label.text = tr("NO_TRI_PROBES")
+			$NoProbes.text = tr("NO_TRI_PROBES")
+			$NoProbes.visible = true
 
 func refresh_energy(send_all:bool = false):
 	fill_costs(dist_mult)
@@ -289,7 +295,7 @@ func _on_Label_mouse_entered(extra_arg_0):
 
 func _on_Label2_text_changed(new_text, prop:String):
 	var new_value:float = float(new_text)
-	if prop == "antimatter" and new_value >= 0 or new_value > 0:
+	if prop == "antimatter" and new_value >= 0 or new_value >= 0.2:
 		_on_TP_value_changed(new_value, prop)
 		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.white
 	else:
@@ -297,8 +303,10 @@ func _on_Label2_text_changed(new_text, prop:String):
 
 
 func _on_SendAll_pressed():
+	refresh_energy()
 	while _on_Send_pressed(true):
 		pass
+	refresh()
 
 func fill_costs(_dist_mult:float):
 	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
@@ -333,7 +341,6 @@ func _on_SendAll_mouse_entered():
 	costs2.erase("time")
 	Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
 	$Control/Time.text = "%s - %s"% [Helper.time_to_str(min_time * 1000.0), Helper.time_to_str(max_time * 1000.0)]
-
 
 func _on_SendAll_mouse_exited():
 	refresh_energy()

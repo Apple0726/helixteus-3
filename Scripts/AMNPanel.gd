@@ -247,11 +247,13 @@ func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
 		btn.visible = not btn.name in ["nanocrystal", "mythril"] or game.science_unlocked.AMM
 	if tf:
+		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("AMN_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
 		au_mult = 1 + pow(au_int, Helper.get_AIE())
 	else:
 		tile_num = 1
+		$Title.text = tr("AMN_NAME")
 		obj = game.tile_data[game.c_t]
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
@@ -297,6 +299,7 @@ func refresh():
 	$Control/HSlider.step = int($Control/HSlider.max_value / 500)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
+		set_text_to_white()
 		$Transform.visible = true
 		$Transform.text = "%s (G)" % tr("STOP")
 	else:
@@ -405,16 +408,19 @@ func _on_Transform_pressed():
 		obj.bldg.start_date = OS.get_system_time_msecs()
 		obj.bldg.reaction = reaction
 		obj.bldg.atom_to_MM = atom_to_MM
-		for hbox in rsrc_nodes_from:
-			hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
-		for hbox in rsrc_nodes_to:
-			hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
+		set_text_to_white()
 		set_process(true)
 		$Control.visible = false
 		$Control3.visible = true
 		$Transform.text = "%s (G)" % tr("STOP")
 		refresh_time_icon()
 	game.HUD.refresh()
+
+func set_text_to_white():
+	for hbox in rsrc_nodes_from:
+		hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
+	for hbox in rsrc_nodes_to:
+		hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():

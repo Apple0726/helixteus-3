@@ -208,3 +208,5 @@ func _on_Timer_timeout():
 				game.save_sc()
 			game.probe_data.remove(i)
 			refresh()
+			yield(get_tree(), "idle_frame")
+	$Timer.start()

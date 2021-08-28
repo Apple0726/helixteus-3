@@ -86,6 +86,8 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 		hbox.add_child(slot)
 		if cmp == curr_cmp:
 			_on_Slot_pressed(type, cmp, slot)
+			$Select.visible = true
+			$ScrollContainer.visible = true
 
 func _on_Slot_mouse_entered(type:String, cmp:String, metal:String):
 	var txt
@@ -117,6 +119,8 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 			slot.remove_child(slot.get_node("border"))
 	Helper.put_rsrc($ScrollContainer/Cost, 36, Data[type][cmp].costs, true, true)
 	s_cmp = cmp
+	$Select.visible = true
+	$ScrollContainer.visible = true
 
 func _input(event):
 	if Input.is_action_just_released("S") and visible:
@@ -138,6 +142,8 @@ func _on_Select_pressed():
 
 
 func _on_OptionButton_item_selected(_index):
+	$Select.visible = false
+	$ScrollContainer.visible = false
 	if _index == 0:
 		refresh("rover_weapons", curr_cmp, true, index)
 	elif _index == 1:

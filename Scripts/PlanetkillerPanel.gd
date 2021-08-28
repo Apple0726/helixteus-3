@@ -41,6 +41,7 @@ func refresh():
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
+		btn.get_node("TF").visible = p_i.has("tile_num")
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
@@ -50,6 +51,8 @@ func refresh():
 		$StartCharging.text = tr("CANCEL_CHARGING")
 	else:
 		set_process(false)
+		rekt_planet = false
+		$StartCharging.visible = false
 		$Control2.visible = false
 		$StartCharging.text = tr("START_CHARGING")
 
@@ -106,21 +109,26 @@ func _on_StartCharging_pressed():
 	if rekt_planet:
 		if game.c_v != "system":
 			return
-		game.popup(tr("PLANET_REKT") % target.name, 2.5)
 		var p_i:Dictionary = game.planet_data[star.p_id]
-		if p_i.has("MS") and p_i.MS == "M_MME":
-			game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
-		if p_i.has("tile_num"):
-			if p_i.bldg.name == "RL":
-				game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
-			elif p_i.bldg.name == "MS":
-				game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
-		var dir = Directory.new()
-		if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
-			dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
-		target.clear()
-		game.view.obj.refresh_planets()
-		game.add_resources(star.rsrc)
+		if not p_i.empty():
+			game.popup(tr("PLANET_REKT") % target.name, 2.5)
+			if p_i.has("bookmark"):
+				game.bookmarks.planet[p_i.bookmark] = null
+				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_child(p_i.bookmark))
+				p_i.erase("bookmark")
+			if p_i.has("MS") and p_i.MS == "M_MME":
+				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
+			if p_i.has("tile_num"):
+				if p_i.bldg.name == "RL":
+					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
+				elif p_i.bldg.name == "MS":
+					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
+			var dir = Directory.new()
+			if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
+				dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
+			target.clear()
+			game.view.obj.refresh_planets()
+			game.add_resources(star.rsrc)
 		star.erase("charging_time")
 		star.erase("charge_start_date")
 		star.erase("p_id")
