@@ -93,18 +93,7 @@ func on_univ_press(id:int):
 	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
 		game.load_univ()
-		if u_i.lv >= 70:
-			game.switch_view("universe")
-		elif u_i.lv >= 50:
-			game.switch_view("supercluster")
-		elif u_i.lv >= 35:
-			game.switch_view("cluster")
-		elif u_i.lv >= 18:
-			game.switch_view("galaxy")
-		elif u_i.lv >= 8:
-			game.switch_view("system")
-		else:
-			game.switch_view("planet")
+		game.switch_view(game.c_v)
 	else:
 		game.remove_dimension()
 		game.new_game(false, id)

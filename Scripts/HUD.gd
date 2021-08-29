@@ -478,7 +478,7 @@ func _input(event):
 	if Input.is_action_just_released("left_click"):
 		if emma_cave_shortcut and game.c_v == "planet":
 			for i in len(game.tile_data):
-				if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave.id == game.fourth_ship_hints.op_grill_cave_spawn:
+				if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave == game.fourth_ship_hints.op_grill_cave_spawn:
 					game.toggle_panel(game.vehicle_panel)
 					game.vehicle_panel.tile_id = i
 					break

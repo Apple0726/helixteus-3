@@ -51,7 +51,7 @@ var minimap_zoom:float = 0.02
 var minimap_center:Vector2 = Vector2(1150, 128)
 var curr_slot:int = 0
 var floor_seeds = []
-var id:int#Cave id
+var id:int = -1#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
 var light_amount:float = 1.0
@@ -127,11 +127,19 @@ func _ready():
 				lum = star.luminosity
 	else:
 		$TileMap.material.shader = null
-	id = tile.cave.id if tile.has("cave") else tile.diamond_tower
-	cave_data = game.cave_data[id] if game else {"num_floors":5, "floor_size":25}
-	num_floors = cave_data.num_floors
-	cave_size = cave_data.floor_size
-	if cave_data.has("enemies_rekt"):
+	var cave_data_file = File.new()
+	if tile.has("cave") and tile.cave.has("id"):
+		id = tile.cave.id
+		num_floors = tile.cave.num_floors
+		cave_size = tile.cave.floor_size
+	elif tile.has("diamond_tower") and tile.diamond_tower.has("id"):
+		id = tile.diamond_tower.id
+		num_floors = tile.diamond_tower.num_floors
+		cave_size = tile.diamond_tower.floor_size
+	if id != -1:
+		cave_data_file.open("user://Save%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.READ)
+		cave_data = cave_data_file.get_var()
+		cave_data_file.close()
 		seeds = cave_data.seeds
 		tiles_mined = cave_data.tiles_mined
 		enemies_rekt = cave_data.enemies_rekt
@@ -151,7 +159,7 @@ func _ready():
 		$UI/Minimap/Hole.rotation_degrees = 180
 		rover_size = 0.7
 	generate_cave(true, false)
-	if cave_data.has("special_cave") and cave_data.special_cave in [1, 3]:
+	if tile.cave.has("special_cave") and tile.cave.special_cave in [1, 3]:
 		$UI/Error.visible = true
 		$UI/Minimap.visible = false
 	if aurora:
@@ -337,26 +345,26 @@ func generate_cave(first_floor:bool, going_up:bool):
 	noise.octaves = 1
 	if cave_size == 20 and num_floors == 3:
 		noise.period = 20
-	elif cave_data.has("special_cave"):
-		if cave_data.special_cave == 3:
+	elif tile.cave.has("special_cave"):
+		if tile.cave.special_cave == 3:
 			noise.period = 35
-		elif cave_data.special_cave == 2:
+		elif tile.cave.special_cave == 2:
 			noise.period = 150
-		elif cave_data.special_cave == 1:
+		elif tile.cave.special_cave == 1:
 			if cave_floor == 30:
 				noise.period = 65
 				cave_size = 16
 			else:
 				noise.period = 50 - cave_floor
 				cave_size = 16 + cave_floor / 2
-		elif cave_data.special_cave == 0:
+		elif tile.cave.special_cave == 0:
 			noise.period = 65
 			rover_size = 0.4
 	else:
 		noise.period = 65
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
-	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
+	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = not game or game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
 	#Generate cave
@@ -592,7 +600,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if not boss_cave:
 		#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
 		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
-			if cave_data.has("special_cave") and not game.third_ship_hints.parts[cave_data.special_cave] and cave_floor == num_floors:
+			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
 				var part = object_scene.instance()
 				part.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/ShipPart.png")
 				part.get_node("Area2D").connect("body_entered", self, "on_ShipPart_entered")
@@ -759,10 +767,10 @@ func on_relic_entered(_body):
 	$UI2/Relic.visible = true
 
 func on_ShipPart_entered(_body):
-	if not game.third_ship_hints.parts[cave_data.special_cave]:
+	if not game.third_ship_hints.parts[tile.cave.special_cave]:
 		game.objective.current += 1
 		game.popup(tr("SHIP_PART_FOUND"), 2.5)
-		game.third_ship_hints.parts[cave_data.special_cave] = true
+		game.third_ship_hints.parts[tile.cave.special_cave] = true
 		for object in get_tree().get_nodes_in_group("misc_objects"):
 			object.visible = false
 
@@ -1067,12 +1075,18 @@ func _input(event):
 		update_ray()
 
 func exit_cave():
-	cave_data.seeds = seeds.duplicate(true)
-	cave_data.tiles_mined = tiles_mined.duplicate(true)
-	cave_data.enemies_rekt = enemies_rekt.duplicate(true)
-	cave_data.chests_looted = chests_looted.duplicate(true)
-	cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
-	cave_data.hole_exits = hole_exits.duplicate(true)
+	var cave_data_file = File.new()
+	cave_data_file.open("user://Save%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, cave.id], File.WRITE)
+	var cave_data_dict = {
+		"seeds":seeds.duplicate(true),
+		"tiles_mined":tiles_mined.duplicate(true),
+		"enemies_rekt":enemies_rekt.duplicate(true),
+		"chests_looted":chests_looted.duplicate(true),
+		"partially_looted_chests":partially_looted_chests.duplicate(true),
+		"hole_exits":hole_exits.duplicate(true),
+	}
+	cave_data_file.store_var(cave_data_dict)
+	cave_data_file.close()
 	for i in len(inventory):
 		if not inventory[i].has("name"):
 			continue

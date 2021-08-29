@@ -28,18 +28,25 @@ align = 1
 [node name="Created" type="Label" parent="."]
 margin_left = 300.0
 margin_top = 13.0
-margin_right = 537.0
+margin_right = 484.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 align = 1
 
 [node name="Saved" type="Label" parent="."]
-margin_left = 542.0
+margin_left = 489.0
 margin_top = 13.0
-margin_right = 779.0
+margin_right = 674.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 align = 1
+
+[node name="Export" type="Button" parent="."]
+margin_left = 679.0
+margin_right = 779.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 100, 40 )
+text = "Export"
 
 [node name="Delete" type="TextureButton" parent="."]
 margin_left = 784.0

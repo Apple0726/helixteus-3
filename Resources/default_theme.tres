@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=2]
+[gd_resource type="Theme" load_steps=31 format=2]
 
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://Graphics/Buttons/CheckboxChecked.png" type="Texture" id=3]
@@ -10,8 +10,8 @@
 [sub_resource type="StyleBoxEmpty" id=2]
 
 [sub_resource type="StyleBoxFlat" id=3]
-content_margin_left = 5.0
-content_margin_right = 5.0
+content_margin_left = 10.0
+content_margin_right = 10.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
 bg_color = Color( 0.321569, 0.321569, 0.321569, 1 )
@@ -146,13 +146,6 @@ bg_color = Color( 0, 0, 0, 1 )
 bg_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="StyleBoxFlat" id=24]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id=25]
 bg_color = Color( 0.462745, 0.682353, 0.682353, 1 )
 border_width_left = 3
 border_width_right = 3
@@ -160,13 +153,13 @@ border_color = Color( 0, 1, 1, 0 )
 border_blend = true
 corner_detail = 5
 
-[sub_resource type="StyleBoxFlat" id=26]
+[sub_resource type="StyleBoxFlat" id=25]
 bg_color = Color( 0.111328, 0.111328, 0.111328, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 0.8, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -175,17 +168,17 @@ expand_margin_left = 5.0
 expand_margin_right = 5.0
 expand_margin_top = 36.0
 expand_margin_bottom = 2.0
-shadow_color = Color( 0.4, 0.501961, 0.8, 0.6 )
-shadow_size = 5
+shadow_color = Color( 0.27451, 0.462745, 0.913725, 0.596078 )
+shadow_size = 3
 
-[sub_resource type="DynamicFont" id=27]
+[sub_resource type="DynamicFont" id=26]
 size = 20
 use_filter = true
 font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 5 )
 
 [resource]
-default_font = SubResource( 27 )
+default_font = SubResource( 26 )
 Button/colors/font_color = Color( 0.823529, 0.823529, 0.823529, 1 )
 Button/colors/font_color_disabled = Color( 0.380392, 0.380392, 0.380392, 1 )
 Button/colors/font_color_hover = Color( 0.823529, 0.823529, 0.823529, 1 )
@@ -522,7 +515,7 @@ Tree/icons/checked = null
 Tree/icons/select_arrow = null
 Tree/icons/unchecked = null
 Tree/icons/updown = null
-Tree/styles/bg = SubResource( 24 )
+Tree/styles/bg = SubResource( 20 )
 Tree/styles/bg_focus = null
 Tree/styles/button_pressed = null
 Tree/styles/cursor = null
@@ -543,7 +536,7 @@ VScrollBar/icons/increment_highlight = null
 VScrollBar/styles/grabber = SubResource( 13 )
 VScrollBar/styles/grabber_highlight = SubResource( 14 )
 VScrollBar/styles/grabber_pressed = SubResource( 13 )
-VScrollBar/styles/scroll = SubResource( 25 )
+VScrollBar/styles/scroll = SubResource( 24 )
 VScrollBar/styles/scroll_focus = null
 VSeparator/constants/separation = 4
 VSeparator/styles/separator = null
@@ -566,4 +559,4 @@ WindowDialog/constants/title_height = 30
 WindowDialog/fonts/title_font = null
 WindowDialog/icons/close = null
 WindowDialog/icons/close_highlight = null
-WindowDialog/styles/panel = SubResource( 26 )
+WindowDialog/styles/panel = SubResource( 25 )

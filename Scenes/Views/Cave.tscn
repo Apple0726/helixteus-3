@@ -99,7 +99,7 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=11]
 content_margin_left = 10.0
 content_margin_right = 10.0
 content_margin_top = 5.0
@@ -126,7 +126,7 @@ use_filter = true
 font_data = ExtResource( 26 )
 fallback/0 = ExtResource( 27 )
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=14]
 length = 6.0
 loop = true
 tracks/0/type = "value"
@@ -142,7 +142,7 @@ tracks/0/keys = {
 "values": [ Color( 0.784314, 1, 0.784314, 1 ), Color( 0.784314, 1, 1, 1 ), Color( 0.784314, 0.784314, 1, 1 ), Color( 1, 0.784314, 1, 1 ), Color( 1, 0.784314, 0.784314, 1 ), Color( 1, 1, 0.784314, 1 ), Color( 0.784314, 1, 0.784314, 1 ) ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=15]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Rover/Glow:modulate")
@@ -157,7 +157,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=16]
 length = 6.0
 loop = true
 tracks/0/type = "value"
@@ -173,7 +173,7 @@ tracks/0/keys = {
 "values": [ Color( 0.705882, 1, 0.705882, 1 ), Color( 0.705882, 1, 1, 1 ), Color( 0.705882, 0.705882, 1, 1 ), Color( 1, 0.705882, 1, 1 ), Color( 1, 0.705882, 0.705882, 1 ), Color( 1, 1, 0.705882, 1 ), Color( 0.705882, 1, 0.705882, 1 ) ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=17]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Rover/Glow:modulate")
@@ -638,7 +638,7 @@ __meta__ = {
 margin_right = 70.0
 margin_bottom = 39.0
 mouse_filter = 1
-custom_styles/normal = SubResource( 19 )
+custom_styles/normal = SubResource( 11 )
 custom_fonts/font = SubResource( 12 )
 text = "B1F"
 align = 1
@@ -653,7 +653,7 @@ margin_bottom = 34.0
 mouse_filter = 1
 size_flags_vertical = 0
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 19 )
+custom_styles/normal = SubResource( 11 )
 text = "Difficulty: 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -685,6 +685,7 @@ __meta__ = {
 }
 
 [node name="Controls" type="Label" parent="UI2"]
+visible = false
 margin_left = 544.0
 margin_top = 128.0
 margin_right = 736.0
@@ -692,7 +693,7 @@ margin_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 19 )
+custom_styles/normal = SubResource( 11 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -701,12 +702,12 @@ __meta__ = {
 [node name="Dialogue" parent="UI2" instance=ExtResource( 24 )]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Aurora = SubResource( 15 )
-anims/RoverSprint = SubResource( 16 )
+anims/Aurora = SubResource( 14 )
+anims/RoverSprint = SubResource( 15 )
 
 [node name="AuroraPlayer" type="AnimationPlayer" parent="."]
-anims/Aurora = SubResource( 17 )
-anims/RoverSprint = SubResource( 18 )
+anims/Aurora = SubResource( 16 )
+anims/RoverSprint = SubResource( 17 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 

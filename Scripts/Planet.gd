@@ -252,15 +252,14 @@ func show_tooltip(tile):
 		adv = tile.has("aurora")
 		if adv:
 			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
-		var cave = game.cave_data[tile.cave.id]
 		tooltip += tr("CAVE")
-		var floor_size:String = tr("FLOOR_SIZE").format({"size":cave.floor_size})
-		if cave.has("special_cave") and cave.special_cave == 1:
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
+		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
 			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
 		if not game.science_unlocked.RC:
-			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
-			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 	elif tile.has("diamond_tower"):
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
 		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]
@@ -824,7 +823,7 @@ func _unhandled_input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
-				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].special_cave == 4:
+				if tile.has("cave") and game.cave_data[tile.cave].has("special_cave") and game.cave_data[tile.cave].special_cave == 4:
 					if not game.fourth_ship_hints.barrier_broken:
 						if not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
 							game.popup(tr("CAVE_BLOCKED"), 2.0)

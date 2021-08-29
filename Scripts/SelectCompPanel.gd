@@ -2,7 +2,6 @@ extends Panel
 
 onready var game = get_node("/root/Game")
 onready var hbox = $ScrollContainer2/HBox
-var polygon
 var g_cmp:String#armor, wheels, CC (g: general)
 var s_cmp:String#lead_armor, copper_wheels etc. (s: specific)
 var curr_cmp:String

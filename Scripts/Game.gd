@@ -1,6 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
+const VERSION:String = "v0.21"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -151,7 +152,7 @@ var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "
 var system_data:Array
 var planet_data:Array
 var tile_data:Array
-var cave_data:Array
+var caves_generated:int
 
 #Vehicle data
 var rover_data:Array
@@ -331,6 +332,7 @@ var tooltip_tween:Tween
 var tile_brightness:Array = []
 
 func _ready():
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -398,15 +400,6 @@ func _ready():
 			Helper.notation = 2
 		config.save("user://settings.cfg")
 	Data.reload()
-	var file = Directory.new()
-	file.open("user://")
-	file.list_dir_begin(true)
-	var next_dir:String = file.get_next()
-	while next_dir != "":
-		if next_dir.substr(0, 4) == "Save":
-			$Title/Menu/VBoxContainer/LoadGame.disabled = false
-			break
-		next_dir = file.get_next()
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
@@ -508,72 +501,74 @@ func load_univ():
 	var save_game = File.new()
 	if save_game.file_exists("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u]):
 		save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.READ)
-		money = save_game.get_float()
-		minerals = save_game.get_float()
-		mineral_capacity = save_game.get_float()
-		stone = save_game.get_var()
-		energy = save_game.get_float()
-		SP = save_game.get_float()
-		c_sc = save_game.get_64()
-		c_c = save_game.get_64()
-		c_c_g = save_game.get_64()
-		c_g = save_game.get_64()
-		c_g_g = save_game.get_64()
-		c_s = save_game.get_64()
-		c_s_g = save_game.get_64()
-		c_p = save_game.get_64()
-		c_p_g = save_game.get_64()
-		c_t = save_game.get_64()
-		stack_size = save_game.get_64()
-		auto_replace = save_game.get_8()
-		pickaxe = save_game.get_var()
-		science_unlocked = save_game.get_var()
+		var save_game_dict:Dictionary = save_game.get_var()
+		save_game.close()
+		money = save_game_dict.money
+		minerals = save_game_dict.minerals
+		mineral_capacity = save_game_dict.mineral_capacity
+		stone = save_game_dict.stone
+		energy = save_game_dict.energy
+		SP = save_game_dict.SP
+		c_v = save_game_dict.c_v
+		l_v = save_game_dict.l_v
+		c_sc = save_game_dict.c_sc
+		c_c = save_game_dict.c_c
+		c_c_g = save_game_dict.c_c_g
+		c_g = save_game_dict.c_g
+		c_g_g = save_game_dict.c_g_g
+		c_s = save_game_dict.c_s
+		c_s_g = save_game_dict.c_s_g
+		c_p = save_game_dict.c_p
+		c_p_g = save_game_dict.c_p_g
+		c_t = save_game_dict.c_t
+		stack_size = save_game_dict.stack_size
+		auto_replace = save_game_dict.auto_replace
+		pickaxe = save_game_dict.pickaxe
+		science_unlocked = save_game_dict.science_unlocked
+		infinite_research = save_game_dict.infinite_research
+		mats = save_game_dict.mats
+		mets = save_game_dict.mets
+		atoms = save_game_dict.atoms
+		particles = save_game_dict.particles
+		show = save_game_dict.show
+		items = save_game_dict.items
+		hotbar = save_game_dict.hotbar
+		MUs = save_game_dict.MUs
+		STM_lv = save_game_dict.STM_lv
+		rover_id = save_game_dict.rover_id
+		rover_data = save_game_dict.rover_data
+		fighter_data = save_game_dict.fighter_data
+		probe_data = save_game_dict.probe_data
+		ship_data = save_game_dict.ship_data
+		second_ship_hints = save_game_dict.second_ship_hints
+		third_ship_hints = save_game_dict.third_ship_hints
+		fourth_ship_hints = save_game_dict.fourth_ship_hints
+		ships_c_coords = save_game_dict.ships_c_coords
+		ships_dest_coords = save_game_dict.ships_dest_coords
+		ships_depart_pos = save_game_dict.ships_depart_pos
+		ships_dest_pos = save_game_dict.ships_dest_pos
+		ships_travel_view = save_game_dict.ships_travel_view
+		ships_c_g_coords = save_game_dict.ships_c_g_coords
+		ships_dest_g_coords = save_game_dict.ships_dest_g_coords
+		ships_travel_start_date = save_game_dict.ships_travel_start_date
+		ships_travel_length = save_game_dict.ships_travel_length
+		p_num = save_game_dict.p_num
+		s_num = save_game_dict.s_num
+		g_num = save_game_dict.g_num
+		c_num = save_game_dict.c_num
+		stats = save_game_dict.stats
+		objective = save_game_dict.objective
+		autocollect = save_game_dict.autocollect
+		save_date = save_game_dict.save_date
+		bookmarks = save_game_dict.bookmarks
+		auto_c_p_g = -1
+		u_i = universe_data[c_u]
 		if science_unlocked.CI:
 			stack_size = 32
 		if science_unlocked.CI2:
 			stack_size = 64
 		if science_unlocked.CI3:
 			stack_size = 128
-		infinite_research = save_game.get_var()
-		mats = save_game.get_var()
-		mets = save_game.get_var()
-		atoms = save_game.get_var()
-		particles = save_game.get_var()
-		show = save_game.get_var()
-		cave_data = save_game.get_var()
-		items = save_game.get_var()
-		hotbar = save_game.get_var()
-		MUs = save_game.get_var()
-		STM_lv = save_game.get_64()
-		rover_id = save_game.get_64()
-		rover_data = save_game.get_var()
-		fighter_data = save_game.get_var()
-		probe_data = save_game.get_var()
-		ship_data = save_game.get_var()
-		second_ship_hints = save_game.get_var()
-		third_ship_hints = save_game.get_var()
-		fourth_ship_hints = save_game.get_var()
-		ships_c_coords = save_game.get_var()
-		ships_dest_coords = save_game.get_var()
-		ships_depart_pos = save_game.get_var()
-		ships_dest_pos = save_game.get_var()
-		ships_travel_view = save_game.get_var()
-		ships_c_g_coords = save_game.get_var()
-		ships_dest_g_coords = save_game.get_var()
-		ships_travel_start_date = save_game.get_64()
-		ships_travel_length = save_game.get_64()
-		p_num = save_game.get_64()
-		s_num = save_game.get_64()
-		g_num = save_game.get_64()
-		c_num = save_game.get_64()
-		stats = save_game.get_var()
-		objective = save_game.get_var()
-		autocollect = save_game.get_var()
-		save_date = save_game.get_64()
-		bookmarks = save_game.get_var()
-		save_game.close()
-		auto_c_p_g = -1
-		u_i = universe_data[c_u]
 		for _seed in craft_agriculture_info:
 			if craft_agriculture_info[_seed].has("produce"):
 				craft_agriculture_info[_seed].produce = round(60 * u_i.planck)
@@ -620,14 +615,12 @@ func load_univ():
 func load_game():
 	var save_info = File.new()
 	save_info.open("user://Save%s/save_info.hx3" % [c_sv], File.READ)
-	save_created = save_info.get_var()
-	save_info.get_var()#This does nothing but we need this to get the "help" variable
-	help = save_info.get_var()
-	c_u = save_info.get_var()
-	c_v = save_info.get_var()
-	l_v = save_info.get_var()
-	universe_data = save_info.get_var()
+	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
+	save_created = save_info_dict.save_created
+	help = save_info_dict.help
+	c_u = save_info_dict.c_u
+	universe_data = save_info_dict.universe_data
 	load_univ()
 	switch_view(c_v, true)
 	if not $UI.is_a_parent_of(HUD):
@@ -693,6 +686,7 @@ func new_game(tut:bool, univ:int = 0):
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
 	dir.make_dir("user://Save%s/Univ%s" % [c_sv, univ])
+	dir.make_dir("user://Save%s/Univ%s/Caves" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Planets" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Systems" % [c_sv, univ])
 	dir.make_dir("user://Save%s/Univ%s/Galaxies" % [c_sv, univ])
@@ -849,7 +843,7 @@ func new_game(tut:bool, univ:int = 0):
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
-	cave_data = []
+	caves_generated = 0
 
 	#Vehicle data
 	rover_data = []
@@ -931,10 +925,7 @@ func new_game(tut:bool, univ:int = 0):
 		planet_data[2].surface.cellulose.chance = 0.4
 		planet_data[2].surface.cellulose.amount = 10
 	Helper.save_obj("Systems", 0, planet_data)
-	
 	generate_tiles(2)
-	cave_data.append({"num_floors":5, "floor_size":30})
-	cave_data.append({"num_floors":8, "floor_size":35})
 	
 	c_v = "planet"
 	Helper.save_obj("Galaxies", 0, system_data)
@@ -2244,7 +2235,7 @@ func generate_systems(id:int):
 		var combined_star_mass = 0
 		for star in stars:
 			combined_star_mass += star.mass
-		stars.sort_custom(self, "sort_by_density")
+		stars.sort_custom(self, "sort_by_mass")
 		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.5)), 2)
 		if planet_num >= 30:
 			planet_num = int(25 + sqrt(planet_num))
@@ -2274,8 +2265,8 @@ func generate_systems(id:int):
 		system_data.append(s_i)
 	galaxy_data[id]["discovered"] = true
 
-func sort_by_density(star1:Dictionary, star2:Dictionary):
-	if star1.mass / star1.size > star2.mass / star2.size:
+func sort_by_mass(star1:Dictionary, star2:Dictionary):
+	if star1.mass > star2.mass:
 		return true
 	return false
 
@@ -2630,8 +2621,6 @@ func generate_tiles(id:int):
 			var boss_cave:bool = cross_aurora and t_id == wid * wid / 2
 			if normal_cond or op_aurora_cond or ship_cond or boss_cave:#Spawn cave
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				tile_data[t_id].cave = {}
-				tile_data[t_id].cave.id = len(cave_data)
 				var floor_size:int = Helper.rand_int(25, int(40 * rand_range(1, 1 + wid / 50.0)))
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
 				if ship_cond:
@@ -2641,9 +2630,9 @@ func generate_tiles(id:int):
 					num_floors = 3
 				if boss_cave:
 					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
-					cave_data.append({"num_floors":5, "floor_size":25, "special_cave":4})
+					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
 				else:
-					cave_data.append({"num_floors":num_floors, "floor_size":floor_size})
+					tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size}
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if not cross_aurora and randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
@@ -2681,17 +2670,13 @@ func generate_tiles(id:int):
 			erase_tile(random_tile)
 			tile_data[random_tile].ship = true
 			erase_tile(random_tile - wid)
-			tile_data[random_tile - wid].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":36, "num_floors":9, "special_cave":0})#Normal cave, except... you're tiny
+			tile_data[random_tile - wid].cave = {"floor_size":36, "num_floors":9, "special_cave":0}#Normal cave, except... you're tiny
 			erase_tile(random_tile + wid)
-			tile_data[random_tile + wid].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":16, "num_floors":30, "special_cave":1})#A super deep cave devoid of everything
+			tile_data[random_tile + wid].cave = {"floor_size":16, "num_floors":30, "special_cave":1}#A super deep cave devoid of everything
 			erase_tile(random_tile - 1)
-			tile_data[random_tile - 1].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":88, "num_floors":3, "special_cave":2})#Huge cave
+			tile_data[random_tile - 1].cave = {"floor_size":77, "num_floors":3, "special_cave":2}#Huge cave
 			erase_tile(random_tile + 1)
-			tile_data[random_tile + 1].cave = {"id":len(cave_data)}
-			cave_data.append({"floor_size":50, "num_floors":5, "special_cave":3})#Big maze cave where minimap is disabled
+			tile_data[random_tile + 1].cave = {"floor_size":50, "num_floors":5, "special_cave":3}#Big maze cave where minimap is disabled
 			third_ship_hints.ship_spawned_at_p = c_p_g
 		elif third_ship_hints.ship_part_id == c_s and third_ship_hints.part_spawned_at_p == -1:
 			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
@@ -2705,8 +2690,7 @@ func generate_tiles(id:int):
 		tile_data[random_tile].artifact = true
 	elif dark_matter_system:
 		erase_tile(12)
-		tile_data[12].diamond_tower = len(cave_data)
-		cave_data.append({"floor_size":40, "num_floors":25})
+		tile_data[12].diamond_tower = {"floor_size":40, "num_floors":25}
 	elif c_c_g == 1 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -2736,11 +2720,9 @@ func generate_tiles(id:int):
 	planet_data[id]["discovered"] = true
 	if home_planet:
 		tile_data[42] = {}
-		tile_data[42].cave = {}
-		tile_data[42].cave.id = 0
+		tile_data[42].cave = {"num_floors":5, "floor_size":30}
 		tile_data[215] = {}
-		tile_data[215].cave = {}
-		tile_data[215].cave.id = 1
+		tile_data[215].cave = {"num_floors":8, "floor_size":35}
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[107] = {}
@@ -3285,7 +3267,7 @@ func _input(event):
 	
 	var cmd_node = $UI/Command
 	#/ to type a command
-	if Input.is_action_just_released("command") and not cmd_node.visible:
+	if Input.is_action_just_released("command") and not cmd_node.visible and c_v != "":
 		cmd_node.visible = true
 		cmd_node.text = "/"
 		cmd_node.call_deferred("grab_focus")
@@ -3415,85 +3397,95 @@ func save_sc():
 	_save_sc.close()
 
 func fn_save_game():
-	var save_info = File.new()
-	save_info.open("user://Save%s/save_info.hx3" % [c_sv], File.WRITE)
-	save_info.store_var(save_created)
-	save_info.store_var(OS.get_datetime())
-	save_info.store_var(help)
-	save_info.store_var(c_u)
-	save_info.store_var(c_v)
-	save_info.store_var(l_v)
-	save_info.store_var(universe_data)
-	save_info.store_var("v0.20.2")
-	save_info.close()
+	var save_info_file = File.new()
+	save_info_file.open("user://Save%s/save_info.hx3" % [c_sv], File.WRITE)
+	var save_info:Dictionary = {
+		"save_created":save_created,
+		"save_modified":OS.get_datetime(),
+		"help":help,
+		"c_u":c_u,
+		"universe_data":universe_data,
+		"version":VERSION,
+	}
+	save_info_file.store_var(save_info)
+	save_info_file.close()
 	var save_game = File.new()
 	save_game.open("user://Save%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
 	if c_v == "cave":
-		var c_d = cave_data[cave.id]
-		c_d.seeds = cave.seeds.duplicate(true)
-		c_d.tiles_mined = cave.tiles_mined.duplicate(true)
-		c_d.enemies_rekt = cave.enemies_rekt.duplicate(true)
-		c_d.chests_looted = cave.chests_looted.duplicate(true)
-		c_d.partially_looted_chests = cave.partially_looted_chests.duplicate(true)
-		c_d.hole_exits = cave.hole_exits.duplicate(true)
+		var cave_data_file = File.new()
+		cave_data_file.open("user://Save%s/Univ%s/Caves/%s.hx3" % [c_sv, c_u, cave.id], File.WRITE)
+		var cave_data_dict = {
+			"seeds":cave.seeds.duplicate(true),
+			"tiles_mined":cave.tiles_mined.duplicate(true),
+			"enemies_rekt":cave.enemies_rekt.duplicate(true),
+			"chests_looted":cave.chests_looted.duplicate(true),
+			"partially_looted_chests":cave.partially_looted_chests.duplicate(true),
+			"hole_exits":cave.hole_exits.duplicate(true),
+		}
+		cave_data_file.store_var(cave_data_dict)
+		cave_data_file.close()
 	save_date = OS.get_system_time_msecs()
-	save_game.store_float(money)
-	save_game.store_float(minerals)
-	save_game.store_float(mineral_capacity)
-	save_game.store_var(stone)
-	save_game.store_float(energy)
-	save_game.store_float(SP)
-	save_game.store_64(c_sc)
-	save_game.store_64(c_c)
-	save_game.store_64(c_c_g)
-	save_game.store_64(c_g)
-	save_game.store_64(c_g_g)
-	save_game.store_64(c_s)
-	save_game.store_64(c_s_g)
-	save_game.store_64(c_p)
-	save_game.store_64(c_p_g)
-	save_game.store_64(c_t)
-	save_game.store_64(stack_size)
-	save_game.store_8(auto_replace)
-	save_game.store_var(pickaxe)
-	save_game.store_var(science_unlocked)
-	save_game.store_var(infinite_research)
-	save_game.store_var(mats)
-	save_game.store_var(mets)
-	save_game.store_var(atoms)
-	save_game.store_var(particles)
-	save_game.store_var(show)
-	save_game.store_var(cave_data)
-	save_game.store_var(items)
-	save_game.store_var(hotbar)
-	save_game.store_var(MUs)
-	save_game.store_64(STM_lv)
-	save_game.store_64(rover_id)
-	save_game.store_var(rover_data)
-	save_game.store_var(fighter_data)
-	save_game.store_var(probe_data)
-	save_game.store_var(ship_data)
-	save_game.store_var(second_ship_hints)
-	save_game.store_var(third_ship_hints)
-	save_game.store_var(fourth_ship_hints)
-	save_game.store_var(ships_c_coords)
-	save_game.store_var(ships_dest_coords)
-	save_game.store_var(ships_depart_pos)
-	save_game.store_var(ships_dest_pos)
-	save_game.store_var(ships_travel_view)
-	save_game.store_var(ships_c_g_coords)
-	save_game.store_var(ships_dest_g_coords)
-	save_game.store_64(ships_travel_start_date)
-	save_game.store_64(ships_travel_length)
-	save_game.store_64(p_num)
-	save_game.store_64(s_num)
-	save_game.store_64(g_num)
-	save_game.store_64(c_num)
-	save_game.store_var(stats)
-	save_game.store_var(objective)
-	save_game.store_var(autocollect)
-	save_game.store_64(save_date)
-	save_game.store_var(bookmarks)
+	var save_game_dict = {
+		"money":money,
+		"minerals":minerals,
+		"mineral_capacity":mineral_capacity,
+		"stone":stone,
+		"energy":energy,
+		"SP":SP,
+		"c_v":c_v,
+		"l_v":l_v,
+		"c_sc":c_sc,
+		"c_c":c_c,
+		"c_c_g":c_c_g,
+		"c_g":c_g,
+		"c_g_g":c_g_g,
+		"c_s":c_s,
+		"c_s_g":c_s_g,
+		"c_p":c_p,
+		"c_p_g":c_p_g,
+		"c_t":c_t,
+		"stack_size":stack_size,
+		"auto_replace":auto_replace,
+		"pickaxe":pickaxe,
+		"science_unlocked":science_unlocked,
+		"infinite_research":infinite_research,
+		"mats":mats,
+		"mets":mets,
+		"atoms":atoms,
+		"particles":particles,
+		"show":show,
+		"items":items,
+		"hotbar":hotbar,
+		"MUs":MUs,
+		"STM_lv":STM_lv,
+		"rover_id":rover_id,
+		"rover_data":rover_data,
+		"fighter_data":fighter_data,
+		"probe_data":probe_data,
+		"ship_data":ship_data,
+		"second_ship_hints":second_ship_hints,
+		"third_ship_hints":third_ship_hints,
+		"fourth_ship_hints":fourth_ship_hints,
+		"ships_c_coords":ships_c_coords,
+		"ships_dest_coords":ships_dest_coords,
+		"ships_depart_pos":ships_depart_pos,
+		"ships_dest_pos":ships_dest_pos,
+		"ships_travel_view":ships_travel_view,
+		"ships_c_g_coords":ships_c_g_coords,
+		"ships_dest_g_coords":ships_dest_g_coords,
+		"ships_travel_start_date":ships_travel_start_date,
+		"ships_travel_length":ships_travel_length,
+		"p_num":p_num,
+		"s_num":s_num,
+		"g_num":g_num,
+		"c_num":c_num,
+		"stats":stats,
+		"objective":objective,
+		"autocollect":autocollect,
+		"save_date":save_date,
+		"bookmarks":bookmarks,
+	}
+	save_game.store_var(save_game_dict)
 	save_game.close()
 
 func save_views(autosave:bool):
