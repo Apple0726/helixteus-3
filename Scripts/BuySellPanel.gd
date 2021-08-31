@@ -86,6 +86,8 @@ func _on_Button_pressed():
 	_on_close_button_pressed()
 
 func _on_TextureButton_pressed():
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play("Switch")
 	if is_selling:
 		if game.money != 0:
 			is_selling = false
@@ -105,3 +107,11 @@ func _on_TextureButton_pressed():
 func _on_close_button_pressed():
 	visible = false
 	game.sub_panel = null
+
+
+func _on_TextureButton_mouse_entered():
+	$AnimationPlayer2.play("Grow")
+
+
+func _on_TextureButton_mouse_exited():
+	$AnimationPlayer2.play_backwards("Grow")

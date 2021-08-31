@@ -177,13 +177,14 @@ func add_particles(pos:Vector2):
 	add_child(particle)
 
 func show_tooltip(tile):
+	if not tile:
+		return
 	var tooltip:String = ""
 	var icons = []
 	var adv = false
-	if not tile:
-		return
 	if tile.has("bldg"):
-		tooltip += Helper.get_bldg_tooltip(p_i, tile, icons)
+		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
+		icons.append_array(Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
 		adv = len(icons) > 0
 		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
 			game.help_str = "tile_shortcuts"
@@ -612,7 +613,7 @@ func _unhandled_input(event):
 					if tile.has("cost_div"):
 						money_cost /= tile.cost_div
 					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
-					if money_cost >= total_XP / 100.0:
+					if money_cost >= total_XP / 10.0:
 						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
 					else:
 						destroy_bldg(tile_over)
@@ -621,6 +622,9 @@ func _unhandled_input(event):
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
 		if Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
+			var path_1_value_sum:float = 0
+			var path_2_value_sum:float = 0
+			var path_3_value_sum:float = 0
 			for i in len(game.tile_data):
 				var select:bool = false
 				var tile2 = game.tile_data[i]
@@ -634,15 +638,31 @@ func _unhandled_input(event):
 					if tile2.has("plant") and not tile2.plant.empty() and tile2.plant.name == tile.plant.name:
 						select = true
 				if select:
+					if tile.has("bldg"):
+						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "GH", "SE"]:
+							path_1_value_sum += Helper.get_final_value(p_i, tile, 1)
+							path_2_value_sum += Helper.get_final_value(p_i, tile, 2)
+						elif tile.bldg.name in ["RL", "MS"]:
+							path_1_value_sum += Helper.get_final_value(p_i, tile, 1)
+						else:
+							path_1_value_sum = Helper.get_final_value(p_i, tile, 1) if tile.bldg.has("path_1_value") else 0
+							path_2_value_sum = Helper.get_final_value(p_i, tile, 2) if tile.bldg.has("path_2_value") else 0
+						path_3_value_sum = Helper.get_final_value(p_i, tile, 3) if tile.bldg.has("path_3_value") else 0
 					tiles_selected.append(i)
 					var white_rect = game.white_rect_scene.instance()
 					white_rect.position.x = (i % wid) * 200
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
+			if Data.desc_icons.has(tile.bldg.name):
+				game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum), Data.desc_icons[tile.bldg.name])
+			else:
+				game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
-				
+		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
+			if game.tile_data[tile_over]:
+				show_tooltip(game.tile_data[tile_over])
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouseMotion:
 		mouse_pos = to_local(event.position)
@@ -823,7 +843,7 @@ func _unhandled_input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
-				if tile.has("cave") and game.cave_data[tile.cave].has("special_cave") and game.cave_data[tile.cave].special_cave == 4:
+				if tile.has("cave") and tile.cave.has("special_cave") and tile.cave.special_cave == 4:
 					if not game.fourth_ship_hints.barrier_broken:
 						if not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
 							game.popup(tr("CAVE_BLOCKED"), 2.0)

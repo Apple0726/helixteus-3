@@ -561,6 +561,9 @@ func load_univ():
 		autocollect = save_game_dict.autocollect
 		save_date = save_game_dict.save_date
 		bookmarks = save_game_dict.bookmarks
+		cave_filters = save_game_dict.cave_filters
+		if save_game_dict.has("caves_generated"):
+			caves_generated = save_game_dict.caves_generated
 		auto_c_p_g = -1
 		u_i = universe_data[c_u]
 		if science_unlocked.CI:
@@ -3191,7 +3194,7 @@ onready var item_cursor = $UI/ItemCursor
 func sell_all_minerals():
 	if minerals > 0:
 		money += minerals * (MUs.MV + 4)
-		popup(tr("MINERAL_SOLD") % [Helper.format_num(minerals), Helper.format_num(minerals * (MUs.MV + 4))], 2)
+		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
 		show.shop = true
 		HUD.refresh()
@@ -3382,9 +3385,9 @@ func _input(event):
 			save_views(false)
 
 func _unhandled_key_input(event):
-	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5")]
+	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5"), Input.is_action_just_released("6"), Input.is_action_just_released("7"), Input.is_action_just_released("8"), Input.is_action_just_released("9"), Input.is_action_just_released("0")]
 	if not c_v in ["battle", "cave", "", "dimension"] and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel.visible and not is_instance_valid(overlay):
-		for i in 5:
+		for i in 10:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
 				if get_item_num(_name) > 0:
@@ -3484,6 +3487,8 @@ func fn_save_game():
 		"autocollect":autocollect,
 		"save_date":save_date,
 		"bookmarks":bookmarks,
+		"cave_filters":cave_filters,
+		"caves_generated":caves_generated,
 	}
 	save_game.store_var(save_game_dict)
 	save_game.close()

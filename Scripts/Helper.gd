@@ -1127,54 +1127,58 @@ func get_star_modulate (star_class:String):
 			m = Color(0.05, 0.05, 0.05, 1)
 	return m
 
-func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1):
-	var tooltip:String = ""
+func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	var bldg:String = dict.bldg.name
-	icons.append_array(Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else [])
 	var mult:float = get_prod_mult(dict)
 	var IR_mult:float = dict.bldg.IR_mult
-	var path_1_value
-	if bldg == "SP":
-		path_1_value = get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict))
-	elif bldg == "AE":
-		path_1_value = get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
-	elif bldg != "PCC":
-		path_1_value = dict.bldg.path_1_value * mult
-	var path_2_value
-	var path_3_value
-	if dict.bldg.has("path_2_value"):
-		path_2_value = dict.bldg.path_2_value
+	if bldg in ["MM", "GH", "AMN", "SPR"]:
+		n = 1
+	if path == 1:
+		if bldg == "SP":
+			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
+		elif bldg == "AE":
+			return get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult) * n
+		else:
+			return dict.bldg.path_1_value * mult * n
+	elif path == 2:
 		if Data.path_2[bldg].is_value_integer:
-			path_2_value = round(path_2_value)
-	if dict.bldg.has("path_3_value"):
-		path_3_value = clever_round(dict.bldg.path_3_value)
-	if path_1_value:
-		path_1_value = clever_round(path_1_value * n)
-	if path_2_value:
-		path_2_value = clever_round(path_2_value * n)
+			return round(dict.bldg.path_2_value * IR_mult * n)
+		else:
+			return dict.bldg.path_2_value * IR_mult * n
+	elif path == 3:
+		return dict.bldg.path_3_value
+
+func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
+	var tooltip:String = ""
+	var bldg:String = dict.bldg.name
+	var path_1_value = get_final_value(p_i, dict, 1, n) if dict.bldg.has("path_1_value") else 0.0
+	var path_2_value = get_final_value(p_i, dict, 2, n) if dict.bldg.has("path_2_value") else 0.0
+	var path_3_value = get_final_value(p_i, dict, 3, n) if dict.bldg.has("path_3_value") else 0.0
+	return get_bldg_tooltip2(bldg, path_1_value, path_2_value, path_3_value)
+
+func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value), 6)]
 		"AMN", "SPR":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value * IR_mult))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value))]
 		"MM":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"SC", "GF", "SE":
-			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value)]
 		"MS":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
+			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value)]
 		"GH":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
 		"CBD":
-			tooltip = "%s\n%s\n%s" % [
+			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % path_1_value,
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
-	return tooltip
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)

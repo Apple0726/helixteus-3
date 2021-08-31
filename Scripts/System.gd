@@ -310,14 +310,12 @@ func show_planet_info(id:int, l_id:int):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		var tooltip:String = ""
-		var icons = []
-		var adv = false
+		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
 		if p_i.has("tile_num"):
 			if p_i.bldg.name in ["MM", "GH", "AMN", "SPR"]:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, 1)]
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
 			else:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
-			adv = len(icons) > 0
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
 			if game.help.planet_details:
 				game.help_str = "planet_details"
@@ -329,7 +327,7 @@ func show_planet_info(id:int, l_id:int):
 				tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
 			else:
 				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4)]
-		if adv:
+		if len(icons) > 0:
 			game.show_adv_tooltip(tooltip, icons)
 		else:
 			game.show_tooltip(tooltip)

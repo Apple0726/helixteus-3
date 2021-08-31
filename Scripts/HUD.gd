@@ -446,7 +446,7 @@ func on_slot_over(i:int):
 	slot_over = i
 	game.help_str = "hotbar_shortcuts"
 	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.hotbar_shortcuts else ""
-	var num = " (%s)" % [i + 1] if i < 5 else ""
+	var num = " (%s)" % [i + 1] if i < 10 else ""
 	game.show_tooltip(Helper.get_item_name(game.hotbar[i]) + num + txt)
 
 func on_slot_out():

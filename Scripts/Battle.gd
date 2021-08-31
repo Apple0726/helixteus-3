@@ -293,7 +293,7 @@ func hitbox_size():
 	else:
 		return 1
 
-func weapon_hit_HX(sh:int, weapon_data:Dictionary, pos:Vector2 = Vector2.ZERO):
+func weapon_hit_HX(sh:int, weapon_data:Dictionary, weapon = null):
 	var w_data = "%s_data" % [weapon_type]
 	var t = weapon_data.target
 	var remove_weapon_b:bool = false
@@ -301,7 +301,7 @@ func weapon_hit_HX(sh:int, weapon_data:Dictionary, pos:Vector2 = Vector2.ZERO):
 		remove_weapon_b = true
 		var light = Sprite.new()
 		light.texture = preload("res://Graphics/Decoratives/light.png")
-		light.position = pos
+		light.position = weapon.pos
 		light.scale *= 0.2
 		light.modulate.a = 0.7
 		add_child(light)
@@ -324,14 +324,38 @@ func weapon_hit_HX(sh:int, weapon_data:Dictionary, pos:Vector2 = Vector2.ZERO):
 	else:
 		if randf() < hit_formula(ship_data[sh].acc * weapon_data.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
 			var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[weapon_data.target].def, DEF_EXPO_ENEMY)
-			if game and weapon_type == "laser":
-				dmg *= game.u_i.speed_of_light
+			if game:
+				if weapon_type == "bullet":
+					dmg *= game.u_i.planck
+				elif weapon_type == "laser":
+					dmg *= game.u_i.charge
+				elif weapon_type == "light":
+					dmg *= game.u_i.speed_of_light
 			var crit = randf() < 0.1
 			if crit:
 				dmg *= 1.5
 			damage_HX(t, dmg, crit)
-			weapon_XPs[sh][weapon_type] += 1
-			remove_weapon_b = true
+			if weapon_type == "bullet":
+				weapon_XPs[sh][weapon_type] += 1
+			else:
+				weapon_XPs[sh][weapon_type] += weapon_data.lv
+			if weapon_data.has("bounces_remaining"):
+				var new_t:int = t
+				remove_weapon_b = weapon_data.bounces_remaining <= 0
+				if not remove_weapon_b:
+					while new_t == t or HX_data[new_t].HP <= 0:
+						new_t = Helper.rand_int(wave * 4, min((wave + 1) * 4, len(HXs)))
+					var HX_pos:Vector2 = HXs[new_t].position
+					weapon.rotation = atan2(HX_pos.y - weapon.position.y, HX_pos.x - weapon.position.x)
+					weapon_data = {"v":polar2cartesian(50.0, weapon.rotation)}
+					weapon_data.target = new_t
+					weapon_data.shooter = curr_sh
+					weapon_data.lim = HX_pos
+					weapon_data.acc_mult = Data["%s_data" % [weapon_type]][weapon_data.lv - 1].accuracy
+					weapon_data.has_hit = false
+					weapon_data.bounces_remaining -= 1
+				else:
+					weapon_data.has_hit = true
 		else:
 			weapon_data.has_hit = true
 			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
@@ -426,10 +450,26 @@ func _process(delta):
 			light.free()
 	for weapon in get_tree().get_nodes_in_group("weapon"):
 		var sh:int = w_c_d[weapon.name].shooter
-		weapon.position += w_c_d[weapon.name].v * delta * 60 * time_speed
-		var remove_weapon_b:bool = weapon.position.x > 1350
-		if weapon.position.x > w_c_d[weapon.name].lim and not w_c_d[weapon.name].has_hit:
-			remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon.position)
+		var vel:Vector2 = w_c_d[weapon.name].v
+		weapon.position += vel * delta * 60 * time_speed
+		var remove_weapon_b:bool
+		var has_hit:bool = w_c_d[weapon.name].has_hit
+		if vel.x > 0:
+			remove_weapon_b = weapon.position.x > 1350
+			if weapon.position.x > w_c_d[weapon.name].lim.x and not has_hit:
+				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
+		elif vel.x < 0:
+			remove_weapon_b = weapon.position.x < 1350
+			if weapon.position.x < w_c_d[weapon.name].lim.x and has_hit:
+				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
+		elif vel.y > 0:
+			remove_weapon_b = weapon.position.y < 800
+			if weapon.position.y < w_c_d[weapon.name].lim.y and has_hit:
+				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
+		elif vel.y < 0:
+			remove_weapon_b = weapon.position.y < -80
+			if weapon.position.y < w_c_d[weapon.name].lim.y and has_hit:
+				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
 		if remove_weapon_b:
 			weapon.remove_from_group("weapon")
 			remove_child(weapon)
@@ -577,12 +617,14 @@ func remove_targets():
 
 func place_targets():
 	remove_targets()
+	var one_enemy:bool = false
 	var target_id:int = -1
 	for i in len(HXs):
 		if HX_data[i].HP <= 0:
 			continue
 		if target_id == -1:#A way to not show target buttons if there's only one target alive
 			target_id = i
+			one_enemy = true
 		else:
 			target_id = -2
 		var HX = HXs[i]
@@ -597,9 +639,9 @@ func place_targets():
 		target.get_node("Label").text = String((i % 4) + 1)
 		target.add_to_group("targets")
 	if target_id != -2:
-		on_target_pressed(target_id)
+		on_target_pressed(target_id, one_enemy)
 
-func on_target_pressed(target:int):
+func on_target_pressed(target:int, one_enemy:bool = false):
 	var weapon_data = ship_data[curr_sh][weapon_type]
 	$FightPanel.visible = false
 	$Current.visible = false
@@ -634,12 +676,14 @@ func on_target_pressed(target:int):
 		weapon.scale *= 0.5
 		add_child(weapon)
 		weapon.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
-		w_c_d[weapon.name] = {"v":(HX_pos - ship_pos) / 30.0}
+		w_c_d[weapon.name] = {"v":polar2cartesian(50.0, weapon.rotation)}
 		w_c_d[weapon.name].target = target
 		w_c_d[weapon.name].shooter = curr_sh
-		w_c_d[weapon.name].lim = HX_pos.x
+		w_c_d[weapon.name].lim = HX_pos
 		w_c_d[weapon.name].acc_mult = Data["%s_data" % [weapon_type]][weapon_data.lv - 1].accuracy
 		w_c_d[weapon.name].has_hit = false
+		if weapon_type == "bullet" and not one_enemy:
+			w_c_d[weapon.name].bounces_remaining = weapon_data.lv
 	remove_targets()
 	curr_sh += 1
 	while curr_sh < len(ship_data) and ship_data[curr_sh].HP <= 0:
