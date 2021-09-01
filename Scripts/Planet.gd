@@ -640,24 +640,25 @@ func _unhandled_input(event):
 				if select:
 					if tile.has("bldg"):
 						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "GH", "SE"]:
-							path_1_value_sum += Helper.get_final_value(p_i, tile, 1)
-							path_2_value_sum += Helper.get_final_value(p_i, tile, 2)
+							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
+							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
 						elif tile.bldg.name in ["RL", "MS"]:
-							path_1_value_sum += Helper.get_final_value(p_i, tile, 1)
+							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 						else:
-							path_1_value_sum = Helper.get_final_value(p_i, tile, 1) if tile.bldg.has("path_1_value") else 0
-							path_2_value_sum = Helper.get_final_value(p_i, tile, 2) if tile.bldg.has("path_2_value") else 0
-						path_3_value_sum = Helper.get_final_value(p_i, tile, 3) if tile.bldg.has("path_3_value") else 0
+							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
+							path_2_value_sum = Helper.get_final_value(p_i, tile2, 2) if tile2.bldg.has("path_2_value") else 0
+						path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
 					tiles_selected.append(i)
 					var white_rect = game.white_rect_scene.instance()
 					white_rect.position.x = (i % wid) * 200
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
-			if Data.desc_icons.has(tile.bldg.name):
-				game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum), Data.desc_icons[tile.bldg.name])
-			else:
-				game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum))
+			if tile.has("bldg"):
+				if Data.desc_icons.has(tile.bldg.name):
+					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum), Data.desc_icons[tile.bldg.name])
+				else:
+					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:

@@ -293,9 +293,9 @@ func hitbox_size():
 	else:
 		return 1
 
-func weapon_hit_HX(sh:int, weapon_data:Dictionary, weapon = null):
+func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	var w_data = "%s_data" % [weapon_type]
-	var t = weapon_data.target
+	var t = w_c_d.target
 	var remove_weapon_b:bool = false
 	if t == -1:
 		remove_weapon_b = true
@@ -310,7 +310,7 @@ func weapon_hit_HX(sh:int, weapon_data:Dictionary, weapon = null):
 		for i in len(HXs):
 			if HX_data[i].HP <= 0:
 				continue
-			if randf() < hit_formula(ship_data[sh].acc * weapon_data.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
+			if randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
 				var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[i].def, DEF_EXPO_ENEMY)
 				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.025 if game else 0)
 				if crit:
@@ -322,8 +322,8 @@ func weapon_hit_HX(sh:int, weapon_data:Dictionary, weapon = null):
 		if light_hit:
 			weapon_XPs[sh].light += 1
 	else:
-		if randf() < hit_formula(ship_data[sh].acc * weapon_data.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
-			var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[weapon_data.target].def, DEF_EXPO_ENEMY)
+		if randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
+			var dmg = ship_data[sh].atk * Data[w_data][ship_data[sh][weapon_type].lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[w_c_d.target].def, DEF_EXPO_ENEMY)
 			if game:
 				if weapon_type == "bullet":
 					dmg *= game.u_i.planck
@@ -335,29 +335,45 @@ func weapon_hit_HX(sh:int, weapon_data:Dictionary, weapon = null):
 			if crit:
 				dmg *= 1.5
 			damage_HX(t, dmg, crit)
+			HXs[t].get_node("AnimationPlayer").stop()
+			HXs[t].get_node("AnimationPlayer").play("Hurt")
 			if weapon_type == "bullet":
 				weapon_XPs[sh][weapon_type] += 1
-			else:
-				weapon_XPs[sh][weapon_type] += weapon_data.lv
-			if weapon_data.has("bounces_remaining"):
+				HXs[t].get_node("BulletParticles").emitting = true
+			elif weapon_type == "bomb":
+				HXs[t].get_node("BombParticles").emitting = true
+				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
+				$Camera2D/Screenshake.start(0.7, 20, 12)
+			if weapon_type != "bullet":
+				weapon_XPs[sh][weapon_type] += ship_data[sh][weapon_type].lv
+			var all_dead:bool = true
+			var last_id:int = min((wave + 1) * 4, len(HXs))
+			for i in range(wave * 4, last_id):
+				if HX_data[i].HP > 0:
+					all_dead = false
+					break
+			if w_c_d.has("bounces_remaining") and not all_dead:
 				var new_t:int = t
-				remove_weapon_b = weapon_data.bounces_remaining <= 0
+				var old_t:int = t
+				remove_weapon_b = w_c_d.bounces_remaining <= 0
 				if not remove_weapon_b:
 					while new_t == t or HX_data[new_t].HP <= 0:
-						new_t = Helper.rand_int(wave * 4, min((wave + 1) * 4, len(HXs)))
+						new_t = Helper.rand_int(wave * 4, last_id - 1)
 					var HX_pos:Vector2 = HXs[new_t].position
-					weapon.rotation = atan2(HX_pos.y - weapon.position.y, HX_pos.x - weapon.position.x)
-					weapon_data = {"v":polar2cartesian(50.0, weapon.rotation)}
-					weapon_data.target = new_t
-					weapon_data.shooter = curr_sh
-					weapon_data.lim = HX_pos
-					weapon_data.acc_mult = Data["%s_data" % [weapon_type]][weapon_data.lv - 1].accuracy
-					weapon_data.has_hit = false
-					weapon_data.bounces_remaining -= 1
+					weapon.rotation = atan2(HX_pos.y - HXs[old_t].position.y, HX_pos.x - HXs[old_t].position.x)
+					w_c_d.v = polar2cartesian(30.0, weapon.rotation)
+					if is_zero_approx(w_c_d.v.x):
+						w_c_d.v.x = 0.0
+					w_c_d.target = new_t
+					w_c_d.lim = HX_pos
+					w_c_d.has_hit = false
+					w_c_d.bounces_remaining -= 1
 				else:
-					weapon_data.has_hit = true
+					w_c_d.has_hit = true
+			else:
+				remove_weapon_b = true
 		else:
-			weapon_data.has_hit = true
+			w_c_d.has_hit = true
 			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
 	$Timer.start(min(1.0, 1.0 / time_speed))
 	return remove_weapon_b
@@ -459,16 +475,16 @@ func _process(delta):
 			if weapon.position.x > w_c_d[weapon.name].lim.x and not has_hit:
 				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
 		elif vel.x < 0:
-			remove_weapon_b = weapon.position.x < 1350
-			if weapon.position.x < w_c_d[weapon.name].lim.x and has_hit:
+			remove_weapon_b = weapon.position.x < -80
+			if weapon.position.x < w_c_d[weapon.name].lim.x and not has_hit:
 				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
 		elif vel.y > 0:
-			remove_weapon_b = weapon.position.y < 800
-			if weapon.position.y < w_c_d[weapon.name].lim.y and has_hit:
+			remove_weapon_b = weapon.position.y > 800
+			if weapon.position.y > w_c_d[weapon.name].lim.y and not has_hit:
 				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
 		elif vel.y < 0:
 			remove_weapon_b = weapon.position.y < -80
-			if weapon.position.y < w_c_d[weapon.name].lim.y and has_hit:
+			if weapon.position.y < w_c_d[weapon.name].lim.y and not has_hit:
 				remove_weapon_b = weapon_hit_HX(sh, w_c_d[weapon.name], weapon)
 		if remove_weapon_b:
 			weapon.remove_from_group("weapon")
@@ -676,7 +692,7 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 		weapon.scale *= 0.5
 		add_child(weapon)
 		weapon.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
-		w_c_d[weapon.name] = {"v":polar2cartesian(50.0, weapon.rotation)}
+		w_c_d[weapon.name] = {"v":polar2cartesian(30.0, weapon.rotation)}
 		w_c_d[weapon.name].target = target
 		w_c_d[weapon.name].shooter = curr_sh
 		w_c_d[weapon.name].lim = HX_pos

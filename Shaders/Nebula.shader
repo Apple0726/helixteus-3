@@ -46,7 +46,8 @@ void fragment() {
 	float final = fbm(coord + motion);
 	COLOR.rgb = color.rgb;
 	COLOR.a = max(final - 0.4, 0.0) * 2.5;
-	COLOR.r = COLOR.a * 1.0;
-	COLOR.rgb *= max(1.0, COLOR.a);
+	//COLOR.r = COLOR.a * 2.0;
+	COLOR.g += pow(COLOR.a * 1.0, 3.0);
+	COLOR.a = max(0.0, 2.0 * COLOR.a * (1.0 - 5.0 * distance(UV, vec2(0.5, 0.5))));
 	
 }

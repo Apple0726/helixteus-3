@@ -1159,24 +1159,24 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value), 6)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(round(path_2_value), 6)]
 		"AMN", "SPR":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"MM":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(clever_round(path_1_value)), Data.path_2[bldg].desc % format_num(clever_round(path_2_value)), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL":
-			return (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
 		"MS":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			return (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
 		"GH":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"CBD":
 			return "%s\n%s\n%s" % [
-				Data.path_1[bldg].desc % path_1_value,
+				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
 

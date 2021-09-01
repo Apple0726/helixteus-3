@@ -131,3 +131,5 @@ func hit(damage:float):
 		queue_free()
 	else:
 		chase_player()
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play("Hurt")

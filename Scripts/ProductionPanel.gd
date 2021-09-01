@@ -17,15 +17,18 @@ func _ready():
 	set_process(false)
 
 func _on_HSlider_value_changed(value):
-	if input_type in ["mats", "mets"]:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num(value), input_unit]
-	else:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num(value), input_unit]
-	if output_type in ["mats", "mets"]:
-		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(Helper.clever_round(value * ratio)), output_unit]
-	else:
-		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round(value * ratio)), output_unit]
+	refresh_values()
 
+func refresh_values():
+	if input_type in ["mats", "mets"]:
+		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value), input_unit]
+	else:
+		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value), input_unit]
+	if output_type in ["mats", "mets"]:
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(Helper.clever_round($Control/HBox/HSlider.value * ratio)), output_unit]
+	else:
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round($Control/HBox/HSlider.value * ratio)), output_unit]
+	
 func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
 	input_type = _input_type
@@ -88,6 +91,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 			$Control/HBox/HSlider.max_value = rsrc
 			$Control/HBox/HSlider.step = int(rsrc / 100)
 			$Control/HBox/HSlider.value = rsrc
+			refresh_values()
 
 func _on_Start_pressed():
 	if tile.bldg.has("qty1"):

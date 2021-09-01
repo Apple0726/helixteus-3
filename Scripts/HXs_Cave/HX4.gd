@@ -32,7 +32,7 @@ func set_rand():
 
 func on_time_out():
 	shoot_timer.wait_time = 0.04 / cave_ref.time_speed
-	if (sees_player or is_aggr()) and counter < 5:
+	if (sees_player or is_aggr()) and counter < 4:
 		for i in range(0, 3):
 			cave_ref.add_proj(true, position, 12.0, rot + i * 2*PI/3, cave_ref.bullet_texture, atk * 2.0)
 	counter += 1
