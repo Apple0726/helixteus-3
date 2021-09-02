@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -37,13 +37,117 @@ tracks/0/keys = {
 "values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Gradient" id=10]
+[sub_resource type="Animation" id=15]
+resource_name = "Big knockback"
+length = 1.3
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0513478, 54.5, 227.732, -0.25, 0, 0.25, 0, 0, -0.660033, -63.4014, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1.2 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.109635, 20.5, 153.083, -0.25, 0, 0.352036, -1.84743, 360, -0.641852, 2.10144, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1.3 )
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "Dead"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.073354, 113.595, 221.596, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.073354, 70.8488, 119.182, -0.58229, -8.37245, 0.352036, -1.84743 ),
+"times": PoolRealArray( 0, 1 )
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "Knockback"
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0513478, 54.5, 80, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.109635, 20.5, 15.7225, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "Small knockback"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0693889, -16.4901, -15, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0416334, 23.0659, 23.9385, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Sprite:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0999201, 17.2517, 6.29962, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+
+[sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=11]
-gradient = SubResource( 10 )
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
 
-[sub_resource type="ParticlesMaterial" id=8]
+[sub_resource type="ParticlesMaterial" id=6]
 flag_align_y = true
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
@@ -54,27 +158,27 @@ initial_velocity_random = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 2.0
-color_ramp = SubResource( 11 )
+color_ramp = SubResource( 5 )
 
-[sub_resource type="Gradient" id=4]
+[sub_resource type="Gradient" id=7]
 offsets = PoolRealArray( 0, 0.132616, 0.55914, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0.490196, 0, 0, 0, 0 )
 
-[sub_resource type="GradientTexture" id=5]
-gradient = SubResource( 4 )
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
 
-[sub_resource type="Curve" id=6]
+[sub_resource type="Curve" id=9]
 _data = [ Vector2( 0, 1 ), 0.0, -2.62433, 0, 0, Vector2( 1, 0 ), -0.0915151, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=7]
-curve = SubResource( 6 )
+[sub_resource type="CurveTexture" id=10]
+curve = SubResource( 9 )
 
-[sub_resource type="ParticlesMaterial" id=12]
+[sub_resource type="ParticlesMaterial" id=11]
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
 spread = 180.0
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 622.67
+initial_velocity = 500.0
 initial_velocity_random = 1.0
 angular_velocity = 129.69
 angular_velocity_random = 1.0
@@ -82,12 +186,12 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 damping = 100.0
 damping_random = 1.0
-scale = 0.3
-scale_random = 1.0
-scale_curve = SubResource( 7 )
-color_ramp = SubResource( 5 )
+scale = 0.1
+scale_random = 0.5
+scale_curve = SubResource( 10 )
+color_ramp = SubResource( 8 )
 
-[sub_resource type="ShaderMaterial" id=9]
+[sub_resource type="ShaderMaterial" id=12]
 shader = ExtResource( 7 )
 shader_param/color = Color( 1, 0, 0, 1 )
 shader_param/fog_size = 6.0
@@ -104,6 +208,7 @@ shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 2 )
+position = Vector2( 0, 6.29962 )
 texture = ExtResource( 6 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -169,8 +274,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="HurtAnimation" type="AnimationPlayer" parent="."]
 anims/Hurt = SubResource( 3 )
+
+[node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
+"anims/Big knockback" = SubResource( 15 )
+anims/Dead = SubResource( 16 )
+anims/Knockback = SubResource( 13 )
+"anims/Small knockback" = SubResource( 14 )
 
 [node name="BulletParticles" type="Particles2D" parent="."]
 emitting = false
@@ -178,7 +289,7 @@ amount = 30
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource( 8 )
+process_material = SubResource( 6 )
 texture = ExtResource( 5 )
 
 [node name="BombParticles" type="Particles2D" parent="."]
@@ -188,21 +299,21 @@ lifetime = 3.0
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
-process_material = SubResource( 12 )
+process_material = SubResource( 11 )
 texture = ExtResource( 10 )
 
 [node name="Fire" type="Sprite" parent="."]
 visible = false
-material = SubResource( 9 )
-position = Vector2( 39.2925, -45.331 )
-scale = Vector2( 10, 10 )
+material = SubResource( 12 )
+position = Vector2( 48.8168, -91.3656 )
+scale = Vector2( 12, 12 )
 texture = ExtResource( 8 )
 
 [node name="Effects" type="HBoxContainer" parent="."]
 margin_left = -186.0
-margin_top = -197.0
+margin_top = -309.705
 margin_right = -37.0
-margin_bottom = -159.0
+margin_bottom = -271.705
 rect_scale = Vector2( 2.5, 2.5 )
 theme = ExtResource( 2 )
 alignment = 1
@@ -212,8 +323,8 @@ __meta__ = {
 
 [node name="Fire" type="TextureRect" parent="Effects"]
 visible = false
-margin_left = 52.0
-margin_right = 82.0
+margin_left = 59.0
+margin_right = 89.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 9 )
@@ -222,9 +333,9 @@ stretch_mode = 6
 
 [node name="FireLabel" type="Label" parent="Effects"]
 visible = false
-margin_left = 69.0
+margin_left = 86.0
 margin_top = 7.0
-margin_right = 80.0
+margin_right = 97.0
 margin_bottom = 31.0
 text = "9"
 __meta__ = {
