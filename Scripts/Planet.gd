@@ -514,31 +514,32 @@ func destroy_bldg(id2:int, mass:bool = false):
 					continue
 				if _tile.has("cost_div_dict"):
 					_tile.cost_div_dict.erase(String(id2))
-				if _tile.cost_div_dict.empty():
-					_tile.erase("cost_div_dict")
-					_tile.erase("cost_div")
-				else:
-					var div:float = 1.0
-					for st in _tile.cost_div_dict:
-						div = max(div, _tile.cost_div_dict[st])
-					_tile.cost_div = div
-				_tile.auto_collect_dict.erase(String(id2))
-				if _tile.auto_collect_dict.empty():
-					_tile.erase("auto_collect_dict")
-					_tile.erase("auto_collect")
-				else:
-					var new_value:float = 0
-					for st in _tile.auto_collect_dict:
-						new_value = max(new_value, _tile.auto_collect_dict[st])
-					var diff:float = max(0, _tile.auto_collect - new_value)
-					_tile.auto_collect = new_value
-					if tile.has("bldg"):
-						if tile.bldg.name == "ME":
-							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
-							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
-						elif tile.bldg.name in ["PP", "SP"]:
-							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
-							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
+					if _tile.cost_div_dict.empty():
+						_tile.erase("cost_div_dict")
+						_tile.erase("cost_div")
+					else:
+						var div:float = 1.0
+						for st in _tile.cost_div_dict:
+							div = max(div, _tile.cost_div_dict[st])
+						_tile.cost_div = div
+				if _tile.has("auto_collect_dict"):
+					_tile.auto_collect_dict.erase(String(id2))
+					if _tile.auto_collect_dict.empty():
+						_tile.erase("auto_collect_dict")
+						_tile.erase("auto_collect")
+					else:
+						var new_value:float = 0
+						for st in _tile.auto_collect_dict:
+							new_value = max(new_value, _tile.auto_collect_dict[st])
+						var diff:float = max(0, _tile.auto_collect - new_value)
+						_tile.auto_collect = new_value
+						if tile.has("bldg"):
+							if tile.bldg.name == "ME":
+								game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
+								game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
+							elif tile.bldg.name in ["PP", "SP"]:
+								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
+								game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
 	else:
 		if tile.has("auto_collect"):
 			if bldg == "ME":

@@ -59,6 +59,8 @@ var weapon_XPs:Array = []
 var tgt_sh:int = -1#target_ship
 var hit_amount:int#Number of times your ships got hit (combined)
 var pattern:String = "" #"1_1", "2_3" etc.
+var max_star_lum:float = 0.0
+var light_mult:float
 
 var victory_panel
 
@@ -79,7 +81,6 @@ func _ready():
 		else:
 			HX_data = p_i.HX_data
 		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0)
-		var lum:float = 0.0
 		for star in game.system_data[game.c_s].stars:
 			var shift:float = 0
 			shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
@@ -97,16 +98,18 @@ func _ready():
 				star_spr.material.set_shader_param("twinkle_speed", 0.4)
 				star_spr.material.set_shader_param("amplitude", 0.1)
 				$BG.material.shader = preload("res://Shaders/PlanetBG.shader")
-				if star.luminosity > lum:
+			if star.luminosity > max_star_lum:
+				if game.enable_shaders:
 					$BG.material.set_shader_param("strength", max(0.3, star_spr.scale.x * 3.0))
 					$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
 					$BG.material.set_shader_param("star_mod", star_spr.modulate)
 					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
-					lum = star.luminosity
-			else:
-				$BG.material.shader = null
+				else:
+					$BG.material.shader = null
+				max_star_lum = star.luminosity
 			add_child(star_spr)
 			move_child(star_spr, 0)
+		light_mult = range_lerp(min(max_star_lum, 2.0), 2.0, 0.0, 1.0, 3.0)
 		if not p_i.type in [11, 12]:
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
@@ -200,13 +203,33 @@ func send_HXs():
 		HX.add_child(btn)
 		btn.connect("mouse_entered", self, "on_HX_over", [k])
 		btn.connect("mouse_exited", self, "on_HX_out")
+		HX.get_node("Effects/Fire").connect("mouse_entered", self, "on_effect_over", [tr("BURN_DESC")])
+		HX.get_node("Effects/Fire").connect("mouse_exited", self, "on_effect_out")
+		HX.get_node("Effects/Stun").connect("mouse_entered", self, "on_effect_over", [tr("STUN_DESC")])
+		HX.get_node("Effects/Stun").connect("mouse_exited", self, "on_effect_out")
 		add_child(HX)
 		HXs.append(HX)
 		HX_c_d[HX.name] = {"position":Vector2((j % 2) * 300 + 850, (j / 2) * 200 + 200)}
-	
+
+func on_effect_over(st:String):
+	if game:
+		game.show_tooltip(st)
+
+func on_effect_out(st:String):
+	if game:
+		game.hide_tooltip()
+
 func on_HX_over(id:int):
 	if game:
-		game.show_adv_tooltip("@i %s / %s\n@i %s   @i %s\n@i %s   @i %s" % [ceil(HX_data[id].HP), HX_data[id].total_HP, HX_data[id].atk, HX_data[id].def, HX_data[id].acc, HX_data[id].eva], [HP_icon, atk_icon, def_icon, acc_icon, eva_icon])
+		game.show_adv_tooltip("@i %s / %s\n@i %s   @i %s\n@i %s   @i %s" % [
+			ceil(HX_data[id].HP),
+			HX_data[id].total_HP,
+			HX_data[id].atk,
+			HX_data[id].def,
+			round(HX_data[id].acc * (1.0 + HX_c_d[HXs[id].name].acc if HX_c_d[HXs[id].name].has("acc") else 1.0)),
+			HX_data[id].eva,
+			],
+			[HP_icon, atk_icon, def_icon, acc_icon, eva_icon])
 
 func on_HX_out():
 	if game:
@@ -235,6 +258,7 @@ func _input(event):
 			var HX = HXs[i]
 			HX.get_node("Info/Icon").visible = false
 			HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[i].lv]
+			HX.get_node("Info/Label")["custom_colors/font_color"] = Color.white
 		for i in len(ship_data):
 			get_node("Ship%s/Icon" % i).visible = false
 			get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
@@ -266,7 +290,14 @@ func display_stats(type:String):
 		if type == "HP":
 			HX.get_node("Info/Label").text = "%s / %s" % [HX_data[i].HP, HX_data[i].total_HP]
 		else:
-			HX.get_node("Info/Label").text = String(HX_data[i][type])
+			if HX_c_d[HXs[i].name].has(type):
+				if HX_c_d[HXs[i].name][type] > 0:
+					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.green
+				elif HX_c_d[HXs[i].name][type] < 0:
+					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.red
+				HX.get_node("Info/Label").text = String(round(HX_data[i][type] * (1.0 + HX_c_d[HXs[i].name][type])))
+			else:
+				HX.get_node("Info/Label").text = String(HX_data[i][type])
 	for i in len(ship_data):
 		get_node("Ship%s/Icon" % i)
 		get_node("Ship%s/Icon" % i).visible = true
@@ -295,6 +326,19 @@ func hitbox_size():
 	else:
 		return 1
 
+func set_buff_text(buff:float, buff_type:String, node):
+	if buff != 0:
+		node.get_node("Effects/%s" % buff_type).visible = true
+		node.get_node("Effects/%sLabel" % buff_type).visible = true
+		node.get_node("Effects/%sLabel" % buff_type).text = "%s%%" % (buff * 100)
+		if buff > 0:
+			node.get_node("Effects/%sLabel" % buff_type)["custom_colors/font_color"] = Color.green
+		elif buff < 0:
+			node.get_node("Effects/%sLabel" % buff_type)["custom_colors/font_color"] = Color.red
+	else:
+		node.get_node("Effects/%s" % buff_type).visible = false
+		node.get_node("Effects/%sLabel" % buff_type).visible = false
+
 func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	var timer_delay:float = 1.0
 	var w_data = "%s_data" % [weapon_type]
@@ -314,7 +358,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		for i in len(HXs):
 			if HX_data[i].HP <= 0:
 				continue
-			if randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
+			if HX_c_d[HXs[i].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
 				var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[i].def, DEF_EXPO_ENEMY)
 				dmg *= game.u_i.speed_of_light
 				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.025 if game else 0)
@@ -326,12 +370,19 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[i].get_node("HurtAnimation").play("Hurt")
 				HXs[i].get_node("KnockbackAnimation").stop()
 				HXs[i].get_node("KnockbackAnimation").play("Small knockback" if HX_data[i].HP > 0 else "Dead")
+				HXs[i].get_node("LightParticles").emitting = true
+				var debuff:float = -0.2 - weapon_lv * 0.1
+				if HX_c_d[HXs[i].name].has("acc"):
+					HX_c_d[HXs[i].name].acc = max(debuff, HX_c_d[HXs[i].name].acc + debuff)
+				else:
+					HX_c_d[HXs[i].name].acc = debuff
+				set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
 			else:
 				Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
 		if light_hit:
 			weapon_XPs[sh].light += 1
 	else:
-		if randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
+		if HX_c_d[HXs[t].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
 			var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[w_c_d.target].def, DEF_EXPO_ENEMY)
 			if game:
 				if weapon_type == "bullet":
@@ -365,6 +416,11 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				weapon_XPs[sh][weapon_type] += weapon_lv
 				timer_delay = 1.3
 			elif weapon_type == "laser":
+				HX_c_d[HXs[t].name].stun = weapon_lv
+				HXs[t].get_node("Stun").visible = true
+				HXs[t].get_node("Effects/Stun").visible = true
+				HXs[t].get_node("Effects/StunLabel").visible = true
+				HXs[t].get_node("Effects/StunLabel").text = String(weapon_lv)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Small knockback" if HX_data[t].HP > 0 else "Dead")
 				weapon_XPs[sh][weapon_type] += weapon_lv
@@ -472,7 +528,7 @@ func _process(delta):
 			self["ship%s_engine" % tgt_sh].emitting = false
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.scale += Vector2(0.1, 0.1) * delta * 60 * time_speed
-		light.modulate.a -= 0.02 * delta * 60 * time_speed
+		light.modulate.a -= 0.05 * delta * 60 * time_speed
 		if light.modulate.a <= 0:
 			light.remove_from_group("lights")
 			remove_child(light)
@@ -539,12 +595,13 @@ func process_1_2(weapon, delta):
 		weapon.scale.y += HX_w_c_d[weapon.name].grow_spd * delta
 		if weapon.scale.y > 0.2:
 			HX_w_c_d[weapon.name].stage = 1
+			weapon.scale.y = 2
+			weapon.modulate.a = 1
+			weapon.get_node("CollisionShape2D").disabled = false
+			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").stop()
+			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").play("Knockback")
+			
 	elif HX_w_c_d[weapon.name].stage == 1:
-		weapon.scale.y = 2
-		weapon.modulate.a = 1
-		HX_w_c_d[weapon.name].stage = 2
-		weapon.get_node("CollisionShape2D").disabled = false
-	elif HX_w_c_d[weapon.name].stage == 2:
 		weapon.modulate.a -= 0.03 * delta
 		if weapon.modulate.a <= 0:
 			remove_weapon(weapon, "w_1_2")
@@ -703,7 +760,7 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 		weapon.scale *= 0.5
 		add_child(weapon)
 		weapon.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
-		w_c_d[weapon.name] = {"v":polar2cartesian(30.0, weapon.rotation)}
+		w_c_d[weapon.name] = {"v":polar2cartesian(60.0 if weapon_type == "light" else 30.0, weapon.rotation)}
 		w_c_d[weapon.name].target = target
 		w_c_d[weapon.name].shooter = curr_sh
 		w_c_d[weapon.name].lim = HX_pos
@@ -728,9 +785,14 @@ func _on_weapon_pressed(_weapon_type:String):
 
 func _on_Timer_timeout():
 	var HXs_rekt:int = wave * 4
-	while curr_en < len(HX_data) and HX_data[curr_en].HP <= 0:
-		HXs_rekt += 1
-		curr_en += 1
+	while curr_en < min((wave + 1) * 4, len(HX_data)):
+		if HX_data[curr_en].HP <= 0:
+			HXs_rekt += 1
+			curr_en += 1
+		elif HX_c_d[HXs[curr_en].name].has("stun"):
+			curr_en += 1
+		else:
+			break
 	if HXs_rekt >= len(HX_data):
 		victory_panel = victory_panel_scene.instance()
 		victory_panel.HX_data = HX_data
@@ -797,28 +859,35 @@ func enemy_attack():
 		if curr_en == last_id:
 			curr_sh = 0
 			for i in range(wave * 4, last_id):
-				if HX_data[i].HP > 0 and HX_c_d[HXs[i].name].has("burn"):
-					damage_HX(i, HX_data[i].total_HP * 0.15)
-					HXs[i].get_node("KnockbackAnimation").stop()
-					HXs[i].get_node("KnockbackAnimation").play("Small knockback")
-					HXs[i].get_node("HurtAnimation").stop()
-					HXs[i].get_node("HurtAnimation").play("Hurt")
-					HX_c_d[HXs[i].name].burn -= 1
-					HXs[i].get_node("Effects/FireLabel").text = String(HX_c_d[HXs[i].name].burn)
-					if HX_c_d[HXs[i].name].burn <= 0:
-						HX_c_d[HXs[i].name].erase("burn")
-						HXs[i].get_node("Fire").visible = false
-						HXs[i].get_node("Effects/Fire").visible = false
-						HXs[i].get_node("Effects/FireLabel").visible = false
+				if HX_data[i].HP > 0:
+					if HX_c_d[HXs[i].name].has("burn"):
+						damage_HX(i, HX_data[i].total_HP * 0.15)
+						HXs[i].get_node("KnockbackAnimation").stop()
+						HXs[i].get_node("KnockbackAnimation").play("Small knockback")
+						HXs[i].get_node("HurtAnimation").stop()
+						HXs[i].get_node("HurtAnimation").play("Hurt")
+						HX_c_d[HXs[i].name].burn -= 1
+						HXs[i].get_node("Effects/FireLabel").text = String(HX_c_d[HXs[i].name].burn)
+						if HX_c_d[HXs[i].name].burn <= 0:
+							HX_c_d[HXs[i].name].erase("burn")
+							HXs[i].get_node("Fire").visible = false
+							HXs[i].get_node("Effects/Fire").visible = false
+							HXs[i].get_node("Effects/FireLabel").visible = false
+					if HX_c_d[HXs[i].name].has("stun"):
+						HX_c_d[HXs[i].name].stun -= 1
+						HXs[i].get_node("Effects/StunLabel").text = String(HX_c_d[HXs[i].name].stun)
+						if HX_c_d[HXs[i].name].stun <= 0:
+							HX_c_d[HXs[i].name].erase("stun")
+							HXs[i].get_node("Stun").visible = false
+							HXs[i].get_node("Effects/Stun").visible = false
+							HXs[i].get_node("Effects/StunLabel").visible = false
+					if HX_c_d[HXs[i].name].has("acc"):
+						if HX_c_d[HXs[i].name].acc > 0:
+							HX_c_d[HXs[i].name].acc = max(0.0, HX_c_d[HXs[i].name].acc - 0.05)
+						elif HX_c_d[HXs[i].name].acc < 0: 
+							HX_c_d[HXs[i].name].acc = min(0.0, HX_c_d[HXs[i].name].acc + 0.05)
+						set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
 			_on_Timer_timeout()
-#			while ship_data[curr_sh].HP <= 0:
-#				curr_sh += 1
-#			curr_en = wave * 4
-#			stage = BattleStages.CHOOSING
-#			$FightPanel.visible = true
-#			$Back.visible = true
-#			$Current.visible = true
-#			refresh_fight_panel()
 		else:
 			pattern = "%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)]
 			call("atk_%s" % pattern, curr_en)
@@ -1170,8 +1239,9 @@ func atk_4_3(id:int):
 func _on_Ship_area_entered(area, ship_id:int):
 	if immune or self["ship%s" % ship_id].modulate.a != 1.0:
 		return
-	var HX = HX_data[HX_w_c_d[area.name].id]
-	if randf() < hit_formula(HX.acc, ship_data[ship_id].eva * ship_data[ship_id].eva_mult):
+	var shooter:int = HX_w_c_d[area.name].id
+	var HX = HX_data[shooter]
+	if randf() < hit_formula(HX.acc * (1 + HX_c_d[HXs[shooter].name].acc if HX_c_d[HXs[shooter].name].has("acc") else 0.0), ship_data[ship_id].eva * ship_data[ship_id].eva_mult):
 		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / pow(ship_data[ship_id].def * ship_data[ship_id].def_mult, DEF_EXPO_SHIP)
 		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
 		ship_data[ship_id].HP -= dmg
@@ -1193,7 +1263,26 @@ func _on_Battle_tree_exited():
 func _on_weapon_mouse_entered(weapon:String):
 	if game:
 		var w_lv:int = ship_data[curr_sh][weapon].lv
-		game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [tr(weapon.to_upper()), tr("LV"), w_lv, tr("BASE_DAMAGE"), Data["%s_data" % [weapon]][w_lv - 1].damage, tr("BASE_ACCURACY"), Data["%s_data" % [weapon]][w_lv - 1].accuracy])
+		if weapon == "light":
+			game.show_tooltip("%s %s %s\n%s: %s (%s: %s)\n%s: %s" % [
+				tr(weapon.to_upper()),# Bullet
+				tr("LV"),# Lv
+				w_lv,# 1
+				tr("BASE_DAMAGE"),# Base damage
+				Data["%s_data" % [weapon]][w_lv - 1].damage * light_mult,# 5
+				tr("BATTLEFIELD_DARKNESS_MULT"),
+				Helper.clever_round(light_mult),# 1.3
+				tr("BASE_ACCURACY"),# Base accuracy
+				Data["%s_data" % [weapon]][w_lv - 1].accuracy])# 2
+		else:
+			game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [
+				tr(weapon.to_upper()),# Bullet
+				tr("LV"),# Lv
+				w_lv,# 1
+				tr("BASE_DAMAGE"),# Base damage
+				Data["%s_data" % [weapon]][w_lv - 1].damage,# 5
+				tr("BASE_ACCURACY"),# Base accuracy
+				Data["%s_data" % [weapon]][w_lv - 1].accuracy])# 2
 
 func _on_weapon_mouse_exited():
 	if game:

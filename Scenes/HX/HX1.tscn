@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -10,6 +10,11 @@
 [ext_resource path="res://icon.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/Debris.png" type="Texture" id=10]
+[ext_resource path="res://Shaders/Laser.shader" type="Shader" id=11]
+[ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Icons/Stun.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=15]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 51.7997
@@ -37,7 +42,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=4]
 resource_name = "Big knockback"
 length = 1.3
 tracks/0/type = "bezier"
@@ -61,7 +66,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.3, 1.3 )
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=5]
 resource_name = "Dead"
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Sprite:position:x")
@@ -84,7 +89,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 )
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=6]
 resource_name = "Knockback"
 step = 0.01
 tracks/0/type = "bezier"
@@ -108,7 +113,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.3, 1 )
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=7]
 resource_name = "Small knockback"
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Sprite:rotation_degrees")
@@ -141,13 +146,13 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.3, 1 )
 }
 
-[sub_resource type="Gradient" id=4]
+[sub_resource type="Gradient" id=8]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=5]
-gradient = SubResource( 4 )
+[sub_resource type="GradientTexture" id=9]
+gradient = SubResource( 8 )
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="ParticlesMaterial" id=10]
 flag_align_y = true
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
@@ -158,22 +163,18 @@ initial_velocity_random = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 2.0
-color_ramp = SubResource( 5 )
+color_ramp = SubResource( 9 )
 
-[sub_resource type="Gradient" id=7]
-offsets = PoolRealArray( 0, 0.132616, 0.55914, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0.490196, 0, 0, 0, 0 )
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0, 0.308244, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=8]
-gradient = SubResource( 7 )
+[sub_resource type="GradientTexture" id=12]
+gradient = SubResource( 11 )
 
-[sub_resource type="Curve" id=9]
-_data = [ Vector2( 0, 1 ), 0.0, -2.62433, 0, 0, Vector2( 1, 0 ), -0.0915151, 0.0, 0, 0 ]
+[sub_resource type="CurveTexture" id=14]
 
-[sub_resource type="CurveTexture" id=10]
-curve = SubResource( 9 )
-
-[sub_resource type="ParticlesMaterial" id=11]
+[sub_resource type="ParticlesMaterial" id=15]
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
 spread = 180.0
@@ -188,15 +189,69 @@ damping = 100.0
 damping_random = 1.0
 scale = 0.1
 scale_random = 0.5
-scale_curve = SubResource( 10 )
-color_ramp = SubResource( 8 )
+scale_curve = SubResource( 14 )
+color_ramp = SubResource( 12 )
 
-[sub_resource type="ShaderMaterial" id=12]
+[sub_resource type="ParticlesMaterial" id=19]
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 250.0
+angular_velocity = 129.69
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 100.0
+damping_random = 1.0
+scale = 0.1
+scale_random = 0.5
+color_ramp = SubResource( 12 )
+
+[sub_resource type="ShaderMaterial" id=16]
 shader = ExtResource( 7 )
 shader_param/color = Color( 1, 0, 0, 1 )
 shader_param/fog_size = 6.0
 shader_param/fog_mvt_spd = 1.0
 shader_param/OCTAVES = 4
+
+[sub_resource type="ShaderMaterial" id=17]
+shader = ExtResource( 11 )
+shader_param/beams = 1
+shader_param/energy = 20.0
+shader_param/roughness = 3
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.021
+shader_param/outline_thickness = 0.044
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=18]
+shader = ExtResource( 11 )
+shader_param/beams = 1
+shader_param/energy = 10.0
+shader_param/roughness = 8
+shader_param/frequency = 15
+shader_param/speed = 1.0
+shader_param/thickness = 0.012
+shader_param/outline_thickness = 0.043
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
 
 [node name="HX" type="KinematicBody2D"]
 collision_layer = 4
@@ -278,10 +333,10 @@ __meta__ = {
 anims/Hurt = SubResource( 3 )
 
 [node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
-"anims/Big knockback" = SubResource( 15 )
-anims/Dead = SubResource( 16 )
-anims/Knockback = SubResource( 13 )
-"anims/Small knockback" = SubResource( 14 )
+"anims/Big knockback" = SubResource( 4 )
+anims/Dead = SubResource( 5 )
+anims/Knockback = SubResource( 6 )
+"anims/Small knockback" = SubResource( 7 )
 
 [node name="BulletParticles" type="Particles2D" parent="."]
 emitting = false
@@ -289,7 +344,8 @@ amount = 30
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource( 6 )
+local_coords = false
+process_material = SubResource( 10 )
 texture = ExtResource( 5 )
 
 [node name="BombParticles" type="Particles2D" parent="."]
@@ -299,21 +355,51 @@ lifetime = 3.0
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
-process_material = SubResource( 11 )
+local_coords = false
+process_material = SubResource( 15 )
 texture = ExtResource( 10 )
+
+[node name="LightParticles" type="Particles2D" parent="."]
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 0.95
+randomness = 1.0
+local_coords = false
+process_material = SubResource( 19 )
+texture = ExtResource( 14 )
 
 [node name="Fire" type="Sprite" parent="."]
 visible = false
-material = SubResource( 12 )
+material = SubResource( 16 )
 position = Vector2( 48.8168, -91.3656 )
 scale = Vector2( 12, 12 )
 texture = ExtResource( 8 )
 
+[node name="Stun" type="Node2D" parent="."]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="Stun"]
+material = SubResource( 17 )
+position = Vector2( 47.1782, 64.5085 )
+rotation = 0.496553
+scale = Vector2( 2.36037, 2.36037 )
+texture = ExtResource( 12 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Sprite2" type="Sprite" parent="Stun"]
+material = SubResource( 18 )
+position = Vector2( 11.3541, 50.4711 )
+rotation = -0.583007
+scale = Vector2( 1.67193, 1.67193 )
+texture = ExtResource( 12 )
+offset = Vector2( -21.4132, -17.9986 )
+
 [node name="Effects" type="HBoxContainer" parent="."]
-margin_left = -186.0
-margin_top = -309.705
-margin_right = -37.0
-margin_bottom = -271.705
+margin_left = -185.37
+margin_top = -252.411
+margin_right = -36.37
+margin_bottom = -214.411
 rect_scale = Vector2( 2.5, 2.5 )
 theme = ExtResource( 2 )
 alignment = 1
@@ -323,8 +409,8 @@ __meta__ = {
 
 [node name="Fire" type="TextureRect" parent="Effects"]
 visible = false
-margin_left = 59.0
-margin_right = 89.0
+margin_left = 27.0
+margin_right = 57.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 9 )
@@ -333,9 +419,51 @@ stretch_mode = 6
 
 [node name="FireLabel" type="Label" parent="Effects"]
 visible = false
-margin_left = 86.0
+margin_left = 44.0
 margin_top = 7.0
-margin_right = 97.0
+margin_right = 55.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stun" type="TextureRect" parent="Effects"]
+visible = false
+margin_left = 52.0
+margin_right = 82.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 13 )
+expand = true
+stretch_mode = 6
+
+[node name="StunLabel" type="Label" parent="Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 7.0
+margin_right = 80.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Acc" type="TextureRect" parent="Effects"]
+visible = false
+margin_left = 59.0
+margin_right = 89.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 6
+
+[node name="AccLabel" type="Label" parent="Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 7.0
+margin_right = 80.0
 margin_bottom = 31.0
 text = "9"
 __meta__ = {
