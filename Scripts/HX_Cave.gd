@@ -27,8 +27,8 @@ enum States {IDLE, MOVE}
 var state = States.IDLE
 
 func _ready():
-	$HP.max_value = total_HP
-	$HP.value = HP
+	$Info/HP.max_value = total_HP
+	$Info/HP.value = HP
 	
 	check_distance_timer = Timer.new()
 	add_child(check_distance_timer)
@@ -122,7 +122,7 @@ func check_distance():
 
 func hit(damage:float):
 	HP -= damage
-	$HP.value = HP
+	$Info/HP.value = HP
 	if HP <= 0:
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
 		cave_ref.MM.remove_child(MM_icon)
@@ -131,5 +131,5 @@ func hit(damage:float):
 		queue_free()
 	else:
 		chase_player()
-	$AnimationPlayer.stop()
-	$AnimationPlayer.play("Hurt")
+	$HurtAnimation.stop()
+	$HurtAnimation.play("Hurt")

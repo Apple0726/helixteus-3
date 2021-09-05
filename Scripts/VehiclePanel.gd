@@ -21,7 +21,7 @@ func _input(event):
 		refresh()
 
 func refresh():
-	$Panel.visible = game.science_unlocked.FG
+	$Panel.visible = game.science_unlocked.has("FG")
 	$Probes.visible = game.universe_data[game.c_u].lv >= 50
 	var hbox = $Rovers/HBox
 	var hbox2 = $Panel/GridContainer

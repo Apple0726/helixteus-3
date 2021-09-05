@@ -119,10 +119,6 @@ func _ready():
 				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				$Obstacles.set_cell(i, j, 1 + tile.crater.variant)
-			if tile.has("plant"):
-				$Soil.set_cell(i, j, 0)
-				if not tile.plant.empty():
-					add_plant(id2, tile.plant.name)
 			if tile.has("depth") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
 			if tile.has("rock"):
@@ -163,6 +159,18 @@ func _ready():
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 0)
 				elif tile.lake.state == "sc":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 1)
+			if tile.has("plant"):
+				var lake_data:Dictionary = Helper.check_lake_presence(Vector2(id2 % wid, int(id2 / wid)), wid)
+				if lake_data.has_lake:
+					game.tile_data[id2].adj_lake_state = lake_data.lake_state
+				$Soil.set_cell(i, j, 0)
+				if not tile.plant.empty():
+					add_plant(id2, tile.plant.name)
+					if game.science_unlocked.has("GHA"):
+						items_collected.clear()
+						harvest_plant(tile, id2)
+						tile.plant.clear()
+						game.show_collect_info(items_collected)
 	if p_i.has("lake_1"):
 		$Lakes1.update_bitmask_region()
 	if p_i.has("lake_2"):
@@ -225,7 +233,7 @@ func show_tooltip(tile):
 			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
 			game.help_str = "boulder_desc"
 	elif tile.has("ship"):
-		if game.science_unlocked.SCT:
+		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
 			if game.help.abandoned_ship:
@@ -257,7 +265,7 @@ func show_tooltip(tile):
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
 		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
 			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
-		if not game.science_unlocked.RC:
+		if not game.science_unlocked.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
 			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
@@ -352,7 +360,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 
 func seeds_plant(tile, tile_id:int, curr_time, mass_plant:bool = false):
 	#Plants can't grow when not adjacent to lakes
-	var check_lake = check_lake(tile_id)
+	var check_lake = Helper.check_lake(Vector2(tile_id % wid, int(tile_id / wid)), wid, game.item_to_use.name)
 	if check_lake[0]:
 		tile.plant.name = game.item_to_use.name
 		game.item_to_use.num -= 1
@@ -382,14 +390,14 @@ func harvest_plant(tile, tile_id:int):
 		return
 	var curr_time = OS.get_system_time_msecs()
 	if curr_time >= tile.plant.grow_time + tile.plant.plant_date:
-		var plant:String = Helper.get_plant_produce(tile.plant.name)
-		var produce:float = game.craft_agriculture_info[tile.plant.name].produce
-		produce *= Helper.get_au_mult(tile)
-		if tile.has("bldg") and tile.bldg.name == "GH":
-			produce *= tile.bldg.path_2_value
-		game.show[plant] = true
+		var produce:Dictionary = game.craft_agriculture_info[tile.plant.name].produce.duplicate(true)
+		for p in produce:
+			produce[p] *= Helper.get_au_mult(tile)
+			if tile.has("bldg") and tile.bldg.name == "GH":
+				produce[p] *= tile.bldg.path_2_value
+			game.show[p] = true
+			Helper.add_item_to_coll(items_collected, p, produce[p])
 		game.show.metals = true
-		Helper.add_item_to_coll(items_collected, plant, produce)
 		tile.plant.clear()
 		remove_child(plant_sprites[String(tile_id)])
 		plant_sprites[String(tile_id)].queue_free()
@@ -448,6 +456,17 @@ func click_tile(tile, tile_id:int):
 		if not tile.bldg.is_constructing:
 			game.c_t = tile_id
 			match bldg:
+				"GH":
+					if game.science_unlocked.has("GHA"):
+						game.greenhouse_panel.c_v = "planet"
+						if tiles_selected.empty():
+							game.greenhouse_panel.tiles_selected = [tile_id]
+							game.greenhouse_panel.tile_num = 1
+						else:
+							game.greenhouse_panel.tiles_selected = tiles_selected.duplicate(true)
+							game.greenhouse_panel.tile_num = len(tiles_selected)
+						game.greenhouse_panel.p_i = p_i
+						game.toggle_panel(game.greenhouse_panel)
 				"RCC":
 					game.toggle_panel(game.RC_panel)
 				"SY":
@@ -785,6 +804,10 @@ func _unhandled_input(event):
 				if not tile:
 					game.tile_data[tile_id] = {}
 				game.tile_data[tile_id].plant = {}
+				if not game.tile_data[tile_id].has("adj_lake_state"):
+					var lake_data:Dictionary = Helper.check_lake_presence(Vector2(tile_id % wid, int(tile_id / wid)), wid)
+					if lake_data.has_lake:
+						game.tile_data[tile_id].adj_lake_state = lake_data.lake_state
 				$Soil.set_cell(x_pos, y_pos, 0)
 				$Soil.update_bitmask_region()
 				game.HUD.refresh()
@@ -819,12 +842,12 @@ func _unhandled_input(event):
 								harvest_plant(game.tile_data[_tile], _tile)
 					elif t == "seeds":
 						if tiles_selected.empty():
-							if tile.plant.empty():
+							if tile.plant.empty() and (not game.science_unlocked.GHA or not tile.has("bldg")):
 								seeds_plant(tile, tile_id, curr_time)
 						else:
 							for _tile_id in tiles_selected:
 								var _tile = game.tile_data[_tile_id]
-								if _tile.has("plant") and _tile.plant.empty():
+								if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.GHA or not tile.has("bldg")):
 									seeds_plant(_tile, _tile_id, curr_time, true)
 									if game.item_to_use.num <= 0:
 										break
@@ -869,7 +892,7 @@ func _unhandled_input(event):
 						game.toggle_panel(game.vehicle_panel)
 						game.vehicle_panel.tile_id = tile_id
 			elif tile.has("ship"):
-				if game.science_unlocked.SCT:
+				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
@@ -1040,22 +1063,6 @@ func available_to_build(tile):
 	if bldg_to_construct == "GH":
 		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
-
-func check_lake(local_id:int):
-# warning-ignore:integer_division
-	var v = Vector2(local_id % wid, int(local_id / wid))
-	var state
-	var has_lake = false
-	for i in range(v.x - 1, v.x + 2):
-		for j in range(v.y - 1, v.y + 2):
-			if Vector2(i, j) != v:
-				if $Lakes1.get_cell(i, j) != -1 or $Lakes2.get_cell(i, j) != -1:
-					var id2 = i % wid + j * wid
-					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[game.item_to_use.name].lake
-					has_lake = has_lake or okay
-					if okay:
-						state = game.tile_data[id2].lake.state
-	return [has_lake, state]
 
 func add_time_bar(id2:int, type:String):
 	var local_id = id2

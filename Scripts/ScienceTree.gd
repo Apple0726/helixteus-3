@@ -19,7 +19,7 @@ func refresh():
 				continue
 			var available:bool = true
 			for p_sc in p_scs:
-				if not game.science_unlocked[p_sc]:
+				if not game.science_unlocked.has(p_sc):
 					available = false
 					break
 			if available:
@@ -34,7 +34,7 @@ func refresh():
 			sc.refresh()
 		else:
 			var sc_to:String = sc.name.split("_")[1]#The science the line points to
-			if game.science_unlocked[sc_to]:
+			if game.science_unlocked.has(sc_to):
 				if sc is Line2D:
 					sc.default_color = Color(0.4, 1.0, 0.46, 1)
 				elif sc is Node2D:

@@ -70,19 +70,19 @@ func _on_btn_pressed(btn_str:String):
 		elif bldg.item_name == "SE":
 			bldg.visible = game.show.coal
 		elif bldg.item_name == "MM":
-			bldg.visible = game.science_unlocked.AM
+			bldg.visible = game.science_unlocked.has("AM")
 		elif bldg.item_name == "SP":
 			bldg.visible = game.stats.planets_conquered > 1
 		elif bldg.item_name in ["AE", "AMN"]:
-			bldg.visible = game.science_unlocked.ATM
+			bldg.visible = game.science_unlocked.has("ATM")
 		elif bldg.item_name == "SPR":
-			bldg.visible = game.science_unlocked.SAP
+			bldg.visible = game.science_unlocked.has("SAP")
 		elif bldg.item_name == "SY":
-			bldg.visible = game.science_unlocked.FG
+			bldg.visible = game.science_unlocked.has("FG")
 		elif bldg.item_name == "PCC":
 			bldg.visible = game.universe_data[game.c_u].lv >= 50
 		elif bldg.item_name == "GH":
-			bldg.visible = game.science_unlocked.EGH
+			bldg.visible = game.science_unlocked.has("EGH")
 	$VBox/Tabs/Production.visible = game.show.stone
 	$VBox/Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
 	$VBox/Tabs/Vehicles.visible = game.show.vehicles_button

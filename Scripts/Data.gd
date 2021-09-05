@@ -180,6 +180,7 @@ var science_unlocks = {
 						#Agriculture sciences
 						"SA":{"cost":100, "parents":[]},
 						"EGH":{"cost":3500, "parents":["SA"]},
+						"GHA":{"cost":e(3.7, 7), "parents":["EGH"]},
 						
 						#Auto mining
 						"AM":{"cost":10000, "parents":[]},
@@ -238,9 +239,7 @@ var science_unlocks = {
 						#Matrioshka brain
 						"MB":{"cost":e(2.6, 16), "parents":["DS4"]},
 						#Space elevator
-						"SE1":{"cost":150000, "parents":["MAE"]},
-						"SE2":{"cost":300000, "parents":["SE1"]},
-						"SE3":{"cost":500000, "parents":["SE2"]},
+						"SE1":{"cost":700000, "parents":["MAE"]},
 						
 						#Mega mineral extractor
 						"MME1":{"cost":e(1.7, 9), "parents":["MAE"]},

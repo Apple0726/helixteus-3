@@ -309,9 +309,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		else:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
 			if game:
-				if game.science_unlocked.RMK2:
+				if game.science_unlocked.has("RMK2"):
 					light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
-				if game.science_unlocked.RMK3:
+				if game.science_unlocked.has("RMK3"):
 					light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
 				if game.help.cave_controls:
 					$UI2/Controls.visible = true
@@ -392,7 +392,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						HX_node.free()
 						continue
-					HX_node.get_node("Info").visible = false
+					HX_node.get_node("Info/Label").visible = false
+					HX_node.get_node("Info/Effects").visible = false
+					HX_node.get_node("Info/Icon").visible = false
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
@@ -1281,7 +1283,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
-	proj.get_node("Sprite").modulate = mod
+	#proj.get_node("Sprite").modulate = mod
 	if collision_shape == 2:
 		proj.get_node("Round").disabled = true
 		proj.get_node("Line").disabled = false
@@ -1295,7 +1297,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.cave_ref = self
 	if light_color != Color.black:
 		proj.get_node("Light2D").enabled = true
-		proj.get_node("Light2D").color = mod
+		proj.get_node("Light2D").color = light_color
 		proj.get_node("Light2D").texture_scale *= light_size
 	add_child(proj)
 	proj.add_to_group("projectiles")

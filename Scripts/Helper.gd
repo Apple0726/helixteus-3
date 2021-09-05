@@ -32,10 +32,12 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	else:
 		if path == "Icons/stone" and rsrc_cost is Dictionary:
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
+		var minus:String = "-" if rsrc_cost < 0 else ""
+		rsrc_cost = abs(rsrc_cost)
 		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
-		text = num_str + mass_str
+		text = "%s%s%s" % [minus, num_str, mass_str]
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
 
@@ -142,9 +144,6 @@ func get_item_name (_name:String):
 
 func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
-
-func get_plant_produce(name:String):
-	return name.split("_")[0]
 
 func get_wid(size:float):
 	return min(round(pow(size / 6000.0, 0.7) * 8.0) + 3, 100)
@@ -882,7 +881,7 @@ func update_bldg_constr(tile):
 	var length = tile.bldg.construction_length
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
-	if progress > 1:
+	if progress >= 1:
 		if tile.bldg.is_constructing:
 			tile.bldg.is_constructing = false
 			game.universe_data[game.c_u].xp += tile.bldg.XP
@@ -891,6 +890,13 @@ func update_bldg_constr(tile):
 			if tile.bldg.has("rover_id"):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")
+			if tile.has("auto_GH"):
+				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
+				for p in produce_info.produce:
+					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value
+					game.autocollect.mets[p] += tile.auto_GH.produce[p]
+				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value
+				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
 			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
@@ -1184,3 +1190,31 @@ func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
+
+func check_lake_presence(pos:Vector2, wid:int):
+	var state:String
+	var has_lake = false
+	for i in range(pos.x - 1, pos.x + 2):
+		if not has_lake:
+			for j in range(pos.y - 1, pos.y + 2):
+				if Vector2(i, j) != pos:
+					var id2 = i % wid + j * wid
+					if game.tile_data[id2].has("lake"):
+						has_lake = true
+						state = game.tile_data[id2].lake.state
+						break
+	return {"has_lake":has_lake, "lake_state":state}
+
+func check_lake(pos:Vector2, wid:int, seed_name:String):
+	var state
+	var has_lake = false
+	for i in range(pos.x - 1, pos.x + 2):
+		for j in range(pos.y - 1, pos.y + 2):
+			if Vector2(i, j) != pos:
+				var id2 = i % wid + j * wid
+				if game.tile_data[id2].has("lake"):
+					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[seed_name].lake
+					has_lake = has_lake or okay
+					if okay:
+						state = game.tile_data[id2].lake.state
+	return [has_lake, state]

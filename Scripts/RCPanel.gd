@@ -40,9 +40,9 @@ func _ready():
 	CC_slot.get_node("Button").connect("mouse_entered", self, "_on_Slot_mouse_entered", ["rover_CC"])
 	CC_slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
 	CC_slot.get_node("Button").connect("pressed", self, "_on_Slot_pressed", ["rover_CC"])
-	if game.science_unlocked.RMK2:
+	if game.science_unlocked.has("RMK2"):
 		inventory.append({"type":""})
-	if game.science_unlocked.RMK3:
+	if game.science_unlocked.has("RMK3"):
 		inventory.append({"type":""})
 
 func _on_Slot_mouse_entered(type:String):
@@ -128,12 +128,12 @@ func refresh():
 	atk = 5.0
 	def = 5.0
 	weight_cap = 3000.0
-	if game.science_unlocked.RMK2:
+	if game.science_unlocked.has("RMK2"):
 		HP = 50
 		atk = 15
 		def = 15
 		weight_cap = 16000.0
-	if game.science_unlocked.RMK3:
+	if game.science_unlocked.has("RMK3"):
 		HP = 450
 		atk = 70
 		def = 70

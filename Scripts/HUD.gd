@@ -124,6 +124,8 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
+	if $Resources/Cellulose.visible:
+		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(Helper.clever_round(game.mats.cellulose))
 
 func update_XP():
 	while game.u_i.xp >= game.u_i.xp_to_lv:
@@ -203,6 +205,7 @@ func refresh():
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
 	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil), 6) + " kg"
+	$Resources/Cellulose.visible = game.science_unlocked.GHA
 	if $Resources/Glass.visible:
 		if game.mats.glass >= Data.costs.GH.glass:
 			glass_text["custom_colors/font_color"] = Color.green
@@ -409,7 +412,9 @@ func _on_MineralUpgrades_mouse_entered():
 
 func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
-	if game.autocollect.has("rsrc"):
+	if extra_arg_0 == "CELLULOSE":
+		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(Helper.clever_round(abs(game.autocollect.mats.cellulose))), tr("S_SECOND")])
+	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, game.infinite_research.MEE) * game.u_i.time_speed
 		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE) * game.u_i.time_speed
 		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE) * game.u_i.time_speed

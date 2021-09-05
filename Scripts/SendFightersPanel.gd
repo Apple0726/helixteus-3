@@ -112,23 +112,15 @@ func get_grav_exit_cost(p_i:Dictionary):
 func get_entry_exit_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.9
+			return 0.5
 		1:
-			return 0.6
-		2:
-			return 0.3
-		3:
 			return 0
 
 func get_travel_cost_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.95
+			return 0.75
 		1:
-			return 0.8
-		2:
-			return 0.65
-		3:
 			return 0.5
 
 func _on_CheckBox_pressed():

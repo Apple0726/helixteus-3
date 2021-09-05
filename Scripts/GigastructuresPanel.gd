@@ -13,7 +13,7 @@ func _ready():
 
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
-	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.TPCC
+	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	var planet_num:float = round(g_i.system_num * 2 * pow(g_i.dark_matter, 1.1))
 	#							 1.3 ~= E(X^2)/E(X)^2
 	surface = round(planet_num * 1.3 * 4 * PI * pow((1000000 + 6000000 * 2.5) * g_i.dark_matter, 2))

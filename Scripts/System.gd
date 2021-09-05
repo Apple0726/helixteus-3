@@ -154,8 +154,8 @@ func refresh_stars():
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(512, 512)
 		#combined_star_size += star_info["size"]
-		star.rect_scale.x = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
-		star.rect_scale.y = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
+		star.rect_scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
+		star.rect_scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
 		star.rect_position = star_info["pos"] - Vector2(512, 512)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
@@ -291,6 +291,8 @@ func show_planet_info(id:int, l_id:int):
 		Helper.put_rsrc(vbox, 32, {})
 		var num_stages = 3
 		var stage:String = tr("%s_NAME" % p_i.MS)
+		if p_i.MS == "M_SE":
+			num_stages = 1
 		if p_i.MS != "M_MPCC":
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, num_stages]]
 		else:
@@ -302,7 +304,7 @@ func show_planet_info(id:int, l_id:int):
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
 		if not p_i.bldg.is_constructing:
-			if p_i.MS_lv < num_stages and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
+			if p_i.MS_lv < num_stages and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -440,11 +442,10 @@ func on_planet_click (id:int, l_id:int):
 				if p_i.has("plant"):
 					if not p_i.plant.is_growing:
 						items_collected.clear()
-						var plant:String = Helper.get_plant_produce(p_i.plant.name)
-						var produce:float = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
-						produce *= p_i.bldg.path_2_value
-						game.show[plant] = true
-						Helper.add_item_to_coll(items_collected, plant, produce)
+						var produce:Dictionary = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
+						for p in produce:
+							produce[p] *= p_i.bldg.path_2_value
+							Helper.add_item_to_coll(items_collected, p, produce[p])
 						game.show_collect_info(items_collected)
 						p_i.erase("plant")
 					else:
@@ -560,11 +561,11 @@ func on_star_over (id:int):
 			elif star.MS_lv == 2:
 				Helper.add_label(tr("PK2_POWER"), -1, true, true)
 		if not star.bldg.is_constructing and star.MS_lv < num_stages:
-			if star.MS == "M_DS" and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
+			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-			elif star.MS == "M_PK" and game.science_unlocked["PK%s" % (star.MS_lv + 1)]:
+			elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))

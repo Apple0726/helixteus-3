@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=2]
+[gd_scene load_steps=65 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -33,6 +33,7 @@
 [ext_resource path="res://Graphics/Clusters/0.png" type="Texture" id=31]
 [ext_resource path="res://Graphics/Buttons/Bookmarked.png" type="Texture" id=32]
 [ext_resource path="res://Graphics/Buttons/DimensionView.png" type="Texture" id=33]
+[ext_resource path="res://Graphics/Materials/cellulose.png" type="Texture" id=34]
 
 [sub_resource type="Animation" id=1]
 resource_name = "BookmarkAnim"
@@ -387,9 +388,9 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Planets"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 5.0
+margin_right = 10.0
 margin_bottom = 5.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
@@ -406,9 +407,9 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Systems"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 5.0
+margin_right = 10.0
 margin_bottom = 5.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
@@ -425,9 +426,9 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Galaxies"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 5.0
+margin_right = 10.0
 margin_bottom = 5.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
@@ -444,9 +445,9 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Clusters"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 5.0
+margin_right = 10.0
 margin_bottom = 5.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
@@ -558,7 +559,7 @@ __meta__ = {
 }
 
 [node name="Money" type="Control" parent="Resources"]
-margin_right = 240.0
+margin_right = 192.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -589,11 +590,12 @@ __meta__ = {
 }
 
 [node name="Minerals" type="Control" parent="Resources"]
-margin_left = 244.0
-margin_right = 484.0
+margin_left = 196.0
+margin_right = 428.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
 
 [node name="Text" type="Label" parent="Resources/Minerals"]
 margin_left = 44.0
@@ -620,8 +622,8 @@ __meta__ = {
 }
 
 [node name="Stone" type="Control" parent="Resources"]
-margin_left = 488.0
-margin_right = 728.0
+margin_left = 432.0
+margin_right = 625.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -714,9 +716,41 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Cellulose" type="Control" parent="Resources"]
+margin_left = 629.0
+margin_right = 822.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Resources/Cellulose"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Resources/Cellulose"]
+margin_left = -1.0
+margin_top = -4.0
+margin_right = 31.0
+margin_bottom = 36.0
+texture_normal = ExtResource( 34 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Energy" type="Control" parent="Resources"]
-margin_left = 732.0
-margin_right = 972.0
+margin_left = 826.0
+margin_right = 1019.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -744,7 +778,7 @@ __meta__ = {
 }
 
 [node name="SP" type="Control" parent="Resources"]
-margin_left = 976.0
+margin_left = 1023.0
 margin_right = 1216.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
@@ -1049,6 +1083,8 @@ __meta__ = {
 [connection signal="mouse_exited" from="Resources/Soil/Texture" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Resources/Glass/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "GLASS" ]]
 [connection signal="mouse_exited" from="Resources/Glass/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Resources/Cellulose/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "CELLULOSE" ]]
+[connection signal="mouse_exited" from="Resources/Cellulose/Texture" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Resources/Energy/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "ENERGY" ]]
 [connection signal="mouse_exited" from="Resources/Energy/Texture" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Resources/SP/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SP" ]]

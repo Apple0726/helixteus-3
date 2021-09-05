@@ -16,7 +16,7 @@ func refresh():
 	$GridContainer/Panel2.visible = len(game.ship_data) >= 2
 	$GridContainer/Panel3.visible = len(game.ship_data) >= 3
 	$GridContainer/Panel4.visible = len(game.ship_data) >= 4
-	$Panel/UpgradeButton.visible = game.science_unlocked.UP1
+	$Panel/UpgradeButton.visible = game.science_unlocked.has("UP1")
 	$Drives.refresh()
 	$Upgrade._refresh()
 	$Upgrade._refresh_op()
@@ -37,7 +37,7 @@ func _on_CheckBox_toggled(button_pressed):
 		panel.set_visibility()
 
 func _on_DriveButton_pressed():
-	if game.science_unlocked.CD:
+	if game.science_unlocked.has("CD"):
 		$GridContainer.visible = false
 		$Drives.visible = true
 		$Panel/CheckBox.visible = false

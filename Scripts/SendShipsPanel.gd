@@ -156,23 +156,15 @@ func get_grav_entry_cost(size:float):
 func get_entry_exit_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.9
+			return 0.5
 		1:
-			return 0.6
-		2:
-			return 0.3
-		3:
 			return 0
 
 func get_travel_cost_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.95
+			return 0.75
 		1:
-			return 0.8
-		2:
-			return 0.65
-		3:
 			return 0.5
 
 func calc_costs():
@@ -191,9 +183,9 @@ func calc_costs():
 	$Panel/EnergyCost2.text = Helper.format_num(entry_exit_cost)
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light
 	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
-	if game.science_unlocked.FTL:
+	if game.science_unlocked.has("FTL"):
 		time_cost /= 10.0
-	if game.science_unlocked.IGD:
+	if game.science_unlocked.has("IGD"):
 		time_cost /= 100.0
 	$Panel/EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost

@@ -52,23 +52,23 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 		var metal = cmp.split("_")[0].to_upper()
 		if type in ["rover_weapons", "rover_mining"]:
 			var laser_color = cmp.split("_")[0]
-			if laser_color == "orange" and not game.science_unlocked.OL:
+			if laser_color == "orange" and not game.science_unlocked.has("OL"):
 				continue
-			if laser_color == "yellow" and not game.science_unlocked.YL:
+			if laser_color == "yellow" and not game.science_unlocked.has("YL"):
 				continue
-			if laser_color == "green" and not game.science_unlocked.GL:
+			if laser_color == "green" and not game.science_unlocked.has("GL"):
 				continue
-			if laser_color == "blue" and not game.science_unlocked.BL:
+			if laser_color == "blue" and not game.science_unlocked.has("BL"):
 				continue
-			if laser_color == "purple" and not game.science_unlocked.PL:
+			if laser_color == "purple" and not game.science_unlocked.has("PL"):
 				continue
-			if laser_color == "UV" and not game.science_unlocked.UVL:
+			if laser_color == "UV" and not game.science_unlocked.has("UVL"):
 				continue
-			if laser_color == "xray" and not game.science_unlocked.XRL:
+			if laser_color == "xray" and not game.science_unlocked.has("XRL"):
 				continue
-			if laser_color == "gammaray" and not game.science_unlocked.GRL:
+			if laser_color == "gammaray" and not game.science_unlocked.has("GRL"):
 				continue
-			if laser_color == "ultragammaray" and not game.science_unlocked.UGRL:
+			if laser_color == "ultragammaray" and not game.science_unlocked.has("UGRL"):
 				continue
 		else:
 			var l_metal = metal.to_lower()

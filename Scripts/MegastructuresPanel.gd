@@ -22,8 +22,8 @@ func _ready():
 	buy_hbox.visible = false
 
 func refresh():
-	grid.get_node("M_MPCC").visible = game.science_unlocked.MPCC
-	grid.get_node("M_MB").visible = game.science_unlocked.MB
+	grid.get_node("M_MPCC").visible = game.science_unlocked.has("MPCC")
+	grid.get_node("M_MB").visible = game.science_unlocked.has("MB")
 		
 func get_MS_name(_name:String):
 	return tr("%s_NAME" % _name)

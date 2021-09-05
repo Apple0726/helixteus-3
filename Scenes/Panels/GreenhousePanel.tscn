@@ -43,26 +43,55 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 44.0
-margin_top = 100.0
-margin_right = 596.0
-margin_bottom = 168.0
+[node name="Seeds" type="ScrollContainer" parent="."]
+margin_left = 48.0
+margin_top = 64.0
+margin_right = 600.0
+margin_bottom = 132.0
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+[node name="HBox" type="HBoxContainer" parent="Seeds"]
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 547.0
+margin_right = 542.0
+margin_bottom = 63.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = -2
+
+[node name="Fertilizer" type="ScrollContainer" parent="."]
+margin_left = 48.0
+margin_top = 64.0
+margin_right = 600.0
+margin_bottom = 132.0
+scroll_vertical_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="Fertilizer"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 542.0
 margin_bottom = 63.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -2
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
+
+[node name="ProductionPerSec" type="Label" parent="."]
+margin_left = 48.0
+margin_top = 160.0
+margin_right = 400.0
+margin_bottom = 184.0
+text = "PRODUCTION_PER_SECOND"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 36.0

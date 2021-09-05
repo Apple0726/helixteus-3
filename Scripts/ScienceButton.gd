@@ -1,30 +1,31 @@
+tool
 extends Panel
 
 var main_tree
 var is_over:bool = false
 export var infinite_research:bool = false
-onready var game = get_node("/root/Game")
+var game
 
 func _ready():
+	game = get_node("/root/Game") if not Engine.editor_hint else null
 	var font = theme.default_font
 	connect("mouse_entered", self, "on_mouse_entered")
 	connect("mouse_exited", self, "on_mouse_exited")
 	$Texture.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
-	if not infinite_research:
+	if game and not infinite_research:
 		#rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
-		#game.science_unlocked.IGD = true
-		if game.science_unlocked[name]:
+		if game.science_unlocked.has(name):
 			$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
-	else:
-		var sc_lv:int = game.infinite_research[name]
-		var st:String = tr("%s_X" % name) % sc_lv
+	#else:
+		#var sc_lv:int = game.infinite_research[name]
+		#var st:String = tr("%s_X" % name) % sc_lv
 		#rect_min_size.x = font.get_string_size(st).x + 80
 	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
 
 func refresh():
 	if infinite_research:
-		var sc_lv:int = game.infinite_research[name]
+		var sc_lv:int = game.infinite_research[name] if game else 1
 		var sc:Dictionary = Data.infinite_research_sciences[name]
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
 		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)), 6)
@@ -94,7 +95,7 @@ func _input(event):
 				refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
-		elif not game.science_unlocked[name]:
+		elif not game.science_unlocked.has(name):
 			if game.SP >= Data.science_unlocks[name].cost:
 				game.SP -= Data.science_unlocks[name].cost
 				game.science_unlocked[name] = true

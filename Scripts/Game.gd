@@ -287,12 +287,12 @@ var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "durat
 						"overclock6":{"costs":{"money":18000000}, "mult":5, "duration":24*60*60000},
 }
 
-var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":60},
-							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":60},
-							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":60},
-							"aluminium_seeds":{"costs":{"cellulose":10, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":60},
-							"silver_seeds":{"costs":{"cellulose":10, "silver":20}, "grow_time":14000000, "lake":"He", "produce":60},
-							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":60},
+var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":{"lead":60}},
+							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":{"copper":60}},
+							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":{"iron":60}},
+							"aluminium_seeds":{"costs":{"cellulose":10, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":{"aluminium":60}},
+							"silver_seeds":{"costs":{"cellulose":10, "silver":20}, "grow_time":14000000, "lake":"He", "produce":{"silver":60}},
+							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":{"gold":60}},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
@@ -566,16 +566,12 @@ func load_univ():
 			caves_generated = save_game_dict.caves_generated
 		auto_c_p_g = -1
 		u_i = universe_data[c_u]
-		if science_unlocked.CI:
+		if science_unlocked.has("CI"):
 			stack_size = 32
-		if science_unlocked.CI2:
+		if science_unlocked.has("CI2"):
 			stack_size = 64
-		if science_unlocked.CI3:
+		if science_unlocked.has("CI3"):
 			stack_size = 128
-		for _seed in craft_agriculture_info:
-			if craft_agriculture_info[_seed].has("produce"):
-				craft_agriculture_info[_seed].produce = round(60 * u_i.planck)
-
 		if not autocollect.empty():
 			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
 			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
@@ -584,6 +580,13 @@ func load_univ():
 			Helper.add_minerals((autocollect.rsrc.minerals * min_mult + autocollect.MS.minerals) * time_elapsed)
 			energy += (autocollect.rsrc.energy * energy_mult + autocollect.MS.energy) * time_elapsed
 			SP += (autocollect.rsrc.SP * SP_mult + autocollect.MS.SP) * time_elapsed
+			var plant_time_elapsed = time_elapsed
+			for mat in autocollect.mats:
+				if mat == "cellulose":
+					plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if autocollect.mats.cellulose != 0 else 0
+				mats[mat] += autocollect.mats[mat] * plant_time_elapsed
+			for met in autocollect.mets:
+				mets[met] += autocollect.mets[met] * plant_time_elapsed
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true)
 		else:
@@ -728,8 +731,6 @@ func new_game(tut:bool, univ:int = 0):
 	#Stores information of the current pickaxe the player is holding
 	pickaxe = {}
 
-	for sc in Data.science_unlocks:
-		science_unlocked[sc] = false
 	for sc in Data.infinite_research_sciences:
 		infinite_research[sc] = 0
 	mats = {	"coal":0,
@@ -901,7 +902,7 @@ func new_game(tut:bool, univ:int = 0):
 				}
 
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
-	autocollect = {"MS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
+	autocollect = {"mats":{"cellulose":0}, "mets":{}, "MS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
 	bookmarks = {"planet":[], "system":[], "galaxy":[], "cluster":[]}
 	
@@ -1497,10 +1498,10 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
-		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.MAE
-		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.GS
+		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
+		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and universe_data[c_u].lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.FG and not galaxy_data[c_g].has("conquered")
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered")
 		if c_v == "supercluster":
 			space_HUD.get_node("SendProbes").visible = c_sc == 0
 		elif c_v == "universe":
@@ -3180,6 +3181,11 @@ func _process(delta):
 					min_to_add += autocollect.rsrc.minerals * delta * min_mult
 					energy += autocollect.rsrc.energy * delta * energy_mult
 					SP += autocollect.rsrc.SP * delta * SP_mult
+			if mats.cellulose > 0:
+				for mat in autocollect.mats:
+					mats[mat] += autocollect.mats[mat] * delta
+				for met in autocollect.mets:
+					mets[met] += autocollect.mets[met] * delta
 			Helper.add_minerals(min_to_add)
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
@@ -3755,7 +3761,7 @@ func _on_Ship_pressed():
 	if Input.is_action_pressed("shift"):
 		switch_view("STM")#Ship travel minigame
 	else:
-		if science_unlocked.CD:
+		if science_unlocked.has("CD"):
 			if not ship_panel.visible:
 				toggle_panel(ship_panel)
 				ship_panel._on_DriveButton_pressed()

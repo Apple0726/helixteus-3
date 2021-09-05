@@ -39,7 +39,7 @@ func _ready():
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = Button.new()
-		if _name in ["nanocrystal", "mythril"] and not game.science_unlocked.AMM:
+		if _name in ["nanocrystal", "mythril"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.rect_min_size.y = 30
@@ -245,7 +245,7 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 
 func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
-		btn.visible = not btn.name in ["nanocrystal", "mythril"] or game.science_unlocked.AMM
+		btn.visible = not btn.name in ["nanocrystal", "mythril"] or game.science_unlocked.has("AMM")
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("AMN_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
