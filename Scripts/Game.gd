@@ -205,7 +205,7 @@ var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"
 }
 var collect_speed_lag_ratio:int = 1
 var c_sv:int = -1#current_save
-var save_created:Dictionary
+var save_created
 var u_i:Dictionary
 var pitch_affected:bool = false
 
@@ -290,9 +290,9 @@ var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "durat
 var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":{"lead":60}},
 							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":{"copper":60}},
 							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":{"iron":60}},
-							"aluminium_seeds":{"costs":{"cellulose":10, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":{"aluminium":60}},
-							"silver_seeds":{"costs":{"cellulose":10, "silver":20}, "grow_time":14000000, "lake":"He", "produce":{"silver":60}},
-							"gold_seeds":{"costs":{"cellulose":10, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":{"gold":60}},
+							"aluminium_seeds":{"costs":{"cellulose":15, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":{"aluminium":60}},
+							"silver_seeds":{"costs":{"cellulose":15, "silver":20}, "grow_time":14000000, "lake":"He", "produce":{"silver":60}},
+							"gold_seeds":{"costs":{"cellulose":20, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":{"gold":60}},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
@@ -387,7 +387,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
-			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - No multithreading (mass-build will generate a lag spike)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
+			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
@@ -647,7 +647,7 @@ func new_game(tut:bool, univ:int = 0):
 		while dir.open("user://Save%s" % c_sv) == OK:
 			c_sv += 1
 		dir.make_dir("user://Save%s" % c_sv)
-		save_created = OS.get_datetime()
+		save_created = OS.get_system_time_msecs()
 		help = {
 				"tutorial":1 if tut else -1,
 				"close_btn1":true,
@@ -904,7 +904,7 @@ func new_game(tut:bool, univ:int = 0):
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {"mats":{"cellulose":0}, "mets":{}, "MS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
-	bookmarks = {"planet":[], "system":[], "galaxy":[], "cluster":[]}
+	bookmarks = {"planet":{}, "system":{}, "galaxy":{}, "cluster":{}}
 	
 	generate_planets(0)
 	if univ == 0:
@@ -1776,7 +1776,7 @@ func generate_clusters(id:int):
 		c_i["l_id"] = c_id
 		c_i.FM = Helper.clever_round(1 + pos.length() / 1000.0)#Ferromagnetic materials
 		if id == 0:
-			c_i.diff = Helper.clever_round(1 + pos.length())
+			c_i.diff = Helper.clever_round(1 + pos.length() * 10.0)
 		else:
 			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2))
 		supercluster_data[id]["clusters"].append(c_id)
@@ -2422,7 +2422,7 @@ func generate_planets(id:int):#local id
 				if num == 12:
 					lv = ceil(0.9 * log(power) / log(1.2))
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
-				var def = round(pow(randf(), 2) * 7.0 + 3.0)
+				var def = round(randf() * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
 				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
@@ -3186,6 +3186,8 @@ func _process(delta):
 					mats[mat] += autocollect.mats[mat] * delta
 				for met in autocollect.mets:
 					mets[met] += autocollect.mets[met] * delta
+			else:
+				mats.cellulose = 0
 			Helper.add_minerals(min_to_add)
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
@@ -3268,7 +3270,6 @@ func _input(event):
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help"):
-		print(help_str)
 		help[help_str] = false
 		hide_tooltip()
 		hide_adv_tooltip()
@@ -3362,6 +3363,20 @@ func _input(event):
 				else:
 					popup("Universes do not have a property called \"%s\"" % arr[1], 2.5)
 					return
+			"get2ndship":
+				get_2nd_ship()
+			"get3rdship":
+				get_3rd_ship()
+			"get4thship":
+				get_4th_ship()
+			"addshipxp":#addshipxp 0 lv 10
+				if arr[2] == "xp":
+					Helper.add_ship_XP(int(arr[1]), float(arr[3]))
+				elif arr[2] in ["bullet", "laser", "bomb", "light"]:
+					Helper.add_weapon_XP(int(arr[1]), arr[2], float(arr[3]))
+				else:
+					popup("\"%s\" isn't a valid XP type" % arr[2], 2.0)
+					return
 			_:
 				fail = true
 		if not fail:
@@ -3410,7 +3425,7 @@ func fn_save_game():
 	save_info_file.open("user://Save%s/save_info.hx3" % [c_sv], File.WRITE)
 	var save_info:Dictionary = {
 		"save_created":save_created,
-		"save_modified":OS.get_datetime(),
+		"save_modified":OS.get_system_time_msecs(),
 		"help":help,
 		"c_u":c_u,
 		"universe_data":universe_data,
@@ -3674,10 +3689,16 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	YN_panel.window_title = title
 	YN_panel.popup_centered()
 	YN_str = type
-	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all"]:
+	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe"]:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
+
+func destroy_tri_probe(probe_id:int):
+	probe_data.remove(probe_id)
+	vehicle_panel.probe_over_id = -1
+	vehicle_panel.refresh()
+	YN_panel.disconnect("confirmed", self, "destroy_tri_probe_confirm")
 
 func discover_univ_confirm():
 	send_probes_panel.discover_univ()
@@ -3728,6 +3749,7 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 			space_HUD.get_node("ConquerAll").visible = false
 		else:
 			is_conquering_all = true
+			c_p = ships_c_coords.p
 			switch_view("battle")
 	else:
 		popup(tr("NOT_ENOUGH_ENERGY"), 2.0)
@@ -3805,14 +3827,33 @@ func game_fade(fn, args:Array = []):
 	game_tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 1), 0.5)
 	game_tween.start()
 
+func get_2nd_ship():
+	if len(ship_data) == 1:
+		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		Helper.add_ship_XP(1, 2000)
+		Helper.add_weapon_XP(1, "bullet", 50)
+		Helper.add_weapon_XP(1, "laser", 50)
+		Helper.add_weapon_XP(1, "bomb", 50)
+		Helper.add_weapon_XP(1, "light", 60)
+
+func get_3rd_ship():
+	if len(ship_data) == 2:
+		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		Helper.add_ship_XP(2, 40000)
+		Helper.add_weapon_XP(2, "bullet", 140)
+		Helper.add_weapon_XP(2, "laser", 140)
+		Helper.add_weapon_XP(2, "bomb", 140)
+		Helper.add_weapon_XP(2, "light", 180)
+
 func get_4th_ship():
-	popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-	ship_data.append({"name":tr("SHIP"),  "lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-	Helper.add_ship_XP(3, 1000000)
-	Helper.add_weapon_XP(3, "bullet", 400)
-	Helper.add_weapon_XP(3, "laser", 400)
-	Helper.add_weapon_XP(3, "bomb", 400)
-	Helper.add_weapon_XP(3, "light", 450)
+	if len(ship_data) == 3:
+		popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
+		ship_data.append({"name":tr("SHIP"),  "lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		Helper.add_ship_XP(3, 1000000)
+		Helper.add_weapon_XP(3, "bullet", 400)
+		Helper.add_weapon_XP(3, "laser", 400)
+		Helper.add_weapon_XP(3, "bomb", 400)
+		Helper.add_weapon_XP(3, "light", 450)
 
 
 func _on_Command_gui_input(event):

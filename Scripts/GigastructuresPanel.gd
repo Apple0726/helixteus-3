@@ -94,10 +94,10 @@ func _on_Convert_pressed():
 			if dir.file_exists("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
-		if g_i.has("bookmark"):
-			game.bookmarks.galaxy[g_i.bookmark] = null
-			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_child(g_i.bookmark))
-			g_i.erase("bookmark")
+		if g_i.has("bookmarked"):
+			game.bookmarks.galaxy.erase(str(game.c_g_g))
+			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(game.c_g_g)))
+			g_i.erase("bookmarked")
 		if bldg == "TP":
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})

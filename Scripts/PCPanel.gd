@@ -16,6 +16,8 @@ func refresh():
 	elif probe_tier == 1:
 		$Label.text = tr("M_MPCC_NAME")
 		$ViewPlanet.visible = true
+	$SpinBox.max_value = max(0, 500 - len(game.probe_data))
+	$Construct.visible = $SpinBox.max_value > 0
 	$TextureRect.texture = load("res://Graphics/Ships/Probe%s.png" % probe_tier)
 
 func e(n, e):
@@ -47,3 +49,5 @@ func _on_ViewPlanet_pressed():
 		game.c_p_g = id
 		game.c_p = l_id
 		game.switch_view("planet")
+
+

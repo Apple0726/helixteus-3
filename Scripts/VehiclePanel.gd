@@ -8,19 +8,30 @@ var spd_icon = load("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
+var probe_over_id:int = -1
 var probe_time_bars:Array = []
 
 func _ready():
 	set_polygon(rect_size)
 
 func _input(event):
-	if modulate.a == 1 and Input.is_action_just_released("X") and rover_over_id != -1:
-		game.rover_data[rover_over_id] = null
-		rover_over_id = -1
-		game.hide_adv_tooltip()
-		refresh()
+	if modulate.a == 1 and Input.is_action_just_released("X"):
+		if rover_over_id != -1:
+			game.rover_data[rover_over_id] = null
+			rover_over_id = -1
+			game.hide_adv_tooltip()
+			refresh()
+		elif probe_over_id != -1:
+			if game.probe_data[probe_over_id].tier == 2:
+				game.show_YN_panel("destroy_tri_probe", tr("DESTROY_TRI_PROBE"), [probe_over_id])
+			else:
+				game.probe_data.remove(probe_over_id)
+				probe_over_id = -1
+				game.hide_tooltip()
+				refresh()
 
 func refresh():
+	$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), len(game.probe_data), 500]
 	$Panel.visible = game.science_unlocked.has("FG")
 	$Probes.visible = game.universe_data[game.c_u].lv >= 50
 	var hbox = $Rovers/HBox
@@ -73,7 +84,7 @@ func refresh():
 		probe.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		probe.rect_min_size = Vector2(80, 80)
 		hbox3.add_child(probe)
-		probe.connect("mouse_entered", self, "on_probe_enter", [probe_info.tier])
+		probe.connect("mouse_entered", self, "on_probe_enter", [probe_info.tier, i])
 		probe.connect("mouse_exited", self, "on_fighter_exit")
 		probe.connect("pressed", self, "on_probe_press", [probe_info.tier])
 		if probe_info.has("start_date"):
@@ -106,7 +117,8 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 func on_fighter_enter(fighter_info:Dictionary):
 	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), fighter_info.strength, tr("CLICK_TO_VIEW_GALAXY")])
 
-func on_probe_enter(tier:int):
+func on_probe_enter(tier:int, probe_id:int):
+	probe_over_id = probe_id
 	if tier == 0:
 		game.show_tooltip(tr("CLICK_TO_VIEW_SC"))
 	elif tier == 1:

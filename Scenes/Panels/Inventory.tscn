@@ -36,28 +36,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Info" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -512.0
-margin_top = 40.0
-margin_right = 512.0
-margin_bottom = 76.0
-custom_styles/normal = SubResource( 1 )
-text = "Information"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Tabs" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 margin_left = 24.0
-margin_top = 104.0
+margin_top = 56.0
 margin_right = -24.0
-margin_bottom = 138.0
+margin_bottom = 90.0
 custom_constants/separation = -1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -104,7 +88,7 @@ expand_icon = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 24.0
-margin_top = 144.0
+margin_top = 104.0
 margin_right = -24.0
 margin_bottom = -24.0
 size_flags_horizontal = 3
@@ -113,27 +97,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GridContainer" type="GridContainer" parent="Control"]
-visible = false
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -450.0
-margin_top = 15.0
-margin_right = 450.0
-margin_bottom = 15.0
+[node name="VBox" type="VBoxContainer" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = -32.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Info" type="Label" parent="Control/VBox"]
+margin_right = 912.0
+margin_bottom = 36.0
+custom_styles/normal = SubResource( 1 )
+text = "Information"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="Control/VBox"]
+margin_top = 40.0
+margin_right = 912.0
+margin_bottom = 40.0
+size_flags_horizontal = 5
 custom_constants/vseparation = 50
 columns = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Inventory" type="GridContainer" parent="Control"]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -450.0
-margin_top = 15.0
-margin_right = 450.0
-margin_bottom = 15.0
+[node name="Inventory" type="GridContainer" parent="Control/VBox"]
+margin_top = 44.0
+margin_right = 912.0
+margin_bottom = 44.0
+size_flags_horizontal = 5
 custom_constants/vseparation = 1
 custom_constants/hseparation = 1
 columns = 15

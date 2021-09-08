@@ -19,16 +19,27 @@ func refresh():
 				var save_info_dict:Dictionary = save_info.get_var()
 				var save = save_slot_scene.instance()
 				if save_info.get_len() == save_info.get_position():
-					var save_created:Dictionary = save_info_dict.save_created
-					var save_modified:Dictionary = save_info_dict.save_modified
+					var save_created = save_info_dict.save_created
+					var save_modified = save_info_dict.save_modified
 					save.get_node("Version").text = save_info_dict.version
 					save.get_node("Button").connect("pressed", self, "on_load", [next_dir.substr(4)])
 					save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir])
 					save.get_node("Export").connect("pressed", self, "on_export", [next_dir])
 					save.get_node("Button").text = next_dir
 					save.get_node("Version")["custom_colors/font_color"] = Color.green
-					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("DATE_FORMAT").format({"day":save_created.day, "month":save_created.month, "year":save_created.year})]
-					save.get_node("Saved").text = "%s %s" % [tr("SAVE_SAVED"), tr("DATE_FORMAT").format({"day":save_modified.day, "month":save_modified.month, "year":save_modified.year})]
+					var now = OS.get_system_time_msecs()
+					if now - save_created < 86400000:
+						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
+					elif now - save_created < 86400000 * 2:
+						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("YESTERDAY")]
+					else:
+						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % ((now - save_created) / 86400000)]
+					if now - save_modified < 86400000:
+						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
+					elif now - save_modified < 86400000 * 2:
+						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("YESTERDAY")]
+					else:
+						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % ((now - save_created) / 86400000)]
 					$ScrollContainer/VBox.add_child(save)
 				else:
 					remove_recursive("user://%s" % next_dir)
@@ -219,3 +230,7 @@ func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 			if file.open("%s/%s/%s" % [path, obj, obj_file_name], File.WRITE) == OK:
 				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
 			file.close()
+
+
+func _on_Export_popup_hide():
+	$PopupBackground.visible = false

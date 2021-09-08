@@ -384,6 +384,7 @@ func toggle_GH(p_i:Dictionary, fertilizer:bool):
 	game.greenhouse_panel.tile_num = p_i.tile_num
 	game.greenhouse_panel.p_i = p_i
 	game.greenhouse_panel.fertilizer = fertilizer
+	game.greenhouse_panel.c_v = "system"
 	game.toggle_panel(game.greenhouse_panel)
 
 func on_planet_click (id:int, l_id:int):
@@ -678,6 +679,8 @@ func _process(_delta):
 		if not is_instance_valid(time_bar):
 			continue
 		var p_i = time_bar_obj.p_i
+		if not p_i.plant.has("grow_time"):
+			continue
 		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
 		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
 		time_bar.get_node("Bar").value = progress

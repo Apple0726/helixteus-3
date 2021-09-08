@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -12,10 +12,11 @@
 [ext_resource path="res://Scenes/SquareBar.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Graphics/Icons/Circle.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Decoratives/Surface.jpg" type="Texture" id=12]
-[ext_resource path="res://Graphics/Noise/noise_combined.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Decoratives/Mantle.jpg" type="Texture" id=13]
 [ext_resource path="res://Graphics/Decoratives/Crust.jpg" type="Texture" id=14]
 [ext_resource path="res://Shaders/Mantle.shader" type="Shader" id=15]
 [ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=16]
+[ext_resource path="res://Graphics/Noise/noise_combined.png" type="Texture" id=17]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 15 )
@@ -417,9 +418,16 @@ texture = ExtResource( 14 )
 centered = false
 
 [node name="MantleBG" type="Sprite" parent="."]
+visible = false
 modulate = Color( 1, 1, 1, 0 )
 material = SubResource( 1 )
 scale = Vector2( 2.5, 1.40625 )
+texture = ExtResource( 17 )
+centered = false
+
+[node name="MantleBGNoShader" type="Sprite" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
 texture = ExtResource( 13 )
 centered = false
 

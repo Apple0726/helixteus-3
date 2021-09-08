@@ -93,10 +93,20 @@ func update_info(first_time:bool = false):
 			if first_time:
 				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0
-				$MantleBG.modulate.a = 0.25
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					$MantleBG.modulate.a = 0.25
+				else:
+					$MantleBGNoShader.visible = true
+					$MantleBGNoShader.modulate.a = 0.45
 			else:
 				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
-				BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				else:
+					$MantleBGNoShader.visible = true
+					BG_tween.interpolate_property($MantleBGNoShader, "modulate", null, Color(1, 1, 1, 0.45), 3)
 				BG_tween.start()
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
@@ -217,6 +227,9 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name"):
 		return
+	if tile.depth > floor(p_i.size * 500.0):
+		game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		return
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
@@ -323,9 +336,12 @@ func _process(delta):
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
-		circ_disabled = false
-		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
+		if tile.depth <= floor(p_i.size * 500.0):
+			circ_disabled = false
+			$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+			$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
+		else:
+			game.popup(tr("CENTER_OF_PLANET"), 2.0)
 
 func _on_Button_button_up():
 	circ_disabled = true

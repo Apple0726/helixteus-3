@@ -71,9 +71,9 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 419.0
+margin_right = 414.0
 margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -100,9 +100,12 @@ margin_left = 264.0
 margin_top = 96.0
 margin_right = 356.0
 margin_bottom = 124.0
+max_value = 500.0
 value = 1.0
 rounded = true
-allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]
 [connection signal="pressed" from="ViewPlanet" to="." method="_on_ViewPlanet_pressed"]

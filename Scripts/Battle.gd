@@ -112,7 +112,6 @@ func _ready():
 				max_star_size = star_spr.scale.x
 			add_child(star_spr)
 			move_child(star_spr, 0)
-		print(max_star_size)
 		light_mult = range_lerp(min(max_star_size, 0.4), 0.4, 0.0, 1.0, 3.0)
 		if not p_i.type in [11, 12]:
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
@@ -322,7 +321,7 @@ func damage_HX(id:int, dmg:float, crit:bool = false):
 	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
 
 func hit_formula(acc:float, eva:float):
-	return 1 / (1 + eva / pow(acc, 1.4))
+	return clamp(1 / (1 + eva / (acc * 1.5)), 0.05, 0.95)
 
 func hitbox_size():
 	if game:
@@ -387,6 +386,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 					HX_c_d[HXs[i].name].acc = debuff
 				set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
 			else:
+				HXs[i].get_node("MissAnimation").stop()
+				HXs[i].get_node("MissAnimation").play("Miss")
 				Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
 		if light_hit:
 			weapon_XPs[sh].light += 1
@@ -462,6 +463,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				remove_weapon_b = not w_c_d.has("bounces_remaining")
 		else:
 			w_c_d.has_hit = true
+			HXs[t].get_node("MissAnimation").stop()
+			HXs[t].get_node("MissAnimation").play("Miss")
 			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
 	$Timer.start(min(timer_delay, timer_delay / time_speed))
 	return remove_weapon_b

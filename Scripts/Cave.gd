@@ -422,7 +422,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							var rarity = game.met_info[met].rarity
 							if rarity > difficulty:
 								break
-							if rand2 < 1 / (rarity + 1):
+							if rand2 < 1 / (pow(rarity, 0.75) + 1):
 								met_spawned = met
 						if met_spawned != "":
 							var deposit = deposit_scene.instance()
@@ -834,8 +834,8 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		var met_value = game.met_info[met]
 		if met_value.rarity > difficulty:
 			break
-		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.5) * pow(tier, 2.0) * pow(difficulty, 1.1))
+		if rng.randf() < 0.5 / pow(met_value.rarity, 0.75):
+			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1))
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1198,7 +1198,7 @@ func hit_rock(delta):
 				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.5))
+				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
 				remove_child(deposit)
 				deposit.queue_free()
 				deposits.erase(st)

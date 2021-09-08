@@ -112,10 +112,10 @@ func _on_StartCharging_pressed():
 		var p_i:Dictionary = game.planet_data[star.p_id]
 		if not p_i.empty():
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
-			if p_i.has("bookmark"):
-				game.bookmarks.planet[p_i.bookmark] = null
-				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_child(p_i.bookmark))
-				p_i.erase("bookmark")
+			if p_i.has("bookmarked"):
+				game.bookmarks.planet.erase(str(target.id))
+				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(target.id)))
+				p_i.erase("bookmarked")
 			if p_i.has("MS") and p_i.MS == "M_MME":
 				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
 			if p_i.has("tile_num"):

@@ -68,67 +68,63 @@ func on_slot_out():
 func calc_prod_per_sec():
 	var production:Dictionary = {}
 	if c_v == "system" and p_i.has("auto_GH"):
-		production = {"cellulose":-p_i.auto_GH.celullose_drain}
+		production = {"cellulose":-p_i.auto_GH.cellulose_drain}
 		for p in p_i.auto_GH.produce:
 			production[p] = p_i.auto_GH.produce[p]
-		Helper.put_rsrc($HBoxContainer, 32, production)
 	elif c_v == "planet":
 		for tile in tiles_selected:
 			if game.tile_data[tile].has("auto_GH"):
 				var tile_p:Dictionary = game.tile_data[tile].auto_GH
 				for p in tile_p.produce:
-					if production.has("cellulose"):
-						production.cellulose -= tile_p.cellulose_drain
-					else:
-						production.cellulose = -tile_p.cellulose_drain
-					if production.has(p):
-						production[p] += tile_p.produce[p]
-					else:
-						production[p] = tile_p.produce[p]
-		Helper.put_rsrc($HBoxContainer, 32, production)
+					production.cellulose = production.get("cellulose", 0.0) -tile_p.cellulose_drain
+					production[p] = tile_p.produce[p] + production.get(p, 0.0)
+	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = $HBoxContainer.get_child_count() != 0
 
 func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_new:bool = true):
 	if obj.has("auto_GH"):
 		for p in obj.auto_GH.produce:
 			game.autocollect.mets[p] -= obj.auto_GH.produce[p]
+			if game.autocollect.mets[p] < 0:
+				game.autocollect.mets[p] = 0
 		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
 		obj.erase("auto_GH")
 	if plant_new:
 		for p in produce:
-			if game.autocollect.mets.has(p):
-				game.autocollect.mets[p] += produce[p]
-			else:
-				game.autocollect.mets[p] = produce[p]
-		var cellulose_drain:float = game.craft_agriculture_info[_name].costs.cellulose / float(game.craft_agriculture_info[_name].grow_time) * 1000.0 * obj.bldg.path_1_value
+			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)
+		var cellulose_drain:float = game.craft_agriculture_info[_name].costs.cellulose / float(game.craft_agriculture_info[_name].grow_time) * 1000.0 * obj.bldg.path_1_value * tile_num
 		if obj.has("adj_lake_state"):
 			if obj.adj_lake_state == "l":
 				cellulose_drain *= 2
 			elif obj.adj_lake_state == "sc":
 				cellulose_drain *= 4
+		if c_v == "system":
+			cellulose_drain *= 2
+		cellulose_drain *= Helper.get_au_mult(obj)
 		obj.auto_GH = {
 			"produce":produce,
 			"cellulose_drain":cellulose_drain,
 			"seed":_name,
 		}
-		if game.autocollect.mats.has("cellulose"):
-			game.autocollect.mats.cellulose -= obj.auto_GH.cellulose_drain
-		else:
-			game.autocollect.mats.cellulose = -obj.auto_GH.cellulose_drain
+		game.autocollect.mats.cellulose = game.autocollect.mats.get("cellulose", 0.0) - obj.auto_GH.cellulose_drain
 
 func on_slot_press(_name:String):
 	if game.science_unlocked.has("GHA"):
 		if c_v == "system":
 			var produce:Dictionary = game.craft_agriculture_info[_name].produce.duplicate(true)
 			for p in produce:
-				produce[p] *= tile_num * game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value
-			set_auto_harvest(p_i, produce, _name)
+				produce[p] *= 2.0 * tile_num * game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value
+			set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
 		elif c_v == "planet":
 			var plant_new:bool = false
 			for tile_id in tiles_selected:
+				if not game.tile_data[tile_id].has("plant"):
+					continue
 				if not game.tile_data[tile_id].has("auto_GH"):
 					plant_new = true
 			for tile_id in tiles_selected:
+				if not game.tile_data[tile_id].has("plant"):
+					continue
 				var produce:Dictionary = game.craft_agriculture_info[_name].produce.duplicate(true)
 				var tile:Dictionary = game.tile_data[tile_id]
 				for p in produce:
@@ -137,6 +133,7 @@ func on_slot_press(_name:String):
 						produce[p] *= 2
 					elif tile.adj_lake_state == "sc":
 						produce[p] *= 4
+					produce[p] *= pow(Helper.get_au_mult(tile), 2)
 				set_auto_harvest(tile, produce, _name, plant_new)
 		calc_prod_per_sec()
 	else:

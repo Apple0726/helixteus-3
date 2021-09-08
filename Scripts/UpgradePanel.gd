@@ -131,7 +131,7 @@ func update(changing_paths:bool = false):
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile[path_str]:
 					same_lv = false
-				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
+				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				all_tiles_constructing = false
 				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
@@ -150,10 +150,28 @@ func update(changing_paths:bool = false):
 	else:
 		first_tile = planet.bldg
 		bldg = first_tile.name
-		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
-		calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, 1.0, planet.tile_num)
+		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
+		var lv_to:int = next_lv.value
+		var a:int = next_lv.min_value
+		var calculated:bool = false
+		if changing_paths:
+			while not calculated or lv_to != a:
+				if calculated:
+					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, 1.0, planet.tile_num)
+				if game.check_enough(costs):
+					if lv_to == next_lv.value:
+						break
+					a = lv_to
+					lv_to = (lv_to + next_lv.value) / 2
+				else:
+					lv_to = (a + lv_to) / 2
+				calculated = true
+			next_lv.value = lv_to
+		else:
+			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, 1.0, planet.tile_num)
 	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
@@ -225,29 +243,38 @@ func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1))
 
 func _on_Path1_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+#	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
+#		game.popup(tr("MAX_LV_REACHED"), 1.5)
+#		return
 	path_selected = 1
 	path_str = "path_%s" % [path_selected]
-	var updated:bool = false
 	Helper.set_btn_color(path1)
-	if not updated:
-		update(true)
+	update(true)
 
 func _on_Path2_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+#	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
+#		game.popup(tr("MAX_LV_REACHED"), 1.5)
+#		return
 	path_selected = 2
 	path_str = "path_%s" % [path_selected]
 	Helper.set_btn_color(path2)
 	update(true)
 
 func _on_Path3_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_3[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_3 == Data.path_3[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+	if bldg != "" and Data.path_3[bldg].has("cap"):
+		if len(ids) == 1:
+			if game.tile_data[ids[0]].bldg.path_3 >= Data.path_3[bldg].cap:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				return
+		else:
+			var all_capped = true
+			for i in ids:
+				if game.tile_data[i].bldg.path_3 < Data.path_3[bldg].cap:
+					all_capped = false
+					break
+			if all_capped:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				return
 	path_selected = 3
 	path_str = "path_%s" % [path_selected]
 	Helper.set_btn_color(path3)
@@ -277,7 +304,7 @@ func _on_Upgrade_pressed():
 			var cost_time
 			for id in ids:
 				var tile = game.tile_data[id]
-				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
+				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
 				if Data[path_str][bldg].has("cost_mult"):
@@ -331,6 +358,13 @@ func _on_Upgrade_pressed():
 				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			elif planet.bldg.name == "RL":
 				game.autocollect.rsrc.SP += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+			elif planet.has("auto_GH"):
+				for p in planet.auto_GH.produce:
+					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
+					planet.auto_GH.produce[p] *= new_base_value / planet.bldg["%s_value" % path_str]
+					if path_selected == 1:
+						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
+						planet.auto_GH.cellulose_drain *= new_base_value / planet.bldg["%s_value" % path_str]
 			if planet.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":

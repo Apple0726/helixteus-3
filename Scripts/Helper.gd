@@ -893,9 +893,13 @@ func update_bldg_constr(tile):
 			if tile.has("auto_GH"):
 				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
 				for p in produce_info.produce:
-					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value
+					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
+					if tile.adj_lake_state == "l":
+						tile.auto_GH.produce[p] *= 2
+					elif tile.adj_lake_state == "sc":
+						tile.auto_GH.produce[p] *= 4
 					game.autocollect.mets[p] += tile.auto_GH.produce[p]
-				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value
+				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
@@ -1185,6 +1189,8 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
+		_:
+			return ""
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)
@@ -1194,12 +1200,12 @@ func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 func check_lake_presence(pos:Vector2, wid:int):
 	var state:String
 	var has_lake = false
-	for i in range(pos.x - 1, pos.x + 2):
+	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
 		if not has_lake:
-			for j in range(pos.y - 1, pos.y + 2):
+			for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
 				if Vector2(i, j) != pos:
 					var id2 = i % wid + j * wid
-					if game.tile_data[id2].has("lake"):
+					if game.tile_data[id2] and game.tile_data[id2].has("lake"):
 						has_lake = true
 						state = game.tile_data[id2].lake.state
 						break
@@ -1208,11 +1214,11 @@ func check_lake_presence(pos:Vector2, wid:int):
 func check_lake(pos:Vector2, wid:int, seed_name:String):
 	var state
 	var has_lake = false
-	for i in range(pos.x - 1, pos.x + 2):
-		for j in range(pos.y - 1, pos.y + 2):
+	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
+		for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
 			if Vector2(i, j) != pos:
 				var id2 = i % wid + j * wid
-				if game.tile_data[id2].has("lake"):
+				if game.tile_data[id2] and game.tile_data[id2].has("lake"):
 					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[seed_name].lake
 					has_lake = has_lake or okay
 					if okay:

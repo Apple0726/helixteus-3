@@ -75,8 +75,6 @@ grow_vertical = 2
 rect_clip_content = false
 size_flags_horizontal = 3
 bbcode_enabled = true
-bbcode_text = "[center]1 mineral/sec[/center]"
-text = "1 mineral/sec"
 scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -113,8 +111,6 @@ rect_clip_content = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "[center]2 mineral/sec[/center]"
-text = "2 mineral/sec"
 scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false

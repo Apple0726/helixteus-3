@@ -73,10 +73,10 @@ func _on_Terraform_pressed():
 		game.toggle_panel(self)
 		game.deduct_resources(total_costs)
 		var planet = game.planet_data[game.c_p]
-		if planet.has("bookmark"):
-			game.bookmarks.planet.remove(planet.bookmark)
-			game.HUD.planet_grid.get_node("GridContainer").remove_child(game.HUD.planet_grid.get_node("GridContainer").get_child(planet.bookmark))
-			planet.erase("bookmark")
+		if planet.has("bookmarked"):
+			game.bookmarks.planet.erase(str(game.c_p_g))
+			game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(game.c_p_g)))
+			planet.erase("bookmarked")
 		planet.tile_num = surface
 		planet.bldg = {}
 		planet.bldg.name = tf_type
