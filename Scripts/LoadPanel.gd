@@ -28,18 +28,14 @@ func refresh():
 					save.get_node("Button").text = next_dir
 					save.get_node("Version")["custom_colors/font_color"] = Color.green
 					var now = OS.get_system_time_msecs()
-					if now - save_created < 86400000:
+					if now - save_created < 86400000 * 2:
 						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
-					elif now - save_created < 86400000 * 2:
-						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("YESTERDAY")]
 					else:
 						save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % ((now - save_created) / 86400000)]
-					if now - save_modified < 86400000:
-						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
-					elif now - save_modified < 86400000 * 2:
-						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("YESTERDAY")]
+					if now - save_modified < 86400000 * 2:
+						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % ((now - save_modified) / 3600000)]
 					else:
-						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % ((now - save_created) / 86400000)]
+						save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % ((now - save_modified) / 86400000)]
 					$ScrollContainer/VBox.add_child(save)
 				else:
 					remove_recursive("user://%s" % next_dir)

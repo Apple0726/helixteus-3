@@ -248,3 +248,9 @@ func _on_EnableShaders_toggled(button_pressed):
 		game.get_node("Nebula").visible = button_pressed
 		config.set_value("graphics", "enable_shaders", button_pressed)
 		config.save("user://settings.cfg")
+
+
+func _on_ResetTooltips_pressed():
+	for h in game.help:
+		if h != "tutorial":
+			game.help[h] = true

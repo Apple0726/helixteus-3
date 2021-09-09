@@ -42,7 +42,12 @@ func refresh():
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
 		btn.get_node("TF").visible = p_i.has("tile_num")
+		btn.get_node("MS").visible = p_i.has("MS")
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
+		btn.get_node("TF").connect("mouse_entered", self, "on_TF_over")
+		btn.get_node("TF").connect("mouse_exited", self, "on_mouse_exit")
+		btn.get_node("MS").connect("mouse_entered", self, "on_MS_over")
+		btn.get_node("MS").connect("mouse_exited", self, "on_mouse_exit")
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
 		set_process(true)
@@ -55,6 +60,15 @@ func refresh():
 		$StartCharging.visible = false
 		$Control2.visible = false
 		$StartCharging.text = tr("START_CHARGING")
+
+func on_TF_over():
+	game.show_tooltip(tr("PLANET_TFED"))
+
+func on_MS_over():
+	game.show_tooltip(tr("PLANET_HAS_MS"))
+
+func on_mouse_exit():
+	game.hide_tooltip()
 
 func refresh_planet_info():
 	var value = $Control/HSlider.value

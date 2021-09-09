@@ -2642,7 +2642,7 @@ func generate_tiles(id:int):
 			if not cross_aurora and randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				tile_data[t_id].crater = {}
-				tile_data[t_id].crater.variant = Helper.rand_int(1, 3)
+				tile_data[t_id].crater.variant = Helper.rand_int(1, 2)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
 				tile_data[t_id].crater.init_depth = depth
 				tile_data[t_id].depth = depth

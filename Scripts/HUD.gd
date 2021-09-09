@@ -109,12 +109,12 @@ func add_c_b(c_b:Dictionary):
 	cluster_grid_btns.add_child(slot)
 
 func setup_b(slot, bookmark:Dictionary, view:String):
-	slot.get_node("TextureButton").connect("mouse_entered", self, "on_bookmark_entered", [bookmark.name])
+	slot.get_node("TextureButton").connect("mouse_entered", self, "on_bookmark_entered", [view, slot.name])
 	slot.get_node("TextureButton").connect("mouse_exited", self, "on_bookmark_exited")
 	slot.get_node("TextureButton").connect("pressed", self, "on_bookmark_pressed", [view, bookmark])
 	
-func on_bookmark_entered(_name:String):
-	game.show_tooltip(_name)
+func on_bookmark_entered(type:String, id:String):
+	game.show_tooltip(game.bookmarks[type][id].name)
 
 func on_bookmark_exited():
 	game.hide_tooltip()
@@ -761,13 +761,21 @@ func _on_Name_mouse_exited():
 func _on_Name_text_entered(new_text):
 	$Name/Name.release_focus()
 	if game.c_v == "planet":
-		 game.planet_data[game.c_p].name = new_text
+		game.planet_data[game.c_p].name = new_text
+		if game.bookmarks.planet.has(str(game.c_p_g)):
+			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":
 		game.system_data[game.c_s].name = new_text
+		if game.bookmarks.system.has(str(game.c_s_g)):
+			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":
 		game.galaxy_data[game.c_g].name = new_text
+		if game.bookmarks.galaxy.has(str(game.c_g_g)):
+			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":
 		game.cluster_data[game.c_c].name = new_text
+		if game.bookmarks.cluster.has(str(game.c_c_g)):
+			game.bookmarks.cluster[str(game.c_c_g)].name = new_text
 	elif game.c_v == "supercluster":
 		game.supercluster_data[game.c_sc].name = new_text
 	elif game.c_v == "universe":

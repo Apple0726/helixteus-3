@@ -103,7 +103,7 @@ func _ready():
 				if game.enable_shaders:
 					$BG.material.set_shader_param("strength", max(0.3, star_spr.scale.x * 3.0))
 					$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
-					$BG.material.set_shader_param("star_mod", star_spr.modulate)
+					$BG.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
 					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
 				else:
 					$BG.material.shader = null
@@ -342,6 +342,10 @@ func set_buff_text(buff:float, buff_type:String, node):
 		node.get_node("Info/Effects/%s" % buff_type).visible = false
 		node.get_node("Info/Effects/%sLabel" % buff_type).visible = false
 
+func on_explosion_finished(animation, explosion:Node2D):
+	remove_child(explosion)
+	explosion.queue_free()
+
 func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	var timer_delay:float = 1.0
 	var w_data = "%s_data" % [weapon_type]
@@ -411,6 +415,11 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("KnockbackAnimation").play("Knockback" if HX_data[t].HP > 0 else "Dead")
 				weapon_XPs[sh][weapon_type] += 1
 			elif weapon_type == "bomb":
+				var explosion = preload("res://Scenes/Explosion.tscn").instance()
+				explosion.position = HXs[t].position
+				add_child(explosion)
+				explosion.get_node("AnimationPlayer").connect("animation_finished", self, "on_explosion_finished", [explosion])
+				explosion.get_node("AnimationPlayer").play("Explosion")
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
 				HXs[t].get_node("BombParticles").process_material.initial_velocity = 200 + 100 * weapon_lv
 				HXs[t].get_node("BombParticles").emitting = true

@@ -390,6 +390,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ResetTooltips" type="Button" parent="TabContainer/GAME"]
+margin_left = 100.0
+margin_top = 253.0
+margin_right = 325.0
+margin_bottom = 282.0
+text = "RESET_HIDDEN_TOOLTIPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="MISC" type="Tabs" parent="TabContainer"]
 visible = false
 anchor_right = 1.0
@@ -470,6 +480,7 @@ __meta__ = {
 [connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
+[connection signal="pressed" from="TabContainer/GAME/ResetTooltips" to="." method="_on_ResetTooltips_pressed"]
 [connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]

@@ -186,7 +186,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.3, 1 )
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id=11]
 resource_name = "Miss"
 length = 0.3
 tracks/0/type = "value"
@@ -214,13 +214,13 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 6.29962 ), Vector2( 0, -25 ), Vector2( 0, -25 ), Vector2( 0, 6.29962 ) ]
 }
 
-[sub_resource type="Gradient" id=11]
+[sub_resource type="Gradient" id=12]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=12]
-gradient = SubResource( 11 )
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
 
-[sub_resource type="ParticlesMaterial" id=13]
+[sub_resource type="ParticlesMaterial" id=14]
 flag_align_y = true
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
@@ -230,22 +230,22 @@ initial_velocity = 1000.0
 initial_velocity_random = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-color_ramp = SubResource( 12 )
+color_ramp = SubResource( 13 )
 
-[sub_resource type="Gradient" id=14]
+[sub_resource type="Gradient" id=15]
 offsets = PoolRealArray( 0, 0.293907, 0.594982, 0.985663, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=15]
-gradient = SubResource( 14 )
+[sub_resource type="GradientTexture" id=16]
+gradient = SubResource( 15 )
 
-[sub_resource type="Curve" id=16]
+[sub_resource type="Curve" id=17]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=17]
-curve = SubResource( 16 )
+[sub_resource type="CurveTexture" id=18]
+curve = SubResource( 17 )
 
-[sub_resource type="ParticlesMaterial" id=18]
+[sub_resource type="ParticlesMaterial" id=19]
 lifetime_randomness = 1.0
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
@@ -261,17 +261,17 @@ damping = 100.0
 damping_random = 1.0
 scale = 0.05
 scale_random = 0.2
-scale_curve = SubResource( 17 )
-color_ramp = SubResource( 15 )
+scale_curve = SubResource( 18 )
+color_ramp = SubResource( 16 )
 
-[sub_resource type="Gradient" id=19]
+[sub_resource type="Gradient" id=20]
 offsets = PoolRealArray( 0, 0.308244, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=20]
-gradient = SubResource( 19 )
+[sub_resource type="GradientTexture" id=21]
+gradient = SubResource( 20 )
 
-[sub_resource type="ParticlesMaterial" id=21]
+[sub_resource type="ParticlesMaterial" id=22]
 lifetime_randomness = 1.0
 flag_disable_z = true
 direction = Vector3( -1, 0, 0 )
@@ -287,7 +287,7 @@ damping = 100.0
 damping_random = 1.0
 scale = 0.1
 scale_random = 0.5
-color_ramp = SubResource( 20 )
+color_ramp = SubResource( 21 )
 
 [node name="HX" type="KinematicBody2D"]
 collision_layer = 4
@@ -476,7 +476,7 @@ anims/Knockback = SubResource( 9 )
 "anims/Small knockback" = SubResource( 10 )
 
 [node name="MissAnimation" type="AnimationPlayer" parent="."]
-anims/Miss = SubResource( 22 )
+anims/Miss = SubResource( 11 )
 
 [node name="BulletParticles" type="Particles2D" parent="."]
 emitting = false
@@ -485,7 +485,7 @@ lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
 local_coords = false
-process_material = SubResource( 13 )
+process_material = SubResource( 14 )
 texture = ExtResource( 5 )
 
 [node name="BombParticles" type="Particles2D" parent="."]
@@ -496,7 +496,7 @@ one_shot = true
 explosiveness = 0.95
 randomness = 1.0
 local_coords = false
-process_material = SubResource( 18 )
+process_material = SubResource( 19 )
 texture = ExtResource( 10 )
 
 [node name="LightParticles" type="Particles2D" parent="."]
@@ -506,5 +506,5 @@ one_shot = true
 explosiveness = 0.95
 randomness = 1.0
 local_coords = false
-process_material = SubResource( 21 )
+process_material = SubResource( 22 )
 texture = ExtResource( 14 )
