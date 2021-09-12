@@ -38,13 +38,13 @@ func _ready():
 	$Title.text = tr("AMN_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		if _name in ["nanocrystal", "mythril"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.rect_min_size.y = 30
-		btn.expand_icon = true
-		btn.text = tr(_name.to_upper())
+		btn.get_node("Icon").texture = Data.time_icon
+		btn.button_text = tr(_name.to_upper())
 		btn.connect("pressed", self, "_on_%s_pressed" % _name, [_name, reactions[_name]])
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
@@ -344,7 +344,7 @@ func _on_HSlider_value_changed(value):
 		var sum = Helper.get_sum_of_dict(game.stone)
 		for atom in atom_costs:
 			if game.stone.has(atom):
-				atom_costs[atom] = value * ratios[atom] * game.stone[atom] / sum
+				atom_costs[atom] = value * ratios[atom] * game.stone[atom] / sum if sum != 0 else 0
 	else:
 		for atom in atom_costs:
 			atom_costs[atom] = value * ratios[atom]
@@ -366,15 +366,16 @@ func _on_Transform_pressed():
 			rsrc_to_add[metal] = MM_value
 		else:
 			var sum = Helper.get_sum_of_dict(obj.bldg.AMN_stone)
-			for atom in rsrc_to_add:
-				if obj.bldg.AMN_stone.has(atom):
-					rsrc_to_add[atom] = MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum
+			if sum != 0:
+				for atom in rsrc_to_add:
+					if obj.bldg.AMN_stone.has(atom):
+						rsrc_to_add[atom] = MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum
 			if metal == "stone":
 				rsrc_to_add[metal] = {}
 				for atom in rsrc_to_add:
 					if atom == "stone":
 						continue
-					if obj.bldg.AMN_stone.has(atom):
+					if obj.bldg.AMN_stone.has(atom) and sum != 0:
 						rsrc_to_add[metal][atom] = max(0, obj.bldg.qty - MM_value) * obj.bldg.AMN_stone[atom] / sum
 			else:
 				rsrc_to_add[metal] = max(0, obj.bldg.qty - MM_value)
@@ -402,12 +403,12 @@ func _on_Transform_pressed():
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
-		game.deduct_resources(rsrc_to_deduct)
 		obj.bldg.qty = rsrc
 		obj.bldg.AMN_stone = game.stone.duplicate(true)
 		obj.bldg.start_date = OS.get_system_time_msecs()
 		obj.bldg.reaction = reaction
 		obj.bldg.atom_to_MM = atom_to_MM
+		game.deduct_resources(rsrc_to_deduct)
 		set_text_to_white()
 		set_process(true)
 		$Control.visible = false
@@ -424,7 +425,7 @@ func set_text_to_white():
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
-		r.icon = Data.time_icon if obj.bldg.has("reaction") and r.name == obj.bldg.reaction else null
+		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _process(delta):
 	if not obj or obj.empty():
@@ -449,7 +450,7 @@ func _process(delta):
 		if metal == "stone":
 			var sum = Helper.get_sum_of_dict(obj.bldg.AMN_stone)
 			for atom in atom_costs:
-				if obj.bldg.AMN_stone.has(atom):
+				if obj.bldg.AMN_stone.has(atom) and sum != 0:
 					atom_dict[atom] = Helper.clever_round(MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum)
 		else:
 			for atom in atom_dict:

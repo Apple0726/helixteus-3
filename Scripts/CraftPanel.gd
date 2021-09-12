@@ -4,13 +4,14 @@ func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
 	for btn_str in ["Mining", "Agriculture"]:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
-		btn.text = tr(btn_str.to_upper())
+		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$VBox/Tabs.add_child(btn)
 	_on_btn_pressed("Mining")
+	$VBox/Tabs.get_node("Mining")._on_Button_pressed()
 	buy_btn.text = tr("CRAFT")
 	buy_btn.icon = load("res://Graphics/Icons/craft.png")
 	$VBox/HBox/ItemInfo/VBox/HBox.visible = true

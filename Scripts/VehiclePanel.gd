@@ -77,6 +77,8 @@ func refresh():
 		fighter.connect("mouse_exited", self, "on_fighter_exit")
 		fighter.connect("pressed", self, "on_fighter_press", [i])
 	for i in len(game.probe_data):
+		if not game.probe_data[i]:
+			continue
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = TextureButton.new()
 		probe.texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
@@ -94,7 +96,7 @@ func refresh():
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
 	for probe in game.probe_data:
-		if probe.has("start_date"):
+		if probe and probe.has("start_date"):
 			$Timer.start()
 			_on_Timer_timeout()
 			break
@@ -192,10 +194,13 @@ func _on_close_button_pressed():
 
 func _on_Timer_timeout():
 	var curr_time = OS.get_system_time_msecs()
+	var refresh:bool = false
 	for dict in probe_time_bars:
 		var i = dict.i
 		var probe = game.probe_data[i]
 		var bar = dict.node
+		if not probe.has("start_date"):
+			continue
 		var start_date = probe.start_date
 		var length = probe.explore_length
 		var progress = (curr_time - start_date) / float(length)
@@ -212,13 +217,16 @@ func _on_Timer_timeout():
 					cluster_data[probe.obj_to_discover].visible = true
 					Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+				refresh = true
 			elif probe.tier == 1:
 				if probe.obj_to_discover >= len(game.supercluster_data):
 					game.generate_superclusters(game.c_u)
 				game.supercluster_data[probe.obj_to_discover].visible = true
 				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
 				game.save_sc()
-			game.probe_data.remove(i)
-			refresh()
-			yield(get_tree(), "idle_frame")
+				refresh = true
+			game.probe_data[i] = null
+	if refresh:
+		refresh()
+	yield(get_tree(), "idle_frame")
 	$Timer.start()

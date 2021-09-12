@@ -423,11 +423,11 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE) * game.u_i.time_speed
 		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE) * game.u_i.time_speed
 		if extra_arg_0 == "MINERALS":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.minerals * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.energy * energy_mult + game.autocollect.MS.energy)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy)), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.rsrc.SP * SP_mult + game.autocollect.MS.SP)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP)), tr("S_SECOND")])
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():

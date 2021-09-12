@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/Inventory.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
@@ -47,42 +48,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Items" type="Button" parent="Tabs"]
+[node name="Items" parent="Tabs" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_right = 196.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
-text = "ITEMS"
+button_text = "ITEMS"
 
-[node name="Materials" type="Button" parent="Tabs"]
+[node name="Materials" parent="Tabs" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 195.0
 margin_right = 391.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
-text = "MATERIALS"
+button_text = "MATERIALS"
 
-[node name="Metals" type="Button" parent="Tabs"]
+[node name="Metals" parent="Tabs" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 390.0
 margin_right = 586.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
-text = "METALS"
-expand_icon = true
+button_text = "METALS"
 
-[node name="Atoms" type="Button" parent="Tabs"]
+[node name="Atoms" parent="Tabs" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 585.0
 margin_right = 781.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
-text = "ATOMS"
-expand_icon = true
+button_text = "ATOMS"
 
-[node name="Particles" type="Button" parent="Tabs"]
+[node name="Particles" parent="Tabs" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 780.0
 margin_right = 976.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
-text = "PARTICLES"
-expand_icon = true
+button_text = "PARTICLES"
 
 [node name="Control" type="Panel" parent="."]
 anchor_right = 1.0

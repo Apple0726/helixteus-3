@@ -137,7 +137,7 @@ func _ready():
 	cave_size = tile[cave_type].floor_size
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
-		cave_data_file.open("user://Save%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.READ)
+		cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.READ)
 		cave_data = cave_data_file.get_var()
 		cave_data_file.close()
 		seeds = cave_data.seeds
@@ -349,10 +349,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-	if cave_size == 20 and num_floors == 3:
-		noise.period = 20
-	elif tile.cave.has("special_cave"):
-		if tile.cave.special_cave == 3:
+	if tile.cave.has("special_cave"):
+		if tile.cave.special_cave == 5:
+			noise.period = 20
+		elif tile.cave.special_cave == 3:
 			noise.period = 35
 		elif tile.cave.special_cave == 2:
 			noise.period = 150
@@ -578,7 +578,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		chests[String(rand_spawn)].node.queue_free()
 		chests.erase(String(rand_spawn))
 	#A way to check whether cave has the relic for 2nd ship
-	if cave_size == 20 and num_floors == 3 and cave_floor == 3:
+	if tile.cave.special_cave == 5 and cave_floor == 3:
 		var relic = object_scene.instance()
 		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
 		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")
@@ -1087,7 +1087,7 @@ func _input(event):
 func exit_cave():
 	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
 	var cave_data_file = File.new()
-	cave_data_file.open("user://Save%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.WRITE)
+	cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.WRITE)
 	var cave_data_dict = {
 		"seeds":seeds.duplicate(true),
 		"tiles_mined":tiles_mined.duplicate(true),

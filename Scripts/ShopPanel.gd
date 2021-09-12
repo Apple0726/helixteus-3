@@ -4,13 +4,14 @@ func _ready():
 	type = PanelType.SHOP
 	$Title.text = tr("SHOP")
 	for btn_str in ["Speedups", "Overclocks", "Pickaxes"]:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
-		btn.text = tr(btn_str.to_upper())
+		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$VBox/Tabs.add_child(btn)
 	_on_btn_pressed("Speedups")
+	$VBox/Tabs.get_node("Speedups")._on_Button_pressed()
 
 func _on_btn_pressed(btn_str:String):
 	if game.tutorial and game.tutorial.tut_num == 12 and btn_str == "Pickaxes" and not game.tutorial.tween.is_active():

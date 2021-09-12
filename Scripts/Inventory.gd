@@ -17,6 +17,7 @@ func _ready():
 	buy_sell.visible = false
 	add_child(buy_sell)
 	_on_Items_pressed()
+	$Tabs/Items._on_Button_pressed()
 
 func refresh():
 	if tab == "items":
@@ -38,7 +39,6 @@ func _on_Items_pressed():
 	set_process(false)
 	tab = "items"
 	info.text = tr("INV_ITEMS_DESC")
-	Helper.set_btn_color($Tabs/Items)
 	inventory_grid.visible = true
 	grid.visible = false
 	for item in inventory_grid.get_children():
@@ -136,7 +136,6 @@ func _on_Materials_pressed():
 	set_process(not game.autocollect.mats.empty())
 	tab = "materials"
 	info.text = tr("INV_MAT_DESC")
-	Helper.set_btn_color($Tabs/Materials)
 	inventory_grid.visible = false
 	grid.visible = true
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats)
@@ -153,7 +152,6 @@ func _on_Metals_pressed():
 	set_process(not game.autocollect.mets.empty())
 	tab = "metals"
 	info.text = tr("INV_MET_DESC")
-	Helper.set_btn_color($Tabs/Metals)
 	inventory_grid.visible = false
 	grid.visible = true
 	hbox_data = Helper.put_rsrc(grid, 48, game.mets)
@@ -170,7 +168,6 @@ func _on_Atoms_pressed():
 	set_process(false)
 	tab = "atoms"
 	info.text = tr("INV_ATOMS_DESC")
-	Helper.set_btn_color($Tabs/Atoms)
 	inventory_grid.visible = false
 	grid.visible = true
 	var atom_data = Helper.put_rsrc(grid, 48, game.atoms)
@@ -182,7 +179,6 @@ func _on_Particles_pressed():
 	set_process(false)
 	tab = "particles"
 	info.text = tr("INV_PARTICLES_DESC")
-	Helper.set_btn_color($Tabs/Particles)
 	inventory_grid.visible = false
 	grid.visible = true
 	Helper.put_rsrc(grid, 48, game.particles)

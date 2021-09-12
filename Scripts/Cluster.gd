@@ -155,6 +155,8 @@ func collect_all():
 			progress.value += 1
 			continue
 		game.system_data = game.open_obj("Galaxies", g_ids.global)
+		if game.system_data.empty():
+			continue
 		for s_ids in game.galaxy_data[g_ids.local].systems:
 			var system:Dictionary = game.system_data[s_ids.local]
 			if not system.has("discovered"):

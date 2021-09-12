@@ -11,9 +11,9 @@ func _ready():
 	tab = "Basic"
 	$Title.text = tr("CONSTRUCT")
 	for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
-		btn.text = tr(btn_str.to_upper())
+		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$VBox/Tabs.add_child(btn)
@@ -59,7 +59,9 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.item_name in ["PP", "MS"]:
+		if bldg.item_name == "PP":
+			bldg.visible = game.tutorial and game.stats.bldgs_built >= 5 or not game.tutorial and game.stats.bldgs_built >= 1
+		elif bldg.item_name == "MS":
 			bldg.visible = game.stats.bldgs_built >= 5
 		elif bldg.item_name == "RL":
 			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
@@ -111,6 +113,7 @@ func get_item(_name, _type, _dir):
 
 func refresh():
 	if game.c_v == "planet":
+		$VBox/Tabs.get_node(tab)._on_Button_pressed()
 		_on_btn_pressed(tab)
 
 func _on_close_button_pressed():

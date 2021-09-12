@@ -7,6 +7,7 @@ var sorted_objs:Array = []
 var n:int = 0
 var obj_index:int = -1
 var obj_to_discover:int = -1
+var undiscovered_obj_num:int = 0
 var dist_mult:float = 1
 var PP:float
 var dist_exp:int
@@ -61,17 +62,17 @@ func refresh():
 	exploring_probe_num = 0
 	costs.clear()
 	if game.c_v == "supercluster":
-		var undiscovered_clusters:int = 0
+		undiscovered_obj_num = 0
 		n = len(game.cluster_data)
 		for cluster in game.cluster_data:
 			if not cluster.visible:
-				undiscovered_clusters += 1
+				undiscovered_obj_num += 1
 		for probe in game.probe_data:
-			if probe.tier == 0:
+			if probe and probe.tier == 0:
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		dist_exp = n - undiscovered_clusters + exploring_probe_num
+		dist_exp = n - undiscovered_obj_num + exploring_probe_num
 		dist_mult = pow(1.01, dist_exp)
 		sorted_objs = game.cluster_data.duplicate(true)
 		sorted_objs.sort_custom(self, "dist_sort")
@@ -95,22 +96,22 @@ func refresh():
 			$Control.visible = true
 			$Send.visible = true
 			$SendAll.visible = true
-		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_clusters]
+		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_obj_num]
 		refresh_energy()
 		$TP.visible = false
-		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
+		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), min(probe_num - exploring_probe_num, undiscovered_obj_num - exploring_probe_num)]
 	elif game.c_v == "universe":
-		var undiscovered_sc:int = 0
+		undiscovered_obj_num = 0
 		n = len(game.supercluster_data)
 		for sc in game.supercluster_data:
 			if not sc.visible:
-				undiscovered_sc += 1
+				undiscovered_obj_num += 1
 		for probe in game.probe_data:
-			if probe.tier == 1:
+			if probe and probe.tier == 1:
 				probe_num += 1
 				if probe.has("start_date"):
 					exploring_probe_num += 1
-		dist_exp = n - undiscovered_sc + exploring_probe_num
+		dist_exp = n - undiscovered_obj_num + exploring_probe_num
 		dist_mult = pow(1.01, dist_exp)
 		sorted_objs = game.supercluster_data.duplicate(true)
 		sorted_objs.sort_custom(self, "dist_sort")
@@ -135,14 +136,14 @@ func refresh():
 			$Send.visible = true
 			$SendAll.visible = true
 			refresh_energy()
-		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_sc]
+		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_obj_num]
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
 	elif game.c_v == "dimension":
 		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
 		for probe in game.probe_data:
-			if probe.tier == 2:
+			if probe and probe.tier == 2:
 				ok = true
 		$Control.visible = false
 		$Send.visible = ok
@@ -173,7 +174,7 @@ func dist_sort(a:Dictionary, b:Dictionary):
 
 func discover_univ():
 	for probe in game.probe_data:
-		if probe.tier == 2:
+		if probe and probe.tier == 2:
 			game.probe_data.erase(probe)
 	var id:int = len(game.universe_data)
 	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
@@ -206,7 +207,7 @@ func _on_Send_pressed(send_all:bool = false):
 			var probe_sent:bool = false
 			if game.c_v == "supercluster":
 				for probe in game.probe_data:
-					if probe.tier == 0 and not probe.has("start_date"):
+					if probe and probe.tier == 0 and not probe.has("start_date"):
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
@@ -214,7 +215,7 @@ func _on_Send_pressed(send_all:bool = false):
 						break
 			elif game.c_v == "universe":
 				for probe in game.probe_data:
-					if probe.tier == 1 and not probe.has("start_date"):
+					if probe and probe.tier == 1 and not probe.has("start_date"):
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
@@ -234,7 +235,9 @@ func _on_Send_pressed(send_all:bool = false):
 						obj_to_discover = sorted_objs[obj_index].l_id
 					elif game.c_v == "universe":
 						obj_to_discover = sorted_objs[obj_index].id
-				refresh_energy(true)
+					refresh_energy(true)
+				else:
+					return false
 			else:
 				game.popup(tr("PROBE_SENT"), 1.5)
 				refresh()
@@ -325,7 +328,7 @@ func _on_SendAll_mouse_entered():
 	var max_time:int = 0
 	var temp_dist_exp = dist_exp
 	var temp_dist_mult = pow(1.01, temp_dist_exp)
-	for i in probe_num - exploring_probe_num:
+	for i in int(min(probe_num - exploring_probe_num, undiscovered_obj_num)):
 		fill_costs(temp_dist_mult)
 		temp_dist_exp += 1
 		temp_dist_mult = pow(1.01, temp_dist_exp)

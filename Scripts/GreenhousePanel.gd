@@ -85,8 +85,6 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 	if obj.has("auto_GH"):
 		for p in obj.auto_GH.produce:
 			game.autocollect.mets[p] -= obj.auto_GH.produce[p]
-			if game.autocollect.mets[p] < 0:
-				game.autocollect.mets[p] = 0
 		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
 		obj.erase("auto_GH")
 	if plant_new:

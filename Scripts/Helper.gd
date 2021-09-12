@@ -323,7 +323,7 @@ func change_circle_size(value, overlays):
 
 func save_obj(type:String, id:int, arr:Array):
 	var save:File = File.new()
-	var file_path:String = "user://Save%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
+	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	save.open(file_path, File.WRITE)
 	save.store_var(arr)
 	save.close()

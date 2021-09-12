@@ -35,14 +35,14 @@ func _ready():
 	$Title.text = tr("SPR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.rect_min_size.y = 30
-		btn.expand_icon = true
-		btn.text = tr("%s_NAME" % _name.to_upper())
+		btn.button_text = tr("%s_NAME" % _name.to_upper())
 		btn.connect("pressed", self, "_on_Atom_pressed", [_name])
+		btn.get_node("Icon").texture = Data.time_icon
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
 func _on_Atom_pressed(_name:String):
@@ -236,7 +236,7 @@ func _process(delta):
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
-		r.icon = Data.time_icon if obj.bldg.has("reaction") and r.name == obj.bldg.reaction else null
+		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _on_Max_pressed():
 	if atom_to_p:

@@ -26,7 +26,7 @@ func refresh():
 	var g_coords:Dictionary = game.ships_c_g_coords
 	var g_s:int = game.ships_c_g_coords.s
 	var file = File.new()
-	file.open("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
+	file.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
 	depart_planet_data = planets_in_depart_system[coords.p]

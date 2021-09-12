@@ -275,7 +275,6 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
-	position *= sc
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 
@@ -292,27 +291,27 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 func save_zooms(obj_str:String):
 	match obj_str:
 		"planet":
-			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
+			game.planet_data[game.c_p]["view"]["pos"] = self.position# / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data[game.c_s]["view"]["pos"] = self.position / self.scale.x
+			game.system_data[game.c_s]["view"]["pos"] = self.position# / self.scale.x
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x
 		"galaxy":
-			game.galaxy_data[game.c_g]["view"]["pos"] = self.position / self.scale.x
+			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 		"cluster":
-			game.cluster_data[game.c_c]["view"]["pos"] = self.position / self.scale.x
+			game.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
 			game.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"supercluster":
-			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position / self.scale.x
+			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position# / self.scale.x
 			game.supercluster_data[game.c_sc]["view"]["zoom"] = self.scale.x
 			game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
 		"universe":
-			game.universe_data[game.c_u]["view"]["pos"] = self.position / self.scale.x
+			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
 			game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
 		"science_tree":
-			game.science_tree_view.pos = position / scale.x
+			game.science_tree_view.pos = position# / scale.x
 			game.science_tree_view.zoom = scale.x
 
 var first_zoom:bool = false
@@ -339,7 +338,7 @@ func _physics_process(_delta):
 	if zooming == "in":
 		if first_zoom:
 			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 200))
-			progress += 0.002
+			progress += 0.003
 			modulate.a = min(1, modulate.a + 0.01)
 		else:
 			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)

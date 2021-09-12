@@ -1,17 +1,9 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Buildings/MM.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 [ext_resource path="res://Scripts/TerraformPanel.gd" type="Script" id=7]
-[ext_resource path="res://Graphics/Buildings/ME.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Buildings/MS.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buildings/AE.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Buildings/PP.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buildings/RL.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buildings/SPR.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Buildings/AMN.png" type="Texture" id=14]
 
 [sub_resource type="Theme" id=1]
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
@@ -78,102 +70,93 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 355.0
+margin_right = 350.0
 margin_bottom = 459.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 1 )
 
-[node name="MineralExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_right = 350.0
+[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 340.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
-text = "MINERAL_EXTRACTION"
-icon = ExtResource( 8 )
-align = 0
-expand_icon = true
+button_text = "MINERAL_EXTRACTION"
 
-[node name="EnergyProduction" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 44.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
-text = "ENERGY_PRODUCTION"
-icon = ExtResource( 11 )
-align = 0
-expand_icon = true
+button_text = "ENERGY_PRODUCTION"
 
-[node name="Research" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 88.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
-text = "RESEARCH"
-icon = ExtResource( 12 )
-align = 0
-expand_icon = true
+button_text = "MINERAL_STORAGE"
 
-[node name="MineralStorage2" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 132.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
-text = "MINERAL_STORAGE"
-icon = ExtResource( 9 )
-align = 0
-expand_icon = true
+button_text = "RESEARCH"
 
-[node name="AtmosphereExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 176.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
-text = "ATMOSPHERE_EXTRACTION"
-icon = ExtResource( 10 )
-align = 0
-expand_icon = true
+button_text = "ATMOSPHERE_EXTRACTION"
 
-[node name="Mining" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 220.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
-text = "MINING"
-icon = ExtResource( 4 )
-align = 0
-expand_icon = true
+button_text = "MINING"
 
-[node name="SpaceAgriculture" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 264.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
-text = "SA_SC"
-icon = ExtResource( 3 )
-align = 0
-expand_icon = true
+button_text = "SA_SC"
 
-[node name="AtomManipulation" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 308.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 348.0
 rect_min_size = Vector2( 0, 40 )
-text = "ATM_SC"
-icon = ExtResource( 14 )
-align = 0
-expand_icon = true
+button_text = "ATM_SC"
 
-[node name="SubatomicParticles" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 352.0
-margin_right = 350.0
+margin_right = 340.0
 margin_bottom = 392.0
 rect_min_size = Vector2( 0, 40 )
-text = "SAP_SC"
-icon = ExtResource( 13 )
-align = 0
-expand_icon = true
+button_text = "SAP_SC"
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
@@ -257,8 +240,8 @@ __meta__ = {
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_ME_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_PP_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_MS_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_RL_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage2" to="." method="_on_MS_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/AtmosphereExtraction" to="." method="_on_AE_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Mining" to="." method="_on_MM_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]

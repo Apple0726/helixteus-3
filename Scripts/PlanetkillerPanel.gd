@@ -137,9 +137,13 @@ func _on_StartCharging_pressed():
 					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
 				elif p_i.bldg.name == "MS":
 					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
+				elif p_i.has("auto_GH"):
+					for p in p_i.auto_GH.produce:
+						game.autocollect.mets[p] -= p_i.auto_GH.produce[p]
+					game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain
 			var dir = Directory.new()
-			if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
-				dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
+			if dir.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
+				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 			target.clear()
 			game.view.obj.refresh_planets()
 			game.add_resources(star.rsrc)

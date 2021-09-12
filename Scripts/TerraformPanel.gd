@@ -102,7 +102,7 @@ func _on_Terraform_pressed():
 			planet.bldg.IR_mult = 1
 		game.switch_view("system")
 		var dir = Directory.new()
-		dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])
+		dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])
 		game.popup(tr("TF_SUCCESS"), 2)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
 			game.objective.current += 1
