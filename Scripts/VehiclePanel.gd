@@ -25,13 +25,12 @@ func _input(event):
 			if game.probe_data[probe_over_id].tier == 2:
 				game.show_YN_panel("destroy_tri_probe", tr("DESTROY_TRI_PROBE"), [probe_over_id])
 			else:
-				game.probe_data.remove(probe_over_id)
+				game.probe_data[probe_over_id] = null
 				probe_over_id = -1
 				game.hide_tooltip()
 				refresh()
 
 func refresh():
-	$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), len(game.probe_data), 500]
 	$Panel.visible = game.science_unlocked.has("FG")
 	$Probes.visible = game.universe_data[game.c_u].lv >= 50
 	var hbox = $Rovers/HBox
@@ -76,9 +75,11 @@ func refresh():
 		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info])
 		fighter.connect("mouse_exited", self, "on_fighter_exit")
 		fighter.connect("pressed", self, "on_fighter_press", [i])
+	var probe_num:int = 0
 	for i in len(game.probe_data):
 		if not game.probe_data[i]:
 			continue
+		probe_num += 1
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = TextureButton.new()
 		probe.texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
@@ -95,6 +96,7 @@ func refresh():
 			time_bar.rect_position = Vector2(30, 0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
+	$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
 	for probe in game.probe_data:
 		if probe and probe.has("start_date"):
 			$Timer.start()
@@ -193,6 +195,8 @@ func _on_close_button_pressed():
 
 
 func _on_Timer_timeout():
+	if not visible:
+		return
 	var curr_time = OS.get_system_time_msecs()
 	var refresh:bool = false
 	for dict in probe_time_bars:

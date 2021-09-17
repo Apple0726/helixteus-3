@@ -79,7 +79,7 @@ func _ready():
 			HX_data = Helper.get_conquer_all_data().HX_data
 		else:
 			HX_data = p_i.HX_data
-		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0)
+		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0) * Vector2(-1, 0)
 		var max_star_lum:float = 0.0
 		var max_star_size:float = 0.0
 		for star in game.system_data[game.c_s].stars:
@@ -95,9 +95,10 @@ func _ready():
 				star_spr.material = ShaderMaterial.new()
 				star_spr.material.shader = star_shader
 				star_spr.material.set_shader_param("time_offset", 10.0 * randf())
-				star_spr.material.set_shader_param("brightness_offset", 2.0)
+				var amp:float = 2.0 - pow(clamp(range_lerp(star_spr.scale.x, 1.0, 3.0, 0.0, 0.9), 0.0, 0.9), 0.5)
+				star_spr.material.set_shader_param("brightness_offset", amp)
 				star_spr.material.set_shader_param("twinkle_speed", 0.4)
-				star_spr.material.set_shader_param("amplitude", 0.1)
+				star_spr.material.set_shader_param("amplitude", 0.05 / star_spr.scale.x)
 				$BG.material.shader = preload("res://Shaders/PlanetBG.shader")
 			if star.luminosity > max_star_lum:
 				if game.enable_shaders:
@@ -374,12 +375,13 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				damage_HX(i, dmg, crit)
 				light_hit = true
 				HXs[i].get_node("HurtAnimation").stop()
-				HXs[i].get_node("HurtAnimation").play("Hurt")
+				HXs[i].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 				HXs[i].get_node("KnockbackAnimation").stop()
-				HXs[i].get_node("KnockbackAnimation").play("Small knockback" if HX_data[i].HP > 0 else "Dead")
+				HXs[i].get_node("KnockbackAnimation").play("Small knockback" if HX_data[i].HP > 0 else "Dead", -1, time_speed)
 				HXs[i].get_node("LightParticles").emitting = true
 				var int_mult:float = pow(light_mult * range_lerp(weapon_lv, 1, 4, 1, 2), 0.7)
 				HXs[i].get_node("LightParticles").lifetime = int_mult
+				HXs[i].get_node("LightParticles").speed_scale = time_speed
 				HXs[i].get_node("LightParticles").amount = int(50 * int_mult)
 				HXs[i].get_node("LightParticles").process_material.initial_velocity = 250.0 * int_mult
 				HXs[i].get_node("LightParticles").process_material.scale = 0.1 * int_mult
@@ -391,7 +393,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
 			else:
 				HXs[i].get_node("MissAnimation").stop()
-				HXs[i].get_node("MissAnimation").play("Miss")
+				HXs[i].get_node("MissAnimation").play("Miss", -1, time_speed)
 				Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
 		if light_hit:
 			weapon_XPs[sh].light += 1
@@ -408,21 +410,23 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				dmg *= 1.5
 			damage_HX(t, dmg, crit)
 			HXs[t].get_node("HurtAnimation").stop()
-			HXs[t].get_node("HurtAnimation").play("Hurt")
+			HXs[t].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 			if weapon_type == "bullet":
 				HXs[t].get_node("BulletParticles").emitting = true
+				HXs[t].get_node("BulletParticles").speed_scale = time_speed
 				HXs[t].get_node("KnockbackAnimation").stop()
-				HXs[t].get_node("KnockbackAnimation").play("Knockback" if HX_data[t].HP > 0 else "Dead")
+				HXs[t].get_node("KnockbackAnimation").play("Knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += 1
 			elif weapon_type == "bomb":
 				var explosion = preload("res://Scenes/Explosion.tscn").instance()
 				explosion.position = HXs[t].position
 				add_child(explosion)
 				explosion.get_node("AnimationPlayer").connect("animation_finished", self, "on_explosion_finished", [explosion])
-				explosion.get_node("AnimationPlayer").play("Explosion")
+				explosion.get_node("AnimationPlayer").play("Explosion", -1, time_speed)
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
 				HXs[t].get_node("BombParticles").process_material.initial_velocity = 200 + 100 * weapon_lv
 				HXs[t].get_node("BombParticles").emitting = true
+				HXs[t].get_node("BombParticles").speed_scale = time_speed
 				HX_c_d[HXs[t].name].burn = weapon_lv
 				HXs[t].get_node("Sprite/Fire").visible = true
 				HXs[t].get_node("Info/Effects/Fire").visible = true
@@ -431,7 +435,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
 				$Camera2D/Screenshake.start(0.7, 20, 12)
 				HXs[t].get_node("KnockbackAnimation").stop()
-				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead")
+				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv
 				timer_delay = 1.3
 			elif weapon_type == "laser":
@@ -441,7 +445,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("Info/Effects/StunLabel").visible = true
 				HXs[t].get_node("Info/Effects/StunLabel").text = String(weapon_lv)
 				HXs[t].get_node("KnockbackAnimation").stop()
-				HXs[t].get_node("KnockbackAnimation").play("Small knockback" if HX_data[t].HP > 0 else "Dead")
+				HXs[t].get_node("KnockbackAnimation").play("Small knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv
 			var all_dead:bool = true
 			var last_id:int = min((wave + 1) * 4, len(HXs))
@@ -473,7 +477,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		else:
 			w_c_d.has_hit = true
 			HXs[t].get_node("MissAnimation").stop()
-			HXs[t].get_node("MissAnimation").play("Miss")
+			HXs[t].get_node("MissAnimation").play("Miss", -1, time_speed)
 			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
 	$Timer.start(min(timer_delay, timer_delay / time_speed))
 	return remove_weapon_b
@@ -501,8 +505,8 @@ func _process(delta):
 	for i in len(HXs):
 		var HX = HXs[i]
 		if HX_data[i].HP <= 0 and HX.get_node("Sprite").modulate.a > 0:
-			HX.get_node("Sprite").modulate.a -= 0.02 * delta * 60
-			HX.get_node("Info").modulate.a -= 0.02 * delta * 60
+			HX.get_node("Sprite").modulate.a -= 0.02 * delta * 60 * time_speed
+			HX.get_node("Info").modulate.a -= 0.02 * delta * 60 * time_speed
 		var pos = HX_c_d[HX.name].position
 		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
 	if stage == BattleStages.CHOOSING:
@@ -621,10 +625,10 @@ func process_1_2(weapon, delta):
 			weapon.modulate.a = 1
 			weapon.get_node("CollisionShape2D").disabled = false
 			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").stop()
-			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").play("Knockback")
+			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").play("Knockback", -1, time_speed)
 			
 	elif HX_w_c_d[weapon.name].stage == 1:
-		weapon.modulate.a -= 0.03 * delta
+		weapon.modulate.a -= 0.03 * delta * time_speed
 		if weapon.modulate.a <= 0:
 			remove_weapon(weapon, "w_1_2")
 
@@ -885,9 +889,9 @@ func enemy_attack():
 					if HX_c_d[HXs[i].name].has("burn"):
 						damage_HX(i, HX_data[i].total_HP * 0.15)
 						HXs[i].get_node("KnockbackAnimation").stop()
-						HXs[i].get_node("KnockbackAnimation").play("Small knockback")
+						HXs[i].get_node("KnockbackAnimation").play("Small knockback", -1, time_speed)
 						HXs[i].get_node("HurtAnimation").stop()
-						HXs[i].get_node("HurtAnimation").play("Hurt")
+						HXs[i].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 						HX_c_d[HXs[i].name].burn -= 1
 						HXs[i].get_node("Info/Effects/FireLabel").text = String(HX_c_d[HXs[i].name].burn)
 						if HX_c_d[HXs[i].name].burn <= 0:
@@ -1291,18 +1295,23 @@ func _on_weapon_mouse_entered(weapon:String):
 				tr("LV"),# Lv
 				w_lv,# 1
 				tr("BASE_DAMAGE"),# Base damage
-				Helper.clever_round(Data["%s_data" % [weapon]][w_lv - 1].damage * light_mult),# 5
+				Helper.clever_round(Data["%s_data" % [weapon]][w_lv - 1].damage * light_mult * game.u_i.speed_of_light),# 5
 				tr("BATTLEFIELD_DARKNESS_MULT"),
 				Helper.clever_round(light_mult),# 1.3
 				tr("BASE_ACCURACY"),# Base accuracy
 				Data["%s_data" % [weapon]][w_lv - 1].accuracy])# 2
 		else:
+			var dmg_mult:float = 1.0
+			if weapon in ["bullet", "bomb"]:
+				dmg_mult = game.u_i.planck
+			elif weapon == "laser":
+				dmg_mult = game.u_i.charge
 			game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [
 				tr(weapon.to_upper()),# Bullet
 				tr("LV"),# Lv
 				w_lv,# 1
 				tr("BASE_DAMAGE"),# Base damage
-				Data["%s_data" % [weapon]][w_lv - 1].damage,# 5
+				Data["%s_data" % [weapon]][w_lv - 1].damage * dmg_mult,# 5
 				tr("BASE_ACCURACY"),# Base accuracy
 				Data["%s_data" % [weapon]][w_lv - 1].accuracy])# 2
 

@@ -90,7 +90,7 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 	if plant_new:
 		for p in produce:
 			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)
-		var cellulose_drain:float = game.craft_agriculture_info[_name].costs.cellulose / float(game.craft_agriculture_info[_name].grow_time) * 1000.0 * obj.bldg.path_1_value * tile_num
+		var cellulose_drain:float = game.craft_agriculture_info[_name].costs.cellulose / float(game.craft_agriculture_info[_name].grow_time) * 1000.0 * obj.bldg.path_1_value
 		if obj.has("adj_lake_state"):
 			if obj.adj_lake_state == "l":
 				cellulose_drain *= 2

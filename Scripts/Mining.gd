@@ -125,7 +125,8 @@ func update_info(first_time:bool = false):
 		unit = "km"
 	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
 	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
-	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr(layer.to_upper())
+	$LayerInfo/Layer.bbcode_text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
+	$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
 	if unit == "m":
 		$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
@@ -351,12 +352,6 @@ func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))
 
 func _on_CheckBox_mouse_exited():
-	game.hide_tooltip()
-
-func _on_Layer_mouse_entered():
-	game.show_tooltip(tr(layer.to_upper() + "_DESC"))
-
-func _on_Layer_mouse_exited():
 	game.hide_tooltip()
 
 func _on_AutoReplace_pressed():

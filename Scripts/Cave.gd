@@ -177,6 +177,7 @@ func _ready():
 	$UI2/Filters/Grid/minerals.set_mod(game.cave_filters.minerals)
 	$UI2/Filters/Grid/stone.connect("pressed", self, "on_filter_pressed", ["stone", $UI2/Filters/Grid/stone])
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
+	
 
 func add_filter(rsrc:String):
 	if rsrc in game.mat_info.keys():
@@ -578,7 +579,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		chests[String(rand_spawn)].node.queue_free()
 		chests.erase(String(rand_spawn))
 	#A way to check whether cave has the relic for 2nd ship
-	if tile.cave.special_cave == 5 and cave_floor == 3:
+	if tile.cave.has("special_cave") and tile.cave.special_cave == 5 and cave_floor == 3:
 		var relic = object_scene.instance()
 		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
 		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")

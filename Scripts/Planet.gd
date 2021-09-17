@@ -694,7 +694,7 @@ func _unhandled_input(event):
 			if game.tile_data[tile_over]:
 				show_tooltip(game.tile_data[tile_over])
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
-	if event is InputEventMouseMotion:
+	if event is InputEventMouse or event is InputEventScreenDrag:
 		mouse_pos = to_local(event.position)
 		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var N:int = mass_build_rect_size.x
@@ -796,7 +796,7 @@ func _unhandled_input(event):
 		return
 	var placing_soil = game.bottom_info_action == "place_soil"
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
-	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
+	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -827,7 +827,7 @@ func _unhandled_input(event):
 			items_collected.clear()
 			var t:String = game.item_to_use.type
 			if tile.has("plant"):#if clicked tile has soil on it
-				if placing_soil and tile.plant.empty() and (not game.science_unlocked.GHA or not tile.has("auto_GH")):
+				if placing_soil and tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("auto_GH")):
 					game.add_resources({"soil":10})
 					tile.erase("plant")
 					$Soil.set_cell(x_pos, y_pos, -1)
@@ -851,12 +851,12 @@ func _unhandled_input(event):
 								harvest_plant(game.tile_data[_tile], _tile)
 					elif t == "seeds":
 						if tiles_selected.empty():
-							if tile.plant.empty() and (not game.science_unlocked.GHA or not tile.has("bldg")):
+							if tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
 								seeds_plant(tile, tile_id, curr_time)
 						else:
 							for _tile_id in tiles_selected:
 								var _tile = game.tile_data[_tile_id]
-								if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.GHA or not tile.has("bldg")):
+								if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
 									seeds_plant(_tile, _tile_id, curr_time, true)
 									if game.item_to_use.num <= 0:
 										break

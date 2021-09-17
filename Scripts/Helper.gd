@@ -551,22 +551,21 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 					continue
 				contents[mat] = amount
 				other_volume += amount / rho / 1000 / h_mult
-	if get_layer(tile, p_i) != "surface":
-		if not tile.has("current_deposit"):
-			for met in game.met_info:
-				var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-				if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
-					if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
-						tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
-		if tile.has("current_deposit"):
-			var met = tile.current_deposit.met
-			var size = tile.current_deposit.size
-			var progress2 = tile.current_deposit.progress
-			var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-			var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
-			contents[met] = amount
-			other_volume += amount / game.met_info[met].density / 1000 / h_mult
-			tile.current_deposit.progress += 1
+	if get_layer(tile, p_i) != "surface" and not tile.has("current_deposit"):
+		for met in game.met_info:
+			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
+			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
+				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
+					tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
+	if tile.has("current_deposit"):
+		var met = tile.current_deposit.met
+		var size = tile.current_deposit.size
+		var progress2 = tile.current_deposit.progress
+		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
+		var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		contents[met] = amount
+		other_volume += amount / game.met_info[met].density / 1000 / h_mult
+		tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult))
 	if stone_amount != 0:
@@ -892,6 +891,7 @@ func update_bldg_constr(tile):
 				tile.bldg.erase("rover_id")
 			if tile.has("auto_GH"):
 				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
+				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
 				for p in produce_info.produce:
 					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
 					if tile.adj_lake_state == "l":
@@ -899,7 +899,10 @@ func update_bldg_constr(tile):
 					elif tile.adj_lake_state == "sc":
 						tile.auto_GH.produce[p] *= 4
 					game.autocollect.mets[p] += tile.auto_GH.produce[p]
-				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
+				if tile.adj_lake_state == "l":
+					tile.auto_GH.cellulose *= 2
+				elif tile.adj_lake_state == "sc":
+					tile.auto_GH.cellulose *= 4
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true

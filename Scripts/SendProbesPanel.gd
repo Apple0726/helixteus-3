@@ -43,8 +43,8 @@ var weights:Dictionary = {
 	"speed_of_light":10,
 	"planck":20,
 	"boltzmann":10,
-	"gravitational":50,
-	"charge":10,
+	"gravitational":30,
+	"charge":20,
 	"dark_energy":25,
 	"difficulty":10,
 	"time_speed":50,
@@ -58,6 +58,17 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
+	$TP/VBox/speed_of_light/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("SPEED_OF_LIGHT")
+	$TP/VBox/planck/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("PLANCK_CTE")
+	$TP/VBox/boltzmann/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("BOLTZMANN_CTE")
+	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
+	$TP/VBox/gravitational/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("GRAVITATIONAL_CTE")
+	$TP/VBox/charge/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ELEMENTARY_CHARGE")
+	$TP/VBox/dark_energy/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DARK_ENERGY")
+	$TP/VBox/difficulty/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
+	$TP/VBox/time_speed/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED")
+	$TP/VBox/antimatter/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ANTIMATTER")
+	$TP/VBox/value/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("UNIVERSE_VALUE")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
@@ -139,7 +150,7 @@ func refresh():
 		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_obj_num]
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
-	elif game.c_v == "dimension":
+	elif game.viewing_dimension:
 		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
 		for probe in game.probe_data:
@@ -153,7 +164,7 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-			$TP/Points.text = "%s: %s" % [tr("PROBE_POINTS"), PP]
+			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
 			$NoProbes.visible = false
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
@@ -176,6 +187,7 @@ func discover_univ():
 	for probe in game.probe_data:
 		if probe and probe.tier == 2:
 			game.probe_data.erase(probe)
+			break
 	var id:int = len(game.universe_data)
 	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
 	for prop in $TP/VBox.get_children():
@@ -188,7 +200,7 @@ func discover_univ():
 	game.dimension.refresh_univs()
 
 func _on_Send_pressed(send_all:bool = false):
-	if game.c_v == "dimension":
+	if game.viewing_dimension:
 		if PP >= 0:
 			for prop in $TP/VBox.get_children():
 				if prop.get_node("Label2")["custom_colors/font_color"] == Color.red:
@@ -277,7 +289,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
-	$TP/Points.text = "%s: %s" % [tr("PROBE_POINTS"), PP]
+	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
 
 func get_lv_sum():
 	var lv:int = 0
@@ -298,7 +310,7 @@ func _on_Label_mouse_entered(extra_arg_0):
 
 func _on_Label2_text_changed(new_text, prop:String):
 	var new_value:float = float(new_text)
-	if prop == "antimatter" and new_value >= 0 or new_value >= 0.2:
+	if prop == "antimatter" and new_value >= 0 or new_value >= 0.5:
 		_on_TP_value_changed(new_value, prop)
 		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.white
 	else:

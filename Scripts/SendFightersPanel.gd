@@ -148,6 +148,7 @@ func _on_Send_pressed():
 			game.galaxy_data[game.c_g].combined_strength = combined_strength
 			game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
 			refresh()
+			game.HUD.refresh()
 	else:
 		game.galaxy_data[game.c_g].erase("conquer_start_date")
 		game.galaxy_data[game.c_g].erase("time_for_one_sys")

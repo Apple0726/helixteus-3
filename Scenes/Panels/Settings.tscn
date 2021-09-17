@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
 
@@ -133,17 +134,26 @@ __meta__ = {
 
 [node name="MusicPitch" type="CheckButton" parent="TabContainer/SFX"]
 margin_left = 456.0
-margin_top = 31.0
+margin_top = 27.0
 margin_right = 846.0
-margin_bottom = 71.0
-text = "TIME_SPEED_AFFECTS_PITCH"
+margin_bottom = 67.0
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="MusicPitchLabel" parent="TabContainer/SFX" instance=ExtResource( 2 )]
+margin_left = 464.0
+margin_top = 35.0
+margin_right = 768.0
+margin_bottom = 65.0
+bbcode_text = "[right]TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img][/right]"
+text = "TIME_SPEED_AFFECTS_PITCH "
+label_text = "TIME_SPEED_AFFECTS_PITCH"
+help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
+align = 2
+
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -164,7 +174,7 @@ __meta__ = {
 }
 
 [node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 128.0
+margin_left = 112.0
 margin_top = 95.0
 margin_right = 356.0
 margin_bottom = 135.0
@@ -216,15 +226,26 @@ __meta__ = {
 }
 
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 104.0
-margin_top = 159.0
+margin_left = 80.0
+margin_top = 155.0
 margin_right = 356.0
-margin_bottom = 199.0
+margin_bottom = 195.0
 pressed = true
-text = "ENABLE_SHADERS"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" instance=ExtResource( 2 )]
+margin_left = 72.0
+margin_top = 163.0
+margin_right = 280.0
+margin_bottom = 203.0
+bbcode_text = "[right]ENABLE_SHADERS [img]Graphics/Icons/help.png[/img][/right]"
+text = "ENABLE_SHADERS "
+label_text = "ENABLE_SHADERS"
+help_text = "ENABLE_SHADERS_DESC"
+align = 2
 
 [node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 104.0
@@ -232,11 +253,13 @@ margin_top = 215.0
 margin_right = 356.0
 margin_bottom = 255.0
 text = "AUTOSAVE_LIGHT"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="GAME" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -245,20 +268,30 @@ __meta__ = {
 }
 
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
-margin_left = 68.0
-margin_top = 87.0
-margin_right = 359.0
-margin_bottom = 127.0
-text = "AUTOSELL_MINERALS"
+margin_left = 72.0
+margin_top = 91.0
+margin_right = 352.0
+margin_bottom = 131.0
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="RichTextLabel" parent="TabContainer/GAME" instance=ExtResource( 2 )]
+margin_left = 40.0
+margin_top = 99.0
+margin_right = 272.0
+margin_bottom = 129.0
+bbcode_text = "[right]AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img][/right]"
+text = "AUTOSELL_MINERALS "
+label_text = "AUTOSELL_MINERALS"
+help_text = "AUTOSELL_MINERALS_DESC"
+align = 2
+
 [node name="EnableAutosave" type="CheckButton" parent="TabContainer/GAME"]
 margin_left = 88.0
 margin_top = 27.0
-margin_right = 359.0
+margin_right = 352.0
 margin_bottom = 67.0
 text = "ENABLE_AUTOSAVE"
 align = 2
@@ -453,18 +486,12 @@ __meta__ = {
 [connection signal="value_changed" from="TabContainer/SFX/Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="TabContainer/SFX/Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="TabContainer/SFX/SFX" to="." method="_on_Sound_Effects_value_changed"]
-[connection signal="mouse_entered" from="TabContainer/SFX/MusicPitch" to="." method="_on_MusicPitch_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/SFX/MusicPitch" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="TabContainer/SFX/MusicPitch" to="." method="_on_MusicPitch_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Vsync" to="." method="_on_Vsync_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Fullscreen" to="." method="_on_Fullscreen_toggled"]
 [connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
-[connection signal="mouse_entered" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
-[connection signal="mouse_entered" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]

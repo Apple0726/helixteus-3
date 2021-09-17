@@ -1,13 +1,14 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=2]
 [ext_resource path="res://Scenes/ShipInfo.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scripts/VictoryPanel.gd" type="Script" id=11]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=13]
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=1]
 size = 30
 use_filter = true
 font_data = ExtResource( 2 )
@@ -37,7 +38,7 @@ shortcut_in_tooltip = false
 [node name="Title" type="Label" parent="."]
 margin_right = 1064.0
 margin_bottom = 64.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
 text = "VICTORY"
 align = 1
 valign = 1
@@ -89,16 +90,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bonus" type="Label" parent="."]
+[node name="Bonus" parent="." instance=ExtResource( 5 )]
 margin_left = 24.0
 margin_top = 20.0
-margin_right = 320.0
-margin_bottom = 44.0
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_right = 421.0
+margin_bottom = 50.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 88.0
@@ -107,5 +103,3 @@ margin_right = 544.0
 margin_bottom = 588.0
 
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="mouse_entered" from="Bonus" to="." method="_on_Bonus_mouse_entered"]
-[connection signal="mouse_exited" from="Bonus" to="." method="_on_mouse_exited"]

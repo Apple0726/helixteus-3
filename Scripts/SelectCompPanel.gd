@@ -96,7 +96,7 @@ func _on_Slot_mouse_entered(type:String, cmp:String, metal:String):
 	elif type == "rover_wheels":
 		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[cmp].speed, tr("MOVEMENT_SPEED")]
 	elif type == "rover_CC":
-		txt = "%s\n+%s kg %s" % [metal_comp, Data.rover_CC[cmp].capacity, tr("CARGO_CAPACITY")]
+		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[cmp].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
 	elif type == "rover_weapons":
 		txt = Helper.get_rover_weapon_text(cmp)
 	elif type == "rover_mining":

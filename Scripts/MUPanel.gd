@@ -4,15 +4,15 @@ func _ready():
 	set_polygon(rect_size)
 	for MU in game.MUs:
 		var hbox = HBoxContainer.new()
-		var title = Label.new()
+		var title = preload("res://Scenes/HelpText.tscn").instance()
 		title.name = "Label"
-		title.text = tr("%s_NAME" % MU)
-		title["custom_colors/font_color"] = Color.yellow
+		title.label_text = "%s_NAME" % MU
+		title.help_text = "%s_DESC" % MU
 		title.rect_min_size.x = 450
+		title.rect_min_size.y = 30
 		title.size_flags_horizontal = Label.SIZE_EXPAND_FILL
+		title.size_flags_vertical = Label.SIZE_SHRINK_CENTER
 		title.mouse_filter = Label.MOUSE_FILTER_PASS
-		title.connect("mouse_entered", self, "_on_Label_mouse_entered", [MU])
-		title.connect("mouse_exited", self, "_on_Label_mouse_exited")
 		hbox.add_child(title)
 		var lv = Label.new()
 		lv.name = "Lv"
@@ -21,6 +21,7 @@ func _ready():
 		var effects
 		if MU == "MV":
 			effects = RichTextLabel.new()
+			effects.size_flags_vertical = Label.SIZE_SHRINK_CENTER
 		else:
 			effects = Label.new()
 		effects.name = "Effects"
@@ -90,14 +91,6 @@ func _on_Upgrade_pressed(MU:String):
 			game.items.append(null)
 	else:
 		game.popup(tr("NOT_ENOUGH_MINERALS"), 1.5)
-
-
-func _on_Label_mouse_entered(MU:String):
-	game.show_tooltip(tr("%s_DESC" % [MU]))
-
-
-func _on_Label_mouse_exited():
-	game.hide_tooltip()
 
 func _on_Upgrade_mouse_entered(MU:String):
 	set_upg_text(MU, 1) 

@@ -5,15 +5,14 @@
 [ext_resource path="res://Scripts/AdvButton.gd" type="Script" id=3]
 [ext_resource path="res://Shaders/Star.shader" type="Shader" id=4]
 
-[sub_resource type="ShaderMaterial" id=2]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 4 )
 shader_param/time_offset = 0.0
 shader_param/brightness_offset = 1.0
 shader_param/twinkle_speed = 0.0
 shader_param/amplitude = 0.2
 
-[sub_resource type="Animation" id=1]
-resource_name = "StarAnim"
+[sub_resource type="Animation" id=2]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -50,7 +49,6 @@ margin_top = -12.0
 margin_right = 20.0
 margin_bottom = 12.0
 grow_horizontal = 2
-text = "aaa"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -58,7 +56,7 @@ __meta__ = {
 
 [node name="TextureRect" type="TextureRect" parent="Label"]
 visible = false
-material = SubResource( 2 )
+material = SubResource( 1 )
 anchor_top = 0.5
 anchor_bottom = 0.5
 margin_left = -35.0
@@ -73,10 +71,9 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/StarAnim = SubResource( 1 )
+anims/StarAnim = SubResource( 2 )
 
 [node name="Icon" type="TextureRect" parent="."]
-visible = false
 anchor_bottom = 1.0
 margin_left = 4.0
 margin_top = 4.0

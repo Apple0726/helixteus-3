@@ -36,7 +36,14 @@ func _on_Construct_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		game.popup(tr("PROBES_CONSTRUCTED"), 3)
-		for i in $SpinBox.value:
+		var probes_remaining:int = $SpinBox.value
+		for i in len(game.probe_data):
+			if not game.probe_data[i]:
+				game.probe_data[i] = {"tier":probe_tier}
+				probes_remaining -= 1
+			if probes_remaining <= 0:
+				break
+		for i in probes_remaining:
 			game.probe_data.append({"tier":probe_tier})
 		_on_close_button_pressed()
 	else:

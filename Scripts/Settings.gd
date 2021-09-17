@@ -63,6 +63,7 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	$TabContainer/SFX/MusicPitchLabel.bbcode_text = "[right]%s  [img]Graphics/Icons/help.png[/img][/right]" % tr("TIME_SPEED_AFFECTS_PITCH")
 	set_difficulty()
 
 func _on_Vsync_toggled(button_pressed):

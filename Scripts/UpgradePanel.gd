@@ -336,7 +336,7 @@ func _on_Upgrade_pressed():
 					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				elif tile.bldg.name == "MS":
 					tile.bldg.mineral_cap_upgrade = new_base_value - tile.bldg.path_1_value
-				elif tile.bldg.name == "GH" and game.science_unlocked.GHA and tile.has("auto_GH"):
+				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):
 					for p in tile.auto_GH.produce:
 						game.autocollect.mets[p] -= tile.auto_GH.produce[p]
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain

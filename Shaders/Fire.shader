@@ -4,7 +4,7 @@ shader_type canvas_item;
 // If you use this shader, I would prefer it if you gave credit to me and my channel
 
 uniform vec4 color: hint_color = vec4(0.35, 0.48, 0.95, 1.0);
-uniform float fog_size: hint_range(0.01, 20.0) = 2.0;
+uniform float fog_size = 2.0;
 uniform float fog_mvt_spd = 0.05;
 uniform int OCTAVES = 1;
 
@@ -47,8 +47,7 @@ void fragment() {
 	COLOR.rgb = color.rgb;
 	COLOR.a = max(final - 0.4, 0.0) * 2.5;
 	//COLOR.r = COLOR.a * 2.0;
-	COLOR.g += pow(COLOR.a * 0.7, 2.0);
-	//COLOR.b += pow(COLOR.a * 1.0, 2.0);
-	//COLOR.a = max(0.0, 2.0 * COLOR.a * (1.0 - 5.0 * distance(UV, vec2(0.5, 0.5))));
+	COLOR.g += pow(COLOR.a * 1.0, 3.0);
+	COLOR.a = max(0.0, 2.0 * COLOR.a * (1.0 - 6.0 * distance(UV, vec2(0.5, 0.5))));
 	
 }

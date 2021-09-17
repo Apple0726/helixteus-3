@@ -21,6 +21,5 @@ func fade_in():
 func change_color(color:Color):
 	tween2.stop_all()
 	tween2.reset_all()
-	tween2.interpolate_property($Fog.material, "shader_param/color", null, color, 3.0)
 	tween2.interpolate_property($Nebula.material, "shader_param/color", null, color, 3.0)
 	tween2.start()

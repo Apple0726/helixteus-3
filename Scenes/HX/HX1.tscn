@@ -6,7 +6,7 @@
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=4]
 [ext_resource path="res://Graphics/Decoratives/BulletHit.jpg" type="Texture" id=5]
 [ext_resource path="res://Graphics/HX/1.png" type="Texture" id=6]
-[ext_resource path="res://Shaders/Nebula.shader" type="Shader" id=7]
+[ext_resource path="res://Shaders/Fire.shader" type="Shader" id=7]
 [ext_resource path="res://icon.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/Debris.png" type="Texture" id=10]
@@ -303,7 +303,6 @@ position = Vector2( 0, 6.29962 )
 texture = ExtResource( 6 )
 
 [node name="Fire" type="Sprite" parent="Sprite"]
-visible = false
 material = SubResource( 3 )
 position = Vector2( 48.8168, -97.6652 )
 scale = Vector2( 12, 12 )

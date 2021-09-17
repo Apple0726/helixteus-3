@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var game = self.get_parent().get_parent()
+onready var game = get_node("/root/Game")
 var star_shader = preload("res://Shaders/Star.shader")
 
 var dimensions:float

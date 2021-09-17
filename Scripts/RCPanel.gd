@@ -56,7 +56,7 @@ func _on_Slot_mouse_entered(type:String):
 	elif type == "rover_wheels":
 		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[wheels].speed, tr("MOVEMENT_SPEED")]
 	elif type == "rover_CC" and CC != "":
-		txt = "%s\n+%s kg %s" % [metal_comp, Data.rover_CC[CC].capacity, tr("CARGO_CAPACITY")]
+		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[CC].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
 	if txt != "":
 		if game.help.rover_inventory_shortcuts:
 			game.help_str = "rover_inventory_shortcuts"
@@ -127,17 +127,17 @@ func refresh():
 	HP = 20.0
 	atk = 5.0
 	def = 5.0
-	weight_cap = 3000.0
+	weight_cap = round(3000.0 * game.u_i.planck)
 	if game.science_unlocked.has("RMK2"):
 		HP = 50
 		atk = 15
 		def = 15
-		weight_cap = 16000.0
+		weight_cap = round(16000.0 * game.u_i.planck)
 	if game.science_unlocked.has("RMK3"):
 		HP = 450
 		atk = 70
 		def = 70
-		weight_cap = 200000.0
+		weight_cap = round(200000.0 * game.u_i.planck)
 	tile = game.tile_data[game.c_t]
 	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
@@ -166,7 +166,7 @@ func refresh():
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-		cargo_bonus = Data.rover_CC[CC].capacity
+		cargo_bonus = round(Data.rover_CC[CC].capacity * game.u_i.planck)
 	else:
 		cargo_bonus = 0
 	var hbox = $Inventory/HBoxContainer
@@ -202,11 +202,16 @@ func refresh():
 	rover_costs.time /= game.u_i.time_speed
 	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
-	$Stats/HPText.text = Helper.format_num(round((HP + HP_bonus) * mult))
-	$Stats/AtkText.text = Helper.format_num(round(atk * mult))
-	$Stats/DefText.text = Helper.format_num(round((def + def_bonus) * mult))
-	$Stats/CargoText.text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult)]
-	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus))
+	$Stats/HPText.bbcode_text = Helper.format_num(round((HP + HP_bonus) * mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/HPText.help_text = "(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult)]
+	$Stats/AtkText.bbcode_text = Helper.format_num(round(atk * mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/AtkText.help_text = "(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult)]
+	$Stats/DefText.bbcode_text = Helper.format_num(round((def + def_bonus) * mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/DefText.help_text = "(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)]
+	$Stats/CargoText.bbcode_text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult)] + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/CargoText.help_text = "(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult)]
+	$Stats/SpeedText.bbcode_text = String(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/SpeedText.help_text = "%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))]
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -235,20 +240,5 @@ func _input(event):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
-func _on_HPText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult)])
-
 func _on_Text_mouse_exited():
 	game.hide_tooltip()
-
-func _on_AtkText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult)])
-
-func _on_DefText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)])
-
-func _on_CargoText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult)])
-
-func _on_SpeedText_mouse_entered():
-	game.show_tooltip("%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))])

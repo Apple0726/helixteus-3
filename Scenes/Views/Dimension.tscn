@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=9]
 [ext_resource path="res://Graphics/Misc/Engineering.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Misc/Biology.png" type="Texture" id=11]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Graphics/Misc/Universe.png" type="Texture" id=13]
 
 [sub_resource type="DynamicFont" id=1]
@@ -45,9 +46,9 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 305.0
+margin_right = 310.0
 margin_bottom = 305.0
 
 [node name="UniverseIcon" type="TextureButton" parent="ScrollContainer/VBoxContainer"]
@@ -113,9 +114,9 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="ScrollContainer2"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 817.0
+margin_right = 822.0
 margin_bottom = 661.0
 mouse_filter = 2
 size_flags_horizontal = 3
@@ -135,19 +136,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Mathematics"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Mathematics" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "MATHS"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]MATHS [img]Graphics/Icons/help.png[/img][/center]"
+text = "MATHS "
+label_text = "MATHS"
+help_text = "MATHS_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Mathematics"]
 anchor_right = 1.0
@@ -204,19 +202,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Physics"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Physics" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "PHYSICS"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]PHYSICS [img]Graphics/Icons/help.png[/img][/center]"
+text = "PHYSICS "
+label_text = "PHYSICS"
+help_text = "PHYSICS_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Physics"]
 anchor_right = 1.0
@@ -273,19 +268,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Chemistry"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Chemistry" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "CHEMISTRY"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]CHEMISTRY [img]Graphics/Icons/help.png[/img][/center]"
+text = "CHEMISTRY "
+label_text = "CHEMISTRY"
+help_text = "CHEMISTRY_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Chemistry"]
 anchor_right = 1.0
@@ -342,19 +334,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Biology"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Biology" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "BIOLOGY"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]BIOLOGY [img]Graphics/Icons/help.png[/img][/center]"
+text = "BIOLOGY "
+label_text = "BIOLOGY"
+help_text = "BIOLOGY_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Biology"]
 anchor_right = 1.0
@@ -411,19 +400,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Philosophy"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Philosophy" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "PHILOSOPHY"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]PHILOSOPHY [img]Graphics/Icons/help.png[/img][/center]"
+text = "PHILOSOPHY "
+label_text = "PHILOSOPHY"
+help_text = "PHILOSOPHY_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Philosophy"]
 anchor_right = 1.0
@@ -483,19 +469,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/Engineering"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/Engineering" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "ENGINEERING"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]ENGINEERING [img]Graphics/Icons/help.png[/img][/center]"
+text = "ENGINEERING "
+label_text = "ENGINEERING"
+help_text = "ENGINEERING_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/Engineering"]
 anchor_right = 1.0
@@ -553,19 +536,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer2/GridContainer/DimensionalPower"]
+[node name="RichTextLabel" parent="ScrollContainer2/GridContainer/DimensionalPower" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 50 )
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-text = "DIMENSIONAL_POWER"
+margin_top = 10.0
+margin_right = 0.0
+margin_bottom = 45.0
+bbcode_text = "[center]DIMENSIONAL_POWER [img]Graphics/Icons/help.png[/img][/center]"
+text = "DIMENSIONAL_POWER "
+label_text = "DIMENSIONAL_POWER"
+help_text = "DIMENSIONAL_POWER_DESC"
 align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="ScrollContainer2/GridContainer/DimensionalPower"]
 modulate = Color( 0.568627, 0, 1, 1 )
@@ -669,18 +649,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Mathematics/Label" to="." method="_on_Label_mouse_entered" binds= [ "MATHS_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Mathematics/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Physics/Label" to="." method="_on_Label_mouse_entered" binds= [ "PHYSICS_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Physics/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Chemistry/Label" to="." method="_on_Label_mouse_entered" binds= [ "CHEMISTRY_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Chemistry/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Biology/Label" to="." method="_on_Label_mouse_entered" binds= [ "BIOLOGY_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Biology/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Philosophy/Label" to="." method="_on_Label_mouse_entered" binds= [ "PHILOSOPHY_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Philosophy/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/Engineering/Label" to="." method="_on_Label_mouse_entered" binds= [ "ENGINEERING_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/Engineering/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="ScrollContainer2/GridContainer/DimensionalPower/Label" to="." method="_on_Label_mouse_entered" binds= [ "DIMENSIONAL_POWER_DESC" ]]
-[connection signal="mouse_exited" from="ScrollContainer2/GridContainer/DimensionalPower/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="pressed" from="SendProbes" to="." method="_on_SendProbes_pressed"]

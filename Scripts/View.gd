@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-onready var game = self.get_parent()
+onready var game = get_node("/root/Game")
 onready var ship:TextureButton = game.get_node("Ship")
 var obj
 #var shapes = []
@@ -333,7 +333,7 @@ func _physics_process(_delta):
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction)
 	velocity = move_and_slide(velocity)
-	
+
 	#Zooming animation
 	if zooming == "in":
 		if first_zoom:
@@ -378,6 +378,32 @@ func _physics_process(_delta):
 			obj.set_process(true)
 
 var dragging:bool = false
+var touch_events = {}
+var target_return_enabled = true
+var target_return_rate = 0.02
+var min_zoom = 0.5
+var max_zoom = 2
+var zoom_sensitivity = 10
+var zoom_speed = 0.05
+
+var last_drag_distance = 0
+
+func _unhandled_input(event):
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			touch_events[event.index] = event
+		else:
+			touch_events.erase(event.index)
+	if event is InputEventScreenDrag:
+		touch_events[event.index] = event
+		if touch_events.size() == 1:
+			position += event.relative
+		elif touch_events.size() == 2:
+			var drag_distance = touch_events[0].position.distance_to(touch_events[1].position)
+			var touch_center = (touch_events[0].position + touch_events[1].position) / 2.0
+			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
+				_zoom_at_point(abs(drag_distance - last_drag_distance), touch_center)
+				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
 func _input(event):
@@ -402,7 +428,7 @@ func _input(event):
 			zooming = "in"
 			progress = 0
 			check_change_scale()
-	if event is InputEventMouse and move_view:
+	if (event is InputEventMouse or event is InputEventScreenTouch) and move_view:
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
 			drag_position = event.position

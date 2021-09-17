@@ -2,9 +2,11 @@ tool
 extends Button
 
 export var button_text:String = ""
+export var icon_texture:Texture
 
 func _ready():
 	$Label.text = tr(button_text)
+	$Icon.texture = icon_texture
 
 func _on_Button_pressed():
 	for btn in get_parent().get_children():

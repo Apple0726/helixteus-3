@@ -23,6 +23,7 @@ shadow_size = 3
 shadow_offset = Vector2( 1, 1 )
 
 [sub_resource type="DynamicFont" id=2]
+resource_name = "Font"
 size = 20
 use_filter = true
 font_data = ExtResource( 2 )

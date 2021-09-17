@@ -712,6 +712,12 @@ func new_game(tut:bool, univ:int = 0):
 	SP = 0
 	#Dimension remnants
 	DRs = 0
+	science_unlocked = {}
+	cave_filters = {
+		"money":false,
+		"minerals":false,
+		"stone":false,
+	}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
 	c_u = univ#c_u: current_universe
@@ -1128,6 +1134,7 @@ func open_shop_pickaxe():
 	if not shop_panel.visible:
 		toggle_panel(shop_panel)
 	shop_panel._on_btn_pressed("Pickaxes")
+	shop_panel.get_node("VBox/Tabs/Pickaxes")._on_Button_pressed()
 
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	b_i_tween.stop_all()
@@ -1607,10 +1614,10 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
-#	if enable_shaders:
-#		$Nebula.fade_in()
-#		if galaxy_data[c_g].type == 0:
-#			$Nebula.change_color(Color.white)
+	if enable_shaders:
+		$Nebula.fade_in()
+		if galaxy_data[c_g].type == 0:
+			$Nebula.change_color(Color.white)
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
@@ -2656,10 +2663,8 @@ func generate_tiles(id:int):
 				if ship_cond:
 					relic_cave_id = t_id
 					second_ship_cave_placed = true
-					floor_size = 20
-					num_floors = 3
-					tile_data[t_id].special_cave = 5
-				if boss_cave:
+					tile_data[t_id].cave = {"num_floors":20, "floor_size":3, "special_cave":5}
+				elif boss_cave:
 					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
 					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
 				else:
@@ -3023,10 +3028,14 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		var arr2 = txt.split("\n")
 		var max_width = 0
 		for st in arr2:
-			var width = min(RTL.get_font("Font").get_string_size(st).x, 400)
+			var bb_start:int = st.find("[")
+			var bb_end:int = st.find("]")
+			if bb_start != -1 and bb_end != -1:
+				st = st.replace(st.substr(bb_start, bb_end - bb_start + 1), "")
+			var width = min(RTL["custom_fonts/normal_font"].get_string_size(st).x, 400)
 			max_width = max(width, max_width)
-		RTL.rect_size.x = max_width + 60
-		RTL.rect_min_size.x = max_width + 60
+		RTL.rect_size.x = max_width# + 60
+		RTL.rect_min_size.x = max_width# + 60
 	yield(get_tree(), "idle_frame")
 	if is_instance_valid(RTL):
 		RTL.rect_min_size.y = RTL.get_content_height()
@@ -3434,7 +3443,7 @@ func _input(event):
 
 func _unhandled_key_input(event):
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5"), Input.is_action_just_released("6"), Input.is_action_just_released("7"), Input.is_action_just_released("8"), Input.is_action_just_released("9"), Input.is_action_just_released("0")]
-	if not c_v in ["battle", "cave", "", "dimension"] and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel.visible and not is_instance_valid(overlay):
+	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel.visible and not is_instance_valid(overlay):
 		for i in 10:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
