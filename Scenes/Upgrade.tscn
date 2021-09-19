@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Scripts/UpgradeShips.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
@@ -7,10 +7,18 @@
 [ext_resource path="res://Graphics/Buttons/Down.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+[ext_resource path="res://Graphics/Buttons/Orb.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Buttons/Repair.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Buttons/None.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Buttons/Debuff.png" type="Texture" id=15]
+[ext_resource path="res://Graphics/Buttons/Charge.png" type="Texture" id=16]
+[ext_resource path="res://Graphics/Buttons/LOL.png" type="Texture" id=17]
+[ext_resource path="res://Graphics/Buttons/Buff.png" type="Texture" id=18]
+[ext_resource path="res://Scripts/AbilitySuperweapon.gd" type="Script" id=19]
 
 [node name="Upgrade" type="Panel"]
 margin_top = 104.0
@@ -377,9 +385,171 @@ margin_left = 721.0
 margin_top = 48.0
 margin_right = 1024.0
 margin_bottom = 496.0
+script = ExtResource( 19 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Abilities" type="Control" parent="Specials"]
+margin_right = 303.0
+margin_bottom = 216.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Specials/Abilities"]
+margin_right = 303.0
+margin_bottom = 24.0
+text = "Abilities"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Specials/Abilities"]
+margin_top = 32.0
+margin_right = 152.0
+margin_bottom = 56.0
+text = "Selected: "
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ability" type="Label" parent="Specials/Abilities"]
+margin_left = 153.0
+margin_top = 32.0
+margin_right = 304.0
+margin_bottom = 56.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Backing" type="Panel" parent="Specials/Abilities"]
+margin_top = 152.0
+margin_right = 303.0
+margin_bottom = 216.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Abilities"]
+margin_left = -1.0
+margin_top = 152.0
+margin_right = 301.0
+margin_bottom = 216.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="None" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
+margin_left = 17.0
+margin_right = 81.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 14 )
+
+[node name="Buff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
+margin_left = 85.0
+margin_right = 149.0
+margin_bottom = 64.0
+grow_horizontal = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Debuff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
+margin_left = 153.0
+margin_right = 217.0
+margin_bottom = 64.0
+grow_horizontal = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource( 15 )
+
+[node name="Repair" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
+margin_left = 221.0
+margin_right = 285.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 13 )
+
+[node name="Superweapons" type="Control" parent="Specials"]
+margin_top = 216.0
+margin_right = 303.0
+margin_bottom = 448.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Specials/Superweapons"]
+margin_right = 303.0
+margin_bottom = 24.0
+text = "Superweapons"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Specials/Superweapons"]
+margin_left = -1.0
+margin_top = 32.0
+margin_right = 151.0
+margin_bottom = 56.0
+text = "Selected: "
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Superweapon" type="Label" parent="Specials/Superweapons"]
+margin_left = 152.0
+margin_top = 32.0
+margin_right = 303.0
+margin_bottom = 56.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Backing" type="Panel" parent="Specials/Superweapons"]
+margin_top = 168.0
+margin_right = 303.0
+margin_bottom = 232.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Superweapons"]
+margin_top = 168.0
+margin_right = 303.0
+margin_bottom = 232.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="None2" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
+margin_left = 17.0
+margin_right = 81.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 14 )
+
+[node name="LOL" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
+margin_left = 85.0
+margin_right = 149.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 17 )
+
+[node name="Orb" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
+margin_left = 153.0
+margin_right = 217.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 8 )
+
+[node name="Charge" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
+margin_left = 221.0
+margin_right = 285.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 16 )
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Upgrades/HP/Up" to="Upgrades/HP" method="_on_Up_pressed"]
@@ -392,3 +562,11 @@ __meta__ = {
 [connection signal="pressed" from="Upgrades/acc/Down" to="Upgrades/acc" method="_on_Down_pressed"]
 [connection signal="pressed" from="Upgrades/eva/Up" to="Upgrades/eva" method="_on_Up_pressed"]
 [connection signal="pressed" from="Upgrades/eva/Down" to="Upgrades/eva" method="_on_Down_pressed"]
+[connection signal="pressed" from="Specials/Abilities/HBoxContainer/None" to="Specials" method="_on_None_pressed"]
+[connection signal="pressed" from="Specials/Abilities/HBoxContainer/Buff" to="Specials" method="_on_Buff_pressed"]
+[connection signal="pressed" from="Specials/Abilities/HBoxContainer/Debuff" to="Specials" method="_on_Debuff_pressed"]
+[connection signal="pressed" from="Specials/Abilities/HBoxContainer/Repair" to="Specials" method="_on_Repair_pressed"]
+[connection signal="pressed" from="Specials/Superweapons/HBoxContainer/None2" to="Specials" method="_on_None2_pressed"]
+[connection signal="pressed" from="Specials/Superweapons/HBoxContainer/LOL" to="Specials" method="_on_LOL_pressed"]
+[connection signal="pressed" from="Specials/Superweapons/HBoxContainer/Orb" to="Specials" method="_on_Orb_pressed"]
+[connection signal="pressed" from="Specials/Superweapons/HBoxContainer/Charge" to="Specials" method="_on_Charge_pressed"]
