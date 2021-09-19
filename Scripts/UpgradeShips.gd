@@ -25,6 +25,8 @@ func _refresh():
 		for i in $Upgrades.get_children():
 			i._refresh()
 		$Specials._refresh()
+	$Specials/Abilities.visible = game.science_unlocked.has("UP2")
+	$Specials/Superweapons.visible = game.science_unlocked.has("UP3")
 
 func _upgrade(stat:String):
 	var stat_mult:String = "%s_mult" % stat
