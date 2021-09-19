@@ -24,6 +24,9 @@ func _refresh():
 		$Ship/Points.text = tr("YOU_HAVE_%s_POINTS_REMAINING") % ship.points
 		for i in $Upgrades.get_children():
 			i._refresh()
+		$Specials._refresh()
+	$Specials/Abilities.visible = game.science_unlocked.has("UP2")
+	$Specials/Superweapons.visible = game.science_unlocked.has("UP3")
 
 func _upgrade(stat:String):
 	var stat_mult:String = "%s_mult" % stat
@@ -40,6 +43,9 @@ func _downgrade(stat:String):
 		ship.points += 1
 		ship[stat_mult] -= 0.1
 		_refresh()
+		if game.help.downgrade:
+			game.popup(tr("WHY_DID_YOU_DOWNGRADE"), 1.5)
+			game.help.downgrade = false
 
 func _on_OptionButton_item_selected(i):
 	_refresh()
