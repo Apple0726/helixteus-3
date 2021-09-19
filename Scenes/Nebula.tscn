@@ -5,11 +5,13 @@
 [ext_resource path="res://Scripts/Nebula.gd" type="Script" id=4]
 
 [sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
 shader = ExtResource( 3 )
-shader_param/color = Color( 0.368627, 0.733333, 1, 1 )
-shader_param/fog_size = 4.1
-shader_param/fog_mvt_spd = 0.05
-shader_param/OCTAVES = 5
+shader_param/color = Color( 0.4, 0.4, 0.4, 1 )
+shader_param/fog_size = 2.045
+shader_param/fog_mvt_spd = 0.02
+shader_param/OCTAVES = 7
+shader_param/seed = 1
 
 [node name="Nebula" type="Node2D"]
 script = ExtResource( 4 )

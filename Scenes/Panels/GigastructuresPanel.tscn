@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 [ext_resource path="res://Scripts/GigastructuresPanel.gd" type="Script" id=7]
@@ -132,7 +133,6 @@ rect_min_size = Vector2( 0, 40 )
 button_text = "TRIANGULUM_PROBE"
 
 [node name="Control" type="Panel" parent="."]
-visible = false
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -167,16 +167,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ProdCostMult" type="Label" parent="Control"]
+[node name="ProdCostMult" parent="Control" instance=ExtResource( 2 )]
 margin_left = 24.0
-margin_top = 388.0
-margin_right = 344.0
-margin_bottom = 412.0
-mouse_filter = 0
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_top = 384.0
+margin_right = 376.0
+margin_bottom = 414.0
+help_text = "PCM_DESC"
 
 [node name="ProductionPerSec" type="Label" parent="Control"]
 margin_left = 24.0
@@ -213,10 +209,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -176.0
-margin_top = -48.0
-margin_right = -12.0
-margin_bottom = -12.0
+margin_left = -152.0
+margin_top = -50.0
+margin_right = -16.0
+margin_bottom = -16.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 3 )
 text = "CONVERT"
@@ -230,6 +226,4 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
-[connection signal="mouse_entered" from="Control/ProdCostMult" to="." method="_on_ProdCostMult_mouse_entered"]
-[connection signal="mouse_exited" from="Control/ProdCostMult" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]

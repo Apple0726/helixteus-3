@@ -39,6 +39,10 @@ var mouse_position = Vector2.ZERO
 var red_line:Line2D
 var green_line:Line2D
 
+#Scaling of objects based on zoom level
+var obj_scaled:bool = false
+var changed:bool = false
+
 func _ready():
 	set_process(false)
 	red_line = Line2D.new()
@@ -150,6 +154,11 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
+	if game.c_v in ["supercluster", "universe"] and not changed:
+		if obj_scaled and scale.x > 1.5:
+			$AnimationPlayer.play("Fade")
+		elif not obj_scaled and scale.x < 1.5:
+			$AnimationPlayer.play("Fade")
 
 func _draw():
 	if is_instance_valid(game.annotator):
@@ -268,13 +277,13 @@ func refresh():
 				add_child(icon)
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
-	scale_mult = s_m
-	scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
-	scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
+	#scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
+	#scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
 	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instance()
 	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
+	obj_scaled = scale.x < 1.5
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 
@@ -305,11 +314,11 @@ func save_zooms(obj_str:String):
 		"supercluster":
 			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position# / self.scale.x
 			game.supercluster_data[game.c_sc]["view"]["zoom"] = self.scale.x
-			game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
+			#game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
 		"universe":
 			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
-			game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
+			#game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
 		"science_tree":
 			game.science_tree_view.pos = position# / scale.x
 			game.science_tree_view.zoom = scale.x
@@ -419,7 +428,7 @@ func _input(event):
 				zoom_factor = 1.2
 			zooming = "out"
 			progress = 0
-			check_change_scale()
+			#check_change_scale()
 		elif event.is_action_released("scroll_up"):
 			if event is InputEventMouse:
 				zoom_factor = 1.1
@@ -427,7 +436,7 @@ func _input(event):
 				zoom_factor = 1.2
 			zooming = "in"
 			progress = 0
-			check_change_scale()
+			#check_change_scale()
 	if (event is InputEventMouse or event is InputEventScreenTouch) and move_view:
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
@@ -476,21 +485,15 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	global_position.x -= delta_x
 	global_position.y -= delta_y
 
-#Scaling of objects based on zoom level
-var scale_inc_threshold
-var scale_dec_threshold
-var scale_mult
-func check_change_scale():
-	if game.c_v in ["supercluster", "universe"]:
-		if scale_inc_threshold < 3 and scale.x > scale_inc_threshold:
-			obj.modulate.a = 0.95
-			obj.change_alpha = -0.05
-			scale_dec_threshold = scale_inc_threshold
-			scale_inc_threshold *= 20
-			scale_mult *= 0.1
-		if scale_dec_threshold > 0.1 and scale.x < scale_dec_threshold:
-			obj.modulate.a = 0.95
-			obj.change_alpha = -0.05
-			scale_inc_threshold = scale_dec_threshold
-			scale_dec_threshold /= 20.0
-			scale_mult *= 10
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if not changed:
+		if scale.x < 1.5:
+			obj_scaled = true
+			obj.change_scale(1.0)
+		else:
+			obj_scaled = false
+			obj.change_scale(0.1)
+		changed = true
+		$AnimationPlayer.play_backwards("Fade")
+	else:
+		changed = false

@@ -102,17 +102,17 @@ var MUs = {	"MV":{"base_cost":100, "pw":1.9},
 			"SHSR":{"base_cost":2000, "pw":1.9},
 			"CHR":{"base_cost":2000, "pw":1.7},
 }
-var minerals_icon = load("res://Graphics/Icons/minerals.png")
-var energy_icon = load("res://Graphics/Icons/energy.png")
-var time_icon = load("res://Graphics/Icons/Time.png")
-var stone_icon = load("res://Graphics/Icons/stone.png")
-var SP_icon = load("res://Graphics/Icons/SP.png")
-var glass_icon = load("res://Graphics/Materials/glass.png")
-var sand_icon = load("res://Graphics/Materials/sand.png")
-var coal_icon = load("res://Graphics/Materials/coal.png")
-var MM_icon = load("res://Graphics/Icons/MM.png")
-var atom_icon = load("res://Graphics/Science/ATM.png")
-var particle_icon = load("res://Graphics/Science/SAP.png")
+var minerals_icon = preload("res://Graphics/Icons/minerals.png")
+var energy_icon = preload("res://Graphics/Icons/energy.png")
+var time_icon = preload("res://Graphics/Icons/Time.png")
+var stone_icon = preload("res://Graphics/Icons/stone.png")
+var SP_icon = preload("res://Graphics/Icons/SP.png")
+var glass_icon = preload("res://Graphics/Materials/glass.png")
+var sand_icon = preload("res://Graphics/Materials/sand.png")
+var coal_icon = preload("res://Graphics/Materials/coal.png")
+var MM_icon = preload("res://Graphics/Icons/MM.png")
+var atom_icon = preload("res://Graphics/Science/ATM.png")
+var particle_icon = preload("res://Graphics/Science/SAP.png")
 
 var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"PP":[energy_icon, energy_icon],

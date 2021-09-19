@@ -14,7 +14,6 @@ shader_param/amplitude = 0.2
 
 [sub_resource type="Animation" id=2]
 length = 0.5
-loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Label/TextureRect:rect_rotation")
 tracks/0/interp = 1
@@ -74,11 +73,13 @@ __meta__ = {
 anims/StarAnim = SubResource( 2 )
 
 [node name="Icon" type="TextureRect" parent="."]
-anchor_bottom = 1.0
+anchor_top = 0.5
+anchor_bottom = 0.5
 margin_left = 4.0
-margin_top = 4.0
+margin_top = -16.0
 margin_right = 36.0
-margin_bottom = -4.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 32, 32 )
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -86,3 +87,4 @@ __meta__ = {
 }
 
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

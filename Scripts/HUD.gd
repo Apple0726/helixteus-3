@@ -168,9 +168,9 @@ func update_money_energy_SP():
 	if game.c_v == "planet" and planet and planet.bldg_to_construct != "":
 		var money_cost = game.view.obj.constr_costs.money
 		var energy_cost = game.view.obj.constr_costs.energy if game.view.obj.constr_costs.has("energy") else 0
-		if not planet.shadows.empty():
-			money_cost *= len(planet.shadows)
-			energy_cost *= len(planet.shadows)
+		if planet.shadow_num > 0:
+			money_cost *= planet.shadow_num
+			energy_cost *= planet.shadow_num
 		money_text.text = "%s / %s" % [Helper.format_num(round(game.money), 6), Helper.format_num(round(money_cost), 6)]
 		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy), 6), Helper.format_num(round(energy_cost), 6)]
 		if game.money >= money_cost:

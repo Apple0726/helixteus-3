@@ -39,8 +39,8 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 margin_top = 88.0
-margin_right = 328.0
-margin_bottom = 720.0
+margin_right = 288.0
+margin_bottom = 684.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -48,20 +48,23 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
 margin_left = 10.0
 margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 305.0
+margin_right = 270.0
+margin_bottom = 265.0
 
 [node name="UniverseIcon" type="TextureButton" parent="ScrollContainer/VBoxContainer"]
-margin_right = 300.0
-margin_bottom = 300.0
+margin_right = 260.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 260, 260 )
 texture_normal = ExtResource( 13 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DiscoveredUnivs" type="Panel" parent="."]
 margin_top = 48.0
-margin_right = 330.0
+margin_right = 288.0
 margin_bottom = 88.0
 rect_min_size = Vector2( 0, 40 )
 __meta__ = {
@@ -81,9 +84,9 @@ __meta__ = {
 }
 
 [node name="UnivInfo" type="Panel" parent="."]
-margin_left = 328.0
+margin_left = 288.0
 margin_top = 48.0
-margin_right = 800.0
+margin_right = 768.0
 margin_bottom = 720.0
 rect_min_size = Vector2( 0, 40 )
 __meta__ = {
@@ -103,7 +106,7 @@ __meta__ = {
 }
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="."]
-margin_left = 800.0
+margin_left = 768.0
 margin_top = 48.0
 margin_right = 1280.0
 margin_bottom = 720.0
@@ -114,6 +117,7 @@ __meta__ = {
 }
 
 [node name="GridContainer" type="GridContainer" parent="ScrollContainer2"]
+visible = false
 margin_left = 10.0
 margin_top = 5.0
 margin_right = 822.0
@@ -592,6 +596,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DimBonusesInfo" type="Label" parent="."]
+margin_left = 800.0
+margin_top = 360.0
+margin_right = 1248.0
+margin_bottom = 384.0
+text = "DIM_BONUSES_INFO"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TopInfo" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -612,18 +626,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DRs" type="Label" parent="TopInfo"]
-margin_left = 2.0
-margin_top = 9.0
-margin_right = 1278.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-text = "Dimension remnants (DRs): 0"
+[node name="DRs" parent="TopInfo" instance=ExtResource( 12 )]
+anchor_right = 1.0
+margin_top = 12.0
+margin_right = 0.0
+margin_bottom = 44.0
+rect_min_size = Vector2( 1280, 32 )
+rect_clip_content = false
+bbcode_text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
+help_text = "DR_DESC"
 align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Reset" type="Button" parent="TopInfo"]
 margin_left = 1064.0
@@ -637,10 +649,9 @@ __meta__ = {
 }
 
 [node name="SendProbes" type="Button" parent="."]
-margin_left = 56.0
-margin_top = 680.0
-margin_right = 280.0
-margin_bottom = 716.0
+margin_top = 684.0
+margin_right = 288.0
+margin_bottom = 720.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
@@ -649,4 +660,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
+[connection signal="mouse_exited" from="TopInfo/Reset" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="SendProbes" to="." method="_on_SendProbes_pressed"]

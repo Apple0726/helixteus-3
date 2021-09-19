@@ -10,6 +10,10 @@ var stars
 const DIST_MULT = 200.0
 var obj_btns = []
 var overlays = []
+var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
+						preload("res://Graphics/Effects/spotlight_5.png"),
+						preload("res://Graphics/Effects/spotlight_6.png"),
+]
 
 func _ready():
 	for s_i in game.system_data:
@@ -19,7 +23,7 @@ func _ready():
 				star = s_i.stars[i]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
-		star_btn.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
+		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)

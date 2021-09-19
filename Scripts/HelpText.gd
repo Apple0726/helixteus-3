@@ -6,6 +6,8 @@ onready var game = get_node("/root/Game")
 export var label_text:String = ""
 export var help_text:String = ""
 export var adv_help:bool = false
+export var translate_help:bool = true
+var adv_icons:Array = []
 export(int, "Left", "Center", "Right") var align
 
 func _ready():
@@ -18,10 +20,13 @@ func _ready():
 
 
 func _on_RichTextLabel_mouse_entered():
+	var _help_text = help_text
+	if translate_help:
+		_help_text = tr(help_text)
 	if adv_help:
-		game.show_adv_tooltip(help_text)
+		game.show_adv_tooltip(_help_text, adv_icons)
 	else:
-		game.show_tooltip(tr(help_text))
+		game.show_tooltip(_help_text)
 
 
 func _on_RichTextLabel_mouse_exited():

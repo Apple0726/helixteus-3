@@ -63,7 +63,6 @@ __meta__ = {
 }
 
 [node name="SFX" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -154,6 +153,7 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0

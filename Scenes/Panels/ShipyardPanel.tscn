@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/ShipyardPanel.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Ships/Fighter.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=5]
 
 [node name="ShipyardPanel" type="Panel"]
 anchor_left = 0.5
@@ -60,9 +61,9 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 419.0
+margin_right = 414.0
 margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -83,10 +84,10 @@ __meta__ = {
 }
 
 [node name="SpinBox" type="SpinBox" parent="."]
-margin_left = 188.0
-margin_top = 92.0
-margin_right = 280.0
-margin_bottom = 120.0
+margin_left = 192.0
+margin_top = 88.0
+margin_right = 284.0
+margin_bottom = 116.0
 value = 1.0
 rounded = true
 allow_greater = true
@@ -94,19 +95,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Strength" type="Label" parent="."]
-margin_left = 320.0
-margin_top = 84.0
-margin_right = 564.0
-margin_bottom = 108.0
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Strength" parent="." instance=ExtResource( 5 )]
+margin_left = 344.0
+margin_top = 88.0
+margin_right = 592.0
+margin_bottom = 118.0
+help_text = "FLEET_STRENGTH_INFO"
 
 [connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="SpinBox" to="." method="_on_SpinBox_value_changed"]
-[connection signal="mouse_entered" from="Strength" to="." method="_on_Strength_mouse_entered"]
-[connection signal="mouse_exited" from="Strength" to="." method="_on_Strength_mouse_exited"]

@@ -303,6 +303,7 @@ position = Vector2( 0, 6.29962 )
 texture = ExtResource( 6 )
 
 [node name="Fire" type="Sprite" parent="Sprite"]
+visible = false
 material = SubResource( 3 )
 position = Vector2( 48.8168, -97.6652 )
 scale = Vector2( 12, 12 )

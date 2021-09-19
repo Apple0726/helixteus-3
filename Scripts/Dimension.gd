@@ -10,23 +10,33 @@ var new_dim_DRs = 0#DRs you will get once you renew dimensions
 
 func _ready():
 	refresh_univs()
-	$TopInfo/DRs.text = tr("DR_TITLE") + ": %s" % [game.DRs]
-	$TopInfo/Reset.text = String(tr("NEW_DIMENSION") + " (+ %s " + tr("DR") + ")") % [new_dim_DRs]
-	if new_dim_DRs == 0:
-		$TopInfo/Reset.disabled = true
 	if game.DRs == 0:
 		for node in $ScrollContainer2/GridContainer.get_children():
 			node.get_node("Invest").disabled = true
-	$TopInfo/DimensionN.text = tr("DIMENSION") + " #1"
-	$DiscoveredUnivs/Label.text = tr("DISCOVERED_UNIVERSES")
 
 func refresh_univs():
+	$TopInfo/Reset.disabled = true
+	$ScrollContainer2/GridContainer.visible = game.dim_num > 1
+	$DimBonusesInfo.visible = game.dim_num == 1
+	if len(game.universe_data) > 1:
+		for univ in game.universe_data:
+			if univ.lv >= 100:
+				$TopInfo/Reset.disabled = false
+				break
+	for univ in game.universe_data:
+		new_dim_DRs += floor(univ.lv / 50.0)
+	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
+	$TopInfo/DRs.bbcode_text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
+	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]
 	for univ in $ScrollContainer/VBoxContainer.get_children():
 		$ScrollContainer/VBoxContainer.remove_child(univ)
 		univ.queue_free()
 	for univ_info in univs:
 		var univ = TextureButton.new()
 		univ.texture_normal = univ_icon
+		univ.expand = true
+		univ.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		univ.rect_min_size = Vector2.ONE * 260.0
 		var id = univ_info["id"]
 		$ScrollContainer/VBoxContainer.add_child(univ)
 		univ.connect("mouse_entered", self, "on_univ_over", [id])
@@ -104,10 +114,9 @@ func on_univ_press(id:int):
 func _on_SendProbes_pressed():
 	game.toggle_panel(game.send_probes_panel)
 
-
-func _on_Label_mouse_entered(extra_arg_0):
-	game.show_tooltip(tr(extra_arg_0))
-
-
-func _on_Label_mouse_exited():
+func _on_mouse_exited():
 	game.hide_tooltip()
+
+func _on_Reset_mouse_entered():
+	if $TopInfo/Reset.disabled:
+		game.show_tooltip(tr("DIM_RESET_CONDITIONS"))

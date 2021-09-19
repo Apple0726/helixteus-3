@@ -14,8 +14,16 @@ func _ready():
 			continue
 		var cluster_btn = TextureButton.new()
 		var cluster = Sprite.new()
-		var cluster_texture = load("res://Graphics/Clusters/" + String(c_i["type"]) + ".png")
-		cluster_btn.texture_normal = cluster_texture
+		cluster_btn.texture_normal = preload("res://Graphics/Clusters/0.png")
+		cluster_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
+		if game.enable_shaders:
+			cluster_btn.material = ShaderMaterial.new()
+			cluster_btn.material.shader = preload("res://Shaders/Cluster.shader")
+			cluster_btn.material.set_shader_param("seed", int(c_i.diff))
+			var dist:Vector2 = cartesian2polar(c_i.pos.x, c_i.pos.y)
+			var hue:float = fmod(dist.x, 1000.0) / 1000.0
+			var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
+			cluster_btn.material.set_shader_param("color", Color.from_hsv(hue, sat, 1.0))
 		self.add_child(cluster)
 		cluster.add_child(cluster_btn)
 		cluster_btn.connect("mouse_entered", self, "on_cluster_over", [c_i.l_id])
@@ -23,7 +31,9 @@ func _ready():
 		cluster_btn.connect("pressed", self, "on_cluster_click", [c_i.id, c_i.l_id])
 		cluster_btn.rect_position = Vector2(-640 / 2, -640 / 2)
 		cluster_btn.rect_pivot_offset = Vector2(640 / 2, 640 / 2)
-		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * view.scale_mult
+		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5)
+		if game.supercluster_data[game.c_sc].view.zoom > 1.5:
+			radius *= 0.1
 		cluster_btn.rect_scale.x = radius
 		cluster_btn.rect_scale.y = radius
 		cluster.position = c_i["pos"]
@@ -43,21 +53,14 @@ func on_cluster_click (id:int, l_id:int):
 		game.c_c = l_id
 		game.switch_view("cluster")
 
-var change_alpha = 0.05
-func _process(delta):
-	if modulate.a < 1:
-		modulate.a += change_alpha * delta * 60
-	if modulate.a <= 0:
-		game.hide_tooltip()
-		for i in range(0, btns.size()):
-			var c_i:Dictionary = game.cluster_data[i]
-			if not c_i.visible:
-				continue
-			var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * view.scale_mult
-			btns[i].rect_scale.x = radius
-			btns[i].rect_scale.y = radius
-		change_alpha *= -1
-		modulate.a = change_alpha
+func change_scale(sc:float):
+	for i in range(0, btns.size()):
+		var c_i:Dictionary = game.cluster_data[i]
+		if not c_i.visible:
+			continue
+		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * sc
+		btns[i].rect_scale.x = radius
+		btns[i].rect_scale.y = radius
 
 
 func _on_Cluster_tree_exited():

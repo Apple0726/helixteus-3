@@ -656,9 +656,9 @@ margin_bottom = 72.0
 text = "TP_INFO"
 
 [node name="Send" type="Button" parent="."]
-margin_left = 440.0
+margin_left = 400.0
 margin_top = 512.0
-margin_right = 664.0
+margin_right = 624.0
 margin_bottom = 552.0
 text = "SEND_A_PROBE"
 __meta__ = {
@@ -666,7 +666,7 @@ __meta__ = {
 }
 
 [node name="SendAll" type="Button" parent="."]
-margin_left = 704.0
+margin_left = 736.0
 margin_top = 512.0
 margin_right = 984.0
 margin_bottom = 552.0

@@ -42,7 +42,7 @@ func _ready():
 		btn.rect_min_size.y = 30
 		btn.button_text = tr("%s_NAME" % _name.to_upper())
 		btn.connect("pressed", self, "_on_Atom_pressed", [_name])
-		btn.get_node("Icon").texture = Data.time_icon
+		btn.icon_texture = Data.time_icon
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
 func _on_Atom_pressed(_name:String):

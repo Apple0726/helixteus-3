@@ -16,7 +16,7 @@ func refresh():
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	var cte:float = 4.0 * 1.3 * 4.0 * PI * pow(1000000.0 + 6000000.0 * 2.5, 2)
 	surface = cte * g_i.system_num * pow(g_i.dark_matter, 3)
-	$Control/ProdCostMult.text = "%s: %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(surface / cte / 200.0)]
+	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(surface / cte / 200.0), "[img]Graphics/Icons/help.png[/img]"]
 	if bldg != "":
 		update_info()
 
@@ -109,11 +109,6 @@ func _on_Convert_pressed():
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
-
-
-func _on_ProdCostMult_mouse_entered():
-	game.show_tooltip(tr("PCM_DESC"))
-
 
 func _on_mouse_exited():
 	game.hide_tooltip()

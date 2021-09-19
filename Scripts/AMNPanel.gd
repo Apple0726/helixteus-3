@@ -42,8 +42,7 @@ func _ready():
 		if _name in ["nanocrystal", "mythril"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
-		btn.rect_min_size.y = 30
-		btn.get_node("Icon").texture = Data.time_icon
+		btn.icon_texture = Data.time_icon
 		btn.button_text = tr(_name.to_upper())
 		btn.connect("pressed", self, "_on_%s_pressed" % _name, [_name, reactions[_name]])
 		$ScrollContainer/VBoxContainer.add_child(btn)
@@ -425,7 +424,8 @@ func set_text_to_white():
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
-		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
+		var icon = r.get_node("Icon")
+		icon.visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _process(delta):
 	if not obj or obj.empty():

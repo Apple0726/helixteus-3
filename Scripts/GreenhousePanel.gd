@@ -9,6 +9,7 @@ var fertilizer:bool
 var craft_costs:Dictionary
 var c_v:String
 var tiles_selected:Array
+var sys_au_mult:float = 1.0
 
 func _ready():
 	for f in game.craft_agriculture_info:
@@ -23,6 +24,18 @@ func _ready():
 func refresh():
 	$Plant.visible = false
 	set_polygon(rect_size)
+	if c_v == "system":
+		$AuroraMult.visible = true
+		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
+		var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
+		sys_au_mult = 1 + pow(au_int, Helper.get_AIE())
+		$AuroraMult.bbcode_text = "[aurora au_int=%s]%s: %s  %s" % [au_int, tr("AURORA_MULTIPLIER"), Helper.format_num(Helper.clever_round(sys_au_mult, 4)), "[img]Graphics/Icons/help.png[/img]"]
+		if game.science_unlocked.has("GHA"):
+			$AuroraMult.help_text = "%s\n%s" % [tr("GH_AURORA"), tr("MMM_DESC")]
+		else:
+			$AuroraMult.help_text = tr("MMM_DESC")
+	else:
+		sys_au_mult = 1.0
 	if tile_num == 1:
 		$Label.text = tr("GH_NAME")
 	else:
@@ -97,8 +110,8 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 			elif obj.adj_lake_state == "sc":
 				cellulose_drain *= 4
 		if c_v == "system":
-			cellulose_drain *= 2
-		cellulose_drain *= Helper.get_au_mult(obj)
+			cellulose_drain *= 2 * tile_num
+		cellulose_drain *= Helper.get_au_mult(obj) * sys_au_mult
 		obj.auto_GH = {
 			"produce":produce,
 			"cellulose_drain":cellulose_drain,
@@ -111,7 +124,7 @@ func on_slot_press(_name:String):
 		if c_v == "system":
 			var produce:Dictionary = game.craft_agriculture_info[_name].produce.duplicate(true)
 			for p in produce:
-				produce[p] *= 2.0 * tile_num * game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value
+				produce[p] *= 2.0 * tile_num * game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value * pow(sys_au_mult, 2.0)
 			set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
 		elif c_v == "planet":
 			var plant_new:bool = false

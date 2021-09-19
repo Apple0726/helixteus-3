@@ -746,10 +746,22 @@ func place_targets():
 		target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
 		target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
 		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
+		target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
+		target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
 		target.get_node("Label").text = String((i % 4) + 1)
 		target.add_to_group("targets")
 	if target_id != -2:
 		on_target_pressed(target_id, one_enemy)
+
+func on_target_over(target:int):
+	var acc:float = ship_data[curr_sh].acc
+	var acc_mult:float = Data.laser_data[ship_data[curr_sh][weapon_type].lv - 1].accuracy
+	var eva:float = HX_data[target].eva
+	var chance:float = hit_formula(acc * acc_mult * ship_data[curr_sh].acc_mult, eva)
+	game.show_tooltip("%s: %s%%" % [tr("CHANCE_OF_HITTING"), round(chance * 100.0)])
+
+func on_target_out():
+	game.hide_tooltip()
 
 func on_target_pressed(target:int, one_enemy:bool = false):
 	var weapon_data = ship_data[curr_sh][weapon_type]

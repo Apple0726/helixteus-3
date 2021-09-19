@@ -1502,8 +1502,6 @@ func init_boss():
 	boss.refresh_bar()
 	boss.next_attack = 1
 	boss.set_process(true)
-	
-
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:

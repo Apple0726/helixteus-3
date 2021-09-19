@@ -72,7 +72,28 @@ func refresh():
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
-	if game.c_v == "supercluster":
+	if game.viewing_dimension:
+		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
+		var ok:bool = false
+		for probe in game.probe_data:
+			if probe and probe.tier == 2:
+				ok = true
+		$Control.visible = false
+		$Send.visible = ok
+		$SendAll.visible = false
+		$TP.visible = ok
+		$Label.text = ""
+		if ok:
+			for prop in $TP/VBox.get_children():
+				prop.get_node("Unit").text = units[prop.name]
+				if prop.has_node("HSlider"):
+					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / 25.0)
+			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
+			$NoProbes.visible = false
+		else:
+			$NoProbes.text = tr("NO_TRI_PROBES")
+			$NoProbes.visible = true
+	elif game.c_v == "supercluster":
 		undiscovered_obj_num = 0
 		n = len(game.cluster_data)
 		for cluster in game.cluster_data:
@@ -150,25 +171,6 @@ func refresh():
 		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_obj_num]
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
-	elif game.viewing_dimension:
-		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
-		var ok:bool = false
-		for probe in game.probe_data:
-			if probe and probe.tier == 2:
-				ok = true
-		$Control.visible = false
-		$Send.visible = ok
-		$SendAll.visible = false
-		$TP.visible = ok
-		$Label.text = ""
-		if ok:
-			for prop in $TP/VBox.get_children():
-				prop.get_node("Unit").text = units[prop.name]
-			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
-			$NoProbes.visible = false
-		else:
-			$NoProbes.text = tr("NO_TRI_PROBES")
-			$NoProbes.visible = true
 
 func refresh_energy(send_all:bool = false):
 	fill_costs(dist_mult)

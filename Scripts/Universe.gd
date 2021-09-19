@@ -14,7 +14,7 @@ func _ready():
 			continue
 		var supercluster_btn = TextureButton.new()
 		var supercluster = Sprite.new()
-		var supercluster_texture = load("res://Graphics/Clusters/" + String(sc_i["type"]) + ".png")
+		var supercluster_texture = preload("res://Graphics/Clusters/0.png")
 		supercluster_btn.texture_normal = supercluster_texture
 		self.add_child(supercluster)
 		supercluster.add_child(supercluster_btn)
@@ -23,7 +23,9 @@ func _ready():
 		supercluster_btn.connect("pressed", self, "on_supercluster_click", [sc_i["id"]])
 		supercluster_btn.rect_position = Vector2(-640 / 2, -640 / 2)
 		supercluster_btn.rect_pivot_offset = Vector2(640 / 2, 640 / 2)
-		var radius = pow(sc_i["cluster_num"] / game.SC_SCALE_DIV, 0.5) * view.scale_mult
+		var radius = pow(sc_i["cluster_num"] / game.SC_SCALE_DIV, 0.5)
+		if game.universe_data[game.c_u].view.zoom > 1.5:
+			radius *= 0.1
 		supercluster_btn.rect_scale.x = radius
 		supercluster_btn.rect_scale.y = radius
 		supercluster.position = sc_i["pos"]
@@ -42,18 +44,11 @@ func on_supercluster_click (id:int):
 		game.c_sc = id
 		game.switch_view("supercluster")
 
-var change_alpha = 0.05
-func _process(delta):
-	if modulate.a < 1:
-		modulate.a += change_alpha * delta * 60
-	if modulate.a <= 0:
-		game.hide_tooltip()
-		for i in range(0, btns.size()):
-			var radius = pow(game.supercluster_data[i]["cluster_num"] / game.SC_SCALE_DIV, 0.5) * view.scale_mult
-			btns[i].rect_scale.x = radius
-			btns[i].rect_scale.y = radius
-		change_alpha *= -1
-		modulate.a = change_alpha
+func change_scale(sc:float):
+	for i in range(0, btns.size()):
+		var radius = pow(game.supercluster_data[i]["cluster_num"] / game.SC_SCALE_DIV, 0.5) * sc
+		btns[i].rect_scale.x = radius
+		btns[i].rect_scale.y = radius
 
 func _on_Cluster_tree_exited():
 	queue_free()

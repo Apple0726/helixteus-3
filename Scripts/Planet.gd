@@ -35,12 +35,14 @@ onready var planet_bounds:PoolVector2Array = [Vector2.ONE, Vector2(1, wid * 200)
 
 var mass_build_rect:NinePatchRect
 var mass_build_rect_size:Vector2
+var shadow_num:int = 0
 var wormhole
 var timer:Timer
 var interval:float = 0.1
 var star_mod:Color
 
 func _ready():
+	shadows.resize(wid * wid)
 	var brightness:float = game.tile_brightness[p_i.type - 3]
 	$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
 	var lum:float = 0.0
@@ -109,8 +111,9 @@ func _ready():
 				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
 				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
 				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
-				aurora.modulate.a = 0.5
+				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
+				aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
 				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()
@@ -583,10 +586,10 @@ func destroy_bldg(id2:int, mass:bool = false):
 		game.show_collect_info(items_collected)
 
 func add_shadows():
-	for sh in shadows:
-		remove_child(sh)
-		sh.queue_free()
-	shadows.clear()
+#	for sh in shadows:
+#		remove_child(sh)
+#		sh.queue_free()
+#	shadows.clear()
 	var poly:Rect2 = Rect2(mass_build_rect.rect_position, Vector2.ZERO)
 	poly.end = mouse_pos
 	poly = poly.abs()
@@ -594,9 +597,16 @@ func add_shadows():
 		for j in wid:
 			var shadow_pos:Vector2 = Vector2(i * 200, j * 200) + Vector2(100, 100)
 			var tile_rekt:Rect2 = Rect2(Vector2(i * 200, j * 200), Vector2.ONE * 200)
-			if poly.intersects(tile_rekt) and available_to_build(game.tile_data[get_tile_id_from_pos(shadow_pos)]):
-				shadows.append(put_shadow(Sprite.new(), shadow_pos))
-	game.HUD.refresh()
+			var id2:int = i % wid + j * wid
+			if is_instance_valid(shadows[id2]) and is_a_parent_of(shadows[id2]):
+				if not poly.intersects(tile_rekt):
+					remove_child(shadows[id2])
+					shadows[id2].queue_free()
+					shadow_num -= 1
+			else:
+				if poly.intersects(tile_rekt) and available_to_build(game.tile_data[id2]):
+					shadows[id2] = put_shadow(Sprite.new(), shadow_pos)
+					shadow_num += 1
 
 func remove_selected_tiles():
 	tiles_selected.clear()
@@ -710,7 +720,7 @@ func _unhandled_input(event):
 				mass_build_rect.rect_scale.y = -1
 			else:
 				mass_build_rect.rect_scale.y = 1
-			var delta:Vector2 = event.relative / view.scale
+			var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
 			var new_x = stepify(round(mouse_pos.x - 100), 200)
 			var new_y = stepify(round(mouse_pos.y - 100), 200)
 			var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
@@ -774,23 +784,25 @@ func _unhandled_input(event):
 		mass_build_rect.visible = false
 		var curr_time = OS.get_system_time_msecs()
 		for i in len(shadows):
-			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
-			remove_child(shadows[i])
-			shadows[i].queue_free()
-		shadows.clear()
+			if is_instance_valid(shadows[i]):
+				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
+				remove_child(shadows[i])
+				shadows[i].queue_free()
+		shadow_num = 0
 		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		return
 	#initiate mass build
-	if Input.is_action_just_pressed("left_click") and len(shadows) == 0 and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
+	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
 		view.move_view = false
 		view.scroll_view = false
 		mass_build_rect.rect_position = mouse_pos
 		mass_build_rect.rect_size = Vector2.ZERO
 		mass_build_rect.visible = true
 		mass_build_rect_size = Vector2.ONE
-		shadows = [put_shadow(Sprite.new(), mouse_pos)]
+		shadows[tile_over] = put_shadow(Sprite.new(), mouse_pos)
+		shadow_num = 1
 		shadow.visible = false
 	if mass_build:
 		return
@@ -1305,9 +1317,10 @@ func finish_construct():
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
-			remove_child(shadows[i])
-			shadows[i].queue_free()
-		shadows.clear()
+			if is_instance_valid(shadows[i]):
+				remove_child(shadows[i])
+				shadows[i].queue_free()
+		shadow_num = 0
 		view.move_view = true
 		view.scroll_view = true
 	game.get_node("UI/Panel").visible = false

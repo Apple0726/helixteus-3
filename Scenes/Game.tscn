@@ -369,8 +369,10 @@ margin_right = 1276.0
 margin_bottom = 716.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="Nebula" parent="." instance=ExtResource( 35 )]
+[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
+visible = false
 modulate = Color( 1, 1, 1, 0 )
+color = Color( 0.686275, 0, 1, 1 )
 
 [node name="GrayscaleRect" type="TextureRect" parent="."]
 visible = false

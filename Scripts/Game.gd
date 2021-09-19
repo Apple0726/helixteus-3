@@ -109,6 +109,7 @@ var energy:float
 var SP:float
 #Dimension remnants
 var DRs:float
+var dim_num:int = 1
 
 #id of the universe/supercluster/etc. you're viewing the object in
 var c_u:int#c_u: current_universe
@@ -628,6 +629,8 @@ func load_game():
 	help = save_info_dict.help
 	c_u = save_info_dict.c_u
 	universe_data = save_info_dict.universe_data
+	DRs = save_info_dict.get("DRs", 0)
+	dim_num = save_info_dict.get("dim_num", 1)
 	load_univ()
 	switch_view(c_v, true)
 	if not $UI.is_a_parent_of(HUD):
@@ -710,8 +713,6 @@ func new_game(tut:bool, univ:int = 0):
 	stone = {}
 	energy = 200
 	SP = 0
-	#Dimension remnants
-	DRs = 0
 	science_unlocked = {}
 	cave_filters = {
 		"money":false,
@@ -1406,7 +1407,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
-	$Nebula.visible = false
+	$ClusterBG.visible = false
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Panel").visible = false
 	HUD.get_node("Hotbar").visible = false
@@ -1615,9 +1616,11 @@ func add_cluster():
 	else:
 		add_obj("cluster")
 	if enable_shaders:
-		$Nebula.fade_in()
-		if galaxy_data[c_g].type == 0:
-			$Nebula.change_color(Color.white)
+		$ClusterBG.fade_in()
+		var dist:Vector2 = cartesian2polar(cluster_data[c_c].pos.x, cluster_data[c_c].pos.y)
+		var hue:float = fmod(dist.x, 1000.0) / 1000.0
+		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
+		$ClusterBG.change_color(Color.from_hsv(hue, sat, 1.0))
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 
@@ -1687,7 +1690,7 @@ func remove_supercluster():
 
 func remove_cluster():
 	if enable_shaders:
-		$Nebula.fade_out()
+		$ClusterBG.fade_out()
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
@@ -2367,7 +2370,7 @@ func generate_planets(id:int):#local id
 			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
-			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * dark_matter * pow(u_i.gravitational, 0.5))
+			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
 			if hypergiant_system:
 				if i == 1:
@@ -2446,7 +2449,7 @@ func generate_planets(id:int):#local id
 		if not p_i.has("conquered"):
 			while num < 12:
 				num += 1
-				var lv = ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2))
+				var lv:int = max(ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2)), 1)
 				if p_num == 0:
 					if lv > 4:
 						lv = 4
@@ -2604,7 +2607,10 @@ func generate_tiles(id:int):
 						show.auroras = true
 						tile_data[j + k * wid] = {}
 						tile_data[j + k * wid].aurora = {"au_int":au_int}
-			diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
+			if wid / 3 == 1:
+				diff = thiccness + 1
+			else:
+				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
 			if cross_aurora:
 				rand = 1 - rand
 				diff = 0
@@ -3466,6 +3472,8 @@ func fn_save_game():
 		"c_u":c_u,
 		"universe_data":universe_data,
 		"version":VERSION,
+		"DRs":DRs,
+		"dim_num":dim_num,
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
@@ -3694,6 +3702,8 @@ func fade_out_title(fn:String):
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
+		DRs = 0
+		dim_num = 1
 		var tut_or_no_tut = preload("res://Scenes/TutOrNoTut.tscn").instance()
 		add_child(tut_or_no_tut)
 		tut_or_no_tut.connect("new_game", self, "new_game")
