@@ -23,8 +23,10 @@ func refresh_univs():
 			if univ.lv >= 100:
 				$TopInfo/Reset.disabled = false
 				break
+	var lv_sum:int = 0
 	for univ in game.universe_data:
-		new_dim_DRs += floor(univ.lv / 50.0)
+		lv_sum += univ.lv
+	new_dim_DRs = floor(lv_sum / 50.0)
 	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
 	$TopInfo/DRs.bbcode_text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]

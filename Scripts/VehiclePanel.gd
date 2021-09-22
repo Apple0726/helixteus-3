@@ -65,11 +65,11 @@ func refresh():
 		var fighter_num = Label.new()
 		fighter_num.text = "x %s" % [fighter_info.number]
 		fighter_num.align = Label.ALIGN_CENTER
-		fighter_num.rect_position = Vector2(40, 70)
+		fighter_num.rect_position = Vector2(110, 40)
 		fighter.texture_normal = load("res://Graphics/Ships/Fighter.png")
 		fighter.expand = true
 		fighter.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		fighter.rect_min_size = Vector2(80, 80)
+		fighter.rect_min_size = Vector2(160, 60)
 		fighter.add_child(fighter_num)
 		hbox2.add_child(fighter)
 		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info])

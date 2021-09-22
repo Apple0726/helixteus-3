@@ -72,10 +72,10 @@ custom_constants/separation = -2
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 48.0
+margin_left = 24.0
 margin_top = 72.0
-margin_right = 148.0
-margin_bottom = 136.0
+margin_right = 232.0
+margin_bottom = 176.0
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -84,10 +84,10 @@ __meta__ = {
 }
 
 [node name="SpinBox" type="SpinBox" parent="."]
-margin_left = 192.0
-margin_top = 88.0
-margin_right = 284.0
-margin_bottom = 116.0
+margin_left = 264.0
+margin_top = 96.0
+margin_right = 356.0
+margin_bottom = 124.0
 value = 1.0
 rounded = true
 allow_greater = true
@@ -96,10 +96,10 @@ __meta__ = {
 }
 
 [node name="Strength" parent="." instance=ExtResource( 5 )]
-margin_left = 344.0
-margin_top = 88.0
-margin_right = 592.0
-margin_bottom = 118.0
+margin_left = 384.0
+margin_top = 96.0
+margin_right = 632.0
+margin_bottom = 126.0
 help_text = "FLEET_STRENGTH_INFO"
 
 [connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]

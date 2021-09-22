@@ -33,6 +33,8 @@ var orbit_scene = preload("res://Scenes/Orbit.tscn")
 var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
+var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
+var star_shader = preload("res://Shaders/Star.shader")
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Dictionary
@@ -331,9 +333,32 @@ var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
 var view_tween:Tween
 var tooltip_tween:Tween
+var stars_tween:Tween
 var tile_brightness:Array = []
 
 func _ready():
+	for i in 500:
+		var star:Sprite = Sprite.new()
+		star.texture = star_texture
+		star.scale *= 0.15
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+		star.rotation = rand_range(0, 2*PI)
+		star.position.x = rand_range(0, 1280)
+		star.position.y = rand_range(0, 720)
+		$Stars/Stars.add_child(star)
+	for i in 50:
+		var star:Sprite = Sprite.new()
+		star.texture = star_texture
+		star.scale *= 0.25
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+		star.rotation = rand_range(0, 2*PI)
+		star.position.x = rand_range(0, 1280)
+		star.position.y = rand_range(0, 720)
+		star.material = ShaderMaterial.new()
+		star.material.shader = star_shader
+		star.material.set_shader_param("brightness_offset", 1.5)
+		star.material.set_shader_param("time_offset", 10.0 * randf())
+		$Stars/Stars.add_child(star)
 	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
@@ -361,6 +386,8 @@ func _ready():
 	add_child(view_tween)
 	tooltip_tween = Tween.new()
 	add_child(tooltip_tween)
+	stars_tween = Tween.new()
+	add_child(stars_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	if not TranslationServer.get_locale() in ["de", "zh", "es"]:
@@ -385,7 +412,6 @@ func _ready():
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		pitch_affected = config.get_value("audio", "pitch_affected", true)
 		enable_shaders = config.get_value("graphics", "enable_shaders", true)
-		$Title/LightRays.visible = enable_shaders
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
@@ -464,6 +490,8 @@ func _ready():
 		var tween:Tween = Tween.new()
 		add_child(tween)
 		tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
+		tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 2.0, 1.2)
+		tween.interpolate_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), Color.white, 1.2)
 		tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
 		tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
 		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
@@ -1163,7 +1191,7 @@ func fade_in_panel(panel:Control):
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 20), Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
-	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 1.0, 0.2)
+	panel.tween.interpolate_property($Panels/Blur.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
 	panel.tween.start()
@@ -1172,7 +1200,7 @@ func fade_out_panel(panel:Control):
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
 	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 20), 0.1)
-	panel.tween.interpolate_property($Panels/ColorRect.material, "shader_param/amount", null, 0.0, 0.2)
+	panel.tween.interpolate_property($Panels/Blur.material, "shader_param/amount", null, 0.0, 0.2)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.connect("tween_all_completed", self, "on_fade_complete", [panel])
@@ -1667,6 +1695,8 @@ func add_system():
 	HUD.get_node("Panel/CollectAll").visible = true
 
 func add_planet():
+	stars_tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 1), 0.3)
+	stars_tween.start()
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered"):
 		generate_tiles(c_p)
@@ -1707,6 +1737,8 @@ func remove_system():
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func remove_planet(save_zooms:bool = true):
+	stars_tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 0), 0.2)
+	stars_tween.start()
 	view.remove_obj("planet", save_zooms)
 	vehicle_panel.tile_id = -1
 	Helper.save_obj("Systems", c_s_g, planet_data)
@@ -2665,12 +2697,12 @@ func generate_tiles(id:int):
 			var boss_cave:bool = cross_aurora and t_id == wid * wid / 2
 			if normal_cond or op_aurora_cond or ship_cond or boss_cave:#Spawn cave
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				var floor_size:int = Helper.rand_int(25, int(40 * rand_range(1, 1 + wid / 100.0)))
+				var floor_size = int(rand_range(25 * min(wid / 8.0, 1), int(40 * rand_range(1, 1 + wid / 100.0))))
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
 				if ship_cond:
 					relic_cave_id = t_id
 					second_ship_cave_placed = true
-					tile_data[t_id].cave = {"num_floors":20, "floor_size":3, "special_cave":5}
+					tile_data[t_id].cave = {"num_floors":3, "floor_size":20, "special_cave":5}
 				elif boss_cave:
 					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
 					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
@@ -3694,10 +3726,16 @@ func fade_out_title(fn:String):
 	var tween:Tween = Tween.new()
 	add_child(tween)
 	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)
+	tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 0.0, 0.5)
+	tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 0), 0.5)
 	tween.start()
 	yield(tween, "tween_all_completed")
 	remove_child(tween)
 	tween.queue_free()
+	$Stars/Stars.remove_child($Stars/Stars/Sprite)
+#	for star in $Stars/Stars.get_children():
+#		$Stars/Stars.remove_child(star)
+#		star.queue_free()
 	$Title.visible = false
 	$Settings/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))

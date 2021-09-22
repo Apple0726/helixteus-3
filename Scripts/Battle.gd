@@ -118,21 +118,9 @@ func _ready():
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
 			$BG.texture = null
-		var num_stars:int = min(10000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))
-		for i in num_stars:
-			var star:Sprite = Sprite.new()
-			star.texture = star_texture
-			star.scale *= pow(rand_range(0.4, 0.7), 2)
-			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
-			star.modulate.a = rand_range(0, 1)
-			star.rotation = rand_range(0, 2*PI)
-			star.position.x = rand_range(0, 1280)
-			star.position.y = rand_range(0, 720)
-			if game.enable_shaders and num_stars < 1000:
-				star.material = ShaderMaterial.new()
-				star.material.shader = star_shader
-				star.material.set_shader_param("time_offset", 10.0 * randf())
-			$Stars.add_child(star)
+		var num_stars:int = min(9000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))
+		add_stars(num_stars, 0.15)
+		add_stars(num_stars / 10, 0.25)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
 		if err == OK:
@@ -184,6 +172,22 @@ func _ready():
 	refresh_fight_panel()
 	send_HXs()
 
+func add_stars(num:int, sc:float):
+	for i in num:
+		var star:Sprite = Sprite.new()
+		star.texture = star_texture
+		star.scale *= sc
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+		star.modulate.a = rand_range(0, 1)
+		star.rotation = rand_range(0, 2*PI)
+		star.position.x = rand_range(0, 1280)
+		star.position.y = rand_range(0, 720)
+		if game.enable_shaders and num < 1000:
+			star.material = ShaderMaterial.new()
+			star.material.shader = star_shader
+			star.material.set_shader_param("time_offset", 10.0 * randf())
+		$Stars.add_child(star)
+	
 func refresh_fight_panel():
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		get_node("FightPanel/HBox/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[curr_sh][weapon.to_lower()].lv])
@@ -401,7 +405,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		if HX_c_d[HXs[t].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
 			var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[w_c_d.target].def, DEF_EXPO_ENEMY)
 			if game:
-				if weapon_type == "bullet":
+				if weapon_type in ["bullet", "bomb"]:
 					dmg *= game.u_i.planck
 				elif weapon_type == "laser":
 					dmg *= game.u_i.charge
@@ -764,6 +768,7 @@ func on_target_out():
 	game.hide_tooltip()
 
 func on_target_pressed(target:int, one_enemy:bool = false):
+	game.hide_tooltip()
 	var weapon_data = ship_data[curr_sh][weapon_type]
 	$FightPanel.visible = false
 	$Current.visible = false

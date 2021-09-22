@@ -24,9 +24,9 @@ onready var upgrade_btn = $Upgrade
 
 func _ready():
 	set_polygon(rect_size)
-	path1.text = tr("PATH") + " 1"
-	path2.text = tr("PATH") + " 2"
-	path3.text = tr("PATH") + " 3"
+	path1.get_node("Label").text = tr("PATH") + " 1"
+	path2.get_node("Label").text = tr("PATH") + " 2"
+	path3.get_node("Label").text = tr("PATH") + " 3"
 
 func refresh():
 	if not planet.empty():
@@ -36,6 +36,7 @@ func refresh():
 		$AutoSpeedup.pressed = true
 		auto_speedup = true
 		_on_Path1_pressed()
+		path1._on_Button_pressed()
 	else:
 		path2.visible = game.tile_data[ids[0]].bldg.has("path_2")
 		path3.visible = game.tile_data[ids[0]].bldg.has("path_3")
@@ -43,6 +44,7 @@ func refresh():
 		$AutoSpeedup.pressed = $AutoSpeedup.visible
 		if game.tile_data[ids[0]].bldg.has("path_1"):
 			_on_Path1_pressed()
+			path1._on_Button_pressed()
 		else:
 			game.popup(tr("NO_UPGRADE"), 1.5)
 			game.toggle_panel(self)

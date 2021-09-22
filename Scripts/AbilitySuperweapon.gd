@@ -14,9 +14,9 @@ func _ready():
 func _refresh():
 	ship = upgrade_panel.ship
 	if ship:
-		ability = ship.ability
+		ability = ship.get("ability", "none")
 		$Abilities/Ability.text = ability
-		superweapon = ship.superweapon
+		superweapon = ship.get("superweapon", "none")
 		$Superweapons/Superweapon.text = superweapon
 
 func _upgrade(thing:String,type:String):
