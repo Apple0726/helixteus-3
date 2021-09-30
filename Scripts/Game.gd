@@ -38,6 +38,7 @@ var star_shader = preload("res://Shaders/Star.shader")
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Dictionary
+var default_font:Font
 
 var tutorial:Node2D
 
@@ -337,6 +338,7 @@ var stars_tween:Tween
 var tile_brightness:Array = []
 
 func _ready():
+	default_font = preload("res://Resources/default_theme.tres").default_font
 	for i in 500:
 		var star:Sprite = Sprite.new()
 		star.texture = star_texture
@@ -722,7 +724,7 @@ func new_game(tut:bool, univ:int = 0):
 		universe_data[0].difficulty = 1.0
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
-		universe_data[0].value = 1.0
+		universe_data[0].universe_value = 1.0
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -1298,7 +1300,6 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	if viewing_dimension:
 		remove_dimension()
 		switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-		viewing_dimension = false
 	else:
 		if not first_time:
 			match c_v:
@@ -1606,6 +1607,7 @@ func add_dimension():
 		$UI.remove_child(HUD)
 	if is_instance_valid(dimension):
 		dimension.visible = true
+		dimension.refresh_univs()
 		$Ship.visible = false
 	else:
 		dimension = preload("res://Scenes/Views/Dimension.tscn").instance()
@@ -1709,6 +1711,7 @@ func add_planet():
 func remove_dimension():
 	if not $UI.is_a_parent_of(HUD):
 		$UI.add_child(HUD)
+	viewing_dimension = false
 	dimension.visible = false
 	view.dragged = true
 
@@ -1831,11 +1834,11 @@ func generate_clusters(id:int):
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
 		if id == 0 and _i == 1:
-			dist_from_center = 150
+			dist_from_center = 149
 			c_i.class = "group"
 			c_i.galaxy_num = Helper.rand_int(80, 100)
 		if id == 0 and _i == 3:
-			dist_from_center = 300
+			dist_from_center = 302
 			c_i.name = "%s 3" % tr("CLUSTER")
 			c_i.class = "group"
 			c_i.galaxy_num = Helper.rand_int(80, 100)
@@ -2479,17 +2482,18 @@ func generate_planets(id:int):#local id
 		p_i.HX_data = []
 		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
 		var num:int = 0
+		var total_num:int = Helper.rand_int(1, 12)
 		if not p_i.has("conquered"):
-			while num < 12:
+			while num < total_num:
 				num += 1
-				var lv:int = max(ceil(pow(rand_range(0.5, 1), 1.2) * log(power) / log(1.2)), 1)
+				var lv:int = max(ceil(rand_range(0.5, 1) * log(power) / log(1.15)), 1)
 				if p_num == 0:
 					if lv > 4:
 						lv = 4
 					if i == 2:
 						lv = 1
-				if num == 12:
-					lv = ceil(0.9 * log(power) / log(1.2))
+				if num == total_num:
+					lv = ceil(log(power) / log(1.2))
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
 				var def = round(randf() * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
@@ -2501,7 +2505,7 @@ func generate_planets(id:int):#local id
 				power -= floor(pow(1.15, lv))
 				if power <= 1:
 					break
-			p_i.HX_data.shuffle()
+			#p_i.HX_data.shuffle()
 		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
 			if p_i.type in [11, 12]:
 				planet_data[0].second_ship = true
@@ -3510,6 +3514,8 @@ func fn_save_game():
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
+	if c_u == -1:
+		return
 	var save_game = File.new()
 	save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
 	if c_v == "cave":
@@ -3770,11 +3776,13 @@ func _on_Autosave_timeout():
 var YN_str:String = ""
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	$UI/PopupBackground.visible = true
+	var width = default_font.get_wordwrap_string_size(text, 800).x
+	YN_panel.rect_size.x = width
 	YN_panel.dialog_text = text
 	YN_panel.window_title = title
 	YN_panel.popup_centered()
 	YN_str = type
-	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe"]:
+	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
@@ -3788,6 +3796,26 @@ func destroy_tri_probe(probe_id:int):
 func discover_univ_confirm():
 	send_probes_panel.discover_univ()
 	YN_panel.disconnect("confirmed", self, "discover_univ_confirm")
+
+func reset_dimension_confirm(DR_num:int):
+	c_u = -1
+	DRs += DR_num
+	for i in len(universe_data):
+		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
+	universe_data.clear()
+	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
+	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
+	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
+	universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
+	universe_data[0].charge = 1.0#e(1.602, -19)#C
+	universe_data[0].dark_energy = 1.0
+	universe_data[0].difficulty = 1.0
+	universe_data[0].time_speed = 1.0
+	universe_data[0].antimatter = 0.0
+	universe_data[0].universe_value = 1.0
+	dimension.refresh_univs()
+	YN_panel.disconnect("confirmed", self, "reset_dimension_confirm")
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)

@@ -337,3 +337,16 @@ var light_data = [{"damage":1.5, "accuracy":1.3}, {"damage":2.5, "accuracy":1.35
 
 #the numbers are the elements' abundance relative to hydrogen
 var elements = {"NH3":0.05, "CO2":0.01, "H":1.0, "He":0.325, "CH4":0.2, "O":0.014, "H2O":0.15, "Ne":0.001813, "Xe":0.0000022}
+
+var univ_prop_weights:Dictionary = {
+	"speed_of_light":10,
+	"planck":20,
+	"boltzmann":10,
+	"gravitational":30,
+	"charge":20,
+	"dark_energy":25,
+	"difficulty":10,
+	"time_speed":50,
+	"antimatter":0,
+	"universe_value":50,
+	}

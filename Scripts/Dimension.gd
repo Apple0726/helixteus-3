@@ -1,7 +1,6 @@
 extends Control
 
 onready var game = get_node("/root/Game")
-onready var univs = game.universe_data
 var univ_icon = preload("res://Graphics/Misc/Universe.png")
 const DUR = 0.6
 const TWEEN_TYPE = Tween.TRANS_EXPO
@@ -9,10 +8,19 @@ const TWEEN_EASE = Tween.EASE_OUT
 var new_dim_DRs = 0#DRs you will get once you renew dimensions
 
 func _ready():
+	$Physics/Control/UnivPropertiesLabel.visible = false
+	for univ_prop in $Physics/Control/VBox.get_children():
+		var univ_prop_text = preload("res://Scenes/HelpText.tscn").instance()
+		univ_prop_text.label_text = tr(univ_prop.name.to_upper())
+		univ_prop_text.help_text = tr("%s_DESC" % univ_prop.name.to_upper())
+		univ_prop_text.size_flags_horizontal = Label.SIZE_EXPAND_FILL
+		univ_prop_text.size_flags_vertical = Label.SIZE_EXPAND_FILL
+		$Physics/Control/VBox2.add_child(univ_prop_text)
 	refresh_univs()
+	$OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
 	if game.DRs == 0:
 		for node in $ScrollContainer2/GridContainer.get_children():
-			node.get_node("Invest").disabled = true
+			node.get_node("HBox/Invest").disabled = true
 
 func refresh_univs():
 	$TopInfo/Reset.disabled = true
@@ -33,7 +41,7 @@ func refresh_univs():
 	for univ in $ScrollContainer/VBoxContainer.get_children():
 		$ScrollContainer/VBoxContainer.remove_child(univ)
 		univ.queue_free()
-	for univ_info in univs:
+	for univ_info in game.universe_data:
 		var univ = TextureButton.new()
 		univ.texture_normal = univ_icon
 		univ.expand = true
@@ -72,13 +80,13 @@ func on_univ_over(id:int):
 		$UnivInfo/Label.text += "%s: %sc\n%s: %sh\n%s: %sk\n%s: %s\u03C3\n%s: %sG\n%s: %se\n" % [
 			tr("SPEED_OF_LIGHT"),
 			u_i.speed_of_light,
-			tr("PLANCK_CTE"),
+			tr("PLANCK"),
 			u_i.planck,
-			tr("BOLTZMANN_CTE"),
+			tr("BOLTZMANN"),
 			u_i.boltzmann,
 			tr("S_B_CTE"),
 			pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2),
-			tr("GRAVITATIONAL_CTE"),
+			tr("GRAVITATIONAL"),
 			u_i.gravitational,
 			tr("ELEMENTARY_CHARGE"),
 			u_i.charge,
@@ -94,7 +102,7 @@ func on_univ_over(id:int):
 		tr("ANTIMATTER"),
 		u_i.antimatter,
 		tr("UNIVERSE_VALUE"),
-		u_i.value,
+		u_i.universe_value,
 		]
 
 func e(n, e):
@@ -122,3 +130,52 @@ func _on_mouse_exited():
 func _on_Reset_mouse_entered():
 	if $TopInfo/Reset.disabled:
 		game.show_tooltip(tr("DIM_RESET_CONDITIONS"))
+
+
+func _on_Reset_pressed():
+	game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
+
+var maths_OP_points:float = 0
+var physics_OP_points:float = 0
+func calc_math_points(node:SpinBox, default_value:float, op_factor:float):
+	if node.value <= 0:
+		node.get_line_edit()["custom_colors/font_color"] = Color.red
+		return
+	else:
+		node.get_line_edit()["custom_colors/font_color"] = Color.black
+		maths_OP_points += (node.value - default_value) * op_factor
+
+func _input(event):
+	if event is InputEventKey or event is InputEventMouseButton:
+		if get_focus_owner() is LineEdit:
+			if $Maths.visible:
+				maths_OP_points = 0
+				calc_math_points($Maths/Control/BUCGF, 1.3, -300.0)
+				calc_math_points($Maths/Control/MUCGF_MV, 1.9, -20.0)
+				calc_math_points($Maths/Control/MUCGF_MSMB, 1.6, -10.0)
+				calc_math_points($Maths/Control/MUCGF_AIE, 2.3, -50.0)
+				calc_math_points($Maths/Control/IRM, 1.2, 40.0)
+				calc_math_points($Maths/Control/SLUGF_XP, 1.3, -25.0)
+				calc_math_points($Maths/Control/SLUGF_Stats, 1.15, 25.0)
+				calc_math_points($Maths/Control/COSHEF, 1.5, 12.0)
+				calc_math_points($Maths/Control/MMBSVR, 10, -8.0)
+				calc_math_points($Maths/Control/ULUGF, 1.6, -70.0)
+				$OPMeter/OPMeter.value = maths_OP_points
+				$OPMeter/TooOP.visible = maths_OP_points > $OPMeter/OPMeter.max_value
+			elif $Physics.visible:
+				physics_OP_points = 0
+				if $Physics/Control/MVOUP.value <= 0:
+					$Physics/Control/MVOUP.get_line_edit()["custom_colors/font_color"] = Color.red
+					return
+				else:
+					$Physics/Control/MVOUP.get_line_edit()["custom_colors/font_color"] = Color.black
+					physics_OP_points += (0.5 / min($Physics/Control/MVOUP.value, 0.5) - 1.0)
+				for cost in $Physics/Control/VBox.get_children():
+					if cost.value <= 0:
+						cost.get_line_edit()["custom_colors/font_color"] = Color.red
+						return
+					else:
+						cost.get_line_edit()["custom_colors/font_color"] = Color.black
+						physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
+				$OPMeter/OPMeter.value = physics_OP_points
+				$OPMeter/TooOP.visible = physics_OP_points > $OPMeter/OPMeter.max_value

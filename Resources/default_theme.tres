@@ -154,16 +154,14 @@ border_blend = true
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id=25]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
 border_width_left = 4
 border_width_top = 4
 border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
 border_blend = true
-expand_margin_top = 37.0
+expand_margin_left = 6.0
+expand_margin_right = 3.0
+expand_margin_top = 34.0
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 

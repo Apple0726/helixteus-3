@@ -759,7 +759,7 @@ func place_targets():
 
 func on_target_over(target:int):
 	var acc:float = ship_data[curr_sh].acc
-	var acc_mult:float = Data.laser_data[ship_data[curr_sh][weapon_type].lv - 1].accuracy
+	var acc_mult:float = Data["%s_data" % weapon_type][ship_data[curr_sh][weapon_type].lv - 1].accuracy
 	var eva:float = HX_data[target].eva
 	var chance:float = hit_formula(acc * acc_mult * ship_data[curr_sh].acc_mult, eva)
 	game.show_tooltip("%s: %s%%" % [tr("CHANCE_OF_HITTING"), round(chance * 100.0)])

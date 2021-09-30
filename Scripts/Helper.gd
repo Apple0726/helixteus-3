@@ -724,15 +724,15 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
-		"SPR":
-			if tile.bldg.has("qty"):
-				var reaction_info = get_reaction_info(tile)
-				var MM_value = reaction_info.MM_value
-				capacity_bar.value = reaction_info.progress
-				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+#		"SPR":
+#			if tile.bldg.has("qty"):
+#				var reaction_info = get_reaction_info(tile)
+#				var MM_value = reaction_info.MM_value
+#				capacity_bar.value = reaction_info.progress
+#				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
+#			else:
+#				rsrc_text.text = ""
+#				capacity_bar.value = 0
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
@@ -900,9 +900,9 @@ func update_bldg_constr(tile):
 						tile.auto_GH.produce[p] *= 4
 					game.autocollect.mets[p] += tile.auto_GH.produce[p]
 				if tile.adj_lake_state == "l":
-					tile.auto_GH.cellulose *= 2
+					tile.auto_GH.cellulose_drain *= 2
 				elif tile.adj_lake_state == "sc":
-					tile.auto_GH.cellulose *= 4
+					tile.auto_GH.cellulose_drain *= 4
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
@@ -1151,13 +1151,18 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
 		elif bldg == "AE":
 			return get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult) * n
+		elif bldg == "SPR":
+			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
 		if Data.path_2[bldg].is_value_integer:
 			return round(dict.bldg.path_2_value * IR_mult * n)
 		else:
-			return dict.bldg.path_2_value * IR_mult * n
+			if bldg == "SPR":
+				return dict.bldg.path_2_value * mult * n * game.u_i.charge
+			else:
+				return dict.bldg.path_2_value * IR_mult * n
 	elif path == 3:
 		return dict.bldg.path_3_value
 
@@ -1227,3 +1232,24 @@ func check_lake(pos:Vector2, wid:int, seed_name:String):
 					if okay:
 						state = game.tile_data[id2].lake.state
 	return [has_lake, state]
+
+func remove_recursive(path):
+	var directory = Directory.new()
+	
+	# Open directory
+	var error = directory.open(path)
+	if error == OK:
+		# List directory content
+		directory.list_dir_begin(true)
+		var file_name = directory.get_next()
+		while file_name != "":
+			if directory.current_is_dir():
+				remove_recursive(path + "/" + file_name)
+			else:
+				directory.remove(file_name)
+			file_name = directory.get_next()
+		
+		# Remove current path
+		directory.remove(path)
+	else:
+		print("Error removing " + path)

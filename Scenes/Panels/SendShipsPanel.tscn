@@ -146,6 +146,7 @@ margin_left = 816.0
 margin_top = 398.0
 margin_right = 988.0
 margin_bottom = 428.0
+text = " [img]Graphics/Icons/help.png[/img]"
 adv_help = true
 translate_help = false
 
@@ -155,7 +156,7 @@ margin_top = 400.0
 margin_right = 736.0
 margin_bottom = 430.0
 bbcode_text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
-text = "PLANET_EE_COST "
+text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
 label_text = "PLANET_EE_COST"
 help_text = "PLANET_EE_COST_DESC"
 align = 2

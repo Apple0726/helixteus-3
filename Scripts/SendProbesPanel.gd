@@ -23,7 +23,7 @@ var units:Dictionary = {
 	"difficulty":"",
 	"time_speed":"",
 	"antimatter":"",
-	"value":"",
+	"universe_value":"",
 	}
 
 var point_distribution:Dictionary = {
@@ -36,20 +36,7 @@ var point_distribution:Dictionary = {
 	"difficulty":0,
 	"time_speed":0,
 	"antimatter":0,
-	"value":0,
-	}
-
-var weights:Dictionary = {
-	"speed_of_light":10,
-	"planck":20,
-	"boltzmann":10,
-	"gravitational":30,
-	"charge":20,
-	"dark_energy":25,
-	"difficulty":10,
-	"time_speed":50,
-	"antimatter":0,
-	"value":50,
+	"universe_value":0,
 	}
 
 
@@ -59,16 +46,16 @@ func _ready():
 
 func refresh():
 	$TP/VBox/speed_of_light/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("SPEED_OF_LIGHT")
-	$TP/VBox/planck/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("PLANCK_CTE")
-	$TP/VBox/boltzmann/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("BOLTZMANN_CTE")
+	$TP/VBox/planck/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("PLANCK")
+	$TP/VBox/boltzmann/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("BOLTZMANN")
 	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
-	$TP/VBox/gravitational/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("GRAVITATIONAL_CTE")
-	$TP/VBox/charge/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ELEMENTARY_CHARGE")
+	$TP/VBox/gravitational/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("GRAVITATIONAL")
+	$TP/VBox/charge/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("CHARGE")
 	$TP/VBox/dark_energy/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DARK_ENERGY")
 	$TP/VBox/difficulty/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
 	$TP/VBox/time_speed/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED")
 	$TP/VBox/antimatter/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ANTIMATTER")
-	$TP/VBox/value/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("UNIVERSE_VALUE")
+	$TP/VBox/universe_value/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("UNIVERSE_VALUE")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
@@ -277,12 +264,12 @@ func _on_TP_value_changed(value:float, prop:String):
 		value = float(text_node.text)
 		get_node("TP/VBox/%s/HSlider" % prop).value = value
 	if prop == "antimatter":
-		point_distribution.antimatter = value * -weights[prop]
+		point_distribution.antimatter = value * -Data.univ_prop_weights[prop]
 	else:
 		if value >= 1:
-			point_distribution[prop] = (value - 1) * -weights[prop]
+			point_distribution[prop] = (value - 1) * -Data.univ_prop_weights[prop]
 		else:
-			point_distribution[prop] = (1 / value - 1) * weights[prop]
+			point_distribution[prop] = (1 / value - 1) * Data.univ_prop_weights[prop]
 	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0
@@ -296,7 +283,7 @@ func _on_TP_value_changed(value:float, prop:String):
 func get_lv_sum():
 	var lv:int = 0
 	for univ in game.universe_data:
-		lv += univ.lv * univ.value
+		lv += univ.lv * univ.universe_value
 	return lv
 
 func _on_Points_mouse_entered():

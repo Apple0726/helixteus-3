@@ -1,7 +1,7 @@
 tool
 extends RichTextLabel
 
-onready var game = get_node("/root/Game")
+var game
 
 export var label_text:String = ""
 export var help_text:String = ""
@@ -11,6 +11,8 @@ var adv_icons:Array = []
 export(int, "Left", "Center", "Right") var align
 
 func _ready():
+	if not Engine.editor_hint:
+		game = get_node("/root/Game")
 	if align == 0:
 		bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(label_text)
 	elif align == 1:

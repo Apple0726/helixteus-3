@@ -37,7 +37,7 @@ func refresh():
 					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % ((now - save_modified) / 86400000)]
 				$ScrollContainer/VBox.add_child(save)
 			else:
-				remove_recursive("user://%s" % next_dir)
+				Helper.remove_recursive("user://%s" % next_dir)
 		save_info.close()
 		next_dir = file.get_next()
 
@@ -64,31 +64,10 @@ func on_delete(save_str:String):
 func _on_delete_save():
 	if $ConfirmSaveDeletion/LineEdit.text == save_to_delete:
 		$PopupBackground.visible = false
-		remove_recursive("user://%s" % save_to_delete)
+		Helper.remove_recursive("user://%s" % save_to_delete)
 		$ConfirmSaveDeletion.visible = false
 		game.popup(tr("SAVE_DELETED"), 2.0)
 		refresh()
-
-func remove_recursive(path):
-	var directory = Directory.new()
-	
-	# Open directory
-	var error = directory.open(path)
-	if error == OK:
-		# List directory content
-		directory.list_dir_begin(true)
-		var file_name = directory.get_next()
-		while file_name != "":
-			if directory.current_is_dir():
-				remove_recursive(path + "/" + file_name)
-			else:
-				directory.remove(file_name)
-			file_name = directory.get_next()
-		
-		# Remove current path
-		directory.remove(path)
-	else:
-		print("Error removing " + path)
 
 
 func _on_ImportSave_pressed():

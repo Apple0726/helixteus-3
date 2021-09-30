@@ -35,6 +35,7 @@ func refresh():
 		else:
 			$AuroraMult.help_text = tr("MMM_DESC")
 	else:
+		$AuroraMult.visible = false
 		sys_au_mult = 1.0
 	if tile_num == 1:
 		$Label.text = tr("GH_NAME")
