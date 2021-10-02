@@ -629,7 +629,12 @@ func _unhandled_input(event):
 		if tile and tile.has("bldg"):
 			if Input.is_action_just_released("Q"):
 				game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-				construct(tile.bldg.name, Data.costs[tile.bldg.name])
+				var base_cost = Data.costs[tile.bldg.name].duplicate(true)
+				for cost in base_cost:
+					base_cost[cost] *= game.engineering_bonus.BCM
+				if tile.bldg.name == "GH":
+					base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
+				construct(tile.bldg.name, base_cost)
 			if Input.is_action_just_released("F"):
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():

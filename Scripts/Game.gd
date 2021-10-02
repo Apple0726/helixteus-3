@@ -113,6 +113,10 @@ var SP:float
 #Dimension remnants
 var DRs:float
 var dim_num:int = 1
+var subjects:Dictionary
+var maths_bonus:Dictionary
+var physics_bonus:Dictionary
+var engineering_bonus:Dictionary
 
 #id of the universe/supercluster/etc. you're viewing the object in
 var c_u:int#c_u: current_universe
@@ -535,65 +539,8 @@ func load_univ():
 		save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.READ)
 		var save_game_dict:Dictionary = save_game.get_var()
 		save_game.close()
-		money = save_game_dict.money
-		minerals = save_game_dict.minerals
-		mineral_capacity = save_game_dict.mineral_capacity
-		stone = save_game_dict.stone
-		energy = save_game_dict.energy
-		SP = save_game_dict.SP
-		c_v = save_game_dict.c_v
-		l_v = save_game_dict.l_v
-		c_sc = save_game_dict.c_sc
-		c_c = save_game_dict.c_c
-		c_c_g = save_game_dict.c_c_g
-		c_g = save_game_dict.c_g
-		c_g_g = save_game_dict.c_g_g
-		c_s = save_game_dict.c_s
-		c_s_g = save_game_dict.c_s_g
-		c_p = save_game_dict.c_p
-		c_p_g = save_game_dict.c_p_g
-		c_t = save_game_dict.c_t
-		stack_size = save_game_dict.stack_size
-		auto_replace = save_game_dict.auto_replace
-		pickaxe = save_game_dict.pickaxe
-		science_unlocked = save_game_dict.science_unlocked
-		infinite_research = save_game_dict.infinite_research
-		mats = save_game_dict.mats
-		mets = save_game_dict.mets
-		atoms = save_game_dict.atoms
-		particles = save_game_dict.particles
-		show = save_game_dict.show
-		items = save_game_dict.items
-		hotbar = save_game_dict.hotbar
-		MUs = save_game_dict.MUs
-		STM_lv = save_game_dict.STM_lv
-		rover_id = save_game_dict.rover_id
-		rover_data = save_game_dict.rover_data
-		fighter_data = save_game_dict.fighter_data
-		probe_data = save_game_dict.probe_data
-		ship_data = save_game_dict.ship_data
-		second_ship_hints = save_game_dict.second_ship_hints
-		third_ship_hints = save_game_dict.third_ship_hints
-		fourth_ship_hints = save_game_dict.fourth_ship_hints
-		ships_c_coords = save_game_dict.ships_c_coords
-		ships_dest_coords = save_game_dict.ships_dest_coords
-		ships_depart_pos = save_game_dict.ships_depart_pos
-		ships_dest_pos = save_game_dict.ships_dest_pos
-		ships_travel_view = save_game_dict.ships_travel_view
-		ships_c_g_coords = save_game_dict.ships_c_g_coords
-		ships_dest_g_coords = save_game_dict.ships_dest_g_coords
-		ships_travel_start_date = save_game_dict.ships_travel_start_date
-		ships_travel_length = save_game_dict.ships_travel_length
-		p_num = save_game_dict.p_num
-		s_num = save_game_dict.s_num
-		g_num = save_game_dict.g_num
-		c_num = save_game_dict.c_num
-		stats = save_game_dict.stats
-		objective = save_game_dict.objective
-		autocollect = save_game_dict.autocollect
-		save_date = save_game_dict.save_date
-		bookmarks = save_game_dict.bookmarks
-		cave_filters = save_game_dict.cave_filters
+		for key in save_game_dict:
+			self[key] = save_game_dict[key]
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
 		auto_c_p_g = -1
@@ -605,9 +552,9 @@ func load_univ():
 		if science_unlocked.has("CI3"):
 			stack_size = 128
 		if not autocollect.empty():
-			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE)
-			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE)
-			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE)
+			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
+			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
+			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
 			Helper.add_minerals((autocollect.rsrc.minerals * min_mult + autocollect.MS.minerals) * time_elapsed)
 			energy += (autocollect.rsrc.energy * energy_mult + autocollect.MS.energy) * time_elapsed
@@ -620,7 +567,7 @@ func load_univ():
 			for met in autocollect.mets:
 				mets[met] += autocollect.mets[met] * plant_time_elapsed
 		if help.tutorial >= 1 and help.tutorial <= 25:
-			new_game(true)
+			new_game(true, 0, true)
 		else:
 			tile_data = open_obj("Planets", c_p_g)
 			if c_v == "mining" or c_v == "cave":
@@ -661,10 +608,57 @@ func load_game():
 	universe_data = save_info_dict.universe_data
 	DRs = save_info_dict.get("DRs", 0)
 	dim_num = save_info_dict.get("dim_num", 1)
-	load_univ()
-	switch_view(c_v, true)
-	if not $UI.is_a_parent_of(HUD):
-		$UI.add_child(HUD)
+	subjects = save_info_dict.get("subjects", {"maths":{"DRs":0, "lv":0},
+					"physics":{"DRs":0, "lv":0},
+					"chemistry":{"DRs":0, "lv":0},
+					"biology":{"DRs":0, "lv":0},
+					"philosophy":{"DRs":0, "lv":0},
+					"engineering":{"DRs":0, "lv":0},
+					"dimensional_power":{"DRs":0, "lv":0},
+		})
+	maths_bonus = save_info_dict.get("maths_bonus", {
+		"BUCGF":1.3,
+		"MUCGF_MV":1.9,
+		"MUCGF_MSMB":1.6,
+		"MUCGF_AIE":2.3,
+		"IRM":1.2,
+		"SLUGF_XP":1.3,
+		"SLUGF_Stats":1.15,
+		"COSHEF":1.5,
+		"MMBSVR":10,
+		"ULUGF":1.6,
+	})
+	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
+	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
+	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
+	physics_bonus = save_info_dict.get("physics_bonus", {
+		"MVOUP":0.5,
+		"speed_of_light":10,
+		"planck":20,
+		"boltzmann":10,
+		"gravitational":30,
+		"charge":20,
+		"dark_energy":25,
+		"difficulty":10,
+		"time_speed":50,
+		"antimatter":0,
+		"universe_value":50,
+	})
+	engineering_bonus = save_info_dict.get("engineering_bonus", {
+		"BCM":1.0,
+		"PS":1.0,
+		"RSM":1.0,
+	})
+	
+	if c_u == -1:
+		viewing_dimension = true
+		add_dimension()
+		dimension.refresh_univs(true)
+	else:
+		load_univ()
+		switch_view(c_v, true)
+		if not $UI.is_a_parent_of(HUD):
+			$UI.add_child(HUD)
 
 func remove_files(dir:Directory):
 	dir.list_dir_begin(true)
@@ -673,10 +667,10 @@ func remove_files(dir:Directory):
 		dir.remove(file_name)
 		file_name = dir.get_next()
 
-func new_game(tut:bool, univ:int = 0):
+func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	var file = File.new()
 	var dir = Directory.new()
-	if univ == 0:
+	if new_save:
 		var sv_id:int = 1
 		c_sv = "Save1"
 		while dir.open("user://%s" % c_sv) == OK:
@@ -684,6 +678,8 @@ func new_game(tut:bool, univ:int = 0):
 			c_sv = "Save%s" % sv_id
 		dir.make_dir("user://%s" % c_sv)
 		save_created = OS.get_system_time_msecs()
+		DRs = 0
+		dim_num = 1
 		help = {
 				"tutorial":1 if tut else -1,
 				"close_btn1":true,
@@ -725,6 +721,36 @@ func new_game(tut:bool, univ:int = 0):
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
 		universe_data[0].universe_value = 1.0
+		maths_bonus = {
+			"BUCGF":1.3,
+			"MUCGF_MV":1.9,
+			"MUCGF_MSMB":1.6,
+			"MUCGF_AIE":2.3,
+			"IRM":1.2,
+			"SLUGF_XP":1.3,
+			"SLUGF_Stats":1.15,
+			"COSHEF":1.5,
+			"MMBSVR":10,
+			"ULUGF":1.6,
+		}
+		physics_bonus = {
+			"MVOUP":0.5,
+			"speed_of_light":10,
+			"planck":20,
+			"boltzmann":10,
+			"gravitational":30,
+			"charge":20,
+			"dark_energy":25,
+			"difficulty":10,
+			"time_speed":50,
+			"antimatter":0,
+			"universe_value":50,
+		}
+		engineering_bonus = {
+			"BCM":1.0,
+			"PS":1.0,
+			"RSM":1.0,
+		}
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -3075,7 +3101,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 			var bb_end:int = st.find("]")
 			if bb_start != -1 and bb_end != -1:
 				st = st.replace(st.substr(bb_start, bb_end - bb_start + 1), "")
-			var width = min(RTL["custom_fonts/normal_font"].get_string_size(st).x, 400)
+			var width = min(default_font.get_string_size(st).x, 400)
 			max_width = max(width, max_width)
 		RTL.rect_size.x = max_width# + 60
 		RTL.rect_min_size.x = max_width# + 60
@@ -3245,9 +3271,9 @@ func _process(delta):
 	if delta != 0:
 		fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
 		if autocollect:
-			var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, infinite_research.MEE) * u_i.time_speed
-			var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, infinite_research.EPE) * u_i.time_speed
-			var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, infinite_research.RLE) * u_i.time_speed
+			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
+			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
+			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
 			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals * min_mult)
 			energy += delta * (autocollect.MS.energy + autocollect.GS.energy * energy_mult)
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
@@ -3511,6 +3537,10 @@ func fn_save_game():
 		"version":VERSION,
 		"DRs":DRs,
 		"dim_num":dim_num,
+		"subjects":subjects,
+		"maths_bonus":maths_bonus,
+		"physics_bonus":physics_bonus,
+		"engineering_bonus":engineering_bonus,
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
@@ -3747,8 +3777,6 @@ func fade_out_title(fn:String):
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
-		DRs = 0
-		dim_num = 1
 		var tut_or_no_tut = preload("res://Scenes/TutOrNoTut.tscn").instance()
 		add_child(tut_or_no_tut)
 		tut_or_no_tut.connect("new_game", self, "new_game")
@@ -3771,7 +3799,8 @@ func _on_Autosave_timeout():
 	if err == OK:
 		if config.get_value("saving", "enable_autosave", true):
 			fn_save_game()
-			save_views(true)
+			if not viewing_dimension:
+				save_views(true)
 
 var YN_str:String = ""
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
@@ -3787,7 +3816,24 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
 
-func destroy_tri_probe(probe_id:int):
+func generate_new_univ_confirm():
+	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
+	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
+	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
+	universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
+	universe_data[0].charge = 1.0#e(1.602, -19)#C
+	universe_data[0].dark_energy = 1.0
+	universe_data[0].difficulty = 1.0
+	universe_data[0].time_speed = 1.0
+	universe_data[0].antimatter = 0.0
+	var UV_mult = (2.0 + subjects.dimensional_power.lv * 0.5) if subjects.dimensional_power.lv > 0 else 1.0
+	universe_data[0].universe_value = UV_mult
+	dimension.set_bonuses()
+	dimension.refresh_univs()
+	YN_panel.disconnect("confirmed", self, "generate_new_univ_confirm")
+
+func destroy_tri_probe_confirm(probe_id:int):
 	probe_data.remove(probe_id)
 	vehicle_panel.probe_over_id = -1
 	vehicle_panel.refresh()
@@ -3803,19 +3849,10 @@ func reset_dimension_confirm(DR_num:int):
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
 	universe_data.clear()
-	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
-	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
-	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
-	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
-	universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
-	universe_data[0].charge = 1.0#e(1.602, -19)#C
-	universe_data[0].dark_energy = 1.0
-	universe_data[0].difficulty = 1.0
-	universe_data[0].time_speed = 1.0
-	universe_data[0].antimatter = 0.0
-	universe_data[0].universe_value = 1.0
-	dimension.refresh_univs()
+	dim_num += 1
+	dimension.refresh_univs(true)
 	YN_panel.disconnect("confirmed", self, "reset_dimension_confirm")
+	fn_save_game()
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)

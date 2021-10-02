@@ -17,7 +17,7 @@ func _on_Button_pressed():
 		btn.get_node("Label")["custom_colors/font_color"] = Color.white
 	$Label["custom_colors/font_color"] = Color.cyan
 	$Label/TextureRect.visible = true
-	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game else 1.0)
+	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game and not game.u_i.empty() else 1.0)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game else 1.0)
+	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game and not game.u_i.empty() else 1.0)

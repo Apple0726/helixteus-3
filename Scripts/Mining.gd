@@ -247,7 +247,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(3, 0.1, 1)
-	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
+	progress += 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_dur"):
 		game.pickaxe.liquid_dur -= 1

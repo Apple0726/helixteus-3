@@ -1,6 +1,6 @@
 extends Node
 
-var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "cost_pw":1.35, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
+var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
@@ -15,7 +15,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "cost_pw":1.35,
 				"AMN":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
-				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":1.5, "cost_pw":1.4, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":1.5, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -258,12 +258,12 @@ var science_unlocks = {
 						"TPCC":{"cost":e(1, 23), "parents":["GS"]},
 }
 
-var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2, "value":1.2},
-									"EPE":{"cost":400, "pw":6.2, "value":1.2},
-									"RLE":{"cost":1250, "pw":6.8, "value":1.2},
-									"MSE":{"cost":350, "pw":6.2, "value":1.2},
-									"MMS":{"cost":150, "pw":6.0, "value":1.2},
-									"PME":{"cost":10000000, "pw":6.8, "value":1.2},
+var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2},
+									"EPE":{"cost":400, "pw":6.2},
+									"RLE":{"cost":1250, "pw":6.8},
+									"MSE":{"cost":350, "pw":6.2},
+									"MMS":{"cost":150, "pw":6.0},
+									"PME":{"cost":10000000, "pw":6.8},
 }
 
 var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},

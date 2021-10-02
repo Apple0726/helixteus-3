@@ -55,7 +55,8 @@ func _ready():
 	else:
 		switch_btn.shortcut.shortcut.action = "Z"
 	refresh_bookmarks()
-	refresh()
+	if not game.viewing_dimension:
+		refresh()
 
 func refresh_bookmarks():
 	for slot in planet_grid_btns.get_children():
@@ -70,14 +71,15 @@ func refresh_bookmarks():
 	for slot in cluster_grid_btns.get_children():
 		cluster_grid_btns.remove_child(slot)
 		slot.queue_free()
-	for p_b in game.bookmarks.planet.values():
-		add_p_b(p_b)
-	for s_b in game.bookmarks.system.values():
-		add_s_b(s_b)
-	for g_b in game.bookmarks.galaxy.values():
-		add_g_b(g_b)
-	for c_b in game.bookmarks.cluster.values():
-		add_c_b(c_b)
+	if not game.bookmarks.empty():
+		for p_b in game.bookmarks.planet.values():
+			add_p_b(p_b)
+		for s_b in game.bookmarks.system.values():
+			add_s_b(s_b)
+		for g_b in game.bookmarks.galaxy.values():
+			add_g_b(g_b)
+		for c_b in game.bookmarks.cluster.values():
+			add_c_b(c_b)
 
 func add_p_b(p_b:Dictionary):
 	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
@@ -135,7 +137,7 @@ func update_XP():
 	while game.u_i.xp >= game.u_i.xp_to_lv:
 		game.u_i.lv += 1
 		game.u_i.xp -= game.u_i.xp_to_lv
-		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * 1.6)
+		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * game.maths_bonus.ULUGF)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
 		if game.u_i.lv == 30:
@@ -191,7 +193,7 @@ func update_money_energy_SP():
 func refresh():
 	if not game:
 		return
-	dimension_btn.visible = len(game.universe_data) > 1 and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
+	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 	switch_btn.visible = game.c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
 	$Panel/CollectProgress.visible = false
 	$Panel/CollectAll.modulate = Color.white
@@ -419,9 +421,9 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	if extra_arg_0 == "CELLULOSE":
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(Helper.clever_round(abs(game.autocollect.mats.cellulose))), tr("S_SECOND")])
 	elif game.autocollect.has("rsrc"):
-		var min_mult:float = pow(Data.infinite_research_sciences.MEE.value, game.infinite_research.MEE) * game.u_i.time_speed
-		var energy_mult:float = pow(Data.infinite_research_sciences.EPE.value, game.infinite_research.EPE) * game.u_i.time_speed
-		var SP_mult:float = pow(Data.infinite_research_sciences.RLE.value, game.infinite_research.RLE) * game.u_i.time_speed
+		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
+		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
+		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 		if extra_arg_0 == "MINERALS":
 			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":

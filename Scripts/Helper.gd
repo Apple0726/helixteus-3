@@ -584,7 +584,7 @@ func get_IR_mult(bldg_name:String):
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
-		mult = pow(Data.infinite_research_sciences[sc].value, game.infinite_research[sc])
+		mult = pow(game.maths_bonus.IRM, game.infinite_research[sc])
 	return mult
 
 func add_ship_XP(id:int, XP:float):
@@ -592,13 +592,13 @@ func add_ship_XP(id:int, XP:float):
 	ship_data[id].XP += XP
 	while ship_data[id].XP >= ship_data[id].XP_to_lv:
 		ship_data[id].XP -= ship_data[id].XP_to_lv
-		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * 1.3)
+		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.math_bonus.SLUGF_XP)
 		ship_data[id].lv += 1
-		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.15)
+		ship_data[id].total_HP = round(ship_data[id].total_HP * game.math_bonus.SLUGF_Stats)
 		ship_data[id].HP = ship_data[id].total_HP
-		ship_data[id].atk = round(ship_data[id].atk * 1.15)
-		ship_data[id].acc = round(ship_data[id].acc * 1.15)
-		ship_data[id].eva = round(ship_data[id].eva * 1.15)
+		ship_data[id].atk = round(ship_data[id].atk * game.math_bonus.SLUGF_Stats)
+		ship_data[id].acc = round(ship_data[id].acc * game.math_bonus.SLUGF_Stats)
+		ship_data[id].eva = round(ship_data[id].eva * game.math_bonus.SLUGF_Stats)
 
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data

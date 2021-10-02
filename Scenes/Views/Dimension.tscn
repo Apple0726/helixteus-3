@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -19,13 +19,38 @@
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=17]
 [ext_resource path="res://Graphics/Misc/BarUnder.png" type="Texture" id=18]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+border_width_top = 4
+border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_blend = true
+shadow_size = 1
+shadow_offset = Vector2( 0, 2 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+expand_margin_top = 12.0
+expand_margin_bottom = 12.0
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="DynamicFont" id=3]
 size = 19
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=4]
 size = 25
 use_mipmaps = true
 use_filter = true
@@ -38,24 +63,34 @@ mouse_filter = 2
 theme = ExtResource( 9 )
 script = ExtResource( 8 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_top = 88.0
-margin_right = 288.0
-margin_bottom = 684.0
+[node name="Universes" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Scroll" type="ScrollContainer" parent="Universes"]
+margin_top = 48.0
+margin_right = 288.0
+margin_bottom = 720.0
+rect_min_size = Vector2( 288, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
 margin_left = 10.0
 margin_top = 5.0
 margin_right = 270.0
 margin_bottom = 265.0
 
-[node name="UniverseIcon" type="TextureButton" parent="ScrollContainer/VBoxContainer"]
+[node name="UniverseIcon" type="TextureButton" parent="Universes/Scroll/VBox"]
 margin_right = 260.0
 margin_bottom = 260.0
 rect_min_size = Vector2( 260, 260 )
@@ -66,587 +101,48 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DiscoveredUnivs" type="Panel" parent="."]
-margin_top = 48.0
-margin_right = 288.0
-margin_bottom = 88.0
-rect_min_size = Vector2( 0, 40 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="DiscoveredUnivs"]
+[node name="Label" type="Label" parent="Universes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 40 )
+margin_top = 48.0
+margin_right = 248.0
+margin_bottom = 40.0
+custom_styles/normal = SubResource( 1 )
 text = "DISCOVERED_UNIVERSES"
 align = 1
-valign = 1
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="UnivInfo" type="Panel" parent="."]
-margin_left = 288.0
-margin_top = 48.0
-margin_right = 704.0
+[node name="SendProbes" type="Button" parent="Universes"]
+margin_top = 684.0
+margin_right = 288.0
 margin_bottom = 720.0
-rect_min_size = Vector2( 0, 40 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+text = "SEND_PROBES"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="UnivInfo"]
+[node name="UnivInfo" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 16.0
-margin_top = 16.0
-margin_right = -16.0
-rect_min_size = Vector2( 0, 40 )
-custom_fonts/font = SubResource( 1 )
+margin_left = 300.0
+margin_top = 60.0
+margin_right = -588.0
+margin_bottom = -12.0
+rect_min_size = Vector2( 392, 648 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Maths" type="ScrollContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 304.0
-margin_top = 48.0
-margin_right = -588.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Maths"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 1025.0
-rect_min_size = Vector2( 300, 1020 )
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Maths/Control"]
-margin_left = 16.0
-margin_top = 99.0
-margin_right = 330.0
-margin_bottom = 123.0
-text = "BUCGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label3" type="Label" parent="Maths/Control"]
-margin_left = 14.0
-margin_top = 238.0
-margin_right = 334.0
-margin_bottom = 262.0
-text = "MUCGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label7" type="Label" parent="Maths/Control"]
-margin_left = 14.0
-margin_top = 398.0
-margin_right = 334.0
-margin_bottom = 422.0
-text = "IRM"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label9" type="Label" parent="Maths/Control"]
-margin_left = 14.0
-margin_top = 502.0
-margin_right = 334.0
-margin_bottom = 526.0
-text = "SLUGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label16" type="Label" parent="Maths/Control"]
-margin_left = 16.0
-margin_top = 637.0
-margin_right = 347.0
-margin_bottom = 661.0
-text = "COSHEF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label12" type="Label" parent="Maths/Control"]
-margin_left = 14.0
-margin_top = 833.0
-margin_right = 334.0
-margin_bottom = 857.0
-text = "MMBSVR"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="Maths/Control"]
-margin_left = 22.0
-margin_top = 174.0
-margin_right = 294.0
-margin_bottom = 202.0
-text = "q = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label10" type="Label" parent="Maths/Control"]
-margin_left = 22.0
-margin_top = 534.0
-margin_right = 294.0
-margin_bottom = 562.0
-text = "q_XP_to_level_up = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label14" type="Label" parent="Maths/Control"]
-margin_left = 14.0
-margin_top = 932.0
-margin_right = 334.0
-margin_bottom = 956.0
-text = "ULUGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label15" type="Label" parent="Maths/Control"]
-margin_left = 22.0
-margin_top = 964.0
-margin_right = 294.0
-margin_bottom = 992.0
-text = "q_XP_to_level_up = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label11" type="Label" parent="Maths/Control"]
-margin_left = 22.0
-margin_top = 566.0
-margin_right = 294.0
-margin_bottom = 594.0
-text = "q_stats = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label17" type="Label" parent="Maths/Control"]
-margin_left = 22.0
-margin_top = 757.0
-margin_right = 294.0
-margin_bottom = 785.0
-text = "a = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel" parent="Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 275.0
-margin_right = 318.0
-margin_bottom = 303.0
-bbcode_text = "q_MV =                   [img]Graphics/Icons/help.png[/img]"
-text = "q_MV =                   "
-label_text = "q_MV =                  "
-help_text = "MV_NAME"
-
-[node name="RichTextLabel2" parent="Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 307.0
-margin_right = 318.0
-margin_bottom = 335.0
-bbcode_text = "q_MSMB =                   [img]Graphics/Icons/help.png[/img]"
-text = "q_MSMB =                   "
-label_text = "q_MSMB =                  "
-help_text = "MSMB_NAME"
-
-[node name="RichTextLabel3" parent="Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 339.0
-margin_right = 318.0
-margin_bottom = 367.0
-bbcode_text = "q_AIE =                   [img]Graphics/Icons/help.png[/img]"
-text = "q_AIE =                   "
-label_text = "q_AIE =                  "
-help_text = "AIE_NAME"
-
-[node name="RichTextLabel4" parent="Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 435.0
-margin_right = 318.0
-margin_bottom = 463.0
-bbcode_text = "IR_mult =                  [img]Graphics/Icons/help.png[/img]"
-text = "IR_mult =                  "
-label_text = "IR_mult =                 "
-help_text = "IR_MULT_HELP"
-
-[node name="RichTextLabel5" parent="Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 867.0
-margin_right = 318.0
-margin_bottom = 895.0
-bbcode_text = "r =                   [img]Graphics/Icons/help.png[/img]"
-text = "r =                   "
-label_text = "r =                  "
-
-[node name="ShipHitChance" type="TextureRect" parent="Maths/Control"]
-margin_left = 24.0
-margin_top = 669.0
-margin_right = 328.0
-margin_bottom = 741.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 16 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ShipHitChance2" type="TextureRect" parent="Maths/Control"]
-margin_left = 26.0
-margin_top = 130.0
-margin_right = 330.0
-margin_bottom = 162.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 15 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BUCGF" type="SpinBox" parent="Maths/Control"]
-margin_left = 62.0
-margin_top = 174.0
-margin_right = 154.0
-margin_bottom = 202.0
-step = 0.001
-value = 1.3
-allow_greater = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MUCGF_MV" type="SpinBox" parent="Maths/Control"]
-margin_left = 106.0
-margin_top = 274.0
-margin_right = 198.0
-margin_bottom = 302.0
-step = 0.01
-value = 1.9
-allow_greater = true
-
-[node name="MUCGF_MSMB" type="SpinBox" parent="Maths/Control"]
-margin_left = 134.0
-margin_top = 306.0
-margin_right = 226.0
-margin_bottom = 334.0
-step = 0.01
-value = 1.6
-allow_greater = true
-
-[node name="MUCGF_AIE" type="SpinBox" parent="Maths/Control"]
-margin_left = 106.0
-margin_top = 338.0
-margin_right = 198.0
-margin_bottom = 366.0
-step = 0.01
-value = 2.3
-allow_greater = true
-
-[node name="IRM" type="SpinBox" parent="Maths/Control"]
-margin_left = 122.0
-margin_top = 434.0
-margin_right = 214.0
-margin_bottom = 462.0
-step = 0.01
-value = 1.2
-allow_greater = true
-
-[node name="SLUGF_XP" type="SpinBox" parent="Maths/Control"]
-margin_left = 214.0
-margin_top = 534.0
-margin_right = 306.0
-margin_bottom = 562.0
-step = 0.01
-value = 1.3
-allow_greater = true
-
-[node name="SLUGF_Stats" type="SpinBox" parent="Maths/Control"]
-margin_left = 118.0
-margin_top = 566.0
-margin_right = 210.0
-margin_bottom = 594.0
-step = 0.01
-value = 1.15
-allow_greater = true
-
-[node name="COSHEF" type="SpinBox" parent="Maths/Control"]
-margin_left = 64.0
-margin_top = 757.0
-margin_right = 156.0
-margin_bottom = 785.0
-step = 0.02
-value = 1.5
-allow_greater = true
-
-[node name="MMBSVR" type="SpinBox" parent="Maths/Control"]
-margin_left = 66.0
-margin_top = 867.0
-margin_right = 158.0
-margin_bottom = 895.0
-step = 0.1
-value = 10.0
-allow_greater = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ULUGF" type="SpinBox" parent="Maths/Control"]
-margin_left = 214.0
-margin_top = 964.0
-margin_right = 306.0
-margin_bottom = 992.0
-step = 0.01
-value = 1.6
-allow_greater = true
-
-[node name="Physics" type="ScrollContainer" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 304.0
-margin_top = 48.0
-margin_right = -588.0
-rect_min_size = Vector2( 388, 672 )
-rect_clip_content = false
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Physics"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 655.0
-rect_min_size = Vector2( 300, 650 )
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Physics/Control"]
-margin_left = 16.0
-margin_top = 119.0
-margin_right = 330.0
-margin_bottom = 143.0
-text = "MIN_VAL_OF_UNIV_PROPERTIES"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="UnivPropertiesLabel" type="Label" parent="Physics/Control"]
-margin_left = 18.0
-margin_top = 275.0
-margin_right = 351.0
-margin_bottom = 603.0
-custom_constants/line_spacing = 14
-text = "Speed of light
-Planck constant
-Boltzmann constant
-Gravitational constant
-Elementary charge
-Dark energy
-Difficulty
-Time speed
-Universe value"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel" parent="Physics/Control" instance=ExtResource( 12 )]
-margin_left = 118.0
-margin_top = 163.0
-margin_right = 154.0
-margin_bottom = 193.0
-help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
-
-[node name="RichTextLabel2" parent="Physics/Control" instance=ExtResource( 12 )]
-margin_left = 18.0
-margin_top = 219.0
-margin_right = 370.0
-margin_bottom = 249.0
-bbcode_text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
-text = "COSTS_OF_UNIV_PROPERTIES "
-label_text = "COSTS_OF_UNIV_PROPERTIES"
-help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
-
-[node name="MVOUP" type="SpinBox" parent="Physics/Control"]
-margin_left = 18.0
-margin_top = 159.0
-margin_right = 110.0
-margin_bottom = 187.0
-max_value = 0.5
-step = 0.1
-value = 0.5
-allow_greater = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBox" type="VBoxContainer" parent="Physics/Control"]
-margin_left = 254.0
-margin_top = 275.0
-margin_right = 346.0
-margin_bottom = 599.0
-custom_constants/separation = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="speed_of_light" type="SpinBox" parent="Physics/Control/VBox"]
-margin_right = 92.0
-margin_bottom = 28.0
-value = 10.0
-allow_greater = true
-
-[node name="planck" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 37.0
-margin_right = 92.0
-margin_bottom = 65.0
-value = 20.0
-allow_greater = true
-
-[node name="boltzmann" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 74.0
-margin_right = 92.0
-margin_bottom = 102.0
-value = 10.0
-allow_greater = true
-
-[node name="gravitational" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 111.0
-margin_right = 92.0
-margin_bottom = 139.0
-value = 30.0
-allow_greater = true
-
-[node name="charge" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 148.0
-margin_right = 92.0
-margin_bottom = 176.0
-value = 20.0
-allow_greater = true
-
-[node name="dark_energy" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 185.0
-margin_right = 92.0
-margin_bottom = 213.0
-value = 25.0
-allow_greater = true
-
-[node name="difficulty" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 222.0
-margin_right = 92.0
-margin_bottom = 250.0
-value = 10.0
-allow_greater = true
-
-[node name="time_speed" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 259.0
-margin_right = 92.0
-margin_bottom = 287.0
-value = 50.0
-allow_greater = true
-
-[node name="universe_value" type="SpinBox" parent="Physics/Control/VBox"]
-margin_top = 296.0
-margin_right = 92.0
-margin_bottom = 324.0
-value = 50.0
-allow_greater = true
-
-[node name="VBox2" type="VBoxContainer" parent="Physics/Control"]
-margin_left = 18.0
-margin_top = 275.0
-margin_right = 254.0
-margin_bottom = 603.0
-custom_constants/separation = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="OPMeter" type="Panel" parent="."]
-margin_left = 316.0
-margin_top = 56.0
-margin_right = 676.0
-margin_bottom = 128.0
-
-[node name="OPMeterText" parent="OPMeter" instance=ExtResource( 12 )]
-anchor_right = 1.0
-margin_top = 4.0
-margin_right = 0.0
-margin_bottom = 32.0
-bbcode_text = "[center]THE_OPMETER [img]Graphics/Icons/help.png[/img][/center]"
-text = "THE_OPMETER "
-label_text = "THE_OPMETER"
-help_text = "THE_OPMETER_DESC"
-align = 1
-
-[node name="OPMeter" type="TextureProgress" parent="OPMeter"]
-modulate = Color( 1, 0.4, 0, 1 )
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-margin_left = 20.0
-margin_top = -4.0
-margin_right = -20.0
-margin_bottom = 4.0
-max_value = 10.0
-step = 0.0
-allow_greater = true
-texture_under = ExtResource( 18 )
-texture_progress = ExtResource( 17 )
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TooOP" type="Label" parent="OPMeter"]
-visible = false
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -28.0
-margin_bottom = -4.0
-custom_colors/font_color = Color( 1, 0, 0, 1 )
-text = "TOO_OP"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ScrollContainer2" type="ScrollContainer" parent="."]
-margin_left = 704.0
+[node name="Subjects" type="ScrollContainer" parent="."]
+margin_left = 448.0
 margin_top = 48.0
 margin_right = 1280.0
 margin_bottom = 720.0
@@ -656,10 +152,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GridContainer" type="GridContainer" parent="ScrollContainer2"]
+[node name="Grid" type="GridContainer" parent="Subjects"]
 margin_left = 10.0
 margin_top = 5.0
-margin_right = 822.0
+margin_right = 1022.0
 margin_bottom = 661.0
 mouse_filter = 2
 size_flags_horizontal = 3
@@ -669,43 +165,46 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Maths" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
+[node name="Maths" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_right = 250.0
 texture = ExtResource( 5 )
 btn_text = "MODIFY_FORMULAS"
 
-[node name="Physics" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
-margin_left = 204.0
-margin_right = 404.0
+[node name="Physics" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 254.0
+margin_right = 504.0
 texture = ExtResource( 4 )
 btn_text = "REWRITE_PHYSICS_LAWS"
 
-[node name="Chemistry" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
-margin_left = 408.0
-margin_right = 608.0
+[node name="Chemistry" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 508.0
+margin_right = 758.0
 texture = ExtResource( 7 )
 btn_text = "CUSTOMIZE_NEW_METALS"
 
-[node name="Biology" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
-margin_left = 612.0
-margin_right = 812.0
+[node name="Biology" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 762.0
+margin_right = 1012.0
 texture = ExtResource( 11 )
 
-[node name="Philosophy" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
+[node name="Philosophy" parent="Subjects/Grid" instance=ExtResource( 3 )]
 margin_top = 330.0
+margin_right = 250.0
 margin_bottom = 656.0
 texture = ExtResource( 14 )
 
-[node name="Engineering" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
-margin_left = 204.0
+[node name="Engineering" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 254.0
 margin_top = 330.0
-margin_right = 404.0
+margin_right = 504.0
 margin_bottom = 656.0
 texture = ExtResource( 10 )
+btn_text = "DO_ENGINEERING"
 
-[node name="Dimensional_Power" parent="ScrollContainer2/GridContainer" instance=ExtResource( 3 )]
-margin_left = 408.0
+[node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 508.0
 margin_top = 330.0
-margin_right = 608.0
+margin_right = 758.0
 margin_bottom = 656.0
 texture = ExtResource( 6 )
 
@@ -734,7 +233,7 @@ margin_right = 480.0
 margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 4 )
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -762,19 +261,1131 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SendProbes" type="Button" parent="."]
-margin_top = 684.0
-margin_right = 288.0
-margin_bottom = 720.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
-custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
-text = "SEND_PROBES"
+[node name="ModifyDimension" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DimResetInfo" type="Label" parent="ModifyDimension"]
+margin_left = 32.0
+margin_top = 104.0
+margin_right = 416.0
+margin_bottom = 172.0
+text = "DIM_JUST_RESET_INFO"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Generate" type="Button" parent="ModifyDimension"]
+margin_left = 50.0
+margin_top = 268.0
+margin_right = 400.0
+margin_bottom = 302.0
+text = "GENERATE_STARTING_UNIVERSE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="ModifyDimension/Maths"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 1025.0
+rect_min_size = Vector2( 300, 1020 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 16.0
+margin_top = 99.0
+margin_right = 330.0
+margin_bottom = 123.0
+text = "BUCGF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 14.0
+margin_top = 238.0
+margin_right = 334.0
+margin_bottom = 262.0
+text = "MUCGF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 14.0
+margin_top = 398.0
+margin_right = 334.0
+margin_bottom = 422.0
+text = "IRM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label9" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 14.0
+margin_top = 502.0
+margin_right = 334.0
+margin_bottom = 526.0
+text = "SLUGF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 16.0
+margin_top = 637.0
+margin_right = 347.0
+margin_bottom = 661.0
+text = "COSHEF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 14.0
+margin_top = 833.0
+margin_right = 334.0
+margin_bottom = 857.0
+text = "MMBSVR"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 22.0
+margin_top = 175.0
+margin_right = 294.0
+margin_bottom = 203.0
+text = "q = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label10" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 22.0
+margin_top = 534.0
+margin_right = 294.0
+margin_bottom = 562.0
+text = "q_XP_to_level_up = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label14" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 14.0
+margin_top = 932.0
+margin_right = 334.0
+margin_bottom = 956.0
+text = "ULUGF"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label15" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 22.0
+margin_top = 964.0
+margin_right = 294.0
+margin_bottom = 992.0
+text = "q_XP_to_level_up = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label11" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 22.0
+margin_top = 566.0
+margin_right = 294.0
+margin_bottom = 594.0
+text = "q_stats = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 22.0
+margin_top = 757.0
+margin_right = 294.0
+margin_bottom = 785.0
+text = "a = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 22.0
+margin_top = 275.0
+margin_right = 318.0
+margin_bottom = 303.0
+bbcode_text = "q_MV =                   [img]Graphics/Icons/help.png[/img]"
+text = "q_MV =                   "
+label_text = "q_MV =                  "
+help_text = "MV_NAME"
+
+[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 22.0
+margin_top = 307.0
+margin_right = 318.0
+margin_bottom = 335.0
+bbcode_text = "q_MSMB =                   [img]Graphics/Icons/help.png[/img]"
+text = "q_MSMB =                   "
+label_text = "q_MSMB =                  "
+help_text = "MSMB_NAME"
+
+[node name="RichTextLabel3" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 22.0
+margin_top = 339.0
+margin_right = 318.0
+margin_bottom = 367.0
+bbcode_text = "q_AIE =                   [img]Graphics/Icons/help.png[/img]"
+text = "q_AIE =                   "
+label_text = "q_AIE =                  "
+help_text = "AIE_NAME"
+
+[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 22.0
+margin_top = 435.0
+margin_right = 318.0
+margin_bottom = 463.0
+bbcode_text = "IR_mult =                  [img]Graphics/Icons/help.png[/img]"
+text = "IR_mult =                  "
+label_text = "IR_mult =                 "
+help_text = "IR_MULT_HELP"
+
+[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 22.0
+margin_top = 867.0
+margin_right = 318.0
+margin_bottom = 895.0
+bbcode_text = "r =                   [img]Graphics/Icons/help.png[/img]"
+text = "r =                   "
+label_text = "r =                  "
+help_text = "RATIO_HELP"
+
+[node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
+margin_left = 24.0
+margin_top = 669.0
+margin_right = 328.0
+margin_bottom = 741.0
+rect_min_size = Vector2( 40, 0 )
+texture = ExtResource( 16 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipHitChance2" type="TextureRect" parent="ModifyDimension/Maths/Control"]
+margin_left = 26.0
+margin_top = 130.0
+margin_right = 330.0
+margin_bottom = 162.0
+rect_min_size = Vector2( 40, 0 )
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BUCGF" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 62.0
+margin_top = 174.0
+margin_right = 154.0
+margin_bottom = 202.0
+step = 0.01
+value = 1.3
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MUCGF_MV" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 106.0
+margin_top = 274.0
+margin_right = 198.0
+margin_bottom = 302.0
+step = 0.01
+value = 1.9
+allow_greater = true
+
+[node name="MUCGF_MSMB" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 134.0
+margin_top = 306.0
+margin_right = 226.0
+margin_bottom = 334.0
+step = 0.01
+value = 1.6
+allow_greater = true
+
+[node name="MUCGF_AIE" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 106.0
+margin_top = 338.0
+margin_right = 198.0
+margin_bottom = 366.0
+step = 0.01
+value = 2.3
+allow_greater = true
+
+[node name="IRM" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 122.0
+margin_top = 434.0
+margin_right = 214.0
+margin_bottom = 462.0
+min_value = 1.0
+step = 0.01
+value = 1.2
+allow_greater = true
+
+[node name="SLUGF_XP" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 214.0
+margin_top = 534.0
+margin_right = 306.0
+margin_bottom = 562.0
+step = 0.01
+value = 1.3
+allow_greater = true
+
+[node name="SLUGF_Stats" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 118.0
+margin_top = 566.0
+margin_right = 210.0
+margin_bottom = 594.0
+min_value = 1.0
+step = 0.01
+value = 1.15
+allow_greater = true
+
+[node name="COSHEF" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 64.0
+margin_top = 757.0
+margin_right = 156.0
+margin_bottom = 785.0
+step = 0.02
+value = 1.5
+allow_greater = true
+
+[node name="MMBSVR" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 66.0
+margin_top = 867.0
+margin_right = 158.0
+margin_bottom = 895.0
+step = 0.1
+value = 10.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ULUGF" type="SpinBox" parent="ModifyDimension/Maths/Control"]
+margin_left = 214.0
+margin_top = 964.0
+margin_right = 306.0
+margin_bottom = 992.0
+step = 0.01
+value = 1.6
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 166.0
+margin_top = 175.0
+margin_right = 208.0
+margin_bottom = 199.0
+text = "(1.3)"
+
+[node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 242.0
+margin_top = 275.0
+margin_right = 284.0
+margin_bottom = 299.0
+text = "(1.9)"
+
+[node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 274.0
+margin_top = 307.0
+margin_right = 316.0
+margin_bottom = 331.0
+text = "(1.6)"
+
+[node name="MUCGF_AIE" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 246.0
+margin_top = 339.0
+margin_right = 288.0
+margin_bottom = 363.0
+text = "(2.3)"
+
+[node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 258.0
+margin_top = 435.0
+margin_right = 300.0
+margin_bottom = 459.0
+text = "(1.2)"
+
+[node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 326.0
+margin_top = 535.0
+margin_right = 368.0
+margin_bottom = 559.0
+text = "(1.3)"
+
+[node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 234.0
+margin_top = 567.0
+margin_right = 276.0
+margin_bottom = 591.0
+text = "(1.15)"
+
+[node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 186.0
+margin_top = 759.0
+margin_right = 239.0
+margin_bottom = 783.0
+text = "(1.5)"
+
+[node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 194.0
+margin_top = 867.0
+margin_right = 247.0
+margin_bottom = 891.0
+text = "(10)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+visible = false
+margin_left = 318.0
+margin_top = 967.0
+margin_right = 360.0
+margin_bottom = 991.0
+text = "(1.6)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="ModifyDimension/Physics"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 655.0
+rect_min_size = Vector2( 300, 650 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 16.0
+margin_top = 119.0
+margin_right = 330.0
+margin_bottom = 143.0
+text = "MIN_VAL_OF_UNIV_PROPERTIES"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 18.0
+margin_top = 275.0
+margin_right = 351.0
+margin_bottom = 603.0
+custom_constants/line_spacing = 14
+text = "Speed of light
+Planck constant
+Boltzmann constant
+Gravitational constant
+Elementary charge
+Dark energy
+Difficulty
+Time speed
+Universe value"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
+margin_left = 118.0
+margin_top = 163.0
+margin_right = 154.0
+margin_bottom = 193.0
+help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
+
+[node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
+margin_left = 18.0
+margin_top = 219.0
+margin_right = 370.0
+margin_bottom = 249.0
+bbcode_text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
+text = "COSTS_OF_UNIV_PROPERTIES "
+label_text = "COSTS_OF_UNIV_PROPERTIES"
+help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
+
+[node name="MVOUP" type="SpinBox" parent="ModifyDimension/Physics/Control"]
+margin_left = 18.0
+margin_top = 159.0
+margin_right = 110.0
+margin_bottom = 187.0
+max_value = 0.5
+step = 0.05
+value = 0.5
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
+margin_left = 254.0
+margin_top = 275.0
+margin_right = 346.0
+margin_bottom = 599.0
+custom_constants/separation = 8
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="speed_of_light" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_right = 92.0
+margin_bottom = 28.0
+value = 10.0
+allow_greater = true
+
+[node name="planck" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 36.0
+margin_right = 92.0
+margin_bottom = 64.0
+value = 20.0
+allow_greater = true
+
+[node name="boltzmann" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 72.0
+margin_right = 92.0
+margin_bottom = 100.0
+value = 10.0
+allow_greater = true
+
+[node name="gravitational" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 108.0
+margin_right = 92.0
+margin_bottom = 136.0
+value = 30.0
+allow_greater = true
+
+[node name="charge" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 144.0
+margin_right = 92.0
+margin_bottom = 172.0
+value = 20.0
+allow_greater = true
+
+[node name="dark_energy" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 180.0
+margin_right = 92.0
+margin_bottom = 208.0
+value = 25.0
+allow_greater = true
+
+[node name="difficulty" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 216.0
+margin_right = 92.0
+margin_bottom = 244.0
+value = 10.0
+allow_greater = true
+
+[node name="time_speed" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 252.0
+margin_right = 92.0
+margin_bottom = 280.0
+value = 50.0
+allow_greater = true
+
+[node name="universe_value" type="SpinBox" parent="ModifyDimension/Physics/Control/VBox"]
+margin_top = 288.0
+margin_right = 92.0
+margin_bottom = 316.0
+value = 50.0
+allow_greater = true
+
+[node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
+margin_left = 18.0
+margin_top = 275.0
+margin_right = 254.0
+margin_bottom = 603.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 158.0
+margin_top = 159.0
+margin_right = 200.0
+margin_bottom = 183.0
+text = "(0.5)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 275.0
+margin_right = 396.0
+margin_bottom = 299.0
+text = "(10)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 311.0
+margin_right = 396.0
+margin_bottom = 335.0
+text = "(20)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 347.0
+margin_right = 396.0
+margin_bottom = 371.0
+text = "(10)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 383.0
+margin_right = 396.0
+margin_bottom = 407.0
+text = "(30)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 419.0
+margin_right = 396.0
+margin_bottom = 443.0
+text = "(20)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 455.0
+margin_right = 396.0
+margin_bottom = 479.0
+text = "(25)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 491.0
+margin_right = 396.0
+margin_bottom = 515.0
+text = "(10)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 527.0
+margin_right = 396.0
+margin_bottom = 551.0
+text = "(50)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="universe_value" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+visible = false
+margin_left = 354.0
+margin_top = 563.0
+margin_right = 396.0
+margin_bottom = 587.0
+text = "(50)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="ModifyDimension/Engineering"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 655.0
+rect_min_size = Vector2( 300, 650 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ModifyDimension/Engineering/Control"]
+margin_left = 16.0
+margin_top = 119.0
+margin_right = 330.0
+margin_bottom = 143.0
+text = "BASE_COST_MULT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control"]
+margin_left = 16.0
+margin_top = 215.0
+margin_right = 330.0
+margin_bottom = 239.0
+text = "PICKAXE_SPEED_MULT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 12 )]
+margin_left = 118.0
+margin_top = 163.0
+margin_right = 154.0
+margin_bottom = 193.0
+help_text = "BASE_COST_MULT_DESC"
+
+[node name="BCM" type="SpinBox" parent="ModifyDimension/Engineering/Control"]
+margin_left = 18.0
+margin_top = 159.0
+margin_right = 110.0
+margin_bottom = 187.0
+max_value = 1.0
+step = 0.05
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PS" type="SpinBox" parent="ModifyDimension/Engineering/Control"]
+margin_left = 18.0
+margin_top = 255.0
+margin_right = 110.0
+margin_bottom = 283.0
+step = 0.5
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control"]
+margin_left = 16.0
+margin_top = 315.0
+margin_right = 330.0
+margin_bottom = 339.0
+text = "ROVER_STAT_MULT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RSM" type="SpinBox" parent="ModifyDimension/Engineering/Control"]
+margin_left = 18.0
+margin_top = 355.0
+margin_right = 110.0
+margin_bottom = 383.0
+step = 0.2
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 805.0
+rect_min_size = Vector2( 300, 800 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Level" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 14.0
+margin_top = 107.0
+margin_right = 82.0
+margin_bottom = 131.0
+text = "LEVEL"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpecialBonuses" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 107.0
+margin_right = 322.0
+margin_bottom = 131.0
+text = "Special bonuses"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 42.0
+margin_top = 159.0
+margin_right = 82.0
+margin_bottom = 667.0
+custom_constants/separation = 70
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+margin_right = 40.0
+margin_bottom = 24.0
+text = "1"
+
+[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.831373, 0.690196, 1, 1 )
+margin_top = 94.0
+margin_right = 40.0
+margin_bottom = 118.0
+text = "2"
+
+[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.764706, 0.564706, 1, 1 )
+margin_top = 188.0
+margin_right = 40.0
+margin_bottom = 212.0
+text = "3"
+
+[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.654902, 0.368627, 1, 1 )
+margin_top = 282.0
+margin_right = 40.0
+margin_bottom = 306.0
+text = "4"
+
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.572549, 0.215686, 1, 1 )
+margin_top = 376.0
+margin_right = 40.0
+margin_bottom = 400.0
+text = "5"
+
+[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.454902, 0, 1, 1 )
+margin_top = 470.0
+margin_right = 40.0
+margin_bottom = 494.0
+text = "6"
+
+[node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+position = Vector2( -18, 79 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D2" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.831373, 0.690196, 1, 1 )
+position = Vector2( -18, 175 )
+points = PoolVector2Array( 88, 92, 148, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D3" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.764706, 0.564706, 1, 1 )
+position = Vector2( -18, 267 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D4" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.654902, 0.368627, 1, 1 )
+position = Vector2( -18, 359 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D5" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.572549, 0.215686, 1, 1 )
+position = Vector2( -18, 455 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D6" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.454902, 0, 1, 1 )
+position = Vector2( -18, 551 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="TextureProgress" type="TextureProgress" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 94.0
+margin_top = 171.0
+margin_right = 110.0
+margin_bottom = 643.0
+min_value = 1.0
+max_value = 6.0
+step = 0.0
+value = 3.0
+texture_under = ExtResource( 18 )
+texture_progress = ExtResource( 17 )
+fill_mode = 2
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 159.0
+margin_right = 386.0
+margin_bottom = 210.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Additional +100% boost to universe values"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 255.0
+margin_right = 386.0
+margin_bottom = 306.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Doubles the limit of all OP-meters"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 347.0
+margin_right = 386.0
+margin_bottom = 398.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Coming soon"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 439.0
+margin_right = 386.0
+margin_bottom = 490.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "™"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 535.0
+margin_right = 386.0
+margin_bottom = 586.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 631.0
+margin_right = 386.0
+margin_bottom = 736.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 26.0
+margin_top = 19.0
+margin_right = 358.0
+margin_bottom = 70.0
+text = "Every level gives a +50% boost to all universe values."
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OPMeter" type="Panel" parent="ModifyDimension"]
+visible = false
+margin_left = 60.0
+margin_top = 56.0
+margin_right = 420.0
+margin_bottom = 128.0
+
+[node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource( 12 )]
+anchor_right = 1.0
+margin_top = 4.0
+margin_right = 0.0
+margin_bottom = 32.0
+bbcode_text = "[center]THE_OPMETER [img]Graphics/Icons/help.png[/img][/center]"
+text = "THE_OPMETER "
+label_text = "THE_OPMETER"
+help_text = "THE_OPMETER_DESC"
+align = 1
+
+[node name="OPMeter" type="TextureProgress" parent="ModifyDimension/OPMeter"]
+modulate = Color( 1, 0.4, 0, 1 )
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 20.0
+margin_top = -4.0
+margin_right = -20.0
+margin_bottom = 4.0
+max_value = 10.0
+step = 0.0
+allow_greater = true
+texture_under = ExtResource( 18 )
+texture_progress = ExtResource( 17 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TooOP" type="Label" parent="ModifyDimension/OPMeter"]
+visible = false
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -28.0
+margin_bottom = -4.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "TOO_OP"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Universes/SendProbes" to="." method="_on_SendProbes_pressed"]
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
 [connection signal="mouse_exited" from="TopInfo/Reset" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TopInfo/Reset" to="." method="_on_Reset_pressed"]
-[connection signal="pressed" from="SendProbes" to="." method="_on_SendProbes_pressed"]
+[connection signal="pressed" from="ModifyDimension/Generate" to="." method="_on_Generate_pressed"]

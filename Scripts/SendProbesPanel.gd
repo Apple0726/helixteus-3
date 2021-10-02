@@ -73,7 +73,11 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
+				if prop.name == "universe_value" and game.subjects.dimensional_power.lv > 0:
+					var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+					prop.get_node("Unit").text = " (x %s) = %s" % [UV_mult, prop.get_node("HSlider").value * UV_mult]
 				if prop.has_node("HSlider"):
+					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
 					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / 25.0)
 			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
 			$NoProbes.visible = false
@@ -264,12 +268,15 @@ func _on_TP_value_changed(value:float, prop:String):
 		value = float(text_node.text)
 		get_node("TP/VBox/%s/HSlider" % prop).value = value
 	if prop == "antimatter":
-		point_distribution.antimatter = value * -Data.univ_prop_weights[prop]
+		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
 		if value >= 1:
-			point_distribution[prop] = (value - 1) * -Data.univ_prop_weights[prop]
+			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
-			point_distribution[prop] = (1 / value - 1) * Data.univ_prop_weights[prop]
+			point_distribution[prop] = (1 / value - 1) * game.physics_bonus[prop]
+			if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
+				var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+				$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
 	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0

@@ -138,6 +138,10 @@ func refresh():
 		atk = 70
 		def = 70
 		weight_cap = round(200000.0 * game.u_i.planck)
+	HP *= game.engineering_bonus.RSM
+	atk *= game.engineering_bonus.RSM
+	def *= game.engineering_bonus.RSM
+	weight_cap *= game.engineering_bonus.RSM
 	tile = game.tile_data[game.c_t]
 	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)

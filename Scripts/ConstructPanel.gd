@@ -51,6 +51,8 @@ func _on_btn_pressed(btn_str:String):
 				txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
 		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
 		item.costs = Data.costs[bldg].duplicate(true)
+		for cost in item.costs:
+			item.costs[cost] *= game.engineering_bonus.BCM
 		if bldg == "GH":
 			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 		if item.costs.has("time"):
@@ -107,7 +109,12 @@ func get_item(_name, _type, _dir):
 	yield(get_tree().create_timer(0.01), "timeout")
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	game.view.obj.construct(_name, Data.costs[_name])
+	var base_cost = Data.costs[_name].duplicate(true)
+	for cost in base_cost:
+		base_cost[cost] *= game.engineering_bonus.BCM
+	if _name == "GH":
+		base_cost.energy = round(base_cost.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
+	game.view.obj.construct(_name, base_cost)
 	if game.tutorial and game.tutorial.tut_num in [3, 5]:
 		game.tutorial.fade(0.15, false)
 

@@ -33,7 +33,7 @@ func _on_btn_pressed(btn_str:String):
 			"overclocks":
 				item.item_desc = tr("OVERCLOCKS_DESC2") % [obj_info.mult, Helper.time_to_str(obj_info.duration / game.u_i.time_speed)]
 			"pickaxes":
-				item.item_desc = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % obj.to_upper()), tr("MINING_SPEED"), obj_info.speed, tr("DURABILITY"), obj_info.durability]
+				item.item_desc = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % obj.to_upper()), tr("MINING_SPEED"), obj_info.speed * game.engineering_bonus.PS, tr("DURABILITY"), obj_info.durability]
 		item.costs = obj_info.costs
 		item.parent = "shop_panel"
 		grid.add_child(item)
@@ -76,7 +76,7 @@ func buy_pickaxe(_costs:Dictionary):
 		game.mining_HUD.get_node("Pickaxe").visible = true
 		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
 	game.pickaxe.name = item_name
-	game.pickaxe.speed = game.pickaxes_info[item_name].speed
+	game.pickaxe.speed = game.pickaxes_info[item_name].speed * game.engineering_bonus.PS
 	game.pickaxe.durability = game.pickaxes_info[item_name].durability
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
 	if game.tutorial and game.tutorial.tut_num == 13 and not game.tutorial.tween.is_active():

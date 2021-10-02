@@ -1,6 +1,6 @@
 extends "Panel.gd"
 
-const BASE_PW:float = 1.3
+var BASE_PW:float = 1.3
 var ids:Array = []
 var planet:Dictionary#Only for terraformed planets
 var bldg:String = ""#You can mass-upgrade only one type of building
@@ -23,6 +23,7 @@ onready var cost_icons = $ScrollContainer/Costs
 onready var upgrade_btn = $Upgrade
 
 func _ready():
+	BASE_PW = game.maths_bonus.BUCGF
 	set_polygon(rect_size)
 	path1.get_node("Label").text = tr("PATH") + " 1"
 	path2.get_node("Label").text = tr("PATH") + " 2"
@@ -73,11 +74,13 @@ func calc_costs(tile_bldg:String, lv_curr:int, lv_to:int, cost_div:float, num:in
 		base_costs.money *= mult
 		base_costs.time *= mult
 		base_costs.energy *= mult
-	if cost_div != 1.0:
+	if cost_div != 1.0 or game.engineering_bonus.BCM != 1.0:
 		for cost in base_costs:
 			base_costs[cost] /= cost_div
+			base_costs[cost] *= game.engineering_bonus.BCM
 		for cost in base_metal_costs:
 			base_metal_costs[cost] /= cost_div
+			base_metal_costs[cost] *= game.engineering_bonus.BCM
 	costs.money += round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
 	costs.time = round(base_costs.time * geo_seq(base_pw, lv_curr, lv_to) / game.u_i.time_speed)
 	if base_costs.has("energy"):
