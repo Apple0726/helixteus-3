@@ -138,11 +138,12 @@ func _on_Send_pressed():
 		if sys_num > 0 and game.energy >= total_energy_cost:
 			game.energy -= total_energy_cost
 			var curr_time = OS.get_system_time_msecs()
-			for i in len(game.fighter_data):
-				var fighter = game.fighter_data[i]
-				if fighter.c_g_g == game.c_g_g:
+			var i:int = 0
+			while i < len(game.fighter_data):
+				if game.fighter_data[i].c_g_g == game.c_g_g:
 					game.fighter_data.remove(i)
-					i -= 1
+				else:
+					i += 1
 			game.galaxy_data[game.c_g].conquer_start_date = curr_time
 			game.galaxy_data[game.c_g].time_for_one_sys = time_for_one_sys
 			game.galaxy_data[game.c_g].sys_num = sys_num

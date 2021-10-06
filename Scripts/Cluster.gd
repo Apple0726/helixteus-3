@@ -37,15 +37,19 @@ func _ready():
 		if g_i.has("GS"):
 			var rsrc
 			var prod:float
+			var rsrc_mult:float = 1.0
 			match g_i.GS:
 				"ME":
+					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i.l_id, radius * 10.0)
 				"PP":
+					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i.l_id, radius * 10.0)
 				"RL":
+					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
 			if rsrc:
-				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num), tr("S_SECOND")]
+				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")]
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 
@@ -64,7 +68,7 @@ func e(n, e):
 
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
-	var tooltip:String = g_i.name
+	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), id])
 	if g_i.has("GS") and g_i.GS == "TP":
 		tooltip += "(%s)" % tr("TPCC_SC")
 	tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]

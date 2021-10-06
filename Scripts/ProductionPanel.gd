@@ -133,6 +133,9 @@ func _process(delta):
 		_on_close_button_pressed()
 		set_process(false)
 		return
+	if not visible:
+		set_process(false)
+		return
 	var prod_i = Helper.get_prod_info(tile)
 	if input_type in ["mats", "mets"]:
 		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]

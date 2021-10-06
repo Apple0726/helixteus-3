@@ -15,13 +15,6 @@ func _ready():
 			$Effects.autowrap = true
 			$Effects.rect_min_size.x = 190
 			$Effects.rect_min_size.y = default_font.get_wordwrap_string_size(st, 200).y + 10
-			#$Effects.rect_size.y = 10
-			#prints($Effects.rect_size.y, default_font.get_wordwrap_string_size(st, 200))
-			#$Effects.rect_position.x = 28
-
-#func _process(delta):
-	#if btn_text == "REWRITE_PHYSICS_LAWS":
-		#$Effects.rect_size.x = randf() * 200
 
 func refresh(DRs:int, lv:int):
 	$Effects.visible = name == "Dimensional_Power" or lv > 0 and btn_text != ""

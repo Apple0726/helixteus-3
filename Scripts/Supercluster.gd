@@ -42,7 +42,15 @@ func _ready():
 
 func on_cluster_over (id:int):
 	var c_i = game.cluster_data[id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s" % [c_i.name, tr("GALAXIES"), c_i.galaxy_num, tr("DIFFICULTY"), c_i.diff, tr("FERROMAGNETIC_MATERIALS"), c_i.FM])
+	var _name:String
+	if c_i.has("name"):
+		_name = c_i.name
+	else:
+		if c_i.class == game.ClusterType.GROUP:
+			_name = tr("GALAXY_GROUP") + " %s" % id
+		else:
+			_name = tr("GALAXY_CLUSTER") + " %s" % id
+	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s" % [_name, tr("GALAXIES"), c_i.galaxy_num, tr("DIFFICULTY"), c_i.diff, tr("FERROMAGNETIC_MATERIALS"), c_i.FM])
 
 func on_cluster_out ():
 	game.hide_tooltip()

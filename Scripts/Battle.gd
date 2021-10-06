@@ -326,7 +326,7 @@ func damage_HX(id:int, dmg:float, crit:bool = false):
 	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
 
 func hit_formula(acc:float, eva:float):
-	return clamp(1 / (1 + eva / (acc * (game.math_bonus.COSHEF if game else 1.5))), 0.05, 0.95)
+	return clamp(1 / (1 + eva / (acc * (game.maths_bonus.COSHEF if game else 1.5))), 0.05, 0.95)
 
 func hitbox_size():
 	if game:

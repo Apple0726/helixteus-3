@@ -100,6 +100,7 @@ func update_info(first_time:bool = false):
 					$MantleBGNoShader.visible = true
 					$MantleBGNoShader.modulate.a = 0.45
 			else:
+				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
 				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
 				if game.enable_shaders:
 					$MantleBG.visible = true

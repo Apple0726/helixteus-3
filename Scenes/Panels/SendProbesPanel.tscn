@@ -150,6 +150,7 @@ __meta__ = {
 }
 
 [node name="TP" type="Panel" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 32.0
@@ -679,21 +680,21 @@ __meta__ = {
 [connection signal="mouse_exited" from="TP/VBox/speed_of_light/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/speed_of_light/HSlider" to="." method="_on_TP_value_changed" binds= [ "speed_of_light" ]]
 [connection signal="text_changed" from="TP/VBox/speed_of_light/Label2" to="." method="_on_Label2_text_changed" binds= [ "speed_of_light" ]]
-[connection signal="mouse_entered" from="TP/VBox/planck/Label" to="." method="_on_Label_mouse_entered" binds= [ "PLANCK_CTE_DESC" ]]
+[connection signal="mouse_entered" from="TP/VBox/planck/Label" to="." method="_on_Label_mouse_entered" binds= [ "PLANCK_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/planck/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/planck/HSlider" to="." method="_on_TP_value_changed" binds= [ "planck" ]]
 [connection signal="text_changed" from="TP/VBox/planck/Label2" to="." method="_on_Label2_text_changed" binds= [ "planck" ]]
-[connection signal="mouse_entered" from="TP/VBox/boltzmann/Label" to="." method="_on_Label_mouse_entered" binds= [ "BOLTZMANN_CTE_DESC" ]]
+[connection signal="mouse_entered" from="TP/VBox/boltzmann/Label" to="." method="_on_Label_mouse_entered" binds= [ "BOLTZMANN_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/boltzmann/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/boltzmann/HSlider" to="." method="_on_TP_value_changed" binds= [ "boltzmann" ]]
 [connection signal="text_changed" from="TP/VBox/boltzmann/Label2" to="." method="_on_Label2_text_changed" binds= [ "boltzmann" ]]
 [connection signal="mouse_entered" from="TP/VBox/s_b/Label" to="." method="_on_Label_mouse_entered" binds= [ "S_B_CTE_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/s_b/Label" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="TP/VBox/gravitational/Label" to="." method="_on_Label_mouse_entered" binds= [ "GRAVITATIONAL_CTE_DESC" ]]
+[connection signal="mouse_entered" from="TP/VBox/gravitational/Label" to="." method="_on_Label_mouse_entered" binds= [ "GRAVITATIONAL_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/gravitational/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/gravitational/HSlider" to="." method="_on_TP_value_changed" binds= [ "gravitational" ]]
 [connection signal="text_changed" from="TP/VBox/gravitational/Label2" to="." method="_on_Label2_text_changed" binds= [ "gravitational" ]]
-[connection signal="mouse_entered" from="TP/VBox/charge/Label" to="." method="_on_Label_mouse_entered" binds= [ "ELEMENTARY_CHARGE_DESC" ]]
+[connection signal="mouse_entered" from="TP/VBox/charge/Label" to="." method="_on_Label_mouse_entered" binds= [ "CHARGE_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/charge/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/charge/HSlider" to="." method="_on_TP_value_changed" binds= [ "charge" ]]
 [connection signal="text_changed" from="TP/VBox/charge/Label2" to="." method="_on_Label2_text_changed" binds= [ "charge" ]]
@@ -715,7 +716,7 @@ __meta__ = {
 [connection signal="text_changed" from="TP/VBox/antimatter/Label2" to="." method="_on_Label2_text_changed" binds= [ "antimatter" ]]
 [connection signal="mouse_entered" from="TP/VBox/universe_value/Label" to="." method="_on_Label_mouse_entered" binds= [ "UNIVERSE_VALUE_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/universe_value/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/universe_value/HSlider" to="." method="_on_TP_value_changed" binds= [ "value" ]]
+[connection signal="value_changed" from="TP/VBox/universe_value/HSlider" to="." method="_on_TP_value_changed" binds= [ "universe_value" ]]
 [connection signal="text_changed" from="TP/VBox/universe_value/Label2" to="." method="_on_Label2_text_changed" binds= [ "value" ]]
 [connection signal="mouse_entered" from="TP/Points" to="." method="_on_Points_mouse_entered"]
 [connection signal="mouse_exited" from="TP/Points" to="." method="_on_mouse_exited"]

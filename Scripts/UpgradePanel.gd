@@ -317,7 +317,7 @@ func _on_Upgrade_pressed():
 				if Data[path_str][bldg].has("cost_mult"):
 					base_costs.time *= Data[path_str][bldg].cost_mult
 				var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed)
+				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed * game.engineering_bonus.BCM)
 				if tile.has("cost_div"):
 					cost_time /= tile.cost_div
 				if auto_speedup:

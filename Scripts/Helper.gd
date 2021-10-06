@@ -592,13 +592,13 @@ func add_ship_XP(id:int, XP:float):
 	ship_data[id].XP += XP
 	while ship_data[id].XP >= ship_data[id].XP_to_lv:
 		ship_data[id].XP -= ship_data[id].XP_to_lv
-		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.math_bonus.SLUGF_XP)
+		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.maths_bonus.SLUGF_XP)
 		ship_data[id].lv += 1
-		ship_data[id].total_HP = round(ship_data[id].total_HP * game.math_bonus.SLUGF_Stats)
+		ship_data[id].total_HP = round(ship_data[id].total_HP * game.maths_bonus.SLUGF_Stats)
 		ship_data[id].HP = ship_data[id].total_HP
-		ship_data[id].atk = round(ship_data[id].atk * game.math_bonus.SLUGF_Stats)
-		ship_data[id].acc = round(ship_data[id].acc * game.math_bonus.SLUGF_Stats)
-		ship_data[id].eva = round(ship_data[id].eva * game.math_bonus.SLUGF_Stats)
+		ship_data[id].atk = round(ship_data[id].atk * game.maths_bonus.SLUGF_Stats)
+		ship_data[id].acc = round(ship_data[id].acc * game.maths_bonus.SLUGF_Stats)
+		ship_data[id].eva = round(ship_data[id].eva * game.maths_bonus.SLUGF_Stats)
 
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
@@ -844,14 +844,7 @@ func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
-	if num is float:
-		if num == 0:
-			return
-		if dict.has(item):
-			dict[item] += num
-		else:
-			dict[item] = num
-	else:
+	if num is Dictionary:
 		if not dict.has("stone"):
 			dict.stone = {}
 		for el in num:
@@ -859,6 +852,13 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 				dict.stone[el] += num[el]
 			else:
 				dict.stone[el] = num[el]
+	else:
+		if num == 0:
+			return
+		if dict.has(item):
+			dict[item] += num
+		else:
+			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
 	return game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
@@ -1253,3 +1253,26 @@ func remove_recursive(path):
 		directory.remove(path)
 	else:
 		print("Error removing " + path)
+
+func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, total_stone:float):
+	for el in game.stone:
+		var item:String
+		var el_num = 0
+		if el == "Si":
+			item = "silicon"
+			el_num = game.stone[el] * amount / total_stone / 30.0
+		elif el == "Fe" and game.science_unlocked.has("ISC"):
+			item = "iron"
+			el_num = game.stone[el] * amount / total_stone / 30.0
+		elif el == "Al" and game.science_unlocked.has("ISC"):
+			item = "aluminium"
+			el_num = game.stone[el] * amount / total_stone / 50.0
+		elif el == "O":
+			item = "sand"
+			el_num = game.stone[el] * amount / total_stone / 2.0
+		elif el == "Ti" and game.science_unlocked.has("ISC"):
+			item = "titanium"
+			el_num = game.stone[el] * amount / total_stone / 500.0
+		el_num = stepify(el_num * path_3_value, 0.001)
+		if el_num != 0:
+			expected_rsrc[item] = el_num

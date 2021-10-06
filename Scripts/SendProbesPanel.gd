@@ -270,13 +270,13 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
+		if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
+			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+			$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
 			point_distribution[prop] = (1 / value - 1) * game.physics_bonus[prop]
-			if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
-				var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
-				$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
 	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0

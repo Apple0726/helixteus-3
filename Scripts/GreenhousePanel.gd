@@ -28,7 +28,7 @@ func refresh():
 		$AuroraMult.visible = true
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		sys_au_mult = 1 + pow(au_int, Helper.get_AIE())
+		sys_au_mult = pow(1 + au_int, Helper.get_AIE())
 		$AuroraMult.bbcode_text = "[aurora au_int=%s]%s: %s  %s" % [au_int, tr("AURORA_MULTIPLIER"), Helper.format_num(Helper.clever_round(sys_au_mult, 4)), "[img]Graphics/Icons/help.png[/img]"]
 		if game.science_unlocked.has("GHA"):
 			$AuroraMult.help_text = "%s\n%s" % [tr("GH_AURORA"), tr("MMM_DESC")]

@@ -213,11 +213,11 @@ func refresh():
 	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil), 6) + " kg"
 	$Resources/Cellulose.visible = game.science_unlocked.has("GHA")
 	if $Resources/Glass.visible:
-		if game.mats.glass >= Data.costs.GH.glass:
+		if game.mats.glass >= Data.costs.GH.glass * game.engineering_bonus.BCM:
 			glass_text["custom_colors/font_color"] = Color.green
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
-		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass), 6), Data.costs.GH.glass]
+		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass), 6), Data.costs.GH.glass * game.engineering_bonus.BCM]
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
 	shop.visible = game.show.shop

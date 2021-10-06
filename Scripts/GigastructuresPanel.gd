@@ -31,7 +31,12 @@ func update_info():
 	if not error:
 		if bldg != "TP":
 			costs.stone = PI * 100
-			costs.mythril = 1 / 50000.0
+			if bldg in ["ME", "MS", "RL"]:
+				costs.mythril = 1 / 80000.0
+			elif bldg == "PP":
+				costs.mythril = 1 / 500000.0
+			if costs.has("energy"):
+				costs.energy *= 200.0
 			costs.erase("time")
 			for cost in costs:
 				costs[cost] *= surface

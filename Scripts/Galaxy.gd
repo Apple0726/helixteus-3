@@ -5,8 +5,6 @@ var star_shader = preload("res://Shaders/Star.shader")
 
 var dimensions:float
 
-var stars
-
 const DIST_MULT = 200.0
 var obj_btns = []
 var overlays = []
@@ -61,7 +59,21 @@ func _ready():
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s" % [s_i.name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
+	var _name:String
+	if s_i.has("name"):
+		_name = s_i.name
+	else:
+		_name = "%s %s" % [tr("SYSTEM"), l_id]
+		match len(game.system_data[l_id].stars):
+			2:
+				_name = "%s %s" % [tr("BINARY_SYSTEM"), l_id]
+			3:
+				_name = "%s %s" % [tr("TERNARY_SYSTEM"), l_id]
+			4:
+				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), l_id]
+			5:
+				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
 
 func on_system_out ():
 	game.hide_tooltip()

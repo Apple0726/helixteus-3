@@ -249,7 +249,7 @@ func refresh():
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("AMN_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		au_mult = 1 + pow(au_int, Helper.get_AIE())
+		au_mult = pow(1 + au_int, Helper.get_AIE())
 	else:
 		tile_num = 1
 		$Title.text = tr("AMN_NAME")

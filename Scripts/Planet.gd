@@ -635,14 +635,14 @@ func _unhandled_input(event):
 				if tile.bldg.name == "GH":
 					base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 				construct(tile.bldg.name, base_cost)
-			if Input.is_action_just_released("F"):
+			elif Input.is_action_just_released("F"):
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():
 					game.upgrade_panel.ids = [tile_over]
 				else:
 					game.upgrade_panel.ids = tiles_selected.duplicate(true)
 				game.toggle_panel(game.upgrade_panel)
-			if Input.is_action_just_released("X") and not game.active_panel:
+			elif Input.is_action_just_released("X") and not game.active_panel:
 				game.hide_adv_tooltip()
 				game.hide_tooltip()
 				if tiles_selected.empty():
@@ -664,6 +664,78 @@ func _unhandled_input(event):
 						game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
+			elif Input.is_action_just_released("G") and not tiles_selected.empty():
+				items_collected.clear()
+				if tile.bldg.name in ["GF", "SE"]:
+					for tile_id in tiles_selected:
+						var _tile = game.tile_data[tile_id]
+						if _tile.bldg.has("qty1"):
+							var prod_i = Helper.get_prod_info(_tile)
+							if _tile.bldg.name == "GF":
+								Helper.add_item_to_coll(items_collected, "sand", prod_i.qty_left)
+								Helper.add_item_to_coll(items_collected, "glass", prod_i.qty_made)
+								game.add_resources({"sand":prod_i.qty_left, "glass":prod_i.qty_made})
+							elif _tile.bldg.name == "SE":
+								Helper.add_item_to_coll(items_collected, "coal", prod_i.qty_left)
+								Helper.add_item_to_coll(items_collected, "energy", prod_i.qty_made)
+								game.add_resources({"coal":prod_i.qty_left, "energy":prod_i.qty_made})
+							_tile.bldg.erase("qty1")
+							_tile.bldg.erase("start_date")
+							_tile.bldg.erase("ratio")
+							_tile.bldg.erase("qty2")
+						else:
+							var rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
+							if game.check_enough(rsrc_to_deduct):
+								game.deduct_resources(rsrc_to_deduct)
+								_tile.bldg.qty1 = _tile.bldg.path_2_value
+								_tile.bldg.start_date = OS.get_system_time_msecs()
+								var ratio:float = _tile.bldg.path_3_value
+								if _tile.bldg.name == "GF":
+									ratio /= 15.0
+								elif _tile.bldg.name == "SE":
+									ratio *= 40.0
+								_tile.bldg.ratio = ratio
+								_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
+				elif tile.bldg.name == "SC":
+					for tile_id in tiles_selected:
+						var _tile = game.tile_data[tile_id]
+						if not _tile.bldg.has("stone"):
+							var stone_qty = _tile.bldg.path_2_value
+							var stone_total = Helper.get_sum_of_dict(game.stone)
+							if stone_total >= stone_qty:
+								var stone_to_crush:Dictionary = {}
+								for el in game.stone:
+									stone_to_crush[el] = stone_qty / stone_total * game.stone[el]
+									game.stone[el] *= (1.0 - stone_qty / stone_total)
+								_tile.bldg.stone = stone_to_crush
+								_tile.bldg.stone_qty = stone_qty
+								_tile.bldg.start_date = OS.get_system_time_msecs()
+								var expected_rsrc:Dictionary = {}
+								Helper.get_SC_output(expected_rsrc, stone_qty, _tile.bldg.path_3_value, stone_total)
+								_tile.bldg.expected_rsrc = expected_rsrc
+						else:
+							var time = OS.get_system_time_msecs()
+							var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
+							var qty_left = max(0, round(_tile.bldg.stone_qty - (time - _tile.bldg.start_date) / 1000.0 * crush_spd))
+							if qty_left > 0:
+								var progress = (time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
+								for el in _tile.bldg.stone:
+									game.stone[el] += qty_left / _tile.bldg.stone_qty * _tile.bldg.stone[el]
+								var rsrc_collected = _tile.bldg.expected_rsrc.duplicate(true)
+								for rsrc in rsrc_collected:
+									rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
+									Helper.add_item_to_coll(items_collected, rsrc, rsrc_collected[rsrc])
+								game.add_resources(rsrc_collected)
+							else:
+								for rsrc in _tile.bldg.expected_rsrc:
+									Helper.add_item_to_coll(items_collected, rsrc, _tile.bldg.expected_rsrc[rsrc])
+								game.add_resources(_tile.bldg.expected_rsrc)
+							_tile.bldg.erase("stone")
+							_tile.bldg.erase("stone_qty")
+							_tile.bldg.erase("start_date")
+							_tile.bldg.erase("expected_rsrc")
+					game.HUD.refresh()
+				game.show_collect_info(items_collected)
 		if Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
 			var path_1_value_sum:float = 0
@@ -683,7 +755,7 @@ func _unhandled_input(event):
 						select = true
 				if select:
 					if tile.has("bldg"):
-						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE"]:
+						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE", "GF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
 						elif tile.bldg.name in ["RL", "MS"]:

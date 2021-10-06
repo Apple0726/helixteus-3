@@ -198,6 +198,7 @@ var c_num:int
 var stats:Dictionary
 
 enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
+enum ClusterType {GROUP, CLUSTER}
 var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 var autocollect:Dictionary
@@ -365,7 +366,7 @@ func _ready():
 		star.material.set_shader_param("brightness_offset", 1.5)
 		star.material.set_shader_param("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "6 Oct 2021"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -908,7 +909,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#Stores information of all objects discovered
 	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":"group", "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
+	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -1607,7 +1608,8 @@ func add_overlay():
 
 func remove_overlay():
 	if is_instance_valid(overlay) and $UI.is_a_parent_of(overlay):
-		$GrayscaleRect.visible = false
+		if $GrayscaleRect.modulate.a > 0:
+			$GrayscaleRect/AnimationPlayer.play_backwards("Fade")
 		$UI.remove_child(overlay)
 		overlay.queue_free()
 
@@ -1669,6 +1671,11 @@ func add_cluster():
 		reset_collisions()
 		if c_c_g != 0:
 			galaxy_data.clear()
+		if not cluster_data[c_c].has("name"):
+			if cluster_data[c_c].class == ClusterType.GROUP:
+				cluster_data[c_c].name = tr("GALAXY_GROUP") + " %s" % c_c
+			else:
+				cluster_data[c_c].name = tr("GALAXY_CLUSTER") + " %s" % c_c
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
@@ -1687,6 +1694,8 @@ func add_galaxy():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g].has("discovered"):
+		if not galaxy_data[c_g].has("name"):
+			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 		yield(start_system_generation(), "completed")
 	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and galaxy_data[c_g].system_num < 2000 and len(ship_data) == 2:
 		third_ship_hints.spawn_galaxy = c_g
@@ -1827,7 +1836,6 @@ func generate_superclusters(id:int):
 		sc_i.dark_energy = Helper.clever_round(max(pow(1 + dist_from_center / 500.0, 0.25), 1) * u_i.dark_energy, 4)
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
-		sc_i["name"] = tr("SUPERCLUSTER") + " %s" % sc_id
 		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length() * 20.0)
 		supercluster_data.append(sc_i)
 	if id != 0:
@@ -1838,6 +1846,8 @@ func generate_superclusters(id:int):
 
 func generate_clusters(id:int):
 	randomize()
+	if not supercluster_data[id].has("name"):
+		supercluster_data[id].name = tr("SUPERCLUSTER") + " %s" % id
 	var total_clust_num = supercluster_data[id]["cluster_num"]
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
 	for _i in range(0, total_clust_num):
@@ -1845,28 +1855,28 @@ func generate_clusters(id:int):
 			continue
 		var c_i = {}
 		c_i["type"] = Helper.rand_int(0, 0)
-		c_i["class"] = "group" if randf() < 0.5 else "cluster"
+		c_i["class"] = ClusterType.GROUP if randf() < 0.5 else ClusterType.CLUSTER
 		c_i["parent"] = id
 		c_i["visible"] = TEST or c_sc != 0
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
 		var c_id = cluster_data.size()
-		if c_i["class"] == "group":
+		if c_i["class"] == ClusterType.GROUP:
 			c_i["galaxy_num"] = Helper.rand_int(10, 100)
-			c_i.name = tr("GALAXY_GROUP") + " %s" % c_id
+			#c_i.name = tr("GALAXY_GROUP") + " %s" % c_id
 		else:
 			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
-			c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
+			#c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
 		var pos
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
 		if id == 0 and _i == 1:
 			dist_from_center = 149
-			c_i.class = "group"
+			c_i.class = ClusterType.GROUP
 			c_i.galaxy_num = Helper.rand_int(80, 100)
 		if id == 0 and _i == 3:
 			dist_from_center = 302
 			c_i.name = "%s 3" % tr("CLUSTER")
-			c_i.class = "group"
+			c_i.class = ClusterType.GROUP
 			c_i.galaxy_num = Helper.rand_int(80, 100)
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
@@ -1874,7 +1884,7 @@ func generate_clusters(id:int):
 		c_i["l_id"] = c_id
 		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * supercluster_data[id].dark_energy)#Ferromagnetic materials
 		if id == 0:
-			c_i.diff = Helper.clever_round(1 + pos.length() * 10.0)
+			c_i.diff = Helper.clever_round(1 + pos.length() * 2.0)
 		else:
 			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2))
 		supercluster_data[id]["clusters"].append(c_id)
@@ -1974,7 +1984,6 @@ func generate_galaxies(id:int):
 		var g_id = galaxy_data.size()
 		g_i["id"] = g_id + g_num
 		g_i["l_id"] = g_id
-		g_i["name"] = tr("GALAXY") + " %s" % [g_id + g_num]
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
 			show.g_bk_button = true
@@ -2352,16 +2361,6 @@ func generate_systems(id:int):
 		s_i["id"] = s_id + s_num
 		s_i["l_id"] = s_id
 		s_i["stars"] = stars
-		s_i["name"] = "%s %s" % [tr("SYSTEM"), s_id]
-		match len(stars):
-			2:
-				s_i.name = "%s %s" % [tr("BINARY_SYSTEM"), s_id]
-			3:
-				s_i.name = "%s %s" % [tr("TERNARY_SYSTEM"), s_id]
-			4:
-				s_i.name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), s_id]
-			5:
-				s_i.name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), s_id]
 		s_i.pos = Vector2.ZERO
 		galaxy_data[id]["systems"].append({"global":s_i.id, "local":s_i.l_id})
 		system_data.append(s_i)
@@ -2384,6 +2383,18 @@ func star_size_in_pixels(size:float):
 
 func generate_planets(id:int):#local id
 	randomize()
+	if not system_data[id].has("name"):
+		var _name:String = "%s %s" % [tr("SYSTEM"), id]
+		match len(system_data[id].stars):
+			2:
+				_name = "%s %s" % [tr("BINARY_SYSTEM"), id]
+			3:
+				_name = "%s %s" % [tr("TERNARY_SYSTEM"), id]
+			4:
+				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), id]
+			5:
+				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), id]
+		system_data[id].name = _name
 	var first_star:Dictionary = system_data[id].stars[0]
 	var combined_star_mass = first_star.mass
 	var star_boundary = star_size_in_pixels(first_star.size / 2.0)
@@ -2506,26 +2517,26 @@ func generate_planets(id:int):#local id
 				p_i.lake_1 = "Xe"
 				p_i.lake_2 = "Xe"
 		p_i.HX_data = []
-		var power:float = system_data[id].diff * pow(p_i.size / 1500.0, 0.5)
+		var power:float = system_data[id].diff * pow(p_i.size / 2500.0, 0.5)
 		var num:int = 0
 		var total_num:int = Helper.rand_int(1, 12)
 		if not p_i.has("conquered"):
 			while num < total_num:
 				num += 1
-				var lv:int = max(ceil(rand_range(0.5, 1) * log(power) / log(1.15)), 1)
+				var lv:int = max(ceil(rand_range(0.5, 0.9) * log(power) / log(1.15)), 1)
 				if p_num == 0:
 					if lv > 4:
 						lv = 4
 					if i == 2:
 						lv = 1
 				if num == total_num:
-					lv = ceil(log(power) / log(1.2))
+					lv = max(ceil(log(power) / log(1.15)), 1)
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
 				var def = round(randf() * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
 				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
-				var _money = round(rand_range(0.4, 2) * pow(1.3, lv - 1) * 50000)
+				var _money = round(rand_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
 				p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
 				power -= floor(pow(1.15, lv))
@@ -3707,7 +3718,35 @@ func _on_lg_pressed(extra_arg_0):
 	change_language()
 
 func _on_lg_mouse_entered(extra_arg_0):
-	show_tooltip(extra_arg_0)
+	var lg:String = ""
+	var lines_translated:int = 0
+	var lines_total:int = 1164
+	match extra_arg_0:
+		"fr":
+			lg = "Français"
+			lines_translated = 529
+		"it":
+			lg = "Italiano"
+			lines_translated = 384
+		"zh":
+			lg = "中文"
+			lines_translated = 1128
+		"de":
+			lg = "Deutsch"
+			lines_translated = 1000
+		"es":
+			lg = "Español"
+			lines_translated = 788
+		"ko":
+			lg = "한국어"
+			lines_translated = 224
+		"sv":
+			lg = "Svenska"
+			lines_translated = 197
+	if extra_arg_0 == "en":
+		show_tooltip("English")
+	else:
+		show_tooltip("%s (%s)" % [lg, tr("X_LINES") % [lines_translated, lines_total]])
 
 func _on_lg_mouse_exited():
 	hide_tooltip()

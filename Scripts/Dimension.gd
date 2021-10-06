@@ -58,7 +58,7 @@ func refresh_univs(reset:bool = false):
 				break
 	var lv_sum:int = 0
 	for univ in game.universe_data:
-		lv_sum += univ.lv
+		lv_sum += univ.lv * univ.universe_value
 	for node in $Subjects/Grid.get_children():
 		node.get_node("HBox/Invest").disabled = game.DRs == 0
 	new_dim_DRs = floor(lv_sum / 50.0)

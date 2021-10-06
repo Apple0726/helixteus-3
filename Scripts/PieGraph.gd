@@ -1,14 +1,7 @@
 extends VBoxContainer
 
 onready var game = get_node("/root/Game")
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-#Array of objects containing values, text, pie texture, modulate
-#Values must be arranged in an increasing order (i.e. smallest number at index 0, largest at last index)
-var objects:Array
+var objects:Array = []
 
 var txts = []
 var small_elements = []
@@ -18,7 +11,13 @@ var other_str_short:String#Shortened version of other_str that is shown on pie
 func _ready():
 	refresh()
 
+func sort_pie(a, b):
+	if a.value < b.value:
+		return true
+	return false
+
 func refresh():
+	objects.sort_custom(self, "sort_pie")
 	var last_value = 100.0
 	var trace_fraction = 0.0
 	small_elements = []

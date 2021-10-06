@@ -155,9 +155,9 @@ func _process(delta):
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
 	if game.c_v in ["supercluster", "universe"] and not changed:
-		if obj_scaled and scale.x > 1.5:
+		if obj_scaled and scale.x > 0.3:
 			$AnimationPlayer.play("Fade")
-		elif not obj_scaled and scale.x < 1.5:
+		elif not obj_scaled and scale.x < 0.3:
 			$AnimationPlayer.play("Fade")
 
 func _draw():
@@ -487,7 +487,7 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:
-		if scale.x < 1.5:
+		if scale.x < 0.3:
 			obj_scaled = true
 			obj.change_scale(1.0)
 		else:
