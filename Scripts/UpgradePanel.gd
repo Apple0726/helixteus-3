@@ -1,6 +1,6 @@
 extends "Panel.gd"
 
-const BASE_PW:float = 1.3
+var BASE_PW:float = 1.3
 var ids:Array = []
 var planet:Dictionary#Only for terraformed planets
 var bldg:String = ""#You can mass-upgrade only one type of building
@@ -10,6 +10,7 @@ var path_str:String
 var auto_speedup:bool = false
 var new_value:float
 var new_base_value:float
+var set_min_lv:bool = false
 
 onready var path1 = $PathButtons/Path1
 onready var path2 = $PathButtons/Path2
@@ -22,10 +23,11 @@ onready var cost_icons = $ScrollContainer/Costs
 onready var upgrade_btn = $Upgrade
 
 func _ready():
+	BASE_PW = game.maths_bonus.BUCGF
 	set_polygon(rect_size)
-	path1.text = tr("PATH") + " 1"
-	path2.text = tr("PATH") + " 2"
-	path3.text = tr("PATH") + " 3"
+	path1.get_node("Label").text = tr("PATH") + " 1"
+	path2.get_node("Label").text = tr("PATH") + " 2"
+	path3.get_node("Label").text = tr("PATH") + " 3"
 
 func refresh():
 	if not planet.empty():
@@ -35,6 +37,7 @@ func refresh():
 		$AutoSpeedup.pressed = true
 		auto_speedup = true
 		_on_Path1_pressed()
+		path1._on_Button_pressed()
 	else:
 		path2.visible = game.tile_data[ids[0]].bldg.has("path_2")
 		path3.visible = game.tile_data[ids[0]].bldg.has("path_3")
@@ -42,6 +45,7 @@ func refresh():
 		$AutoSpeedup.pressed = $AutoSpeedup.visible
 		if game.tile_data[ids[0]].bldg.has("path_1"):
 			_on_Path1_pressed()
+			path1._on_Button_pressed()
 		else:
 			game.popup(tr("NO_UPGRADE"), 1.5)
 			game.toggle_panel(self)
@@ -61,8 +65,7 @@ func get_min_lv():
 	else:
 		return planet.bldg[path_str]
 
-func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
-	var lv_to:int = next_lv.value
+func calc_costs(tile_bldg:String, lv_curr:int, lv_to:int, cost_div:float, num:int = 1):
 	var base_costs = Data.costs[tile_bldg].duplicate(true)
 	var base_metal_costs = Data[path_str][tile_bldg].metal_costs.duplicate(true) if Data[path_str][tile_bldg].has("metal_costs") else {}
 	var base_pw:float = Data[path_str][tile_bldg].cost_pw if Data[path_str][tile_bldg].has("cost_pw") else BASE_PW
@@ -71,16 +74,15 @@ func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
 		base_costs.money *= mult
 		base_costs.time *= mult
 		base_costs.energy *= mult
-	if cost_div != 1.0:
+	if cost_div != 1.0 or game.engineering_bonus.BCM != 1.0:
 		for cost in base_costs:
 			base_costs[cost] /= cost_div
+			base_costs[cost] *= game.engineering_bonus.BCM
 		for cost in base_metal_costs:
 			base_metal_costs[cost] /= cost_div
+			base_metal_costs[cost] *= game.engineering_bonus.BCM
 	costs.money += round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
 	costs.time = round(base_costs.time * geo_seq(base_pw, lv_curr, lv_to) / game.u_i.time_speed)
-	if auto_speedup:
-		costs.money += costs.time * 10 * num
-		costs.time = 0
 	if base_costs.has("energy"):
 		costs.energy += round(base_costs.energy * geo_seq(base_pw, lv_curr, lv_to) * num)
 	if not base_metal_costs.empty():
@@ -98,8 +100,14 @@ func calc_costs(tile_bldg:String, lv_curr:int, cost_div:float, num:int = 1):
 			costs.gold += base_metal_costs.gold * num
 		if lv_curr <= 71 and lv_to >= 71 and base_metal_costs.has("platinum"):
 			costs.platinum += base_metal_costs.platinum * num
+	if auto_speedup:
+		costs.money += costs.time * 10 * num
+		costs.time = 0
 
-func update():
+func update(changing_paths:bool = false):
+	set_min_lv = true
+	next_lv.min_value = get_min_lv() + 1
+	set_min_lv = false
 	auto_speedup = $AutoSpeedup.pressed
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
 	var same_lv = true
@@ -116,23 +124,59 @@ func update():
 		else:
 			next_lv.allow_greater = true
 		first_tile_bldg_info = Data[path_str][bldg]
-		for id in ids:
-			var tile = game.tile_data[id]
-			var tile_bldg:String = tile.bldg.name
-			var lv_curr = tile.bldg[path_str]
-			if lv_curr != first_tile[path_str]:
-				same_lv = false
-			if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
-				continue
-			all_tiles_constructing = false
-			calc_costs(tile_bldg, lv_curr, tile.cost_div if tile.has("cost_div") else 1.0, 1)
+		var lv_to:int = next_lv.value
+		var a:int = next_lv.min_value
+		var calculated:bool = false
+		while not calculated or lv_to != a:
+			if calculated:
+				costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+			for id in ids:
+				var tile = game.tile_data[id]
+				var tile_bldg:String = tile.bldg.name
+				var lv_curr = tile.bldg[path_str]
+				if lv_curr != first_tile[path_str]:
+					same_lv = false
+				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+					continue
+				all_tiles_constructing = false
+				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
+			if not changing_paths:
+				break
+			if game.check_enough(costs):
+				if lv_to == next_lv.value:
+					break
+				a = lv_to
+				lv_to = (lv_to + next_lv.value) / 2
+			else:
+				lv_to = (a + lv_to) / 2
+			calculated = true
+		if changing_paths:
+			next_lv.value = lv_to
 	else:
 		first_tile = planet.bldg
 		bldg = first_tile.name
-		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
-		calc_costs(planet.bldg.name, planet.bldg[path_str], 1.0, planet.tile_num)
+		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
+		var lv_to:int = next_lv.value
+		var a:int = next_lv.min_value
+		var calculated:bool = false
+		if changing_paths:
+			while not calculated or lv_to != a:
+				if calculated:
+					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, 1.0, planet.tile_num)
+				if game.check_enough(costs):
+					if lv_to == next_lv.value:
+						break
+					a = lv_to
+					lv_to = (lv_to + next_lv.value) / 2
+				else:
+					lv_to = (a + lv_to) / 2
+				calculated = true
+			next_lv.value = lv_to
+		else:
+			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, 1.0, planet.tile_num)
 	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
@@ -204,38 +248,49 @@ func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1))
 
 func _on_Path1_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+#	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
+#		game.popup(tr("MAX_LV_REACHED"), 1.5)
+#		return
 	path_selected = 1
 	path_str = "path_%s" % [path_selected]
-	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path1)
-	update()
+	update(true)
 
 func _on_Path2_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+#	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
+#		game.popup(tr("MAX_LV_REACHED"), 1.5)
+#		return
 	path_selected = 2
 	path_str = "path_%s" % [path_selected]
-	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path2)
-	update()
+	update(true)
 
 func _on_Path3_pressed():
-	if bldg != "" and len(ids) == 1 and Data.path_3[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_3 == Data.path_3[bldg].cap:
-		game.popup(tr("MAX_LV_REACHED"), 1.5)
-		return
+	if bldg != "" and Data.path_3[bldg].has("cap"):
+		if len(ids) == 1:
+			if game.tile_data[ids[0]].bldg.path_3 >= Data.path_3[bldg].cap:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
+				return
+		else:
+			var all_capped = true
+			for i in ids:
+				if game.tile_data[i].bldg.path_3 < Data.path_3[bldg].cap:
+					all_capped = false
+					break
+			if all_capped:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
+				return
 	path_selected = 3
 	path_str = "path_%s" % [path_selected]
-	next_lv.min_value = get_min_lv() + 1
 	Helper.set_btn_color(path3)
-	update()
+	update(true)
 
 
 func _on_NextLv_value_changed(_value):
-	update()
+	if not set_min_lv:
+		update()
 
 
 func _on_ScrollContainer_resized():
@@ -256,13 +311,13 @@ func _on_Upgrade_pressed():
 			var cost_time
 			for id in ids:
 				var tile = game.tile_data[id]
-				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value:
+				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
 				if Data[path_str][bldg].has("cost_mult"):
 					base_costs.time *= Data[path_str][bldg].cost_mult
 				var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed)
+				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed * game.engineering_bonus.BCM)
 				if tile.has("cost_div"):
 					cost_time /= tile.cost_div
 				if auto_speedup:
@@ -288,6 +343,10 @@ func _on_Upgrade_pressed():
 					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				elif tile.bldg.name == "MS":
 					tile.bldg.mineral_cap_upgrade = new_base_value - tile.bldg.path_1_value
+				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):
+					for p in tile.auto_GH.produce:
+						game.autocollect.mets[p] -= tile.auto_GH.produce[p]
+					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 				if tile.bldg.has("start_date"):
 					tile.bldg.start_date += cost_time * 1000
 				if tile.bldg.has("overclock_mult"):
@@ -306,6 +365,13 @@ func _on_Upgrade_pressed():
 				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			elif planet.bldg.name == "RL":
 				game.autocollect.rsrc.SP += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+			elif planet.has("auto_GH"):
+				for p in planet.auto_GH.produce:
+					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
+					planet.auto_GH.produce[p] *= new_base_value / planet.bldg["%s_value" % path_str]
+					if path_selected == 1:
+						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
+						planet.auto_GH.cellulose_drain *= new_base_value / planet.bldg["%s_value" % path_str]
 			if planet.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":

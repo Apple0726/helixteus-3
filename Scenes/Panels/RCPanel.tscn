@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Graphics/Icons/Inventory.png" type="Texture" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=6]
@@ -151,75 +152,35 @@ texture = ExtResource( 12 )
 expand = true
 stretch_mode = 6
 
-[node name="HPText" type="Label" parent="Stats"]
-margin_left = 336.0
-margin_top = 36.0
-margin_right = 488.0
-margin_bottom = 76.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-custom_constants/line_spacing = 20
-text = "a"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="HPText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 335.5
+margin_top = 44.0
+margin_right = 491.5
+margin_bottom = 72.0
 
-[node name="AtkText" type="Label" parent="Stats"]
-margin_left = 336.0
-margin_top = 84.0
-margin_right = 488.0
-margin_bottom = 124.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-custom_constants/line_spacing = 20
-text = "a"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="AtkText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 335.5
+margin_top = 92.0
+margin_right = 491.5
+margin_bottom = 120.0
 
-[node name="DefText" type="Label" parent="Stats"]
-margin_left = 336.0
-margin_top = 132.0
-margin_right = 488.0
-margin_bottom = 172.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-custom_constants/line_spacing = 20
-text = "a"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="DefText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 335.5
+margin_top = 140.0
+margin_right = 491.5
+margin_bottom = 168.0
 
-[node name="CargoText" type="Label" parent="Stats"]
-margin_left = 336.0
-margin_top = 180.0
-margin_right = 488.0
+[node name="CargoText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 335.5
+margin_top = 192.0
+margin_right = 491.5
 margin_bottom = 220.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-custom_constants/line_spacing = 20
-text = "a"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="SpeedText" type="Label" parent="Stats"]
-margin_left = 336.0
-margin_top = 228.0
-margin_right = 488.0
-margin_bottom = 268.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 0, 1 )
-custom_constants/line_spacing = 20
-text = "a"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="SpeedText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 335.5
+margin_top = 236.0
+margin_right = 491.5
+margin_bottom = 264.0
 
 [node name="Inventory" type="Panel" parent="."]
 margin_left = 30.0
@@ -285,9 +246,9 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 419.0
+margin_right = 414.0
 margin_bottom = 251.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -306,14 +267,4 @@ __meta__ = {
 [connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered" binds= [ "MOVEMENT_SPEED" ]]
 [connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/HPText" to="." method="_on_HPText_mouse_entered"]
-[connection signal="mouse_exited" from="Stats/HPText" to="." method="_on_Text_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/AtkText" to="." method="_on_AtkText_mouse_entered"]
-[connection signal="mouse_exited" from="Stats/AtkText" to="." method="_on_Text_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/DefText" to="." method="_on_DefText_mouse_entered"]
-[connection signal="mouse_exited" from="Stats/DefText" to="." method="_on_Text_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/CargoText" to="." method="_on_CargoText_mouse_entered"]
-[connection signal="mouse_exited" from="Stats/CargoText" to="." method="_on_Text_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/SpeedText" to="." method="_on_SpeedText_mouse_entered"]
-[connection signal="mouse_exited" from="Stats/SpeedText" to="." method="_on_Text_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

@@ -1,13 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Graphics/Ships/Probe2.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 [ext_resource path="res://Scripts/GigastructuresPanel.gd" type="Script" id=7]
-[ext_resource path="res://Graphics/Buildings/MS.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buildings/ME.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Buildings/PP.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buildings/RL.png" type="Texture" id=12]
 
 [sub_resource type="Theme" id=1]
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
@@ -83,57 +80,57 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 371.0
+margin_right = 366.0
 margin_bottom = 435.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 1 )
 
-[node name="MineralExtraction" type="Button" parent="ScrollContainer/VBoxContainer"]
-margin_right = 366.0
+[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 356.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
-text = "MINERAL_EXTRACTION"
-icon = ExtResource( 10 )
-expand_icon = true
+button_text = "MINERAL_EXTRACTION"
 
-[node name="EnergyProduction" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 44.0
-margin_right = 366.0
+margin_right = 356.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
-text = "ENERGY_PRODUCTION"
-icon = ExtResource( 11 )
-expand_icon = true
+button_text = "ENERGY_PRODUCTION"
 
-[node name="MineralStorage" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 88.0
-margin_right = 366.0
+margin_right = 356.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
-text = "MINERAL_STORAGE"
-icon = ExtResource( 9 )
-expand_icon = true
+button_text = "MINERAL_STORAGE"
 
-[node name="Research" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 132.0
-margin_right = 366.0
+margin_right = 356.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
-text = "RESEARCH"
-icon = ExtResource( 12 )
-expand_icon = true
+button_text = "RESEARCH"
 
-[node name="TriangulumProbe" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 176.0
-margin_right = 366.0
+margin_right = 356.0
 margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
-text = "TRIANGULUM_PROBE"
-icon = ExtResource( 4 )
-expand_icon = true
+button_text = "TRIANGULUM_PROBE"
 
 [node name="Control" type="Panel" parent="."]
 visible = false
@@ -145,6 +142,7 @@ margin_left = -552.0
 margin_top = -160.0
 margin_right = -24.0
 margin_bottom = 272.0
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -169,6 +167,13 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ProdCostMult" parent="Control" instance=ExtResource( 2 )]
+margin_left = 24.0
+margin_top = 384.0
+margin_right = 376.0
+margin_bottom = 414.0
+help_text = "PCM_DESC"
 
 [node name="ProductionPerSec" type="Label" parent="Control"]
 margin_left = 24.0
@@ -205,10 +210,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -216.0
-margin_top = -48.0
-margin_right = -12.0
-margin_bottom = -12.0
+margin_left = -152.0
+margin_top = -50.0
+margin_right = -16.0
+margin_bottom = -16.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 3 )
 text = "CONVERT"

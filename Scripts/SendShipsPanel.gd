@@ -12,10 +12,13 @@ var dest_p_id:int
 var distance:int
 var planets_in_depart_system:Array
 var depart_planet_data:Dictionary
+var atm_exit_cost:float
+var gravity_exit_cost:float
+var atm_entry_cost:float
+var gravity_entry_cost:float
 
 func _ready():
 	set_polygon($Background.rect_size)
-	$Panel/PlanetEECost.text = "%s:" % [tr("PLANET_EE_COST")]
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("TOTAL_ENERGY_COST")]
 
@@ -26,7 +29,7 @@ func refresh():
 	var g_coords:Dictionary = game.ships_c_g_coords
 	var g_s:int = game.ships_c_g_coords.s
 	var file = File.new()
-	file.open("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
+	file.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
 	depart_planet_data = planets_in_depart_system[coords.p]
@@ -87,7 +90,12 @@ func refresh():
 			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, 4)
 			$Scroll/Enemies.add_child(HX_data_node)
 			HX_data_node.rect_min_size.y = 70
+		$Enemies.text = "%s (%s)" % [tr("ENEMIES"), len(game.planet_data[dest_p_id].HX_data)]
+	else:
+		$Enemies.text = tr("ENEMIES")
 	$Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
+	$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
+	$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""]
 
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 35:
@@ -156,31 +164,23 @@ func get_grav_entry_cost(size:float):
 func get_entry_exit_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.9
+			return 0.5
 		1:
-			return 0.6
-		2:
-			return 0.3
-		3:
 			return 0
 
 func get_travel_cost_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.95
+			return 0.75
 		1:
-			return 0.8
-		2:
-			return 0.65
-		3:
 			return 0.5
 
 func calc_costs():
 	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 2)
-	var atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
-	var gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
-	var atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
-	var gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
+	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
+	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
+	atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
+	gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	if depart_planet_data.type in [11, 12]:
 		atm_exit_cost = 0
 		gravity_exit_cost = 0
@@ -188,39 +188,17 @@ func calc_costs():
 		atm_entry_cost = 0
 		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
-	$Panel/EnergyCost2.text = Helper.format_num(entry_exit_cost)
+	$EnergyCost2.bbcode_text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light
 	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
-	if game.science_unlocked.FTL:
+	if game.science_unlocked.has("FTL"):
 		time_cost /= 10.0
-	if game.science_unlocked.IGD:
+	if game.science_unlocked.has("IGD"):
 		time_cost /= 100.0
 	$Panel/EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
 	$Panel/TimeCost.text = Helper.time_to_str(time_cost)
-
-func _on_EnergyCost2_mouse_entered():
-	var atm_exit_cost = Helper.format_num(get_atm_exit_cost(depart_planet_data.pressure))
-	var gravity_exit_cost = Helper.format_num(get_grav_exit_cost(depart_planet_data.size))
-	var atm_entry_cost = Helper.format_num(get_atm_entry_cost(game.planet_data[dest_p_id].pressure))
-	var gravity_entry_cost = Helper.format_num(get_grav_entry_cost(game.planet_data[dest_p_id].size))
-	if depart_planet_data.type in [11, 12]:
-		atm_exit_cost = 0
-		gravity_exit_cost = 0
-	if game.planet_data[dest_p_id].type in [11, 12]:
-		atm_entry_cost = 0
-		gravity_entry_cost = 0
-	game.show_adv_tooltip("%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""], [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon])
-
-func _on_EnergyCost2_mouse_exited():
-	game.hide_adv_tooltip()
-
-func _on_PlanetEECost_mouse_entered():
-	game.show_tooltip(tr("PLANET_EE_COST_DESC"))
-
-func _on_PlanetEECost_mouse_exited():
-	game.hide_tooltip()
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

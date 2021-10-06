@@ -1,0 +1,64 @@
+Things to know about commands: 
+
+- All commands and parameters are non case-sensitive, so you can write /setmat coal 1000 or /SETMAT Coal 1000
+- You can write a command anywhere in the game by pressing /
+- Press up and down arrow keys to scroll through command history
+- Press esc to cancel writing a command
+- You can't write scientific notation in the [value] parameter yet (no /setMoney 1e6), but the game will support it later
+
+Commands list:
+
+/setMoney [value]
+- Sets your money to [value]
+- Example: /setMoney 10000
+
+/setMin [value]
+- Sets your minerals to [value]
+
+/setMinCap [value]
+- Sets your minerals capacity to [value]
+
+/setEnergy [value]
+- Sets your energy to [value]
+
+/setSP [value]
+- Sets your science points to [value]
+
+/setMat [material] [value]
+- Sets the amount of [material] to [value]
+- Example: /setMat coal 10000
+
+/setMet [metal] [value]
+- Sets the amount of [metal] to [value]
+- Example: /setMet lead 10000
+
+/setAtom [atom] [value]
+- Sets the amount of [atom] to [value]
+- Example: /setatom c 100
+
+/setPart [particle] [value]
+- Sets the amount of [particle] to [value]
+- Possible values of [particle]: proton, neutron, electron
+- Example: /setpart electron 15
+
+/fc
+- Finish construction of all buildings on the planet you're viewing. If you're not viewing a planet, it considers the last planet you viewed
+
+/setMULv [upgrade] [value]
+- Sets [upgrade]'s mineral upgrade level to [value]
+- Possible values of [upgrade]: mv, msmb, is, aie, stmb, shsr
+- Example: /setMULv mv 5
+
+/setLv [value]
+- Sets player level to [value]
+- Example: /setLv 5
+
+/switchView [view]
+- Makes you view [view]. Useful if you get stuck somewhere
+- Possible values of [view]: planet, system, galaxy, cluster, supercluster, universe, dimension
+- Example: /switchview planet
+
+/setUnivProp [property] [value]
+- Sets the current universe's [property] to [value]
+- Possible values of [property]: speed_of_light, planck, boltzmann, gravitational, charge, dark_energy, difficulty, time_speed, antimatter, value
+- Example: /setunivprop time_speed 5.4

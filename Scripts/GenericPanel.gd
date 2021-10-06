@@ -49,7 +49,7 @@ func change_tab(btn_str:String):
 	remove_costs()
 	item_info.visible = false
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
-	Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
+	#Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
 	locked = false
 	
 func remove_costs():

@@ -1,35 +1,23 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=1]
-[ext_resource path="res://Shaders/Fog.shader" type="Shader" id=2]
 [ext_resource path="res://Shaders/Nebula.shader" type="Shader" id=3]
 [ext_resource path="res://Scripts/Nebula.gd" type="Script" id=4]
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 2 )
-shader_param/color = Color( 0.666667, 0.368627, 1, 1 )
-shader_param/fog_size = 20.0
-shader_param/fog_mvt_spd = 0.1
-shader_param/OCTAVES = 1
-
-[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
 shader = ExtResource( 3 )
-shader_param/color = Color( 0.666667, 0.368627, 1, 1 )
-shader_param/fog_size = 10.0
-shader_param/fog_mvt_spd = 0.1
-shader_param/OCTAVES = 4
+shader_param/color = Color( 0.4, 0.4, 0.4, 1 )
+shader_param/fog_size = 2.045
+shader_param/fog_mvt_spd = 0.02
+shader_param/OCTAVES = 7
+shader_param/seed = 1
 
 [node name="Nebula" type="Node2D"]
 script = ExtResource( 4 )
 
-[node name="Fog" type="Sprite" parent="."]
-material = SubResource( 1 )
-scale = Vector2( 6.4, 3.6 )
-texture = ExtResource( 1 )
-centered = false
-
 [node name="Nebula" type="Sprite" parent="."]
-material = SubResource( 2 )
+material = SubResource( 1 )
 scale = Vector2( 6.4, 3.6 )
 texture = ExtResource( 1 )
 centered = false

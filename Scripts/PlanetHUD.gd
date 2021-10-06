@@ -9,7 +9,7 @@ func _ready():
 func refresh():
 	$VBoxContainer/Construct.visible = game.show.construct_button
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
-	$VBoxContainer/Terraform.visible = game.science_unlocked.TF
+	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.mining
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
@@ -80,7 +80,7 @@ func _on_Terraform_pressed():
 	else:
 		game.terraform_panel.pressure = game.planet_data[game.c_p].pressure
 		var surface = 4 * PI * pow(game.planet_data[game.c_p].size / 8.0, 2)
-		game.terraform_panel.surface = surface
+		game.terraform_panel.surface = round(surface)
 		var lake_num:int = 0
 		for tile in game.tile_data:
 			if tile and tile.has("lake"):

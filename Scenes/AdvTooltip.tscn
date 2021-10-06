@@ -9,7 +9,7 @@ content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
 content_margin_bottom = 0.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
 border_width_left = 3
 border_width_top = 3
 border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
@@ -23,6 +23,7 @@ shadow_size = 3
 shadow_offset = Vector2( 1, 1 )
 
 [sub_resource type="DynamicFont" id=2]
+resource_name = "Font"
 size = 20
 use_filter = true
 font_data = ExtResource( 2 )

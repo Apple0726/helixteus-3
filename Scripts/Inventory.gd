@@ -3,10 +3,13 @@ extends "Panel.gd"
 var tab:String
 var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
-onready var inventory_grid = $Control/Inventory
+onready var inventory_grid = $Control/VBox/Inventory
+onready var grid = $Control/VBox/GridContainer
+onready var info = $Control/VBox/Info
 var item_hovered:String = ""
 var item_stack:int = 0
 var item_slot:int = 0
+var hbox_data:Array = []
 
 func _ready():
 	set_polygon(rect_size)
@@ -14,6 +17,7 @@ func _ready():
 	buy_sell.visible = false
 	add_child(buy_sell)
 	_on_Items_pressed()
+	$Tabs/Items._on_Button_pressed()
 
 func refresh():
 	if tab == "items":
@@ -32,11 +36,11 @@ func refresh():
 	$Tabs/Particles.visible = game.show.particles
 
 func _on_Items_pressed():
+	set_process(false)
 	tab = "items"
-	$Info.text = tr("INV_ITEMS_DESC")
-	Helper.set_btn_color($Tabs/Items)
+	info.text = tr("INV_ITEMS_DESC")
 	inventory_grid.visible = true
-	$Control/GridContainer.visible = false
+	grid.visible = false
 	for item in inventory_grid.get_children():
 		inventory_grid.remove_child(item)
 		item.free()
@@ -98,7 +102,7 @@ func on_slot_press(name:String):
 		game.popup("SUCCESSFULLY_APPLIED", 1.5)
 		return
 	elif type == "speedups_info":
-		if game.c_v == "system" and game.science_unlocked.MAE:
+		if game.c_v == "system" and game.science_unlocked.has("MAE"):
 			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
 		else:
 			game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
@@ -129,13 +133,13 @@ func on_slot_press(name:String):
 	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():
+	set_process(not game.autocollect.mats.empty())
 	tab = "materials"
-	$Info.text = tr("INV_MAT_DESC")
-	Helper.set_btn_color($Tabs/Materials)
+	info.text = tr("INV_MAT_DESC")
 	inventory_grid.visible = false
-	$Control/GridContainer.visible = true
-	var mat_data = Helper.put_rsrc($Control/GridContainer, 48, game.mats)
-	for mat in mat_data:
+	grid.visible = true
+	hbox_data = Helper.put_rsrc(grid, 48, game.mats)
+	for mat in hbox_data:
 		if game.show.has(mat.name) and not game.show[mat.name]:
 			mat.rsrc.visible = false
 			continue
@@ -145,13 +149,13 @@ func _on_Materials_pressed():
 		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat.name])
 
 func _on_Metals_pressed():
+	set_process(not game.autocollect.mets.empty())
 	tab = "metals"
-	$Info.text = tr("INV_MET_DESC")
-	Helper.set_btn_color($Tabs/Metals)
+	info.text = tr("INV_MET_DESC")
 	inventory_grid.visible = false
-	$Control/GridContainer.visible = true
-	var met_data = Helper.put_rsrc($Control/GridContainer, 48, game.mets)
-	for met in met_data:
+	grid.visible = true
+	hbox_data = Helper.put_rsrc(grid, 48, game.mets)
+	for met in hbox_data:
 		if game.show.has(met.name) and not game.show[met.name]:
 			met.rsrc.visible = false
 			continue
@@ -161,23 +165,23 @@ func _on_Metals_pressed():
 		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
 
 func _on_Atoms_pressed():
+	set_process(false)
 	tab = "atoms"
-	$Info.text = tr("INV_ATOMS_DESC")
-	Helper.set_btn_color($Tabs/Atoms)
+	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
-	$Control/GridContainer.visible = true
-	var atom_data = Helper.put_rsrc($Control/GridContainer, 48, game.atoms)
+	grid.visible = true
+	var atom_data = Helper.put_rsrc(grid, 48, game.atoms)
 	for atom in atom_data:
 		if game.show.has(atom.name) and not game.show[atom.name]:
 			atom.rsrc.visible = false
 
 func _on_Particles_pressed():
+	set_process(false)
 	tab = "particles"
-	$Info.text = tr("INV_PARTICLES_DESC")
-	Helper.set_btn_color($Tabs/Particles)
+	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false
-	$Control/GridContainer.visible = true
-	Helper.put_rsrc($Control/GridContainer, 48, game.particles)
+	grid.visible = true
+	Helper.put_rsrc(grid, 48, game.particles)
 
 func show_buy_sell(type:String, obj:String):
 	if game.money == 0:
@@ -198,13 +202,21 @@ func show_buy_sell(type:String, obj:String):
 	buy_sell.refresh(type, obj)
 
 func show_mat(mat:String):
-	game.show_tooltip(get_str(mat) + "\n" + get_str(mat, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
+	var st:String = "%s\n%s" % [get_str(mat), get_str(mat, "_DESC")]
+	if game.autocollect.mats.has(mat):
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(Helper.clever_round(abs(game.autocollect.mats[mat]))), tr("S_SECOND")])
+	st += "\n" + tr("CLICK_TO_BUY_SELL")
+	game.show_tooltip(st)
 
 func hide_mat():
 	game.hide_tooltip()
 
 func show_met(met:String):
-	game.show_tooltip(get_str(met) + "\n" + get_str(met, "_DESC") + "\n" + tr("CLICK_TO_BUY_SELL"))
+	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
+	if game.autocollect.mets.has(met):
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.mets[met])), tr("S_SECOND")])
+	st += "\n" + tr("CLICK_TO_BUY_SELL")
+	game.show_tooltip(st)
 
 func hide_met():
 	game.hide_tooltip()
@@ -236,4 +248,12 @@ func _input(_event):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
-
+func _process(delta):
+	if not visible:
+		set_process(false)
+	if tab == "materials":
+		for hbox in hbox_data:
+			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(game.mats[hbox.name]))]
+	elif tab == "metals":
+		for hbox in hbox_data:
+			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(game.mets[hbox.name]))]

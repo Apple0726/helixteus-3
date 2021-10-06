@@ -63,6 +63,7 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	$TabContainer/SFX/MusicPitchLabel.bbcode_text = "[right]%s  [img]Graphics/Icons/help.png[/img][/right]" % tr("TIME_SPEED_AFFECTS_PITCH")
 	set_difficulty()
 
 func _on_Vsync_toggled(button_pressed):
@@ -248,3 +249,9 @@ func _on_EnableShaders_toggled(button_pressed):
 		game.get_node("Nebula").visible = button_pressed
 		config.set_value("graphics", "enable_shaders", button_pressed)
 		config.save("user://settings.cfg")
+
+
+func _on_ResetTooltips_pressed():
+	for h in game.help:
+		if h != "tutorial":
+			game.help[h] = true

@@ -1,53 +1,333 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=4]
+[ext_resource path="res://Graphics/Decoratives/BulletHit.jpg" type="Texture" id=5]
+[ext_resource path="res://Graphics/HX/1.png" type="Texture" id=6]
+[ext_resource path="res://Shaders/Fire.shader" type="Shader" id=7]
+[ext_resource path="res://icon.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Icons/Debris.png" type="Texture" id=10]
+[ext_resource path="res://Shaders/Laser.shader" type="Shader" id=11]
+[ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Icons/Stun.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=15]
 
-[sub_resource type="ShaderMaterial" id=1]
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 51.7997
+height = 96.3995
+
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 4 )
 shader_param/amplitude = 6.0
 shader_param/frequency = 6.0
 
-[sub_resource type="CapsuleShape2D" id=2]
-radius = 51.7997
-height = 96.3995
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 7 )
+shader_param/color = Color( 1, 0, 0, 1 )
+shader_param/fog_size = 6.0
+shader_param/fog_mvt_spd = 1.0
+shader_param/OCTAVES = 4
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 11 )
+shader_param/beams = 1
+shader_param/energy = 20.0
+shader_param/roughness = 3
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.021
+shader_param/outline_thickness = 0.044
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 11 )
+shader_param/beams = 1
+shader_param/energy = 10.0
+shader_param/roughness = 8
+shader_param/frequency = 15
+shader_param/speed = 1.0
+shader_param/thickness = 0.012
+shader_param/outline_thickness = 0.043
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=6]
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.406126, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 1.3
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0513478, 54.5, 227.732, -0.25, 0, 0.25, 0, 0, -0.660033, -63.4014, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1.2 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.109635, 20.5, 153.083, -0.25, 0, 0.352036, -1.84743, 360, -0.641852, 2.10144, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1.3 )
+}
+
+[sub_resource type="Animation" id=8]
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.073354, 113.595, 221.596, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.073354, 70.8488, 119.182, -0.58229, -8.37245, 0.352036, -1.84743 ),
+"times": PoolRealArray( 0, 1 )
+}
+
+[sub_resource type="Animation" id=9]
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0513478, 54.5, 80, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.109635, 20.5, 15.7225, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+
+[sub_resource type="Animation" id=10]
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0693889, -16.4901, -15, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Sprite:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0416334, 23.0659, 23.9385, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Sprite:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.0999201, 17.2517, 6.29962, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3, 1 )
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "Miss"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 6.29962 ), Vector2( 0, -25 ), Vector2( 0, -25 ), Vector2( 0, 6.29962 ) ]
+}
+
+[sub_resource type="Gradient" id=12]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="ParticlesMaterial" id=14]
+flag_align_y = true
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1000.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+color_ramp = SubResource( 13 )
+
+[sub_resource type="Gradient" id=15]
+offsets = PoolRealArray( 0, 0.293907, 0.594982, 0.985663, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=16]
+gradient = SubResource( 15 )
+
+[sub_resource type="Curve" id=17]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=18]
+curve = SubResource( 17 )
+
+[sub_resource type="ParticlesMaterial" id=19]
+lifetime_randomness = 1.0
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 300.0
+initial_velocity_random = 1.0
+angular_velocity = 129.69
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 100.0
+damping_random = 1.0
+scale = 0.05
+scale_random = 0.2
+scale_curve = SubResource( 18 )
+color_ramp = SubResource( 16 )
+
+[sub_resource type="Gradient" id=20]
+offsets = PoolRealArray( 0, 0.308244, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=21]
+gradient = SubResource( 20 )
+
+[sub_resource type="ParticlesMaterial" id=22]
+lifetime_randomness = 1.0
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 250.0
+initial_velocity_random = 0.27
+angular_velocity = 129.69
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 100.0
+damping_random = 1.0
+scale = 0.1
+scale_random = 0.5
+color_ramp = SubResource( 21 )
 
 [node name="HX" type="KinematicBody2D"]
 collision_layer = 4
 collision_mask = 0
 
-[node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 1 )
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
-modulate = Color( 0, 0.34902, 0, 1 )
-margin_left = 120.0
-margin_top = -60.0
-margin_right = 132.0
-margin_bottom = 60.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 2 )
+position = Vector2( 0, 6.29962 )
+texture = ExtResource( 6 )
 
-[node name="HP" type="TextureProgress" parent="."]
-modulate = Color( 0, 1, 0, 1 )
-margin_left = 120.0
-margin_top = -60.0
-margin_right = 132.0
-margin_bottom = 60.0
-value = 50.0
-texture_progress = ExtResource( 3 )
-fill_mode = 3
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Fire" type="Sprite" parent="Sprite"]
+visible = false
+material = SubResource( 3 )
+position = Vector2( 48.8168, -97.6652 )
+scale = Vector2( 12, 12 )
+texture = ExtResource( 8 )
+
+[node name="Stun" type="Node2D" parent="Sprite"]
+visible = false
+position = Vector2( 0, -6.29962 )
+
+[node name="Sprite" type="Sprite" parent="Sprite/Stun"]
+material = SubResource( 4 )
+position = Vector2( 47.1782, 64.5085 )
+rotation = 0.496553
+scale = Vector2( 2.36037, 2.36037 )
+texture = ExtResource( 12 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Sprite2" type="Sprite" parent="Sprite/Stun"]
+material = SubResource( 5 )
+position = Vector2( 11.3541, 50.4711 )
+rotation = -0.583007
+scale = Vector2( 1.67193, 1.67193 )
+texture = ExtResource( 12 )
+offset = Vector2( -21.4132, -17.9986 )
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 collision_mask = 3
@@ -87,3 +367,144 @@ text = "15"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ColorRect" type="ColorRect" parent="Info"]
+modulate = Color( 0, 0.34902, 0, 1 )
+margin_left = 103.02
+margin_top = -69.0997
+margin_right = 108.02
+margin_bottom = -5.09969
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HP" type="TextureProgress" parent="Info"]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = 103.02
+margin_top = -69.0997
+margin_right = 108.02
+margin_bottom = -5.09969
+value = 50.0
+texture_progress = ExtResource( 3 )
+fill_mode = 3
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Effects" type="HBoxContainer" parent="Info"]
+margin_left = -25.5284
+margin_top = -138.064
+margin_right = 123.472
+margin_bottom = -100.064
+theme = ExtResource( 2 )
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Fire" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 27.0
+margin_right = 57.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 6
+
+[node name="FireLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 44.0
+margin_top = 7.0
+margin_right = 55.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stun" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 52.0
+margin_right = 82.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 13 )
+expand = true
+stretch_mode = 6
+
+[node name="StunLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 7.0
+margin_right = 80.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Acc" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 59.0
+margin_right = 89.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 6
+
+[node name="AccLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 7.0
+margin_right = 80.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HurtAnimation" type="AnimationPlayer" parent="."]
+anims/Hurt = SubResource( 6 )
+
+[node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
+"anims/Big knockback" = SubResource( 7 )
+anims/Dead = SubResource( 8 )
+anims/Knockback = SubResource( 9 )
+"anims/Small knockback" = SubResource( 10 )
+
+[node name="MissAnimation" type="AnimationPlayer" parent="."]
+anims/Miss = SubResource( 11 )
+
+[node name="BulletParticles" type="Particles2D" parent="."]
+emitting = false
+amount = 30
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource( 14 )
+texture = ExtResource( 5 )
+
+[node name="BombParticles" type="Particles2D" parent="."]
+emitting = false
+amount = 150
+lifetime = 3.0
+one_shot = true
+explosiveness = 0.95
+randomness = 1.0
+local_coords = false
+process_material = SubResource( 19 )
+texture = ExtResource( 10 )
+
+[node name="LightParticles" type="Particles2D" parent="."]
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 0.95
+randomness = 1.0
+local_coords = false
+process_material = SubResource( 22 )
+texture = ExtResource( 14 )

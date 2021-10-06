@@ -32,10 +32,12 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	else:
 		if path == "Icons/stone" and rsrc_cost is Dictionary:
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
+		var minus:String = "-" if rsrc_cost < 0 else ""
+		rsrc_cost = abs(rsrc_cost)
 		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
-		text = num_str + mass_str
+		text = "%s%s%s" % [minus, num_str, mass_str]
 	text_node.text = text
 	text_node["custom_colors/font_color"] = color
 
@@ -142,9 +144,6 @@ func get_item_name (_name:String):
 
 func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
-
-func get_plant_produce(name:String):
-	return name.split("_")[0]
 
 func get_wid(size:float):
 	return min(round(pow(size / 6000.0, 0.7) * 8.0) + 3, 100)
@@ -324,7 +323,7 @@ func change_circle_size(value, overlays):
 
 func save_obj(type:String, id:int, arr:Array):
 	var save:File = File.new()
-	var file_path:String = "user://Save%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
+	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	save.open(file_path, File.WRITE)
 	save.store_var(arr)
 	save.close()
@@ -552,22 +551,21 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 					continue
 				contents[mat] = amount
 				other_volume += amount / rho / 1000 / h_mult
-	if get_layer(tile, p_i) != "surface":
-		if not tile.has("current_deposit"):
-			for met in game.met_info:
-				var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-				if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
-					if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
-						tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
-		if tile.has("current_deposit"):
-			var met = tile.current_deposit.met
-			var size = tile.current_deposit.size
-			var progress2 = tile.current_deposit.progress
-			var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-			var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
-			contents[met] = amount
-			other_volume += amount / game.met_info[met].density / 1000 / h_mult
-			tile.current_deposit.progress += 1
+	if get_layer(tile, p_i) != "surface" and not tile.has("current_deposit"):
+		for met in game.met_info:
+			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
+			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
+				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
+					tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
+	if tile.has("current_deposit"):
+		var met = tile.current_deposit.met
+		var size = tile.current_deposit.size
+		var progress2 = tile.current_deposit.progress
+		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
+		var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		contents[met] = amount
+		other_volume += amount / game.met_info[met].density / 1000 / h_mult
+		tile.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult))
 	if stone_amount != 0:
@@ -586,7 +584,7 @@ func get_IR_mult(bldg_name:String):
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
-		mult = pow(Data.infinite_research_sciences[sc].value, game.infinite_research[sc])
+		mult = pow(game.maths_bonus.IRM, game.infinite_research[sc])
 	return mult
 
 func add_ship_XP(id:int, XP:float):
@@ -594,13 +592,13 @@ func add_ship_XP(id:int, XP:float):
 	ship_data[id].XP += XP
 	while ship_data[id].XP >= ship_data[id].XP_to_lv:
 		ship_data[id].XP -= ship_data[id].XP_to_lv
-		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * 1.3)
+		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.maths_bonus.SLUGF_XP)
 		ship_data[id].lv += 1
-		ship_data[id].total_HP = round(ship_data[id].total_HP * 1.15)
+		ship_data[id].total_HP = round(ship_data[id].total_HP * game.maths_bonus.SLUGF_Stats)
 		ship_data[id].HP = ship_data[id].total_HP
-		ship_data[id].atk = round(ship_data[id].atk * 1.15)
-		ship_data[id].acc = round(ship_data[id].acc * 1.15)
-		ship_data[id].eva = round(ship_data[id].eva * 1.15)
+		ship_data[id].atk = round(ship_data[id].atk * game.maths_bonus.SLUGF_Stats)
+		ship_data[id].acc = round(ship_data[id].acc * game.maths_bonus.SLUGF_Stats)
+		ship_data[id].eva = round(ship_data[id].eva * game.maths_bonus.SLUGF_Stats)
 
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
@@ -726,15 +724,15 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			else:
 				rsrc_text.text = ""
 				capacity_bar.value = 0
-		"SPR":
-			if tile.bldg.has("qty"):
-				var reaction_info = get_reaction_info(tile)
-				var MM_value = reaction_info.MM_value
-				capacity_bar.value = reaction_info.progress
-				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+#		"SPR":
+#			if tile.bldg.has("qty"):
+#				var reaction_info = get_reaction_info(tile)
+#				var MM_value = reaction_info.MM_value
+#				capacity_bar.value = reaction_info.progress
+#				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
+#			else:
+#				rsrc_text.text = ""
+#				capacity_bar.value = 0
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
@@ -846,14 +844,7 @@ func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
-	if num is float:
-		if num == 0:
-			return
-		if dict.has(item):
-			dict[item] += num
-		else:
-			dict[item] = num
-	else:
+	if num is Dictionary:
 		if not dict.has("stone"):
 			dict.stone = {}
 		for el in num:
@@ -861,6 +852,13 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 				dict.stone[el] += num[el]
 			else:
 				dict.stone[el] = num[el]
+	else:
+		if num == 0:
+			return
+		if dict.has(item):
+			dict[item] += num
+		else:
+			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
 	return game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
@@ -882,7 +880,7 @@ func update_bldg_constr(tile):
 	var length = tile.bldg.construction_length
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
-	if progress > 1:
+	if progress >= 1:
 		if tile.bldg.is_constructing:
 			tile.bldg.is_constructing = false
 			game.universe_data[game.c_u].xp += tile.bldg.XP
@@ -891,6 +889,21 @@ func update_bldg_constr(tile):
 			if tile.bldg.has("rover_id"):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")
+			if tile.has("auto_GH"):
+				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
+				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
+				for p in produce_info.produce:
+					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
+					if tile.adj_lake_state == "l":
+						tile.auto_GH.produce[p] *= 2
+					elif tile.adj_lake_state == "sc":
+						tile.auto_GH.produce[p] *= 4
+					game.autocollect.mets[p] += tile.auto_GH.produce[p]
+				if tile.adj_lake_state == "l":
+					tile.auto_GH.cellulose_drain *= 2
+				elif tile.adj_lake_state == "sc":
+					tile.auto_GH.cellulose_drain *= 4
+				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
 			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
@@ -1127,56 +1140,139 @@ func get_star_modulate (star_class:String):
 			m = Color(0.05, 0.05, 0.05, 1)
 	return m
 
-func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, icons:Array, n:float = 1):
-	var tooltip:String = ""
+func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	var bldg:String = dict.bldg.name
-	icons.append_array(Data.desc_icons[bldg] if Data.desc_icons.has(bldg) else [])
 	var mult:float = get_prod_mult(dict)
 	var IR_mult:float = dict.bldg.IR_mult
-	var path_1_value
-	if bldg == "SP":
-		path_1_value = get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict))
-	elif bldg == "AE":
-		path_1_value = get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult)
-	elif bldg != "PCC":
-		path_1_value = dict.bldg.path_1_value * mult
-	var path_2_value
-	var path_3_value
-	if dict.bldg.has("path_2_value"):
-		path_2_value = dict.bldg.path_2_value
+	if bldg in ["MM", "GH", "AMN", "SPR"]:
+		n = 1
+	if path == 1:
+		if bldg == "SP":
+			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
+		elif bldg == "AE":
+			return get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult) * n
+		elif bldg == "SPR":
+			return dict.bldg.path_1_value * mult * n * game.u_i.charge
+		else:
+			return dict.bldg.path_1_value * mult * n
+	elif path == 2:
 		if Data.path_2[bldg].is_value_integer:
-			path_2_value = round(path_2_value)
-	if dict.bldg.has("path_3_value"):
-		path_3_value = clever_round(dict.bldg.path_3_value)
-	if path_1_value:
-		path_1_value = clever_round(path_1_value * n)
-	if path_2_value:
-		path_2_value = clever_round(path_2_value * n)
+			return round(dict.bldg.path_2_value * IR_mult * n)
+		else:
+			if bldg == "SPR":
+				return dict.bldg.path_2_value * mult * n * game.u_i.charge
+			else:
+				return dict.bldg.path_2_value * IR_mult * n
+	elif path == 3:
+		return dict.bldg.path_3_value
+
+func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
+	var tooltip:String = ""
+	var bldg:String = dict.bldg.name
+	var path_1_value = get_final_value(p_i, dict, 1, n) if dict.bldg.has("path_1_value") else 0.0
+	var path_2_value = get_final_value(p_i, dict, 2, n) if dict.bldg.has("path_2_value") else 0.0
+	var path_3_value = get_final_value(p_i, dict, 3, n) if dict.bldg.has("path_3_value") else 0.0
+	return get_bldg_tooltip2(bldg, path_1_value, path_2_value, path_3_value)
+
+func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(round(path_2_value * IR_mult), 6)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(round(path_2_value), 6)]
 		"AMN", "SPR":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(clever_round(path_2_value * IR_mult))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"MM":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"SC", "GF", "SE":
-			tooltip = "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value), Data.path_2[bldg].desc % format_num(path_2_value), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(clever_round(path_1_value)), Data.path_2[bldg].desc % format_num(clever_round(path_2_value)), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
 		"MS":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
+			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			tooltip = (Data.path_1[bldg].desc) % [format_num(path_1_value)]
+			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
 		"GH":
-			tooltip = (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value), format_num(path_2_value)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
 		"CBD":
-			tooltip = "%s\n%s\n%s" % [
-				Data.path_1[bldg].desc % path_1_value,
+			return "%s\n%s\n%s" % [
+				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,
 				Data.path_3[bldg].desc.format({"n":path_3_value})]
-	return tooltip
+		_:
+			return ""
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
+
+func check_lake_presence(pos:Vector2, wid:int):
+	var state:String
+	var has_lake = false
+	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
+		if not has_lake:
+			for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
+				if Vector2(i, j) != pos:
+					var id2 = i % wid + j * wid
+					if game.tile_data[id2] and game.tile_data[id2].has("lake"):
+						has_lake = true
+						state = game.tile_data[id2].lake.state
+						break
+	return {"has_lake":has_lake, "lake_state":state}
+
+func check_lake(pos:Vector2, wid:int, seed_name:String):
+	var state
+	var has_lake = false
+	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
+		for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
+			if Vector2(i, j) != pos:
+				var id2 = i % wid + j * wid
+				if game.tile_data[id2] and game.tile_data[id2].has("lake"):
+					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[seed_name].lake
+					has_lake = has_lake or okay
+					if okay:
+						state = game.tile_data[id2].lake.state
+	return [has_lake, state]
+
+func remove_recursive(path):
+	var directory = Directory.new()
+	
+	# Open directory
+	var error = directory.open(path)
+	if error == OK:
+		# List directory content
+		directory.list_dir_begin(true)
+		var file_name = directory.get_next()
+		while file_name != "":
+			if directory.current_is_dir():
+				remove_recursive(path + "/" + file_name)
+			else:
+				directory.remove(file_name)
+			file_name = directory.get_next()
+		
+		# Remove current path
+		directory.remove(path)
+	else:
+		print("Error removing " + path)
+
+func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, total_stone:float):
+	for el in game.stone:
+		var item:String
+		var el_num = 0
+		if el == "Si":
+			item = "silicon"
+			el_num = game.stone[el] * amount / total_stone / 30.0
+		elif el == "Fe" and game.science_unlocked.has("ISC"):
+			item = "iron"
+			el_num = game.stone[el] * amount / total_stone / 30.0
+		elif el == "Al" and game.science_unlocked.has("ISC"):
+			item = "aluminium"
+			el_num = game.stone[el] * amount / total_stone / 50.0
+		elif el == "O":
+			item = "sand"
+			el_num = game.stone[el] * amount / total_stone / 2.0
+		elif el == "Ti" and game.science_unlocked.has("ISC"):
+			item = "titanium"
+			el_num = game.stone[el] * amount / total_stone / 500.0
+		el_num = stepify(el_num * path_3_value, 0.001)
+		if el_num != 0:
+			expected_rsrc[item] = el_num

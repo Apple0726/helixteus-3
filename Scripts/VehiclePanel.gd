@@ -8,20 +8,30 @@ var spd_icon = load("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
+var probe_over_id:int = -1
 var probe_time_bars:Array = []
 
 func _ready():
 	set_polygon(rect_size)
 
 func _input(event):
-	if modulate.a == 1 and Input.is_action_just_released("X") and rover_over_id != -1:
-		game.rover_data[rover_over_id] = null
-		rover_over_id = -1
-		game.hide_adv_tooltip()
-		refresh()
+	if modulate.a == 1 and Input.is_action_just_released("X"):
+		if rover_over_id != -1:
+			game.rover_data[rover_over_id] = null
+			rover_over_id = -1
+			game.hide_adv_tooltip()
+			refresh()
+		elif probe_over_id != -1:
+			if game.probe_data[probe_over_id].tier == 2:
+				game.show_YN_panel("destroy_tri_probe", tr("DESTROY_TRI_PROBE"), [probe_over_id])
+			else:
+				game.probe_data[probe_over_id] = null
+				probe_over_id = -1
+				game.hide_tooltip()
+				refresh()
 
 func refresh():
-	$Panel.visible = game.science_unlocked.FG
+	$Panel.visible = game.science_unlocked.has("FG")
 	$Probes.visible = game.universe_data[game.c_u].lv >= 50
 	var hbox = $Rovers/HBox
 	var hbox2 = $Panel/GridContainer
@@ -55,17 +65,21 @@ func refresh():
 		var fighter_num = Label.new()
 		fighter_num.text = "x %s" % [fighter_info.number]
 		fighter_num.align = Label.ALIGN_CENTER
-		fighter_num.rect_position = Vector2(40, 70)
+		fighter_num.rect_position = Vector2(110, 40)
 		fighter.texture_normal = load("res://Graphics/Ships/Fighter.png")
 		fighter.expand = true
 		fighter.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		fighter.rect_min_size = Vector2(80, 80)
+		fighter.rect_min_size = Vector2(160, 60)
 		fighter.add_child(fighter_num)
 		hbox2.add_child(fighter)
 		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info])
 		fighter.connect("mouse_exited", self, "on_fighter_exit")
 		fighter.connect("pressed", self, "on_fighter_press", [i])
+	var probe_num:int = 0
 	for i in len(game.probe_data):
+		if not game.probe_data[i]:
+			continue
+		probe_num += 1
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = TextureButton.new()
 		probe.texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
@@ -73,7 +87,7 @@ func refresh():
 		probe.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		probe.rect_min_size = Vector2(80, 80)
 		hbox3.add_child(probe)
-		probe.connect("mouse_entered", self, "on_probe_enter", [probe_info.tier])
+		probe.connect("mouse_entered", self, "on_probe_enter", [probe_info.tier, i])
 		probe.connect("mouse_exited", self, "on_fighter_exit")
 		probe.connect("pressed", self, "on_probe_press", [probe_info.tier])
 		if probe_info.has("start_date"):
@@ -82,8 +96,9 @@ func refresh():
 			time_bar.rect_position = Vector2(30, 0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
+	$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
 	for probe in game.probe_data:
-		if probe.has("start_date"):
+		if probe and probe.has("start_date"):
 			$Timer.start()
 			_on_Timer_timeout()
 			break
@@ -106,7 +121,8 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 func on_fighter_enter(fighter_info:Dictionary):
 	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), fighter_info.strength, tr("CLICK_TO_VIEW_GALAXY")])
 
-func on_probe_enter(tier:int):
+func on_probe_enter(tier:int, probe_id:int):
+	probe_over_id = probe_id
 	if tier == 0:
 		game.show_tooltip(tr("CLICK_TO_VIEW_SC"))
 	elif tier == 1:
@@ -179,11 +195,16 @@ func _on_close_button_pressed():
 
 
 func _on_Timer_timeout():
+	if not visible:
+		return
 	var curr_time = OS.get_system_time_msecs()
+	var refresh:bool = false
 	for dict in probe_time_bars:
 		var i = dict.i
 		var probe = game.probe_data[i]
 		var bar = dict.node
+		if not probe.has("start_date"):
+			continue
 		var start_date = probe.start_date
 		var length = probe.explore_length
 		var progress = (curr_time - start_date) / float(length)
@@ -200,13 +221,16 @@ func _on_Timer_timeout():
 					cluster_data[probe.obj_to_discover].visible = true
 					Helper.save_obj("Superclusters", 0, cluster_data)
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+				refresh = true
 			elif probe.tier == 1:
 				if probe.obj_to_discover >= len(game.supercluster_data):
 					game.generate_superclusters(game.c_u)
 				game.supercluster_data[probe.obj_to_discover].visible = true
 				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
 				game.save_sc()
-			game.probe_data.remove(i)
-			refresh()
-			yield(get_tree(), "idle_frame")
+				refresh = true
+			game.probe_data[i] = null
+	if refresh:
+		refresh()
+	yield(get_tree(), "idle_frame")
 	$Timer.start()

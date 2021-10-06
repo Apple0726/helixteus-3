@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -74,11 +74,34 @@ shader_param/noise_scale = Vector2( 1, 1 )
 [sub_resource type="CircleShape2D" id=7]
 radius = 40.0
 
-[sub_resource type="DynamicFont" id=8]
-size = 14
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 26 )
+[sub_resource type="Animation" id=8]
+resource_name = "Fade"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rect_position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 184, 520 ), Vector2( 184, 515 ) ]
+}
 
 [sub_resource type="DynamicFont" id=9]
 size = 14
@@ -86,7 +109,13 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="DynamicFont" id=10]
+size = 14
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 26 )
+
+[sub_resource type="StyleBoxFlat" id=11]
 content_margin_left = 10.0
 content_margin_right = 10.0
 content_margin_top = 10.0
@@ -99,7 +128,7 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=12]
 content_margin_left = 10.0
 content_margin_right = 10.0
 content_margin_top = 5.0
@@ -112,14 +141,14 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=13]
 size = 25
 use_mipmaps = true
 use_filter = true
 extra_spacing_char = 2
 font_data = ExtResource( 26 )
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=14]
 size = 18
 use_mipmaps = true
 use_filter = true
@@ -400,12 +429,63 @@ __meta__ = {
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
 
+[node name="BottomLeft" type="HBoxContainer" parent="UI2"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -104.0
+margin_right = 216.0
+theme = ExtResource( 29 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft"]
+margin_bottom = 104.0
+grow_vertical = 0
+custom_constants/separation = 7
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBox"]
+margin_top = 23.0
+margin_bottom = 47.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBox"]
+margin_top = 54.0
+margin_bottom = 104.0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 50 )
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Filter" type="Button" parent="UI2/BottomLeft"]
+margin_left = 4.0
+margin_top = 70.0
+margin_right = 68.0
+margin_bottom = 104.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Filter"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Filters" type="PanelContainer" parent="UI2"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 184.0
-margin_top = 560.0
+margin_top = 530.0
 margin_right = 332.0
-margin_bottom = 620.0
+margin_bottom = 590.0
 grow_vertical = 0
 theme = ExtResource( 29 )
 __meta__ = {
@@ -433,56 +513,8 @@ margin_left = 88.0
 margin_right = 128.0
 texture = ExtResource( 8 )
 
-[node name="BottomLeft" type="Control" parent="UI2"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -96.0
-margin_right = 216.0
-theme = ExtResource( 29 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI2/BottomLeft"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -88.0
-margin_right = 152.0
-grow_vertical = 0
-custom_constants/separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBoxContainer"]
-margin_right = 152.0
-margin_bottom = 24.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBoxContainer"]
-margin_top = 34.0
-margin_right = 152.0
-margin_bottom = 84.0
-grow_vertical = 0
-rect_min_size = Vector2( 0, 50 )
-custom_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Filter" type="Button" parent="UI2/BottomLeft/VBoxContainer/InventorySlots"]
-margin_top = 16.0
-margin_right = 64.0
-margin_bottom = 50.0
-size_flags_vertical = 8
-text = "Filter"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI2/Filters"]
+anims/Fade = SubResource( 8 )
 
 [node name="Ship2Map" parent="UI2" instance=ExtResource( 32 )]
 visible = false
@@ -536,7 +568,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.580392, 1, 0.521569, 1 )
 text = "1 / 30"
 align = 1
@@ -592,7 +624,7 @@ margin_left = 1092.0
 margin_top = 692.0
 margin_right = 1260.0
 margin_bottom = 708.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 1, 0.807812, 0.671875, 1 )
 align = 1
 valign = 1
@@ -610,7 +642,7 @@ grow_horizontal = 0
 grow_vertical = 2
 rect_pivot_offset = Vector2( -96, 0 )
 theme = ExtResource( 29 )
-custom_styles/panel = SubResource( 10 )
+custom_styles/panel = SubResource( 11 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -638,8 +670,8 @@ __meta__ = {
 margin_right = 70.0
 margin_bottom = 39.0
 mouse_filter = 1
-custom_styles/normal = SubResource( 19 )
-custom_fonts/font = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+custom_fonts/font = SubResource( 13 )
 text = "B1F"
 align = 1
 __meta__ = {
@@ -653,7 +685,7 @@ margin_bottom = 34.0
 mouse_filter = 1
 size_flags_vertical = 0
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 19 )
+custom_styles/normal = SubResource( 12 )
 text = "Difficulty: 1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -675,7 +707,7 @@ margin_left = 156.0
 margin_top = 84.0
 margin_right = 432.0
 margin_bottom = 504.0
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 14 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "RELIC_TEXT"
 valign = 1
@@ -685,6 +717,7 @@ __meta__ = {
 }
 
 [node name="Controls" type="Label" parent="UI2"]
+visible = false
 margin_left = 544.0
 margin_top = 128.0
 margin_right = 736.0
@@ -692,7 +725,7 @@ margin_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 19 )
+custom_styles/normal = SubResource( 12 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -717,13 +750,13 @@ modulate = Color( 0.705882, 1, 0.705882, 1 )
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
 [connection signal="body_exited" from="Hole" to="." method="_on_body_exited"]
+[connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= [ "money" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_entered" binds= [ "minerals" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_entered" binds= [ "stone" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_exited"]
-[connection signal="pressed" from="UI2/BottomLeft/VBoxContainer/InventorySlots/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]

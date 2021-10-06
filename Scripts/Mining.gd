@@ -93,10 +93,21 @@ func update_info(first_time:bool = false):
 			if first_time:
 				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0
-				$MantleBG.modulate.a = 0.25
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					$MantleBG.modulate.a = 0.25
+				else:
+					$MantleBGNoShader.visible = true
+					$MantleBGNoShader.modulate.a = 0.45
 			else:
+				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
 				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
-				BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				else:
+					$MantleBGNoShader.visible = true
+					BG_tween.interpolate_property($MantleBGNoShader, "modulate", null, Color(1, 1, 1, 0.45), 3)
 				BG_tween.start()
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
@@ -115,7 +126,8 @@ func update_info(first_time:bool = false):
 		unit = "km"
 	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
 	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
-	$LayerInfo/Layer.text = tr("LAYER") + ": " + tr(layer.to_upper())
+	$LayerInfo/Layer.bbcode_text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
+	$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
 	if unit == "m":
 		$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
@@ -217,6 +229,9 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name"):
 		return
+	if tile.depth > floor(p_i.size * 500.0):
+		game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		return
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
@@ -233,7 +248,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(3, 0.1, 1)
-	progress += 2 * game.pickaxe.speed * speed_mult * pow(Data.infinite_research_sciences.MMS.value, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
+	progress += 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_dur"):
 		game.pickaxe.liquid_dur -= 1
@@ -323,9 +338,12 @@ func _process(delta):
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
-		circ_disabled = false
-		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
+		if tile.depth <= floor(p_i.size * 500.0):
+			circ_disabled = false
+			$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+			$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
+		else:
+			game.popup(tr("CENTER_OF_PLANET"), 2.0)
 
 func _on_Button_button_up():
 	circ_disabled = true
@@ -335,12 +353,6 @@ func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))
 
 func _on_CheckBox_mouse_exited():
-	game.hide_tooltip()
-
-func _on_Layer_mouse_entered():
-	game.show_tooltip(tr(layer.to_upper() + "_DESC"))
-
-func _on_Layer_mouse_exited():
 	game.hide_tooltip()
 
 func _on_AutoReplace_pressed():

@@ -35,28 +35,29 @@ onready var planet_bounds:PoolVector2Array = [Vector2.ONE, Vector2(1, wid * 200)
 
 var mass_build_rect:NinePatchRect
 var mass_build_rect_size:Vector2
+var shadow_num:int = 0
 var wormhole
 var timer:Timer
 var interval:float = 0.1
+var star_mod:Color
 
 func _ready():
-	if game.enable_shaders:
-		var brightness:float = game.tile_brightness[p_i.type - 3]
-		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
-		var lum:float = 0.0
-		for star in game.system_data[game.c_s].stars:
-			var sc:float = 0.5 * star.size / (p_i.distance / 500)
-			if star.luminosity > lum:
-				$TileMap.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
-				var strength_mult = 1.0
-				if p_i.temperature >= 500:
-					strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
-				else:
-					strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
-				$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
-				lum = star.luminosity
-	else:
-		$TileMap.material.shader = null
+	shadows.resize(wid * wid)
+	var brightness:float = game.tile_brightness[p_i.type - 3]
+	$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
+	var lum:float = 0.0
+	for star in game.system_data[game.c_s].stars:
+		var sc:float = 0.5 * star.size / (p_i.distance / 500)
+		if star.luminosity > lum:
+			star_mod = Helper.get_star_modulate(star.class)
+			$TileMap.material.set_shader_param("star_mod", star_mod)
+			var strength_mult = 1.0
+			if p_i.temperature >= 500:
+				strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
+			else:
+				strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
+			$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
+			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = interval
@@ -74,6 +75,7 @@ func _ready():
 	dimensions = wid * 200
 	$TileMap.tile_set = game.planet_TS
 	$Obstacles.tile_set = game.obstacles_TS
+	$Obstacles.modulate = star_mod
 	var lake_1_phase = "G"
 	var lake_2_phase = "G"
 	if p_i.has("lake_1"):
@@ -109,20 +111,26 @@ func _ready():
 				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
 				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
 				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), 1.0, 1.0)
-				aurora.modulate.a = 0.5
+				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
+				aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
 				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
 				metal.scale *= 0.4
 				add_child(metal)
-				metal.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				$Obstacles.set_cell(i, j, 1 + tile.crater.variant)
-			if tile.has("plant"):
-				$Soil.set_cell(i, j, 0)
-				if not tile.plant.empty():
-					add_plant(id2, tile.plant.name)
+				metal.position = Vector2(i, j) * 200 + Vector2(100, 70)
+				var crater = Sprite.new()
+				if tile.crater.variant == 3:
+					tile.crater.variant = 2
+				if tile.crater.variant == 1:
+					crater.texture = preload("res://Graphics/Tiles/Crater/1.png")
+				else:
+					crater.texture = preload("res://Graphics/Tiles/Crater/2.png")
+				crater.scale *= clamp(range_lerp(tile.crater.init_depth, 10, 1000, 0.4, 1.0), 0.4, 1.0)
+				add_child(crater)
+				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
 			if tile.has("rock"):
@@ -163,6 +171,18 @@ func _ready():
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 0)
 				elif tile.lake.state == "sc":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 1)
+			if tile.has("plant"):
+				var lake_data:Dictionary = Helper.check_lake_presence(Vector2(id2 % wid, int(id2 / wid)), wid)
+				if lake_data.has_lake:
+					game.tile_data[id2].adj_lake_state = lake_data.lake_state
+				$Soil.set_cell(i, j, 0)
+				if not tile.plant.empty():
+					add_plant(id2, tile.plant.name)
+					if game.science_unlocked.has("GHA"):
+						items_collected.clear()
+						harvest_plant(tile, id2)
+						tile.plant.clear()
+						game.show_collect_info(items_collected)
 	if p_i.has("lake_1"):
 		$Lakes1.update_bitmask_region()
 	if p_i.has("lake_2"):
@@ -177,13 +197,14 @@ func add_particles(pos:Vector2):
 	add_child(particle)
 
 func show_tooltip(tile):
+	if not tile:
+		return
 	var tooltip:String = ""
 	var icons = []
 	var adv = false
-	if not tile:
-		return
 	if tile.has("bldg"):
-		tooltip += Helper.get_bldg_tooltip(p_i, tile, icons)
+		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
+		icons.append_array(Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
 		adv = len(icons) > 0
 		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
 			game.help_str = "tile_shortcuts"
@@ -224,7 +245,7 @@ func show_tooltip(tile):
 			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
 			game.help_str = "boulder_desc"
 	elif tile.has("ship"):
-		if game.science_unlocked.SCT:
+		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
 			if game.help.abandoned_ship:
@@ -252,15 +273,14 @@ func show_tooltip(tile):
 		adv = tile.has("aurora")
 		if adv:
 			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
-		var cave = game.cave_data[tile.cave.id]
 		tooltip += tr("CAVE")
-		var floor_size:String = tr("FLOOR_SIZE").format({"size":cave.floor_size})
-		if cave.has("special_cave") and cave.special_cave == 1:
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
+		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
 			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
-		if not game.science_unlocked.RC:
-			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+		if not game.science_unlocked.has("RC"):
+			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
-			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % cave.num_floors, floor_size]
+			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 	elif tile.has("diamond_tower"):
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
 		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]
@@ -352,7 +372,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 
 func seeds_plant(tile, tile_id:int, curr_time, mass_plant:bool = false):
 	#Plants can't grow when not adjacent to lakes
-	var check_lake = check_lake(tile_id)
+	var check_lake = Helper.check_lake(Vector2(tile_id % wid, int(tile_id / wid)), wid, game.item_to_use.name)
 	if check_lake[0]:
 		tile.plant.name = game.item_to_use.name
 		game.item_to_use.num -= 1
@@ -382,14 +402,14 @@ func harvest_plant(tile, tile_id:int):
 		return
 	var curr_time = OS.get_system_time_msecs()
 	if curr_time >= tile.plant.grow_time + tile.plant.plant_date:
-		var plant:String = Helper.get_plant_produce(tile.plant.name)
-		var produce:float = game.craft_agriculture_info[tile.plant.name].produce
-		produce *= Helper.get_au_mult(tile)
-		if tile.has("bldg") and tile.bldg.name == "GH":
-			produce *= tile.bldg.path_2_value
-		game.show[plant] = true
+		var produce:Dictionary = game.craft_agriculture_info[tile.plant.name].produce.duplicate(true)
+		for p in produce:
+			produce[p] *= Helper.get_au_mult(tile)
+			if tile.has("bldg") and tile.bldg.name == "GH":
+				produce[p] *= tile.bldg.path_2_value
+			game.show[p] = true
+			Helper.add_item_to_coll(items_collected, p, produce[p])
 		game.show.metals = true
-		Helper.add_item_to_coll(items_collected, plant, produce)
 		tile.plant.clear()
 		remove_child(plant_sprites[String(tile_id)])
 		plant_sprites[String(tile_id)].queue_free()
@@ -448,6 +468,17 @@ func click_tile(tile, tile_id:int):
 		if not tile.bldg.is_constructing:
 			game.c_t = tile_id
 			match bldg:
+				"GH":
+					if game.science_unlocked.has("GHA"):
+						game.greenhouse_panel.c_v = "planet"
+						if tiles_selected.empty():
+							game.greenhouse_panel.tiles_selected = [tile_id]
+							game.greenhouse_panel.tile_num = 1
+						else:
+							game.greenhouse_panel.tiles_selected = tiles_selected.duplicate(true)
+							game.greenhouse_panel.tile_num = len(tiles_selected)
+						game.greenhouse_panel.p_i = p_i
+						game.toggle_panel(game.greenhouse_panel)
 				"RCC":
 					game.toggle_panel(game.RC_panel)
 				"SY":
@@ -514,31 +545,32 @@ func destroy_bldg(id2:int, mass:bool = false):
 					continue
 				if _tile.has("cost_div_dict"):
 					_tile.cost_div_dict.erase(String(id2))
-				if _tile.cost_div_dict.empty():
-					_tile.erase("cost_div_dict")
-					_tile.erase("cost_div")
-				else:
-					var div:float = 1.0
-					for st in _tile.cost_div_dict:
-						div = max(div, _tile.cost_div_dict[st])
-					_tile.cost_div = div
-				_tile.auto_collect_dict.erase(String(id2))
-				if _tile.auto_collect_dict.empty():
-					_tile.erase("auto_collect_dict")
-					_tile.erase("auto_collect")
-				else:
-					var new_value:float = 0
-					for st in _tile.auto_collect_dict:
-						new_value = max(new_value, _tile.auto_collect_dict[st])
-					var diff:float = max(0, _tile.auto_collect - new_value)
-					_tile.auto_collect = new_value
-					if tile.has("bldg"):
-						if tile.bldg.name == "ME":
-							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
-							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
-						elif tile.bldg.name in ["PP", "SP"]:
-							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
-							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
+					if _tile.cost_div_dict.empty():
+						_tile.erase("cost_div_dict")
+						_tile.erase("cost_div")
+					else:
+						var div:float = 1.0
+						for st in _tile.cost_div_dict:
+							div = max(div, _tile.cost_div_dict[st])
+						_tile.cost_div = div
+				if _tile.has("auto_collect_dict"):
+					_tile.auto_collect_dict.erase(String(id2))
+					if _tile.auto_collect_dict.empty():
+						_tile.erase("auto_collect_dict")
+						_tile.erase("auto_collect")
+					else:
+						var new_value:float = 0
+						for st in _tile.auto_collect_dict:
+							new_value = max(new_value, _tile.auto_collect_dict[st])
+						var diff:float = max(0, _tile.auto_collect - new_value)
+						_tile.auto_collect = new_value
+						if tile.has("bldg"):
+							if tile.bldg.name == "ME":
+								game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
+								game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
+							elif tile.bldg.name in ["PP", "SP"]:
+								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
+								game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
 	else:
 		if tile.has("auto_collect"):
 			if bldg == "ME":
@@ -554,10 +586,10 @@ func destroy_bldg(id2:int, mass:bool = false):
 		game.show_collect_info(items_collected)
 
 func add_shadows():
-	for sh in shadows:
-		remove_child(sh)
-		sh.queue_free()
-	shadows.clear()
+#	for sh in shadows:
+#		remove_child(sh)
+#		sh.queue_free()
+#	shadows.clear()
 	var poly:Rect2 = Rect2(mass_build_rect.rect_position, Vector2.ZERO)
 	poly.end = mouse_pos
 	poly = poly.abs()
@@ -565,9 +597,16 @@ func add_shadows():
 		for j in wid:
 			var shadow_pos:Vector2 = Vector2(i * 200, j * 200) + Vector2(100, 100)
 			var tile_rekt:Rect2 = Rect2(Vector2(i * 200, j * 200), Vector2.ONE * 200)
-			if poly.intersects(tile_rekt) and available_to_build(game.tile_data[get_tile_id_from_pos(shadow_pos)]):
-				shadows.append(put_shadow(Sprite.new(), shadow_pos))
-	game.HUD.refresh()
+			var id2:int = i % wid + j * wid
+			if is_instance_valid(shadows[id2]) and is_a_parent_of(shadows[id2]):
+				if not poly.intersects(tile_rekt):
+					remove_child(shadows[id2])
+					shadows[id2].queue_free()
+					shadow_num -= 1
+			else:
+				if poly.intersects(tile_rekt) and available_to_build(game.tile_data[id2]):
+					shadows[id2] = put_shadow(Sprite.new(), shadow_pos)
+					shadow_num += 1
 
 func remove_selected_tiles():
 	tiles_selected.clear()
@@ -590,15 +629,20 @@ func _unhandled_input(event):
 		if tile and tile.has("bldg"):
 			if Input.is_action_just_released("Q"):
 				game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-				construct(tile.bldg.name, Data.costs[tile.bldg.name])
-			if Input.is_action_just_released("F"):
+				var base_cost = Data.costs[tile.bldg.name].duplicate(true)
+				for cost in base_cost:
+					base_cost[cost] *= game.engineering_bonus.BCM
+				if tile.bldg.name == "GH":
+					base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
+				construct(tile.bldg.name, base_cost)
+			elif Input.is_action_just_released("F"):
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():
 					game.upgrade_panel.ids = [tile_over]
 				else:
 					game.upgrade_panel.ids = tiles_selected.duplicate(true)
 				game.toggle_panel(game.upgrade_panel)
-			if Input.is_action_just_released("X") and not game.active_panel:
+			elif Input.is_action_just_released("X") and not game.active_panel:
 				game.hide_adv_tooltip()
 				game.hide_tooltip()
 				if tiles_selected.empty():
@@ -613,15 +657,90 @@ func _unhandled_input(event):
 					if tile.has("cost_div"):
 						money_cost /= tile.cost_div
 					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
-					if money_cost >= total_XP / 100.0:
+					if money_cost >= total_XP / 10.0:
 						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
 					else:
 						destroy_bldg(tile_over)
 						game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
+			elif Input.is_action_just_released("G") and not tiles_selected.empty():
+				items_collected.clear()
+				if tile.bldg.name in ["GF", "SE"]:
+					for tile_id in tiles_selected:
+						var _tile = game.tile_data[tile_id]
+						if _tile.bldg.has("qty1"):
+							var prod_i = Helper.get_prod_info(_tile)
+							if _tile.bldg.name == "GF":
+								Helper.add_item_to_coll(items_collected, "sand", prod_i.qty_left)
+								Helper.add_item_to_coll(items_collected, "glass", prod_i.qty_made)
+								game.add_resources({"sand":prod_i.qty_left, "glass":prod_i.qty_made})
+							elif _tile.bldg.name == "SE":
+								Helper.add_item_to_coll(items_collected, "coal", prod_i.qty_left)
+								Helper.add_item_to_coll(items_collected, "energy", prod_i.qty_made)
+								game.add_resources({"coal":prod_i.qty_left, "energy":prod_i.qty_made})
+							_tile.bldg.erase("qty1")
+							_tile.bldg.erase("start_date")
+							_tile.bldg.erase("ratio")
+							_tile.bldg.erase("qty2")
+						else:
+							var rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
+							if game.check_enough(rsrc_to_deduct):
+								game.deduct_resources(rsrc_to_deduct)
+								_tile.bldg.qty1 = _tile.bldg.path_2_value
+								_tile.bldg.start_date = OS.get_system_time_msecs()
+								var ratio:float = _tile.bldg.path_3_value
+								if _tile.bldg.name == "GF":
+									ratio /= 15.0
+								elif _tile.bldg.name == "SE":
+									ratio *= 40.0
+								_tile.bldg.ratio = ratio
+								_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
+				elif tile.bldg.name == "SC":
+					for tile_id in tiles_selected:
+						var _tile = game.tile_data[tile_id]
+						if not _tile.bldg.has("stone"):
+							var stone_qty = _tile.bldg.path_2_value
+							var stone_total = Helper.get_sum_of_dict(game.stone)
+							if stone_total >= stone_qty:
+								var stone_to_crush:Dictionary = {}
+								for el in game.stone:
+									stone_to_crush[el] = stone_qty / stone_total * game.stone[el]
+									game.stone[el] *= (1.0 - stone_qty / stone_total)
+								_tile.bldg.stone = stone_to_crush
+								_tile.bldg.stone_qty = stone_qty
+								_tile.bldg.start_date = OS.get_system_time_msecs()
+								var expected_rsrc:Dictionary = {}
+								Helper.get_SC_output(expected_rsrc, stone_qty, _tile.bldg.path_3_value, stone_total)
+								_tile.bldg.expected_rsrc = expected_rsrc
+						else:
+							var time = OS.get_system_time_msecs()
+							var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
+							var qty_left = max(0, round(_tile.bldg.stone_qty - (time - _tile.bldg.start_date) / 1000.0 * crush_spd))
+							if qty_left > 0:
+								var progress = (time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
+								for el in _tile.bldg.stone:
+									game.stone[el] += qty_left / _tile.bldg.stone_qty * _tile.bldg.stone[el]
+								var rsrc_collected = _tile.bldg.expected_rsrc.duplicate(true)
+								for rsrc in rsrc_collected:
+									rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
+									Helper.add_item_to_coll(items_collected, rsrc, rsrc_collected[rsrc])
+								game.add_resources(rsrc_collected)
+							else:
+								for rsrc in _tile.bldg.expected_rsrc:
+									Helper.add_item_to_coll(items_collected, rsrc, _tile.bldg.expected_rsrc[rsrc])
+								game.add_resources(_tile.bldg.expected_rsrc)
+							_tile.bldg.erase("stone")
+							_tile.bldg.erase("stone_qty")
+							_tile.bldg.erase("start_date")
+							_tile.bldg.erase("expected_rsrc")
+					game.HUD.refresh()
+				game.show_collect_info(items_collected)
 		if Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
+			var path_1_value_sum:float = 0
+			var path_2_value_sum:float = 0
+			var path_3_value_sum:float = 0
 			for i in len(game.tile_data):
 				var select:bool = false
 				var tile2 = game.tile_data[i]
@@ -635,17 +754,34 @@ func _unhandled_input(event):
 					if tile2.has("plant") and not tile2.plant.empty() and tile2.plant.name == tile.plant.name:
 						select = true
 				if select:
+					if tile.has("bldg"):
+						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE", "GF"]:
+							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
+							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
+						elif tile.bldg.name in ["RL", "MS"]:
+							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
+						else:
+							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
+							path_2_value_sum = Helper.get_final_value(p_i, tile2, 2) if tile2.bldg.has("path_2_value") else 0
+						path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
 					tiles_selected.append(i)
 					var white_rect = game.white_rect_scene.instance()
 					white_rect.position.x = (i % wid) * 200
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
+			if tile.has("bldg"):
+				if Data.desc_icons.has(tile.bldg.name):
+					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum), Data.desc_icons[tile.bldg.name])
+				else:
+					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
-				
+		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
+			if game.tile_data[tile_over]:
+				show_tooltip(game.tile_data[tile_over])
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
-	if event is InputEventMouseMotion:
+	if event is InputEventMouse or event is InputEventScreenDrag:
 		mouse_pos = to_local(event.position)
 		var mouse_on_tiles = Geometry.is_point_in_polygon(mouse_pos, planet_bounds)
 		var N:int = mass_build_rect_size.x
@@ -661,7 +797,7 @@ func _unhandled_input(event):
 				mass_build_rect.rect_scale.y = -1
 			else:
 				mass_build_rect.rect_scale.y = 1
-			var delta:Vector2 = event.relative / view.scale
+			var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
 			var new_x = stepify(round(mouse_pos.x - 100), 200)
 			var new_y = stepify(round(mouse_pos.y - 100), 200)
 			var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
@@ -725,29 +861,31 @@ func _unhandled_input(event):
 		mass_build_rect.visible = false
 		var curr_time = OS.get_system_time_msecs()
 		for i in len(shadows):
-			constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
-			remove_child(shadows[i])
-			shadows[i].queue_free()
-		shadows.clear()
+			if is_instance_valid(shadows[i]):
+				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
+				remove_child(shadows[i])
+				shadows[i].queue_free()
+		shadow_num = 0
 		game.HUD.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		return
 	#initiate mass build
-	if Input.is_action_just_pressed("left_click") and len(shadows) == 0 and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
+	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
 		view.move_view = false
 		view.scroll_view = false
 		mass_build_rect.rect_position = mouse_pos
 		mass_build_rect.rect_size = Vector2.ZERO
 		mass_build_rect.visible = true
 		mass_build_rect_size = Vector2.ONE
-		shadows = [put_shadow(Sprite.new(), mouse_pos)]
+		shadows[tile_over] = put_shadow(Sprite.new(), mouse_pos)
+		shadow_num = 1
 		shadow.visible = false
 	if mass_build:
 		return
 	var placing_soil = game.bottom_info_action == "place_soil"
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
-	if Input.is_action_just_released("left_click") and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
+	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -764,6 +902,10 @@ func _unhandled_input(event):
 				if not tile:
 					game.tile_data[tile_id] = {}
 				game.tile_data[tile_id].plant = {}
+				if not game.tile_data[tile_id].has("adj_lake_state"):
+					var lake_data:Dictionary = Helper.check_lake_presence(Vector2(tile_id % wid, int(tile_id / wid)), wid)
+					if lake_data.has_lake:
+						game.tile_data[tile_id].adj_lake_state = lake_data.lake_state
 				$Soil.set_cell(x_pos, y_pos, 0)
 				$Soil.update_bitmask_region()
 				game.HUD.refresh()
@@ -774,7 +916,7 @@ func _unhandled_input(event):
 			items_collected.clear()
 			var t:String = game.item_to_use.type
 			if tile.has("plant"):#if clicked tile has soil on it
-				if placing_soil and tile.plant.empty():
+				if placing_soil and tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("auto_GH")):
 					game.add_resources({"soil":10})
 					tile.erase("plant")
 					$Soil.set_cell(x_pos, y_pos, -1)
@@ -798,12 +940,12 @@ func _unhandled_input(event):
 								harvest_plant(game.tile_data[_tile], _tile)
 					elif t == "seeds":
 						if tiles_selected.empty():
-							if tile.plant.empty():
+							if tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
 								seeds_plant(tile, tile_id, curr_time)
 						else:
 							for _tile_id in tiles_selected:
 								var _tile = game.tile_data[_tile_id]
-								if _tile.has("plant") and _tile.plant.empty():
+								if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
 									seeds_plant(_tile, _tile_id, curr_time, true)
 									if game.item_to_use.num <= 0:
 										break
@@ -824,7 +966,7 @@ func _unhandled_input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
-				if tile.has("cave") and game.cave_data[tile.cave.id].has("special_cave") and game.cave_data[tile.cave.id].special_cave == 4:
+				if tile.has("cave") and tile.cave.has("special_cave") and tile.cave.special_cave == 4:
 					if not game.fourth_ship_hints.barrier_broken:
 						if not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
 							game.popup(tr("CAVE_BLOCKED"), 2.0)
@@ -848,36 +990,26 @@ func _unhandled_input(event):
 						game.toggle_panel(game.vehicle_panel)
 						game.vehicle_panel.tile_id = tile_id
 			elif tile.has("ship"):
-				if game.science_unlocked.SCT:
+				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 					elif len(game.ship_data) == 1:
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":35}
-						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-						Helper.add_ship_XP(1, 2000)
-						Helper.add_weapon_XP(1, "bullet", 50)
-						Helper.add_weapon_XP(1, "laser", 50)
-						Helper.add_weapon_XP(1, "bomb", 50)
-						Helper.add_weapon_XP(1, "light", 60)
+						game.get_2nd_ship()
 					elif len(game.ship_data) == 2:
 						if game.third_ship_hints.parts[0] and game.third_ship_hints.parts[1] and game.third_ship_hints.parts[2] and game.third_ship_hints.parts[3] and game.third_ship_hints.parts[4]:
 							game.tile_data[tile_id].erase("ship")
 							$Obstacles.set_cell(x_pos, y_pos, -1)
 							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":50}
-							game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-							Helper.add_ship_XP(2, 40000)
-							Helper.add_weapon_XP(2, "bullet", 140)
-							Helper.add_weapon_XP(2, "laser", 140)
-							Helper.add_weapon_XP(2, "bomb", 140)
-							Helper.add_weapon_XP(2, "light", 180)
+							game.get_3rd_ship()
 						else:
 							game.popup(tr("MISSING_PARTS"), 2.5)
 				else:
@@ -1019,22 +1151,6 @@ func available_to_build(tile):
 	if bldg_to_construct == "GH":
 		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
-
-func check_lake(local_id:int):
-# warning-ignore:integer_division
-	var v = Vector2(local_id % wid, int(local_id / wid))
-	var state
-	var has_lake = false
-	for i in range(v.x - 1, v.x + 2):
-		for j in range(v.y - 1, v.y + 2):
-			if Vector2(i, j) != v:
-				if $Lakes1.get_cell(i, j) != -1 or $Lakes2.get_cell(i, j) != -1:
-					var id2 = i % wid + j * wid
-					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[game.item_to_use.name].lake
-					has_lake = has_lake or okay
-					if okay:
-						state = game.tile_data[id2].lake.state
-	return [has_lake, state]
 
 func add_time_bar(id2:int, type:String):
 	var local_id = id2
@@ -1278,9 +1394,10 @@ func finish_construct():
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
-			remove_child(shadows[i])
-			shadows[i].queue_free()
-		shadows.clear()
+			if is_instance_valid(shadows[i]):
+				remove_child(shadows[i])
+				shadows[i].queue_free()
+		shadow_num = 0
 		view.move_view = true
 		view.scroll_view = true
 	game.get_node("UI/Panel").visible = false

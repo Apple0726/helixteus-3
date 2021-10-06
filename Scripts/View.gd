@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-onready var game = self.get_parent()
+onready var game = get_node("/root/Game")
 onready var ship:TextureButton = game.get_node("Ship")
 var obj
 #var shapes = []
@@ -38,6 +38,10 @@ var mouse_position = Vector2.ZERO
 
 var red_line:Line2D
 var green_line:Line2D
+
+#Scaling of objects based on zoom level
+var obj_scaled:bool = false
+var changed:bool = false
 
 func _ready():
 	set_process(false)
@@ -150,6 +154,11 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
+	if game.c_v in ["supercluster", "universe"] and not changed:
+		if obj_scaled and scale.x > 0.3:
+			$AnimationPlayer.play("Fade")
+		elif not obj_scaled and scale.x < 0.3:
+			$AnimationPlayer.play("Fade")
 
 func _draw():
 	if is_instance_valid(game.annotator):
@@ -268,14 +277,13 @@ func refresh():
 				add_child(icon)
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
-	scale_mult = s_m
-	scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
-	scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
+	#scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
+	#scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
 	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instance()
 	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
-	position *= sc
+	obj_scaled = scale.x < 1.5
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 
@@ -292,27 +300,27 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 func save_zooms(obj_str:String):
 	match obj_str:
 		"planet":
-			game.planet_data[game.c_p]["view"]["pos"] = self.position / self.scale.x
+			game.planet_data[game.c_p]["view"]["pos"] = self.position# / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data[game.c_s]["view"]["pos"] = self.position / self.scale.x
+			game.system_data[game.c_s]["view"]["pos"] = self.position# / self.scale.x
 			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x
 		"galaxy":
-			game.galaxy_data[game.c_g]["view"]["pos"] = self.position / self.scale.x
+			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 		"cluster":
-			game.cluster_data[game.c_c]["view"]["pos"] = self.position / self.scale.x
+			game.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
 			game.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"supercluster":
-			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position / self.scale.x
+			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position# / self.scale.x
 			game.supercluster_data[game.c_sc]["view"]["zoom"] = self.scale.x
-			game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
+			#game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
 		"universe":
-			game.universe_data[game.c_u]["view"]["pos"] = self.position / self.scale.x
+			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
-			game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
+			#game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
 		"science_tree":
-			game.science_tree_view.pos = position / scale.x
+			game.science_tree_view.pos = position# / scale.x
 			game.science_tree_view.zoom = scale.x
 
 var first_zoom:bool = false
@@ -334,12 +342,12 @@ func _physics_process(_delta):
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction)
 	velocity = move_and_slide(velocity)
-	
+
 	#Zooming animation
 	if zooming == "in":
 		if first_zoom:
 			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 200))
-			progress += 0.002
+			progress += 0.003
 			modulate.a = min(1, modulate.a + 0.01)
 		else:
 			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)
@@ -379,6 +387,32 @@ func _physics_process(_delta):
 			obj.set_process(true)
 
 var dragging:bool = false
+var touch_events = {}
+var target_return_enabled = true
+var target_return_rate = 0.02
+var min_zoom = 0.5
+var max_zoom = 2
+var zoom_sensitivity = 10
+var zoom_speed = 0.05
+
+var last_drag_distance = 0
+
+func _unhandled_input(event):
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			touch_events[event.index] = event
+		else:
+			touch_events.erase(event.index)
+	if event is InputEventScreenDrag:
+		touch_events[event.index] = event
+		if touch_events.size() == 1:
+			position += event.relative
+		elif touch_events.size() == 2:
+			var drag_distance = touch_events[0].position.distance_to(touch_events[1].position)
+			var touch_center = (touch_events[0].position + touch_events[1].position) / 2.0
+			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
+				_zoom_at_point(abs(drag_distance - last_drag_distance), touch_center)
+				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
 func _input(event):
@@ -394,7 +428,7 @@ func _input(event):
 				zoom_factor = 1.2
 			zooming = "out"
 			progress = 0
-			check_change_scale()
+			#check_change_scale()
 		elif event.is_action_released("scroll_up"):
 			if event is InputEventMouse:
 				zoom_factor = 1.1
@@ -402,8 +436,8 @@ func _input(event):
 				zoom_factor = 1.2
 			zooming = "in"
 			progress = 0
-			check_change_scale()
-	if event is InputEventMouse and move_view:
+			#check_change_scale()
+	if (event is InputEventMouse or event is InputEventScreenTouch) and move_view:
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
 			drag_position = event.position
@@ -451,21 +485,15 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	global_position.x -= delta_x
 	global_position.y -= delta_y
 
-#Scaling of objects based on zoom level
-var scale_inc_threshold
-var scale_dec_threshold
-var scale_mult
-func check_change_scale():
-	if game.c_v in ["supercluster", "universe"]:
-		if scale_inc_threshold < 3 and scale.x > scale_inc_threshold:
-			obj.modulate.a = 0.95
-			obj.change_alpha = -0.05
-			scale_dec_threshold = scale_inc_threshold
-			scale_inc_threshold *= 20
-			scale_mult *= 0.1
-		if scale_dec_threshold > 0.1 and scale.x < scale_dec_threshold:
-			obj.modulate.a = 0.95
-			obj.change_alpha = -0.05
-			scale_inc_threshold = scale_dec_threshold
-			scale_dec_threshold /= 20.0
-			scale_mult *= 10
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if not changed:
+		if scale.x < 0.3:
+			obj_scaled = true
+			obj.change_scale(1.0)
+		else:
+			obj_scaled = false
+			obj.change_scale(0.1)
+		changed = true
+		$AnimationPlayer.play_backwards("Fade")
+	else:
+		changed = false

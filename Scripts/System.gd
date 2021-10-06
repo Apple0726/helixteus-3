@@ -154,8 +154,8 @@ func refresh_stars():
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(512, 512)
 		#combined_star_size += star_info["size"]
-		star.rect_scale.x = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
-		star.rect_scale.y = 5.0 * star_info["size"] / game.STAR_SCALE_DIV
+		star.rect_scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
+		star.rect_scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
 		star.rect_position = star_info["pos"] - Vector2(512, 512)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
@@ -205,7 +205,7 @@ func show_M_DS_costs(star:Dictionary):
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM)
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
@@ -219,6 +219,8 @@ func show_M_PK_costs(star:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_PK_%s" % ((star.MS_lv + 1) if star.has("MS") else 0)].duplicate(true)
+	for cost in bldg_costs:
+		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
@@ -240,9 +242,9 @@ func show_M_SE_costs(p_i:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
 	for cost in bldg_costs:
 		if cost != "energy":
-			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0)
+			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM)
 		else:
-			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1))
+			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 1
@@ -255,7 +257,7 @@ func show_M_MME_costs(p_i:Dictionary):
 		game.get_node("UI/Panel").visible = true
 		bldg_costs = Data.MS_costs["M_MME_%s" % ((p_i.MS_lv + 1) if p_i.has("MS") else 0)].duplicate(true)
 		for cost in bldg_costs:
-			bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2))
+			bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2) * game.engineering_bonus.BCM)
 		bldg_costs.time /= game.u_i.time_speed
 		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
@@ -269,6 +271,8 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
+	for cost in bldg_costs:
+		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
@@ -291,6 +295,8 @@ func show_planet_info(id:int, l_id:int):
 		Helper.put_rsrc(vbox, 32, {})
 		var num_stages = 3
 		var stage:String = tr("%s_NAME" % p_i.MS)
+		if p_i.MS == "M_SE":
+			num_stages = 1
 		if p_i.MS != "M_MPCC":
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, num_stages]]
 		else:
@@ -302,7 +308,7 @@ func show_planet_info(id:int, l_id:int):
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
 		if not p_i.bldg.is_constructing:
-			if p_i.MS_lv < num_stages and game.science_unlocked["%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]]:
+			if p_i.MS_lv < num_stages and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -310,14 +316,12 @@ func show_planet_info(id:int, l_id:int):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
 		var tooltip:String = ""
-		var icons = []
-		var adv = false
+		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
 		if p_i.has("tile_num"):
 			if p_i.bldg.name in ["MM", "GH", "AMN", "SPR"]:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, 1)]
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
 			else:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, icons, p_i.tile_num)]
-			adv = len(icons) > 0
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
 			if game.help.planet_details:
 				game.help_str = "planet_details"
@@ -329,7 +333,7 @@ func show_planet_info(id:int, l_id:int):
 				tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
 			else:
 				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4)]
-		if adv:
+		if len(icons) > 0:
 			game.show_adv_tooltip(tooltip, icons)
 		else:
 			game.show_tooltip(tooltip)
@@ -384,6 +388,7 @@ func toggle_GH(p_i:Dictionary, fertilizer:bool):
 	game.greenhouse_panel.tile_num = p_i.tile_num
 	game.greenhouse_panel.p_i = p_i
 	game.greenhouse_panel.fertilizer = fertilizer
+	game.greenhouse_panel.c_v = "system"
 	game.toggle_panel(game.greenhouse_panel)
 
 func on_planet_click (id:int, l_id:int):
@@ -442,11 +447,10 @@ func on_planet_click (id:int, l_id:int):
 				if p_i.has("plant"):
 					if not p_i.plant.is_growing:
 						items_collected.clear()
-						var plant:String = Helper.get_plant_produce(p_i.plant.name)
-						var produce:float = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
-						produce *= p_i.bldg.path_2_value
-						game.show[plant] = true
-						Helper.add_item_to_coll(items_collected, plant, produce)
+						var produce:Dictionary = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
+						for p in produce:
+							produce[p] *= p_i.bldg.path_2_value
+							Helper.add_item_to_coll(items_collected, p, produce[p])
 						game.show_collect_info(items_collected)
 						p_i.erase("plant")
 					else:
@@ -562,11 +566,11 @@ func on_star_over (id:int):
 			elif star.MS_lv == 2:
 				Helper.add_label(tr("PK2_POWER"), -1, true, true)
 		if not star.bldg.is_constructing and star.MS_lv < num_stages:
-			if star.MS == "M_DS" and game.science_unlocked["DS%s" % (star.MS_lv + 1)]:
+			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-			elif star.MS == "M_PK" and game.science_unlocked["PK%s" % (star.MS_lv + 1)]:
+			elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
 				MS_constr_data.obj = star
 				MS_constr_data.confirm = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -679,6 +683,8 @@ func _process(_delta):
 		if not is_instance_valid(time_bar):
 			continue
 		var p_i = time_bar_obj.p_i
+		if not p_i.plant.has("grow_time"):
+			continue
 		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
 		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
 		time_bar.get_node("Bar").value = progress

@@ -4,13 +4,14 @@ func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
 	for btn_str in ["Mining", "Agriculture"]:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
-		btn.text = tr(btn_str.to_upper())
+		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
 		$VBox/Tabs.add_child(btn)
 	_on_btn_pressed("Mining")
+	$VBox/Tabs.get_node("Mining")._on_Button_pressed()
 	buy_btn.text = tr("CRAFT")
 	buy_btn.icon = load("res://Graphics/Icons/craft.png")
 	$VBox/HBox/ItemInfo/VBox/HBox.visible = true
@@ -35,7 +36,7 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func refresh():
-	$VBox/Tabs/Agriculture.visible = game.science_unlocked.SA
+	$VBox/Tabs/Agriculture.visible = game.science_unlocked.has("SA")
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
 
@@ -45,7 +46,8 @@ func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _
 	if tab == "Agriculture":
 		var agric_info = game.craft_agriculture_info[_name]
 		if agric_info.has("grow_time"):
-			imgs = [load("res://Graphics/Metals/" + Helper.get_plant_produce(_name) + ".png")]
+			for p in agric_info.produce:
+				imgs.append(load("res://Graphics/Metals/" + p + ".png"))
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
 
 func get_item(_name, _type, _dir):
@@ -68,7 +70,7 @@ func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
 	else:
 		var item_arr = item.split("_")
 		if len(item_arr) > 1 and item_arr[1] == "seeds":
-			desc = tr("SEEDS_DESC") % [game.craft_agriculture_info[item].produce]
+			desc = tr("SEEDS_DESC") % [60.0 * game.u_i.planck]
 	if btn_str == "Agriculture":
 		if craft_info.has("grow_time"):
 			desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time / game.u_i.time_speed)]

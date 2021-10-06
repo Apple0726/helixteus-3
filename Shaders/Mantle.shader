@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
-uniform vec4 color:hint_color;
-uniform float speed = 1.0;
+uniform vec4 color:hint_color = vec4(3.0, 1.5, 1.0, 1.0);
+uniform float speed = 0.03;
 
 void fragment() {
 	vec2 uv = vec2(UV.x * 2.5, UV.y * 1.406);

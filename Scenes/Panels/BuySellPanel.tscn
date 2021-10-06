@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Resource.tscn" type="PackedScene" id=2]
@@ -6,6 +6,70 @@
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Graphics/Buttons/Switch.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Animation" id=2]
+resource_name = "Grow"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureButton:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 0.297302 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ) ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "Switch"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureButton:rect_rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.420448, 2 ),
+"update": 0,
+"values": [ 0.0, 180.0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Grow"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureButton:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 0.297302 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "Switch"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureButton:rect_rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.420448, 2 ),
+"update": 0,
+"values": [ 0.0, 180.0 ]
+}
 
 [node name="BuySellPanel" type="Panel"]
 anchor_left = 0.5
@@ -83,6 +147,7 @@ margin_left = 304.0
 margin_top = 144.0
 margin_right = 336.0
 margin_bottom = 176.0
+rect_pivot_offset = Vector2( 16, 16 )
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 5
@@ -92,7 +157,17 @@ __meta__ = {
 
 [node name="CloseButton" parent="." instance=ExtResource( 6 )]
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Grow = SubResource( 2 )
+anims/Switch = SubResource( 1 )
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/Grow = SubResource( 3 )
+anims/Switch = SubResource( 4 )
+
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Buy" to="." method="_on_Button_pressed"]
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

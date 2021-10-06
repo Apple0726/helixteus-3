@@ -58,7 +58,7 @@ func refresh():
 		for fighter in game.fighter_data:
 			if fighter.c_g_g == game.c_g_g:
 				var file = File.new()
-				file.open("user://Save%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], File.READ)
+				file.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], File.READ)
 				var planets_in_depart_system = file.get_var()
 				combined_strength += fighter.strength
 				fighter_num += fighter.number
@@ -112,23 +112,15 @@ func get_grav_exit_cost(p_i:Dictionary):
 func get_entry_exit_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.9
+			return 0.5
 		1:
-			return 0.6
-		2:
-			return 0.3
-		3:
 			return 0
 
 func get_travel_cost_multiplier(lv:int):
 	match lv:
 		0:
-			return 0.95
+			return 0.75
 		1:
-			return 0.8
-		2:
-			return 0.65
-		3:
 			return 0.5
 
 func _on_CheckBox_pressed():
@@ -146,9 +138,12 @@ func _on_Send_pressed():
 		if sys_num > 0 and game.energy >= total_energy_cost:
 			game.energy -= total_energy_cost
 			var curr_time = OS.get_system_time_msecs()
-			for fighter in game.fighter_data:
-				if fighter.c_g_g == game.c_g_g:
-					game.fighter_data.erase(fighter)
+			var i:int = 0
+			while i < len(game.fighter_data):
+				if game.fighter_data[i].c_g_g == game.c_g_g:
+					game.fighter_data.remove(i)
+				else:
+					i += 1
 			game.galaxy_data[game.c_g].conquer_start_date = curr_time
 			game.galaxy_data[game.c_g].time_for_one_sys = time_for_one_sys
 			game.galaxy_data[game.c_g].sys_num = sys_num
@@ -156,6 +151,7 @@ func _on_Send_pressed():
 			game.galaxy_data[game.c_g].combined_strength = combined_strength
 			game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
 			refresh()
+			game.HUD.refresh()
 	else:
 		game.galaxy_data[game.c_g].erase("conquer_start_date")
 		game.galaxy_data[game.c_g].erase("time_for_one_sys")

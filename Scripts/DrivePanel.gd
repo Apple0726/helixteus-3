@@ -25,7 +25,7 @@ func refresh_drive_modulate():
 	
 func refresh():
 	for drive in $Panel/Drives.get_children():
-		drive.visible = game.science_unlocked[drive.name]
+		drive.visible = game.science_unlocked.has(drive.name)
 
 	meta = op.get_selected_metadata()
 	

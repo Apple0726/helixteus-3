@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Wiki.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
@@ -92,67 +93,67 @@ margin_bottom = 444.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="KeyboardShortcuts" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="KeyboardShortcuts" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_right = 336.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "KEYBOARD_SHORTCUTS"
-expand_icon = true
+button_text = "KEYBOARD_SHORTCUTS"
 
-[node name="Aurora" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="Aurora" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 44.0
 margin_right = 336.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "AURORA"
-expand_icon = true
+button_text = "AURORA"
 
-[node name="LevelUnlocks" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="LevelUnlocks" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 88.0
 margin_right = 336.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "LEVEL_UNLOCKS"
-expand_icon = true
+button_text = "LEVEL_UNLOCKS"
 
-[node name="DarkMatter" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="DarkMatter" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 132.0
 margin_right = 336.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "DARK_MATTER"
-expand_icon = true
+button_text = "DARK_MATTER"
 
-[node name="B_strength" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="B_strength" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 176.0
 margin_right = 336.0
 margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "B_STRENGTH"
-expand_icon = true
+button_text = "B_STRENGTH"
 
-[node name="FM" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="FM" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 220.0
 margin_right = 336.0
 margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "FERROMAGNETIC_MATERIALS"
-expand_icon = true
+button_text = "FERROMAGNETIC_MATERIALS"
 
-[node name="DarkEnergy" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="DarkEnergy" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_top = 264.0
 margin_right = 336.0
 margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
-toggle_mode = true
-text = "DARK_ENERGY"
-expand_icon = true
+button_text = "DARK_ENERGY"
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/KeyboardShortcuts" to="." method="_on_KeyboardShortcuts_pressed"]

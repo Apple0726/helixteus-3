@@ -38,8 +38,8 @@ onready var mining_p = $MiningParticles
 onready var tile_highlight = $TileHighlight
 onready var canvas_mod = $CanvasModulate
 onready var aurora_mod = $AuroraModulate
-onready var active_item = $UI2/BottomLeft/VBoxContainer/ActiveItem
-onready var inventory_slots = $UI2/BottomLeft/VBoxContainer/InventorySlots
+onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
+onready var inventory_slots = $UI2/BottomLeft/VBox/InventorySlots
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
@@ -51,7 +51,7 @@ var minimap_zoom:float = 0.02
 var minimap_center:Vector2 = Vector2(1150, 128)
 var curr_slot:int = 0
 var floor_seeds = []
-var id:int#Cave id
+var id:int = -1#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
 var light_amount:float = 1.0
@@ -127,17 +127,29 @@ func _ready():
 				lum = star.luminosity
 	else:
 		$TileMap.material.shader = null
-	id = tile.cave.id if tile.has("cave") else tile.diamond_tower
-	cave_data = game.cave_data[id] if game else {"num_floors":5, "floor_size":25}
-	num_floors = cave_data.num_floors
-	cave_size = cave_data.floor_size
-	if cave_data.has("enemies_rekt"):
+	var cave_data_file = File.new()
+	var cave_type:String = ""
+	if tile.has("cave"):
+		cave_type = "cave"
+	elif tile.has("diamond_tower"):
+		cave_type = "diamond_tower"
+	num_floors = tile[cave_type].num_floors
+	cave_size = tile[cave_type].floor_size
+	if tile[cave_type].has("id"):
+		id = tile.cave.id
+		cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.READ)
+		cave_data = cave_data_file.get_var()
+		cave_data_file.close()
 		seeds = cave_data.seeds
 		tiles_mined = cave_data.tiles_mined
 		enemies_rekt = cave_data.enemies_rekt
 		chests_looted = cave_data.chests_looted
 		partially_looted_chests = cave_data.partially_looted_chests
 		hole_exits = cave_data.hole_exits
+	else:
+		id = game.caves_generated
+		tile[cave_type].id = id
+		game.caves_generated += 1
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
@@ -151,7 +163,7 @@ func _ready():
 		$UI/Minimap/Hole.rotation_degrees = 180
 		rover_size = 0.7
 	generate_cave(true, false)
-	if cave_data.has("special_cave") and cave_data.special_cave in [1, 3]:
+	if tile.cave.has("special_cave") and tile.cave.special_cave in [1, 3]:
 		$UI/Error.visible = true
 		$UI/Minimap.visible = false
 	if aurora:
@@ -160,8 +172,12 @@ func _ready():
 		if game.show[rsrc]:
 			add_filter(rsrc)
 	$UI2/Filters/Grid/money.connect("pressed", self, "on_filter_pressed", ["money", $UI2/Filters/Grid/money])
+	$UI2/Filters/Grid/money.set_mod(game.cave_filters.money)
 	$UI2/Filters/Grid/minerals.connect("pressed", self, "on_filter_pressed", ["minerals", $UI2/Filters/Grid/minerals])
+	$UI2/Filters/Grid/minerals.set_mod(game.cave_filters.minerals)
 	$UI2/Filters/Grid/stone.connect("pressed", self, "on_filter_pressed", ["stone", $UI2/Filters/Grid/stone])
+	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
+	
 
 func add_filter(rsrc:String):
 	if rsrc in game.mat_info.keys():
@@ -220,7 +236,6 @@ func set_rover_data():
 			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(inventory[i].name), inventory[i].name])
 			if inventory[i].has("num"):
 				slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
-	inventory_slots.move_child(inventory_slots.get_node("Filter"), inventory_slots.get_child_count() - 1)
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
 	$Rover/Bar.max_value = total_HP
@@ -295,9 +310,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		else:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
 			if game:
-				if game.science_unlocked.RMK2:
+				if game.science_unlocked.has("RMK2"):
 					light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
-				if game.science_unlocked.RMK3:
+				if game.science_unlocked.has("RMK3"):
 					light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
 				if game.help.cave_controls:
 					$UI2/Controls.visible = true
@@ -335,28 +350,28 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-	if cave_size == 20 and num_floors == 3:
-		noise.period = 20
-	elif cave_data.has("special_cave"):
-		if cave_data.special_cave == 3:
+	if tile.cave.has("special_cave"):
+		if tile.cave.special_cave == 5:
+			noise.period = 20
+		elif tile.cave.special_cave == 3:
 			noise.period = 35
-		elif cave_data.special_cave == 2:
+		elif tile.cave.special_cave == 2:
 			noise.period = 150
-		elif cave_data.special_cave == 1:
+		elif tile.cave.special_cave == 1:
 			if cave_floor == 30:
 				noise.period = 65
 				cave_size = 16
 			else:
 				noise.period = 50 - cave_floor
 				cave_size = 16 + cave_floor / 2
-		elif cave_data.special_cave == 0:
+		elif tile.cave.special_cave == 0:
 			noise.period = 65
 			rover_size = 0.4
 	else:
 		noise.period = 65
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
-	dont_gen_anything = cave_data.has("special_cave") and cave_data.special_cave == 1
+	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = not game or game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
 	#Generate cave
@@ -378,7 +393,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						HX_node.free()
 						continue
-					HX_node.get_node("Info").visible = false
+					HX_node.get_node("Info/Label").visible = false
+					HX_node.get_node("Info/Effects").visible = false
+					HX_node.get_node("Info/Icon").visible = false
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
@@ -406,7 +423,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							var rarity = game.met_info[met].rarity
 							if rarity > difficulty:
 								break
-							if rand2 < 1 / (rarity + 1):
+							if rand2 < 1 / (pow(rarity, 0.75) + 1):
 								met_spawned = met
 						if met_spawned != "":
 							var deposit = deposit_scene.instance()
@@ -562,7 +579,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		chests[String(rand_spawn)].node.queue_free()
 		chests.erase(String(rand_spawn))
 	#A way to check whether cave has the relic for 2nd ship
-	if cave_size == 20 and num_floors == 3 and cave_floor == 3:
+	if tile.cave.has("special_cave") and tile.cave.special_cave == 5 and cave_floor == 3:
 		var relic = object_scene.instance()
 		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
 		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")
@@ -592,7 +609,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if not boss_cave:
 		#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
 		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
-			if cave_data.has("special_cave") and not game.third_ship_hints.parts[cave_data.special_cave] and cave_floor == num_floors:
+			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
 				var part = object_scene.instance()
 				part.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/ShipPart.png")
 				part.get_node("Area2D").connect("body_entered", self, "on_ShipPart_entered")
@@ -759,10 +776,10 @@ func on_relic_entered(_body):
 	$UI2/Relic.visible = true
 
 func on_ShipPart_entered(_body):
-	if not game.third_ship_hints.parts[cave_data.special_cave]:
+	if not game.third_ship_hints.parts[tile.cave.special_cave]:
 		game.objective.current += 1
 		game.popup(tr("SHIP_PART_FOUND"), 2.5)
-		game.third_ship_hints.parts[cave_data.special_cave] = true
+		game.third_ship_hints.parts[tile.cave.special_cave] = true
 		for object in get_tree().get_nodes_in_group("misc_objects"):
 			object.visible = false
 
@@ -818,8 +835,8 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		var met_value = game.met_info[met]
 		if met_value.rarity > difficulty:
 			break
-		if rng.randf() < 0.5 / met_value.rarity:
-			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.5) * pow(tier, 2.0) * pow(difficulty, 1.1))
+		if rng.randf() < 0.5 / pow(met_value.rarity, 0.75):
+			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1))
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -889,24 +906,21 @@ func update_ray():
 			mining_p.emitting = false
 		mining_laser.visible = holding_left_click
 		if holding_left_click:
-			if game and game.enable_shaders:
-				mining_laser.scale.x = laser_reach / 16.0
-				mining_laser.scale.y = 16.0
-				if inventory[curr_slot].name == "xray_mining_laser":
-					mining_laser.material["shader_param/beams"] = 3
-					mining_laser.material["shader_param/energy"] = 12
-					mining_laser.material["shader_param/speed"] = 1.2
-				elif inventory[curr_slot].name == "gammaray_mining_laser":
-					mining_laser.material["shader_param/beams"] = 4
-					mining_laser.material["shader_param/energy"] = 15
-					mining_laser.material["shader_param/speed"] = 1.3
-				elif inventory[curr_slot].name == "ultragammaray_mining_laser":
-					mining_laser.material["shader_param/beams"] = 5
-					mining_laser.material["shader_param/roughness"] = 3
-					mining_laser.material["shader_param/energy"] = 20
-					mining_laser.material["shader_param/frequency"] = 15
-			else:
-				mining_laser.region_rect.end = Vector2(laser_reach, 16)
+			mining_laser.scale.x = laser_reach / 16.0
+			mining_laser.scale.y = 16.0
+			if inventory[curr_slot].name == "xray_mining_laser":
+				mining_laser.material["shader_param/beams"] = 3
+				mining_laser.material["shader_param/energy"] = 12
+				mining_laser.material["shader_param/speed"] = 1.2
+			elif inventory[curr_slot].name == "gammaray_mining_laser":
+				mining_laser.material["shader_param/beams"] = 4
+				mining_laser.material["shader_param/energy"] = 15
+				mining_laser.material["shader_param/speed"] = 1.3
+			elif inventory[curr_slot].name == "ultragammaray_mining_laser":
+				mining_laser.material["shader_param/beams"] = 5
+				mining_laser.material["shader_param/roughness"] = 3
+				mining_laser.material["shader_param/energy"] = 20
+				mining_laser.material["shader_param/frequency"] = 15
 			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 	else:
@@ -921,6 +935,11 @@ func _input(event):
 		global_mouse_pos = event.position
 		mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 		update_ray()
+		var alpha:float = clamp(range_lerp((global_mouse_pos - Vector2(1280, 0)).length(), 0.0, 350.0, -1.0, 1.0), 0.0, 1.0)
+		if inventory[curr_slot].type != "rover_weapons":
+			alpha = 1.0
+		for MM in $UI.get_children():
+			MM.modulate.a = alpha
 	else:
 		if event.is_action_released("scroll_up"):
 			curr_slot -= 1
@@ -935,7 +954,7 @@ func _input(event):
 		if Input.is_action_just_released("M"):
 			if not $UI/Error.visible:
 				$UI/Minimap.visible = not $UI/Minimap.visible
-			$UI/Rover.visible = not $UI/Rover.visible
+			minimap_rover.visible = not minimap_rover.visible
 			$UI/MinimapBG.visible = not $UI/MinimapBG.visible
 		elif Input.is_action_just_released("1") and curr_slot != 0:
 			curr_slot = 0
@@ -982,7 +1001,7 @@ func _input(event):
 					if game.cave_filters.has(rsrc):
 						if game.cave_filters[rsrc]:
 							remainders[rsrc] = contents[rsrc]
-						continue
+							continue
 					else:
 						game.cave_filters[rsrc] = false
 						game.show[rsrc] = true
@@ -1067,12 +1086,19 @@ func _input(event):
 		update_ray()
 
 func exit_cave():
-	cave_data.seeds = seeds.duplicate(true)
-	cave_data.tiles_mined = tiles_mined.duplicate(true)
-	cave_data.enemies_rekt = enemies_rekt.duplicate(true)
-	cave_data.chests_looted = chests_looted.duplicate(true)
-	cave_data.partially_looted_chests = partially_looted_chests.duplicate(true)
-	cave_data.hole_exits = hole_exits.duplicate(true)
+	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
+	var cave_data_file = File.new()
+	cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.WRITE)
+	var cave_data_dict = {
+		"seeds":seeds.duplicate(true),
+		"tiles_mined":tiles_mined.duplicate(true),
+		"enemies_rekt":enemies_rekt.duplicate(true),
+		"chests_looted":chests_looted.duplicate(true),
+		"partially_looted_chests":partially_looted_chests.duplicate(true),
+		"hole_exits":hole_exits.duplicate(true),
+	}
+	cave_data_file.store_var(cave_data_dict)
+	cave_data_file.close()
 	for i in len(inventory):
 		if not inventory[i].has("name"):
 			continue
@@ -1173,7 +1199,7 @@ func hit_rock(delta):
 				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
 			if deposits.has(st):
 				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.5))
+				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
 				remove_child(deposit)
 				deposit.queue_free()
 				deposits.erase(st)
@@ -1258,7 +1284,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
-	proj.get_node("Sprite").modulate = mod
+	#proj.get_node("Sprite").modulate = mod
 	if collision_shape == 2:
 		proj.get_node("Round").disabled = true
 		proj.get_node("Line").disabled = false
@@ -1272,7 +1298,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.cave_ref = self
 	if light_color != Color.black:
 		proj.get_node("Light2D").enabled = true
-		proj.get_node("Light2D").color = mod
+		proj.get_node("Light2D").color = light_color
 		proj.get_node("Light2D").texture_scale *= light_size
 	add_child(proj)
 	proj.add_to_group("projectiles")
@@ -1291,10 +1317,7 @@ func set_border(i:int):
 			slot.remove_child(border)
 			border.queue_free()
 	if inventory[i].type == "rover_mining":
-		if game and game.enable_shaders:
-			mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
-		else:
-			mining_laser.modulate = get_color(inventory[i].name.split("_")[0])
+		mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
@@ -1479,8 +1502,13 @@ func init_boss():
 	boss.refresh_bar()
 	boss.next_attack = 1
 	boss.set_process(true)
-	
-
 
 func _on_Filter_pressed():
-	$UI2/Filters.visible = not $UI2/Filters.visible
+	if $UI2/Filters.visible:
+		$UI2/Filters/AnimationPlayer.play_backwards("Fade")
+		yield($UI2/Filters/AnimationPlayer, "animation_finished")
+		if $UI2/Filters.modulate.a == 0:
+			$UI2/Filters.visible = false
+	else:
+		$UI2/Filters/AnimationPlayer.play("Fade")
+		$UI2/Filters.visible = true

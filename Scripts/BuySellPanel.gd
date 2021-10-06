@@ -57,9 +57,9 @@ func _on_HSlider_value_changed(value):
 		money_value = value
 		money_node.get_node("Text").text = Helper.format_num(value, 6)
 		if type == "Materials":
-			rounded_value = Helper.clever_round(0.1 * value / game.mat_info[obj].value)
+			rounded_value = Helper.clever_round(value / game.mat_info[obj].value / game.maths_bonus.MMBSVR)
 		elif type == "Metals":
-			rounded_value = Helper.clever_round(0.1 * value / game.met_info[obj].value)
+			rounded_value = Helper.clever_round(value / game.met_info[obj].value / game.maths_bonus.MMBSVR)
 		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
 
 func _on_Button_pressed():
@@ -86,6 +86,8 @@ func _on_Button_pressed():
 	_on_close_button_pressed()
 
 func _on_TextureButton_pressed():
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play("Switch")
 	if is_selling:
 		if game.money != 0:
 			is_selling = false
@@ -105,3 +107,11 @@ func _on_TextureButton_pressed():
 func _on_close_button_pressed():
 	visible = false
 	game.sub_panel = null
+
+
+func _on_TextureButton_mouse_entered():
+	$AnimationPlayer2.play("Grow")
+
+
+func _on_TextureButton_mouse_exited():
+	$AnimationPlayer2.play_backwards("Grow")

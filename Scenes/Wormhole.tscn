@@ -4,11 +4,10 @@
 [ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=2]
 
 [sub_resource type="CanvasItemMaterial" id=1]
-blend_mode = 1
 
 [sub_resource type="Gradient" id=2]
-offsets = PoolRealArray( 0, 0.315152, 0.739394, 1 )
-colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1 )
+offsets = PoolRealArray( 0, 0.307453, 0.739394, 1 )
+colors = PoolColorArray( 0, 0, 0, 0, 0.93069, 0.441406, 1, 1, 0.93069, 0.441406, 1, 1, 0, 0, 0, 0 )
 
 [sub_resource type="GradientTexture" id=3]
 gradient = SubResource( 2 )
@@ -28,7 +27,7 @@ orbit_velocity_random = 0.0
 scale_random = 1.0
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
-hue_variation = 0.08
+hue_variation = 0.03
 hue_variation_random = 1.0
 
 [sub_resource type="CanvasItemMaterial" id=7]
@@ -55,7 +54,6 @@ scale = Vector2( 2, 2 )
 texture = ExtResource( 2 )
 
 [node name="Particles2D" type="Particles2D" parent="Active"]
-modulate = Color( 0.603922, 0.211765, 1, 1 )
 material = SubResource( 1 )
 scale = Vector2( 1.4, 1.4 )
 amount = 3

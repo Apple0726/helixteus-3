@@ -28,4 +28,4 @@ func disconnect_things():
 	
 func on_tween_complete():
 	get_parent().remove_child(self)
-	emit_signal("new_game", tut)
+	emit_signal("new_game", tut, 0, true)

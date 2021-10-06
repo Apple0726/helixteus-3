@@ -88,7 +88,7 @@ func fade(spd:float = 0.4, begin:bool = true):
 		$RLCheckTimer2.start()
 	elif tut_num == 24:
 		game.objective = {"type":game.ObjectiveType.SAVE, "data":"SP", "id":-1, "current":game.SP, "goal":5}
-		game.HUD.refresh()
+		game.HUD.call_deferred("refresh")
 		begin = false
 #	elif tut_num == 30:
 #		game.objective = {"type":game.ObjectiveType.SAVE, "data":"mats/silicon", "id":-1, "current":game.mats.silicon, "goal":20}

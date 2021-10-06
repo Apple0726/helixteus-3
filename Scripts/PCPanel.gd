@@ -16,6 +16,8 @@ func refresh():
 	elif probe_tier == 1:
 		$Label.text = tr("M_MPCC_NAME")
 		$ViewPlanet.visible = true
+	$SpinBox.max_value = max(0, 500 - len(game.probe_data))
+	$Construct.visible = $SpinBox.max_value > 0
 	$TextureRect.texture = load("res://Graphics/Ships/Probe%s.png" % probe_tier)
 
 func e(n, e):
@@ -34,7 +36,14 @@ func _on_Construct_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		game.popup(tr("PROBES_CONSTRUCTED"), 3)
-		for i in $SpinBox.value:
+		var probes_remaining:int = $SpinBox.value
+		for i in len(game.probe_data):
+			if not game.probe_data[i]:
+				game.probe_data[i] = {"tier":probe_tier}
+				probes_remaining -= 1
+			if probes_remaining <= 0:
+				break
+		for i in probes_remaining:
 			game.probe_data.append({"tier":probe_tier})
 		_on_close_button_pressed()
 	else:
@@ -47,3 +56,5 @@ func _on_ViewPlanet_pressed():
 		game.c_p_g = id
 		game.c_p = l_id
 		game.switch_view("planet")
+
+

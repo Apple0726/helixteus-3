@@ -26,61 +26,42 @@ func refresh():
 	pie.objects = []
 	pie.other_str = tr("TRACE_ELEMENTS")
 	pie.other_str_short = tr("TRACE")
-	var total_stone
-	var arr
+	var total_stone:float
+	var stone_dict:Dictionary
 	if is_crushing:
-		arr = obj_to_array(tile.bldg.stone)
-		total_stone = Helper.get_sum_of_dict(tile.bldg.stone)
+		stone_dict = tile.bldg.stone
+		total_stone = Helper.get_sum_of_dict(stone_dict)
 		pie.get_node("Title").text = tr("COMP_OF_STONE_BEING_CR")
 		$Control/Button.text = "%s (G)" % tr("STOP_CRUSHING")
 		$Control/Label.text = tr("RESOURCES_EXTRACTED")
 		rsrc_nodes = Helper.put_rsrc(vbox, 44, tile.bldg.expected_rsrc)
 	else:
-		if Helper.get_sum_of_dict(game.stone) == 0:
+		stone_dict = game.stone
+		total_stone = Helper.get_sum_of_dict(stone_dict)
+		if total_stone == 0:
 			game.stone.clear()
 			$Desc.text = tr("NO_STONE")
 			$Control.visible = false
 			return
 		else:
-			arr = obj_to_array(game.stone)
-			total_stone = Helper.get_sum_of_dict(game.stone)
 			pie.get_node("Title").text = tr("STONE_COMPOSITION")
 			$Control/Button.text = "%s (G)" % tr("START_CRUSHING")
 			$Control/Label.text = tr("EXPECTED_RESOURCES")
-			for el in arr:
-				var item:String
-				var el_num = 0
-				if el.element == "Si":
-					item = "silicon"
-					el_num = hslider.value * el.fraction / 30.0
-				elif el.element == "Fe" and game.science_unlocked.ISC:
-					item = "iron"
-					el_num = hslider.value * el.fraction / 30.0
-				elif el.element == "Al" and game.science_unlocked.ISC:
-					item = "aluminium"
-					el_num = hslider.value * el.fraction / 50.0
-				elif el.element == "O":
-					item = "sand"
-					el_num = hslider.value * el.fraction / 2.0
-				elif el.element == "Ti" and game.science_unlocked.ISC:
-					item = "titanium"
-					el_num = hslider.value * el.fraction / 500.0
-				el_num = stepify(el_num * tile.bldg.path_3_value, 0.001)
-				if el_num != 0:
-					expected_rsrc[item] = el_num
+			Helper.get_SC_output(expected_rsrc, hslider.value, tile.bldg.path_3_value, total_stone)
 			for el in game.stone:
 				stone_to_crush[el] = game.stone[el] * hslider.value / total_stone
 			Helper.put_rsrc(vbox, 44, expected_rsrc)
-	for obj in arr:
+	for el in stone_dict:
 		var file = File.new()
-		var dir_str = "res://Graphics/Elements/" + obj.element + ".png"
+		var dir_str = "res://Graphics/Elements/" + el + ".png"
 		var texture
 		if ResourceLoader.exists(dir_str):
 			texture = load(dir_str)
 		else:
 			texture = preload("res://Graphics/Elements/Default.png")
-		var pie_text = "%s\n%s%%" % [obj.element, Helper.clever_round(obj.fraction * 100.0, 2)]
-		pie.objects.append({"value":obj.fraction, "text":pie_text, "modulate":Helper.get_el_color(obj.element), "texture":texture})
+		var fraction:float = stone_dict[el] / total_stone
+		var pie_text = "%s\n%s%%" % [el, Helper.clever_round(fraction * 100.0, 2)]
+		pie.objects.append({"value":fraction, "text":pie_text, "modulate":Helper.get_el_color(el), "texture":texture})
 	pie.refresh()
 	$Control/HBoxContainer/Label.text = "%s kg" % [Helper.format_num(round(hslider.value))]
 	$Desc.text = tr("SC_DESC")
@@ -89,22 +70,6 @@ func refresh():
 	CC.visible = is_crushing
 	hslider.max_value = min(total_stone, tile.bldg.path_2_value)
 	hslider.min_value = 0
-
-func obj_to_array(elements:Dictionary):
-	var stone_qty = Helper.get_sum_of_dict(elements)
-	if stone_qty == 0:
-		return
-	var arr = []
-	for element in elements.keys():
-		arr.append({"element":element, "fraction":elements[element] / stone_qty})
-	arr.sort_custom(self, "sort_elements")
-	return arr
-
-func sort_elements (a, b):
-	if a["fraction"] < b["fraction"]:
-		return true
-	return false
-
 
 func _on_Button_pressed():
 	if not tile.bldg.has("stone"):

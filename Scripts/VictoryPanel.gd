@@ -25,7 +25,8 @@ func _ready():
 				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [round(weapon_XPs[i][weapon.to_lower()] * mult * diff_mult)]
 			$Grid.get_node("Panel%s" % (i + 1)).show_weapon_XPs = true
 			$Grid.get_node("Panel%s" % (i + 1)).refresh()
-	$Bonus.text = "%s: %sx" % [tr("LOOT_XP_BONUS"), mult * diff_mult]
+	$Bonus.bbcode_text = "%s: %sx %s" % [tr("LOOT_XP_BONUS"), mult * diff_mult, "[img]Graphics/Icons/help.png[/img]"]
+	$Bonus.help_text = "%s: x %s\n%s: x %s\n%s:\n%s" % [tr("PERFORMANCE_MULTIPLIER"), mult, tr("DIFFICULTY"), diff_mult, tr("PERFORMANCE_MULTIPLIER_VALUES"), tr("LOOT_XP_BONUS_DESC")]
 
 func _process(delta):
 	for i in len(ship_data):
@@ -73,9 +74,6 @@ func _on_close_button_pressed():
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	game.battle.remove_child(self)
 	game.switch_view("system", false, "", [], true, false)
-
-func _on_Bonus_mouse_entered():
-	game.show_tooltip("%s: x %s\n%s: x %s\n%s:\n%s" % [tr("PERFORMANCE_MULTIPLIER"), mult, tr("DIFFICULTY"), diff_mult, tr("PERFORMANCE_MULTIPLIER_VALUES"), tr("LOOT_XP_BONUS_DESC")])
 
 func _on_mouse_exited():
 	game.hide_tooltip()

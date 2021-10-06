@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=52 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -30,7 +30,8 @@
 [ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
 [ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=29]
 [ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
-[ext_resource path="res://Shaders/GodRays.shader" type="Shader" id=31]
+[ext_resource path="res://Shaders/Star.shader" type="Shader" id=31]
+[ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=32]
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=33]
 [ext_resource path="res://Shaders/ScienceTree.shader" type="Shader" id=34]
 [ext_resource path="res://Scenes/Nebula.tscn" type="PackedScene" id=35]
@@ -108,21 +109,21 @@ colors = PoolColorArray( 0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.
 [sub_resource type="GradientTexture" id=9]
 gradient = SubResource( 8 )
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = ExtResource( 31 )
-shader_param/angle = 1.218
-shader_param/position = 0.211
-shader_param/spread = 0.0
-shader_param/cutoff = -1.0
-shader_param/falloff = 1.0
-shader_param/edge_fade = 1.0
-shader_param/speed = 2.0
-shader_param/ray1_density = 8.0
-shader_param/ray2_density = 30.0
-shader_param/ray2_intensity = 0.3
-shader_param/color = Color( 1, 1, 1, 0.0980392 )
-shader_param/hdr = false
-shader_param/seed = 5.0
+[sub_resource type="Animation" id=10]
+resource_name = "Fade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="DynamicFont" id=11]
 size = 50
@@ -165,6 +166,13 @@ action = "P"
 [sub_resource type="ShortCut" id=15]
 shortcut = SubResource( 14 )
 
+[sub_resource type="ShaderMaterial" id=16]
+shader = ExtResource( 31 )
+shader_param/time_offset = 0.0
+shader_param/brightness_offset = 0.0
+shader_param/twinkle_speed = 1.0
+shader_param/amplitude = 0.15
+
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
 
@@ -176,7 +184,7 @@ bus = "SFX"
 [node name="Panels" type="CanvasLayer" parent="."]
 layer = 2
 
-[node name="ColorRect" type="ColorRect" parent="Panels"]
+[node name="Blur" type="ColorRect" parent="Panels"]
 material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -253,7 +261,6 @@ margin_top = 704.0
 margin_right = 1280.0
 margin_bottom = 718.0
 custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-text = "Alpha v0.20.2: 28 Aug 2021"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -329,7 +336,7 @@ __meta__ = {
 margin_right = 200.0
 margin_bottom = 70.0
 theme = ExtResource( 7 )
-window_title = "Veuillez confirmer…"
+dialog_autowrap = true
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 visible = false
@@ -351,18 +358,6 @@ margin_top = 2.0
 margin_right = 146.0
 margin_bottom = 12.0
 
-[node name="ImportSave" type="FileDialog" parent="UI"]
-margin_right = 315.0
-margin_bottom = 130.0
-theme = ExtResource( 7 )
-window_title = "Open a File"
-mode = 0
-
-[node name="ExportSave" type="FileDialog" parent="UI"]
-margin_right = 315.0
-margin_bottom = 130.0
-theme = ExtResource( 7 )
-
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 5
 
@@ -382,20 +377,26 @@ margin_right = 1276.0
 margin_bottom = 716.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="Nebula" parent="." instance=ExtResource( 35 )]
+[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
+visible = false
 modulate = Color( 1, 1, 1, 0 )
+color = Color( 0.686275, 0, 1, 1 )
 
 [node name="GrayscaleRect" type="TextureRect" parent="."]
-visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 720.0
 margin_right = 720.0
 margin_bottom = 2000.0
 rect_rotation = -90.0
+mouse_filter = 2
 texture = SubResource( 9 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
+anims/Fade = SubResource( 10 )
 
 [node name="Title" type="Control" parent="."]
 margin_right = 40.0
@@ -413,18 +414,6 @@ texture = ExtResource( 4 )
 expand = true
 __meta__ = {
 "_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="LightRays" type="ColorRect" parent="Title"]
-visible = false
-material = SubResource( 10 )
-margin_left = -3.0
-margin_top = 284.0
-margin_right = 1282.0
-margin_bottom = 1080.0
-mouse_filter = 2
-__meta__ = {
 "_edit_use_anchors_": false
 }
 
@@ -677,7 +666,6 @@ margin_top = 42.0
 margin_right = 184.0
 margin_bottom = 76.0
 rect_min_size = Vector2( 0, 30 )
-disabled = true
 text = "LOAD_GAME"
 
 [node name="Settings" type="Button" parent="Title/Menu/VBoxContainer"]
@@ -730,7 +718,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Stars" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Stars" type="Node2D" parent="Stars"]
+
+[node name="Sprite" type="Sprite" parent="Stars/Stars"]
+material = SubResource( 16 )
+position = Vector2( 1064.25, 171.865 )
+scale = Vector2( 0.725823, 0.725823 )
+texture = ExtResource( 32 )
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
@@ -740,31 +737,30 @@ __meta__ = {
 [connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
 [connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
 [connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]
-[connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "English" ]]
+[connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "en" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "中文" ]]
+[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
 [connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
-[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "Deutsch (~95%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
 [connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "Español (~80%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "es" ]]
 [connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "Français (~50%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
 [connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "Italiano (~40%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "it" ]]
 [connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "한국어 (~25%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "ko" ]]
 [connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
-[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "Svenska (~25%)" ]]
+[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "sv" ]]
 [connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
-[connection signal="mouse_entered" from="Title/Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "Русский (4 lines)" ]]
 [connection signal="mouse_exited" from="Title/Languages/ru" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]

@@ -1,15 +1,17 @@
 extends Node2D
 
-onready var game = self.get_parent().get_parent()
+onready var game = get_node("/root/Game")
 var star_shader = preload("res://Shaders/Star.shader")
 
 var dimensions:float
 
-var stars
-
 const DIST_MULT = 200.0
 var obj_btns = []
 var overlays = []
+var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
+						preload("res://Graphics/Effects/spotlight_5.png"),
+						preload("res://Graphics/Effects/spotlight_6.png"),
+]
 
 func _ready():
 	for s_i in game.system_data:
@@ -19,7 +21,7 @@ func _ready():
 				star = s_i.stars[i]
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
-		star_btn.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
+		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)
@@ -57,7 +59,21 @@ func _ready():
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s" % [s_i.name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
+	var _name:String
+	if s_i.has("name"):
+		_name = s_i.name
+	else:
+		_name = "%s %s" % [tr("SYSTEM"), l_id]
+		match len(game.system_data[l_id].stars):
+			2:
+				_name = "%s %s" % [tr("BINARY_SYSTEM"), l_id]
+			3:
+				_name = "%s %s" % [tr("TERNARY_SYSTEM"), l_id]
+			4:
+				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), l_id]
+			5:
+				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
 
 func on_system_out ():
 	game.hide_tooltip()

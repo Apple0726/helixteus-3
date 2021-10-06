@@ -4,9 +4,10 @@ shader_type canvas_item;
 // If you use this shader, I would prefer it if you gave credit to me and my channel
 
 uniform vec4 color: hint_color = vec4(0.35, 0.48, 0.95, 1.0);
-uniform float fog_size = 2.0;
+uniform float fog_size: hint_range(0.01, 20.0) = 2.0;
 uniform float fog_mvt_spd = 0.05;
 uniform int OCTAVES = 1;
+uniform int seed = 1;
 
 float rand(vec2 coord){
 	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
@@ -40,13 +41,15 @@ float fbm(vec2 coord){
 }
 
 void fragment() {
-	vec2 coord = UV * fog_size;
+	vec2 coord = UV * fog_size + vec2(float(seed));
 	vec2 motion = vec2( fbm(coord + vec2(TIME * -fog_mvt_spd, TIME * fog_mvt_spd)) );
 
 	float final = fbm(coord + motion);
 	COLOR.rgb = color.rgb;
 	COLOR.a = max(final - 0.4, 0.0) * 2.5;
-	COLOR.r = COLOR.a * 1.0;
-	COLOR.rgb *= max(1.0, COLOR.a);
+	//COLOR.r = COLOR.a * 2.0;
+	COLOR.rgb += pow(COLOR.a * 1.0, 2.0);
+	//COLOR.b += pow(COLOR.a * 1.0, 2.0);
+	//COLOR.a = max(0.0, 2.0 * COLOR.a * (1.0 - 5.0 * distance(UV, vec2(0.5, 0.5))));
 	
 }

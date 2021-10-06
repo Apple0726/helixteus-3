@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/HelpText.gd" type="Script" id=1]
+
+[node name="RichTextLabel" type="RichTextLabel"]
+margin_right = 200.0
+margin_bottom = 30.0
+bbcode_enabled = true
+bbcode_text = " [img]Graphics/Icons/help.png[/img]"
+text = " "
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="mouse_entered" from="." to="." method="_on_RichTextLabel_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_RichTextLabel_mouse_exited"]

@@ -17,7 +17,7 @@ func _on_SpinBox_value_changed(value):
 		costs[cost] *= value
 	strength = value * strength_mult
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs)
-	$Strength.text = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength)]
+	$Strength.bbcode_text = "%s: %s  %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength), "[img]Graphics/Icons/help.png[/img]"]
 
 func _on_Construct_pressed():
 	if game.check_enough(costs):
@@ -27,9 +27,3 @@ func _on_Construct_pressed():
 		_on_close_button_pressed()
 	else:
 		game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
-
-func _on_Strength_mouse_entered():
-	game.show_tooltip(tr("FLEET_STRENGTH_INFO"))
-
-func _on_Strength_mouse_exited():
-	game.hide_tooltip()

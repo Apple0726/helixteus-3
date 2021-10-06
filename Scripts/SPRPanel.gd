@@ -35,14 +35,14 @@ func _ready():
 	$Title.text = tr("SPR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = Button.new()
-		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.AMM:
+		var btn = preload("res://Scenes/AdvButton.tscn").instance()
+		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.rect_min_size.y = 30
-		btn.expand_icon = true
-		btn.text = tr("%s_NAME" % _name.to_upper())
+		btn.button_text = tr("%s_NAME" % _name.to_upper())
 		btn.connect("pressed", self, "_on_Atom_pressed", [_name])
+		btn.icon_texture = Data.time_icon
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
 func _on_Atom_pressed(_name:String):
@@ -53,12 +53,12 @@ func _on_Atom_pressed(_name:String):
 
 func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
-		btn.visible = not btn.name in ["Ta", "W", "Os"] or game.science_unlocked.AMM
+		btn.visible = not btn.name in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM")
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SPR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		au_mult = 1 + pow(au_int, Helper.get_AIE())
+		au_mult = pow(1 + au_int, Helper.get_AIE())
 	else:
 		$Title.text = tr("SPR_NAME")
 		tile_num = 1
@@ -66,12 +66,12 @@ func refresh():
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("SPR")
+	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
-		$Control/EnergyCostText["custom_colors/font_color"] = Color.yellow
+		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
-		$Control/EnergyCostText["custom_colors/font_color"] = Color.white
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value))
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed)
+		$Control/EnergyCostText.help_text = tr("AMN_TIP")
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge)
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	$Transform.visible = $Control3.visible or $Control.visible
@@ -232,11 +232,11 @@ func _process(delta):
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(atom_dict[hbox.name]))]
 	for hbox in rsrc_nodes_to:
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(MM_dict[hbox.name]))]
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge))
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
-		r.icon = Data.time_icon if obj.bldg.has("reaction") and r.name == obj.bldg.reaction else null
+		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _on_Max_pressed():
 	if atom_to_p:
@@ -247,7 +247,7 @@ func _on_EnergyCostText_mouse_entered():
 		game.show_adv_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("SPR") * game.u_i.time_speed, 0, obj.bldg.qty)
+	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("SPR") * game.u_i.time_speed * game.u_i.charge, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_exited():

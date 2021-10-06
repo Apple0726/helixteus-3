@@ -13,6 +13,7 @@ var rover_costs:Dictionary
 var slot_over:int = -1
 var cmp_over:String = ""
 var mult:float
+var engi_mult:float
 
 onready var armor_slot = $Stats/HBoxContainer/Armor
 onready var wheels_slot = $Stats/HBoxContainer/Wheels
@@ -40,9 +41,9 @@ func _ready():
 	CC_slot.get_node("Button").connect("mouse_entered", self, "_on_Slot_mouse_entered", ["rover_CC"])
 	CC_slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
 	CC_slot.get_node("Button").connect("pressed", self, "_on_Slot_pressed", ["rover_CC"])
-	if game.science_unlocked.RMK2:
+	if game.science_unlocked.has("RMK2"):
 		inventory.append({"type":""})
-	if game.science_unlocked.RMK3:
+	if game.science_unlocked.has("RMK3"):
 		inventory.append({"type":""})
 
 func _on_Slot_mouse_entered(type:String):
@@ -56,7 +57,7 @@ func _on_Slot_mouse_entered(type:String):
 	elif type == "rover_wheels":
 		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[wheels].speed, tr("MOVEMENT_SPEED")]
 	elif type == "rover_CC" and CC != "":
-		txt = "%s\n+%s kg %s" % [metal_comp, Data.rover_CC[CC].capacity, tr("CARGO_CAPACITY")]
+		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[CC].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
 	if txt != "":
 		if game.help.rover_inventory_shortcuts:
 			game.help_str = "rover_inventory_shortcuts"
@@ -107,12 +108,12 @@ func _on_Button_pressed():
 		var append:bool = true
 		for i in len(game.rover_data):
 			if game.rover_data[i] == null:
-				game.rover_data[i] = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}}
+				game.rover_data[i] = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round((def + def_bonus) * mult * engi_mult), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}}
 				tile.bldg.rover_id = i
 				append = false
 				break
 		if append:
-			game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult), "atk":round(atk * mult), "def":round((def + def_bonus) * mult), "weight_cap":round((weight_cap + cargo_bonus) * mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}})
+			game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round((def + def_bonus) * mult * engi_mult), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}})
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
@@ -127,17 +128,18 @@ func refresh():
 	HP = 20.0
 	atk = 5.0
 	def = 5.0
-	weight_cap = 3000.0
-	if game.science_unlocked.RMK2:
+	weight_cap = round(3000.0 * game.u_i.planck)
+	if game.science_unlocked.has("RMK2"):
 		HP = 50
 		atk = 15
 		def = 15
-		weight_cap = 16000.0
-	if game.science_unlocked.RMK3:
+		weight_cap = round(16000.0 * game.u_i.planck)
+	if game.science_unlocked.has("RMK3"):
 		HP = 450
 		atk = 70
 		def = 70
-		weight_cap = 200000.0
+		weight_cap = round(200000.0 * game.u_i.planck)
+	engi_mult = game.engineering_bonus.RSM
 	tile = game.tile_data[game.c_t]
 	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
@@ -166,7 +168,7 @@ func refresh():
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-		cargo_bonus = Data.rover_CC[CC].capacity
+		cargo_bonus = round(Data.rover_CC[CC].capacity * game.u_i.planck)
 	else:
 		cargo_bonus = 0
 	var hbox = $Inventory/HBoxContainer
@@ -202,11 +204,22 @@ func refresh():
 	rover_costs.time /= game.u_i.time_speed
 	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
-	$Stats/HPText.text = Helper.format_num(round((HP + HP_bonus) * mult))
-	$Stats/AtkText.text = Helper.format_num(round(atk * mult))
-	$Stats/DefText.text = Helper.format_num(round((def + def_bonus) * mult))
-	$Stats/CargoText.text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult)]
-	$Stats/SpeedText.text = String(Helper.clever_round(spd_bonus))
+	$Stats/HPText.bbcode_text = Helper.format_num(round((HP + HP_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/AtkText.bbcode_text = Helper.format_num(round(atk * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/DefText.bbcode_text = Helper.format_num(round((def + def_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/CargoText.bbcode_text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)] + "  [img]Graphics/Icons/help.png[/img]"
+	if engi_mult == 1.0:
+		$Stats/HPText.help_text = "(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult * engi_mult)]
+		$Stats/AtkText.help_text = "(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult * engi_mult)]
+		$Stats/DefText.help_text = "(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult * engi_mult)]
+		$Stats/CargoText.help_text = "(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)]
+	else:
+		$Stats/HPText.help_text = "(%s + %s) * %s * %s = %s" % [HP, HP_bonus, mult, engi_mult, round((HP + HP_bonus) * mult * engi_mult)]
+		$Stats/AtkText.help_text = "(%s + %s) * %s * %s = %s" % [atk, 0, mult, engi_mult, round(atk * mult * engi_mult)]
+		$Stats/DefText.help_text = "(%s + %s) * %s * %s = %s" % [def, def_bonus, mult, engi_mult, round((def + def_bonus) * mult * engi_mult)]
+		$Stats/CargoText.help_text = "(%s + %s) * %s * %s = %s kg" % [weight_cap, cargo_bonus, mult, engi_mult, Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)]
+	$Stats/SpeedText.bbcode_text = String(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/SpeedText.help_text = "%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))]
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -235,20 +248,5 @@ func _input(event):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
-func _on_HPText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult)])
-
 func _on_Text_mouse_exited():
 	game.hide_tooltip()
-
-func _on_AtkText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult)])
-
-func _on_DefText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s" % [def, def_bonus, mult, round((def + def_bonus) * mult)])
-
-func _on_CargoText_mouse_entered():
-	game.show_tooltip("(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult)])
-
-func _on_SpeedText_mouse_entered():
-	game.show_tooltip("%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))])

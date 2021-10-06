@@ -42,7 +42,12 @@ func refresh():
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
 		btn.get_node("TF").visible = p_i.has("tile_num")
+		btn.get_node("MS").visible = p_i.has("MS")
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
+		btn.get_node("TF").connect("mouse_entered", self, "on_TF_over")
+		btn.get_node("TF").connect("mouse_exited", self, "on_mouse_exit")
+		btn.get_node("MS").connect("mouse_entered", self, "on_MS_over")
+		btn.get_node("MS").connect("mouse_exited", self, "on_mouse_exit")
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
 		set_process(true)
@@ -55,6 +60,15 @@ func refresh():
 		$StartCharging.visible = false
 		$Control2.visible = false
 		$StartCharging.text = tr("START_CHARGING")
+
+func on_TF_over():
+	game.show_tooltip(tr("PLANET_TFED"))
+
+func on_MS_over():
+	game.show_tooltip(tr("PLANET_HAS_MS"))
+
+func on_mouse_exit():
+	game.hide_tooltip()
 
 func refresh_planet_info():
 	var value = $Control/HSlider.value
@@ -80,7 +94,7 @@ func refresh_planet_info():
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-	var au_mult = 1 + pow(au_int, Helper.get_AIE())
+	var au_mult = pow(1 + au_int, Helper.get_AIE())
 	$Control/MMM.bbcode_text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
@@ -112,10 +126,10 @@ func _on_StartCharging_pressed():
 		var p_i:Dictionary = game.planet_data[star.p_id]
 		if not p_i.empty():
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
-			if p_i.has("bookmark"):
-				game.bookmarks.planet[p_i.bookmark] = null
-				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_child(p_i.bookmark))
-				p_i.erase("bookmark")
+			if p_i.has("bookmarked"):
+				game.bookmarks.planet.erase(str(target.id))
+				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(target.id)))
+				p_i.erase("bookmarked")
 			if p_i.has("MS") and p_i.MS == "M_MME":
 				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
 			if p_i.has("tile_num"):
@@ -123,9 +137,13 @@ func _on_StartCharging_pressed():
 					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
 				elif p_i.bldg.name == "MS":
 					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
+				elif p_i.has("auto_GH"):
+					for p in p_i.auto_GH.produce:
+						game.autocollect.mets[p] -= p_i.auto_GH.produce[p]
+					game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain
 			var dir = Directory.new()
-			if dir.file_exists("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
-				dir.remove("user://Save%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
+			if dir.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
+				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 			target.clear()
 			game.view.obj.refresh_planets()
 			game.add_resources(star.rsrc)

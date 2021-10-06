@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
@@ -45,22 +46,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Path1" type="Button" parent="PathButtons"]
+[node name="Path1" parent="PathButtons" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 252.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+
+[node name="Path2" parent="PathButtons" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 250.0
+margin_right = 502.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+
+[node name="Path3" parent="PathButtons" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 500.0
 margin_right = 752.0
-margin_bottom = 35.0
-size_flags_horizontal = 3
-
-[node name="Path2" type="Button" parent="PathButtons"]
-visible = false
-margin_left = 287.0
-margin_right = 576.0
-margin_bottom = 35.0
-size_flags_horizontal = 3
-
-[node name="Path3" type="Button" parent="PathButtons"]
-visible = false
-margin_left = 285.0
-margin_right = 572.0
 margin_bottom = 35.0
 size_flags_horizontal = 3
 
@@ -75,8 +80,6 @@ grow_vertical = 2
 rect_clip_content = false
 size_flags_horizontal = 3
 bbcode_enabled = true
-bbcode_text = "[center]1 mineral/sec[/center]"
-text = "1 mineral/sec"
 scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -113,8 +116,6 @@ rect_clip_content = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "[center]2 mineral/sec[/center]"
-text = "2 mineral/sec"
 scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false

@@ -100,18 +100,18 @@ infinite_research = true
 
 [node name="AM" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
-margin_top = -144.0
+margin_top = -256.0
 margin_right = 1056.0
-margin_bottom = -80.0
+margin_bottom = -192.0
 
 [node name="CI" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
-margin_top = -576.0
+margin_top = -784.0
 margin_right = 1056.0
-margin_bottom = -512.0
+margin_bottom = -720.0
 
 [node name="L_CI" type="Line2D" parent="."]
-position = Vector2( 1088, -564 )
+position = Vector2( 1088, -772 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
@@ -119,12 +119,12 @@ antialiased = true
 
 [node name="CI2" parent="." instance=ExtResource( 1 )]
 margin_left = 1216.0
-margin_top = -576.0
+margin_top = -784.0
 margin_right = 1472.0
-margin_bottom = -512.0
+margin_bottom = -720.0
 
 [node name="L_CI2" type="Line2D" parent="."]
-position = Vector2( 1504, -564 )
+position = Vector2( 1504, -772 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
@@ -132,24 +132,24 @@ antialiased = true
 
 [node name="CI3" parent="." instance=ExtResource( 1 )]
 margin_left = 1632.0
-margin_top = -576.0
+margin_top = -784.0
 margin_right = 1888.0
-margin_bottom = -512.0
+margin_bottom = -720.0
 
 [node name="ISC" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
-margin_top = 148.0
+margin_top = 128.0
 margin_right = 1056.0
-margin_bottom = 212.0
+margin_bottom = 192.0
 
 [node name="SA" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
-margin_top = -368.0
+margin_top = -576.0
 margin_right = 1056.0
-margin_bottom = -304.0
+margin_bottom = -512.0
 
 [node name="L_SA" type="Line2D" parent="."]
-position = Vector2( 1088, -356 )
+position = Vector2( 1088, -564 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
@@ -157,9 +157,22 @@ antialiased = true
 
 [node name="EGH" parent="." instance=ExtResource( 1 )]
 margin_left = 1216.0
-margin_top = -368.0
+margin_top = -576.0
 margin_right = 1472.0
-margin_bottom = -304.0
+margin_bottom = -512.0
+
+[node name="L_EGH" type="Line2D" parent="."]
+position = Vector2( 1504, -564 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="GHA" parent="." instance=ExtResource( 1 )]
+margin_left = 1632.0
+margin_top = -576.0
+margin_right = 1888.0
+margin_bottom = -512.0
 
 [node name="RC" parent="." instance=ExtResource( 1 )]
 margin_left = 800.0
@@ -529,34 +542,6 @@ margin_left = 2592.0
 margin_top = 248.0
 margin_right = 2848.0
 margin_bottom = 312.0
-size_flags_horizontal = 13
-
-[node name="L_SE1" type="Line2D" parent="."]
-position = Vector2( 2464, -60 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="SE2" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = -72.0
-margin_right = 2848.0
-margin_bottom = -8.0
-size_flags_horizontal = 13
-
-[node name="L_SE2" type="Line2D" parent="."]
-position = Vector2( 2880, -60 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="SE3" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = -72.0
-margin_right = 3264.0
-margin_bottom = -8.0
 size_flags_horizontal = 13
 
 [node name="MME1" parent="." instance=ExtResource( 1 )]
