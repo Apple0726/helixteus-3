@@ -469,7 +469,7 @@ centered = false
 [node name="Mults" type="VBoxContainer" parent="."]
 margin_left = 272.0
 margin_top = 512.0
-margin_right = 512.0
+margin_right = 616.0
 margin_bottom = 552.0
 custom_constants/separation = 5
 __meta__ = {
@@ -477,7 +477,7 @@ __meta__ = {
 }
 
 [node name="SpdMult" type="Label" parent="Mults"]
-margin_right = 240.0
+margin_right = 344.0
 margin_bottom = 24.0
 __meta__ = {
 "_edit_use_anchors_": false

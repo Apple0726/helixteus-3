@@ -18,6 +18,9 @@ Commands list:
 /setMinCap [value]
 - Sets your minerals capacity to [value]
 
+/setStone [value]
+- Sets your stone to [value] (100% silicon)
+
 /setEnergy [value]
 - Sets your energy to [value]
 
@@ -62,3 +65,18 @@ Commands list:
 - Sets the current universe's [property] to [value]
 - Possible values of [property]: speed_of_light, planck, boltzmann, gravitational, charge, dark_energy, difficulty, time_speed, antimatter, value
 - Example: /setunivprop time_speed 5.4
+
+/get2ndship
+- Get 2nd ship. Only works if you have exactly 1 ship
+
+/get3rdship
+- Get 3rd ship. Only works if you have exactly 2 ships
+
+/get4thship
+- Get 4th ship. Only works if you have exactly 3 ships
+
+/addShipXP [ship ID] [XP type] [amount]
+- Gives [amount] XP to [ship ID]'s [XP type]
+- Possible values of [ship ID]: 0, 1, 2, 3
+- Possible values of [XP type]: xp, bullet, laser, bomb, light
+- Example: `/addshipxp 1 laser 300

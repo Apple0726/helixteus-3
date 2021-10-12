@@ -160,7 +160,7 @@ func _ready():
 	else:
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
-	$Current.material["shader_param/frequency"] = 12.0 / time_speed
+	$Current.material["shader_param/frequency"] = 12.0 * time_speed
 	for i in len(ship_data):
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		get_node("Ship%s" % i).visible = true
@@ -512,7 +512,7 @@ func _process(delta):
 			HX.get_node("Sprite").modulate.a -= 0.02 * delta * 60 * time_speed
 			HX.get_node("Info").modulate.a -= 0.02 * delta * 60 * time_speed
 		var pos = HX_c_d[HX.name].position
-		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
+		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5 * game.u_i.time_speed)
 	if stage == BattleStages.CHOOSING:
 		var ship0_dist:float = ship0.position.distance_to(Vector2(200, 200))
 		var ship1_dist:float = ship1.position.distance_to(Vector2(400, 200))
@@ -632,7 +632,7 @@ func process_1_2(weapon, delta):
 			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").play("Knockback", -1, time_speed)
 			
 	elif HX_w_c_d[weapon.name].stage == 1:
-		weapon.modulate.a -= 0.03 * delta * time_speed
+		weapon.modulate.a -= 0.04 * delta * time_speed
 		if weapon.modulate.a <= 0:
 			remove_weapon(weapon, "w_1_2")
 

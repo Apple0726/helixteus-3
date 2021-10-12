@@ -35,7 +35,7 @@ func _ready():
 func on_supercluster_over (id:int):
 	var sc_i = game.supercluster_data[id]
 	var _name:String = sc_i.name if sc_i.has("name") else (tr("SUPERCLUSTER") + " %s" % id)
-	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s" % [sc_i.name, tr("CLUSTERS"), sc_i.cluster_num, tr("DIFFICULTY"), sc_i.diff, tr("DARK_ENERGY"), sc_i.dark_energy])
+	game.show_tooltip("%s\n%s: %s\n%s: %s\n%s: %s" % [_name, tr("CLUSTERS"), sc_i.cluster_num, tr("DIFFICULTY"), sc_i.diff, tr("DARK_ENERGY"), sc_i.dark_energy])
 
 func on_supercluster_out ():
 	game.hide_tooltip()

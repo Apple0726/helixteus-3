@@ -1836,7 +1836,7 @@ func generate_superclusters(id:int):
 		sc_i.dark_energy = Helper.clever_round(max(pow(1 + dist_from_center / 500.0, 0.25), 1) * u_i.dark_energy, 4)
 		var sc_id = supercluster_data.size()
 		sc_i["id"] = sc_id
-		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length() * 20.0)
+		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length() * 30.0)
 		supercluster_data.append(sc_i)
 	if id != 0:
 		var view_zoom = 500.0 / max_dist_from_center
@@ -3391,7 +3391,7 @@ func _input(event):
 		hide_adv_tooltip()
 		$UI/Panel.visible = false
 	
-	var cmd_node = $UI/Command
+	var cmd_node = $Tooltips/Command
 	#/ to type a command
 	if Input.is_action_just_released("command") and not cmd_node.visible and c_v != "":
 		cmd_node.visible = true
@@ -3516,7 +3516,7 @@ func _input(event):
 		cmd_node.text = cmd_history[cmd_history_index]
 		cmd_node.caret_position = cmd_node.text.length()
 	
-	if Input.is_action_just_released("S") and Input.is_action_pressed("ctrl"):
+	if Input.is_action_just_pressed("S") and Input.is_action_pressed("ctrl"):
 		if c_v != "":
 			fn_save_game()
 			save_views(false)
@@ -3559,7 +3559,7 @@ func fn_save_game():
 		return
 	var save_game = File.new()
 	save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
-	if c_v == "cave":
+	if c_v == "cave" and is_instance_valid(cave):
 		var cave_data_file = File.new()
 		cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [c_sv, c_u, cave.id], File.WRITE)
 		var cave_data_dict = {

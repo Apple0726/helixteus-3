@@ -20,7 +20,8 @@ func _ready():
 
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1) * 5.0
-	$Control/EnergyCost.text = Helper.format_num(base_travel_costs * slider_factor + planet_exit_costs)
+	total_energy_cost = base_travel_costs * slider_factor + planet_exit_costs
+	$Control/EnergyCost.text = Helper.format_num(total_energy_cost)
 	time_for_one_sys = 2 * 1200.0 / slider_factor / game.u_i.time_speed
 	game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), sys_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_sys, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_sys * sys_num)], [Data.energy_icon, Data.time_icon], 19)
 

@@ -52,9 +52,9 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
 				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
+				"CBD":{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(2.5, 23), "energy":e(2.5, 23)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
-				"CBD":{"money":7000, "energy":1000, "time":360.0},
 }
 
 func e(n, e):
@@ -330,10 +330,10 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"gammaray_mining_laser":{"speed":12, "rnge":380, "costs":{"money":e(9.4, 10), "silicon":1000, "quartz":500, "time":65000}},
 						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000, "time":100000}},
 }
-var bullet_data = [{"damage":3.5, "accuracy":1.0}, {"damage":5, "accuracy":1.05}, {"damage":9, "accuracy":1.1}]
-var laser_data = [{"damage":2.5, "accuracy":2.2}, {"damage":3.5, "accuracy":2.4}, {"damage":6.5, "accuracy":2.7}]
-var bomb_data = [{"damage":6, "accuracy":0.7}, {"damage":8, "accuracy":0.72}, {"damage":15, "accuracy":0.75}]
-var light_data = [{"damage":1.5, "accuracy":1.3}, {"damage":2.5, "accuracy":1.35}, {"damage":4.5, "accuracy":1.45}]
+var bullet_data = [{"damage":3.5, "accuracy":1.0}, {"damage":5, "accuracy":1.05}, {"damage":9, "accuracy":1.1}, {"damage":19, "accuracy":1.3}]
+var laser_data = [{"damage":2.5, "accuracy":2.2}, {"damage":3.5, "accuracy":2.4}, {"damage":6.5, "accuracy":2.7}, {"damage":13, "accuracy":3.3}]
+var bomb_data = [{"damage":6, "accuracy":0.7}, {"damage":8, "accuracy":0.72}, {"damage":15, "accuracy":0.75}, {"damage":34, "accuracy":0.8}]
+var light_data = [{"damage":1.5, "accuracy":1.3}, {"damage":2.5, "accuracy":1.35}, {"damage":4.0, "accuracy":1.45}, {"damage":8.0, "accuracy":1.7}]
 
 #the numbers are the elements' abundance relative to hydrogen
 var elements = {"NH3":0.05, "CO2":0.01, "H":1.0, "He":0.325, "CH4":0.2, "O":0.014, "H2O":0.15, "Ne":0.001813, "Xe":0.0000022}

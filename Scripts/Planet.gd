@@ -85,7 +85,6 @@ func _ready():
 		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
 		if lake_1_phase != "G":
 			$Lakes1.modulate = phase_1.colors[lake_1_phase]
-			#$Lakes1.modulate = Color(0.3, 0.3, 0.3, 1)
 		phase_1.free()
 	if p_i.has("lake_2"):
 		$Lakes2.tile_set = game.lake_TS
@@ -110,9 +109,10 @@ func _ready():
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
 				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
+				#aurora.get_node("Particles2D").process_material["shader_param/strength"] = 1.0 if randf() < 0.5 else 0.0
 				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * pow(tile.aurora.au_int, 0.03)
 				aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
 				add_child(aurora)
 			if tile.has("crater"):
@@ -304,7 +304,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2)}
+	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":

@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=2]
+[gd_scene load_steps=53 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -35,6 +35,7 @@
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=33]
 [ext_resource path="res://Shaders/ScienceTree.shader" type="Shader" id=34]
 [ext_resource path="res://Scenes/Nebula.tscn" type="PackedScene" id=35]
+[ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=36]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 30 )
@@ -189,6 +190,7 @@ material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+color = Color( 0.364706, 0.968627, 0.968627, 1 )
 __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
@@ -303,15 +305,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Command" type="LineEdit" parent="UI"]
-visible = false
-margin_top = 696.0
-margin_right = 336.0
-margin_bottom = 720.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ItemCursor" type="Node2D" parent="UI"]
 visible = false
 
@@ -364,6 +357,15 @@ layer = 5
 [node name="FPS" type="Label" parent="Tooltips"]
 margin_right = 74.0
 margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Command" type="LineEdit" parent="Tooltips"]
+visible = false
+margin_top = 696.0
+margin_right = 336.0
+margin_bottom = 720.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -729,11 +731,17 @@ position = Vector2( 1064.25, 171.865 )
 scale = Vector2( 0.725823, 0.725823 )
 texture = ExtResource( 32 )
 
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 640, 360 )
+current = true
+
+[node name="Screenshake" parent="Camera2D" instance=ExtResource( 36 )]
+
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
-[connection signal="gui_input" from="UI/Command" to="." method="_on_Command_gui_input"]
 [connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
+[connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
 [connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
 [connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
 [connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]

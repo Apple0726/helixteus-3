@@ -170,7 +170,7 @@ func generate_rock(new:bool):
 	if tile.has("current_deposit"):
 		var met = tile.current_deposit.met
 		var amount = contents[met]
-		for i in clamp(round(amount / 2.0), 1, 40):
+		for i in clamp(round(amount / 2.0), 1, 80):
 			var met_sprite = Sprite.new()
 			met_sprite.texture = game.metal_textures[met]
 			met_sprite.centered = true
