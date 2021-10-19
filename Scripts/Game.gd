@@ -207,6 +207,7 @@ var bookmarks:Dictionary
 
 ############ End save data ############
 var enable_shaders:bool = true
+var screen_shake:bool = true
 var block_scroll:bool = false
 var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
@@ -419,6 +420,7 @@ func _ready():
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		pitch_affected = config.get_value("audio", "pitch_affected", true)
 		enable_shaders = config.get_value("graphics", "enable_shaders", true)
+		screen_shake = config.get_value("graphics", "screen_shake", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
@@ -444,7 +446,7 @@ func _ready():
 	if TEST:
 		$Title.visible = false
 		HUD = load("res://Scenes/HUD.tscn").instance()
-		new_game(false)
+		new_game(false, 0, true)
 		Helper.save_obj("Galaxies", 0, system_data)
 		universe_data[0].lv = 90
 		money = e(1, 24)
@@ -617,6 +619,14 @@ func load_game():
 					"engineering":{"DRs":0, "lv":0},
 					"dimensional_power":{"DRs":0, "lv":0},
 		})
+	if subjects.empty():
+		subjects = {"maths":{"DRs":0, "lv":0},
+					"physics":{"DRs":0, "lv":0},
+					"chemistry":{"DRs":0, "lv":0},
+					"biology":{"DRs":0, "lv":0},
+					"philosophy":{"DRs":0, "lv":0},
+					"engineering":{"DRs":0, "lv":0},
+					"dimensional_power":{"DRs":0, "lv":0}}
 	maths_bonus = save_info_dict.get("maths_bonus", {
 		"BUCGF":1.3,
 		"MUCGF_MV":1.9,
@@ -752,6 +762,13 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 			"PS":1.0,
 			"RSM":1.0,
 		}
+		subjects = {"maths":{"DRs":0, "lv":0},
+					"physics":{"DRs":0, "lv":0},
+					"chemistry":{"DRs":0, "lv":0},
+					"biology":{"DRs":0, "lv":0},
+					"philosophy":{"DRs":0, "lv":0},
+					"engineering":{"DRs":0, "lv":0},
+					"dimensional_power":{"DRs":0, "lv":0}}
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]

@@ -63,6 +63,7 @@ __meta__ = {
 }
 
 [node name="SFX" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -153,7 +154,6 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -165,7 +165,7 @@ __meta__ = {
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 68.0
 margin_top = 31.0
-margin_right = 356.0
+margin_right = 360.0
 margin_bottom = 71.0
 text = "Vsync (requires restart)"
 align = 2
@@ -176,7 +176,7 @@ __meta__ = {
 [node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 112.0
 margin_top = 95.0
-margin_right = 356.0
+margin_right = 360.0
 margin_bottom = 135.0
 align = 2
 __meta__ = {
@@ -228,7 +228,7 @@ __meta__ = {
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 80.0
 margin_top = 155.0
-margin_right = 356.0
+margin_right = 360.0
 margin_bottom = 195.0
 pressed = true
 align = 2
@@ -250,9 +250,21 @@ align = 2
 [node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
 margin_left = 104.0
 margin_top = 215.0
-margin_right = 356.0
+margin_right = 360.0
 margin_bottom = 255.0
 text = "AUTOSAVE_LIGHT"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Screenshake" type="CheckButton" parent="TabContainer/GRAPHICS"]
+margin_left = 64.0
+margin_top = 275.0
+margin_right = 360.0
+margin_bottom = 315.0
+pressed = true
+text = "ENABLE_SCREEN_SHAKE"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -492,6 +504,7 @@ __meta__ = {
 [connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
+[connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]

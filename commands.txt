@@ -4,7 +4,7 @@ Things to know about commands:
 - You can write a command anywhere in the game by pressing /
 - Press up and down arrow keys to scroll through command history
 - Press esc to cancel writing a command
-- You can't write scientific notation in the [value] parameter yet (no /setMoney 1e6), but the game will support it later
+- You can even write scientific notation: /setMoney 1e6
 
 Commands list:
 

@@ -329,6 +329,7 @@ __meta__ = {
 margin_right = 200.0
 margin_bottom = 70.0
 theme = ExtResource( 7 )
+window_title = "Veuillez confirmer…"
 dialog_autowrap = true
 
 [node name="Panel" type="PanelContainer" parent="UI"]
@@ -378,11 +379,6 @@ material = SubResource( 7 )
 margin_right = 1276.0
 margin_bottom = 716.0
 color = Color( 0, 0, 0, 1 )
-
-[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
-visible = false
-modulate = Color( 1, 1, 1, 0 )
-color = Color( 0.686275, 0, 1, 1 )
 
 [node name="GrayscaleRect" type="TextureRect" parent="."]
 modulate = Color( 1, 1, 1, 0 )
@@ -676,6 +672,11 @@ margin_right = 184.0
 margin_bottom = 118.0
 rect_min_size = Vector2( 0, 30 )
 text = "SETTINGS"
+
+[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+color = Color( 0.686275, 0, 1, 1 )
 
 [node name="Autosave" type="Timer" parent="."]
 

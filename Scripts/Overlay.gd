@@ -12,7 +12,7 @@ var err = config.load("user://settings.cfg")
 func _ready():
 	set_polygon(rect_size, Vector2(0, 308))
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
-	$ClickToEdit.visible = not game.show.has("overlay")
+	$ClickToEdit.visible = not game.help.has("overlay")
 
 func refresh_overlay():
 	$HBoxContainer/HSlider.value = game.overlay_CS
@@ -296,7 +296,7 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	game.show.overlay = true
+	game.help.overlay = true
 	$ClickToEdit.visible = false
 
 func _on_RightNumEdit_text_entered(new_text):
@@ -306,7 +306,7 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	game.show.overlay = true
+	game.help.overlay = true
 	$ClickToEdit.visible = false
 
 

@@ -437,7 +437,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("Info/Effects/FireLabel").visible = true
 				HXs[t].get_node("Info/Effects/FireLabel").text = String(weapon_lv)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
-				$Camera2D/Screenshake.start(0.7, 20, 12)
+				if game.screen_shake:
+					$Camera2D/Screenshake.start(0.7, 20, 12)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv

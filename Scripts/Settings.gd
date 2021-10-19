@@ -246,7 +246,7 @@ func _on_EnableShaders_mouse_entered():
 func _on_EnableShaders_toggled(button_pressed):
 	if err == OK:
 		game.enable_shaders = button_pressed
-		game.get_node("Nebula").visible = button_pressed
+		game.get_node("ClusterBG").visible = button_pressed
 		config.set_value("graphics", "enable_shaders", button_pressed)
 		config.save("user://settings.cfg")
 
@@ -255,3 +255,10 @@ func _on_ResetTooltips_pressed():
 	for h in game.help:
 		if h != "tutorial":
 			game.help[h] = true
+
+
+func _on_Screenshake_toggled(button_pressed):
+	if err == OK:
+		game.screen_shake = button_pressed
+		config.set_value("graphics", "screen_shake", button_pressed)
+		config.save("user://settings.cfg")
