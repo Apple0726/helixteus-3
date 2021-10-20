@@ -520,7 +520,7 @@ func on_star_over (id:int):
 	tooltip += "\n%s\n%s\n%s\n%s" % [	tr("STAR_TEMPERATURE") % [star.temperature], 
 										tr("STAR_SIZE") % [star.size],
 										tr("STAR_MASS") % [star.mass],
-										tr("STAR_LUMINOSITY") % [Helper.e_notation(star.luminosity) if star.luminosity < 0.0001 else star.luminosity]]
+										tr("STAR_LUMINOSITY") % Helper.format_num(star.luminosity)]
 	#var building:bool = game.bottom_info_action == "building_DS"
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")

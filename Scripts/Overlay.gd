@@ -12,7 +12,7 @@ var err = config.load("user://settings.cfg")
 func _ready():
 	set_polygon(rect_size, Vector2(0, 308))
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
-	$ClickToEdit.visible = not game.show.has("overlay")
+	$ClickToEdit.visible = not game.help.has("overlay")
 
 func refresh_overlay():
 	$HBoxContainer/HSlider.value = game.overlay_CS
@@ -120,6 +120,7 @@ func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var min_max:Dictionary
 	$Reset.visible = false if not c_vl else c_vl.modified
+	var unit:String = ""
 	match game.c_v:
 		"galaxy":
 			match index:
@@ -129,20 +130,16 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				1:
 					if recalculate and not c_vl.modified:
 						min_max = get_star_num_min_max()
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				2, 3, 4, 9:
 					editable = false
-					$LeftNumEdit.text = tr("YES")
-					$RightNumEdit.text = tr("NO")
 				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("system", "diff")
@@ -150,8 +147,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_HST_min_max()#HST: hottest star temperature
@@ -159,8 +155,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s K" % [c_vl.left]
-					$RightNumEdit.text = "%s K" % [c_vl.right]
+					unit = " K"
 				7:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSS_min_max()
@@ -168,8 +163,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				8:
 					if recalculate and not c_vl.modified:
 						min_max = get_BSL_min_max()
@@ -177,8 +171,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 		"cluster":
 			match index:
 				0:
@@ -187,8 +180,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				1, 2, 3, 7:
 					editable = false
 				4:
@@ -198,8 +190,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
 				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
@@ -207,8 +198,7 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max * e(1, 9)
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s nT" % [c_vl.left]
-					$RightNumEdit.text = "%s nT" % [c_vl.right]
+					unit = " nT"
 				6:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "dark_matter")
@@ -216,8 +206,10 @@ func refresh_options(index:int, recalculate:bool = true):
 						c_vl.right = min_max._max
 					editable = true
 					is_int = false
-					$LeftNumEdit.text = "%s" % [c_vl.left]
-					$RightNumEdit.text = "%s" % [c_vl.right]
+					unit = ""
+	if editable:
+		$LeftNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.left) if c_vl.left >= 1000000 else c_vl.left, unit]
+		$RightNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.right) if c_vl.right >= 1000000 else c_vl.right, unit]
 	$LeftNumEdit.visible = editable
 	$RightNumEdit.visible = editable
 	$Yes.visible = not editable
@@ -296,7 +288,7 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	game.show.overlay = true
+	game.help.overlay = true
 	$ClickToEdit.visible = false
 
 func _on_RightNumEdit_text_entered(new_text):
@@ -306,7 +298,7 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	game.show.overlay = true
+	game.help.overlay = true
 	$ClickToEdit.visible = false
 
 

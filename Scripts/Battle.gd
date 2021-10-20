@@ -160,7 +160,7 @@ func _ready():
 	else:
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	stage = BattleStages.CHOOSING
-	$Current.material["shader_param/frequency"] = 12.0 / time_speed
+	$Current.material["shader_param/frequency"] = 12.0 * time_speed
 	for i in len(ship_data):
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		get_node("Ship%s" % i).visible = true
@@ -296,24 +296,24 @@ func display_stats(type:String):
 		HX.get_node("Info/Icon").visible = true
 		HX.get_node("Info/Icon").texture = self["%s_icon" % [type]]
 		if type == "HP":
-			HX.get_node("Info/Label").text = "%s / %s" % [HX_data[i].HP, HX_data[i].total_HP]
+			HX.get_node("Info/Label").text = "%s / %s" % [Helper.format_num(HX_data[i].HP), Helper.format_num(HX_data[i].total_HP)]
 		else:
 			if HX_c_d[HXs[i].name].has(type):
 				if HX_c_d[HXs[i].name][type] > 0:
 					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.green
 				elif HX_c_d[HXs[i].name][type] < 0:
 					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.red
-				HX.get_node("Info/Label").text = String(round(HX_data[i][type] * (1.0 + HX_c_d[HXs[i].name][type])))
+				HX.get_node("Info/Label").text = Helper.format_num(round(HX_data[i][type] * (1.0 + HX_c_d[HXs[i].name][type])))
 			else:
-				HX.get_node("Info/Label").text = String(HX_data[i][type])
+				HX.get_node("Info/Label").text = Helper.format_num(HX_data[i][type])
 	for i in len(ship_data):
 		get_node("Ship%s/Icon" % i)
 		get_node("Ship%s/Icon" % i).visible = true
 		get_node("Ship%s/Icon" % i).texture = self["%s_icon" % [type]]
 		if type == "HP":
-			get_node("Ship%s/Label" % i).text = "%s / %s" % [ship_data[i].HP, (ship_data[i].total_HP * ship_data[i].HP_mult)]
+			get_node("Ship%s/Label" % i).text = "%s / %s" % [Helper.format_num(ship_data[i].HP), Helper.format_num(ship_data[i].total_HP * ship_data[i].HP_mult)]
 		else:
-			get_node("Ship%s/Label" % i).text = String(ship_data[i][type] * ship_data[i]["%s_mult" % type])
+			get_node("Ship%s/Label" % i).text = Helper.format_num(ship_data[i][type] * ship_data[i]["%s_mult" % type])
 
 func _on_Back_pressed():
 	game.switch_view("system")
@@ -437,7 +437,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("Info/Effects/FireLabel").visible = true
 				HXs[t].get_node("Info/Effects/FireLabel").text = String(weapon_lv)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
-				$Camera2D/Screenshake.start(0.7, 20, 12)
+				if game.screen_shake:
+					$Camera2D/Screenshake.start(0.7, 20, 12)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv
@@ -512,7 +513,7 @@ func _process(delta):
 			HX.get_node("Sprite").modulate.a -= 0.02 * delta * 60 * time_speed
 			HX.get_node("Info").modulate.a -= 0.02 * delta * 60 * time_speed
 		var pos = HX_c_d[HX.name].position
-		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5)
+		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5 * game.u_i.time_speed)
 	if stage == BattleStages.CHOOSING:
 		var ship0_dist:float = ship0.position.distance_to(Vector2(200, 200))
 		var ship1_dist:float = ship1.position.distance_to(Vector2(400, 200))
@@ -632,7 +633,7 @@ func process_1_2(weapon, delta):
 			HXs[HX_w_c_d[weapon.name].id].get_node("KnockbackAnimation").play("Knockback", -1, time_speed)
 			
 	elif HX_w_c_d[weapon.name].stage == 1:
-		weapon.modulate.a -= 0.03 * delta * time_speed
+		weapon.modulate.a -= 0.04 * delta * time_speed
 		if weapon.modulate.a <= 0:
 			remove_weapon(weapon, "w_1_2")
 
@@ -775,7 +776,7 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 	$Back.visible = false
 	stage = BattleStages.PLAYER
 	var ship_pos = self["ship%s" % [curr_sh]].position
-	var HX_pos = Vector2(1000, 360) if target == -1 else HXs[target].position
+	var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 	if weapon_type == "laser":
 		$Laser.visible = true
 		$Laser.rect_position = ship_pos

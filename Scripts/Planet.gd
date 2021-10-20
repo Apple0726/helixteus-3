@@ -85,7 +85,6 @@ func _ready():
 		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
 		if lake_1_phase != "G":
 			$Lakes1.modulate = phase_1.colors[lake_1_phase]
-			#$Lakes1.modulate = Color(0.3, 0.3, 0.3, 1)
 		phase_1.free()
 	if p_i.has("lake_2"):
 		$Lakes2.tile_set = game.lake_TS
@@ -110,10 +109,12 @@ func _ready():
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
 				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
-				var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+				#aurora.get_node("Particles2D").process_material["shader_param/strength"] = 1.0 if randf() < 0.5 else 0.0
+				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
 				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
-				aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora.au_int) / 10.0, 1.0)
+				#aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
 				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()
@@ -304,7 +305,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2)}
+	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":
@@ -620,9 +621,26 @@ var mouse_pos = Vector2.ZERO
 var thread:Thread
 var mutex:Mutex
 
+func check_tile_change(event, fn:String, fn_args:Array = []):
+	var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
+	var new_x = stepify(round(mouse_pos.x - 100), 200)
+	var new_y = stepify(round(mouse_pos.y - 100), 200)
+	var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
+	var old_y = stepify(round(mouse_pos.y - delta.y - 100), 200)
+	if new_x > old_x:
+		callv(fn, fn_args)
+	elif new_x < old_x:
+		callv(fn, fn_args)
+	if new_y > old_y:
+		callv(fn, fn_args)
+	elif new_y < old_y:
+		callv(fn, fn_args)
+
 func _unhandled_input(event):
 	if game.tutorial and game.tutorial.BG_blocked:
 		return
+	var placing_soil = game.bottom_info_action == "place_soil"
+	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
 	if tile_over != -1 and game.bottom_info_action != "building":
 		var tile = game.tile_data[tile_over]
@@ -674,11 +692,9 @@ func _unhandled_input(event):
 							if _tile.bldg.name == "GF":
 								Helper.add_item_to_coll(items_collected, "sand", prod_i.qty_left)
 								Helper.add_item_to_coll(items_collected, "glass", prod_i.qty_made)
-								game.add_resources({"sand":prod_i.qty_left, "glass":prod_i.qty_made})
 							elif _tile.bldg.name == "SE":
 								Helper.add_item_to_coll(items_collected, "coal", prod_i.qty_left)
 								Helper.add_item_to_coll(items_collected, "energy", prod_i.qty_made)
-								game.add_resources({"coal":prod_i.qty_left, "energy":prod_i.qty_made})
 							_tile.bldg.erase("qty1")
 							_tile.bldg.erase("start_date")
 							_tile.bldg.erase("ratio")
@@ -797,19 +813,7 @@ func _unhandled_input(event):
 				mass_build_rect.rect_scale.y = -1
 			else:
 				mass_build_rect.rect_scale.y = 1
-			var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
-			var new_x = stepify(round(mouse_pos.x - 100), 200)
-			var new_y = stepify(round(mouse_pos.y - 100), 200)
-			var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
-			var old_y = stepify(round(mouse_pos.y - delta.y - 100), 200)
-			if new_x > old_x:
-				add_shadows()
-			elif new_x < old_x:
-				add_shadows()
-			if new_y > old_y:
-				add_shadows()
-			elif new_y < old_y:
-				add_shadows()
+			check_tile_change(event, "add_shadows")
 		var black_bg = game.get_node("UI/PopupBackground").visible
 		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
@@ -824,6 +828,8 @@ func _unhandled_input(event):
 				if not tiles_selected.empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
 				var tile = game.tile_data[tile_over]
+				if placing_soil and Input.is_action_pressed("shift") and Input.is_action_pressed("left_click"):
+					check_tile_change(event, "place_soil", [tile, Vector2(x_over, y_over)])
 				show_tooltip(tile)
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					remove_child(white_rect)
@@ -870,22 +876,27 @@ func _unhandled_input(event):
 		view.move_view = true
 		view.scroll_view = true
 		return
-	#initiate mass build
-	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
+	if Input.is_action_just_pressed("shift"):
 		view.move_view = false
 		view.scroll_view = false
+	elif Input.is_action_just_released("shift"):
+		view.move_view = true
+		view.scroll_view = true
+	#initiate mass build
+	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
 		mass_build_rect.rect_position = mouse_pos
 		mass_build_rect.rect_size = Vector2.ZERO
 		mass_build_rect.visible = true
 		mass_build_rect_size = Vector2.ONE
-		shadows[tile_over] = put_shadow(Sprite.new(), mouse_pos)
-		shadow_num = 1
+		if available_to_build(game.tile_data[tile_over]):
+			shadows[tile_over] = put_shadow(Sprite.new(), mouse_pos)
+			shadow_num = 1
+		else:
+			shadow_num = 0
 		shadow.visible = false
 	if mass_build:
 		return
-	var placing_soil = game.bottom_info_action == "place_soil"
-	var about_to_mine = game.bottom_info_action == "about_to_mine"
-	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
+	if (Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = OS.get_system_time_msecs()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -896,60 +907,41 @@ func _unhandled_input(event):
 				constr_bldg(tile_id, curr_time, bldg_to_construct)
 		if about_to_mine and available_for_mining(tile) or tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "":
 			game.mine_tile(tile_id)
-		if placing_soil and available_for_plant(tile):
-			if game.check_enough({"soil":10}):
-				game.deduct_resources({"soil":10})
-				if not tile:
-					game.tile_data[tile_id] = {}
-				game.tile_data[tile_id].plant = {}
-				if not game.tile_data[tile_id].has("adj_lake_state"):
-					var lake_data:Dictionary = Helper.check_lake_presence(Vector2(tile_id % wid, int(tile_id / wid)), wid)
-					if lake_data.has_lake:
-						game.tile_data[tile_id].adj_lake_state = lake_data.lake_state
-				$Soil.set_cell(x_pos, y_pos, 0)
-				$Soil.update_bitmask_region()
-				game.HUD.refresh()
-			else:
-				game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
-			return
 		if tile and bldg_to_construct == "":
 			items_collected.clear()
+			if placing_soil:
+				place_soil(tile, Vector2(x_pos, y_pos))
+				return
 			var t:String = game.item_to_use.type
 			if tile.has("plant"):#if clicked tile has soil on it
-				if placing_soil and tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("auto_GH")):
-					game.add_resources({"soil":10})
-					tile.erase("plant")
-					$Soil.set_cell(x_pos, y_pos, -1)
-					$Soil.update_bitmask_region()
-				else:
-					var orig_num:int = game.item_to_use.num
-					if t == "fertilizer":
-						if tiles_selected.empty():
-							fertilizer_plant(tile, tile_id)
-						else:
-							for _tile in tiles_selected:
-								fertilizer_plant(game.tile_data[_tile], _tile)
+				var orig_num:int = game.item_to_use.num
+				if t == "fertilizer":
+					if tiles_selected.empty():
+						fertilizer_plant(tile, tile_id)
+					else:
+						for _tile in tiles_selected:
+							fertilizer_plant(game.tile_data[_tile], _tile)
+							if game.item_to_use.num <= 0:
+								break
+					game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
+				elif t == "":
+					if tiles_selected.empty():
+						harvest_plant(tile, tile_id)
+					else:
+						for _tile in tiles_selected:
+							harvest_plant(game.tile_data[_tile], _tile)
+				elif t == "seeds":
+					if tiles_selected.empty():
+						if tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
+							seeds_plant(tile, tile_id, curr_time)
+					else:
+						for _tile_id in tiles_selected:
+							var _tile = game.tile_data[_tile_id]
+							if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
+								seeds_plant(_tile, _tile_id, curr_time, true)
 								if game.item_to_use.num <= 0:
 									break
-						game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
-					elif t == "":
-						if tiles_selected.empty():
-							harvest_plant(tile, tile_id)
-						else:
-							for _tile in tiles_selected:
-								harvest_plant(game.tile_data[_tile], _tile)
-					elif t == "seeds":
-						if tiles_selected.empty():
-							if tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
-								seeds_plant(tile, tile_id, curr_time)
-						else:
-							for _tile_id in tiles_selected:
-								var _tile = game.tile_data[_tile_id]
-								if _tile.has("plant") and _tile.plant.empty() and (not game.science_unlocked.has("GHA") or not tile.has("bldg")):
-									seeds_plant(_tile, _tile_id, curr_time, true)
-									if game.item_to_use.num <= 0:
-										break
-					game.update_item_cursor()
+				game.update_item_cursor()
 			if tile.has("bldg"):
 				if t in ["speedup", "overclock"]:
 					var orig_num:int = game.item_to_use.num
@@ -1114,6 +1106,31 @@ func _unhandled_input(event):
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
 
+func place_soil(tile:Dictionary, tile_pos:Vector2):
+	if not tile.has("plant"):
+		if available_for_plant(tile):
+			if game.check_enough({"soil":10}):
+				var tile_id:int = int(tile_pos.x) % wid + tile_pos.y * wid
+				game.deduct_resources({"soil":10})
+				if not tile:
+					game.tile_data[tile_id] = {}
+				game.tile_data[tile_id].plant = {}
+				if not game.tile_data[tile_id].has("adj_lake_state"):
+					var lake_data:Dictionary = Helper.check_lake_presence(Vector2(tile_id % wid, int(tile_id / wid)), wid)
+					if lake_data.has_lake:
+						game.tile_data[tile_id].adj_lake_state = lake_data.lake_state
+				$Soil.set_cell(tile_pos.x, tile_pos.y, 0)
+				$Soil.update_bitmask_region()
+				game.HUD.refresh()
+			else:
+				game.popup(tr("NOT_ENOUGH_SOIL"), 1.2)
+	else:
+		if tile.plant.empty() and (game.science_unlocked.has("GHA") or not tile.has("auto_GH")):
+			game.add_resources({"soil":10})
+			tile.erase("plant")
+			$Soil.set_cell(tile_pos.x, tile_pos.y, -1)
+			$Soil.update_bitmask_region()
+
 func test(_bldg_to_construct:String):
 	mutex.lock()
 	var curr_time = OS.get_system_time_msecs()
@@ -1263,8 +1280,6 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	rsrcs[id2] = rsrc
 
 func on_timeout():
-	if not is_processing():
-		return
 	var curr_time = OS.get_system_time_msecs()
 	var update_XP:bool = false
 	for time_bar_obj in time_bars:
@@ -1347,6 +1362,8 @@ func on_timeout():
 				tile.wormhole.active = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
+	if icons_hidden:
+		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
 		if not tile or not tile.has("bldg"):

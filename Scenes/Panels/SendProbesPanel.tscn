@@ -717,7 +717,7 @@ __meta__ = {
 [connection signal="mouse_entered" from="TP/VBox/universe_value/Label" to="." method="_on_Label_mouse_entered" binds= [ "UNIVERSE_VALUE_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/universe_value/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/universe_value/HSlider" to="." method="_on_TP_value_changed" binds= [ "universe_value" ]]
-[connection signal="text_changed" from="TP/VBox/universe_value/Label2" to="." method="_on_Label2_text_changed" binds= [ "value" ]]
+[connection signal="text_changed" from="TP/VBox/universe_value/Label2" to="." method="_on_Label2_text_changed" binds= [ "universe_value" ]]
 [connection signal="mouse_entered" from="TP/Points" to="." method="_on_Points_mouse_entered"]
 [connection signal="mouse_exited" from="TP/Points" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]

@@ -118,7 +118,7 @@ __meta__ = {
 }
 
 [node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
-margin_right = 240.0
+margin_right = 246.0
 margin_bottom = 34.0
 size_flags_vertical = 4
 text = "Number of planets"
@@ -128,8 +128,8 @@ __meta__ = {
 }
 
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
-margin_left = 260.0
-margin_right = 288.0
+margin_left = 266.0
+margin_right = 294.0
 margin_bottom = 34.0
 custom_constants/hseparation = 10
 __meta__ = {
@@ -137,7 +137,7 @@ __meta__ = {
 }
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer"]
-margin_left = 308.0
+margin_left = 314.0
 margin_right = 592.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 50, 0 )

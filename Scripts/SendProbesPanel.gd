@@ -186,7 +186,11 @@ func discover_univ():
 	for prop in $TP/VBox.get_children():
 		if prop.name == "s_b":
 			continue
-		u_i[prop.name] = float(prop.get_node("Label2").text)
+		if prop.name == "universe_value":
+			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+			u_i.universe_value = UV_mult * float(prop.get_node("Label2").text)
+		else:
+			u_i[prop.name] = float(prop.get_node("Label2").text)
 	game.universe_data.append(u_i)
 	if visible:
 		game.toggle_panel(self)

@@ -10,13 +10,18 @@ func _ready():
 
 func refresh():
 	_on_SpinBox_value_changed($SpinBox.value)
+	var probe_num:int = 0
+	for i in len(game.probe_data):
+		if not game.probe_data[i]:
+			continue
+		probe_num += 1
 	if probe_tier == 0:
 		$Label.text = tr("PCC_NAME")
 		$ViewPlanet.visible = false
 	elif probe_tier == 1:
 		$Label.text = tr("M_MPCC_NAME")
 		$ViewPlanet.visible = true
-	$SpinBox.max_value = max(0, 500 - len(game.probe_data))
+	$SpinBox.max_value = max(0, 500 - probe_num)
 	$Construct.visible = $SpinBox.max_value > 0
 	$TextureRect.texture = load("res://Graphics/Ships/Probe%s.png" % probe_tier)
 

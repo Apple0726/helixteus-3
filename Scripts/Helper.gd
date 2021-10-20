@@ -353,7 +353,7 @@ func set_back_btn(back_btn, set_text:bool = true):
 		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
 
 var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
-func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
+func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
 	lb["custom_fonts/font"] = dmg_txt_rsrc
 	if missed:
@@ -361,16 +361,16 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		lb.text = tr("MISSED")
 	else:
 		lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
-		lb.text = "- %s" % [dmg]
+		lb.text = "- %s" % format_num(dmg)
 		if crit:
-			lb.text = "%s\n- %s" % [tr("CRITICAL"), dmg]
+			lb.text = "%s\n- %s" % [tr("CRITICAL"), format_num(dmg)]
 		else:
-			lb.text = "- %s" % [dmg]
+			lb.text = "- %s" % format_num(dmg)
 	lb.rect_position = pos - Vector2(0, 40)
 	lb.rect_scale *= sc
 	var dur = 1.5 if crit else 1.0
 	if game:
-		dur *= game.u_i.time_speed
+		dur /= game.u_i.time_speed
 	var tween:Tween = Tween.new()
 	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), dur)
 	tween.interpolate_property(lb, "rect_position", null, pos - Vector2(0, 55), dur, Tween.TRANS_BACK, Tween.EASE_OUT)
@@ -651,8 +651,6 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			var prod:float
 			if tile.bldg.name == "SP":
 				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, get_au_mult(tile))
-			elif tile.bldg.name == "AE":
-				prod = 1000 / get_AE_production(p_i.pressure, tile.bldg.path_1_value)
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
@@ -1149,8 +1147,6 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	if path == 1:
 		if bldg == "SP":
 			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
-		elif bldg == "AE":
-			return get_AE_production(p_i.pressure, dict.bldg.path_1_value * mult) * n
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		else:

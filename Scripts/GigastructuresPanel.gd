@@ -23,6 +23,7 @@ func refresh():
 func update_info():
 	var error:bool = false
 	costs = Data.costs[bldg].duplicate(true)
+	$Control/ProdCostMult.visible = bldg != "TP"
 	$Control/ProductionPerSec.visible = bldg != "TP"
 	$Control/Production.visible = bldg != "TP"
 	if game.c_g_g == game.ships_c_g_coords.g:

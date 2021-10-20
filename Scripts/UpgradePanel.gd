@@ -257,9 +257,22 @@ func _on_Path1_pressed():
 	update(true)
 
 func _on_Path2_pressed():
-#	if bldg != "" and len(ids) == 1 and Data.path_2[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_2 == Data.path_2[bldg].cap:
-#		game.popup(tr("MAX_LV_REACHED"), 1.5)
-#		return
+	if bldg != "" and Data.path_2[bldg].has("cap"):
+		if len(ids) == 1:
+			if game.tile_data[ids[0]].bldg.path_2 >= Data.path_2[bldg].cap:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
+				return
+		else:
+			var all_capped = true
+			for i in ids:
+				if game.tile_data[i].bldg.path_2 < Data.path_2[bldg].cap:
+					all_capped = false
+					break
+			if all_capped:
+				game.popup(tr("MAX_LV_REACHED"), 1.5)
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
+				return
 	path_selected = 2
 	path_str = "path_%s" % [path_selected]
 	Helper.set_btn_color(path2)
@@ -354,7 +367,7 @@ func _on_Upgrade_pressed():
 				tile.bldg[path_str] = next_lv.value
 				tile.bldg[path_str + "_value"] = new_base_value
 				tile.bldg.construction_date = curr_time
-				tile.bldg.XP = round(cost_money / 100.0)
+				tile.bldg.XP = cost_money / 100.0
 				tile.bldg.construction_length = cost_time * 1000.0
 				tile.bldg.is_constructing = true
 				game.view.obj.add_time_bar(id, "bldg")
