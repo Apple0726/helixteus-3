@@ -73,7 +73,7 @@ func on_system_over (l_id:int):
 				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), l_id]
 			5:
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
-	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), s_i.diff])
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
 
 func on_system_out ():
 	game.hide_tooltip()

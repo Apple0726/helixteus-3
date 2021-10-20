@@ -38,13 +38,13 @@ func refresh():
 		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
-	$XP/Label2.text = "%s / %s" % [game.ship_data[id].XP, game.ship_data[id].XP_to_lv]
+	$XP/Label2.text = "%s / %s" % [Helper.format_num(game.ship_data[id].XP), Helper.format_num(game.ship_data[id].XP_to_lv)]
 	set_visibility()
-	$Stats/HP.text = String(game.ship_data[id].total_HP * game.ship_data[id].HP_mult)
-	$Stats/Atk.text = String(game.ship_data[id].atk * game.ship_data[id].atk_mult)
-	$Stats/Def.text = String(game.ship_data[id].def * game.ship_data[id].def_mult)
-	$Stats/Acc.text = String(game.ship_data[id].acc * game.ship_data[id].acc_mult)
-	$Stats/Eva.text = String(game.ship_data[id].eva * game.ship_data[id].eva_mult)
+	$Stats/HP.text = Helper.format_num(game.ship_data[id].total_HP * game.ship_data[id].HP_mult)
+	$Stats/Atk.text = Helper.format_num(game.ship_data[id].atk * game.ship_data[id].atk_mult)
+	$Stats/Def.text = Helper.format_num(game.ship_data[id].def * game.ship_data[id].def_mult)
+	$Stats/Acc.text = Helper.format_num(game.ship_data[id].acc * game.ship_data[id].acc_mult)
+	$Stats/Eva.text = Helper.format_num(game.ship_data[id].eva * game.ship_data[id].eva_mult)
 	$TextEdit.text = game.ship_data[id].name
 	
 func _on_icon_mouse_entered(stat:String):

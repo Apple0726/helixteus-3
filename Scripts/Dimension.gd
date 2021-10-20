@@ -11,7 +11,7 @@ var physics_OP_points:float = 0
 var engineering_OP_points:float = 0
 
 func _ready():
-	$ModifyDimension/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
+	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
 	for univ_prop in $ModifyDimension/Physics/Control/VBox.get_children():
 		univ_prop.value = game.physics_bonus[univ_prop.name]
@@ -102,23 +102,25 @@ func refresh_univs(reset:bool = false):
 			univ.connect("mouse_exited", self, "on_univ_out")
 			univ.connect("pressed", self, "on_univ_press", [id])
 	else:
+		$ModifyDimension/Reset/DRsPerCilck.visible = game.dim_num >= 3
+		$ModifyDimension/Reset/LineEdit.visible = game.dim_num >= 3
 		$Subjects.margin_left = 448
 		for subj in $Subjects/Grid.get_children():
 			if subj.name in ["Maths", "Physics", "Engineering", "Dimensional_Power"]:
 				subj.get_node("HBox/Invest").connect("pressed", self, "on_invest", [subj])
 	$Universes.visible = not reset
 	$UnivInfo.visible = not reset
-	$ModifyDimension/DimResetInfo.visible = reset
-	$ModifyDimension/Generate.visible = reset
+	$ModifyDimension/Reset.visible = reset
 
 func on_invest(subj_node):
 	if game.DRs > 0:
-		game.DRs -= 1
+		var old_DRs:int = game.DRs
+		game.DRs = max(game.DRs - int($ModifyDimension/Reset/LineEdit.text), 0)
 		$TopInfo/DRs.bbcode_text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 		var subject:Dictionary = game.subjects[subj_node.name.to_lower()]
-		subject.DRs += 1
-		if subject.DRs > subject.lv:
-			subject.DRs = 0
+		subject.DRs += old_DRs - game.DRs
+		while subject.DRs > subject.lv:
+			subject.DRs -= subject.lv
 			subject.lv += 1
 		if subj_node.name == "Dimensional_Power":
 			if $ModifyDimension/Maths.visible:
@@ -219,9 +221,9 @@ func _on_Reset_pressed():
 	game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
 
 func calc_math_points(node, default_value:float, op_factor:float, limit:float = -1.0):
-	if node.value <= 0 and limit == -1.0 or op_factor < 0 and node.value <= limit or op_factor > 0 and node.value >= limit:
+	if node.value <= 0 and limit == -1.0 or limit != -1.0 and (op_factor < 0 and node.value <= limit or op_factor > 0 and node.value >= limit):
 		node["custom_colors/font_color"] = Color.red
-		$ModifyDimension/Generate.visible = false
+		$ModifyDimension/Reset/Generate.visible = false
 		return
 	else:
 		node["custom_colors/font_color"] = Color.black
@@ -231,15 +233,26 @@ func calc_math_points(node, default_value:float, op_factor:float, limit:float = 
 				points_to_add = -atan(-points_to_add) * 0.2
 			maths_OP_points += points_to_add
 		else:
-			maths_OP_points += abs(op_factor) * (1 / abs(node.value - limit) - 1 / default_value)
+			#print(node.value)
+			maths_OP_points += abs(op_factor) * (1 / abs(node.value - limit) - 1 / abs(default_value - limit))
 
 onready var math_defaults = $ModifyDimension/Maths/Control/Defaults
 onready var physics_defaults = $ModifyDimension/Physics/Control/Defaults
 func _input(event):
-	if event is InputEventKey or event is InputEventMouseButton:
-		if $ModifyDimension/Maths.visible:
+	if $ModifyDimension/Reset.visible:
+		var DR_per_click:int = int($ModifyDimension/Reset/LineEdit.text)
+		if DR_per_click < 0:
+			$ModifyDimension/Reset/LineEdit.text = "0"
+		if DR_per_click <= 1:
+			for subj in $Subjects/Grid.get_children():
+				subj.get_node("HBox/Invest").text = tr("INVEST")
+		else:
+			for subj in $Subjects/Grid.get_children():
+				subj.get_node("HBox/Invest").text = tr("INVEST_X") % Helper.format_num(DR_per_click, 3)
+		if event is InputEventKey or event is InputEventMouse:
+			yield(get_tree(), "idle_frame")
 			maths_OP_points = 0
-			calc_math_points($ModifyDimension/Maths/Control/BUCGF, 1.3, -120.0, 1.16)
+			calc_math_points($ModifyDimension/Maths/Control/BUCGF, 1.3, -10.0, 1.16)
 			math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MV, 1.9, -4.0, 1.0)
 			math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
@@ -247,25 +260,22 @@ func _input(event):
 			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.0)
 			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 8.0)
+			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 20.0, 7.0)
 			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -45.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -20.0, 1.0)
 			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_Stats, 1.15, 15.0)
+			calc_math_points($ModifyDimension/Maths/Control/SLUGF_Stats, 1.15, 200.0)
 			math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 2.5)
 			math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -2.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -120.0, 1.0)
 			math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/ULUGF, 1.6, -50.0, 1.0)
 			math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/ULUGF.value, float(math_defaults.get_node("ULUGF").text.right(1)))
-			$ModifyDimension/OPMeter/OPMeter.value = maths_OP_points
-			$ModifyDimension/OPMeter/TooOP.visible = maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
-		elif $ModifyDimension/Physics.visible:
 			physics_OP_points = 0
 			if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
 				$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.red
-				$ModifyDimension/Generate.visible = false
+				$ModifyDimension/Reset/Generate.visible = false
 				return
 			else:
 				$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.black
@@ -274,29 +284,34 @@ func _input(event):
 			for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 				if cost.value <= 0:
 					cost["custom_colors/font_color"] = Color.red
-					$ModifyDimension/Generate.visible = false
+					$ModifyDimension/Reset/Generate.visible = false
 					return
 				else:
 					cost["custom_colors/font_color"] = Color.black
 					physics_OP_points += (Data.univ_prop_weights[cost.name] / cost.value - 1.0) * 0.5
 				physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
-			$ModifyDimension/OPMeter/OPMeter.value = physics_OP_points
-			$ModifyDimension/OPMeter/TooOP.visible = physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
-		elif $ModifyDimension/Engineering.visible:
+			
 			engineering_OP_points = 0
 			calc_engi_points($ModifyDimension/Engineering/Control/BCM, 0.7, false)
 			calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.1, true)
 			calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.15, true)
-			$ModifyDimension/OPMeter/OPMeter.value = engineering_OP_points
-			$ModifyDimension/OPMeter/TooOP.visible = engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
-		var OP_mult:float = (2.0 if game.subjects.dimensional_power.lv >= 2 else 1.0)
-		if $ModifyDimension/DimResetInfo.visible:
-			$ModifyDimension/Generate.visible = maths_OP_points <= game.subjects.maths.lv * OP_mult and physics_OP_points <= game.subjects.physics.lv * OP_mult and engineering_OP_points <= game.subjects.engineering.lv * OP_mult
+			if $ModifyDimension/Maths.visible:
+				$ModifyDimension/OPMeter/OPMeter.value = maths_OP_points
+				$ModifyDimension/OPMeter/TooOP.visible = maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+			elif $ModifyDimension/Physics.visible:
+				$ModifyDimension/OPMeter/OPMeter.value = physics_OP_points
+				$ModifyDimension/OPMeter/TooOP.visible = physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+			elif $ModifyDimension/Engineering.visible:
+				$ModifyDimension/OPMeter/OPMeter.value = engineering_OP_points
+				$ModifyDimension/OPMeter/TooOP.visible = engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+			var OP_mult:float = (2.0 if game.subjects.dimensional_power.lv >= 2 else 1.0)
+			if $ModifyDimension/Reset.visible:
+				$ModifyDimension/Reset/Generate.visible = maths_OP_points <= game.subjects.maths.lv * OP_mult and physics_OP_points <= game.subjects.physics.lv * OP_mult and engineering_OP_points <= game.subjects.engineering.lv * OP_mult
 
 func calc_engi_points(node, op_factor:float, growth:bool):
 	if node.value <= 0:
 		node["custom_colors/font_color"] = Color.red
-		$ModifyDimension/Generate.visible = false
+		$ModifyDimension/Reset/Generate.visible = false
 		return
 	else:
 		node["custom_colors/font_color"] = Color.black

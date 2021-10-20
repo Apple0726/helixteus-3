@@ -5,7 +5,7 @@
 [ext_resource path="res://Graphics/Icons/DropdownArrow.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/CustomSpinBox.gd" type="Script" id=4]
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
@@ -17,7 +17,7 @@ border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 2 )
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
@@ -29,7 +29,7 @@ border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 size = 12
 use_mipmaps = true
 use_filter = true
@@ -56,10 +56,10 @@ anchor_left = 1.0
 anchor_right = 1.0
 margin_right = 20.0
 margin_bottom = 16.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 1 )
-custom_styles/normal = SubResource( 1 )
-custom_fonts/font = SubResource( 2 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -84,10 +84,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -16.0
 margin_right = 20.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 1 )
-custom_styles/normal = SubResource( 1 )
-custom_fonts/font = SubResource( 2 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

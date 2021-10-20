@@ -282,7 +282,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DimResetInfo" type="Label" parent="ModifyDimension"]
+[node name="Reset" type="Control" parent="ModifyDimension"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DimResetInfo" type="Label" parent="ModifyDimension/Reset"]
 margin_left = 32.0
 margin_top = 104.0
 margin_right = 416.0
@@ -293,7 +300,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Generate" type="Button" parent="ModifyDimension"]
+[node name="DRsPerCilck" type="Label" parent="ModifyDimension/Reset"]
+margin_left = 32.0
+margin_top = 468.0
+margin_right = 416.0
+margin_bottom = 492.0
+text = "DRS_PER_CLICK"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="ModifyDimension/Reset"]
+margin_left = 32.0
+margin_top = 505.0
+margin_right = 108.0
+margin_bottom = 533.0
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Generate" type="Button" parent="ModifyDimension/Reset"]
 margin_left = 50.0
 margin_top = 268.0
 margin_right = 400.0
@@ -535,7 +563,7 @@ margin_left = 70.0
 margin_top = 175.0
 margin_right = -154.0
 margin_bottom = -813.0
-step = 0.01
+step = 0.001
 
 [node name="MUCGF_MV" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
 margin_left = 102.0
@@ -563,28 +591,26 @@ margin_left = 118.0
 margin_top = 431.0
 margin_right = -106.0
 margin_bottom = -557.0
-step = 0.05
 
 [node name="SLUGF_XP" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
 margin_left = 218.0
 margin_top = 535.0
 margin_right = -6.0
 margin_bottom = -453.0
-step = 0.01
+step = 0.001
 
 [node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
 margin_left = 122.0
 margin_top = 571.0
 margin_right = -102.0
 margin_bottom = -417.0
-step = 0.01
+step = 0.001
 
 [node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
 margin_left = 66.0
 margin_top = 755.0
 margin_right = -158.0
 margin_bottom = -233.0
-step = 0.02
 
 [node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
 margin_left = 62.0
@@ -597,7 +623,7 @@ margin_left = 218.0
 margin_top = 963.0
 margin_right = -6.0
 margin_bottom = -25.0
-step = 0.01
+step = 0.001
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
 margin_right = 40.0
@@ -1377,4 +1403,4 @@ __meta__ = {
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
 [connection signal="mouse_exited" from="TopInfo/Reset" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TopInfo/Reset" to="." method="_on_Reset_pressed"]
-[connection signal="pressed" from="ModifyDimension/Generate" to="." method="_on_Generate_pressed"]
+[connection signal="pressed" from="ModifyDimension/Reset/Generate" to="." method="_on_Generate_pressed"]

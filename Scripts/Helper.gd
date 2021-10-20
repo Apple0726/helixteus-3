@@ -353,7 +353,7 @@ func set_back_btn(back_btn, set_text:bool = true):
 		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
 
 var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
-func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
+func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
 	lb["custom_fonts/font"] = dmg_txt_rsrc
 	if missed:
@@ -361,11 +361,11 @@ func show_dmg(dmg:int, pos:Vector2, parent, sc:float = 1.0, missed:bool = false,
 		lb.text = tr("MISSED")
 	else:
 		lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
-		lb.text = "- %s" % [dmg]
+		lb.text = "- %s" % format_num(dmg)
 		if crit:
-			lb.text = "%s\n- %s" % [tr("CRITICAL"), dmg]
+			lb.text = "%s\n- %s" % [tr("CRITICAL"), format_num(dmg)]
 		else:
-			lb.text = "- %s" % [dmg]
+			lb.text = "- %s" % format_num(dmg)
 	lb.rect_position = pos - Vector2(0, 40)
 	lb.rect_scale *= sc
 	var dur = 1.5 if crit else 1.0

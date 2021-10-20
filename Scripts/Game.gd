@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.21"
+const VERSION:String = "v0.21.1"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -367,7 +367,7 @@ func _ready():
 		star.material.set_shader_param("brightness_offset", 1.5)
 		star.material.set_shader_param("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "6 Oct 2021"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "20 Oct 2021"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -424,7 +424,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
-			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage (Firefox: ~1.2 GB, Chrome/Edge: ~700 MB, Windows: ~400 MB)\n - Less FPS\n - Saving delay (5-10 seconds)\n - Some settings do not work\n - Audio glitches", "Browser version", [], [], "I understand")
+			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
@@ -2269,7 +2269,7 @@ func generate_systems(id:int):
 		s_i["planets"] = []
 		
 		var num_stars = 1
-		while randf() < 0.3 * dark_matter / pow(num_stars, 1.1):
+		while randf() < 0.3 * log(dark_matter - 1.0 + exp(1.0)) / pow(num_stars, 1.1):
 			num_stars += 1
 		var stars = []
 		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
@@ -2364,9 +2364,11 @@ func generate_systems(id:int):
 		for star in stars:
 			combined_star_mass += star.mass
 		stars.sort_custom(self, "sort_by_mass")
-		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.5)), 2)
-		if planet_num >= 30:
-			planet_num = int(25 + sqrt(planet_num))
+		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * log(dark_matter - 1.0 + exp(1.0))), 2)
+		if planet_num >= 20:
+			planet_num = int(16 + sqrt(planet_num))
+		if planet_num >= 50:
+			planet_num = 50
 		if hypergiant_system:
 			planet_num = 5
 		elif dark_matter_system:
@@ -3554,6 +3556,8 @@ func save_sc():
 	_save_sc.close()
 
 func fn_save_game():
+	if c_u == -1:
+		return
 	var save_info_file = File.new()
 	save_info_file.open("user://%s/save_info.hx3" % [c_sv], File.WRITE)
 	var save_info:Dictionary = {
@@ -3572,8 +3576,6 @@ func fn_save_game():
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
-	if c_u == -1:
-		return
 	var save_game = File.new()
 	save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
 	if c_v == "cave" and is_instance_valid(cave):
@@ -3737,7 +3739,7 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1164
+	var lines_total:int = 1167
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
@@ -3747,7 +3749,7 @@ func _on_lg_mouse_entered(extra_arg_0):
 			lines_translated = 384
 		"zh":
 			lg = "中文"
-			lines_translated = 1128
+			lines_translated = 1137
 		"de":
 			lg = "Deutsch"
 			lines_translated = 1000

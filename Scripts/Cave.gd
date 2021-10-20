@@ -244,7 +244,7 @@ func set_rover_data():
 	$UI2/Inventory/Bar.value = weight
 	$Rover/InvBar.value = weight
 	update_health_bar(total_HP)
-	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
+	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
 	if game and game.help.sprint_mode and speed_mult > 1:
 		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
 		game.help.sprint_mode = false
@@ -327,7 +327,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
 	rover_light.energy = (1 - light_amount) * 1.4
-	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.clever_round(difficulty)]
+	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
 		$UI2/CaveInfo/Floor.text = "%sF" % [cave_floor]
@@ -873,7 +873,7 @@ func update_health_bar(_HP):
 		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
-	$UI2/HP/Label.text = "%s / %s" % [ceil(HP), total_HP]
+	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil(HP)), Helper.format_num(total_HP)]
 
 var mouse_pos = Vector2.ZERO
 var tile_highlighted:int = -1
@@ -1259,7 +1259,7 @@ func add_weight_rsrc(r, rsrc_amount):
 		i_w_w[r] -= float_error
 	$UI2/Inventory/Bar.value = weight
 	$Rover/InvBar.value = weight
-	$UI2/Inventory/Label.text = "%s / %s kg" % [round(weight), weight_cap]
+	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
 	return max(diff, 0.0)
 
 func _on_Timer_timeout():
@@ -1449,7 +1449,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), game.system_data[game.c_s].diff, tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.clever_round(pow(1.25 if tower else 2, cave_floor - 1))]
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), Helper.format_num(game.system_data[game.c_s].diff), tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1))]
 	if game.help.cave_diff_info:
 		game.help_str = "cave_diff_info"
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
