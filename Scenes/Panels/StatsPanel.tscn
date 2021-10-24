@@ -1,0 +1,636 @@
+[gd_scene load_steps=28 format=2]
+
+[ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Achievement.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Achievements/Construct.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Megastructures/M_DS_0.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Achievements/HypergiantL.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Achievements/HypergiantX.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Achievements/HypergiantV.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Achievements/Hypergiant.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Achievements/HypergiantXX.png" type="Texture" id=15]
+[ext_resource path="res://Graphics/Achievements/20Planets.png" type="Texture" id=16]
+[ext_resource path="res://Graphics/Science/GS.png" type="Texture" id=17]
+[ext_resource path="res://Graphics/Ships/Ship2.png" type="Texture" id=18]
+[ext_resource path="res://Graphics/Ships/Ship1.png" type="Texture" id=19]
+[ext_resource path="res://Graphics/Ships/Ship3.png" type="Texture" id=20]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=21]
+[ext_resource path="res://Graphics/Planets/Other/BG.png" type="Texture" id=22]
+[ext_resource path="res://Graphics/Tiles/cave.png" type="Texture" id=23]
+[ext_resource path="res://Graphics/Items/Pickaxes/stick.png" type="Texture" id=24]
+[ext_resource path="res://Graphics/Ships/Probe2.png" type="Texture" id=25]
+[ext_resource path="res://Graphics/HX/4.png" type="Texture" id=26]
+[ext_resource path="res://Graphics/Misc/Physics.png" type="Texture" id=27]
+
+[node name="Panel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -296.0
+margin_right = 512.0
+margin_bottom = 296.0
+theme = ExtResource( 5 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" parent="." instance=ExtResource( 3 )]
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 38 )
+text = "Achievements & statistics"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+margin_left = 24.0
+margin_top = 48.0
+margin_right = 1000.0
+margin_bottom = 82.0
+custom_constants/separation = 0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Achievements" parent="Tabs" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 488.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+button_text = "ACHIEVEMENTS"
+
+[node name="Statistics" parent="Tabs" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 488.0
+margin_right = 976.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+button_text = "STATISTICS"
+
+[node name="Achievements" type="ScrollContainer" parent="."]
+margin_left = 24.0
+margin_top = 104.0
+margin_right = 1000.0
+margin_bottom = 560.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="Achievements"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 932.0
+margin_bottom = 449.0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Labels" type="VBoxContainer" parent="Achievements/HBox"]
+margin_right = 148.0
+margin_bottom = 444.0
+
+[node name="Money" type="Label" parent="Achievements/HBox/Labels"]
+margin_right = 148.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 60 )
+size_flags_vertical = 1
+text = "MONEY"
+align = 2
+valign = 1
+
+[node name="Conquest" type="Label" parent="Achievements/HBox/Labels"]
+margin_top = 64.0
+margin_right = 148.0
+margin_bottom = 124.0
+rect_min_size = Vector2( 0, 60 )
+text = "CONQUEST"
+align = 2
+valign = 1
+
+[node name="Construct" type="Label" parent="Achievements/HBox/Labels"]
+margin_top = 128.0
+margin_right = 148.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 0, 60 )
+text = "CONSTRUCT"
+align = 2
+valign = 1
+
+[node name="Exploration" type="Label" parent="Achievements/HBox/Labels"]
+margin_top = 192.0
+margin_right = 148.0
+margin_bottom = 316.0
+rect_min_size = Vector2( 0, 124 )
+text = "EXPLORATION"
+align = 2
+valign = 1
+
+[node name="Progression" type="Label" parent="Achievements/HBox/Labels"]
+margin_top = 320.0
+margin_right = 148.0
+margin_bottom = 380.0
+rect_min_size = Vector2( 0, 60 )
+text = "PROGRESSION"
+align = 2
+valign = 1
+
+[node name="Random" type="Label" parent="Achievements/HBox/Labels"]
+margin_top = 384.0
+margin_right = 148.0
+margin_bottom = 444.0
+rect_min_size = Vector2( 0, 60 )
+size_flags_vertical = 6
+text = "RANDOM"
+align = 2
+valign = 1
+
+[node name="Slots" type="VBoxContainer" parent="Achievements/HBox"]
+margin_left = 158.0
+margin_right = 922.0
+margin_bottom = 444.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Money" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_right = 764.0
+margin_bottom = 60.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="1" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="2" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="3" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="4" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="5" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="6" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="7" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="8" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 572.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="9" parent="Achievements/HBox/Slots/Money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_right = 636.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+
+[node name="Conquest" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_top = 64.0
+margin_right = 764.0
+margin_bottom = 124.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="1" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="2" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="3" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="4" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="5" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="6" parent="Achievements/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+
+[node name="Construct" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_top = 128.0
+margin_right = 764.0
+margin_bottom = 188.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="1" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="2" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="3" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="4" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="5" parent="Achievements/HBox/Slots/Construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+
+[node name="Exploration" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_top = 192.0
+margin_right = 764.0
+margin_bottom = 316.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+modulate = Color( 0.686275, 0.823529, 1, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="1" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+modulate = Color( 0.509804, 0.72549, 1, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="2" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+modulate = Color( 0.686275, 1, 0.705882, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="3" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+modulate = Color( 0.858824, 0.541176, 1, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="4" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="5" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 14 )
+
+[node name="6" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 13 )
+
+[node name="7" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 12 )
+
+[node name="8" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 572.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 15 )
+
+[node name="9" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_right = 636.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 11 )
+
+[node name="10" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_right = 700.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 16 )
+
+[node name="11" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 704.0
+margin_right = 764.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 16 )
+
+[node name="12" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 64.0
+margin_right = 60.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+
+[node name="13" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 124.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+
+[node name="14" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_top = 64.0
+margin_right = 188.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+
+[node name="15" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_top = 64.0
+margin_right = 252.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+
+[node name="16" parent="Achievements/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_top = 64.0
+margin_right = 316.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+
+[node name="Progression" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_top = 320.0
+margin_right = 764.0
+margin_bottom = 380.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 9 )
+
+[node name="1" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 17 )
+
+[node name="2" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 25 )
+
+[node name="3" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 27 )
+
+[node name="4" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 19 )
+
+[node name="5" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 18 )
+
+[node name="6" parent="Achievements/HBox/Slots/Progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 20 )
+
+[node name="Random" type="GridContainer" parent="Achievements/HBox/Slots"]
+margin_top = 384.0
+margin_right = 764.0
+margin_bottom = 444.0
+columns = 12
+
+[node name="0" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 23 )
+
+[node name="1" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+modulate = Color( 1, 0.952941, 0.745098, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 22 )
+
+[node name="2" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 21 )
+
+[node name="3" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 25 )
+
+[node name="4" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 24 )
+
+[node name="5" parent="Achievements/HBox/Slots/Random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 26 )
+
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Tabs/Achievements" to="." method="_on_Achievements_pressed"]
+[connection signal="pressed" from="Tabs/Statistics" to="." method="_on_Statistics_pressed"]

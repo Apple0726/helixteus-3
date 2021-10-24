@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex"
+path="res://.import/Construct.png-46ecdd9415b0818c856a0af5a753fe57.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Megastructures/M_DS_0.png"
-dest_files=[ "res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex" ]
+source_file="res://Graphics/Achievements/Construct.png"
+dest_files=[ "res://.import/Construct.png-46ecdd9415b0818c856a0af5a753fe57.stex" ]
 
 [params]
 

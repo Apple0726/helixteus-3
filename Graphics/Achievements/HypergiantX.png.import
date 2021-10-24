@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Home.png-5682efc42b6dbdd5f253196d1e736df4.stex"
+path="res://.import/HypergiantX.png-e52d8f2c4392de87de589ab22aa89585.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/Home.png"
-dest_files=[ "res://.import/Home.png-5682efc42b6dbdd5f253196d1e736df4.stex" ]
+source_file="res://Graphics/Achievements/HypergiantX.png"
+dest_files=[ "res://.import/HypergiantX.png-e52d8f2c4392de87de589ab22aa89585.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

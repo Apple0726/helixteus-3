@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex"
+path="res://.import/HypergiantXX.png-3e4c2854f0402eae4bedb43e3cded7d6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Megastructures/M_DS_0.png"
-dest_files=[ "res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex" ]
+source_file="res://Graphics/Achievements/HypergiantXX.png"
+dest_files=[ "res://.import/HypergiantXX.png-3e4c2854f0402eae4bedb43e3cded7d6.stex" ]
 
 [params]
 

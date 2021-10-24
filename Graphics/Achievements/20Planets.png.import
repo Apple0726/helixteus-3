@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex"
+path="res://.import/20Planets.png-5222f0057721fceaf32c4571f8d8f658.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Megastructures/M_DS_0.png"
-dest_files=[ "res://.import/M_DS_0.png-fb457f440d50fbb7fa83966c3a2427d4.stex" ]
+source_file="res://Graphics/Achievements/20Planets.png"
+dest_files=[ "res://.import/20Planets.png-5222f0057721fceaf32c4571f8d8f658.stex" ]
 
 [params]
 

@@ -71,6 +71,7 @@ var planet_details:Control
 var overlay:Control
 var annotator:Control
 var wiki:Panel
+var stats_panel:Panel
 var load_panel:Panel
 var tooltip
 onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
@@ -325,6 +326,74 @@ var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
+
+var achievements:Dictionary = {
+	"money":[
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30)), "rsrc":tr("MONEY")}),
+	],
+	"conquest":[
+		tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "object":tr("PLANETS")}),
+	],
+	"construct":[
+		tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8)), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10)), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12)), "bldg":tr("BUILDINGS")}),
+	],
+	"exploration":[
+		tr("FIND_CLASS_X_STAR") % "B",
+		tr("FIND_CLASS_X_STAR") % "O",
+		tr("FIND_CLASS_X_STAR") % "Q",
+		tr("FIND_CLASS_X_STAR") % "R",
+		tr("FIND_CLASS_X_STAR") % "Z",
+		tr("FIND_HYPERGIANT_STAR"),
+		tr("FIND_HYPERGIANT_X_STAR") % "V",
+		tr("FIND_HYPERGIANT_X_STAR") % "X",
+		tr("FIND_HYPERGIANT_X_STAR") % "XX",
+		tr("FIND_HYPERGIANT_X_STAR") % "L",
+		tr("FIND_X_PLANET_SYSTEM") % 20,
+		tr("FIND_X_PLANET_SYSTEM") % 25,
+		tr("FIND_X_PLANET_SYSTEM") % 30,
+		tr("FIND_X_PLANET_SYSTEM") % 35,
+		tr("FIND_X_PLANET_SYSTEM") % 40,
+		tr("FIND_X_PLANET_SYSTEM") % 45,
+		tr("FIND_X_PLANET_SYSTEM") % 50,
+	],
+	"progression":[
+		tr("BUILD_A_MS"),
+		tr("BUILD_A_GS"),
+		tr("DISCOVER_NEW_UNIV"),
+		tr("RENEW_DIMENSION"),
+		tr("FIND_2ND_SHIP"),
+		tr("FIND_3RD_SHIP"),
+		tr("FIND_4TH_SHIP"),
+	],
+	"random":[
+		tr("CLEAR_OUT_CAVE_FLOOR"),
+		tr("REACH_CENTER_OF_PLANET"),
+		tr("1000_YEAR_JOURNEY"),
+		tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
+		tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
+		tr("REKT_ENEMY_30_LEVELS_HIGHER"),
+	]
+}
 
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
@@ -1073,6 +1142,7 @@ func add_panels():
 	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
 	planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instance()
 	wiki = preload("res://Scenes/Panels/Wiki.tscn").instance()
+	stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instance()
 	
 	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instance()
 	send_probes_panel.visible = false
@@ -1080,6 +1150,9 @@ func add_panels():
 	
 	wiki.visible = false
 	$Panels/Control.add_child(wiki)
+	
+	stats_panel.visible = false
+	$Panels/Control.add_child(stats_panel)
 	
 	planetkiller_panel.visible = false
 	$Panels/Control.add_child(planetkiller_panel)

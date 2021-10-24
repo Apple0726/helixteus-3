@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=2]
+[gd_scene load_steps=66 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -34,6 +34,7 @@
 [ext_resource path="res://Graphics/Buttons/Bookmarked.png" type="Texture" id=32]
 [ext_resource path="res://Graphics/Buttons/DimensionView.png" type="Texture" id=33]
 [ext_resource path="res://Graphics/Materials/cellulose.png" type="Texture" id=34]
+[ext_resource path="res://Graphics/Buttons/Stats.png" type="Texture" id=35]
 
 [sub_resource type="Animation" id=1]
 resource_name = "BookmarkAnim"
@@ -552,14 +553,14 @@ __meta__ = {
 
 [node name="Resources" type="HBoxContainer" parent="."]
 margin_top = 4.0
-margin_right = 1216.0
+margin_right = 1168.0
 margin_bottom = 36.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Money" type="Control" parent="Resources"]
-margin_right = 192.0
+margin_right = 185.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -590,8 +591,8 @@ __meta__ = {
 }
 
 [node name="Minerals" type="Control" parent="Resources"]
-margin_left = 196.0
-margin_right = 428.0
+margin_left = 189.0
+margin_right = 411.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -622,8 +623,8 @@ __meta__ = {
 }
 
 [node name="Stone" type="Control" parent="Resources"]
-margin_left = 432.0
-margin_right = 625.0
+margin_left = 415.0
+margin_right = 600.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -717,8 +718,8 @@ __meta__ = {
 }
 
 [node name="Cellulose" type="Control" parent="Resources"]
-margin_left = 629.0
-margin_right = 822.0
+margin_left = 604.0
+margin_right = 789.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -749,8 +750,8 @@ __meta__ = {
 }
 
 [node name="Energy" type="Control" parent="Resources"]
-margin_left = 826.0
-margin_right = 1019.0
+margin_left = 793.0
+margin_right = 978.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -778,8 +779,8 @@ __meta__ = {
 }
 
 [node name="SP" type="Control" parent="Resources"]
-margin_left = 1023.0
-margin_right = 1216.0
+margin_left = 982.0
+margin_right = 1168.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
 
@@ -1001,8 +1002,8 @@ __meta__ = {
 
 [node name="AutosaveLight" type="TextureRect" parent="."]
 modulate = Color( 0, 0.301961, 0, 1 )
-margin_left = 1162.0
-margin_right = 1186.0
+margin_left = 1124.0
+margin_right = 1148.0
 margin_bottom = 40.0
 texture = ExtResource( 18 )
 expand = true
@@ -1012,11 +1013,21 @@ __meta__ = {
 }
 
 [node name="Wiki" type="TextureButton" parent="."]
-margin_left = 1200.0
-margin_top = 6.0
-margin_right = 1230.0
-margin_bottom = 34.0
+margin_left = 1204.0
+margin_right = 1234.0
+margin_bottom = 40.0
 texture_normal = ExtResource( 25 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stats" type="TextureButton" parent="."]
+margin_left = 1160.0
+margin_right = 1190.0
+margin_bottom = 40.0
+texture_normal = ExtResource( 35 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -1131,6 +1142,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="Wiki" to="." method="_on_Wiki_mouse_entered"]
 [connection signal="mouse_exited" from="Wiki" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Wiki" to="." method="_on_Wiki_pressed"]
+[connection signal="mouse_entered" from="Stats" to="." method="_on_Stats_mouse_entered"]
+[connection signal="mouse_exited" from="Stats" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Stats" to="." method="_on_Stats_pressed"]
 [connection signal="mouse_entered" from="DimensionBtn" to="." method="_on_Dimension_mouse_entered"]
 [connection signal="mouse_exited" from="DimensionBtn" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="DimensionBtn" to="." method="_on_Dimension_pressed"]

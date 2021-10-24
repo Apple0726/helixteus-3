@@ -839,3 +839,11 @@ func _on_SwitchBtn_pressed():
 
 func _on_Name_gui_input(event):
 	get_tree().set_input_as_handled()
+
+
+func _on_Stats_mouse_entered():
+	game.show_tooltip("%s & %s" % [tr("ACHIEVEMENTS"), tr("STATISTICS")])
+
+
+func _on_Stats_pressed():
+	game.toggle_panel(game.stats_panel)

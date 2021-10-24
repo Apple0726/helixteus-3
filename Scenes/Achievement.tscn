@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Achievement.gd" type="Script" id=1]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
+
+[node name="Achievement" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1216.0
+margin_bottom = -656.0
+rect_min_size = Vector2( 60, 60 )
+mouse_filter = 1
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -6.0
+margin_bottom = -6.0
+mouse_filter = 2
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
