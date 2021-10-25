@@ -260,7 +260,11 @@ func pickaxe_hit():
 	if progress >= 1000:
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
 		game.add_resources(Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100))
-		tile.depth += int(progress / 100)
+		var tiles_mined:int = int(progress / 100)
+		tile.depth += tiles_mined
+		game.stats_univ.tiles_mined_mining += tiles_mined
+		game.stats_dim.tiles_mined_mining += tiles_mined
+		game.stats_global.tiles_mined_mining += tiles_mined
 		progress = fmod(progress, 100)
 		rock_gen = true
 		generate_rock(true)
@@ -271,6 +275,9 @@ func pickaxe_hit():
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
 				game.objective.current += 1
 			rock_gen = true
+			game.stats_univ.tiles_mined_mining += 1
+			game.stats_dim.tiles_mined_mining += 1
+			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
 			generate_rock(true)
 	tile.mining_progress = progress

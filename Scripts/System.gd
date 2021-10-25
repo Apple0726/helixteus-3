@@ -474,7 +474,9 @@ func on_planet_click (id:int, l_id:int):
 				game.show_collect_info(items_collected)
 		if (Input.is_action_pressed("Q") or p_i.has("conquered")) and not Input.is_action_pressed("ctrl"):
 			if not p_i.has("conquered"):
-				game.stats.planets_conquered += 1
+				game.stats_univ.planets_conquered += 1
+				game.stats_dim.planets_conquered += 1
+				game.stats_global.planets_conquered += 1
 				game.planet_data[l_id].conquered = true
 				var all_conquered = true
 				for planet in game.planet_data:
@@ -517,10 +519,12 @@ func on_star_over (id:int):
 		star_type = star_type.split(" ")[0]
 		star_tier = " %s" % star.type.split(" ")[1]
 	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star.class})
-	tooltip += "\n%s\n%s\n%s\n%s" % [	tr("STAR_TEMPERATURE") % [star.temperature], 
-										tr("STAR_SIZE") % [star.size],
-										tr("STAR_MASS") % [star.mass],
-										tr("STAR_LUMINOSITY") % Helper.format_num(star.luminosity)]
+	tooltip += "\n%s\n%s %s\n%s\n%s" % [
+		tr("STAR_TEMPERATURE") % [star.temperature], 
+		tr("STAR_SIZE") % [star.size], tr("SOLAR_RADII"),
+		tr("STAR_MASS") % [star.mass],
+		tr("STAR_LUMINOSITY") % Helper.format_num(star.luminosity)
+	]
 	#var building:bool = game.bottom_info_action == "building_DS"
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")

@@ -44,8 +44,8 @@ func refresh():
 	$Panel/VBox/AIE.visible = game.show.auroras
 	$Panel/VBox/MSMB.visible = game.show.mining
 	$Panel/VBox/STMB.visible = game.STM_lv >= 2
-	$Panel/VBox/SHSR.visible = game.stats.planets_conquered >= 2
-	$Panel/VBox/CHR.visible = game.stats.planets_conquered >= 2
+	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
+	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])

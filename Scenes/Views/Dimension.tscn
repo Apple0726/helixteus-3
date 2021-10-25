@@ -529,7 +529,7 @@ margin_right = 318.0
 margin_bottom = 895.0
 bbcode_text = "r =                     [img]Graphics/Icons/help.png[/img]"
 text = "r =                     "
-label_text = "r =                    "
+label_text = "r =                     "
 help_text = "RATIO_HELP"
 
 [node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]

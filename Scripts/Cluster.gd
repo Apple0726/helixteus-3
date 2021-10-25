@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var game = self.get_parent().get_parent()
+onready var game = get_node("/root/Game")
 
 var dimensions:float
 
@@ -11,9 +11,11 @@ var rsrcs:Array = []
 
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
+	var conquered = true
 	for g_i in game.galaxy_data:
 		if g_i.empty():
 			continue
+		conquered = conquered and g_i.has("conquered")
 		var galaxy_btn = TextureButton.new()
 		var galaxy = Sprite.new()
 		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
@@ -50,6 +52,8 @@ func _ready():
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
 			if rsrc:
 				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")]
+	if conquered:
+		game.cluster_data[game.c_c].conquered = true
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 

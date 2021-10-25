@@ -72,7 +72,7 @@ func _on_Button_pressed():
 			game.mets[obj] -= rounded_value
 			if game.mets[obj] < 0:
 				game.mets[obj] = 0
-		game.money += money_value
+		game.add_resources({"money":money_value})
 		game.popup(tr("SALE_SUCCESS"), 1.5)
 	else:
 		game.money -= money_value

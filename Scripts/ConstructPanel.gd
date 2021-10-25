@@ -62,13 +62,13 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
 		if bldg.item_name == "PP":
-			bldg.visible = game.tutorial and game.stats.bldgs_built >= 5 or not game.tutorial and game.stats.bldgs_built >= 1
+			bldg.visible = game.tutorial and game.stats_univ.bldgs_built >= 5 or not game.tutorial and game.stats_univ.bldgs_built >= 1
 		elif bldg.item_name == "MS":
-			bldg.visible = game.stats.bldgs_built >= 5
+			bldg.visible = game.stats_univ.bldgs_built >= 5
 		elif bldg.item_name == "RL":
-			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
+			bldg.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
 		elif bldg.item_name == "CBD":
-			bldg.visible = not game.tutorial or game.stats.bldgs_built >= 18
+			bldg.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
 		elif bldg.item_name == "GF":
 			bldg.visible = game.show.sand
 		elif bldg.item_name == "SE":
@@ -76,7 +76,7 @@ func _on_btn_pressed(btn_str:String):
 		elif bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.has("AM")
 		elif bldg.item_name == "SP":
-			bldg.visible = game.stats.planets_conquered > 1
+			bldg.visible = game.stats_global.planets_conquered > 1
 		elif bldg.item_name in ["AE", "AMN"]:
 			bldg.visible = game.science_unlocked.has("ATM")
 		elif bldg.item_name == "SPR":
@@ -88,7 +88,7 @@ func _on_btn_pressed(btn_str:String):
 		elif bldg.item_name == "GH":
 			bldg.visible = game.science_unlocked.has("EGH")
 	$VBox/Tabs/Production.visible = game.show.stone
-	$VBox/Tabs/Support.visible = not game.tutorial or game.stats.bldgs_built >= 18
+	$VBox/Tabs/Support.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
 	$VBox/Tabs/Vehicles.visible = game.show.vehicles_button
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):

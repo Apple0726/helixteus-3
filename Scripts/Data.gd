@@ -137,6 +137,47 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"SPR":particle_icon,
 }
 
+var default_stats:Dictionary = {
+		"bldgs_built":0,
+		"total_money_earned":0,
+		"wormholes_activated":0,
+		"planets_conquered":1,
+		"systems_conquered":0,
+		"galaxies_conquered":0,
+		"enemies_rekt_in_battle":0,
+		"enemies_rekt_in_caves":0,
+		"chests_looted":0,
+		"tiles_mined_mining":0,
+		"tiles_mined_caves":0,
+		"biggest_planet":0,
+		"biggest_star":1,
+		"hottest_star":5500,
+		"highest_au_int":0,
+		"star_classes":{
+			"Y":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"T":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"L":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"M":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"K":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"G":[0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+			"F":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"A":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"B":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"O":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"Q":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"R":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"Z":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		},
+		"star_types":{
+			"brown_dwarf":0,
+			"white_dwarf":0,
+			"main_sequence":1,
+			"giant":0,
+			"supergiant":0,
+			"hypergiant":0,
+		}
+}
+
 func reload():
 	path_1.ME.desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.AE.desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]

@@ -397,7 +397,7 @@ func add_minerals(amount:float, add:bool = true):
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
 				game.minerals = fmod(diff, round(min_cap))
-				game.money += ceil(diff / min_cap) * round(min_cap) * (game.MUs.MV + 4)
+				game.add_resources({"money":ceil(diff / min_cap) * round(min_cap) * (game.MUs.MV + 4)})
 			return {"added":amount, "remainder":0}
 		else:
 			if add:

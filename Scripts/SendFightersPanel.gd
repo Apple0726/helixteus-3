@@ -196,6 +196,9 @@ func _process(delta):
 					game.galaxy_data[game.c_g].combined_strength -= system.diff
 					game.system_data[system.l_id].conquered = true
 					system.conquered = true
+					game.stats_univ.planets_conquered += system.planet_num
+					game.stats_dim.planets_conquered += system.planet_num
+					game.stats_global.planets_conquered += system.planet_num
 					game.galaxy_data[game.c_g].sys_conquered += 1
 					game.galaxy_data[game.c_g].conquer_start_date += game.galaxy_data[game.c_g].time_for_one_sys
 					progress.value = (curr_time - game.galaxy_data[game.c_g].conquer_start_date) / game.galaxy_data[game.c_g].time_for_one_sys * 100

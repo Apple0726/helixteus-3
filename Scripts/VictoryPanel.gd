@@ -46,27 +46,37 @@ func _input(event):
 		_on_close_button_pressed()
 
 func _on_close_button_pressed():
-	game.money += money
+	game.add_resources({"money":money})
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)
 		for weapon in ["bullet", "laser", "bomb", "light"]:
 			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult * diff_mult))
 	var all_conquered = true
 	if not game.is_conquering_all:
+		game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+		game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+		game.stats_global.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 		game.planet_data[p_id].conquered = true
 		game.planet_data[p_id].erase("HX_data")
 		for planet in game.planet_data:
 			if not planet.has("conquered"):
 				all_conquered = false
-		game.stats.planets_conquered += 1
+		game.stats_univ.planets_conquered += 1
+		game.stats_dim.planets_conquered += 1
+		game.stats_global.planets_conquered += 1
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
 			game.objective.current += 1
 	else:
 		for planet in game.planet_data:
 			if not planet.has("conquered"):
 				planet.conquered = true
+				game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+				game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+				game.stats_global.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 				planet.erase("HX_data")
-				game.stats.planets_conquered += 1
+				game.stats_univ.planets_conquered += 1
+				game.stats_dim.planets_conquered += 1
+				game.stats_global.planets_conquered += 1
 	if all_conquered:
 		game.system_data[game.c_s].conquered = all_conquered
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)

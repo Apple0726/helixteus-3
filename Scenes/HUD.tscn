@@ -1002,8 +1002,8 @@ __meta__ = {
 
 [node name="AutosaveLight" type="TextureRect" parent="."]
 modulate = Color( 0, 0.301961, 0, 1 )
-margin_left = 1124.0
-margin_right = 1148.0
+margin_left = 1120.0
+margin_right = 1144.0
 margin_bottom = 40.0
 texture = ExtResource( 18 )
 expand = true
@@ -1013,8 +1013,8 @@ __meta__ = {
 }
 
 [node name="Wiki" type="TextureButton" parent="."]
-margin_left = 1204.0
-margin_right = 1234.0
+margin_left = 1200.0
+margin_right = 1230.0
 margin_bottom = 40.0
 texture_normal = ExtResource( 25 )
 expand = true
@@ -1024,8 +1024,8 @@ __meta__ = {
 }
 
 [node name="Stats" type="TextureButton" parent="."]
-margin_left = 1160.0
-margin_right = 1190.0
+margin_left = 1156.0
+margin_right = 1186.0
 margin_bottom = 40.0
 texture_normal = ExtResource( 35 )
 expand = true

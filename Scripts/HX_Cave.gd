@@ -124,6 +124,9 @@ func hit(damage:float):
 	HP -= damage
 	$Info/HP.value = HP
 	if HP <= 0:
+		cave_ref.game.stats_univ.enemies_rekt_in_caves += 1
+		cave_ref.game.stats_dim.enemies_rekt_in_caves += 1
+		cave_ref.game.stats_global.enemies_rekt_in_caves += 1
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
 		cave_ref.MM.remove_child(MM_icon)
 		MM_icon.queue_free()

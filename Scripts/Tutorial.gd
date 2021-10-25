@@ -30,16 +30,6 @@ func begin():
 		game.HUD.refresh()
 	elif tut_num == 26:
 		game.objective = {"type":game.ObjectiveType.UPGRADE, "id":0, "current":0, "goal":1}
-#		game.show.construct_button = true
-#		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
-#		game.stats.bldgs_built = 20
-#		game.money = 100000
-#		game.energy = 100000
-#		game.SP = 10000
-#		game.mats.silicon = 30
-#		game.stone.O = 600
-#		for sh in game.show:
-#			game.show[sh] = true
 		game.HUD.refresh()
 	var node = get_node(String(tut_num)) if tut_num <= 26 else get_node("26")
 	var node_label

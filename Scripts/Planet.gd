@@ -305,7 +305,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats_univ.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":
@@ -318,7 +318,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 	constr_costs2.time /= game.u_i.time_speed
 	if game.check_enough(constr_costs2):
 		game.deduct_resources(constr_costs2)
-		game.stats.bldgs_built += 1
+		game.stats_univ.bldgs_built += 1
+		game.stats_dim.bldgs_built += 1
+		game.stats_global.bldgs_built += 1
 		if not tile:
 			tile = {}
 		if game.tutorial:
@@ -1094,7 +1096,9 @@ func _unhandled_input(event):
 							if not game.objective.empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
 								game.objective.current += 1
 							game.SP -= costs.SP
-							game.stats.wormholes_activated += 1
+							game.stats_univ.wormholes_activated += 1
+							game.stats_dim.wormholes_activated += 1
+							game.stats_global.wormholes_activated += 1
 							tile.wormhole.investigation_length = costs.time * 1000
 							tile.wormhole.investigation_date = curr_time
 							game.popup(tr("INVESTIGATION_STARTED"), 2.0)
@@ -1380,7 +1384,7 @@ func on_timeout():
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
-	if game.help.mass_build and game.stats.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
+	if game.help.mass_build and game.stats_univ.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		game.help_str = "mass_build"

@@ -1048,6 +1048,9 @@ func _input(event):
 					chests[temp].node.queue_free()
 					chests.erase(temp)
 					chests_looted[cave_floor - 1].append(int(temp))
+					game.stats_univ.chests_looted += 1
+					game.stats_dim.chests_looted += 1
+					game.stats_global.chests_looted += 1
 			elif active_type == "exit":
 				exit_cave()
 			elif active_type == "go_down":
@@ -1103,7 +1106,7 @@ func exit_cave():
 		if not inventory[i].has("name"):
 			continue
 		if inventory[i].name == "money":
-			game.money += inventory[i].num
+			game.add_resources({"money":inventory[i].num}) 
 			inventory[i] = {"type":""}
 		elif inventory[i].name == "minerals":
 			inventory[i].num = Helper.add_minerals(inventory[i].num).remainder
@@ -1185,6 +1188,9 @@ func hit_rock(delta):
 		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
+			game.stats_univ.tiles_mined_caves += 1
+			game.stats_dim.tiles_mined_caves += 1
+			game.stats_global.tiles_mined_caves += 1
 			var map_pos = cave_wall.world_to_map(tile_highlight.position)
 			var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
 			#var wall_type = cave_wall.get_cellv(map_pos)

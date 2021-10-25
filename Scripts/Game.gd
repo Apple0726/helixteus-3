@@ -196,7 +196,9 @@ var s_num:int
 var g_num:int#Total number of galaxies generated
 var c_num:int
 
-var stats:Dictionary
+var stats_univ:Dictionary
+var stats_dim:Dictionary
+var stats_global:Dictionary
 
 enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
 enum ClusterType {GROUP, CLUSTER}
@@ -329,33 +331,36 @@ var element = {	"Si":{"density":2.329},
 
 var achievements:Dictionary = {
 	"money":[
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27)), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30)), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30), 308), "rsrc":tr("MONEY")}),
 	],
 	"conquest":[
 		tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
 		tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
 		tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "object":tr("PLANETS")}),
+		tr("FULLY_CONQUER_SYSTEM"),
+		tr("FULLY_CONQUER_GALAXY"),
+		tr("FULLY_CONQUER_CLUSTER"),
 	],
 	"construct":[
 		tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6)), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8)), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10)), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12)), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), 308), "bldg":tr("BUILDINGS")}),
 	],
 	"exploration":[
 		tr("FIND_CLASS_X_STAR") % "B",
@@ -375,6 +380,9 @@ var achievements:Dictionary = {
 		tr("FIND_X_PLANET_SYSTEM") % 40,
 		tr("FIND_X_PLANET_SYSTEM") % 45,
 		tr("FIND_X_PLANET_SYSTEM") % 50,
+		tr("FIND_X_CRATER") % tr("DIAMOND"),
+		tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
+		tr("FIND_X_CRATER") % tr("MYTHRIL"),
 	],
 	"progression":[
 		tr("BUILD_A_MS"),
@@ -612,7 +620,16 @@ func load_univ():
 		var save_game_dict:Dictionary = save_game.get_var()
 		save_game.close()
 		for key in save_game_dict:
-			self[key] = save_game_dict[key]
+			if key in self:
+				self[key] = save_game_dict[key]
+		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
+		for stat in Data.default_stats:
+			var val = Data.default_stats[stat]
+			if not stats_univ.has(stat):
+				if val is Dictionary:
+					stats_univ[stat] = val.duplicate(true)
+				else:
+					stats_univ[stat] = val
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
 		auto_c_p_g = -1
@@ -688,14 +705,20 @@ func load_game():
 					"engineering":{"DRs":0, "lv":0},
 					"dimensional_power":{"DRs":0, "lv":0},
 		})
-	if subjects.empty():
-		subjects = {"maths":{"DRs":0, "lv":0},
-					"physics":{"DRs":0, "lv":0},
-					"chemistry":{"DRs":0, "lv":0},
-					"biology":{"DRs":0, "lv":0},
-					"philosophy":{"DRs":0, "lv":0},
-					"engineering":{"DRs":0, "lv":0},
-					"dimensional_power":{"DRs":0, "lv":0}}
+	stats_global = save_info_dict.get("stats_global", Data.default_stats.duplicate(true))
+	stats_dim = save_info_dict.get("stats_dim", Data.default_stats.duplicate(true))
+	for stat in Data.default_stats:
+		var val = Data.default_stats[stat]
+		if not stats_global.has(stat):
+			if val is Dictionary:
+				stats_global[stat] = val.duplicate(true)
+			else:
+				stats_global[stat] = val
+		if not stats_dim.has(stat):
+			if val is Dictionary:
+				stats_dim[stat] = val.duplicate(true)
+			else:
+				stats_dim[stat] = val
 	maths_bonus = save_info_dict.get("maths_bonus", {
 		"BUCGF":1.3,
 		"MUCGF_MV":1.9,
@@ -750,7 +773,9 @@ func remove_files(dir:Directory):
 func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	var file = File.new()
 	var dir = Directory.new()
+	stats_univ = Data.default_stats.duplicate(true)
 	if new_save:
+		stats_global = stats_univ.duplicate(true)
 		var sv_id:int = 1
 		c_sv = "Save1"
 		while dir.open("user://%s" % c_sv) == OK:
@@ -1050,11 +1075,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	g_num = 0#Total number of galaxies generated
 	c_num = 0
 
-	stats = {	"bldgs_built":0,
-				"wormholes_activated":0,
-				"planets_conquered":1,
-				}
-
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {"mats":{"cellulose":0}, "mets":{}, "MS":{"minerals":0, "energy":0, "SP":0}, "GS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
@@ -1066,6 +1086,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2]["name"] = tr("HOME_PLANET")
 		planet_data[2]["conquered"] = true
 		planet_data[2]["size"] = round(rand_range(12000, 12100))
+		stats_univ.biggest_planet = planet_data[2].size
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
 		planet_data[2].pressure = 1
@@ -2332,7 +2353,6 @@ func generate_systems(id:int):
 	#Open clusters are
 	var B = galaxy_data[id].B_strength#Magnetic field strength
 	var dark_matter = galaxy_data[id].dark_matter
-	
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
 			show.s_bk_button = true
@@ -2425,6 +2445,18 @@ func generate_systems(id:int):
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
+			stats_univ.biggest_star = max(star_size, stats_univ.biggest_star)
+			stats_dim.biggest_star = max(star_size, stats_dim.biggest_star)
+			stats_global.biggest_star = max(star_size, stats_global.biggest_star)
+			stats_univ.hottest_star = max(temp, stats_univ.hottest_star)
+			stats_dim.hottest_star = max(temp, stats_dim.hottest_star)
+			stats_global.hottest_star = max(temp, stats_global.hottest_star)
+			stats_univ.star_classes[star_class[0]][int(star_class[1])] += 1
+			stats_dim.star_classes[star_class[0]][int(star_class[1])] += 1
+			stats_global.star_classes[star_class[0]][int(star_class[1])] += 1
+			stats_univ.star_types[star_type] = stats_univ.star_types.get(star_type, 0) + 1
+			stats_dim.star_types[star_type] = stats_dim.star_types.get(star_type, 0) + 1
+			stats_global.star_types[star_type] = stats_global.star_types.get(star_type, 0) + 1
 			star["luminosity"] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
 			star["mass"] = Helper.clever_round(mass * u_i.planck, 4)
 			star["size"] = Helper.clever_round(star_size, 4)
@@ -2648,6 +2680,9 @@ func generate_planets(id:int):#local id
 			p_i.conquered = true
 			p_i.angle = PI / 2
 			p_i.pressure = 1
+		stats_univ.biggest_planet = max(p_i.size, stats_univ.biggest_planet)
+		stats_dim.biggest_planet = max(p_i.size, stats_dim.biggest_planet)
+		stats_global.biggest_planet = max(p_i.size, stats_global.biggest_planet)
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		var view_zoom = 400 / max_distance
@@ -3323,6 +3358,9 @@ func add_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money += costs.money
+			stats_global.total_money_earned += costs.money
+			stats_dim.total_money_earned += costs.money
+			stats_univ.total_money_earned += costs.money
 		elif cost == "energy":
 			energy += costs.energy
 		elif cost == "SP":
@@ -3409,7 +3447,7 @@ onready var item_cursor = $UI/ItemCursor
 
 func sell_all_minerals():
 	if minerals > 0:
-		money += minerals * (MUs.MV + 4)
+		add_resources({"money":minerals * (MUs.MV + 4)})
 		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
 		show.shop = true
@@ -3422,6 +3460,10 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
+		$Tooltips/CtrlShift.rect_position = mouse_pos - Vector2(85, 15)
+	elif event is InputEventKey:
+		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
+		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 	if is_instance_valid(tooltip):
 		yield(get_tree(), "idle_frame")
 		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
@@ -3646,6 +3688,8 @@ func fn_save_game():
 		"maths_bonus":maths_bonus,
 		"physics_bonus":physics_bonus,
 		"engineering_bonus":engineering_bonus,
+		"stats_global":stats_global,
+		"stats_dim":stats_dim,
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
@@ -3719,7 +3763,7 @@ func fn_save_game():
 		"s_num":s_num,
 		"g_num":g_num,
 		"c_num":c_num,
-		"stats":stats,
+		"stats_univ":stats_univ,
 		"objective":objective,
 		"autocollect":autocollect,
 		"save_date":save_date,
@@ -3961,6 +4005,9 @@ func generate_new_univ_confirm():
 	var UV_mult = (2.0 + subjects.dimensional_power.lv * 0.5) if subjects.dimensional_power.lv > 0 else 1.0
 	universe_data[0].universe_value = UV_mult
 	dimension.set_bonuses()
+	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
+	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
+	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	dimension.refresh_univs()
 	YN_panel.disconnect("confirmed", self, "generate_new_univ_confirm")
 
@@ -3983,6 +4030,7 @@ func reset_dimension_confirm(DR_num:int):
 	dim_num += 1
 	dimension.refresh_univs(true)
 	YN_panel.disconnect("confirmed", self, "reset_dimension_confirm")
+	stats_dim = Data.default_stats.duplicate(true)
 	fn_save_game()
 
 func buy_pickaxe_confirm(_costs:Dictionary):
@@ -4024,7 +4072,9 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 				if not planet.has("conquered"):
 					planet.conquered = true
 					planet.erase("HX_data")
-					stats.planets_conquered += 1
+					stats_univ.planets_conquered += 1
+					stats_dim.planets_conquered += 1
+					stats_global.planets_conquered += 1
 			system_data[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false
