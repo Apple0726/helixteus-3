@@ -1,0 +1,116 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+border_width_top = 4
+border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_blend = true
+shadow_size = 1
+shadow_offset = Vector2( 0, 2 )
+
+[sub_resource type="DynamicFont" id=3]
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 3 )
+fallback/0 = ExtResource( 2 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "FadeInOut"
+length = 4.0
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Panel:rect_position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 250, -0.25, 0, 0.0570531, -352.901, 0, -0.67, -1, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Panel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4, 3.5, 4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="AchievementEarned" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 250.0
+margin_right = 328.0
+margin_bottom = 386.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AchievementGet" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_bottom = 32.0
+custom_styles/normal = SubResource( 1 )
+text = "ACHIEVEMENT_EARNED"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Type" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_left = 112.0
+margin_top = 40.0
+margin_bottom = 64.0
+text = "EXPLORATION"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_left = 112.0
+margin_top = 72.0
+margin_bottom = 136.0
+custom_fonts/font = SubResource( 3 )
+text = "asdf"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = -85.9996
+margin_right = 88.0
+margin_bottom = -13.9996
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FadeInOut = SubResource( 2 )

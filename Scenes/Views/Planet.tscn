@@ -1,13 +1,18 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/WhiteRect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/LakeTileSet.tres" type="TileSet" id=2]
 [ext_resource path="res://Scripts/Planet.gd" type="Script" id=3]
 [ext_resource path="res://Resources/PlanetTileSet.tres" type="TileSet" id=4]
+[ext_resource path="res://Shaders/BCS.shader" type="Shader" id=5]
 [ext_resource path="res://icon.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Tiles/SoilSpritesheet.png" type="Texture" id=16]
 
-[sub_resource type="ShaderMaterial" id=1]
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 5 )
+shader_param/brightness = 1.0
+shader_param/contrast = 1.0
+shader_param/saturation = 1.0
 
 [sub_resource type="TileSet" id=2]
 0/name = "SoilSpritesheet.png 0"
@@ -55,10 +60,11 @@ shader = SubResource( 3 )
 script = ExtResource( 3 )
 
 [node name="TileMap" type="TileMap" parent="."]
-material = SubResource( 1 )
+material = SubResource( 5 )
 tile_set = ExtResource( 4 )
 cell_size = Vector2( 200, 200 )
 format = 1
+tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0 )
 
 [node name="Lakes2" type="TileMap" parent="."]
 modulate = Color( 0.733333, 0.917647, 1, 1 )

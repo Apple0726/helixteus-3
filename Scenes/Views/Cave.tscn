@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -62,9 +62,9 @@ shader_param/speed = 1.0
 shader_param/thickness = 0.006
 shader_param/outline_thickness = 0.03
 shader_param/beam_difference = 0.0
-shader_param/glow = 3.0
+shader_param/glow = 1.0
 shader_param/outline_glow = 0.0
-shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/color = Color( 0.91, 1, 1, 1 )
 shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
 shader_param/progress = 1.0
 shader_param/y_offset = 0.0
@@ -216,6 +216,14 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
+
+[sub_resource type="Environment" id=19]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.3
+glow_blend_mode = 1
+glow_bicubic_upscale = true
+adjustment_enabled = true
 
 [node name="Cave" type="Node2D"]
 script = ExtResource( 2 )
@@ -746,6 +754,11 @@ anims/RoverSprint = SubResource( 18 )
 [node name="AuroraModulate" type="Node2D" parent="."]
 modulate = Color( 0.705882, 1, 0.705882, 1 )
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 19 )
+
+[node name="CheckAchievements" type="Timer" parent="."]
+
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
@@ -763,3 +776,4 @@ modulate = Color( 0.705882, 1, 0.705882, 1 )
 [connection signal="mouse_entered" from="UI2/CaveInfo/Difficulty" to="." method="_on_Difficulty_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Difficulty" to="." method="_on_mouse_exited"]
 [connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
+[connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]

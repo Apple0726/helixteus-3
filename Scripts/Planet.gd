@@ -43,20 +43,24 @@ var star_mod:Color
 
 func _ready():
 	shadows.resize(wid * wid)
-	var brightness:float = game.tile_brightness[p_i.type - 3]
-	$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
+	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
+	$TileMap.material.shader = preload("res://Shaders/BCS.shader")
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
 		if star.luminosity > lum:
 			star_mod = Helper.get_star_modulate(star.class)
-			$TileMap.material.set_shader_param("star_mod", star_mod)
+			$TileMap.modulate = star_mod
 			var strength_mult = 1.0
-			if p_i.temperature >= 500:
-				strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
+			if p_i.temperature >= 1500:
+				strength_mult = min(range_lerp(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
 			else:
-				strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
-			$TileMap.material.set_shader_param("strength", range_lerp(brightness, 40000, 90000, 2.5, 1.1) * strength_mult)
+				strength_mult = min(range_lerp(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
+			var brightness:float = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
+			var contrast:float = sqrt(brightness)
+			$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))
+			$TileMap.material.set_shader_param("contrast", 1.5)
+			#$TileMap.material.set_shader_param("saturation", saturation)
 			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)

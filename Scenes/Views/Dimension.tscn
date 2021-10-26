@@ -527,8 +527,8 @@ margin_left = 22.0
 margin_top = 867.0
 margin_right = 318.0
 margin_bottom = 895.0
-bbcode_text = "r =                     [img]Graphics/Icons/help.png[/img]"
-text = "r =                     "
+bbcode_text = "r =                      [img]Graphics/Icons/help.png[/img]"
+text = "r =                      "
 label_text = "r =                     "
 help_text = "RATIO_HELP"
 
@@ -1267,7 +1267,7 @@ margin_right = 386.0
 margin_bottom = 210.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Additional +100% boost to universe values"
+text = "Additional +50% boost to universe values"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1342,7 +1342,7 @@ margin_left = 26.0
 margin_top = 19.0
 margin_right = 358.0
 margin_bottom = 70.0
-text = "Every level gives a +50% boost to all universe values."
+text = "Every level gives a +20% boost to all universe values."
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false

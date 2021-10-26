@@ -112,6 +112,9 @@ func send_ships():
 	if game.ships_travel_view == "-":
 		if time_cost != 0:
 			if game.energy >= total_energy_cost:
+				if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
+					if not game.achievement_data.random[2]:
+						game.earn_achievement("random", 2)
 				game.energy -= round(total_energy_cost)
 				game.ships_depart_pos = depart_pos
 				game.ships_dest_pos = dest_pos

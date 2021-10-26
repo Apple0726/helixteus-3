@@ -279,7 +279,7 @@ func _input(event):
 				return
 			else:
 				$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.black
-				physics_OP_points += (0.5 / min($ModifyDimension/Physics/Control/MVOUP.value, 0.5) - 1.0) * 0.5
+				physics_OP_points += 0.5 / min($ModifyDimension/Physics/Control/MVOUP.value, 0.5) - 1.0
 			physics_defaults.get_node("MVOUP").visible = not is_equal_approx($ModifyDimension/Physics/Control/MVOUP.value, float(physics_defaults.get_node("MVOUP").text.right(1)))
 			for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 				if cost.value <= 0:
@@ -288,7 +288,7 @@ func _input(event):
 					return
 				else:
 					cost["custom_colors/font_color"] = Color.black
-					physics_OP_points += (Data.univ_prop_weights[cost.name] / cost.value - 1.0) * 0.5
+					physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
 				physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 			
 			engineering_OP_points = 0

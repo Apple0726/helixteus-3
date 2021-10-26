@@ -23,7 +23,7 @@ func _ready():
 		var system = Sprite.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.modulate = get_star_modulate(star["class"])
+		star_btn.modulate = get_star_modulate(star["class"]) * 1.5
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
@@ -33,13 +33,6 @@ func _ready():
 		star_btn.rect_rotation = sin(star.temperature) * 180
 		star_btn.rect_position = Vector2(-1024 / 2, -1024 / 2)
 		star_btn.rect_pivot_offset = Vector2(1024 / 2, 1024 / 2)
-		if game.enable_shaders and len(game.system_data) < 4000:
-			star_btn.material = ShaderMaterial.new()
-			star_btn.material.shader = star_shader
-			star_btn.material.set_shader_param("amplitude", 0.1)
-			star_btn.material.set_shader_param("time_offset", 10.0 * randf())
-			star_btn.material.set_shader_param("twinkle_speed", 0.5)
-			star_btn.material.set_shader_param("brightness_offset", 1.1)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]

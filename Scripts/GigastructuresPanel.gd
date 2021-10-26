@@ -91,11 +91,15 @@ func _on_Convert_pressed():
 			game.autocollect.GS.SP += num
 		game.toggle_panel(self)
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
+		if not game.achievement_data.progression[1]:
+			game.earn_achievement("progression", 1)
 		if g_i.has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
 			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(game.c_g_g)))
 			g_i.erase("bookmarked")
 		if bldg == "TP":
+			if not game.achievement_data.random[3] and game.u_i.time_speed <= 0.2:
+				game.earn_achievement("random", 3)
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
 			game.switch_view("cluster", false, "delete_galaxy")

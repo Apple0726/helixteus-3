@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -18,11 +18,6 @@
 
 [sub_resource type="ShaderMaterial" id=1]
 
-[sub_resource type="InputEventAction" id=2]
-
-[sub_resource type="ShortCut" id=3]
-shortcut = SubResource( 2 )
-
 [sub_resource type="ShaderMaterial" id=4]
 shader = ExtResource( 15 )
 shader_param/amplitude = 20.0
@@ -31,11 +26,6 @@ shader_param/frequency = 6.0
 [sub_resource type="CapsuleShape2D" id=5]
 radius = 12.0
 height = 96.0
-
-[sub_resource type="ShaderMaterial" id=6]
-shader = ExtResource( 15 )
-shader_param/amplitude = 8.0
-shader_param/frequency = 12.0
 
 [sub_resource type="StyleBoxFlat" id=7]
 content_margin_left = 5.0
@@ -91,7 +81,65 @@ action = "4"
 [sub_resource type="ShortCut" id=17]
 shortcut = SubResource( 16 )
 
-[sub_resource type="ShaderMaterial" id=18]
+[sub_resource type="Animation" id=18]
+resource_name = "FightPanelAnim"
+length = 0.3
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:rect_position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 700, -0.25, 0, 0.05, -16.9775, 660, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("../Back:rect_position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 700, -0.25, 0, 0.03, -7.03973, 684, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.3 )
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../Back:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="InputEventAction" id=2]
+
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 15 )
+shader_param/amplitude = 8.0
+shader_param/frequency = 12.0
+
+[sub_resource type="ShaderMaterial" id=19]
 shader = ExtResource( 8 )
 shader_param/beams = 1
 shader_param/energy = 3.0
@@ -102,7 +150,7 @@ shader_param/thickness = 0.006
 shader_param/outline_thickness = 0.034
 shader_param/beam_difference = 0.0
 shader_param/glow = 0.0
-shader_param/outline_glow = 0.0
+shader_param/outline_glow = 1.0
 shader_param/color = Color( 1, 0.937255, 0.937255, 1 )
 shader_param/outline_color = Color( 1, 0, 0, 1 )
 shader_param/progress = 1.0
@@ -110,7 +158,7 @@ shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
 shader_param/noise_scale = Vector2( 1, 1 )
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=20]
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Texture:material:shader_param/progress")
 tracks/0/interp = 1
@@ -120,6 +168,57 @@ tracks/0/enabled = true
 tracks/0/keys = {
 "points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0, 1 )
+}
+
+[sub_resource type="Environment" id=21]
+background_mode = 4
+glow_enabled = true
+glow_levels/1 = true
+glow_levels/2 = true
+glow_levels/5 = false
+glow_blend_mode = 1
+glow_hdr_luminance_cap = 1.2
+glow_bicubic_upscale = true
+adjustment_enabled = true
+
+[sub_resource type="Animation" id=22]
+resource_name = "WorldAnim"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("WorldEnvironment:environment:adjustment_brightness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.12 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("WorldEnvironment:environment:adjustment_contrast")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.12 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("WorldEnvironment:environment:adjustment_saturation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.12 ]
 }
 
 [node name="Battle" type="Control"]
@@ -135,16 +234,6 @@ material = SubResource( 1 )
 position = Vector2( 658.397, 658.258 )
 scale = Vector2( 0.952953, 0.952953 )
 texture = ExtResource( 9 )
-
-[node name="Back" type="Button" parent="."]
-margin_top = 684.0
-margin_right = 136.0
-margin_bottom = 720.0
-shortcut_in_tooltip = false
-shortcut = SubResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Ship0" type="Area2D" parent="."]
 visible = false
@@ -409,194 +498,6 @@ rect_min_size = Vector2( 24, 24 )
 expand = true
 stretch_mode = 6
 
-[node name="Current" type="Sprite" parent="."]
-material = SubResource( 6 )
-scale = Vector2( 0.4, 0.4 )
-texture = ExtResource( 4 )
-
-[node name="FightPanel" type="PanelContainer" parent="."]
-margin_left = 352.0
-margin_top = 660.0
-margin_right = 928.0
-margin_bottom = 716.0
-grow_horizontal = 2
-custom_styles/panel = SubResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HBox" type="HBoxContainer" parent="FightPanel"]
-margin_left = 121.0
-margin_top = 5.0
-margin_right = 454.0
-margin_bottom = 51.0
-size_flags_horizontal = 4
-custom_constants/separation = 15
-alignment = 1
-
-[node name="Bullet" type="PanelContainer" parent="FightPanel/HBox"]
-margin_right = 72.0
-margin_bottom = 46.0
-custom_styles/panel = SubResource( 8 )
-
-[node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Bullet"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 56.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 4
-expand = true
-stretch_mode = 6
-
-[node name="Label" type="Label" parent="FightPanel/HBox/Bullet"]
-margin_left = 8.0
-margin_top = 29.0
-margin_right = 64.0
-margin_bottom = 45.0
-size_flags_horizontal = 4
-size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
-text = "            1"
-align = 2
-valign = 2
-
-[node name="TextureButton" type="TextureButton" parent="FightPanel/HBox/Bullet"]
-modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 70, 0 )
-shortcut_in_tooltip = false
-shortcut = SubResource( 11 )
-texture_hover = ExtResource( 11 )
-expand = true
-stretch_mode = 6
-
-[node name="Laser" type="PanelContainer" parent="FightPanel/HBox"]
-margin_left = 87.0
-margin_right = 159.0
-margin_bottom = 46.0
-custom_styles/panel = SubResource( 8 )
-
-[node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Laser"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 56.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 4
-expand = true
-stretch_mode = 6
-
-[node name="Label" type="Label" parent="FightPanel/HBox/Laser"]
-margin_left = 8.0
-margin_top = 29.0
-margin_right = 64.0
-margin_bottom = 45.0
-size_flags_horizontal = 4
-size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
-text = "            2"
-align = 2
-valign = 2
-
-[node name="TextureButton" type="TextureButton" parent="FightPanel/HBox/Laser"]
-modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 70, 0 )
-shortcut_in_tooltip = false
-shortcut = SubResource( 13 )
-texture_hover = ExtResource( 11 )
-expand = true
-stretch_mode = 6
-
-[node name="Bomb" type="PanelContainer" parent="FightPanel/HBox"]
-margin_left = 174.0
-margin_right = 246.0
-margin_bottom = 46.0
-custom_styles/panel = SubResource( 8 )
-
-[node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Bomb"]
-margin_left = 21.0
-margin_top = 1.0
-margin_right = 51.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 30, 0 )
-size_flags_horizontal = 4
-expand = true
-stretch_mode = 6
-
-[node name="Label" type="Label" parent="FightPanel/HBox/Bomb"]
-margin_left = 8.0
-margin_top = 29.0
-margin_right = 64.0
-margin_bottom = 45.0
-size_flags_horizontal = 4
-size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
-text = "            3"
-align = 2
-valign = 2
-
-[node name="TextureButton" type="TextureButton" parent="FightPanel/HBox/Bomb"]
-modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 70, 0 )
-shortcut_in_tooltip = false
-shortcut = SubResource( 15 )
-texture_hover = ExtResource( 11 )
-expand = true
-stretch_mode = 6
-
-[node name="Light" type="PanelContainer" parent="FightPanel/HBox"]
-margin_left = 261.0
-margin_right = 333.0
-margin_bottom = 46.0
-custom_styles/panel = SubResource( 8 )
-
-[node name="TextureRect" type="TextureRect" parent="FightPanel/HBox/Light"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 56.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 4
-expand = true
-stretch_mode = 6
-
-[node name="Label" type="Label" parent="FightPanel/HBox/Light"]
-margin_left = 8.0
-margin_top = 29.0
-margin_right = 64.0
-margin_bottom = 45.0
-size_flags_horizontal = 4
-size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
-text = "            4"
-align = 2
-valign = 2
-
-[node name="TextureButton" type="TextureButton" parent="FightPanel/HBox/Light"]
-modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 70, 0 )
-shortcut_in_tooltip = false
-shortcut = SubResource( 17 )
-texture_hover = ExtResource( 11 )
-expand = true
-stretch_mode = 6
-
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 
@@ -612,6 +513,193 @@ margin_bottom = 348.0
 align = 1
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="FightPanel" type="PanelContainer" parent="UI"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 352.0
+margin_top = 700.0
+margin_right = 928.0
+margin_bottom = 756.0
+grow_horizontal = 2
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="UI/FightPanel"]
+margin_left = 121.0
+margin_top = 5.0
+margin_right = 454.0
+margin_bottom = 51.0
+size_flags_horizontal = 4
+custom_constants/separation = 15
+alignment = 1
+
+[node name="Bullet" type="PanelContainer" parent="UI/FightPanel/HBox"]
+margin_right = 72.0
+margin_bottom = 46.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/HBox/Bullet"]
+margin_left = 16.0
+margin_top = 1.0
+margin_right = 56.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/HBox/Bullet"]
+margin_left = 8.0
+margin_top = 29.0
+margin_right = 64.0
+margin_bottom = 45.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            1"
+align = 2
+valign = 2
+
+[node name="TextureButton" type="TextureButton" parent="UI/FightPanel/HBox/Bullet"]
+modulate = Color( 1, 1, 1, 0.0588235 )
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 71.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 70, 0 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 11 )
+texture_hover = ExtResource( 11 )
+expand = true
+stretch_mode = 6
+
+[node name="Laser" type="PanelContainer" parent="UI/FightPanel/HBox"]
+margin_left = 87.0
+margin_right = 159.0
+margin_bottom = 46.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/HBox/Laser"]
+margin_left = 16.0
+margin_top = 1.0
+margin_right = 56.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/HBox/Laser"]
+margin_left = 8.0
+margin_top = 29.0
+margin_right = 64.0
+margin_bottom = 45.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            2"
+align = 2
+valign = 2
+
+[node name="TextureButton" type="TextureButton" parent="UI/FightPanel/HBox/Laser"]
+modulate = Color( 1, 1, 1, 0.0588235 )
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 71.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 70, 0 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 13 )
+texture_hover = ExtResource( 11 )
+expand = true
+stretch_mode = 6
+
+[node name="Bomb" type="PanelContainer" parent="UI/FightPanel/HBox"]
+margin_left = 174.0
+margin_right = 246.0
+margin_bottom = 46.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/HBox/Bomb"]
+margin_left = 21.0
+margin_top = 1.0
+margin_right = 51.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 30, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/HBox/Bomb"]
+margin_left = 8.0
+margin_top = 29.0
+margin_right = 64.0
+margin_bottom = 45.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            3"
+align = 2
+valign = 2
+
+[node name="TextureButton" type="TextureButton" parent="UI/FightPanel/HBox/Bomb"]
+modulate = Color( 1, 1, 1, 0.0588235 )
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 71.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 70, 0 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 15 )
+texture_hover = ExtResource( 11 )
+expand = true
+stretch_mode = 6
+
+[node name="Light" type="PanelContainer" parent="UI/FightPanel/HBox"]
+margin_left = 261.0
+margin_right = 333.0
+margin_bottom = 46.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/HBox/Light"]
+margin_left = 16.0
+margin_top = 1.0
+margin_right = 56.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/HBox/Light"]
+margin_left = 8.0
+margin_top = 29.0
+margin_right = 64.0
+margin_bottom = 45.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            4"
+align = 2
+valign = 2
+
+[node name="TextureButton" type="TextureButton" parent="UI/FightPanel/HBox/Light"]
+modulate = Color( 1, 1, 1, 0.0588235 )
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 71.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 70, 0 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 17 )
+texture_hover = ExtResource( 11 )
+expand = true
+stretch_mode = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel"]
+anims/FightPanelAnim = SubResource( 18 )
 
 [node name="Help2" type="Panel" parent="UI"]
 visible = false
@@ -679,6 +767,23 @@ margin_bottom = 28.0
 size_flags_horizontal = 3
 text = "HARD"
 
+[node name="Back" type="Button" parent="UI"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 700.0
+margin_right = 136.0
+margin_bottom = 736.0
+theme = ExtResource( 2 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Current" type="Sprite" parent="UI"]
+material = SubResource( 6 )
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 4 )
+
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
 
@@ -691,7 +796,7 @@ __meta__ = {
 }
 
 [node name="Texture" type="ColorRect" parent="Laser"]
-material = SubResource( 18 )
+material = SubResource( 19 )
 margin_top = -332.0
 margin_right = 664.0
 margin_bottom = 332.0
@@ -700,7 +805,7 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Laser"]
-anims/LaserFade = SubResource( 19 )
+anims/LaserFade = SubResource( 20 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 640, 360 )
@@ -712,27 +817,35 @@ current = true
 margin_top = 14.2339
 margin_right = 40.0
 margin_bottom = 38.2339
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 21 )
+
+[node name="WorldAnim" type="AnimationPlayer" parent="."]
+anims/WorldAnim = SubResource( 22 )
 
 [connection signal="tree_exited" from="." to="." method="_on_Battle_tree_exited"]
-[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
 [connection signal="area_entered" from="Ship0" to="." method="_on_Ship_area_entered" binds= [ 0 ]]
 [connection signal="area_entered" from="Ship1" to="." method="_on_Ship_area_entered" binds= [ 1 ]]
 [connection signal="area_entered" from="Ship2" to="." method="_on_Ship_area_entered" binds= [ 2 ]]
 [connection signal="area_entered" from="Ship3" to="." method="_on_Ship_area_entered" binds= [ 3 ]]
-[connection signal="mouse_entered" from="FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "bullet" ]]
-[connection signal="mouse_exited" from="FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bullet" ]]
-[connection signal="mouse_entered" from="FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "laser" ]]
-[connection signal="mouse_exited" from="FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_pressed" binds= [ "laser" ]]
-[connection signal="mouse_entered" from="FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "bomb" ]]
-[connection signal="mouse_exited" from="FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bomb" ]]
-[connection signal="mouse_entered" from="FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "light" ]]
-[connection signal="mouse_exited" from="FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_pressed" binds= [ "light" ]]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ImmuneTimer" to="." method="_on_ImmuneTimer_timeout"]
+[connection signal="mouse_entered" from="UI/FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "bullet" ]]
+[connection signal="mouse_exited" from="UI/FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/HBox/Bullet/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bullet" ]]
+[connection signal="mouse_entered" from="UI/FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "laser" ]]
+[connection signal="mouse_exited" from="UI/FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/HBox/Laser/TextureButton" to="." method="_on_weapon_pressed" binds= [ "laser" ]]
+[connection signal="mouse_entered" from="UI/FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "bomb" ]]
+[connection signal="mouse_exited" from="UI/FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/HBox/Bomb/TextureButton" to="." method="_on_weapon_pressed" binds= [ "bomb" ]]
+[connection signal="mouse_entered" from="UI/FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_mouse_entered" binds= [ "light" ]]
+[connection signal="mouse_exited" from="UI/FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/HBox/Light/TextureButton" to="." method="_on_weapon_pressed" binds= [ "light" ]]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_mouse_exited"]
 [connection signal="pressed" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_pressed" binds= [ 0 ]]
@@ -742,4 +855,5 @@ margin_bottom = 38.2339
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_mouse_exited"]
 [connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [ 2 ]]
+[connection signal="pressed" from="UI/Back" to="." method="_on_Back_pressed"]
 [connection signal="animation_finished" from="Laser/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

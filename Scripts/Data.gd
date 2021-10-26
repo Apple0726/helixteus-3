@@ -144,6 +144,7 @@ var default_stats:Dictionary = {
 		"planets_conquered":1,
 		"systems_conquered":0,
 		"galaxies_conquered":0,
+		"clusters_conquered":0,
 		"enemies_rekt_in_battle":0,
 		"enemies_rekt_in_caves":0,
 		"chests_looted":0,

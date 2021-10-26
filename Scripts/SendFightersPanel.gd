@@ -165,7 +165,10 @@ func _on_Send_pressed():
 			if not system.has("conquered"):
 				galaxy_conquered = false
 				break
-		if galaxy_conquered:
+		if galaxy_conquered and not game.galaxy_data[game.c_g].has("conquered"):
+			game.stats_univ.galaxies_conquered += 1
+			game.stats_dim.galaxies_conquered += 1
+			game.stats_global.galaxies_conquered += 1
 			game.galaxy_data[game.c_g].conquered = true
 		refresh()
 
@@ -199,6 +202,9 @@ func _process(delta):
 					game.stats_univ.planets_conquered += system.planet_num
 					game.stats_dim.planets_conquered += system.planet_num
 					game.stats_global.planets_conquered += system.planet_num
+					game.stats_univ.systems_conquered += 1
+					game.stats_dim.systems_conquered += 1
+					game.stats_global.systems_conquered += 1
 					game.galaxy_data[game.c_g].sys_conquered += 1
 					game.galaxy_data[game.c_g].conquer_start_date += game.galaxy_data[game.c_g].time_for_one_sys
 					progress.value = (curr_time - game.galaxy_data[game.c_g].conquer_start_date) / game.galaxy_data[game.c_g].time_for_one_sys * 100
@@ -214,7 +220,11 @@ func _process(delta):
 		RTL.text += "\n%s" % tr("CONQUERED_GALAXY")
 		$Control2.visible = false
 		$Send.visible = true
-		game.galaxy_data[game.c_g].conquered = true
+		if not game.galaxy_data[game.c_g].has("conquered"):
+			game.stats_univ.galaxies_conquered += 1
+			game.stats_dim.galaxies_conquered += 1
+			game.stats_global.galaxies_conquered += 1
+			game.galaxy_data[game.c_g].conquered = true
 	else:
 		time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - OS.get_system_time_msecs() + game.galaxy_data[game.c_g].conquer_start_date)
 	

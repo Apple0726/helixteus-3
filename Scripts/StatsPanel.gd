@@ -3,10 +3,10 @@ extends "Panel.gd"
 var stats_for:String = "global"
 var curr_stat_tab:String = ""
 var star_class_bar_width:float = 20.0
+var ach_num:int = 0
 
 func _ready():
 	set_polygon(rect_size)
-	var ach_num:int = 0
 	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
 	$Statistics/HBox/Prefix.text = show_stats_for[0]
 	$Statistics/HBox/Suffix.text = show_stats_for[1]
@@ -16,10 +16,18 @@ func _ready():
 			ach_num += 1
 			ach.connect("mouse_entered", self, "on_ach_entered", [grid.name, ach.name])
 			ach.connect("mouse_exited", self, "on_ach_exited")
-	$Achievements/Progress.text = "%s: %s / %s" % [tr("ACHIEVEMENTS_EARNED"), 0, ach_num]
 	refresh()
 
 func refresh():
+	var ach_get:int = 0
+	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
+		for ach in grid.get_children():
+			if game.achievement_data[grid.name][int(ach.name)]:
+				ach.modulate = Color.white
+				ach_get += 1
+			else:
+				ach.modulate = Color(0.2, 0.2, 0.2, 1.0)
+	$Achievements/Progress.text = "%s: %s / %s" % [tr("ACHIEVEMENTS_EARNED"), ach_get, ach_num]
 	$Statistics/HBox.visible = game.dim_num > 1 or len(game.universe_data) > 1
 	$Statistics/HBox/OptionButton.clear()
 	$Statistics/HBox/OptionButton.add_item(tr("THIS_SAVE"), 0)

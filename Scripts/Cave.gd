@@ -108,6 +108,8 @@ var tile_brightness:float
 var brightness_mult:float
 
 func _ready():
+	if not game.achievement_data.random[0]:
+		$CheckAchievements.start()
 	if game.enable_shaders:
 		tile_brightness = game.tile_brightness[p_i.type - 3]
 		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
@@ -323,6 +325,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				light_amount = 0.4
 				rover_light.visible = true
+	if not aurora:
+		canvas_mod.color = Color.white * light_amount
+		canvas_mod.color.a = 1
+		$WorldEnvironment.environment.adjustment_saturation = light_amount
 	if game.enable_shaders:
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
@@ -432,6 +438,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
+							deposit.modulate *= 1.5
 							deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
@@ -1148,9 +1155,6 @@ func _process(delta):
 	if aurora:
 		canvas_mod.color = aurora_mod.modulate * light_amount
 		canvas_mod.color.a = 1
-	else:
-		canvas_mod.color = Color.white * light_amount
-		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
 			enemy.MM_icon.position = enemy.position * minimap_zoom
@@ -1158,7 +1162,7 @@ func _process(delta):
 
 func attack():
 	var laser_name:String = inventory[curr_slot].name.split("_")[0]
-	var laser_color:Color = get_color(laser_name)
+	var laser_color:Color = get_color(laser_name) * 5.0
 	var light_size:float = 1.0
 	if laser_name in ["yellow", "green"]:
 		light_size = 1.4
@@ -1170,7 +1174,7 @@ func attack():
 		light_size = 3.4
 	elif laser_name == "ultragammaray":
 		light_size = 4.5
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, laser_color, light_size)
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, BLEND_MODE_ADD)
 	cooldown()
 
 func hit_rock(delta):
@@ -1282,7 +1286,7 @@ func hit_player(damage:float):
 	update_health_bar(HP - damage)
 
 #Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, light_color:Color = Color.black, light_size:float = 2.5):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, blend_mode:int = BLEND_MODE_MIX):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1290,7 +1294,8 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.position = pos
 	proj.damage = damage
 	proj.enemy = enemy
-	#proj.get_node("Sprite").modulate = mod
+	proj.get_node("Sprite").modulate = mod
+	proj.get_node("Sprite").material.blend_mode = blend_mode
 	if collision_shape == 2:
 		proj.get_node("Round").disabled = true
 		proj.get_node("Line").disabled = false
@@ -1302,10 +1307,6 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_layer = 8
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
-	if light_color != Color.black:
-		proj.get_node("Light2D").enabled = true
-		proj.get_node("Light2D").color = light_color
-		proj.get_node("Light2D").texture_scale *= light_size
 	add_child(proj)
 	proj.add_to_group("projectiles")
 
@@ -1323,7 +1324,9 @@ func set_border(i:int):
 			slot.remove_child(border)
 			border.queue_free()
 	if inventory[i].type == "rover_mining":
-		mining_laser.material["shader_param/outline_color"] = get_color(inventory[i].name.split("_")[0])
+		var c:Color = get_color(inventory[i].name.split("_")[0])
+		mining_laser.material["shader_param/color"] = c * 2.0
+		mining_laser.material["shader_param/outline_color"] = c * 2.0
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
@@ -1518,3 +1521,10 @@ func _on_Filter_pressed():
 	else:
 		$UI2/Filters/AnimationPlayer.play("Fade")
 		$UI2/Filters.visible = true
+
+
+func _on_CheckAchievements_timeout():
+	if cave_wall.get_used_cells_by_id(0).empty() and chests.empty() and get_tree().get_nodes_in_group("enemies").empty():
+		game.earn_achievement("random", 0)
+		$CheckAchievements.stop()
+		$CheckAchievements.disconnect("timeout", self, "_on_CheckAchievements_timeout")

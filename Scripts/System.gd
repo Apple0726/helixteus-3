@@ -147,7 +147,7 @@ func refresh_stars():
 	star_rsrcs.clear()
 	#var combined_star_size = 0
 	for i in len(stars_info):
-		var star_info = stars_info[i]
+		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
@@ -161,6 +161,28 @@ func refresh_stars():
 		star.connect("mouse_exited", self, "on_btn_out")
 		star.connect("pressed", self, "on_star_pressed", [i])
 		star.modulate = Helper.get_star_modulate(star_info["class"])
+		if star_info.type.substr(0, 10) == "hypergiant" and not star_info.has("hypergiant"):
+			star_info.hypergiant = 1
+		if not game.achievement_data.exploration[0] and star_info.class[0] == "B":
+			game.earn_achievement("exploration", 0)
+		if not game.achievement_data.exploration[1] and star_info.class[0] == "O":
+			game.earn_achievement("exploration", 1)
+		if not game.achievement_data.exploration[2] and star_info.class[0] == "Q":
+			game.earn_achievement("exploration", 2)
+		if not game.achievement_data.exploration[3] and star_info.class[0] == "R":
+			game.earn_achievement("exploration", 3)
+		if not game.achievement_data.exploration[4] and star_info.class[0] == "Z":
+			game.earn_achievement("exploration", 4)
+		if not game.achievement_data.exploration[5] and star_info.has("hypergiant"):
+			game.earn_achievement("exploration", 5)
+		if not game.achievement_data.exploration[6] and star_info.has("hypergiant") and star_info.hypergiant >= 5:
+			game.earn_achievement("exploration", 6)
+		if not game.achievement_data.exploration[7] and star_info.has("hypergiant") and star_info.hypergiant >= 10:
+			game.earn_achievement("exploration", 7)
+		if not game.achievement_data.exploration[8] and star_info.has("hypergiant") and star_info.hypergiant >= 20:
+			game.earn_achievement("exploration", 8)
+		if not game.achievement_data.exploration[9] and star_info.has("hypergiant") and star_info.hypergiant >= 50:
+			game.earn_achievement("exploration", 9)
 		star.add_to_group("stars")
 		if game.enable_shaders:
 			star.material = ShaderMaterial.new()
@@ -361,6 +383,8 @@ func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
+		if not game.achievement_data.progression[0]:
+			game.earn_achievement("progression", 0)
 		if obj.has("MS"):
 			if obj.MS == "M_DS":
 				game.autocollect.MS.energy -= Helper.get_DS_output(obj)

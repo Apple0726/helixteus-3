@@ -74,7 +74,7 @@ func refresh():
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
 				if prop.name == "universe_value" and game.subjects.dimensional_power.lv > 0:
-					var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+					var UV_mult = 1.5 + game.subjects.dimensional_power.lv * 0.2
 					prop.get_node("Unit").text = " (x %s) = %s" % [UV_mult, prop.get_node("HSlider").value * UV_mult]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
@@ -187,10 +187,12 @@ func discover_univ():
 		if prop.name == "s_b":
 			continue
 		if prop.name == "universe_value":
-			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+			var UV_mult = (1.5 + game.subjects.dimensional_power.lv * 0.2) if game.subjects.dimensional_power.lv > 0 else 1.0
 			u_i.universe_value = UV_mult * float(prop.get_node("Label2").text)
 		else:
 			u_i[prop.name] = float(prop.get_node("Label2").text)
+	if not game.achievement_data.progression[2]:
+		game.earn_achievement("progression", 2)
 	game.universe_data.append(u_i)
 	if visible:
 		game.toggle_panel(self)
@@ -275,7 +277,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
 		if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
-			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
+			var UV_mult = 1.5 + game.subjects.dimensional_power.lv * 0.2
 			$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]

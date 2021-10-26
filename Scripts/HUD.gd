@@ -360,6 +360,8 @@ func refresh():
 			$Name/Name.text = game.u_i.name
 	$Name.visible = false
 	$Name.visible = true
+	yield(get_tree(), "idle_frame")
+	game.refresh_achievements()
 
 func _on_Shop_pressed():
 	click_sound.play()

@@ -329,6 +329,7 @@ var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
 
+var achievement_data:Dictionary = {}
 var achievements:Dictionary = {
 	"money":[
 		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, 308), "rsrc":tr("MONEY")}),
@@ -593,9 +594,10 @@ func _ready():
 
 func switch_music(src, pitch:float = 1.0):
 	#Music fading
-	var tween = Tween.new()
-	add_child(tween)
+	var tween = $MusicTween
 	if music_player.playing:
+		tween.stop_all()
+		tween.remove_all()
 		tween.interpolate_property(music_player, "volume_db", null, -30, 1, Tween.TRANS_QUAD, Tween.EASE_IN)
 		tween.start()
 		yield(tween, "tween_all_completed")
@@ -604,9 +606,6 @@ func switch_music(src, pitch:float = 1.0):
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(tween)
-	tween.queue_free()
 
 func load_univ():
 	var _save_sc = File.new()
@@ -752,6 +751,12 @@ func load_game():
 		"PS":1.0,
 		"RSM":1.0,
 	})
+	achievement_data = save_info_dict.get("achievement_data", {})
+	if achievement_data.empty():
+		for ach in achievements:
+			achievement_data[ach] = []
+			for i in len(achievements[ach]):
+				achievement_data[ach].append(false)
 	
 	if c_u == -1:
 		viewing_dimension = true
@@ -815,6 +820,10 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"cave_diff_info":true,
 				"downgrade":true,
 		}
+		for ach in achievements:
+			achievement_data[ach] = []
+			for i in len(achievements[ach]):
+				achievement_data[ach].append(false)
 		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
@@ -2416,6 +2425,7 @@ func generate_systems(id:int):
 				star_type = "main_sequence"
 			else:
 				star_type = "brown_dwarf"
+			var hypergiant:int = -1
 			if not dark_matter_system:
 				if mass > 0.2 and mass < 1.3 and randf() < 0.05:
 					star_type = "white_dwarf"
@@ -2437,9 +2447,11 @@ func generate_systems(id:int):
 							var tier:int = floor(1 / pow(randf(), 0.35 * pow(u_i.gravitational, 0.25)))
 							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
 							star_type = "hypergiant " + get_roman_num(tier)
+							hypergiant = tier
 			if hypergiant_system:
 				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
 				star_type = "hypergiant XV"
+				hypergiant = 15
 				mass = rand_range(4, 4.05)
 				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
 				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
@@ -2461,6 +2473,8 @@ func generate_systems(id:int):
 			star["mass"] = Helper.clever_round(mass * u_i.planck, 4)
 			star["size"] = Helper.clever_round(star_size, 4)
 			star["type"] = star_type
+			if hypergiant != -1:
+				star.hypergiant = hypergiant
 			star["class"] = star_class
 			star["temperature"] = Helper.clever_round(temp, 4)
 			star["pos"] = Vector2.ZERO
@@ -2556,6 +2570,20 @@ func generate_planets(id:int):#local id
 	system_data[id]["planets"].clear()
 	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
 	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
+	if not achievement_data.exploration[10] and planet_num >= 20:
+		earn_achievement("exploration", 10)
+	if not achievement_data.exploration[11] and planet_num >= 25:
+		earn_achievement("exploration", 11)
+	if not achievement_data.exploration[12] and planet_num >= 30:
+		earn_achievement("exploration", 12)
+	if not achievement_data.exploration[13] and planet_num >= 35:
+		earn_achievement("exploration", 13)
+	if not achievement_data.exploration[14] and planet_num >= 40:
+		earn_achievement("exploration", 14)
+	if not achievement_data.exploration[15] and planet_num >= 45:
+		earn_achievement("exploration", 15)
+	if not achievement_data.exploration[16] and planet_num >= 50:
+		earn_achievement("exploration", 16)
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -2895,6 +2923,12 @@ func generate_tiles(id:int):
 						if c_g_g == 0 and met_info[met].rarity > 50:
 							continue
 						tile_data[t_id].crater.metal = met
+					if not achievement_data.exploration[17] and met == "diamond":
+						earn_achievement("exploration", 17)
+					if not achievement_data.exploration[18] and met == "nanocrystal":
+						earn_achievement("exploration", 18)
+					if not achievement_data.exploration[19] and met == "mythril":
+						earn_achievement("exploration", 19)
 	if relic_cave_id != -1:
 		erase_tile(relic_cave_id + wid)
 		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
@@ -3690,6 +3724,7 @@ func fn_save_game():
 		"engineering_bonus":engineering_bonus,
 		"stats_global":stats_global,
 		"stats_dim":stats_dim,
+		"achievement_data":achievement_data,
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
@@ -4002,7 +4037,7 @@ func generate_new_univ_confirm():
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0
-	var UV_mult = (2.0 + subjects.dimensional_power.lv * 0.5) if subjects.dimensional_power.lv > 0 else 1.0
+	var UV_mult = (1.5 + subjects.dimensional_power.lv * 0.2) if subjects.dimensional_power.lv > 0 else 1.0
 	universe_data[0].universe_value = UV_mult
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
@@ -4026,6 +4061,8 @@ func reset_dimension_confirm(DR_num:int):
 	DRs += DR_num
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
+	if not achievement_data.progression[3]:
+		earn_achievement("progression", 3)
 	universe_data.clear()
 	dim_num += 1
 	dimension.refresh_univs(true)
@@ -4075,6 +4112,9 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 					stats_univ.planets_conquered += 1
 					stats_dim.planets_conquered += 1
 					stats_global.planets_conquered += 1
+			stats_univ.systems_conquered += 1
+			stats_dim.systems_conquered += 1
+			stats_global.systems_conquered += 1
 			system_data[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false
@@ -4166,6 +4206,8 @@ func get_2nd_ship():
 		Helper.add_weapon_XP(1, "laser", 50)
 		Helper.add_weapon_XP(1, "bomb", 50)
 		Helper.add_weapon_XP(1, "light", 60)
+		if not achievement_data.progression[4]:
+			earn_achievement("progression", 4)
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
@@ -4175,6 +4217,8 @@ func get_3rd_ship():
 		Helper.add_weapon_XP(2, "laser", 140)
 		Helper.add_weapon_XP(2, "bomb", 140)
 		Helper.add_weapon_XP(2, "light", 180)
+		if not achievement_data.progression[5]:
+			earn_achievement("progression", 5)
 
 func get_4th_ship():
 	if len(ship_data) == 3:
@@ -4185,7 +4229,52 @@ func get_4th_ship():
 		Helper.add_weapon_XP(3, "laser", 400)
 		Helper.add_weapon_XP(3, "bomb", 400)
 		Helper.add_weapon_XP(3, "light", 450)
+		if not achievement_data.progression[6]:
+			earn_achievement("progression", 6)
 
 
 func _on_Command_gui_input(event):
 	get_tree().set_input_as_handled()
+
+func earn_achievement(type:String, ach_id:int):
+	var ach = preload("res://Scenes/AchievementEarned.tscn").instance()
+	ach.get_node("Panel/Type").text = type.capitalize()
+	ach.get_node("Panel/Desc").text = achievements[type.to_lower()][ach_id]
+	ach.get_node("Panel/TextureRect").texture = stats_panel.get_node("Achievements/ScrollContainer/HBox/Slots/%s/%s" % [type, ach_id]).achievement_icon
+	achievement_data[type][ach_id] = true
+	ach.add_to_group("achievement_nodes")
+	$UI.add_child(ach)
+	ach.get_node("AnimationPlayer").connect("animation_finished", self, "on_ach_anim_finished", [ach])
+	yield(get_tree().create_timer(0.5 * len(get_tree().get_nodes_in_group("achievement_nodes"))), "timeout")
+	ach.get_node("AnimationPlayer").play("FadeInOut")
+
+func on_ach_anim_finished(anin_name:String, node):
+	$UI.remove_child(node)
+	node.remove_from_group("achievement_nodes")
+	node.queue_free()
+
+func refresh_achievements():
+	for i in len(achievement_data.money):
+		if not achievement_data.money[i]:
+			if money >= pow(10, (i+1) * 3):
+				earn_achievement("money", i)
+	if not achievement_data.conquest[0]:
+		if stats_global.planets_conquered >= 2:
+			earn_achievement("conquest", 0)
+	for i in range(1, 7):
+		if not achievement_data.conquest[i]:
+			if stats_global.planets_conquered >= pow(10, i + 1):
+				earn_achievement("conquest", i)
+	if not achievement_data.conquest[7]:
+		if stats_global.systems_conquered >= 1:
+			earn_achievement("conquest", 7)
+	if not achievement_data.conquest[8]:
+		if stats_global.galaxies_conquered >= 1:
+			earn_achievement("conquest", 8)
+	if not achievement_data.conquest[9]:
+		if stats_global.clusters_conquered >= 1:
+			earn_achievement("conquest", 9)
+	for i in len(achievement_data.construct):
+		if not achievement_data.construct[i]:
+			if stats_global.bldgs_built >= pow(10, (i+1) * 2):
+				earn_achievement("construct", i)

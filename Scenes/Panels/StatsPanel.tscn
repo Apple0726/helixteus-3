@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
@@ -9,7 +9,7 @@
 [ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Achievements/Construct.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Megastructures/M_DS_0.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Achievements/ZStar.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Achievements/HypergiantL.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Achievements/HypergiantX.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Achievements/HypergiantV.png" type="Texture" id=13]
@@ -33,6 +33,10 @@
 [ext_resource path="res://Graphics/Metals/diamond.png" type="Texture" id=31]
 [ext_resource path="res://Graphics/Metals/mythril.png" type="Texture" id=32]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=33]
+[ext_resource path="res://Graphics/Achievements/BStar.png" type="Texture" id=34]
+[ext_resource path="res://Graphics/Achievements/RStar.png" type="Texture" id=35]
+[ext_resource path="res://Graphics/Achievements/OStar.png" type="Texture" id=36]
+[ext_resource path="res://Graphics/Achievements/QStar.png" type="Texture" id=37]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -97,7 +101,6 @@ size_flags_horizontal = 3
 button_text = "STATISTICS"
 
 [node name="Achievements" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -201,12 +204,12 @@ margin_bottom = 444.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Money" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="money" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_right = 764.0
 margin_bottom = 60.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
@@ -214,7 +217,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1000.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
@@ -223,7 +226,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+06
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -232,7 +235,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+09
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -241,7 +244,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+12
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -250,7 +253,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+15
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -259,7 +262,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+18
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 384.0
@@ -268,7 +271,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+21
 
-[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 448.0
@@ -277,7 +280,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+24
 
-[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 512.0
@@ -286,7 +289,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+27
 
-[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/Money" instance=ExtResource( 4 )]
+[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 576.0
@@ -295,13 +298,13 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 6 )
 number = 1e+30
 
-[node name="Conquest" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="conquest" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 64.0
 margin_right = 764.0
 margin_bottom = 124.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
@@ -309,7 +312,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 2.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
@@ -318,7 +321,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 10.0
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -327,7 +330,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 100.0
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -336,7 +339,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 1000.0
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -345,7 +348,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 10000.0
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -354,7 +357,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 100000.0
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 384.0
@@ -363,7 +366,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 7 )
 number = 1e+06
 
-[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 448.0
@@ -371,7 +374,7 @@ margin_right = 508.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 16 )
 
-[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 512.0
@@ -379,7 +382,7 @@ margin_right = 572.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 29 )
 
-[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/Conquest" instance=ExtResource( 4 )]
+[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 576.0
@@ -387,13 +390,13 @@ margin_right = 636.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 28 )
 
-[node name="Construct" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="construct" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 128.0
 margin_right = 764.0
 margin_bottom = 188.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
@@ -401,7 +404,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 100.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
@@ -410,7 +413,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 10000.0
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -419,7 +422,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 1e+06
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -428,7 +431,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 1e+08
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -437,7 +440,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 1e+10
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Construct" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -446,48 +449,44 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 8 )
 number = 1e+12
 
-[node name="Exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 192.0
 margin_right = 764.0
 margin_bottom = 316.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
-modulate = Color( 0.686275, 0.823529, 1, 1 )
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
 margin_bottom = 60.0
-achievement_icon = ExtResource( 10 )
+achievement_icon = ExtResource( 34 )
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
-modulate = Color( 0.509804, 0.72549, 1, 1 )
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
 margin_right = 124.0
 margin_bottom = 60.0
-achievement_icon = ExtResource( 10 )
+achievement_icon = ExtResource( 36 )
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
-modulate = Color( 0.686275, 1, 0.705882, 1 )
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
 margin_right = 188.0
 margin_bottom = 60.0
-achievement_icon = ExtResource( 10 )
+achievement_icon = ExtResource( 37 )
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
-modulate = Color( 0.858824, 0.541176, 1, 1 )
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
 margin_right = 252.0
 margin_bottom = 60.0
-achievement_icon = ExtResource( 10 )
+achievement_icon = ExtResource( 35 )
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -495,7 +494,7 @@ margin_right = 316.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 10 )
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -503,7 +502,7 @@ margin_right = 380.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 14 )
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 384.0
@@ -511,7 +510,7 @@ margin_right = 444.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 13 )
 
-[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 448.0
@@ -519,7 +518,7 @@ margin_right = 508.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 12 )
 
-[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 512.0
@@ -527,7 +526,7 @@ margin_right = 572.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 15 )
 
-[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 576.0
@@ -535,7 +534,7 @@ margin_right = 636.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 11 )
 
-[node name="10" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="10" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 640.0
@@ -544,7 +543,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 16 )
 number = 20.0
 
-[node name="11" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="11" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 704.0
@@ -553,7 +552,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 16 )
 number = 25.0
 
-[node name="12" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="12" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 64.0
@@ -562,7 +561,7 @@ margin_bottom = 124.0
 achievement_icon = ExtResource( 16 )
 number = 30.0
 
-[node name="13" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="13" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
@@ -572,7 +571,7 @@ margin_bottom = 124.0
 achievement_icon = ExtResource( 16 )
 number = 35.0
 
-[node name="14" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="14" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -582,7 +581,7 @@ margin_bottom = 124.0
 achievement_icon = ExtResource( 16 )
 number = 40.0
 
-[node name="15" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="15" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -592,7 +591,7 @@ margin_bottom = 124.0
 achievement_icon = ExtResource( 16 )
 number = 45.0
 
-[node name="16" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="16" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -602,7 +601,7 @@ margin_bottom = 124.0
 achievement_icon = ExtResource( 16 )
 number = 50.0
 
-[node name="17" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="17" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -611,7 +610,7 @@ margin_right = 380.0
 margin_bottom = 124.0
 achievement_icon = ExtResource( 31 )
 
-[node name="18" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="18" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 384.0
@@ -620,7 +619,7 @@ margin_right = 444.0
 margin_bottom = 124.0
 achievement_icon = ExtResource( 30 )
 
-[node name="19" parent="Achievements/ScrollContainer/HBox/Slots/Exploration" instance=ExtResource( 4 )]
+[node name="19" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 448.0
@@ -629,20 +628,20 @@ margin_right = 508.0
 margin_bottom = 124.0
 achievement_icon = ExtResource( 32 )
 
-[node name="Progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 320.0
 margin_right = 764.0
 margin_bottom = 380.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 9 )
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
@@ -650,7 +649,7 @@ margin_right = 124.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 17 )
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -658,7 +657,7 @@ margin_right = 188.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 25 )
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -666,7 +665,7 @@ margin_right = 252.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 27 )
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -674,7 +673,7 @@ margin_right = 316.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 19 )
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -682,7 +681,7 @@ margin_right = 380.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 18 )
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/Progression" instance=ExtResource( 4 )]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 384.0
@@ -690,20 +689,20 @@ margin_right = 444.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 20 )
 
-[node name="Random" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="random" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 384.0
 margin_right = 764.0
 margin_bottom = 444.0
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 60.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 23 )
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 modulate = Color( 1, 0.952941, 0.745098, 1 )
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -712,7 +711,7 @@ margin_right = 124.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 22 )
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 128.0
@@ -720,7 +719,7 @@ margin_right = 188.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 21 )
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 192.0
@@ -728,7 +727,7 @@ margin_right = 252.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 25 )
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
@@ -736,7 +735,7 @@ margin_right = 316.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 24 )
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/Random" instance=ExtResource( 4 )]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 320.0
@@ -745,6 +744,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 26 )
 
 [node name="Statistics" type="Control" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -758,6 +758,7 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="Statistics"]
+visible = false
 anchor_right = 1.0
 margin_top = -40.0
 margin_bottom = -6.0

@@ -78,11 +78,16 @@ func _on_close_button_pressed():
 				game.stats_dim.planets_conquered += 1
 				game.stats_global.planets_conquered += 1
 	if all_conquered:
-		game.system_data[game.c_s].conquered = all_conquered
+		game.system_data[game.c_s].conquered = true
+		game.stats_univ.systems_conquered += 1
+		game.stats_dim.systems_conquered += 1
+		game.stats_global.systems_conquered += 1
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
-	game.battle.remove_child(self)
+	if game.battle.hard_battle:
+		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	game.battle.get_node("UI").remove_child(self)
 	game.switch_view("system", false, "", [], true, false)
 
 func _on_mouse_exited():

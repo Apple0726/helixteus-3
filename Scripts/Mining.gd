@@ -229,9 +229,15 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name"):
 		return
+	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):
 		game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		if not game.achievement_data.random[1]:
+			game.earn_achievement("random", 1)
 		return
+	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):
+		if not game.achievement_data.random[4]:
+			game.earn_achievement("random", 4)
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
@@ -248,7 +254,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(3, 0.1, 1)
-	progress += 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
+	progress += add_progress
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_dur"):
 		game.pickaxe.liquid_dur -= 1
