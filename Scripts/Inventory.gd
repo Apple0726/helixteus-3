@@ -73,34 +73,38 @@ func on_slot_out():
 	item_hovered = ""
 	game.hide_tooltip()
 
-func on_slot_press(name:String):
+func on_slot_press(_name:String):
 	game.hide_tooltip()
 	game._on_BottomInfo_close_button_pressed()
 	var num:int
 	if Input.is_action_pressed("shift"):
-		num = game.get_item_num(name)
+		num = game.get_item_num(_name)
 	else:
 		num = 1
-	game.item_to_use.name = name
+	game.item_to_use.name = _name
 	game.item_to_use.num = num
 	var texture
-	var type:String = Helper.get_type_from_name(name)
+	var type:String = Helper.get_type_from_name(_name)
 	if type == "craft_agriculture_info":
-		if game.craft_agriculture_info[name].has("grow_time"):
+		if game.craft_agriculture_info[_name].has("grow_time"):
 			game.put_bottom_info(tr("PLANT_SEED_INFO"), "plant_seed", "hide_item_cursor")
 			game.item_to_use.type = "seeds"
-		elif game.craft_agriculture_info[name].has("speed_up_time"):
+		elif game.craft_agriculture_info[_name].has("speed_up_time"):
 			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
 			game.item_to_use.type = "fertilizer"
 	elif type == "craft_mining_info":
-		game.remove_items(name)
-		game.pickaxe.speed_mult = game.craft_mining_info[name].speed_mult
-		game.pickaxe.liquid_dur = game.craft_mining_info[name].durability
-		game.pickaxe.liquid_name = name
+		game.remove_items(_name)
+		game.pickaxe.speed_mult = game.craft_mining_info[_name].speed_mult
+		game.pickaxe.liquid_dur = game.craft_mining_info[_name].durability
+		game.pickaxe.liquid_name = _name
 		if game.active_panel == self:
 			game.toggle_panel(self)
 		game.popup("SUCCESSFULLY_APPLIED", 1.5)
 		return
+	elif type == "craft_cave_info":
+		game.put_bottom_info(tr("CLICK_ON_ROVER_TO_GIVE"), "give_rover_items", "hide_item_cursor")
+		game.item_to_use.type = "cave"
+		game.toggle_panel(game.vehicle_panel)
 	elif type == "speedups_info":
 		if game.c_v == "system" and game.science_unlocked.has("MAE"):
 			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
@@ -119,7 +123,7 @@ func on_slot_press(name:String):
 			if game.tutorial and game.tutorial.tut_num == 21:
 				game.tutorial.fade(0.4, false)
 	elif type == "other_items_info":
-		if name.substr(0, 7) == "hx_core":
+		if _name.substr(0, 7) == "hx_core":
 			if len(game.ship_data) > 0:
 				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
 				game.toggle_panel(game.ship_panel)
@@ -129,7 +133,7 @@ func on_slot_press(name:String):
 				return
 	if game.active_panel == self:
 		game.toggle_panel(self)
-	texture = load("res://Graphics/" + Helper.get_dir_from_name(name) + "/" + name + ".png")
+	texture = load("res://Graphics/" + Helper.get_dir_from_name(_name) + "/" + _name + ".png")
 	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():

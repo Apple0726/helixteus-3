@@ -260,7 +260,7 @@ func _input(event):
 			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.0)
 			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 20.0, 7.0)
+			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 40.0, 6.0)
 			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -20.0, 1.0)
 			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))

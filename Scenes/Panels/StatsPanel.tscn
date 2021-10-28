@@ -856,6 +856,7 @@ __meta__ = {
 }
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="Statistics"]
+visible = false
 margin_left = 272.0
 margin_right = 976.0
 margin_bottom = 440.0

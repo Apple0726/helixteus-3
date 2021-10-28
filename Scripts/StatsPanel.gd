@@ -54,8 +54,9 @@ func _on_General_pressed():
 	curr_stat_tab = "_on_General_pressed"
 	$Statistics/Panel.visible = true
 	$Statistics/ScrollContainer2.visible = false
-	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
 		tr("TOTAL_MONEY_EARNED"), Helper.format_num(game["stats_%s" % stats_for].total_money_earned),
+		tr("BLDGS_BUILT"), Helper.format_num(game["stats_%s" % stats_for].bldgs_built),
 		tr("PLANETS_CONQUERED"), Helper.format_num(game["stats_%s" % stats_for].planets_conquered),
 		tr("SYSTEMS_CONQUERED"), Helper.format_num(game["stats_%s" % stats_for].systems_conquered),
 		tr("GALAXIES_CONQUERED"), game["stats_%s" % stats_for].galaxies_conquered,
@@ -117,11 +118,11 @@ func _on_StarClasses_pressed():
 				label.text = "%s%s" % [star_class, i]
 			vbox.add_child(label)
 			graph.add_child(vbox)
+	for vbox in graph.get_children():
+		vbox.get_node("ColorRect").rect_min_size.y *= 288.0 / max_num
 	max_label.text = String(max_num)
 	yield(get_tree(), "idle_frame")
 	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
-	for vbox in graph.get_children():
-		vbox.get_node("ColorRect").rect_min_size.y *= 288.0 / max_num
 
 func on_star_class_bar_entered(star_class:String, i:int):
 	game.show_tooltip("%s%s: %s" % [star_class, i, game["stats_%s" % stats_for].star_classes[star_class][i]])
@@ -175,10 +176,10 @@ func _on_StarTypes_pressed():
 		vbox.add_child(label)
 		graph.add_child(vbox)
 	max_label.text = String(max_num)
-	yield(get_tree(), "idle_frame")
-	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
 	for vbox in graph.get_children():
 		vbox.get_node("ColorRect").rect_min_size.y *= 288.0 / max_num
+	yield(get_tree(), "idle_frame")
+	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
 
 func _on_OptionButton_item_selected(index):
 	if index == 0:

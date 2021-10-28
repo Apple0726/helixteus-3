@@ -39,13 +39,15 @@ func _ready():
 		hbox.name = MU
 		hbox.add_child(btn)
 		$Panel/VBox.add_child(hbox)
-	
+
 func refresh():
 	$Panel/VBox/AIE.visible = game.show.auroras
 	$Panel/VBox/MSMB.visible = game.show.mining
 	$Panel/VBox/STMB.visible = game.STM_lv >= 2
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
+	$Panel/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
+	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 45
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
@@ -67,7 +69,7 @@ func set_upg_text(MU:String, next_lv:int = 0):
 		"SHSR":
 			$Panel/VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$Panel/VBox/CHR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 2.5)
+			$Panel/VBox/CHR/Effects.text = "%s %%" % (10 + (game.MUs.CHR + next_lv - 1) * 2)
 	if next_lv == 0:
 		get_node("Panel/VBox/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
 	else:

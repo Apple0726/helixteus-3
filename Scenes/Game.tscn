@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=2]
+[gd_scene load_steps=55 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -42,19 +42,36 @@ shader = ExtResource( 30 )
 shader_param/amount = 0.0
 
 [sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 11.0
-content_margin_right = 11.0
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 9.0
+content_margin_bottom = 9.0
+bg_color = Color( 0.197242, 0.197242, 0.197242, 1 )
+border_width_left = 2
+border_width_top = 2
+border_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_blend = true
 shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=18]
+resource_name = "Flashing"
+length = 0.6
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Text:custom_styles/normal:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.329412, 0.329412, 0.329412, 1 ), Color( 0.129412, 0.129412, 0.129412, 1 ), Color( 0.329412, 0.329412, 0.329412, 1 ) ]
+}
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
@@ -76,15 +93,6 @@ shadow_offset = Vector2( 1, 1 )
 size = 20
 use_filter = true
 font_data = ExtResource( 15 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 25
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 14 )
 fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=6]
@@ -139,6 +147,15 @@ expand_margin_left = 3.0
 expand_margin_right = 3.0
 expand_margin_top = 3.0
 expand_margin_bottom = 3.0
+
+[sub_resource type="DynamicFont" id=5]
+size = 25
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 14 )
+fallback/0 = ExtResource( 1 )
 
 [sub_resource type="ShaderMaterial" id=11]
 shader = ExtResource( 34 )
@@ -247,7 +264,7 @@ margin_right = 1280.0
 margin_bottom = 756.0
 mouse_filter = 2
 theme = ExtResource( 7 )
-custom_constants/separation = -2
+custom_constants/separation = 1
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -255,9 +272,9 @@ __meta__ = {
 
 [node name="Text" type="Label" parent="UI/BottomInfo"]
 visible = false
-margin_left = 599.0
-margin_right = 648.0
-margin_bottom = 36.0
+margin_left = 594.0
+margin_right = 649.0
+margin_bottom = 42.0
 custom_styles/normal = SubResource( 2 )
 text = "dsf"
 align = 1
@@ -266,13 +283,20 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource( 25 )]
-margin_left = 646.0
-margin_right = 681.0
-margin_bottom = 36.0
+anchor_left = 0.0
+anchor_right = 0.0
+margin_left = 650.0
+margin_top = 0.0
+margin_right = 685.0
+margin_bottom = 42.0
 grow_horizontal = 0
 grow_vertical = 0
 rect_min_size = Vector2( 35, 35 )
 close_button_type = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/BottomInfo"]
+autoplay = "Flashing"
+anims/Flashing = SubResource( 18 )
 
 [node name="Version" type="Label" parent="UI"]
 margin_left = 944.0
@@ -318,26 +342,6 @@ visible = false
 margin_right = 1280.0
 margin_bottom = 720.0
 color = Color( 0, 0, 0, 0.564706 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ItemCursor" type="Node2D" parent="UI"]
-visible = false
-
-[node name="Sprite" type="Sprite" parent="UI/ItemCursor"]
-position = Vector2( 32, 32 )
-scale = Vector2( 0.25, 0.25 )
-
-[node name="Polygon2D" type="Polygon2D" parent="UI/ItemCursor"]
-polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
-
-[node name="Num" type="Label" parent="UI/ItemCursor"]
-margin_left = 56.0
-margin_top = 48.0
-margin_right = 96.0
-margin_bottom = 77.0
-custom_fonts/font = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -437,6 +441,34 @@ margin_right = 56.0
 margin_bottom = 15.0
 custom_styles/normal = SubResource( 10 )
 text = "Shift"
+
+[node name="Alt" type="Label" parent="Tooltips/CtrlShift"]
+visible = false
+margin_left = 28.0
+margin_right = 56.0
+margin_bottom = 15.0
+custom_styles/normal = SubResource( 10 )
+text = "Alt"
+
+[node name="ItemCursor" type="Node2D" parent="Tooltips"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="Tooltips/ItemCursor"]
+position = Vector2( 32, 32 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor"]
+polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
+
+[node name="Num" type="Label" parent="Tooltips/ItemCursor"]
+margin_left = 56.0
+margin_top = 48.0
+margin_right = 96.0
+margin_bottom = 77.0
+custom_fonts/font = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 

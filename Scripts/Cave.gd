@@ -40,6 +40,7 @@ onready var canvas_mod = $CanvasModulate
 onready var aurora_mod = $AuroraModulate
 onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
 onready var inventory_slots = $UI2/BottomLeft/VBox/InventorySlots
+onready var use_item = $UI2/UseItem
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
@@ -110,25 +111,25 @@ var brightness_mult:float
 func _ready():
 	if not game.achievement_data.random[0]:
 		$CheckAchievements.start()
-	if game.enable_shaders:
-		tile_brightness = game.tile_brightness[p_i.type - 3]
-		$TileMap.material.shader = preload("res://Shaders/PlanetTiles.shader")
-		var lum:float = 0.0
-		for star in game.system_data[game.c_s].stars:
-			var sc:float = 0.5 * star.size / (p_i.distance / 500)
-			if star.luminosity > lum:
-				tile_mod = Helper.get_star_modulate(star.class)
-				$TileMap.material.set_shader_param("star_mod", tile_mod)
-				var strength_mult = 1.0
-				if p_i.temperature >= 500:
-					strength_mult = min(range_lerp(p_i.temperature, 500, 3000, 1.2, 1.5), 1.5)
-				else:
-					strength_mult = min(range_lerp(p_i.temperature, -273, 500, 0.3, 1.2), 1.2)
-				brightness_mult = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
-				$TileMap.material.set_shader_param("strength", strength_mult)
-				lum = star.luminosity
-	else:
-		$TileMap.material.shader = null
+	tile_brightness = game.tile_brightness[p_i.type - 3]
+	$TileMap.material.shader = preload("res://Shaders/BCS.shader")
+	var lum:float = 0.0
+	for star in game.system_data[game.c_s].stars:
+		var sc:float = 0.5 * star.size / (p_i.distance / 500)
+		if star.luminosity > lum:
+			tile_mod = Helper.get_star_modulate(star.class)
+			$TileMap.modulate = tile_mod
+			var strength_mult = 1.0
+			if p_i.temperature >= 1500:
+				strength_mult = min(range_lerp(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
+			else:
+				strength_mult = min(range_lerp(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
+			var brightness:float = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
+			var contrast:float = sqrt(brightness)
+			$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))
+			$TileMap.material.set_shader_param("contrast", 1.5)
+			#$TileMap.material.set_shader_param("saturation", saturation)
+			lum = star.luminosity
 	var cave_data_file = File.new()
 	var cave_type:String = ""
 	if tile.has("cave"):
@@ -270,6 +271,10 @@ func remove_cave():
 		enemy.remove_from_group("enemies")
 		remove_child(enemy)
 		enemy.free()
+	for drilled_hole in get_tree().get_nodes_in_group("drilled_holes"):
+		drilled_hole.remove_from_group("drilled_holes")
+		remove_child(drilled_hole)
+		drilled_hole.free()
 	for object in get_tree().get_nodes_in_group("misc_objects"):
 		object.remove_from_group("misc_objects")
 		remove_child(object)
@@ -706,6 +711,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
 		hole_exits[cave_floor - 1].exit = rand_spawn
+	if hole_exits[cave_floor - 1].has("drilled_holes"):
+		for id in hole_exits[cave_floor - 1].drilled_holes:
+			add_hole(id)
 	hole.position = hole_pos
 	MM_hole.position = hole_pos * minimap_zoom
 	MM_exit.position = pos * minimap_zoom
@@ -744,6 +752,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
+
+func add_hole(id:int):
+	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instance()
+	drilled_hole.position = get_tile_pos(id) * 200 + Vector2(100, 100)
+	drilled_hole.add_to_group("drilled_holes")
+	add_child_below_node($Hole, drilled_hole)
+	drilled_hole.connect("body_entered", self, "_on_Hole_body_entered")
+	drilled_hole.connect("body_exited", self, "_on_body_exited")
 
 func on_Ship4_entered(_body):
 	if game.fourth_ship_hints.emma_joined:
@@ -891,7 +907,7 @@ func update_ray():
 		var laser_reach = Data.rover_mining[inventory[curr_slot].name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
-		var holding_left_click = Input.is_action_pressed("left_click")
+		var holding_left_click = use_item.pressed
 		if coll is TileMap:
 			var pos = ray.get_collision_point() + ray.cast_to / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
@@ -933,7 +949,6 @@ func update_ray():
 	else:
 		mining_laser.visible = false
 		mining_p.emitting = false
-		tile_highlight.visible = false
 
 var global_mouse_pos = Vector2.ZERO
 
@@ -1110,7 +1125,7 @@ func exit_cave():
 	cave_data_file.store_var(cave_data_dict)
 	cave_data_file.close()
 	for i in len(inventory):
-		if not inventory[i].has("name"):
+		if not inventory[i].has("name") or inventory[i].type == "consumable":
 			continue
 		if inventory[i].name == "money":
 			game.add_resources({"money":inventory[i].num}) 
@@ -1133,11 +1148,11 @@ func exit_cave():
 	game.add_resources(i_w_w2)
 	queue_free()
 
-func cooldown():
+func cooldown(duration:float):
 	inventory_ready[curr_slot] = false
 	var timer = Timer.new()
 	add_child(timer)
-	timer.start(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
+	timer.start(duration)
 	timer.connect("timeout", self, "on_timeout", [curr_slot, timer])
 
 func on_timeout(slot, timer):
@@ -1145,13 +1160,46 @@ func on_timeout(slot, timer):
 	remove_child(timer)
 	timer.queue_free()
 
+func remove_item(item:Dictionary, num:int = 1):
+	item.num -= num
+	if item.num <= 0:
+		item = {"type":""}
+		slots[curr_slot].get_node("TextureRect").texture = null
+		slots[curr_slot].get_node("Label").text = ""
+	else:
+		slots[curr_slot].get_node("Label").text = String(num)
+	
 func _process(delta):
-	if Input.is_action_pressed("left_click") and inventory_ready[curr_slot]:
-		if inventory[curr_slot].type == "rover_weapons":
+	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
+		tile_highlight.position.x = floor(rover.position.x / 200) * 200 + 100
+		tile_highlight.position.y = floor(rover.position.y / 200) * 200 + 100
+	if use_item.pressed and inventory_ready[curr_slot]:
+		var item:Dictionary = inventory[curr_slot]
+		if item.type == "rover_weapons":
 			attack()
-		elif inventory[curr_slot].type == "rover_mining" and tile_highlighted != -1:
+		elif item.type == "rover_mining" and tile_highlighted != -1:
 			hit_rock(delta)
 			update_ray()
+		elif item.type == "consumable":
+			if item.name == "portable_wormhole":
+				remove_item(item, 1)
+				exit_cave()
+			elif item.name == "drill":
+				var tile_id:int = get_tile_index(Vector2(int(rover.position.x / 200), int(rover.position.y / 200)))
+				var holes:Dictionary = hole_exits[cave_floor - 1]
+				var ok:bool = false
+				if tile_id != holes.hole and tile_id != holes.exit:
+					if holes.has("drilled_holes"):
+						if not tile_id in holes.drilled_holes:
+							holes.drilled_holes.append(tile_id)
+							ok = true
+					else:
+						holes.drilled_holes = [tile_id]
+						ok = true
+				if ok:
+					remove_item(item, 1)
+					add_hole(tile_id)
+				cooldown(0.5)
 	if aurora:
 		canvas_mod.color = aurora_mod.modulate * light_amount
 		canvas_mod.color.a = 1
@@ -1175,7 +1223,7 @@ func attack():
 	elif laser_name == "ultragammaray":
 		light_size = 4.5
 	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, BLEND_MODE_ADD)
-	cooldown()
+	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
 
 func hit_rock(delta):
 	var st = String(tile_highlighted)
@@ -1338,6 +1386,10 @@ func set_border(i:int):
 		active_item.text = tr(inventory[i].name.to_upper())
 	else:
 		active_item.text = ""
+	if inventory[i].has("name") and inventory[i].name == "drill":
+		tile_highlight.visible = true
+	elif inventory[i].type != "rover_mining":
+		tile_highlight.visible = false
 
 func get_color(color:String):
 	match color:

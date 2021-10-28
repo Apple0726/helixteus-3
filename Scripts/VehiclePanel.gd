@@ -175,7 +175,7 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			else:
 				game.popup(tr("ITEMS_COLLECTED"), 1.5)
 			game.HUD.refresh()
-	elif game.c_v == "planet":
+	elif game.c_v == "planet" and game.item_to_use.type == "":
 		if tile_id == -1:
 			game.view.obj.rover_selected = rov_id
 			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"), "enter_cave")
@@ -189,6 +189,26 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			else:
 				game.switch_view("ruins")
 			game.toggle_panel(self)
+	elif game.item_to_use.type == "cave":
+		var ok:bool = false
+		for i in len(rov.inventory):
+			if rov.inventory[i].has("name") and rov.inventory[i].name == game.item_to_use.name:
+				rov.inventory[i].num += game.item_to_use.num
+				ok = true
+				break
+			if not rov.inventory[i].has("name"):
+				rov.inventory[i].type = "consumable"
+				rov.inventory[i].name = game.item_to_use.name
+				rov.inventory[i].num = game.item_to_use.num
+				ok = true
+				break
+		if ok:
+			game.remove_items(game.item_to_use.name, game.item_to_use.num)
+			game.item_to_use.num = 0
+			game.update_item_cursor()
+			game.popup(tr("ITEMS_SENT_TO_ROVER"), 2.0)
+		else:
+			game.popup(tr("ROVERS_INV_FULL"), 2.0)
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)

@@ -77,7 +77,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	yield(get_tree().create_timer(0), "timeout")
 	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
 	if not costs.empty():
-		Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
+		Helper.put_rsrc(vbox, 36, item_total_costs, true, true)
 	#desc_txt.rect_min_size.y = desc_txt.get_content_height()
 	#desc_txt.rect_size.y = desc_txt.get_content_height()
 

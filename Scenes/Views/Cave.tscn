@@ -8,10 +8,10 @@
 [ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
+[ext_resource path="res://Scenes/CaveHole.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
 [ext_resource path="res://Resources/CaveWalls.tres" type="TileSet" id=12]
 [ext_resource path="res://Graphics/Cave/Objects/exit.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Cave/Objects/Hole.png" type="Texture" id=14]
 [ext_resource path="res://Graphics/Cave/minimap.png" type="Texture" id=15]
 [ext_resource path="res://Graphics/Cave/MMIcons/Rover.png" type="Texture" id=16]
 [ext_resource path="res://Graphics/Cave/MMIcons/NextFloor.png" type="Texture" id=17]
@@ -37,9 +37,6 @@ height = 151.187
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 52.0
-
-[sub_resource type="CircleShape2D" id=4]
-radius = 68.1175
 
 [sub_resource type="ParticlesMaterial" id=5]
 flag_disable_z = true
@@ -73,6 +70,23 @@ shader_param/noise_scale = Vector2( 1, 1 )
 
 [sub_resource type="CircleShape2D" id=7]
 radius = 40.0
+
+[sub_resource type="Animation" id=20]
+resource_name = "Flash"
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.192157 ), Color( 1, 1, 1, 0.376471 ), Color( 1, 1, 1, 0.192157 ) ]
+}
 
 [sub_resource type="Animation" id=8]
 resource_name = "Fade"
@@ -220,6 +234,11 @@ tracks/0/keys = {
 [sub_resource type="Environment" id=19]
 background_mode = 4
 glow_enabled = true
+glow_levels/2 = true
+glow_levels/3 = false
+glow_levels/4 = true
+glow_levels/5 = false
+glow_levels/6 = true
 glow_intensity = 0.3
 glow_blend_mode = 1
 glow_bicubic_upscale = true
@@ -273,16 +292,7 @@ __meta__ = {
 shape = SubResource( 3 )
 disabled = true
 
-[node name="Hole" type="Area2D" parent="."]
-position = Vector2( 460, -4 )
-collision_layer = 32
-collision_mask = 0
-
-[node name="Sprite" type="Sprite" parent="Hole"]
-texture = ExtResource( 14 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hole"]
-shape = SubResource( 4 )
+[node name="Hole" parent="." instance=ExtResource( 9 )]
 
 [node name="MiningParticles" type="Particles2D" parent="."]
 emitting = false
@@ -379,6 +389,10 @@ light_mask = -2147483646
 position = Vector2( 0, -1 )
 texture = ExtResource( 22 )
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlight"]
+autoplay = "Flash"
+anims/Flash = SubResource( 20 )
+
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="MinimapBG" type="Sprite" parent="UI"]
@@ -437,11 +451,19 @@ __meta__ = {
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
 
+[node name="UseItem" type="TextureButton" parent="UI2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="BottomLeft" type="HBoxContainer" parent="UI2"]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -104.0
 margin_right = 216.0
+mouse_filter = 2
 theme = ExtResource( 29 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -450,6 +472,7 @@ __meta__ = {
 [node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft"]
 margin_bottom = 104.0
 grow_vertical = 0
+mouse_filter = 2
 custom_constants/separation = 7
 alignment = 2
 __meta__ = {
@@ -495,6 +518,7 @@ margin_top = 530.0
 margin_right = 332.0
 margin_bottom = 590.0
 grow_vertical = 0
+mouse_filter = 1
 theme = ExtResource( 29 )
 __meta__ = {
 "_edit_use_anchors_": false

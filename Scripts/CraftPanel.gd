@@ -3,7 +3,7 @@ extends "GenericPanel.gd"
 func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
-	for btn_str in ["Mining", "Agriculture"]:
+	for btn_str in ["Mining", "Agriculture", "Cave"]:
 		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
@@ -20,7 +20,7 @@ func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
 	tab = btn_str
-	change_tab(btn_str)
+	change_tab("CR_%s" % btn_str)
 	var info:String = "craft_%s_info" % btn_str_l
 	for craft in game[info]:
 		var craft_info = game[info][craft]
@@ -37,6 +37,7 @@ func _on_btn_pressed(btn_str:String):
 
 func refresh():
 	$VBox/Tabs/Agriculture.visible = game.science_unlocked.has("SA")
+	$VBox/Tabs/Cave.visible = game.science_unlocked.has("RC")
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
 
@@ -78,4 +79,6 @@ func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
 	elif btn_str == "Mining":
 		desc += "%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
 		desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
+	elif btn_str == "Cave":
+		desc += tr("%s_DESC" % item.to_upper())
 	return desc

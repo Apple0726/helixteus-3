@@ -23,7 +23,7 @@ func update_info():
 		tf_costs[cost] *= surface * pressure_mult * lake_mult
 	costs.erase("time")
 	for cost in costs:
-		costs[cost] *= surface
+		costs[cost] *= surface * game.engineering_bonus.BCM
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 	var pressure_mult_color = gradient.interpolate(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
 	var lake_mult_color = gradient.interpolate(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
@@ -78,6 +78,9 @@ func _on_Terraform_pressed():
 			game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(game.c_p_g)))
 			planet.erase("bookmarked")
 		planet.tile_num = surface
+		game.stats_univ.bldgs_built += floor(surface)
+		game.stats_dim.bldgs_built += floor(surface)
+		game.stats_global.bldgs_built += floor(surface)
 		planet.bldg = {}
 		planet.bldg.name = tf_type
 		planet.bldg.is_constructing = false

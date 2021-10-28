@@ -160,39 +160,38 @@ func e_notation(num:float, sd:int = 4):#e notation
 	return "%se%s" %  [n2, e]
 
 func get_dir_from_name(_name:String):
-	if _name.substr(0, 7) == "speedup":
+	if get_type_from_name(_name) == "speedups_info":
 		return "Items/Speedups"
-	if _name.substr(0, 9) == "overclock":
+	if get_type_from_name(_name) == "overclocks_info":
 		return "Items/Overclocks"
-	if _name.substr(0, 7) == "hx_core":
+	if get_type_from_name(_name) == "other_items_info":
 		return "Items/Others"
+	if get_type_from_name(_name) == "craft_agriculture_info":
+		return "Agriculture"
+	if get_type_from_name(_name) == "craft_mining_info":
+		return "Mining"
+	if get_type_from_name(_name) == "craft_cave_info":
+		return "Cave"
 	match _name:
-		"fertilizer":
-			return "Agriculture"
-		"mining_liquid", "purple_mining_liquid":
-			return "Mining"
 		"money":
 			return "Icons"
 		"minerals":
 			return "Icons"
-	if _name.split("_")[1] == "seeds":
-		return "Agriculture"
 	return ""
 
 func get_type_from_name(_name:String):
-	if _name.substr(0, 7) == "speedup":
+	if game.speedups_info.keys().has(_name):
 		return "speedups_info"
-	if _name.substr(0, 9) == "overclock":
+	if game.overclocks_info.keys().has(_name):
 		return "overclocks_info"
-	if _name.substr(0, 7) == "hx_core":
+	if game.other_items_info.keys().has(_name):
 		return "other_items_info"
-	match _name:
-		"fertilizer":
-			return "craft_agriculture_info"
-		"mining_liquid", "purple_mining_liquid":
-			return "craft_mining_info"
-	if len(_name.split("_")) > 0 and _name.split("_")[1] == "seeds":
+	if game.craft_agriculture_info.keys().has(_name):
 		return "craft_agriculture_info"
+	if game.craft_mining_info.keys().has(_name):
+		return "craft_mining_info"
+	if game.craft_cave_info.keys().has(_name):
+		return "craft_cave_info"
 	return ""
 
 func format_num(num:float, threshold:int = 6):

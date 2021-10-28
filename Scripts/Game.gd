@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.21.1"
+const VERSION:String = "v0.22"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -313,6 +313,11 @@ var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "sp
 							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
 }
 
+var craft_cave_info = {
+	"drill":{"costs":{"iron":1500, "aluminium":1500, "titanium":300}},
+	"portable_wormhole":{"costs":{"quartz":500, "diamond":500}},
+}
+
 var other_items_info = {
 	"hx_core":{"XP":6},
 	"hx_core2":{"XP":50},
@@ -445,7 +450,7 @@ func _ready():
 		star.material.set_shader_param("brightness_offset", 1.5)
 		star.material.set_shader_param("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "20 Oct 2021"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -1331,7 +1336,7 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	more_info.modulate.a = 1
 	bottom_info_action = action
 	$UI/BottomInfo/CloseButton.on_close = on_close
-	b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 684), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
+	b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 680), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
 	b_i_tween.start()
 
 func fade_in_panel(panel:Control):
@@ -3477,7 +3482,7 @@ func _process(delta):
 					HUD.refresh()
 
 var mouse_pos = Vector2.ZERO
-onready var item_cursor = $UI/ItemCursor
+onready var item_cursor = $Tooltips/ItemCursor
 
 func sell_all_minerals():
 	if minerals > 0:
@@ -3494,10 +3499,11 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
-		$Tooltips/CtrlShift.rect_position = mouse_pos - Vector2(85, 15)
+		$Tooltips/CtrlShift.rect_position = mouse_pos - Vector2(87, 17)
 	elif event is InputEventKey:
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
 		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
+		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
 	if is_instance_valid(tooltip):
 		yield(get_tree(), "idle_frame")
 		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
