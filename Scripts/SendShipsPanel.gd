@@ -81,7 +81,9 @@ func refresh():
 	if game.planet_data[dest_p_id].has("HX_data"):
 		for HX_data in game.planet_data[dest_p_id].HX_data:
 			var HX_data_node = HX_data_scene.instance()
-			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s.png" % [HX_data.type])
+			if not HX_data.has("class"):
+				HX_data.class = 1
+			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data.class, HX_data.type])
 			HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, 4), Helper.format_num(HX_data.total_HP, 4)]
 			HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
 			HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, 4)

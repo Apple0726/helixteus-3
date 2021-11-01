@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=54 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -9,12 +9,15 @@
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
 [ext_resource path="res://Scenes/CaveHole.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
 [ext_resource path="res://Resources/CaveWalls.tres" type="TileSet" id=12]
 [ext_resource path="res://Graphics/Cave/Objects/exit.png" type="Texture" id=13]
+[ext_resource path="res://Shaders/Fire.shader" type="Shader" id=14]
 [ext_resource path="res://Graphics/Cave/minimap.png" type="Texture" id=15]
 [ext_resource path="res://Graphics/Cave/MMIcons/Rover.png" type="Texture" id=16]
 [ext_resource path="res://Graphics/Cave/MMIcons/NextFloor.png" type="Texture" id=17]
+[ext_resource path="res://icon.png" type="Texture" id=18]
 [ext_resource path="res://Graphics/Cave/MMIcons/Exit.png" type="Texture" id=21]
 [ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=22]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=23]
@@ -38,7 +41,7 @@ height = 151.187
 [sub_resource type="CircleShape2D" id=3]
 radius = 52.0
 
-[sub_resource type="ParticlesMaterial" id=5]
+[sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -49,15 +52,15 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 1 )
-shader_param/beams = 2
+shader_param/beams = 1
 shader_param/energy = 8.0
-shader_param/roughness = 3
+shader_param/roughness = 2
 shader_param/frequency = 10
 shader_param/speed = 1.0
-shader_param/thickness = 0.006
-shader_param/outline_thickness = 0.03
+shader_param/thickness = 0.005
+shader_param/outline_thickness = 0.052
 shader_param/beam_difference = 0.0
 shader_param/glow = 1.0
 shader_param/outline_glow = 0.0
@@ -68,10 +71,55 @@ shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
 shader_param/noise_scale = Vector2( 1, 1 )
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=6]
 radius = 40.0
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="ShaderMaterial" id=20]
+shader = ExtResource( 1 )
+shader_param/beams = 1
+shader_param/energy = 20.0
+shader_param/roughness = 3
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.021
+shader_param/outline_thickness = 0.044
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1.5, 1.5, 1 )
+shader_param/outline_color = Color( 0.501961, 1, 0.960784, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=21]
+shader = ExtResource( 1 )
+shader_param/beams = 1
+shader_param/energy = 10.0
+shader_param/roughness = 8
+shader_param/frequency = 15
+shader_param/speed = 1.0
+shader_param/thickness = 0.012
+shader_param/outline_thickness = 0.043
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 2, 2, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=22]
+shader = ExtResource( 14 )
+shader_param/color = Color( 1, 0, 0, 1 )
+shader_param/fog_size = 6.0
+shader_param/fog_mvt_spd = 1.0
+shader_param/OCTAVES = 4
+
+[sub_resource type="Animation" id=7]
 resource_name = "Flash"
 length = 0.6
 loop = true
@@ -241,6 +289,7 @@ glow_levels/5 = false
 glow_levels/6 = true
 glow_intensity = 0.3
 glow_blend_mode = 1
+glow_hdr_luminance_cap = 4.0
 glow_bicubic_upscale = true
 adjustment_enabled = true
 
@@ -299,7 +348,7 @@ emitting = false
 amount = 25
 lifetime = 0.2
 local_coords = false
-process_material = SubResource( 5 )
+process_material = SubResource( 4 )
 
 [node name="Rover" type="KinematicBody2D" parent="."]
 collision_layer = 2
@@ -362,7 +411,7 @@ __meta__ = {
 
 [node name="MiningLaser" type="Sprite" parent="Rover"]
 visible = false
-material = SubResource( 6 )
+material = SubResource( 5 )
 scale = Vector2( 14, 14 )
 texture = ExtResource( 5 )
 centered = false
@@ -379,9 +428,36 @@ texture = ExtResource( 30 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 7 )
+shape = SubResource( 6 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
+
+[node name="Stun" type="Node2D" parent="Rover"]
+visible = false
+position = Vector2( 0, -6.29962 )
+
+[node name="Sprite" type="Sprite" parent="Rover/Stun"]
+material = SubResource( 20 )
+position = Vector2( 32, 38.2996 )
+rotation = 0.496553
+scale = Vector2( 1.45224, 1.45224 )
+texture = ExtResource( 10 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Sprite2" type="Sprite" parent="Rover/Stun"]
+material = SubResource( 21 )
+position = Vector2( 8, 30.2996 )
+rotation = -0.583007
+scale = Vector2( 0.965229, 0.965229 )
+texture = ExtResource( 10 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Burn" type="Sprite" parent="Rover"]
+visible = false
+material = SubResource( 22 )
+position = Vector2( 16, -40 )
+scale = Vector2( 4, 4 )
+texture = ExtResource( 18 )
 
 [node name="TileHighlight" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.192157 )
@@ -391,9 +467,17 @@ texture = ExtResource( 22 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlight"]
 autoplay = "Flash"
-anims/Flash = SubResource( 20 )
+anims/Flash = SubResource( 7 )
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="UseItem" type="TextureButton" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MinimapBG" type="Sprite" parent="UI"]
 modulate = Color( 0, 0, 0, 1 )
@@ -450,13 +534,6 @@ __meta__ = {
 
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
-
-[node name="UseItem" type="TextureButton" parent="UI2"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BottomLeft" type="HBoxContainer" parent="UI2"]
 anchor_top = 1.0
@@ -783,6 +860,8 @@ environment = SubResource( 19 )
 
 [node name="CheckAchievements" type="Timer" parent="."]
 
+[node name="BurnTimer" type="Timer" parent="."]
+
 [connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
 [connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
@@ -801,3 +880,4 @@ environment = SubResource( 19 )
 [connection signal="mouse_exited" from="UI2/CaveInfo/Difficulty" to="." method="_on_mouse_exited"]
 [connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
 [connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]
+[connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]

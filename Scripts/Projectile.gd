@@ -6,6 +6,7 @@ var texture
 var damage
 var enemy:bool
 var cave_ref
+var status_effects:Dictionary = {}
 
 func _ready():
 	$Sprite.texture = texture
@@ -24,13 +25,11 @@ func _on_Sprite_body_entered(body):
 				else:
 					dmg = 1
 			else:
-				dmg = damage / dmg_penalty / pow(body.def, cave_ref.DEF_EXPO)
+				dmg = damage / dmg_penalty / body.def
 			Helper.show_dmg(int(dmg), position, cave_ref)
 			body.hit(dmg)
 		else:
-			var dmg:float = damage / pow(cave_ref.def, cave_ref.DEF_EXPO) / cave_ref.rover_size
-			cave_ref.hit_player(dmg)
-			if cave_ref.HP >= 0:
-				Helper.show_dmg(int(dmg), body.position, cave_ref)
+			var dmg:float = damage / cave_ref.def / cave_ref.rover_size
+			cave_ref.hit_player(dmg, status_effects)
 	get_parent().call_deferred("remove_child", self)
 	queue_free()

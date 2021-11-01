@@ -2,7 +2,6 @@ class_name Cave
 extends Node2D
 
 var astar_node = AStar2D.new()
-const DEF_EXPO = 0.7
 
 onready var game = get_node("/root/Game")
 onready var p_i = game.planet_data[game.c_p] if game else {"type":3}
@@ -19,6 +18,7 @@ onready var difficulty:float = (game.system_data[game.c_s].diff if game else 1) 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
 var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
+var bomb_texture = preload("res://Graphics/Weapons/bomb1.png")
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -40,7 +40,7 @@ onready var canvas_mod = $CanvasModulate
 onready var aurora_mod = $AuroraModulate
 onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
 onready var inventory_slots = $UI2/BottomLeft/VBox/InventorySlots
-onready var use_item = $UI2/UseItem
+onready var use_item = $UI/UseItem
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
@@ -76,6 +76,7 @@ var inventory_ready:Array = []#For cooldowns
 var i_w_w:Dictionary = {}#inventory_with_weight
 var weight:float = 0.0
 var weight_cap:float = 1500.0
+var status_effects:Dictionary = {}
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -109,6 +110,7 @@ var tile_brightness:float
 var brightness_mult:float
 
 func _ready():
+	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
 		$CheckAchievements.start()
 	tile_brightness = game.tile_brightness[p_i.type - 3]
@@ -397,13 +399,21 @@ func generate_cave(first_floor:bool, going_up:bool):
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor):
 					var HX_node = HX1_scene.instance()
-					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [rng.randi_range(1, 4)]))
-					HX_node.HP = round(15 * pow(difficulty, 0.75) * rng.randf_range(0.8, 1.2))
-					HX_node.atk = round(6 * difficulty * rng.randf_range(0.9, 1.1))
-					HX_node.def = round(6 * pow(difficulty, 0.75) * rng.randf_range(0.9, 1.1))
+					var type:int = rng.randi_range(1, 4)
+					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [type]))
+					var _class:int = 1
+					if rng.randf() < log(difficulty) / log(100) - 1.0:
+						_class += 1
+					if rng.randf() < log(difficulty / 100.0) / log(100) - 1.0:
+						_class += 1
+					HX_node._class = _class
+					HX_node.HP = round(15 * difficulty * rng.randf_range(0.8, 1.2))
+					HX_node.def = rng.randi_range(3, 6)
+					HX_node.atk = round((10 - HX_node.def) * difficulty * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
 						HX_node.free()
 						continue
+					HX_node.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
 					HX_node.get_node("Info/Label").visible = false
 					HX_node.get_node("Info/Effects").visible = false
 					HX_node.get_node("Info/Icon").visible = false
@@ -931,20 +941,15 @@ func update_ray():
 		if holding_left_click:
 			mining_laser.scale.x = laser_reach / 16.0
 			mining_laser.scale.y = 16.0
-			if inventory[curr_slot].name == "xray_mining_laser":
-				mining_laser.material["shader_param/beams"] = 3
-				mining_laser.material["shader_param/energy"] = 12
-				mining_laser.material["shader_param/speed"] = 1.2
-			elif inventory[curr_slot].name == "gammaray_mining_laser":
-				mining_laser.material["shader_param/beams"] = 4
+			if inventory[curr_slot].name == "gammaray_mining_laser":
+				mining_laser.material["shader_param/beams"] = 2
 				mining_laser.material["shader_param/energy"] = 15
-				mining_laser.material["shader_param/speed"] = 1.3
 			elif inventory[curr_slot].name == "ultragammaray_mining_laser":
-				mining_laser.material["shader_param/beams"] = 5
-				mining_laser.material["shader_param/roughness"] = 3
+				mining_laser.material["shader_param/beams"] = 3
 				mining_laser.material["shader_param/energy"] = 20
-				mining_laser.material["shader_param/frequency"] = 15
-			#mining_laser.region_rect.end = Vector2(laser_reach, 16)
+			else:
+				mining_laser.material["shader_param/beams"] = 1
+				mining_laser.material["shader_param/energy"] = 8
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 	else:
 		mining_laser.visible = false
@@ -1170,10 +1175,19 @@ func remove_item(item:Dictionary, num:int = 1):
 		slots[curr_slot].get_node("Label").text = String(num)
 	
 func _process(delta):
+	for effect in status_effects:
+		status_effects[effect] -= delta * time_speed
+		if status_effects[effect] < 0:
+			status_effects.erase(effect)
+			if effect == "stun":
+				rover.get_node("Stun").visible = false
+			elif effect == "burn":
+				rover.get_node("Burn").visible = false
+				$BurnTimer.stop()
 	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
 		tile_highlight.position.x = floor(rover.position.x / 200) * 200 + 100
 		tile_highlight.position.y = floor(rover.position.y / 200) * 200 + 100
-	if use_item.pressed and inventory_ready[curr_slot]:
+	if not status_effects.has("stun") and use_item.pressed and inventory_ready[curr_slot]:
 		var item:Dictionary = inventory[curr_slot]
 		if item.type == "rover_weapons":
 			attack()
@@ -1210,20 +1224,72 @@ func _process(delta):
 
 func attack():
 	var laser_name:String = inventory[curr_slot].name.split("_")[0]
-	var laser_color:Color = get_color(laser_name) * 5.0
-	var light_size:float = 1.0
+	var laser_color:Color = get_color(laser_name)
+	if $WorldEnvironment.environment.glow_enabled:
+		laser_color *= 4.0
+	var proj_scale:float = 1.0
 	if laser_name in ["yellow", "green"]:
-		light_size = 1.4
+		proj_scale *= 1.2
 	elif laser_name in ["blue", "purple"]:
-		light_size = 2.0
+		proj_scale *= 1.4
 	elif laser_name in ["UV", "xray"]:
-		light_size = 2.7
+		proj_scale *= 1.7
 	elif laser_name == "gammaray":
-		light_size = 3.4
+		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
-		light_size = 4.5
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * game.u_i.speed_of_light, laser_color, 2, BLEND_MODE_ADD)
+		proj_scale *= 3.0
+	prints(Data.rover_weapons[inventory[curr_slot].name].damage, atk, rover_size, log(game.u_i.speed_of_light - 1.0 + exp(1.0)))
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, 2, proj_scale)
 	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
+
+#Basic projectile that has a fixed velocity and disappears once hitting something
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, proj_scale:float = 1.0, status_effects:Dictionary = {}):
+	var proj:Projectile = bullet_scene.instance()
+	proj.texture = texture
+	proj.rotation = rot
+	proj.velocity = polar2cartesian(spd * time_speed, rot)
+	proj.position = pos
+	proj.scale *= proj_scale
+	proj.damage = damage
+	proj.enemy = enemy
+	proj.status_effects = status_effects
+	proj.get_node("Sprite").modulate = mod
+	if collision_shape == 2:
+		proj.get_node("Round").disabled = true
+		proj.get_node("Line").disabled = false
+	if enemy:
+		proj.collision_layer = 16
+		proj.collision_mask = 1 + 2
+	else:
+		proj.scale *= rover_size
+		proj.collision_layer = 8
+		proj.collision_mask = 1 + 4
+	proj.cave_ref = self
+	add_child(proj)
+	proj.add_to_group("projectiles")
+
+func get_color(color:String):
+	match color:
+		"red":
+			return Color(1.0, 0.1, 0.1, 1.0)
+		"orange":
+			return Color(1.0, 0.2, 0.1, 1.0)
+		"yellow":
+			return Color.yellow
+		"green":
+			return Color(0.1, 1.0, 0.1, 1.0)
+		"blue":
+			return Color(0.13, 0.16, 1.0, 1.0)
+		"purple":
+			return Color.purple
+		"UV":
+			return Color(1.0, 0.15, 1.0, 1.0)
+		"xray":
+			return Color.lightgray
+		"gammaray":
+			return Color.lightseagreen
+		"ultragammaray":
+			return Color.white
 
 func hit_rock(delta):
 	var st = String(tile_highlighted)
@@ -1330,33 +1396,18 @@ func _on_Timer_timeout():
 	$UI2/Panel.modulate.a = 1
 	tween.stop_all()
 
-func hit_player(damage:float):
+func hit_player(damage:float, _status_effects:Dictionary = {}):
+	for effect in _status_effects:
+		if not status_effects.has(effect):
+			status_effects[effect] = _status_effects[effect]
+			if effect == "stun":
+				rover.get_node("Stun").visible = true
+			elif effect == "burn":
+				rover.get_node("Burn").visible = true
+				$BurnTimer.start()
 	update_health_bar(HP - damage)
-
-#Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, blend_mode:int = BLEND_MODE_MIX):
-	var proj:Projectile = bullet_scene.instance()
-	proj.texture = texture
-	proj.rotation = rot
-	proj.velocity = polar2cartesian(spd * time_speed, rot)
-	proj.position = pos
-	proj.damage = damage
-	proj.enemy = enemy
-	proj.get_node("Sprite").modulate = mod
-	proj.get_node("Sprite").material.blend_mode = blend_mode
-	if collision_shape == 2:
-		proj.get_node("Round").disabled = true
-		proj.get_node("Line").disabled = false
-	if enemy:
-		proj.collision_layer = 16
-		proj.collision_mask = 1 + 2
-	else:
-		proj.scale *= rover_size
-		proj.collision_layer = 8
-		proj.collision_mask = 1 + 4
-	proj.cave_ref = self
-	add_child(proj)
-	proj.add_to_group("projectiles")
+	if HP > 0:
+		Helper.show_dmg(ceil(damage), rover.position, self)
 
 var slots = []
 func set_border(i:int):
@@ -1364,7 +1415,7 @@ func set_border(i:int):
 		var slot = slots[j]
 		if i == j and not slot.has_node("border"):
 			var border = TextureRect.new()
-			border.texture = load("res://Graphics/Cave/SlotBorder.png")
+			border.texture = preload("res://Graphics/Cave/SlotBorder.png")
 			slot.add_child(border)
 			border.name = "border"
 		elif slot.has_node("border"):
@@ -1373,8 +1424,8 @@ func set_border(i:int):
 			border.queue_free()
 	if inventory[i].type == "rover_mining":
 		var c:Color = get_color(inventory[i].name.split("_")[0])
-		mining_laser.material["shader_param/color"] = c * 2.0
-		mining_laser.material["shader_param/outline_color"] = c * 2.0
+		mining_laser.material["shader_param/color"] = c * 4.0
+		mining_laser.material["shader_param/outline_color"] = c * 4.0
 		var speed = Data.rover_mining[inventory[i].name].speed
 		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
 		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
@@ -1390,29 +1441,6 @@ func set_border(i:int):
 		tile_highlight.visible = true
 	elif inventory[i].type != "rover_mining":
 		tile_highlight.visible = false
-
-func get_color(color:String):
-	match color:
-		"red":
-			return Color.red
-		"orange":
-			return Color.orange
-		"yellow":
-			return Color.yellow
-		"green":
-			return Color.lightgreen
-		"blue":
-			return Color.blue
-		"purple":
-			return Color.purple
-		"UV":
-			return Color.lightsteelblue
-		"xray":
-			return Color.lightgray
-		"gammaray":
-			return Color.lightseagreen
-		"ultragammaray":
-			return Color.white
 
 func sort_size(a, b):
 	if a.size > b.size:
@@ -1444,13 +1472,14 @@ func _physics_process(delta):
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
-		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))
-	else:
-		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
-		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
-	input_vector = input_vector.normalized()
+	if not status_effects.has("stun"):
+		if OS.get_latin_keyboard_variant() == "AZERTY":
+			input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
+			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))
+		else:
+			input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
+			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
+		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * delta * speed_mult2)
 	else:
@@ -1580,3 +1609,7 @@ func _on_CheckAchievements_timeout():
 		game.earn_achievement("random", 0)
 		$CheckAchievements.stop()
 		$CheckAchievements.disconnect("timeout", self, "_on_CheckAchievements_timeout")
+
+
+func _on_BurnTimer_timeout():
+	hit_player(ceil(total_HP / 50.0))

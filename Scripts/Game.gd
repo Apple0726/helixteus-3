@@ -2674,13 +2674,19 @@ func generate_planets(id:int):#local id
 				p_i.lake_1 = "Xe"
 				p_i.lake_2 = "Xe"
 		p_i.HX_data = []
-		var power:float = system_data[id].diff * pow(p_i.size / 2500.0, 0.5)
+		var diff:float = system_data[id].diff
+		var power:float = diff * pow(p_i.size / 2500.0, 0.5)
 		var num:int = 0
 		var total_num:int = Helper.rand_int(1, 12)
 		if not p_i.has("conquered"):
 			while num < total_num:
 				num += 1
 				var lv:int = max(ceil(rand_range(0.5, 0.9) * log(power) / log(1.15)), 1)
+				var _class:int = 1
+				if randf() < log(diff) / log(100) - 1.0:#difficulty < 100 = no green enemies, difficulty = 1000 = 50% chance of green enemies, difficulty > 10000 = no more red enemies, always green or higher
+					_class += 1
+				if randf() < log(diff / 100.0) / log(100) - 1.0:
+					_class += 1
 				if p_num == 0:
 					if lv > 4:
 						lv = 4
@@ -2689,17 +2695,21 @@ func generate_planets(id:int):#local id
 				if num == total_num:
 					lv = max(ceil(log(power) / log(1.15)), 1)
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
+				if _class == 2:
+					HP = round(HP * rand_range(4.0, 6.0))
+				elif _class == 3:
+					HP = round(HP * rand_range(8.0, 12.0))
 				var def = round(randf() * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
 				var acc = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var eva = round(rand_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var _money = round(rand_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
-				p_i.HX_data.append({"type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
+				p_i.HX_data.append({"class":_class, "type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
 				power -= floor(pow(1.15, lv))
 				if power <= 1:
 					break
-			#p_i.HX_data.shuffle()
+			p_i.HX_data.shuffle()
 		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
 			if p_i.type in [11, 12]:
 				planet_data[0].second_ship = true
@@ -2928,12 +2938,12 @@ func generate_tiles(id:int):
 						if c_g_g == 0 and met_info[met].rarity > 50:
 							continue
 						tile_data[t_id].crater.metal = met
-					if not achievement_data.exploration[17] and met == "diamond":
-						earn_achievement("exploration", 17)
-					if not achievement_data.exploration[18] and met == "nanocrystal":
-						earn_achievement("exploration", 18)
-					if not achievement_data.exploration[19] and met == "mythril":
-						earn_achievement("exploration", 19)
+						if not achievement_data.exploration[17] and met == "diamond":
+							earn_achievement("exploration", 17)
+						if not achievement_data.exploration[18] and met == "nanocrystal":
+							earn_achievement("exploration", 18)
+						if not achievement_data.exploration[19] and met == "mythril":
+							earn_achievement("exploration", 19)
 	if relic_cave_id != -1:
 		erase_tile(relic_cave_id + wid)
 		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)

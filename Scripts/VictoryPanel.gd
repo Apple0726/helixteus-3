@@ -68,7 +68,7 @@ func _on_close_button_pressed():
 			game.objective.current += 1
 	else:
 		for planet in game.planet_data:
-			if not planet.has("conquered"):
+			if not planet.has("conquered") and game.planet_data[p_id].has("HX_data"):
 				planet.conquered = true
 				game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 				game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)

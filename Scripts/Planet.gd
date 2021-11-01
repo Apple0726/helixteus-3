@@ -53,9 +53,9 @@ func _ready():
 			$TileMap.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
-				strength_mult = min(range_lerp(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
+				strength_mult = min(range_lerp(p_i.temperature, 1000, 3000, 1.2, 1.5), 1.5)
 			else:
-				strength_mult = min(range_lerp(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
+				strength_mult = min(range_lerp(p_i.temperature, -273, 1000, 0.3, 1.2), 1.2)
 			var brightness:float = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
 			var contrast:float = sqrt(brightness)
 			$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))

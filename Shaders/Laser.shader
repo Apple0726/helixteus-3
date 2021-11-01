@@ -8,7 +8,7 @@ the modified result to godotshaders.com.
 */
 
 shader_type canvas_item;
-render_mode blend_add; // Remove this if you want to use HDR glow instead (use "Glow" and "Outline Glow" sliders)
+//render_mode blend_add; // Remove this if you want to use HDR glow instead (use "Glow" and "Outline Glow" sliders)
 
 uniform int beams = 2; // How many beams the energy field should have
 

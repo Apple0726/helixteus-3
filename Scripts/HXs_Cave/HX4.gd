@@ -4,8 +4,6 @@ var rot:float
 var counter:int = 0
 
 func _ready():
-	$Sprite.texture = load("res://Graphics/HX/4.png")
-	
 	move_timer = Timer.new()
 	add_child(move_timer)
 	move_timer.start(3.0)
@@ -34,7 +32,12 @@ func on_time_out():
 	shoot_timer.wait_time = 0.04 / cave_ref.time_speed
 	if (sees_player or is_aggr()) and counter < 4:
 		for i in range(0, 3):
-			cave_ref.add_proj(true, position, 12.0, rot + i * 2*PI/3, cave_ref.bullet_texture, atk * 2.0)
+			if _class == 1:
+				cave_ref.add_proj(true, position, 12.0, rot + i * 2*PI/3, cave_ref.bullet_texture, atk * 2.0)
+			elif _class == 2:
+				cave_ref.add_proj(true, position, 14.0, rot + i * 2*PI/3, cave_ref.laser_texture, atk * 1.3, Color(1.5, 1.5, 0.75), 2, 1.0, {"stun":0.5})
+			elif _class == 3:
+				cave_ref.add_proj(true, position, 10.0, rot + i * 2*PI/3, cave_ref.bomb_texture, atk * 3.5, Color.white, 1, 1.0, {"burn":5.0})
 	counter += 1
 	if counter >= 15:
 		counter = 0

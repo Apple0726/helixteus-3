@@ -66,8 +66,10 @@ var light_mult:float
 var victory_panel
 
 enum BattleStages {START, CHOOSING, TARGETING, PLAYER, ENEMY}
+enum MoveMethod {STANDARD, MOUSE, GRAVITY}#Standard: red enemies, mouse: green enemies, gravity: blue enemies
 
 var stage = BattleStages.START
+var move_method = MoveMethod.STANDARD
 
 func _ready():
 	$CurrentPattern.visible = not OS.has_feature("standalone")
@@ -76,7 +78,9 @@ func _ready():
 	randomize()
 	var total_enemy_stats:float = 0.0
 	var total_ship_stats:float = 0.0
+	var bright_star:bool = false
 	if game:
+		$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 		ship_data = game.ship_data
 		var p_i:Dictionary = game.planet_data[game.c_p]
 		if game.is_conquering_all:
@@ -85,7 +89,7 @@ func _ready():
 			HX_data = p_i.HX_data
 		for HX in HX_data:
 			total_enemy_stats += pow(HX.total_HP, 2)
-			total_enemy_stats += pow(HX.atk, 2)
+			total_enemy_stats += pow(HX.atk * 2.5, 2)
 			total_enemy_stats += pow(HX.acc, 2)
 			total_enemy_stats += pow(HX.eva, 2)
 		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0) * Vector2(-1, 0)
@@ -96,28 +100,20 @@ func _ready():
 			shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
 			var star_spr = Sprite.new()
 			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
-			star_spr.modulate = Helper.get_star_modulate(star.class) * 1.5
+			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
+			star_spr.modulate = Helper.get_star_modulate(star.class) * clamp(range_lerp(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
 			star_spr.position.x = range_lerp(p_i.angle, 0, 2 * PI, 100, 1180) + shift
 			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
-			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
+			if star_spr.scale.x > 2:
+				bright_star = true
 			star_spr.material = CanvasItemMaterial.new()
 			star_spr.material.blend_mode = BLEND_MODE_ADD
-#				star_spr.material = ShaderMaterial.new()
-#				star_spr.material.shader = star_shader
-#				star_spr.material.set_shader_param("time_offset", 10.0 * randf())
-#				var amp:float = 2.0 - pow(clamp(range_lerp(star_spr.scale.x, 1.0, 3.0, 0.0, 0.9), 0.0, 0.9), 0.5)
-#				star_spr.material.set_shader_param("brightness_offset", amp)
-#				star_spr.material.set_shader_param("twinkle_speed", 0.4)
-#				star_spr.material.set_shader_param("amplitude", 0.05 / star_spr.scale.x)
 			$BG.material.shader = preload("res://Shaders/PlanetBG.shader")
 			if star.luminosity > max_star_lum:
-				if game.enable_shaders:
-					$BG.material.set_shader_param("strength", max(0.3, star_spr.scale.x * 2.0))
-					$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
-					$BG.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
-					$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
-				else:
-					$BG.material.shader = null
+				$BG.material.set_shader_param("strength", max(0.3, sqrt(star_spr.scale.x)))
+				$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
+				$BG.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
+				$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
 				max_star_lum = star.luminosity
 			if star_spr.scale.x > max_star_size:
 				max_star_size = star_spr.scale.x
@@ -173,7 +169,7 @@ func _ready():
 		max_lv_ship = max(max_lv_ship, ship_data[i].lv)
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		total_ship_stats += pow(ship_data[i].total_HP, 2)
-		total_ship_stats += pow(ship_data[i].atk, 2)
+		total_ship_stats += pow(ship_data[i].atk * max(Data.bullet_data[ship_data[i].bullet.lv - 1].damage, max(Data.laser_data[ship_data[i].laser.lv - 1].damage, max(Data.bomb_data[ship_data[i].bomb.lv - 1].damage, Data.light_data[ship_data[i].light.lv - 1].damage))), 2)
 		total_ship_stats += pow(ship_data[i].acc, 2)
 		total_ship_stats += pow(ship_data[i].eva, 2)
 		get_node("Ship%s" % i).visible = true
@@ -182,18 +178,24 @@ func _ready():
 		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP * ship_data[i].HP_mult
 		get_node("Ship%s/HP" % i).value = ship_data[i].HP
 		get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
-	if total_enemy_stats > total_ship_stats:
-		hard_battle = true
+	total_ship_stats *= max(log(game.u_i.speed_of_light - 1.0 + exp(1.0)), max(log(game.u_i.planck - 1.0 + exp(1.0)), log(game.u_i.charge - 1.0 + exp(1.0))))
+	if bright_star:
 		$WorldEnvironment.environment.adjustment_enabled = true
 		$WorldAnim.play("WorldAnim")
-		game.switch_music(load("res://Audio/battle.ogg"))
+	else:
+		$WorldEnvironment.environment.adjustment_enabled = false
+	prints(total_enemy_stats, total_ship_stats)
+	if total_enemy_stats > total_ship_stats:
+		hard_battle = true
+		$InitialFade.play("SceneFade", -1, 0.5)
+		game.switch_music(preload("res://Audio/battle.ogg"))
 		yield(get_tree().create_timer(0.5), "timeout")
 		send_HXs()
 		yield(get_tree().create_timer(1.0), "timeout")
 		refresh_fight_panel()
 		stage = BattleStages.CHOOSING
 	else:
-		$WorldEnvironment.environment.adjustment_enabled = false
+		$InitialFade.play("SceneFade")
 		send_HXs()
 		refresh_fight_panel()
 		stage = BattleStages.CHOOSING
@@ -228,7 +230,7 @@ func send_HXs():
 		btn.rect_position = -Vector2(90, 50)
 		btn.rect_size = Vector2(180, 100)
 		var HX = HX1_scene.instance()
-		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s.png" % [HX_data[k].type])
+		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[k].class, HX_data[k].type])
 		HX.get_node("Sprite").material.set_shader_param("frequency", 6 * time_speed)
 		HX.scale *= 0.4
 		HX.get_node("Info/HP").max_value = HX_data[k].total_HP
@@ -407,7 +409,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				continue
 			if HX_c_d[HXs[i].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
 				var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * light_mult * ship_data[sh].atk_mult / pow(HX_data[i].def, DEF_EXPO_ENEMY)
-				dmg *= log(1 + game.u_i.speed_of_light)
+				dmg *= log(game.u_i.speed_of_light - 1.0 + exp(1.0))
 				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.02 if game else 0)
 				if crit:
 					dmg *= 1.5
@@ -441,9 +443,9 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult / pow(HX_data[w_c_d.target].def, DEF_EXPO_ENEMY)
 			if game:
 				if weapon_type in ["bullet", "bomb"]:
-					dmg *= log(1 + game.u_i.planck)
+					dmg *= log(game.u_i.planck - 1.0 + exp(1.0))
 				elif weapon_type == "laser":
-					dmg *= log(1 + game.u_i.charge)
+					dmg *= log(game.u_i.charge - 1.0 + exp(1.0))
 			var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.025 if game else 0)
 			if crit:
 				dmg *= 1.5
@@ -524,11 +526,12 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	return remove_weapon_b
 
 func _process(delta):
+	var time_mult:float = delta * 60.0 * time_speed
 	$UI/FightPanel.visible = $UI/FightPanel.modulate.a > 0
 	if is_instance_valid(star):
-		star.scale += Vector2(0.12, 0.12) * delta * 60 * time_speed
-		star.modulate.a -= 0.03 * delta * 60 * time_speed
-		star.rotation += 0.04 * delta * 60 * time_speed
+		star.scale += Vector2(0.12, 0.12) * time_mult
+		star.modulate.a -= 0.03 * time_mult
+		star.rotation += 0.04 * time_mult
 		if star.modulate.a <= 0:
 			remove_child(star)
 			star.free()
@@ -549,8 +552,8 @@ func _process(delta):
 		if HX_data[i].HP <= 0 and HX.get_node("Sprite").modulate.a > 0:
 			if HX_data[i].lv >= max_lv_ship + 30 and not game.achievement_data.random[5]:
 				game.earn_achievement("random", 5)
-			HX.get_node("Sprite").modulate.a -= 0.02 * delta * 60 * time_speed
-			HX.get_node("Info").modulate.a -= 0.02 * delta * 60 * time_speed
+			HX.get_node("Sprite").modulate.a -= 0.02 * time_mult
+			HX.get_node("Info").modulate.a -= 0.02 * time_mult
 		var pos = HX_c_d[HX.name].position
 		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5 * game.u_i.time_speed)
 	if stage in [BattleStages.START, BattleStages.CHOOSING]:
@@ -586,19 +589,27 @@ func _process(delta):
 			else:
 				ship_i.scale = ship_i.scale.move_toward(Vector2.ONE, ship_i.scale.distance_to(Vector2.ONE) * delta * 5 * time_speed)
 				ship_i.modulate.a = max(ship_i.modulate.a - 0.03 * time_speed, 0.2)
-		var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.1
-		if ship_dir == "left":
-			self["ship%s" % tgt_sh].position.y = max(0, self["ship%s" % tgt_sh].position.y - 10 * boost * delta * 60 * time_speed)
+		var curr_ship = self["ship%s" % tgt_sh]
+		if move_method == MoveMethod.STANDARD:
+			var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.1
+			if ship_dir == "left":
+				curr_ship.position.y = max(0, curr_ship.position.y - 10 * boost * time_mult)
+				self["ship%s_engine" % tgt_sh].emitting = true
+			elif ship_dir == "right":
+				self["ship%s_engine" % tgt_sh].modulate.a = 0.2 * boost
+				self["ship%s_engine" % tgt_sh].emitting = true
+				curr_ship.position.y = min(720, curr_ship.position.y + 10 * boost * time_mult)
+			else:
+				self["ship%s_engine" % tgt_sh].emitting = false
+		elif move_method == MoveMethod.MOUSE:
+			curr_ship.position.y = move_toward(curr_ship.position.y, mouse_pos.y, pow(abs(mouse_pos.y - curr_ship.position.y), 1.2) * time_mult * 0.05)
 			self["ship%s_engine" % tgt_sh].emitting = true
-		elif ship_dir == "right":
-			self["ship%s_engine" % tgt_sh].modulate.a = 0.2 * boost
-			self["ship%s_engine" % tgt_sh].emitting = true
-			self["ship%s" % tgt_sh].position.y = min(720, self["ship%s" % tgt_sh].position.y + 10 * boost * delta * 60 * time_speed)
-		else:
-			self["ship%s_engine" % tgt_sh].emitting = false
+		if move_method == MoveMethod.GRAVITY:
+			curr_ship.gravity += time_mult
+			curr_ship.position.y = min(720, curr_ship.position.y + curr_ship.grav_acc * time_mult)
 	for light in get_tree().get_nodes_in_group("lights"):
-		light.scale += Vector2(0.1, 0.1) * delta * 60 * time_speed
-		light.modulate.a -= 0.05 * delta * 60 * time_speed
+		light.scale += Vector2(0.1, 0.1) * time_mult
+		light.modulate.a -= 0.05 * time_mult
 		if light.modulate.a <= 0:
 			light.remove_from_group("lights")
 			remove_child(light)
@@ -606,7 +617,7 @@ func _process(delta):
 	for weapon in get_tree().get_nodes_in_group("weapon"):
 		var sh:int = w_c_d[weapon.name].shooter
 		var vel:Vector2 = w_c_d[weapon.name].v
-		weapon.position += vel * delta * 60 * time_speed
+		weapon.position += vel * time_mult
 		var remove_weapon_b:bool
 		var has_hit:bool = w_c_d[weapon.name].has_hit
 		if vel.x > 0:
@@ -634,7 +645,7 @@ func _process(delta):
 		if HX_w_c_d[weapon.name].delay < 0:
 			var curr_p_str:String = "process_%s" % pattern
 			$CurrentPattern.text = curr_p_str
-			call(curr_p_str, weapon, delta * 60 * time_speed)
+			call(curr_p_str, weapon, time_mult)
 	if a_p_c_d.has("pattern"):
 		a_p_c_d.delay -= delta * time_speed
 		HX_c_d[HXs[a_p_c_d.HX_id].name].position.y = a_p_c_d.y_poses[a_p_c_d.i]
@@ -949,7 +960,7 @@ func enemy_attack():
 			for i in range(wave * 4, last_id):
 				if HX_data[i].HP > 0:
 					if HX_c_d[HXs[i].name].has("burn"):
-						damage_HX(i, HX_data[i].total_HP * 0.15)
+						damage_HX(i, HX_data[i].total_HP * 0.1)
 						HXs[i].get_node("KnockbackAnimation").stop()
 						HXs[i].get_node("KnockbackAnimation").play("Small knockback", -1, time_speed)
 						HXs[i].get_node("HurtAnimation").stop()
@@ -987,6 +998,11 @@ func enemy_attack():
 				_on_Timer_timeout()
 		else:
 			pattern = "%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)]
+			move_method = HX_data[curr_en].class - 1
+			ship0.grav_acc = 0
+			ship1.grav_acc = 0
+			ship2.grav_acc = 0
+			ship3.grav_acc = 0
 			call("atk_%s" % pattern, curr_en)
 			curr_en += 1
 
@@ -1366,7 +1382,7 @@ func _on_weapon_mouse_entered(weapon:String):
 				tr("LV"),# Lv
 				w_lv,# 1
 				tr("BASE_DAMAGE"),# Base damage
-				Helper.clever_round(Data["%s_data" % [weapon]][w_lv - 1].damage * light_mult * log(1 + game.u_i.speed_of_light)),# 5
+				Helper.clever_round(Data["%s_data" % [weapon]][w_lv - 1].damage * light_mult * log(game.u_i.speed_of_light - 1.0 + exp(1.0))),# 5
 				tr("BATTLEFIELD_DARKNESS_MULT"),
 				Helper.clever_round(light_mult),# 1.3
 				tr("BASE_ACCURACY"),# Base accuracy
@@ -1374,9 +1390,9 @@ func _on_weapon_mouse_entered(weapon:String):
 		else:
 			var dmg_mult:float = 1.0
 			if weapon in ["bullet", "bomb"]:
-				dmg_mult = log(1 + game.u_i.planck)
+				dmg_mult = log(game.u_i.planck - 1.0 + exp(1.0))
 			elif weapon == "laser":
-				dmg_mult = log(1 + game.u_i.charge)
+				dmg_mult = log(game.u_i.charge - 1.0 + exp(1.0))
 			game.show_tooltip("%s %s %s\n%s: %s\n%s: %s" % [
 				tr(weapon.to_upper()),# Bullet
 				tr("LV"),# Lv

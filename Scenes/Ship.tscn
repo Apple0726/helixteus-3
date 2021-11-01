@@ -1,0 +1,107 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Ship.gd" type="Script" id=2]
+[ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=3]
+[ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=5]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.300469, 0.746479, 0.995305, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 0.605469, 0.858986, 1, 1, 0, 0, 0, 1, 1, 0.352941, 0, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+emission_shape = 1
+emission_sphere_radius = 6.0
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 70.0
+initial_velocity_random = 0.16
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.03
+color_ramp = SubResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 3 )
+shader_param/amplitude = 20.0
+shader_param/frequency = 6.0
+
+[sub_resource type="CapsuleShape2D" id=5]
+radius = 12.0
+height = 96.0
+
+[node name="Ship" type="Area2D"]
+visible = false
+position = Vector2( -272, 144 )
+collision_layer = 2
+collision_mask = 16
+script = ExtResource( 2 )
+
+[node name="Fire" parent="." instance=ExtResource( 4 )]
+position = Vector2( -60, -4 )
+process_material = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 4 )
+scale = Vector2( 0.15, 0.15 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 5 )
+disabled = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = -100.0
+margin_top = -36.0
+margin_right = -92.0
+margin_bottom = 32.0
+color = Color( 0, 0.34902, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HP" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = -100.0
+margin_top = -36.0
+margin_right = -92.0
+margin_bottom = 32.0
+value = 50.0
+texture_progress = ExtResource( 1 )
+fill_mode = 3
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = -28.0
+margin_top = 52.0
+margin_right = 52.0
+margin_bottom = 76.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+text = "Lv 1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="."]
+margin_left = -72.0
+margin_top = 52.0
+margin_right = -48.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 24, 24 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}

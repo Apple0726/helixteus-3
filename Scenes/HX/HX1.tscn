@@ -1,11 +1,10 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=4]
 [ext_resource path="res://Graphics/Decoratives/BulletHit.jpg" type="Texture" id=5]
-[ext_resource path="res://Graphics/HX/1.png" type="Texture" id=6]
 [ext_resource path="res://Shaders/Fire.shader" type="Shader" id=7]
 [ext_resource path="res://icon.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=9]
@@ -44,8 +43,8 @@ shader_param/outline_thickness = 0.044
 shader_param/beam_difference = 0.0
 shader_param/glow = 0.0
 shader_param/outline_glow = 0.0
-shader_param/color = Color( 0.91, 1, 1, 1 )
-shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/color = Color( 0.91, 1.5, 1.5, 1 )
+shader_param/outline_color = Color( 0.501961, 1, 0.960784, 1 )
 shader_param/progress = 1.0
 shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
@@ -63,7 +62,7 @@ shader_param/outline_thickness = 0.043
 shader_param/beam_difference = 0.0
 shader_param/glow = 0.0
 shader_param/outline_glow = 0.0
-shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/color = Color( 0.91, 2, 2, 1 )
 shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
 shader_param/progress = 1.0
 shader_param/y_offset = 0.0
@@ -318,7 +317,6 @@ shape = SubResource( 1 )
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 2 )
 position = Vector2( 0, 6.29962 )
-texture = ExtResource( 6 )
 
 [node name="Fire" type="Sprite" parent="Sprite"]
 visible = false

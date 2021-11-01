@@ -1,9 +1,10 @@
 extends KinematicBody2D
 
-var HP
-var total_HP
-var atk
-var def
+var HP:float
+var total_HP:float
+var atk:float
+var def:float
+var _class:int
 var MM_icon
 var cave_ref
 var shoot_timer:Timer
