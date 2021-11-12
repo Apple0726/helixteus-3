@@ -125,14 +125,7 @@ margin_bottom = 192.0
 rect_clip_content = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "a
-a
-a
-a
-a
-a
-a
-"
+bbcode_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -148,9 +141,9 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo/VBox/Costs"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 5.0
+margin_right = 10.0
 margin_bottom = 5.0
 
 [node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox"]
@@ -195,9 +188,9 @@ __meta__ = {
 }
 
 [node name="Items" type="GridContainer" parent="VBox/HBox/Items"]
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 659.0
+margin_right = 654.0
 margin_bottom = 5.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 5

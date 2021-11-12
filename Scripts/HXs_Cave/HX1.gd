@@ -35,6 +35,6 @@ func on_time_out():
 			if _class == 1:
 				cave_ref.add_proj(true, position, 12.0, rot, cave_ref.bullet_texture, atk * 2.0)
 			elif _class == 2:
-				cave_ref.add_proj(true, position, 14.0, rot, cave_ref.laser_texture, atk * 1.3, Color(1.5, 1.5, 0.75), 2, 1.0, {"stun":0.5})
+				cave_ref.add_proj(true, position, 14.0, rot, cave_ref.laser_texture, atk * 1.3, Color(1.5, 1.5, 0.75), Data.ProjType.LASER, 1.0, {"stun":0.5})
 			elif _class == 3:
-				cave_ref.add_proj(true, position, 10.0, rot, cave_ref.bomb_texture, atk * 3.5, Color.white, 1, 1.0, {"burn":5.0})
+				cave_ref.add_proj(true, position, 10.0, rot, cave_ref.bubble_texture, atk * 3.5, Color.white, Data.ProjType.BUBBLE)

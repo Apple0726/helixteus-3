@@ -337,36 +337,36 @@ var element = {	"Si":{"density":2.329},
 var achievement_data:Dictionary = {}
 var achievements:Dictionary = {
 	"money":[
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27), 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30), 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27), false, 308), "rsrc":tr("MONEY")}),
+		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30), false, 308), "rsrc":tr("MONEY")}),
 	],
 	"conquest":[
 		tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
 		tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
 		tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
+		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "object":tr("PLANETS")}),
 		tr("FULLY_CONQUER_SYSTEM"),
 		tr("FULLY_CONQUER_GALAXY"),
 		tr("FULLY_CONQUER_CLUSTER"),
 	],
 	"construct":[
 		tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), false, 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), false, 308), "bldg":tr("BUILDINGS")}),
+		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "bldg":tr("BUILDINGS")}),
 	],
 	"exploration":[
 		tr("FIND_CLASS_X_STAR") % "B",
@@ -659,6 +659,8 @@ func load_univ():
 				mats[mat] += autocollect.mats[mat] * plant_time_elapsed
 			for met in autocollect.mets:
 				mets[met] += autocollect.mets[met] * plant_time_elapsed
+			if not autocollect.has("particles"):#Save migration
+				autocollect.particles = {"proton":0, "neutron":0, "electron":0}
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true, 0, true)
 		else:
@@ -757,7 +759,7 @@ func load_game():
 		"RSM":1.0,
 	})
 	achievement_data = save_info_dict.get("achievement_data", {})
-	if achievement_data.empty():
+	if achievement_data.empty():#Save migration
 		for ach in achievements:
 			achievement_data[ach] = []
 			for i in len(achievements[ach]):
@@ -1090,7 +1092,14 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	c_num = 0
 
 	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
-	autocollect = {"mats":{"cellulose":0}, "mets":{}, "MS":{"minerals":0, "energy":0, "SP":0}, "GS":{"minerals":0, "energy":0, "SP":0}, "rsrc":{"minerals":0, "energy":0, "SP":0}, "rsrc_list":{}}
+	autocollect = {
+		"mats":{"cellulose":0},
+		"mets":{},
+		"particles":{"proton":0, "neutron":0, "electron":0},
+		"MS":{"minerals":0, "energy":0, "SP":0},
+		"GS":{"minerals":0, "energy":0, "SP":0},
+		"rsrc":{"minerals":0, "energy":0, "SP":0},
+		"rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
 	bookmarks = {"planet":{}, "system":{}, "galaxy":{}, "cluster":{}}
 	
@@ -1361,6 +1370,8 @@ func fade_out_panel(panel:Control):
 
 func on_fade_complete(panel:Control):
 	panel.visible = false
+	hide_tooltip()
+	hide_adv_tooltip()
 
 func toggle_panel(_panel):
 	if active_panel:
@@ -1368,8 +1379,6 @@ func toggle_panel(_panel):
 		if active_panel == _panel:
 			active_panel = null
 			return
-	hide_tooltip()
-	hide_adv_tooltip()
 	active_panel = _panel
 	fade_in_panel(_panel)
 	_panel.refresh()
@@ -3277,7 +3286,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 	for st in arr:
 		if RTL.append_bbcode(st) != OK:
 			return
-		if i != len(imgs) and imgs[i]:
+		if i < len(imgs) and imgs[i]:
 			RTL.add_image(imgs[i], 0, size)
 		i += 1
 	if _tooltip:

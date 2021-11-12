@@ -18,7 +18,7 @@ onready var difficulty:float = (game.system_data[game.c_s].diff if game else 1) 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
 var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
-var bomb_texture = preload("res://Graphics/Weapons/bomb1.png")
+var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 
 onready var cave = $TileMap
 onready var cave_wall = $Walls
@@ -162,8 +162,8 @@ func _ready():
 		rover_data = {"HP":100, "total_HP":100, "atk":100, "def":100, "spd":2.5, "weight_cap":10000, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}
 		set_rover_data()
 	if tower:
-		$Walls.tile_set = load("res://Resources/DiamondWalls.tres")
-		$Hole/Sprite.texture = load("res://Graphics/Tiles/diamond_stairs.png")
+		$Walls.tile_set = preload("res://Resources/DiamondWalls.tres")
+		$Hole/Sprite.texture = preload("res://Graphics/Tiles/diamond_stairs.png")
 		$TileMap.modulate.a = 1
 		$UI/Minimap/Hole.rotation_degrees = 180
 		rover_size = 0.7
@@ -440,8 +440,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
 					if rand < ch:
 						var met_spawned:String = "lead"
+						var rarity:float = 1.0
 						for met in game.met_info:
-							var rarity = game.met_info[met].rarity
+							rarity = game.met_info[met].rarity
 							if rarity > difficulty:
 								break
 							if rand2 < 1 / (pow(rarity, 0.75) + 1):
@@ -453,7 +454,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
-							deposit.modulate *= 1.5
+							if rarity > 100:
+								deposit.modulate *= 1.5
+							elif rarity > 10:
+								deposit.modulate *= 1.2
 							deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
@@ -500,7 +504,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						chest.modulate = Color(0.7, 0, 0.79, 1.0)
 					elif tier == 5:
 						chest.modulate = Color(0.85, 1.0, 0, 1.0)
-					chest.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Chest.png")
+					chest.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/Chest.png")
 					chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
 					chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
 					chest.scale *= 0.8
@@ -558,7 +562,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					elif bottom:
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
-		$Exit/Sprite.texture = load("res://Graphics/Cave/Objects/exit.png")
+		$Exit/Sprite.texture = preload("res://Graphics/Cave/Objects/exit.png")
+		$Exit/Particles2D.emitting = false
 		$Exit/ExitColl.disabled = false
 		var rot = spawn_edge_tiles[0].dir
 		$Exit/GoUpColl.disabled = true
@@ -575,9 +580,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 		exit.rotation = 0
 		MM_exit.rotation_degrees = 180 if tower else 0
 		if tower:
-			$Exit/Sprite.texture = load("res://Graphics/Tiles/diamond_stairs.png")
+			$Exit/Sprite.texture = preload("res://Graphics/Tiles/diamond_stairs.png")
+			$Exit/Particles2D.emitting = false
 		else:
-			$Exit/Sprite.texture = load("res://Graphics/Cave/Objects/go_up.png")
+			$Exit/Sprite.texture = preload("res://Graphics/Cave/Objects/go_up.png")
+			$Exit/Particles2D.emitting = true
 		$Exit/ExitColl.disabled = true
 		$Exit/GoUpColl.disabled = false
 		while rand_hole == rand_spawn:
@@ -603,7 +610,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#A way to check whether cave has the relic for 2nd ship
 	if tile.cave.has("special_cave") and tile.cave.special_cave == 5 and cave_floor == 3:
 		var relic = object_scene.instance()
-		relic.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Relic.png")
+		relic.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/Relic.png")
 		relic.get_node("Area2D").connect("body_entered", self, "on_relic_entered")
 		relic.get_node("Area2D").connect("body_exited", self, "on_relic_exited")
 		var relic_tile = rooms[0].tiles[-1]
@@ -615,7 +622,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if cave_floor == num_floors and not boss_cave:
 		wormhole = object_scene.instance()
 		wormhole.get_node("Sprite").texture = null
-		var wormhole_texture = load("res://Scenes/Wormhole.tscn").instance()
+		var wormhole_texture = preload("res://Scenes/Wormhole.tscn").instance()
 		wormhole.add_child(wormhole_texture)
 		wormhole.get_node("Area2D").connect("body_entered", self, "on_WH_entered")
 		wormhole.get_node("Area2D").connect("body_exited", self, "_on_body_exited")
@@ -633,7 +640,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
 			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
 				var part = object_scene.instance()
-				part.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/ShipPart.png")
+				part.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/ShipPart.png")
 				part.get_node("Area2D").connect("body_entered", self, "on_ShipPart_entered")
 				var part_tile = rooms[0].tiles[0]
 				part.position = cave.map_to_world(get_tile_pos(part_tile)) + Vector2(100, 100)
@@ -642,7 +649,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				enable_light(part)
 			if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
 				var map = object_scene.instance()
-				map.get_node("Sprite").texture = load("res://Graphics/Cave/Objects/Map.png")
+				map.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/Map.png")
 				map.get_node("Area2D").connect("body_entered", self, "on_map_entered")
 				map.get_node("Area2D").connect("body_exited", self, "on_map_exited")
 				var map_tile:Vector2
@@ -681,7 +688,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					deposit.free()
 		elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
 			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id) and not game.fourth_ship_hints.emma_joined:
-				var op_grill:NPC = load("res://Scenes/NPC.tscn").instance()
+				var op_grill:NPC = preload("res://Scenes/NPC.tscn").instance()
 				op_grill.NPC_id = 3
 				if game.fourth_ship_hints.op_grill_cave_spawn == -1:
 					op_grill.connect_events(1, $UI2/Dialogue)
@@ -734,7 +741,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if boss_cave and (not game or not game.fourth_ship_hints.boss_rekt):
 			pos = Vector2(2000, 2900)
 			MM_exit.position = pos * minimap_zoom
-			boss = load("res://Scenes/Cave/CaveBoss.tscn").instance()
+			boss = preload("res://Scenes/Cave/CaveBoss.tscn").instance()
 			add_child(boss)
 			boss.position = Vector2(2000, 2000)
 			boss.cave_ref = self
@@ -749,7 +756,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			pos = Vector2(500, 500)
 			MM_exit.position = pos * minimap_zoom
 			var ship = object_scene.instance()
-			ship.get_node("Sprite").texture = load("res://Graphics/Ships/Ship3.png")
+			ship.get_node("Sprite").texture = preload("res://Graphics/Ships/Ship3.png")
 			ship.get_node("Area2D").connect("body_entered", self, "on_Ship4_entered")
 			add_child(ship)
 			ship.position = Vector2(1000, 1000)
@@ -1055,12 +1062,12 @@ func _input(event):
 								inventory[i].type = "item"
 								inventory[i].name = rsrc
 								slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
-								slot.get_node("Label").text = Helper.format_num(contents[rsrc], 3)
+								slot.get_node("Label").text = Helper.format_num(contents[rsrc], false, 3)
 								inventory[i].num = contents[rsrc]
 								game.show[rsrc] = true
 							else:
 								inventory[i].num += contents[rsrc]
-								slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
+								slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
 							break
 				if not remainders.empty():
 					chests[active_chest].contents = remainders.duplicate(true)
@@ -1238,12 +1245,10 @@ func attack():
 		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
 		proj_scale *= 3.0
-	prints(Data.rover_weapons[inventory[curr_slot].name].damage, atk, rover_size, log(game.u_i.speed_of_light - 1.0 + exp(1.0)))
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, 2, proj_scale)
+	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
 	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
 
-#Basic projectile that has a fixed velocity and disappears once hitting something
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, collision_shape:int = 1, proj_scale:float = 1.0, status_effects:Dictionary = {}):
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
@@ -1252,11 +1257,10 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.scale *= proj_scale
 	proj.damage = damage
 	proj.enemy = enemy
+	proj.type = type
+	proj.time_speed = time_speed
 	proj.status_effects = status_effects
 	proj.get_node("Sprite").modulate = mod
-	if collision_shape == 2:
-		proj.get_node("Round").disabled = true
-		proj.get_node("Line").disabled = false
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
@@ -1584,7 +1588,7 @@ func init_boss():
 	active_item.visible = true
 	$UI2/HP.visible = true
 	$UI2/Inventory.visible = true
-	bossHPBar = load("res://Scenes/BossHPBar.tscn").instance()
+	bossHPBar = preload("res://Scenes/BossHPBar.tscn").instance()
 	$UI2.add_child(bossHPBar)
 	bossHPBar.set_anchors_and_margins_preset(Control.PRESET_CENTER_TOP)
 	boss.HPBar = bossHPBar

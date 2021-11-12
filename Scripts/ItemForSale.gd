@@ -45,7 +45,9 @@ func _on_ItemForSale_mouse_exited():
 		game[parent].item_info.visible = false
 
 func _on_LockItemInfo_toggled(button_pressed):
+	$ColorRect.visible = button_pressed
 	if button_pressed:
+		$AnimationPlayer.play("Flashing")
 		for item in game[parent].grid.get_children():
 			if item != self:
 				item.get_node("LockItemInfo").pressed = false

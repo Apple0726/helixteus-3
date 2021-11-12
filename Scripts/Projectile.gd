@@ -2,17 +2,40 @@ class_name Projectile
 extends Area2D
 
 var velocity:Vector2 = Vector2.ZERO
+var type:int
 var texture
 var damage
 var enemy:bool
 var cave_ref
 var status_effects:Dictionary = {}
+var timer:Timer
+var fading:bool = false
+var time_speed:float
 
 func _ready():
 	$Sprite.texture = texture
+	if type == Data.ProjType.LASER:
+		$Round.disabled = true
+		$Line.disabled = false
+	elif type == Data.ProjType.BUBBLE:
+		timer = Timer.new()
+		add_child(timer)
+		timer.start(3.0)
+		timer.one_shot = true
+		timer.connect("timeout", self, "on_timeout")
+
+func on_timeout():
+	fading = true
 
 func _physics_process(delta):
 	position += velocity * delta * 60
+	if type == Data.ProjType.BUBBLE:
+		velocity = velocity.move_toward(Vector2.ZERO, delta * 5.0)
+		if fading:
+			modulate.a -= 0.03 * delta * 60 * time_speed
+			if modulate.a <= 0:
+				get_parent().remove_child(self)
+				queue_free()
 
 func _on_Sprite_body_entered(body):
 	if body is KinematicBody2D:

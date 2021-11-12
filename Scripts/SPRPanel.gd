@@ -230,9 +230,9 @@ func _process(delta):
 		atom_dict[reaction] = MM_value
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
 	for hbox in rsrc_nodes_from:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(atom_dict[hbox.name]))]
+		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
 	for hbox in rsrc_nodes_to:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(MM_dict[hbox.name]))]
+		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(MM_dict[hbox.name], true)]
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge))
 
 func refresh_time_icon():

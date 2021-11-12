@@ -127,7 +127,7 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 	if $Resources/Cellulose.visible:
-		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(Helper.clever_round(game.mats.cellulose))
+		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(game.mats.cellulose)
 		if game.mats.cellulose > 0:
 			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
 		else:
@@ -155,7 +155,7 @@ func update_minerals():
 	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
 		return
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
-	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals), 6), Helper.format_num(min_cap, 6)]
+	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
 		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
@@ -173,8 +173,8 @@ func update_money_energy_SP():
 		if planet.shadow_num > 0:
 			money_cost *= planet.shadow_num
 			energy_cost *= planet.shadow_num
-		money_text.text = "%s / %s" % [Helper.format_num(round(game.money), 6), Helper.format_num(round(money_cost), 6)]
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy), 6), Helper.format_num(round(energy_cost), 6)]
+		money_text.text = "%s / %s" % [Helper.format_num(round(game.money)), Helper.format_num(round(money_cost))]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(energy_cost))]
 		if game.money >= money_cost:
 			money_text["custom_colors/font_color"] = Color.green
 		else:
@@ -186,9 +186,9 @@ func update_money_energy_SP():
 	else:
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
-		money_text.text = Helper.format_num(round(game.money), 6)
-		energy_text.text = Helper.format_num(floor(game.energy), 6)
-	SP_text.text = Helper.format_num(floor(game.SP), 6)
+		money_text.text = Helper.format_num(round(game.money))
+		energy_text.text = Helper.format_num(floor(game.energy))
+	SP_text.text = Helper.format_num(floor(game.SP))
 	
 func refresh():
 	if not game:
@@ -209,15 +209,15 @@ func refresh():
 	update_money_energy_SP()
 	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
-	stone_text.text = Helper.format_num(total_stone, 6) + " kg"
-	soil_text.text = Helper.format_num(Helper.clever_round(game.mats.soil), 6) + " kg"
+	stone_text.text = Helper.format_num(total_stone) + " kg"
+	soil_text.text = Helper.format_num(game.mats.soil, true) + " kg"
 	$Resources/Cellulose.visible = game.science_unlocked.has("GHA")
 	if $Resources/Glass.visible:
 		if game.mats.glass >= Data.costs.GH.glass * game.engineering_bonus.BCM:
 			glass_text["custom_colors/font_color"] = Color.green
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
-		glass_text.text = "%s / %s kg" % [Helper.format_num(Helper.clever_round(game.mats.glass), 6), Data.costs.GH.glass * game.engineering_bonus.BCM]
+		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), Data.costs.GH.glass * game.engineering_bonus.BCM]
 	minerals.visible = game.show.minerals
 	stone.visible = game.show.stone
 	shop.visible = game.show.shop
@@ -421,17 +421,17 @@ func _on_MineralUpgrades_mouse_entered():
 func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
-		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(Helper.clever_round(abs(game.autocollect.mats.cellulose))), tr("S_SECOND")])
+		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
 	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
 		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
 		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 		if extra_arg_0 == "MINERALS":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + game.autocollect.MS.minerals)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + game.autocollect.MS.minerals, true), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(Helper.clever_round((game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP)), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP, true), tr("S_SECOND")])
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():

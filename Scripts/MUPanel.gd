@@ -51,7 +51,7 @@ func refresh():
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
-			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name), 6)]
+			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name))]
 			set_upg_text(hbox.name)
 
 func set_upg_text(MU:String, next_lv:int = 0):

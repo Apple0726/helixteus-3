@@ -73,7 +73,7 @@ func _on_Records_pressed():
 	$Statistics/ScrollContainer2.visible = false
 	$Statistics/Panel/Label.text = "%s: %s km\n%s: %s %s\n%s: %s K\n%s: %s" % [
 		tr("BIGGEST_PLANET_DIAMETER"), Helper.format_num(game["stats_%s" % stats_for].biggest_planet),
-		tr("BIGGEST_STAR_SIZE"), Helper.format_num(Helper.clever_round(game["stats_%s" % stats_for].biggest_star)), tr("SOLAR_RADII"),
+		tr("BIGGEST_STAR_SIZE"), Helper.format_num(game["stats_%s" % stats_for].biggest_star, true), tr("SOLAR_RADII"),
 		tr("HOTTEST_STAR_TEMPERATURE"), Helper.format_num(round(game["stats_%s" % stats_for].hottest_star)),
 		tr("HIGHEST_AURORA_INTENSITY"), Helper.format_num(game["stats_%s" % stats_for].highest_au_int),
 	]

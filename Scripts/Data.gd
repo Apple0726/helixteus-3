@@ -1,5 +1,7 @@
 extends Node
 
+enum ProjType {STANDARD, LASER, BUBBLE}
+
 var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
@@ -16,6 +18,9 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integ
 				"SPR":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "is_value_integer":false, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
 				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":1.5, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -55,6 +60,9 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(2.5, 23), "energy":e(2.5, 23)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
+				"PC":{"money":1000000, "energy":50000, "time":600.0},
+				"NC":{"money":8500000, "energy":1200000, "time":4000.0},
+				"EC":{"money":e(3.0, 7), "energy":e(4.0, 6), "time":9001.0},
 }
 
 func e(n, e):
@@ -113,6 +121,9 @@ var coal_icon = preload("res://Graphics/Materials/coal.png")
 var MM_icon = preload("res://Graphics/Icons/MM.png")
 var atom_icon = preload("res://Graphics/Science/ATM.png")
 var particle_icon = preload("res://Graphics/Science/SAP.png")
+var proton_icon = preload("res://Graphics/Particles/proton.png")
+var neutron_icon = preload("res://Graphics/Particles/neutron.png")
+var electron_icon = preload("res://Graphics/Particles/electron.png")
 
 var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"PP":[energy_icon, energy_icon],
@@ -122,6 +133,9 @@ var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"GF":[glass_icon, sand_icon, null],
 					"SE":[energy_icon, coal_icon, null],
 					"SP":[energy_icon, energy_icon],
+					"PC":[proton_icon],
+					"NC":[neutron_icon],
+					"EC":[electron_icon],
 }
 
 var rsrc_icons = {	"ME":minerals_icon,
@@ -135,6 +149,9 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"AE":atom_icon,
 					"AMN":atom_icon,
 					"SPR":particle_icon,
+					"PC":proton_icon,
+					"NC":neutron_icon,
+					"EC":electron_icon,
 }
 
 var default_stats:Dictionary = {
@@ -195,6 +212,9 @@ func reload():
 	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.AMN.desc = "%s: %%s" % [tr("BASE_SPEED")]
 	path_1.SPR.desc = "%s: %%s" % [tr("BASE_SPEED")]
+	path_1.PC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.NC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_2.ME.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
 	path_2.PP.desc = tr("X_CAPACITY") % [" @i %s"]

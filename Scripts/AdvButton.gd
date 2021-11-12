@@ -9,6 +9,7 @@ func _ready():
 	game = get_node("/root/Game") if not Engine.editor_hint else null
 	$Label.text = tr(button_text)
 	$Icon.texture = icon_texture
+	get_node("Label")["custom_colors/font_color"] = Color.white
 
 func _on_Button_pressed():
 	for btn in get_parent().get_children():

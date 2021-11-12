@@ -248,7 +248,7 @@ func _input(event):
 				subj.get_node("HBox/Invest").text = tr("INVEST")
 		else:
 			for subj in $Subjects/Grid.get_children():
-				subj.get_node("HBox/Invest").text = tr("INVEST_X") % Helper.format_num(DR_per_click, 3)
+				subj.get_node("HBox/Invest").text = tr("INVEST_X") % Helper.format_num(DR_per_click, false, 3)
 		if event is InputEventKey or event is InputEventMouse:
 			yield(get_tree(), "idle_frame")
 			maths_OP_points = 0
@@ -260,7 +260,7 @@ func _input(event):
 			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.0)
 			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 40.0, 6.0)
+			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 5.0)
 			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -20.0, 1.0)
 			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))

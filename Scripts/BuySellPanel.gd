@@ -45,22 +45,22 @@ func _on_HSlider_value_changed(value):
 	value = value * max_value / 100.0
 	if is_selling:
 		rounded_value = Helper.clever_round(value)
-		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
+		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value)
 		if type == "Materials":
 			money_value = floor(rounded_value * game.mat_info[obj].value)
-			money_node.get_node("Text").text = Helper.format_num(money_value, 6)
+			money_node.get_node("Text").text = Helper.format_num(money_value)
 		elif type == "Metals":
 			money_value = floor(rounded_value * game.met_info[obj].value)
-			money_node.get_node("Text").text = Helper.format_num(money_value, 6)
+			money_node.get_node("Text").text = Helper.format_num(money_value)
 	else:
 		value = round(value)
 		money_value = value
-		money_node.get_node("Text").text = Helper.format_num(value, 6)
+		money_node.get_node("Text").text = Helper.format_num(value)
 		if type == "Materials":
 			rounded_value = Helper.clever_round(value / game.mat_info[obj].value / game.maths_bonus.MMBSVR)
 		elif type == "Metals":
 			rounded_value = Helper.clever_round(value / game.met_info[obj].value / game.maths_bonus.MMBSVR)
-		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value, 6)
+		obj_node.get_node("Text").text = "%s kg" % Helper.format_num(rounded_value)
 
 func _on_Button_pressed():
 	if is_selling:

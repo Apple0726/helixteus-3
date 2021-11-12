@@ -194,7 +194,9 @@ func get_type_from_name(_name:String):
 		return "craft_cave_info"
 	return ""
 
-func format_num(num:float, threshold:int = 6):
+func format_num(num:float, clever_round:bool = false, threshold:int = 6):
+	if clever_round:
+		num = clever_round(num)
 	if num < pow(10, threshold):
 		var string = str(num)
 		var arr = string.split(".")
@@ -696,7 +698,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
 				current_bar.value = min((c_t - c_d) / prod, 1)
-				rsrc_text.text = "%s/%s" % [format_num(clever_round(1000.0 / prod, 3)), tr("S_SECOND")]
+				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = get_crush_info(tile)
@@ -1172,21 +1174,21 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(round(path_2_value), 6)]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(round(path_2_value))]
 		"AMN", "SPR":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"MM":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(clever_round(path_1_value)), Data.path_2[bldg].desc % format_num(clever_round(path_2_value)), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL":
-			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"MS":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"GH":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"CBD":
 			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % clever_round(path_1_value),

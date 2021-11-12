@@ -28,11 +28,11 @@ func refresh():
 		var sc_lv:int = game.infinite_research[name] if game else 1
 		var sc:Dictionary = Data.infinite_research_sciences[name]
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
-		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)), 6)
+		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)))
 	else:
 		if modulate == Color.white:
 			$Label.text = get_science_name(name)
-			$Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
+			$Text.text = Helper.format_num(Data.science_unlocks[name].cost)
 		else:
 			$Label.text = "?"
 			$Text.text = "-"

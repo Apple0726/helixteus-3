@@ -149,7 +149,7 @@ func _on_Materials_pressed():
 			continue
 		var texture = mat.rsrc.get_node("Texture")
 		texture.connect("mouse_entered", self, "show_mat", [mat.name])
-		texture.connect("mouse_exited", self, "hide_mat")
+		texture.connect("mouse_exited", self, "on_mouse_out")
 		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat.name])
 
 func _on_Metals_pressed():
@@ -165,7 +165,7 @@ func _on_Metals_pressed():
 			continue
 		var texture = met.rsrc.get_node("Texture")
 		texture.connect("mouse_entered", self, "show_met", [met.name])
-		texture.connect("mouse_exited", self, "hide_met")
+		texture.connect("mouse_exited", self, "on_mouse_out")
 		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
 
 func _on_Atoms_pressed():
@@ -185,8 +185,18 @@ func _on_Particles_pressed():
 	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
-	Helper.put_rsrc(grid, 48, game.particles)
+	hbox_data = Helper.put_rsrc(grid, 48, game.particles)
+	for part in hbox_data:
+		var texture = part.rsrc.get_node("Texture")
+		texture.connect("mouse_entered", self, "show_part", [part.name])
+		texture.connect("mouse_exited", self, "on_mouse_out")
 
+func show_part(_name:String):
+	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
+	if game.autocollect.particles.has(_name):
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.particles[_name] >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.particles[_name], true), tr("S_SECOND")])
+	game.show_tooltip(st)
+	
 func show_buy_sell(type:String, obj:String):
 	if game.money == 0:
 		if type == "Materials" and game.mats[obj] == 0:
@@ -208,22 +218,19 @@ func show_buy_sell(type:String, obj:String):
 func show_mat(mat:String):
 	var st:String = "%s\n%s" % [get_str(mat), get_str(mat, "_DESC")]
 	if game.autocollect.mats.has(mat):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(Helper.clever_round(abs(game.autocollect.mats[mat]))), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
 	st += "\n" + tr("CLICK_TO_BUY_SELL")
 	game.show_tooltip(st)
 
-func hide_mat():
+func on_mouse_out():
 	game.hide_tooltip()
 
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(Helper.clever_round(game.autocollect.mets[met])), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
 	st += "\n" + tr("CLICK_TO_BUY_SELL")
 	game.show_tooltip(st)
-
-func hide_met():
-	game.hide_tooltip()
 
 func get_str(obj:String, desc:String = ""):
 	return tr(obj.to_upper() + desc)
@@ -257,7 +264,7 @@ func _process(delta):
 		set_process(false)
 	if tab == "materials":
 		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(game.mats[hbox.name]))]
+			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mats[hbox.name], true)]
 	elif tab == "metals":
 		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(game.mets[hbox.name]))]
+			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mets[hbox.name], true)]

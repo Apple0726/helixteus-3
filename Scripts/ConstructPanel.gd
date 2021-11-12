@@ -1,6 +1,6 @@
 extends "GenericPanel.gd"
 
-var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE"]
+var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE", "PC", "NC", "EC"]
 var storage_bldgs:Array = ["MS"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
 var support_bldgs:Array = ["GH", "CBD"]
@@ -32,18 +32,18 @@ func _on_btn_pressed(btn_str:String):
 		item.item_dir = "Buildings"
 		var txt:String = ""
 		if bldg == "SP":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg))]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), true)]
 		elif bldg == "AE":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg))]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value) * Helper.get_IR_mult(bldg), true)]
 		else:
 			if Data.path_1.has(bldg):
 				var time_speed:float = game.u_i.time_speed if Data.path_1[bldg].has("time_based") else 1.0
-				txt = (Data.path_1[bldg].desc + "\n") % [Helper.clever_round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed)]
+				txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
 		if Data.path_2.has(bldg):
 			if Data.path_2[bldg].is_value_integer:
-				txt += (Data.path_2[bldg].desc + "\n") % [round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg))]
+				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg)))]
 			else:
-				txt += (Data.path_2[bldg].desc + "\n") % [Data.path_2[bldg].value * Helper.get_IR_mult(bldg)]
+				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * Helper.get_IR_mult(bldg), true)]
 		if Data.path_3.has(bldg):
 			if bldg == "CBD":
 				txt += Data.path_3[bldg].desc.format({"n":Data.path_3[bldg].value}) + "\n"
@@ -79,7 +79,7 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.stats_global.planets_conquered > 1
 		elif bldg.item_name in ["AE", "AMN"]:
 			bldg.visible = game.science_unlocked.has("ATM")
-		elif bldg.item_name == "SPR":
+		elif bldg.item_name in ["SPR", "PC", "NC", "EC"]:
 			bldg.visible = game.science_unlocked.has("SAP")
 		elif bldg.item_name == "SY":
 			bldg.visible = game.science_unlocked.has("FG")

@@ -271,7 +271,7 @@ func show_tooltip(tile):
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
 			if not tile.wormhole.has("investigation_length"):
-				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP, 6), Helper.time_to_str(wh_costs.time * 1000)]
+				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time * 1000)]
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
 	elif tile.has("cave"):
