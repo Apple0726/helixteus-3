@@ -631,6 +631,9 @@ func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
 func get_AE_production(pressure:float, value:float):
 	return clever_round(value * pressure)
 
+func get_PCNC_production(pressure:float, value:float):
+	return clever_round(value / pressure)
+
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
 	var current_bar
@@ -698,6 +701,16 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
 				current_bar.value = min((c_t - c_d) / prod, 1)
+				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+		"PC", "NC":
+			var prod = 1000 / (tile.bldg.path_1_value / p_i.pressure)
+			prod /= get_prod_mult(tile)
+			if rsrc:
+				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+		"EC":
+			var prod = 1000 / (tile.bldg.path_1_value * tile.aurora.au_int)
+			prod /= get_prod_mult(tile)
+			if rsrc:
 				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
@@ -921,6 +934,12 @@ func update_bldg_constr(tile):
 				else:
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult
 				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
+			elif tile.bldg.name == "PC":
+				game.autocollect.particles.proton += tile.bldg.path_1_value * mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "NC":
+				game.autocollect.particles.neutron += tile.bldg.path_1_value * mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "EC":
+				game.autocollect.particles.electron += tile.bldg.path_1_value * mult * tile.aurora.au_int
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
@@ -1150,6 +1169,10 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
+		elif bldg in ["PC", "NC"]:
+			return dict.bldg.path_1_value * mult * n / p_i.pressure
+		elif bldg == "EC":
+			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
@@ -1181,7 +1204,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
 			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
-		"RL":
+		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"MS":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]

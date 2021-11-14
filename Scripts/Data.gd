@@ -193,7 +193,12 @@ var default_stats:Dictionary = {
 			"giant":0,
 			"supergiant":0,
 			"hypergiant":0,
-		}
+		},
+		"clicks":0,
+		"right_clicks":0,
+		"scrolls":0,
+		"mouse_travel_distance":0,
+		"keyboard_presses":0,
 }
 
 func reload():

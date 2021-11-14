@@ -194,3 +194,16 @@ func _on_OptionButton_item_selected(index):
 func _on_Zoom_value_changed(value):
 	star_class_bar_width = value
 	_on_StarClasses_pressed()
+
+
+func _on_UserInput_pressed():
+	curr_stat_tab = "_on_UserInput_pressed"
+	$Statistics/Panel.visible = true
+	$Statistics/ScrollContainer2.visible = false
+	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s %s\n%s: %s" % [
+		tr("NUMBER_OF_CLICKS"), Helper.format_num(game["stats_%s" % stats_for].clicks),
+		tr("NUMBER_OF_RIGHT_CLICKS"), Helper.format_num(game["stats_%s" % stats_for].right_clicks),
+		tr("NUMBER_OF_SCROLLS"), Helper.format_num(game["stats_%s" % stats_for].scrolls),
+		tr("DISTANCE_TRAVELLED_WITH_MOUSE"), Helper.format_num(round(game["stats_%s" % stats_for].mouse_travel_distance)), tr("PIXELS"),
+		tr("KEYBOARD_PRESSES"), Helper.format_num(game["stats_%s" % stats_for].keyboard_presses),
+	]

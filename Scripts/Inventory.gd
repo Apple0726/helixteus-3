@@ -180,7 +180,7 @@ func _on_Atoms_pressed():
 			atom.rsrc.visible = false
 
 func _on_Particles_pressed():
-	set_process(false)
+	set_process(true)
 	tab = "particles"
 	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false
@@ -268,3 +268,6 @@ func _process(delta):
 	elif tab == "metals":
 		for hbox in hbox_data:
 			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mets[hbox.name], true)]
+	elif tab == "particles":
+		for hbox in hbox_data:
+			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.particles[hbox.name], true)]

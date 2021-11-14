@@ -188,7 +188,7 @@ func _ready():
 	if total_enemy_stats > total_ship_stats:
 		hard_battle = true
 		$InitialFade.play("SceneFade", -1, 0.5)
-		game.switch_music(preload("res://Audio/battle.ogg"))
+		game.switch_music(preload("res://Audio/op_battle.ogg"))
 		yield(get_tree().create_timer(0.5), "timeout")
 		send_HXs()
 		yield(get_tree().create_timer(1.0), "timeout")

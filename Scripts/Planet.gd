@@ -361,6 +361,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			tile.bldg.x_pos = tile_id % wid
 			tile.bldg.y_pos = tile_id / wid
 			tile.bldg.wid = wid
+		elif _bldg_to_construct in ["PC", "NC"]:
+			tile.bldg.planet_pressure = p_i.pressure
 		tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
@@ -454,6 +456,12 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		if tile.bldg.name == "RL":
 			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff
 			game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult_diff
+		elif tile.bldg.name == "PC":
+			game.autocollect.particles.proton += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
+		elif tile.bldg.name == "NC":
+			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
+		elif tile.bldg.name == "EC":
+			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
 		if tile.has("auto_collect"):
 			if tile.bldg.name in ["PP", "SP"]:
 				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
@@ -469,7 +477,7 @@ func click_tile(tile, tile_id:int):
 	if not tile.has("bldg"):
 		return
 	var bldg:String = tile.bldg.name
-	if bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]:
+	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
 		Helper.collect_rsrc(items_collected, p_i, tile, tile_id)
 	else:
 		if not tile.bldg.is_constructing:
@@ -535,6 +543,15 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if not tile.bldg.is_constructing:
 			game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
 			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
+	elif bldg == "PC":
+		if not tile.bldg.is_constructing:
+			game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * mult
+	elif bldg == "NC":
+		if not tile.bldg.is_constructing:
+			game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * mult
+	elif bldg == "EC":
+		if not tile.bldg.is_constructing:
+			game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * mult
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -780,7 +797,7 @@ func _unhandled_input(event):
 						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE", "GF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
-						elif tile.bldg.name in ["RL", "MS"]:
+						elif tile.bldg.name in ["RL", "MS", "PC", "NC", "EC"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 						else:
 							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
@@ -1243,6 +1260,12 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, id2)
 		"RL":
 			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons.RL, id2)
+		"PC":
+			add_rsrc(v, Color.white, Data.proton_icon, id2)
+		"NC":
+			add_rsrc(v, Color.white, Data.neutron_icon, id2)
+		"EC":
+			add_rsrc(v, Color.white, Data.electron_icon, id2)
 		"MM":
 			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, id2)
 		"SC":
@@ -1276,7 +1299,7 @@ func add_bldg(id2:int, st:String):
 		Helper.update_rsrc(p_i, tile)
 
 func overclockable(bldg:String):
-	return bldg in ["ME", "PP", "RL", "MM", "SP", "AE"]
+	return bldg in ["ME", "PP", "RL", "PC", "NC", "EC", "MM", "SP", "AE"]
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
 	var rsrc = game.rsrc_stocked_scene.instance()
@@ -1344,6 +1367,12 @@ func on_timeout():
 				if tile.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP -= tile.bldg.path_1_value * (mult - 1)
+				elif tile.bldg.name == "PC":
+					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
+				elif tile.bldg.name == "NC":
+					game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
+				elif tile.bldg.name == "EC":
+					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * (mult - 1)
 				if tile.has("auto_collect"):
 					if tile.bldg.name in ["PP", "SP"]:
 						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0

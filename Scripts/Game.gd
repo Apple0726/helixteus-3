@@ -1358,6 +1358,8 @@ func fade_in_panel(panel:Control):
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
 	panel.tween.start()
+	hide_tooltip()
+	hide_adv_tooltip()
 
 func fade_out_panel(panel:Control):
 	var s = panel.rect_size
@@ -3492,6 +3494,11 @@ func _process(delta):
 					mets[met] += autocollect.mets[met] * delta
 			else:
 				mats.cellulose = 0
+			for part in particles:
+				if particles[part] >= 0:
+					particles[part] += autocollect.particles[part] * delta * u_i.time_speed
+				else:
+					particles[part] = 0
 			Helper.add_minerals(min_to_add)
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
@@ -3509,7 +3516,7 @@ func sell_all_minerals():
 		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
 		show.shop = true
-		HUD.refresh()
+		HUD.update_minerals()
 
 var cmd_history:Array = []
 var cmd_history_index:int = -1
@@ -3518,11 +3525,34 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
+		if not stats_global.empty():
+			stats_global.mouse_travel_distance += event.relative.length()
+			stats_dim.mouse_travel_distance += event.relative.length()
+			stats_univ.mouse_travel_distance += event.relative.length()
 		$Tooltips/CtrlShift.rect_position = mouse_pos - Vector2(87, 17)
 	elif event is InputEventKey:
+		if event.is_pressed() and not stats_global.empty():
+			stats_global.keyboard_presses += 1
+			stats_dim.keyboard_presses += 1
+			stats_univ.keyboard_presses += 1
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
 		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
+	elif event is InputEventMouseButton and not stats_global.empty():
+		if Input.is_action_just_pressed("left_click"):
+			stats_global.clicks += 1
+			stats_dim.clicks += 1
+			stats_univ.clicks += 1
+		if Input.is_action_just_pressed("right_click"):
+			stats_global.right_clicks += 1
+			stats_dim.right_clicks += 1
+			stats_univ.right_clicks += 1
+		if Input.is_action_just_pressed("scroll"):
+			stats_global.scrolls += 1
+			stats_dim.scrolls += 1
+			stats_univ.scrolls += 1
+	if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Statistics").visible and stats_panel.curr_stat_tab == "_on_UserInput_pressed":
+		stats_panel._on_UserInput_pressed()
 	if is_instance_valid(tooltip):
 		yield(get_tree(), "idle_frame")
 		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):

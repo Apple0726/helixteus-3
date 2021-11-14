@@ -8,7 +8,6 @@ var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
 var auto_speedup:bool = false
-var new_value:float
 var new_base_value:float
 var set_min_lv:bool = false
 
@@ -177,32 +176,10 @@ func update(changing_paths:bool = false):
 			next_lv.value = lv_to
 		else:
 			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, 1.0, planet.tile_num)
-	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""
-		var curr_value:float
-		if bldg == "SP" and path_selected == 1:
-			curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw) * first_tile.IR_mult
-		elif bldg == "AE" and path_selected == 1:
-			curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), first_tile[path_str], first_tile_bldg_info.pw)
-		else:
-			if first_tile_bldg_info.has("pw"):
-				curr_value = bldg_value(first_tile_bldg_info.value, first_tile[path_str], first_tile_bldg_info.pw) * first_tile.IR_mult
-			elif first_tile_bldg_info.has("step"):
-				curr_value = first_tile_bldg_info.value + (first_tile[path_str] - 1) * first_tile_bldg_info.step
-		if first_tile_bldg_info.is_value_integer:
-			curr_value = round(curr_value)
-		else:
-			curr_value = Helper.clever_round(curr_value)
-		if first_tile_bldg_info.has("time_based"):
-			curr_value *= game.u_i.time_speed
-		if not planet.empty():
-			curr_value *= num
-		if bldg == "CBD" and path_selected == 3:
-			game.add_text_icons(current, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value)}), rsrc_icon, 20)
-		else:
-			game.add_text_icons(current, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value)], rsrc_icon, 20)
+		set_bldg_value(first_tile_bldg_info, first_tile, first_tile[path_str], num, current, false)
 	else:
 		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
@@ -212,45 +189,43 @@ func update(changing_paths:bool = false):
 		game.toggle_panel(self)
 		return
 	next.text = ""
-	if bldg == "SP" and path_selected == 1:
-		new_base_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), next_lv.value, first_tile_bldg_info.pw)
-		new_value = new_base_value * first_tile.IR_mult
-	elif bldg == "AE" and path_selected == 1:
-		new_base_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), next_lv.value, first_tile_bldg_info.pw)
-		new_value = new_base_value
-	else:
-		if first_tile_bldg_info.has("pw"):
-			new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
-			new_value = new_base_value * first_tile.IR_mult
-		elif first_tile_bldg_info.has("step"):
-			new_base_value = first_tile_bldg_info.value + (next_lv.value - 1) * first_tile_bldg_info.step
-			new_value = new_base_value
-	if first_tile_bldg_info.is_value_integer:
-		new_base_value = round(new_base_value)
-		new_value = round(new_value)
-	else:
-		new_base_value = Helper.clever_round(new_base_value)
-		new_value = Helper.clever_round(new_value)
-	if first_tile_bldg_info.has("time_based"):
-		new_value *= game.u_i.time_speed
-	if not planet.empty():
-		new_value *= num
-	if bldg == "CBD" and path_selected == 3:
-		game.add_text_icons(next, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(new_value)}), rsrc_icon, 20)
-	else:
-		game.add_text_icons(next, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(new_value)], rsrc_icon, 20)
+	set_bldg_value(first_tile_bldg_info, first_tile, next_lv.value, num, next, true)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 
+func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, n:int, text_to_modify:RichTextLabel, next:bool):
+	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
+	var curr_value:float
+	if bldg == "SP" and path_selected == 1:
+		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw) * first_tile.IR_mult
+	elif bldg == "AE" and path_selected == 1:
+		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+	else:
+		if first_tile_bldg_info.has("pw"):
+			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw) * first_tile.IR_mult
+		elif first_tile_bldg_info.has("step"):
+			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
+	if first_tile_bldg_info.is_value_integer:
+		curr_value = round(curr_value)
+	else:
+		curr_value = Helper.clever_round(curr_value)
+	if next:
+		new_base_value = curr_value
+	if first_tile_bldg_info.has("time_based"):
+		curr_value *= game.u_i.time_speed
+	if not planet.empty():
+		curr_value *= n
+	if bldg == "CBD" and path_selected == 3:
+		game.add_text_icons(text_to_modify, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value)}), rsrc_icon, 20)
+	else:
+		game.add_text_icons(text_to_modify, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value)], rsrc_icon, 20)
+	
 func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1))
 
 func _on_Path1_pressed():
-#	if bldg != "" and len(ids) == 1 and Data.path_1[bldg].has("cap") and game.tile_data[ids[0]].bldg.path_1 == Data.path_1[bldg].cap:
-#		game.popup(tr("MAX_LV_REACHED"), 1.5)
-#		return
 	path_selected = 1
 	path_str = "path_%s" % [path_selected]
 	Helper.set_btn_color(path1)
@@ -334,7 +309,7 @@ func _on_Upgrade_pressed():
 				if tile.has("cost_div"):
 					cost_time /= tile.cost_div
 				if auto_speedup:
-					cost_time = 1
+					cost_time = 0.2
 				if tile.bldg.has("collect_date"):
 					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 					if tile.has("auto_collect"):

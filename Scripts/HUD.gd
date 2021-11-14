@@ -127,7 +127,7 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 	if $Resources/Cellulose.visible:
-		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(game.mats.cellulose)
+		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
 		if game.mats.cellulose > 0:
 			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
 		else:

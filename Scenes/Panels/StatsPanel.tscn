@@ -101,6 +101,7 @@ size_flags_horizontal = 3
 button_text = "STATISTICS"
 
 [node name="Achievements" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -744,7 +745,6 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 26 )
 
 [node name="Statistics" type="Control" parent="."]
-visible = false
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -833,6 +833,15 @@ margin_right = 244.0
 margin_bottom = 192.0
 rect_min_size = Vector2( 0, 45 )
 button_text = "STAR_TYPES"
+
+[node name="UserInput" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 196.0
+margin_right = 244.0
+margin_bottom = 241.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "USER_INPUT"
 
 [node name="Panel" type="Panel" parent="Statistics"]
 visible = false
@@ -991,4 +1000,5 @@ __meta__ = {
 [connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/Records" to="." method="_on_Records_pressed"]
 [connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/StarClasses" to="." method="_on_StarClasses_pressed"]
 [connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/StarTypes" to="." method="_on_StarTypes_pressed"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/UserInput" to="." method="_on_UserInput_pressed"]
 [connection signal="value_changed" from="Statistics/ScrollContainer2/Control/Zoom" to="." method="_on_Zoom_value_changed"]
