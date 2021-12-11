@@ -331,6 +331,8 @@ func _on_Upgrade_pressed():
 					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				elif tile.bldg.name == "MS":
 					tile.bldg.mineral_cap_upgrade = new_base_value - tile.bldg.path_1_value
+				elif tile.bldg.name in ["NSF", "ESF"]:
+					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):
 					for p in tile.auto_GH.produce:
 						game.autocollect.mets[p] -= tile.auto_GH.produce[p]
@@ -351,6 +353,10 @@ func _on_Upgrade_pressed():
 		else:
 			if planet.bldg.name == "MS":
 				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+			elif planet.bldg.name == "NSF":
+				game.neutron_cap += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+			elif planet.bldg.name == "ESF":
+				game.electron_cap += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			elif planet.bldg.name == "RL":
 				game.autocollect.rsrc.SP += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			elif planet.has("auto_GH"):

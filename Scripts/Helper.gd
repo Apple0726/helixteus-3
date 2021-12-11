@@ -654,7 +654,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			#Number of seconds needed per mineral
 			var prod:float
 			if tile.bldg.name == "SP":
-				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, get_au_mult(tile))
+				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
@@ -928,6 +928,10 @@ func update_bldg_constr(tile):
 					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+			elif tile.bldg.name == "NSF":
+				game.neutron_cap += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "ESF":
+				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
 				if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value * mult}
@@ -1166,7 +1170,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == "SP":
-			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
+			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, 1 + dict.aurora.au_int if dict.has("aurora") else 1.0) * n
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg in ["PC", "NC"]:
@@ -1206,7 +1210,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
 		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
-		"MS":
+		"MS", "NSF", "ESF":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]

@@ -5,6 +5,7 @@ var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
 onready var inventory_grid = $Control/VBox/Inventory
 onready var grid = $Control/VBox/GridContainer
+onready var particles_hbox = $Control/ParticlesHBox
 onready var info = $Control/VBox/Info
 var item_hovered:String = ""
 var item_stack:int = 0
@@ -41,6 +42,7 @@ func _on_Items_pressed():
 	info.text = tr("INV_ITEMS_DESC")
 	inventory_grid.visible = true
 	grid.visible = false
+	particles_hbox.visible = false
 	for item in inventory_grid.get_children():
 		inventory_grid.remove_child(item)
 		item.free()
@@ -142,6 +144,7 @@ func _on_Materials_pressed():
 	info.text = tr("INV_MAT_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
+	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats)
 	for mat in hbox_data:
 		if game.show.has(mat.name) and not game.show[mat.name]:
@@ -158,6 +161,7 @@ func _on_Metals_pressed():
 	info.text = tr("INV_MET_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
+	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mets)
 	for met in hbox_data:
 		if game.show.has(met.name) and not game.show[met.name]:
@@ -174,6 +178,7 @@ func _on_Atoms_pressed():
 	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
+	particles_hbox.visible = false
 	var atom_data = Helper.put_rsrc(grid, 48, game.atoms)
 	for atom in atom_data:
 		if game.show.has(atom.name) and not game.show[atom.name]:
@@ -184,17 +189,24 @@ func _on_Particles_pressed():
 	tab = "particles"
 	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false
-	grid.visible = true
-	hbox_data = Helper.put_rsrc(grid, 48, game.particles)
-	for part in hbox_data:
-		var texture = part.rsrc.get_node("Texture")
-		texture.connect("mouse_entered", self, "show_part", [part.name])
-		texture.connect("mouse_exited", self, "on_mouse_out")
+	grid.visible = false
+	particles_hbox.visible = true
 
 func show_part(_name:String):
 	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
 	if game.autocollect.particles.has(_name):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.particles[_name] >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.particles[_name], true), tr("S_SECOND")])
+		var num:float = 0.0
+		if _name in ["proton", "electron"]:
+			if game.particles.neutron > game.neutron_cap:
+				num = game.autocollect.particles[_name] + (game.particles.neutron - game.neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0)) / 2.0
+			else:
+				num = game.autocollect.particles[_name]
+		elif _name == "neutron":
+			if game.particles.neutron > game.neutron_cap:
+				num = game.autocollect.particles[_name] - (game.particles.neutron - game.neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
+			else:
+				num = game.autocollect.particles[_name]
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(num, true), tr("S_SECOND")])
 	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
@@ -269,5 +281,14 @@ func _process(delta):
 		for hbox in hbox_data:
 			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mets[hbox.name], true)]
 	elif tab == "particles":
-		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.particles[hbox.name], true)]
+		$Control/ParticlesHBox/Protons.text = "%s mol" % Helper.format_num(game.particles.proton, true)
+		if game.particles.neutron >= game.neutron_cap:
+			$Control/ParticlesHBox/Neutrons["custom_colors/font_color"] = Color.orange
+		else:
+			$Control/ParticlesHBox/Neutrons["custom_colors/font_color"] = Color.white
+		$Control/ParticlesHBox/Neutrons.text = "%s / %s mol" % [Helper.format_num(game.particles.neutron, true), Helper.format_num(game.neutron_cap, true)]
+		if game.particles.electron >= game.electron_cap:
+			$Control/ParticlesHBox/Electrons["custom_colors/font_color"] = Color.red
+		else:
+			$Control/ParticlesHBox/Electrons["custom_colors/font_color"] = Color.white
+		$Control/ParticlesHBox/Electrons.text = "%s / %s mol" % [Helper.format_num(game.particles.electron, true), Helper.format_num(game.electron_cap, true)]

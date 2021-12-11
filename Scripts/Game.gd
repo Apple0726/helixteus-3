@@ -111,6 +111,8 @@ var mineral_capacity:float
 var stone:Dictionary
 var energy:float
 var SP:float
+var neutron_cap:float
+var electron_cap:float
 #Dimension remnants
 var DRs:float
 var dim_num:int = 1
@@ -661,6 +663,15 @@ func load_univ():
 				mets[met] += autocollect.mets[met] * plant_time_elapsed
 			if not autocollect.has("particles"):#Save migration
 				autocollect.particles = {"proton":0, "neutron":0, "electron":0}
+			particles.proton += autocollect.particles.proton * time_elapsed * u_i.time_speed
+			particles.neutron += autocollect.particles.neutron * time_elapsed * u_i.time_speed
+			particles.electron += autocollect.particles.electron * time_elapsed * u_i.time_speed
+			if particles.neutron > neutron_cap:
+				var diff:float = particles.neutron - neutron_cap
+				var amount_decayed:float = diff * pow(0.5, time_elapsed * u_i.time_speed / 900.0) #900 seconds = 15 minutes
+				particles.neutron -= diff - amount_decayed
+				particles.proton += (diff - amount_decayed) / 2.0
+				particles.electron += (diff - amount_decayed) / 2.0
 		if help.tutorial >= 1 and help.tutorial <= 25:
 			new_game(true, 0, true)
 		else:
@@ -898,6 +909,8 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	stone = {}
 	energy = 200
 	SP = 0
+	neutron_cap = 0
+	electron_cap = 0
 	science_unlocked = {}
 	cave_filters = {
 		"money":false,
@@ -991,7 +1004,9 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	particles = {	"proton":0,
 					"neutron":0,
+					"neutron_cap":0,
 					"electron":0,
+					"electron_cap":0,
 	}
 
 	#Display help when players see/do things for the first time. true: show help
@@ -3494,11 +3509,17 @@ func _process(delta):
 					mets[met] += autocollect.mets[met] * delta
 			else:
 				mats.cellulose = 0
-			for part in particles:
-				if particles[part] >= 0:
-					particles[part] += autocollect.particles[part] * delta * u_i.time_speed
-				else:
-					particles[part] = 0
+			particles.proton += autocollect.particles.proton * delta * u_i.time_speed
+			particles.neutron += autocollect.particles.neutron * delta * u_i.time_speed
+			particles.electron += autocollect.particles.electron * delta * u_i.time_speed
+			if particles.neutron > neutron_cap:
+				var diff:float = particles.neutron - neutron_cap
+				var amount_decayed:float = diff * pow(0.5, delta * u_i.time_speed / 900.0) #900 seconds = 15 minutes
+				particles.neutron -= diff - amount_decayed
+				particles.proton += (diff - amount_decayed) / 2.0
+				particles.electron += (diff - amount_decayed) / 2.0
+			if particles.electron > electron_cap:
+				particles.electron = electron_cap
 			Helper.add_minerals(min_to_add)
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
@@ -3803,6 +3824,8 @@ func fn_save_game():
 		"money":money,
 		"minerals":minerals,
 		"mineral_capacity":mineral_capacity,
+		"neutron_cap":neutron_cap,
+		"electron_cap":electron_cap,
 		"stone":stone,
 		"energy":energy,
 		"SP":SP,

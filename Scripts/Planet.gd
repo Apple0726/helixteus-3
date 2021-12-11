@@ -315,6 +315,15 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 	if _bldg_to_construct == "":
 		return
 	var tile = game.tile_data[tile_id]
+	if _bldg_to_construct == "EC":
+		if not tile:
+			if not mass_build:
+				game.popup(tr("EC_ERROR"), 1.5)
+			return
+		if not tile.has("aurora"):
+			if not mass_build:
+				game.popup(tr("EC_ERROR"), 1.5)
+			return
 	var constr_costs2:Dictionary = constr_costs.duplicate(true)
 	if tile and tile.has("cost_div"):
 		for cost in constr_costs2:
@@ -357,6 +366,10 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 		elif _bldg_to_construct == "MS":
 			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+		elif _bldg_to_construct == "NSF":
+			tile.bldg.cap_upgrade = Data.path_1.NSF.value
+		elif _bldg_to_construct == "ESF":
+			tile.bldg.cap_upgrade = Data.path_1.ESF.value
 		elif _bldg_to_construct == "CBD":
 			tile.bldg.x_pos = tile_id % wid
 			tile.bldg.y_pos = tile_id / wid
@@ -539,6 +552,16 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
+	elif bldg == "NSF":
+		if tile.bldg.is_constructing:
+			game.neutron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
+		else:
+			game.neutron_cap -= tile.bldg.path_1_value
+	elif bldg == "ESF":
+		if tile.bldg.is_constructing:
+			game.electron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
+		else:
+			game.electron_cap -= tile.bldg.path_1_value
 	elif bldg == "RL":
 		if not tile.bldg.is_constructing:
 			game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
@@ -641,8 +664,6 @@ func remove_selected_tiles():
 
 var prev_tile_over = -1
 var mouse_pos = Vector2.ZERO
-var thread:Thread
-var mutex:Mutex
 
 func check_tile_change(event, fn:String, fn_args:Array = []):
 	var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
@@ -797,7 +818,7 @@ func _unhandled_input(event):
 						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE", "GF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
-						elif tile.bldg.name in ["RL", "MS", "PC", "NC", "EC"]:
+						elif tile.bldg.name in ["RL", "MS", "PC", "NC", "EC", "NSF", "ESF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 						else:
 							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
@@ -1155,25 +1176,6 @@ func place_soil(tile:Dictionary, tile_pos:Vector2):
 			tile.erase("plant")
 			$Soil.set_cell(tile_pos.x, tile_pos.y, -1)
 			$Soil.update_bitmask_region()
-
-func test(_bldg_to_construct:String):
-	mutex.lock()
-	var curr_time = OS.get_system_time_msecs()
-	for i in len(shadows):
-		if not is_inside_tree():
-			mutex.unlock()
-			return
-		constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
-		#call_deferred("constr_bldg", get_tile_id_from_pos(shadows[i].position), curr_time, _bldg_to_construct, true)
-		call_deferred("remove_child", shadows[i])
-		shadows[i].queue_free()
-	shadows.clear()
-	game.HUD.call_deferred("refresh")
-	mutex.unlock()
-
-func _exit_tree():
-	if thread and thread.is_active():
-		thread.wait_to_finish()
 
 func available_for_plant(tile):
 	if not tile:

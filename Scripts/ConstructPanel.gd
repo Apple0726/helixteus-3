@@ -1,7 +1,7 @@
 extends "GenericPanel.gd"
 
 var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE", "PC", "NC", "EC"]
-var storage_bldgs:Array = ["MS"]
+var storage_bldgs:Array = ["MS", "NSF", "ESF"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
 var support_bldgs:Array = ["GH", "CBD"]
 var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]

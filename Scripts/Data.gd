@@ -21,6 +21,8 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integ
 				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"NSF":{"value":20000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"ESF":{"value":20000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -63,6 +65,8 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"PC":{"money":1000000, "energy":50000, "time":600.0},
 				"NC":{"money":8500000, "energy":1200000, "time":4000.0},
 				"EC":{"money":e(3.0, 7), "energy":e(4.0, 6), "time":9001.0},
+				"NSF":{"money":e(1.2, 7), "energy":e(1.0, 6), "time":4000.0},
+				"ESF":{"money":e(3.5, 7), "energy":e(7.0, 6), "time":10000.0},
 }
 
 func e(n, e):
@@ -135,7 +139,9 @@ var desc_icons = {	"ME":[minerals_icon, minerals_icon],
 					"SP":[energy_icon, energy_icon],
 					"PC":[proton_icon],
 					"NC":[neutron_icon],
+					"NSF":[neutron_icon],
 					"EC":[electron_icon],
+					"ESF":[electron_icon],
 }
 
 var rsrc_icons = {	"ME":minerals_icon,
@@ -151,7 +157,9 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"SPR":particle_icon,
 					"PC":proton_icon,
 					"NC":neutron_icon,
+					"NSF":neutron_icon,
 					"EC":electron_icon,
+					"ESF":electron_icon,
 }
 
 var default_stats:Dictionary = {
@@ -220,6 +228,8 @@ func reload():
 	path_1.PC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.NC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1.NSF.desc = tr("STORES_X") % ["@i %s mol"]
+	path_1.ESF.desc = tr("STORES_X") % ["@i %s mol"]
 	path_2.ME.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
 	path_2.PP.desc = tr("X_CAPACITY") % [" @i %s"]
