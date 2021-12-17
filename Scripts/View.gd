@@ -477,7 +477,12 @@ func _input(event):
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
-	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1:
+	var max_zoom_out = 250 / obj.dimensions
+	var max_zoom_in = 5000 / obj.dimensions
+	print(limit_to_viewport, zoom_change)
+	if zoom_change < 1 and scale.x < max_zoom_out:
+		return
+	if zoom_change > 1 and scale.x > max_zoom_in:
 		return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
