@@ -287,12 +287,12 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 12)}},
 }
 
-var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000},
-						"speedup2":{"costs":{"money":2800}, "time":15*60000},
-						"speedup3":{"costs":{"money":11000}, "time":60*60000},
-						"speedup4":{"costs":{"money":65000}, "time":6*60*60000},
-						"speedup5":{"costs":{"money":255000}, "time":24*60*60000},
-						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60000},
+var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60000, "name":"X_MINUTE_SPEEDUP", "name_param":2},
+						"speedup2":{"costs":{"money":2800}, "time":15*60000, "name":"X_MINUTE_SPEEDUP", "name_param":15},
+						"speedup3":{"costs":{"money":11000}, "time":60*60000, "name":"X_HOUR_SPEEDUP", "name_param":1},
+						"speedup4":{"costs":{"money":65000}, "time":6*60*60000, "name":"X_HOUR_SPEEDUP", "name_param":6},
+						"speedup5":{"costs":{"money":255000}, "time":24*60*60000, "name":"X_HOUR_SPEEDUP", "name_param":24},
+						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60000, "name":"X_DAY_SPEEDUP", "name_param":7},
 }
 
 var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "duration":10*60000},
@@ -525,12 +525,12 @@ func _ready():
 	settings = load("res://Scenes/Panels/Settings.tscn").instance()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
-	load_panel = load("res://Scenes/Panels/LoadPanel.tscn").instance()
+	load_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instance()
 	load_panel.visible = false
 	$Panels/Control.add_child(load_panel)
 	if TEST:
 		$Title.visible = false
-		HUD = load("res://Scenes/HUD.tscn").instance()
+		HUD = preload("res://Scenes/HUD.tscn").instance()
 		new_game(false, 0, true)
 		Helper.save_obj("Galaxies", 0, system_data)
 		universe_data[0].lv = 90
@@ -799,6 +799,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	stats_univ = Data.default_stats.duplicate(true)
 	if new_save:
 		stats_global = stats_univ.duplicate(true)
+		stats_dim = stats_univ.duplicate(true)
 		var sv_id:int = 1
 		c_sv = "Save1"
 		while dir.open("user://%s" % c_sv) == OK:
@@ -2666,7 +2667,15 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 40000 * pow(combined_star_mass * u_i.gravitational, 0.25))
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.25))
+		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
+			if p_i.type in [11, 12]:
+				if i == 0:
+					gas_giant = false
+				else:
+					planet_data[0].second_ship = true
+			else:
+				p_i.second_ship = true
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2736,11 +2745,6 @@ func generate_planets(id:int):#local id
 				if power <= 1:
 					break
 			p_i.HX_data.shuffle()
-		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
-			if p_i.type in [11, 12]:
-				planet_data[0].second_ship = true
-			else:
-				p_i.second_ship = true
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80), "zoom":view_zoom}
@@ -3630,7 +3634,7 @@ func _input(event):
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help"):
-		help[help_str] = false
+		help[help_str] = not help[help_str]
 		hide_tooltip()
 		hide_adv_tooltip()
 		$UI/Panel.visible = false
@@ -4066,6 +4070,7 @@ func fade_out_title(fn:String):
 	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
 		var tut_or_no_tut = preload("res://Scenes/TutOrNoTut.tscn").instance()
+		tut_or_no_tut.modulate.a = 0.0
 		add_child(tut_or_no_tut)
 		tut_or_no_tut.connect("new_game", self, "new_game")
 	else:
@@ -4093,7 +4098,8 @@ func _on_Autosave_timeout():
 var YN_str:String = ""
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	$UI/PopupBackground.visible = true
-	var width = default_font.get_wordwrap_string_size(text, 800).x
+	var width = min(800, default_font.get_string_size(text).x) + 40
+	YN_panel.rect_min_size.x = width
 	YN_panel.rect_size.x = width
 	YN_panel.dialog_text = text
 	YN_panel.window_title = title
@@ -4209,15 +4215,13 @@ func show_collect_info(info:Dictionary):
 	if info.empty():
 		return
 	add_resources(info)
-	$UI/Panel.visible = false
 	var info2:Dictionary = info.duplicate(true)
 	if info2.has("stone"):
 		info2.stone = Helper.get_sum_of_dict(info2.stone)
 	Helper.put_rsrc($UI/Panel/VBox, 32, info2)
-	$UI/Panel/VBox.rect_size.y = 0
+	Helper.add_label(tr("YOU_COLLECTED"), 0)
 	$UI/Panel.visible = true
 	$UI/Panel.modulate.a = 1.0
-	Helper.add_label(tr("YOU_COLLECTED"), 0)
 	$CollectPanelTimer.start(min(2.5, 0.5 + 0.3 * $UI/Panel/VBox.get_child_count()))
 	$CollectPanelAnim.stop()
 

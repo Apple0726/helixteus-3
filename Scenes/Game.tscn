@@ -347,8 +347,9 @@ __meta__ = {
 }
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="UI"]
-margin_right = 200.0
-margin_bottom = 70.0
+margin_right = 225.0
+margin_bottom = 82.0
+rect_min_size = Vector2( 200, 30 )
 theme = ExtResource( 7 )
 window_title = "Veuillez confirmer…"
 dialog_autowrap = true

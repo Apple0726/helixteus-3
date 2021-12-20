@@ -520,6 +520,24 @@ func _on_ConvertMinerals_mouse_entered():
 	game.show_tooltip(tr("SELL_MINERALS") + " (,)")
 
 func _on_ConvertMinerals_pressed():
+	if game.minerals > 0:
+		var mineral_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
+		mineral_icon.texture = preload("res://Graphics/Icons/minerals.png")
+		mineral_icon.scale *= 0.15
+		var node = game.HUD.get_node("Resources/Minerals")
+		var node2 = game.HUD.get_node("Resources/Minerals/Texture")
+		mineral_icon.position = node.rect_position + node2.rect_size / 2.0
+		mineral_icon.end_pos = $Panel/ConvertMinerals.rect_global_position
+		game.get_node("UI").add_child(mineral_icon)
+		
+		var money_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
+		money_icon.texture = preload("res://Graphics/Icons/money.png")
+		money_icon.scale *= 0.05
+		node = game.HUD.get_node("Resources/Money")
+		node2 = game.HUD.get_node("Resources/Money/Texture")
+		money_icon.position = $Panel/ConvertMinerals.rect_global_position
+		money_icon.end_pos = node.rect_position + node2.rect_size / 2.0
+		game.get_node("UI").add_child(money_icon)
 	game.sell_all_minerals()
 	if game.tutorial and game.tutorial.tut_num == 8 and not game.tutorial.tween.is_active():
 		game.tutorial.fade()
@@ -532,8 +550,8 @@ func _on_Ships_mouse_entered():
 
 
 func _on_AutosaveLight_mouse_entered():
+	game.help_str = "autosave_light_desc"
 	if game.help.autosave_light_desc:
-		game.help_str = "autosave_light_desc"
 		game.show_tooltip("%s\n%s" % [tr("AUTOSAVE_LIGHT_DESC"), tr("HIDE_HELP")])
 
 func _on_ShipLocator_pressed():

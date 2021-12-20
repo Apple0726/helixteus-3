@@ -411,7 +411,12 @@ func _unhandled_input(event):
 			var drag_distance = touch_events[0].position.distance_to(touch_events[1].position)
 			var touch_center = (touch_events[0].position + touch_events[1].position) / 2.0
 			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
-				_zoom_at_point(abs(drag_distance - last_drag_distance), touch_center)
+				if drag_distance > last_drag_distance:
+					zooming = "in"
+					progress = 0
+				else:
+					zooming = "out"
+					progress = 0
 				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
@@ -422,18 +427,12 @@ func _input(event):
 			zooming = ""
 	if scroll_view and not game.block_scroll:
 		if event.is_action_released("scroll_down"):
-			if event is InputEventMouse:
-				zoom_factor = 1.1
-			else:
-				zoom_factor = 1.2
+			zoom_factor = 1.1
 			zooming = "out"
 			progress = 0
 			#check_change_scale()
 		elif event.is_action_released("scroll_up"):
-			if event is InputEventMouse:
-				zoom_factor = 1.1
-			else:
-				zoom_factor = 1.2
+			zoom_factor = 1.1
 			zooming = "in"
 			progress = 0
 			#check_change_scale()

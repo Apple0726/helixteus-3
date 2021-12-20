@@ -32,8 +32,8 @@ func refresh():
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 4 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 4 else weapon_data.XP_to_lv
 		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])

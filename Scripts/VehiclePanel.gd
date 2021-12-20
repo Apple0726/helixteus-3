@@ -113,8 +113,8 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 			if inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				rover_has_items = true
 				break
+		game.help_str = "rover_shortcuts"
 		if rover_has_items:
-			game.help_str = "rover_shortcuts"
 			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
 	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
 

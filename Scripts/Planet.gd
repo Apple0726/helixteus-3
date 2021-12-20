@@ -136,7 +136,7 @@ func _ready():
 				crater.scale *= clamp(range_lerp(tile.crater.init_depth, 10, 1000, 0.4, 1.0), 0.4, 1.0)
 				add_child(crater)
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
-			if tile.has("depth") and not tile.has("crater"):
+			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
 			if tile.has("rock"):
 				$Obstacles.set_cell(i, j, 0)
@@ -211,14 +211,14 @@ func show_tooltip(tile):
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
 		adv = len(icons) > 0
+		game.help_str = "tile_shortcuts"
 		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
-			game.help_str = "tile_shortcuts"
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 	elif tile.has("plant"):
 		if tile.plant.empty():
+			game.help_str = "plant_something_here"
 			if game.help.plant_something_here:
 				tooltip = tr("PLANT_STH") + "\n" + tr("HIDE_HELP")
-				game.help_str = "plant_something_here"
 		else:
 			tooltip = Helper.get_plant_name(tile.plant.name)
 			if OS.get_system_time_msecs() >= tile.plant.plant_date + tile.plant.grow_time:
@@ -240,9 +240,9 @@ func show_tooltip(tile):
 		adv = tile.has("aurora")
 		if adv:
 			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
+		game.help_str = "crater_desc"
 		if game.help.crater_desc:
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-			game.help_str = "crater_desc"
 		else:
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("rock"):
@@ -253,20 +253,20 @@ func show_tooltip(tile):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
+			game.help_str = "abandoned_ship"
 			if game.help.abandoned_ship:
 				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
-				game.help_str = "abandoned_ship"
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
+			game.help_str = "active_wormhole"
 			if game.help.active_wormhole:
 				tooltip = "%s\n%s\n%s" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
-				game.help_str = "active_wormhole"
 			else:
 				tooltip = tr("ACTIVE_WORMHOLE")
 		else:
+			game.help_str = "inactive_wormhole"
 			if game.help.inactive_wormhole:
 				tooltip = "%s\n%s\n%s" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
-				game.help_str = "inactive_wormhole"
 			else:
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
@@ -289,12 +289,12 @@ func show_tooltip(tile):
 	elif tile.has("diamond_tower"):
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
 		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]
-	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater"):
-		tooltip += tr("HOLE_DEPTH") + ": %s m" % [tile.depth]
+	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
+		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif tile.has("aurora") and tooltip == "":
+		game.help_str = "aurora_desc"
 		if game.help.aurora_desc:
 			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]]
-			game.help_str = "aurora_desc"
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
 	if tile.has("ruins"):
@@ -309,7 +309,7 @@ func show_tooltip(tile):
 			game.show_tooltip(tooltip)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":1200 * pow(game.stats_univ.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 * pow(game.stats_univ.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":
@@ -491,7 +491,9 @@ func click_tile(tile, tile_id:int):
 		return
 	var bldg:String = tile.bldg.name
 	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
-		Helper.collect_rsrc(items_collected, p_i, tile, tile_id)
+		Helper.update_rsrc(p_i, tile)
+		add_anim_icon(tile, tile_id)
+		Helper.collect_rsrc(items_collected, p_i, tile, tile_id, false)
 	else:
 		if not tile.bldg.is_constructing:
 			game.c_t = tile_id
@@ -537,6 +539,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 	var tile = game.tile_data[id2]
 	var bldg:String = tile.bldg.name
 	items_collected.clear()
+	Helper.update_rsrc(p_i, tile)
+	add_anim_icon(tile, id2)
 	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	remove_child(bldgs[id2])
 	bldgs[id2].queue_free()
@@ -669,12 +673,13 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 	var delta:Vector2 = event.relative / view.scale if event is InputEventMouseMotion else Vector2.ZERO
 	var new_x = stepify(round(mouse_pos.x - 100), 200)
 	var new_y = stepify(round(mouse_pos.y - 100), 200)
-	var old_x = stepify(round(mouse_pos.x - delta.x - 100), 200)
-	var old_y = stepify(round(mouse_pos.y - delta.y - 100), 200)
+	var old_x = stepify(round(mouse_pos.x - delta.x * 2.0 - 100), 200)
+	var old_y = stepify(round(mouse_pos.y - delta.y * 2.0 - 100), 200)
 	if new_x > old_x:
 		callv(fn, fn_args)
 	elif new_x < old_x:
 		callv(fn, fn_args)
+	#prints(round(mouse_pos.y - 100), round(mouse_pos.y - delta.y - 100))
 	if new_y > old_y:
 		callv(fn, fn_args)
 	elif new_y < old_y:
@@ -719,7 +724,7 @@ func _unhandled_input(event):
 					if tile.has("cost_div"):
 						money_cost /= tile.cost_div
 					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
-					if money_cost >= total_XP / 10.0:
+					if money_cost >= total_XP / 10.0 + game.money / 100.0:
 						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
 					else:
 						destroy_bldg(tile_over)
@@ -873,6 +878,8 @@ func _unhandled_input(event):
 					remove_selected_tiles()
 				var tile = game.tile_data[tile_over]
 				if placing_soil and Input.is_action_pressed("shift") and Input.is_action_pressed("left_click"):
+					if not tile:
+						tile = {}
 					check_tile_change(event, "place_soil", [tile, Vector2(x_over, y_over)])
 				show_tooltip(tile)
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
@@ -949,13 +956,21 @@ func _unhandled_input(event):
 		if bldg_to_construct != "":
 			if available_to_build(tile):
 				constr_bldg(tile_id, curr_time, bldg_to_construct)
-		if about_to_mine and available_for_mining(tile) or tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "":
+		if about_to_mine and available_for_mining(tile):
 			game.mine_tile(tile_id)
+		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "" and not tile.has("bridge"):
+			if Input.is_action_pressed("shift"):
+				game.tile_data[tile_id].bridge = true
+				$Obstacles.set_cell(x_pos, y_pos, -1)
+			else:
+				game.mine_tile(tile_id)
+		if placing_soil:
+			if not tile:
+				tile = {}
+			place_soil(tile, Vector2(x_pos, y_pos))
+			return
 		if tile and bldg_to_construct == "":
 			items_collected.clear()
-			if placing_soil:
-				place_soil(tile, Vector2(x_pos, y_pos))
-				return
 			var t:String = game.item_to_use.type
 			if tile.has("plant"):#if clicked tile has soil on it
 				var orig_num:int = game.item_to_use.num
@@ -1180,7 +1195,7 @@ func place_soil(tile:Dictionary, tile_pos:Vector2):
 func available_for_plant(tile):
 	if not tile:
 		return true
-	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth")
+	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and (not tile.has("depth") or tile.has("bridge"))
 	if tile.has("bldg") and tile.bldg.name == "GH":
 		return bool1
 	else:
@@ -1193,7 +1208,7 @@ func available_to_build(tile):
 	if bldg_to_construct == "MM":
 		return not tile or available_for_mining(tile)
 	if bldg_to_construct == "GH":
-		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and not tile.has("depth") and not tile.has("bldg")
+		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and (not tile.has("depth") or tile.has("bridge")) and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
 
 func add_time_bar(id2:int, type:String):
@@ -1419,10 +1434,10 @@ func on_timeout():
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
+	game.help_str = "mass_build"
 	if game.help.mass_build and game.stats_univ.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
-		game.help_str = "mass_build"
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
 		game.get_node("UI/Panel").visible = true
 	bldg_to_construct = st
@@ -1461,12 +1476,35 @@ func finish_construct():
 func _on_Planet_tree_exited():
 	queue_free()
 
+func add_anim_icon(tile:Dictionary, tile_id:int):
+	if not tile.bldg.has("stored") or tile.bldg.stored <= 0:
+		return
+	var rsrc_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
+	var node
+	var node2
+	if tile.bldg.name == "ME":
+		node = game.HUD.get_node("Resources/Minerals")
+		node2 = game.HUD.get_node("Resources/Minerals/Texture")
+		rsrc_icon.texture = preload("res://Graphics/Icons/minerals.png")
+	elif tile.bldg.name == "PP":
+		node = game.HUD.get_node("Resources/Energy")
+		node2 = game.HUD.get_node("Resources/Energy/Texture")
+		rsrc_icon.texture = preload("res://Graphics/Icons/energy.png")
+	var start_pos:Vector2 = to_global(bldgs[tile_id].position)
+	var end_pos:Vector2 = node.rect_position + node2.rect_size / 2.0
+	rsrc_icon.scale *= 0.15
+	rsrc_icon.position = start_pos
+	rsrc_icon.end_pos = end_pos
+	game.get_node("UI").add_child(rsrc_icon)
+		
 func collect_all():
 	var i:int
 	items_collected.clear()
 	for tile in game.tile_data:
-		if tile:
-			Helper.collect_rsrc(items_collected, p_i, tile, i)
+		if tile and tile.has("bldg"):
+			Helper.update_rsrc(p_i, tile)
+			add_anim_icon(tile, i)
+			Helper.collect_rsrc(items_collected, p_i, tile, i, false)
 		i += 1
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()

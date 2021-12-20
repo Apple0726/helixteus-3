@@ -20,13 +20,11 @@ var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
 var mouse_pos:Vector2
 var speed_mult:float = 1.0
 var aurora_mult:float = 1.0
+var rsrc_mined:Dictionary = {}
 
 func _ready():
 	Helper.set_back_btn($Back)
-	if p_i.temperature > 1000:
-		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
-	else:
-		$Tile/TextureRect.texture = tile_texture
+	$Tile/TextureRect.texture = tile_texture
 	if not tile:
 		game.tile_data[id] = {}
 		tile = game.tile_data[id]
@@ -36,6 +34,8 @@ func _ready():
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
 		tile.depth = 0
+	if tile.has("bridge"):
+		tile.erase("bridge")
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
@@ -44,6 +44,7 @@ func _ready():
 	generate_rock(false)
 	$Help.visible = game.help.mining
 	circ.visible = not game.help.mining
+	$RsrcMinedBtn.visible = not game.help.mining
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.mining_layer
 	if $LayerInfo.visible:
@@ -219,6 +220,7 @@ func hide_help():
 	circ.modulate.a = 0
 	circ.visible = true
 	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
+	tween.interpolate_property($RsrcMinedBtn, "modulate", null, Color(1, 1, 1, 1.0), 2)
 	add_child(tween)
 	tween.start()
 	yield(tween, "tween_all_completed")
@@ -264,8 +266,11 @@ func pickaxe_hit():
 			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
 	if progress >= 1000:
+		add_rsrc_mined(contents)
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
-		game.add_resources(Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100))
+		var new_contents:Dictionary = Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100)
+		add_rsrc_mined(new_contents)
+		game.add_resources(new_contents)
 		var tiles_mined:int = int(progress / 100)
 		tile.depth += tiles_mined
 		game.stats_univ.tiles_mined_mining += tiles_mined
@@ -276,6 +281,7 @@ func pickaxe_hit():
 		generate_rock(true)
 	else:
 		while progress >= 100:
+			add_rsrc_mined(contents)
 			Helper.get_rsrc_from_rock(contents, tile, p_i)
 			progress -= 100
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
@@ -293,12 +299,15 @@ func pickaxe_hit():
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
+			$RsrcMinedBtn.modulate.a = 0.0
+			$RsrcMinedBtn.visible = true
 			$LayerAnim.play("Layer fade")
 			$LayerInfo.visible = true
 		place_crumbles(10, 0.2, 2)
 		game.HUD.refresh()
 	update_info()
 	update_pickaxe()
+	Helper.put_rsrc($ResourcesMined/Grid, 32, rsrc_mined)
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
@@ -313,6 +322,14 @@ func pickaxe_hit():
 			circ_disabled = true
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
+
+func add_rsrc_mined(content:Dictionary):
+	for content in contents:
+		if content == "stone":
+			var stone_amount:float = Helper.get_sum_of_dict(contents[content])
+			rsrc_mined[content] = (rsrc_mined[content] + stone_amount) if rsrc_mined.has(content) else stone_amount
+		else:
+			rsrc_mined[content] = (rsrc_mined[content] + contents[content]) if rsrc_mined.has(content) else contents[content]
 
 func _process(delta):
 	for cr in crumbles:
@@ -378,3 +395,7 @@ func _on_AuroraMult_mouse_entered():
 
 func _on_AuroraMult_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_RsrcMinedBtn_pressed():
+	$ResourcesMined.visible = not $ResourcesMined.visible

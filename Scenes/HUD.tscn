@@ -500,8 +500,8 @@ __meta__ = {
 margin_right = 70.0
 margin_bottom = 34.0
 mouse_filter = 0
-custom_styles/normal = SubResource( 8 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/normal = SubResource( 8 )
 text = "Lv 1"
 align = 1
 
@@ -532,13 +532,13 @@ __meta__ = {
 [node name="Name" type="LineEdit" parent="Name"]
 margin_right = 21.0
 margin_bottom = 34.0
-custom_styles/focus = SubResource( 9 )
-custom_styles/normal = SubResource( 10 )
 custom_colors/selection_color = Color( 1, 1, 1, 1 )
 custom_colors/cursor_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_constants/minimum_spaces = 0
+custom_styles/focus = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
 expand_to_text_length = true
 caret_blink = true
 caret_blink_speed = 0.5
@@ -613,11 +613,11 @@ __meta__ = {
 
 [node name="Texture" type="TextureButton" parent="Resources/Minerals"]
 margin_left = 4.0
-margin_right = 260.0
-margin_bottom = 256.0
-rect_scale = Vector2( 0.12, 0.12 )
+margin_right = 35.0
+margin_bottom = 31.0
 texture_normal = ExtResource( 4 )
-stretch_mode = 1
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -770,10 +770,11 @@ __meta__ = {
 
 [node name="Texture" type="TextureButton" parent="Resources/Energy"]
 margin_left = 4.0
-margin_right = 260.0
-margin_bottom = 256.0
-rect_scale = Vector2( 0.12, 0.12 )
+margin_right = 35.0
+margin_bottom = 32.0
 texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }

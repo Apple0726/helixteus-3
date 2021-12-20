@@ -80,7 +80,7 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.stats_global.planets_conquered > 1
 		elif bldg.item_name in ["AE", "AMN"]:
 			bldg.visible = game.science_unlocked.has("ATM")
-		elif bldg.item_name in ["SPR", "PC", "NC", "EC"]:
+		elif bldg.item_name in ["SPR", "PC", "NC", "EC", "NSF", "ESF"]:
 			bldg.visible = game.science_unlocked.has("SAP")
 		elif bldg.item_name == "SY":
 			bldg.visible = game.science_unlocked.has("FG")

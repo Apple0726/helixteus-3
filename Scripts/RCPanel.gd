@@ -59,15 +59,15 @@ func _on_Slot_mouse_entered(type:String):
 	elif type == "rover_CC" and CC != "":
 		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[CC].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
 	if txt != "":
+		game.help_str = "rover_inventory_shortcuts"
 		if game.help.rover_inventory_shortcuts:
-			game.help_str = "rover_inventory_shortcuts"
 			txt += "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")]
 		game.show_tooltip(txt)
 
 func _on_InvSlot_mouse_entered(txt:String, index:int):
 	slot_over = index
+	game.help_str = "rover_inventory_shortcuts"
 	if game.help.rover_inventory_shortcuts:
-		game.help_str = "rover_inventory_shortcuts"
 		if txt != "":
 			game.show_tooltip(txt + "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")])
 		else:

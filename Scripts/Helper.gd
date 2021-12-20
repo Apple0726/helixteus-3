@@ -135,7 +135,7 @@ func set_visibility(node):
 
 func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
-		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
+		return tr(game.speedups_info[_name].name) % game.speedups_info[_name].name_param
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
@@ -604,9 +604,9 @@ func add_ship_XP(id:int, XP:float):
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
 	ship_data[id][weapon].XP += XP
-	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 7:
+	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 4:
 		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
-		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[id][weapon].lv - 1]
+		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 0][ship_data[id][weapon].lv - 1]
 		ship_data[id][weapon].lv += 1
 
 func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
@@ -755,12 +755,13 @@ func get_prod_mult(tile):
 func has_IR(bldg_name:String):
 	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
 
-func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int):
+func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int, update:bool = true):
 	if not tile.has("bldg"):
 		return
 	var bldg:String = tile.bldg.name
 	var curr_time = OS.get_system_time_msecs()
-	update_rsrc(p_i, tile)
+	if update:
+		update_rsrc(p_i, tile)
 	match bldg:
 		"ME":
 			collect_ME(p_i, tile, rsrc_collected, curr_time)

@@ -563,6 +563,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
 		$Exit/Sprite.texture = preload("res://Graphics/Cave/Objects/exit.png")
+		$Exit/Sprite.modulate = tile_mod * 1.5
 		$Exit/Particles2D.emitting = false
 		$Exit/ExitColl.disabled = false
 		var rot = spawn_edge_tiles[0].dir
@@ -584,6 +585,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			$Exit/Particles2D.emitting = false
 		else:
 			$Exit/Sprite.texture = preload("res://Graphics/Cave/Objects/go_up.png")
+			$Exit/Sprite.modulate = Color(1, 1, 3, 1)
 			$Exit/Particles2D.emitting = true
 		$Exit/ExitColl.disabled = true
 		$Exit/GoUpColl.disabled = false
@@ -1543,9 +1545,18 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [tr("STAR_SYSTEM_DIFFICULTY"), Helper.format_num(game.system_data[game.c_s].diff), tr("AURORA_MULTIPLIER"), aurora_mult, tr("FLOOR_MULTIPLIER"), Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1))]
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+		tr("STAR_SYSTEM_DIFFICULTY"),
+		Helper.format_num(game.system_data[game.c_s].diff),
+		tr("AURORA_MULTIPLIER"),
+		aurora_mult,
+		tr("FLOOR_MULTIPLIER"),
+		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
+		tr("AVERAGE_ENEMY_DAMAGE"),
+		Helper.clever_round(5.5 * difficulty * 2.0 / def, 2)
+	]
+	game.help_str = "cave_diff_info"
 	if game.help.cave_diff_info:
-		game.help_str = "cave_diff_info"
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
 	else:
 		game.show_tooltip(tooltip)

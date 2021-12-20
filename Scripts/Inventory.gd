@@ -66,8 +66,8 @@ func on_slot_over (_name:String, num:int, slot:int):
 	item_slot = slot
 	item_hovered = _name
 	item_stack = num
+	game.help_str = "inventory_shortcuts"
 	if game.help.inventory_shortcuts and not game.tutorial:
-		game.help_str = "inventory_shortcuts"
 		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
 	game.show_tooltip(st)
 

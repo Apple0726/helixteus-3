@@ -101,7 +101,6 @@ size_flags_horizontal = 3
 button_text = "STATISTICS"
 
 [node name="Achievements" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -745,6 +744,7 @@ margin_bottom = 60.0
 achievement_icon = ExtResource( 26 )
 
 [node name="Statistics" type="Control" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5

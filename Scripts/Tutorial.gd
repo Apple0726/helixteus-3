@@ -22,6 +22,8 @@ func begin():
 	if tut_num == 2:
 		game.show.construct_button = true
 		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
+	elif tut_num == 4:
+		game._on_BottomInfo_close_button_pressed()
 	elif tut_num == 10:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "id":-1, "current":0, "goal":6}
 		game.HUD.refresh()
@@ -67,6 +69,8 @@ func fade(spd:float = 0.4, begin:bool = true):
 	elif tut_num == 6:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":3}
 		game.HUD.refresh()
+	elif tut_num == 8:
+		yield(get_tree().create_timer(1.5), "timeout")
 	elif tut_num == 9:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":4}
 		game.HUD.refresh()
