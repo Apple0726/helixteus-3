@@ -520,7 +520,7 @@ func _on_ConvertMinerals_mouse_entered():
 	game.show_tooltip(tr("SELL_MINERALS") + " (,)")
 
 func _on_ConvertMinerals_pressed():
-	if game.minerals > 0:
+	if game.minerals > 0 and game.icon_animations:
 		var mineral_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
 		mineral_icon.texture = preload("res://Graphics/Icons/minerals.png")
 		mineral_icon.scale *= 0.15

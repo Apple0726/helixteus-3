@@ -233,7 +233,6 @@ func calc_math_points(node, default_value:float, op_factor:float, limit:float = 
 				points_to_add = -atan(-points_to_add) * 0.2
 			maths_OP_points += points_to_add
 		else:
-			#print(node.value)
 			maths_OP_points += abs(op_factor) * (1 / abs(node.value - limit) - 1 / abs(default_value - limit))
 
 onready var math_defaults = $ModifyDimension/Maths/Control/Defaults

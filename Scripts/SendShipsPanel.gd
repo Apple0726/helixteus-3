@@ -101,7 +101,7 @@ func refresh():
 
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 35:
-		if not game.science_unlocked.SE and game.planet_data[dest_p_id].pressure > sqrt(game.energy / 15000.0):
+		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > sqrt(game.energy / 10000.0):
 			game.long_popup(tr("PLANET_PRESSURE_TOO_HIGH"), "")
 		elif game.planet_data[dest_p_id].pressure > 30:
 			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
@@ -145,13 +145,13 @@ func has_SE(p_i:Dictionary):
 	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.is_constructing
 
 func get_atm_exit_cost(pressure:float):
-	var res:float = pow(pressure * 10, 2) * 150
+	var res:float = pow(pressure * 10, 2) * 100
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
 
 func get_grav_exit_cost(size:float):
-	var res:float = pow(size / 200.0, 2.5) * game.u_i.gravitational
+	var res:float = pow(size / 250.0, 2.5) * game.u_i.gravitational
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)

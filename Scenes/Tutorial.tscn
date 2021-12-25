@@ -776,6 +776,7 @@ __meta__ = {
 }
 
 [node name="23" type="Node2D" parent="."]
+visible = false
 
 [node name="Polygon" type="Polygon2D" parent="23"]
 color = Color( 0, 0, 0, 0.615686 )

@@ -203,10 +203,7 @@ var crumbles = []
 func place_crumbles(num:int, sc:float, v:float):
 	for i in num:
 		var crumble = Sprite.new()
-		if p_i.temperature > 1000:
-			crumble.texture = load("res://Resources/Lava.tres")
-		else:
-			crumble.texture = tile_texture
+		crumble.texture = tile_texture
 		crumble.scale *= sc
 		crumble.centered = true
 		add_child(crumble)
@@ -323,13 +320,13 @@ func pickaxe_hit():
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
 
-func add_rsrc_mined(content:Dictionary):
-	for content in contents:
+func add_rsrc_mined(_contents:Dictionary):
+	for content in _contents:
 		if content == "stone":
-			var stone_amount:float = Helper.get_sum_of_dict(contents[content])
+			var stone_amount:float = Helper.get_sum_of_dict(_contents[content])
 			rsrc_mined[content] = (rsrc_mined[content] + stone_amount) if rsrc_mined.has(content) else stone_amount
 		else:
-			rsrc_mined[content] = (rsrc_mined[content] + contents[content]) if rsrc_mined.has(content) else contents[content]
+			rsrc_mined[content] = (rsrc_mined[content] + _contents[content]) if rsrc_mined.has(content) else _contents[content]
 
 func _process(delta):
 	for cr in crumbles:

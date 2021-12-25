@@ -196,23 +196,27 @@ func update(changing_paths:bool = false):
 			icon.rsrc.visible = false
 
 func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, n:int, text_to_modify:RichTextLabel, next:bool):
-	var rsrc_icon = [Data.desc_icons[bldg][path_selected - 1]] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
+	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	var curr_value:float
+	var IR_mult:float = 1.0
 	if bldg == "SP" and path_selected == 1:
-		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw) * first_tile.IR_mult
+		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		IR_mult = first_tile.IR_mult
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	else:
 		if first_tile_bldg_info.has("pw"):
-			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw) * first_tile.IR_mult
+			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
+			IR_mult = first_tile.IR_mult
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
+	curr_value *= IR_mult
 	if first_tile_bldg_info.is_value_integer:
 		curr_value = round(curr_value)
 	else:
 		curr_value = Helper.clever_round(curr_value)
 	if next:
-		new_base_value = curr_value
+		new_base_value = curr_value / IR_mult
 	if first_tile_bldg_info.has("time_based"):
 		curr_value *= game.u_i.time_speed
 	if not planet.empty():

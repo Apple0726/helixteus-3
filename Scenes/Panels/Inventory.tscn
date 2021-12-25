@@ -157,6 +157,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="BuySell" type="Label" parent="Control/VBox"]
+margin_top = 57.0
+margin_right = 912.0
+margin_bottom = 157.0
+rect_min_size = Vector2( 0, 100 )
+custom_styles/normal = SubResource( 1 )
+text = "CLICK_TO_BUY_SELL"
+align = 1
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ParticlesHBox" type="HBoxContainer" parent="Control"]
 margin_left = 40.0
 margin_top = 48.0

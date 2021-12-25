@@ -211,8 +211,6 @@ var save_date:int
 var bookmarks:Dictionary
 
 ############ End save data ############
-var enable_shaders:bool = true
-var screen_shake:bool = true
 var block_scroll:bool = false
 var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
@@ -223,7 +221,7 @@ var collect_speed_lag_ratio:int = 1
 var c_sv:String = ""#current_save
 var save_created
 var u_i:Dictionary
-var pitch_affected:bool = false
+
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -316,8 +314,8 @@ var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "sp
 }
 
 var craft_cave_info = {
-	"drill":{"costs":{"iron":1500, "aluminium":1500, "titanium":300}},
-	"portable_wormhole":{"costs":{"quartz":500, "diamond":500}},
+	"drill":{"costs":{"iron":500, "aluminium":500, "titanium":70}},
+	"portable_wormhole":{"costs":{"quartz":300, "diamond":80}},
 }
 
 var other_items_info = {
@@ -414,8 +412,13 @@ var achievements:Dictionary = {
 #Holds information of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
 var bottom_info_action:String = ""
+#Settings
+var pitch_affected:bool = false
 var autosave_interval:int = 10
 var autosell:bool = true
+var enable_shaders:bool = true
+var screen_shake:bool = true
+var icon_animations:bool = true
 
 var music_player = AudioStreamPlayer.new()
 
@@ -452,7 +455,7 @@ func _ready():
 		star.material.set_shader_param("brightness_offset", 1.5)
 		star.material.set_shader_param("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "25 Dec 2021"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -512,6 +515,7 @@ func _ready():
 			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
+		icon_animations = config.get_value("game", "icon_animations", true)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
@@ -628,6 +632,8 @@ func load_univ():
 		for key in save_game_dict:
 			if key in self:
 				self[key] = save_game_dict[key]
+		if not help.has("battle2"):
+			help.battle2 = true#Save migration
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -816,6 +822,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"mining":true,
 				"STM":true,
 				"battle":true,
+				"battle2":true,
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,
@@ -1315,9 +1322,14 @@ func long_popup(txt:String, title:String, other_buttons:Array = [], other_functi
 	$UI.add_child(dialog)
 	$UI/PopupBackground.visible = true
 	dialog.window_title = title
+	dialog.get_label().autowrap = true
+	var width = min(800, default_font.get_string_size(txt).x) + 40
+	dialog.rect_min_size.x = width
+	dialog.rect_min_size.y = 0
+	dialog.rect_size.y = 0
+	dialog.rect_size.x = width
 	dialog.dialog_text = txt
 	dialog.visible = true
-	dialog.rect_size = Vector2.ZERO
 	dialog.popup_centered()
 	for i in range(0, len(other_buttons)):
 		dialog.add_button(other_buttons[i], false, other_functions[i])
@@ -1839,6 +1851,9 @@ func add_cluster():
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 1.0))
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
+	if len(ship_data) == 3 and u_i.lv >= 60:
+		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		get_4th_ship()
 
 func add_galaxy():
 	if obj_exists("Clusters", c_c_g):
@@ -1849,17 +1864,20 @@ func add_galaxy():
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 		yield(start_system_generation(), "completed")
-	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and galaxy_data[c_g].system_num < 2000 and len(ship_data) == 2:
-		third_ship_hints.spawn_galaxy = c_g
-		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-		third_ship_hints.g_g_id = c_g_g
-		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
-		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
-		HUD.refresh()
+#	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and galaxy_data[c_g].system_num < 2000 and len(ship_data) == 2:
+#		third_ship_hints.spawn_galaxy = c_g
+#		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+#		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
+#		third_ship_hints.g_g_id = c_g_g
+#		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
+#		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
+#		HUD.refresh()
 	add_obj("galaxy")
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
+	if len(ship_data) == 2 and u_i.lv >= 40:
+		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		get_3rd_ship()
 
 func start_system_generation():
 	yield(get_tree(), "idle_frame")
@@ -1882,6 +1900,9 @@ func add_system():
 	add_obj("system")
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
+	if len(ship_data) == 1 and u_i.lv >= 20:
+		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		get_2nd_ship()
 
 func add_planet():
 	stars_tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 1), 0.3)
@@ -2089,13 +2110,13 @@ func generate_galaxies(id:int):
 			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
-				if c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
-					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
-					g_i.B_strength = e(5, -9)
-				if c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == -1:
-					fourth_ship_hints.dark_matter_spawn_galaxy = i
-					g_i.dark_matter = 2.7
-					rand = 1
+#				if c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
+#					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
+#					g_i.B_strength = e(5, -9)
+#				if c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == -1:
+#					fourth_ship_hints.dark_matter_spawn_galaxy = i
+#					g_i.dark_matter = 2.7
+#					rand = 1
 		if rand < 0.02:
 			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
 		elif rand < 0.2:
@@ -2225,17 +2246,17 @@ func generate_system_part():
 			systems_collision_detection(c_g, i)
 			update_loading_bar(i, N, tr("GENERATING_GALAXY"))
 			yield(get_tree().create_timer(0.0000000000001),"timeout")
-	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
-		#Second ship can only appear in a system in the rectangle formed by solar system and center of galaxy
-		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
-		rect = rect.abs()
-		for system in system_data:
-			if system.id == 0:
-				continue
-			if rect.has_point(system.pos) and randf() < 0.1:
-				system.second_ship = Helper.rand_int(1, system.planet_num)
-				second_ship_hints.spawned_at = system.id
-				break
+#	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
+#		#Second ship can only appear in a system in the rectangle formed by solar system and center of galaxy
+#		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
+#		rect = rect.abs()
+#		for system in system_data:
+#			if system.id == 0:
+#				continue
+#			if rect.has_point(system.pos) and randf() < 0.1:
+#				system.second_ship = Helper.rand_int(1, system.planet_num)
+#				second_ship_hints.spawned_at = system.id
+#				break
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
@@ -2459,7 +2480,7 @@ func generate_systems(id:int):
 				star_type = "brown_dwarf"
 			var hypergiant:int = -1
 			if not dark_matter_system:
-				if mass > 0.2 and mass < 1.3 and randf() < 0.05:
+				if mass > 0.2 and mass < 1.3 and randf() < 0.03:
 					star_type = "white_dwarf"
 					temp = 4000 + exp(10 * randf())
 					star_size = rand_range(0.008, 0.02)
@@ -2480,13 +2501,13 @@ func generate_systems(id:int):
 							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
 							star_type = "hypergiant " + get_roman_num(tier)
 							hypergiant = tier
-			if hypergiant_system:
-				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
-				star_type = "hypergiant XV"
-				hypergiant = 15
-				mass = rand_range(4, 4.05)
-				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
-				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
+#			if hypergiant_system:
+#				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
+#				star_type = "hypergiant XV"
+#				hypergiant = 15
+#				mass = rand_range(4, 4.05)
+#				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
+#				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 			stats_univ.biggest_star = max(star_size, stats_univ.biggest_star)
@@ -2520,11 +2541,11 @@ func generate_systems(id:int):
 			planet_num = int(16 + sqrt(planet_num))
 		if planet_num >= 50:
 			planet_num = 50
-		if hypergiant_system:
-			planet_num = 5
-		elif dark_matter_system:
-			fourth_ship_hints.dark_matter_spawn_system = system_data.size() + s_num
-			planet_num = 1
+#		if hypergiant_system:
+#			planet_num = 5
+#		elif dark_matter_system:
+#			fourth_ship_hints.dark_matter_spawn_system = system_data.size() + s_num
+#			planet_num = 1
 		s_i["planet_num"] = planet_num
 		
 		var s_id = system_data.size()
@@ -2629,24 +2650,24 @@ func generate_planets(id:int):#local id
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
-			if hypergiant_system:
-				if i == 1:
-					p_i.size = 6000
-					p_i.pressure = rand_range(400, 500)
-				elif i == 2:
-					p_i.size = 11000
-					p_i.pressure = rand_range(150, 200)
-				elif i == 3:
-					p_i.size = 17000
-				elif i == 4:
-					p_i.size = 25000
-				elif i == 5:
-					p_i.size = 32000
-					p_i.type = 8
-				p_i.conquered = true
-			elif dark_matter_system:
-				p_i.size = 1000
-				p_i.conquered = true
+#			if hypergiant_system:
+#				if i == 1:
+#					p_i.size = 6000
+#					p_i.pressure = rand_range(400, 500)
+#				elif i == 2:
+#					p_i.size = 11000
+#					p_i.pressure = rand_range(150, 200)
+#				elif i == 3:
+#					p_i.size = 17000
+#				elif i == 4:
+#					p_i.size = 25000
+#				elif i == 5:
+#					p_i.size = 32000
+#					p_i.type = 8
+#				p_i.conquered = true
+#			elif dark_matter_system:
+#				p_i.size = 1000
+#				p_i.conquered = true
 		p_i["angle"] = rand_range(0, 2 * PI)
 		if p_num == 0 and i == 2:
 			p_i.angle = rand_range(PI/4, 3*PI/4)
@@ -2838,17 +2859,17 @@ func generate_tiles(id:int):
 	var op_aurora:bool = hypergiant_system and id == 3
 	var cross_aurora:bool = hypergiant_system and id == 4
 	var num_auroras:int = 2
-	if op_aurora:
-		fourth_ship_hints.op_grill_planet = c_p_g
-		thiccness = 1
-		num_auroras = 5
-	if cross_aurora:
-		fourth_ship_hints.boss_planet = c_p_g
-		pulsation = 0.5
-		thiccness = 1
-		amplitude = 1.3
-	if dark_matter_system:
-		num_auroras = 0
+#	if op_aurora:
+#		fourth_ship_hints.op_grill_planet = c_p_g
+#		thiccness = 1
+#		num_auroras = 5
+#	if cross_aurora:
+#		fourth_ship_hints.boss_planet = c_p_g
+#		pulsation = 0.5
+#		thiccness = 1
+#		amplitude = 1.3
+#	if dark_matter_system:
+#		num_auroras = 0
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	for i in num_auroras:
 		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
@@ -2881,6 +2902,9 @@ func generate_tiles(id:int):
 						show.auroras = true
 						tile_data[j + k * wid] = {}
 						tile_data[j + k * wid].aurora = {"au_int":au_int}
+			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
+			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
+			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
 			if wid / 3 == 1:
 				diff = thiccness + 1
 			else:
@@ -2977,52 +3001,52 @@ func generate_tiles(id:int):
 	if relic_cave_id != -1:
 		erase_tile(relic_cave_id + wid)
 		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
-	if p_i.has("second_ship"):
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-		erase_tile(random_tile)
-		tile_data[random_tile].ship = true
-	elif len(ship_data) == 2 and c_c_g == 0:
-		if third_ship_hints.ship_sys_id == c_s and third_ship_hints.ship_spawned_at_p == -1:
-			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
-				random_tile = Helper.rand_int(1, len(tile_data)) - 1
-			objective = {"type":ObjectiveType.COLLECT_PARTS, "id":-1, "current":0, "goal":5}
-			if third_ship_hints.parts[4]:
-				objective.current = 1
-			erase_tile(random_tile)
-			tile_data[random_tile].ship = true
-			erase_tile(random_tile - wid)
-			tile_data[random_tile - wid].cave = {"floor_size":36, "num_floors":9, "special_cave":0}#Normal cave, except... you're tiny
-			erase_tile(random_tile + wid)
-			tile_data[random_tile + wid].cave = {"floor_size":16, "num_floors":30, "special_cave":1}#A super deep cave devoid of everything
-			erase_tile(random_tile - 1)
-			tile_data[random_tile - 1].cave = {"floor_size":77, "num_floors":3, "special_cave":2}#Huge cave
-			erase_tile(random_tile + 1)
-			tile_data[random_tile + 1].cave = {"floor_size":50, "num_floors":5, "special_cave":3}#Big maze cave where minimap is disabled
-			third_ship_hints.ship_spawned_at_p = c_p_g
-		elif third_ship_hints.ship_part_id == c_s and third_ship_hints.part_spawned_at_p == -1:
-			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-			erase_tile(random_tile)
-			tile_data[random_tile].ship_part = true
-			third_ship_hints.part_spawned_at_p = c_p_g
-			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
-	elif hypergiant_system and id == 2:
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-		erase_tile(random_tile)
-		tile_data[random_tile].artifact = true
-	elif dark_matter_system:
-		erase_tile(12)
-		tile_data[12].diamond_tower = {"floor_size":40, "num_floors":25}
-	elif c_c_g == 1 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-		erase_tile(random_tile)
-		tile_data[random_tile].ruins = 1
-		fourth_ship_hints.ruins_spawned = true
-		long_popup(tr("UNIQUE_STRUCTURE_NOTICE"), tr("UNIQUE_STRUCTURE"))
-	elif hypergiant_system and id == 1:
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-		erase_tile(random_tile)
-		tile_data[random_tile].ruins = 2
+#	if p_i.has("second_ship"):
+#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#		erase_tile(random_tile)
+#		tile_data[random_tile].ship = true
+#	elif len(ship_data) == 2 and c_c_g == 0:
+#		if third_ship_hints.ship_sys_id == c_s and third_ship_hints.ship_spawned_at_p == -1:
+#			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
+#				random_tile = Helper.rand_int(1, len(tile_data)) - 1
+#			objective = {"type":ObjectiveType.COLLECT_PARTS, "id":-1, "current":0, "goal":5}
+#			if third_ship_hints.parts[4]:
+#				objective.current = 1
+#			erase_tile(random_tile)
+#			tile_data[random_tile].ship = true
+#			erase_tile(random_tile - wid)
+#			tile_data[random_tile - wid].cave = {"floor_size":36, "num_floors":9, "special_cave":0}#Normal cave, except... you're tiny
+#			erase_tile(random_tile + wid)
+#			tile_data[random_tile + wid].cave = {"floor_size":16, "num_floors":30, "special_cave":1}#A super deep cave devoid of everything
+#			erase_tile(random_tile - 1)
+#			tile_data[random_tile - 1].cave = {"floor_size":77, "num_floors":3, "special_cave":2}#Huge cave
+#			erase_tile(random_tile + 1)
+#			tile_data[random_tile + 1].cave = {"floor_size":50, "num_floors":5, "special_cave":3}#Big maze cave where minimap is disabled
+#			third_ship_hints.ship_spawned_at_p = c_p_g
+#		elif third_ship_hints.ship_part_id == c_s and third_ship_hints.part_spawned_at_p == -1:
+#			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#			erase_tile(random_tile)
+#			tile_data[random_tile].ship_part = true
+#			third_ship_hints.part_spawned_at_p = c_p_g
+#			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
+#	elif hypergiant_system and id == 2:
+#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#		erase_tile(random_tile)
+#		tile_data[random_tile].artifact = true
+#	elif dark_matter_system:
+#		erase_tile(12)
+#		tile_data[12].diamond_tower = {"floor_size":40, "num_floors":25}
+#	elif c_c_g == 1 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
+#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#		erase_tile(random_tile)
+#		tile_data[random_tile].ruins = 1
+#		fourth_ship_hints.ruins_spawned = true
+#		long_popup(tr("UNIQUE_STRUCTURE_NOTICE"), tr("UNIQUE_STRUCTURE"))
+#	elif hypergiant_system and id == 1:
+#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+#		erase_tile(random_tile)
+#		tile_data[random_tile].ruins = 2
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -3109,10 +3133,10 @@ func generate_tiles(id:int):
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
-	if ship_signal:
-		objective = {"type":ObjectiveType.SIGNAL, "id":11, "current":0, "goal":1}
-		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
-		second_ship_hints.spawned_at_p = c_p_g
+#	if ship_signal:
+#		objective = {"type":ObjectiveType.SIGNAL, "id":11, "current":0, "goal":1}
+#		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
+#		second_ship_hints.spawned_at_p = c_p_g
 
 func erase_tile(random_tile:int):
 	if not tile_data[random_tile] or not tile_data[random_tile].has("aurora"):
@@ -3590,13 +3614,13 @@ func _input(event):
 			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
-	if ship_locator:
-		ship_locator.position = mouse_pos
-		var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
-		var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
-		ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
-		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
-			STM.move_ship_inst = true
+#	if ship_locator:
+#		ship_locator.position = mouse_pos
+#		var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
+#		var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
+#		ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
+#		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
+#			STM.move_ship_inst = true
 
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
@@ -3973,29 +3997,29 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1167
+	var lines_total:int = 1252
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
-			lines_translated = 529
+			lines_translated = 529 - 2
 		"it":
 			lg = "Italiano"
-			lines_translated = 384
+			lines_translated = 384 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1137
+			lines_translated = 1140 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1000
+			lines_translated = 1000 - 2
 		"es":
 			lg = "Español"
-			lines_translated = 788
+			lines_translated = 1161 - 2
 		"ko":
 			lg = "한국어"
-			lines_translated = 224
+			lines_translated = 222 - 2
 		"sv":
 			lg = "Svenska"
-			lines_translated = 197
+			lines_translated = 197 - 1
 	if extra_arg_0 == "en":
 		show_tooltip("English")
 	else:
@@ -4100,6 +4124,8 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	$UI/PopupBackground.visible = true
 	var width = min(800, default_font.get_string_size(text).x) + 40
 	YN_panel.rect_min_size.x = width
+	YN_panel.rect_min_size.y = 0
+	YN_panel.rect_size.y = 0
 	YN_panel.rect_size.x = width
 	YN_panel.dialog_text = text
 	YN_panel.window_title = title
@@ -4294,7 +4320,7 @@ func get_2nd_ship():
 func get_3rd_ship():
 	if len(ship_data) == 2:
 		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-		Helper.add_ship_XP(2, 40000)
+		Helper.add_ship_XP(2, 60000)
 		Helper.add_weapon_XP(2, "bullet", 140)
 		Helper.add_weapon_XP(2, "laser", 140)
 		Helper.add_weapon_XP(2, "bomb", 140)
@@ -4345,7 +4371,7 @@ func refresh_achievements():
 			earn_achievement("conquest", 0)
 	for i in range(1, 7):
 		if not achievement_data.conquest[i]:
-			if stats_global.planets_conquered >= pow(10, i + 1):
+			if stats_global.planets_conquered >= pow(10, i):
 				earn_achievement("conquest", i)
 	if not achievement_data.conquest[7]:
 		if stats_global.systems_conquered >= 1:

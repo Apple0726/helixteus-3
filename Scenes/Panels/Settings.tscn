@@ -154,6 +154,7 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -271,7 +272,6 @@ __meta__ = {
 }
 
 [node name="GAME" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -311,11 +311,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="IconAnimations" type="CheckButton" parent="TabContainer/GAME"]
+margin_left = 88.0
+margin_top = 155.0
+margin_right = 352.0
+margin_bottom = 195.0
+pressed = true
+text = "ICON_ANIMATIONS"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CollectSpeed" type="Control" parent="TabContainer/GAME"]
 margin_left = 126.189
-margin_top = 155.0
+margin_top = 243.0
 margin_right = 166.189
-margin_bottom = 195.0
+margin_bottom = 283.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -358,6 +370,9 @@ margin_top = 30.0172
 margin_right = 292.649
 margin_bottom = 44.0172
 text = "SLOW"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME"]
 margin_left = 480.0
@@ -437,9 +452,9 @@ __meta__ = {
 
 [node name="ResetTooltips" type="Button" parent="TabContainer/GAME"]
 margin_left = 100.0
-margin_top = 253.0
+margin_top = 341.0
 margin_right = 325.0
-margin_bottom = 282.0
+margin_bottom = 370.0
 text = "RESET_HIDDEN_TOOLTIPS"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -507,6 +522,7 @@ __meta__ = {
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
+[connection signal="toggled" from="TabContainer/GAME/IconAnimations" to="." method="_on_IconAnimations_toggled"]
 [connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
 [connection signal="mouse_entered" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]

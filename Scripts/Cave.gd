@@ -226,6 +226,7 @@ func set_rover_data():
 		weight += i_w_w[w]
 	for i in len(inventory):
 		inventory_ready.append(true)
+	print(inventory)
 	for i in range(0, len(inventory)):
 		var slot = game.slot_scene.instance()
 		inventory_slots.add_child(slot)
@@ -240,7 +241,7 @@ func set_rover_data():
 		else:
 			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(inventory[i].name), inventory[i].name])
 			if inventory[i].has("num"):
-				slot.get_node("Label").text = Helper.format_num(inventory[i].num, 3)
+				slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
 	$Rover/Bar.max_value = total_HP
@@ -1177,7 +1178,8 @@ func on_timeout(slot, timer):
 func remove_item(item:Dictionary, num:int = 1):
 	item.num -= num
 	if item.num <= 0:
-		item = {"type":""}
+		inventory[curr_slot] = {"type":""}
+		active_item.text = ""
 		slots[curr_slot].get_node("TextureRect").texture = null
 		slots[curr_slot].get_node("Label").text = ""
 	else:
@@ -1208,6 +1210,12 @@ func _process(delta):
 				remove_item(item, 1)
 				exit_cave()
 			elif item.name == "drill":
+				if tile.cave.has("special_cave"):
+					game.popup(tr("DRILL_ERROR"), 2.0)
+					return
+				if cave_floor == num_floors:
+					game.popup(tr("DRILL_ERROR2"), 1.5)
+					return
 				var tile_id:int = get_tile_index(Vector2(int(rover.position.x / 200), int(rover.position.y / 200)))
 				var holes:Dictionary = hole_exits[cave_floor - 1]
 				var ok:bool = false
@@ -1221,6 +1229,8 @@ func _process(delta):
 						ok = true
 				if ok:
 					remove_item(item, 1)
+					if not inventory[curr_slot].has("name"):
+						tile_highlight.visible = false
 					add_hole(tile_id)
 				cooldown(0.5)
 	if aurora:
@@ -1553,7 +1563,7 @@ func _on_Difficulty_mouse_entered():
 		tr("FLOOR_MULTIPLIER"),
 		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
 		tr("AVERAGE_ENEMY_DAMAGE"),
-		Helper.clever_round(5.5 * difficulty * 2.0 / def, 2)
+		Helper.format_num(5.5 * difficulty * 2.0 / def, true)
 	]
 	game.help_str = "cave_diff_info"
 	if game.help.cave_diff_info:

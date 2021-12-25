@@ -209,7 +209,7 @@ func show_tooltip(tile):
 	var adv = false
 	if tile.has("bldg"):
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
-		icons.append_array(Data.desc_icons[tile.bldg.name] if Data.desc_icons.has(tile.bldg.name) else [])
+		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
 		adv = len(icons) > 0
 		game.help_str = "tile_shortcuts"
 		if game.help.tile_shortcuts and (not game.tutorial or game.tutorial.tut_num >= 26):
@@ -352,6 +352,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
+		if _bldg_to_construct == "AE":
+			tile.bldg.path_1_value = Helper.get_AE_production(p_i.pressure, Data.path_1[_bldg_to_construct].value)
 		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
@@ -492,7 +494,8 @@ func click_tile(tile, tile_id:int):
 	var bldg:String = tile.bldg.name
 	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
 		Helper.update_rsrc(p_i, tile)
-		add_anim_icon(tile, tile_id)
+		if game.icon_animations:
+			add_anim_icon(tile, tile_id)
 		Helper.collect_rsrc(items_collected, p_i, tile, tile_id, false)
 	else:
 		if not tile.bldg.is_constructing:
@@ -540,7 +543,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 	var bldg:String = tile.bldg.name
 	items_collected.clear()
 	Helper.update_rsrc(p_i, tile)
-	add_anim_icon(tile, id2)
+	if game.icon_animations:
+		add_anim_icon(tile, id2)
 	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	remove_child(bldgs[id2])
 	bldgs[id2].queue_free()
@@ -837,9 +841,9 @@ func _unhandled_input(event):
 					white_rect.add_to_group("white_rects")
 			if tile.has("bldg"):
 				if Data.desc_icons.has(tile.bldg.name):
-					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum), Data.desc_icons[tile.bldg.name])
+					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected), Helper.flatten(Data.desc_icons[tile.bldg.name]))
 				else:
-					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum))
+					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
@@ -924,8 +928,6 @@ func _unhandled_input(event):
 				shadows[i].queue_free()
 		shadow_num = 0
 		game.HUD.refresh()
-		view.move_view = true
-		view.scroll_view = true
 		return
 	if Input.is_action_just_pressed("shift"):
 		view.move_view = false
@@ -948,6 +950,16 @@ func _unhandled_input(event):
 	if mass_build:
 		return
 	if (Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
+		var x_pos = int(mouse_pos.x / 200)
+		var y_pos = int(mouse_pos.y / 200)
+		var tile_id = get_tile_id_from_pos(mouse_pos)
+		var tile = game.tile_data[tile_id]
+		if placing_soil:
+			if not tile:
+				tile = {}
+			place_soil(tile, Vector2(x_pos, y_pos))
+			return
+	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds) and not placing_soil:
 		var curr_time = OS.get_system_time_msecs()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -964,11 +976,6 @@ func _unhandled_input(event):
 				$Obstacles.set_cell(x_pos, y_pos, -1)
 			else:
 				game.mine_tile(tile_id)
-		if placing_soil:
-			if not tile:
-				tile = {}
-			place_soil(tile, Vector2(x_pos, y_pos))
-			return
 		if tile and bldg_to_construct == "":
 			items_collected.clear()
 			var t:String = game.item_to_use.type
@@ -1051,7 +1058,7 @@ func _unhandled_input(event):
 						game.tile_data[tile_id].erase("ship")
 						$Obstacles.set_cell(x_pos, y_pos, -1)
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						if not game.objective.empty() and game.objective.type == game.ObjectiveType.DAVID:
+						if not game.objective.empty() and game.objective.type in [game.ObjectiveType.DAVID, game.ObjectiveType.SIGNAL]:
 							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":35}
 						game.get_2nd_ship()
 					elif len(game.ship_data) == 2:
@@ -1469,8 +1476,6 @@ func finish_construct():
 				remove_child(shadows[i])
 				shadows[i].queue_free()
 		shadow_num = 0
-		view.move_view = true
-		view.scroll_view = true
 	game.get_node("UI/Panel").visible = false
 
 func _on_Planet_tree_exited():
@@ -1486,10 +1491,12 @@ func add_anim_icon(tile:Dictionary, tile_id:int):
 		node = game.HUD.get_node("Resources/Minerals")
 		node2 = game.HUD.get_node("Resources/Minerals/Texture")
 		rsrc_icon.texture = preload("res://Graphics/Icons/minerals.png")
-	elif tile.bldg.name == "PP":
+	elif tile.bldg.name in ["PP", "SP"]:
 		node = game.HUD.get_node("Resources/Energy")
 		node2 = game.HUD.get_node("Resources/Energy/Texture")
 		rsrc_icon.texture = preload("res://Graphics/Icons/energy.png")
+	if not node:
+		return
 	var start_pos:Vector2 = to_global(bldgs[tile_id].position)
 	var end_pos:Vector2 = node.rect_position + node2.rect_size / 2.0
 	rsrc_icon.scale *= 0.15
@@ -1503,7 +1510,8 @@ func collect_all():
 	for tile in game.tile_data:
 		if tile and tile.has("bldg"):
 			Helper.update_rsrc(p_i, tile)
-			add_anim_icon(tile, i)
+			if game.icon_animations:
+				add_anim_icon(tile, i)
 			Helper.collect_rsrc(items_collected, p_i, tile, i, false)
 		i += 1
 	game.show_collect_info(items_collected)

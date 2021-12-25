@@ -25,6 +25,7 @@ func _ready():
 		$TabContainer/GRAPHICS/EnableShaders.pressed = config.get_value("graphics", "enable_shaders", true)
 		$TabContainer/GAME/EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		$TabContainer/GAME/AutosellMinerals.pressed = config.get_value("game", "autosell", true)
+		$TabContainer/GAME/IconAnimations.pressed = config.get_value("game", "icon_animations", true)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		$TabContainer/GRAPHICS/Fullscreen.pressed = OS.window_fullscreen
@@ -261,4 +262,11 @@ func _on_Screenshake_toggled(button_pressed):
 	if err == OK:
 		game.screen_shake = button_pressed
 		config.set_value("graphics", "screen_shake", button_pressed)
+		config.save("user://settings.cfg")
+
+
+func _on_IconAnimations_toggled(button_pressed):
+	if err == OK:
+		game.icon_animations = button_pressed
+		config.set_value("game", "icon_animations", button_pressed)
 		config.save("user://settings.cfg")

@@ -96,9 +96,9 @@ func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _d
 	.set_item_info(_name, desc, costs, _type, _dir)
 	desc_txt.text = ""
 	var icons = []
-	var has_icon = Data.desc_icons.has(_name)# and txt.find("@i") != -1
+	var has_icon = Data.desc_icons.has(_name)
 	if has_icon:
-		icons = Data.desc_icons[_name]
+		icons = Helper.flatten(Data.desc_icons[_name])
 	game.add_text_icons(desc_txt, desc, icons, 22)
 
 func _on_Buy_pressed():

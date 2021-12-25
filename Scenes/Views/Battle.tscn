@@ -170,6 +170,8 @@ glow_hdr_luminance_cap = 1.01
 glow_hdr_scale = 1.13
 glow_bicubic_upscale = true
 adjustment_enabled = true
+adjustment_brightness = 0.82
+adjustment_contrast = 0.82
 
 [sub_resource type="Animation" id=25]
 length = 3.0
@@ -183,7 +185,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 0.8, 1.0 ]
+"values": [ 0.9, 1.0 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("WorldEnvironment:environment:adjustment_contrast")
@@ -195,7 +197,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 0.8, 1.0 ]
+"values": [ 0.9, 1.0 ]
 }
 
 [sub_resource type="Animation" id=26]
@@ -251,7 +253,12 @@ modulate = Color( 1, 1, 1, 0 )
 margin_top = 324.0
 margin_right = 1280.0
 margin_bottom = 348.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -490,21 +497,21 @@ __meta__ = {
 
 [node name="Easy" type="Button" parent="UI/Help2/HBoxContainer"]
 margin_right = 122.0
-margin_bottom = 28.0
+margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "EASY"
 
 [node name="Normal" type="Button" parent="UI/Help2/HBoxContainer"]
 margin_left = 126.0
 margin_right = 249.0
-margin_bottom = 28.0
+margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "NORMAL"
 
 [node name="Hard" type="Button" parent="UI/Help2/HBoxContainer"]
 margin_left = 253.0
 margin_right = 376.0
-margin_bottom = 28.0
+margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "HARD"
 

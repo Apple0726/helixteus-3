@@ -1301,3 +1301,9 @@ func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, t
 		el_num = stepify(el_num * path_3_value, 0.001)
 		if el_num != 0:
 			expected_rsrc[item] = el_num
+
+func flatten(arr:Array):
+	var arr2:Array = []
+	for i in len(arr):
+		arr2.append_array(arr[i])
+	return arr2

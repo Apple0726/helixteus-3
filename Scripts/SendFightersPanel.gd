@@ -136,23 +136,26 @@ func _on_CheckBox2_pressed():
 
 func _on_Send_pressed():
 	if not game.galaxy_data[game.c_g].has("conquer_start_date"):
-		if sys_num > 0 and game.energy >= total_energy_cost:
-			game.energy -= total_energy_cost
-			var curr_time = OS.get_system_time_msecs()
-			var i:int = 0
-			while i < len(game.fighter_data):
-				if game.fighter_data[i].c_g_g == game.c_g_g:
-					game.fighter_data.remove(i)
-				else:
-					i += 1
-			game.galaxy_data[game.c_g].conquer_start_date = curr_time
-			game.galaxy_data[game.c_g].time_for_one_sys = time_for_one_sys
-			game.galaxy_data[game.c_g].sys_num = sys_num
-			game.galaxy_data[game.c_g].sys_conquered = 0
-			game.galaxy_data[game.c_g].combined_strength = combined_strength
-			game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
-			refresh()
-			game.HUD.refresh()
+		if sys_num > 0:
+			if game.energy >= total_energy_cost:
+				game.energy -= total_energy_cost
+				var curr_time = OS.get_system_time_msecs()
+				var i:int = 0
+				while i < len(game.fighter_data):
+					if game.fighter_data[i].c_g_g == game.c_g_g:
+						game.fighter_data.remove(i)
+					else:
+						i += 1
+				game.galaxy_data[game.c_g].conquer_start_date = curr_time
+				game.galaxy_data[game.c_g].time_for_one_sys = time_for_one_sys
+				game.galaxy_data[game.c_g].sys_num = sys_num
+				game.galaxy_data[game.c_g].sys_conquered = 0
+				game.galaxy_data[game.c_g].combined_strength = combined_strength
+				game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
+				refresh()
+				game.HUD.refresh()
+			else:
+				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.galaxy_data[game.c_g].erase("conquer_start_date")
 		game.galaxy_data[game.c_g].erase("time_for_one_sys")

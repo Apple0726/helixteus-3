@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/TutOrNoTut.gd" type="Script" id=3]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Graphics/Title screen/StoryMode.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Title screen/IncMode.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -19,6 +21,187 @@ use_filter = true
 font_data = ExtResource( 2 )
 fallback/0 = ExtResource( 4 )
 
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 0.4, 0.4, 0.4, 1 )
+border_blend = true
+
+[sub_resource type="DynamicFont" id=4]
+size = 18
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 4 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "ButtonFade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Story/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.247059 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Story/Desc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Story/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Story/Desc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "ButtonFade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.223529 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Desc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Desc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Gamemode:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("TutOrNoTut:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "Transition"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Gamemode:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("TutOrNoTut:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,17 +213,23 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_top = 68.0
+margin_top = 48.0
 margin_right = 1280.0
-margin_bottom = 92.0
+margin_bottom = 77.0
 custom_fonts/font = SubResource( 1 )
-text = "T_OR_NO_T"
+text = "CHOOSE_GAME_MODE"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="."]
+[node name="TutOrNoTut" type="Control" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label2" type="Label" parent="TutOrNoTut"]
 margin_top = 488.0
 margin_right = 1280.0
 margin_bottom = 512.0
@@ -52,7 +241,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label3" type="Label" parent="."]
+[node name="Label3" type="Label" parent="TutOrNoTut"]
 margin_top = 292.0
 margin_right = 1280.0
 margin_bottom = 316.0
@@ -64,7 +253,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="TutOrNoTut"]
 margin_left = 448.0
 margin_top = 244.0
 margin_right = 832.0
@@ -74,7 +263,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button2" type="Button" parent="."]
+[node name="Button2" type="Button" parent="TutOrNoTut"]
 margin_left = 448.0
 margin_top = 440.0
 margin_right = 832.0
@@ -84,5 +273,137 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+[node name="Gamemode" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Story" type="Button" parent="Gamemode"]
+margin_left = 192.0
+margin_top = 128.0
+margin_right = 512.0
+margin_bottom = 640.0
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Gamemode/Story"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Gamemode/Story"]
+anchor_right = 1.0
+margin_bottom = 72.0
+custom_fonts/font = SubResource( 1 )
+text = "STORY"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="Gamemode/Story"]
+anchor_right = 1.0
+margin_top = 472.0
+margin_bottom = 512.0
+custom_colors/font_color = Color( 1, 1, 0, 1 )
+text = "In development"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="Gamemode/Story"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 32.0
+margin_top = 96.0
+margin_right = 288.0
+margin_bottom = 448.0
+custom_fonts/font = SubResource( 4 )
+text = "Features quests, NPCs, dialogues, talking enemies and boss fights
+
+Recommended for players who desire a guided experience with always a goal in mind"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Gamemode/Story"]
+root_node = NodePath("../..")
+anims/ButtonFade = SubResource( 5 )
+anims/RESET = SubResource( 6 )
+
+[node name="Incremental" type="Button" parent="Gamemode"]
+margin_left = 768.0
+margin_top = 128.0
+margin_right = 1088.0
+margin_bottom = 640.0
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="Gamemode/Incremental"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="Gamemode/Incremental"]
+anchor_right = 1.0
+margin_bottom = 72.0
+custom_fonts/font = SubResource( 1 )
+text = "INCREMENTAL"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="Gamemode/Incremental"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 32.0
+margin_top = 96.0
+margin_right = 288.0
+margin_bottom = 448.0
+custom_fonts/font = SubResource( 4 )
+text = "A freestyle, sandbox-like, lifeless and unguided mode, purely focused on incremental gameplay
+
+For players who find the most fun in managing resources and seeing numbers go up"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Gamemode/Incremental"]
+anims/ButtonFade = SubResource( 7 )
+anims/RESET = SubResource( 8 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 9 )
+anims/Transition = SubResource( 10 )
+
+[connection signal="pressed" from="TutOrNoTut/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="TutOrNoTut/Button2" to="." method="_on_Button2_pressed"]
+[connection signal="mouse_entered" from="Gamemode/Story" to="." method="_on_Story_mouse_entered"]
+[connection signal="mouse_exited" from="Gamemode/Story" to="." method="_on_Story_mouse_exited"]
+[connection signal="pressed" from="Gamemode/Story" to="." method="_on_Story_pressed"]
+[connection signal="mouse_entered" from="Gamemode/Incremental" to="." method="_on_Incremental_mouse_entered"]
+[connection signal="mouse_exited" from="Gamemode/Incremental" to="." method="_on_Incremental_mouse_exited"]
+[connection signal="pressed" from="Gamemode/Incremental" to="." method="_on_Incremental_pressed"]

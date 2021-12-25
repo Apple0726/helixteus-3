@@ -57,6 +57,7 @@ func _on_Items_pressed():
 			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name])
 		inventory_grid.add_child(slot)
 		i += 1
+	$Control/VBox/BuySell.visible = false
 
 func on_slot_over (_name:String, num:int, slot:int):
 	var st:String = Helper.get_item_name(_name)
@@ -154,6 +155,7 @@ func _on_Materials_pressed():
 		texture.connect("mouse_entered", self, "show_mat", [mat.name])
 		texture.connect("mouse_exited", self, "on_mouse_out")
 		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat.name])
+	$Control/VBox/BuySell.visible = true
 
 func _on_Metals_pressed():
 	set_process(not game.autocollect.mets.empty())
@@ -171,6 +173,7 @@ func _on_Metals_pressed():
 		texture.connect("mouse_entered", self, "show_met", [met.name])
 		texture.connect("mouse_exited", self, "on_mouse_out")
 		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
+	$Control/VBox/BuySell.visible = true
 
 func _on_Atoms_pressed():
 	set_process(false)
@@ -183,6 +186,7 @@ func _on_Atoms_pressed():
 	for atom in atom_data:
 		if game.show.has(atom.name) and not game.show[atom.name]:
 			atom.rsrc.visible = false
+	$Control/VBox/BuySell.visible = false
 
 func _on_Particles_pressed():
 	set_process(true)
@@ -191,6 +195,7 @@ func _on_Particles_pressed():
 	inventory_grid.visible = false
 	grid.visible = false
 	particles_hbox.visible = true
+	$Control/VBox/BuySell.visible = false
 
 func show_part(_name:String):
 	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
@@ -231,7 +236,6 @@ func show_mat(mat:String):
 	var st:String = "%s\n%s" % [get_str(mat), get_str(mat, "_DESC")]
 	if game.autocollect.mats.has(mat):
 		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
-	st += "\n" + tr("CLICK_TO_BUY_SELL")
 	game.show_tooltip(st)
 
 func on_mouse_out():
@@ -241,7 +245,6 @@ func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met):
 		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
-	st += "\n" + tr("CLICK_TO_BUY_SELL")
 	game.show_tooltip(st)
 
 func get_str(obj:String, desc:String = ""):

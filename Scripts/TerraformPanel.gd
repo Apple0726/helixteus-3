@@ -12,6 +12,11 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
+	$ScrollContainer/VBoxContainer/AtmosphereExtraction.visible = game.science_unlocked.has("ATM")
+	$ScrollContainer/VBoxContainer/AtomManipulation.visible = game.science_unlocked.has("ATM")
+	$ScrollContainer/VBoxContainer/SubatomicParticles.visible = game.science_unlocked.has("SAP")
+	$ScrollContainer/VBoxContainer/NeutronStorage.visible = game.science_unlocked.has("SAP")
+	$ScrollContainer/VBoxContainer/ElectronStorage.visible = game.science_unlocked.has("SAP")
 	if tf_type != "":
 		call("_on_%s_pressed" % tf_type)
 
@@ -97,6 +102,10 @@ func _on_Terraform_pressed():
 			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
 		elif tf_type == "MS":
 			game.mineral_capacity += Data.path_1.MS.value * surface
+		elif tf_type == "NSF":
+			game.neutron_cap += Data.path_1.NSF.value * surface
+		elif tf_type == "ESF":
+			game.electron_cap += Data.path_1.ESF.value * surface
 		elif tf_type == "MM" and not planet.has("depth"):
 			planet.depth = 0
 		if Helper.has_IR(tf_type):
@@ -150,5 +159,21 @@ func _on_SPR_pressed():
 	tf_type = "SPR"
 	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("SPR_NAME_S").to_lower()]
 	costs = Data.costs.SPR.duplicate(true)
+	$Panel/Note.visible = false
+	update_info()
+
+
+func _on_NSF_pressed():
+	tf_type = "NSF"
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("NSF_NAME_S").to_lower()]
+	costs = Data.costs.NSF.duplicate(true)
+	$Panel/Note.visible = false
+	update_info()
+
+
+func _on_ESF_pressed():
+	tf_type = "ESF"
+	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ESF_NAME_S").to_lower()]
+	costs = Data.costs.ESF.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()

@@ -11,6 +11,8 @@ var status_effects:Dictionary = {}
 var timer:Timer
 var fading:bool = false
 var time_speed:float
+var init_mod:Color
+var laser_fade:float = 0.0
 
 func _ready():
 	$Sprite.texture = texture
@@ -23,6 +25,7 @@ func _ready():
 		timer.start(3.0)
 		timer.one_shot = true
 		timer.connect("timeout", self, "on_timeout")
+	init_mod = $Sprite.modulate
 
 func on_timeout():
 	fading = true
@@ -36,6 +39,9 @@ func _physics_process(delta):
 			if modulate.a <= 0:
 				get_parent().remove_child(self)
 				queue_free()
+	if not enemy:
+		laser_fade = min(laser_fade + 0.03 * delta * 60 * time_speed, 1)
+		$Sprite.modulate = lerp(init_mod, init_mod / 20.0, laser_fade)
 
 func _on_Sprite_body_entered(body):
 	if body is KinematicBody2D:

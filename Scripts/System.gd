@@ -231,7 +231,7 @@ func show_M_DS_costs(star:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 1
+		bldg_costs.time = 0.2
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
@@ -246,7 +246,7 @@ func show_M_PK_costs(star:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 1
+		bldg_costs.time = 0.2
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	var max_diameter = 4000
@@ -269,7 +269,7 @@ func show_M_SE_costs(p_i:Dictionary):
 			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 1
+		bldg_costs.time = 0.2
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 
@@ -283,7 +283,7 @@ func show_M_MME_costs(p_i:Dictionary):
 		bldg_costs.time /= game.u_i.time_speed
 		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
-			bldg_costs.time = 1
+			bldg_costs.time = 0.2
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
@@ -298,7 +298,7 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
 	if game.universe_data[game.c_u].lv >= 60:
 		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 1
+		bldg_costs.time = 0.2
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 
@@ -356,7 +356,7 @@ func show_planet_info(id:int, l_id:int):
 			else:
 				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4)]
 		if len(icons) > 0:
-			game.show_adv_tooltip(tooltip, icons)
+			game.show_adv_tooltip(tooltip, Helper.flatten(icons))
 		else:
 			game.show_tooltip(tooltip)
 
@@ -393,6 +393,9 @@ func build_MS(obj:Dictionary, MS:String):
 			obj.MS_lv += 1
 		else:
 			obj.MS_lv = 0
+			game.stats_univ.MS_constructed += 1
+			game.stats_dim.MS_constructed += 1
+			game.stats_global.MS_constructed += 1
 		obj.MS = MS
 		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
@@ -562,7 +565,7 @@ func on_star_over (id:int):
 		bldg_costs.time /= game.u_i.time_speed
 		if game.universe_data[game.c_u].lv >= 60:
 			bldg_costs.money += bldg_costs.time * 200
-			bldg_costs.time = 1
+			bldg_costs.time = 0.2
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 		Helper.add_label(tr("PRODUCTION_PER_SECOND"))
