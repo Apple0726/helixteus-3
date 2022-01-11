@@ -1475,6 +1475,7 @@ func set_g_id(l_id:int, g_id:int):
 func delete_galaxy():
 	galaxy_data[c_g].clear()
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
+
 #															V function to execute after removing objects but before adding new ones
 func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 	hide_tooltip()
@@ -3470,10 +3471,7 @@ func add_resources(costs):
 			SP += costs.SP
 		elif cost == "stone":
 			for comp in costs.stone:
-				if stone.has(comp):
-					stone[comp] += costs.stone[comp]
-				else:
-					stone[comp] = costs.stone[comp]
+				Helper.add_to_dict(stone, comp, costs.stone[comp])
 		elif mats.has(cost):
 			mats[cost] += costs[cost]
 		elif mets.has(cost):

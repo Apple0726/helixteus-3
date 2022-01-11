@@ -74,6 +74,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="CheckBox" type="CheckBox" parent="VBox"]
+visible = false
+margin_top = 4.0
+margin_right = 976.0
+margin_bottom = 32.0
+
 [node name="HBox" type="Control" parent="VBox"]
 margin_top = 4.0
 margin_right = 976.0

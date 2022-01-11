@@ -38,6 +38,31 @@ func _ready():
 		system.position = s_i["pos"]
 		dimensions = max(dimensions, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
+		if s_i.has("discovered"):
+			var planet_data:Array = game.open_obj("Systems", s_i.id)
+			var grid:GridContainer = GridContainer.new()
+			grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			grid.columns = 3
+			grid.rect_scale *= 2.0
+			var bldgs:Dictionary = {}
+			for p_i in planet_data:
+				if p_i.empty():
+					continue
+				if p_i.has("tile_num"):
+					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+				var tile_data:Array = game.open_obj("Planets", p_i.id)
+				for tile in tile_data:
+					if tile and tile.has("bldg"):
+						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+			if not bldgs.empty():
+				for bldg in bldgs:
+					var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+					grid.add_child(bldg_count)
+					bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+					bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+				add_child(grid)
+				grid.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * 2.0
+				grid.rect_position.y = s_i.pos.y - (grid.rect_size.y + 40) * 2.0
 	if game.galaxy_data[game.c_g].has("wormholes"):
 		for wh_data in game.galaxy_data[game.c_g].wormholes:
 			var blue_line = Line2D.new()

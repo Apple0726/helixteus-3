@@ -67,7 +67,7 @@ func refresh():
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("SPR")
-	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
@@ -164,7 +164,7 @@ func _on_Transform_pressed():
 		rsrc_to_add.proton = num
 		rsrc_to_add.neutron = num
 		rsrc_to_add.electron = num
-		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
@@ -184,7 +184,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct[reaction] = rsrc
 		else:
 			rsrc_to_deduct = {"proton":rsrc * Z, "neutron":rsrc * Z, "electron":rsrc * Z}
-		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult / game.u_i.charge / path_2_value)
+		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / game.u_i.charge / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
@@ -241,7 +241,7 @@ func refresh_time_icon():
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, game.atoms[reaction])
+		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[reaction])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

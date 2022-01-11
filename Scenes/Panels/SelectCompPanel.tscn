@@ -85,9 +85,9 @@ __meta__ = {
 [node name="Cost" parent="ScrollContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 5.0
+margin_left = 10.0
 margin_top = 5.0
-margin_right = 463.0
+margin_right = 458.0
 margin_bottom = 43.0
 size_flags_vertical = 3
 

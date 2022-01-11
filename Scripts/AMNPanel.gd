@@ -213,7 +213,7 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
-	energy_cost = 45000
+	energy_cost = 55000
 	difficulty = 2.2
 	refresh()
 	$Control/Switch.visible = true
@@ -225,7 +225,7 @@ func _on_nanocrystal_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"nanocrystal":0})
 	metal = "nanocrystal"
-	energy_cost = 130000
+	energy_cost = 330000
 	difficulty = 2.5
 	refresh()
 	$Control/Switch.visible = true
@@ -237,7 +237,7 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"mythril":0})
 	metal = "mythril"
-	energy_cost = 270000
+	energy_cost = 970000
 	difficulty = 2.9
 	refresh()
 	$Control/Switch.visible = true
@@ -257,7 +257,7 @@ func refresh():
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("AMN")
-	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult * tile_num / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
@@ -294,7 +294,7 @@ func refresh():
 			max_value = Helper.get_sum_of_dict(game.stone)
 		else:
 			max_value = game[MM][metal]
-	$Control/HSlider.max_value = min(game.energy * au_mult / energy_cost / tile_num * path_2_value, max_value)
+	$Control/HSlider.max_value = min(game.energy * au_mult / energy_cost * path_2_value, max_value)
 	$Control/HSlider.step = int($Control/HSlider.max_value / 500)
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
@@ -378,7 +378,7 @@ func _on_Transform_pressed():
 						rsrc_to_add[metal][atom] = max(0, obj.bldg.qty - MM_value) * obj.bldg.AMN_stone[atom] / sum
 			else:
 				rsrc_to_add[metal] = max(0, obj.bldg.qty - MM_value)
-		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult * obj.bldg.qty * tile_num / path_2_value)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
@@ -398,7 +398,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct = atom_costs.duplicate(true)
 		else:
 			rsrc_to_deduct[metal] = rsrc
-		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult * tile_num / path_2_value)
+		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return

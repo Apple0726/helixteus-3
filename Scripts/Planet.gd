@@ -1202,7 +1202,7 @@ func place_soil(tile:Dictionary, tile_pos:Vector2):
 func available_for_plant(tile):
 	if not tile:
 		return true
-	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and (not tile.has("depth") or tile.has("bridge"))
+	var bool1 = not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and (not tile.has("depth") and not tile.has("crater") or tile.has("bridge"))
 	if tile.has("bldg") and tile.bldg.name == "GH":
 		return bool1
 	else:
@@ -1215,7 +1215,7 @@ func available_to_build(tile):
 	if bldg_to_construct == "MM":
 		return not tile or available_for_mining(tile)
 	if bldg_to_construct == "GH":
-		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("crater") and (not tile.has("depth") or tile.has("bridge")) and not tile.has("bldg")
+		return not tile or not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and (not tile.has("depth") and not tile.has("crater") or tile.has("bridge")) and not tile.has("bldg")
 	return not tile or available_for_plant(tile) and not tile.has("plant")
 
 func add_time_bar(id2:int, type:String):

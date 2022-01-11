@@ -1038,13 +1038,13 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity * game.u_i.planck * game.u_i.time_speed
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck * game.u_i.time_speed
 
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5)) * game.u_i.time_speed
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5)) * game.u_i.time_speed
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
@@ -1307,3 +1307,16 @@ func flatten(arr:Array):
 	for i in len(arr):
 		arr2.append_array(arr[i])
 	return arr2
+
+func add_to_dict(dict:Dictionary, key:String, value):
+	if dict.has(key):
+		dict[key] += value
+	else:
+		dict[key] = value
+
+func add_dict_to_dict(dict1:Dictionary, dict2:Dictionary):
+	for key in dict2:
+		if dict1.has(key):
+			dict1[key] += dict2[key]
+		else:
+			dict1[key] = dict2[key]

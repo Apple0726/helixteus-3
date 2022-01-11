@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Graphics/Icons/HX icon.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Icons/HX_icon.png" type="Texture" id=2]
 
 [node name="HBox" type="HBoxContainer"]
 margin_right = 82.0

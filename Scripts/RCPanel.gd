@@ -7,7 +7,9 @@ var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 2.0
 var weight_cap:float = 3000.0
-var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}, {"type":""}]
+var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {}, {}, {}, {}]
+var right_inventory = [{"type":"rover_mining", "name":"red_mining_laser"}]
+var right_inv:bool = false
 var tile
 var rover_costs:Dictionary
 var slot_over:int = -1
@@ -42,9 +44,9 @@ func _ready():
 	CC_slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
 	CC_slot.get_node("Button").connect("pressed", self, "_on_Slot_pressed", ["rover_CC"])
 	if game.science_unlocked.has("RMK2"):
-		inventory.append({"type":""})
+		inventory.append({})
 	if game.science_unlocked.has("RMK3"):
-		inventory.append({"type":""})
+		inventory.append({})
 
 func _on_Slot_mouse_entered(type:String):
 	var txt:String = ""
@@ -64,8 +66,9 @@ func _on_Slot_mouse_entered(type:String):
 			txt += "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")]
 		game.show_tooltip(txt)
 
-func _on_InvSlot_mouse_entered(txt:String, index:int):
+func _on_InvSlot_mouse_entered(txt:String, index:int, _right_inv:bool = false):
 	slot_over = index
+	right_inv = _right_inv
 	game.help_str = "rover_inventory_shortcuts"
 	if game.help.rover_inventory_shortcuts:
 		if txt != "":
@@ -84,7 +87,10 @@ func _on_Slot_mouse_exited():
 func _on_InvSlot_pressed(index:int):
 	select_comp.visible = true
 	game.sub_panel = select_comp
-	select_comp.refresh(inventory[index].type, inventory[index].name if inventory[index].has("name") else "", true, index)
+	if right_inv:
+		select_comp.refresh(right_inventory[index].type if right_inventory[index].has("type") else "", right_inventory[index].name if right_inventory[index].has("name") else "", true, index)
+	else:
+		select_comp.refresh(inventory[index].type if inventory[index].has("type") else "", inventory[index].name if inventory[index].has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):
 	select_comp.visible = true
@@ -105,15 +111,16 @@ func _on_Button_pressed():
 		tile.bldg.construction_date = OS.get_system_time_msecs()
 		tile.bldg.construction_length = rover_costs.time * 1000
 		tile.bldg.XP = round(rover_costs.money / 100.0)
+		var rover_data:Dictionary = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "right_inventory":right_inventory.duplicate(true), "i_w_w":{}}
 		var append:bool = true
 		for i in len(game.rover_data):
 			if game.rover_data[i] == null:
-				game.rover_data[i] = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}}
+				game.rover_data[i] = rover_data
 				tile.bldg.rover_id = i
 				append = false
 				break
 		if append:
-			game.rover_data.append({"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "i_w_w":{}})
+			game.rover_data.append(rover_data)
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 		if not game.show.vehicles_button:
@@ -171,38 +178,19 @@ func refresh():
 		cargo_bonus = round(Data.rover_CC[CC].capacity * game.u_i.planck)
 	else:
 		cargo_bonus = 0
-	var hbox = $Inventory/HBoxContainer
+	var hbox = $Inventory/HBoxLeft
 	for node in hbox.get_children():
 		hbox.remove_child(node)
 	var i:int = 0
 	for inv in inventory:
 		var slot = slot_scene.instance()
-		if inv.type == "rover_weapons":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], i])
-			for cost_key in Data.rover_weapons[inv.name].costs.keys():
-				var cost = Data.rover_weapons[inv.name].costs[cost_key]
-				if rover_costs.has(cost_key):
-					rover_costs[cost_key] += cost
-				else:
-					rover_costs[cost_key] = cost
-		elif inv.type == "rover_mining":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.name])
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_mining_text(inv.name)], i])
-			for cost_key in Data.rover_mining[inv.name].costs.keys():
-				var cost = Data.rover_mining[inv.name].costs[cost_key]
-				if rover_costs.has(cost_key):
-					rover_costs[cost_key] += cost
-				else:
-					rover_costs[cost_key] = cost
-		else:
-			slot.get_node("Button").connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["", -1])
-		slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
-		slot.get_node("Button").connect("pressed", self, "_on_InvSlot_pressed", [i])
+		set_slot(inv, slot, i)
 		hbox.add_child(slot)
 		i += 1
+	$Inventory/RightSlot/TextureRect.texture = null
+	set_slot(right_inventory[0], $Inventory/RightSlot, 0, true)
 	rover_costs.time /= game.u_i.time_speed
-	Helper.put_rsrc($ScrollContainer/VBoxContainer, 36, rover_costs, true, true)
+	Helper.put_rsrc($ScrollContainer/Grid, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
 	$Stats/HPText.bbcode_text = Helper.format_num(round((HP + HP_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/AtkText.bbcode_text = Helper.format_num(round(atk * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
@@ -223,6 +211,37 @@ func refresh():
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
 
+func set_slot(inv:Dictionary, slot, i:int, _right_inv:bool = false):
+	var btn = slot.get_node("Button")
+	if btn.is_connected("mouse_entered", self, "_on_InvSlot_mouse_entered"):
+		btn.disconnect("mouse_entered", self, "_on_InvSlot_mouse_entered")
+	if btn.is_connected("mouse_exited", self, "_on_Slot_mouse_exited"):
+		btn.disconnect("mouse_exited", self, "_on_Slot_mouse_exited")
+	if btn.is_connected("pressed", self, "_on_InvSlot_pressed"):
+		btn.disconnect("pressed", self, "_on_InvSlot_pressed")
+	if inv.empty():
+		btn.connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["", i, _right_inv])
+	elif inv.type == "rover_weapons":
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
+		btn.connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], i, _right_inv])
+		for cost_key in Data.rover_weapons[inv.name].costs.keys():
+			var cost = Data.rover_weapons[inv.name].costs[cost_key]
+			if rover_costs.has(cost_key):
+				rover_costs[cost_key] += cost
+			else:
+				rover_costs[cost_key] = cost
+	elif inv.type == "rover_mining":
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.name])
+		btn.connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_mining_text(inv.name)], i, _right_inv])
+		for cost_key in Data.rover_mining[inv.name].costs.keys():
+			var cost = Data.rover_mining[inv.name].costs[cost_key]
+			if rover_costs.has(cost_key):
+				rover_costs[cost_key] += cost
+			else:
+				rover_costs[cost_key] = cost
+	btn.connect("mouse_exited", self, "_on_Slot_mouse_exited")
+	btn.connect("pressed", self, "_on_InvSlot_pressed", [i])
+
 func _on_icon_mouse_entered(extra_arg_0):
 	game.show_tooltip(tr(extra_arg_0))
 
@@ -232,8 +251,10 @@ func _on_icon_mouse_exited():
 func _input(event):
 	if Input.is_action_just_released("X"):
 		if slot_over != -1:
-			inventory[slot_over].erase("name")
-			inventory[slot_over].type = ""
+			if right_inv:
+				right_inventory[slot_over].clear()
+			else:
+				inventory[slot_over].clear()
 			refresh()
 			game.hide_tooltip()
 		if cmp_over != "":
@@ -249,3 +270,7 @@ func _on_close_button_pressed():
 
 func _on_Text_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_RightSlot_mouse_entered():
+	pass # Replace with function body.

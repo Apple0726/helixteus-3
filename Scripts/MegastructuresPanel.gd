@@ -1,7 +1,12 @@
 extends "GenericPanel.gd"
 
 var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_PK", "M_MB", "M_MPCC"]
+var build_all:bool = false
+
 func _ready():
+	$VBox/CheckBox.visible = true
+	$VBox/CheckBox.text = tr("BUILD_ALL_AT_ONCE")
+	$VBox/CheckBox.connect("toggled", self, "on_checkbox_toggle")
 	item_info.visible = false
 	type = PanelType.MEGASTRUCTURES
 	$Title.text = tr("MEGASTRUCTURES")
@@ -20,6 +25,9 @@ func _ready():
 		item.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/%s.png" % MS)
 		grid.add_child(item)
 	buy_hbox.visible = false
+
+func on_checkbox_toggle(button_pressed:bool):
+	build_all = button_pressed
 
 func refresh():
 	grid.get_node("M_MPCC").visible = game.science_unlocked.has("MPCC")
@@ -49,5 +57,6 @@ func get_item(_name, _type, _dir):
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
 	elif _name == "M_MPCC":
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MPCC", "cancel_building_MS")
-	game.view.obj.construct(_name)
+	print(build_all)
+	game.view.obj.build_all_MS_stages = build_all
 

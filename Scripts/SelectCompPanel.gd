@@ -110,7 +110,7 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 	for slot in hbox.get_children():
 		if slot == _slot and not slot.has_node("border"):
 			var border = TextureRect.new()
-			border.texture = load("res://Graphics/Cave/SlotBorder.png")
+			border.texture = preload("res://Graphics/Cave/SlotBorder.png")
 			border.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			slot.add_child(border)
 			border.name = "border"
@@ -129,8 +129,12 @@ func _input(event):
 func set_cmp():
 	if s_cmp != "":
 		if is_inventory:
-			get_parent().inventory[index].type = "rover_" + g_cmp
-			get_parent().inventory[index].name = s_cmp
+			if get_parent().right_inv:
+				get_parent().right_inventory[0].type = "rover_" + g_cmp
+				get_parent().right_inventory[0].name = s_cmp
+			else:
+				get_parent().inventory[index].type = "rover_" + g_cmp
+				get_parent().inventory[index].name = s_cmp
 		else:
 			get_parent()[g_cmp] = s_cmp
 	get_parent().refresh()
