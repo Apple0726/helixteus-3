@@ -10,6 +10,7 @@ var annotate_icon:Sprite
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
 var limit_to_viewport
+const CLUSTER_SCALE_THRESHOLD:float = 4.0
 
 var rect:Sprite
 
@@ -155,9 +156,9 @@ func _process(delta):
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
 	if game.c_v in ["supercluster", "universe"] and not changed:
-		if obj_scaled and scale.x > 0.3:
+		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
 			$AnimationPlayer.play("Fade")
-		elif not obj_scaled and scale.x < 0.3:
+		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
 			$AnimationPlayer.play("Fade")
 
 func _draw():
@@ -489,7 +490,7 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:
-		if scale.x < 0.3:
+		if scale.x < CLUSTER_SCALE_THRESHOLD:
 			obj_scaled = true
 			obj.change_scale(1.0)
 		else:

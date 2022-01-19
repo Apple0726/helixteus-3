@@ -126,7 +126,7 @@ func _on_StartCharging_pressed():
 		var p_i:Dictionary = game.planet_data[star.p_id]
 		if not p_i.empty():
 			if game.screen_shake:
-				game.get_node("Camera2D/Screenshake").start(1.5, 20, 12)
+				game.get_node("Camera2D/Screenshake").start(1.5, 20, 3)
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
 			if p_i.has("bookmarked"):
 				game.bookmarks.planet.erase(str(target.id))

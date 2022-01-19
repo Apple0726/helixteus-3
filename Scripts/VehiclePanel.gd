@@ -1,10 +1,10 @@
 extends "Panel.gd"
 
-var HP_icon = load("res://Graphics/Icons/HP.png")
-var atk_icon = load("res://Graphics/Icons/atk.png")
-var def_icon = load("res://Graphics/Icons/def.png")
-var inv_icon = load("res://Graphics/Icons/Inventory.png")
-var spd_icon = load("res://Graphics/Icons/eva.png")
+var HP_icon = preload("res://Graphics/Icons/HP.png")
+var atk_icon = preload("res://Graphics/Icons/atk.png")
+var def_icon = preload("res://Graphics/Icons/def.png")
+var inv_icon = preload("res://Graphics/Icons/Inventory.png")
+var spd_icon = preload("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
@@ -53,7 +53,7 @@ func refresh():
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()
-			rover.texture_normal = load("res://Graphics/Cave/Rover.png")
+			rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
 			rover.set_anchors_and_margins_preset(Control.PRESET_CENTER)
 			hbox.add_child(rover)
 			rover.connect("mouse_entered", self, "on_rover_enter", [rov, i])
@@ -66,7 +66,12 @@ func refresh():
 		fighter_num.text = "x %s" % [fighter_info.number]
 		fighter_num.align = Label.ALIGN_CENTER
 		fighter_num.rect_position = Vector2(110, 40)
-		fighter.texture_normal = load("res://Graphics/Ships/Fighter.png")
+		if not fighter_info.has("tier"):#Save migration
+			fighter_info.tier = 0
+		if fighter_info.tier == 0:
+			fighter.texture_normal = preload("res://Graphics/Ships/Fighter.png")
+		elif fighter_info.tier == 1:
+			fighter.texture_normal = preload("res://Graphics/Ships/Fighter2.png")
 		fighter.expand = true
 		fighter.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		fighter.rect_min_size = Vector2(160, 60)
@@ -135,7 +140,10 @@ func on_fighter_exit():
 
 func on_fighter_press(i:int):
 	_on_close_button_pressed()
-	game.switch_view("galaxy", false, "set_to_fighter_coords", [i])
+	if game.fighter_data[i].tier == 0:
+		game.switch_view("galaxy", false, "set_to_fighter_coords", [i])
+	elif game.fighter_data[i].tier == 1:
+		game.switch_view("cluster", false, "set_to_fighter_coords", [i])
 
 func on_probe_press(tier:int):
 	_on_close_button_pressed()

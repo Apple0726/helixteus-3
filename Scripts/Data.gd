@@ -32,8 +32,8 @@ var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_cost
 				"MM":{"value":4, "pw":1.1, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
 				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
-				"AMN":{"value":1.0, "pw":1.14, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
-				"SPR":{"value":1.0, "pw":1.14, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
+				"AMN":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				"SPR":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"AE":{"value":120, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
 				"CBD":{"value":10, "step":2, "cap":46, "is_value_integer":true},
 }
@@ -296,6 +296,7 @@ var science_unlocks = {
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
 						"FG":{"cost":e(3.45, 9), "parents":["IGD"]},
+						"FG2":{"cost":e(1.42, 19), "parents":["FG"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
 						"PD":{"cost":e(1.2, 12), "parents":["FD"]},

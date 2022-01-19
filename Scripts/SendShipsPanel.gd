@@ -169,18 +169,16 @@ func get_grav_entry_cost(size:float):
 	return round(res)
 
 func get_entry_exit_multiplier(lv:int):
-	match lv:
-		0:
-			return 0.5
-		1:
-			return 0
+	if lv > 0:
+		return 0
+	else:
+		return 0.5
 
 func get_travel_cost_multiplier(lv:int):
-	match lv:
-		0:
-			return 0.75
-		1:
-			return 0.5
+	if lv > 0:
+		return 0.5
+	else:
+		return 0.75
 
 func calc_costs():
 	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 2)

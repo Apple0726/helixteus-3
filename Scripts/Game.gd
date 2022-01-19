@@ -431,8 +431,7 @@ var tooltip_tween:Tween
 var stars_tween:Tween
 var tile_brightness:Array = []
 
-func _ready():
-	default_font = preload("res://Resources/default_theme.tres").default_font
+func place_BG_stars():#shown in title screen and planet view
 	for i in 500:
 		var star:Sprite = Sprite.new()
 		star.texture = star_texture
@@ -455,6 +454,29 @@ func _ready():
 		star.material.set_shader_param("brightness_offset", 1.5)
 		star.material.set_shader_param("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
+
+func place_BG_sc_stars():#shown in (super)cluster view
+	for i in 4000:
+		var star:Sprite = Sprite.new()
+		star.texture = preload("res://Graphics/Misc/STMBullet.png")
+		star.scale *= 0.05
+		star.modulate.a = rand_range(0.2, 0.3)
+		star.position.x = rand_range(0, 1280)
+		star.position.y = rand_range(0, 720)
+		$Stars/WhiteStars.add_child(star)
+	for i in 100:
+		var star:Sprite = Sprite.new()
+		star.texture = preload("res://Graphics/Misc/STMBullet.png")
+		star.scale *= 0.07
+		star.modulate.a = 0.5
+		star.position.x = rand_range(0, 1280)
+		star.position.y = rand_range(0, 720)
+		$Stars/WhiteStars.add_child(star)
+
+func _ready():
+	place_BG_stars()
+	place_BG_sc_stars()
+	default_font = preload("res://Resources/default_theme.tres").default_font
 	$UI/Version.text = "Alpha %s: %s" % [VERSION, "25 Dec 2021"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
@@ -1429,8 +1451,9 @@ func set_to_fighter_coords(i:int):
 	c_sc = fighter_data[i].c_sc
 	c_c_g = fighter_data[i].c_c_g
 	c_c = fighter_data[i].c_c
-	c_g_g = fighter_data[i].c_g_g
-	c_g = fighter_data[i].c_g
+	if fighter_data[i].has("c_g_g"):
+		c_g_g = fighter_data[i].c_g_g
+		c_g = fighter_data[i].c_g
 
 func set_to_probe_coords(sc:int):
 	c_sc = sc
@@ -1754,10 +1777,11 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
+		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and universe_data[c_u].lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered")
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not cluster_data[c_c].has("conquered")
 		if c_v == "supercluster":
 			space_HUD.get_node("SendProbes").visible = c_sc == 0
 		elif c_v == "universe":
@@ -1844,6 +1868,8 @@ func add_cluster():
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
+	$Stars/WhiteStars.visible = true
+	$Stars/AnimationPlayer.play("StarFade")
 	if enable_shaders:
 		$ClusterBG.fade_in()
 		var dist:Vector2 = cartesian2polar(cluster_data[c_c].pos.x, cluster_data[c_c].pos.y)
@@ -1934,6 +1960,7 @@ func remove_supercluster():
 func remove_cluster():
 	if enable_shaders:
 		$ClusterBG.fade_out()
+	$Stars/AnimationPlayer.play_backwards("StarFade")
 	view.remove_obj("cluster")
 	Helper.save_obj("Superclusters", c_sc, cluster_data)
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
@@ -2548,6 +2575,11 @@ func generate_systems(id:int):
 #			fourth_ship_hints.dark_matter_spawn_system = system_data.size() + s_num
 #			planet_num = 1
 		s_i["planet_num"] = planet_num
+		if galaxy_data[id].has("conquered"):
+			s_i.conquered = true
+			stats_univ.planets_conquered += planet_num
+			stats_dim.planets_conquered += planet_num
+			stats_global.planets_conquered += planet_num
 		
 		var s_id = system_data.size()
 		s_i["id"] = s_id + s_num
@@ -4384,3 +4416,8 @@ func refresh_achievements():
 		if not achievement_data.construct[i]:
 			if stats_global.bldgs_built >= pow(10, (i+1) * 2):
 				earn_achievement("construct", i)
+
+
+func _on_StarFade_animation_finished(anim_name):
+	if $Stars/WhiteStars.modulate.a <= 0:
+		$Stars/WhiteStars.visible = false

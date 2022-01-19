@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://Graphics/Buttons/Annotate.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Buttons/Gigastructures.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Buttons/ElementOverlay.png" type="Texture" id=9]
 
 [sub_resource type="InputEventAction" id=1]
 action = "O"
@@ -50,6 +51,21 @@ margin_bottom = 720.0
 mouse_filter = 2
 custom_constants/separation = 0
 alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ElementOverlay" type="TextureButton" parent="VBoxContainer"]
+visible = false
+margin_top = 312.0
+margin_right = 48.0
+margin_bottom = 360.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 2 )
+texture_normal = ExtResource( 9 )
+expand = true
+stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -147,6 +163,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="mouse_entered" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ElementOverlay" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]

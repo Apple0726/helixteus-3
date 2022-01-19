@@ -58,7 +58,7 @@ func update_info():
 		Helper.put_rsrc($Control/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 1.5
+		num = surface * 0.5
 		Helper.put_rsrc($Control/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult("RL")})
 	elif bldg == "MS":
 		$Control/ProductionPerSec.text = tr("STORAGE")

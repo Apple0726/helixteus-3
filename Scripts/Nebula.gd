@@ -25,7 +25,7 @@ func fade_in():
 	visible = true
 	tween.stop_all()
 	tween.remove_all()
-	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0.2), 3.0)
+	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0.15), 3.0)
 	tween.start()
 
 func change_color(color:Color):

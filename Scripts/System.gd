@@ -17,7 +17,7 @@ var star_rsrcs = []
 var planet_rsrcs = []
 var planet_hovered:int = -1
 var tile_datas:Array = []
-var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_PK":2, "M_SE":2, "M_MPCC":1, "M_MB":1}
+var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 var build_all_MS_stages:bool = false
 
 func _ready():
@@ -96,7 +96,7 @@ func refresh_planets():
 				planet_glow.modulate = Color(0, 1, 0, 1)
 			var tile_data:Array = tile_datas[p_i.l_id]
 			var bldgs:Dictionary = {}
-			if p_i.has("bldg"):
+			if p_i.has("tile_num"):
 				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 			else:
 				for tile in tile_data:
@@ -379,13 +379,13 @@ func show_planet_info(id:int, l_id:int):
 	var vbox = game.get_node("UI/Panel/VBox")
 	if building:
 		var MS:String = game.bottom_info_action.split("-")[1]
-		if MS != "MME" or p_i.type in [11, 12]:
+		if not has_MS:
 			call("show_%s_costs" % MS, p_i, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String = tr("%s_NAME" % p_i.MS)
-		if num_stages[p_i.MS] > 1:
+		if num_stages[p_i.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, num_stages[p_i.MS]]]
 		Helper.add_label(stage)
 		if p_i.MS == "M_SE":
@@ -457,7 +457,7 @@ func build_MS(obj:Dictionary, MS:String):
 			obj.MS_lv += 1
 		else:
 			if build_all_MS_stages:
-				obj.MS_lv = 0
+				obj.MS_lv = num_stages[MS]
 			else:
 				obj.MS_lv = 0
 			game.stats_univ.MS_constructed += 1
@@ -641,12 +641,12 @@ func on_star_over (id:int):
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
-			show_M_PK_costs(star)
+			show_M_PK_costs(star, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String = tr("%s_NAME" % star.MS)
-		if num_stages[star.MS] > 1:
+		if num_stages[star.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, num_stages[star.MS]]]
 		Helper.add_label(stage)
 		if star.MS == "M_DS":

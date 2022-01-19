@@ -294,6 +294,19 @@ margin_top = 432.0
 margin_right = 2848.0
 margin_bottom = 496.0
 
+[node name="L_FG" type="Line2D" parent="."]
+position = Vector2( 2880, 444 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="FG2" parent="." instance=ExtResource( 1 )]
+margin_left = 3008.0
+margin_top = 432.0
+margin_right = 3264.0
+margin_bottom = 496.0
+
 [node name="L_YL" type="Line2D" parent="."]
 position = Vector2( 1984, 640 )
 points = PoolVector2Array( 0, 20, 96, 20 )

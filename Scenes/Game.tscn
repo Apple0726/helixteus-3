@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=2]
+[gd_scene load_steps=57 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -207,6 +207,37 @@ shader_param/time_offset = 0.0
 shader_param/brightness_offset = 0.0
 shader_param/twinkle_speed = 1.0
 shader_param/amplitude = 0.15
+
+[sub_resource type="Animation" id=19]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("WhiteStars:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=20]
+resource_name = "StarFade"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("WhiteStars:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -811,6 +842,13 @@ position = Vector2( 1064.25, 171.865 )
 scale = Vector2( 0.725823, 0.725823 )
 texture = ExtResource( 32 )
 
+[node name="WhiteStars" type="Node2D" parent="Stars"]
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Stars"]
+anims/RESET = SubResource( 19 )
+anims/StarFade = SubResource( 20 )
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 640, 360 )
 current = true
@@ -865,3 +903,4 @@ current = true
 [connection signal="mouse_entered" from="Settings/Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="Settings/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="Settings/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="animation_finished" from="Stars/AnimationPlayer" to="." method="_on_StarFade_animation_finished"]
