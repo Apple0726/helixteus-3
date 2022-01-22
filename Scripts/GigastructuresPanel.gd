@@ -43,7 +43,7 @@ func update_info():
 				costs[cost] *= surface
 			$Control/GalaxyInfo.text = ""
 		else:
-			if g_i.system_num <= 9000:
+			if g_i.system_num <= 4999:
 				$Control/GalaxyInfo.text = tr("TP_ERROR")
 				error = true
 			else:

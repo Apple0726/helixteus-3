@@ -54,6 +54,7 @@ func _on_General_pressed():
 	curr_stat_tab = "_on_General_pressed"
 	$Statistics/Panel.visible = true
 	$Statistics/ScrollContainer2.visible = false
+	print(stats_for)
 	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
 		tr("TOTAL_MONEY_EARNED"), Helper.format_num(game["stats_%s" % stats_for].total_money_earned),
 		tr("BLDGS_BUILT"), Helper.format_num(game["stats_%s" % stats_for].bldgs_built),
@@ -183,11 +184,12 @@ func _on_StarTypes_pressed():
 	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
 
 func _on_OptionButton_item_selected(index):
-	if index == 0:
+	var id:int = $Statistics/HBox/OptionButton.get_item_id(index)
+	if id == 0:
 		stats_for = "global"
-	elif index == 1:
+	elif id == 1:
 		stats_for = "dim"
-	elif index == 2:
+	elif id == 2:
 		stats_for = "univ"
 	if curr_stat_tab != "":
 		call(curr_stat_tab)

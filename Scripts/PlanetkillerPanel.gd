@@ -172,7 +172,7 @@ func _on_StartCharging_pressed():
 			game.popup(tr("PK_ERROR"), 2.0)
 			return
 		for fighter in game.fighter_data:
-			if c_s_g == fighter.c_s_g and p_id == fighter.c_p:
+			if fighter.tier == 0 and c_s_g == fighter.c_s_g and p_id == fighter.c_p:
 				game.popup(tr("PK_ERROR"), 2.0)
 				return
 		if game.energy >= additional_energy:

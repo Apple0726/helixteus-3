@@ -4,8 +4,8 @@ extends Node2D
 var astar_node = AStar2D.new()
 
 onready var game = get_node("/root/Game")
-onready var p_i = game.planet_data[game.c_p] if game else {"type":3}
-onready var tile = game.tile_data[game.c_t] if game else {"cave":{"id":-1}}
+onready var p_i = game.planet_data[game.c_p]
+onready var tile = game.tile_data[game.c_t]
 onready var aurora:bool = tile.has("aurora")
 onready var tower:bool = tile.has("diamond_tower")
 onready var tile_type = 10 if tower else p_i.type - 3
@@ -13,7 +13,7 @@ onready var time_speed = game.u_i.time_speed
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
-onready var difficulty:float = (game.system_data[game.c_s].diff if game else 1) * aurora_mult
+onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult
 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
@@ -35,7 +35,8 @@ onready var hole = $Hole
 onready var ray = $Rover/RayCast2D
 onready var mining_laser = $Rover/MiningLaser
 onready var mining_p = $MiningParticles
-onready var tile_highlight = $TileHighlight
+onready var tile_highlight_left = $TileHighlightLeft
+onready var tile_highlight_right = $TileHighlightRight
 onready var canvas_mod = $CanvasModulate
 onready var aurora_mod = $AuroraModulate
 onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
@@ -71,8 +72,10 @@ var def:float = 5.0
 var HP:float = 20.0
 var total_HP:float = 20.0
 var speed_mult:float = 1.0
-var inventory:Array
+var inventory:Array = []
+var right_inventory:Array = []
 var inventory_ready:Array = []#For cooldowns
+var right_inventory_ready:Array = []#For cooldowns
 var i_w_w:Dictionary = {}#inventory_with_weight
 var weight:float = 0.0
 var weight_cap:float = 1500.0
@@ -158,9 +161,6 @@ func _ready():
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
-	if not game:
-		rover_data = {"HP":100, "total_HP":100, "atk":100, "def":100, "spd":2.5, "weight_cap":10000, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"red_mining_laser"}, {"type":""}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}
-		set_rover_data()
 	if tower:
 		$Walls.tile_set = preload("res://Resources/DiamondWalls.tres")
 		$Hole/Sprite.texture = preload("res://Graphics/Tiles/diamond_stairs.png")
@@ -221,27 +221,23 @@ func set_rover_data():
 	speed_mult = rover_data.spd
 	weight_cap = rover_data.weight_cap
 	inventory = rover_data.inventory
+	right_inventory = rover_data.right_inventory
 	i_w_w = rover_data.i_w_w
 	for w in i_w_w:
 		weight += i_w_w[w]
 	for i in len(inventory):
 		inventory_ready.append(true)
-	print(inventory)
+	right_inventory_ready.append(true)
 	for i in range(0, len(inventory)):
 		var slot = game.slot_scene.instance()
+		slot.get_node("Button").modulate = Color.red
 		inventory_slots.add_child(slot)
-		var rsrc = inventory[i].type
 		slots.append(slot)
-		if rsrc == "":
-			continue
-		if rsrc == "rover_weapons":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + inventory[i].name + ".png")
-		elif rsrc == "rover_mining":
-			slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + inventory[i].name + ".png")
-		else:
-			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(inventory[i].name), inventory[i].name])
-			if inventory[i].has("num"):
-				slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
+		if not inventory[i].empty():
+			set_slot_info(slot, inventory[i])
+	$UI2/RightClickSlot.get_node("Button").modulate = Color.green
+	if not right_inventory.empty():
+		set_slot_info($UI2/RightClickSlot, right_inventory[0])
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
 	$Rover/Bar.max_value = total_HP
@@ -251,10 +247,23 @@ func set_rover_data():
 	$Rover/InvBar.value = weight
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
-	if game and game.help.sprint_mode and speed_mult > 1:
+	if game.help.sprint_mode and speed_mult > 1:
 		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
 		game.help.sprint_mode = false
 
+func set_slot_info(slot, _inv:Dictionary):
+	var rsrc = _inv.type
+	if rsrc == "":
+		return
+	if rsrc == "rover_weapons":
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.name + ".png")
+	elif rsrc == "rover_mining":
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
+	else:
+		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.name), _inv.name])
+		if _inv.has("num"):
+			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
+	
 func remove_cave():
 	if is_instance_valid(boss):
 		remove_child(boss)
@@ -319,20 +328,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 			light_amount = 1
 		else:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
-			if game:
-				if game.science_unlocked.has("RMK2"):
-					light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
-				if game.science_unlocked.has("RMK3"):
-					light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
-				if game.help.cave_controls:
-					$UI2/Controls.visible = true
-					game.help_str = "cave_controls"
-					$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-				if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
-					game.objective.current += 1
-			else:
-				light_amount = 0.4
-				rover_light.visible = true
+			if game.science_unlocked.has("RMK2"):
+				light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
+			if game.science_unlocked.has("RMK3"):
+				light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
+			if game.help.cave_controls:
+				$UI2/Controls.visible = true
+				game.help_str = "cave_controls"
+				$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
+			if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
+				game.objective.current += 1
 	if not aurora:
 		canvas_mod.color = Color.white * light_amount
 		canvas_mod.color.a = 1
@@ -386,7 +391,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
-	var boss_cave = not game or game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
+	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
 	#Generate cave
 	for i in cave_size:
@@ -741,7 +746,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = hole_pos
 		camera.position = hole_pos
 	else:
-		if boss_cave and (not game or not game.fourth_ship_hints.boss_rekt):
+		if boss_cave and not game.fourth_ship_hints.boss_rekt:
 			pos = Vector2(2000, 2900)
 			MM_exit.position = pos * minimap_zoom
 			boss = preload("res://Scenes/Cave/CaveBoss.tscn").instance()
@@ -919,42 +924,54 @@ func update_health_bar(_HP):
 	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil(HP)), Helper.format_num(total_HP)]
 
 var mouse_pos = Vector2.ZERO
-var tile_highlighted:int = -1
+var tile_highlighted_for_mining:int = -1
 
 func update_ray():
-	ray.enabled = inventory[curr_slot].type == "rover_mining"
+	var _inv:Dictionary
+	var _tile_highlight
+	var left_type:String = inventory[curr_slot].type if not inventory[curr_slot].empty() else ""
+	var right_type:String = right_inventory[0].type if not right_inventory[0].empty() else ""
+	ray.enabled = "rover_mining" in [left_type, right_type]
+	var holding_click:bool
+	if left_type == "rover_mining":
+		_inv = inventory[curr_slot]
+		_tile_highlight = tile_highlight_left
+		holding_click = use_item.pressed
+	elif right_type == "rover_mining":
+		_inv = right_inventory[0]
+		_tile_highlight = tile_highlight_right
+		holding_click = Input.is_action_pressed("right_click")
 	if ray.enabled:
-		var laser_reach = Data.rover_mining[inventory[curr_slot].name].rnge
+		var laser_reach = Data.rover_mining[_inv.name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
-		var holding_left_click = use_item.pressed
 		if coll is TileMap:
 			var pos = ray.get_collision_point() + ray.cast_to / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
-			tile_highlighted = get_tile_index(cave_wall.world_to_map(pos))
+			tile_highlighted_for_mining = get_tile_index(cave_wall.world_to_map(pos))
 			var is_minable = cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
-			if tile_highlighted != -1 and is_minable:
-				tile_highlight.visible = true
-				tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
-				tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
-				mining_p.emitting = holding_left_click
-				if holding_left_click:
+			if tile_highlighted_for_mining != -1 and is_minable:
+				_tile_highlight.visible = true
+				_tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
+				_tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
+				mining_p.emitting = holding_click
+				if holding_click:
 					mining_p.position = pos
 			else:
 				mining_p.emitting = false
-				tile_highlighted = -1
+				tile_highlighted_for_mining = -1
 		else:
-			tile_highlighted = -1
-			tile_highlight.visible = false
+			tile_highlighted_for_mining = -1
+			_tile_highlight.visible = false
 			mining_p.emitting = false
-		mining_laser.visible = holding_left_click
-		if holding_left_click:
+		mining_laser.visible = holding_click
+		if holding_click:
 			mining_laser.scale.x = laser_reach / 16.0
 			mining_laser.scale.y = 16.0
-			if inventory[curr_slot].name == "gammaray_mining_laser":
+			if _inv.name == "gammaray_mining_laser":
 				mining_laser.material["shader_param/beams"] = 2
 				mining_laser.material["shader_param/energy"] = 15
-			elif inventory[curr_slot].name == "ultragammaray_mining_laser":
+			elif _inv.name == "ultragammaray_mining_laser":
 				mining_laser.material["shader_param/beams"] = 3
 				mining_laser.material["shader_param/energy"] = 20
 			else:
@@ -972,8 +989,8 @@ func _input(event):
 		global_mouse_pos = event.position
 		mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 		update_ray()
-		var alpha:float = clamp(range_lerp((global_mouse_pos - Vector2(1280, 0)).length(), 0.0, 350.0, -1.0, 1.0), 0.0, 1.0)
-		if inventory[curr_slot].type != "rover_weapons":
+		var alpha:float = clamp(range_lerp((global_mouse_pos - Vector2(1280, 0)).length(), 0.0, 500.0, -1.0, 1.0), 0.0, 1.0)
+		if (inventory[curr_slot].empty() or inventory[curr_slot].type != "rover_weapons") and (right_inventory[0].empty() or right_inventory[0].type != "rover_weapons"):
 			alpha = 1.0
 		for MM in $UI.get_children():
 			MM.modulate.a = alpha
@@ -1196,43 +1213,15 @@ func _process(delta):
 				rover.get_node("Burn").visible = false
 				$BurnTimer.stop()
 	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
-		tile_highlight.position.x = floor(rover.position.x / 200) * 200 + 100
-		tile_highlight.position.y = floor(rover.position.y / 200) * 200 + 100
-	if not status_effects.has("stun") and use_item.pressed and inventory_ready[curr_slot]:
-		var item:Dictionary = inventory[curr_slot]
-		if item.type == "rover_weapons":
-			attack()
-		elif item.type == "rover_mining" and tile_highlighted != -1:
-			hit_rock(delta)
-			update_ray()
-		elif item.type == "consumable":
-			if item.name == "portable_wormhole":
-				remove_item(item, 1)
-				exit_cave()
-			elif item.name == "drill":
-				if tile.cave.has("special_cave"):
-					game.popup(tr("DRILL_ERROR"), 2.0)
-					return
-				if cave_floor == num_floors:
-					game.popup(tr("DRILL_ERROR2"), 1.5)
-					return
-				var tile_id:int = get_tile_index(Vector2(int(rover.position.x / 200), int(rover.position.y / 200)))
-				var holes:Dictionary = hole_exits[cave_floor - 1]
-				var ok:bool = false
-				if tile_id != holes.hole and tile_id != holes.exit:
-					if holes.has("drilled_holes"):
-						if not tile_id in holes.drilled_holes:
-							holes.drilled_holes.append(tile_id)
-							ok = true
-					else:
-						holes.drilled_holes = [tile_id]
-						ok = true
-				if ok:
-					remove_item(item, 1)
-					if not inventory[curr_slot].has("name"):
-						tile_highlight.visible = false
-					add_hole(tile_id)
-				cooldown(0.5)
+		tile_highlight_left.position.x = floor(rover.position.x / 200) * 200 + 100
+		tile_highlight_left.position.y = floor(rover.position.y / 200) * 200 + 100
+	elif right_inventory[0].has("name") and right_inventory[0].name == "drill":
+		tile_highlight_right.position.x = floor(rover.position.x / 200) * 200 + 100
+		tile_highlight_right.position.y = floor(rover.position.y / 200) * 200 + 100
+	if not status_effects.has("stun") and use_item.pressed and inventory_ready[curr_slot] and not inventory[curr_slot].empty():
+		use_item(inventory[curr_slot], tile_highlight_left, delta)
+	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].empty():
+		use_item(right_inventory[0], tile_highlight_right, delta)
 	if aurora:
 		canvas_mod.color = aurora_mod.modulate * light_amount
 		canvas_mod.color.a = 1
@@ -1240,6 +1229,40 @@ func _process(delta):
 		for enemy in get_tree().get_nodes_in_group("enemies"):
 			enemy.MM_icon.position = enemy.position * minimap_zoom
 
+func use_item(item:Dictionary, _tile_highlight, delta):
+	if item.type == "rover_weapons":
+		attack()
+	elif item.type == "rover_mining" and tile_highlighted_for_mining != -1:
+		hit_rock(item, _tile_highlight, delta)
+		update_ray()
+	elif item.type == "consumable":
+		if item.name == "portable_wormhole":
+			remove_item(item, 1)
+			exit_cave()
+		elif item.name == "drill":
+			if tile.cave.has("special_cave"):
+				game.popup(tr("DRILL_ERROR"), 2.0)
+				return
+			if cave_floor == num_floors:
+				game.popup(tr("DRILL_ERROR2"), 1.5)
+				return
+			var tile_id:int = get_tile_index(Vector2(int(rover.position.x / 200), int(rover.position.y / 200)))
+			var holes:Dictionary = hole_exits[cave_floor - 1]
+			var ok:bool = false
+			if tile_id != holes.hole and tile_id != holes.exit:
+				if holes.has("drilled_holes"):
+					if not tile_id in holes.drilled_holes:
+						holes.drilled_holes.append(tile_id)
+						ok = true
+				else:
+					holes.drilled_holes = [tile_id]
+					ok = true
+			if ok:
+				remove_item(item, 1)
+				if not item.has("name"):
+					_tile_highlight.visible = false
+				add_hole(tile_id)
+			cooldown(0.5)
 
 func attack():
 	var laser_name:String = inventory[curr_slot].name.split("_")[0]
@@ -1307,25 +1330,25 @@ func get_color(color:String):
 		"ultragammaray":
 			return Color.white
 
-func hit_rock(delta):
-	var st = String(tile_highlighted)
+func hit_rock(item:Dictionary, _tile_highlight, delta):
+	var st = String(tile_highlighted_for_mining)
 	if not tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st] = {}
 		var tile = tiles_touched_by_laser[st]
 		tile.progress = 0
 		var sq_bar = sq_bar_scene.instance()
 		add_child(sq_bar)
-		sq_bar.rect_position = cave.map_to_world(get_tile_pos(tile_highlighted))
+		sq_bar.rect_position = cave.map_to_world(get_tile_pos(tile_highlighted_for_mining))
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[inventory[curr_slot].name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
+		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			game.stats_univ.tiles_mined_caves += 1
 			game.stats_dim.tiles_mined_caves += 1
 			game.stats_global.tiles_mined_caves += 1
-			var map_pos = cave_wall.world_to_map(tile_highlight.position)
+			var map_pos = cave_wall.world_to_map(_tile_highlight.position)
 			var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
 			#var wall_type = cave_wall.get_cellv(map_pos)
 			if not dont_gen_anything:
@@ -1375,14 +1398,14 @@ func hit_rock(delta):
 				var timer = $UI2/Panel/Timer
 				timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
 				timer.start()
-			astar_node.add_point(tile_highlighted, Vector2(map_pos.x, map_pos.y))
+			astar_node.add_point(tile_highlighted_for_mining, Vector2(map_pos.x, map_pos.y))
 			connect_points(map_pos, true)
 			remove_child(tiles_touched_by_laser[st].bar)
 			tiles_touched_by_laser[st].bar.queue_free()
 			tiles_touched_by_laser.erase(st)
 			cave.set_cellv(map_pos, tile_type)
-			tiles_mined[cave_floor - 1].append(tile_highlighted)
-			tile_highlighted = -1
+			tiles_mined[cave_floor - 1].append(tile_highlighted_for_mining)
+			tile_highlighted_for_mining = -1
 
 func add_weight_rsrc(r, rsrc_amount):
 	weight += rsrc_amount
@@ -1438,6 +1461,9 @@ func set_border(i:int):
 			var border = slot.get_node("border")
 			slot.remove_child(border)
 			border.queue_free()
+	if inventory[i].empty():
+		active_item.text = ""
+		return
 	if inventory[i].type == "rover_mining":
 		var c:Color = get_color(inventory[i].name.split("_")[0])
 		mining_laser.material["shader_param/color"] = c * 4.0
@@ -1454,9 +1480,9 @@ func set_border(i:int):
 	else:
 		active_item.text = ""
 	if inventory[i].has("name") and inventory[i].name == "drill":
-		tile_highlight.visible = true
+		tile_highlight_left.visible = true
 	elif inventory[i].type != "rover_mining":
-		tile_highlight.visible = false
+		tile_highlight_left.visible = false
 
 func sort_size(a, b):
 	if a.size > b.size:
@@ -1593,7 +1619,7 @@ func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 			game.get_4th_ship()
 	if _NPC_id == 4:
 		if _dialogue_id == 1:
-			if not game or game.money >= 50000000000000:#50T
+			if game.money >= 50000000000000:#50T
 				$UI2/Dialogue.dialogue_id = 2
 				$UI2/Dialogue.show_dialogue()
 			else:
@@ -1620,13 +1646,29 @@ func init_boss():
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:
-		$UI2/Filters/AnimationPlayer.play_backwards("Fade")
-		yield($UI2/Filters/AnimationPlayer, "animation_finished")
+		var tween = Tween.new()
+		add_child(tween)
+		var rect_x:int = $UI2/Filters.rect_position.x
+		tween.interpolate_property($UI2/Filters, "modulate", null, Color(1, 1, 1, 0), 0.1)
+		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 602), 0.1)
+		tween.start()
+		yield(tween, "tween_all_completed")
+		remove_child(tween)
+		tween.queue_free()
 		if $UI2/Filters.modulate.a == 0:
 			$UI2/Filters.visible = false
 	else:
-		$UI2/Filters/AnimationPlayer.play("Fade")
+		var tween = Tween.new()
+		add_child(tween)
+		var rect_x:int = $UI2/BottomLeft/Filter.rect_position.x
+		$UI2/Filters.rect_position.x = rect_x
+		tween.interpolate_property($UI2/Filters, "modulate", null, Color.white, 0.1)
+		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 598), 0.1)
+		tween.start()
 		$UI2/Filters.visible = true
+		yield(tween, "tween_all_completed")
+		remove_child(tween)
+		tween.queue_free()
 
 
 func _on_CheckAchievements_timeout():

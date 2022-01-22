@@ -130,9 +130,9 @@ __meta__ = {
 
 [node name="HBox" type="HBoxContainer" parent="Achievements/ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 932.0
-margin_bottom = 449.0
+margin_bottom = 454.0
 custom_constants/separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
@@ -793,7 +793,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 254.0
 margin_bottom = 435.0
 size_flags_horizontal = 3
@@ -875,9 +875,9 @@ __meta__ = {
 
 [node name="Control" type="Control" parent="Statistics/ScrollContainer2"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 660.0
-margin_bottom = 405.0
+margin_bottom = 410.0
 rect_min_size = Vector2( 650, 400 )
 
 [node name="HBox" type="HBoxContainer" parent="Statistics/ScrollContainer2/Control"]

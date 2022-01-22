@@ -115,7 +115,7 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 		rover_has_items = false
 		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]
 		for inv in rov.inventory:
-			if inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
+			if not inv.empty() and inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				rover_has_items = true
 				break
 		game.help_str = "rover_shortcuts"

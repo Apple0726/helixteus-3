@@ -19,6 +19,11 @@ func _ready():
 		for i in range(1, len(s_i.stars)):
 			if s_i.stars[i].luminosity > star.luminosity:
 				star = s_i.stars[i]
+		if game.galaxy_data[game.c_g].has("conquered") and not s_i.has("conquered"):
+			s_i.conquered = true
+			game.stats_univ.planets_conquered += s_i.planet_num
+			game.stats_dim.planets_conquered += s_i.planet_num
+			game.stats_global.planets_conquered += s_i.planet_num
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]

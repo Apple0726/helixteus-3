@@ -679,9 +679,9 @@ func load_univ():
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
-			Helper.add_minerals((autocollect.rsrc.minerals * min_mult + autocollect.MS.minerals) * time_elapsed)
-			energy += (autocollect.rsrc.energy * energy_mult + autocollect.MS.energy) * time_elapsed
-			SP += (autocollect.rsrc.SP * SP_mult + autocollect.MS.SP) * time_elapsed
+			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.GS.minerals) * min_mult + autocollect.MS.minerals) * time_elapsed)
+			energy += ((autocollect.rsrc.energy + autocollect.GS.energy) * energy_mult + autocollect.MS.energy) * time_elapsed
+			SP += ((autocollect.rsrc.SP + autocollect.GS.SP) * SP_mult + autocollect.MS.SP) * time_elapsed
 			var plant_time_elapsed = time_elapsed
 			for mat in autocollect.mats:
 				if mat == "cellulose":
@@ -774,7 +774,7 @@ func load_game():
 		"SLUGF_Stats":1.15,
 		"COSHEF":1.5,
 		"MMBSVR":10,
-		"ULUGF":1.6,
+		"ULUGF":1.63,
 	})
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
@@ -785,12 +785,12 @@ func load_game():
 		"planck":20,
 		"boltzmann":10,
 		"gravitational":30,
-		"charge":20,
+		"charge":25,
 		"dark_energy":25,
 		"difficulty":10,
 		"time_speed":50,
 		"antimatter":0,
-		"universe_value":50,
+		"universe_value":100,
 	})
 	engineering_bonus = save_info_dict.get("engineering_bonus", {
 		"BCM":1.0,
@@ -893,21 +893,10 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 			"SLUGF_Stats":1.15,
 			"COSHEF":1.5,
 			"MMBSVR":10,
-			"ULUGF":1.6,
+			"ULUGF":1.63,
 		}
-		physics_bonus = {
-			"MVOUP":0.5,
-			"speed_of_light":10,
-			"planck":20,
-			"boltzmann":10,
-			"gravitational":30,
-			"charge":20,
-			"dark_energy":25,
-			"difficulty":10,
-			"time_speed":50,
-			"antimatter":0,
-			"universe_value":50,
-		}
+		physics_bonus = Data.univ_prop_weights.duplicate(true)
+		physics_bonus.MVOUP = 0.5
 		engineering_bonus = {
 			"BCM":1.0,
 			"PS":1.0,

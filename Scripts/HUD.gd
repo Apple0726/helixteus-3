@@ -126,12 +126,6 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
-	if $Resources/Cellulose.visible:
-		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
-		if game.mats.cellulose > 0:
-			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
-		else:
-			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.red
 
 func update_XP():
 	while game.u_i.xp >= game.u_i.xp_to_lv:
@@ -189,6 +183,12 @@ func update_money_energy_SP():
 		money_text.text = Helper.format_num(round(game.money))
 		energy_text.text = Helper.format_num(floor(game.energy))
 	SP_text.text = Helper.format_num(floor(game.SP))
+	if $Resources/Cellulose.visible:
+		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
+		if game.mats.cellulose > 0:
+			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
+		else:
+			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.red
 	
 func refresh():
 	if not game:

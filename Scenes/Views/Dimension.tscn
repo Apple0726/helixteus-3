@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -28,6 +28,45 @@ border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 2 )
 
+[sub_resource type="Animation" id=6]
+resource_name = "FlashButton"
+length = 0.6
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.223529 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=3]
+size = 19
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 10.0
 content_margin_right = 10.0
@@ -44,12 +83,6 @@ expand_margin_top = 12.0
 expand_margin_bottom = 12.0
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="DynamicFont" id=3]
-size = 19
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 25
@@ -82,7 +115,6 @@ __meta__ = {
 }
 
 [node name="Universes" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
@@ -100,9 +132,9 @@ __meta__ = {
 
 [node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 270.0
-margin_bottom = 265.0
+margin_bottom = 270.0
 
 [node name="UniverseIcon" type="TextureButton" parent="Universes/Scroll/VBox"]
 margin_right = 260.0
@@ -140,6 +172,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ColorRect" type="ColorRect" parent="Universes/SendProbes"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 1, 1, 1, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Universes/SendProbes"]
+anims/FlashButton = SubResource( 6 )
+anims/RESET = SubResource( 7 )
+
 [node name="UnivInfo" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -148,8 +193,8 @@ margin_top = 60.0
 margin_right = -588.0
 margin_bottom = -12.0
 rect_min_size = Vector2( 392, 648 )
-custom_styles/normal = SubResource( 2 )
 custom_fonts/font = SubResource( 3 )
+custom_styles/normal = SubResource( 2 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -168,9 +213,9 @@ __meta__ = {
 
 [node name="Grid" type="GridContainer" parent="Subjects"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 1022.0
-margin_bottom = 661.0
+margin_bottom = 666.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

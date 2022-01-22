@@ -60,7 +60,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
 				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
-				"TP":{"money":e(2.5, 23), "energy":e(2.5, 23)},#Triangulum probe
+				"TP":{"money":e(7.5, 23), "energy":e(7.5, 23)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"PC":{"money":1000000, "energy":50000, "time":600.0},
 				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
@@ -423,10 +423,10 @@ var univ_prop_weights:Dictionary = {
 	"planck":20,
 	"boltzmann":10,
 	"gravitational":30,
-	"charge":20,
+	"charge":25,
 	"dark_energy":25,
 	"difficulty":10,
 	"time_speed":50,
 	"antimatter":0,
-	"universe_value":50,
+	"universe_value":100,
 	}
