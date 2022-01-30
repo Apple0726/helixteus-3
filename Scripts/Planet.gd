@@ -520,6 +520,7 @@ func click_tile(tile, tile_id:int):
 					game.PC_panel.probe_tier = 0
 					game.toggle_panel(game.PC_panel)
 				"SC":
+					game.SC_panel.c_t = tile_id
 					game.toggle_panel(game.SC_panel)
 					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 				"GF":
@@ -560,6 +561,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
+		if game.mineral_capacity < 200:
+			game.mineral_capacity = 200
 	elif bldg == "NSF":
 		if tile.bldg.is_constructing:
 			game.neutron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
@@ -728,7 +731,7 @@ func _unhandled_input(event):
 					if tile.has("cost_div"):
 						money_cost /= tile.cost_div
 					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
-					if money_cost >= total_XP / 10.0 + game.money / 100.0:
+					if money_cost >= total_XP + game.money / 100.0:
 						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
 					else:
 						destroy_bldg(tile_over)

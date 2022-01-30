@@ -24,6 +24,8 @@ var drag_delta = Vector2.ZERO
 var move_view = true
 #Whether the view should be zoomed when scrolling
 var scroll_view = true
+#Whether the view should be moved with WASD
+var move_with_keyboard = true
 
 #Variables for smoothly moving the tiles
 var acceleration = 90
@@ -329,20 +331,21 @@ var first_zoom:bool = false
 func _physics_process(_delta):
 	if not is_instance_valid(obj):
 		return
-	#Moving tiles code
-	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
-	else:
-		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
-	input_vector = input_vector.normalized()
-	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed, acceleration)
-	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction)
-	velocity = move_and_slide(velocity)
+	if move_with_keyboard:
+		#Moving tiles code
+		var input_vector = Vector2.ZERO
+		if OS.get_latin_keyboard_variant() == "AZERTY":
+			input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
+			input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
+		else:
+			input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
+			input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
+		input_vector = input_vector.normalized()
+		if input_vector != Vector2.ZERO:
+			velocity = velocity.move_toward(input_vector * max_speed, acceleration)
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, friction)
+		velocity = move_and_slide(velocity)
 
 	#Zooming animation
 	if zooming == "in":

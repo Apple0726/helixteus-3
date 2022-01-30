@@ -16,7 +16,6 @@ __meta__ = {
 margin_right = 40.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 40, 30 )
-mouse_filter = 2
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6

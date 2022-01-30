@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.22"
+const VERSION:String = "v0.23"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -13,6 +13,7 @@ var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
 var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 var overlay_scene = preload("res://Scenes/Overlay.tscn")
+var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
 var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
@@ -69,6 +70,7 @@ var settings:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
+var element_overlay:Control
 var annotator:Control
 var wiki:Panel
 var stats_panel:Panel
@@ -477,7 +479,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "25 Dec 2021"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -1766,6 +1768,8 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
+		if c_v == "system":
+			add_element_overlay()
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
@@ -1791,6 +1795,16 @@ func remove_overlay():
 		$UI.remove_child(overlay)
 		overlay.queue_free()
 
+func add_element_overlay():
+	element_overlay = element_overlay_scene.instance()
+	element_overlay.visible = false
+	$UI.add_child(element_overlay)
+
+func remove_element_overlay():
+	if is_instance_valid(element_overlay) and $UI.is_a_parent_of(element_overlay):
+		$UI.remove_child(element_overlay)
+		element_overlay.queue_free()
+
 func add_annotator():
 	annotator = annotator_scene.instance()
 	annotator.visible = false
@@ -1806,6 +1820,7 @@ func remove_space_HUD():
 		$UI.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
+	remove_element_overlay()
 	remove_annotator()
 
 func add_dimension():
@@ -2711,14 +2726,14 @@ func generate_planets(id:int):#local id
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
 		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.25))
-		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
-			if p_i.type in [11, 12]:
-				if i == 0:
-					gas_giant = false
-				else:
-					planet_data[0].second_ship = true
-			else:
-				p_i.second_ship = true
+#		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
+#			if p_i.type in [11, 12]:
+#				if i == 0:
+#					gas_giant = false
+#				else:
+#					planet_data[0].second_ship = true
+#			else:
+#				p_i.second_ship = true
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -3674,6 +3689,9 @@ func _input(event):
 	if Input.is_action_just_released("toggle"):
 		if is_instance_valid(overlay):
 			overlay.toggle_btn.pressed = not overlay.toggle_btn.pressed
+		elif is_instance_valid(element_overlay):
+			element_overlay.toggle_btn.pressed = not element_overlay.toggle_btn.pressed
+		
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help"):

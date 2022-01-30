@@ -1,6 +1,6 @@
 extends "GenericPanel.gd"
 
-var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_PK", "M_MB", "M_MPCC"]
+var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_CBS", "M_PK", "M_MB", "M_MPCC"]
 var build_all:bool = false
 
 func _ready():
@@ -47,6 +47,8 @@ func get_item(_name, _type, _dir):
 	game.toggle_panel(game.megastructures_panel)
 	if _name == "M_DS":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+	elif _name == "M_CBS":
+		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
 	elif _name == "M_MB":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
 	elif _name == "M_PK":

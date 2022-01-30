@@ -11,7 +11,7 @@ var physics_OP_points:float = 0
 var engineering_OP_points:float = 0
 
 func _ready():
-	if not game.show.has("flash_send_probe_btn"):
+	if not game.help.has("flash_send_probe_btn"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
@@ -209,7 +209,7 @@ func on_univ_press(id:int):
 	game.HUD.refresh_bookmarks()
 
 func _on_SendProbes_pressed():
-	game.show.flash_send_probe_btn = true
+	game.help.flash_send_probe_btn = true
 	$Universes/SendProbes/AnimationPlayer.play("RESET")
 	game.toggle_panel(game.send_probes_panel)
 

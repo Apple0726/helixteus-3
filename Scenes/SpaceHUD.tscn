@@ -165,6 +165,7 @@ __meta__ = {
 
 [connection signal="mouse_entered" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/ElementOverlay" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/Overlay" to="." method="_on_Overlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Overlay" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Overlay" to="." method="_on_Overlay_pressed"]

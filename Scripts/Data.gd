@@ -1,6 +1,6 @@
 extends Node
 
-enum ProjType {STANDARD, LASER, BUBBLE}
+enum ProjType {STANDARD, LASER, BUBBLE}#For caves
 
 var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
@@ -87,6 +87,10 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_1":{"money":e(6.5, 8), "stone":e(5, 7), "copper":70000, "iron":650000, "aluminium":200000, "titanium":12000, "time":48 * 3600},
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
+					"M_CBS_0":{"money":e(1.0, 11), "stone":e(6, 8), "silicon":1200000, "copper":750000, "iron":1400000, "platinum":90000, "time":4 * 86400},
+					"M_CBS_1":{"money":e(1.0, 11)*80, "stone":e(6, 8)*60, "silicon":1200000*80, "copper":750000*80, "iron":1400000*60, "platinum":90000*90, "time":12 * 86400},
+					"M_CBS_2":{"money":e(1.0, 11)*80*80, "stone":e(6, 8)*60*60, "silicon":1200000*80*60, "copper":750000*80*60, "iron":1400000*60*60, "platinum":90000*90*90, "time":36 * 86400},
+					"M_CBS_3":{"money":e(1.0, 11)*80*80*80, "stone":e(6, 8)*60*60*60, "silicon":1200000*80*60*60, "copper":750000*80*60*60, "iron":1400000*60*60*60, "platinum":90000*90*90*90, "time":100 * 86400},
 					"M_MB":{"money":e(5.5, 17), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 11), "aluminium":e(2, 12), "nanocrystal":e(8, 11), "time":120 * 86400},
 					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
 					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":48 * 86400},
@@ -257,7 +261,7 @@ var science_unlocks = {
 						#Agriculture sciences
 						"SA":{"cost":100, "parents":[]},
 						"EGH":{"cost":3500, "parents":["SA"]},
-						"GHA":{"cost":e(3.7, 7), "parents":["EGH"]},
+						"GHA":{"cost":3.7e7, "parents":["EGH"]},
 						
 						#Auto mining
 						"AM":{"cost":10000, "parents":[]},
@@ -267,12 +271,12 @@ var science_unlocks = {
 						
 						#Compact items
 						"CI":{"cost":4800, "parents":[]},
-						"CI2":{"cost":e(4.8, 6), "parents":["CI"]},
-						"CI3":{"cost":e(4.8, 9), "parents":["CI2"]},
+						"CI2":{"cost":4.8e6, "parents":["CI"]},
+						"CI3":{"cost":4.8e9, "parents":["CI2"]},
 						
 						#Atom manipulation
 						"ATM":{"cost":200000, "parents":[]},
-						"AMM":{"cost":e(1.0, 13), "parents":["ATM"]},
+						"AMM":{"cost":1e13, "parents":["ATM"]},
 						"SAP":{"cost":12500000, "parents":["ATM"]},
 						
 						#Rover sciences
@@ -282,60 +286,65 @@ var science_unlocks = {
 						"GL":{"cost":70000, "parents":["YL"]},
 						"BL":{"cost":350000, "parents":["GL"]},
 						"PL":{"cost":2400000, "parents":["BL"]},
-						"UVL":{"cost":e(2.8, 7), "parents":["PL"]},
-						"XRL":{"cost":e(4.05, 8), "parents":["UVL"]},
-						"GRL":{"cost":e(6.5, 9), "parents":["XRL"]},
-						"UGRL":{"cost":e(1, 12), "parents":["GRL"]},
+						"UVL":{"cost":2.8e7, "parents":["PL"]},
+						"XRL":{"cost":4.05e8, "parents":["UVL"]},
+						"GRL":{"cost":6.5e9, "parents":["XRL"]},
+						"UGRL":{"cost":1e12, "parents":["GRL"]},
 						
-						"RMK2":{"cost":e(5, 6), "parents":["RC"]},
-						"RMK3":{"cost":e(5, 10), "parents":["RMK2"]},
+						"RMK2":{"cost":5e6, "parents":["RC"]},
+						"RMK3":{"cost":5e10, "parents":["RMK2"]},
 						
 						#Ship sciences
 						"SCT":{"cost":350, "parents":["RC"]},
 						"CD":{"cost":2400, "parents":["SCT"]},
 						"FTL":{"cost":128000, "parents":["SCT"]},
-						"IGD":{"cost":e(9.5, 7), "parents":["FTL"]},
-						"FG":{"cost":e(3.45, 9), "parents":["IGD"]},
-						"FG2":{"cost":e(1.42, 19), "parents":["FG"]},
+						"IGD":{"cost":9.5e7, "parents":["FTL"]},
+						"FG":{"cost":3.45e9, "parents":["IGD"]},
+						"FG2":{"cost":1.42e19, "parents":["FG"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
-						"FD":{"cost":e(1.5, 8), "parents":["ID"]},
-						"PD":{"cost":e(1.2, 12), "parents":["FD"]},
+						"FD":{"cost":1.5e8, "parents":["ID"]},
+						"PD":{"cost":1.2e12, "parents":["FD"]},
 						
-						"UP1":{"cost":e(5, 7), "parents":["SCT"]},
-						"UP2":{"cost":e(5, 10), "parents":["UP1"]},
-						"UP3":{"cost":e(5, 13), "parents":["UP2"]},
-						"UP4":{"cost":e(5, 16), "parents":["UP3"]},
+						"UP1":{"cost":5e7, "parents":["SCT"]},
+						"UP2":{"cost":5e10, "parents":["UP1"]},
+						"UP3":{"cost":5e13, "parents":["UP2"]},
+						"UP4":{"cost":5e16, "parents":["UP3"]},
 						
 						#Megastructure sciences
 						"MAE":{"cost":100000, "parents":["SCT"]},
-						"TF":{"cost":e(5.6, 8), "parents":["MAE"]},
+						"TF":{"cost":5.6e8, "parents":["MAE"]},
 						#Dyson sphere
-						"DS1":{"cost":e(1.2, 11), "parents":["MAE"]},
-						"DS2":{"cost":e(4.8, 12), "parents":["DS1"]},
-						"DS3":{"cost":e(2.1, 14), "parents":["DS2"]},
-						"DS4":{"cost":e(8.0, 15), "parents":["DS3"]},
+						"DS1":{"cost":1.2e11, "parents":["MAE"]},
+						"DS2":{"cost":4.8e12, "parents":["DS1"]},
+						"DS3":{"cost":2.1e14, "parents":["DS2"]},
+						"DS4":{"cost":8.0e15, "parents":["DS3"]},
 						#Matrioshka brain
-						"MB":{"cost":e(2.6, 16), "parents":["DS4"]},
+						"MB":{"cost":2.6e16, "parents":["DS4"]},
 						#Space elevator
 						"SE1":{"cost":700000, "parents":["MAE"]},
 						
 						#Mega mineral extractor
-						"MME1":{"cost":e(1.7, 9), "parents":["MAE"]},
-						"MME2":{"cost":e(6.0, 10), "parents":["MME1"]},
-						"MME3":{"cost":e(2.4, 12), "parents":["MME2"]},
+						"MME1":{"cost":1.7e9, "parents":["MAE"]},
+						"MME2":{"cost":6.0e10, "parents":["MME1"]},
+						"MME3":{"cost":2.4e12, "parents":["MME2"]},
+						
+						#CBS
+						"CBS1":{"cost":8.5e11, "parents":["MAE"]},
+						"CBS2":{"cost":8.5e11*70, "parents":["CBS1"]},
+						"CBS3":{"cost":8.5e11*70*70, "parents":["CBS2"]},
 						
 						#Planetkiller
-						"PK1":{"cost":e(5.25, 14), "parents":["MAE"]},
-						"PK2":{"cost":e(3.4, 16), "parents":["PK1"]},
+						"PK1":{"cost":5.25e14, "parents":["MAE"]},
+						"PK2":{"cost":3.4e16, "parents":["PK1"]},
 						
 						#Mega probe construction center
-						"MPCC":{"cost":e(2.9, 15), "parents":["MAE"]},
+						"MPCC":{"cost":2.9e15, "parents":["MAE"]},
 						
 						#Gigastructures
-						"GS":{"cost":e(1, 19), "parents":["MB"]},
+						"GS":{"cost":1e19, "parents":["MB"]},
 						
 						#Triangulum probe
-						"TPCC":{"cost":e(1, 23), "parents":["GS"]},
+						"TPCC":{"cost":1e23, "parents":["GS"]},
 }
 
 var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2},
@@ -429,4 +438,35 @@ var univ_prop_weights:Dictionary = {
 	"time_speed":50,
 	"antimatter":0,
 	"universe_value":100,
+	}
+
+var molar_mass = {	"H":1.008,
+						"He":4.0026,
+						"C":12.011,
+						"N":14.001,
+						"O":15.999,
+						"F":18.998,
+						"Ne":20.18,
+						"Na":22.99,
+						"Mg":24.305,
+						"Al":26.982,
+						"Si":28.085,
+						"P":30.974,
+						"S":32.06,
+						"K":39.098,
+						"Ca":40.078,
+						"Ti":47.867,
+						"Cr":51.996,
+						"Mn":54.938,
+						"Fe":55.845,
+						"Co":58.933,
+						"Ni":58.693,
+						"Xe":131.29,
+						"Ta":180.95,
+						"W":183.84,
+						"Os":190.23,
+						"Ir":192.22,
+						"U":238.03,
+						"Np":237,
+						"Pu":244,
 	}

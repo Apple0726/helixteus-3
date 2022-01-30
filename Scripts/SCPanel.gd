@@ -19,7 +19,7 @@ func _ready():
 	set_process(false)
 
 func refresh():
-	tile = game.tile_data[game.c_t]
+	tile = game.tile_data[c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.bldg.has("stone")
 	set_process(is_crushing)

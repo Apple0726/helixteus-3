@@ -258,6 +258,13 @@ func set_slot_info(slot, _inv:Dictionary):
 	if rsrc == "rover_weapons":
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.name + ".png")
 	elif rsrc == "rover_mining":
+		var c:Color = get_color(_inv.name.split("_")[0])
+		mining_laser.material["shader_param/color"] = c * 4.0
+		mining_laser.material["shader_param/outline_color"] = c * 4.0
+		var speed = Data.rover_mining[_inv.name].speed
+		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
+		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
+		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
 	else:
 		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.name), _inv.name])
@@ -1073,6 +1080,8 @@ func _input(event):
 							remainders[rsrc] = remainder
 					else:
 						for i in len(inventory):
+							if inventory[i].empty():
+								continue
 							if inventory[i].has("name") and rsrc != inventory[i].name:
 								if i == len(inventory) - 1:
 									remainders[rsrc] = contents[rsrc]
@@ -1452,26 +1461,14 @@ var slots = []
 func set_border(i:int):
 	for j in range(0, len(slots)):
 		var slot = slots[j]
-		if i == j and not slot.has_node("border"):
-			var border = TextureRect.new()
-			border.texture = preload("res://Graphics/Cave/SlotBorder.png")
-			slot.add_child(border)
-			border.name = "border"
-		elif slot.has_node("border"):
-			var border = slot.get_node("border")
-			slot.remove_child(border)
-			border.queue_free()
+		if i == j and not slot.get_node("Border").visible:
+			slot.get_node("Border").visible = true
+		elif slot.get_node("Border").visible:
+			slot.get_node("Border").visible = false
 	if inventory[i].empty():
 		active_item.text = ""
 		return
 	if inventory[i].type == "rover_mining":
-		var c:Color = get_color(inventory[i].name.split("_")[0])
-		mining_laser.material["shader_param/color"] = c * 4.0
-		mining_laser.material["shader_param/outline_color"] = c * 4.0
-		var speed = Data.rover_mining[inventory[i].name].speed
-		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
-		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
-		mining_p.lifetime = 0.2 / time_speed
 		active_item.text = Helper.get_rover_mining_name(inventory[i].name)
 	elif inventory[i].type == "rover_weapons":
 		active_item.text = Helper.get_rover_weapon_name(inventory[i].name)

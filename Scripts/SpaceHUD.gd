@@ -63,3 +63,7 @@ func _on_mouse_exited():
 
 func _on_ElementOverlay_mouse_entered():
 	game.show_tooltip(tr("ELEMENT_OVERLAY") + " (O)\n" + tr("ELEMENT_OVERLAY_DESC"))
+
+
+func _on_ElementOverlay_pressed():
+	game.element_overlay.visible = not game.element_overlay.visible

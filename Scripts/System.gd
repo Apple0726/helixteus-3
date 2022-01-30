@@ -17,8 +17,9 @@ var star_rsrcs = []
 var planet_rsrcs = []
 var planet_hovered:int = -1
 var tile_datas:Array = []
-var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
+var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 var build_all_MS_stages:bool = false
+var show_atoms:Array = []#Used by element overlay
 
 func _ready():
 	refresh_planets()
@@ -94,37 +95,49 @@ func refresh_planets():
 				planet_glow.modulate = Color.burlywood
 			else:
 				planet_glow.modulate = Color(0, 1, 0, 1)
-			var tile_data:Array = tile_datas[p_i.l_id]
-			var bldgs:Dictionary = {}
-			if p_i.has("tile_num"):
-				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+			if not is_instance_valid(game.element_overlay):
+				yield(get_tree(), "idle_frame")
+			if game.element_overlay.toggle_btn.pressed:
+				add_elements(p_i, v, sc)
 			else:
-				for tile in tile_data:
-					if tile and tile.has("bldg"):
-						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-			if not bldgs.empty():
-				var grid:GridContainer = GridContainer.new()
-				grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				grid.columns = 3
-				grid.rect_scale *= sc * 2.0
-				for bldg in bldgs:
-					var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
-					grid.add_child(bldg_count)
-					bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
-					bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-				add_child(grid)
-				grid.add_to_group("info_nodes")
-				grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.0
-				grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.0
+				var tile_data:Array = tile_datas[p_i.l_id]
+				var bldgs:Dictionary = {}
+				if p_i.has("tile_num"):
+					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+				else:
+					for tile in tile_data:
+						if tile and tile.has("bldg"):
+							Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+				if not bldgs.empty():
+					var grid:GridContainer = GridContainer.new()
+					grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					grid.columns = 3
+					grid.rect_scale *= sc * 2.0
+					for bldg in bldgs:
+						var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+						bldg_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % bldg)])
+						bldg_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+						grid.add_child(bldg_count)
+						bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+						bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+					add_child(grid)
+					grid.add_to_group("info_nodes")
+					grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.0
+					grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.0
 		else:
-			var HX_count = preload("res://Scenes/EntityCount.tscn").instance()
-			HX_count.rect_scale *= sc * 3.0
-			#HX_count.rect_position = v - Vector2(0, 80) * sc * 3.0
-			HX_count.get_node("Label").text = "x %s" % len(p_i.HX_data)
-			add_child(HX_count)
-			HX_count.add_to_group("info_nodes")
-			HX_count.rect_position.x = v.x - HX_count.rect_size.x / 2.0 * sc * 3.0
-			HX_count.rect_position.y = v.y - (HX_count.rect_size.y + 40) * sc * 3.0
+			if game.element_overlay.toggle_btn.pressed:
+				add_elements(p_i, v, sc)
+			else:
+				var HX_count = preload("res://Scenes/EntityCount.tscn").instance()
+				HX_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("ENEMIES")])
+				HX_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+				HX_count.rect_scale *= sc * 3.0
+				#HX_count.rect_position = v - Vector2(0, 80) * sc * 3.0
+				HX_count.get_node("Label").text = "x %s" % len(p_i.HX_data)
+				add_child(HX_count)
+				HX_count.add_to_group("info_nodes")
+				HX_count.rect_position.x = v.x - HX_count.rect_size.x / 2.0 * sc * 3.0
+				HX_count.rect_position.y = v.y - (HX_count.rect_size.y + 40) * sc * 3.0
 			if p_i.type in [11, 12]:
 				planet_glow.modulate = Color.burlywood
 			else:
@@ -180,7 +193,55 @@ func refresh_planets():
 		planet.position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
-	
+
+func add_elements(p_i:Dictionary, v:Vector2, sc:float):
+	var grid:GridContainer = GridContainer.new()
+	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	grid.columns = 3
+	grid.rect_scale *= sc * 2.0
+	if game.element_overlay.option_btn.get_selected_id() == 0:#Planet interior
+		var R = p_i.size * 1000.0 / 2#in meters
+		var surface_volume = get_sph_V(R, R - p_i.crust_start_depth)#in m^3
+		var crust_volume = get_sph_V(R - p_i.crust_start_depth, R - p_i.mantle_start_depth)
+		var mantle_volume = get_sph_V(R - p_i.mantle_start_depth, R - p_i.core_start_depth)
+		var core_volume = get_sph_V(R - p_i.core_start_depth)
+		var crust_stone_amount = (surface_volume + crust_volume) * ((5600 + p_i.mantle_start_depth * 0.01) / 2.0)
+		var mantle_stone_amount = mantle_volume * ((5690 + (p_i.mantle_start_depth + p_i.core_start_depth) * 0.01) / 2.0)
+		var core_stone_amount = core_volume * ((5700 + (p_i.core_start_depth + R) * 0.01) / 2.0)
+		for atom in show_atoms:
+			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
+			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
+			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+			grid.add_child(atom_count)
+			atom_count.get_node("Texture").texture = load("res://Graphics/Atoms/%s.png" % atom)
+			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount) / Data.molar_mass[atom] / 1000.0
+			atom_count.get_node("Label").text = "%s mol" % Helper.format_num(num, true)
+	elif game.element_overlay.option_btn.get_selected_id() == 1:
+		for atom in show_atoms:
+			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
+			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
+			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+			grid.add_child(atom_count)
+			atom_count.get_node("Texture").texture = load("res://Graphics/Atoms/%s.png" % atom)
+			var percentage:float = p_i.atmosphere[atom] * 100.0 if p_i.atmosphere.has(atom) else 0.0
+			atom_count.get_node("Label").text = "%s%%" % Helper.clever_round(percentage)
+	add_child(grid)
+	grid.add_to_group("info_nodes")
+	grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.0
+	grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.0
+
+#get_sphere_volume
+func get_sph_V(outer:float, inner:float = 0):
+	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
+	inner /= 150.0
+	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
+
+func on_entity_icon_over(txt:String):
+	game.show_tooltip(txt)
+
+func on_entity_icon_out():
+	game.hide_tooltip()
+
 func refresh_stars():
 	for star in get_tree().get_nodes_in_group("stars"):
 		star.remove_from_group("stars")
@@ -268,6 +329,12 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 	glow_over = glow
 	show_planet_info(id, l_id)
 
+func auto_speedup(bldg_costs:Dictionary):
+	bldg_costs.time /= game.u_i.time_speed
+	if game.universe_data[game.c_u].lv >= 60:
+		bldg_costs.money += bldg_costs.time * 200
+		bldg_costs.time = 0.2
+
 func show_M_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
@@ -279,10 +346,7 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_4)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM)
-	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 60:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
+	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
@@ -290,6 +354,29 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, num_stages.M_DS)}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1)}, false)
+
+func show_M_CBS_costs(star:Dictionary, base:bool = false):
+	var vbox = game.get_node("UI/Panel/VBox")
+	game.get_node("UI/Panel").visible = true
+	var stage:int = (star.MS_lv + 1) if not base else 0
+	bldg_costs = Data.MS_costs["M_CBS_%s" % stage].duplicate(true)
+	if base and build_all_MS_stages:
+		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_CBS_1)
+		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_CBS_2)
+		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_CBS_3)
+	for cost in bldg_costs:
+		bldg_costs[cost] = round(bldg_costs[cost] * game.planet_data[-1].distance / 1000.0 * game.engineering_bonus.BCM)
+	auto_speedup(bldg_costs)
+	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
+	var p_num:int = len(game.planet_data)
+	if base and build_all_MS_stages:
+		Helper.add_label(tr("CBS_PATH_3") % [p_num, 100])
+	elif base:
+		Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
+	else:
+		Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * stage * 0.333), round(stage * 33.3)])
 
 func show_M_PK_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -300,10 +387,7 @@ func show_M_PK_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_PK_2)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
-	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 60:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
+	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	var max_diameter = 4000
@@ -323,15 +407,12 @@ func show_M_SE_costs(p_i:Dictionary, base:bool = false):
 	bldg_costs = Data.MS_costs["M_SE_%s" % ((p_i.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_SE_1)
-	bldg_costs.time /= game.u_i.time_speed
 	for cost in bldg_costs:
 		if cost != "energy":
 			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM)
 		else:
 			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM
-	if game.universe_data[game.c_u].lv >= 60:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
+	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 
@@ -345,10 +426,7 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_MME_3)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2) * game.engineering_bonus.BCM)
-	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 60:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
+	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
@@ -363,10 +441,7 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
-	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 60:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
+	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 
@@ -619,12 +694,14 @@ func on_star_over (id:int):
 		tr("STAR_MASS") % [star.mass],
 		tr("STAR_LUMINOSITY") % Helper.format_num(star.luminosity)
 	]
-	#var building:bool = game.bottom_info_action == "building_DS"
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if game.bottom_info_action == "building_DS":
 		if not has_MS:
 			show_M_DS_costs(star, true)
+	elif game.bottom_info_action == "building_CBS":
+		if not has_MS:
+			show_M_CBS_costs(star, true)
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "M_MB":
 			game.get_node("UI/Panel").visible = true

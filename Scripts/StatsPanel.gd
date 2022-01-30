@@ -54,7 +54,6 @@ func _on_General_pressed():
 	curr_stat_tab = "_on_General_pressed"
 	$Statistics/Panel.visible = true
 	$Statistics/ScrollContainer2.visible = false
-	print(stats_for)
 	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
 		tr("TOTAL_MONEY_EARNED"), Helper.format_num(game["stats_%s" % stats_for].total_money_earned),
 		tr("BLDGS_BUILT"), Helper.format_num(game["stats_%s" % stats_for].bldgs_built),

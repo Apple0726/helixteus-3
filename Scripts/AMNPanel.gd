@@ -49,34 +49,9 @@ func _ready():
 
 func _on_stone_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
-	ratios = {	"H":1000 / 1.008,
-				"He":1000 / 4.0026,
-				"C":1000 / 12.011,
-				"O":1000 / 15.999,
-				"F":1000 / 18.998,
-				"Ne":1000 / 20.18,
-				"Na":1000 / 22.99,
-				"Mg":1000 / 24.305,
-				"Al":1000 / 26.982,
-				"Si":1000 / 28.085,
-				"P":1000 / 30.974,
-				"S":1000 / 32.06,
-				"K":1000 / 39.098,
-				"Ca":1000 / 40.078,
-				"Ti":1000 / 47.867,
-				"Cr":1000 / 51.996,
-				"Mn":1000 / 54.938,
-				"Fe":1000 / 55.845,
-				"Co":1000 / 58.933,
-				"Ni":1000 / 58.693,
-				"Ta":1000 / 180.95,
-				"W":1000 / 183.84,
-				"Os":1000 / 190.23,
-				"Ir":1000 / 192.22,
-				"U":1000 / 238.03,
-				"Np":1000 / 237,
-				"Pu":1000 / 244,
-	}
+	ratios.clear()
+	for atom in Data.molar_mass:
+		ratios[atom] = 1000.0 / Data.molar_mass[atom]
 	atom_costs = {}
 	for el in ratios:
 		if game.stone.has(el):
