@@ -184,12 +184,8 @@ func _on_StarTypes_pressed():
 
 func _on_OptionButton_item_selected(index):
 	var id:int = $Statistics/HBox/OptionButton.get_item_id(index)
-	if id == 0:
-		stats_for = "global"
-	elif id == 1:
-		stats_for = "dim"
-	elif id == 2:
-		stats_for = "univ"
+	var stat_ids:Dictionary = {0:"global", 1:"dim", 2:"univ"}
+	stats_for = stat_ids[id]
 	if curr_stat_tab != "":
 		call(curr_stat_tab)
 
