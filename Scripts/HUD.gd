@@ -254,7 +254,7 @@ func refresh():
 				game.objective = {"type":game.ObjectiveType.MINERAL_UPG, "id":2, "current":0, "goal":1}
 			elif game.objective.id == 2:#Build 1 rover constr center
 				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":3, "current":0, "goal":1}
-			elif game.objective.id == 3:##Explore a cave
+			elif game.objective.id == 3:#Explore a cave
 				game.objective = {"type":game.ObjectiveType.CAVE, "id":4, "current":0, "goal":1}
 			elif game.objective.id == 4:#Mine 3 tiles
 				game.objective = {"type":game.ObjectiveType.MINE, "id":5, "current":0, "goal":3}
