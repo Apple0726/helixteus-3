@@ -76,6 +76,11 @@ func refresh():
 					fighter_num += fighter.number
 					planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number
 					base_travel_costs += 50000000 * fighter.number * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
+			if combined_strength == 0:
+				RTL.text = tr("NO_FIGHTERS")
+				$Send.visible = false
+				$Control.visible = false
+				return
 			combined_strength2 = combined_strength
 			sort_systems($Control/CheckBox.pressed)
 			for system in sorted_objs:#Calculates the actual number of systems the fighters will conquer
@@ -124,6 +129,11 @@ func refresh():
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
 					base_travel_costs += 50000000 * 2000000 * fighter.number * sys_num
+			if combined_strength == 0:
+				RTL.text = tr("NO_FIGHTERS")
+				$Send.visible = false
+				$Control.visible = false
+				return
 			combined_strength2 = combined_strength
 			sort_galaxies($Control/CheckBox.pressed)
 			for galaxy in sorted_objs:

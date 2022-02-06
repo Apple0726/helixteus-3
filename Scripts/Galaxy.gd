@@ -48,13 +48,20 @@ func _ready():
 			var grid:GridContainer = GridContainer.new()
 			grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			grid.columns = 3
-			grid.rect_scale *= 2.0
+			grid.rect_scale *= 5.0
+			var MS_grid:GridContainer = GridContainer.new()
+			MS_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			MS_grid.columns = 3
+			MS_grid.rect_scale *= 5.0
 			var bldgs:Dictionary = {}
+			var MSs:Dictionary = {}
 			for p_i in planet_data:
 				if p_i.empty():
 					continue
 				if p_i.has("tile_num"):
 					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+				if p_i.has("MS"):
+					Helper.add_to_dict(MSs, p_i.MS, 1)
 				var tile_data:Array = game.open_obj("Planets", p_i.id)
 				for tile in tile_data:
 					if tile and tile.has("bldg"):
@@ -66,8 +73,21 @@ func _ready():
 					bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
 					bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 				add_child(grid)
-				grid.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * 2.0
-				grid.rect_position.y = s_i.pos.y - (grid.rect_size.y + 40) * 2.0
+				grid.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * grid.rect_scale.x
+				grid.rect_position.y = s_i.pos.y - (grid.rect_size.y + 30) * grid.rect_scale.y
+			else:
+				grid.free()
+			if not MSs.empty():
+				for MS in MSs:
+					var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
+					MS_grid.add_child(MS_count)
+					MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
+					MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+				add_child(MS_grid)
+				MS_grid.rect_position.x = s_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid.rect_scale.x
+				MS_grid.rect_position.y = s_i.pos.y + MS_grid.rect_size.y * MS_grid.rect_scale.y
+			else:
+				MS_grid.free()
 	if game.galaxy_data[game.c_g].has("wormholes"):
 		for wh_data in game.galaxy_data[game.c_g].wormholes:
 			var blue_line = Line2D.new()

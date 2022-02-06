@@ -52,10 +52,6 @@ func _on_LineEdit_text_changed(new_text):
 func _on_LineEdit_focus_entered():
 	game.view.move_with_keyboard = false
 
-func _input(event):
-	if event is InputEventMouseButton:
-		print(event)
-
 func _on_LineEdit_focus_exited():
 	game.view.move_with_keyboard = true
 

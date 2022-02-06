@@ -2,13 +2,14 @@ extends Node2D
 
 onready var game = get_node('/root/Game')
 var sc_over:String = ""
+var sc_type:String = "Main"
 
 func _ready():
 	yield(get_tree().create_timer(0), "timeout")
 	refresh()
 
 func refresh():
-	for sc in get_children():
+	for sc in get_node(sc_type).get_children():
 		if not sc is Line2D and not sc is Node2D and not Data.science_unlocks.has(sc.name):
 			continue
 		if sc.get_script():#A way of checking whether the node is a button
@@ -49,3 +50,27 @@ func refresh():
 
 func _on_ScienceTree_tree_exited():
 	queue_free()
+
+
+func _on_IRAnim_animation_finished(anim_name):
+	if $IR.modulate.a == 0:
+		$IR.visible = false
+		get_node(sc_type).visible = true
+		get_node("%sAnim" % sc_type).play("Fade")
+		refresh()
+
+
+func _on_MainAnim_animation_finished(anim_name):
+	if $Main.modulate.a == 0:
+		$Main.visible = false
+		get_node(sc_type).visible = true
+		get_node("%sAnim" % sc_type).play("Fade")
+		refresh()
+
+
+func _on_OtherAnim_animation_finished(anim_name):
+	if $Other.modulate.a == 0:
+		$Other.visible = false
+		get_node(sc_type).visible = true
+		get_node("%sAnim" % sc_type).play("Fade")
+		refresh()

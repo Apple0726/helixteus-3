@@ -50,7 +50,7 @@ func refresh_planets():
 			tile_datas.append([])
 			continue
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
-		if p_i.has("bldg") and not tile_data_to_append.empty():#Save migration
+		if p_i.has("tile_num") and not tile_data_to_append.empty():#Save migration
 			var dir = Directory.new()
 			dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, p_i.id])
 			tile_data_to_append.clear()
@@ -86,6 +86,8 @@ func refresh_planets():
 		planet_glow.rect_scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
+		if not is_instance_valid(game.element_overlay):
+			yield(get_tree(), "idle_frame")
 		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)
@@ -95,8 +97,6 @@ func refresh_planets():
 				planet_glow.modulate = Color.burlywood
 			else:
 				planet_glow.modulate = Color(0, 1, 0, 1)
-			if not is_instance_valid(game.element_overlay):
-				yield(get_tree(), "idle_frame")
 			if game.element_overlay.toggle_btn.pressed:
 				add_elements(p_i, v, sc)
 			else:
@@ -301,7 +301,7 @@ func refresh_stars():
 		if star_info.has("MS"):
 			var MS = Sprite.new()
 			if star_info.MS == "M_MB":
-				MS.texture = load("res://Graphics/Megastructures/M_MB.png")
+				MS.texture = preload("res://Graphics/Megastructures/M_MB_0.png")
 			else:
 				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
 			MS.position = Vector2(512, 512)
@@ -753,13 +753,15 @@ func on_star_over (id:int):
 func on_star_pressed (id:int):
 	var curr_time = OS.get_system_time_msecs()
 	var star = stars_info[id]
-	if game.bottom_info_action in ["building_DS", "building_PK"]:
+	if game.bottom_info_action in ["building_DS", "building_PK", "building_CBS"]:
 		if game.system_data[game.c_s].has("conquered"):
 			if not star.has("MS"):
 				if game.bottom_info_action == "building_DS":
 					build_MS(star, "M_DS")
 				elif game.bottom_info_action == "building_PK":
 					build_MS(star, "M_PK")
+				elif game.bottom_info_action == "building_CBS":
+					build_MS(star, "M_CBS")
 			else:
 				game.popup(tr("MS_ALREADY_PRESENT"), 2.0)
 		else:

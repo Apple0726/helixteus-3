@@ -1,834 +1,879 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/ScienceButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/ScienceTree.gd" type="Script" id=2]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Fade"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("IR:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Fade"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Main:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Fade"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Other:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="ScienceTree" type="Node2D"]
+position = Vector2( 64, 0 )
 script = ExtResource( 2 )
 
-[node name="Help" type="Control" parent="."]
+[node name="IR" type="Control" parent="."]
 visible = false
-margin_left = 92.0
-margin_top = 332.0
-margin_right = 132.0
-margin_bottom = 372.0
-theme = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Help"]
-margin_left = -92.0
-margin_top = -36.0
-margin_right = 164.0
-margin_bottom = -12.0
-text = "INFINITE_RESEARCH"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TextureRect" type="TextureRect" parent="Help"]
-margin_left = 164.0
-margin_top = 8.0
-margin_right = 419.0
-margin_bottom = 40.0
-rect_scale = Vector2( -1, 1 )
-texture = ExtResource( 4 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="InfiniteResearch" type="Control" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MEE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 156.0
-margin_right = -128.0
-margin_bottom = 220.0
+[node name="MEE" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 80.0
+margin_right = 624.0
+margin_bottom = 144.0
 rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
-[node name="EPE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 252.0
-margin_right = -128.0
-margin_bottom = 316.0
+[node name="EPE" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 176.0
+margin_right = 624.0
+margin_bottom = 240.0
 rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
-[node name="RLE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 348.0
-margin_right = -128.0
-margin_bottom = 412.0
+[node name="RLE" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 272.0
+margin_right = 624.0
+margin_bottom = 336.0
 rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
-[node name="MSE" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 444.0
-margin_right = -128.0
-margin_bottom = 508.0
-rect_min_size = Vector2( 336, 0 )
-infinite_research = true
-
-[node name="MMS" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 540.0
-margin_right = -128.0
-margin_bottom = 604.0
-rect_min_size = Vector2( 336, 0 )
-infinite_research = true
-
-[node name="PME" parent="InfiniteResearch" instance=ExtResource( 1 )]
-margin_left = -464.0
-margin_top = 636.0
-margin_right = -128.0
-margin_bottom = 700.0
-rect_min_size = Vector2( 336, 0 )
-infinite_research = true
-
-[node name="AM" parent="." instance=ExtResource( 1 )]
-margin_left = 800.0
-margin_top = -256.0
-margin_right = 1056.0
-margin_bottom = -192.0
-
-[node name="CI" parent="." instance=ExtResource( 1 )]
-margin_left = 800.0
-margin_top = -912.0
-margin_right = 1056.0
-margin_bottom = -848.0
-
-[node name="L_CI" type="Line2D" parent="."]
-position = Vector2( 1088, -900 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="CI2" parent="." instance=ExtResource( 1 )]
-margin_left = 1216.0
-margin_top = -912.0
-margin_right = 1472.0
-margin_bottom = -848.0
-
-[node name="L_CI2" type="Line2D" parent="."]
-position = Vector2( 1504, -900 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="CI3" parent="." instance=ExtResource( 1 )]
-margin_left = 1632.0
-margin_top = -912.0
-margin_right = 1888.0
-margin_bottom = -848.0
-
-[node name="ISC" parent="." instance=ExtResource( 1 )]
-margin_left = 800.0
-margin_top = 128.0
-margin_right = 1056.0
-margin_bottom = 192.0
-
-[node name="SA" parent="." instance=ExtResource( 1 )]
-margin_left = 800.0
-margin_top = -704.0
-margin_right = 1056.0
-margin_bottom = -640.0
-
-[node name="L_SA" type="Line2D" parent="."]
-position = Vector2( 1088, -692 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="EGH" parent="." instance=ExtResource( 1 )]
-margin_left = 1216.0
-margin_top = -704.0
-margin_right = 1472.0
-margin_bottom = -640.0
-
-[node name="L_EGH" type="Line2D" parent="."]
-position = Vector2( 1504, -692 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="GHA" parent="." instance=ExtResource( 1 )]
-margin_left = 1632.0
-margin_top = -704.0
-margin_right = 1888.0
-margin_bottom = -640.0
-
-[node name="RC" parent="." instance=ExtResource( 1 )]
-margin_left = 800.0
-margin_top = 544.0
-margin_right = 1056.0
-margin_bottom = 608.0
-size_flags_horizontal = 13
-
-[node name="SCT" parent="." instance=ExtResource( 1 )]
-margin_left = 1280.0
-margin_top = 128.0
-margin_right = 1536.0
-margin_bottom = 192.0
-
-[node name="CD" parent="." instance=ExtResource( 1 )]
-margin_left = 1760.0
-margin_top = -256.0
-margin_right = 2016.0
-margin_bottom = -192.0
-
-[node name="ATM" parent="." instance=ExtResource( 1 )]
-margin_left = 1760.0
-margin_top = -352.0
-margin_right = 2016.0
-margin_bottom = -288.0
-
-[node name="SAP" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = -352.0
-margin_right = 2432.0
-margin_bottom = -288.0
-
-[node name="AMM" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = -448.0
-margin_right = 2432.0
-margin_bottom = -384.0
-
-[node name="ID" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = -256.0
-margin_right = 2432.0
-margin_bottom = -192.0
-
-[node name="L_ID" type="Line2D" parent="."]
-position = Vector2( 2464, -244 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="FD" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = -256.0
-margin_right = 2848.0
-margin_bottom = -192.0
-
-[node name="L_FD" type="Line2D" parent="."]
-position = Vector2( 2880, -244 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="PD" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = -256.0
-margin_right = 3264.0
-margin_bottom = -192.0
-
-[node name="OL" parent="." instance=ExtResource( 1 )]
-margin_left = 1280.0
-margin_top = 704.0
-margin_right = 1536.0
-margin_bottom = 768.0
-
-[node name="YL" parent="." instance=ExtResource( 1 )]
-margin_left = 1696.0
-margin_top = 704.0
-margin_right = 1952.0
-margin_bottom = 768.0
-
-[node name="L_OL" type="Line2D" parent="."]
-position = Vector2( 1568, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="FTL" parent="." instance=ExtResource( 1 )]
-margin_left = 1760.0
-margin_top = 480.0
-margin_right = 2016.0
-margin_bottom = 544.0
-
-[node name="L_FTL" type="Line2D" parent="."]
-position = Vector2( 2048, 496 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="IGD" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 480.0
-margin_right = 2432.0
-margin_bottom = 544.0
-
-[node name="L_IGD" type="Line2D" parent="."]
-position = Vector2( 2464, 496 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="FG" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 480.0
-margin_right = 2848.0
-margin_bottom = 544.0
-
-[node name="L_FG" type="Line2D" parent="."]
-position = Vector2( 2880, 496 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="FG2" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = 480.0
-margin_right = 3264.0
-margin_bottom = 544.0
-
-[node name="L_YL" type="Line2D" parent="."]
-position = Vector2( 1984, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="GL" parent="." instance=ExtResource( 1 )]
-margin_left = 2112.0
-margin_top = 704.0
-margin_right = 2368.0
-margin_bottom = 768.0
-
-[node name="L_GL" type="Line2D" parent="."]
-position = Vector2( 2400, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="BL" parent="." instance=ExtResource( 1 )]
-margin_left = 2528.0
-margin_top = 704.0
-margin_right = 2784.0
-margin_bottom = 768.0
-
-[node name="L_BL" type="Line2D" parent="."]
-position = Vector2( 2816, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="PL" parent="." instance=ExtResource( 1 )]
-margin_left = 2944.0
-margin_top = 704.0
-margin_right = 3200.0
-margin_bottom = 768.0
-
-[node name="L_PL" type="Line2D" parent="."]
-position = Vector2( 3232, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="UVL" parent="." instance=ExtResource( 1 )]
-margin_left = 3368.0
-margin_top = 704.0
-margin_right = 3624.0
-margin_bottom = 768.0
-
-[node name="L_UVL" type="Line2D" parent="."]
-position = Vector2( 3648, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="XRL" parent="." instance=ExtResource( 1 )]
-margin_left = 3776.0
-margin_top = 704.0
-margin_right = 4032.0
-margin_bottom = 768.0
-
-[node name="L_XRL" type="Line2D" parent="."]
-position = Vector2( 4064, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="GRL" parent="." instance=ExtResource( 1 )]
-margin_left = 4192.0
-margin_top = 704.0
-margin_right = 4448.0
-margin_bottom = 768.0
-
-[node name="L_GRL" type="Line2D" parent="."]
-position = Vector2( 4480, 716 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="UGRL" parent="." instance=ExtResource( 1 )]
-margin_left = 4608.0
-margin_top = 704.0
-margin_right = 4864.0
-margin_bottom = 768.0
-
-[node name="RMK2" parent="." instance=ExtResource( 1 )]
-margin_left = 1280.0
-margin_top = 900.0
-margin_right = 1536.0
-margin_bottom = 964.0
-
-[node name="L_RMK2" type="Line2D" parent="."]
-position = Vector2( 1568, 912 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="RMK3" parent="." instance=ExtResource( 1 )]
-margin_left = 1696.0
-margin_top = 900.0
-margin_right = 1952.0
-margin_bottom = 964.0
-
-[node name="MAE" parent="." instance=ExtResource( 1 )]
-margin_left = 1760.0
-margin_top = 128.0
-margin_right = 2016.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
-
-[node name="TF" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = -32.0
-margin_right = 2432.0
-margin_bottom = 32.0
-size_flags_horizontal = 13
-
-[node name="MPCC" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
+[node name="MSE" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
 margin_top = 368.0
-margin_right = 2432.0
+margin_right = 624.0
 margin_bottom = 432.0
+rect_min_size = Vector2( 336, 0 )
+infinite_research = true
+
+[node name="MMS" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 464.0
+margin_right = 624.0
+margin_bottom = 528.0
+rect_min_size = Vector2( 336, 0 )
+infinite_research = true
+
+[node name="PME" parent="IR" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 560.0
+margin_right = 624.0
+margin_bottom = 624.0
+rect_min_size = Vector2( 336, 0 )
+infinite_research = true
+
+[node name="Main" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RC" parent="Main" instance=ExtResource( 1 )]
+margin_left = 224.0
+margin_top = 336.0
+margin_right = 480.0
+margin_bottom = 400.0
 size_flags_horizontal = 13
 
-[node name="DS1" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 128.0
-margin_right = 2432.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="SCT" parent="Main" instance=ExtResource( 1 )]
+margin_left = 704.0
+margin_top = 336.0
+margin_right = 960.0
+margin_bottom = 400.0
 
-[node name="L_DS1" type="Line2D" parent="."]
-position = Vector2( 2464, 140 )
+[node name="CD" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1184.0
+margin_top = -272.0
+margin_right = 1440.0
+margin_bottom = -208.0
+
+[node name="ATM" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1184.0
+margin_top = -368.0
+margin_right = 1440.0
+margin_bottom = -304.0
+
+[node name="SAP" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = -368.0
+margin_right = 1856.0
+margin_bottom = -304.0
+
+[node name="AMM" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = -464.0
+margin_right = 1856.0
+margin_bottom = -400.0
+
+[node name="ID" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = -272.0
+margin_right = 1856.0
+margin_bottom = -208.0
+
+[node name="L_ID" type="Line2D" parent="Main"]
+position = Vector2( 1888, -240 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_CBS1" type="Line2D" parent="."]
-position = Vector2( 2464, 220 )
+[node name="FD" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = -272.0
+margin_right = 2272.0
+margin_bottom = -208.0
+
+[node name="L_FD" type="Line2D" parent="Main"]
+position = Vector2( 2304, -240 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="DS2" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 128.0
-margin_right = 2848.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="PD" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = -272.0
+margin_right = 2688.0
+margin_bottom = -208.0
 
-[node name="L_DS2" type="Line2D" parent="."]
-position = Vector2( 2880, 140 )
+[node name="OL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 704.0
+margin_top = 692.0
+margin_right = 960.0
+margin_bottom = 756.0
+
+[node name="YL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1120.0
+margin_top = 692.0
+margin_right = 1376.0
+margin_bottom = 756.0
+
+[node name="L_OL" type="Line2D" parent="Main"]
+position = Vector2( 992, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_CBS2" type="Line2D" parent="."]
-position = Vector2( 2880, 220 )
+[node name="FTL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1184.0
+margin_top = -144.0
+margin_right = 1440.0
+margin_bottom = -80.0
+
+[node name="L_FTL" type="Line2D" parent="Main"]
+position = Vector2( 1472, -108 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="DS3" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = 128.0
-margin_right = 3264.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="IGD" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = -144.0
+margin_right = 1856.0
+margin_bottom = -80.0
 
-[node name="L_DS3" type="Line2D" parent="."]
-position = Vector2( 3296, 140 )
+[node name="L_IGD" type="Line2D" parent="Main"]
+position = Vector2( 1888, -108 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="DS4" parent="." instance=ExtResource( 1 )]
-margin_left = 3424.0
-margin_top = 128.0
-margin_right = 3680.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="FG" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = -144.0
+margin_right = 2272.0
+margin_bottom = -80.0
 
-[node name="L_DS4" type="Line2D" parent="."]
-position = Vector2( 3714, 140 )
+[node name="L_FG" type="Line2D" parent="Main"]
+position = Vector2( 2304, -108 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="MB" parent="." instance=ExtResource( 1 )]
-margin_left = 3842.0
-margin_top = 128.0
-margin_right = 4098.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="FG2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = -144.0
+margin_right = 2688.0
+margin_bottom = -80.0
 
-[node name="L_MB" type="Line2D" parent="."]
-position = Vector2( 4144, 140 )
+[node name="L_YL" type="Line2D" parent="Main"]
+position = Vector2( 1408, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="GS" parent="." instance=ExtResource( 1 )]
-margin_left = 4272.0
-margin_top = 128.0
-margin_right = 4528.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="GL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1536.0
+margin_top = 692.0
+margin_right = 1792.0
+margin_bottom = 756.0
 
-[node name="L_GS" type="Line2D" parent="."]
-position = Vector2( 4560, 140 )
+[node name="L_GL" type="Line2D" parent="Main"]
+position = Vector2( 1824, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="TPCC" parent="." instance=ExtResource( 1 )]
-margin_left = 4688.0
-margin_top = 128.0
-margin_right = 4944.0
-margin_bottom = 192.0
-size_flags_horizontal = 13
+[node name="BL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1952.0
+margin_top = 692.0
+margin_right = 2208.0
+margin_bottom = 756.0
 
-[node name="SE1" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = -112.0
-margin_right = 2432.0
-margin_bottom = -48.0
-size_flags_horizontal = 13
-
-[node name="PK1" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 288.0
-margin_right = 2432.0
-margin_bottom = 352.0
-size_flags_horizontal = 13
-
-[node name="CBS1" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 208.0
-margin_right = 2432.0
-margin_bottom = 272.0
-size_flags_horizontal = 13
-
-[node name="CBS2" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 208.0
-margin_right = 2848.0
-margin_bottom = 272.0
-size_flags_horizontal = 13
-
-[node name="CBS3" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = 208.0
-margin_right = 3264.0
-margin_bottom = 272.0
-size_flags_horizontal = 13
-
-[node name="L_PK1" type="Line2D" parent="."]
-position = Vector2( 2464, 292 )
+[node name="L_BL" type="Line2D" parent="Main"]
+position = Vector2( 2240, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="PK2" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 288.0
-margin_right = 2848.0
-margin_bottom = 352.0
-size_flags_horizontal = 13
+[node name="PL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2368.0
+margin_top = 692.0
+margin_right = 2624.0
+margin_bottom = 756.0
 
-[node name="MME1" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 48.0
-margin_right = 2432.0
-margin_bottom = 112.0
-size_flags_horizontal = 13
-
-[node name="L_MME2" type="Line2D" parent="."]
-position = Vector2( 2464, 60 )
+[node name="L_PL" type="Line2D" parent="Main"]
+position = Vector2( 2656, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="MME2" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 48.0
-margin_right = 2848.0
-margin_bottom = 112.0
-size_flags_horizontal = 13
+[node name="UVL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2792.0
+margin_top = 692.0
+margin_right = 3048.0
+margin_bottom = 756.0
 
-[node name="L_MME3" type="Line2D" parent="."]
-position = Vector2( 2880, 60 )
+[node name="L_UVL" type="Line2D" parent="Main"]
+position = Vector2( 3072, 724 )
 points = PoolVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="MME3" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = 48.0
-margin_right = 3264.0
-margin_bottom = 112.0
+[node name="XRL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 3200.0
+margin_top = 692.0
+margin_right = 3456.0
+margin_bottom = 756.0
+
+[node name="L_XRL" type="Line2D" parent="Main"]
+position = Vector2( 3488, 724 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="GRL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 3616.0
+margin_top = 692.0
+margin_right = 3872.0
+margin_bottom = 756.0
+
+[node name="L_GRL" type="Line2D" parent="Main"]
+position = Vector2( 3904, 724 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="UGRL" parent="Main" instance=ExtResource( 1 )]
+margin_left = 4032.0
+margin_top = 692.0
+margin_right = 4288.0
+margin_bottom = 756.0
+
+[node name="RMK2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 704.0
+margin_top = 804.0
+margin_right = 960.0
+margin_bottom = 868.0
+
+[node name="L_RMK2" type="Line2D" parent="Main"]
+position = Vector2( 992, 836 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="RMK3" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1120.0
+margin_top = 804.0
+margin_right = 1376.0
+margin_bottom = 868.0
+
+[node name="MAE" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1184.0
+margin_top = 336.0
+margin_right = 1440.0
+margin_bottom = 400.0
 size_flags_horizontal = 13
 
-[node name="UP1" parent="." instance=ExtResource( 1 )]
-margin_left = 1760.0
+[node name="TF" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 176.0
+margin_right = 1856.0
+margin_bottom = 240.0
+size_flags_horizontal = 13
+
+[node name="MPCC" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
 margin_top = 576.0
-margin_right = 2016.0
+margin_right = 1856.0
 margin_bottom = 640.0
 size_flags_horizontal = 13
 
-[node name="L_UP1" type="Line2D" parent="."]
-position = Vector2( 0, 48 )
+[node name="DS1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 336.0
+margin_right = 1856.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_DS1" type="Line2D" parent="Main"]
+position = Vector2( 1888, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="L_CBS1" type="Line2D" parent="Main"]
+position = Vector2( 1888, 448 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="DS2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = 336.0
+margin_right = 2272.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_DS2" type="Line2D" parent="Main"]
+position = Vector2( 2304, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="L_CBS2" type="Line2D" parent="Main"]
+position = Vector2( 2304, 448 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="DS3" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = 336.0
+margin_right = 2688.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_DS3" type="Line2D" parent="Main"]
+position = Vector2( 2720, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="DS4" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2848.0
+margin_top = 336.0
+margin_right = 3104.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_DS4" type="Line2D" parent="Main"]
+position = Vector2( 3138, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="MB" parent="Main" instance=ExtResource( 1 )]
+margin_left = 3266.0
+margin_top = 336.0
+margin_right = 3522.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_MB" type="Line2D" parent="Main"]
+position = Vector2( 3568, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="GS" parent="Main" instance=ExtResource( 1 )]
+margin_left = 3696.0
+margin_top = 336.0
+margin_right = 3952.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="L_GS" type="Line2D" parent="Main"]
+position = Vector2( 3984, 368 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="TPCC" parent="Main" instance=ExtResource( 1 )]
+margin_left = 4112.0
+margin_top = 336.0
+margin_right = 4368.0
+margin_bottom = 400.0
+size_flags_horizontal = 13
+
+[node name="SE1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 96.0
+margin_right = 1856.0
+margin_bottom = 160.0
+size_flags_horizontal = 13
+
+[node name="PK1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 496.0
+margin_right = 1856.0
+margin_bottom = 560.0
+size_flags_horizontal = 13
+
+[node name="CBS1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 416.0
+margin_right = 1856.0
+margin_bottom = 480.0
+size_flags_horizontal = 13
+
+[node name="CBS2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = 416.0
+margin_right = 2272.0
+margin_bottom = 480.0
+size_flags_horizontal = 13
+
+[node name="CBS3" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = 416.0
+margin_right = 2688.0
+margin_bottom = 480.0
+size_flags_horizontal = 13
+
+[node name="L_PK1" type="Line2D" parent="Main"]
+position = Vector2( 1888, 520 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="PK2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = 496.0
+margin_right = 2272.0
+margin_bottom = 560.0
+size_flags_horizontal = 13
+
+[node name="MME1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = 256.0
+margin_right = 1856.0
+margin_bottom = 320.0
+size_flags_horizontal = 13
+
+[node name="L_MME2" type="Line2D" parent="Main"]
+position = Vector2( 1888, 288 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="MME2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = 256.0
+margin_right = 2272.0
+margin_bottom = 320.0
+size_flags_horizontal = 13
+
+[node name="L_MME3" type="Line2D" parent="Main"]
+position = Vector2( 2304, 288 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="MME3" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = 256.0
+margin_right = 2688.0
+margin_bottom = 320.0
+size_flags_horizontal = 13
+
+[node name="UP1" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1184.0
+margin_top = -48.0
+margin_right = 1440.0
+margin_bottom = 16.0
+size_flags_horizontal = 13
+
+[node name="L_UP1" type="Line2D" parent="Main"]
+position = Vector2( -576, -556 )
 points = PoolVector2Array( 2048, 560, 2144, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
-[node name="UP2" parent="." instance=ExtResource( 1 )]
-margin_left = 2176.0
-margin_top = 576.0
-margin_right = 2432.0
-margin_bottom = 640.0
+[node name="UP2" parent="Main" instance=ExtResource( 1 )]
+margin_left = 1600.0
+margin_top = -48.0
+margin_right = 1856.0
+margin_bottom = 16.0
 size_flags_horizontal = 13
 
-[node name="L_UP2" type="Line2D" parent="."]
-position = Vector2( 0, 48 )
+[node name="L_UP2" type="Line2D" parent="Main"]
+position = Vector2( -576, -556 )
 points = PoolVector2Array( 2464, 560, 2560, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
-[node name="UP3" parent="." instance=ExtResource( 1 )]
-margin_left = 2592.0
-margin_top = 576.0
-margin_right = 2848.0
-margin_bottom = 640.0
+[node name="UP3" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2016.0
+margin_top = -48.0
+margin_right = 2272.0
+margin_bottom = 16.0
 size_flags_horizontal = 13
 
-[node name="L_UP3" type="Line2D" parent="."]
-position = Vector2( 416, 48 )
+[node name="L_UP3" type="Line2D" parent="Main"]
+position = Vector2( -160, -556 )
 points = PoolVector2Array( 2464, 560, 2560, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
-[node name="UP4" parent="." instance=ExtResource( 1 )]
-margin_left = 3008.0
-margin_top = 576.0
-margin_right = 3264.0
-margin_bottom = 640.0
+[node name="UP4" parent="Main" instance=ExtResource( 1 )]
+margin_left = 2432.0
+margin_top = -48.0
+margin_right = 2688.0
+margin_bottom = 16.0
 size_flags_horizontal = 13
 
-[node name="L_CD" type="Line2D" parent="."]
-position = Vector2( 2060.25, -292 )
+[node name="L_CD" type="Line2D" parent="Main"]
+position = Vector2( 1484.25, -288 )
 scale = Vector2( 0.875, 1 )
 points = PoolVector2Array( -14, 68, 96, 68 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_RC" type="Node2D" parent="."]
+[node name="L_RC" type="Node2D" parent="Main"]
 
-[node name="L_SCT" type="Line2D" parent="L_RC"]
-position = Vector2( 1084, 540 )
+[node name="L_SCT" type="Line2D" parent="Main/L_RC"]
+position = Vector2( 508, 768 )
 points = PoolVector2Array( 84, -380, 164, -380 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.466667, 1 )
 antialiased = true
 
-[node name="L_OL" type="Line2D" parent="L_RC"]
-position = Vector2( 1086, 542 )
+[node name="L_OL" type="Line2D" parent="Main/L_RC"]
+position = Vector2( 510, 354 )
 points = PoolVector2Array( 2, 34, 81.5562, 34 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_OL2" type="Line2D" parent="L_RC"]
-position = Vector2( 1086, 542 )
-points = PoolVector2Array( 82, -382, 82, 386 )
+[node name="L_OL2" type="Line2D" parent="Main/L_RC"]
+position = Vector2( 510, 354 )
+points = PoolVector2Array( 82, 34, 82, 506 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.466667, 1 )
 begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
-[node name="L_OL3" type="Line2D" parent="L_RC"]
-position = Vector2( 0, 72 )
+[node name="L_OL3" type="Line2D" parent="Main/L_RC"]
+position = Vector2( -576, 80 )
 points = PoolVector2Array( 1168, 664, 1248, 664 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
-[node name="L_RMK2" type="Line2D" parent="L_RC"]
-position = Vector2( 1080, 644 )
+[node name="L_RMK2" type="Line2D" parent="Main/L_RC"]
+position = Vector2( 504, 576 )
 points = PoolVector2Array( 88, 284, 168, 284 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_SCT" type="Node2D" parent="."]
+[node name="L_SCT" type="Node2D" parent="Main"]
 
-[node name="L_CD" type="Line2D" parent="L_SCT"]
-position = Vector2( 1568, 140 )
+[node name="L_CD" type="Line2D" parent="Main/L_SCT"]
+position = Vector2( 992, 368 )
 points = PoolVector2Array( 0, 20, 160, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_CD2" type="Line2D" parent="L_SCT"]
-position = Vector2( 1568, 140 )
-points = PoolVector2Array( 80, -364, 80, 468 )
+[node name="L_CD2" type="Line2D" parent="Main/L_SCT"]
+position = Vector2( 992, 80 )
+points = PoolVector2Array( 80, -300, 80, 308 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
-[node name="L_YL" type="Line2D" parent="L_SCT"]
-position = Vector2( 1568, 192 )
+[node name="L_YL" type="Line2D" parent="Main/L_SCT"]
+position = Vector2( 992, -412 )
 points = PoolVector2Array( 80, 324, 160, 324 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_MAE" type="Line2D" parent="L_SCT"]
-position = Vector2( 1560, -236 )
+[node name="L_MAE" type="Line2D" parent="Main/L_SCT"]
+position = Vector2( 984, -232 )
 points = PoolVector2Array( 88, 12, 168, 12 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_UP1" type="Line2D" parent="L_SCT"]
-position = Vector2( 0, 48 )
+[node name="L_UP1" type="Line2D" parent="Main/L_SCT"]
+position = Vector2( -576, -556 )
 points = PoolVector2Array( 1648, 560, 1728, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
-[node name="L_MAE" type="Node2D" parent="."]
+[node name="L_MAE" type="Node2D" parent="Main"]
 
-[node name="L_TF2" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF2" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, -240 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF3" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF3" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, -160 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF4" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF4" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, -80 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF5" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF5" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, 0 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF6" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF6" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, 160 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF8" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF8" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, 80 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_TF7" type="Line2D" parent="L_MAE"]
-position = Vector2( 2044, 160 )
+[node name="L_TF7" type="Line2D" parent="Main/L_MAE"]
+position = Vector2( 1468, 388 )
 points = PoolVector2Array( 4, 0, 100, 240 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_ATM" type="Node2D" parent="."]
+[node name="L_ATM" type="Node2D" parent="Main"]
 
-[node name="L_SAP" type="Line2D" parent="L_ATM"]
-position = Vector2( 2048, -292 )
+[node name="L_SAP" type="Line2D" parent="Main/L_ATM"]
+position = Vector2( 1472, -288 )
 points = PoolVector2Array( 0, -28, 96, -28 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_AMM" type="Line2D" parent="L_ATM"]
-position = Vector2( 2048, -292 )
+[node name="L_AMM" type="Line2D" parent="Main/L_ATM"]
+position = Vector2( 1472, -288 )
 points = PoolVector2Array( 0, -28, 96, -124 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="L_ID_2" type="Line2D" parent="L_ATM"]
-position = Vector2( 2036, -340 )
+[node name="L_ID_2" type="Line2D" parent="Main/L_ATM"]
+position = Vector2( 1460, -336 )
 points = PoolVector2Array( 12, 20, 108, 100 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
+[node name="Other" type="Control" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AM" parent="Other" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 492.0
+margin_right = 544.0
+margin_bottom = 556.0
+
+[node name="CI" parent="Other" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 108.0
+margin_right = 544.0
+margin_bottom = 172.0
+
+[node name="L_CI" type="Line2D" parent="Other"]
+position = Vector2( 576, 140 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="CI2" parent="Other" instance=ExtResource( 1 )]
+margin_left = 704.0
+margin_top = 108.0
+margin_right = 960.0
+margin_bottom = 172.0
+
+[node name="L_CI2" type="Line2D" parent="Other"]
+position = Vector2( 992, 140 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="CI3" parent="Other" instance=ExtResource( 1 )]
+margin_left = 1120.0
+margin_top = 108.0
+margin_right = 1376.0
+margin_bottom = 172.0
+
+[node name="ISC" parent="Other" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 364.0
+margin_right = 544.0
+margin_bottom = 428.0
+
+[node name="SA" parent="Other" instance=ExtResource( 1 )]
+margin_left = 288.0
+margin_top = 236.0
+margin_right = 544.0
+margin_bottom = 300.0
+
+[node name="L_SA" type="Line2D" parent="Other"]
+position = Vector2( 576, 268 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="EGH" parent="Other" instance=ExtResource( 1 )]
+margin_left = 704.0
+margin_top = 236.0
+margin_right = 960.0
+margin_bottom = 300.0
+
+[node name="L_EGH" type="Line2D" parent="Other"]
+position = Vector2( 992, 268 )
+points = PoolVector2Array( 0, 20, 96, 20 )
+width = 2.0
+default_color = Color( 0.4, 1, 0.465625, 1 )
+antialiased = true
+
+[node name="GHA" parent="Other" instance=ExtResource( 1 )]
+margin_left = 1120.0
+margin_top = 236.0
+margin_right = 1376.0
+margin_bottom = 300.0
+
+[node name="IRAnim" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource( 1 )
+
+[node name="MainAnim" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource( 2 )
+
+[node name="OtherAnim" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource( 3 )
+
 [connection signal="tree_exited" from="." to="." method="_on_ScienceTree_tree_exited"]
+[connection signal="animation_finished" from="IRAnim" to="." method="_on_IRAnim_animation_finished"]
+[connection signal="animation_finished" from="MainAnim" to="." method="_on_MainAnim_animation_finished"]
+[connection signal="animation_finished" from="OtherAnim" to="." method="_on_OtherAnim_animation_finished"]

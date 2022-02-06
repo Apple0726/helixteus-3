@@ -164,20 +164,25 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 		if rover_has_items:
 			var remaining:bool = false
 			for i in len(rov.inventory):
-				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
+				if rov.inventory[i].empty():
+					continue
+				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining":
 					if rov.inventory[i].name == "minerals":
 						rov.inventory[i].num = Helper.add_minerals(rov.inventory[i].num).remainder
 						if rov.inventory[i].num <= 0:
-							rov.inventory[i] = {"type":""}
+							rov.inventory[i].clear()
 						else:
 							remaining = true
+					elif rov.inventory[i].name == "money":
+						game.money += rov.inventory[i].num
+						rov.inventory[i].clear()
 					else:
 						var remainder:int = game.add_items(rov.inventory[i].name, rov.inventory[i].num)
 						if remainder > 0:
 							remaining = true
 							rov.inventory[i].num = remainder
 						else:
-							rov.inventory[i] = {"type":""}
+							rov.inventory[i].clear()
 			if remaining:
 				game.popup(tr("NOT_ENOUGH_INV_SPACE_COLLECT"), 2)
 			else:

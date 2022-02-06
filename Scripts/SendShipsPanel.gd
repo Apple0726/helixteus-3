@@ -101,9 +101,9 @@ func refresh():
 
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 35:
-		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.planet_data[dest_p_id].pressure > sqrt(game.energy / 10000.0):
+		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
 			game.long_popup(tr("PLANET_PRESSURE_TOO_HIGH"), "")
-		elif game.planet_data[dest_p_id].pressure > 20:
+		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:
 			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
 		elif time_cost > 4 * 60 * 60 * 1000:
 			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"))

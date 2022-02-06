@@ -453,9 +453,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
 					if rand < ch:
 						var met_spawned:String = "lead"
-						var rarity:float = 1.0
+						var base_rarity:float = 1.0
 						for met in game.met_info:
-							rarity = game.met_info[met].rarity
+							base_rarity = game.met_info[met].rarity
+							var rarity:float = base_rarity
+							if cave_floor >= 8:
+								rarity = pow(base_rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
 							if rarity > difficulty:
 								break
 							if rand2 < 1 / (pow(rarity, 0.75) + 1):
@@ -467,9 +470,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
-							if rarity > 100:
+							if base_rarity > 100:
 								deposit.modulate *= 1.5
-							elif rarity > 10:
+							elif base_rarity > 10:
 								deposit.modulate *= 1.2
 							deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
@@ -888,10 +891,13 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		contents.erase("hx_core")
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		if met_value.rarity > difficulty:
+		var rarity = met_value.rarity
+		if cave_floor >= 8:
+			rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
+		if rarity > difficulty:
 			break
-		if rng.randf() < 0.5 / pow(met_value.rarity, 0.75):
-			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(met_value.rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1))
+		if rng.randf() < 0.5 / pow(rarity, 0.75):
+			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1))
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1080,24 +1086,21 @@ func _input(event):
 							remainders[rsrc] = remainder
 					else:
 						for i in len(inventory):
-							if inventory[i].empty():
-								continue
-							if inventory[i].has("name") and rsrc != inventory[i].name:
-								if i == len(inventory) - 1:
-									remainders[rsrc] = contents[rsrc]
-								continue
 							var slot = slots[i]
-							if inventory[i].type == "":
+							if inventory[i].empty():
 								inventory[i].type = "item"
 								inventory[i].name = rsrc
 								slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
 								slot.get_node("Label").text = Helper.format_num(contents[rsrc], false, 3)
 								inventory[i].num = contents[rsrc]
 								game.show[rsrc] = true
-							else:
+								break
+							if inventory[i].has("name") and rsrc == inventory[i].name:
 								inventory[i].num += contents[rsrc]
 								slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
-							break
+								break
+							elif i == len(inventory) - 1:
+								remainders[rsrc] = contents[rsrc]
 				if not remainders.empty():
 					chests[active_chest].contents = remainders.duplicate(true)
 					partially_looted_chests[cave_floor - 1][String(active_chest)] = remainders.duplicate(true)
@@ -1119,12 +1122,16 @@ func _input(event):
 			elif active_type == "go_down":
 				remove_cave()
 				cave_floor += 1
+				if cave_floor == 8:
+					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty *= 1.25 if tower else 2
 				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
+				if cave_floor == 7:
+					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty /= 1.25 if tower else 2
 				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
@@ -1166,21 +1173,21 @@ func exit_cave():
 	cave_data_file.store_var(cave_data_dict)
 	cave_data_file.close()
 	for i in len(inventory):
-		if not inventory[i].has("name") or inventory[i].type == "consumable":
+		if inventory[i].empty() or inventory[i].type == "consumable":
 			continue
 		if inventory[i].name == "money":
 			game.add_resources({"money":inventory[i].num}) 
-			inventory[i] = {"type":""}
+			inventory[i].clear()
 		elif inventory[i].name == "minerals":
 			inventory[i].num = Helper.add_minerals(inventory[i].num).remainder
 			if inventory[i].num <= 0:
-				inventory[i] = {"type":""}
-		elif inventory[i].type != "rover_weapons" and inventory[i].type != "rover_mining" and inventory[i].has("name"):
+				inventory[i].clear()
+		elif inventory[i].type != "rover_weapons" and inventory[i].type != "rover_mining":
 			var remaining:int = game.add_items(inventory[i].name, inventory[i].num)
 			if remaining > 0:
 				inventory[i].num = remaining
 			else:
-				inventory[i] = {"type":""}
+				inventory[i].clear()
 	var i_w_w2 = i_w_w.duplicate(true)
 	if i_w_w.has("stone"):
 		i_w_w2.stone = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
@@ -1647,7 +1654,7 @@ func _on_Filter_pressed():
 		add_child(tween)
 		var rect_x:int = $UI2/Filters.rect_position.x
 		tween.interpolate_property($UI2/Filters, "modulate", null, Color(1, 1, 1, 0), 0.1)
-		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 602), 0.1)
+		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 662 - $UI2/Filters/Grid.rect_size.y), 0.1)
 		tween.start()
 		yield(tween, "tween_all_completed")
 		remove_child(tween)
@@ -1659,8 +1666,9 @@ func _on_Filter_pressed():
 		add_child(tween)
 		var rect_x:int = $UI2/BottomLeft/Filter.rect_position.x
 		$UI2/Filters.rect_position.x = rect_x
+		$UI2/Filters.rect_position.y = 662 - $UI2/Filters/Grid.rect_size.y
 		tween.interpolate_property($UI2/Filters, "modulate", null, Color.white, 0.1)
-		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 598), 0.1)
+		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 658 - $UI2/Filters/Grid.rect_size.y), 0.1)
 		tween.start()
 		$UI2/Filters.visible = true
 		yield(tween, "tween_all_completed")

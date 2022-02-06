@@ -478,9 +478,13 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		elif tile.bldg.name == "EC":
 			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
 		if tile.has("auto_collect"):
-			if tile.bldg.name in ["PP", "SP"]:
+			if tile.bldg.name == "PP":
 				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
 				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
+			elif tile.bldg.name == "SP":
+				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+				game.autocollect.rsrc.energy += prod * mult_diff  * tile.auto_collect / 100.0
+				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += prod * mult_diff * tile.auto_collect / 100.0
 			elif tile.bldg.name == "ME":
 				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
 				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
@@ -626,17 +630,25 @@ func destroy_bldg(id2:int, mass:bool = false):
 							if tile.bldg.name == "ME":
 								game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * diff / 100.0
 								game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * diff / 100.0
-							elif tile.bldg.name in ["PP", "SP"]:
+							elif tile.bldg.name == "PP":
 								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * diff / 100.0
 								game.autocollect.rsrc.energy -= tile.bldg.path_1_value * diff / 100.0
+							elif tile.bldg.name == "SP":
+								var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * diff / 100.0
+								game.autocollect.rsrc.energy -= prod * diff / 100.0
 	else:
 		if tile.has("auto_collect"):
 			if bldg == "ME":
 				game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * mult * ac / 100.0
 				game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * mult * ac / 100.0
-			elif bldg in ["PP", "SP"]:
+			elif bldg == "SP":
 				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
 				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
+			elif bldg == "PP":
+				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * mult * ac / 100.0
+				game.autocollect.rsrc.energy -= prod * mult * ac / 100.0
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -698,6 +710,8 @@ func _unhandled_input(event):
 	var placing_soil = game.bottom_info_action == "place_soil"
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
+	view.move_view = not mass_build
+	view.scroll_view = not mass_build
 	if tile_over != -1 and game.bottom_info_action != "building":
 		var tile = game.tile_data[tile_over]
 		if tile and tile.has("bldg"):
@@ -932,12 +946,6 @@ func _unhandled_input(event):
 		shadow_num = 0
 		game.HUD.refresh()
 		return
-	if Input.is_action_just_pressed("shift"):
-		view.move_view = false
-		view.scroll_view = false
-	elif Input.is_action_just_released("shift"):
-		view.move_view = true
-		view.scroll_view = true
 	#initiate mass build
 	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building":
 		mass_build_rect.rect_position = mouse_pos

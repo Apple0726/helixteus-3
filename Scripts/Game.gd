@@ -1600,7 +1600,6 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				if help.science_tree:
 					$UI/Help.visible = true
 					$UI/Help.text = tr("SC_TREE_ZOOM")
-					view.obj.get_node("Help").visible = true
 					help.science_tree = false
 			"cave":
 				if is_instance_valid(HUD) and is_a_parent_of(HUD):
@@ -1680,7 +1679,7 @@ func remove_science_tree():
 	view.remove_obj("science_tree")
 	for rsrc in HUD.get_node("Resources").get_children():
 		rsrc.modulate.a = 1.0
-	remove_child(get_node("ScienceBackBtn"))
+	$UI.remove_child($UI.get_node("ScienceUI"))
 
 func add_loading():
 	var loading_scene = preload("res://Scenes/Loading.tscn")
@@ -1737,26 +1736,11 @@ func add_obj(view_str):
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
 		"science_tree":
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
-			var back_btn = Button.new()
-			back_btn.name = "ScienceBackBtn"
-			back_btn.theme = preload("res://Resources/default_theme.tres")
-			back_btn.margin_left = -640
-			back_btn.margin_top = 320
-			back_btn.margin_right = -512
-			back_btn.margin_bottom = 360
-			back_btn.shortcut_in_tooltip = false
-			back_btn.shortcut = ShortCut.new()
-			back_btn.shortcut.shortcut = InputEventAction.new()
-			add_child(back_btn)
-			back_btn.rect_position = Vector2(0, 680)
-			back_btn.connect("pressed", self, "on_science_back_pressed")
-			Helper.set_back_btn(back_btn)
+			var sc_UI = preload("res://Scenes/ScienceUI.tscn").instance()
+			$UI.add_child(sc_UI)
+			sc_UI.sc_tree = view.obj
+			sc_UI.name = "ScienceUI"
 	view.update()
-
-func on_science_back_pressed():
-	switch_view("planet")
-	if is_instance_valid(tutorial) and tutorial.tut_num == 26:
-		tutorial.begin()
 
 func add_space_HUD():
 	if not is_instance_valid(space_HUD) or not $UI.is_a_parent_of(space_HUD):
@@ -1877,9 +1861,9 @@ func add_cluster():
 	if enable_shaders:
 		$ClusterBG.fade_in()
 		var dist:Vector2 = cartesian2polar(cluster_data[c_c].pos.x, cluster_data[c_c].pos.y)
-		var hue:float = fmod(dist.x, 1000.0) / 1000.0
+		var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
-		$ClusterBG.change_color(Color.from_hsv(hue, sat, 1.0))
+		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.7))
 	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
@@ -1939,7 +1923,7 @@ func add_planet():
 	stars_tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 1), 0.3)
 	stars_tween.start()
 	planet_data = open_obj("Systems", c_s_g)
-	if not planet_data[c_p].has("discovered"):
+	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).empty():
 		generate_tiles(c_p)
 	add_obj("planet")
 	view.obj.icons_hidden = view.scale.x >= 0.25
@@ -3661,8 +3645,6 @@ func _input(event):
 		OS.window_fullscreen = not OS.window_fullscreen
 		settings.get_node("TabContainer/GRAPHICS/Fullscreen").pressed = OS.window_fullscreen
 
-	if c_v == "science_tree":
-		Helper.set_back_btn(get_node("ScienceBackBtn"))
 	if Input.is_action_just_released("right_click"):
 		if bottom_info_action != "":
 			if not c_v in ["STM", ""]:

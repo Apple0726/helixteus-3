@@ -59,6 +59,5 @@ func get_item(_name, _type, _dir):
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
 	elif _name == "M_MPCC":
 		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MPCC", "cancel_building_MS")
-	print(build_all)
 	game.view.obj.build_all_MS_stages = build_all
 
