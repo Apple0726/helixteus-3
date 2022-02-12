@@ -455,13 +455,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 						var met_spawned:String = "lead"
 						var base_rarity:float = 1.0
 						for met in game.met_info:
-							base_rarity = game.met_info[met].rarity
-							var rarity:float = base_rarity
+							var rarity:float = game.met_info[met].rarity
 							if cave_floor >= 8:
-								rarity = pow(base_rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
+								rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
 							if rarity > difficulty:
 								break
 							if rand2 < 1 / (pow(rarity, 0.75) + 1):
+								base_rarity = game.met_info[met].rarity
 								met_spawned = met
 						if met_spawned != "":
 							var deposit = deposit_scene.instance()
@@ -470,10 +470,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 							add_child(deposit)
 							deposit.position = cave_wall.map_to_world(Vector2(i, j))
-							if base_rarity > 100:
-								deposit.modulate *= 1.5
-							elif base_rarity > 10:
-								deposit.modulate *= 1.2
+							deposit.modulate *= log(base_rarity) / 4.0 + 1.0
 							deposits[String(tile_id)] = deposit
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
@@ -1123,6 +1120,10 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				if cave_floor == 8:
+					if tile.has("aurora"):
+						$Walls.tile_set.tile_set_modulate(0, Color(1.4, 1.4, 2.4, 2.0))
+					else:
+						$Walls.tile_set.tile_set_modulate(0, Color(0.4, 0.4, 2.0, 2.0))
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty *= 1.25 if tower else 2
 				rover_light.visible = true
@@ -1131,6 +1132,7 @@ func _input(event):
 				remove_cave()
 				cave_floor -= 1
 				if cave_floor == 7:
+					$Walls.tile_set.tile_set_modulate(0, Color.white)
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty /= 1.25 if tower else 2
 				rover_light.visible = cave_floor != 1

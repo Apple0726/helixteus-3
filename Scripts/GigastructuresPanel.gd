@@ -104,7 +104,7 @@ func _on_Convert_pressed():
 				game.earn_achievement("random", 3)
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
-			game.switch_view("cluster", false, "delete_galaxy")
+			game.switch_view("cluster", {"fn":"delete_galaxy"})
 		else:
 			game.switch_view("cluster")
 		yield(game.view_tween, "tween_all_completed")

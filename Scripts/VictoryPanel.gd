@@ -88,7 +88,7 @@ func _on_close_button_pressed():
 	if game.battle.hard_battle:
 		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	game.battle.get_node("UI").remove_child(self)
-	game.switch_view("system", false, "", [], true, false)
+	game.switch_view("system", {"dont_fade_anim":true})
 
 func _on_mouse_exited():
 	game.hide_tooltip()

@@ -57,9 +57,7 @@ func on_cluster_out ():
 
 func on_cluster_click (id:int, l_id:int):
 	if not view.dragged:
-		game.c_c_g = id
-		game.c_c = l_id
-		game.switch_view("cluster")
+		game.switch_view("cluster", {"fn":"set_custom_coords", "fn_args":[["c_c", "c_c_g"], [l_id, id]]})
 
 func change_scale(sc:float):
 	for i in range(0, btns.size()):

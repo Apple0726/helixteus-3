@@ -75,7 +75,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_GoToShips_pressed():
-	game.switch_view("system", false, "set_to_ship_coords")
+	game.switch_view("system", {"fn":"set_to_ship_coords"})
 	_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():

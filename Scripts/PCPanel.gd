@@ -58,8 +58,6 @@ func _on_Construct_pressed():
 func _on_ViewPlanet_pressed():
 	game.toggle_panel(self)
 	if probe_tier == 1:
-		game.c_p_g = id
-		game.c_p = l_id
-		game.switch_view("planet")
+		game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})
 
 

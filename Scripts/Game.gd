@@ -223,7 +223,8 @@ var collect_speed_lag_ratio:int = 1
 var c_sv:String = ""#current_save
 var save_created
 var u_i:Dictionary
-
+var view_history:Array = []
+var view_history_pos:int = -1
 
 #Stores data of the item that you clicked in your inventory
 var item_to_use = {"name":"", "type":"", "num":0}
@@ -637,7 +638,7 @@ func switch_music(src, pitch:float = 1.0):
 		tween.start()
 		yield(tween, "tween_all_completed")
 	music_player.stream = src
-	music_player.pitch_scale = pitch * u_i.time_speed if u_i and pitch_affected else 1.0
+	music_player.pitch_scale = pitch * u_i.time_speed if u_i and pitch_affected else pitch
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
@@ -812,7 +813,7 @@ func load_game():
 		dimension.refresh_univs(true)
 	else:
 		load_univ()
-		switch_view(c_v, true)
+		switch_view(c_v, {"first_time":true})
 		if not $UI.is_a_parent_of(HUD):
 			$UI.add_child(HUD)
 
@@ -1477,21 +1478,19 @@ func set_bookmark_coords(bookmark:Dictionary):
 		system_data = open_obj("Galaxies", c_g_g)
 		galaxy_data = open_obj("Clusters", c_c_g)
 	return false#No error
-	
-func set_planet_ids(l_id:int, g_id:int):
-	c_p = l_id
-	c_p_g = g_id
 
-func set_g_id(l_id:int, g_id:int):
-	c_g = l_id
-	c_g_g = g_id
+func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p"], coord_values: [1, 2]
+	for i in len(coords):
+		if coords[i] in self:
+			self[coords[i]] = coord_values[i]
 
 func delete_galaxy():
 	galaxy_data[c_g].clear()
 	Helper.save_obj("Clusters", c_c_g, galaxy_data)
 
 #															V function to execute after removing objects but before adding new ones
-func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
+#func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
+func switch_view(new_view:String, other_params:Dictionary = {}):
 	hide_tooltip()
 	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
@@ -1499,7 +1498,7 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 	var old_view:String = c_v
 	if view_tween.is_active():
 		return
-	if fade_anim:
+	if not other_params.has("dont_fade_anim"):
 		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
 		view_tween.start()
 		yield(view_tween, "tween_all_completed")
@@ -1507,10 +1506,10 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 		remove_dimension()
 		switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	else:
-		if not first_time:
+		if not other_params.has("first_time"):
 			match c_v:
 				"planet":
-					remove_planet(save_zooms)
+					remove_planet(not other_params.has("dont_save_zooms"))
 				"planet_details":
 					remove_child(planet_details)
 					planet_details = null
@@ -1565,7 +1564,50 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				else:
 					viewing_dimension = true
 					add_dimension()
-	if fn != "":
+	if new_view in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]:
+		var new_dict:Dictionary = {"view":new_view, "c_sc":c_sc, "c_c_g":c_c_g, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
+		if other_params.has("fn"):
+			var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
+			if other_params.fn == "set_custom_coords":
+				new_dict = {#fn_args[0]: ["c_c_g", "c_c"], fn_args[1]: [2, 5] (c_c_g = 2, c_c = 5)
+					"view":new_view, 
+					"c_sc":(fn_args[1][fn_args[0].find("c_sc")] if fn_args[0].has("c_sc") else c_sc),
+					"c_c_g":(fn_args[1][fn_args[0].find("c_c_g")] if fn_args[0].has("c_c_g") else c_c_g),
+					"c_c":(fn_args[1][fn_args[0].find("c_c")] if fn_args[0].has("c_c") else c_c),
+					"c_g_g":(fn_args[1][fn_args[0].find("c_g_g")] if fn_args[0].has("c_g_g") else c_g_g),
+					"c_g":(fn_args[1][fn_args[0].find("c_g")] if fn_args[0].has("c_g") else c_g),
+					"c_s_g":(fn_args[1][fn_args[0].find("c_s_g")] if fn_args[0].has("c_s_g") else c_s_g),
+					"c_s":(fn_args[1][fn_args[0].find("c_s")] if fn_args[0].has("c_s") else c_s),
+					"c_p_g":(fn_args[1][fn_args[0].find("c_p_g")] if fn_args[0].has("c_p_g") else c_p_g),
+					"c_p":(fn_args[1][fn_args[0].find("c_p")] if fn_args[0].has("c_p") else c_p),
+				}
+			elif other_params.fn == "set_bookmark_coords":
+				new_dict = {#fn_args[0]: {"c_sc":0, "c_c_g":1, "c_c":1} (bookmark dictionary)
+					"view":new_view, 
+					"c_sc":(fn_args[0].c_sc if fn_args[0].has("c_sc") else c_sc),
+					"c_c_g":(fn_args[0].c_c_g if fn_args[0].has("c_c_g") else c_c_g),
+					"c_c":(fn_args[0].c_c if fn_args[0].has("c_c") else c_c),
+					"c_g_g":(fn_args[0].c_g_g if fn_args[0].has("c_g_g") else c_g_g),
+					"c_g":(fn_args[0].c_g if fn_args[0].has("c_g") else c_g),
+					"c_s_g":(fn_args[0].c_s_g if fn_args[0].has("c_s_g") else c_s_g),
+					"c_s":(fn_args[0].c_s if fn_args[0].has("c_s") else c_s),
+					"c_p_g":(fn_args[0].c_p_g if fn_args[0].has("c_p_g") else c_p_g),
+					"c_p":(fn_args[0].c_p if fn_args[0].has("c_p") else c_p),
+				}
+		if other_params.has("shift"):
+			view_history_pos += other_params.shift
+			if view_history_pos < 0:
+				view_history_pos = 0
+			elif view_history_pos > len(view_history) - 1:
+				view_history_pos = len(view_history) - 1
+		if len(view_history) == 0 or view_history[view_history_pos].hash() != new_dict.hash():
+			if view_history_pos < len(view_history) - 1:
+				view_history.resize(view_history_pos + 1)
+			view_history.append(new_dict)
+			view_history_pos += 1
+	if other_params.has("fn"):
+		var fn:String = other_params.fn
+		var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
 		if fn == "set_bookmark_coords":
 			if set_bookmark_coords(fn_args[0]):
 				c_v = old_view
@@ -1627,16 +1669,14 @@ func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_ar
 				$UI.remove_child(HUD)
 				battle = battle_scene.instance()
 				add_child(battle)
-		if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]:
-			HUD.refresh()
-		if is_instance_valid(HUD) and is_a_parent_of(HUD):
+		if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"] and is_instance_valid(HUD) and is_a_parent_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and HUD.dimension_btn.visible:
 			HUD.switch_btn.visible = false
-	if not first_time:
+	if not other_params.has("first_time"):
 		fn_save_game()
 		save_views(true)
-	if fade_anim:
+	if not other_params.has("dont_fade_anim"):
 		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
 		view_tween.start()
 
@@ -1823,7 +1863,7 @@ func add_universe():
 		reset_collisions()
 		generate_superclusters(c_u)
 	add_obj("universe")
-	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
 	HUD.get_node("Panel/CollectAll").visible = false
 
 func add_supercluster():
@@ -1836,7 +1876,7 @@ func add_supercluster():
 		generate_clusters(c_sc)
 	add_obj("supercluster")
 	HUD.get_node("Panel/CollectAll").visible = false
-	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 
 func add_cluster():
 	if obj_exists("Superclusters", c_sc):
@@ -1864,7 +1904,7 @@ func add_cluster():
 		var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.7))
-	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
@@ -1888,7 +1928,7 @@ func add_galaxy():
 #		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
 #		HUD.refresh()
 	add_obj("galaxy")
-	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
@@ -1913,7 +1953,7 @@ func add_system():
 		generate_planets(c_s)
 	show.bookmarks = true
 	add_obj("system")
-	HUD.get_node("SwitchBtn").texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	HUD.get_node("Panel/CollectAll").visible = true
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
@@ -1926,6 +1966,7 @@ func add_planet():
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).empty():
 		generate_tiles(c_p)
 	add_obj("planet")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SystemView.png")
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	$UI.add_child(planet_HUD)
@@ -4225,9 +4266,7 @@ func new_game_confirm():
 	YN_panel.disconnect("confirmed", self, "new_game_confirm")
 
 func op_galaxy_confirm(l_id:int, g_id:int):
-	c_g_g = g_id
-	c_g = l_id
-	switch_view("galaxy")
+	switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, g_id]]})
 	YN_panel.disconnect("confirmed", self, "op_galaxy_confirm")
 
 func conquer_all_confirm(energy_cost:float, insta_conquer:bool):

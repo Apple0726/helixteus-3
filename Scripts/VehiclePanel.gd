@@ -141,14 +141,14 @@ func on_fighter_exit():
 func on_fighter_press(i:int):
 	_on_close_button_pressed()
 	if game.fighter_data[i].tier == 0:
-		game.switch_view("galaxy", false, "set_to_fighter_coords", [i])
+		game.switch_view("system", {"fn":"set_to_fighter_coords", "fn_args":[i]})
 	elif game.fighter_data[i].tier == 1:
-		game.switch_view("cluster", false, "set_to_fighter_coords", [i])
+		game.switch_view("cluster", {"fn":"set_to_fighter_coords", "fn_args":[i]})
 
 func on_probe_press(tier:int):
 	_on_close_button_pressed()
 	if tier == 0:
-		game.switch_view("supercluster", false, "set_to_probe_coords", [0])
+		game.switch_view("supercluster", {"fn":"set_to_probe_coords", "fn_args":[0]})
 	elif tier == 1:
 		game.switch_view("universe")
 	elif tier == 2:

@@ -7,11 +7,15 @@ var pressure:float
 var tile_num:int
 var surface:float
 var lake_num:int
+var p_i:Dictionary
+var cost_div:float
 
 func _ready():
 	set_polygon(rect_size)
 
 func refresh():
+	p_i = game.planet_data[game.c_p]
+	cost_div = Helper.clever_round(p_i.cost_div) if p_i.has("cost_div") else 1.0
 	$ScrollContainer/VBoxContainer/AtmosphereExtraction.visible = game.science_unlocked.has("ATM")
 	$ScrollContainer/VBoxContainer/AtomManipulation.visible = game.science_unlocked.has("ATM")
 	$ScrollContainer/VBoxContainer/SubatomicParticles.visible = game.science_unlocked.has("SAP")
@@ -28,7 +32,7 @@ func update_info():
 		tf_costs[cost] *= surface * pressure_mult * lake_mult
 	costs.erase("time")
 	for cost in costs:
-		costs[cost] *= surface * game.engineering_bonus.BCM
+		costs[cost] *= surface * game.engineering_bonus.BCM / cost_div
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 	var pressure_mult_color = gradient.interpolate(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
 	var lake_mult_color = gradient.interpolate(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
@@ -37,30 +41,36 @@ func update_info():
 	Helper.put_rsrc($Panel/BCVBox, 32, costs, true, true)
 	$Panel.visible = true
 
+func set_bldg_cost_txt():
+	if cost_div > 1.0:
+		$Panel/BuildingCosts.text = "%s (%s %s) (%s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower(), tr("CBD_PATH_1") % cost_div]
+	else:
+		$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
+
 func _on_MS_pressed():
 	tf_type = "MS"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MS_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.MS.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AE_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.AE.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
 
 func _on_MM_pressed():
 	tf_type = "MM"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("MM_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.MM.duplicate(true)
 	$Panel/Note.visible = true
 	update_info()
 
 func _on_GH_pressed():
 	tf_type = "GH"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("GH_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
 	$Panel/Note.visible = false
@@ -77,27 +87,26 @@ func _on_Terraform_pressed():
 	if game.check_enough(total_costs):
 		game.toggle_panel(self)
 		game.deduct_resources(total_costs)
-		var planet = game.planet_data[game.c_p]
-		if planet.has("bookmarked"):
+		if p_i.has("bookmarked"):
 			game.bookmarks.planet.erase(str(game.c_p_g))
 			game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(game.c_p_g)))
-			planet.erase("bookmarked")
-		planet.tile_num = surface
+			p_i.erase("bookmarked")
+		p_i.tile_num = surface
 		game.stats_univ.bldgs_built += floor(surface)
 		game.stats_dim.bldgs_built += floor(surface)
 		game.stats_global.bldgs_built += floor(surface)
-		planet.bldg = {}
-		planet.bldg.name = tf_type
-		planet.bldg.is_constructing = false
+		p_i.bldg = {}
+		p_i.bldg.name = tf_type
+		p_i.bldg.is_constructing = false
 		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
-		planet.bldg.path_1 = 1
-		planet.bldg.path_1_value = Data.path_1[tf_type].value
+		p_i.bldg.path_1 = 1
+		p_i.bldg.path_1_value = Data.path_1[tf_type].value
 		if tf_type in ["MM", "GH", "AE", "ME", "PP", "AMN", "SPR"]:
-			planet.bldg.path_2 = 1
-			planet.bldg.path_2_value = Data.path_2[tf_type].value
+			p_i.bldg.path_2 = 1
+			p_i.bldg.path_2_value = Data.path_2[tf_type].value
 		if tf_type in ["MM", "AE", "PP", "ME"]:
-			planet.bldg.collect_date = OS.get_system_time_msecs()
-			planet.bldg.stored = 0
+			p_i.bldg.collect_date = OS.get_system_time_msecs()
+			p_i.bldg.stored = 0
 		if tf_type == "RL":
 			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
 		elif tf_type == "MS":
@@ -106,12 +115,17 @@ func _on_Terraform_pressed():
 			game.neutron_cap += Data.path_1.NSF.value * surface
 		elif tf_type == "ESF":
 			game.electron_cap += Data.path_1.ESF.value * surface
-		elif tf_type == "MM" and not planet.has("depth"):
-			planet.depth = 0
+		elif tf_type == "MM" and not p_i.has("depth"):
+			p_i.depth = 0
 		if Helper.has_IR(tf_type):
-			planet.bldg.IR_mult = Helper.get_IR_mult(planet.bldg.name)
+			p_i.bldg.IR_mult = Helper.get_IR_mult(p_i.bldg.name)
 		else:
-			planet.bldg.IR_mult = 1
+			p_i.bldg.IR_mult = 1
+		if p_i.has("autocollect"):
+			if tf_type == "ME":
+				game.autocollect.rsrc.minerals += Data.path_1[tf_type].value
+			elif tf_type == "PP":
+				game.autocollect.rsrc.energy += Data.path_1[tf_type].value
 		game.switch_view("system")
 		var dir = Directory.new()
 		dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])
@@ -125,7 +139,7 @@ func _on_Terraform_pressed():
 
 func _on_PP_pressed():
 	tf_type = "PP"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("PP_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.PP.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -133,7 +147,7 @@ func _on_PP_pressed():
 
 func _on_ME_pressed():
 	tf_type = "ME"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ME_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.ME.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -141,7 +155,7 @@ func _on_ME_pressed():
 
 func _on_RL_pressed():
 	tf_type = "RL"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("RL_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.RL.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -149,7 +163,7 @@ func _on_RL_pressed():
 
 func _on_AMN_pressed():
 	tf_type = "AMN"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("AMN_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.AMN.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -157,7 +171,7 @@ func _on_AMN_pressed():
 
 func _on_SPR_pressed():
 	tf_type = "SPR"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("SPR_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.SPR.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -165,7 +179,7 @@ func _on_SPR_pressed():
 
 func _on_NSF_pressed():
 	tf_type = "NSF"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("NSF_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.NSF.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
@@ -173,7 +187,7 @@ func _on_NSF_pressed():
 
 func _on_ESF_pressed():
 	tf_type = "ESF"
-	$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("ESF_NAME_S").to_lower()]
+	set_bldg_cost_txt()
 	costs = Data.costs.ESF.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()

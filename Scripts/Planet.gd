@@ -193,7 +193,7 @@ func _ready():
 	if p_i.has("lake_2"):
 		$Lakes2.update_bitmask_region()
 	$Soil.update_bitmask_region()
-	game.HUD.refresh()
+	#game.HUD.refresh()
 
 func add_particles(pos:Vector2):
 	var particle:Particles2D = game.particles_scene.instance()
@@ -1145,7 +1145,7 @@ func _unhandled_input(event):
 							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
 						else:
-							game.switch_view("", false, "", [], true, false)
+							game.switch_view("", {"dont_fade_anim":true})
 							game.c_p = tile.wormhole.l_dest_p_id
 							game.c_p_g = tile.wormhole.g_dest_p_id
 							game.c_s = tile.wormhole.l_dest_s_id
@@ -1158,7 +1158,7 @@ func _unhandled_input(event):
 						game.ships_dest_coords.s = game.c_s
 						game.ships_c_g_coords.s = game.c_s_g
 						game.ships_dest_g_coords.s = game.c_s_g
-						game.switch_view("planet", false, "", [], false, false)
+						game.switch_view("planet", {"dont_save_zooms":true, "dont_fade_anim":true})
 						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
 						game.view_tween.start()
 					else:
@@ -1365,7 +1365,7 @@ func on_timeout():
 			start_date = tile.bldg.construction_date
 			length = tile.bldg.construction_length
 			progress = (curr_time - start_date) / float(length)
-			if Helper.update_bldg_constr(tile):
+			if Helper.update_bldg_constr(tile, p_i):
 				if tile.bldg.has("path_1"):
 					hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
 				if tile.bldg.has("path_2"):

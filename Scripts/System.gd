@@ -335,6 +335,12 @@ func auto_speedup(bldg_costs:Dictionary):
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 0.2
 
+func add_constr_costs(vbox:VBoxContainer, dict:Dictionary):
+	if dict.has("cost_div"):
+		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(dict.cost_div)], 0)
+	else:
+		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	
 func show_M_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
@@ -345,10 +351,10 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_3)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_4)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM)
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, star)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 	if base and build_all_MS_stages:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, num_stages.M_DS)}, false)
@@ -365,10 +371,10 @@ func show_M_CBS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_CBS_2)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_CBS_3)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.planet_data[-1].distance / 1000.0 * game.engineering_bonus.BCM)
+		bldg_costs[cost] = round(bldg_costs[cost] * game.planet_data[-1].distance / 1000.0 * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, star)
 	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
 	var p_num:int = len(game.planet_data)
 	if base and build_all_MS_stages:
@@ -386,10 +392,10 @@ func show_M_PK_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_PK_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_PK_2)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
+		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, star)
 	var max_diameter = 4000
 	if not star.has("MS"):
 		if build_all_MS_stages:
@@ -409,12 +415,12 @@ func show_M_SE_costs(p_i:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_SE_1)
 	for cost in bldg_costs:
 		if cost != "energy":
-			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM)
+			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
 		else:
-			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM
+			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0)
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, p_i)
 
 func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -425,10 +431,10 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_MME_2)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_MME_3)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2) * game.engineering_bonus.BCM)
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2) * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, p_i)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 	if build_all_MS_stages:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, num_stages.M_MME)}, false)
@@ -440,10 +446,10 @@ func show_M_MPCC_costs(p_i:Dictionary):
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM)
+		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	add_constr_costs(vbox, p_i)
 
 func show_planet_info(id:int, l_id:int):
 	planet_hovered = l_id
@@ -656,9 +662,7 @@ func on_planet_click (id:int, l_id:int):
 					Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 			if not p_i.type in [11, 12]:
 				if not p_i.has("bldg") or not p_i.bldg.has("name"):
-					game.c_p = l_id
-					game.c_p_g = id
-					game.switch_view("planet")
+					game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})
 					Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 			else:
 				game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
@@ -739,6 +743,13 @@ func on_star_over (id:int):
 				Helper.add_label(tr("PK1_POWER") % int(40000 * sqrt(game.u_i.gravitational)), -1, true, true)
 			elif star.MS_lv == 2:
 				Helper.add_label(tr("PK2_POWER"), -1, true, true)
+		elif star.MS == "M_CBS":
+			var p_num:int = len(game.planet_data)
+			Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
+			if star.MS_lv == 0:
+				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
+			else:
+				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
 		if not star.bldg.is_constructing and star.MS_lv < num_stages[star.MS]:
 			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
 				MS_constr_data.obj = star
@@ -830,6 +841,25 @@ func _process(_delta):
 					game.autocollect.MS.energy += Helper.get_DS_output(star)
 				elif star.MS == "M_MB":
 					game.autocollect.MS.SP += Helper.get_MB_output(star)
+				elif star.MS == "M_CBS":
+					var p_num_total:int = len(game.planet_data)
+					var p_num:int = ceil(p_num_total * star.MS_lv * 0.333)
+					if star.MS_lv == 0:
+						p_num = ceil(p_num_total * 0.1)
+					for i in range(0, p_num):
+						var p_i:Dictionary = game.planet_data[i]
+						if p_i.has("cost_div"):
+							p_i.cost_div = max(p_i.cost_div, 1 + log(star.luminosity + 1))
+						else:
+							p_i.cost_div = 1 + log(star.luminosity + 1)
+						p_i.autocollect = true
+					for i in len(stars_info):
+						if i != id:
+							var _star:Dictionary = stars_info[i]
+							if _star.has("cost_div"):
+								_star.cost_div = max(_star.cost_div, 1 + log(star.luminosity + 1))
+							else:
+								_star.cost_div = 1 + log(star.luminosity + 1)
 				game.HUD.refresh()
 			remove_child(time_bar)
 			time_bar.queue_free()

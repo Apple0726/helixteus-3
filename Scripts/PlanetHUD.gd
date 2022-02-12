@@ -11,18 +11,6 @@ func refresh():
 	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.mining
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "W"
-	elif OS.get_latin_keyboard_variant() == "QWERTZ":
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Y"
-	else:
-		$VBoxContainer/StarSystem.shortcut.shortcut.action = "Z"
-
-func _on_StarSystem_pressed():
-	click_sound.play()
-	if game.universe_data[game.c_u].lv < 8:
-		return
-	game.call_deferred("switch_view", "system")
 
 func _input(event):
 	refresh()
@@ -52,13 +40,6 @@ func _on_Construct_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("CONSTRUCT") + " (C)")
 
-func _on_StarSystem_mouse_entered():
-	on_button = true
-	var view_str:String = "%s (%s)" % [tr("VIEW_STAR_SYSTEM"), $VBoxContainer/StarSystem.shortcut.shortcut.action]
-	if game.universe_data[game.c_u].lv < 8:
-		view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 8"]]
-	game.show_tooltip(view_str)
-
 func _on_Mine_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("MINE") + " (N)")
@@ -70,7 +51,6 @@ func _on_PlaceSoil_mouse_entered():
 func _on_mouse_exited():
 	on_button = false
 	game.hide_tooltip()
-
 
 func _on_Terraform_pressed():
 	if game.planet_data[game.c_p].has("second_ship") or game.c_p_g in [2, game.second_ship_hints.spawned_at_p, game.third_ship_hints.ship_spawned_at_p, game.third_ship_hints.part_spawned_at_p, game.fourth_ship_hints.op_grill_planet, game.fourth_ship_hints.boss_planet]:

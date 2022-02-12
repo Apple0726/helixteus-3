@@ -164,7 +164,7 @@ func update(changing_paths:bool = false):
 			while not calculated or lv_to != a:
 				if calculated:
 					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
-				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, 1.0, planet.tile_num)
+				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 				if game.check_enough(costs):
 					if lv_to == next_lv.value:
 						break
@@ -378,6 +378,11 @@ func _on_Upgrade_pressed():
 					prod_ratio = 1.0
 				var coll_date = planet.bldg.collect_date
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
+			if planet.has("autocollect"):
+				if planet.bldg.name == "ME":
+					game.autocollect.rsrc.minerals += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+				elif planet.bldg.name == "PP":
+					game.autocollect.rsrc.energy += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			planet.bldg[path_str] = next_lv.value
 			planet.bldg[path_str + "_value"] = new_base_value
 			game.universe_data[game.c_u].xp += round(cost_money / 100.0)

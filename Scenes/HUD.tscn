@@ -390,9 +390,9 @@ __meta__ = {
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Planets"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
 columns = 3
@@ -409,9 +409,9 @@ __meta__ = {
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Systems"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
 columns = 3
@@ -428,9 +428,9 @@ __meta__ = {
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Galaxies"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
 columns = 3
@@ -447,9 +447,9 @@ __meta__ = {
 
 [node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Clusters"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 custom_constants/vseparation = 2
 custom_constants/hseparation = 2
 columns = 3
@@ -1061,6 +1061,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="PrevView" type="Button" parent="."]
+margin_top = 636.0
+margin_right = 36.0
+margin_bottom = 670.0
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextView" type="Button" parent="."]
+margin_left = 36.0
+margin_top = 636.0
+margin_right = 72.0
+margin_bottom = 670.0
+text = ">"
+
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]
 [connection signal="mouse_exited" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_exited"]
 [connection signal="pressed" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_pressed"]
@@ -1152,3 +1168,9 @@ __meta__ = {
 [connection signal="mouse_entered" from="SwitchBtn" to="." method="_on_SwitchBtn_mouse_entered"]
 [connection signal="mouse_exited" from="SwitchBtn" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="SwitchBtn" to="." method="_on_SwitchBtn_pressed"]
+[connection signal="mouse_entered" from="PrevView" to="." method="_on_PrevView_mouse_entered"]
+[connection signal="mouse_exited" from="PrevView" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="PrevView" to="." method="_on_PrevView_pressed"]
+[connection signal="mouse_entered" from="NextView" to="." method="_on_NextView_mouse_entered"]
+[connection signal="mouse_exited" from="NextView" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="NextView" to="." method="_on_NextView_pressed"]

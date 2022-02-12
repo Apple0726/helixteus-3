@@ -33,6 +33,8 @@ onready var galaxy_b_btn = $Bookmarks/BookMarkButtons/Galaxies
 onready var cluster_b_btn = $Bookmarks/BookMarkButtons/Clusters
 onready var dimension_btn = $DimensionBtn
 onready var switch_btn = $SwitchBtn
+onready var prev_btn = $PrevView
+onready var next_btn = $NextView
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
@@ -55,8 +57,8 @@ func _ready():
 	else:
 		switch_btn.shortcut.shortcut.action = "Z"
 	refresh_bookmarks()
-	if not game.viewing_dimension:
-		refresh()
+#	if not game.viewing_dimension:
+#		refresh()
 
 func refresh_bookmarks():
 	for slot in planet_grid_btns.get_children():
@@ -122,7 +124,7 @@ func on_bookmark_exited():
 	game.hide_tooltip()
 
 func on_bookmark_pressed(view:String, bookmark:Dictionary):
-	game.switch_view(view, false, "set_bookmark_coords", [bookmark])
+	game.switch_view(view, {"fn":"set_bookmark_coords", "fn_args":[bookmark]})
 
 func _process(delta):
 	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
@@ -193,8 +195,10 @@ func update_money_energy_SP():
 func refresh():
 	if not game:
 		return
+	prev_btn.visible = game.view_history_pos != 0
+	next_btn.visible = game.view_history_pos != len(game.view_history) - 1
 	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
-	switch_btn.visible = game.c_v in ["system", "galaxy", "cluster", "supercluster", "universe"]
+	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]
 	$Panel/CollectProgress.visible = false
 	$Panel/CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
@@ -835,11 +839,18 @@ func _on_SwitchBtn_mouse_entered():
 		view_str = tr("VIEW_GALAXY")
 		if u_i.lv < 18:
 			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 18"]]
+	elif game.c_v == "planet":
+		view_str = tr("VIEW_STAR_SYSTEM")
+		if u_i.lv < 8:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 8"]]
 	game.show_tooltip("%s (%s)" % [view_str, switch_btn.shortcut.shortcut.action])
 
 func _on_SwitchBtn_pressed():
 	var u_i:Dictionary = game.u_i
 	match game.c_v:
+		"planet":
+			if u_i.lv >= 8:
+				game.switch_view("system")
 		"system":
 			if u_i.lv >= 18:
 				game.switch_view("galaxy")
@@ -867,3 +878,22 @@ func _on_Stats_mouse_entered():
 
 func _on_Stats_pressed():
 	game.toggle_panel(game.stats_panel)
+
+
+func _on_PrevView_pressed():
+	set_view_and_switch(-1)
+
+func _on_NextView_pressed():
+	set_view_and_switch(1)
+
+func set_view_and_switch(shift:int):
+	var view_data:Dictionary = game.view_history[game.view_history_pos + shift].duplicate(true)
+	var view:String = view_data.view
+	view_data.erase("view")
+	game.switch_view(view, {"fn":"set_custom_coords", "fn_args":[view_data.keys(), view_data.values()], "shift":shift})
+
+func _on_PrevView_mouse_entered():
+	game.show_tooltip(tr("PREV_VIEW"))
+
+func _on_NextView_mouse_entered():
+	game.show_tooltip(tr("NEXT_VIEW"))

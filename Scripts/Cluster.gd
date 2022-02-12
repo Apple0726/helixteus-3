@@ -94,9 +94,7 @@ func on_galaxy_click (id:int, l_id:int):
 		if not g_i.has("discovered") and g_i.system_num > 9000:
 			game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))
 		else:
-			game.c_g_g = id
-			game.c_g = l_id
-			game.switch_view("galaxy", false, "set_g_id", [l_id, id])
+			game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
 	view.dragged = false
 
 func change_overlay(overlay_id:int, gradient:Gradient):

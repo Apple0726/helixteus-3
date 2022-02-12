@@ -24,7 +24,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	if show_available:
 		if path == "Icons/stone" and rsrc_available is Dictionary:
 			rsrc_available = get_sum_of_dict(rsrc_available)
-		text = "%s/%s" % [format_num(clever_round(rsrc_available), threshold / 2), format_num(clever_round(rsrc_cost), threshold / 2)] + mass_str
+		text = "%s/%s" % [format_num(clever_round(rsrc_available, 3, false, true), threshold / 2), format_num(clever_round(rsrc_cost, 3, false, true), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
@@ -34,7 +34,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
 		var minus:String = "-" if rsrc_cost < 0 else ""
 		rsrc_cost = abs(rsrc_cost)
-		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost), threshold)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3, false, true), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = "%s%s%s" % [minus, num_str, mass_str]
@@ -646,7 +646,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	else:
 		if tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
 			return
-	update_bldg_constr(tile)
+	update_bldg_constr(tile, p_i)
 	if tile.bldg.is_constructing:
 		return
 	match tile.bldg.name:
@@ -887,7 +887,7 @@ func update_ship_travel():
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
 	return progress
 
-func update_bldg_constr(tile):
+func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
 	var start_date = tile.bldg.construction_date
 	var length = tile.bldg.construction_length
@@ -924,9 +924,13 @@ func update_bldg_constr(tile):
 				if tile.bldg.name == "ME":
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-				elif tile.bldg.name in ["PP", "SP"]:
+				elif tile.bldg.name == "PP":
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+				elif tile.bldg.name == "SP":
+					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+					game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
 			elif tile.bldg.name == "NSF":
@@ -987,9 +991,13 @@ func update_bldg_constr(tile):
 							if _tile.bldg.name == "ME":
 								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
-							elif _tile.bldg.name in ["PP", "SP"]:
+							elif _tile.bldg.name == "PP":
 								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
+							elif _tile.bldg.name == "SP":
+								var prod:float = Helper.get_SP_production(p_i.temperature, _tile.bldg.path_1_value, 1 + _tile.aurora.au_int if _tile.has("aurora") else 1.0)
+								game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * diff / 100.0 * _mult
+								game.autocollect.rsrc.energy += prod * diff / 100.0 * _mult
 						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
@@ -1021,18 +1029,18 @@ func update_MS_rsrc(dict:Dictionary):
 				cap = round(cap * dict.tile_num)
 			else:
 				cap = round(cap)
-			if stored < cap:
-				if c_t - c_d > prod:
-					var rsrc_num = floor((c_t - c_d) / prod)
-					dict.bldg.stored += rsrc_num
-					dict.bldg.collect_date += prod * rsrc_num
-					if dict.bldg.stored >= cap:
-						dict.bldg.stored = cap
-		else:
-			if c_t - c_d > prod:
+			if stored < cap and c_t - c_d > prod and not dict.has("autocollect"):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num
+				if dict.bldg.stored >= cap:
+					dict.bldg.stored = cap
+		else:
+			if c_t - c_d > prod:
+				if not dict.has("autocollect"):
+					var rsrc_num = floor((c_t - c_d) / prod)
+					dict.bldg.stored += rsrc_num
+					dict.bldg.collect_date += prod * rsrc_num
 		return min((c_t - c_d) / prod, 1)
 	else:
 		return 0
@@ -1109,12 +1117,15 @@ func on_path_enter(path:String, obj:Dictionary):
 func on_path_exit():
 	game.hide_tooltip()
 
-func clever_round (num:float, sd:int = 3, st:bool = false):#sd: significant digits
+func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):#sd: significant digits
 	var e = floor(log10(abs(num)))
 	if e < -4 and st:
 		return e_notation(num, sd)
 	if sd < e + 1:
-		return round(num)
+		if _floor:
+			return floor(num)
+		else:
+			return round(num)
 	return stepify(num, pow(10, e - sd + 1))
 
 const Y9 = Color(25, 0, 0, 255) / 255.0
