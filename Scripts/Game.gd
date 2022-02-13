@@ -422,6 +422,7 @@ var autosell:bool = true
 var enable_shaders:bool = true
 var screen_shake:bool = true
 var icon_animations:bool = true
+var cave_gen_info:bool = false
 
 var music_player = AudioStreamPlayer.new()
 
@@ -541,6 +542,7 @@ func _ready():
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
 		icon_animations = config.get_value("game", "icon_animations", true)
+		cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
@@ -851,7 +853,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,
-				"cave_desc":true,
 				"crater_desc":true,
 				"autosave_light_desc":true,
 				"tile_shortcuts":true,
@@ -3022,19 +3023,44 @@ func generate_tiles(id:int):
 			var op_aurora_cond:bool = op_aurora and tile_data[t_id] and tile_data[t_id].has("aurora")
 			var ship_cond:bool = (ship_signal and not second_ship_cave_placed and tile_data[t_id] and tile_data[t_id].has("aurora"))
 			var boss_cave:bool = cross_aurora and t_id == wid * wid / 2
-			if normal_cond or op_aurora_cond or ship_cond or boss_cave:#Spawn cave
+			if normal_cond:# or op_aurora_cond or ship_cond or boss_cave:
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				var floor_size = int(rand_range(25 * min(wid / 8.0, 1), int(40 * rand_range(1, 1 + wid / 100.0))))
+				var floor_size:int = rand_range(25 * min(wid / 8.0, 1), 40 * rand_range(1, 1 + wid / 100.0))
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
-				if ship_cond:
-					relic_cave_id = t_id
-					second_ship_cave_placed = true
-					tile_data[t_id].cave = {"num_floors":3, "floor_size":20, "special_cave":5}
-				elif boss_cave:
-					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
-					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
-				else:
-					tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size}
+				var modifiers:Dictionary = {}
+				if c_s_g != 0:
+					var N:int = log(1.0 / randf() + 1.1) * log(system_data[c_s].diff) / log(10)
+					var modifiers2:Dictionary = Data.cave_modifiers.duplicate(true)
+					if c_g_g == 0:
+						N = min(N, 2)
+						for mod in modifiers2.keys():
+							if modifiers2[mod].tier == 2:
+								modifiers2.erase(mod)
+					if N > len(modifiers2.keys()):
+						N = len(modifiers2.keys())
+					for k in N:
+						var modifier_keys:Array = modifiers2.keys()
+						modifier_keys.shuffle()
+						var key:String = modifier_keys[0]
+						if modifiers2[key].has("double_treasure_at"):
+							var mod_power:float = log(1.0 / randf() + 0.5) / max(range_lerp(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
+							var direction:float = sign(randf() - 0.5)
+							modifiers[key] = pow(modifiers2[key].double_treasure_at, mod_power * direction)
+						else:
+							modifiers[key] = modifiers2[key].treasure_if_true
+						modifiers2.erase(key)
+#				if ship_cond:
+#					relic_cave_id = t_id
+#					second_ship_cave_placed = true
+#					tile_data[t_id].cave = {"num_floors":3, "floor_size":20, "special_cave":5}
+#				elif boss_cave:
+#					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
+#					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
+#				else:
+				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
+				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period}
+				if not modifiers.empty():
+					tile_data[t_id].cave.modifiers = modifiers
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if not cross_aurora and randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
@@ -3402,9 +3428,11 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 		for st in arr2:
 			var bb_start:int = st.find("[")
 			var bb_end:int = st.find("]")
-			if bb_start != -1 and bb_end != -1:
+			while bb_start != -1 and bb_end != -1:
 				st = st.replace(st.substr(bb_start, bb_end - bb_start + 1), "")
-			var width = min(default_font.get_string_size(st).x, 400)
+				bb_start = st.find("[")
+				bb_end = st.find("]")
+			var width = min(default_font.get_string_size(st).x + 10, 400)
 			max_width = max(width, max_width)
 		RTL.rect_size.x = max_width# + 60
 		RTL.rect_min_size.x = max_width# + 60

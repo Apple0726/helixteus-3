@@ -830,6 +830,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Modifiers" type="Label" parent="UI2/CaveInfo"]
+visible = false
+margin_left = 192.0
+margin_right = 293.0
+margin_bottom = 34.0
+mouse_filter = 1
+size_flags_vertical = 0
+theme = ExtResource( 29 )
+custom_styles/normal = SubResource( 12 )
+text = "Modifiers"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Relic" type="TextureRect" parent="UI2"]
 visible = false
 margin_left = 340.0
@@ -908,6 +922,8 @@ environment = SubResource( 19 )
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Difficulty" to="." method="_on_Difficulty_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Difficulty" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="UI2/CaveInfo/Modifiers" to="." method="_on_Modifiers_mouse_entered"]
+[connection signal="mouse_exited" from="UI2/CaveInfo/Modifiers" to="." method="_on_mouse_exited"]
 [connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
 [connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]

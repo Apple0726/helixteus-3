@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=2]
+[gd_scene load_steps=70 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -222,6 +222,18 @@ action = "Z"
 
 [sub_resource type="ShortCut" id=30]
 shortcut = SubResource( 29 )
+
+[sub_resource type="InputEventAction" id=31]
+action = "prev_view"
+
+[sub_resource type="ShortCut" id=32]
+shortcut = SubResource( 31 )
+
+[sub_resource type="InputEventAction" id=33]
+action = "next_view"
+
+[sub_resource type="ShortCut" id=34]
+shortcut = SubResource( 33 )
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
@@ -1065,6 +1077,8 @@ __meta__ = {
 margin_top = 636.0
 margin_right = 36.0
 margin_bottom = 670.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 32 )
 text = "<"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1075,6 +1089,8 @@ margin_left = 36.0
 margin_top = 636.0
 margin_right = 72.0
 margin_bottom = 670.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 34 )
 text = ">"
 
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]

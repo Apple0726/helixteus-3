@@ -26,6 +26,7 @@ func _ready():
 		$TabContainer/GAME/EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		$TabContainer/GAME/AutosellMinerals.pressed = config.get_value("game", "autosell", true)
 		$TabContainer/GAME/IconAnimations.pressed = config.get_value("game", "icon_animations", true)
+		$TabContainer/GAME/CaveGenInfo.pressed = config.get_value("game", "cave_gen_info", false)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		$TabContainer/GRAPHICS/Fullscreen.pressed = OS.window_fullscreen
@@ -269,4 +270,11 @@ func _on_IconAnimations_toggled(button_pressed):
 	if err == OK:
 		game.icon_animations = button_pressed
 		config.set_value("game", "icon_animations", button_pressed)
+		config.save("user://settings.cfg")
+
+
+func _on_CaveGenInfo_toggled(button_pressed):
+	if err == OK:
+		game.cave_gen_info = button_pressed
+		config.set_value("game", "cave_gen_info", button_pressed)
 		config.save("user://settings.cfg")

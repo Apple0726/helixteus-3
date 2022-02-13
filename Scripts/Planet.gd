@@ -275,17 +275,29 @@ func show_tooltip(tile):
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
 	elif tile.has("cave"):
-		adv = tile.has("aurora")
-		if adv:
-			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
+		var au_str:String = ""
+		adv = tile.has("aurora") or tile.cave.has("modifiers")
+		if tile.has("aurora"):
+			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
+			tooltip = au_str
 		tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
-		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
-			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
+#		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
+#			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
 		if not game.science_unlocked.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
-			tooltip += "\n%s\n%s\n%s" % [tr("CLICK_CAVE_TO_EXPLORE"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+			if game.help.cave_controls:
+				tooltip += "\n%s\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
+			else:
+				tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+		if tile.cave.has("modifiers"):
+			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
+		if game.cave_gen_info:
+			if tile.cave.has("period"):#Save migration
+				tooltip += "\n%s: %s" % [tr("PERIOD"), tile.cave.period]
+			else:
+				tooltip += "\n%s: %s" % [tr("PERIOD"), 65]
 	elif tile.has("diamond_tower"):
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
 		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]

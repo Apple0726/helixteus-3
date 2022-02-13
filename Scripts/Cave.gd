@@ -56,6 +56,7 @@ var floor_seeds = []
 var id:int = -1#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
+var modifiers:Dictionary = {}
 var light_amount:float = 1.0
 var dont_gen_anything:bool = false
 var wormhole
@@ -112,7 +113,14 @@ var tile_mod:Color = Color.white
 var tile_brightness:float
 var brightness_mult:float
 
+#Modifiers
+
+var enemy_attack_rate:float = 1.0
+var enemy_projectile_size:float = 1.0
+var treasure_mult:float = 1.0
+
 func _ready():
+	$Walls.tile_set.tile_set_modulate(0, Color.white)
 	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
 		$CheckAchievements.start()
@@ -143,6 +151,27 @@ func _ready():
 		cave_type = "diamond_tower"
 	num_floors = tile[cave_type].num_floors
 	cave_size = tile[cave_type].floor_size
+	if tile[cave_type].has("modifiers"):
+		$UI2/CaveInfo/Modifiers.visible = true
+		modifiers = tile[cave_type].modifiers
+		for modifier in modifiers:
+			if Data.cave_modifiers[modifier].has("double_treasure_at"):
+				var double_treasure_at:float = Data.cave_modifiers[modifier].double_treasure_at
+				if modifiers[modifier] > 1.0 and double_treasure_at > 1.0:
+					treasure_mult *= range_lerp(modifiers[modifier], 1.0, double_treasure_at, 0, 1) + 1.0
+				elif modifiers[modifier] < 1.0 and double_treasure_at < 1.0:
+					treasure_mult *= range_lerp(1.0 / modifiers[modifier], 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0
+			elif Data.cave_modifiers[modifier].has("treasure_if_true"):
+				treasure_mult *= Data.cave_modifiers[modifier].treasure_if_true
+		if modifiers.has("enemy_attack_rate"):
+			enemy_attack_rate = modifiers.enemy_attack_rate
+		if modifiers.has("enemy_projectile_size"):
+			enemy_projectile_size = modifiers.enemy_projectile_size
+		if modifiers.has("rover_size"):
+			rover_size = modifiers.rover_size
+		if modifiers.has("minimap_disabled"):
+			$UI/Error.visible = true
+			$UI/Minimap.visible = false
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
 		cave_data_file.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], File.READ)
@@ -168,9 +197,6 @@ func _ready():
 		$UI/Minimap/Hole.rotation_degrees = 180
 		rover_size = 0.7
 	generate_cave(true, false)
-	if tile.cave.has("special_cave") and tile.cave.special_cave in [1, 3]:
-		$UI/Error.visible = true
-		$UI/Minimap.visible = false
 	if aurora:
 		$AuroraPlayer.play("Aurora", -1, 0.2)
 	for rsrc in game.show:
@@ -334,11 +360,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if tower:
 			light_amount = 1
 		else:
-			light_amount = clamp((11 - cave_floor) * 0.1, 0.3, 1)
+			light_amount = (11 - cave_floor) * 0.1
 			if game.science_unlocked.has("RMK2"):
-				light_amount = clamp((12.5 - cave_floor) * 0.08, 0.3, 1)
+				light_amount = (12.5 - cave_floor) * 0.08
 			if game.science_unlocked.has("RMK3"):
-				light_amount = clamp((16 - cave_floor) * 0.0625, 0.3, 1)
+				light_amount = (16 - cave_floor) * 0.0625
+			var darkness:float = modifiers.darkness if modifiers.has("darkness") else 1.0
+			light_amount = clamp(light_amount / darkness, 0.3 / darkness, 1.0)
 			if game.help.cave_controls:
 				$UI2/Controls.visible = true
 				game.help_str = "cave_controls"
@@ -376,26 +404,27 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-	if tile.cave.has("special_cave"):
-		if tile.cave.special_cave == 5:
-			noise.period = 20
-		elif tile.cave.special_cave == 3:
-			noise.period = 35
-		elif tile.cave.special_cave == 2:
-			noise.period = 150
-		elif tile.cave.special_cave == 1:
-			if cave_floor == 30:
-				noise.period = 65
-				cave_size = 16
-			else:
-				noise.period = 50 - cave_floor
-				cave_size = 16 + cave_floor / 2
-		elif tile.cave.special_cave == 0:
-			noise.period = 65
-			rover_size = 0.4
-	else:
-		noise.period = 65
+#	if tile.cave.has("special_cave"):
+#		if tile.cave.special_cave == 5:
+#			noise.period = 20
+#		elif tile.cave.special_cave == 3:
+#			noise.period = 35
+#		elif tile.cave.special_cave == 2:
+#			noise.period = 150
+#		elif tile.cave.special_cave == 1:
+#			if cave_floor == 30:
+#				noise.period = 65
+#				cave_size = 16
+#			else:
+#				noise.period = 50 - cave_floor
+#				cave_size = 16 + cave_floor / 2
+#		elif tile.cave.special_cave == 0:
+#			noise.period = 65
+#			rover_size = 0.4
+#	else:
+	noise.period = tile.cave.period if tile.cave.has("period") else 65
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
+	print($Camera2D.zoom)
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
@@ -410,7 +439,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor):
+				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
 					var HX_node = HX1_scene.instance()
 					var type:int = rng.randi_range(1, 4)
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [type]))
@@ -420,7 +449,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					if rng.randf() < log(difficulty / 100.0) / log(100) - 1.0:
 						_class += 1
 					HX_node._class = _class
-					HX_node.HP = round(15 * difficulty * rng.randf_range(0.8, 1.2))
+					HX_node.HP = round(15 * difficulty * rng.randf_range(0.8, 1.2) * (modifiers.enemy_HP if modifiers.has("enemy_HP") else 1.0))
 					HX_node.def = rng.randi_range(3, 6)
 					HX_node.atk = round((10 - HX_node.def) * difficulty * rng.randf_range(0.9, 1.1))
 					if enemies_rekt[cave_floor - 1].has(tile_id):
@@ -498,7 +527,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var n = room.size
 			for tile in room.tiles:
 				var rand = rng.randf()
-				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8)
+				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
 					var tier:int = int(clamp(pow(formula / rand * aurora_mult, 0.2), 1, 5))
 					var contents:Dictionary = generate_treasure(tier, rng)
@@ -894,7 +923,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if rarity > difficulty:
 			break
 		if rng.randf() < 0.5 / pow(rarity, 0.75):
-			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1))
+			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1) * treasure_mult)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1121,9 +1150,9 @@ func _input(event):
 				cave_floor += 1
 				if cave_floor == 8:
 					if tile.has("aurora"):
-						$Walls.tile_set.tile_set_modulate(0, Color(1.4, 1.4, 2.4, 2.0))
+						$Walls.tile_set.tile_set_modulate(0, Color(1.4, 1.4, 2.4, 1.8))
 					else:
-						$Walls.tile_set.tile_set_modulate(0, Color(0.4, 0.4, 2.0, 2.0))
+						$Walls.tile_set.tile_set_modulate(0, Color(0.4, 0.4, 2.0, 1.8))
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty *= 1.25 if tower else 2
 				rover_light.visible = true
@@ -1298,7 +1327,7 @@ func attack():
 		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
 		proj_scale *= 3.0
-	add_proj(false, rover.position, 70.0 * rover_size, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
+	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
 	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
 
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}):
@@ -1307,7 +1336,10 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	proj.rotation = rot
 	proj.velocity = polar2cartesian(spd * time_speed, rot)
 	proj.position = pos
-	proj.scale *= proj_scale
+	if enemy:
+		proj.scale *= proj_scale * enemy_projectile_size
+	else:
+		proj.scale *= proj_scale
 	proj.damage = damage
 	proj.enemy = enemy
 	proj.type = type
@@ -1595,7 +1627,7 @@ func _on_Difficulty_mouse_entered():
 		tr("FLOOR_MULTIPLIER"),
 		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
 		tr("AVERAGE_ENEMY_DAMAGE"),
-		Helper.format_num(5.5 * difficulty * 2.0 / def, true)
+		Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)
 	]
 	game.help_str = "cave_diff_info"
 	if game.help.cave_diff_info:
@@ -1687,3 +1719,11 @@ func _on_CheckAchievements_timeout():
 
 func _on_BurnTimer_timeout():
 	hit_player(ceil(total_HP / 50.0))
+
+
+func _on_Modifiers_mouse_entered():
+	var icons:Array = []
+	var tooltip:String = Helper.get_modifier_string(modifiers, "", icons)
+	tooltip.erase(0, 1)
+	tooltip += "\n%s: %s" % [tr("TOTAL_TREASURE_MULT"), Helper.clever_round(treasure_mult)]
+	game.show_adv_tooltip(tooltip, icons)

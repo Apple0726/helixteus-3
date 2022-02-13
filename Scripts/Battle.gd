@@ -16,6 +16,7 @@ onready var time_speed = game.u_i.time_speed if game else 2.5
 var hard_battle:bool = false
 var max_lv_ship:int = 0
 var green_enemy:int = -1
+var HXs_rekt:int = 0
 
 enum EDiff {EASY, NORMAL, HARD}
 var e_diff:int = 2
@@ -159,6 +160,7 @@ func _ready():
 			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
 			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+	$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
 	if OS.get_latin_keyboard_variant() == "AZERTY":
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
@@ -218,7 +220,7 @@ func add_stars(num:int, sc:float):
 func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		get_node("UI/FightPanel/HBox/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[curr_sh][weapon.to_lower()].lv])
+		get_node("UI/FightPanel/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[curr_sh][weapon.to_lower()].lv])
 
 func send_HXs():
 	for j in 4:
@@ -369,6 +371,10 @@ func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("Info/HP").value = HX_data[id].HP
 	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
+	if HX_data[id].HP <= 0 and not HX_data[id].has("rekt"):
+		HXs_rekt += 1
+		HX_data[id].rekt = true
+		$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
 
 func hit_formula(acc:float, eva:float):
 	return clamp(1 / (1 + eva / (acc * (game.maths_bonus.COSHEF if game else 1.5))), 0.05, 0.95)
@@ -913,10 +919,9 @@ func add_victory_panel():
 	$UI.add_child(victory_panel)
 
 func _on_Timer_timeout():
-	var HXs_rekt:int = wave * 4
+	#var HXs_rekt:int = wave * 4
 	while curr_en < min((wave + 1) * 4, len(HX_data)):
 		if HX_data[curr_en].HP <= 0:
-			HXs_rekt += 1
 			curr_en += 1
 		elif HX_c_d[HXs[curr_en].name].has("stun"):
 			curr_en += 1
@@ -1005,12 +1010,12 @@ func enemy_attack():
 					elif HX_c_d[HXs[i].name].acc < 0: 
 						HX_c_d[HXs[i].name].acc = min(0.0, HX_c_d[HXs[i].name].acc + 0.05)
 					set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
-		var all_rekt:bool = true
-		for i in len(HX_data):
-			if HX_data[i].HP > 0:
-				all_rekt = false
-				break
-		if all_rekt:
+#		var all_rekt:bool = true
+#		for i in len(HX_data):
+#			if HX_data[i].HP > 0:
+#				all_rekt = false
+#				break
+		if HXs_rekt == len(HX_data):
 			yield(get_tree().create_timer(1.0), "timeout")
 			add_victory_panel()
 		else:

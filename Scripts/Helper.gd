@@ -1331,3 +1331,56 @@ func add_dict_to_dict(dict1:Dictionary, dict2:Dictionary):
 			dict1[key] += dict2[key]
 		else:
 			dict1[key] = dict2[key]
+
+func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
+	var au_str_end:String = "[/aurora]" if au_str != "" else ""
+	var st:String = ""
+	for modifier in modifiers:
+		if Data.cave_modifiers[modifier].has("double_treasure_at"):
+			var treasure_bonus_str:String = ""
+			var cave_mod:float = modifiers[modifier]
+			var double_treasure_at:float = Data.cave_modifiers[modifier].double_treasure_at
+			var mod_color:String = ""
+			if cave_mod > 1.0:
+				if double_treasure_at > 1.0:
+					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod)).to_html(false)
+					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
+						treasure_bonus_str = " (x%s %s@i%s)" % [Helper.clever_round(range_lerp(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						icons.append(preload("res://Graphics/Icons/Inventory.png"))
+				else:
+					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+				st += "\n%s: %s+%s%%[/color]%s%s" % [
+					tr(modifier.to_upper()),
+					au_str_end + "[color=#%s]" % mod_color,
+					Helper.clever_round((cave_mod - 1.0) * 100.0),
+					au_str,
+					treasure_bonus_str,
+				]
+			else:
+				if double_treasure_at < 1.0:
+					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod)).to_html(false)
+					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
+						treasure_bonus_str = " (x%s %s@i%s)" % [Helper.clever_round(range_lerp(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						icons.append(preload("res://Graphics/Icons/Inventory.png"))
+				else:
+					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+				st += "\n%s: %s-%s%%[/color]%s%s" % [
+					tr(modifier.to_upper()),
+					au_str_end + "[color=#%s]" % mod_color,
+					Helper.clever_round((1.0 - cave_mod) * 100.0),
+					au_str,
+					treasure_bonus_str,
+				]
+		elif Data.cave_modifiers[modifier].has("treasure_if_true"):
+			st += "\n%s[color=red]%s[/color]%s (x%s %s@i%s)" % [
+				"[/aurora]" if au_str != "" else "",
+				tr(modifier.to_upper()),
+				au_str,
+				Data.cave_modifiers[modifier].treasure_if_true,
+				au_str_end,
+				au_str,
+			]
+			icons.append(preload("res://Graphics/Icons/Inventory.png"))
+	return st
