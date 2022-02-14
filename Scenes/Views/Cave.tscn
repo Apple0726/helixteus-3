@@ -372,7 +372,6 @@ collision_layer = 2
 collision_mask = 37
 
 [node name="Light2D" type="Light2D" parent="Rover"]
-visible = false
 texture = ExtResource( 31 )
 texture_scale = 3.0
 energy = 0.8
@@ -840,6 +839,19 @@ size_flags_vertical = 0
 theme = ExtResource( 29 )
 custom_styles/normal = SubResource( 12 )
 text = "Modifiers"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AvgDmg" type="Label" parent="UI2/CaveInfo"]
+margin_left = 192.0
+margin_right = 453.0
+margin_bottom = 34.0
+mouse_filter = 1
+size_flags_vertical = 0
+theme = ExtResource( 29 )
+custom_styles/normal = SubResource( 12 )
+text = "Average enemy damage: 1"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -4,6 +4,7 @@ onready var click_sound = game.get_node("click")
 var on_button = false
 
 func _ready():
+	$AnimationPlayer.play("MoveButtons")
 	refresh()
 
 func refresh():
@@ -33,7 +34,7 @@ func _on_Mine_pressed():
 
 func _on_PlaceSoil_pressed():
 	click_sound.play()
-	game.HUD.get_node("Resources/Soil").visible = true
+	game.HUD.get_node("Top/Resources/Soil").visible = true
 	game.put_bottom_info(tr("PLACE_SOIL_INFO"), "place_soil", "cancel_place_soil")
 
 func _on_Construct_mouse_entered():

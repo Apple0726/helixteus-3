@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Graphics/Buttons/ConstructBuildings.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/PlanetHUD.gd" type="Script" id=2]
@@ -24,6 +24,54 @@ action = "C"
 [sub_resource type="ShortCut" id=6]
 shortcut = SubResource( 5 )
 
+[sub_resource type="Animation" id=7]
+resource_name = "MoveButtons"
+length = 0.3
+step = 0.05
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("VBoxContainer:rect_position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -48, -0.25, 0, 0, 33.5524, 0, -0.05, 0.0646114, 0.1, -1.00469 ),
+"times": PoolRealArray( 0.15, 0.3 )
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("VBoxContainer:rect_size:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 48, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("VBoxContainer:rect_position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( -48, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("VBoxContainer:rect_position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 48, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
 [node name="PlanetHUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,8 +82,8 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = -48.0
 margin_top = 48.0
-margin_right = 48.0
 margin_bottom = 720.0
 mouse_filter = 2
 custom_constants/separation = 0
@@ -92,6 +140,10 @@ stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/MoveButtons = SubResource( 7 )
+anims/RESET = SubResource( 8 )
 
 [connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]

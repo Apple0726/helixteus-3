@@ -6,7 +6,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integ
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
-				"RCC":{"value":1.0, "pw":1.06, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"RCC":{"value":1.0, "pw":1.07, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 				"SC":{"value":50.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":1, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":40.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
@@ -58,15 +58,15 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"AMN":{"money":580000, "energy":8200, "time":490.0},
 				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
 				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
-				"PCC":{"money":e(2.25, 11), "energy":e(7.8, 9), "time":840000},
+				"PCC":{"money":2.5e12, "energy":7.8e10, "time":840000},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(7.5, 23), "energy":e(7.5, 23)},#Triangulum probe
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"PC":{"money":1000000, "energy":50000, "time":600.0},
 				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
 				"EC":{"money":e(3.0, 7), "energy":e(4.0, 6), "time":9001.0},
-				"NSF":{"money":e(1.2, 7), "energy":e(1.0, 6), "time":4000.0},
-				"ESF":{"money":e(3.5, 7), "energy":e(7.0, 6), "time":10000.0},
+				"NSF":{"money":e(7.5, 6), "energy":e(1.0, 6), "time":4000.0},
+				"ESF":{"money":e(1.2, 7), "energy":e(7.0, 6), "time":10000.0},
 }
 
 func e(n, e):
@@ -88,9 +88,9 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_CBS_0":{"money":e(1.0, 11), "stone":e(6, 8), "silicon":1200000, "copper":750000, "iron":1400000, "platinum":90000, "time":2 * 86400},
-					"M_CBS_1":{"money":e(1.0, 11)*80, "stone":e(6, 8)*60, "silicon":1200000*80, "copper":750000*80, "iron":1400000*60, "platinum":90000*90, "time":6 * 86400},
-					"M_CBS_2":{"money":e(1.0, 11)*80*80, "stone":e(6, 8)*60*60, "silicon":1200000*80*60, "copper":750000*80*60, "iron":1400000*60*60, "platinum":90000*90*90, "time":18 * 86400},
-					"M_CBS_3":{"money":e(1.0, 11)*80*80*80, "stone":e(6, 8)*60*60*60, "silicon":1200000*80*60*60, "copper":750000*80*60*60, "iron":1400000*60*60*60, "platinum":90000*90*90*90, "time":50 * 86400},
+					"M_CBS_1":{"money":e(1.0, 11)*40, "stone":e(6, 8)*30, "silicon":1200000*40, "copper":750000*40, "iron":1400000*30, "platinum":90000*50, "time":6 * 86400},
+					"M_CBS_2":{"money":e(1.0, 11)*40*40, "stone":e(6, 8)*30*30, "silicon":1200000*40*30, "copper":750000*40*30, "iron":1400000*30*30, "platinum":90000*50*50, "time":18 * 86400},
+					"M_CBS_3":{"money":e(1.0, 11)*40*40*40, "stone":e(6, 8)*30*30*30, "silicon":1200000*40*30*30, "copper":750000*40*30*30, "iron":1400000*30*30*30, "platinum":90000*50*50*50, "time":50 * 86400},
 					"M_MB":{"money":e(5.5, 17), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 11), "aluminium":e(2, 12), "nanocrystal":e(8, 11), "time":120 * 86400},
 					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
 					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":48 * 86400},
@@ -330,8 +330,8 @@ var science_unlocks = {
 						
 						#CBS
 						"CBS1":{"cost":8.5e11, "parents":["MAE"]},
-						"CBS2":{"cost":8.5e11*70, "parents":["CBS1"]},
-						"CBS3":{"cost":8.5e11*70*70, "parents":["CBS2"]},
+						"CBS2":{"cost":8.5e11*30, "parents":["CBS1"]},
+						"CBS3":{"cost":8.5e11*30*30, "parents":["CBS2"]},
 						
 						#Planetkiller
 						"PK1":{"cost":5.25e14, "parents":["MAE"]},
@@ -360,14 +360,14 @@ var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},
 					"copper_armor":{"HP":10, "defense":3, "costs":{"copper":50}},
 					"iron_armor":{"HP":15, "defense":4, "costs":{"iron":65}},
 					"aluminium_armor":{"HP":20, "defense":5, "costs":{"aluminium":90}},
-					"silver_armor":{"HP":30, "defense":6, "costs":{"silver":130}},
-					"gold_armor":{"HP":50, "defense":7, "costs":{"gold":190}},
-					"titanium_armor":{"HP":80, "defense":9, "costs":{"titanium":240}},
-					"gemstone_armor":{"HP":85, "defense":10, "costs":{"amethyst":70, "quartz":70, "topaz":70, "sapphire":70, "emerald":70, "ruby":70}},
-					"platinum_armor":{"HP":130, "defense":12, "costs":{"platinum":600}},
-					"diamond_armor":{"HP":180, "defense":15, "costs":{"diamond":750}},
-					"nanocrystal_armor":{"HP":240, "defense":18, "costs":{"nanocrystal":1600}},
-					"mythril_armor":{"HP":400, "defense":22, "costs":{"mythril":3800}},
+					"silver_armor":{"HP":30, "defense":7, "costs":{"silver":130}},
+					"gold_armor":{"HP":50, "defense":10, "costs":{"gold":190}},
+					"titanium_armor":{"HP":80, "defense":15, "costs":{"titanium":240}},
+					"gemstone_armor":{"HP":85, "defense":22, "costs":{"amethyst":70, "quartz":70, "topaz":70, "sapphire":70, "emerald":70, "ruby":70}},
+					"platinum_armor":{"HP":130, "defense":40, "costs":{"platinum":600}},
+					"diamond_armor":{"HP":180, "defense":70, "costs":{"diamond":750}},
+					"nanocrystal_armor":{"HP":240, "defense":110, "costs":{"nanocrystal":1600}},
+					"mythril_armor":{"HP":400, "defense":250, "costs":{"mythril":3800}},
 }
 var rover_wheels = {	"stone_wheels":{"speed":1.0, "costs":{"stone":100}},
 						"lead_wheels":{"speed":1.05, "costs":{"lead":30}},
@@ -406,7 +406,7 @@ var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":
 						"UV_laser":{"damage":140, "cooldown":0.165, "costs":{"money":e(3.1, 8), "silicon":200, "quartz":100, "time":18000}},
 						"xray_laser":{"damage":270, "cooldown":0.155, "costs":{"money":e(9.8, 9), "silicon":500, "quartz":200, "time":30000}},
 						"gammaray_laser":{"damage":525, "cooldown":0.14, "costs":{"money":e(2.5, 11), "silicon":1000, "quartz":500, "time":65000}},
-						"ultragammaray_laser":{"damage":1200, "cooldown":0.1, "costs":{"money":e(1.5, 13), "silicon":2500, "quartz":1000, "time":100000}},
+						"ultragammaray_laser":{"damage":900, "cooldown":0.12, "costs":{"money":e(1.5, 13), "silicon":2500, "quartz":1000, "time":100000}},
 }#														rnge: mining range
 var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money":1000, "silicon":10, "time":10}},
 						"orange_mining_laser":{"speed":1.4, "rnge":260, "costs":{"money":17000, "silicon":12, "time":60}},
@@ -474,7 +474,7 @@ var molar_mass = {	"H":1.008,
 var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outside starting system), tier 2 modifiers cannot be applied to caves in starting galaxy
 	"enemy_attack_rate":{"double_treasure_at":1.2, "tier":1},
 	"enemy_number":{"double_treasure_at":1.3, "tier":1},
-	"enemy_projectile_size":{"double_treasure_at":2, "tier":1},
+	"enemy_projectile_size":{"double_treasure_at":3, "tier":1, "min":0.2, "max":4},
 	"enemy_HP":{"double_treasure_at":1.5, "tier":1},
 	"chest_number":{"double_treasure_at":0.5, "no_treasure_mult":true, "tier":1},
 	"darkness":{"double_treasure_at":2.0, "tier":1},
@@ -483,7 +483,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 }
 
 var cave_enemy_proj:Array = [
-	{"dmg_mult":2.0, "mod":Color.white},
+	{"dmg_mult":2.0, "mod":Color.white * 1.1},
 	{"dmg_mult":1.3, "mod":Color(1.5, 1.5, 0.75)},
-	{"dmg_mult":3.5, "mod":Color.white},
+	{"dmg_mult":3.5, "mod":Color.white * 1.1},
 ]

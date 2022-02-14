@@ -141,7 +141,7 @@ func on_fighter_exit():
 func on_fighter_press(i:int):
 	_on_close_button_pressed()
 	if game.fighter_data[i].tier == 0:
-		game.switch_view("system", {"fn":"set_to_fighter_coords", "fn_args":[i]})
+		game.switch_view("galaxy", {"fn":"set_to_fighter_coords", "fn_args":[i]})
 	elif game.fighter_data[i].tier == 1:
 		game.switch_view("cluster", {"fn":"set_to_fighter_coords", "fn_args":[i]})
 

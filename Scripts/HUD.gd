@@ -2,23 +2,23 @@ extends Control
 
 onready var game = get_node("/root/Game")
 onready var click_sound = game.get_node("click")
-onready var money_text = $Resources/Money/Text
-onready var minerals_text = $Resources/Minerals/Text
-onready var stone_text = $Resources/Stone/Text
-onready var soil_text = $Resources/Soil/Text
-onready var energy_text = $Resources/Energy/Text
-onready var glass_text = $Resources/Glass/Text
-onready var SP_text = $Resources/SP/Text
-onready var minerals = $Resources/Minerals
-onready var stone = $Resources/Stone
-onready var SP = $Resources/SP
+onready var money_text = $Top/Resources/Money/Text
+onready var minerals_text = $Top/Resources/Minerals/Text
+onready var stone_text = $Top/Resources/Stone/Text
+onready var soil_text = $Top/Resources/Soil/Text
+onready var energy_text = $Top/Resources/Energy/Text
+onready var glass_text = $Top/Resources/Glass/Text
+onready var SP_text = $Top/Resources/SP/Text
+onready var minerals = $Top/Resources/Minerals
+onready var stone = $Top/Resources/Stone
+onready var SP = $Top/Resources/SP
 onready var ships = $Buttons/Ships
 onready var shop = $Buttons/Shop
 onready var craft = $Buttons/Craft
 onready var MU = $Buttons/MineralUpgrades
 onready var sc_tree = $Buttons/ScienceTree
-onready var lv_txt = $Lv/Label
-onready var lv_progress = $Lv/TextureProgress
+onready var lv_txt = $Top/Lv/Label
+onready var lv_progress = $Top/Lv/TextureProgress
 onready var planet_grid = $Bookmarks/BookmarksList/Planets
 onready var planet_grid_btns = $Bookmarks/BookmarksList/Planets/GridContainer
 onready var system_grid = $Bookmarks/BookmarksList/Systems
@@ -31,10 +31,10 @@ onready var planet_b_btn = $Bookmarks/BookMarkButtons/Planets
 onready var system_b_btn = $Bookmarks/BookMarkButtons/Systems
 onready var galaxy_b_btn = $Bookmarks/BookMarkButtons/Galaxies
 onready var cluster_b_btn = $Bookmarks/BookMarkButtons/Clusters
-onready var dimension_btn = $DimensionBtn
-onready var switch_btn = $SwitchBtn
-onready var prev_btn = $PrevView
-onready var next_btn = $NextView
+onready var dimension_btn = $Bottom/DimensionBtn
+onready var switch_btn = $Bottom/SwitchBtn
+onready var prev_btn = $Bottom/PrevView
+onready var next_btn = $Bottom/NextView
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
@@ -127,7 +127,7 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 	game.switch_view(view, {"fn":"set_bookmark_coords", "fn_args":[bookmark]})
 
 func _process(delta):
-	$AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
+	$Top/AutosaveLight.modulate.g = lerp(0.3, 1, game.get_node("Autosave").time_left / game.autosave_interval)
 
 func update_XP():
 	while game.u_i.xp >= game.u_i.xp_to_lv:
@@ -153,12 +153,12 @@ func update_minerals():
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
-		if not $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
-			$Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			$Top/Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 		minerals_text["custom_colors/font_color"] = Color.red
 	else:
-		if $Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
-			 $Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
+		if $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
+			 $Top/Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 		minerals_text["custom_colors/font_color"] = Color.white
 
 func update_money_energy_SP():
@@ -185,38 +185,38 @@ func update_money_energy_SP():
 		money_text.text = Helper.format_num(round(game.money))
 		energy_text.text = Helper.format_num(floor(game.energy))
 	SP_text.text = Helper.format_num(floor(game.SP))
-	if $Resources/Cellulose.visible:
-		$Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
+	if $Top/Resources/Cellulose.visible:
+		$Top/Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
 		if game.mats.cellulose > 0:
-			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
+			$Top/Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
 		else:
-			$Resources/Cellulose/Text["custom_colors/font_color"] = Color.red
+			$Top/Resources/Cellulose/Text["custom_colors/font_color"] = Color.red
 	
 func refresh():
 	if not game:
 		return
-	prev_btn.visible = game.view_history_pos != 0
-	next_btn.visible = game.view_history_pos != len(game.view_history) - 1
+	prev_btn.visible = game.view_history_pos != 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
+	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]
-	$Panel/CollectProgress.visible = false
-	$Panel/CollectAll.modulate = Color.white
+	$Bottom/Panel/CollectProgress.visible = false
+	$Bottom/Panel/CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
 		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
 			set_process(autosave_light)
 		else:
-			$AutosaveLight.modulate.g = 0.3
+			$Top/AutosaveLight.modulate.g = 0.3
 			set_process(false)
-		$AutosaveLight.visible = autosave_light
+		$Top/AutosaveLight.visible = autosave_light
 	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
 	update_money_energy_SP()
 	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone) + " kg"
 	soil_text.text = Helper.format_num(game.mats.soil, true) + " kg"
-	$Resources/Cellulose.visible = game.science_unlocked.has("GHA")
-	if $Resources/Glass.visible:
+	$Top/Resources/Cellulose.visible = game.science_unlocked.has("GHA")
+	if $Top/Resources/Glass.visible:
 		if game.mats.glass >= Data.costs.GH.glass * game.engineering_bonus.BCM:
 			glass_text["custom_colors/font_color"] = Color.green
 		else:
@@ -231,7 +231,7 @@ func refresh():
 	craft.visible = game.show.materials
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
-	$Panel.visible = game.show.minerals and game.c_v != "science_tree"
+	$Bottom/Panel.visible = game.show.minerals and game.c_v != "science_tree"
 	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
 	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
 	update_XP()
@@ -288,54 +288,54 @@ func refresh():
 							game.objective = {"type":game.ObjectiveType.SAVE, "data":"money", "id":-1, "current":game.money, "goal":300}
 						else:
 							game.tutorial.begin()
-			$Objectives/TextureProgress.value = 0
+			$Top/Objectives/TextureProgress.value = 0
 	tween.stop_all()
-	$Objectives.visible = not game.objective.empty()
-	if $Objectives.visible:
-		$Objectives/Label.visible = false
+	$Top/Objectives.visible = not game.objective.empty()
+	if $Top/Objectives.visible:
+		$Top/Objectives/Label.visible = false
 		if game.objective.type == game.ObjectiveType.BUILD:
-			$Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":tr("%s_NAME%s" % [game.objective.data.to_upper(), "" if game.objective.goal == 1 else "_S"]).to_lower()})
+			$Top/Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":tr("%s_NAME%s" % [game.objective.data.to_upper(), "" if game.objective.goal == 1 else "_S"]).to_lower()})
 		elif game.objective.type == game.ObjectiveType.SAVE:
 			var split:Array = game.objective.data.split("/")
 			var primary_resource = len(split) == 1
 			if primary_resource:
-				$Objectives/Label.text = tr("SAVE_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[0].to_upper()).to_lower()})
+				$Top/Objectives/Label.text = tr("SAVE_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[0].to_upper()).to_lower()})
 			else:
-				$Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
+				$Top/Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
 		elif game.objective.type == game.ObjectiveType.MINE:
-			$Objectives/Label.text = tr("MINE_OBJECTIVE") % game.objective.goal
+			$Top/Objectives/Label.text = tr("MINE_OBJECTIVE") % game.objective.goal
 		elif game.objective.type == game.ObjectiveType.LEVEL:
-			$Objectives/Label.text = tr("LEVEL_OBJECTIVE") % game.objective.goal
+			$Top/Objectives/Label.text = tr("LEVEL_OBJECTIVE") % game.objective.goal
 		elif game.objective.type == game.ObjectiveType.CONQUER:
-			$Objectives/Label.text = tr("CONQUER_OBJECTIVE").format({"num":game.objective.goal, "object":tr(game.objective.data.to_upper() + ("S" if game.objective.goal > 1 else "")).to_lower()})
+			$Top/Objectives/Label.text = tr("CONQUER_OBJECTIVE").format({"num":game.objective.goal, "object":tr(game.objective.data.to_upper() + ("S" if game.objective.goal > 1 else "")).to_lower()})
 		elif game.objective.type == game.ObjectiveType.CAVE:
-			$Objectives/Label.text = tr("CAVE_OBJECTIVE")
+			$Top/Objectives/Label.text = tr("CAVE_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.CRUST:
-			$Objectives/Label.text = tr("CRUST_OBJECTIVE")
+			$Top/Objectives/Label.text = tr("CRUST_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.WORMHOLE:
-			$Objectives/Label.text = tr("WORMHOLE_OBJECTIVE")
+			$Top/Objectives/Label.text = tr("WORMHOLE_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.SIGNAL:
-			$Objectives/Label.text = tr("SIGNAL_OBJECTIVE")
+			$Top/Objectives/Label.text = tr("SIGNAL_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.DAVID:
-			$Objectives/Label.text = tr("DAVID_OBJECTIVE")
+			$Top/Objectives/Label.text = tr("DAVID_OBJECTIVE")
 		elif game.objective.type == game.ObjectiveType.COLLECT_PARTS:
-			$Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
+			$Top/Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
 		elif game.objective.type == game.ObjectiveType.MANIPULATORS:
-			$Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
+			$Top/Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
 		elif game.objective.type == game.ObjectiveType.EMMA:
-			$Objectives/Label.text = tr("SELECT_EMMA_CAVE")
+			$Top/Objectives/Label.text = tr("SELECT_EMMA_CAVE")
 		elif game.objective.type == game.ObjectiveType.UPGRADE:
-			$Objectives/Label.text = tr("UPGRADE_BLDG")
+			$Top/Objectives/Label.text = tr("UPGRADE_BLDG")
 		elif game.objective.type == game.ObjectiveType.MINERAL_UPG:
-			$Objectives/Label.text = tr("PURCHASE_MIN_UPG")
-		$Objectives/Label.visible = true
-		$Objectives/TextureProgress.rect_size = $Objectives/Label.rect_size
-		$Objectives/TextureProgress.rect_position = $Objectives/Label.rect_position
-		tween.interpolate_property($Objectives, "rect_position", null, Vector2($Objectives.rect_position.x, 36), 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
-		tween.interpolate_property($Objectives/TextureProgress, "value", null, game.objective.current / float(game.objective.goal) * 100, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+			$Top/Objectives/Label.text = tr("PURCHASE_MIN_UPG")
+		$Top/Objectives/Label.visible = true
+		$Top/Objectives/TextureProgress.rect_size = $Top/Objectives/Label.rect_size
+		$Top/Objectives/TextureProgress.rect_position = $Top/Objectives/Label.rect_position
+		tween.interpolate_property($Top/Objectives, "rect_position", null, Vector2($Top/Objectives.rect_position.x, 36), 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+		tween.interpolate_property($Top/Objectives/TextureProgress, "value", null, game.objective.current / float(game.objective.goal) * 100, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
 		tween.start()
 	else:
-		$Objectives.rect_position.y = 4
+		$Top/Objectives.rect_position.y = 4
 	$Bookmarks.visible = game.show.bookmarks
 	system_b_btn.visible = game.show.s_bk_button
 	galaxy_b_btn.visible = game.show.g_bk_button
@@ -343,27 +343,27 @@ func refresh():
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Name/Name.text = game.planet_data[game.c_p].name
+		$Top/Name/Name.text = game.planet_data[game.c_p].name
 	elif game.c_v == "system":
 		$Bookmarks/Bookmarked.pressed = game.system_data[game.c_s].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Name/Name.text = game.system_data[game.c_s].name
+		$Top/Name/Name.text = game.system_data[game.c_s].name
 	elif game.c_v == "galaxy":
 		$Bookmarks/Bookmarked.pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Name/Name.text = game.galaxy_data[game.c_g].name
+		$Top/Name/Name.text = game.galaxy_data[game.c_g].name
 	elif game.c_v == "cluster":
 		$Bookmarks/Bookmarked.pressed = game.cluster_data[game.c_c].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Name/Name.text = game.cluster_data[game.c_c].name
+		$Top/Name/Name.text = game.cluster_data[game.c_c].name
 	else:
 		$Bookmarks/Bookmarked.visible = false
 		if game.c_v == "supercluster":
-			$Name/Name.text = game.supercluster_data[game.c_sc].name
+			$Top/Name/Name.text = game.supercluster_data[game.c_sc].name
 		elif game.c_v == "universe":
-			$Name/Name.text = game.u_i.name
-	$Name.visible = false
-	$Name.visible = true
+			$Top/Name/Name.text = game.u_i.name
+	$Top/Name.visible = false
+	$Top/Name.visible = true
 	yield(get_tree(), "idle_frame")
 	game.refresh_achievements()
 
@@ -442,8 +442,8 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func update_hotbar():
-	for child in $Hotbar.get_children():
-		$Hotbar.remove_child(child)
+	for child in $Bottom/Hotbar.get_children():
+		$Bottom/Hotbar.remove_child(child)
 		child.queue_free()
 	var i:int = 0
 	for item in game.hotbar:
@@ -455,7 +455,7 @@ func update_hotbar():
 		slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
 		if num > 0:
 			slot.get_node("Button").connect("pressed", self, "on_slot_press", [i])
-		$Hotbar.add_child(slot)
+		$Bottom/Hotbar.add_child(slot)
 		i += 1
 
 var slot_over = -1
@@ -490,8 +490,8 @@ func _input(event):
 		update_hotbar()
 		refresh()
 	if Input.is_action_just_released("F2") and game.c_v in ["planet", "system", "galaxy", "cluster"]:
-		$Name/Name.grab_focus()
-		$Name/Name.select_all()
+		$Top/Name/Name.grab_focus()
+		$Top/Name/Name.select_all()
 	if Input.is_action_just_released("left_click"):
 		if emma_cave_shortcut and game.c_v == "planet":
 			for i in len(game.tile_data):
@@ -514,10 +514,10 @@ func _on_CollectAll_mouse_entered():
 	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
 
 func _on_CollectAll_pressed():
-	if not $Panel/CollectProgress.visible:
-		$Panel/CollectProgress.visible = true
-		$Panel/CollectProgress.value = 0
-		$Panel/CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
+	if not $Bottom/Panel/CollectProgress.visible:
+		$Bottom/Panel/CollectProgress.visible = true
+		$Bottom/Panel/CollectProgress.value = 0
+		$Bottom/Panel/CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
 		game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():
@@ -528,18 +528,18 @@ func _on_ConvertMinerals_pressed():
 		var mineral_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
 		mineral_icon.texture = preload("res://Graphics/Icons/minerals.png")
 		mineral_icon.scale *= 0.15
-		var node = game.HUD.get_node("Resources/Minerals")
-		var node2 = game.HUD.get_node("Resources/Minerals/Texture")
+		var node = $Top/Resources/Minerals
+		var node2 = $Top/Resources/Minerals/Texture
 		mineral_icon.position = node.rect_position + node2.rect_size / 2.0
-		mineral_icon.end_pos = $Panel/ConvertMinerals.rect_global_position
+		mineral_icon.end_pos = $Bottom/Panel/ConvertMinerals.rect_global_position
 		game.get_node("UI").add_child(mineral_icon)
 		
 		var money_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
 		money_icon.texture = preload("res://Graphics/Icons/money.png")
 		money_icon.scale *= 0.05
-		node = game.HUD.get_node("Resources/Money")
-		node2 = game.HUD.get_node("Resources/Money/Texture")
-		money_icon.position = $Panel/ConvertMinerals.rect_global_position
+		node = $Top/Resources/Money
+		node2 = $Top/Resources/Money/Texture
+		money_icon.position = $Bottom/Panel/ConvertMinerals.rect_global_position
 		money_icon.end_pos = node.rect_position + node2.rect_size / 2.0
 		game.get_node("UI").add_child(money_icon)
 	game.sell_all_minerals()
@@ -785,7 +785,7 @@ func _on_Name_mouse_exited():
 
 
 func _on_Name_text_entered(new_text):
-	$Name/Name.release_focus()
+	$Top/Name/Name.release_focus()
 	if game.c_v == "planet":
 		game.planet_data[game.c_p].name = new_text
 		if game.bookmarks.planet.has(str(game.c_p_g)):
@@ -897,3 +897,7 @@ func _on_PrevView_mouse_entered():
 
 func _on_NextView_mouse_entered():
 	game.show_tooltip(tr("NEXT_VIEW"))
+
+
+func _on_HUD_tree_entered():
+	$AnimationPlayer2.play("MoveStuff")

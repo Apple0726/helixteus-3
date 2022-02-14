@@ -2,6 +2,9 @@ extends Control
 onready var game = get_node("/root/Game")
 onready var click_sound = game.get_node("click")
 
+func _ready():
+	$AnimationPlayer.play("MoveButtons")
+
 func _on_Overlay_mouse_entered():
 	game.show_tooltip(tr("OVERLAY") + " (O)\n" + tr("OVERLAY_DESC"))
 

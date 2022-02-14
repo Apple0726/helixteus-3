@@ -351,6 +351,7 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
 	if dont_gen_anything:
 		if cave_floor < 19:
 			light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
@@ -380,7 +381,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if game.enable_shaders:
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = (1 - light_amount) * 1.4
+	rover_light.energy = (1 - light_amount) * 1.2
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
@@ -424,7 +425,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 #	else:
 	noise.period = tile.cave.period if tile.cave.has("period") else 65
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
-	print($Camera2D.zoom)
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
@@ -1155,7 +1155,6 @@ func _input(event):
 						$Walls.tile_set.tile_set_modulate(0, Color(0.4, 0.4, 2.0, 1.8))
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty *= 1.25 if tower else 2
-				rover_light.visible = true
 				generate_cave(false, false)
 			elif active_type == "go_up":
 				remove_cave()
@@ -1164,7 +1163,6 @@ func _input(event):
 					$Walls.tile_set.tile_set_modulate(0, Color.white)
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty /= 1.25 if tower else 2
-				rover_light.visible = cave_floor != 1
 				generate_cave(true if cave_floor == 1 else false, true)
 			elif active_type == "map":
 				game.third_ship_hints.erase("map_found_at")
@@ -1619,15 +1617,13 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [
 		tr("STAR_SYSTEM_DIFFICULTY"),
 		Helper.format_num(game.system_data[game.c_s].diff),
 		tr("AURORA_MULTIPLIER"),
 		aurora_mult,
 		tr("FLOOR_MULTIPLIER"),
 		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
-		tr("AVERAGE_ENEMY_DAMAGE"),
-		Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)
 	]
 	game.help_str = "cave_diff_info"
 	if game.help.cave_diff_info:

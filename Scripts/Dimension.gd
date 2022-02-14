@@ -200,7 +200,7 @@ func on_univ_press(id:int):
 	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
 		game.load_univ()
-		game.switch_view("universe")
+		game.switch_view(game.c_v)
 	else:
 		game.remove_dimension()
 		game.new_game(false, id)

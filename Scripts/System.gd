@@ -20,9 +20,9 @@ var tile_datas:Array = []
 var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 var build_all_MS_stages:bool = false
 var show_atoms:Array = []#Used by element overlay
+var CBS_range:float = 0.0
 
 func _ready():
-	refresh_planets()
 	refresh_stars()
 	if game.tutorial:
 		if game.tutorial.tut_num == 27:
@@ -45,7 +45,17 @@ func refresh_planets():
 	glows.clear()
 	planet_rsrcs.clear()
 	tile_datas.clear()
-	for p_i in game.planet_data:
+	var planets_affected_by_CBS:int = 0
+	var p_num:int = len(game.planet_data)
+	for i in len(stars_info):
+		var star_info:Dictionary = stars_info[i]
+		if star_info.has("MS") and star_info.MS == "M_CBS":
+			if star_info.MS_lv == 0:
+				planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * 0.1))
+			else:
+				planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
+	for i in p_num:
+		var p_i:Dictionary = game.planet_data[i]
 		if p_i.empty():
 			tile_datas.append([])
 			continue
@@ -193,6 +203,12 @@ func refresh_planets():
 		planet.position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
+		if planets_affected_by_CBS > 0 and i == planets_affected_by_CBS - 1:
+			CBS_range = p_i.distance * 1.1
+
+func _draw():
+	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), 1)
+	draw_circle(Vector2.ZERO, CBS_range, Color(0.4, 0.4, 1.0, 0.15))
 
 func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
@@ -752,14 +768,17 @@ func on_star_over (id:int):
 				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
 		if not star.bldg.is_constructing and star.MS_lv < num_stages[star.MS]:
 			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
-				MS_constr_data.obj = star
-				MS_constr_data.confirm = false
-				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+				continue_upg(star)
 			elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
-				MS_constr_data.obj = star
-				MS_constr_data.confirm = false
-				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+				continue_upg(star)
+			elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
+				continue_upg(star)
 	game.show_tooltip(tooltip)
+
+func continue_upg(obj:Dictionary):
+	MS_constr_data.obj = obj
+	MS_constr_data.confirm = false
+	Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 
 func on_star_pressed (id:int):
 	var curr_time = OS.get_system_time_msecs()
@@ -860,6 +879,7 @@ func _process(_delta):
 								_star.cost_div = max(_star.cost_div, 1 + log(star.luminosity + 1))
 							else:
 								_star.cost_div = 1 + log(star.luminosity + 1)
+					update()
 				game.HUD.refresh()
 			remove_child(time_bar)
 			time_bar.queue_free()
@@ -973,7 +993,7 @@ var items_collected = {}
 func collect_all():
 	items_collected.clear()
 	var planets = game.system_data[game.c_s].planets
-	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
+	var progress:TextureProgress = game.HUD.get_node("Bottom/Panel/CollectProgress")
 	progress.max_value = len(planets)
 	var curr_time = OS.get_system_time_msecs()
 	for p_ids in planets:
@@ -999,3 +1019,7 @@ func collect_all():
 	progress.visible = false
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()
+
+
+func _on_System_draw():
+	refresh_planets()

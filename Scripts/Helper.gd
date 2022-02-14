@@ -1029,7 +1029,7 @@ func update_MS_rsrc(dict:Dictionary):
 				cap = round(cap * dict.tile_num)
 			else:
 				cap = round(cap)
-			if stored < cap and c_t - c_d > prod and not dict.has("autocollect"):
+			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") or dict.bldg.name == "MM"):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num
@@ -1344,7 +1344,7 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			if cave_mod > 1.0:
 				if double_treasure_at > 1.0:
 					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod)).to_html(false)
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 						treasure_bonus_str = " (x%s %s@i%s)" % [Helper.clever_round(range_lerp(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))
@@ -1360,7 +1360,7 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			else:
 				if double_treasure_at < 1.0:
 					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod)).to_html(false)
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 						treasure_bonus_str = " (x%s %s@i%s)" % [Helper.clever_round(range_lerp(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))

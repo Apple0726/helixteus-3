@@ -151,7 +151,7 @@ func collect_all():
 	items_collected.clear()
 	var curr_time = OS.get_system_time_msecs()
 	var galaxies = game.cluster_data[game.c_c].galaxies
-	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
+	var progress:TextureProgress = game.HUD.get_node("Bottom/Panel/CollectProgress")
 	progress.max_value = len(galaxies)
 	var cond = game.collect_speed_lag_ratio != 0
 	for g_ids in galaxies:

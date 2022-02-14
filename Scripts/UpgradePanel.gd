@@ -152,6 +152,10 @@ func update(changing_paths:bool = false):
 		if changing_paths:
 			next_lv.value = lv_to
 	else:
+		if planet.has("cost_div"):
+			$DivBy.text = tr("DIV_BY") % Helper.clever_round(planet.cost_div)
+		else:
+			$DivBy.text = ""
 		first_tile = planet.bldg
 		bldg = first_tile.name
 		first_tile_bldg_info = Data[path_str][bldg]
@@ -175,7 +179,7 @@ func update(changing_paths:bool = false):
 				calculated = true
 			next_lv.value = lv_to
 		else:
-			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, 1.0, planet.tile_num)
+			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 	if same_lv:
 		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
 		current.text = ""

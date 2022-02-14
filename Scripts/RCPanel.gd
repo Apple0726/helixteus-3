@@ -137,14 +137,14 @@ func refresh():
 	def = 2.0
 	weight_cap = round(3000.0 * game.u_i.planck)
 	if game.science_unlocked.has("RMK2"):
-		HP = 50
-		atk = 15
-		def = 8.0
+		HP = 50.0
+		atk = 15.0
+		def = 15.0
 		weight_cap = round(16000.0 * game.u_i.planck)
 	if game.science_unlocked.has("RMK3"):
-		HP = 450
-		atk = 70
-		def = 20.0
+		HP = 450.0
+		atk = 70.0
+		def = 200.0
 		weight_cap = round(200000.0 * game.u_i.planck)
 	engi_mult = game.engineering_bonus.RSM
 	tile = game.tile_data[game.c_t]

@@ -460,7 +460,7 @@ func place_BG_stars():#shown in title screen and planet view
 		$Stars/Stars.add_child(star)
 
 func place_BG_sc_stars():#shown in (super)cluster view
-	for i in 4000:
+	for i in 2000:
 		var star:Sprite = Sprite.new()
 		star.texture = preload("res://Graphics/Misc/STMBullet.png")
 		star.scale *= 0.05
@@ -646,6 +646,8 @@ func switch_music(src, pitch:float = 1.0):
 	tween.start()
 
 func load_univ():
+	view_history.clear()
+	view_history_pos = -1
 	var _save_sc = File.new()
 	if _save_sc.file_exists("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u]):
 		_save_sc.open("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.READ)
@@ -1027,9 +1029,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	particles = {	"proton":0,
 					"neutron":0,
-					"neutron_cap":0,
 					"electron":0,
-					"electron_cap":0,
 	}
 
 	#Display help when players see/do things for the first time. true: show help
@@ -1483,6 +1483,14 @@ func set_bookmark_coords(bookmark:Dictionary):
 func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p"], coord_values: [1, 2]
 	for i in len(coords):
 		if coords[i] in self:
+			if coords[i] == "c_p_g" and c_p_g != coord_values[i]:
+				tile_data = open_obj("Planets", coord_values[i])
+			elif coords[i] == "c_s_g" and c_s_g != coord_values[i]:
+				planet_data = open_obj("Systems", coord_values[i])
+			elif coords[i] == "c_g_g" and c_g_g != coord_values[i]:
+				system_data = open_obj("Galaxies", coord_values[i])
+			elif coords[i] == "c_c_g" and c_c_g != coord_values[i]:
+				galaxy_data = open_obj("Clusters", coord_values[i])
 			self[coords[i]] = coord_values[i]
 
 func delete_galaxy():
@@ -1500,8 +1508,17 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if view_tween.is_active():
 		return
 	if not other_params.has("dont_fade_anim"):
-		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		view_tween.start()
+		if is_instance_valid(planet_HUD) and new_view != "planet":
+			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
+			anim_player.play_backwards("MoveButtons")
+		if is_instance_valid(space_HUD) and not new_view in ["system", "galaxy", "cluster", "supercluster", "universe"]:
+			var anim_player:AnimationPlayer = space_HUD.get_node("AnimationPlayer")
+			anim_player.play_backwards("MoveButtons")
+		if is_instance_valid(HUD) and new_view in ["battle", "cave", "dimension", "STM", "planet_details"]:
+			var anim_player:AnimationPlayer = HUD.get_node("AnimationPlayer2")
+			anim_player.play_backwards("MoveStuff")
 		yield(view_tween, "tween_all_completed")
 	if viewing_dimension:
 		remove_dimension()
@@ -1551,6 +1568,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.add_child(HUD)
 					remove_child(STM)
 					STM = null
+					switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 				"battle":
 					$UI.add_child(HUD)
 					HUD.refresh()
@@ -1621,7 +1639,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"planet_details":
 				planet_details = planet_details_scene.instance()
 				add_child(planet_details)
-				if is_a_parent_of(HUD):
+				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 					$UI.remove_child(HUD)
 			"system":
 				add_system()
@@ -1645,32 +1663,35 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI/Help.text = tr("SC_TREE_ZOOM")
 					help.science_tree = false
 			"cave":
-				if is_instance_valid(HUD) and is_a_parent_of(HUD):
+				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 					$UI.remove_child(HUD)
 				cave = cave_scene.instance()
 				add_child(cave)
 				cave.rover_data = rover_data[rover_id]
 				cave.set_rover_data()
-				switch_music(load("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
+				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 			"ruins":
-				if is_instance_valid(HUD) and is_a_parent_of(HUD):
+				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 					$UI.remove_child(HUD)
 				ruins = ruins_scene.instance()
 				ruins.ruins_id = tile_data[c_t].ruins
 				add_child(ruins)
 				ruins.rover_data = rover_data[rover_id]
-				switch_music(load("res://Audio/ruins.mp3"), 0.9)
+				switch_music(preload("res://Audio/ruins.mp3"), 0.9)
 			"STM":
 				$Ship.visible = false
-				$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
+					$UI.remove_child(HUD)
 				STM = STM_scene.instance()
 				add_child(STM)
+				switch_music(preload("res://Audio/STM.mp3"))
 			"battle":
 				$Ship.visible = false
-				$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
+					$UI.remove_child(HUD)
 				battle = battle_scene.instance()
 				add_child(battle)
-		if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"] and is_instance_valid(HUD) and is_a_parent_of(HUD):
+		if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_a_parent_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and HUD.dimension_btn.visible:
 			HUD.switch_btn.visible = false
@@ -1678,25 +1699,25 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		fn_save_game()
 		save_views(true)
 	if not other_params.has("dont_fade_anim"):
-		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
+		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.25)
 		view_tween.start()
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
 	$ClusterBG.visible = false
 	HUD.get_node("Buttons").visible = false
-	HUD.get_node("Panel").visible = false
-	HUD.get_node("Hotbar").visible = false
-	HUD.get_node("Lv").modulate.a = 0.5
-	HUD.get_node("Name").modulate.a = 0.5
+	HUD.get_node("Bottom/Panel").visible = false
+	HUD.get_node("Bottom/Hotbar").visible = false
+	HUD.get_node("Top/Lv").modulate.a = 0.5
+	HUD.get_node("Top/Name").modulate.a = 0.5
 	add_obj("science_tree")
-	for rsrc in HUD.get_node("Resources").get_children():
+	for rsrc in HUD.get_node("Top/Resources").get_children():
 		if rsrc.name != "SP":
 			rsrc.modulate.a = 0.5
 
 func add_mining():
-	HUD.get_node("Panel/CollectAll").visible = false
-	HUD.get_node("Hotbar").visible = false
+	HUD.get_node("Bottom/Panel/CollectAll").visible = false
+	HUD.get_node("Bottom/Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instance()
 	add_child(mining_HUD)
 
@@ -1704,8 +1725,8 @@ func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	if is_instance_valid(tutorial) and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
-	HUD.get_node("Panel/CollectAll").visible = true
-	HUD.get_node("Hotbar").visible = true
+	HUD.get_node("Bottom/Panel/CollectAll").visible = true
+	HUD.get_node("Bottom/Hotbar").visible = true
 	if is_instance_valid(mining_HUD):
 		remove_child(mining_HUD)
 	mining_HUD = null
@@ -1713,12 +1734,12 @@ func remove_mining():
 func remove_science_tree():
 	$ScienceTreeBG.visible = false
 	HUD.get_node("Buttons").visible = true
-	HUD.get_node("Panel").visible = true
-	HUD.get_node("Hotbar").visible = true
-	HUD.get_node("Lv").modulate.a = 1.0
-	HUD.get_node("Name").modulate.a = 1.0
+	HUD.get_node("Bottom/Panel").visible = true
+	HUD.get_node("Bottom/Hotbar").visible = true
+	HUD.get_node("Top/Lv").modulate.a = 1.0
+	HUD.get_node("Top/Name").modulate.a = 1.0
 	view.remove_obj("science_tree")
-	for rsrc in HUD.get_node("Resources").get_children():
+	for rsrc in HUD.get_node("Top/Resources").get_children():
 		rsrc.modulate.a = 1.0
 	$UI.remove_child($UI.get_node("ScienceUI"))
 
@@ -1849,7 +1870,7 @@ func remove_space_HUD():
 	remove_annotator()
 
 func add_dimension():
-	if $UI.is_a_parent_of(HUD):
+	if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 		$UI.remove_child(HUD)
 	if is_instance_valid(dimension):
 		dimension.visible = true
@@ -1865,7 +1886,7 @@ func add_universe():
 		generate_superclusters(c_u)
 	add_obj("universe")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
-	HUD.get_node("Panel/CollectAll").visible = false
+	HUD.get_node("Bottom/Panel/CollectAll").visible = false
 
 func add_supercluster():
 	if obj_exists("Superclusters", c_sc):
@@ -1876,7 +1897,7 @@ func add_supercluster():
 			cluster_data.clear()
 		generate_clusters(c_sc)
 	add_obj("supercluster")
-	HUD.get_node("Panel/CollectAll").visible = false
+	HUD.get_node("Bottom/Panel/CollectAll").visible = false
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 
 func add_cluster():
@@ -1906,7 +1927,7 @@ func add_cluster():
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.7))
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
-	HUD.get_node("Panel/CollectAll").visible = true
+	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
@@ -1930,7 +1951,7 @@ func add_galaxy():
 #		HUD.refresh()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
-	HUD.get_node("Panel/CollectAll").visible = true
+	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
@@ -1955,7 +1976,7 @@ func add_system():
 	show.bookmarks = true
 	add_obj("system")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
-	HUD.get_node("Panel/CollectAll").visible = true
+	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
@@ -1971,7 +1992,7 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	$UI.add_child(planet_HUD)
-	HUD.get_node("Panel/CollectAll").visible = true
+	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 
 func remove_dimension():
 	if not $UI.is_a_parent_of(HUD):
@@ -3046,6 +3067,10 @@ func generate_tiles(id:int):
 							var mod_power:float = log(1.0 / randf() + 0.5) / max(range_lerp(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
 							var direction:float = sign(randf() - 0.5)
 							modifiers[key] = pow(modifiers2[key].double_treasure_at, mod_power * direction)
+							if modifiers2[key].has("min") and modifiers[key] < modifiers2[key].min:
+								modifiers[key] = modifiers2[key].min
+							if modifiers2[key].has("max") and modifiers[key] > modifiers2[key].max:
+								modifiers[key] = modifiers2[key].max
 						else:
 							modifiers[key] = modifiers2[key].treasure_if_true
 						modifiers2.erase(key)
@@ -4062,7 +4087,7 @@ func hide_item_cursor():
 	
 func cancel_building():
 	view.obj.finish_construct()
-	HUD.get_node("Resources/Glass").visible = false
+	HUD.get_node("Top/Resources/Glass").visible = false
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
@@ -4150,7 +4175,7 @@ func _on_BottomInfo_close_button_pressed(direct:bool = false):
 		$UI/BottomInfo.visible = false
 
 func cancel_place_soil():
-	HUD.get_node("Resources/Soil").visible = false
+	HUD.get_node("Top/Resources/Soil").visible = false
 
 #Used in planet view only
 var close_button_over:bool = false

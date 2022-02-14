@@ -43,7 +43,7 @@ func update_info():
 
 func set_bldg_cost_txt():
 	if cost_div > 1.0:
-		$Panel/BuildingCosts.text = "%s (%s %s) (%s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower(), tr("CBD_PATH_1") % cost_div]
+		$Panel/BuildingCosts.text = "%s (%s) (%s %s)" % [tr("BUILDING_COSTS"), tr("DIV_BY") % cost_div, Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
 	else:
 		$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
 

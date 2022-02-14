@@ -77,7 +77,7 @@ func refresh():
 					planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number
 					base_travel_costs += 50000000 * fighter.number * (get_travel_cost_multiplier(planets_in_depart_system[fighter.c_p].MS_lv) if has_SE(planets_in_depart_system[fighter.c_p]) else 1)
 			if combined_strength == 0:
-				RTL.text = tr("NO_FIGHTERS")
+				RTL.text = "%s\n%s: %s" % [tr("NO_FIGHTERS"), tr("STRENGTH_REQUIRED_F1"), Helper.format_num(ceil(strength_required))]
 				$Send.visible = false
 				$Control.visible = false
 				return
@@ -130,7 +130,7 @@ func refresh():
 					fighter_num += fighter.number
 					base_travel_costs += 50000000 * 2000000 * fighter.number * sys_num
 			if combined_strength == 0:
-				RTL.text = tr("NO_FIGHTERS")
+				RTL.text = "%s\n%s: %s" % [tr("NO_FIGHTERS"), tr("STRENGTH_REQUIRED_F2"), Helper.format_num(ceil(strength_required))]
 				$Send.visible = false
 				$Control.visible = false
 				return

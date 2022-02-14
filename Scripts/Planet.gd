@@ -993,6 +993,7 @@ func _unhandled_input(event):
 				constr_bldg(tile_id, curr_time, bldg_to_construct)
 		if about_to_mine and available_for_mining(tile):
 			game.mine_tile(tile_id)
+			return
 		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == "" and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
 				game.tile_data[tile_id].bridge = true
@@ -1475,7 +1476,7 @@ func construct(st:String, costs:Dictionary):
 	shadow = Sprite.new()
 	put_shadow(shadow)
 	if st == "GH":
-		game.HUD.get_node("Resources/Glass").visible = true
+		game.HUD.get_node("Top/Resources/Glass").visible = true
 	game.HUD.refresh()
 
 func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):

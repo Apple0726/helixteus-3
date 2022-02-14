@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=2]
+[gd_scene load_steps=72 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -105,64 +105,6 @@ border_width_bottom = 2
 border_color = Color( 0.478431, 1, 0, 1 )
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id=7]
-content_margin_left = 20.0
-content_margin_right = 20.0
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=8]
-content_margin_left = 12.0
-content_margin_right = 12.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=9]
-content_margin_left = 10.0
-content_margin_right = 5.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 10.0
-content_margin_right = 5.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
-
 [sub_resource type="InputEventAction" id=11]
 action = "Y"
 
@@ -235,6 +177,162 @@ action = "next_view"
 [sub_resource type="ShortCut" id=34]
 shortcut = SubResource( 33 )
 
+[sub_resource type="StyleBoxFlat" id=7]
+content_margin_left = 20.0
+content_margin_right = 20.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+shadow_color = Color( 0, 0, 0, 0.258824 )
+shadow_size = 1
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+content_margin_left = 10.0
+content_margin_right = 5.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+shadow_color = Color( 0, 0, 0, 0.258824 )
+shadow_size = 1
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+content_margin_left = 10.0
+content_margin_right = 5.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
+shadow_color = Color( 0, 0, 0, 0.258824 )
+shadow_size = 1
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=35]
+resource_name = "MoveStuff"
+length = 0.3
+step = 0.05
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Buttons:rect_position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1280, -0.25, 0, 0.25, 0, 1280, -0.25, 0, 0, -23.9106, 1232, -0.05, 0.134888, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.15, 0.3 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Bottom:rect_position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 84, -0.25, 0, 0, -57.0637, 0, -0.05, 0.412369, 0.25, 0 ),
+"times": PoolRealArray( 0.15, 0.3 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Top:rect_position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( -76, -0.25, 0, 0, 37.053, 0, -0.1, -1.10351, 0.25, 0 ),
+"times": PoolRealArray( 0.15, 0.3 )
+}
+tracks/3/type = "bezier"
+tracks/3/path = NodePath("Bookmarks:rect_position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"points": PoolRealArray( -156, -0.25, 0, 0, 16.0558, -126, -0.1, 0.268288, 0.25, 0 ),
+"times": PoolRealArray( 0.15, 0.3 )
+}
+
+[sub_resource type="Animation" id=36]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Buttons:rect_position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1232, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Bottom:rect_position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 84, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Top:rect_position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( -76, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/3/type = "bezier"
+tracks/3/path = NodePath("Bookmarks:rect_position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"points": PoolRealArray( -156, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/4/type = "bezier"
+tracks/4/path = NodePath("Bookmarks:rect_position:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"points": PoolRealArray( 108, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -259,9 +357,9 @@ scale = Vector2( 1, 1.02632 )
 polygon = PoolVector2Array( 0, 80, 198, 80, 198, 232, 0, 232 )
 
 [node name="Bookmarks" type="Control" parent="."]
-margin_left = -126.0
+margin_left = -156.0
 margin_top = 108.0
-margin_right = 28.0
+margin_right = -2.0
 margin_bottom = 226.0
 mouse_filter = 1
 __meta__ = {
@@ -466,360 +564,6 @@ custom_constants/vseparation = 2
 custom_constants/hseparation = 2
 columns = 3
 
-[node name="Objectives" type="Control" parent="."]
-margin_left = 640.0
-margin_top = 4.0
-margin_right = 680.0
-margin_bottom = 44.0
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Objectives"]
-visible = false
-margin_left = -44.0
-margin_right = 48.0
-margin_bottom = 34.0
-grow_horizontal = 2
-mouse_filter = 0
-custom_styles/normal = SubResource( 7 )
-text = "Build 5 mineral extractors"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TextureProgress" type="TextureProgress" parent="Objectives"]
-modulate = Color( 1, 1, 1, 0.305882 )
-margin_left = -44.0
-margin_right = 100.0
-margin_bottom = 32.0
-mouse_filter = 2
-texture_progress = ExtResource( 16 )
-nine_patch_stretch = true
-
-[node name="Lv" type="VBoxContainer" parent="."]
-margin_top = 38.0
-margin_right = 70.0
-margin_bottom = 77.0
-custom_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Lv"]
-margin_right = 70.0
-margin_bottom = 34.0
-mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_styles/normal = SubResource( 8 )
-text = "Lv 1"
-align = 1
-
-[node name="TextureProgress" type="TextureProgress" parent="Lv"]
-modulate = Color( 0, 1, 0, 1 )
-margin_top = 34.0
-margin_right = 70.0
-margin_bottom = 37.0
-rect_min_size = Vector2( 0, 3 )
-max_value = 1.0
-step = 0.0
-value = 1.0
-texture_progress = ExtResource( 16 )
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Name" type="HBoxContainer" parent="."]
-margin_left = 144.0
-margin_top = 38.0
-margin_right = 352.0
-margin_bottom = 72.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Name" type="LineEdit" parent="Name"]
-margin_right = 21.0
-margin_bottom = 34.0
-custom_colors/selection_color = Color( 1, 1, 1, 1 )
-custom_colors/cursor_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_constants/minimum_spaces = 0
-custom_styles/focus = SubResource( 9 )
-custom_styles/normal = SubResource( 10 )
-expand_to_text_length = true
-caret_blink = true
-caret_blink_speed = 0.5
-
-[node name="ColorRect" type="TextureRect" parent="."]
-margin_right = 1280.0
-margin_bottom = 40.0
-texture = ExtResource( 21 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Resources" type="HBoxContainer" parent="."]
-margin_top = 4.0
-margin_right = 1168.0
-margin_bottom = 36.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Money" type="Control" parent="Resources"]
-margin_right = 185.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Money"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 77.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Money"]
-margin_left = 10.0
-margin_top = 4.0
-margin_right = 40.0
-margin_bottom = 36.0
-rect_scale = Vector2( 0.8, 0.8 )
-texture_normal = ExtResource( 2 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Minerals" type="Control" parent="Resources"]
-margin_left = 189.0
-margin_right = 411.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 1.2
-
-[node name="Text" type="Label" parent="Resources/Minerals"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 116.0
-margin_bottom = 28.0
-mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100/100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Minerals"]
-margin_left = 4.0
-margin_right = 35.0
-margin_bottom = 31.0
-texture_normal = ExtResource( 4 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Stone" type="Control" parent="Resources"]
-margin_left = 415.0
-margin_right = 600.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Stone"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Stone"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Soil" type="Control" parent="Resources"]
-visible = false
-margin_left = 732.0
-margin_right = 972.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Soil"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Soil"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 11 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Glass" type="Control" parent="Resources"]
-visible = false
-margin_left = 609.0
-margin_right = 809.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Glass"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Glass"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 26 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Cellulose" type="Control" parent="Resources"]
-margin_left = 604.0
-margin_right = 789.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Cellulose"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Cellulose"]
-margin_left = -1.0
-margin_top = -4.0
-margin_right = 31.0
-margin_bottom = 36.0
-texture_normal = ExtResource( 34 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Energy" type="Control" parent="Resources"]
-margin_left = 793.0
-margin_right = 978.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/Energy"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 284.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureButton" parent="Resources/Energy"]
-margin_left = 4.0
-margin_right = 35.0
-margin_bottom = 32.0
-texture_normal = ExtResource( 3 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SP" type="Control" parent="Resources"]
-margin_left = 982.0
-margin_right = 1168.0
-margin_bottom = 32.0
-size_flags_horizontal = 3
-
-[node name="Text" type="Label" parent="Resources/SP"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 84.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "100"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Texture" type="TextureRect" parent="Resources/SP"]
-margin_left = -6.0
-margin_top = 2.0
-margin_right = 32.0
-margin_bottom = 28.0
-texture = ExtResource( 12 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Buttons" type="VBoxContainer" parent="."]
 margin_left = 1232.0
 margin_top = 48.0
@@ -912,19 +656,15 @@ texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
 
-[node name="Hotbar" type="HBoxContainer" parent="."]
-margin_top = 680.0
-margin_right = 1829.0
-margin_bottom = 740.0
-rect_scale = Vector2( 0.7, 0.7 )
-mouse_filter = 2
-custom_constants/separation = -2
-alignment = 1
+[node name="Bottom" type="Control" parent="."]
+margin_top = 84.0
+margin_right = 40.0
+margin_bottom = 124.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="Bottom"]
 margin_left = 1170.0
 margin_top = 654.0
 margin_right = 1276.0
@@ -933,7 +673,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectAll" type="TextureButton" parent="Panel"]
+[node name="CollectAll" type="TextureButton" parent="Bottom/Panel"]
 margin_left = 62.0
 margin_top = 2.0
 margin_right = 102.0
@@ -947,7 +687,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectProgress" type="TextureProgress" parent="Panel"]
+[node name="CollectProgress" type="TextureProgress" parent="Bottom/Panel"]
 margin_left = 62.0
 margin_top = 4.0
 margin_right = 102.0
@@ -957,8 +697,11 @@ value = 99.0
 texture_progress = ExtResource( 14 )
 fill_mode = 4
 nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="ConvertMinerals" type="TextureButton" parent="Panel"]
+[node name="ConvertMinerals" type="TextureButton" parent="Bottom/Panel"]
 margin_left = 6.0
 margin_top = 2.0
 margin_right = 46.0
@@ -968,6 +711,480 @@ shortcut = SubResource( 28 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DimensionBtn" type="TextureButton" parent="Bottom"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 48.0
+margin_top = 632.0
+margin_right = 96.0
+margin_bottom = 680.0
+texture_normal = ExtResource( 33 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchBtn" type="TextureButton" parent="Bottom"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = 632.0
+margin_right = 48.0
+margin_bottom = 680.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 30 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PrevView" type="Button" parent="Bottom"]
+margin_top = 636.0
+margin_right = 36.0
+margin_bottom = 670.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 32 )
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextView" type="Button" parent="Bottom"]
+margin_left = 36.0
+margin_top = 636.0
+margin_right = 72.0
+margin_bottom = 670.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 34 )
+text = ">"
+
+[node name="Hotbar" type="HBoxContainer" parent="Bottom"]
+margin_top = 680.0
+margin_right = 1829.0
+margin_bottom = 740.0
+rect_scale = Vector2( 0.7, 0.7 )
+mouse_filter = 2
+custom_constants/separation = -2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Top" type="Control" parent="."]
+margin_top = -76.0
+margin_right = 40.0
+margin_bottom = -36.0
+
+[node name="Objectives" type="Control" parent="Top"]
+margin_left = 640.0
+margin_top = 4.0
+margin_right = 680.0
+margin_bottom = 44.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Top/Objectives"]
+visible = false
+margin_left = -44.0
+margin_right = 48.0
+margin_bottom = 34.0
+grow_horizontal = 2
+mouse_filter = 0
+custom_styles/normal = SubResource( 7 )
+text = "Build 5 mineral extractors"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureProgress" type="TextureProgress" parent="Top/Objectives"]
+modulate = Color( 1, 1, 1, 0.305882 )
+margin_left = -44.0
+margin_right = 100.0
+margin_bottom = 32.0
+mouse_filter = 2
+texture_progress = ExtResource( 16 )
+nine_patch_stretch = true
+
+[node name="Lv" type="VBoxContainer" parent="Top"]
+margin_top = 38.0
+margin_right = 70.0
+margin_bottom = 77.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Top/Lv"]
+margin_right = 70.0
+margin_bottom = 34.0
+mouse_filter = 0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/normal = SubResource( 8 )
+text = "Lv 1"
+align = 1
+
+[node name="TextureProgress" type="TextureProgress" parent="Top/Lv"]
+modulate = Color( 0, 1, 0, 1 )
+margin_top = 34.0
+margin_right = 70.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 3 )
+max_value = 1.0
+step = 0.0
+value = 1.0
+texture_progress = ExtResource( 16 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="HBoxContainer" parent="Top"]
+margin_left = 144.0
+margin_top = 38.0
+margin_right = 352.0
+margin_bottom = 72.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="LineEdit" parent="Top/Name"]
+margin_right = 21.0
+margin_bottom = 34.0
+custom_colors/selection_color = Color( 1, 1, 1, 1 )
+custom_colors/cursor_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_constants/minimum_spaces = 0
+custom_styles/focus = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+expand_to_text_length = true
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="ColorRect" type="TextureRect" parent="Top"]
+margin_right = 1280.0
+margin_bottom = 45.0
+texture = ExtResource( 21 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Resources" type="HBoxContainer" parent="Top"]
+margin_top = 4.0
+margin_right = 1168.0
+margin_bottom = 36.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Money" type="Control" parent="Top/Resources"]
+margin_right = 185.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Money"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 77.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Money"]
+margin_left = 10.0
+margin_top = 4.0
+margin_right = 40.0
+margin_bottom = 36.0
+rect_scale = Vector2( 0.8, 0.8 )
+texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Minerals" type="Control" parent="Top/Resources"]
+margin_left = 189.0
+margin_right = 411.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="Text" type="Label" parent="Top/Resources/Minerals"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 116.0
+margin_bottom = 28.0
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100/100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Minerals"]
+margin_left = 4.0
+margin_right = 35.0
+margin_bottom = 31.0
+texture_normal = ExtResource( 4 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stone" type="Control" parent="Top/Resources"]
+margin_left = 415.0
+margin_right = 600.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Stone"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Stone"]
+margin_left = -2.0
+margin_top = -4.0
+margin_right = 254.0
+margin_bottom = 252.0
+rect_scale = Vector2( 0.14, 0.14 )
+texture_normal = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Soil" type="Control" parent="Top/Resources"]
+visible = false
+margin_left = 732.0
+margin_right = 972.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Soil"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Soil"]
+margin_left = -2.0
+margin_top = -4.0
+margin_right = 254.0
+margin_bottom = 252.0
+rect_scale = Vector2( 0.14, 0.14 )
+texture_normal = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Glass" type="Control" parent="Top/Resources"]
+visible = false
+margin_left = 609.0
+margin_right = 809.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Glass"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Glass"]
+margin_left = -2.0
+margin_top = -4.0
+margin_right = 254.0
+margin_bottom = 252.0
+rect_scale = Vector2( 0.14, 0.14 )
+texture_normal = ExtResource( 26 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cellulose" type="Control" parent="Top/Resources"]
+margin_left = 604.0
+margin_right = 789.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Cellulose"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 301.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Cellulose"]
+margin_left = -1.0
+margin_top = -4.0
+margin_right = 31.0
+margin_bottom = 36.0
+texture_normal = ExtResource( 34 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Energy" type="Control" parent="Top/Resources"]
+margin_left = 793.0
+margin_right = 978.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/Energy"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 284.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureButton" parent="Top/Resources/Energy"]
+margin_left = 4.0
+margin_right = 35.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SP" type="Control" parent="Top/Resources"]
+margin_left = 982.0
+margin_right = 1168.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="Text" type="Label" parent="Top/Resources/SP"]
+margin_left = 44.0
+margin_top = 4.0
+margin_right = 84.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Texture" type="TextureRect" parent="Top/Resources/SP"]
+margin_left = -6.0
+margin_top = 2.0
+margin_right = 32.0
+margin_bottom = 28.0
+texture = ExtResource( 12 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AutosaveLight" type="TextureRect" parent="Top"]
+modulate = Color( 0, 0.301961, 0, 1 )
+margin_left = 1120.0
+margin_right = 1144.0
+margin_bottom = 40.0
+texture = ExtResource( 18 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Wiki" type="TextureButton" parent="Top"]
+margin_left = 1200.0
+margin_right = 1230.0
+margin_bottom = 40.0
+texture_normal = ExtResource( 25 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stats" type="TextureButton" parent="Top"]
+margin_left = 1156.0
+margin_right = 1186.0
+margin_bottom = 40.0
+texture_normal = ExtResource( 35 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/MoveStuff = SubResource( 35 )
+anims/RESET = SubResource( 36 )
+
+[node name="Emma" type="TextureButton" parent="."]
+visible = false
+margin_left = 1112.0
+margin_top = 656.0
+margin_right = 1152.0
+margin_bottom = 700.0
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 24 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ShipLocator" type="TextureButton" parent="."]
 visible = false
@@ -1000,99 +1217,7 @@ __meta__ = {
 [node name="Dialogue" parent="." instance=ExtResource( 23 )]
 mouse_filter = 2
 
-[node name="Emma" type="TextureButton" parent="."]
-margin_left = 1112.0
-margin_top = 656.0
-margin_right = 1152.0
-margin_bottom = 700.0
-shortcut_in_tooltip = false
-texture_normal = ExtResource( 24 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AutosaveLight" type="TextureRect" parent="."]
-modulate = Color( 0, 0.301961, 0, 1 )
-margin_left = 1120.0
-margin_right = 1144.0
-margin_bottom = 40.0
-texture = ExtResource( 18 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Wiki" type="TextureButton" parent="."]
-margin_left = 1200.0
-margin_right = 1230.0
-margin_bottom = 40.0
-texture_normal = ExtResource( 25 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Stats" type="TextureButton" parent="."]
-margin_left = 1156.0
-margin_right = 1186.0
-margin_bottom = 40.0
-texture_normal = ExtResource( 35 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="DimensionBtn" type="TextureButton" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_left = 48.0
-margin_top = -48.0
-margin_right = 96.0
-texture_normal = ExtResource( 33 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SwitchBtn" type="TextureButton" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -48.0
-margin_right = 48.0
-shortcut_in_tooltip = false
-shortcut = SubResource( 30 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PrevView" type="Button" parent="."]
-margin_top = 636.0
-margin_right = 36.0
-margin_bottom = 670.0
-shortcut_in_tooltip = false
-shortcut = SubResource( 32 )
-text = "<"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="NextView" type="Button" parent="."]
-margin_left = 36.0
-margin_top = 636.0
-margin_right = 72.0
-margin_bottom = 670.0
-shortcut_in_tooltip = false
-shortcut = SubResource( 34 )
-text = ">"
-
+[connection signal="tree_entered" from="." to="." method="_on_HUD_tree_entered"]
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]
 [connection signal="mouse_exited" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_exited"]
 [connection signal="pressed" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_pressed"]
@@ -1108,31 +1233,6 @@ text = ">"
 [connection signal="mouse_entered" from="Bookmarks/BookMarkButtons/Clusters" to="." method="_on_Clusters_mouse_entered"]
 [connection signal="mouse_exited" from="Bookmarks/BookMarkButtons/Clusters" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Bookmarks/BookMarkButtons/Clusters" to="." method="_on_Clusters_pressed"]
-[connection signal="mouse_entered" from="Objectives/Label" to="." method="_on_ObjectivesLabel_mouse_entered"]
-[connection signal="mouse_exited" from="Objectives/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="Lv/Label" to="." method="_on_Label_mouse_entered"]
-[connection signal="mouse_exited" from="Lv/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="gui_input" from="Name/Name" to="." method="_on_Name_gui_input"]
-[connection signal="mouse_entered" from="Name/Name" to="." method="_on_Name_mouse_entered"]
-[connection signal="mouse_exited" from="Name/Name" to="." method="_on_Name_mouse_exited"]
-[connection signal="text_entered" from="Name/Name" to="." method="_on_Name_text_entered"]
-[connection signal="mouse_entered" from="Resources/Money/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MONEY" ]]
-[connection signal="mouse_exited" from="Resources/Money/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_exited" from="Resources/Minerals/Text" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Minerals/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MINERALS" ]]
-[connection signal="mouse_exited" from="Resources/Minerals/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Stone/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "STONE" ]]
-[connection signal="mouse_exited" from="Resources/Stone/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Soil/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SOIL" ]]
-[connection signal="mouse_exited" from="Resources/Soil/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Glass/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "GLASS" ]]
-[connection signal="mouse_exited" from="Resources/Glass/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Cellulose/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "CELLULOSE" ]]
-[connection signal="mouse_exited" from="Resources/Cellulose/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/Energy/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "ENERGY" ]]
-[connection signal="mouse_exited" from="Resources/Energy/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Resources/SP/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SP" ]]
-[connection signal="mouse_exited" from="Resources/SP/Texture" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Buttons/Ships" to="." method="_on_Ships_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/Ships" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/Ships" to="." method="_on_Ships_pressed"]
@@ -1154,12 +1254,60 @@ text = ">"
 [connection signal="mouse_entered" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/ScienceTree" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_pressed"]
-[connection signal="mouse_entered" from="Panel/CollectAll" to="." method="_on_CollectAll_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/CollectAll" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/CollectAll" to="." method="_on_CollectAll_pressed"]
-[connection signal="mouse_entered" from="Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/ConvertMinerals" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_pressed"]
+[connection signal="mouse_entered" from="Bottom/Panel/CollectAll" to="." method="_on_CollectAll_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/Panel/CollectAll" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/Panel/CollectAll" to="." method="_on_CollectAll_pressed"]
+[connection signal="mouse_entered" from="Bottom/Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/Panel/ConvertMinerals" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_pressed"]
+[connection signal="mouse_entered" from="Bottom/DimensionBtn" to="." method="_on_Dimension_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/DimensionBtn" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/DimensionBtn" to="." method="_on_Dimension_pressed"]
+[connection signal="mouse_entered" from="Bottom/SwitchBtn" to="." method="_on_SwitchBtn_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/SwitchBtn" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/SwitchBtn" to="." method="_on_SwitchBtn_pressed"]
+[connection signal="mouse_entered" from="Bottom/PrevView" to="." method="_on_PrevView_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/PrevView" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/PrevView" to="." method="_on_PrevView_pressed"]
+[connection signal="mouse_entered" from="Bottom/NextView" to="." method="_on_NextView_mouse_entered"]
+[connection signal="mouse_exited" from="Bottom/NextView" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Bottom/NextView" to="." method="_on_NextView_pressed"]
+[connection signal="mouse_entered" from="Top/Objectives/Label" to="." method="_on_ObjectivesLabel_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Objectives/Label" to="." method="_on_Label_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Lv/Label" to="." method="_on_Label_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Lv/Label" to="." method="_on_Label_mouse_exited"]
+[connection signal="gui_input" from="Top/Name/Name" to="." method="_on_Name_gui_input"]
+[connection signal="mouse_entered" from="Top/Name/Name" to="." method="_on_Name_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Name/Name" to="." method="_on_Name_mouse_exited"]
+[connection signal="text_entered" from="Top/Name/Name" to="." method="_on_Name_text_entered"]
+[connection signal="mouse_entered" from="Top/Resources/Money/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MONEY" ]]
+[connection signal="mouse_exited" from="Top/Resources/Money/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_exited" from="Top/Resources/Minerals/Text" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Minerals/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MINERALS" ]]
+[connection signal="mouse_exited" from="Top/Resources/Minerals/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Stone/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "STONE" ]]
+[connection signal="mouse_exited" from="Top/Resources/Stone/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Soil/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SOIL" ]]
+[connection signal="mouse_exited" from="Top/Resources/Soil/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Glass/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "GLASS" ]]
+[connection signal="mouse_exited" from="Top/Resources/Glass/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Cellulose/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "CELLULOSE" ]]
+[connection signal="mouse_exited" from="Top/Resources/Cellulose/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Energy/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "ENERGY" ]]
+[connection signal="mouse_exited" from="Top/Resources/Energy/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/SP/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SP" ]]
+[connection signal="mouse_exited" from="Top/Resources/SP/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/AutosaveLight" to="." method="_on_AutosaveLight_mouse_entered"]
+[connection signal="mouse_exited" from="Top/AutosaveLight" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Wiki" to="." method="_on_Wiki_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Wiki" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Top/Wiki" to="." method="_on_Wiki_pressed"]
+[connection signal="mouse_entered" from="Top/Stats" to="." method="_on_Stats_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Stats" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Top/Stats" to="." method="_on_Stats_pressed"]
+[connection signal="mouse_entered" from="Emma" to="." method="_on_Emma_mouse_entered"]
+[connection signal="mouse_exited" from="Emma" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Emma" to="." method="_on_Emma_pressed"]
 [connection signal="mouse_entered" from="ShipLocator" to="." method="_on_ShipLocator_mouse_entered"]
 [connection signal="mouse_exited" from="ShipLocator" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ShipLocator" to="." method="_on_ShipLocator_pressed"]
@@ -1167,26 +1315,3 @@ text = ">"
 [connection signal="mouse_exited" from="Ship2Map" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ship2Map" to="." method="_on_Ship2Map_pressed"]
 [connection signal="dialogue_finished" from="Dialogue" to="." method="_on_Dialogue_dialogue_finished"]
-[connection signal="mouse_entered" from="Emma" to="." method="_on_Emma_mouse_entered"]
-[connection signal="mouse_exited" from="Emma" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Emma" to="." method="_on_Emma_pressed"]
-[connection signal="mouse_entered" from="AutosaveLight" to="." method="_on_AutosaveLight_mouse_entered"]
-[connection signal="mouse_exited" from="AutosaveLight" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Wiki" to="." method="_on_Wiki_mouse_entered"]
-[connection signal="mouse_exited" from="Wiki" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Wiki" to="." method="_on_Wiki_pressed"]
-[connection signal="mouse_entered" from="Stats" to="." method="_on_Stats_mouse_entered"]
-[connection signal="mouse_exited" from="Stats" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Stats" to="." method="_on_Stats_pressed"]
-[connection signal="mouse_entered" from="DimensionBtn" to="." method="_on_Dimension_mouse_entered"]
-[connection signal="mouse_exited" from="DimensionBtn" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="DimensionBtn" to="." method="_on_Dimension_pressed"]
-[connection signal="mouse_entered" from="SwitchBtn" to="." method="_on_SwitchBtn_mouse_entered"]
-[connection signal="mouse_exited" from="SwitchBtn" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="SwitchBtn" to="." method="_on_SwitchBtn_pressed"]
-[connection signal="mouse_entered" from="PrevView" to="." method="_on_PrevView_mouse_entered"]
-[connection signal="mouse_exited" from="PrevView" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="PrevView" to="." method="_on_PrevView_pressed"]
-[connection signal="mouse_entered" from="NextView" to="." method="_on_NextView_mouse_entered"]
-[connection signal="mouse_exited" from="NextView" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="NextView" to="." method="_on_NextView_pressed"]

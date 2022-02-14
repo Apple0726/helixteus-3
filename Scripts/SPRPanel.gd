@@ -91,6 +91,8 @@ func refresh():
 		max_value = game.atoms[reaction]
 	else:
 		for particle in game.particles:
+			if not particle in ["proton", "electron", "neutron"]:
+				continue
 			var max_value2 = game.particles[particle] / Z
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
