@@ -195,7 +195,7 @@ func update_money_energy_SP():
 func refresh():
 	if not game:
 		return
-	prev_btn.visible = game.view_history_pos != 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
+	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]

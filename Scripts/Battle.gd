@@ -66,13 +66,13 @@ var light_mult:float
 var victory_panel
 
 enum BattleStages {START, CHOOSING, TARGETING, PLAYER, ENEMY}
-enum MoveMethod {STANDARD, MOUSE, GRAVITY}#Standard: red enemies, mouse: green enemies, gravity: blue enemies
+enum MoveMethod {STANDARD, MOUSE, FRICTION}#Standard: red enemies, mouse: green enemies, gravity: blue enemies
 
 var stage = BattleStages.START
 var move_method = MoveMethod.STANDARD
 
 func _ready():
-	$CurrentPattern.visible = not OS.has_feature("standalone")
+	$CurrentPattern.visible = false#not OS.has_feature("standalone")
 	$Timer.wait_time = min(1.0, 1.0 / time_speed)
 	Helper.set_back_btn($UI/Back)
 	randomize()
@@ -162,6 +162,7 @@ func _ready():
 			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
 	if OS.get_latin_keyboard_variant() == "AZERTY":
+		$UI/ControlKeyboard/GoUp/Label.text = "Z"
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
@@ -558,6 +559,8 @@ func _process(delta):
 	if battle_lost:
 		for i in len(ship_data):
 			ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
+		if hard_battle:
+			game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 		game.switch_view("system")
 		game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return
@@ -618,9 +621,19 @@ func _process(delta):
 		elif move_method == MoveMethod.MOUSE:
 			curr_ship.position.y = move_toward(curr_ship.position.y, mouse_pos.y, pow(abs(mouse_pos.y - curr_ship.position.y), 1.2) * time_mult * 0.05)
 			self["ship%s_engine" % tgt_sh].emitting = true
-		if move_method == MoveMethod.GRAVITY:
-			curr_ship.gravity += time_mult
-			curr_ship.position.y = min(720, curr_ship.position.y + curr_ship.grav_acc * time_mult)
+		elif move_method == MoveMethod.FRICTION:
+			var boost:int = 2.5 if Input.is_action_pressed("shift") or Input.is_action_pressed("X") else 1.0
+			if ship_dir == "left":
+				self["ship%s_engine" % tgt_sh].emitting = true
+				curr_ship.y_acc = -0.8 * boost
+			elif ship_dir == "right":
+				self["ship%s_engine" % tgt_sh].emitting = true
+				curr_ship.y_acc = 0.8 * boost
+			else:
+				self["ship%s_engine" % tgt_sh].emitting = false
+				curr_ship.y_acc = 0
+			curr_ship.y_speed = curr_ship.y_speed * pow(0.9, time_mult) + curr_ship.y_acc * time_mult
+			curr_ship.position.y = clamp(curr_ship.position.y + curr_ship.y_speed * time_mult, 0, 720)
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.scale += Vector2(0.1, 0.1) * time_mult
 		light.modulate.a -= 0.05 * time_mult
@@ -658,7 +671,7 @@ func _process(delta):
 		HX_w_c_d[weapon.name].delay -= delta * time_speed
 		if HX_w_c_d[weapon.name].delay < 0:
 			var curr_p_str:String = "process_%s" % pattern
-			$CurrentPattern.text = curr_p_str
+			#$CurrentPattern.text = curr_p_str
 			call(curr_p_str, weapon, time_mult)
 	if a_p_c_d.has("pattern"):
 		a_p_c_d.delay -= delta * time_speed
@@ -979,8 +992,11 @@ func enemy_attack():
 			tween.start()
 			return
 	var last_id:int = min((wave + 1) * 4, len(HX_data))
+	self["ship%s_engine" % tgt_sh].emitting = false
 	if curr_en == last_id:
 		curr_sh = 0
+		while ship_data[curr_sh].HP <= 0:
+			curr_sh += 1
 		for i in range(wave * 4, last_id):
 			if HX_data[i].HP > 0:
 				if HX_c_d[HXs[i].name].has("burn"):
@@ -1010,11 +1026,10 @@ func enemy_attack():
 					elif HX_c_d[HXs[i].name].acc < 0: 
 						HX_c_d[HXs[i].name].acc = min(0.0, HX_c_d[HXs[i].name].acc + 0.05)
 					set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
-#		var all_rekt:bool = true
-#		for i in len(HX_data):
-#			if HX_data[i].HP > 0:
-#				all_rekt = false
-#				break
+		if $UI/ControlKeyboard.visible:
+			$UI/ControlKeyboard/AnimationPlayer.play_backwards("Fade")
+		if $UI/ControlMouse.visible:
+			$UI/ControlMouse/AnimationPlayer.play_backwards("Fade")
 		if HXs_rekt == len(HX_data):
 			yield(get_tree().create_timer(1.0), "timeout")
 			add_victory_panel()
@@ -1023,10 +1038,18 @@ func enemy_attack():
 	else:
 		pattern = "%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)]
 		move_method = HX_data[curr_en].class - 1
-		ship0.grav_acc = 0
-		ship1.grav_acc = 0
-		ship2.grav_acc = 0
-		ship3.grav_acc = 0
+		if move_method in [MoveMethod.STANDARD, MoveMethod.FRICTION]:
+			if not $UI/ControlKeyboard.visible:
+				$UI/ControlKeyboard.visible = true
+				$UI/ControlKeyboard/AnimationPlayer.play("Fade")
+			if $UI/ControlMouse.visible:
+				$UI/ControlMouse/AnimationPlayer.play_backwards("Fade")
+		elif move_method == MoveMethod.MOUSE:
+			if not $UI/ControlMouse.visible:
+				$UI/ControlMouse.visible = true
+				$UI/ControlMouse/AnimationPlayer.play("Fade")
+			if $UI/ControlKeyboard.visible:
+				$UI/ControlKeyboard/AnimationPlayer.play_backwards("Fade")
 		call("atk_%s" % pattern, curr_en)
 		curr_en += 1
 
@@ -1466,3 +1489,13 @@ func _on_diff_pressed(diff:int):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	$Laser.visible = false
+
+
+func _on_ControlKeyboard_animation_finished(anim_name):
+	if $UI/ControlKeyboard.modulate.a <= 0:
+		$UI/ControlKeyboard.visible = false
+
+
+func _on_ControlMouse_animation_finished(anim_name):
+	if $UI/ControlMouse.modulate.a <= 0:
+		$UI/ControlMouse.visible = false

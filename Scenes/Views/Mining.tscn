@@ -657,7 +657,6 @@ __meta__ = {
 }
 
 [node name="Help" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 position = Vector2( 420, 496 )
 
 [node name="Sprite" type="Sprite" parent="Help"]

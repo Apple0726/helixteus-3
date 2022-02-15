@@ -1029,7 +1029,8 @@ func update_MS_rsrc(dict:Dictionary):
 				cap = round(cap * dict.tile_num)
 			else:
 				cap = round(cap)
-			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") or dict.bldg.name == "MM"):
+			var ac_b:bool = dict.bldg.name in ["PP", "ME"]
+			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") and not ac_b or not ac_b):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num

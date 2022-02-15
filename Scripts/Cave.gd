@@ -57,7 +57,7 @@ var id:int = -1#Cave id
 var rover_data:Dictionary = {}
 var cave_data:Dictionary
 var modifiers:Dictionary = {}
-var light_amount:float = 1.0
+var cave_darkness:float = 0.0
 var dont_gen_anything:bool = false
 var wormhole
 
@@ -139,7 +139,7 @@ func _ready():
 				strength_mult = min(range_lerp(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
 			var brightness:float = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
 			var contrast:float = sqrt(brightness)
-			$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))
+			$TileMap.material.set_shader_param("brightness", min(brightness, 1.6))
 			$TileMap.material.set_shader_param("contrast", 1.5)
 			#$TileMap.material.set_shader_param("saturation", saturation)
 			lum = star.luminosity
@@ -157,9 +157,9 @@ func _ready():
 		for modifier in modifiers:
 			if Data.cave_modifiers[modifier].has("double_treasure_at"):
 				var double_treasure_at:float = Data.cave_modifiers[modifier].double_treasure_at
-				if modifiers[modifier] > 1.0 and double_treasure_at > 1.0:
+				if modifiers[modifier] > 1.0 and double_treasure_at > 1.0 and not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 					treasure_mult *= range_lerp(modifiers[modifier], 1.0, double_treasure_at, 0, 1) + 1.0
-				elif modifiers[modifier] < 1.0 and double_treasure_at < 1.0:
+				elif modifiers[modifier] < 1.0 and double_treasure_at < 1.0 and not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 					treasure_mult *= range_lerp(1.0 / modifiers[modifier], 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0
 			elif Data.cave_modifiers[modifier].has("treasure_if_true"):
 				treasure_mult *= Data.cave_modifiers[modifier].treasure_if_true
@@ -209,6 +209,33 @@ func _ready():
 	$UI2/Filters/Grid/stone.connect("pressed", self, "on_filter_pressed", ["stone", $UI2/Filters/Grid/stone])
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
 	
+	for w in i_w_w:
+		weight += i_w_w[w]
+	for i in len(inventory):
+		inventory_ready.append(true)
+	right_inventory_ready.append(true)
+	for i in range(0, len(inventory)):
+		var slot = game.slot_scene.instance()
+		slot.get_node("Button").modulate = Color.red
+		inventory_slots.add_child(slot)
+		slots.append(slot)
+		if not inventory[i].empty():
+			set_slot_info(slot, inventory[i])
+	$UI2/RightClickSlot.get_node("Button").modulate = Color.green
+	if not right_inventory.empty():
+		set_slot_info($UI2/RightClickSlot, right_inventory[0])
+	set_border(curr_slot)
+	$UI2/HP/Bar.max_value = total_HP
+	$Rover/Bar.max_value = total_HP
+	$UI2/Inventory/Bar.max_value = weight_cap
+	$Rover/InvBar.max_value = weight_cap
+	$UI2/Inventory/Bar.value = weight
+	$Rover/InvBar.value = weight
+	update_health_bar(total_HP)
+	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
+	if game.help.sprint_mode and speed_mult > 1:
+		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
+		game.help.sprint_mode = false
 
 func add_filter(rsrc:String):
 	if rsrc in game.mat_info.keys():
@@ -249,33 +276,6 @@ func set_rover_data():
 	inventory = rover_data.inventory
 	right_inventory = rover_data.right_inventory
 	i_w_w = rover_data.i_w_w
-	for w in i_w_w:
-		weight += i_w_w[w]
-	for i in len(inventory):
-		inventory_ready.append(true)
-	right_inventory_ready.append(true)
-	for i in range(0, len(inventory)):
-		var slot = game.slot_scene.instance()
-		slot.get_node("Button").modulate = Color.red
-		inventory_slots.add_child(slot)
-		slots.append(slot)
-		if not inventory[i].empty():
-			set_slot_info(slot, inventory[i])
-	$UI2/RightClickSlot.get_node("Button").modulate = Color.green
-	if not right_inventory.empty():
-		set_slot_info($UI2/RightClickSlot, right_inventory[0])
-	set_border(curr_slot)
-	$UI2/HP/Bar.max_value = total_HP
-	$Rover/Bar.max_value = total_HP
-	$UI2/Inventory/Bar.max_value = weight_cap
-	$Rover/InvBar.max_value = weight_cap
-	$UI2/Inventory/Bar.value = weight
-	$Rover/InvBar.value = weight
-	update_health_bar(total_HP)
-	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
-	if game.help.sprint_mode and speed_mult > 1:
-		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
-		game.help.sprint_mode = false
 
 func set_slot_info(slot, _inv:Dictionary):
 	var rsrc = _inv.type
@@ -351,37 +351,30 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	prints(difficulty, def, rover_size)
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
-	if dont_gen_anything:
-		if cave_floor < 19:
-			light_amount = clamp((11 - cave_floor) * 0.1, 0.25, 1)
-		else:
-			light_amount = clamp((23 - cave_floor) * 0.05, 0, 0.2)
-	else:
-		if tower:
-			light_amount = 1
-		else:
-			light_amount = (11 - cave_floor) * 0.1
-			if game.science_unlocked.has("RMK2"):
-				light_amount = (12.5 - cave_floor) * 0.08
-			if game.science_unlocked.has("RMK3"):
-				light_amount = (16 - cave_floor) * 0.0625
-			var darkness:float = modifiers.darkness if modifiers.has("darkness") else 1.0
-			light_amount = clamp(light_amount / darkness, 0.3 / darkness, 1.0)
-			if game.help.cave_controls:
-				$UI2/Controls.visible = true
-				game.help_str = "cave_controls"
-				$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
-			if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
-				game.objective.current += 1
+	cave_darkness = cave_floor * 0.1
+	if game.science_unlocked.has("RMK2"):
+		cave_darkness /= 1.1
+	if game.science_unlocked.has("RMK3"):
+		cave_darkness /= 1.1
+	var darkness_mod:float = modifiers.darkness if modifiers.has("darkness") else 1.0
+	cave_darkness *= darkness_mod
+	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
+	if game.help.cave_controls:
+		$UI2/Controls.visible = true
+		game.help_str = "cave_controls"
+		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
+	if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
+		game.objective.current += 1
 	if not aurora:
-		canvas_mod.color = Color.white * light_amount
+		canvas_mod.color = Color.white * (1.0 - cave_darkness)
 		canvas_mod.color.a = 1
-		$WorldEnvironment.environment.adjustment_saturation = light_amount
+	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
 	if game.enable_shaders:
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = (1 - light_amount) * 1.2
+	rover_light.energy = cave_darkness
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
@@ -1268,7 +1261,7 @@ func _process(delta):
 	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].empty():
 		use_item(right_inventory[0], tile_highlight_right, delta)
 	if aurora:
-		canvas_mod.color = aurora_mod.modulate * light_amount
+		canvas_mod.color = aurora_mod.modulate * (1.0 - cave_darkness)
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):

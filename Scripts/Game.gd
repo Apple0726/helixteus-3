@@ -472,7 +472,7 @@ func place_BG_sc_stars():#shown in (super)cluster view
 		var star:Sprite = Sprite.new()
 		star.texture = preload("res://Graphics/Misc/STMBullet.png")
 		star.scale *= 0.07
-		star.modulate.a = 0.5
+		star.modulate.a = 0.4
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
 		$Stars/WhiteStars.add_child(star)
@@ -481,7 +481,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "15 Feb 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -646,6 +646,12 @@ func switch_music(src, pitch:float = 1.0):
 	tween.start()
 
 func load_univ():
+	if is_instance_valid(RC_panel) and $Panels/Control.is_a_parent_of(RC_panel):
+		$Panels/Control.remove_child(RC_panel)
+		RC_panel.queue_free()
+	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instance()
+	RC_panel.visible = false
+	$Panels/Control.add_child(RC_panel)
 	view_history.clear()
 	view_history_pos = -1
 	var _save_sc = File.new()
@@ -1178,6 +1184,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	fn_save_game()
 	if not is_a_parent_of(HUD):
 		$UI.add_child(HUD)
+		HUD.refresh()
 	if tut:
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
 		tutorial.visible = false
@@ -1419,7 +1426,7 @@ func on_fade_complete(panel:Control):
 	hide_adv_tooltip()
 
 func toggle_panel(_panel):
-	if active_panel:
+	if is_instance_valid(active_panel):
 		fade_out_panel(active_panel)
 		if active_panel == _panel:
 			active_panel = null
@@ -1666,9 +1673,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 					$UI.remove_child(HUD)
 				cave = cave_scene.instance()
-				add_child(cave)
 				cave.rover_data = rover_data[rover_id]
 				cave.set_rover_data()
+				add_child(cave)
 				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 			"ruins":
 				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
@@ -1925,7 +1932,7 @@ func add_cluster():
 		var dist:Vector2 = cartesian2polar(cluster_data[c_c].pos.x, cluster_data[c_c].pos.y)
 		var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
-		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.7))
+		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
 	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
@@ -2027,6 +2034,8 @@ func remove_system():
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func remove_planet(save_zooms:bool = true):
+	if is_instance_valid(active_panel):
+		fade_out_panel(active_panel)
 	stars_tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 0), 0.2)
 	stars_tween.start()
 	view.remove_obj("planet", save_zooms)
@@ -3071,7 +3080,7 @@ func generate_tiles(id:int):
 								modifiers[key] = modifiers2[key].min
 							if modifiers2[key].has("max") and modifiers[key] > modifiers2[key].max:
 								modifiers[key] = modifiers2[key].max
-						else:
+						elif randf() < 0.5:
 							modifiers[key] = modifiers2[key].treasure_if_true
 						modifiers2.erase(key)
 #				if ship_cond:
@@ -3328,10 +3337,10 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.19)
 			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
 			uncommon_elements = {	"S":0.5,
+									"Ta":0.5,
+									"W":0.5,
+									"Os":0.25,
 									"Cr":0.3,
-									"Ta":0.2,
-									"W":0.2,
-									"Os":0.1,
 									"Ir":0.1,
 									"Ti":0.1,
 									"Co":0.1 * FM,
@@ -3686,20 +3695,20 @@ var sub_panel
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
-		if not stats_global.empty():
+		if not stats_global.empty() and c_u != -1:
 			stats_global.mouse_travel_distance += event.relative.length()
 			stats_dim.mouse_travel_distance += event.relative.length()
 			stats_univ.mouse_travel_distance += event.relative.length()
 		$Tooltips/CtrlShift.rect_position = mouse_pos - Vector2(87, 17)
 	elif event is InputEventKey:
-		if event.is_pressed() and not stats_global.empty():
+		if event.is_pressed() and not stats_global.empty() and c_u != -1:
 			stats_global.keyboard_presses += 1
 			stats_dim.keyboard_presses += 1
 			stats_univ.keyboard_presses += 1
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
 		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
-	elif event is InputEventMouseButton and not stats_global.empty():
+	elif event is InputEventMouseButton and not stats_global.empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):
 			stats_global.clicks += 1
 			stats_dim.clicks += 1
@@ -3770,7 +3779,7 @@ func _input(event):
 		
 	
 	#J to hide help
-	if Input.is_action_just_released("hide_help"):
+	if Input.is_action_just_released("hide_help") and help_str != "":
 		help[help_str] = not help[help_str]
 		hide_tooltip()
 		hide_adv_tooltip()
@@ -3922,8 +3931,6 @@ func save_sc():
 	_save_sc.close()
 
 func fn_save_game():
-	if c_u == -1:
-		return
 	var save_info_file = File.new()
 	save_info_file.open("user://%s/save_info.hx3" % [c_sv], File.WRITE)
 	var save_info:Dictionary = {
@@ -3945,6 +3952,8 @@ func fn_save_game():
 	}
 	save_info_file.store_var(save_info)
 	save_info_file.close()
+	if c_u == -1:
+		return
 	var save_game = File.new()
 	save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.WRITE)
 	if c_v == "cave" and is_instance_valid(cave):
@@ -4077,7 +4086,7 @@ func update_item_cursor():
 		item_to_use = {"name":"", "type":"", "num":0}
 	else:
 		item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
-	if HUD:
+	if is_instance_valid(HUD):
 		HUD.update_hotbar()
 
 func hide_item_cursor():
@@ -4110,7 +4119,7 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1252
+	var lines_total:int = 1306
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
@@ -4120,10 +4129,10 @@ func _on_lg_mouse_entered(extra_arg_0):
 			lines_translated = 384 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1140 - 2
+			lines_translated = 1293 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1000 - 2
+			lines_translated = 1279 - 2
 		"es":
 			lg = "Español"
 			lines_translated = 1161 - 2

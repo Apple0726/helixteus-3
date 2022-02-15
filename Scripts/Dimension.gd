@@ -122,8 +122,8 @@ func on_invest(subj_node):
 		var subject:Dictionary = game.subjects[subj_node.name.to_lower()]
 		subject.DRs += old_DRs - game.DRs
 		while subject.DRs > subject.lv:
-			subject.DRs -= subject.lv
 			subject.lv += 1
+			subject.DRs -= subject.lv
 		if subj_node.name == "Dimensional_Power":
 			if $ModifyDimension/Maths.visible:
 				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (2.0 if subject.lv >= 2 else 1.0)
@@ -255,25 +255,25 @@ func _input(event):
 		if event is InputEventKey or event is InputEventMouse:
 			yield(get_tree(), "idle_frame")
 			maths_OP_points = 0
-			calc_math_points($ModifyDimension/Maths/Control/BUCGF, 1.3, -10.0, 1.16)
+			calc_math_points($ModifyDimension/Maths/Control/BUCGF, 1.3, -20.0, 1.2)
 			math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MV, 1.9, -4.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MV, 1.9, -8.0, 1.5)
 			math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MSMB, 1.6, -2.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MSMB, 1.6, -2.0, 1.5)
 			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.5)
 			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 5.0)
+			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 3.0)
 			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -20.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -40.0, 1.1)
 			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_Stats, 1.15, 200.0)
+			calc_math_points($ModifyDimension/Maths/Control/SLUGF_Stats, 1.15, 400.0)
 			math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 2.5)
 			math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -120.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -120.0, 1.5)
 			math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/ULUGF, 1.6, -50.0, 1.0)
+			calc_math_points($ModifyDimension/Maths/Control/ULUGF, 1.6, -200.0, 1.15)
 			math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/ULUGF.value, float(math_defaults.get_node("ULUGF").text.right(1)))
 			physics_OP_points = 0
 			if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
@@ -291,11 +291,14 @@ func _input(event):
 					return
 				else:
 					cost["custom_colors/font_color"] = Color.black
-					physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
+					if cost.value > Data.univ_prop_weights[cost.name]:
+						physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
+					else:
+						physics_OP_points += pow(Data.univ_prop_weights[cost.name] / cost.value, 2) - 1.0
 				physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 			
 			engineering_OP_points = 0
-			calc_engi_points($ModifyDimension/Engineering/Control/BCM, 0.7, false)
+			calc_engi_points($ModifyDimension/Engineering/Control/BCM, 1.0, false)
 			calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.1, true)
 			calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.15, true)
 			if $ModifyDimension/Maths.visible:

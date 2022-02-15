@@ -58,7 +58,7 @@ func _ready():
 			for p_i in planet_data:
 				if p_i.empty():
 					continue
-				if p_i.has("tile_num"):
+				if p_i.has("tile_num") and p_i.bldg.has("name"):
 					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 				if p_i.has("MS"):
 					Helper.add_to_dict(MSs, p_i.MS, 1)
@@ -66,6 +66,9 @@ func _ready():
 				for tile in tile_data:
 					if tile and tile.has("bldg"):
 						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+			for _star in s_i.stars:
+				if _star.has("MS"):
+					Helper.add_to_dict(MSs, _star.MS, 1)
 			if not bldgs.empty():
 				for bldg in bldgs:
 					var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()

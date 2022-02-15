@@ -13,7 +13,7 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
-	$OptionButton.visible = game.science_unlocked.has("FG2")
+	$OptionButton.visible = game.science_unlocked.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
 	strength_mult = game.tile_data[game.c_t].bldg.path_1_value
 	_on_SpinBox_value_changed($SpinBox.value)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -104,6 +104,77 @@ shader = ExtResource( 15 )
 shader_param/amplitude = 8.0
 shader_param/frequency = 12.0
 
+[sub_resource type="StyleBoxFlat" id=35]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 1, 1, 1, 1 )
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="Animation" id=38]
+resource_name = "Fade"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="StyleBoxFlat" id=36]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 1, 1, 1, 1 )
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id=37]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 1, 1, 1, 1 )
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="Animation" id=39]
+resource_name = "Fade"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [sub_resource type="ShaderMaterial" id=22]
 shader = ExtResource( 8 )
 shader_param/beams = 1
@@ -204,6 +275,9 @@ material = SubResource( 6 )
 position = Vector2( 658.397, 658.258 )
 scale = Vector2( 0.952953, 0.952953 )
 texture = ExtResource( 9 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Ship0" parent="." instance=ExtResource( 12 )]
 texture = ExtResource( 3 )
@@ -536,8 +610,125 @@ margin_bottom = 720.0
 mouse_filter = 2
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
+
+[node name="ControlKeyboard" type="Control" parent="UI"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoUp" type="Panel" parent="UI/ControlKeyboard"]
+margin_left = 548.0
+margin_top = 560.0
+margin_right = 580.0
+margin_bottom = 592.0
+custom_styles/panel = SubResource( 35 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/ControlKeyboard/GoUp"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "W"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoDown" type="Panel" parent="UI/ControlKeyboard"]
+margin_left = 548.0
+margin_top = 600.0
+margin_right = 580.0
+margin_bottom = 632.0
+custom_styles/panel = SubResource( 35 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/ControlKeyboard/GoDown"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "S"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost" type="Panel" parent="UI/ControlKeyboard"]
+margin_left = 680.0
+margin_top = 600.0
+margin_right = 772.0
+margin_bottom = 632.0
+custom_styles/panel = SubResource( 35 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/ControlKeyboard/Boost"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Shift"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlKeyboard"]
+anims/Fade = SubResource( 38 )
+
+[node name="ControlMouse" type="Control" parent="UI"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 8.0
+margin_right = 40.0
+margin_bottom = 48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost2" type="Panel" parent="UI/ControlMouse"]
+margin_left = 612.0
+margin_top = 544.0
+margin_right = 640.0
+margin_bottom = 576.0
+custom_styles/panel = SubResource( 36 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost3" type="Panel" parent="UI/ControlMouse"]
+margin_left = 640.0
+margin_top = 544.0
+margin_right = 668.0
+margin_bottom = 576.0
+custom_styles/panel = SubResource( 36 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boost4" type="Panel" parent="UI/ControlMouse"]
+margin_left = 612.0
+margin_top = 544.0
+margin_right = 668.0
+margin_bottom = 628.0
+custom_styles/panel = SubResource( 37 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlMouse"]
+anims/Fade = SubResource( 39 )
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
@@ -569,9 +760,10 @@ current = true
 [node name="Screenshake" parent="Camera2D" instance=ExtResource( 5 )]
 
 [node name="CurrentPattern" type="Label" parent="."]
-margin_top = 14.2339
-margin_right = 40.0
-margin_bottom = 38.2339
+margin_left = 2.33598
+margin_top = 40.2633
+margin_right = 42.336
+margin_bottom = 64.2633
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -614,4 +806,6 @@ anims/SceneFade = SubResource( 26 )
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_mouse_exited"]
 [connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [ 2 ]]
 [connection signal="pressed" from="UI/Back" to="." method="_on_Back_pressed"]
+[connection signal="animation_finished" from="UI/ControlKeyboard/AnimationPlayer" to="." method="_on_ControlKeyboard_animation_finished"]
+[connection signal="animation_finished" from="UI/ControlMouse/AnimationPlayer" to="." method="_on_ControlMouse_animation_finished"]
 [connection signal="animation_finished" from="Laser/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

@@ -112,11 +112,11 @@ func refresh_planets():
 			else:
 				var tile_data:Array = tile_datas[p_i.l_id]
 				var bldgs:Dictionary = {}
-				if p_i.has("tile_num"):
+				if p_i.has("tile_num") and p_i.bldg.has("name"):
 					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 				else:
 					for tile in tile_data:
-						if tile and tile.has("bldg"):
+						if tile and tile.has("bldg") and tile.bldg.has("name"):
 							Helper.add_to_dict(bldgs, tile.bldg.name, 1)
 				if not bldgs.empty():
 					var grid:GridContainer = GridContainer.new()
@@ -173,7 +173,7 @@ func refresh_planets():
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
-		if p_i.has("tile_num"):
+		if p_i.has("tile_num") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
 			match p_i.bldg.name:
 				"ME":
@@ -457,7 +457,7 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 	else:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1)}, false)
 
-func show_M_MPCC_costs(p_i:Dictionary):
+func show_M_MPCC_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
@@ -540,6 +540,9 @@ func _input(event):
 
 func build_MS(obj:Dictionary, MS:String):
 	if bldg_costs.empty():
+		return
+	if obj.has("tile_num"):
+		game.popup(tr("MS_ON_TF_PLANET"), 2.0)
 		return
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
@@ -867,6 +870,8 @@ func _process(_delta):
 						p_num = ceil(p_num_total * 0.1)
 					for i in range(0, p_num):
 						var p_i:Dictionary = game.planet_data[i]
+						if p_i.empty():
+							continue
 						if p_i.has("cost_div"):
 							p_i.cost_div = max(p_i.cost_div, 1 + log(star.luminosity + 1))
 						else:

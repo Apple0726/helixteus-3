@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/Projectile.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Cave/Projectiles/enemy_bullet.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 12.0
@@ -28,8 +27,5 @@ disabled = true
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 3 )
 texture = ExtResource( 2 )
-
-[node name="Light2D" type="Light2D" parent="."]
-texture = ExtResource( 3 )
 
 [connection signal="body_entered" from="." to="." method="_on_Sprite_body_entered"]

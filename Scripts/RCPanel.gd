@@ -139,10 +139,10 @@ func refresh():
 	if game.science_unlocked.has("RMK2"):
 		HP = 50.0
 		atk = 15.0
-		def = 15.0
+		def = 10.0
 		weight_cap = round(16000.0 * game.u_i.planck)
 	if game.science_unlocked.has("RMK3"):
-		HP = 450.0
+		HP = 750.0
 		atk = 70.0
 		def = 200.0
 		weight_cap = round(200000.0 * game.u_i.planck)

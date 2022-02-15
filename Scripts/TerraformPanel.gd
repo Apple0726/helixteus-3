@@ -126,6 +126,8 @@ func _on_Terraform_pressed():
 				game.autocollect.rsrc.minerals += Data.path_1[tf_type].value
 			elif tf_type == "PP":
 				game.autocollect.rsrc.energy += Data.path_1[tf_type].value
+		game.view_history.pop_back()
+		game.view_history_pos -= 1
 		game.switch_view("system")
 		var dir = Directory.new()
 		dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])

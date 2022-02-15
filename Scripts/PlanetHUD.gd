@@ -54,7 +54,7 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Terraform_pressed():
-	if game.planet_data[game.c_p].has("second_ship") or game.c_p_g in [2, game.second_ship_hints.spawned_at_p, game.third_ship_hints.ship_spawned_at_p, game.third_ship_hints.part_spawned_at_p, game.fourth_ship_hints.op_grill_planet, game.fourth_ship_hints.boss_planet]:
+	if game.c_p_g == 2:
 		game.popup(tr("NO_TF"), 1.5)
 	elif game.planet_data[game.c_p].has("MS"):
 		game.popup("%s (%s)" % [tr("NO_TF"), tr("MS_EXISTS")], 2.0)

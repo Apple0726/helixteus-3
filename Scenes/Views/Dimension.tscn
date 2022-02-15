@@ -898,7 +898,7 @@ margin_top = 160.0
 margin_right = 76.0
 margin_bottom = 192.0
 step = 1.0
-value = 30.0
+value = 25.0
 
 [node name="dark_energy" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
 anchor_right = 0.0
@@ -907,7 +907,7 @@ margin_top = 200.0
 margin_right = 76.0
 margin_bottom = 232.0
 step = 1.0
-value = 30.0
+value = 25.0
 
 [node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
 anchor_right = 0.0
@@ -934,7 +934,7 @@ margin_top = 320.0
 margin_right = 76.0
 margin_bottom = 352.0
 step = 1.0
-value = 50.0
+value = 100.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
@@ -1014,7 +1014,7 @@ margin_left = 362.0
 margin_top = 439.0
 margin_right = 404.0
 margin_bottom = 463.0
-text = "(20)"
+text = "(25)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1058,7 +1058,7 @@ margin_left = 362.0
 margin_top = 599.0
 margin_right = 404.0
 margin_bottom = 623.0
-text = "(50)"
+text = "(100)"
 __meta__ = {
 "_edit_use_anchors_": false
 }

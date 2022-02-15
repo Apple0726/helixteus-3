@@ -300,7 +300,7 @@ var science_unlocks = {
 						"FTL":{"cost":128000, "parents":["SCT"]},
 						"IGD":{"cost":9.5e7, "parents":["FTL"]},
 						"FG":{"cost":3.45e9, "parents":["IGD"]},
-						"FG2":{"cost":1.42e19, "parents":["FG"]},
+						"FG2":{"cost":1.4e19, "parents":["FG"]},
 						"ID":{"cost":450000, "parents":["CD", "ATM"]},
 						"FD":{"cost":1.5e8, "parents":["ID"]},
 						"PD":{"cost":1.2e12, "parents":["FD"]},
@@ -477,7 +477,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"enemy_projectile_size":{"double_treasure_at":3, "tier":1, "min":0.2, "max":4},
 	"enemy_HP":{"double_treasure_at":1.5, "tier":1},
 	"chest_number":{"double_treasure_at":0.5, "no_treasure_mult":true, "tier":1},
-	"darkness":{"double_treasure_at":2.0, "tier":1},
+	"darkness":{"double_treasure_at":2.0, "tier":1, "max":4},
 	"rover_size":{"double_treasure_at":0.75, "tier":2},
 	"minimap_disabled":{"treasure_if_true":2.0, "tier":2},
 }
