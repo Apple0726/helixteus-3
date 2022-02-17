@@ -96,7 +96,7 @@ func refresh():
 			var max_value2 = game.particles[particle] / Z
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
-	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, max_value)
+	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
 	$Control/HSlider.step = $Control/HSlider.max_value / 500.0
 	$Control/HSlider.visible = $Control/HSlider.max_value != 0
 	if $Control3.visible:

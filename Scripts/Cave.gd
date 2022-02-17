@@ -222,7 +222,7 @@ func _ready():
 		if not inventory[i].empty():
 			set_slot_info(slot, inventory[i])
 	$UI2/RightClickSlot.get_node("Button").modulate = Color.green
-	if not right_inventory.empty():
+	if not right_inventory[0].empty():
 		set_slot_info($UI2/RightClickSlot, right_inventory[0])
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP

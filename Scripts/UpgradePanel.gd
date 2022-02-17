@@ -324,9 +324,14 @@ func _on_Upgrade_pressed():
 						if tile.bldg.name == "ME":
 							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-						elif tile.bldg.name in ["PP", "SP"]:
+						elif tile.bldg.name == "PP":
 							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+						elif tile.bldg.name == "SP":
+							var p_i:Dictionary = game.planet_data[game.c_p]
+							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * tile.auto_collect / 100.0 * mult
+							game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
 					if tile.bldg.name == "RL":
 						game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value
 						game.autocollect.rsrc.SP -= tile.bldg.path_1_value

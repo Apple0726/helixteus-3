@@ -14,6 +14,7 @@ var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 ]
 
 func _ready():
+	var discovered_sys:Array = []
 	for s_i in game.system_data:
 		var star:Dictionary = s_i.stars[0]
 		for i in range(1, len(s_i.stars)):
@@ -44,53 +45,58 @@ func _ready():
 		dimensions = max(dimensions, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		if s_i.has("discovered"):
-			var planet_data:Array = game.open_obj("Systems", s_i.id)
-			var grid:GridContainer = GridContainer.new()
-			grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			grid.columns = 3
-			grid.rect_scale *= 5.0
-			var MS_grid:GridContainer = GridContainer.new()
-			MS_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			MS_grid.columns = 3
-			MS_grid.rect_scale *= 5.0
-			var bldgs:Dictionary = {}
-			var MSs:Dictionary = {}
-			for p_i in planet_data:
-				if p_i.empty():
-					continue
-				if p_i.has("tile_num") and p_i.bldg.has("name"):
-					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
-				if p_i.has("MS"):
-					Helper.add_to_dict(MSs, p_i.MS, 1)
-				var tile_data:Array = game.open_obj("Planets", p_i.id)
-				for tile in tile_data:
-					if tile and tile.has("bldg"):
-						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-			for _star in s_i.stars:
-				if _star.has("MS"):
-					Helper.add_to_dict(MSs, _star.MS, 1)
-			if not bldgs.empty():
-				for bldg in bldgs:
-					var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
-					grid.add_child(bldg_count)
-					bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
-					bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-				add_child(grid)
-				grid.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * grid.rect_scale.x
-				grid.rect_position.y = s_i.pos.y - (grid.rect_size.y + 30) * grid.rect_scale.y
-			else:
-				grid.free()
-			if not MSs.empty():
-				for MS in MSs:
-					var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
-					MS_grid.add_child(MS_count)
-					MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
-					MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
-				add_child(MS_grid)
-				MS_grid.rect_position.x = s_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid.rect_scale.x
-				MS_grid.rect_position.y = s_i.pos.y + MS_grid.rect_size.y * MS_grid.rect_scale.y
-			else:
-				MS_grid.free()
+			discovered_sys.append(s_i)
+	for s_i in discovered_sys:
+		var planet_data:Array = game.open_obj("Systems", s_i.id)
+		var bldgs:Dictionary = {}
+		var MSs:Dictionary = {}
+		for p_i in planet_data:
+			if p_i.empty():
+				continue
+			if p_i.has("tile_num") and p_i.bldg.has("name"):
+				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+			if p_i.has("MS"):
+				Helper.add_to_dict(MSs, p_i.MS, 1)
+			var tile_data:Array = game.open_obj("Planets", p_i.id)
+			for tile in tile_data:
+				if tile and tile.has("bldg"):
+					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+		yield(get_tree(), "idle_frame")
+		for _star in s_i.stars:
+			if _star.has("MS"):
+				Helper.add_to_dict(MSs, _star.MS, 1)
+		if not bldgs.empty():
+			var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+			grid_panel.get_node("Top").visible = false
+			var grid = grid_panel.get_node("PanelContainer/GridContainer")
+			grid_panel.rect_scale *= 5.0
+			for bldg in bldgs:
+				var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+				grid.add_child(bldg_count)
+				bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+				bldg_count.get_node("Texture").mouse_filter = Control.MOUSE_FILTER_IGNORE
+				bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+			add_child(grid_panel)
+			grid_panel.add_to_group("Grids")
+			grid_panel.name = "Grid_%s" % s_i.l_id
+			grid_panel.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
+			grid_panel.rect_position.y = s_i.pos.y - (grid.rect_size.y + 30) * grid_panel.rect_scale.y
+		if not MSs.empty():
+			var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+			MS_grid_panel.get_node("Bottom").visible = false
+			var MS_grid = MS_grid_panel.get_node("PanelContainer/GridContainer")
+			MS_grid_panel.rect_scale *= 5.0
+			for MS in MSs:
+				var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
+				MS_grid.add_child(MS_count)
+				MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
+				MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+			add_child(MS_grid_panel)
+			MS_grid_panel.add_to_group("MSGrids")
+			MS_grid_panel.name = "MSGrid_%s" % s_i.l_id
+			MS_grid_panel.rect_position.x = s_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
+			MS_grid_panel.rect_position.y = s_i.pos.y + MS_grid.rect_size.y * MS_grid_panel.rect_scale.y
+		
 	if game.galaxy_data[game.c_g].has("wormholes"):
 		for wh_data in game.galaxy_data[game.c_g].wormholes:
 			var blue_line = Line2D.new()
@@ -119,9 +125,19 @@ func on_system_over (l_id:int):
 				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), l_id]
 			5:
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		if grid.name != "Grid_%s" % l_id:
+			grid.visible = false
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		if grid.name != "MSGrid_%s" % l_id:
+			grid.visible = false
 	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
 
 func on_system_out ():
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		grid.visible = true
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		grid.visible = true
 	game.hide_tooltip()
 
 func on_system_click (id:int, l_id:int):

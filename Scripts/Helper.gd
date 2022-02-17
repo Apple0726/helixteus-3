@@ -446,17 +446,21 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			game.mats[content] += amount
 			if not game.show.plant_button and content == "soil":
 				game.show.plant_button = true
-			if not game.show.materials:
+			if not game.help.has("materials"):
 				if not is_MM and is_instance_valid(game.tutorial):
 					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
-				game.inventory.get_node("Tabs/Materials").visible = true
+				game.help.materials = true
+			if not game.show.has("materials"):
 				game.show.materials = true
+				game.inventory.get_node("Tabs/Materials").visible = true
 		elif game.mets.has(content):
-			if not game.show.metals:
+			if not game.help.has("metals"):
 				if not is_MM and is_instance_valid(game.tutorial):
 					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
-				game.inventory.get_node("Tabs/Metals").visible = true
+				game.help.metals = true
+			if not game.show.has("metals"):
 				game.show.metals = true
+				game.inventory.get_node("Tabs/Metals").visible = true
 			game.mets[content] += amount
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
@@ -930,7 +934,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				elif tile.bldg.name == "SP":
 					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
 					game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc.energy += prod * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
 			elif tile.bldg.name == "NSF":
@@ -1030,7 +1034,7 @@ func update_MS_rsrc(dict:Dictionary):
 			else:
 				cap = round(cap)
 			var ac_b:bool = dict.bldg.name in ["PP", "ME"]
-			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") and not ac_b or not ac_b):
+			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") and ac_b or not ac_b):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num

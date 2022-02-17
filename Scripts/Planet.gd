@@ -1422,9 +1422,13 @@ func on_timeout():
 				elif tile.bldg.name == "EC":
 					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * (mult - 1)
 				if tile.has("auto_collect"):
-					if tile.bldg.name in ["PP", "SP"]:
+					if tile.bldg.name == "PP":
 						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
 						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
+					if tile.bldg.name == "SP":
+						var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+						game.autocollect.rsrc.energy -= prod * (mult - 1) * tile.auto_collect / 100.0
+						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy -= prod * (mult - 1) * tile.auto_collect / 100.0
 					elif tile.bldg.name == "ME":
 						game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
 						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0

@@ -31,10 +31,10 @@ func refresh():
 		_on_Atoms_pressed()
 	elif tab == "particles":
 		_on_Particles_pressed()
-	$Tabs/Materials.visible = game.show.materials
-	$Tabs/Metals.visible = game.show.metals
-	$Tabs/Atoms.visible = game.show.atoms
-	$Tabs/Particles.visible = game.show.particles
+	$Tabs/Materials.visible = game.show.has("materials")
+	$Tabs/Metals.visible = game.show.has("metals")
+	$Tabs/Atoms.visible = game.show.has("atoms")
+	$Tabs/Particles.visible = game.show.has("particles")
 
 func _on_Items_pressed():
 	set_process(false)

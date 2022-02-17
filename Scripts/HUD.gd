@@ -228,7 +228,7 @@ func refresh():
 	SP.visible = game.show.SP
 	sc_tree.visible = game.show.SP
 	$Buttons/Vehicles.visible = game.show.vehicles_button
-	craft.visible = game.show.materials
+	craft.visible = game.show.has("materials")
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.minerals
 	$Bottom/Panel.visible = game.show.minerals and game.c_v != "science_tree"

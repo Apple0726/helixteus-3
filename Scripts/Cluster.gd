@@ -12,6 +12,7 @@ var rsrcs:Array = []
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
 	var conquered = true
+	var discovered_gal:Array = []
 	for g_i in game.galaxy_data:
 		if g_i.empty():
 			continue
@@ -25,8 +26,8 @@ func _ready():
 		galaxy_btn.connect("mouse_entered", self, "on_galaxy_over", [g_i.l_id])
 		galaxy_btn.connect("mouse_exited", self, "on_galaxy_out")
 		galaxy_btn.connect("pressed", self, "on_galaxy_click", [g_i.id, g_i.l_id])
-		galaxy_btn.rect_position = Vector2(-358 / 2, -199 / 2)
-		galaxy_btn.rect_pivot_offset = Vector2(358 / 2, 199 / 2)
+		galaxy_btn.rect_position = Vector2(-galaxy_btn.texture_normal.get_width() / 2, -galaxy_btn.texture_normal.get_height() / 2)
+		galaxy_btn.rect_pivot_offset = Vector2(galaxy_btn.texture_normal.get_width() / 2, galaxy_btn.texture_normal.get_height() / 2)
 		galaxy_btn.rect_rotation = rad2deg(g_i["rotation"])
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.rect_scale.x = radius
@@ -37,6 +38,11 @@ func _ready():
 		dimensions = max(dimensions, g_i.pos.length())
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):
+			var GS_marker:Sprite = Sprite.new()
+			GS_marker.scale *= 2.0
+			#GS_marker.show_behind_parent = true
+			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
+			galaxy.add_child(GS_marker)
 			var rsrc
 			var prod:float
 			var rsrc_mult:float = 1.0
@@ -52,6 +58,60 @@ func _ready():
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
 			if rsrc:
 				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")]
+		if g_i.has("discovered") and not g_i.has("GS"):
+			discovered_gal.append(g_i)
+	for g_i in discovered_gal:
+		var bldgs:Dictionary = {}
+		var MSs:Dictionary = {}
+		var system_data2:Array = game.open_obj("Galaxies", g_i.id)
+		for s_i in system_data2:
+			if not s_i.has("discovered"):
+				continue
+			var planet_data2:Array = game.open_obj("Systems", s_i.id)
+			for p_i in planet_data2:
+				if p_i.empty():
+					continue
+				if p_i.has("tile_num") and p_i.bldg.has("name"):
+					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+				if p_i.has("MS"):
+					Helper.add_to_dict(MSs, p_i.MS, 1)
+			for _star in s_i.stars:
+				if _star.has("MS"):
+					Helper.add_to_dict(MSs, _star.MS, 1)
+			yield(get_tree(), "idle_frame")
+		var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+		if not bldgs.empty():
+			var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+			grid_panel.get_node("Top").visible = false
+			var grid = grid_panel.get_node("PanelContainer/GridContainer")
+			grid_panel.rect_scale *= 7.0
+			for bldg in bldgs:
+				var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+				grid.add_child(bldg_count)
+				bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+				bldg_count.get_node("Texture").mouse_filter = Control.MOUSE_FILTER_IGNORE
+				bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+			add_child(grid_panel)
+			grid_panel.add_to_group("Grids")
+			grid_panel.name = "Grid_%s" % g_i.l_id
+			grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
+			grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y + 50) * grid_panel.rect_scale.y * sc
+		if not MSs.empty():
+			var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+			MS_grid_panel.get_node("Bottom").visible = false
+			var MS_grid = MS_grid_panel.get_node("PanelContainer/GridContainer")
+			MS_grid_panel.rect_scale *= 7.0
+			for MS in MSs:
+				var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
+				MS_grid.add_child(MS_count)
+				MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
+				MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+			add_child(MS_grid_panel)
+			MS_grid_panel.add_to_group("MSGrids")
+			MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
+			MS_grid_panel.rect_position.x = g_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
+			MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y - 15) * MS_grid_panel.rect_scale.y * sc
+		
 	if conquered:
 		game.cluster_data[game.c_c].conquered = true
 	if game.overlay_data.cluster.visible:
@@ -76,9 +136,19 @@ func on_galaxy_over (id:int):
 	if g_i.has("GS") and g_i.GS == "TP":
 		tooltip += "(%s)" % tr("TPCC_SC")
 	tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		if grid.name != "Grid_%s" % g_i.l_id:
+			grid.visible = false
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		if grid.name != "MSGrid_%s" % g_i.l_id:
+			grid.visible = false
 	game.show_tooltip(tooltip)
 
 func on_galaxy_out ():
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		grid.visible = true
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		grid.visible = true
 	game.hide_tooltip()
 
 func on_galaxy_click (id:int, l_id:int):

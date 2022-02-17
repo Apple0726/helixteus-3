@@ -598,8 +598,8 @@ func _ready():
 		show.SP = true
 		show.stone = true
 		show.glass = true
-		show.materials = true
-		show.metals = true
+		help.materials = true
+		help.metals = true
 		show.atoms = true
 		atoms.C = 100
 		atoms.Xe = 10000
@@ -835,6 +835,8 @@ func remove_files(dir:Directory):
 		file_name = dir.get_next()
 
 func new_game(tut:bool, univ:int = 0, new_save:bool = false):
+	view_history.clear()
+	view_history_pos = -1
 	var file = File.new()
 	var dir = Directory.new()
 	stats_univ = Data.default_stats.duplicate(true)
@@ -1061,10 +1063,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"vehicles_button":false,
 				"s_bk_button":false,#system_bookmark_button
 				"g_bk_button":false,#galaxy_bookmark_button
-				"materials":false,
-				"metals":false,
-				"atoms":false,
-				"particles":false,
 				"auroras":false,
 				"bookmarks":false,
 				"dimensions":false,
