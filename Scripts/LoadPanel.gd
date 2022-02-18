@@ -43,10 +43,19 @@ func refresh():
 
 func on_export(save_str:String):
 	save_to_export = save_str
-	$PopupBackground.visible = true
-	$Export.current_file = save_str
-	$Export.window_title = tr("EXPORT_X") % save_str
-	$Export.popup_centered()
+	if OS.get_name() == "HTML5":
+		export_game("user://%s.hx3" % save_str)
+		var file = File.new()
+		file.open("user://%s.hx3" % save_str, File.READ)
+		var L = file.get_len()
+		var buffer = file.get_buffer(L)
+		file.close()
+		JavaScript.download_buffer(buffer, save_str + ".hx3")
+	else:
+		$PopupBackground.visible = true
+		$Export.current_file = save_str
+		$Export.window_title = tr("EXPORT_X") % save_str
+		$Export.popup_centered()
 
 func on_load(sv:String):
 	if modulate.a == 1:
@@ -80,6 +89,9 @@ func _on_Import_popup_hide():
 
 
 func _on_Export_file_selected(path):
+	export_game(path)
+
+func export_game(path:String = "user://"):
 	var file = File.new()
 	var error = file.open(path, File.WRITE)
 	var error2 = false
@@ -107,7 +119,7 @@ func _on_Export_file_selected(path):
 					game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 					$PopupBackground.visible = false
 	file.close()
-
+	
 func export_univ(univ_str:String):
 	var error = false
 	var univ_data:Dictionary = {

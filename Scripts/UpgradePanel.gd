@@ -387,7 +387,7 @@ func _on_Upgrade_pressed():
 					prod_ratio = 1.0
 				var coll_date = planet.bldg.collect_date
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
-			if planet.has("autocollect"):
+			if planet.has("autocollect") and path_selected == 1:
 				if planet.bldg.name == "ME":
 					game.autocollect.rsrc.minerals += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 				elif planet.bldg.name == "PP":

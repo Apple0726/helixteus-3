@@ -659,8 +659,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
 			elif bldg == "PP":
 				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
-				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * mult * ac / 100.0
-				game.autocollect.rsrc.energy -= prod * mult * ac / 100.0
+				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * ac / 100.0
+				game.autocollect.rsrc.energy -= prod * ac / 100.0
 	tile.erase("bldg")
 	if tile.empty():
 		game.tile_data[id2] = null
@@ -1516,12 +1516,12 @@ func add_anim_icon(tile:Dictionary, tile_id:int):
 	var node
 	var node2
 	if tile.bldg.name == "ME":
-		node = game.HUD.get_node("Resources/Minerals")
-		node2 = game.HUD.get_node("Resources/Minerals/Texture")
+		node = game.HUD.get_node("Top/Resources/Minerals")
+		node2 = game.HUD.get_node("Top/Resources/Minerals/Texture")
 		rsrc_icon.texture = preload("res://Graphics/Icons/minerals.png")
 	elif tile.bldg.name in ["PP", "SP"]:
-		node = game.HUD.get_node("Resources/Energy")
-		node2 = game.HUD.get_node("Resources/Energy/Texture")
+		node = game.HUD.get_node("Top/Resources/Energy")
+		node2 = game.HUD.get_node("Top/Resources/Energy/Texture")
 		rsrc_icon.texture = preload("res://Graphics/Icons/energy.png")
 	if not node:
 		return

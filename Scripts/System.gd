@@ -876,6 +876,12 @@ func _process(_delta):
 							p_i.cost_div = max(p_i.cost_div, 1 + log(star.luminosity + 1))
 						else:
 							p_i.cost_div = 1 + log(star.luminosity + 1)
+						if not p_i.has("autocollect"):
+							if p_i.has("tile_num"):
+								if p_i.bldg.name == "ME":
+									game.autocollect.rsrc.minerals += p_i.bldg.path_1_value * p_i.tile_num
+								elif p_i.bldg.name == "PP":
+									game.autocollect.rsrc.energy += p_i.bldg.path_1_value * p_i.tile_num
 						p_i.autocollect = true
 					for i in len(stars_info):
 						if i != id:

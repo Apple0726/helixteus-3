@@ -83,6 +83,8 @@ func on_slot_press(_name:String):
 		num = game.get_item_num(_name)
 	else:
 		num = 1
+	if game.get_node("UI/BottomInfo").visible:
+		game._on_BottomInfo_close_button_pressed(true)
 	game.item_to_use.name = _name
 	game.item_to_use.num = num
 	var texture

@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.23"
+const VERSION:String = "v0.23.1"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -481,7 +481,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "15 Feb 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "18 Feb 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -2485,7 +2485,7 @@ func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
 	for star in stars:
 		combined_star_mass += star.mass
 	if c_g_g == 0:
-		return Helper.clever_round(1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000)
+		return Helper.clever_round((1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000) * galaxy_data[id].diff)
 	else:
 		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 	
@@ -4073,7 +4073,9 @@ func hide_ship_locator():
 	
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite").texture = texture
-	update_item_cursor()
+	print(item_to_use)
+	item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
+	#update_item_cursor()
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	item_cursor.position = mouse_pos
 	item_cursor.visible = true

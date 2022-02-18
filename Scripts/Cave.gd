@@ -1233,7 +1233,7 @@ func on_timeout(slot, timer):
 func remove_item(item:Dictionary, num:int = 1):
 	item.num -= num
 	if item.num <= 0:
-		inventory[curr_slot] = {"type":""}
+		inventory[curr_slot].clear()
 		active_item.text = ""
 		slots[curr_slot].get_node("TextureRect").texture = null
 		slots[curr_slot].get_node("Label").text = ""

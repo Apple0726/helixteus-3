@@ -123,9 +123,9 @@ func _on_Terraform_pressed():
 			p_i.bldg.IR_mult = 1
 		if p_i.has("autocollect"):
 			if tf_type == "ME":
-				game.autocollect.rsrc.minerals += Data.path_1[tf_type].value
+				game.autocollect.rsrc.minerals += Data.path_1[tf_type].value * surface
 			elif tf_type == "PP":
-				game.autocollect.rsrc.energy += Data.path_1[tf_type].value
+				game.autocollect.rsrc.energy += Data.path_1[tf_type].value * surface
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
 		game.switch_view("system")

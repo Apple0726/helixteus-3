@@ -932,7 +932,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 				elif tile.bldg.name == "SP":
-					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
 					game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += prod * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
