@@ -7,7 +7,6 @@ export_presets.cfg
 *.import
 *.png~
 *.kra
-*.csv
 addons/
 
 # Mono-specific ignores
