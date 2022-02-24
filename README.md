@@ -1,6 +1,6 @@
 <h1 align="center">Helixteus 3</h1>
 <p align="center">
-<img src="icon.png" alt="icon">
+<img src="logo.png" alt="logo">
 </p>
 
 A space-themed incremental game where you manage planets and resources in a quest to dominate the universe with buildings and megastructures.
