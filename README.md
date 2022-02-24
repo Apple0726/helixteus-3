@@ -6,6 +6,7 @@
 Helixteus 3 is a a 2D space conquest/resource management game with incremental mechanics. You start with only one planet, construct buildings to produce resources that will allow you to conquer other procedurally generated planets, systems, galaxies, and eventually entire universes.
 
 [Play the game on itch.io](https://apple0726.itch.io/helixteus-3)
+
 [Wishlist the game on Steam](https://store.steampowered.com/app/1642730/Helixteus_3/)
 
 ## Community
@@ -44,12 +45,14 @@ Helixteus 3 is built using the [Godot game engine](https://godotengine.org/downl
 Refer to the **Quick start for contributors** section above for information on how to import the game into the game engine to test your code.
 
 **Code**
+
 All of the game logic is written in [GDScript](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/index.html), which is very easy to learn (inspired by Python). You will find all of this code in `/Scripts`.
 Refactoring the code to look nicer is a great way to start with contributing code. Beautiful code is more likely to attract future contributors. If you are familar with GDScript's [built-in functions](https://docs.godotengine.org/en/stable/classes/class_%40gdscript.html#), then consider finding some inefficient algorithms to improve. New features are also welcome, but try to coordinate with other developers before you start working on anything big.
 
 *Please test your code for bugs before you commit any changes!*
 
 **Shaders**
+
 This game also uses shaders to add visual effects. Godot uses a [custom shader language](https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shading_language.html), though it is very similar to GLSL. All of these shaders are in the `/Shaders` directory. If you are a GLSL wizard, then feel free to improve any existing shaders, or add new ones!
 
 ### Bug reports
