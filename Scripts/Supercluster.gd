@@ -21,7 +21,7 @@ func _ready():
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.shader")
 			cluster_btn.material.set_shader_param("seed", int(c_i.diff))
 			var dist:Vector2 = cartesian2polar(c_i.pos.x, c_i.pos.y)
-			var hue:float = fmod(dist.x, 1000.0) / 1000.0
+			var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
 			var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
 			cluster_btn.material.set_shader_param("color", Color.from_hsv(hue, sat, 1.0))
 		self.add_child(cluster)

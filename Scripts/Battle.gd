@@ -320,14 +320,14 @@ func _input(event):
 	elif Input.is_action_just_released("battle_down"):
 		ship_dir = ""
 	if $Help.modulate.a == 1:
-		if game.help.battle and event is InputEventKey:
-			game.help.battle = false
+		if game.help.has("battle") and event is InputEventKey:
+			game.help.erase("battle")
 			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
 			tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
 			tween.start()
 			enemy_attack()
-		elif game.help.battle2 and event is InputEventMouseButton:
-			game.help.battle2 = false
+		elif game.help.has("battle2") and event is InputEventMouseButton:
+			game.help.erase("battle2")
 			green_enemy = -1
 			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
 			tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
@@ -972,7 +972,7 @@ func _on_Timer_timeout():
 var tween:Tween
 func enemy_attack():
 	if game:
-		if game.help.battle:
+		if game.help.has("battle"):
 			tween = Tween.new()
 			add_child(tween)
 			$UI/Help2.modulate.a = 0
@@ -981,7 +981,7 @@ func enemy_attack():
 			tween.interpolate_property($UI/Help2, "rect_position", Vector2(448, 263), Vector2(448, 248), 0.5)
 			tween.start()
 			return
-		elif game.help.battle2 and curr_en == green_enemy:
+		elif game.help.has("battle2") and curr_en == green_enemy:
 			tween = Tween.new()
 			add_child(tween)
 			$Help.text = tr("GREEN_ENEMY_HELP")

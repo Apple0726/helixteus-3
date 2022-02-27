@@ -272,6 +272,7 @@ __meta__ = {
 }
 
 [node name="GAME" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -482,12 +483,21 @@ __meta__ = {
 }
 
 [node name="MISC" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
 __meta__ = {
 "_edit_lock_": true
+}
+
+[node name="OPCursor" type="CheckBox" parent="TabContainer/MISC"]
+margin_left = 576.0
+margin_top = 43.0
+margin_right = 695.0
+margin_bottom = 83.0
+text = "op cursor"
+__meta__ = {
+"_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC"]
@@ -559,6 +569,7 @@ __meta__ = {
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="pressed" from="TabContainer/GAME/ResetTooltips" to="." method="_on_ResetTooltips_pressed"]
+[connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
 [connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]

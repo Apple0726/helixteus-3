@@ -68,7 +68,7 @@ func on_slot_over (_name:String, num:int, slot:int):
 	item_hovered = _name
 	item_stack = num
 	game.help_str = "inventory_shortcuts"
-	if game.help.inventory_shortcuts and not game.tutorial:
+	if game.help.has("inventory_shortcuts") and not game.tutorial:
 		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
 	game.show_tooltip(st)
 
@@ -149,7 +149,7 @@ func _on_Materials_pressed():
 	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats)
 	for mat in hbox_data:
-		if game.show.has(mat.name) and not game.show[mat.name]:
+		if not game.show.has(mat.name):
 			mat.rsrc.visible = false
 			continue
 		var texture = mat.rsrc.get_node("Texture")
@@ -167,7 +167,7 @@ func _on_Metals_pressed():
 	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mets)
 	for met in hbox_data:
-		if game.show.has(met.name) and not game.show[met.name]:
+		if not game.show.has(met.name):
 			met.rsrc.visible = false
 			continue
 		var texture = met.rsrc.get_node("Texture")
@@ -185,7 +185,7 @@ func _on_Atoms_pressed():
 	particles_hbox.visible = false
 	var atom_data = Helper.put_rsrc(grid, 48, game.atoms)
 	for atom in atom_data:
-		if game.show.has(atom.name) and not game.show[atom.name]:
+		if not game.show.has(atom.name):
 			atom.rsrc.visible = false
 	$Control/VBox/BuySell.visible = false
 

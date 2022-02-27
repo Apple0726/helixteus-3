@@ -111,7 +111,7 @@ func refresh():
 func on_rover_enter(rov:Dictionary, rov_id:int):
 	rover_over_id = rov_id
 	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [Helper.format_num(rov.HP), Helper.format_num(rov.atk), Helper.format_num(rov.def), Helper.format_num(rov.weight_cap), Helper.clever_round(rov.spd)]
-	if game.help.rover_shortcuts:
+	if game.help.has("rover_shortcuts"):
 		rover_has_items = false
 		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]
 		for inv in rov.inventory:

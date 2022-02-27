@@ -8,10 +8,10 @@ func _ready():
 	refresh()
 
 func refresh():
-	$VBoxContainer/Construct.visible = game.show.construct_button
-	$VBoxContainer/PlaceSoil.visible = game.show.plant_button
+	$VBoxContainer/Construct.visible = game.show.has("construct_button")
+	$VBoxContainer/PlaceSoil.visible = game.show.has("plant_button")
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
-	$VBoxContainer/Mine.visible = game.show.mining
+	$VBoxContainer/Mine.visible = game.show.has("mining")
 
 func _input(event):
 	refresh()

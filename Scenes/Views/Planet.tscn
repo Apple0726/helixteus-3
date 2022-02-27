@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scenes/WhiteRect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/LakeTileSet.tres" type="TileSet" id=2]
@@ -38,6 +38,18 @@ shader_param/saturation = 1.0
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	COLOR.rgb = vec3(pow(length(c.rgb), 0.7) / 2.0);
+	COLOR.a = c.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
 
 [sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;
@@ -79,6 +91,13 @@ cell_quadrant_size = 100
 format = 1
 
 [node name="Soil" type="TileMap" parent="."]
+tile_set = SubResource( 2 )
+cell_size = Vector2( 200, 200 )
+cell_quadrant_size = 100
+format = 1
+
+[node name="Ash" type="TileMap" parent="."]
+material = SubResource( 6 )
 tile_set = SubResource( 2 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100

@@ -474,16 +474,10 @@ var molar_mass = {	"H":1.008,
 var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outside starting system), tier 2 modifiers cannot be applied to caves in starting galaxy
 	"enemy_attack_rate":{"double_treasure_at":1.2, "tier":1},
 	"enemy_number":{"double_treasure_at":1.3, "tier":1},
-	"enemy_projectile_size":{"double_treasure_at":3, "tier":1, "min":0.2, "max":4},
 	"enemy_HP":{"double_treasure_at":1.5, "tier":1},
 	"chest_number":{"double_treasure_at":0.5, "no_treasure_mult":true, "tier":1},
 	"darkness":{"double_treasure_at":2.0, "tier":1, "max":4},
+	"enemy_size":{"double_treasure_at":0.8, "tier":2, "min":0.2, "one_direction":1},
 	"rover_size":{"double_treasure_at":0.75, "tier":2},
-	"minimap_disabled":{"treasure_if_true":2.0, "tier":2},
+	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
-
-var cave_enemy_proj:Array = [
-	{"dmg_mult":2.0, "mod":Color.white * 1.1},
-	{"dmg_mult":1.3, "mod":Color(1.5, 1.5, 0.75)},
-	{"dmg_mult":3.5, "mod":Color.white * 1.1},
-]

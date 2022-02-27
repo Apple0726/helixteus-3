@@ -66,7 +66,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			texture.texture_normal = Data.time_icon
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
-			if obj == "silicon" and not game.show.silicon:
+			if obj == "silicon" and not game.show.has("silicon"):
 				tooltip += "\n%s" % [tr("HOW2SILICON")]
 			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
 		elif game.mets.has(obj):
@@ -444,7 +444,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		var amount = contents[content]
 		if game.mats.has(content):
 			game.mats[content] += amount
-			if not game.show.plant_button and content == "soil":
+			if not game.show.has("plant_button") and content == "soil":
 				game.show.plant_button = true
 			if not game.help.has("materials"):
 				if not is_MM and is_instance_valid(game.tutorial):
@@ -629,14 +629,14 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 
 #solar panels
 func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
-	return clever_round(value * temp * au_mult / 273.0)
+	return value * temp * au_mult / 273.0
 
 #atm extractor
 func get_AE_production(pressure:float, value:float):
-	return clever_round(value * pressure)
+	return value * pressure
 
 func get_PCNC_production(pressure:float, value:float):
-	return clever_round(value / pressure)
+	return value / pressure
 
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
@@ -658,7 +658,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			#Number of seconds needed per mineral
 			var prod:float
 			if tile.bldg.name == "SP":
-				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 1.0))
+			elif tile.bldg.name == "ME":
+				prod = 1000 / tile.bldg.path_1_value / (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
 			else:
 				prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
@@ -926,13 +928,14 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 			if tile.has("auto_collect"):
 				if tile.bldg.name == "ME":
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+					var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += prod * tile.auto_collect / 100.0 * mult
+					game.autocollect.rsrc.minerals += prod * tile.auto_collect / 100.0 * mult
 				elif tile.bldg.name == "PP":
 					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 				elif tile.bldg.name == "SP":
-					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
 					game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * tile.auto_collect / 100.0 * mult
 					game.autocollect.rsrc.energy += prod * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
@@ -993,19 +996,20 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						if _tile.has("bldg"):
 							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0
 							if _tile.bldg.name == "ME":
-								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
-								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
+								var prod:float = _tile.bldg.path_1_value * (_tile.plant.ash if _tile.has("plant") and _tile.plant.has("ash") else 1.0)
+								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += prod * diff / 100.0 * _mult
+								game.autocollect.rsrc.minerals += prod * diff / 100.0 * _mult
 							elif _tile.bldg.name == "PP":
 								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
 							elif _tile.bldg.name == "SP":
-								var prod:float = Helper.get_SP_production(p_i.temperature, _tile.bldg.path_1_value, 1 + _tile.aurora.au_int if _tile.has("aurora") else 1.0)
+								var prod:float = Helper.get_SP_production(p_i.temperature, _tile.bldg.path_1_value, 1.0 + (_tile.aurora.au_int if _tile.has("aurora") else 0.0))
 								game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * diff / 100.0 * _mult
 								game.autocollect.rsrc.energy += prod * diff / 100.0 * _mult
 						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
-			if game.tutorial:
+			if game.tutorial and game.help.tutorial < 26:
 				game.HUD.refresh()
 	return update_boxes
 
@@ -1182,21 +1186,25 @@ func get_star_modulate (star_class:String):
 func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	var bldg:String = dict.bldg.name
 	var mult:float = get_prod_mult(dict)
-	var IR_mult:float = dict.bldg.IR_mult
 	if bldg in ["MM", "GH", "AMN", "SPR"]:
 		n = 1
 	if path == 1:
 		if bldg == "SP":
-			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, 1 + dict.aurora.au_int if dict.has("aurora") else 1.0) * n
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, 1.0 + (dict.aurora.au_int if dict.has("aurora") else 0.0)) * n)
+		elif bldg == "AE":
+			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value))
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg in ["PC", "NC"]:
 			return dict.bldg.path_1_value * mult * n / p_i.pressure
 		elif bldg == "EC":
 			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
+		elif bldg == "ME":
+			return dict.bldg.path_1_value * (dict.plant.ash if dict.has("plant") and dict.plant.has("ash") else 1.0) * mult * n
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
+		var IR_mult:float = dict.bldg.IR_mult
 		if Data.path_2[bldg].is_value_integer:
 			return round(dict.bldg.path_2_value * IR_mult * n)
 		else:

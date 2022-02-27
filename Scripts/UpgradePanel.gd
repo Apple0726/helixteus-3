@@ -110,13 +110,15 @@ func update(changing_paths:bool = false):
 	auto_speedup = $AutoSpeedup.pressed
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
 	var same_lv = true
-	var first_tile
-	var first_tile_bldg_info
+	var first_tile:Dictionary
+	var first_tile_bldg:Dictionary
+	var first_tile_bldg_info:Dictionary
 	var all_tiles_constructing = true
 	var num:int = 1
 	if planet.empty():
-		first_tile = game.tile_data[ids[0]].bldg
-		bldg = first_tile.name
+		first_tile = game.tile_data[ids[0]]
+		first_tile_bldg = game.tile_data[ids[0]].bldg
+		bldg = first_tile_bldg.name
 		if Data[path_str][bldg].has("cap"):
 			next_lv.allow_greater = false
 			next_lv.max_value = Data[path_str][bldg].cap
@@ -133,7 +135,7 @@ func update(changing_paths:bool = false):
 				var tile = game.tile_data[id]
 				var tile_bldg:String = tile.bldg.name
 				var lv_curr = tile.bldg[path_str]
-				if lv_curr != first_tile[path_str]:
+				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
 				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
@@ -156,8 +158,9 @@ func update(changing_paths:bool = false):
 			$DivBy.text = tr("DIV_BY") % Helper.clever_round(planet.cost_div)
 		else:
 			$DivBy.text = ""
-		first_tile = planet.bldg
-		bldg = first_tile.name
+		first_tile = planet
+		first_tile_bldg = planet.bldg
+		bldg = first_tile_bldg.name
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
 		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
@@ -181,9 +184,9 @@ func update(changing_paths:bool = false):
 		else:
 			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 	if same_lv:
-		current_lv.text = tr("LEVEL") + " %s" % [first_tile[path_str]]
+		current_lv.text = tr("LEVEL") + " %s" % [first_tile_bldg[path_str]]
 		current.text = ""
-		set_bldg_value(first_tile_bldg_info, first_tile, first_tile[path_str], num, current, false)
+		set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], num, current, false)
 	else:
 		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
@@ -205,33 +208,35 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	var IR_mult:float = 1.0
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
-		IR_mult = first_tile.IR_mult
+		IR_mult = first_tile.bldg.IR_mult
+		prints(curr_value * IR_mult * game.u_i.time_speed)
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+	elif bldg == "ME" and path_selected == 1:
+		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.plant.ash if first_tile.has("plant") and first_tile.plant.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
+		IR_mult = first_tile.bldg.IR_mult
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
-			IR_mult = first_tile.IR_mult
+			IR_mult = first_tile.bldg.IR_mult
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
 	curr_value *= IR_mult
-	if first_tile_bldg_info.is_value_integer:
-		curr_value = round(curr_value)
-	else:
-		curr_value = Helper.clever_round(curr_value)
-	if next:
-		new_base_value = curr_value / IR_mult
 	if first_tile_bldg_info.has("time_based"):
 		curr_value *= game.u_i.time_speed
+	if first_tile_bldg_info.is_value_integer:
+		curr_value = round(curr_value)
+	if next:
+		new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
 	if not planet.empty():
 		curr_value *= n
 	if bldg == "CBD" and path_selected == 3:
-		game.add_text_icons(text_to_modify, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value)}), rsrc_icon, 20)
+		game.add_text_icons(text_to_modify, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value, true)}), rsrc_icon, 20)
 	else:
-		game.add_text_icons(text_to_modify, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value)], rsrc_icon, 20)
+		game.add_text_icons(text_to_modify, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true)], rsrc_icon, 20)
 	
 func bldg_value(base_value, lv:int, pw:float = 1.15):
-	return Helper.clever_round(base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1))
+	return base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1)
 
 func _on_Path1_pressed():
 	path_selected = 1
@@ -322,14 +327,15 @@ func _on_Upgrade_pressed():
 					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 					if tile.has("auto_collect"):
 						if tile.bldg.name == "ME":
-							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-							game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+							var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * tile.auto_collect / 100.0 * mult
+							game.autocollect.rsrc.minerals -= prod * tile.auto_collect / 100.0 * mult
 						elif tile.bldg.name == "PP":
 							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
 						elif tile.bldg.name == "SP":
 							var p_i:Dictionary = game.planet_data[game.c_p]
-							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1 + tile.aurora.au_int if tile.has("aurora") else 1.0)
+							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
 							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * tile.auto_collect / 100.0 * mult
 							game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
 					if tile.bldg.name == "RL":

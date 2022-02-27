@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.23.1"
+const VERSION:String = "v0.24"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -246,7 +246,7 @@ var cave_filters = {
 var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"glass":{"value":1000},
 					"sand":{"value":8},
-					#"clay":{"value":12},
+					"clay":{"value":12},
 					"soil":{"value":14},
 					"cellulose":{"value":100},
 					"silicon":{"value":80},
@@ -481,7 +481,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "18 Feb 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -737,7 +737,7 @@ func load_univ():
 			if file.file_exists("user://%s/Univ%s/Superclusters/%s.hx3" % [c_sv, c_u, c_sc]):
 				cluster_data = open_obj("Superclusters", c_sc)
 			if help.tutorial >= 26:
-				tutorial = load("res://Scenes/Tutorial.tscn").instance()
+				tutorial = preload("res://Scenes/Tutorial.tscn").instance()
 				tutorial.visible = false
 				tutorial.tut_num = help.tutorial
 				$UI.add_child(tutorial)
@@ -977,7 +977,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
-				"clay":0,
+				#"clay":0,
 				"soil":0,
 				"cellulose":0,
 				"silicon":0,
@@ -1052,30 +1052,9 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	}#Levels of mineral upgrades
 
 	#Measures to not overwhelm beginners. false: not visible
-	show = {	"minerals":false,
-				"stone":false,
-				"mining":false,
-				"shop":false,
-				"SP":false,
-				"mining_layer":false,
-				"construct_button":not tut,
-				"plant_button":false,
-				"vehicles_button":false,
-				"s_bk_button":false,#system_bookmark_button
-				"g_bk_button":false,#galaxy_bookmark_button
-				"auroras":false,
-				"bookmarks":false,
-				"dimensions":false,
-	}
-	for mat in mats:
-		show[mat] = false
-	for met in mets:
-		show[met] = false
-	for atom in atoms:
-		show[atom] = false
-	for particle in particles:
-		show[particle] = false
-
+	show = {}
+	if not tut:
+		show.construct_button = true
 	#Stores information of all objects discovered
 	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
@@ -1182,7 +1161,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	fn_save_game()
 	if not is_a_parent_of(HUD):
 		$UI.add_child(HUD)
-		HUD.refresh()
+	HUD.refresh()
 	if tut:
 		tutorial = load("res://Scenes/Tutorial.tscn").instance()
 		tutorial.visible = false
@@ -1663,10 +1642,10 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				add_mining()
 			"science_tree":
 				add_science_tree()
-				if help.science_tree:
+				if help.has("science_tree"):
 					$UI/Help.visible = true
 					$UI/Help.text = tr("SC_TREE_ZOOM")
-					help.science_tree = false
+					help.erase("science_tree")
 			"cave":
 				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
 					$UI.remove_child(HUD)
@@ -2944,37 +2923,15 @@ func generate_tiles(id:int):
 	var pulsation:float = rand_range(0.4, 1)
 	var amplitude:float = 0.85
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
-	var ship_signal:bool = second_ship_hints.spawned_at_p == -1 and len(ship_data) == 1 and c_g_g == 0 and c_s_g != 0
-	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
-	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
-	var op_aurora:bool = hypergiant_system and id == 3
-	var cross_aurora:bool = hypergiant_system and id == 4
 	var num_auroras:int = 2
-#	if op_aurora:
-#		fourth_ship_hints.op_grill_planet = c_p_g
-#		thiccness = 1
-#		num_auroras = 5
-#	if cross_aurora:
-#		fourth_ship_hints.boss_planet = c_p_g
-#		pulsation = 0.5
-#		thiccness = 1
-#		amplitude = 1.3
-#	if dark_matter_system:
-#		num_auroras = 0
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	for i in num_auroras:
-		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15) or ship_signal or op_aurora or cross_aurora):
+		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15)):
 			#au_int: aurora_intensity
-			var au_int = Helper.clever_round((rand_range(80000, 85000) if cross_aurora else rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp)
-			if op_aurora:
-				au_int = Helper.clever_round(rand_range(8, 8.5))
+			var au_int = Helper.clever_round((rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp)
 			if tile_from == -1:
-				if cross_aurora:
-					tile_from = wid / 2
-					tile_to = wid / 2
-				else:
-					tile_from = Helper.rand_int(0, 1 if ship_signal else wid)
-					tile_to = Helper.rand_int(0, wid)
+				tile_from = Helper.rand_int(0, wid)
+				tile_to = Helper.rand_int(0, wid)
 			if rand < 0.5:#Vertical
 				for j in wid:
 					var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -3000,9 +2957,6 @@ func generate_tiles(id:int):
 				diff = thiccness + 1
 			else:
 				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(rand_range(-1, 1))
-			if cross_aurora:
-				rand = 1 - rand
-				diff = 0
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_coldest_star_temp(c_s)
@@ -3012,9 +2966,6 @@ func generate_tiles(id:int):
 	noise.period = p_i.liq_period#Higher period = bigger lakes
 	var lake_1_phase = "G"
 	var lake_2_phase = "G"
-	if cross_aurora:
-		p_i.erase("lake_1")
-		p_i.erase("lake_2")
 	if p_i.has("lake_1"):
 		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
 		var phase_1 = phase_1_scene.instance()
@@ -3025,8 +2976,9 @@ func generate_tiles(id:int):
 		var phase_2 = phase_2_scene.instance()
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		phase_2.free()
-	var second_ship_cave_placed:bool = false
-	var relic_cave_id:int = -1
+	var volcano_probability:float = 0.0
+	if randf() < log(pow(coldest_star_temp, -0.15) + 1.0):
+		volcano_probability = min(1.0 / sqrt(randf()) / pow(wid, 2), 0.15)
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
@@ -3047,11 +2999,7 @@ func generate_tiles(id:int):
 #				continue
 			if home_planet:
 				continue
-			var normal_cond:bool = not op_aurora and not cross_aurora and randf() < 0.1 / pow(wid, 0.9)
-			var op_aurora_cond:bool = op_aurora and tile_data[t_id] and tile_data[t_id].has("aurora")
-			var ship_cond:bool = (ship_signal and not second_ship_cave_placed and tile_data[t_id] and tile_data[t_id].has("aurora"))
-			var boss_cave:bool = cross_aurora and t_id == wid * wid / 2
-			if normal_cond:# or op_aurora_cond or ship_cond or boss_cave:
+			if randf() < 0.1 / pow(wid, 0.9):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				var floor_size:int = rand_range(25 * min(wid / 8.0, 1), 40 * rand_range(1, 1 + wid / 100.0))
 				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
@@ -3072,7 +3020,11 @@ func generate_tiles(id:int):
 						var key:String = modifier_keys[0]
 						if modifiers2[key].has("double_treasure_at"):
 							var mod_power:float = log(1.0 / randf() + 0.5) / max(range_lerp(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
-							var direction:float = sign(randf() - 0.5)
+							var direction:float
+							if modifiers2[key].has("one_direction"):
+								direction = modifiers2[key].one_direction
+							else:
+								direction = sign(randf() - 0.5)
 							modifiers[key] = pow(modifiers2[key].double_treasure_at, mod_power * direction)
 							if modifiers2[key].has("min") and modifiers[key] < modifiers2[key].min:
 								modifiers[key] = modifiers2[key].min
@@ -3081,22 +3033,34 @@ func generate_tiles(id:int):
 						elif randf() < 0.5:
 							modifiers[key] = modifiers2[key].treasure_if_true
 						modifiers2.erase(key)
-#				if ship_cond:
-#					relic_cave_id = t_id
-#					second_ship_cave_placed = true
-#					tile_data[t_id].cave = {"num_floors":3, "floor_size":20, "special_cave":5}
-#				elif boss_cave:
-#					tile_data[t_id].aurora.au_int *= 4 * tile_data[t_id].aurora.au_int
-#					tile_data[t_id].cave = {"num_floors":5, "floor_size":25, "special_cave":4}
-#				else:
 				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
 				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period}
 				if not modifiers.empty():
 					tile_data[t_id].cave.modifiers = modifiers
 				continue
-			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
-			if not cross_aurora and randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
+			if randf() < volcano_probability:
+				var VEI:float = Helper.clever_round(log(1e6/(coldest_star_temp * randf()) + exp(3.0)))
+				var size:int = stepify(VEI - 2, 2) + 1
+				var half_size:int = size / 2
+				for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
+					for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
+						var t_id2:int = k % wid + l * wid
+						if tile_data[t_id2] and tile_data[t_id2].has("lake"):
+							continue
+						if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
+							tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
+							if tile_data[t_id2].has("plant"):
+								tile_data[t_id2].plant.ash = max(VEI, tile_data[t_id2].plant.ash)
+							else:
+								tile_data[t_id2].plant = {"ash":VEI}
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+				tile_data[t_id].volcano = {"VEI":VEI}
+				continue
+			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
+			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
+				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+				if tile_data[t_id].has("plant"):
+					continue
 				tile_data[t_id].crater = {}
 				tile_data[t_id].crater.variant = Helper.rand_int(1, 2)
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
@@ -3118,62 +3082,13 @@ func generate_tiles(id:int):
 							earn_achievement("exploration", 18)
 						if not achievement_data.exploration[19] and met == "mythril":
 							earn_achievement("exploration", 19)
-	if relic_cave_id != -1:
-		erase_tile(relic_cave_id + wid)
-		tile_data[relic_cave_id + wid].ship_locator_depth = Helper.rand_int(4, 7)
-#	if p_i.has("second_ship"):
-#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#		erase_tile(random_tile)
-#		tile_data[random_tile].ship = true
-#	elif len(ship_data) == 2 and c_c_g == 0:
-#		if third_ship_hints.ship_sys_id == c_s and third_ship_hints.ship_spawned_at_p == -1:
-#			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#			while random_tile / wid in [0, wid - 1] or random_tile % wid in [0, wid - 1]:
-#				random_tile = Helper.rand_int(1, len(tile_data)) - 1
-#			objective = {"type":ObjectiveType.COLLECT_PARTS, "id":-1, "current":0, "goal":5}
-#			if third_ship_hints.parts[4]:
-#				objective.current = 1
-#			erase_tile(random_tile)
-#			tile_data[random_tile].ship = true
-#			erase_tile(random_tile - wid)
-#			tile_data[random_tile - wid].cave = {"floor_size":36, "num_floors":9, "special_cave":0}#Normal cave, except... you're tiny
-#			erase_tile(random_tile + wid)
-#			tile_data[random_tile + wid].cave = {"floor_size":16, "num_floors":30, "special_cave":1}#A super deep cave devoid of everything
-#			erase_tile(random_tile - 1)
-#			tile_data[random_tile - 1].cave = {"floor_size":77, "num_floors":3, "special_cave":2}#Huge cave
-#			erase_tile(random_tile + 1)
-#			tile_data[random_tile + 1].cave = {"floor_size":50, "num_floors":5, "special_cave":3}#Big maze cave where minimap is disabled
-#			third_ship_hints.ship_spawned_at_p = c_p_g
-#		elif third_ship_hints.ship_part_id == c_s and third_ship_hints.part_spawned_at_p == -1:
-#			var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#			erase_tile(random_tile)
-#			tile_data[random_tile].ship_part = true
-#			third_ship_hints.part_spawned_at_p = c_p_g
-#			p_i.mantle_start_depth = Helper.rand_int(25000, 27000)
-#	elif hypergiant_system and id == 2:
-#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#		erase_tile(random_tile)
-#		tile_data[random_tile].artifact = true
-#	elif dark_matter_system:
-#		erase_tile(12)
-#		tile_data[12].diamond_tower = {"floor_size":40, "num_floors":25}
-#	elif c_c_g == 1 and p_i.temperature < 500 and p_i.pressure > 70 and not fourth_ship_hints.ruins_spawned:
-#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#		erase_tile(random_tile)
-#		tile_data[random_tile].ruins = 1
-#		fourth_ship_hints.ruins_spawned = true
-#		long_popup(tr("UNIQUE_STRUCTURE_NOTICE"), tr("UNIQUE_STRUCTURE"))
-#	elif hypergiant_system and id == 1:
-#		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
-#		erase_tile(random_tile)
-#		tile_data[random_tile].ruins = 2
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#				local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
 		p_i.wormhole = true
-	elif c_s_g != 0 and not second_ship_cave_placed and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
+	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
@@ -3778,7 +3693,10 @@ func _input(event):
 	
 	#J to hide help
 	if Input.is_action_just_released("hide_help") and help_str != "":
-		help[help_str] = not help[help_str]
+		if help.has(help_str):
+			help.erase(help_str)
+		else:
+			help[help_str] = true
 		hide_tooltip()
 		hide_adv_tooltip()
 		$UI/Panel.visible = false
@@ -4073,7 +3991,6 @@ func hide_ship_locator():
 	
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite").texture = texture
-	print(item_to_use)
 	item_cursor.get_node("Num").text = "x " + String(item_to_use.num)
 	#update_item_cursor()
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)

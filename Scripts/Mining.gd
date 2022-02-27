@@ -42,11 +42,11 @@ func _ready():
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
-	$Help.visible = game.help.mining
-	circ.visible = not game.help.mining
-	$RsrcMinedBtn.visible = not game.help.mining
+	$Help.visible = game.help.has("mining")
+	circ.visible = not game.help.has("mining")
+	$RsrcMinedBtn.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
-	$LayerInfo.visible = game.show.mining_layer
+	$LayerInfo.visible = game.show.has("mining_layer")
 	if $LayerInfo.visible:
 		$LayerAnim.play("Layer fade")
 		$LayerAnim.seek(1, true)
@@ -212,7 +212,7 @@ func place_crumbles(num:int, sc:float, v:float):
 
 func hide_help():
 	$Help.visible = false
-	game.help.mining = false
+	game.help.erase("mining")
 	var tween:Tween = Tween.new()
 	circ.modulate.a = 0
 	circ.visible = true

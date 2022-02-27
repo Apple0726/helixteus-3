@@ -222,18 +222,16 @@ func refresh():
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
 		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), Data.costs.GH.glass * game.engineering_bonus.BCM]
-	minerals.visible = game.show.minerals
-	stone.visible = game.show.stone
-	shop.visible = game.show.shop
-	SP.visible = game.show.SP
-	sc_tree.visible = game.show.SP
-	$Buttons/Vehicles.visible = game.show.vehicles_button
+	minerals.visible = game.show.has("minerals")
+	stone.visible = game.show.has("stone")
+	shop.visible = game.show.has("shop")
+	SP.visible = game.show.has("SP")
+	sc_tree.visible = game.show.has("SP")
+	$Buttons/Vehicles.visible = game.show.has("vehicles_button")
 	craft.visible = game.show.has("materials")
 	ships.visible = len(game.ship_data) > 0
-	MU.visible = game.show.minerals
-	$Bottom/Panel.visible = game.show.minerals and game.c_v != "science_tree"
-	$ShipLocator.visible = len(game.ship_data) == 1 and game.second_ship_hints.ship_locator
-	$Ship2Map.visible = len(game.ship_data) == 2 and not game.third_ship_hints.has("map_found_at")
+	MU.visible = game.show.has("minerals")
+	$Bottom/Panel.visible = game.show.has("minerals") and game.c_v != "science_tree"
 	update_XP()
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		$Buttons/Ships.shortcut.shortcut.action = "Z"
@@ -336,9 +334,9 @@ func refresh():
 		tween.start()
 	else:
 		$Top/Objectives.rect_position.y = 4
-	$Bookmarks.visible = game.show.bookmarks
-	system_b_btn.visible = game.show.s_bk_button
-	galaxy_b_btn.visible = game.show.g_bk_button
+	$Bookmarks.visible = game.show.has("bookmarks")
+	system_b_btn.visible = game.show.has("s_bk_button")
+	galaxy_b_btn.visible = game.show.has("g_bk_button")
 	cluster_b_btn.visible = game.supercluster_data[0].has("discovered")
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmarked")
@@ -462,7 +460,7 @@ var slot_over = -1
 func on_slot_over(i:int):
 	slot_over = i
 	game.help_str = "hotbar_shortcuts"
-	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.hotbar_shortcuts else ""
+	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.has("hotbar_shortcuts") else ""
 	var num = " (%s)" % [i + 1] if i < 10 else ""
 	game.show_tooltip(Helper.get_item_name(game.hotbar[i]) + num + txt)
 
@@ -555,7 +553,7 @@ func _on_Ships_mouse_entered():
 
 func _on_AutosaveLight_mouse_entered():
 	game.help_str = "autosave_light_desc"
-	if game.help.autosave_light_desc:
+	if game.help.has("autosave_light_desc"):
 		game.show_tooltip("%s\n%s" % [tr("AUTOSAVE_LIGHT_DESC"), tr("HIDE_HELP")])
 
 func _on_ShipLocator_pressed():
@@ -821,7 +819,7 @@ func _on_SwitchBtn_mouse_entered():
 	var view_str:String = ""
 	if game.c_v == "universe":
 		view_str = tr("VIEW_DIMENSION")
-		if not game.show.dimensions:
+		if not game.show.has("dimensions"):
 			view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
 	elif game.c_v == "supercluster":
 		view_str = tr("VIEW_UNIVERSE")
@@ -864,7 +862,7 @@ func _on_SwitchBtn_pressed():
 			if u_i.lv >= 70:
 				game.switch_view("universe")
 		"universe":
-			if game.show.dimensions:
+			if game.show.has("dimensions"):
 				game.switch_view("dimension")
 
 

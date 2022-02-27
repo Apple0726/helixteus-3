@@ -62,7 +62,7 @@ func _on_Slot_mouse_entered(type:String):
 		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[CC].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
 	if txt != "":
 		game.help_str = "rover_inventory_shortcuts"
-		if game.help.rover_inventory_shortcuts:
+		if game.help.has("rover_inventory_shortcuts"):
 			txt += "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")]
 		game.show_tooltip(txt)
 
@@ -70,7 +70,7 @@ func _on_InvSlot_mouse_entered(txt:String, index:int, _right_inv:bool = false):
 	slot_over = index
 	right_inv = _right_inv
 	game.help_str = "rover_inventory_shortcuts"
-	if game.help.rover_inventory_shortcuts:
+	if game.help.has("rover_inventory_shortcuts"):
 		if txt != "":
 			game.show_tooltip(txt + "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")])
 		else:
@@ -123,7 +123,7 @@ func _on_Button_pressed():
 			game.rover_data.append(rover_data)
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
-		if not game.show.vehicles_button:
+		if not game.show.has("vehicles_button"):
 			game.show.vehicles_button = true
 			if game.planet_HUD:
 				game.planet_HUD.get_node("VBoxContainer/Vehicles").visible = true

@@ -45,14 +45,14 @@ func _ready():
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
 		star.add_to_group("stars")
-	if not game or game.help.STM:
+	if not game or game.help.has("STM"):
 		if lv % 4 == 0:
 			fn_to_call = "graph_pattern"
 		else:
 			fn_to_call = "pattern_%s" % pattern
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
-	if game and not game.help.STM:
+	if game and not game.help.has("STM"):
 		pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 		if lv % 4 == 0:
 			graph_pattern()
@@ -344,7 +344,7 @@ func _process(delta):
 							fn_to_call = "pattern_%s" % pattern
 							if pattern == 4:
 								go_up_lv()
-								game.help.STM = false
+								game.help.erase("STM")
 							else:
 								show_help(tr("STM_AFTER_PATTERN_%s" % [pattern - 1]))
 						else:

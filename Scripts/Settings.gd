@@ -278,3 +278,9 @@ func _on_CaveGenInfo_toggled(button_pressed):
 		game.cave_gen_info = button_pressed
 		config.set_value("game", "cave_gen_info", button_pressed)
 		config.save("user://settings.cfg")
+
+func _on_OPCursor_toggled(button_pressed):
+	if button_pressed:
+		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
+	else:
+		Input.set_custom_mouse_cursor(null)

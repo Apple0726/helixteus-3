@@ -33,9 +33,9 @@ func _on_btn_pressed(btn_str:String):
 		var txt:String = ""
 		var time_speed:float = game.u_i.time_speed if Data.path_1.has(bldg) and Data.path_1[bldg].has("time_based") else 1.0
 		if bldg == "SP":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed))]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
 		elif bldg == "AE":
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed))]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
 		elif bldg in ["PC", "NC"]:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
 		elif Data.path_1.has(bldg):
@@ -71,9 +71,9 @@ func _on_btn_pressed(btn_str:String):
 		elif bldg.item_name == "CBD":
 			bldg.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
 		elif bldg.item_name == "GF":
-			bldg.visible = game.show.sand
+			bldg.visible = game.show.has("sand")
 		elif bldg.item_name == "SE":
-			bldg.visible = game.show.coal
+			bldg.visible = game.show.has("coal")
 		elif bldg.item_name == "MM":
 			bldg.visible = game.science_unlocked.has("AM")
 		elif bldg.item_name == "SP":
@@ -88,9 +88,9 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.universe_data[game.c_u].lv >= 50
 		elif bldg.item_name == "GH":
 			bldg.visible = game.science_unlocked.has("EGH")
-	$VBox/Tabs/Production.visible = game.show.stone
+	$VBox/Tabs/Production.visible = game.show.has("stone")
 	$VBox/Tabs/Support.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
-	$VBox/Tabs/Vehicles.visible = game.show.vehicles_button
+	$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, desc, costs, _type, _dir)

@@ -7,7 +7,7 @@ func _ready():
 	place(33, 12.9, $SuperPoint)
 
 var colors = {	"S":Color(0.85, 1, 0.85, 0.6),
-				"L":Color(0.85, 1, 0.85, 1.0),
+				"L":Color(0.7, 1, 0.7, 1.0),
 				"SC":Color(0.85, 1, 0.85, 0.3)}
 
 func place(T:float, P:float, node):

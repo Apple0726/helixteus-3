@@ -165,8 +165,8 @@ func _ready():
 				treasure_mult *= Data.cave_modifiers[modifier].treasure_if_true
 		if modifiers.has("enemy_attack_rate"):
 			enemy_attack_rate = modifiers.enemy_attack_rate
-		if modifiers.has("enemy_projectile_size"):
-			enemy_projectile_size = modifiers.enemy_projectile_size
+		if modifiers.has("enemy_size"):
+			enemy_projectile_size = modifiers.enemy_size
 		if modifiers.has("rover_size"):
 			rover_size = modifiers.rover_size
 		if modifiers.has("minimap_disabled"):
@@ -233,9 +233,9 @@ func _ready():
 	$Rover/InvBar.value = weight
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
-	if game.help.sprint_mode and speed_mult > 1:
+	if game.help.has("sprint_mode") and speed_mult > 1:
 		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
-		game.help.sprint_mode = false
+		game.help.erase("sprint_mode")
 
 func add_filter(rsrc:String):
 	if rsrc in game.mat_info.keys():
@@ -351,7 +351,6 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
-	prints(difficulty, def, rover_size)
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
 	cave_darkness = cave_floor * 0.1
 	if game.science_unlocked.has("RMK2"):
@@ -361,7 +360,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var darkness_mod:float = modifiers.darkness if modifiers.has("darkness") else 1.0
 	cave_darkness *= darkness_mod
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
-	if game.help.cave_controls:
+	if game.help.has("cave_controls"):
 		$UI2/Controls.visible = true
 		game.help_str = "cave_controls"
 		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
@@ -442,6 +441,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					if rng.randf() < log(difficulty / 100.0) / log(100) - 1.0:
 						_class += 1
 					HX_node._class = _class
+					if modifiers.has("enemy_size"):
+						HX_node.scale *= modifiers.enemy_size
 					HX_node.HP = round(15 * difficulty * rng.randf_range(0.8, 1.2) * (modifiers.enemy_HP if modifiers.has("enemy_HP") else 1.0))
 					HX_node.def = rng.randi_range(3, 6)
 					HX_node.atk = round((10 - HX_node.def) * difficulty * rng.randf_range(0.9, 1.1))
@@ -1321,6 +1322,14 @@ func attack():
 	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
 	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
 
+func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
+	if _class == 1:
+		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg * 2.0, Color.white * 1.1 / sqrt(enemy_projectile_size))
+	elif _class == 2:
+		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 1.3, Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), Data.ProjType.LASER, 1.0, {"stun":0.7})
+	elif _class == 3:
+		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 3.5, Color.white * 1.1 / sqrt(enemy_projectile_size), Data.ProjType.BUBBLE)
+
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
@@ -1552,10 +1561,16 @@ func _physics_process(delta):
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * delta * speed_mult2)
+		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_mult2)
+		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2)
 	velocity = rover.move_and_slide(velocity)
+	for i in rover.get_slide_count():
+		var collision = rover.get_slide_collision(i)
+		if not collision:
+			continue
+		elif collision.collider is Projectile:
+			collision.collider.collide(collision)
 	camera.position = rover.position + shaking
 	MM.position = minimap_center - rover.position * minimap_zoom
 
@@ -1619,7 +1634,7 @@ func _on_Difficulty_mouse_entered():
 		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
 	]
 	game.help_str = "cave_diff_info"
-	if game.help.cave_diff_info:
+	if game.help.has("cave_diff_info"):
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
 	else:
 		game.show_tooltip(tooltip)

@@ -37,12 +37,7 @@ func on_time_out():
 	shoot_timer.wait_time = 0.04 / cave_ref.time_speed / cave_ref.enemy_attack_rate
 	if (sees_player or is_aggr()) and counter < 6:
 		for i in range(0, 5):
-			if _class == 1:
-				cave_ref.add_proj(true, position, 10.0, rot + i * 2*PI/5 * sign(sgn), cave_ref.bullet_texture, atk * Data.cave_enemy_proj[0].dmg_mult, Data.cave_enemy_proj[0].mod / min(1.0, sqrt(cave_ref.enemy_projectile_size)))
-			elif _class == 2:
-				cave_ref.add_proj(true, position, 12.0, rot + i * 2*PI/5 * sign(sgn), cave_ref.laser_texture, atk * Data.cave_enemy_proj[1].dmg_mult, Data.cave_enemy_proj[1].mod / min(1.0, sqrt(cave_ref.enemy_projectile_size)), Data.ProjType.LASER, 1.0, {"stun":0.75})
-			elif _class == 3:
-				cave_ref.add_proj(true, position, 9.0, rot + i * 2*PI/5 * sign(sgn), cave_ref.bubble_texture, atk * Data.cave_enemy_proj[2].dmg_mult, Data.cave_enemy_proj[2].mod / min(1.0, sqrt(cave_ref.enemy_projectile_size)), Data.ProjType.BUBBLE)
+			cave_ref.add_enemy_proj(_class, rot + i * 2*PI/5 * sign(sgn), atk, position)
 			rot += 0.02
 	counter += 1
 	if counter >= 50:

@@ -41,8 +41,8 @@ func _ready():
 		$Panel/VBox.add_child(hbox)
 
 func refresh():
-	$Panel/VBox/AIE.visible = game.show.auroras
-	$Panel/VBox/MSMB.visible = game.show.mining
+	$Panel/VBox/AIE.visible = game.show.has("auroras")
+	$Panel/VBox/MSMB.visible = game.show.has("mining")
 	$Panel/VBox/STMB.visible = game.STM_lv >= 2
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
