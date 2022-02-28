@@ -227,7 +227,11 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	if first_tile_bldg_info.is_value_integer:
 		curr_value = round(curr_value)
 	if next:
-		new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
+		if first_tile_bldg_info.has("pw"):
+			new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
+		elif first_tile_bldg_info.has("step"):
+			new_base_value = first_tile_bldg_info.value + (next_lv.value - 1) * first_tile_bldg_info.step
+		
 	if not planet.empty():
 		curr_value *= n
 	if bldg == "CBD" and path_selected == 3:

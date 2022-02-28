@@ -881,6 +881,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"inactive_wormhole":true,
 				"cave_diff_info":true,
 				"downgrade":true,
+				"artificial_volcano":true,
 		}
 		for ach in achievements:
 			achievement_data[ach] = []
@@ -2162,26 +2163,19 @@ func generate_galaxies(id:int):
 		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
 		var rand = randf()
+		g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1 #Influences planet numbers and size
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
-			g_i.dark_matter = rand_range(0.8, 1) + dark_energy - 1 #Influences planet numbers and size
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
+			g_i.dark_matter -= 0.1
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM * u_i.charge)
-			g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
-#				if c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == -1:
-#					fourth_ship_hints.hypergiant_system_spawn_galaxy = i
-#					g_i.B_strength = e(5, -9)
-#				if c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == -1:
-#					fourth_ship_hints.dark_matter_spawn_galaxy = i
-#					g_i.dark_matter = 2.7
-#					rand = 1
 		if rand < 0.02:
 			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
 		elif rand < 0.2:
@@ -2903,6 +2897,30 @@ func get_brightest_star_luminosity(s_id):
 func make_lake(tile, state:String, lake:String, which_lake):
 	tile.lake = {"state":state, "element":lake, "type":which_lake}#type: 1 or 2
 
+func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
+	var richness:float = VEI if VEI <= 7.0 else pow(VEI - 6.0, 1.6) + 6.0
+	var size:int = stepify(VEI - 2, 2) + 1
+	var half_size:int = size / 2
+	var wid:int = Helper.get_wid(planet_data[c_p].size)
+	var i:int = t_id % wid
+	var j:int = t_id / wid
+	for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
+		for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
+			var t_id2:int = k % wid + l * wid
+			if tile_data[t_id2] and tile_data[t_id2].has("lake"):
+				continue
+			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
+				tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
+				if tile_data[t_id2].has("plant"):
+					if not tile_data[t_id2].has("cave"):
+						tile_data[t_id2].plant.ash = max(richness, tile_data[t_id2].plant.ash)
+				else:
+					tile_data[t_id2].plant = {"ash":richness}
+					if artificial:
+						tile_data[t_id2].plant.artificial_ash = true
+	tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+	tile_data[t_id].volcano = {"VEI":VEI}
+
 func generate_tiles(id:int):
 	tile_data.clear()
 	var p_i:Dictionary = planet_data[id]
@@ -2993,10 +3011,6 @@ func generate_tiles(id:int):
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
 					continue
-#			if p_i.temperature <= 1000 and randf() < 0.001:
-#				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-#				tile_data[t_id].rock = {}
-#				continue
 			if home_planet:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
@@ -3039,22 +3053,8 @@ func generate_tiles(id:int):
 					tile_data[t_id].cave.modifiers = modifiers
 				continue
 			if randf() < volcano_probability:
-				var VEI:float = Helper.clever_round(log(1e6/(coldest_star_temp * randf()) + exp(3.0)))
-				var size:int = stepify(VEI - 2, 2) + 1
-				var half_size:int = size / 2
-				for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
-					for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
-						var t_id2:int = k % wid + l * wid
-						if tile_data[t_id2] and tile_data[t_id2].has("lake"):
-							continue
-						if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
-							tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
-							if tile_data[t_id2].has("plant"):
-								tile_data[t_id2].plant.ash = max(VEI, tile_data[t_id2].plant.ash)
-							else:
-								tile_data[t_id2].plant = {"ash":VEI}
-				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				tile_data[t_id].volcano = {"VEI":VEI}
+				var VEI:float = log(1e6/(coldest_star_temp * randf()) + exp(3.0))
+				generate_volcano(t_id, VEI)
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
@@ -4327,6 +4327,8 @@ func mine_tile(tile_id:int = -1):
 			if tutorial and tutorial.tut_num == 15 and objective.empty():
 				objective = {"type":ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
 			c_t = tile_id
+			if tile_data[tile_id].has("plant"):
+				tile_data[tile_id].erase("plant")
 			switch_view("mining")
 	else:
 		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))

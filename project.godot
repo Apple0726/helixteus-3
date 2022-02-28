@@ -478,6 +478,7 @@ next_view={
 2d_physics/layer_4="Player projectiles"
 2d_physics/layer_5="Enemy projectiles"
 2d_physics/layer_6="Interactables"
+2d_physics/layer_7="Floor"
 
 [locale]
 

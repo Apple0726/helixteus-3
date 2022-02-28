@@ -13,7 +13,8 @@ onready var time_speed = game.u_i.time_speed
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
-onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult
+onready var volcano_mult:float = tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0
+onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (volcano_mult if tile.has("plant") and not tile.plant.has("artificial_ash") else 1.0)
 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
@@ -21,6 +22,7 @@ var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
 var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 
 onready var cave = $TileMap
+onready var ash = $Ash
 onready var cave_wall = $Walls
 onready var minimap_cave = $UI/Minimap/TileMap
 onready var minimap_rover = $UI/Rover
@@ -29,6 +31,7 @@ onready var MM_exit = $UI/Minimap/Exit
 onready var MM = $UI/Minimap
 onready var rover = $Rover
 onready var rover_light = $Rover/Light2D
+onready var floor_detector = $FloorCollisionDetector
 onready var camera = $Camera2D
 onready var exit = $Exit
 onready var hole = $Hole
@@ -60,6 +63,7 @@ var modifiers:Dictionary = {}
 var cave_darkness:float = 0.0
 var dont_gen_anything:bool = false
 var wormhole
+var on_ash:bool = false
 
 var velocity = Vector2.ZERO
 var max_speed = 1000
@@ -352,6 +356,7 @@ func remove_cave():
 
 func generate_cave(first_floor:bool, going_up:bool):
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
+	ash.clear()
 	cave_darkness = cave_floor * 0.1
 	if game.science_unlocked.has("RMK2"):
 		cave_darkness /= 1.1
@@ -374,7 +379,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
 	rover_light.energy = cave_darkness
-	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty)]
+	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
 		$UI2/CaveInfo/Floor.text = "%sF" % [cave_floor]
@@ -397,24 +402,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-#	if tile.cave.has("special_cave"):
-#		if tile.cave.special_cave == 5:
-#			noise.period = 20
-#		elif tile.cave.special_cave == 3:
-#			noise.period = 35
-#		elif tile.cave.special_cave == 2:
-#			noise.period = 150
-#		elif tile.cave.special_cave == 1:
-#			if cave_floor == 30:
-#				noise.period = 65
-#				cave_size = 16
-#			else:
-#				noise.period = 50 - cave_floor
-#				cave_size = 16 + cave_floor / 2
-#		elif tile.cave.special_cave == 0:
-#			noise.period = 65
-#			rover_size = 0.4
-#	else:
 	noise.period = tile.cave.period if tile.cave.has("period") else 65
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
@@ -424,10 +411,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
-			var level = rng.randf_range(-0.25, 1) if tower else noise.get_noise_2d(i * 10.0, j * 10.0)
+			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			cave.set_cell(i, j, tile_type)
-			if level > 0 or boss_cave or top_of_the_tower:
+			if level > 0:
+				if cave_floor == 1 and level < 0.5:
+					ash.set_cell(i, j, 0)
+				elif cave_floor == 2 and level < 0.2:
+					ash.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
@@ -470,31 +461,32 @@ func generate_cave(first_floor:bool, going_up:bool):
 					enemy_icon.add_to_group("enemy_icons")
 			else:
 				cave_wall.set_cell(i, j, 0)
-				if not dont_gen_anything and not tower:
-					var rand:float = rng.randf()
-					var rand2:float = rng.randf()
-					var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
-					if rand < ch:
-						var met_spawned:String = "lead"
-						var base_rarity:float = 1.0
-						for met in game.met_info:
-							var rarity:float = game.met_info[met].rarity
-							if cave_floor >= 8:
-								rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
-							if rarity > difficulty:
-								break
-							if rand2 < 1 / (pow(rarity, 0.75) + 1):
-								base_rarity = game.met_info[met].rarity
-								met_spawned = met
-						if met_spawned != "":
-							var deposit = deposit_scene.instance()
-							deposit.rsrc_texture = game.metal_textures[met_spawned]
-							deposit.rsrc_name = met_spawned
-							deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
-							add_child(deposit)
-							deposit.position = cave_wall.map_to_world(Vector2(i, j))
-							deposit.modulate *= log(base_rarity) / 4.0 + 1.0
-							deposits[String(tile_id)] = deposit
+				var rand:float = rng.randf()
+				var rand2:float = rng.randf()
+				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
+				if rand < ch:
+					var met_spawned:String = "lead"
+					var base_rarity:float = 1.0
+					for met in game.met_info:
+						var rarity:float = game.met_info[met].rarity
+						if cave_floor >= 8:
+							rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
+						if rarity > difficulty:
+							break
+						if rand2 < 1 / (pow(rarity, 0.75) + 1):
+							base_rarity = game.met_info[met].rarity
+							met_spawned = met
+					if met_spawned != "":
+						var deposit = deposit_scene.instance()
+						deposit.rsrc_texture = game.metal_textures[met_spawned]
+						deposit.rsrc_name = met_spawned
+						deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
+						add_child(deposit)
+						deposit.position = cave_wall.map_to_world(Vector2(i, j))
+						deposit.modulate *= log(base_rarity) / 4.0 + 1.0
+						deposits[String(tile_id)] = deposit
+	if not ash.get_used_cells().empty():
+		ash.update_bitmask_region()
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, -1, 1)
@@ -1105,22 +1097,7 @@ func _input(event):
 							show_notif = true
 							remainders[rsrc] = remainder
 					else:
-						for i in len(inventory):
-							var slot = slots[i]
-							if inventory[i].empty():
-								inventory[i].type = "item"
-								inventory[i].name = rsrc
-								slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
-								slot.get_node("Label").text = Helper.format_num(contents[rsrc], false, 3)
-								inventory[i].num = contents[rsrc]
-								game.show[rsrc] = true
-								break
-							if inventory[i].has("name") and rsrc == inventory[i].name:
-								inventory[i].num += contents[rsrc]
-								slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
-								break
-							elif i == len(inventory) - 1:
-								remainders[rsrc] = contents[rsrc]
+						add_to_inventory(rsrc, contents[rsrc], remainders)
 				if not remainders.empty():
 					chests[active_chest].contents = remainders.duplicate(true)
 					partially_looted_chests[cave_floor - 1][String(active_chest)] = remainders.duplicate(true)
@@ -1180,6 +1157,24 @@ func _input(event):
 		if Input.is_action_just_released("hide_help"):
 			$UI2/Controls.visible = false
 		update_ray()
+
+func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
+	for i in len(inventory):
+		var slot = slots[i]
+		if inventory[i].empty():
+			inventory[i].type = "item"
+			inventory[i].name = rsrc
+			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
+			slot.get_node("Label").text = Helper.format_num(content, false, 3)
+			inventory[i].num = content
+			game.show[rsrc] = true
+			break
+		if inventory[i].has("name") and rsrc == inventory[i].name:
+			inventory[i].num += content
+			slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
+			break
+		elif i == len(inventory) - 1:
+			remainders[rsrc] = content
 
 func exit_cave():
 	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
@@ -1400,33 +1395,31 @@ func hit_rock(item:Dictionary, _tile_highlight, delta):
 			game.stats_global.tiles_mined_caves += 1
 			var map_pos = cave_wall.world_to_map(_tile_highlight.position)
 			var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
+			if volcano_mult > 1.0:
+				rsrc.minerals = rand_range(2, 3) * pow(difficulty, 1.2)
 			#var wall_type = cave_wall.get_cellv(map_pos)
-			if not dont_gen_anything:
-				for mat in p_i.surface.keys():
-					if randf() < p_i.surface[mat].chance / 2.5:
-						var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
-						if amount < 1:
-							continue
-						rsrc[mat] = amount
-			if tower:
-				rsrc = {"diamond":Helper.rand_int(1600, 1700)}
+			for mat in p_i.surface.keys():
+				if randf() < p_i.surface[mat].chance / 2.5:
+					var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
+					rsrc[mat] = amount
 			if deposits.has(st):
 				var deposit = deposits[st]
 				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
-				remove_child(deposit)
 				deposit.queue_free()
 				deposits.erase(st)
 			var remainder:float = 0
-			var rsrc2:Dictionary = rsrc.duplicate(true)
-			for r in rsrc2:
+			for r in rsrc.keys():
 				if game.cave_filters.has(r):
 					if game.cave_filters[r]:
 						rsrc.erase(r)
+						continue
 				else:
 					game.cave_filters[r] = false
-					game.show[r] = true
-					add_filter(r)
-				if rsrc.has(r):
+				game.show[r] = true
+				add_filter(r)
+				if r == "minerals":
+					add_to_inventory(r, rsrc[r], {})
+				else:
 					rsrc[r] *= game.u_i.planck
 					remainder += add_weight_rsrc(r, rsrc[r])
 			if remainder != 0:
@@ -1561,8 +1554,10 @@ func _physics_process(delta):
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
+		$Rover/AshParticles.emitting = on_ash
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
 	else:
+		$Rover/AshParticles.emitting = false
 		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2)
 	velocity = rover.move_and_slide(velocity)
 	for i in rover.get_slide_count():
@@ -1571,6 +1566,7 @@ func _physics_process(delta):
 			continue
 		elif collision.collider is Projectile:
 			collision.collider.collide(collision)
+	floor_detector.position = rover.position
 	camera.position = rover.position + shaking
 	MM.position = minimap_center - rover.position * minimap_zoom
 
@@ -1625,14 +1621,16 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
-	var tooltip:String = "%s: %s\n%s: %s\n%s: %s" % [
+	var tooltip:String = "%s: %s\n%s: %s" % [
 		tr("STAR_SYSTEM_DIFFICULTY"),
 		Helper.format_num(game.system_data[game.c_s].diff),
-		tr("AURORA_MULTIPLIER"),
-		aurora_mult,
 		tr("FLOOR_MULTIPLIER"),
 		Helper.format_num(pow(1.25 if tower else 2, cave_floor - 1)),
 	]
+	if aurora_mult > 1:
+		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
+	if volcano_mult > 1 and tile.has("plant") and not tile.plant.has("artificial_ash"):
+		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(volcano_mult)]
 	game.help_str = "cave_diff_info"
 	if game.help.has("cave_diff_info"):
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
@@ -1731,3 +1729,11 @@ func _on_Modifiers_mouse_entered():
 	tooltip.erase(0, 1)
 	tooltip += "\n%s: %s" % [tr("TOTAL_TREASURE_MULT"), Helper.clever_round(treasure_mult)]
 	game.show_adv_tooltip(tooltip, icons)
+
+func _on_FloorCollisionDetector_body_entered(body):
+	max_speed = 500
+	on_ash = true
+
+func _on_FloorCollisionDetector_body_exited(body):
+	max_speed = 1000
+	on_ash = false

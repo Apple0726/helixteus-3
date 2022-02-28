@@ -507,19 +507,18 @@ func show_planet_info(id:int, l_id:int):
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
 			game.help_str = "planet_details"
+			var T_gradient:Gradient = preload("res://Resources/TemperatureGradient.tres")
+			var temp_color:String = T_gradient.interpolate(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
+			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+			var pressure_color:String = P_gradient.interpolate(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
+			if p_i.has("conquered"):
+				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
+				if p_i.has("bldg"):
+					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
-				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar\n%s" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4), tr("MORE_DETAILS")]
-				if p_i.has("conquered"):
-					tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
-					if p_i.has("bldg"):
-						tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
-				tooltip += "\n%s" % tr("HIDE_SHORTCUTS")
-			else:
-				tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: %s °C\n%s: %s bar" % [p_i.name, tr("DIAMETER"), round(p_i.size), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.clever_round(p_i.distance / 569.25), tr("SURFACE_TEMPERATURE"), Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(p_i.pressure, 4)]
-		if len(icons) > 0:
-			game.show_adv_tooltip(tooltip, Helper.flatten(icons))
-		else:
-			game.show_tooltip(tooltip)
+				tooltip += "\n%s\n%s" % [tr("MORE_DETAILS"), tr("HIDE_SHORTCUTS")]
+		game.show_adv_tooltip(tooltip, Helper.flatten(icons))
 
 var MS_constr_data:Dictionary = {}
 

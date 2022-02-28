@@ -230,9 +230,19 @@ func pickaxe_hit():
 		return
 	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):
-		game.popup(tr("CENTER_OF_PLANET"), 2.0)
 		if not game.achievement_data.random[1]:
 			game.earn_achievement("random", 1)
+		var VEI:float = log(add_progress / 500.0 * rand_range(0.7, 1.3) + exp(3.0))
+		game.tile_data[id].erase("depth")
+		game.generate_volcano(id, VEI, true)
+		game.switch_view("planet")
+		if game.help.has("artificial_volcano"):
+			game.long_popup("%s\n%s" % [tr("CREATED_ARITIFICAL_VOLCANO") % Helper.clever_round(VEI), tr("CREATED_ARITIFICAL_VOLCANO_NOTE")], tr("ARTIFICIAL_VOLCANO"))
+			game.help.erase("artificial_volcano")
+		else:
+			game.popup(tr("CREATED_ARITIFICAL_VOLCANO") % Helper.clever_round(VEI), 4.0)
+		if game.screen_shake:
+			game.get_node("Camera2D/Screenshake").start(1.5, 20, 3)
 		return
 	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):
 		if not game.achievement_data.random[4]:

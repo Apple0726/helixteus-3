@@ -226,12 +226,45 @@ func show_tooltip(tile):
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
-			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), tile.volcano.VEI]
+			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
 		else:
-			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", tile.volcano.VEI]
+			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
+	elif tile.has("crater") and tile.crater.has("init_depth"):
+		adv = tile.has("aurora")
+		if adv:
+			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
+		game.help_str = "crater_desc"
+		if game.help.has("crater_desc"):
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+		else:
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+	elif tile.has("cave"):
+		var au_str:String = ""
+		adv = tile.has("aurora") or tile.cave.has("modifiers")
+		if tile.has("aurora"):
+			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
+			tooltip = au_str
+		tooltip += tr("CAVE")
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
+#		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
+#			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
+		if not game.science_unlocked.has("RC"):
+			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+		else:
+			if game.help.has("cave_controls"):
+				tooltip += "\n%s\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
+			else:
+				tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+		if tile.cave.has("modifiers"):
+			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
+		if game.cave_gen_info:
+			if tile.cave.has("period"):#Save migration
+				tooltip += "\n%s: %s" % [tr("PERIOD"), tile.cave.period]
+			else:
+				tooltip += "\n%s: %s" % [tr("PERIOD"), 65]
 	elif tile.has("plant"):
 		if tile.plant.has("ash"):
-			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), tile.plant.ash]
+			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.plant.ash)]
 		else:
 			if not tile.plant.has("name"):
 				game.help_str = "plant_something_here"
@@ -254,19 +287,6 @@ func show_tooltip(tile):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
-	elif tile.has("crater") and tile.crater.has("init_depth"):
-		adv = tile.has("aurora")
-		if adv:
-			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
-		game.help_str = "crater_desc"
-		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-		else:
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-	elif tile.has("rock"):
-		if game.help.has("boulder_desc"):
-			tooltip = tr("BOULDER_DESC") + "\n" + tr("HIDE_HELP")
-			game.help_str = "boulder_desc"
 	elif tile.has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
@@ -292,33 +312,6 @@ func show_tooltip(tile):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time * 1000)]
 				icons = [Data.SP_icon, Data.time_icon]
 				adv = true
-	elif tile.has("cave"):
-		var au_str:String = ""
-		adv = tile.has("aurora") or tile.cave.has("modifiers")
-		if tile.has("aurora"):
-			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
-			tooltip = au_str
-		tooltip += tr("CAVE")
-		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
-#		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
-#			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
-		if not game.science_unlocked.has("RC"):
-			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
-		else:
-			if game.help.has("cave_controls"):
-				tooltip += "\n%s\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
-			else:
-				tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
-		if tile.cave.has("modifiers"):
-			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
-		if game.cave_gen_info:
-			if tile.cave.has("period"):#Save migration
-				tooltip += "\n%s: %s" % [tr("PERIOD"), tile.cave.period]
-			else:
-				tooltip += "\n%s: %s" % [tr("PERIOD"), 65]
-	elif tile.has("diamond_tower"):
-		var floor_size:String = tr("FLOOR_SIZE").format({"size":"?"})
-		tooltip = "%s\n%s\n%s\n%s" % [tr("DIAMOND_TOWER"), tr("DIAMOND_TOWER_DESC"), tr("NUM_FLOORS") % 25, floor_size]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
 		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif tile.has("aurora") and tooltip == "":
@@ -459,11 +452,14 @@ func harvest_plant(tile, tile_id:int):
 			produce[p] *= Helper.get_au_mult(tile)
 			if tile.has("bldg") and tile.bldg.name == "GH":
 				produce[p] *= tile.bldg.path_2_value
+			if tile.plant.has("ash"):
+				produce[p] *= tile.plant.ash
 			game.show[p] = true
 			Helper.add_item_to_coll(items_collected, p, produce[p])
 		game.show.metals = true
-		tile.plant.clear()
-		remove_child(plant_sprites[String(tile_id)])
+		for plant_attr in tile.plant.keys():
+			if plant_attr != "ash":
+				tile.plant.erase(plant_attr)
 		plant_sprites[String(tile_id)].queue_free()
 
 func speedup_bldg(tile, tile_id:int, curr_time):
@@ -1259,7 +1255,7 @@ func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	return tile.has("rock") or (tile.has("bldg") if bldg_is_obstacle else true) or tile.has("ship") or tile.has("wormhole") or tile.has("lake") or tile.has("cave") or tile.has("volcano") or ((tile.has("depth") or tile.has("crater")) and not tile.has("bridge"))
 
 func available_for_mining(tile):
-	return not tile or not tile.has("bldg") and not tile.has("plant") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
+	return not tile or not tile.has("bldg") and (not tile.has("plant") or not tile.plant.has("name")) and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
 
 func available_to_build(tile):
 	if bldg_to_construct == "MM":

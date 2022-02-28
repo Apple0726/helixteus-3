@@ -124,7 +124,7 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
 
 func on_fighter_enter(fighter_info:Dictionary):
-	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), fighter_info.strength, tr("CLICK_TO_VIEW_GALAXY")])
+	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), Helper.format_num(fighter_info.strength, true), tr("CLICK_TO_VIEW_GALAXY")])
 
 func on_probe_enter(tier:int, probe_id:int):
 	probe_over_id = probe_id
