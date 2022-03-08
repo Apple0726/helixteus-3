@@ -446,10 +446,10 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			game.mats[content] += amount
 			if not game.show.has("plant_button") and content == "soil":
 				game.show.plant_button = true
-			if not game.help.has("materials"):
-				if not is_MM and is_instance_valid(game.tutorial):
+			if game.help.has("materials"):
+				if not is_MM:
 					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
-				game.help.materials = true
+				game.help.erase("materials")
 			if not game.show.has("materials"):
 				game.show.materials = true
 				game.inventory.get_node("Tabs/Materials").visible = true
@@ -478,7 +478,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.long_popup("%s\n%s" % [tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND_DESC2")], tr("ARTIFACT_FOUND"))
 			else:
 				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
-		if game.show.has(content):
+		if not game.show.has(content):
 			game.show[content] = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")

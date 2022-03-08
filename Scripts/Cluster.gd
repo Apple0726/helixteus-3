@@ -26,12 +26,13 @@ func _ready():
 		galaxy_btn.connect("mouse_entered", self, "on_galaxy_over", [g_i.l_id])
 		galaxy_btn.connect("mouse_exited", self, "on_galaxy_out")
 		galaxy_btn.connect("pressed", self, "on_galaxy_click", [g_i.id, g_i.l_id])
-		galaxy_btn.rect_position = Vector2(-galaxy_btn.texture_normal.get_width() / 2, -galaxy_btn.texture_normal.get_height() / 2)
-		galaxy_btn.rect_pivot_offset = Vector2(galaxy_btn.texture_normal.get_width() / 2, galaxy_btn.texture_normal.get_height() / 2)
-		galaxy_btn.rect_rotation = rad2deg(g_i["rotation"])
+		#galaxy_btn.rect_pivot_offset = Vector2(galaxy_btn.texture_normal.get_width(), galaxy_btn.texture_normal.get_height()) / 2.0
+		#galaxy_btn.rect_rotation = rad2deg(g_i["rotation"])
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+		galaxy_btn.rect_position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
 		galaxy_btn.rect_scale.x = radius
 		galaxy_btn.rect_scale.y = radius
+		galaxy.rotation = g_i.rotation
 		if g_i.has("modulate"):
 			galaxy_btn.modulate = g_i.modulate
 		galaxy.position = g_i["pos"]
@@ -95,7 +96,8 @@ func _ready():
 			grid_panel.add_to_group("Grids")
 			grid_panel.name = "Grid_%s" % g_i.l_id
 			grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
-			grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y + 50) * grid_panel.rect_scale.y * sc
+			grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y) * grid_panel.rect_scale.y * max(sc, 1.0) - 200 * sc
+			prints(sc, g_i.l_id)
 		if not MSs.empty():
 			var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
 			MS_grid_panel.get_node("Bottom").visible = false
@@ -110,7 +112,7 @@ func _ready():
 			MS_grid_panel.add_to_group("MSGrids")
 			MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
 			MS_grid_panel.rect_position.x = g_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
-			MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y - 15) * MS_grid_panel.rect_scale.y * sc
+			MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y) * MS_grid_panel.rect_scale.y * max(sc, 1.0)
 		
 	if conquered:
 		game.cluster_data[game.c_c].conquered = true

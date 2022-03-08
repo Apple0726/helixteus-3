@@ -21,8 +21,8 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integ
 				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"NSF":{"value":50000.0, "pw":1.15, "time_based":false, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"ESF":{"value":50000.0, "pw":1.15, "time_based":false, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"NSF":{"value":50000.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+				"ESF":{"value":50000.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
 var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},

@@ -65,7 +65,7 @@ func _on_MM_pressed():
 	tf_type = "MM"
 	set_bldg_cost_txt()
 	costs = Data.costs.MM.duplicate(true)
-	$Panel/Note.visible = true
+	$Panel/Note.visible = false
 	update_info()
 
 func _on_GH_pressed():

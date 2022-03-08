@@ -1,6 +1,6 @@
 extends Control
 
-onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
+onready var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 onready var bullet_texture = preload("res://Graphics/Misc/bullet.png")
 
 onready var game = get_node("/root/Game")
@@ -38,8 +38,9 @@ func _ready():
 	tween.start()
 
 	for i in 100: #number of stars to render
-		var star = star_scene.instance()
-		star.scale *= rand_range(0.02, 0.05)
+		var star = Sprite.new()
+		star.texture = star_texture
+		star.scale *= rand_range(0.15, 0.25)
 		star.rotation = rand_range(0, 2 * PI)
 		add_child(star)
 		star.position.x = rand_range(0, 1280)
@@ -77,6 +78,7 @@ func hide_help():
 	help_tween.start()
 	$Timer.paused = false
 	if fn_to_call != "":
+		pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 		if lv % 4 == 0:
 			graph_pattern()
 		else:
@@ -314,7 +316,7 @@ func _process(delta):
 	point.position = m_pos
 	acc_time.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0, secs_elapsed * 1000 - penalty_time))]
 	for star in get_tree().get_nodes_in_group("stars"):
-		star.position.x -= star.scale.x * 20
+		star.position.x -= star.scale.x * 10
 		if star.position.x < -5:
 			star.position.x = 1285
 

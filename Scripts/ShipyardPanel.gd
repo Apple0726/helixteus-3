@@ -14,6 +14,8 @@ func _ready():
 
 func refresh():
 	$OptionButton.visible = game.science_unlocked.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
+	if not $OptionButton.visible:
+		$OptionButton.select(0)
 	strength_mult = game.tile_data[game.c_t].bldg.path_1_value
 	_on_SpinBox_value_changed($SpinBox.value)
 

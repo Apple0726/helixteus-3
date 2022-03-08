@@ -415,10 +415,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			cave.set_cell(i, j, tile_type)
 			if level > 0:
-				if cave_floor == 1 and level < 0.5:
-					ash.set_cell(i, j, 0)
-				elif cave_floor == 2 and level < 0.2:
-					ash.set_cell(i, j, 0)
+				if volcano_mult > 1.0:
+					if cave_floor == 1 and level < 0.5:
+						ash.set_cell(i, j, 0)
+					elif cave_floor == 2 and level < 0.2:
+						ash.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
@@ -1554,6 +1555,25 @@ func _physics_process(delta):
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
+		if input_vector.x > 0:
+			if input_vector.y > 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 45, delta * 60.0 * 15.0)
+			elif input_vector.y < 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -45, delta * 60.0 * 15.0)
+			else:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 0, delta * 60.0 * 15.0)
+		elif input_vector.x < 0:
+			if input_vector.y > 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 135, delta * 60.0 * 15.0)
+			elif input_vector.y < 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -135, delta * 60.0 * 15.0)
+			else:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 180, delta * 60.0 * 15.0)
+		else:
+			if input_vector.y > 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 90, delta * 60.0 * 15.0)
+			elif input_vector.y < 0:
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -90, delta * 60.0 * 15.0)
 		$Rover/AshParticles.emitting = on_ash
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
 	else:

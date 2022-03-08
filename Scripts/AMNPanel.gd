@@ -24,6 +24,7 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 								"ruby":{"MM":"mets", "atoms":["Al", "O"]},
 								"sapphire":{"MM":"mets", "atoms":["Al", "O"]},
 								"titanium":{"MM":"mets", "atoms":["Ti"]},
+								"platinum":{"MM":"mets", "atoms":["Pt"]},
 								"diamond":{"MM":"mets", "atoms":["C"]},
 								"nanocrystal":{"MM":"mets", "atoms":["Si", "O", "Na"]},
 								"mythril":{"MM":"mets", "atoms":["W", "Os", "Ta"]},
@@ -181,6 +182,18 @@ func _on_titanium_pressed(_name:String, dict:Dictionary):
 	refresh()
 	$Control/Switch.visible = true
 
+func _on_platinum_pressed(_name:String, dict:Dictionary):
+	reset_poses(_name, dict)
+	ratios = {"Pt":1000.0 / 195.084}
+	atom_costs = {"Pt":0}
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"platinum":0})
+	metal = "platinum"
+	energy_cost = 40000
+	difficulty = 2.0
+	refresh()
+	$Control/Switch.visible = true
+
 func _on_diamond_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"C":1000.0 / 12.011}
@@ -188,7 +201,7 @@ func _on_diamond_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"diamond":0})
 	metal = "diamond"
-	energy_cost = 55000
+	energy_cost = 85000
 	difficulty = 2.2
 	refresh()
 	$Control/Switch.visible = true
@@ -200,8 +213,8 @@ func _on_nanocrystal_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"nanocrystal":0})
 	metal = "nanocrystal"
-	energy_cost = 330000
-	difficulty = 2.5
+	energy_cost = 1330000
+	difficulty = 2.9
 	refresh()
 	$Control/Switch.visible = true
 
@@ -212,8 +225,8 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
 	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"mythril":0})
 	metal = "mythril"
-	energy_cost = 970000
-	difficulty = 2.9
+	energy_cost = 8970000
+	difficulty = 4.8
 	refresh()
 	$Control/Switch.visible = true
 

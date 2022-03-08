@@ -209,7 +209,6 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 		IR_mult = first_tile.bldg.IR_mult
-		prints(curr_value * IR_mult * game.u_i.time_speed)
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:

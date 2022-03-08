@@ -10,7 +10,7 @@
 [ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
 [ext_resource path="res://Scenes/CaveHole.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Cave/Rover top down.png" type="Texture" id=11]
 [ext_resource path="res://Resources/CaveWalls.tres" type="TileSet" id=12]
 [ext_resource path="res://Graphics/Cave/Objects/exit.png" type="Texture" id=13]
 [ext_resource path="res://Shaders/Fire.shader" type="Shader" id=14]
@@ -946,6 +946,7 @@ scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 30 )
 
 [node name="Sprite" type="Sprite" parent="Rover"]
+scale = Vector2( 0.288352, 0.288352 )
 texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
@@ -980,6 +981,8 @@ position = Vector2( 16, -40 )
 scale = Vector2( 4, 4 )
 texture = ExtResource( 18 )
 
+[node name="Tween" type="Tween" parent="Rover"]
+
 [node name="TileHighlightLeft" type="Sprite" parent="."]
 modulate = Color( 1, 0.509804, 0.509804, 0.192157 )
 light_mask = -2147483646
@@ -1006,9 +1009,6 @@ anims/Flash = SubResource( 7 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MinimapBG" type="Sprite" parent="UI"]
 modulate = Color( 0, 0, 0, 1 )

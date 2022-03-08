@@ -84,11 +84,12 @@ margin_right = 176.0
 margin_bottom = 60.0
 
 [node name="Rover" type="TextureRect" parent="Stats"]
-margin_left = 48.0
-margin_top = 52.0
-margin_right = 224.0
-margin_bottom = 172.0
+margin_left = 32.0
+margin_top = 56.0
+margin_right = 236.0
+margin_bottom = 176.0
 texture = ExtResource( 9 )
+expand = true
 stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false

@@ -22,9 +22,9 @@ func _ready():
 func on_atom_toggled(pressed:bool, atom:String, border):
 	border.visible = pressed
 	if not pressed:
-		game.view.obj.show_atoms.erase(atom)
-	elif not game.view.obj.show_atoms.has(atom):
-		game.view.obj.show_atoms.append(atom)
+		game.show_atoms.erase(atom)
+	elif not game.show_atoms.has(atom):
+		game.show_atoms.append(atom)
 	game.view.obj.refresh_planets()
 	
 func on_atom_entered(st:String):

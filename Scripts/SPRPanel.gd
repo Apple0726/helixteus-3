@@ -24,7 +24,8 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
 								"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
 								"W":{"Z":74, "energy_cost":100000, "difficulty":5},
 								"Os":{"Z":76, "energy_cost":120000, "difficulty":5},
-								"Pu":{"Z":94, "energy_cost":14000000000000, "difficulty":80000},
+								"Pt":{"Z":78, "energy_cost":180000, "difficulty":6},
+								"Pu":{"Z":94, "energy_cost":1.4e16, "difficulty":8e6},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array

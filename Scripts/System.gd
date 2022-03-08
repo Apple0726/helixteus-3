@@ -19,7 +19,6 @@ var planet_hovered:int = -1
 var tile_datas:Array = []
 var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 var build_all_MS_stages:bool = false
-var show_atoms:Array = []#Used by element overlay
 var CBS_range:float = 0.0
 
 func _ready():
@@ -106,7 +105,10 @@ func refresh_planets():
 			elif p_i.type in [11, 12]:
 				planet_glow.modulate = Color.burlywood
 			else:
-				planet_glow.modulate = Color(0, 1, 0, 1)
+				if p_i.has("discovered"):
+					planet_glow.modulate = Color(0, 1, 0, 1)
+				else:
+					planet_glow.modulate = Color(0.8, 1, 0, 1)
 			if game.element_overlay.toggle_btn.pressed:
 				add_elements(p_i, v, sc)
 			else:
@@ -224,7 +226,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 		var crust_stone_amount = (surface_volume + crust_volume) * ((5600 + p_i.mantle_start_depth * 0.01) / 2.0)
 		var mantle_stone_amount = mantle_volume * ((5690 + (p_i.mantle_start_depth + p_i.core_start_depth) * 0.01) / 2.0)
 		var core_stone_amount = core_volume * ((5700 + (p_i.core_start_depth + R) * 0.01) / 2.0)
-		for atom in show_atoms:
+		for atom in game.show_atoms:
 			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
 			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
 			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
@@ -233,7 +235,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount) / Data.molar_mass[atom] / 1000.0
 			atom_count.get_node("Label").text = "%s mol" % Helper.format_num(num, true)
 	elif game.element_overlay.option_btn.get_selected_id() == 1:
-		for atom in show_atoms:
+		for atom in game.show_atoms:
 			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
 			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
 			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")

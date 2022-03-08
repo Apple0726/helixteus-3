@@ -5,7 +5,6 @@ const VERSION:String = "v0.24"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
-var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
@@ -98,6 +97,7 @@ var active_panel
 
 #The base node containing things that can be moved/zoomed in/out
 var view
+var show_atoms:Array = []#For element overlay
 
 ############ Save data ############
 
@@ -667,8 +667,10 @@ func load_univ():
 		for key in save_game_dict:
 			if key in self:
 				self[key] = save_game_dict[key]
-		if not help.has("battle2"):
-			help.battle2 = true#Save migration
+		if not help.has("battle2"):#Save migration
+			help.battle2 = true
+		if not atoms.has("Pt"):#Save migration
+			atoms.Pt = 0
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -854,6 +856,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		dim_num = 1
 		help = {
 				"tutorial":1 if tut else -1,
+				"materials":true,
 				"close_btn1":true,
 				"close_btn2":true,
 				"mining":true,
@@ -887,7 +890,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 			achievement_data[ach] = []
 			for i in len(achievements[ach]):
 				achievement_data[ach].append(false)
-		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -1031,6 +1034,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"W":0,
 				"Os":0,
 				#"Ir":0,
+				"Pt":0,
 				#"U":0,
 				#"Np":0,
 				"Pu":0,
@@ -1286,6 +1290,10 @@ func add_panels():
 
 	upgrade_panel.visible = false
 	$Panels/Control.add_child(upgrade_panel)
+	
+	element_overlay = element_overlay_scene.instance()
+	element_overlay.visible = false
+	$UI.add_child(element_overlay)
 
 func popup(txt, dur):
 	var node = $UI/Popup
@@ -1799,8 +1807,6 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
-		if c_v == "system":
-			add_element_overlay()
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
@@ -1826,16 +1832,6 @@ func remove_overlay():
 		$UI.remove_child(overlay)
 		overlay.queue_free()
 
-func add_element_overlay():
-	element_overlay = element_overlay_scene.instance()
-	element_overlay.visible = false
-	$UI.add_child(element_overlay)
-
-func remove_element_overlay():
-	if is_instance_valid(element_overlay) and $UI.is_a_parent_of(element_overlay):
-		$UI.remove_child(element_overlay)
-		element_overlay.queue_free()
-
 func add_annotator():
 	annotator = annotator_scene.instance()
 	annotator.visible = false
@@ -1851,7 +1847,6 @@ func remove_space_HUD():
 		$UI.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
-	remove_element_overlay()
 	remove_annotator()
 
 func add_dimension():
@@ -3328,7 +3323,6 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 
 func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	if is_instance_valid(tooltip):
-		$Tooltips.remove_child(tooltip)
 		tooltip.queue_free()
 	tooltip = preload("res://Scenes/AdvTooltip.tscn").instance()
 	tooltip.modulate.a = 0.0
@@ -3339,7 +3333,6 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 
 func show_tooltip(txt:String, hide:bool = true):
 	if is_instance_valid(tooltip):
-		$Tooltips.remove_child(tooltip)
 		tooltip.queue_free()
 	tooltip = preload("res://Scenes/Tooltip.tscn").instance()
 	tooltip.modulate.a = 0.0
@@ -4176,7 +4169,7 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
 
 func generate_new_univ_confirm():
-	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
+	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
 	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -4327,7 +4320,7 @@ func mine_tile(tile_id:int = -1):
 			if tutorial and tutorial.tut_num == 15 and objective.empty():
 				objective = {"type":ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
 			c_t = tile_id
-			if tile_data[tile_id].has("plant"):
+			if tile_data[tile_id] and tile_data[tile_id].has("plant"):
 				tile_data[tile_id].erase("plant")
 			switch_view("mining")
 	else:

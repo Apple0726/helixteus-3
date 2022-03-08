@@ -37,13 +37,10 @@ func refresh():
 	var hbox2 = $Panel/GridContainer
 	var hbox3 = $Probes/ScrollContainer/GridContainer
 	for rov in hbox.get_children():
-		hbox.remove_child(rov)
 		rov.queue_free()
 	for fgh in hbox2.get_children():
-		hbox2.remove_child(fgh)
 		fgh.queue_free()
 	for probe in hbox3.get_children():
-		hbox3.remove_child(probe)
 		probe.queue_free()
 	probe_time_bars.clear()
 	for i in len(game.rover_data):
@@ -53,6 +50,10 @@ func refresh():
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()
+			rover.expand = true
+			rover.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			rover.rect_min_size.x = 200
+			rover.rect_min_size.y = 200
 			rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
 			rover.set_anchors_and_margins_preset(Control.PRESET_CENTER)
 			hbox.add_child(rover)
