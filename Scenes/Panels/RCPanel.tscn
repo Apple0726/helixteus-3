@@ -1,14 +1,15 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/RoverSlot.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Graphics/Icons/Inventory.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Icons/REP.png" type="Texture" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=9]
 [ext_resource path="res://Scripts/RCPanel.gd" type="Script" id=10]
-[ext_resource path="res://Scenes/InventorySlot.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=12]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=13]
 
@@ -38,62 +39,43 @@ rect_min_size = Vector2( 0, 38 )
 text = "CONSTRUCT_ROVER"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stats" type="Panel" parent="."]
 margin_left = 28.0
 margin_top = 48.0
 margin_right = 524.0
-margin_bottom = 328.0
+margin_bottom = 552.0
 size_flags_vertical = 3
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_lock_": true
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Stats"]
-margin_left = 48.0
-margin_top = 188.0
-margin_right = 176.0
-margin_bottom = 248.0
-custom_constants/separation = -2
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Armor" parent="Stats" instance=ExtResource( 2 )]
+margin_left = 376.0
+margin_top = 96.0
+margin_right = 436.0
+margin_bottom = 156.0
 
-[node name="Armor" parent="Stats/HBoxContainer" instance=ExtResource( 11 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 60.0
-margin_bottom = 60.0
+[node name="Wheels" parent="Stats" instance=ExtResource( 2 )]
+margin_left = 376.0
+margin_top = 156.0
+margin_right = 436.0
+margin_bottom = 216.0
 
-[node name="Wheels" parent="Stats/HBoxContainer" instance=ExtResource( 11 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 58.0
-margin_right = 118.0
-margin_bottom = 60.0
-
-[node name="CC" parent="Stats/HBoxContainer" instance=ExtResource( 11 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 116.0
-margin_right = 176.0
-margin_bottom = 60.0
+[node name="CC" parent="Stats" instance=ExtResource( 2 )]
+margin_left = 376.0
+margin_top = 216.0
+margin_right = 436.0
+margin_bottom = 276.0
 
 [node name="Rover" type="TextureRect" parent="Stats"]
-margin_left = 32.0
-margin_top = 56.0
-margin_right = 236.0
-margin_bottom = 176.0
+margin_left = 36.0
+margin_top = 108.0
+margin_right = 340.0
+margin_bottom = 272.0
 texture = ExtResource( 9 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Stats"]
 anchor_right = 1.0
@@ -108,85 +90,93 @@ __meta__ = {
 }
 
 [node name="HP" type="TextureRect" parent="Stats"]
-margin_left = 280.0
-margin_top = 36.0
-margin_right = 320.0
-margin_bottom = 76.0
+margin_left = 52.0
+margin_top = 324.0
+margin_right = 92.0
+margin_bottom = 364.0
 texture = ExtResource( 8 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="REPIcon" type="TextureRect" parent="Stats"]
+margin_left = 156.0
+margin_top = 72.0
+margin_right = 188.0
+margin_bottom = 104.0
+texture = ExtResource( 4 )
 
 [node name="Attack" type="TextureRect" parent="Stats"]
-margin_left = 280.0
-margin_top = 84.0
-margin_right = 320.0
-margin_bottom = 124.0
+margin_left = 52.0
+margin_top = 372.0
+margin_right = 92.0
+margin_bottom = 412.0
 texture = ExtResource( 6 )
 expand = true
 stretch_mode = 6
 
 [node name="Defense" type="TextureRect" parent="Stats"]
-margin_left = 280.0
-margin_top = 132.0
-margin_right = 320.0
-margin_bottom = 172.0
+margin_left = 52.0
+margin_top = 420.0
+margin_right = 92.0
+margin_bottom = 460.0
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
 [node name="Cargo" type="TextureRect" parent="Stats"]
-margin_left = 280.0
-margin_top = 180.0
-margin_right = 320.0
-margin_bottom = 220.0
+margin_left = 256.0
+margin_top = 368.0
+margin_right = 296.0
+margin_bottom = 408.0
 texture = ExtResource( 3 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Speed" type="TextureRect" parent="Stats"]
-margin_left = 280.0
-margin_top = 228.0
-margin_right = 320.0
-margin_bottom = 268.0
+margin_left = 256.0
+margin_top = 420.0
+margin_right = 296.0
+margin_bottom = 460.0
 texture = ExtResource( 12 )
 expand = true
 stretch_mode = 6
 
 [node name="HPText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 335.5
-margin_top = 44.0
-margin_right = 491.5
-margin_bottom = 72.0
+margin_left = 107.5
+margin_top = 332.0
+margin_right = 263.5
+margin_bottom = 360.0
 
 [node name="AtkText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 335.5
-margin_top = 92.0
-margin_right = 491.5
-margin_bottom = 120.0
+margin_left = 107.5
+margin_top = 380.0
+margin_right = 263.5
+margin_bottom = 408.0
 
 [node name="DefText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 335.5
-margin_top = 140.0
-margin_right = 491.5
-margin_bottom = 168.0
+margin_left = 107.5
+margin_top = 428.0
+margin_right = 263.5
+margin_bottom = 456.0
 
 [node name="CargoText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 335.5
-margin_top = 192.0
-margin_right = 491.5
-margin_bottom = 220.0
+margin_left = 311.5
+margin_top = 380.0
+margin_right = 467.5
+margin_bottom = 408.0
 
 [node name="SpeedText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 335.5
-margin_top = 236.0
-margin_right = 491.5
-margin_bottom = 264.0
+margin_left = 311.5
+margin_top = 428.0
+margin_right = 467.5
+margin_bottom = 456.0
+
+[node name="REPText" parent="Stats" instance=ExtResource( 1 )]
+margin_left = 208.0
+margin_top = 76.0
+margin_right = 364.0
+margin_bottom = 104.0
+help_text = "REP_DESC"
 
 [node name="Inventory" type="Panel" parent="."]
 margin_left = 544.0
@@ -245,18 +235,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightSlot" parent="Inventory" instance=ExtResource( 11 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
+[node name="RightSlot" parent="Inventory" instance=ExtResource( 2 )]
 margin_left = 32.0
 margin_top = 84.0
 margin_right = 92.0
 margin_bottom = 144.0
 
 [node name="Costs" type="Label" parent="."]
-margin_left = 352.0
+margin_left = 552.0
 margin_top = 344.0
-margin_right = 712.0
+margin_right = 1040.0
 margin_bottom = 368.0
 text = "COSTS"
 align = 1
@@ -266,10 +254,14 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
-margin_left = 724.0
-margin_top = 472.0
-margin_right = 904.0
-margin_bottom = 516.0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -195.0
+margin_top = -56.0
+margin_right = -15.0
+margin_bottom = -12.0
 theme = ExtResource( 5 )
 text = "CONSTRUCT"
 __meta__ = {
@@ -277,9 +269,9 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 352.0
+margin_left = 616.0
 margin_top = 376.0
-margin_right = 712.0
+margin_right = 976.0
 margin_bottom = 516.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -300,6 +292,8 @@ __meta__ = {
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered" binds= [ "HEALTH_POINTS" ]]
 [connection signal="mouse_exited" from="Stats/HP" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered" binds= [ "REP" ]]
+[connection signal="mouse_exited" from="Stats/REPIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered" binds= [ "ATTACK" ]]
 [connection signal="mouse_exited" from="Stats/Attack" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered" binds= [ "DEFENSE" ]]
