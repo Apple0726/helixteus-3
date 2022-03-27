@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/RoverSlot.tscn" type="PackedScene" id=2]
@@ -10,8 +10,10 @@
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Cave/Rover.png" type="Texture" id=9]
 [ext_resource path="res://Scripts/RCPanel.gd" type="Script" id=10]
+[ext_resource path="res://Scenes/RESlot.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=12]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=14]
 
 [node name="RCPanel" type="Panel"]
 anchor_left = 0.5
@@ -49,6 +51,22 @@ size_flags_vertical = 3
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Ability" parent="Stats" instance=ExtResource( 11 )]
+margin_left = 376.0
+margin_top = 36.0
+margin_right = 436.0
+margin_bottom = 96.0
+
+[node name="AbilityInfo" type="TextureRect" parent="Stats/Ability"]
+margin_left = 64.0
+margin_top = 12.0
+margin_right = 112.0
+margin_bottom = 48.0
+mouse_filter = 0
+texture = ExtResource( 14 )
+expand = true
+stretch_mode = 4
 
 [node name="Armor" parent="Stats" instance=ExtResource( 2 )]
 margin_left = 376.0
@@ -142,39 +160,39 @@ expand = true
 stretch_mode = 6
 
 [node name="HPText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 107.5
+margin_left = 108.0
 margin_top = 332.0
-margin_right = 263.5
+margin_right = 221.0
 margin_bottom = 360.0
 
 [node name="AtkText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 107.5
+margin_left = 108.0
 margin_top = 380.0
-margin_right = 263.5
+margin_right = 221.0
 margin_bottom = 408.0
 
 [node name="DefText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 107.5
+margin_left = 108.0
 margin_top = 428.0
-margin_right = 263.5
+margin_right = 221.0
 margin_bottom = 456.0
 
 [node name="CargoText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 311.5
+margin_left = 312.0
 margin_top = 380.0
-margin_right = 467.5
+margin_right = 428.0
 margin_bottom = 408.0
 
 [node name="SpeedText" parent="Stats" instance=ExtResource( 1 )]
-margin_left = 311.5
+margin_left = 312.0
 margin_top = 428.0
-margin_right = 467.5
+margin_right = 428.0
 margin_bottom = 456.0
 
 [node name="REPText" parent="Stats" instance=ExtResource( 1 )]
 margin_left = 208.0
 margin_top = 76.0
-margin_right = 364.0
+margin_right = 272.0
 margin_bottom = 104.0
 help_text = "REP_DESC"
 
@@ -290,16 +308,20 @@ __meta__ = {
 }
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="Stats/Ability" to="." method="_on_Ability_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/Ability" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/Ability/AbilityInfo" to="." method="_on_AbilityInfo_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/Ability/AbilityInfo" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered" binds= [ "HEALTH_POINTS" ]]
-[connection signal="mouse_exited" from="Stats/HP" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_exited" from="Stats/HP" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered" binds= [ "REP" ]]
-[connection signal="mouse_exited" from="Stats/REPIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_exited" from="Stats/REPIcon" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered" binds= [ "ATTACK" ]]
-[connection signal="mouse_exited" from="Stats/Attack" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_exited" from="Stats/Attack" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered" binds= [ "DEFENSE" ]]
-[connection signal="mouse_exited" from="Stats/Defense" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_exited" from="Stats/Defense" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Cargo" to="." method="_on_icon_mouse_entered" binds= [ "CARGO_CAPACITY" ]]
 [connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered" binds= [ "MOVEMENT_SPEED" ]]
-[connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

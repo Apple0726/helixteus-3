@@ -70,6 +70,7 @@ var max_speed = 1000
 var acceleration = 12000
 var friction = 12000
 var rover_size = 1.0
+var speed_penalty:float = 1.0
 
 #Rover stats
 var atk:float = 5.0
@@ -85,6 +86,8 @@ var i_w_w:Dictionary = {}#inventory_with_weight
 var weight:float = 0.0
 var weight_cap:float = 1500.0
 var status_effects:Dictionary = {}
+var enhancements:Dictionary = {}
+var laser_name:String = ""
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -280,6 +283,13 @@ func set_rover_data():
 	inventory = rover_data.inventory
 	right_inventory = rover_data.right_inventory
 	i_w_w = rover_data.i_w_w
+	enhancements = rover_data.get("enhancements", {})
+	if right_inventory[0].get("type") == "rover_weapons":
+		laser_name = right_inventory[0].name.split("_")[0]
+	else:
+		for i in len(inventory):
+			if inventory[i].get("type") == "rover_weapons":
+				laser_name = inventory[i].name.split("_")[0]
 
 func set_slot_info(slot, _inv:Dictionary):
 	var rsrc = _inv.type
@@ -355,6 +365,8 @@ func remove_cave():
 	deposits.clear()
 
 func generate_cave(first_floor:bool, going_up:bool):
+	if enhancements.has("armor_12") and HP < total_HP * 0.2:
+		HP = total_HP * 0.2
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
 	ash.clear()
 	cave_darkness = cave_floor * 0.1
@@ -1216,16 +1228,10 @@ func exit_cave():
 	queue_free()
 
 func cooldown(duration:float):
-	inventory_ready[curr_slot] = false
-	var timer = Timer.new()
-	add_child(timer)
-	timer.start(duration)
-	timer.connect("timeout", self, "on_timeout", [curr_slot, timer])
-
-func on_timeout(slot, timer):
+	var slot:int = curr_slot
+	inventory_ready[slot] = false
+	yield(get_tree().create_timer(duration), "timeout")
 	inventory_ready[slot] = true
-	remove_child(timer)
-	timer.queue_free()
 
 func remove_item(item:Dictionary, num:int = 1):
 	item.num -= num
@@ -1238,7 +1244,7 @@ func remove_item(item:Dictionary, num:int = 1):
 		slots[curr_slot].get_node("Label").text = String(num)
 	
 func _process(delta):
-	for effect in status_effects:
+	for effect in status_effects.keys():
 		status_effects[effect] -= delta * time_speed
 		if status_effects[effect] < 0:
 			status_effects.erase(effect)
@@ -1247,6 +1253,8 @@ func _process(delta):
 			elif effect == "burn":
 				rover.get_node("Burn").visible = false
 				$BurnTimer.stop()
+			elif effect == "invincible":
+				$Rover/AnimationPlayer.stop()
 	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
 		tile_highlight_left.position.x = floor(rover.position.x / 200) * 200 + 100
 		tile_highlight_left.position.y = floor(rover.position.y / 200) * 200 + 100
@@ -1266,7 +1274,17 @@ func _process(delta):
 
 func use_item(item:Dictionary, _tile_highlight, delta):
 	if item.type == "rover_weapons":
-		attack()
+		attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x))
+		if enhancements.has("laser_6"):
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/12.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/12.0)
+		if enhancements.has("laser_7"):
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/6.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/6.0)
+		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
+		if status_effects.has("invincible") and enhancements.has("armor_6"):
+			cooldown /= 3.0
+		cooldown(cooldown)
 	elif item.type == "rover_mining" and tile_highlighted_for_mining != -1:
 		hit_rock(item, _tile_highlight, delta)
 		update_ray()
@@ -1299,8 +1317,9 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 				add_hole(tile_id)
 			cooldown(0.5)
 
-func attack():
-	var laser_name:String = inventory[curr_slot].name.split("_")[0]
+func attack(angle:float):
+	if laser_name == "":
+		return
 	var laser_color:Color = get_color(laser_name)
 	if $WorldEnvironment.environment.glow_enabled:
 		laser_color *= 4.0
@@ -1315,8 +1334,7 @@ func attack():
 		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
 		proj_scale *= 3.0
-	add_proj(false, rover.position, 70.0, atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x), laser_texture, Data.rover_weapons[inventory[curr_slot].name].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
-	cooldown(Data.rover_weapons[inventory[curr_slot].name].cooldown / time_speed)
+	add_proj(false, rover.position, 70.0, angle, laser_texture, Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
 
 func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
 	if _class == 1:
@@ -1416,8 +1434,8 @@ func hit_rock(item:Dictionary, _tile_highlight, delta):
 						continue
 				else:
 					game.cave_filters[r] = false
+					add_filter(r)
 				game.show[r] = true
-				add_filter(r)
 				if r == "minerals":
 					add_to_inventory(r, rsrc[r], {})
 				else:
@@ -1458,12 +1476,29 @@ func add_weight_rsrc(r, rsrc_amount):
 	else:
 		i_w_w[r] = rsrc_amount
 	var diff:float = floor((weight - weight_cap) * 100) / 100.0
-	if weight > weight_cap:
-		weight -= diff
-		i_w_w[r] -= diff
-		var float_error:float = weight - weight_cap
-		weight -= float_error
-		i_w_w[r] -= float_error
+	if enhancements.has("CC_0") or enhancements.has("CC_1") or enhancements.has("CC_2"):
+		diff = floor((weight - weight_cap * 5.0) * 100) / 100.0
+		if weight > weight_cap * 5.0:
+			weight -= diff
+			i_w_w[r] -= diff
+			var float_error:float = weight - weight_cap * 5.0
+			weight -= float_error
+			i_w_w[r] -= float_error
+		if weight > weight_cap:
+			if enhancements.has("CC_1"):
+				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 5.0, 1.0, 0.7), 0.7, 1.0)
+			elif enhancements.has("CC_0"):
+				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 5.0, 1.0, 0.3), 0.3, 1.0)
+			$UI2/Inventory/Label["custom_colors/font_color"] = Color.red
+		else:
+			$UI2/Inventory/Label["custom_colors/font_color"] = Color(1.0, 0.8, 0.67)
+	else:
+		if weight > weight_cap:
+			weight -= diff
+			i_w_w[r] -= diff
+			var float_error:float = weight - weight_cap
+			weight -= float_error
+			i_w_w[r] -= float_error
 	$UI2/Inventory/Bar.value = weight
 	$Rover/InvBar.value = weight
 	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
@@ -1480,6 +1515,21 @@ func _on_Timer_timeout():
 	tween.stop_all()
 
 func hit_player(damage:float, _status_effects:Dictionary = {}):
+	if not status_effects.has("invincible"):
+		if enhancements.has("armor_5"):
+			status_effects.invincible = 1.5
+			$Rover/AnimationPlayer.play("Invincible")
+		elif enhancements.has("armor_4"):
+			status_effects.invincible = 0.5
+			$Rover/AnimationPlayer.play("Invincible")
+		if enhancements.has("armor_8"):
+			for angle in 32:
+				attack(angle * 11.25 * PI / 180)
+		elif enhancements.has("armor_7"):
+			for angle in 16:
+				attack(angle * 22.5 * PI / 180)
+	else:
+		return
 	for effect in _status_effects:
 		if not status_effects.has(effect):
 			status_effects[effect] = _status_effects[effect]
@@ -1488,6 +1538,17 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 			elif effect == "burn":
 				rover.get_node("Burn").visible = true
 				$BurnTimer.start()
+	if enhancements.has("armor_11"):
+		if HP <= total_HP * 0.2:
+			damage *= 0.2
+		elif HP <= total_HP * 0.6:
+			damage *= 0.6
+	elif enhancements.has("armor_10"):
+		if HP <= total_HP * 0.6:
+			damage *= 0.6
+	elif enhancements.has("armor_9"):
+		if HP <= total_HP * 0.5:
+			damage *= 0.75
 	update_health_bar(HP - damage)
 	if HP > 0:
 		Helper.show_dmg(ceil(damage), rover.position, self)
@@ -1542,7 +1603,7 @@ func get_tile_pos(_id:int):
 	return Vector2(_id % cave_size, _id / cave_size)
 
 func _physics_process(delta):
-	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size) * time_speed
+	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size) * time_speed * speed_penalty
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
 	var input_vector = Vector2.ZERO
@@ -1555,25 +1616,26 @@ func _physics_process(delta):
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
+		var rot:float = fposmod($Rover/Sprite.rotation_degrees,360)
 		if input_vector.x > 0:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 45, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 45, 360) + 45, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -45, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 45, 360) - 45, delta * 60.0 * 15.0)
 			else:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 0, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees, 360), delta * 60.0 * 15.0)
 		elif input_vector.x < 0:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 135, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 135, 360) + 135, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -135, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 135, 360) - 135, delta * 60.0 * 15.0)
 			else:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 180, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 180, 360) + 180, delta * 60.0 * 15.0)
 		else:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, 90, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 90, 360) + 90, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, -90, delta * 60.0 * 15.0)
+				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 90, 360) - 90, delta * 60.0 * 15.0)
 		$Rover/AshParticles.emitting = on_ash
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
 	else:

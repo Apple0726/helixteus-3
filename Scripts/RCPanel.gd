@@ -19,6 +19,11 @@ var cmp_over:String = ""
 var mult:float
 var engi_mult:float
 var REPs:int = 0
+var REPs_used:int = 0
+var enhancements:Dictionary = {}
+var ability:String = ""
+var rover_weapons:bool = true
+var rover_mining:bool = true
 
 onready var armor_slot = $Stats/Armor
 onready var wheels_slot = $Stats/Wheels
@@ -113,12 +118,23 @@ func _on_Slot_mouse_exited():
 	game.hide_tooltip()
 
 func _on_InvSlot_pressed(index:int):
-	select_comp.visible = true
-	game.sub_panel = select_comp
+	var inv:Dictionary = inventory[index]
 	if right_inv:
-		select_comp.refresh(right_inventory[index].type if right_inventory[index].has("type") else "", right_inventory[index].name if right_inventory[index].has("name") else "", true, index)
-	else:
-		select_comp.refresh(inventory[index].type if inventory[index].has("type") else "", inventory[index].name if inventory[index].has("name") else "", true, index)
+		inv = right_inventory[index]
+	select_comp.get_node("OptionButton").clear()
+	var default_type:String = inv.type if inv.has("type") else ""
+	if not rover_weapons or inv.has("type") and inv.type == "rover_weapons":
+		select_comp.get_node("OptionButton").add_item(tr("WEAPONS"))
+		if default_type == "":
+			default_type = "rover_weapons"
+	if not rover_mining or inv.has("type") and inv.type == "rover_mining":
+		select_comp.get_node("OptionButton").add_item(tr("MINING_TOOLS"), 1)
+		if default_type == "":
+			default_type = "rover_mining"
+	if select_comp.get_node("OptionButton").get_item_count() == 0:
+		return
+	select_comp.visible = true
+	select_comp.refresh(default_type, inv.name if inv.has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):
 	select_comp.visible = true
@@ -139,7 +155,20 @@ func _on_Button_pressed():
 		tile.bldg.construction_date = OS.get_system_time_msecs()
 		tile.bldg.construction_length = rover_costs.time * 1000
 		tile.bldg.XP = round(rover_costs.money / 100.0)
-		var rover_data:Dictionary = {"c_p":game.c_p, "ready":false, "HP":round((HP + HP_bonus) * mult * engi_mult), "atk":round(atk * mult * engi_mult), "def":round(def + def_bonus), "weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult), "spd":spd_bonus, "inventory":inventory.duplicate(true), "right_inventory":right_inventory.duplicate(true), "i_w_w":{}}
+		var rover_data:Dictionary = {
+			"c_p":game.c_p,
+			"ready":false,
+			"HP":round((HP + HP_bonus) * mult * engi_mult),
+			"atk":round(atk * mult * engi_mult),
+			"def":round(def + def_bonus),
+			"weight_cap":round((weight_cap + cargo_bonus) * mult * engi_mult),
+			"spd":spd_bonus,
+			"inventory":inventory.duplicate(true),
+			"right_inventory":right_inventory.duplicate(true),
+			"i_w_w":{},
+			"enhancements":enhancements,
+			"ability":ability
+		}
 		var append:bool = true
 		for i in len(game.rover_data):
 			if game.rover_data[i] == null:
@@ -176,11 +205,14 @@ func refresh():
 		atk = 15.0
 		def = 10.0
 		weight_cap = round(16000.0 * game.u_i.planck)
+		REPs += 1
 	if game.science_unlocked.has("RMK3"):
 		HP = 750.0
 		atk = 70.0
 		def = 200.0
 		weight_cap = round(200000.0 * game.u_i.planck)
+		REPs += 1
+	$Stats/Ability.visible = ability != ""
 	engi_mult = game.engineering_bonus.RSM
 	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
@@ -244,7 +276,7 @@ func refresh():
 	$Stats/DefText.help_text = "%s + %s = %s" % [def, def_bonus, round(def + def_bonus)]
 	$Stats/SpeedText.bbcode_text = str(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/SpeedText.help_text = "%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))]
-	$Stats/REPText.bbcode_text = str(REPs) + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/REPText.bbcode_text = str(REPs - REPs_used) + "  [img]Graphics/Icons/help.png[/img]"
 	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
 	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
 	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
@@ -257,6 +289,9 @@ func set_slot(inv:Dictionary, slot, i:int, _right_inv:bool = false):
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
 		btn.connect("mouse_entered", self, "_on_InvSlot_mouse_entered", ["%s" % [Helper.get_rover_weapon_text(inv.name)], i, _right_inv])
 		slot.get_node("REP").visible = REPs != 0
+		slot.get_node("REP").connect("mouse_entered", self, "_on_REP_mouse_entered")
+		slot.get_node("REP").connect("mouse_exited", self, "_on_mouse_exited")
+		slot.get_node("REP").connect("pressed", self, "_on_REP_pressed", ["Laser"])
 		for cost_key in Data.rover_weapons[inv.name].costs.keys():
 			var cost = Data.rover_weapons[inv.name].costs[cost_key]
 			if rover_costs.has(cost_key):
@@ -284,12 +319,17 @@ func _on_icon_mouse_exited():
 func _input(event):
 	if Input.is_action_just_released("X"):
 		if slot_over != -1:
+			var inv = inventory[slot_over]
 			if right_inv:
-				right_inventory[slot_over].clear()
-			else:
-				inventory[slot_over].clear()
-			refresh()
-			game.hide_tooltip()
+				inv = right_inventory[slot_over]
+			if inv.has("type"):
+				if inv.type == "rover_weapons":
+					rover_weapons = false
+				elif inv.type == "rover_mining":
+					rover_mining = false
+				inv.clear()
+				refresh()
+				game.hide_tooltip()
 		if cmp_over != "":
 			if cmp_over in ["rover_armor", "rover_CC"]:
 				self[cmp_over.split("_")[1]] = ""
@@ -301,6 +341,12 @@ func _input(event):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
-func _on_Text_mouse_exited():
-	game.hide_tooltip()
+func _on_Ability_mouse_entered():
+	game.show_tooltip(tr("RE_" + ability.to_upper()))
 
+
+func _on_AbilityInfo_mouse_entered():
+	if OS.get_latin_keyboard_variant() == "AZERTY":
+		game.show_tooltip(tr("ABILITY_INFO") % "A")
+	else:
+		game.show_tooltip(tr("ABILITY_INFO") % "Q")

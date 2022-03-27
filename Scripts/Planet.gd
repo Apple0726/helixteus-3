@@ -518,7 +518,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		game.item_to_use.num -= 1
 
 func click_tile(tile, tile_id:int):
-	if not tile.has("bldg"):
+	if not tile.has("bldg") or is_instance_valid(game.active_panel):
 		return
 	var bldg:String = tile.bldg.name
 	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
@@ -851,7 +851,7 @@ func _unhandled_input(event):
 							_tile.bldg.erase("expected_rsrc")
 					game.HUD.refresh()
 				game.show_collect_info(items_collected)
-		if Input.is_action_just_pressed("shift") and tile:
+		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
 			var path_1_value_sum:float = 0
 			var path_2_value_sum:float = 0
@@ -893,7 +893,7 @@ func _unhandled_input(event):
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
-			if game.tile_data[tile_over]:
+			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel):
 				show_tooltip(game.tile_data[tile_over])
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:

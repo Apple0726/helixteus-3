@@ -3592,7 +3592,7 @@ func sell_all_minerals():
 		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
 		show.shop = true
-		HUD.update_minerals()
+		HUD.refresh()
 
 var cmd_history:Array = []
 var cmd_history_index:int = -1

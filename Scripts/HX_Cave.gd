@@ -23,9 +23,9 @@ var atk_move_speed:float
 var ray_length:float
 onready var ray:RayCast2D = $RayCast2D
 
-enum States {IDLE, MOVE}
+enum {IDLE, MOVE}
 
-var state = States.IDLE
+var state = IDLE
 
 func _ready():
 	$Info/HP.max_value = total_HP
@@ -53,7 +53,7 @@ var move_path_v = []
 func move_HX():
 	var second_condition = true
 	if not sees_player:
-		second_condition = state == States.IDLE
+		second_condition = state == IDLE
 	if AI_enabled and second_condition or is_aggr():
 		move_timer.stop()
 		move_path_v = []
@@ -77,17 +77,17 @@ func move_HX():
 			cave_ref.HX_tiles.erase(curr_tile)
 			cave_ref.HX_tiles.append(target_tile)
 			move_path_v = a_n.get_point_path(curr_tile, target_tile)
-			state = States.MOVE
+			state = MOVE
 		
 func _process(delta):
-	if state == States.MOVE:
+	if state == MOVE:
 		if len(move_path_v) > 0:
 			var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
 			position = position.move_toward(move_to, delta * move_speed)
 			if position == move_to:
 				move_path_v.remove(0)
 		else:
-			state = States.IDLE
+			state = IDLE
 			move_timer.start()
 	if ray.enabled and is_not_aggr():
 		ray.cast_to = (cave_ref.rover.position - position).normalized() * ray_length

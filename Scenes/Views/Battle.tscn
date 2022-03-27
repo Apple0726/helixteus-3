@@ -266,9 +266,6 @@ tracks/0/keys = {
 rect_pivot_offset = Vector2( -160, 36 )
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BG" type="Sprite" parent="."]
 material = SubResource( 6 )

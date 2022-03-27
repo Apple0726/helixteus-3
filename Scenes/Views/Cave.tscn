@@ -1,4 +1,4 @@
-[gd_scene load_steps=112 format=2]
+[gd_scene load_steps=114 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -623,6 +623,39 @@ shader_param/fog_size = 6.0
 shader_param/fog_mvt_spd = 1.0
 shader_param/OCTAVES = 4
 
+[sub_resource type="Animation" id=79]
+resource_name = "Invincible"
+length = 0.3
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.388235 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=80]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
 [sub_resource type="Animation" id=26]
 resource_name = "Flash"
 length = 0.6
@@ -983,6 +1016,10 @@ texture = ExtResource( 18 )
 
 [node name="Tween" type="Tween" parent="Rover"]
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover"]
+anims/Invincible = SubResource( 79 )
+anims/RESET = SubResource( 80 )
+
 [node name="TileHighlightLeft" type="Sprite" parent="."]
 modulate = Color( 1, 0.509804, 0.509804, 0.192157 )
 light_mask = -2147483646
@@ -1271,9 +1308,6 @@ custom_colors/font_color = Color( 1, 0.807812, 0.671875, 1 )
 custom_fonts/font = SubResource( 10 )
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel" type="PanelContainer" parent="UI2"]
 visible = false
