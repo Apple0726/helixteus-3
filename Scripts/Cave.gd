@@ -36,6 +36,8 @@ onready var camera = $Camera2D
 onready var exit = $Exit
 onready var hole = $Hole
 onready var ray = $Rover/RayCast2D
+onready var RoD = $Rover/RayOfDoom
+onready var RoDray = $Rover/RayOfDoom/Ray
 onready var mining_laser = $Rover/MiningLaser
 onready var mining_p = $MiningParticles
 onready var tile_highlight_left = $TileHighlightLeft
@@ -45,6 +47,7 @@ onready var aurora_mod = $AuroraModulate
 onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
 onready var inventory_slots = $UI2/BottomLeft/VBox/InventorySlots
 onready var use_item = $UI/UseItem
+onready var ability_timer = $UI2/Ability/Timer
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
@@ -88,6 +91,8 @@ var weight_cap:float = 1500.0
 var status_effects:Dictionary = {}
 var enhancements:Dictionary = {}
 var laser_name:String = ""
+var ability:String = ""
+var ability_num:int = 0
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -290,6 +295,11 @@ func set_rover_data():
 		for i in len(inventory):
 			if inventory[i].get("type") == "rover_weapons":
 				laser_name = inventory[i].name.split("_")[0]
+	if rover_data.has("ability"):#Save migration
+		$UI2/Ability/TextureRect.texture = load("res://Graphics/Cave/RE/%s.png" % rover_data.ability)
+		ability = rover_data.ability
+		ability_num = rover_data.ability_num
+		$UI2/Ability/Panel/Num.text = str(ability_num)
 
 func set_slot_info(slot, _inv:Dictionary):
 	var rsrc = _inv.type
@@ -979,6 +989,18 @@ func update_ray():
 		_inv = right_inventory[0]
 		_tile_highlight = tile_highlight_right
 		holding_click = Input.is_action_pressed("right_click")
+	if RoDray.enabled:
+		var laser_reach = 9001.0
+		RoD.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
+		RoDray.cast_to.x = laser_reach
+		var coll = RoDray.get_collider()
+		if coll is TileMap:
+			var pos = RoDray.get_collision_point()# + RoDray.cast_to / 200.0
+			laser_reach = rover.position.distance_to(pos) / rover_size
+		print(RoDray.get_collision_point().x)
+		RoD.scale.x = laser_reach / 16.0
+		RoD.scale.y = 16.0
+		RoD.visible = true
 	if ray.enabled:
 		var laser_reach = Data.rover_mining[_inv.name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
@@ -1043,6 +1065,23 @@ func _input(event):
 			if curr_slot >= len(inventory):
 				curr_slot = 0
 			set_border(curr_slot)
+		if ability_timer.is_stopped() and ability_num > 0:
+			if OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_pressed("A") or Input.is_action_just_pressed("Q"):
+				if ability == "armor_3":
+					ability_timer.start(15.0 / time_speed)
+				elif ability == "laser_2":
+					RoDray.enabled = true
+					if game.screen_shake:
+						$Camera2D/Screenshake.start(1.5, 20, 12)
+					$Rover/RayOfDoom.material.set_shader_param("outline_color", get_color(laser_name))
+					$Rover/RayOfDoom/AnimationPlayer.play("RayFade", -1, time_speed)
+					ability_timer.start(10.0 / time_speed)
+				elif ability == "laser_8":
+					ability_timer.start(11.0 / time_speed)
+				$UI2/Ability/TextureProgress.visible = true
+				$UI2/Ability/TextureRect.modulate.a = 0.2
+				ability_num -= 1
+				$UI2/Ability/Panel/Num.text = str(ability_num)
 		if Input.is_action_just_released("M"):
 			if not $UI/Error.visible:
 				$UI/Minimap.visible = not $UI/Minimap.visible
@@ -1244,6 +1283,8 @@ func remove_item(item:Dictionary, num:int = 1):
 		slots[curr_slot].get_node("Label").text = String(num)
 	
 func _process(delta):
+	if not ability_timer.is_stopped():
+		$UI2/Ability/TextureProgress.value = ability_timer.time_left / ability_timer.wait_time
 	for effect in status_effects.keys():
 		status_effects[effect] -= delta * time_speed
 		if status_effects[effect] < 0:
@@ -1275,12 +1316,19 @@ func _process(delta):
 func use_item(item:Dictionary, _tile_highlight, delta):
 	if item.type == "rover_weapons":
 		attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x))
+		if not ability_timer.is_stopped() and ability == "laser_8":
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 3.0 * PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 3.0 * PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 4.0 * PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 4.0 * PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 5.0 * PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 5.0 * PI/16.0)
 		if enhancements.has("laser_6"):
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/12.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/12.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/16.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/16.0)
 		if enhancements.has("laser_7"):
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/6.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/6.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/8.0)
+			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/8.0)
 		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
 		if status_effects.has("invincible") and enhancements.has("armor_6"):
 			cooldown /= 3.0
@@ -1616,7 +1664,6 @@ func _physics_process(delta):
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
-		var rot:float = fposmod($Rover/Sprite.rotation_degrees,360)
 		if input_vector.x > 0:
 			if input_vector.y > 0:
 				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 45, 360) + 45, delta * 60.0 * 15.0)
@@ -1819,3 +1866,23 @@ func _on_FloorCollisionDetector_body_entered(body):
 func _on_FloorCollisionDetector_body_exited(body):
 	max_speed = 1000
 	on_ash = false
+
+
+func _on_Ability_mouse_entered():
+	if OS.get_latin_keyboard_variant() == "AZERTY":
+		game.show_tooltip(tr("USE_ABILITY") % ["A", ability_num])
+	else:
+		game.show_tooltip(tr("USE_ABILITY") % ["Q", ability_num])
+
+
+func _on_AbilityTimer_timeout():
+	if ability == "laser_2":
+		RoDray.enabled = false
+		$Rover/RayOfDoom/AnimationPlayer.play("RayDisappear", -1, time_speed)
+	$UI2/Ability/TextureProgress.visible = false
+	$UI2/Ability/TextureRect.modulate = Color.white
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "RayDisappear":
+		$Rover/RayOfDoom.visible = false

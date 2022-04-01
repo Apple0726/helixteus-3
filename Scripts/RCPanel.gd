@@ -22,6 +22,7 @@ var REPs:int = 0
 var REPs_used:int = 0
 var enhancements:Dictionary = {}
 var ability:String = ""
+var ability_num:int = 2
 var rover_weapons:bool = true
 var rover_mining:bool = true
 
@@ -78,6 +79,7 @@ func _on_REP_pressed(type:String):
 	for panel in ["Armor", "Wheels", "CC", "Laser"]:
 		RE_panel.get_node(panel).visible = false
 	RE_panel.get_node(type).visible = true
+	game.sub_panel = RE_panel
 	RE_panel.get_node("Label").text = tr(type.to_upper())
 	RE_panel.visible = true
 
@@ -167,7 +169,8 @@ func _on_Button_pressed():
 			"right_inventory":right_inventory.duplicate(true),
 			"i_w_w":{},
 			"enhancements":enhancements,
-			"ability":ability
+			"ability":ability,
+			"ability_num":ability_num,
 		}
 		var append:bool = true
 		for i in len(game.rover_data):
@@ -200,18 +203,21 @@ func refresh():
 	atk = 5.0
 	def = 2.0
 	weight_cap = round(3000.0 * game.u_i.planck)
+	ability_num = 2
 	if game.science_unlocked.has("RMK2"):
 		HP = 50.0
 		atk = 15.0
 		def = 10.0
 		weight_cap = round(16000.0 * game.u_i.planck)
 		REPs += 1
+		ability_num = 3
 	if game.science_unlocked.has("RMK3"):
 		HP = 750.0
 		atk = 70.0
 		def = 200.0
 		weight_cap = round(200000.0 * game.u_i.planck)
 		REPs += 1
+		ability_num = 4
 	$Stats/Ability.visible = ability != ""
 	engi_mult = game.engineering_bonus.RSM
 	mult = tile.bldg.path_1_value
@@ -342,8 +348,7 @@ func _on_close_button_pressed():
 	game.toggle_panel(self)
 
 func _on_Ability_mouse_entered():
-	game.show_tooltip(tr("RE_" + ability.to_upper()))
-
+	game.show_tooltip(Helper.get_RE_info(ability))
 
 func _on_AbilityInfo_mouse_entered():
 	if OS.get_latin_keyboard_variant() == "AZERTY":

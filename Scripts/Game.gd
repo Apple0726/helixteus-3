@@ -3660,7 +3660,10 @@ func _input(event):
 				item_to_use.num = 0
 				update_item_cursor()
 		elif not tutorial or tutorial.tut_num >= 26:
-			if is_instance_valid(active_panel):
+			if is_instance_valid(sub_panel):
+				sub_panel.visible = false
+				sub_panel = null
+			elif is_instance_valid(active_panel):
 				if c_v != "":
 					if is_instance_valid(sub_panel):
 						sub_panel.visible = false
@@ -3672,9 +3675,6 @@ func _input(event):
 					toggle_panel(active_panel)
 				hide_tooltip()
 				hide_adv_tooltip()
-			elif is_instance_valid(sub_panel):
-				sub_panel.visible = false
-				sub_panel = null
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):

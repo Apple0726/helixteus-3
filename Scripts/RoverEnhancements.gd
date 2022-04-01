@@ -39,7 +39,7 @@ func _ready():
 			RE.get_node("Button").connect("pressed", self, "on_RE_clicked", [RE.name, RE.texture])
 
 func on_RE_mouse_entered(RE_name:String):
-	game.show_tooltip("RE_" + tr(RE_name.to_upper()))
+	game.show_tooltip(Helper.get_RE_info(RE_name))
 
 func on_RE_mouse_exited():
 	game.hide_tooltip()

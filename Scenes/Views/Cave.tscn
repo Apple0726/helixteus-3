@@ -1,4 +1,4 @@
-[gd_scene load_steps=114 format=2]
+[gd_scene load_steps=120 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -34,6 +34,8 @@
 [ext_resource path="res://Scenes/Ship2Map.tscn" type="PackedScene" id=32]
 [ext_resource path="res://Resources/PlanetTileSet.tres" type="TileSet" id=33]
 [ext_resource path="res://Graphics/Tiles/SoilSpritesheet.png" type="Texture" id=34]
+[ext_resource path="res://Graphics/Cave/RE/armor_3.png" type="Texture" id=35]
+[ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=36]
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
@@ -575,6 +577,84 @@ shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
 shader_param/noise_scale = Vector2( 1, 1 )
 
+[sub_resource type="ShaderMaterial" id=84]
+shader = ExtResource( 1 )
+shader_param/beams = 1
+shader_param/energy = 8.0
+shader_param/roughness = 2
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.2
+shader_param/outline_thickness = 0.1
+shader_param/beam_difference = 0.0
+shader_param/glow = 1.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1, 1, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=82]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_param/thickness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0.2, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=85]
+resource_name = "RayDisappear"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_param/thickness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0.2, -0.25, 0, 0.2, -0.163699, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath(".:material:shader_param/outline_thickness")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0.1, -0.25, 0, 0.4, -0.0544836, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+
+[sub_resource type="Animation" id=83]
+resource_name = "RayFade"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_param/thickness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0, 0.15007, 0.334945, -0.1, -0.125959, 0.25, 0, 0.2, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.1, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath(".:material:shader_param/outline_thickness")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0.1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1 )
+}
+
 [sub_resource type="CircleShape2D" id=29]
 radius = 40.0
 
@@ -855,6 +935,8 @@ zoom = Vector2( 2.5, 2.5 )
 smoothing_enabled = true
 smoothing_speed = 10.0
 
+[node name="Screenshake" parent="Camera2D" instance=ExtResource( 36 )]
+
 [node name="Exit" type="Area2D" parent="."]
 position = Vector2( 212, 4 )
 collision_layer = 32
@@ -971,6 +1053,23 @@ texture = ExtResource( 5 )
 centered = false
 offset = Vector2( 0, -8 )
 
+[node name="RayOfDoom" type="Sprite" parent="Rover"]
+visible = false
+material = SubResource( 84 )
+scale = Vector2( 13, 6.5 )
+texture = ExtResource( 5 )
+centered = false
+offset = Vector2( 0, -8 )
+
+[node name="Ray" type="RayCast2D" parent="Rover/RayOfDoom"]
+scale = Vector2( 0.0769231, 0.153846 )
+cast_to = Vector2( 50, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover/RayOfDoom"]
+anims/RESET = SubResource( 82 )
+anims/RayDisappear = SubResource( 85 )
+anims/RayFade = SubResource( 83 )
+
 [node name="Glow" type="Sprite" parent="Rover"]
 modulate = Color( 1, 1, 1, 0 )
 light_mask = -2147483647
@@ -1046,6 +1145,9 @@ anims/Flash = SubResource( 7 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="MinimapBG" type="Sprite" parent="UI"]
 modulate = Color( 0, 0, 0, 1 )
@@ -1437,6 +1539,45 @@ __meta__ = {
 
 [node name="Dialogue" parent="UI2" instance=ExtResource( 24 )]
 
+[node name="Ability" type="Panel" parent="UI2"]
+margin_top = 40.0
+margin_right = 64.0
+margin_bottom = 104.0
+theme = ExtResource( 29 )
+
+[node name="Timer" type="Timer" parent="UI2/Ability"]
+one_shot = true
+
+[node name="TextureRect" type="TextureRect" parent="UI2/Ability"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 35 )
+
+[node name="Panel" type="Panel" parent="UI2/Ability"]
+show_behind_parent = true
+margin_left = 60.0
+margin_right = 88.0
+margin_bottom = 24.0
+
+[node name="Num" type="Label" parent="UI2/Ability/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+text = "2"
+align = 1
+
+[node name="TextureProgress" type="TextureProgress" parent="UI2/Ability"]
+visible = false
+modulate = Color( 1, 1, 1, 0.423529 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+max_value = 1.0
+step = 0.0
+value = 0.4
+texture_progress = ExtResource( 4 )
+fill_mode = 5
+nine_patch_stretch = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Aurora = SubResource( 15 )
 anims/RoverSprint = SubResource( 16 )
@@ -1463,6 +1604,7 @@ environment = SubResource( 19 )
 [connection signal="body_exited" from="Hole" to="." method="_on_body_exited"]
 [connection signal="body_entered" from="FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_entered"]
 [connection signal="body_exited" from="FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_exited"]
+[connection signal="animation_finished" from="Rover/RayOfDoom/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= [ "money" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]
@@ -1478,5 +1620,8 @@ environment = SubResource( 19 )
 [connection signal="mouse_entered" from="UI2/CaveInfo/Modifiers" to="." method="_on_Modifiers_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Modifiers" to="." method="_on_mouse_exited"]
 [connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
+[connection signal="mouse_entered" from="UI2/Ability" to="." method="_on_Ability_mouse_entered"]
+[connection signal="mouse_exited" from="UI2/Ability" to="." method="_on_mouse_exited"]
+[connection signal="timeout" from="UI2/Ability/Timer" to="." method="_on_AbilityTimer_timeout"]
 [connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]

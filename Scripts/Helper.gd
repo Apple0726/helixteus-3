@@ -1397,3 +1397,24 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			]
 			icons.append(preload("res://Graphics/Icons/Inventory.png"))
 	return st
+
+func get_time_div(time:float):
+	return round(time / game.u_i.time_speed * 10.0) / 10.0
+
+func get_RE_info(RE_name:String):
+	if RE_name == "armor_3":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(15.0))
+	elif RE_name == "armor_4":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(0.5))
+	elif RE_name == "armor_5":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(1.5))
+	elif RE_name == "laser_2":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(10.0))
+	elif RE_name == "laser_4":
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(1.0), get_time_div(0.8)])
+	elif RE_name == "laser_5":
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(0.5), get_time_div(1.0)])
+	elif RE_name == "laser_8":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(11.0))
+	else:
+		return tr("RE_" + RE_name.to_upper())

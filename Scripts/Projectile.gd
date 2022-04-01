@@ -70,7 +70,9 @@ func collide(collision:KinematicCollision2D):
 				set_physics_process(false)
 				queue_free()
 		else:#if the projectile comes from the enemy
-			if cave_ref.enhancements.has("armor_2"):
+			if not cave_ref.ability_timer.is_stopped() and cave_ref.ability == "armor_3":
+				deflected = true
+			elif cave_ref.enhancements.has("armor_2"):
 				deflected = randf() < 0.3
 			elif cave_ref.enhancements.has("armor_0"):
 				deflected = randf() < 0.15
