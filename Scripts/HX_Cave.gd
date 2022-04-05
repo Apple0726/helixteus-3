@@ -21,6 +21,7 @@ var move_speed:float = 200.0
 var idle_move_speed:float
 var atk_move_speed:float
 var ray_length:float
+var status_effects:Dictionary = {}
 onready var ray:RayCast2D = $RayCast2D
 
 enum {IDLE, MOVE}
@@ -100,6 +101,10 @@ func _process(delta):
 		else:
 			sees_player = false
 			move_speed = idle_move_speed
+#	for effect in status_effects.keys():
+#		status_effects[effect] -= delta * cave_ref.time_speed
+#		if status_effects[effect] < 0:
+#			status_effects.erase(effect)
 
 func chase_player():
 	if aggressive_timer:
@@ -137,3 +142,13 @@ func hit(damage:float):
 		chase_player()
 	$HurtAnimation.stop()
 	$HurtAnimation.play("Hurt")
+
+func RoD_damage():
+	var dmg:float = cave_ref.laser_damage / def
+	Helper.show_dmg(round(dmg), position, cave_ref)
+	hit(dmg)
+
+func on_RoD_timeout():
+	if status_effects.has("RoD"):
+		$RoDTimer.start(0.2 / cave_ref.time_speed)
+		RoD_damage()

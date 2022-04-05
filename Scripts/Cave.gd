@@ -37,7 +37,11 @@ onready var exit = $Exit
 onready var hole = $Hole
 onready var ray = $Rover/RayCast2D
 onready var RoD = $Rover/RayOfDoom
+onready var RoD_sprite = $Rover/RayOfDoom/Sprite
 onready var RoDray = $Rover/RayOfDoom/Ray
+onready var RoD_effects = $RoDEffects
+onready var RoD_coll = $Rover/RayOfDoom/CollisionShape2D
+onready var RoD_coll2 = $Rover/RayOfDoom/CollisionShape2D2
 onready var mining_laser = $Rover/MiningLaser
 onready var mining_p = $MiningParticles
 onready var tile_highlight_left = $TileHighlightLeft
@@ -91,6 +95,7 @@ var weight_cap:float = 1500.0
 var status_effects:Dictionary = {}
 var enhancements:Dictionary = {}
 var laser_name:String = ""
+var laser_damage:float = 0.0
 var ability:String = ""
 var ability_num:int = 0
 
@@ -132,6 +137,32 @@ var enemy_projectile_size:float = 1.0
 var treasure_mult:float = 1.0
 
 func _ready():
+	HP = rover_data.HP
+	total_HP = rover_data.HP
+	atk = rover_data.atk
+	def = rover_data.def
+	speed_mult = rover_data.spd
+	weight_cap = rover_data.weight_cap
+	inventory = rover_data.inventory
+	right_inventory = rover_data.right_inventory
+	i_w_w = rover_data.i_w_w
+	enhancements = rover_data.get("enhancements", {})
+	if right_inventory[0].get("type") == "rover_weapons":
+		laser_name = right_inventory[0].name.split("_")[0]
+	else:
+		for i in len(inventory):
+			if inventory[i].get("type") == "rover_weapons":
+				laser_name = inventory[i].name.split("_")[0]
+	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0))
+	if rover_data.has("ability"):#Save migration
+		ability = rover_data.ability
+		ability_num = rover_data.ability_num
+		if ability != "":
+			$UI2/Ability.visible = true
+			$UI2/Ability/TextureRect.texture = load("res://Graphics/Cave/RE/%s.png" % rover_data.ability)
+			$UI2/Ability/Panel/Num.text = str(ability_num)
+		else:
+			$UI2/Ability.visible = false
 	$Walls.tile_set.tile_set_modulate(0, Color.white)
 	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
@@ -277,29 +308,6 @@ func on_filter_pressed(rsrc:String, filter_slot):
 
 func on_filter_mouse_exited():
 	game.hide_tooltip()
-
-func set_rover_data():
-	HP = rover_data.HP
-	total_HP = rover_data.HP
-	atk = rover_data.atk
-	def = rover_data.def
-	speed_mult = rover_data.spd
-	weight_cap = rover_data.weight_cap
-	inventory = rover_data.inventory
-	right_inventory = rover_data.right_inventory
-	i_w_w = rover_data.i_w_w
-	enhancements = rover_data.get("enhancements", {})
-	if right_inventory[0].get("type") == "rover_weapons":
-		laser_name = right_inventory[0].name.split("_")[0]
-	else:
-		for i in len(inventory):
-			if inventory[i].get("type") == "rover_weapons":
-				laser_name = inventory[i].name.split("_")[0]
-	if rover_data.has("ability"):#Save migration
-		$UI2/Ability/TextureRect.texture = load("res://Graphics/Cave/RE/%s.png" % rover_data.ability)
-		ability = rover_data.ability
-		ability_num = rover_data.ability_num
-		$UI2/Ability/Panel/Num.text = str(ability_num)
 
 func set_slot_info(slot, _inv:Dictionary):
 	var rsrc = _inv.type
@@ -997,10 +1005,19 @@ func update_ray():
 		if coll is TileMap:
 			var pos = RoDray.get_collision_point()# + RoDray.cast_to / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
-		print(RoDray.get_collision_point().x)
-		RoD.scale.x = laser_reach / 16.0
-		RoD.scale.y = 16.0
+			RoD_effects.get_node("Sprite").visible = true
+			RoD_effects.get_node("Particles").emitting = true
+			RoD_effects.position = pos
+		else:
+			RoD_effects.get_node("Sprite").visible = false
+			RoD_effects.get_node("Particles").emitting = false
+		RoD_sprite.scale.x = laser_reach / 16.0
+		RoD_sprite.scale.y = 16.0
 		RoD.visible = true
+		RoD.monitoring = true
+		var l:float = (RoDray.get_collision_point() - rover.position).length()
+		RoD_coll.shape.b.x = l
+		RoD_coll2.shape.b.x = l
 	if ray.enabled:
 		var laser_reach = Data.rover_mining[_inv.name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
@@ -1066,14 +1083,14 @@ func _input(event):
 				curr_slot = 0
 			set_border(curr_slot)
 		if ability_timer.is_stopped() and ability_num > 0:
-			if OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_pressed("A") or Input.is_action_just_pressed("Q"):
+			if OS.get_latin_keyboard_variant() == "AZERTY" and Input.is_action_just_pressed("A") or Input.is_action_just_pressed("Q") and ability != "":
 				if ability == "armor_3":
 					ability_timer.start(15.0 / time_speed)
 				elif ability == "laser_2":
 					RoDray.enabled = true
 					if game.screen_shake:
 						$Camera2D/Screenshake.start(1.5, 20, 12)
-					$Rover/RayOfDoom.material.set_shader_param("outline_color", get_color(laser_name))
+					$Rover/RayOfDoom/Sprite.material.set_shader_param("outline_color", get_color(laser_name))
 					$Rover/RayOfDoom/AnimationPlayer.play("RayFade", -1, time_speed)
 					ability_timer.start(10.0 / time_speed)
 				elif ability == "laser_8":
@@ -1382,7 +1399,7 @@ func attack(angle:float):
 		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
 		proj_scale *= 3.0
-	add_proj(false, rover.position, 70.0, angle, laser_texture, Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), laser_color, Data.ProjType.LASER, proj_scale)
+	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, laser_color, Data.ProjType.LASER, proj_scale)
 
 func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
 	if _class == 1:
@@ -1683,6 +1700,7 @@ func _physics_process(delta):
 				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 90, 360) + 90, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
 				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 90, 360) - 90, delta * 60.0 * 15.0)
+		$Rover/CollisionShape2D.rotation_degrees = $Rover/Sprite.rotation_degrees
 		$Rover/AshParticles.emitting = on_ash
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
 	else:
@@ -1878,6 +1896,9 @@ func _on_Ability_mouse_entered():
 func _on_AbilityTimer_timeout():
 	if ability == "laser_2":
 		RoDray.enabled = false
+		RoD.monitoring = false
+		RoD_effects.get_node("Sprite").visible = false
+		RoD_effects.get_node("Particles").emitting = false
 		$Rover/RayOfDoom/AnimationPlayer.play("RayDisappear", -1, time_speed)
 	$UI2/Ability/TextureProgress.visible = false
 	$UI2/Ability/TextureRect.modulate = Color.white
@@ -1885,4 +1906,16 @@ func _on_AbilityTimer_timeout():
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "RayDisappear":
-		$Rover/RayOfDoom.visible = false
+		RoD.visible = false
+
+
+func _on_RayOfDoom_body_entered(body):
+	body.status_effects.RoD = INF
+	body.RoD_damage()
+	body.get_node("RoDTimer").start(0.2 / time_speed)
+	body.get_node("RoDTimer").connect("timeout", body, "on_RoD_timeout")
+
+
+func _on_RayOfDoom_body_exited(body):
+	body.get_node("RoDTimer").disconnect("timeout", body, "on_RoD_timeout")
+	body.status_effects.erase("RoD")

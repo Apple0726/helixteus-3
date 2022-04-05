@@ -19,9 +19,6 @@ margin_right = 512.0
 margin_bottom = 296.0
 theme = ExtResource( 4 )
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 6 )]
 
@@ -57,10 +54,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox" type="HBoxContainer" parent="Rovers"]
-anchor_top = 0.5
+[node name="ScrollContainer" type="ScrollContainer" parent="Rovers"]
 anchor_right = 1.0
-anchor_bottom = 0.5
+anchor_bottom = 1.0
+margin_top = 40.0
+margin_bottom = -8.0
+custom_styles/bg = SubResource( 1 )
+scroll_vertical_enabled = false
+
+[node name="HBox" type="HBoxContainer" parent="Rovers/ScrollContainer"]
+margin_left = 20.0
+margin_top = 15.0
+margin_right = 20.0
+margin_bottom = 15.0
 grow_vertical = 2
 alignment = 1
 __meta__ = {

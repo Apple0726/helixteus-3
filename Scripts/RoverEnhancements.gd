@@ -79,6 +79,7 @@ func remove_recursive(RE_name):
 
 func _on_TextureButton_close_button_pressed():
 	visible = false
+	game.sub_panel = null
 
 
 func _on_Control_visibility_changed():

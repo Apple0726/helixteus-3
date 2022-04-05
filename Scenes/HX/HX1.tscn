@@ -527,3 +527,6 @@ texture = ExtResource( 14 )
 
 [node name="LabelAnimation" type="AnimationPlayer" parent="."]
 anims/LabelAnim = SubResource( 23 )
+
+[node name="RoDTimer" type="Timer" parent="."]
+one_shot = true

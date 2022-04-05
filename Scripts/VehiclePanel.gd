@@ -33,7 +33,7 @@ func _input(event):
 func refresh():
 	$Panel.visible = game.science_unlocked.has("FG")
 	$Probes.visible = game.universe_data[game.c_u].lv >= 50
-	var hbox = $Rovers/HBox
+	var hbox = $Rovers/ScrollContainer/HBox
 	var hbox2 = $Panel/GridContainer
 	var hbox3 = $Probes/ScrollContainer/GridContainer
 	for rov in hbox.get_children():

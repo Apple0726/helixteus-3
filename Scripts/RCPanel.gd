@@ -194,11 +194,6 @@ func _on_Button_pressed():
 func refresh():
 	tile = game.tile_data[game.c_t]
 	REPs = tile.bldg.path_1 / 20
-	$Stats/REPIcon.visible = REPs != 0
-	$Stats/REPText.visible = REPs != 0
-	armor_slot.get_node("REP").visible = REPs != 0
-	wheels_slot.get_node("REP").visible = REPs != 0
-	CC_slot.get_node("REP").visible = REPs != 0
 	HP = 20.0
 	atk = 5.0
 	def = 2.0
@@ -218,6 +213,11 @@ func refresh():
 		weight_cap = round(200000.0 * game.u_i.planck)
 		REPs += 1
 		ability_num = 4
+	$Stats/REPIcon.visible = REPs != 0
+	$Stats/REPText.visible = REPs != 0
+	armor_slot.get_node("REP").visible = REPs != 0
+	wheels_slot.get_node("REP").visible = REPs != 0
+	CC_slot.get_node("REP").visible = REPs != 0
 	$Stats/Ability.visible = ability != ""
 	engi_mult = game.engineering_bonus.RSM
 	mult = tile.bldg.path_1_value

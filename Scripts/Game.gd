@@ -1660,7 +1660,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				cave = cave_scene.instance()
 				cave.rover_data = rover_data[rover_id]
-				cave.set_rover_data()
 				add_child(cave)
 				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 			"ruins":
