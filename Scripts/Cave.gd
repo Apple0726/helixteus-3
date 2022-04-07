@@ -71,13 +71,15 @@ var cave_darkness:float = 0.0
 var dont_gen_anything:bool = false
 var wormhole
 var on_ash:bool = false
+var input_vector:Vector2 = Vector2.ZERO
 
 var velocity = Vector2.ZERO
 var max_speed = 1000
-var acceleration = 12000
-var friction = 12000
+var acceleration = 200
+var friction = 200
 var rover_size = 1.0
 var speed_penalty:float = 1.0
+var dashes_remaining:int = 0
 
 #Rover stats
 var atk:float = 5.0
@@ -163,6 +165,12 @@ func _ready():
 			$UI2/Ability/Panel/Num.text = str(ability_num)
 		else:
 			$UI2/Ability.visible = false
+	if enhancements.has("wheels_2"):
+		dashes_remaining = 3
+	elif enhancements.has("wheels_1"):
+		dashes_remaining = 2
+	elif enhancements.has("wheels_0"):
+		dashes_remaining = 1
 	$Walls.tile_set.tile_set_modulate(0, Color.white)
 	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
@@ -1072,6 +1080,29 @@ func _input(event):
 		for MM in $UI.get_children():
 			MM.modulate.a = alpha
 	else:
+		if Input.is_action_just_pressed("spacebar") and dashes_remaining > 0:
+			print(dashes_remaining)
+			$Rover/DashTimer.start(0.6 / time_speed)
+			dashes_remaining -= 1
+			$Rover/BreakRocksWithDash.monitorable = true
+			$Rover/BreakRocksWithDash.monitoring = true
+			var speed_mult2 = min(2.5, rover_size) * time_speed * speed_penalty
+			var rot_vec:Vector2 = Vector2.ZERO
+			if input_vector != Vector2.ZERO:
+				rot_vec = input_vector
+			else:
+				var sprite = $Rover/Sprite
+				rot_vec = Vector2(cos(sprite.rotation), sin(sprite.rotation)).normalized() 
+			var base_vel:Vector2 = rot_vec * max_speed * speed_mult2
+			if enhancements.has("wheels_4"):
+				velocity = base_vel * 4.5
+			else:
+				velocity = base_vel * 3.0
+			status_effects.invincible = 0.3
+			if enhancements.has("wheels_3"):
+				rover.collision_mask = 32
+			else:
+				rover.collision_mask = 33
 		if event.is_action_released("scroll_up"):
 			curr_slot -= 1
 			if curr_slot < 0:
@@ -1312,6 +1343,7 @@ func _process(delta):
 				rover.get_node("Burn").visible = false
 				$BurnTimer.stop()
 			elif effect == "invincible":
+				rover.collision_mask = 37
 				$Rover/AnimationPlayer.stop()
 	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
 		tile_highlight_left.position.x = floor(rover.position.x / 200) * 200 + 100
@@ -1331,6 +1363,7 @@ func _process(delta):
 			enemy.MM_icon.position = enemy.position * minimap_zoom
 
 func use_item(item:Dictionary, _tile_highlight, delta):
+	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
 	if item.type == "rover_weapons":
 		attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x))
 		if not ability_timer.is_stopped() and ability == "laser_8":
@@ -1347,7 +1380,7 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/8.0)
 			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/8.0)
 		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
-		if status_effects.has("invincible") and enhancements.has("armor_6"):
+		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
 		cooldown(cooldown)
 	elif item.type == "rover_mining" and tile_highlighted_for_mining != -1:
@@ -1460,7 +1493,7 @@ func get_color(color:String):
 			return Color.white
 
 func hit_rock(item:Dictionary, _tile_highlight, delta):
-	var st = String(tile_highlighted_for_mining)
+	var st = str(tile_highlighted_for_mining)
 	if not tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st] = {}
 		var tile = tiles_touched_by_laser[st]
@@ -1474,65 +1507,70 @@ func hit_rock(item:Dictionary, _tile_highlight, delta):
 		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
-			game.stats_univ.tiles_mined_caves += 1
-			game.stats_dim.tiles_mined_caves += 1
-			game.stats_global.tiles_mined_caves += 1
-			var map_pos = cave_wall.world_to_map(_tile_highlight.position)
-			var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
-			if volcano_mult > 1.0:
-				rsrc.minerals = rand_range(2, 3) * pow(difficulty, 1.2)
-			#var wall_type = cave_wall.get_cellv(map_pos)
-			for mat in p_i.surface.keys():
-				if randf() < p_i.surface[mat].chance / 2.5:
-					var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
-					rsrc[mat] = amount
-			if deposits.has(st):
-				var deposit = deposits[st]
-				rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
-				deposit.queue_free()
-				deposits.erase(st)
-			var remainder:float = 0
-			for r in rsrc.keys():
-				if game.cave_filters.has(r):
-					if game.cave_filters[r]:
-						rsrc.erase(r)
-						continue
-				else:
-					game.cave_filters[r] = false
-					add_filter(r)
-				game.show[r] = true
-				if r == "minerals":
-					add_to_inventory(r, rsrc[r], {})
-				else:
-					rsrc[r] *= game.u_i.planck
-					remainder += add_weight_rsrc(r, rsrc[r])
-			if remainder != 0:
-				game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
-			cave_wall.set_cellv(map_pos, -1)
-			minimap_cave.set_cellv(map_pos, tile_type)
-			cave_wall.update_bitmask_region()
-			if not rsrc.empty():
-				var vbox = $UI2/Panel/VBoxContainer
-				var you_mined = Label.new()
-				you_mined.align = Label.ALIGN_CENTER
-				you_mined.text = tr("YOU_MINED")
-				reset_panel_anim()
-				Helper.put_rsrc(vbox, 32, rsrc)
-				vbox.add_child(you_mined)
-				vbox.move_child(you_mined, 0)
-				$UI2/Panel.visible = true
-				$UI2/Panel.modulate.a = 1
-				var timer = $UI2/Panel/Timer
-				timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
-				timer.start()
-			astar_node.add_point(tile_highlighted_for_mining, Vector2(map_pos.x, map_pos.y))
-			connect_points(map_pos, true)
-			remove_child(tiles_touched_by_laser[st].bar)
-			tiles_touched_by_laser[st].bar.queue_free()
-			tiles_touched_by_laser.erase(st)
-			cave.set_cellv(map_pos, tile_type)
-			tiles_mined[cave_floor - 1].append(tile_highlighted_for_mining)
+			mine_tile(_tile_highlight.position, tile_highlighted_for_mining)
 			tile_highlighted_for_mining = -1
+
+func mine_tile(tile_pos:Vector2, tile_id:int):
+	var st = str(tile_id)
+	game.stats_univ.tiles_mined_caves += 1
+	game.stats_dim.tiles_mined_caves += 1
+	game.stats_global.tiles_mined_caves += 1
+	var map_pos = cave_wall.world_to_map(tile_pos)
+	print(map_pos)
+	var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
+	if volcano_mult > 1.0:
+		rsrc.minerals = rand_range(2, 3) * pow(difficulty, 1.2)
+	#var wall_type = cave_wall.get_cellv(map_pos)
+	for mat in p_i.surface.keys():
+		if randf() < p_i.surface[mat].chance / 2.5:
+			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
+			rsrc[mat] = amount
+	if deposits.has(st):
+		var deposit = deposits[st]
+		rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
+		deposit.queue_free()
+		deposits.erase(st)
+	var remainder:float = 0
+	for r in rsrc.keys():
+		if game.cave_filters.has(r):
+			if game.cave_filters[r]:
+				rsrc.erase(r)
+				continue
+		else:
+			game.cave_filters[r] = false
+			add_filter(r)
+		game.show[r] = true
+		if r == "minerals":
+			add_to_inventory(r, rsrc[r], {})
+		else:
+			rsrc[r] *= game.u_i.planck
+			remainder += add_weight_rsrc(r, rsrc[r])
+	if remainder != 0:
+		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
+	cave_wall.set_cellv(map_pos, -1)
+	minimap_cave.set_cellv(map_pos, tile_type)
+	cave_wall.update_bitmask_region()
+	if not rsrc.empty():
+		var vbox = $UI2/Panel/VBoxContainer
+		var you_mined = Label.new()
+		you_mined.align = Label.ALIGN_CENTER
+		you_mined.text = tr("YOU_MINED")
+		reset_panel_anim()
+		Helper.put_rsrc(vbox, 32, rsrc)
+		vbox.add_child(you_mined)
+		vbox.move_child(you_mined, 0)
+		$UI2/Panel.visible = true
+		$UI2/Panel.modulate.a = 1
+		var timer = $UI2/Panel/Timer
+		timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
+		timer.start()
+	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
+	connect_points(map_pos, true)
+	if tiles_touched_by_laser.has(st):
+		tiles_touched_by_laser[st].bar.queue_free()
+		tiles_touched_by_laser.erase(st)
+	cave.set_cellv(map_pos, tile_type)
+	tiles_mined[cave_floor - 1].append(tile_id)
 
 func add_weight_rsrc(r, rsrc_amount):
 	weight += rsrc_amount
@@ -1542,18 +1580,18 @@ func add_weight_rsrc(r, rsrc_amount):
 		i_w_w[r] = rsrc_amount
 	var diff:float = floor((weight - weight_cap) * 100) / 100.0
 	if enhancements.has("CC_0") or enhancements.has("CC_1") or enhancements.has("CC_2"):
-		diff = floor((weight - weight_cap * 5.0) * 100) / 100.0
-		if weight > weight_cap * 5.0:
+		diff = floor((weight - weight_cap * 8.0) * 100) / 100.0
+		if weight > weight_cap * 8.0:
 			weight -= diff
 			i_w_w[r] -= diff
-			var float_error:float = weight - weight_cap * 5.0
+			var float_error:float = weight - weight_cap * 8.0
 			weight -= float_error
 			i_w_w[r] -= float_error
 		if weight > weight_cap:
 			if enhancements.has("CC_1"):
-				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 5.0, 1.0, 0.7), 0.7, 1.0)
+				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 8.0, 1.0, 0.7), 0.7, 1.0)
 			elif enhancements.has("CC_0"):
-				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 5.0, 1.0, 0.3), 0.3, 1.0)
+				speed_penalty = clamp(range_lerp(weight / weight_cap, 1.0, 8.0, 1.0, 0.3), 0.3, 1.0)
 			$UI2/Inventory/Label["custom_colors/font_color"] = Color.red
 		else:
 			$UI2/Inventory/Label["custom_colors/font_color"] = Color(1.0, 0.8, 0.67)
@@ -1580,7 +1618,8 @@ func _on_Timer_timeout():
 	tween.stop_all()
 
 func hit_player(damage:float, _status_effects:Dictionary = {}):
-	if not status_effects.has("invincible"):
+	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
+	if not status_effects.has("invincible") and not firing_RoD:
 		if enhancements.has("armor_5"):
 			status_effects.invincible = 1.5
 			$Rover/AnimationPlayer.play("Invincible")
@@ -1671,7 +1710,8 @@ func _physics_process(delta):
 	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size) * time_speed * speed_penalty
 	mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 	update_ray()
-	var input_vector = Vector2.ZERO
+	input_vector = Vector2.ZERO
+	var acc_penalty = range_lerp(speed_penalty, 0.3, 1.0, 0.1, 1.0)
 	if not status_effects.has("stun"):
 		if OS.get_latin_keyboard_variant() == "AZERTY":
 			input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
@@ -1680,33 +1720,43 @@ func _physics_process(delta):
 			input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
 			input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 		input_vector = input_vector.normalized()
+	var rover_sprite:Sprite = $Rover/Sprite
 	if input_vector != Vector2.ZERO:
 		if input_vector.x > 0:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 45, 360) + 45, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees - 45, 360) + 45, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 45, 360) - 45, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees + 45, 360) - 45, delta * 60.0 * 15.0)
 			else:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees, 360), delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees, 360), delta * 60.0 * 15.0)
 		elif input_vector.x < 0:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 135, 360) + 135, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees - 135, 360) + 135, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 135, 360) - 135, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees + 135, 360) - 135, delta * 60.0 * 15.0)
 			else:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 180, 360) + 180, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees - 180, 360) + 180, delta * 60.0 * 15.0)
 		else:
 			if input_vector.y > 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees - 90, 360) + 90, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees - 90, 360) + 90, delta * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				$Rover/Sprite.rotation_degrees = move_toward($Rover/Sprite.rotation_degrees, stepify($Rover/Sprite.rotation_degrees + 90, 360) - 90, delta * 60.0 * 15.0)
-		$Rover/CollisionShape2D.rotation_degrees = $Rover/Sprite.rotation_degrees
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, stepify(rover_sprite.rotation_degrees + 90, 360) - 90, delta * 60.0 * 15.0)
+		$Rover/CollisionShape2D.rotation_degrees = rover_sprite.rotation_degrees
 		$Rover/AshParticles.emitting = on_ash
-		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2)
+		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2 * acc_penalty)
 	else:
 		$Rover/AshParticles.emitting = false
-		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2)
-	velocity = rover.move_and_slide(velocity)
+		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2 * acc_penalty)
+	rover.move_and_slide(velocity)
+	if rover.collision_mask == 32:
+		if rover.position.x < 64 * rover_size:
+			rover.position.x = 64 * rover_size
+		elif rover.position.x > cave_size * 200 - 64 * rover_size:
+			rover.position.x = cave_size * 200 - 64 * rover_size
+		if rover.position.y < 64 * rover_size:
+			rover.position.y = 64 * rover_size
+		elif rover.position.y > cave_size * 200 - 64 * rover_size:
+			rover.position.y = cave_size * 200 - 64 * rover_size
 	for i in rover.get_slide_count():
 		var collision = rover.get_slide_collision(i)
 		if not collision:
@@ -1912,10 +1962,29 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 func _on_RayOfDoom_body_entered(body):
 	body.status_effects.RoD = INF
 	body.RoD_damage()
-	body.get_node("RoDTimer").start(0.2 / time_speed)
-	body.get_node("RoDTimer").connect("timeout", body, "on_RoD_timeout")
+	if body.HP > 0:
+		body.get_node("RoDTimer").start(0.2 / time_speed)
+		body.get_node("RoDTimer").connect("timeout", body, "on_RoD_timeout")
 
 
 func _on_RayOfDoom_body_exited(body):
-	body.get_node("RoDTimer").disconnect("timeout", body, "on_RoD_timeout")
-	body.status_effects.erase("RoD")
+	if body.HP > 0:
+		body.get_node("RoDTimer").disconnect("timeout", body, "on_RoD_timeout")
+		body.status_effects.erase("RoD")
+
+
+func _on_BreakRocksWithDash_body_entered(body):
+	if body is TileMap:
+		var pos:Vector2 = Vector2(stepify(rover.position.x - 100, 200), stepify(rover.position.y - 100, 200))
+		mine_tile(pos, get_tile_index(pos / 200))
+
+
+func _on_DashTimer_timeout():
+	if enhancements.has("wheels_2"):
+		dashes_remaining = 3
+	elif enhancements.has("wheels_1"):
+		dashes_remaining = 2
+	elif enhancements.has("wheels_0"):
+		dashes_remaining = 1
+	$Rover/BreakRocksWithDash.monitoring = false
+	$Rover/BreakRocksWithDash.monitorable = false

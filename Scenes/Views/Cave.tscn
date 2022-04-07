@@ -1,4 +1,4 @@
-[gd_scene load_steps=129 format=2]
+[gd_scene load_steps=130 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -697,9 +697,6 @@ shader_param/y_offset = 0.0
 shader_param/fixed_edge_size = 0.05
 shader_param/noise_scale = Vector2( 1, 1 )
 
-[sub_resource type="RectangleShape2D" id=86]
-extents = Vector2( 64, 20 )
-
 [sub_resource type="ShaderMaterial" id=20]
 shader = ExtResource( 1 )
 shader_param/beams = 1
@@ -777,6 +774,12 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ) ]
 }
+
+[sub_resource type="RectangleShape2D" id=86]
+extents = Vector2( 64, 20 )
+
+[sub_resource type="CircleShape2D" id=93]
+radius = 1.0
 
 [sub_resource type="ShaderMaterial" id=91]
 shader = ExtResource( 37 )
@@ -1178,9 +1181,6 @@ rotation = 1.5708
 scale = Vector2( 2, 2 )
 texture = ExtResource( 38 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
-shape = SubResource( 86 )
-
 [node name="RayCast2D" type="RayCast2D" parent="Rover"]
 
 [node name="Stun" type="Node2D" parent="Rover"]
@@ -1215,6 +1215,20 @@ texture = ExtResource( 18 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover"]
 anims/Invincible = SubResource( 79 )
 anims/RESET = SubResource( 80 )
+
+[node name="DashTimer" type="Timer" parent="Rover"]
+wait_time = 0.7
+one_shot = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
+shape = SubResource( 86 )
+
+[node name="BreakRocksWithDash" type="Area2D" parent="Rover"]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/BreakRocksWithDash"]
+shape = SubResource( 93 )
 
 [node name="RoDEffects" type="Node2D" parent="."]
 
@@ -1722,6 +1736,8 @@ environment = SubResource( 19 )
 [connection signal="body_entered" from="Rover/RayOfDoom" to="." method="_on_RayOfDoom_body_entered"]
 [connection signal="body_exited" from="Rover/RayOfDoom" to="." method="_on_RayOfDoom_body_exited"]
 [connection signal="animation_finished" from="Rover/RayOfDoom/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="Rover/DashTimer" to="." method="_on_DashTimer_timeout"]
+[connection signal="body_entered" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_entered"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= [ "money" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]

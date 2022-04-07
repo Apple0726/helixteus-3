@@ -134,9 +134,7 @@ func hit(damage:float):
 		cave_ref.game.stats_dim.enemies_rekt_in_caves += 1
 		cave_ref.game.stats_global.enemies_rekt_in_caves += 1
 		cave_ref.enemies_rekt[cave_ref.cave_floor - 1].append(spawn_tile)
-		cave_ref.MM.remove_child(MM_icon)
 		MM_icon.queue_free()
-		cave_ref.remove_child(self)
 		queue_free()
 	else:
 		chase_player()
@@ -149,6 +147,6 @@ func RoD_damage():
 	hit(dmg)
 
 func on_RoD_timeout():
-	if status_effects.has("RoD"):
+	if HP > 0 and status_effects.has("RoD"):
 		$RoDTimer.start(0.2 / cave_ref.time_speed)
 		RoD_damage()

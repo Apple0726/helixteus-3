@@ -73,10 +73,6 @@ mouse_cursor/tooltip_position_offset=Vector2( 5, 5 )
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/ridiculous_coding/plugin.cfg" )
-
 [global]
 
 vsync=false
@@ -467,6 +463,11 @@ prev_view={
 next_view={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":16777233,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+spacebar={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 

@@ -43,7 +43,6 @@ func _physics_process(delta):
 		if fading:
 			modulate.a -= 0.03 * delta * 60 * time_speed
 			if modulate.a <= 0:
-				set_physics_process(false)
 				queue_free()
 	var collision = move_and_collide(velocity)
 	if collision:
@@ -67,7 +66,6 @@ func collide(collision:KinematicCollision2D):
 				body.hit(dmg)
 				pierce -= 1
 			if pierce <= 0:
-				set_physics_process(false)
 				queue_free()
 		else:#if the projectile comes from the enemy
 			if not cave_ref.ability_timer.is_stopped() and cave_ref.ability == "armor_3":
@@ -87,11 +85,9 @@ func collide(collision:KinematicCollision2D):
 			else:
 				var dmg:float = damage / cave_ref.def / cave_ref.rover_size
 				cave_ref.hit_player(dmg, status_effects)
-				set_physics_process(false)
 				queue_free()
 	else:
 		if type == Data.ProjType.BUBBLE:#Bubble projectiles reflect off of walls
 			velocity = -velocity.reflect(collision.normal)
 		else:#Other projectiles get destroyed
-			set_physics_process(false)
 			queue_free()
