@@ -81,7 +81,7 @@ func move_HX():
 			state = MOVE
 		
 func _process(delta):
-	if state == MOVE:
+	if state == MOVE and not status_effects.has("stun"):
 		if len(move_path_v) > 0:
 			var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
 			position = position.move_toward(move_to, delta * move_speed)
@@ -101,10 +101,10 @@ func _process(delta):
 		else:
 			sees_player = false
 			move_speed = idle_move_speed
-#	for effect in status_effects.keys():
-#		status_effects[effect] -= delta * cave_ref.time_speed
-#		if status_effects[effect] < 0:
-#			status_effects.erase(effect)
+	for effect in status_effects.keys():
+		status_effects[effect] -= delta * cave_ref.time_speed
+		if status_effects[effect] < 0:
+			status_effects.erase(effect)
 
 func chase_player():
 	if aggressive_timer:
@@ -150,3 +150,14 @@ func on_RoD_timeout():
 	if HP > 0 and status_effects.has("RoD"):
 		$RoDTimer.start(0.2 / cave_ref.time_speed)
 		RoD_damage()
+
+func on_proj_enter(body):#This signal is connected with code (during enemy generation in Cave.gd)
+	if body is Projectile and not body.seeking_body:
+		body.seeking_body = self
+		body.get_node("SeekingRay").enabled = true
+
+
+func on_proj_exit(body):#This signal is connected with code (during enemy generation in Cave.gd)
+	if body is Projectile:
+		body.seeking_body = null
+		body.get_node("SeekingRay").enabled = false

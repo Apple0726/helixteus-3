@@ -57,3 +57,6 @@ explosiveness = 1.0
 local_coords = false
 process_material = SubResource( 6 )
 texture = ExtResource( 3 )
+
+[node name="SeekingRay" type="RayCast2D" parent="."]
+collision_mask = 5

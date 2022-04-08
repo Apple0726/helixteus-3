@@ -171,6 +171,10 @@ func _ready():
 		dashes_remaining = 2
 	elif enhancements.has("wheels_0"):
 		dashes_remaining = 1
+	if enhancements.has("laser_5"):
+		$Rover/EnergyBallTimer.start(0.5 / time_speed)
+	elif enhancements.has("laser_4"):
+		$Rover/EnergyBallTimer.start(1.0 / time_speed)
 	$Walls.tile_set.tile_set_modulate(0, Color.white)
 	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
@@ -446,6 +450,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
+	var seeking_proj = enhancements.has("laser_3")
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
@@ -461,7 +466,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
-				if not dont_gen_anything and not boss_cave and not top_of_the_tower and rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
+				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
 					var HX_node = HX1_scene.instance()
 					var type:int = rng.randi_range(1, 4)
 					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [type]))
@@ -473,6 +478,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node._class = _class
 					if modifiers.has("enemy_size"):
 						HX_node.scale *= modifiers.enemy_size
+					HX_node.get_node("SeekingProjSeekArea").monitorable = seeking_proj
+					HX_node.get_node("SeekingProjSeekArea").monitoring = seeking_proj
+					if seeking_proj:
+						HX_node.get_node("SeekingProjSeekArea").connect("body_entered", HX_node, "on_proj_enter")
+						HX_node.get_node("SeekingProjSeekArea").connect("body_exited", HX_node, "on_proj_exit")
 					HX_node.HP = round(15 * difficulty * rng.randf_range(0.8, 1.2) * (modifiers.enemy_HP if modifiers.has("enemy_HP") else 1.0))
 					HX_node.def = rng.randi_range(3, 6)
 					HX_node.atk = round((10 - HX_node.def) * difficulty * rng.randf_range(0.9, 1.1))
@@ -1081,7 +1091,6 @@ func _input(event):
 			MM.modulate.a = alpha
 	else:
 		if Input.is_action_just_pressed("spacebar") and dashes_remaining > 0:
-			print(dashes_remaining)
 			$Rover/DashTimer.start(0.6 / time_speed)
 			dashes_remaining -= 1
 			$Rover/BreakRocksWithDash.monitorable = true
@@ -1365,20 +1374,21 @@ func _process(delta):
 func use_item(item:Dictionary, _tile_highlight, delta):
 	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
 	if item.type == "rover_weapons":
-		attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x))
+		var base_angle:float = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
+		attack(base_angle)
 		if not ability_timer.is_stopped() and ability == "laser_8":
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 3.0 * PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 3.0 * PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 4.0 * PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 4.0 * PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - 5.0 * PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + 5.0 * PI/16.0)
+			attack(base_angle - 3.0 * PI/16.0)
+			attack(base_angle + 3.0 * PI/16.0)
+			attack(base_angle - 4.0 * PI/16.0)
+			attack(base_angle + 4.0 * PI/16.0)
+			attack(base_angle - 5.0 * PI/16.0)
+			attack(base_angle + 5.0 * PI/16.0)
 		if enhancements.has("laser_6"):
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/16.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/16.0)
+			attack(base_angle - PI/16.0)
+			attack(base_angle + PI/16.0)
 		if enhancements.has("laser_7"):
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) - PI/8.0)
-			attack(atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x) + PI/8.0)
+			attack(base_angle - PI/8.0)
+			attack(base_angle + PI/8.0)
 		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
 		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
@@ -1432,32 +1442,34 @@ func attack(angle:float):
 		proj_scale *= 2.2
 	elif laser_name == "ultragammaray":
 		proj_scale *= 3.0
-	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, laser_color, Data.ProjType.LASER, proj_scale)
+	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, {"mod":laser_color, "type":Data.ProjType.LASER, "size": proj_scale})
 
 func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
 	if _class == 1:
-		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg * 2.0, Color.white * 1.1 / sqrt(enemy_projectile_size))
+		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg * 2.0, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
 	elif _class == 2:
-		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 1.3, Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), Data.ProjType.LASER, 1.0, {"stun":0.7})
+		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 1.3, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
 	elif _class == 3:
-		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 3.5, Color.white * 1.1 / sqrt(enemy_projectile_size), Data.ProjType.BUBBLE)
-
-func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}):
+		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 3.5, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
+#mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
+func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instance()
 	proj.texture = texture
 	proj.rotation = rot
-	proj.velocity = polar2cartesian(spd * time_speed, rot)
+	proj.speed = spd
+	proj.direction = polar2cartesian(1, rot)
 	proj.position = pos
+	var size:float = other_data.get("size", 1.0)
 	if enemy:
-		proj.scale *= proj_scale * enemy_projectile_size
+		proj.scale *= size * enemy_projectile_size
 	else:
-		proj.scale *= proj_scale
+		proj.scale *= size
 	proj.damage = damage
 	proj.enemy = enemy
-	proj.type = type
+	proj.type = other_data.get("type", Data.ProjType.STANDARD)
 	proj.time_speed = time_speed
-	proj.status_effects = status_effects
-	proj.get_node("Sprite").modulate = mod
+	proj.status_effects = other_data.get("status_effects", {})
+	proj.get_node("Sprite").modulate = other_data.get("mod", Color.white)
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
@@ -1466,7 +1478,16 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.collision_layer = 8
 		proj.collision_mask = 1 + 4
 	proj.cave_ref = self
-	add_child(proj)
+	if other_data.has("energy_ball"):
+		var targ_mod:Color = proj.modulate
+		proj.modulate.a = 0.0
+		var tween = Tween.new()
+		proj.add_child(tween)
+		add_child(proj)
+		tween.interpolate_property(proj, "modulate", null, targ_mod, 0.3)
+		tween.start()
+	else:
+		add_child(proj)
 	proj.add_to_group("projectiles")
 
 func get_color(color:String):
@@ -1988,3 +2009,16 @@ func _on_DashTimer_timeout():
 		dashes_remaining = 1
 	$Rover/BreakRocksWithDash.monitoring = false
 	$Rover/BreakRocksWithDash.monitorable = false
+
+
+func _on_EnergyBallTimer_timeout():
+	if enhancements.has("laser_5"):
+		add_proj(
+			false, rover.position, 30.0, rover.get_node("Sprite").rotation,
+			preload("res://Graphics/Cave/Projectiles/energy_ball2.png"),
+			laser_damage * 8.0, {"mod":Color(2.0, 2.0, 2.0, 1.0), "size":0.5, "status_effects":{"stun":1.0}, "energy_ball":true})
+	else:
+		add_proj(
+			false, rover.position, 20.0, rover.get_node("Sprite").rotation,
+			preload("res://Graphics/Cave/Projectiles/energy_ball.png"),
+			laser_damage * 3.0, {"mod":Color(2.0, 2.0, 2.0, 1.0), "size":0.4, "status_effects":{"stun":0.8}, "energy_ball":true})

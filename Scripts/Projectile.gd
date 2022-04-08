@@ -1,7 +1,11 @@
 class_name Projectile
 extends KinematicBody2D
 
-var velocity:Vector2 = Vector2.ZERO
+onready var seeking_ray:RayCast2D = $SeekingRay
+onready var sprite = $Sprite
+
+var speed:float = 0.0
+var direction:Vector2 = Vector2.ZERO#Normalized
 var type:int
 var texture
 var damage
@@ -15,6 +19,7 @@ var init_mod:Color
 var laser_fade:float = 0.0
 var deflected:bool = false
 var pierce:int = 1
+var seeking_body:KinematicBody2D = null
 
 func _ready():
 	$Sprite.texture = texture
@@ -39,17 +44,24 @@ func on_timeout():
 
 func _physics_process(delta):
 	if type == Data.ProjType.BUBBLE:
-		velocity = velocity.move_toward(Vector2.ZERO, delta * 5.0)
+		speed = move_toward(speed, 0.0, delta * 5.0)
 		if fading:
 			modulate.a -= 0.03 * delta * 60 * time_speed
 			if modulate.a <= 0:
 				queue_free()
-	var collision = move_and_collide(velocity)
+	var collision = move_and_collide(speed * direction)
 	if collision:
 		collide(collision)
 	if not enemy and not deflected:
-		laser_fade = min(laser_fade + 0.03 * delta * 60 * time_speed, 1)
-		$Sprite.modulate = lerp(init_mod, init_mod / 20.0, laser_fade)
+		if type == Data.ProjType.LASER:
+			laser_fade = min(laser_fade + 0.03 * delta * 60 * time_speed, 1)
+			sprite.modulate = lerp(init_mod, init_mod / 20.0, laser_fade)
+		if seeking_body and is_instance_valid(seeking_body):
+			var th:float = atan2(seeking_body.position.y - position.y, seeking_body.position.x - position.x)
+			seeking_ray.cast_to = polar2cartesian(1500, th - rotation)
+			if seeking_ray.get_collider() is KinematicBody2D:
+				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * 0.12 * speed / 30.0).normalized()
+				rotation = direction.angle()
 
 func collide(collision:KinematicCollision2D):
 	var body = collision.collider
@@ -63,6 +75,11 @@ func collide(collision:KinematicCollision2D):
 				var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
 				var dmg:float = damage / dmg_penalty / body.def
 				Helper.show_dmg(round(dmg), position, cave_ref)
+				for effect in status_effects:
+					if not body.status_effects.has(effect):
+						body.status_effects[effect] = status_effects[effect]
+						if effect == "stun":
+							body.get_node("Sprite/Stun").visible = true
 				body.hit(dmg)
 				pierce -= 1
 			if pierce <= 0:
@@ -75,7 +92,8 @@ func collide(collision:KinematicCollision2D):
 			elif cave_ref.enhancements.has("armor_0"):
 				deflected = randf() < 0.15
 			if deflected:
-				velocity = -2.0 * velocity.reflect(collision.normal)
+				direction = -direction.reflect(collision.normal)
+				speed *= 2.0
 				collision_layer = 8
 				collision_mask = 5
 				enemy = false
@@ -88,6 +106,6 @@ func collide(collision:KinematicCollision2D):
 				queue_free()
 	else:
 		if type == Data.ProjType.BUBBLE:#Bubble projectiles reflect off of walls
-			velocity = -velocity.reflect(collision.normal)
+			direction = -direction.reflect(collision.normal)
 		else:#Other projectiles get destroyed
 			queue_free()

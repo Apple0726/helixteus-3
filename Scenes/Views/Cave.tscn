@@ -1216,6 +1216,8 @@ texture = ExtResource( 18 )
 anims/Invincible = SubResource( 79 )
 anims/RESET = SubResource( 80 )
 
+[node name="EnergyBallTimer" type="Timer" parent="Rover"]
+
 [node name="DashTimer" type="Timer" parent="Rover"]
 wait_time = 0.7
 one_shot = true
@@ -1736,6 +1738,7 @@ environment = SubResource( 19 )
 [connection signal="body_entered" from="Rover/RayOfDoom" to="." method="_on_RayOfDoom_body_entered"]
 [connection signal="body_exited" from="Rover/RayOfDoom" to="." method="_on_RayOfDoom_body_exited"]
 [connection signal="animation_finished" from="Rover/RayOfDoom/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="Rover/EnergyBallTimer" to="." method="_on_EnergyBallTimer_timeout"]
 [connection signal="timeout" from="Rover/DashTimer" to="." method="_on_DashTimer_timeout"]
 [connection signal="body_entered" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_entered"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
