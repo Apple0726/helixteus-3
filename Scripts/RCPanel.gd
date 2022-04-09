@@ -23,6 +23,7 @@ var REPs_used:int = 0
 var enhancements:Dictionary = {}
 var ability:String = ""
 var ability_num:int = 2
+var MK:int = 1
 var rover_weapons:bool = true
 var rover_mining:bool = true
 
@@ -171,6 +172,7 @@ func _on_Button_pressed():
 			"enhancements":enhancements,
 			"ability":ability,
 			"ability_num":ability_num,
+			"MK":MK,
 		}
 		var append:bool = true
 		for i in len(game.rover_data):
@@ -194,25 +196,32 @@ func _on_Button_pressed():
 func refresh():
 	tile = game.tile_data[game.c_t]
 	REPs = tile.bldg.path_1 / 20
-	HP = 20.0
-	atk = 5.0
-	def = 2.0
-	weight_cap = round(3000.0 * game.u_i.planck)
-	ability_num = 2
-	if game.science_unlocked.has("RMK2"):
+	if game.science_unlocked.has("RMK3"):
+		$Stats/Rover.texture = preload("res://Graphics/Cave/Rover3.png")
+		HP = 750.0
+		atk = 70.0
+		def = 200.0
+		weight_cap = round(200000.0 * game.u_i.planck)
+		REPs += 2
+		ability_num = 4
+		MK = 3
+	elif game.science_unlocked.has("RMK2"):
+		$Stats/Rover.texture = preload("res://Graphics/Cave/Rover2.png")
 		HP = 50.0
 		atk = 15.0
 		def = 10.0
 		weight_cap = round(16000.0 * game.u_i.planck)
 		REPs += 1
 		ability_num = 3
-	if game.science_unlocked.has("RMK3"):
-		HP = 750.0
-		atk = 70.0
-		def = 200.0
-		weight_cap = round(200000.0 * game.u_i.planck)
-		REPs += 1
-		ability_num = 4
+		MK = 2
+	else:
+		$Stats/Rover.texture = preload("res://Graphics/Cave/Rover.png")
+		HP = 20.0
+		atk = 5.0
+		def = 2.0
+		weight_cap = round(3000.0 * game.u_i.planck)
+		ability_num = 2
+		MK = 1
 	$Stats/REPIcon.visible = REPs != 0
 	$Stats/REPText.visible = REPs != 0
 	armor_slot.get_node("REP").visible = REPs != 0

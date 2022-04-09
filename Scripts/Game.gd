@@ -1365,11 +1365,13 @@ func open_shop_pickaxe():
 	shop_panel._on_btn_pressed("Pickaxes")
 	shop_panel.get_node("VBox/Tabs/Pickaxes")._on_Button_pressed()
 
+var bottom_info_shown:bool = false
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	b_i_tween.stop_all()
-	if $UI/BottomInfo.visible:
+	if bottom_info_shown:
 		_on_BottomInfo_close_button_pressed(true)
 	$UI/BottomInfo.visible = true
+	bottom_info_shown = true
 	$UI.move_child($UI/BottomInfo, $UI.get_child_count())
 	var more_info = $UI/BottomInfo/Text
 	more_info.visible = false
@@ -4074,7 +4076,8 @@ func _on_Title_Button_pressed(URL:String):
 
 func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
-	if $UI/BottomInfo.visible:
+	if bottom_info_shown:
+		bottom_info_shown = false
 		hide_tooltip()
 		if $UI/BottomInfo/CloseButton.on_close != "":
 			call($UI/BottomInfo/CloseButton.on_close)
@@ -4090,7 +4093,8 @@ func _on_BottomInfo_close_button_pressed(direct:bool = false):
 			b_i_tween.interpolate_property($UI/BottomInfo, "rect_position", null, Vector2(0, 720), 0.5, Tween.TRANS_CIRC, Tween.EASE_OUT)
 			b_i_tween.start()
 			yield(b_i_tween, "tween_all_completed")
-		$UI/BottomInfo.visible = false
+		if not bottom_info_shown:
+			$UI/BottomInfo.visible = false
 
 func cancel_place_soil():
 	HUD.get_node("Top/Resources/Soil").visible = false

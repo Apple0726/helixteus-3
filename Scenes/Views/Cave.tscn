@@ -1,4 +1,4 @@
-[gd_scene load_steps=130 format=2]
+[gd_scene load_steps=133 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -39,6 +39,7 @@
 [ext_resource path="res://Shaders/Shine.shader" type="Shader" id=37]
 [ext_resource path="res://Graphics/Effects/spotlight_8.png" type="Texture" id=38]
 [ext_resource path="res://Graphics/Cave/DebrisAnim.png" type="Texture" id=39]
+[ext_resource path="res://Graphics/Cave/RoverHurt.png" type="Texture" id=40]
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
@@ -689,7 +690,7 @@ shader_param/thickness = 0.2
 shader_param/outline_thickness = 0.0
 shader_param/beam_difference = 0.0
 shader_param/glow = 1.0
-shader_param/outline_glow = 0.0
+shader_param/outline_glow = 1.059
 shader_param/color = Color( 0.91, 1, 1, 1 )
 shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
 shader_param/progress = 1.0
@@ -779,7 +780,7 @@ tracks/0/keys = {
 extents = Vector2( 64, 20 )
 
 [sub_resource type="CircleShape2D" id=93]
-radius = 1.0
+radius = 16.0
 
 [sub_resource type="ShaderMaterial" id=91]
 shader = ExtResource( 37 )
@@ -902,6 +903,36 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 fallback/0 = ExtResource( 27 )
+
+[sub_resource type="Animation" id=94]
+resource_name = "Hurt"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=95]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="Animation" id=15]
 length = 6.0
@@ -1148,7 +1179,7 @@ texture = ExtResource( 11 )
 [node name="RayOfDoom" type="Area2D" parent="Rover"]
 visible = false
 collision_layer = 0
-collision_mask = 4
+collision_mask = 20
 monitoring = false
 monitorable = false
 
@@ -1171,6 +1202,7 @@ anims/RayFade = SubResource( 83 )
 
 [node name="Sprite" type="Sprite" parent="Rover/RayOfDoom"]
 material = SubResource( 84 )
+scale = Vector2( 31, 1 )
 texture = ExtResource( 5 )
 centered = false
 offset = Vector2( 0, -8 )
@@ -1222,12 +1254,14 @@ anims/RESET = SubResource( 80 )
 wait_time = 0.7
 one_shot = true
 
+[node name="SuffocationTimer" type="Timer" parent="Rover"]
+wait_time = 0.2
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
 shape = SubResource( 86 )
 
 [node name="BreakRocksWithDash" type="Area2D" parent="Rover"]
-monitoring = false
-monitorable = false
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/BreakRocksWithDash"]
 shape = SubResource( 93 )
@@ -1709,6 +1743,17 @@ texture_progress = ExtResource( 4 )
 fill_mode = 5
 nine_patch_stretch = true
 
+[node name="HurtTexture" type="TextureRect" parent="UI2"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource( 40 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI2/HurtTexture"]
+anims/Hurt = SubResource( 94 )
+anims/RESET = SubResource( 95 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Aurora = SubResource( 15 )
 anims/RoverSprint = SubResource( 16 )
@@ -1740,7 +1785,9 @@ environment = SubResource( 19 )
 [connection signal="animation_finished" from="Rover/RayOfDoom/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="Rover/EnergyBallTimer" to="." method="_on_EnergyBallTimer_timeout"]
 [connection signal="timeout" from="Rover/DashTimer" to="." method="_on_DashTimer_timeout"]
+[connection signal="timeout" from="Rover/SuffocationTimer" to="." method="_on_SuffocationTimer_timeout"]
 [connection signal="body_entered" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_entered"]
+[connection signal="body_exited" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_exited"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= [ "money" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]

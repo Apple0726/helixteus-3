@@ -54,7 +54,12 @@ func refresh():
 			rover.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			rover.rect_min_size.x = 200
 			rover.rect_min_size.y = 200
-			rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
+			if rov.get("MK", 1) == 2:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover2.png")
+			elif rov.get("MK", 1) == 3:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover3.png")
+			else:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
 			rover.set_anchors_and_margins_preset(Control.PRESET_CENTER)
 			hbox.add_child(rover)
 			rover.connect("mouse_entered", self, "on_rover_enter", [rov, i])

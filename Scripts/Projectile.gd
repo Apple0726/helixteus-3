@@ -16,7 +16,6 @@ var timer:Timer
 var fading:bool = false
 var time_speed:float
 var init_mod:Color
-var laser_fade:float = 0.0
 var deflected:bool = false
 var pierce:int = 1
 var seeking_body:KinematicBody2D = null
@@ -32,11 +31,6 @@ func _ready():
 		timer.start(3.0)
 		timer.one_shot = true
 		timer.connect("timeout", self, "on_timeout")
-	if not enemy and not deflected:
-		if cave_ref.enhancements.has("laser_1"):
-			pierce = 3
-		elif cave_ref.enhancements.has("laser_0"):
-			pierce = 2
 	init_mod = $Sprite.modulate
 
 func on_timeout():
@@ -53,9 +47,6 @@ func _physics_process(delta):
 	if collision:
 		collide(collision)
 	if not enemy and not deflected:
-		if type == Data.ProjType.LASER:
-			laser_fade = min(laser_fade + 0.03 * delta * 60 * time_speed, 1)
-			sprite.modulate = lerp(init_mod, init_mod / 20.0, laser_fade)
 		if seeking_body and is_instance_valid(seeking_body):
 			var th:float = atan2(seeking_body.position.y - position.y, seeking_body.position.x - position.x)
 			seeking_ray.cast_to = polar2cartesian(1500, th - rotation)

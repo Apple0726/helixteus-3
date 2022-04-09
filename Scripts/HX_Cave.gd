@@ -81,30 +81,33 @@ func move_HX():
 			state = MOVE
 		
 func _process(delta):
-	if state == MOVE and not status_effects.has("stun"):
-		if len(move_path_v) > 0:
-			var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
-			position = position.move_toward(move_to, delta * move_speed)
-			if position == move_to:
-				move_path_v.remove(0)
-		else:
-			state = IDLE
-			move_timer.start()
-	if ray.enabled and is_not_aggr():
-		ray.cast_to = (cave_ref.rover.position - position).normalized() * ray_length
-		if ray.get_collider() is KinematicBody2D:
-			if not sees_player:
-				sees_player = true
-				if move_timer:
-					move_HX()
-					move_speed = atk_move_speed
-		else:
-			sees_player = false
-			move_speed = idle_move_speed
+	if not status_effects.has("stun"):
+		if state == MOVE:
+			if len(move_path_v) > 0:
+				var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
+				position = position.move_toward(move_to, delta * move_speed)
+				if position == move_to:
+					move_path_v.remove(0)
+			else:
+				state = IDLE
+				move_timer.start()
+		if ray.enabled and is_not_aggr():
+			ray.cast_to = (cave_ref.rover.position - position).normalized() * ray_length
+			if ray.get_collider() is KinematicBody2D:
+				if not sees_player:
+					sees_player = true
+					if move_timer:
+						move_HX()
+						move_speed = atk_move_speed
+			else:
+				sees_player = false
+				move_speed = idle_move_speed
 	for effect in status_effects.keys():
 		status_effects[effect] -= delta * cave_ref.time_speed
 		if status_effects[effect] < 0:
 			status_effects.erase(effect)
+			if effect == "stun":
+				$Sprite/Stun.visible = false
 
 func chase_player():
 	if aggressive_timer:

@@ -27,9 +27,11 @@ func update_info():
 	$Control/ProductionPerSec.visible = bldg != "TP"
 	$Control/Production.visible = bldg != "TP"
 	if game.c_g_g == game.ships_c_g_coords.g:
-		$Control/GalaxyInfo.text = tr("GS_ERROR")
+		$Control/GalaxyInfo.text = tr("GS_ERROR3")
+		$Control/GalaxyInfo["custom_colors/font_color"] = Color.yellow
 		error = true
 	if not error:
+		$Control/GalaxyInfo["custom_colors/font_color"] = Color.white
 		if bldg != "TP":
 			costs.stone = PI * 100
 			if bldg in ["ME", "MS", "RL"]:

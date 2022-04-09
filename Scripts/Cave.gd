@@ -100,6 +100,7 @@ var laser_name:String = ""
 var laser_damage:float = 0.0
 var ability:String = ""
 var ability_num:int = 0
+var travel_distance:float = 0#Only used for unique death message for now
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -156,6 +157,10 @@ func _ready():
 			if inventory[i].get("type") == "rover_weapons":
 				laser_name = inventory[i].name.split("_")[0]
 	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0))
+	if rover_data.get("MK", 1) == 2:#Save migration
+		$Rover/Sprite.texture = preload("res://Graphics/Cave/Rover top down 2.png")
+	elif rover_data.get("MK", 1) == 3:
+		$Rover/Sprite.texture = preload("res://Graphics/Cave/Rover top down 3.png")
 	if rover_data.has("ability"):#Save migration
 		ability = rover_data.ability
 		ability_num = rover_data.ability_num
@@ -342,12 +347,6 @@ func set_slot_info(slot, _inv:Dictionary):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
 func remove_cave():
-	if is_instance_valid(boss):
-		remove_child(boss)
-		boss.queue_free()
-	if is_instance_valid(bossHPBar):
-		$UI2.remove_child(bossHPBar)
-		bossHPBar.queue_free()
 	astar_node.clear()
 	rooms.clear()
 	tiles = []
@@ -358,28 +357,26 @@ func remove_cave():
 	minimap_cave.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
-		remove_child(enemy)
 		enemy.free()
 	for drilled_hole in get_tree().get_nodes_in_group("drilled_holes"):
 		drilled_hole.remove_from_group("drilled_holes")
-		remove_child(drilled_hole)
 		drilled_hole.free()
 	for object in get_tree().get_nodes_in_group("misc_objects"):
 		object.remove_from_group("misc_objects")
-		remove_child(object)
 		object.free()
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.remove_from_group("lights")
-		remove_child(light)
 		light.free()
 	for enemy_icon in get_tree().get_nodes_in_group("enemy_icons"):
 		enemy_icon.remove_from_group("enemy_icons")
-		MM.remove_child(enemy_icon)
 		enemy_icon.free()
-	for proj in get_tree().get_nodes_in_group("projectiles"):
-		proj.remove_from_group("projectiles")
+	for proj in get_tree().get_nodes_in_group("enemy_projectiles"):
+		proj.remove_from_group("enemy_projectiles")
 		if is_a_parent_of(proj):
-			remove_child(proj)
+			proj.free()
+	for proj in get_tree().get_nodes_in_group("player_projectiles"):
+		proj.remove_from_group("player_projectiles")
+		if is_a_parent_of(proj):
 			proj.free()
 	for deposit in deposits:
 		remove_child(deposits[deposit])
@@ -397,12 +394,17 @@ func remove_cave():
 func generate_cave(first_floor:bool, going_up:bool):
 	if enhancements.has("armor_12") and HP < total_HP * 0.2:
 		HP = total_HP * 0.2
-	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(5.5 * difficulty * 2.0 / def / rover_size, true)]
+	var avg_dmg:float = 5.5 * difficulty / def / rover_size
+	var dmg_to_HP_ratio:float = avg_dmg / total_HP
+	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+	var color:String = gradient.interpolate(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
+	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(avg_dmg, true)]
+	$UI2/CaveInfo/AvgDmg["custom_colors/font_color"] = color
 	ash.clear()
 	cave_darkness = cave_floor * 0.1
-	if game.science_unlocked.has("RMK2"):
+	if rover_data.get("MK", 1) >= 2:#Save migration
 		cave_darkness /= 1.1
-	if game.science_unlocked.has("RMK3"):
+	if rover_data.get("MK", 1) >= 3:
 		cave_darkness /= 1.1
 	var darkness_mod:float = modifiers.darkness if modifiers.has("darkness") else 1.0
 	cave_darkness *= darkness_mod
@@ -982,17 +984,6 @@ func connect_points(tile:Vector2, bidir:bool = false):
 
 func update_health_bar(_HP):
 	HP = _HP
-	if HP <= 0:
-		for inv in inventory:
-			if inv.has("num"):
-				inv.num /= 2
-		for w in i_w_w:
-			i_w_w[w] /= 2
-		var st = tr("ROVER_REKT")
-		if randf() < 0.01:
-			st = st.replace("wrecked", "rekt")
-		call_deferred("exit_cave")
-		game.long_popup(st, tr("ROVER_REKT_TITLE"))
 	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
 	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil(HP)), Helper.format_num(total_HP)]
@@ -1093,8 +1084,6 @@ func _input(event):
 		if Input.is_action_just_pressed("spacebar") and dashes_remaining > 0:
 			$Rover/DashTimer.start(0.6 / time_speed)
 			dashes_remaining -= 1
-			$Rover/BreakRocksWithDash.monitorable = true
-			$Rover/BreakRocksWithDash.monitoring = true
 			var speed_mult2 = min(2.5, rover_size) * time_speed * speed_penalty
 			var rot_vec:Vector2 = Vector2.ZERO
 			if input_vector != Vector2.ZERO:
@@ -1377,18 +1366,18 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		var base_angle:float = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 		attack(base_angle)
 		if not ability_timer.is_stopped() and ability == "laser_8":
-			attack(base_angle - 3.0 * PI/16.0)
-			attack(base_angle + 3.0 * PI/16.0)
-			attack(base_angle - 4.0 * PI/16.0)
-			attack(base_angle + 4.0 * PI/16.0)
-			attack(base_angle - 5.0 * PI/16.0)
-			attack(base_angle + 5.0 * PI/16.0)
+			attack(base_angle - 3.0 * PI/32.0)
+			attack(base_angle + 3.0 * PI/32.0)
+			attack(base_angle - 4.0 * PI/32.0)
+			attack(base_angle + 4.0 * PI/32.0)
+			attack(base_angle - 5.0 * PI/32.0)
+			attack(base_angle + 5.0 * PI/32.0)
 		if enhancements.has("laser_6"):
+			attack(base_angle - PI/32.0)
+			attack(base_angle + PI/32.0)
+		if enhancements.has("laser_7"):
 			attack(base_angle - PI/16.0)
 			attack(base_angle + PI/16.0)
-		if enhancements.has("laser_7"):
-			attack(base_angle - PI/8.0)
-			attack(base_angle + PI/8.0)
 		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
 		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
@@ -1446,11 +1435,11 @@ func attack(angle:float):
 
 func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
 	if _class == 1:
-		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg * 2.0, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
+		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
 	elif _class == 2:
-		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 1.3, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
+		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
 	elif _class == 3:
-		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 3.5, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
+		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
 #mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instance()
@@ -1473,10 +1462,12 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
+		proj.add_to_group("enemy_projectiles")
 	else:
 		proj.scale *= rover_size
 		proj.collision_layer = 8
 		proj.collision_mask = 1 + 4
+		proj.add_to_group("player_projectiles")
 	proj.cave_ref = self
 	if other_data.has("energy_ball"):
 		var targ_mod:Color = proj.modulate
@@ -1484,11 +1475,15 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		var tween = Tween.new()
 		proj.add_child(tween)
 		add_child(proj)
-		tween.interpolate_property(proj, "modulate", null, targ_mod, 0.3)
+		tween.interpolate_property(proj, "modulate", null, targ_mod, 0.2)
 		tween.start()
 	else:
+		if not enemy:
+			if enhancements.has("laser_1"):
+				proj.pierce = 3
+			elif enhancements.has("laser_0"):
+				proj.pierce = 2
 		add_child(proj)
-	proj.add_to_group("projectiles")
 
 func get_color(color:String):
 	match color:
@@ -1537,7 +1532,6 @@ func mine_tile(tile_pos:Vector2, tile_id:int):
 	game.stats_dim.tiles_mined_caves += 1
 	game.stats_global.tiles_mined_caves += 1
 	var map_pos = cave_wall.world_to_map(tile_pos)
-	print(map_pos)
 	var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
 	if volcano_mult > 1.0:
 		rsrc.minerals = rand_range(2, 3) * pow(difficulty, 1.2)
@@ -1655,14 +1649,6 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 				attack(angle * 22.5 * PI / 180)
 	else:
 		return
-	for effect in _status_effects:
-		if not status_effects.has(effect):
-			status_effects[effect] = _status_effects[effect]
-			if effect == "stun":
-				rover.get_node("Stun").visible = true
-			elif effect == "burn":
-				rover.get_node("Burn").visible = true
-				$BurnTimer.start()
 	if enhancements.has("armor_11"):
 		if HP <= total_HP * 0.2:
 			damage *= 0.2
@@ -1675,6 +1661,43 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 		if HP <= total_HP * 0.5:
 			damage *= 0.75
 	update_health_bar(HP - damage)
+	if HP <= 0:
+		for inv in inventory:
+			if inv.has("num"):
+				inv.num /= 2
+		for w in i_w_w:
+			i_w_w[w] /= 2
+		var st:String = tr("ROVER_DEATH_MESSAGE_NORMAL")
+		var st2:String = ""
+		if not $Rover/SuffocationTimer.is_stopped():
+			st = tr("ROVER_DEATH_MESSAGE_SUFFOCATE")
+		elif travel_distance < 2000.0 and cave_floor == 1:
+			st = tr("ROVER_DEATH_MESSAGE_ENTRANCE")
+			st2 = tr("ROVER_DEATH_MESSAGE_ENTRANCE2")
+		elif damage >= total_HP:
+			st = tr("ROVER_DEATH_MESSAGE_OHKO")
+		elif status_effects.has("stun"):
+			st = tr("ROVER_DEATH_MESSAGE_STUN")
+		elif len(get_tree().get_nodes_in_group("enemy_projectiles")) > 30:
+			st = tr("ROVER_DEATH_MESSAGE_BULLET_HELL")
+		elif weight > 2.0 * weight_cap:
+			st = tr("ROVER_DEATH_MESSAGE_OVERLOAD")
+		elif cave_darkness > 0.9:
+			st = tr("ROVER_DEATH_MESSAGE_DARK")
+		if randf() < 0.01:
+			st = st.replace("wrecked", "rekt")
+		call_deferred("exit_cave")
+		game.long_popup(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
+	for effect in _status_effects:
+		if not status_effects.has(effect):
+			status_effects[effect] = _status_effects[effect]
+			if effect == "stun":
+				rover.get_node("Stun").visible = true
+			elif effect == "burn":
+				rover.get_node("Burn").visible = true
+				$BurnTimer.start()
+	$UI2/HurtTexture/AnimationPlayer.stop(true)
+	$UI2/HurtTexture/AnimationPlayer.play("Hurt")
 	if HP > 0:
 		Helper.show_dmg(ceil(damage), rover.position, self)
 
@@ -1769,6 +1792,7 @@ func _physics_process(delta):
 		$Rover/AshParticles.emitting = false
 		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2 * acc_penalty)
 	rover.move_and_slide(velocity)
+	travel_distance += velocity.length()
 	if rover.collision_mask == 32:
 		if rover.position.x < 64 * rover_size:
 			rover.position.x = 64 * rover_size
@@ -1981,23 +2005,20 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 
 func _on_RayOfDoom_body_entered(body):
-	body.status_effects.RoD = INF
-	body.RoD_damage()
-	if body.HP > 0:
-		body.get_node("RoDTimer").start(0.2 / time_speed)
-		body.get_node("RoDTimer").connect("timeout", body, "on_RoD_timeout")
+	if body is Projectile:
+		body.queue_free()
+	else:
+		body.status_effects.RoD = INF
+		body.RoD_damage()
+		if body.HP > 0:
+			body.get_node("RoDTimer").start(0.2 / time_speed)
+			body.get_node("RoDTimer").connect("timeout", body, "on_RoD_timeout")
 
 
 func _on_RayOfDoom_body_exited(body):
 	if body.HP > 0:
 		body.get_node("RoDTimer").disconnect("timeout", body, "on_RoD_timeout")
 		body.status_effects.erase("RoD")
-
-
-func _on_BreakRocksWithDash_body_entered(body):
-	if body is TileMap:
-		var pos:Vector2 = Vector2(stepify(rover.position.x - 100, 200), stepify(rover.position.y - 100, 200))
-		mine_tile(pos, get_tile_index(pos / 200))
 
 
 func _on_DashTimer_timeout():
@@ -2007,8 +2028,6 @@ func _on_DashTimer_timeout():
 		dashes_remaining = 2
 	elif enhancements.has("wheels_0"):
 		dashes_remaining = 1
-	$Rover/BreakRocksWithDash.monitoring = false
-	$Rover/BreakRocksWithDash.monitorable = false
 
 
 func _on_EnergyBallTimer_timeout():
@@ -2022,3 +2041,22 @@ func _on_EnergyBallTimer_timeout():
 			false, rover.position, 20.0, rover.get_node("Sprite").rotation,
 			preload("res://Graphics/Cave/Projectiles/energy_ball.png"),
 			laser_damage * 3.0, {"mod":Color(2.0, 2.0, 2.0, 1.0), "size":0.4, "status_effects":{"stun":0.8}, "energy_ball":true})
+
+
+func _on_BreakRocksWithDash_body_entered(body):
+	if body is TileMap:
+		if enhancements.has("wheels_5"):
+			var pos:Vector2 = Vector2(stepify(rover.position.x - 100, 200), stepify(rover.position.y - 100, 200))
+			mine_tile(pos, get_tile_index(pos / 200))
+		else:
+			$Rover/SuffocationTimer.start()
+
+func _on_BreakRocksWithDash_body_exited(body):
+	if body is TileMap:
+		if not enhancements.has("wheels_5"):
+			$Rover/SuffocationTimer.stop()
+			rover.collision_mask = 37
+
+
+func _on_SuffocationTimer_timeout():
+	hit_player(total_HP / 20.0)
