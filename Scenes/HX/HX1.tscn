@@ -1,10 +1,10 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
-[ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=4]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Decoratives/BulletHit.jpg" type="Texture" id=5]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=6]
 [ext_resource path="res://Shaders/Fire.shader" type="Shader" id=7]
 [ext_resource path="res://icon.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=9]
@@ -22,10 +22,27 @@ radius = 1252.0
 radius = 51.7997
 height = 96.3995
 
+[sub_resource type="Shader" id=25]
+code = "shader_type canvas_item;
+uniform float amplitude = 5;
+uniform float frequency = 3.0;
+uniform bool aurora = false;
+
+void vertex() {
+  VERTEX += vec2(0, amplitude * sin(frequency * TIME));
+}
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	if (aurora) {
+		COLOR.rb += 0.3 * sin((UV.x + UV.y) * 6.0 + TIME * 10.0) + 0.3;
+	}
+}"
+
 [sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 4 )
+shader = SubResource( 25 )
 shader_param/amplitude = 6.0
 shader_param/frequency = 6.0
+shader_param/aurora = false
 
 [sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 7 )
@@ -397,29 +414,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Info"]
-modulate = Color( 0, 0.34902, 0, 1 )
-margin_left = 103.02
-margin_top = -69.0997
-margin_right = 108.02
-margin_bottom = -5.09969
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="HP" type="TextureProgress" parent="Info"]
 modulate = Color( 0, 1, 0, 1 )
 margin_left = 103.02
-margin_top = -69.0997
-margin_right = 108.02
-margin_bottom = -5.09969
+margin_top = -5.09968
+margin_right = 167.02
+margin_bottom = -0.0996799
+rect_rotation = -90.0
 value = 50.0
-texture_progress = ExtResource( 3 )
-fill_mode = 3
+texture_under = ExtResource( 3 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Effects" type="HBoxContainer" parent="Info"]
 margin_left = -25.5284

@@ -180,7 +180,7 @@ margin_bottom = 456.0
 [node name="CargoText" parent="Stats" instance=ExtResource( 1 )]
 margin_left = 312.0
 margin_top = 380.0
-margin_right = 428.0
+margin_right = 476.0
 margin_bottom = 408.0
 
 [node name="SpeedText" parent="Stats" instance=ExtResource( 1 )]

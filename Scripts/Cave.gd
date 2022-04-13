@@ -20,6 +20,7 @@ var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
 var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
 var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
+var purple_texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
 
 onready var cave = $TileMap
 onready var ash = $Ash
@@ -446,7 +447,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
-	noise.period = tile.cave.period if tile.cave.has("period") else 65
+	noise.period = tile.cave.get("period", 65)
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
@@ -461,9 +462,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			cave.set_cell(i, j, tile_type)
 			if level > 0:
 				if volcano_mult > 1.0:
-					if cave_floor == 1 and level < 0.5:
-						ash.set_cell(i, j, 0)
-					elif cave_floor == 2 and level < 0.2:
+					if cave_floor <= 8 and level < range_lerp(cave_floor, 1, 8, 1.0, 0.0):
 						ash.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
@@ -476,6 +475,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					if rng.randf() < log(difficulty) / log(100) - 1.0:
 						_class += 1
 					if rng.randf() < log(difficulty / 100.0) / log(100) - 1.0:
+						_class += 1
+					if rng.randf() < log(difficulty / 10000.0) / log(100) - 1.0:
 						_class += 1
 					HX_node._class = _class
 					if modifiers.has("enemy_size"):
@@ -492,6 +493,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						HX_node.free()
 						continue
 					HX_node.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
+					HX_node.get_node("Sprite").material.set_shader_param("aurora", aurora)
 					HX_node.get_node("Info/Label").visible = false
 					HX_node.get_node("Info/Effects").visible = false
 					HX_node.get_node("Info/Icon").visible = false
@@ -566,7 +568,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var rand = rng.randf()
 				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
-					var tier:int = int(clamp(pow(formula / rand * aurora_mult, 0.2), 1, 5))
+					var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
 					var contents:Dictionary = generate_treasure(tier, rng)
 					if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 						continue
@@ -598,9 +600,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 				cave.set_cell(i, j, tile_type)
 				minimap_cave.set_cell(i, j, tile_type)
 				astar_node.add_point(tile_id, Vector2(i, j))
+				connect_points(Vector2(i, j), true)
 				cave_wall.set_cell(i, j, -1)
 				if deposits.has(String(tile_id)):
-					remove_child(deposits[String(tile_id)])
 					deposits[String(tile_id)].queue_free()
 					deposits.erase(String(tile_id))
 	cave_wall.update_bitmask_region()
@@ -984,6 +986,11 @@ func connect_points(tile:Vector2, bidir:bool = false):
 
 func update_health_bar(_HP):
 	HP = _HP
+	var gradient:Gradient = preload("res://Resources/HPGradient.tres")
+	var bar_color:Color = gradient.interpolate(inverse_lerp(0.0, 1.0, HP / total_HP)).to_html(false)
+	$UI2/HP/Bar.tint_progress = bar_color
+	$UI2/HP/Bar.tint_over = bar_color
+	$UI2/HP/Bar.tint_under = bar_color
 	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
 	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil(HP)), Helper.format_num(total_HP)]
@@ -1315,9 +1322,15 @@ func exit_cave():
 func cooldown(duration:float):
 	var slot:int = curr_slot
 	inventory_ready[slot] = false
-	yield(get_tree().create_timer(duration), "timeout")
-	inventory_ready[slot] = true
+	var timer = Timer.new()
+	add_child(timer)
+	timer.start(duration)
+	timer.connect("timeout", self, "on_cooldown_timeout", [timer, slot])
 
+func on_cooldown_timeout(timer:Timer, slot:int):
+	inventory_ready[slot] = true
+	timer.queue_free()
+	
 func remove_item(item:Dictionary, num:int = 1):
 	item.num -= num
 	if item.num <= 0:
@@ -1433,13 +1446,15 @@ func attack(angle:float):
 		proj_scale *= 3.0
 	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, {"mod":laser_color, "type":Data.ProjType.LASER, "size": proj_scale})
 
-func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2):
+func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2, proj_speed_mult:float = 1.0):
 	if _class == 1:
-		add_proj(true, pos, 12.0, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
+		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
 	elif _class == 2:
-		add_proj(true, pos, 15.0, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
+		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
 	elif _class == 3:
-		add_proj(true, pos, 13.0, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
+		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
+	elif _class == 4:
+		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.PURPLE})
 #mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instance()
@@ -1660,7 +1675,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 	elif enhancements.has("armor_9"):
 		if HP <= total_HP * 0.5:
 			damage *= 0.75
-	update_health_bar(HP - damage)
+	update_health_bar(HP - round(damage))
 	if HP <= 0:
 		for inv in inventory:
 			if inv.has("num"):
@@ -1674,11 +1689,11 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 		elif travel_distance < 2000.0 and cave_floor == 1:
 			st = tr("ROVER_DEATH_MESSAGE_ENTRANCE")
 			st2 = tr("ROVER_DEATH_MESSAGE_ENTRANCE2")
-		elif damage >= total_HP:
+		elif HP == total_HP and damage >= total_HP:
 			st = tr("ROVER_DEATH_MESSAGE_OHKO")
 		elif status_effects.has("stun"):
 			st = tr("ROVER_DEATH_MESSAGE_STUN")
-		elif len(get_tree().get_nodes_in_group("enemy_projectiles")) > 30:
+		elif len(get_tree().get_nodes_in_group("enemy_projectiles")) > 70:
 			st = tr("ROVER_DEATH_MESSAGE_BULLET_HELL")
 		elif weight > 2.0 * weight_cap:
 			st = tr("ROVER_DEATH_MESSAGE_OVERLOAD")
@@ -1696,10 +1711,17 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 			elif effect == "burn":
 				rover.get_node("Burn").visible = true
 				$BurnTimer.start()
-	$UI2/HurtTexture/AnimationPlayer.stop(true)
-	$UI2/HurtTexture/AnimationPlayer.play("Hurt")
+	$UI2/HurtTexture/Tween.stop_all()
+	var strength:float = min($UI2/HurtTexture.modulate.a + range_lerp(damage / total_HP, 0.0, 0.5, 0.05, 0.5), 0.5)
+	$UI2/HurtTexture/Tween.reset_all()
+	$UI2/HurtTexture/Tween.interpolate_property($UI2/HurtTexture,
+	"modulate",
+	Color(1, 1, 1, strength),
+	Color(1, 1, 1, 0),
+	1.0)
+	$UI2/HurtTexture/Tween.start()
 	if HP > 0:
-		Helper.show_dmg(ceil(damage), rover.position, self)
+		Helper.show_dmg(round(damage), rover.position, self)
 
 var slots = []
 func set_border(i:int):
@@ -1935,10 +1957,10 @@ func _on_Filter_pressed():
 		tween.interpolate_property($UI2/Filters, "rect_position", null, Vector2(rect_x, 662 - $UI2/Filters/Grid.rect_size.y), 0.1)
 		tween.start()
 		yield(tween, "tween_all_completed")
-		remove_child(tween)
 		tween.queue_free()
 		if $UI2/Filters.modulate.a == 0:
 			$UI2/Filters.visible = false
+			game.hide_tooltip()
 	else:
 		var tween = Tween.new()
 		add_child(tween)
@@ -1950,7 +1972,6 @@ func _on_Filter_pressed():
 		tween.start()
 		$UI2/Filters.visible = true
 		yield(tween, "tween_all_completed")
-		remove_child(tween)
 		tween.queue_free()
 
 
@@ -2016,7 +2037,7 @@ func _on_RayOfDoom_body_entered(body):
 
 
 func _on_RayOfDoom_body_exited(body):
-	if body.HP > 0:
+	if "HP" in body and body.HP > 0:
 		body.get_node("RoDTimer").disconnect("timeout", body, "on_RoD_timeout")
 		body.status_effects.erase("RoD")
 

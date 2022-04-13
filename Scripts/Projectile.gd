@@ -43,6 +43,8 @@ func _physics_process(delta):
 			modulate.a -= 0.03 * delta * 60 * time_speed
 			if modulate.a <= 0:
 				queue_free()
+	elif type == Data.ProjType.PURPLE:
+		speed += 0.4 * delta * 60.0 * time_speed
 	var collision = move_and_collide(speed * direction)
 	if collision:
 		collide(collision)

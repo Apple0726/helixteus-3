@@ -87,7 +87,10 @@ func _on_close_button_pressed():
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	if game.battle.hard_battle:
 		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-	game.battle.get_node("UI").remove_child(self)
+	queue_free()
+	if not game.help.has("SP"):
+		game.long_popup(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
+		game.help.SP = true
 	game.switch_view("system", {"dont_fade_anim":true})
 
 func _on_mouse_exited():

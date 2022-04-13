@@ -1,6 +1,6 @@
 extends Node
 
-enum ProjType {STANDARD, LASER, BUBBLE}#For caves
+enum ProjType {STANDARD, LASER, BUBBLE, PURPLE}#For caves
 
 var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},

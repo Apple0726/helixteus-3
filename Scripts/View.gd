@@ -10,7 +10,7 @@ var annotate_icon:Sprite
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
 var limit_to_viewport
-const CLUSTER_SCALE_THRESHOLD:float = 4.0
+const CLUSTER_SCALE_THRESHOLD:float = 0.5
 
 var rect:Sprite
 

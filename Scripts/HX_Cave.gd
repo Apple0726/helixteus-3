@@ -8,6 +8,7 @@ var _class:int
 var MM_icon
 var cave_ref
 var shoot_timer:Timer
+var special_attack_timer:Timer
 var check_distance_timer:Timer
 var move_timer:Timer
 var aggressive_timer:Timer
@@ -38,20 +39,25 @@ func _ready():
 	check_distance_timer.autostart = true
 	check_distance_timer.connect("timeout", self, "check_distance")
 	connect("tree_exited", self, "on_tree_exited")
+	
+	aggressive_timer = Timer.new()
+	aggressive_timer.one_shot = true
+	add_child(aggressive_timer)
+	
 
 func on_tree_exited():
 	queue_free()
 
 func is_aggr():
-	return aggressive_timer and not aggressive_timer.is_stopped()
+	return not aggressive_timer.is_stopped()
 
 func is_not_aggr():
-	if not aggressive_timer:
-		return true
-	return aggressive_timer and aggressive_timer.is_stopped()
+	return aggressive_timer.is_stopped()
 
 var move_path_v = []
 func move_HX():
+	if not move_timer:
+		return
 	var second_condition = true
 	if not sees_player:
 		second_condition = state == IDLE
@@ -96,6 +102,7 @@ func _process(delta):
 			if ray.get_collider() is KinematicBody2D:
 				if not sees_player:
 					sees_player = true
+					ray.collision_mask = 2
 					if move_timer:
 						move_HX()
 						move_speed = atk_move_speed
@@ -110,13 +117,12 @@ func _process(delta):
 				$Sprite/Stun.visible = false
 
 func chase_player():
-	if aggressive_timer:
-		var not_chasing = aggressive_timer.is_stopped()
-		aggressive_timer.wait_time = 10.0
-		aggressive_timer.start()
-		if not_chasing:
-			move_HX()
-		move_speed = atk_move_speed
+	var not_chasing = aggressive_timer.is_stopped()
+	aggressive_timer.wait_time = 8.0
+	aggressive_timer.start()
+	if not_chasing:
+		move_HX()
+	move_speed = atk_move_speed
 
 func check_distance():
 	var dist = position.distance_to(cave_ref.rover.position)
@@ -126,6 +132,7 @@ func check_distance():
 	else:
 		AI_enabled = false
 		ray.enabled = false
+		aggressive_timer.stop()
 		if move_timer:
 			move_timer.start()
 

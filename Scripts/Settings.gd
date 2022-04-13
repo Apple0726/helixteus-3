@@ -33,6 +33,7 @@ func _ready():
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
 		$TabContainer/GAME/CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
+		$TabContainer/MISC/OPCursor.pressed = config.get_value("misc", "op_cursor", false)
 		set_notation()
 
 func _on_Main_audio_value_changed(value):
@@ -280,7 +281,24 @@ func _on_CaveGenInfo_toggled(button_pressed):
 		config.save("user://settings.cfg")
 
 func _on_OPCursor_toggled(button_pressed):
+	game.op_cursor = button_pressed
+	if err == OK:
+		config.set_value("misc", "op_cursor", button_pressed)
+		config.save("user://settings.cfg")
 	if button_pressed:
 		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 	else:
 		Input.set_custom_mouse_cursor(null)
+
+
+func _on_OPCursor_mouse_entered():
+	game.show_tooltip("it's pretty op")
+
+
+func _on_OPCursor_mouse_exited():
+	if game.op_cursor:
+		game.show_tooltip(":)")
+	else:
+		game.show_tooltip(":(")
+	yield(get_tree().create_timer(0.5), "timeout")
+	game.hide_tooltip()

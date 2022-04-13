@@ -423,6 +423,7 @@ var enable_shaders:bool = true
 var screen_shake:bool = true
 var icon_animations:bool = true
 var cave_gen_info:bool = false
+var op_cursor:bool = false
 
 var music_player = AudioStreamPlayer.new()
 
@@ -543,6 +544,9 @@ func _ready():
 		autosell = config.get_value("game", "autosell", true)
 		icon_animations = config.get_value("game", "icon_animations", true)
 		cave_gen_info = config.get_value("game", "cave_gen_info", false)
+		op_cursor = config.get_value("misc", "op_cursor", false)
+		if op_cursor:
+			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
@@ -1495,8 +1499,6 @@ func delete_galaxy():
 #															V function to execute after removing objects but before adding new ones
 #func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 func switch_view(new_view:String, other_params:Dictionary = {}):
-	hide_tooltip()
-	hide_adv_tooltip()
 	_on_BottomInfo_close_button_pressed()
 	$UI/Panel.visible = false
 	var old_view:String = c_v
@@ -1515,6 +1517,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			var anim_player:AnimationPlayer = HUD.get_node("AnimationPlayer2")
 			anim_player.play_backwards("MoveStuff")
 		yield(view_tween, "tween_all_completed")
+	hide_tooltip()
+	hide_adv_tooltip()
 	if viewing_dimension:
 		remove_dimension()
 		switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
@@ -2803,6 +2807,8 @@ func generate_planets(id:int):#local id
 					_class += 1
 				if randf() < log(diff / 100.0) / log(100) - 1.0:
 					_class += 1
+				if randf() < log(diff / 10000.0) / log(100) - 1.0:
+					_class += 1
 				if p_num == 0:
 					if lv > 4:
 						lv = 4
@@ -2813,7 +2819,7 @@ func generate_planets(id:int):#local id
 				var HP = round(rand_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
 				if _class == 2:
 					HP = round(HP * rand_range(4.0, 6.0))
-				elif _class == 3:
+				elif _class >= 3:
 					HP = round(HP * rand_range(8.0, 12.0))
 				var def = round(randf() * 7.0 + 3.0)
 				var atk = round(rand_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
@@ -3097,9 +3103,9 @@ func generate_tiles(id:int):
 	planet_data[id]["discovered"] = true
 	if home_planet:
 		tile_data[42] = {}
-		tile_data[42].cave = {"num_floors":5, "floor_size":30}
+		tile_data[42].cave = {"num_floors":5, "floor_size":25}
 		tile_data[215] = {}
-		tile_data[215].cave = {"num_floors":8, "floor_size":35}
+		tile_data[215].cave = {"num_floors":8, "floor_size":30}
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[107] = {}
@@ -3160,7 +3166,12 @@ func generate_tiles(id:int):
 	elif c_p_g == 2:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
+		var random_tile2:int = random_tile
+		while random_tile == random_tile2:
+			random_tile2 = Helper.rand_int(1, len(tile_data)) - 1
+		erase_tile(random_tile2)
 		tile_data[random_tile].ship = true
+		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30}
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -3632,14 +3643,20 @@ func _input(event):
 		stats_panel._on_UserInput_pressed()
 	if is_instance_valid(tooltip):
 		yield(get_tree(), "idle_frame")
-		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-			tooltip.rect_position = mouse_pos + Vector2(9, 9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-			tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-			tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
-		elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+		if op_cursor:
+			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left) or Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+			else:
+				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+		else:
+			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
+				tooltip.rect_position = mouse_pos + Vector2(9, 9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
+				tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
+				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
 #	if ship_locator:

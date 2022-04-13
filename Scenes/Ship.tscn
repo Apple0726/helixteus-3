@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Ship.gd" type="Script" id=2]
 [ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=3]
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=6]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.300469, 0.746479, 0.995305, 1 )
@@ -57,30 +58,6 @@ rotation = 1.5708
 shape = SubResource( 5 )
 disabled = true
 
-[node name="ColorRect" type="ColorRect" parent="."]
-margin_left = -100.0
-margin_top = -36.0
-margin_right = -92.0
-margin_bottom = 32.0
-color = Color( 0, 0.34902, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HP" type="TextureProgress" parent="."]
-modulate = Color( 0, 1, 0, 1 )
-margin_left = -100.0
-margin_top = -36.0
-margin_right = -92.0
-margin_bottom = 32.0
-value = 50.0
-texture_progress = ExtResource( 1 )
-fill_mode = 3
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Label" type="Label" parent="."]
 margin_left = -28.0
 margin_top = 52.0
@@ -105,3 +82,15 @@ stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="HP" type="TextureProgress" parent="."]
+modulate = Color( 0, 1, 0, 1 )
+margin_left = -100.125
+margin_top = 32.0
+margin_right = -36.125
+margin_bottom = 40.0
+rect_rotation = -90.0
+value = 50.0
+texture_under = ExtResource( 1 )
+texture_progress = ExtResource( 6 )
+nine_patch_stretch = true

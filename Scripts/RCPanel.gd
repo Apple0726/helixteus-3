@@ -201,7 +201,7 @@ func refresh():
 		HP = 750.0
 		atk = 70.0
 		def = 200.0
-		weight_cap = round(200000.0 * game.u_i.planck)
+		weight_cap = 200000.0 * game.u_i.planck
 		REPs += 2
 		ability_num = 4
 		MK = 3
@@ -210,7 +210,7 @@ func refresh():
 		HP = 50.0
 		atk = 15.0
 		def = 10.0
-		weight_cap = round(16000.0 * game.u_i.planck)
+		weight_cap = 16000.0 * game.u_i.planck
 		REPs += 1
 		ability_num = 3
 		MK = 2
@@ -219,7 +219,7 @@ func refresh():
 		HP = 20.0
 		atk = 5.0
 		def = 2.0
-		weight_cap = round(3000.0 * game.u_i.planck)
+		weight_cap = 3000.0 * game.u_i.planck
 		ability_num = 2
 		MK = 1
 	$Stats/REPIcon.visible = REPs != 0
@@ -279,15 +279,15 @@ func refresh():
 	$Stats/HPText.bbcode_text = Helper.format_num(round((HP + HP_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/AtkText.bbcode_text = Helper.format_num(round(atk * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/DefText.bbcode_text = Helper.format_num(round(def + def_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
-	$Stats/CargoText.bbcode_text = "%s kg" % [Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)] + "  [img]Graphics/Icons/help.png[/img]"
+	$Stats/CargoText.bbcode_text = "%s kg" % [Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))] + "  [img]Graphics/Icons/help.png[/img]"
 	if engi_mult == 1.0:
 		$Stats/HPText.help_text = "(%s + %s) * %s = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult * engi_mult)]
 		$Stats/AtkText.help_text = "(%s + %s) * %s = %s" % [atk, 0, mult, round(atk * mult * engi_mult)]
-		$Stats/CargoText.help_text = "(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)]
+		$Stats/CargoText.help_text = "(%s + %s) * %s = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))]
 	else:
 		$Stats/HPText.help_text = "(%s + %s) * %s * %s = %s" % [HP, HP_bonus, mult, engi_mult, round((HP + HP_bonus) * mult * engi_mult)]
 		$Stats/AtkText.help_text = "(%s + %s) * %s * %s = %s" % [atk, 0, mult, engi_mult, round(atk * mult * engi_mult)]
-		$Stats/CargoText.help_text = "(%s + %s) * %s * %s = %s kg" % [weight_cap, cargo_bonus, mult, engi_mult, Helper.format_num((weight_cap + cargo_bonus) * mult * engi_mult)]
+		$Stats/CargoText.help_text = "(%s + %s) * %s * %s = %s kg" % [weight_cap, cargo_bonus, mult, engi_mult, Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))]
 	$Stats/DefText.help_text = "%s + %s = %s" % [def, def_bonus, round(def + def_bonus)]
 	$Stats/SpeedText.bbcode_text = str(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/SpeedText.help_text = "%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))]

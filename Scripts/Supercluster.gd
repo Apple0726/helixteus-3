@@ -31,7 +31,7 @@ func _ready():
 		cluster_btn.connect("pressed", self, "on_cluster_click", [c_i.id, c_i.l_id])
 		cluster_btn.rect_position = Vector2(-640 / 2, -640 / 2)
 		cluster_btn.rect_pivot_offset = Vector2(640 / 2, 640 / 2)
-		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5)
+		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3)
 		if game.supercluster_data[game.c_sc].view.zoom > 1.5:
 			radius *= 0.1
 		cluster_btn.rect_scale.x = radius
@@ -64,7 +64,7 @@ func change_scale(sc:float):
 		var c_i:Dictionary = game.cluster_data[i]
 		if not c_i.visible:
 			continue
-		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.5) * sc
+		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3) * sc
 		btns[i].rect_scale.x = radius
 		btns[i].rect_scale.y = radius
 

@@ -40,6 +40,9 @@
 [ext_resource path="res://Graphics/Effects/spotlight_8.png" type="Texture" id=38]
 [ext_resource path="res://Graphics/Cave/DebrisAnim.png" type="Texture" id=39]
 [ext_resource path="res://Graphics/Cave/RoverHurt.png" type="Texture" id=40]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=41]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=42]
+[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=43]
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
@@ -780,7 +783,7 @@ tracks/0/keys = {
 extents = Vector2( 64, 20 )
 
 [sub_resource type="CircleShape2D" id=93]
-radius = 16.0
+radius = 12.0
 
 [sub_resource type="ShaderMaterial" id=91]
 shader = ExtResource( 37 )
@@ -852,14 +855,8 @@ tracks/0/keys = {
 "values": [ Color( 0.509804, 1, 0.509804, 0.192157 ), Color( 0.509804, 1, 0.509804, 0.266667 ), Color( 0.509804, 1, 0.509804, 0.192157 ) ]
 }
 
-[sub_resource type="DynamicFont" id=9]
-size = 14
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 26 )
-
-[sub_resource type="DynamicFont" id=10]
-size = 14
+[sub_resource type="DynamicFont" id=96]
+size = 15
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
@@ -903,36 +900,6 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 26 )
 fallback/0 = ExtResource( 27 )
-
-[sub_resource type="Animation" id=94]
-resource_name = "Hurt"
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 1 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
-}
-
-[sub_resource type="Animation" id=95]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
-}
 
 [sub_resource type="Animation" id=15]
 length = 6.0
@@ -1120,9 +1087,6 @@ margin_top = 84.0
 margin_right = 48.0
 margin_bottom = 96.0
 color = Color( 0.321569, 0.164706, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Bar" type="TextureProgress" parent="Rover"]
 modulate = Color( 0, 1, 0, 1 )
@@ -1467,112 +1431,101 @@ texture = ExtResource( 8 )
 visible = false
 light_mask = 0
 
-[node name="HP" type="Control" parent="UI2"]
-margin_top = -52.0
-margin_right = 40.0
-margin_bottom = -12.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HPBG" type="ColorRect" parent="UI2/HP"]
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-color = Color( 0, 0.298039, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="HP" type="Panel" parent="UI2"]
+margin_left = 1052.0
+margin_top = 616.0
+margin_right = 1276.0
+margin_bottom = 656.0
+theme = ExtResource( 29 )
 
 [node name="Bar" type="TextureProgress" parent="UI2/HP"]
-modulate = Color( 0.0431373, 0.756863, 0.0431373, 1 )
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-value = 50.0
-texture_progress = ExtResource( 4 )
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -176.0
+margin_top = -12.0
+margin_right = -8.0
+margin_bottom = 12.0
+value = 20.0
+texture_under = ExtResource( 42 )
+texture_over = ExtResource( 43 )
+texture_progress = ExtResource( 41 )
+tint_under = Color( 0, 1, 0, 1 )
+tint_over = Color( 0, 1, 0, 1 )
+tint_progress = Color( 0, 1, 0, 1 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+stretch_margin_left = 10
+stretch_margin_right = 10
 
 [node name="HPIcon" type="TextureRect" parent="UI2/HP"]
-margin_left = 1044.0
-margin_top = 680.0
-margin_right = 1088.0
-margin_bottom = 716.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = -16.0
+margin_right = 40.0
+margin_bottom = 16.0
 texture = ExtResource( 23 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="UI2/HP"]
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-custom_colors/font_color = Color( 0.580392, 1, 0.521569, 1 )
-custom_fonts/font = SubResource( 9 )
-text = "1 / 30"
+margin_left = 48.0
+margin_top = 8.0
+margin_right = 216.0
+margin_bottom = 32.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 96 )
+text = "20 / 20"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Inventory" type="Control" parent="UI2"]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BG" type="ColorRect" parent="UI2/Inventory"]
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-color = Color( 0.231373, 0.117647, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Bar" type="TextureProgress" parent="UI2/Inventory"]
-modulate = Color( 0.54902, 0.227451, 0, 1 )
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-value = 50.0
-texture_progress = ExtResource( 4 )
-nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Inventory" type="Panel" parent="UI2"]
+margin_left = 1052.0
+margin_top = 660.0
+margin_right = 1276.0
+margin_bottom = 700.0
+theme = ExtResource( 29 )
 
 [node name="Icon" type="TextureRect" parent="UI2/Inventory"]
-margin_left = 1044.0
-margin_top = 680.0
-margin_right = 1088.0
-margin_bottom = 716.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = -16.0
+margin_right = 40.0
+margin_bottom = 16.0
 texture = ExtResource( 25 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="Bar" type="TextureProgress" parent="UI2/Inventory"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -176.0
+margin_top = -12.0
+margin_right = -8.0
+margin_bottom = 12.0
+value = 20.0
+texture_under = ExtResource( 42 )
+texture_over = ExtResource( 43 )
+texture_progress = ExtResource( 41 )
+tint_under = Color( 0.670588, 0.376471, 0, 1 )
+tint_over = Color( 0.670588, 0.376471, 0, 1 )
+tint_progress = Color( 0.670588, 0.376471, 0, 1 )
+nine_patch_stretch = true
+stretch_margin_left = 10
+stretch_margin_right = 10
 
 [node name="Label" type="Label" parent="UI2/Inventory"]
-margin_left = 1092.0
-margin_top = 692.0
-margin_right = 1260.0
-margin_bottom = 708.0
-custom_colors/font_color = Color( 1, 0.807812, 0.671875, 1 )
-custom_fonts/font = SubResource( 10 )
+margin_left = 48.0
+margin_top = 8.0
+margin_right = 216.0
+margin_bottom = 32.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 96 )
+text = "0 / 4000 kg"
 align = 1
 valign = 1
 
@@ -1749,10 +1702,11 @@ margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource( 40 )
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI2/HurtTexture"]
-anims/Hurt = SubResource( 94 )
-anims/RESET = SubResource( 95 )
+[node name="Tween" type="Tween" parent="UI2/HurtTexture"]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Aurora = SubResource( 15 )

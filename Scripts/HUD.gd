@@ -163,7 +163,7 @@ func update_minerals():
 
 func update_money_energy_SP():
 	var planet = game.view.obj
-	if game.c_v == "planet" and planet and planet.bldg_to_construct != "":
+	if game.c_v == "planet" and is_instance_valid(planet) and planet.bldg_to_construct != "":
 		var money_cost = game.view.obj.constr_costs.money
 		var energy_cost = game.view.obj.constr_costs.energy if game.view.obj.constr_costs.has("energy") else 0
 		if planet.shadow_num > 0:

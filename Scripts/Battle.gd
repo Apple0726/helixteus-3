@@ -16,6 +16,7 @@ onready var time_speed = game.u_i.time_speed if game else 2.5
 var hard_battle:bool = false
 var max_lv_ship:int = 0
 var green_enemy:int = -1
+var purple_enemy:int = -1
 var HXs_rekt:int = 0
 
 enum EDiff {EASY, NORMAL, HARD}
@@ -66,7 +67,7 @@ var light_mult:float
 var victory_panel
 
 enum BattleStages {START, CHOOSING, TARGETING, PLAYER, ENEMY}
-enum MoveMethod {STANDARD, MOUSE, FRICTION}#Standard: red enemies, mouse: green enemies, gravity: blue enemies
+enum MoveMethod {STANDARD, MOUSE, FRICTION, CLICK}#Standard: red enemies, mouse: green enemies, gravity: blue enemies, click: purple
 
 var stage = BattleStages.START
 var move_method = MoveMethod.STANDARD
@@ -234,6 +235,8 @@ func send_HXs():
 		var HX = HX1_scene.instance()
 		if HX_data[k].class == 2:
 			green_enemy = k
+		elif HX_data[k].class == 2:
+			purple_enemy = k
 		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[k].class, HX_data[k].type])
 		HX.get_node("Sprite").material.set_shader_param("frequency", 6 * time_speed)
 		HX.scale *= 0.4
@@ -288,6 +291,16 @@ func _input(event):
 		stage = BattleStages.CHOOSING
 		if $UI/FightPanel.modulate.a < 1:
 			refresh_fight_panel()
+	else:
+		if move_method == MoveMethod.CLICK:
+			var curr_ship = self["ship%s" % tgt_sh]
+			if Input.is_action_just_pressed("left_click"):
+				if curr_ship.get_node("Sprite").flip_v:
+					curr_ship.y_speed = -3.0
+				else:
+					curr_ship.y_speed = 3.0
+			if Input.is_action_just_pressed("right_click"):
+				curr_ship.get_node("Sprite").flip_v = not curr_ship.get_node("Sprite").flip_v
 	if Input.is_action_just_pressed("A"):
 		display_stats("atk")
 	if Input.is_action_just_pressed("D"):
@@ -322,18 +335,22 @@ func _input(event):
 	if $Help.modulate.a == 1:
 		if game.help.has("battle") and event is InputEventKey:
 			game.help.erase("battle")
-			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
-			tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
-			tween.start()
-			enemy_attack()
+			fade_help_out()
 		elif game.help.has("battle2") and event is InputEventMouseButton:
 			game.help.erase("battle2")
 			green_enemy = -1
-			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
-			tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
-			tween.start()
-			enemy_attack()
+			fade_help_out()
+		elif game.help.has("battle3") and event is InputEventMouseButton:
+			game.help.erase("battle3")
+			purple_enemy = -1
+			fade_help_out()
 
+func fade_help_out():
+	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
+	tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
+	tween.start()
+	enemy_attack()
+	
 func display_stats(type:String):
 	for i in len(HXs):
 		var HX = HXs[i]
@@ -632,14 +649,21 @@ func _process(delta):
 			else:
 				self["ship%s_engine" % tgt_sh].emitting = false
 				curr_ship.y_acc = 0
-			curr_ship.y_speed = curr_ship.y_speed * pow(0.9, time_mult) + curr_ship.y_acc * time_mult
+			curr_ship.y_speed = curr_ship.y_speed * time_mult + curr_ship.y_acc * time_mult
+			curr_ship.position.y = clamp(curr_ship.position.y + curr_ship.y_speed * time_mult, 0, 720)
+		elif move_method == MoveMethod.CLICK:
+			self["ship%s_engine" % tgt_sh].emitting = true
+			if curr_ship.get_node("Sprite").flip_v:
+				curr_ship.y_acc = -0.8
+			else:
+				curr_ship.y_acc = 0.8
+			curr_ship.y_speed = curr_ship.y_speed * time_mult + curr_ship.y_acc * time_mult
 			curr_ship.position.y = clamp(curr_ship.position.y + curr_ship.y_speed * time_mult, 0, 720)
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.scale += Vector2(0.1, 0.1) * time_mult
 		light.modulate.a -= 0.05 * time_mult
 		if light.modulate.a <= 0:
 			light.remove_from_group("lights")
-			remove_child(light)
 			light.free()
 	for weapon in get_tree().get_nodes_in_group("weapon"):
 		var sh:int = w_c_d[weapon.name].shooter
@@ -991,6 +1015,16 @@ func enemy_attack():
 			tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
 			tween.start()
 			return
+		elif not game.help.has("battle3") and curr_en == purple_enemy:
+			tween = Tween.new()
+			add_child(tween)
+			$Help.text = tr("PURPLE_ENEMY_HELP")
+			$Help.modulate.a = 0
+			$Help.visible = true
+			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
+			tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
+			tween.start()
+			return
 	var last_id:int = min((wave + 1) * 4, len(HX_data))
 	self["ship%s_engine" % tgt_sh].emitting = false
 	if curr_en == last_id:
@@ -1044,7 +1078,7 @@ func enemy_attack():
 				$UI/ControlKeyboard/AnimationPlayer.play("Fade")
 			if $UI/ControlMouse.visible:
 				$UI/ControlMouse/AnimationPlayer.play_backwards("Fade")
-		elif move_method == MoveMethod.MOUSE:
+		elif move_method in [MoveMethod.MOUSE, MoveMethod.CLICK]:
 			if not $UI/ControlMouse.visible:
 				$UI/ControlMouse.visible = true
 				$UI/ControlMouse/AnimationPlayer.play("Fade")

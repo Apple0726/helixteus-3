@@ -72,10 +72,10 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 				continue
 		else:
 			var l_metal = metal.to_lower()
-			if not l_metal in ["gemstone"] and not game.show[l_metal]:
+			if not l_metal in ["gemstone"] and not game.show.has(l_metal):
 				continue
 			if l_metal == "gemstone":
-				if not game.show.amethyst and not game.show.emerald and not game.show.quartz and not game.show.ruby and not game.show.sapphire and not game.show.topaz:
+				if not game.show.has("amethyst") and not game.show.has("emerald") and not game.show.has("quartz") and not game.show.has("ruby") and not game.show.has("sapphire") and not game.show.has("topaz"):
 					continue
 		var slot = game.slot_scene.instance()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/%s/%s.png" % [dir, cmp])
