@@ -61,5 +61,5 @@ func on_SA_time_out():
 			cave_ref.add_enemy_proj(_class, rot + i * 2*PI/5 * sign(sgn), atk, position)
 			rot += 0.02
 	SA_counter += 1
-	if SA_counter >= 110:
+	if SA_counter >= 106:
 		SA_counter = 0

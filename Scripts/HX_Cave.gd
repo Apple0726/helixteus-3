@@ -102,7 +102,6 @@ func _process(delta):
 			if ray.get_collider() is KinematicBody2D:
 				if not sees_player:
 					sees_player = true
-					ray.collision_mask = 2
 					if move_timer:
 						move_HX()
 						move_speed = atk_move_speed

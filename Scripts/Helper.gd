@@ -375,16 +375,15 @@ func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = fals
 	var tween:Tween = Tween.new()
 	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), dur)
 	tween.interpolate_property(lb, "rect_position", null, pos - Vector2(0, 55), dur, Tween.TRANS_BACK, Tween.EASE_OUT)
-	add_child(tween)
+	parent.add_child(tween)
 	tween.start()
+	tween.connect("tween_all_completed", self, "on_tween_all_completed", [tween, lb])
 	#lb.light_mask = 2
 	parent.add_child(lb)
-	yield(tween, "tween_all_completed")
-	if is_instance_valid(parent):
-		parent.remove_child(lb)
-		lb.queue_free()
-		remove_child(tween)
-		tween.queue_free()
+
+func on_tween_all_completed(tween, lb):
+	tween.queue_free()
+	lb.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
 	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
@@ -1232,7 +1231,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 		"MM":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
 		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"MS", "NSF", "ESF":
@@ -1405,7 +1404,7 @@ func get_RE_info(RE_name:String):
 	if RE_name == "armor_3":
 		return (tr("RE_" + RE_name.to_upper()) % get_time_div(15.0))
 	elif RE_name == "armor_4":
-		return (tr("RE_" + RE_name.to_upper()) % get_time_div(0.5))
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(0.5), get_time_div(2.0)])
 	elif RE_name == "armor_5":
 		return (tr("RE_" + RE_name.to_upper()) % get_time_div(1.5))
 	elif RE_name == "laser_2":

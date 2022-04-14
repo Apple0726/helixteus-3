@@ -14,7 +14,7 @@ func _ready():
 	if cave_ref.aurora:
 		special_attack_timer = Timer.new()
 		add_child(special_attack_timer)
-		special_attack_timer.wait_time = 3.0
+		special_attack_timer.wait_time = 4.0
 		special_attack_timer.start()
 		special_attack_timer.autostart = true
 		special_attack_timer.connect("timeout", self, "on_SA_time_out")

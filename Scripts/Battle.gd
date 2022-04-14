@@ -1455,7 +1455,7 @@ func _on_Battle_tree_exited():
 	queue_free()
 
 func _on_weapon_mouse_entered(weapon:String):
-	if game:
+	if game and $UI/FightPanel.modulate.a == 1.0 and curr_sh < len(ship_data):
 		var w_lv:int = ship_data[curr_sh][weapon].lv
 		if weapon == "light":
 			game.show_tooltip("%s %s %s\n%s: %s (%s: %s)\n%s: %s" % [

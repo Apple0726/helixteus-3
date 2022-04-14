@@ -1,8 +1,16 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=3]
+[ext_resource path="res://Shaders/FireTooltip.shader" type="Shader" id=4]
+
+[sub_resource type="DynamicFont" id=2]
+resource_name = "Font"
+size = 20
+use_filter = true
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 0.0
@@ -17,30 +25,39 @@ border_blend = true
 expand_margin_left = 9.0
 expand_margin_right = 9.0
 expand_margin_top = 9.0
-expand_margin_bottom = 10.0
+expand_margin_bottom = 9.0
 shadow_color = Color( 0, 0, 0, 0.380392 )
 shadow_size = 3
 shadow_offset = Vector2( 2, 2 )
 
-[sub_resource type="DynamicFont" id=2]
-resource_name = "Font"
-size = 20
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
-
 [sub_resource type="RichTextEffect" id=3]
 script = ExtResource( 3 )
 
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 4 )
+shader_param/color = Color( 1, 0.513726, 0, 1 )
+shader_param/fog_size = 4.408
+shader_param/fog_mvt_spd = 1.0
+shader_param/OCTAVES = 6
+shader_param/seed = 3
+
 [node name="AdvTooltip" type="RichTextLabel"]
-margin_right = 54.0
-margin_bottom = 37.0
+margin_right = 16.0
+margin_bottom = 10.0
 rect_clip_content = false
 mouse_filter = 2
-custom_styles/normal = SubResource( 1 )
 custom_fonts/normal_font = SubResource( 2 )
+custom_styles/normal = SubResource( 1 )
 scroll_active = false
 custom_effects = [ SubResource( 3 ) ]
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -9.0
+margin_top = -9.0
+margin_right = 9.0
+margin_bottom = 9.0
+mouse_filter = 2

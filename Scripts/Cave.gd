@@ -14,6 +14,7 @@ onready var time_speed = game.u_i.time_speed
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
 onready var volcano_mult:float = tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0
+onready var artificial_volcano = tile.has("plant") and not tile.plant.has("artificial_ash")
 onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (volcano_mult if tile.has("plant") and not tile.plant.has("artificial_ash") else 1.0)
 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
@@ -23,6 +24,7 @@ var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 var purple_texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
 
 onready var cave = $TileMap
+onready var lava_tiles = $Lava
 onready var ash = $Ash
 onready var cave_wall = $Walls
 onready var minimap_cave = $UI/Minimap/TileMap
@@ -102,6 +104,7 @@ var laser_damage:float = 0.0
 var ability:String = ""
 var ability_num:int = 0
 var travel_distance:float = 0#Only used for unique death message for now
+var armor_damage_mult:float = 1.0#For armor enhnacements
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -181,7 +184,6 @@ func _ready():
 		$Rover/EnergyBallTimer.start(0.5 / time_speed)
 	elif enhancements.has("laser_4"):
 		$Rover/EnergyBallTimer.start(1.0 / time_speed)
-	$Walls.tile_set.tile_set_modulate(0, Color.white)
 	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random[0]:
 		$CheckAchievements.start()
@@ -355,6 +357,7 @@ func remove_cave():
 	active_type = ""
 	cave.clear()
 	cave_wall.clear()
+	lava_tiles.clear()
 	minimap_cave.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
@@ -380,27 +383,27 @@ func remove_cave():
 		if is_a_parent_of(proj):
 			proj.free()
 	for deposit in deposits:
-		remove_child(deposits[deposit])
 		deposits[deposit].free()
 	for chest_str in chests:
-		remove_child(chests[chest_str].node)
 		chests[chest_str].node.free()
 	for tile in tiles_touched_by_laser:
-		remove_child(tiles_touched_by_laser[tile].bar)
 		tiles_touched_by_laser[tile].bar.free()
 	tiles_touched_by_laser.clear()
 	chests.clear()
 	deposits.clear()
 
-func generate_cave(first_floor:bool, going_up:bool):
-	if enhancements.has("armor_12") and HP < total_HP * 0.2:
-		HP = total_HP * 0.2
-	var avg_dmg:float = 5.5 * difficulty / def / rover_size
+func set_avg_dmg():
+	var avg_dmg:float = 5.5 * difficulty / def / rover_size * armor_damage_mult
 	var dmg_to_HP_ratio:float = avg_dmg / total_HP
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 	var color:String = gradient.interpolate(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(avg_dmg, true)]
 	$UI2/CaveInfo/AvgDmg["custom_colors/font_color"] = color
+	
+func generate_cave(first_floor:bool, going_up:bool):
+	if enhancements.has("armor_12") and HP < total_HP * 0.2:
+		HP = total_HP * 0.2
+	set_avg_dmg()
 	ash.clear()
 	cave_darkness = cave_floor * 0.1
 	if rover_data.get("MK", 1) >= 2:#Save migration
@@ -416,14 +419,19 @@ func generate_cave(first_floor:bool, going_up:bool):
 		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
 	if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
 		game.objective.current += 1
-	if not aurora:
-		canvas_mod.color = Color.white * (1.0 - cave_darkness)
-		canvas_mod.color.a = 1
+	cave.modulate = Color.white * (1.0 - cave_darkness)
+	cave.modulate.a = 1.0
+	cave_wall.modulate = Color.white * (1.0 - cave_darkness)
+	cave_wall.modulate.a = 1.0
+	hole.modulate = Color.white * (1.0 - cave_darkness)
+	hole.modulate.a = 1.0
+	if cave_floor >= 8:
+		cave_wall.modulate.b *= 2.5
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
 	if game.enable_shaders:
 		$TileMap.material.set_shader_param("star_mod", lerp(tile_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_param("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = cave_darkness
+	rover_light.energy = cave_darkness * 1.2
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
@@ -432,11 +440,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 	else:
 		$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
 	var noise = OpenSimplexNoise.new()
+	var lava_noise = OpenSimplexNoise.new()
 	var first_time:bool = cave_floor > len(seeds)
 	if first_time:
 		var sd = randi()
 		rng.set_seed(sd)
 		noise.seed = sd
+		lava_noise.seed = sd * 2
 		seeds.append(sd)
 		tiles_mined.append([])
 		enemies_rekt.append([])
@@ -446,8 +456,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	else:
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
+		lava_noise.seed = seeds[cave_floor - 1]
 	noise.octaves = 1
 	noise.period = tile.cave.get("period", 65)
+	lava_noise.octaves = 1
+	lava_noise.period = rng.randi_range(30, 120)
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
@@ -462,7 +475,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			cave.set_cell(i, j, tile_type)
 			if level > 0:
 				if volcano_mult > 1.0:
-					if cave_floor <= 8 and level < range_lerp(cave_floor, 1, 8, 1.0, 0.0):
+					if cave_floor <= 8 and level < range_lerp(cave_floor, 1, 8, 0.6, 0.0):
 						ash.set_cell(i, j, 0)
 				minimap_cave.set_cell(i, j, tile_type)
 				tiles.append(Vector2(i, j))
@@ -494,6 +507,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 						continue
 					HX_node.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
 					HX_node.get_node("Sprite").material.set_shader_param("aurora", aurora)
+					if volcano_mult > 1:
+						HX_node.get_node("Sprite/Particles2D").emitting = true
+						HX_node.get_node("Sprite/Particles2D").amount = int(sqrt(volcano_mult) * 9)
+					else:
+						HX_node.get_node("Sprite").material.set_shader_param("light", 1.0 - cave_darkness)
 					HX_node.get_node("Info/Label").visible = false
 					HX_node.get_node("Info/Effects").visible = false
 					HX_node.get_node("Info/Icon").visible = false
@@ -524,8 +542,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 						var rarity:float = game.met_info[met].rarity
 						if cave_floor >= 8:
 							rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
-						if rarity > difficulty:
-							break
+						if aurora:
+							rarity = pow(rarity, 0.9)
+						if volcano_mult > 1 and not artificial_volcano:
+							rarity = pow(rarity, 0.9)
 						if rand2 < 1 / (pow(rarity, 0.75) + 1):
 							base_rarity = game.met_info[met].rarity
 							met_spawned = met
@@ -536,8 +556,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 						deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 						add_child(deposit)
 						deposit.position = cave_wall.map_to_world(Vector2(i, j))
-						deposit.modulate *= log(base_rarity) / 4.0 + 1.0
+						deposit.modulate *= log(base_rarity) / 6.5 + 1.0
 						deposits[String(tile_id)] = deposit
+			if volcano_mult > 1.0:
+				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
+				if lava_level > range_lerp(cave_floor, 1, 16, 0.8, 0.0):
+					lava_tiles.set_cell(i, j, 0)
 	if not ash.get_used_cells().empty():
 		ash.update_bitmask_region()
 	#Add unpassable tiles at the cave borders
@@ -568,7 +592,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var rand = rng.randf()
 				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
-					var tier:int = int(clamp(pow(formula / rand, 0.2), 1, 5))
+					var tier:int = clamp(pow(formula / rand, 0.4), 1, 5)
 					var contents:Dictionary = generate_treasure(tier, rng)
 					if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 						continue
@@ -585,9 +609,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 						chest.modulate = Color(0.7, 0, 0.79, 1.0)
 					elif tier == 5:
 						chest.modulate = Color(0.85, 1.0, 0, 1.0)
+					chest.modulate *= (1.0 - cave_darkness)
+					chest.modulate.a = 1
 					chest.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/Chest.png")
-					chest.get_node("Area2D").connect("body_entered", self, "on_chest_entered", [String(tile)])
-					chest.get_node("Area2D").connect("body_exited", self, "on_chest_exited")
+					chest.get_node("Area2D").connect("area_entered", self, "on_chest_entered", [String(tile)])
+					chest.get_node("Area2D").connect("area_exited", self, "on_chest_exited")
 					chest.scale *= 0.8
 					chest.position = cave.map_to_world(get_tile_pos(tile)) + Vector2(100, 100)
 					chests[String(tile)] = {"node":chest, "contents":contents, "tier":tier}
@@ -707,8 +733,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 		wormhole.get_node("Sprite").texture = null
 		var wormhole_texture = preload("res://Scenes/Wormhole.tscn").instance()
 		wormhole.add_child(wormhole_texture)
-		wormhole.get_node("Area2D").connect("body_entered", self, "on_WH_entered")
-		wormhole.get_node("Area2D").connect("body_exited", self, "_on_body_exited")
+		wormhole.get_node("Area2D").connect("area_entered", self, "on_WH_entered")
+		wormhole.get_node("Area2D").connect("area_exited", self, "_on_area_exited")
 		var wormhole_tile = rooms[0].tiles[1]
 		wormhole.position = cave.map_to_world(get_tile_pos(wormhole_tile)) + Vector2(100, 100)
 		add_child(wormhole)
@@ -858,8 +884,8 @@ func add_hole(id:int):
 	drilled_hole.position = get_tile_pos(id) * 200 + Vector2(100, 100)
 	drilled_hole.add_to_group("drilled_holes")
 	add_child_below_node($Hole, drilled_hole)
-	drilled_hole.connect("body_entered", self, "_on_Hole_body_entered")
-	drilled_hole.connect("body_exited", self, "_on_body_exited")
+	drilled_hole.connect("area_entered", self, "_on_Hole_area_entered")
+	drilled_hole.connect("area_exited", self, "_on_area_exited")
 
 func on_Ship4_entered(_body):
 	if game.fourth_ship_hints.emma_joined:
@@ -874,7 +900,7 @@ func enable_light(node):
 	node.get_node("Light2D").enabled = true
 	node.get_node("Shadow").visible = false
 
-func on_chest_entered(_body, tile:String):
+func on_chest_entered(_area, tile:String):
 	var chest_rsrc = chests[tile].contents
 	active_chest = tile
 	active_type = "chest"
@@ -920,11 +946,16 @@ func on_map_entered(_body):
 	active_type = "map"
 	show_right_info(tr("TAKE_ALL"))
 
-func on_chest_exited(_body):
-	active_chest = "-1"
-	active_type = ""
-	$UI2/Panel.visible = false
+func on_chest_exited(area:Area2D):
+	call_deferred("hide_panel", true)
 
+func hide_panel(hiding_chest:bool = false):
+	if len($Rover/InteractArea.get_overlapping_areas()) == 0:
+		active_type = ""
+		if hiding_chest:
+			active_chest = "-1"
+		$UI2/Panel.visible = false
+	
 func on_relic_exited(_body):
 	$UI2/Relic.visible = false
 
@@ -959,8 +990,10 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		var rarity = met_value.rarity
 		if cave_floor >= 8:
 			rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
-		if rarity > difficulty:
-			break
+		if aurora:
+			rarity = pow(rarity, 0.9)
+		if volcano_mult > 1 and not artificial_volcano:
+			rarity = pow(rarity, 0.9)
 		if rng.randf() < 0.5 / pow(rarity, 0.75):
 			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1) * treasure_mult)
 	return contents
@@ -1225,10 +1258,6 @@ func _input(event):
 				remove_cave()
 				cave_floor += 1
 				if cave_floor == 8:
-					if tile.has("aurora"):
-						$Walls.tile_set.tile_set_modulate(0, Color(1.4, 1.4, 2.4, 1.8))
-					else:
-						$Walls.tile_set.tile_set_modulate(0, Color(0.4, 0.4, 2.0, 1.8))
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty *= 1.25 if tower else 2
 				generate_cave(false, false)
@@ -1236,7 +1265,6 @@ func _input(event):
 				remove_cave()
 				cave_floor -= 1
 				if cave_floor == 7:
-					$Walls.tile_set.tile_set_modulate(0, Color.white)
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				difficulty /= 1.25 if tower else 2
 				generate_cave(true if cave_floor == 1 else false, true)
@@ -1352,7 +1380,8 @@ func _process(delta):
 				rover.get_node("Stun").visible = false
 			elif effect == "burn":
 				rover.get_node("Burn").visible = false
-				$BurnTimer.stop()
+				$Rover/BurnTimer.stop()
+				$Rover/Sprite.modulate = Color.white
 			elif effect == "invincible":
 				rover.collision_mask = 37
 				$Rover/AnimationPlayer.stop()
@@ -1367,7 +1396,7 @@ func _process(delta):
 	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].empty():
 		use_item(right_inventory[0], tile_highlight_right, delta)
 	if aurora:
-		canvas_mod.color = aurora_mod.modulate * (1.0 - cave_darkness)
+		canvas_mod.color = aurora_mod.modulate
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
@@ -1447,14 +1476,20 @@ func attack(angle:float):
 	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, {"mod":laser_color, "type":Data.ProjType.LASER, "size": proj_scale})
 
 func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2, proj_speed_mult:float = 1.0):
+	var _status_effects = {}
+	var glow:float = 1.0
+	if volcano_mult > 1:
+		_status_effects.burn = volcano_mult
+		glow = 0.8 * pow(volcano_mult, 0.25)
 	if _class == 1:
-		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size)})
+		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.05 * glow, "status_effects":_status_effects})
 	elif _class == 2:
-		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) / sqrt(enemy_projectile_size), "type":Data.ProjType.LASER, "status_effects":{"stun":0.7}})
+		_status_effects.stun = 0.7
+		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) * glow, "type":Data.ProjType.LASER, "status_effects":_status_effects})
 	elif _class == 3:
-		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.BUBBLE})
+		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.05 * glow, "type":Data.ProjType.BUBBLE, "status_effects":_status_effects})
 	elif _class == 4:
-		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.white * 1.1 / sqrt(enemy_projectile_size), "type":Data.ProjType.PURPLE})
+		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.white * 1.1 * glow, "type":Data.ProjType.PURPLE, "status_effects":_status_effects})
 #mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instance()
@@ -1642,20 +1677,24 @@ func _on_Timer_timeout():
 	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
 	tween.start()
 	$UI2/Panel/Timer.stop()
-	yield(tween, "tween_all_completed")
+
+func _on_Tween_tween_all_completed():
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
-	tween.stop_all()
+	$UI2/Panel/Tween.stop_all()
 
 func hit_player(damage:float, _status_effects:Dictionary = {}):
 	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
 	if not status_effects.has("invincible") and not firing_RoD:
-		if enhancements.has("armor_5"):
-			status_effects.invincible = 1.5
-			$Rover/AnimationPlayer.play("Invincible")
-		elif enhancements.has("armor_4"):
-			status_effects.invincible = 0.5
-			$Rover/AnimationPlayer.play("Invincible")
+		if $Rover/InvincibilityCooldown.is_stopped():
+			if enhancements.has("armor_5"):
+				status_effects.invincible = 1.5
+				$Rover/AnimationPlayer.play("Invincible")
+				$Rover/InvincibilityCooldown.start(2.0 / time_speed)
+			elif enhancements.has("armor_4"):
+				status_effects.invincible = 0.5
+				$Rover/AnimationPlayer.play("Invincible")
+				$Rover/InvincibilityCooldown.start(2.0 / time_speed)
 		if enhancements.has("armor_8"):
 			for angle in 32:
 				attack(angle * 11.25 * PI / 180)
@@ -1664,18 +1703,25 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 				attack(angle * 22.5 * PI / 180)
 	else:
 		return
+	damage *= armor_damage_mult
+	update_health_bar(HP - round(damage))
 	if enhancements.has("armor_11"):
 		if HP <= total_HP * 0.2:
-			damage *= 0.2
+			armor_damage_mult = 0.2
 		elif HP <= total_HP * 0.6:
-			damage *= 0.6
+			armor_damage_mult = 0.6
+		else:
+			armor_damage_mult = 1.0
 	elif enhancements.has("armor_10"):
 		if HP <= total_HP * 0.6:
-			damage *= 0.6
+			armor_damage_mult = 0.6
+		else:
+			armor_damage_mult = 1.0
 	elif enhancements.has("armor_9"):
 		if HP <= total_HP * 0.5:
-			damage *= 0.75
-	update_health_bar(HP - round(damage))
+			armor_damage_mult = 0.75
+		else:
+			armor_damage_mult = 1.0
 	if HP <= 0:
 		for inv in inventory:
 			if inv.has("num"):
@@ -1691,10 +1737,10 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 			st2 = tr("ROVER_DEATH_MESSAGE_ENTRANCE2")
 		elif HP == total_HP and damage >= total_HP:
 			st = tr("ROVER_DEATH_MESSAGE_OHKO")
-		elif status_effects.has("stun"):
-			st = tr("ROVER_DEATH_MESSAGE_STUN")
 		elif len(get_tree().get_nodes_in_group("enemy_projectiles")) > 70:
 			st = tr("ROVER_DEATH_MESSAGE_BULLET_HELL")
+		elif status_effects.has("stun"):
+			st = tr("ROVER_DEATH_MESSAGE_STUN")
 		elif weight > 2.0 * weight_cap:
 			st = tr("ROVER_DEATH_MESSAGE_OVERLOAD")
 		elif cave_darkness > 0.9:
@@ -1710,7 +1756,8 @@ func hit_player(damage:float, _status_effects:Dictionary = {}):
 				rover.get_node("Stun").visible = true
 			elif effect == "burn":
 				rover.get_node("Burn").visible = true
-				$BurnTimer.start()
+				$Rover/BurnTimer.start(1.0 / time_speed)
+				$Rover/Sprite.modulate = Color.orangered
 	$UI2/HurtTexture/Tween.stop_all()
 	var strength:float = min($UI2/HurtTexture.modulate.a + range_lerp(damage / total_HP, 0.0, 0.5, 0.05, 0.5), 0.5)
 	$UI2/HurtTexture/Tween.reset_all()
@@ -1814,7 +1861,7 @@ func _physics_process(delta):
 		$Rover/AshParticles.emitting = false
 		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2 * acc_penalty)
 	rover.move_and_slide(velocity)
-	travel_distance += velocity.length()
+	travel_distance += velocity.length() * delta
 	if rover.collision_mask == 32:
 		if rover.position.x < 64 * rover_size:
 			rover.position.x = 64 * rover_size
@@ -1842,7 +1889,8 @@ func reset_panel_anim():
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
 
-func _on_Exit_body_entered(_body):
+func _on_Exit_area_entered(_body):
+	active_chest = "-1"
 	if cave_floor == 1:
 		show_right_info(tr("F_TO_EXIT"))
 		active_type = "exit"
@@ -1857,7 +1905,8 @@ func on_WH_entered(_body):
 	show_right_info(tr("F_TO_EXIT"))
 	active_type = "exit"
 
-func _on_Hole_body_entered(_body):
+func _on_Hole_area_entered(_body):
+	active_chest = "-1"
 	if tower:
 		show_right_info(tr("F_TO_GO_UP"))
 	else:
@@ -1874,9 +1923,8 @@ func show_right_info(txt:String):
 	vbox.add_child(info)
 	$UI2/Panel.visible = true
 
-func _on_body_exited(_body):
-	$UI2/Panel.visible = false
-	active_type = ""
+func _on_area_exited(_body):
+	call_deferred("hide_panel")
 
 func _on_Floor_mouse_entered():
 	game.show_tooltip(tr("CAVE_FLOOR") % [cave_floor])
@@ -1983,7 +2031,10 @@ func _on_CheckAchievements_timeout():
 
 
 func _on_BurnTimer_timeout():
-	hit_player(ceil(total_HP / 50.0))
+	if volcano_mult > 1:
+		hit_player(total_HP / clamp(100.0 / sqrt(volcano_mult), 25.0, 50.0))
+	else:
+		hit_player(total_HP / 50.0)
 
 
 func _on_Modifiers_mouse_entered():

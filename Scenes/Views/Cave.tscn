@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=2]
+[gd_scene load_steps=140 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -43,6 +43,7 @@
 [ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=41]
 [ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=42]
 [ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=43]
+[ext_resource path="res://Graphics/Tiles/Lava/0.jpg" type="Texture" id=44]
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
@@ -55,6 +56,22 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = SubResource( 5 )
+
+[sub_resource type="TileSet" id=98]
+0/name = "0.jpg 0"
+0/texture = ExtResource( 44 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 200, 200 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = SubResource( 5 )
@@ -536,6 +553,12 @@ scale = 0.02
 scale_random = 0.08
 color_ramp = SubResource( 24 )
 
+[sub_resource type="Gradient" id=102]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=103]
+gradient = SubResource( 102 )
+
 [sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
@@ -546,6 +569,7 @@ initial_velocity_random = 0.72
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 4.0
+color_ramp = SubResource( 103 )
 
 [sub_resource type="CircleShape2D" id=30]
 
@@ -785,6 +809,9 @@ extents = Vector2( 64, 20 )
 [sub_resource type="CircleShape2D" id=93]
 radius = 12.0
 
+[sub_resource type="CircleShape2D" id=99]
+radius = 68.0
+
 [sub_resource type="ShaderMaterial" id=91]
 shader = ExtResource( 37 )
 
@@ -821,6 +848,8 @@ color_ramp = SubResource( 89 )
 anim_offset = 1.0
 anim_offset_random = 1.0
 
+[sub_resource type="CanvasItemMaterial" id=100]
+
 [sub_resource type="Animation" id=26]
 resource_name = "Flash"
 length = 0.6
@@ -837,6 +866,8 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 0.509804, 0.509804, 0.192157 ), Color( 1, 0.509804, 0.509804, 0.376471 ), Color( 1, 0.509804, 0.509804, 0.192157 ) ]
 }
+
+[sub_resource type="CanvasItemMaterial" id=101]
 
 [sub_resource type="Animation" id=7]
 resource_name = "Flash"
@@ -986,6 +1017,15 @@ __meta__ = {
 [node name="TileMap" type="TileMap" parent="."]
 material = SubResource( 1 )
 tile_set = ExtResource( 33 )
+cell_size = Vector2( 200, 200 )
+cell_quadrant_size = 100
+collision_mask = 0
+format = 1
+
+[node name="Lava" type="TileMap" parent="."]
+modulate = Color( 1.5, 1.5, 1.5, 1 )
+light_mask = 0
+tile_set = SubResource( 98 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
 collision_mask = 0
@@ -1202,8 +1242,8 @@ offset = Vector2( -21.4132, -17.9986 )
 [node name="Burn" type="Sprite" parent="Rover"]
 visible = false
 material = SubResource( 22 )
-position = Vector2( 16, -40 )
-scale = Vector2( 4, 4 )
+position = Vector2( 20, -48 )
+scale = Vector2( 7.6875, 7.6875 )
 texture = ExtResource( 18 )
 
 [node name="Tween" type="Tween" parent="Rover"]
@@ -1221,6 +1261,12 @@ one_shot = true
 [node name="SuffocationTimer" type="Timer" parent="Rover"]
 wait_time = 0.2
 
+[node name="BurnTimer" type="Timer" parent="Rover"]
+
+[node name="InvincibilityCooldown" type="Timer" parent="Rover"]
+wait_time = 2.0
+one_shot = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
 shape = SubResource( 86 )
 
@@ -1229,6 +1275,13 @@ collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/BreakRocksWithDash"]
 shape = SubResource( 93 )
+
+[node name="InteractArea" type="Area2D" parent="Rover"]
+collision_layer = 2
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/InteractArea"]
+shape = SubResource( 99 )
 
 [node name="RoDEffects" type="Node2D" parent="."]
 
@@ -1250,7 +1303,8 @@ texture = ExtResource( 39 )
 
 [node name="TileHighlightLeft" type="Sprite" parent="."]
 modulate = Color( 1, 0.509804, 0.509804, 0.192157 )
-light_mask = -2147483646
+light_mask = -2147483647
+material = SubResource( 100 )
 position = Vector2( 0, -1 )
 texture = ExtResource( 22 )
 
@@ -1260,7 +1314,8 @@ anims/Flash = SubResource( 26 )
 
 [node name="TileHighlightRight" type="Sprite" parent="."]
 modulate = Color( 0.509804, 1, 0.509804, 0.192157 )
-light_mask = -2147483646
+light_mask = -2147483647
+material = SubResource( 101 )
 position = Vector2( -208, 96 )
 texture = ExtResource( 22 )
 
@@ -1726,12 +1781,10 @@ environment = SubResource( 19 )
 
 [node name="CheckAchievements" type="Timer" parent="."]
 
-[node name="BurnTimer" type="Timer" parent="."]
-
-[connection signal="body_entered" from="Exit" to="." method="_on_Exit_body_entered"]
-[connection signal="body_exited" from="Exit" to="." method="_on_body_exited"]
-[connection signal="body_entered" from="Hole" to="." method="_on_Hole_body_entered"]
-[connection signal="body_exited" from="Hole" to="." method="_on_body_exited"]
+[connection signal="area_entered" from="Exit" to="." method="_on_Exit_area_entered"]
+[connection signal="area_exited" from="Exit" to="." method="_on_area_exited"]
+[connection signal="area_entered" from="Hole" to="." method="_on_Hole_area_entered"]
+[connection signal="area_exited" from="Hole" to="." method="_on_area_exited"]
 [connection signal="body_entered" from="FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_entered"]
 [connection signal="body_exited" from="FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_exited"]
 [connection signal="body_entered" from="Rover/RayOfDoom" to="." method="_on_RayOfDoom_body_entered"]
@@ -1740,6 +1793,7 @@ environment = SubResource( 19 )
 [connection signal="timeout" from="Rover/EnergyBallTimer" to="." method="_on_EnergyBallTimer_timeout"]
 [connection signal="timeout" from="Rover/DashTimer" to="." method="_on_DashTimer_timeout"]
 [connection signal="timeout" from="Rover/SuffocationTimer" to="." method="_on_SuffocationTimer_timeout"]
+[connection signal="timeout" from="Rover/BurnTimer" to="." method="_on_BurnTimer_timeout"]
 [connection signal="body_entered" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_entered"]
 [connection signal="body_exited" from="Rover/BreakRocksWithDash" to="." method="_on_BreakRocksWithDash_body_exited"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
@@ -1750,6 +1804,7 @@ environment = SubResource( 19 )
 [connection signal="mouse_entered" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_entered" binds= [ "stone" ]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_exited"]
 [connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="tween_all_completed" from="UI2/Panel/Tween" to="." method="_on_Tween_tween_all_completed"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Difficulty" to="." method="_on_Difficulty_mouse_entered"]
@@ -1761,4 +1816,3 @@ environment = SubResource( 19 )
 [connection signal="mouse_exited" from="UI2/Ability" to="." method="_on_mouse_exited"]
 [connection signal="timeout" from="UI2/Ability/Timer" to="." method="_on_AbilityTimer_timeout"]
 [connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]
-[connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]

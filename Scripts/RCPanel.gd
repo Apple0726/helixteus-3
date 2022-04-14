@@ -65,10 +65,6 @@ func _ready():
 	CC_slot.get_node("Button").connect("mouse_entered", self, "_on_Slot_mouse_entered", ["rover_CC"])
 	CC_slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
 	CC_slot.get_node("Button").connect("pressed", self, "_on_Slot_pressed", ["rover_CC"])
-	if game.science_unlocked.has("RMK2"):
-		inventory.append({})
-	if game.science_unlocked.has("RMK3"):
-		inventory.append({})
 
 func _on_REP_mouse_entered():
 	game.show_tooltip(tr("ENHANCE"))
@@ -194,6 +190,10 @@ func _on_Button_pressed():
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
 
 func refresh():
+	if game.science_unlocked.has("RMK2") and len(inventory) == 5:
+		inventory.append({})
+	if game.science_unlocked.has("RMK3") and len(inventory) == 6:
+		inventory.append({})
 	tile = game.tile_data[game.c_t]
 	REPs = tile.bldg.path_1 / 20
 	if game.science_unlocked.has("RMK3"):

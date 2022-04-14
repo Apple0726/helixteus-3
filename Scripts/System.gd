@@ -516,7 +516,7 @@ func show_planet_info(id:int, l_id:int):
 			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
 			if p_i.has("conquered"):
 				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
-				if p_i.has("bldg"):
+				if p_i.has("tile_num"):
 					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
 				tooltip += "\n%s\n%s" % [tr("MORE_DETAILS"), tr("HIDE_SHORTCUTS")]

@@ -2997,7 +2997,7 @@ func generate_tiles(id:int):
 		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		phase_2.free()
 	var volcano_probability:float = 0.0
-	if randf() < log(pow(coldest_star_temp, -0.15) + 1.0):
+	if randf() < log(pow(coldest_star_temp, -0.12) + 1.0):
 		volcano_probability = min(1.0 / sqrt(randf()) / pow(wid, 2), 0.15)
 	for i in wid:
 		for j in wid:

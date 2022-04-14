@@ -216,6 +216,8 @@ func show_tooltip(tile):
 	var tooltip:String = ""
 	var icons = []
 	var adv = false
+	var fiery_tooltip:int = -1
+	var fire_strength:float = 0.0
 	if tile.has("bldg"):
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
@@ -240,10 +242,13 @@ func show_tooltip(tile):
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("cave"):
 		var au_str:String = ""
-		adv = tile.has("aurora") or tile.cave.has("modifiers")
+		adv = true
 		if tile.has("aurora"):
 			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
 			tooltip = au_str
+		if tile.has("plant") and tile.plant.has("ash"):
+			fiery_tooltip = tile_over
+			fire_strength = tile.plant.ash
 		tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
 #		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
@@ -330,6 +335,13 @@ func show_tooltip(tile):
 			game.hide_tooltip()
 		else:
 			game.show_tooltip(tooltip)
+	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
+		game.tooltip.get_node("ColorRect").visible = true
+		game.tooltip.get_node("ColorRect").material.set_shader_param("seed", fiery_tooltip)
+		game.tooltip.get_node("ColorRect").material.set_shader_param("color", Color(1, 0.51, 0, 1) * clamp(range_lerp(fire_strength, 6.0, 12.0, 0.5, 2.0), 0.5, 2.0))
+		#game.tooltip.get_node("ColorRect").material.set_shader_param("color", Color(1, 0.51, 0, 1) * 2.0)
+		game.tooltip.get_node("ColorRect").material.set_shader_param("fog_mvt_spd", clamp(range_lerp(fire_strength, 6.0, 12.0, 0.5, 1.5), 0.5, 1.5))
+		#game.tooltip.get_node("ColorRect").material.set_shader_param("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
 	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 * pow(game.stats_univ.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
