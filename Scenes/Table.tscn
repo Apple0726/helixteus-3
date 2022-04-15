@@ -1,0 +1,170 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.611765, 0.611765, 0.611765, 1 )
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 6.0
+content_margin_right = 6.0
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.611765, 0.611765, 0.611765, 1 )
+
+[node name="Control" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -982.0
+margin_bottom = -593.0
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_right = 298.0
+margin_bottom = 127.0
+custom_constants/vseparation = -1
+custom_constants/hseparation = -1
+columns = 3
+
+[node name="Level" type="Label" parent="GridContainer"]
+margin_right = 100.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 40, 40 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "LEVEL"
+align = 1
+valign = 1
+
+[node name="Value" type="Label" parent="GridContainer"]
+margin_left = 99.0
+margin_right = 199.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 100, 40 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "VALUE"
+align = 1
+valign = 1
+
+[node name="Default" type="Label" parent="GridContainer"]
+margin_left = 198.0
+margin_right = 298.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 100, 40 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "DEFAULT"
+align = 1
+valign = 1
+
+[node name="1" type="Label" parent="GridContainer"]
+margin_top = 39.0
+margin_right = 100.0
+margin_bottom = 69.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "1"
+align = 1
+
+[node name="1Value" type="Label" parent="GridContainer"]
+margin_left = 99.0
+margin_top = 39.0
+margin_right = 199.0
+margin_bottom = 69.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="1Default" type="Label" parent="GridContainer"]
+margin_left = 198.0
+margin_top = 39.0
+margin_right = 298.0
+margin_bottom = 69.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="10" type="Label" parent="GridContainer"]
+margin_top = 68.0
+margin_right = 100.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "10"
+align = 1
+
+[node name="10Value" type="Label" parent="GridContainer"]
+margin_left = 99.0
+margin_top = 68.0
+margin_right = 199.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="10Default" type="Label" parent="GridContainer"]
+margin_left = 198.0
+margin_top = 68.0
+margin_right = 298.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="100" type="Label" parent="GridContainer"]
+margin_top = 97.0
+margin_right = 100.0
+margin_bottom = 127.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="100Value" type="Label" parent="GridContainer"]
+margin_left = 99.0
+margin_top = 97.0
+margin_right = 199.0
+margin_bottom = 127.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1
+
+[node name="100Default" type="Label" parent="GridContainer"]
+margin_left = 198.0
+margin_top = 97.0
+margin_right = 298.0
+margin_bottom = 127.0
+rect_min_size = Vector2( 100, 30 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "100"
+align = 1

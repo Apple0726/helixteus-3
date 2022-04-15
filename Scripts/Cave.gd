@@ -1133,9 +1133,9 @@ func _input(event):
 				rot_vec = Vector2(cos(sprite.rotation), sin(sprite.rotation)).normalized() 
 			var base_vel:Vector2 = rot_vec * max_speed * speed_mult2
 			if enhancements.has("wheels_4"):
-				velocity = base_vel * 4.5
+				velocity = base_vel * 6.0
 			else:
-				velocity = base_vel * 3.0
+				velocity = base_vel * 4.0
 			status_effects.invincible = 0.3
 			if enhancements.has("wheels_3"):
 				rover.collision_mask = 32

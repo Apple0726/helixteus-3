@@ -10,7 +10,11 @@ var maths_OP_points:float = 0
 var physics_OP_points:float = 0
 var engineering_OP_points:float = 0
 
+var table
+
 func _ready():
+	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0001
+	$ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.step = 0.0001
 	if not game.help.has("flash_send_probe_btn"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
@@ -20,9 +24,11 @@ func _ready():
 		var univ_prop_text = preload("res://Scenes/HelpText.tscn").instance()
 		univ_prop_text.label_text = tr(univ_prop.name.to_upper())
 		univ_prop_text.help_text = tr("%s_DESC" % univ_prop.name.to_upper())
+		univ_prop_text.rect_min_size.y = 32.0
 		univ_prop_text.size_flags_horizontal = Label.SIZE_EXPAND_FILL
-		univ_prop_text.size_flags_vertical = Label.SIZE_EXPAND_FILL
+		#univ_prop_text.size_flags_vertical = Label.SIZE_EXPAND_FILL
 		$ModifyDimension/Physics/Control/VBox2.add_child(univ_prop_text)
+		univ_prop_text.name = univ_prop.name
 	
 	refresh_univs()
 	$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
@@ -45,9 +51,8 @@ func toggle_subj(subj_name:String):
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (2.0 if game.subjects.dimensional_power.lv >= 2 else 1.0)
+			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.25 if game.subjects.dimensional_power.lv >= 4 else 1.0)
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj_name.to_lower()]
-			$ModifyDimension/OPMeter/TooOP.visible = self["%s_OP_points" % subj_name.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value
 	else:
 		$ModifyDimension/OPMeter.visible = false
 
@@ -84,8 +89,12 @@ func refresh_univs(reset:bool = false):
 	$ModifyDimension/Physics/Control/MVOUP.set_value(game.physics_bonus.MVOUP)
 	$ModifyDimension/Physics/Control/MVOUP.editable = reset
 	for maths_bonus in game.maths_bonus:
-		$ModifyDimension/Maths/Control.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
-		$ModifyDimension/Maths/Control.get_node(maths_bonus).editable = reset
+		if $ModifyDimension/Maths/Control/CostGrowthFactors.has_node(maths_bonus):
+			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
+			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).editable = reset
+		else:
+			$ModifyDimension/Maths/Control.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
+			$ModifyDimension/Maths/Control.get_node(maths_bonus).editable = reset
 	for engineering_bonus in game.engineering_bonus:
 		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).set_value(game.engineering_bonus[engineering_bonus])
 		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).editable = reset
@@ -113,6 +122,12 @@ func refresh_univs(reset:bool = false):
 	$Universes.visible = not reset
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
+	if game.subjects.dimensional_power.lv >= 1:
+		$ModifyDimension/Physics/Control/VBox/universe_value.visible = true
+		$ModifyDimension/Physics/Control/VBox2/universe_value.visible = true
+	else:
+		$ModifyDimension/Physics/Control/VBox/universe_value.visible = false
+		$ModifyDimension/Physics/Control/VBox2/universe_value.visible = false
 
 func on_invest(subj_node):
 	if game.DRs > 0:
@@ -126,15 +141,15 @@ func on_invest(subj_node):
 			subject.DRs -= subject.lv
 		if subj_node.name == "Dimensional_Power":
 			if $ModifyDimension/Maths.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (2.0 if subject.lv >= 2 else 1.0)
-				$ModifyDimension/OPMeter/TooOP.visible = maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.25 if subject.lv >= 4 else 1.0)
 			elif $ModifyDimension/Physics.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (2.0 if subject.lv >= 2 else 1.0)
-				$ModifyDimension/OPMeter/TooOP.visible = physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.25 if subject.lv >= 4 else 1.0)
 			elif $ModifyDimension/Engineering.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (2.0 if subject.lv >= 2 else 1.0)
-				$ModifyDimension/OPMeter/TooOP.visible = engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.25 if subject.lv >= 4 else 1.0)
 			$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = subject.lv + subject.DRs / float(subject.lv + 1)
+			if subject.lv >= 1:
+				$ModifyDimension/Physics/Control/VBox/universe_value.visible = true
+				$ModifyDimension/Physics/Control/VBox2/universe_value.visible = true
 			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject.lv):
 				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject.lv)["custom_colors/font_color"] = Color.white
 		subj_node.refresh(subject.DRs, subject.lv)
@@ -179,18 +194,18 @@ func on_univ_over(id:int):
 			u_i.charge,
 			]
 	$UnivInfo.text += "\n%s\n" % tr("MULTIPLIERS")
-	$UnivInfo.text += "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+	$UnivInfo.text += "%s: %s\n%s: %s\n%s: %s" % [
 		tr("DARK_ENERGY"),
 		u_i.dark_energy,
 		tr("DIFFICULTY"),
 		u_i.difficulty,
 		tr("TIME_SPEED"),
 		u_i.time_speed,
-		tr("ANTIMATTER"),
-		u_i.antimatter,
-		tr("UNIVERSE_VALUE"),
-		u_i.universe_value,
 		]
+	if game.subjects.dimensional_power.lv > 2:
+		$UnivInfo.text += "%s: %s" % [tr("ANTIMATTER"), u_i.antimatter]
+	if game.subjects.dimensional_power.lv > 0:
+		$UnivInfo.text += "%s: %s" % [tr("UNIVERSE_VALUE"), u_i.universe_value]
 
 func e(n, e):
 	return n * pow(10, e)
@@ -242,6 +257,26 @@ func calc_math_points(node, default_value:float, op_factor:float, limit:float = 
 onready var math_defaults = $ModifyDimension/Maths/Control/Defaults
 onready var physics_defaults = $ModifyDimension/Physics/Control/Defaults
 func _input(event):
+	if event is InputEventMouseMotion:
+		if is_instance_valid(table):
+			var mouse_pos:Vector2 = game.mouse_pos
+			if game.op_cursor:
+				if Geometry.is_point_in_polygon(mouse_pos, game.quadrant_top_left) or Geometry.is_point_in_polygon(mouse_pos, game.quadrant_bottom_left):
+					table.rect_position = mouse_pos - Vector2(-9, table.rect_size.y + 9)
+				else:
+					table.rect_position = mouse_pos - table.rect_size - Vector2(9, 9)
+			else:
+				if Geometry.is_point_in_polygon(mouse_pos, game.quadrant_top_left):
+					table.rect_position = mouse_pos + Vector2(9, 9)
+				elif Geometry.is_point_in_polygon(mouse_pos, game.quadrant_top_right):
+					table.rect_position = mouse_pos - Vector2(table.rect_size.x + 9, -9)
+				elif Geometry.is_point_in_polygon(mouse_pos, game.quadrant_bottom_left):
+					table.rect_position = mouse_pos - Vector2(-9, table.rect_size.y + 9)
+				elif Geometry.is_point_in_polygon(mouse_pos, game.quadrant_bottom_right):
+					table.rect_position = mouse_pos - table.rect_size - Vector2(9, 9)
+			table.visible = true
+	if $ColorRect.visible and $ColorRect/Label.modulate.a == 1.0 and Input.is_action_just_released("left_click"):
+		show_DR_help()
 	if $ModifyDimension/Reset.visible:
 		var DR_per_click:int = int($ModifyDimension/Reset/LineEdit.text)
 		if DR_per_click < 0:
@@ -255,26 +290,27 @@ func _input(event):
 		if event is InputEventKey or event is InputEventMouse:
 			yield(get_tree(), "idle_frame")
 			maths_OP_points = 0
-			calc_math_points($ModifyDimension/Maths/Control/BUCGF, 1.3, -20.0, 1.2)
-			math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MV, 1.9, -8.0, 1.5)
-			math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_MSMB, 1.6, -2.0, 1.5)
-			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/MUCGF_AIE, 2.3, -10.0, 1.5)
-			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -15.0, 1.2)
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.5)
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -2.0, 1.5)
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -10.0, 1.5)
 			calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 3.0)
-			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_XP, 1.3, -40.0, 1.1)
-			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/SLUGF_Stats, 1.15, 400.0)
-			math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.right(1)))
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -40.0, 1.1)
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 400.0)
 			calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 2.5)
-			math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.right(1)))
 			calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -120.0, 1.5)
+			calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.6, -200.0, 1.15)
+
+			math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
+			math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
+			math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
+			math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
+			math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
+			math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))
+			math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.right(1)))
+			math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.right(1)))
 			math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.right(1)))
-			calc_math_points($ModifyDimension/Maths/Control/ULUGF, 1.6, -200.0, 1.15)
-			math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/ULUGF.value, float(math_defaults.get_node("ULUGF").text.right(1)))
+			math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.value, float(math_defaults.get_node("ULUGF").text.right(1)))
 			physics_OP_points = 0
 			if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
 				$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.red
@@ -302,17 +338,36 @@ func _input(event):
 			calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.1, true)
 			calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.15, true)
 			if $ModifyDimension/Maths.visible:
+				if is_equal_approx(maths_OP_points, 0):
+					maths_OP_points = 0
 				$ModifyDimension/OPMeter/OPMeter.value = maths_OP_points
-				$ModifyDimension/OPMeter/TooOP.visible = maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+				$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(maths_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
+				if maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value:
+					$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
+					$Subjects/Grid/Maths/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
+				else:
+					$Subjects/Grid/Maths/Effects["custom_colors/font_color"] = Color.white
 			elif $ModifyDimension/Physics.visible:
 				$ModifyDimension/OPMeter/OPMeter.value = physics_OP_points
-				$ModifyDimension/OPMeter/TooOP.visible = physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
+				$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(physics_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
+				if physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value:
+					$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
+					$Subjects/Grid/Physics/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
+				else:
+					$Subjects/Grid/Physics/Effects["custom_colors/font_color"] = Color.white
 			elif $ModifyDimension/Engineering.visible:
 				$ModifyDimension/OPMeter/OPMeter.value = engineering_OP_points
-				$ModifyDimension/OPMeter/TooOP.visible = engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value
-			var OP_mult:float = (2.0 if game.subjects.dimensional_power.lv >= 2 else 1.0)
+				$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(engineering_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
+				if engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value:
+					$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
+					$Subjects/Grid/Engineering/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
+				else:
+					$Subjects/Grid/Engineering/Effects["custom_colors/font_color"] = Color.white
+			var OP_mult:float = (1.25 if game.subjects.dimensional_power.lv >= 4 else 1.0)
 			if $ModifyDimension/Reset.visible:
-				$ModifyDimension/Reset/Generate.visible = maths_OP_points <= game.subjects.maths.lv * OP_mult and physics_OP_points <= game.subjects.physics.lv * OP_mult and engineering_OP_points <= game.subjects.engineering.lv * OP_mult
+				#Save migration
+				$ModifyDimension/Reset/Generate.visible = true
+				$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult)
 
 func calc_engi_points(node, op_factor:float, growth:bool):
 	if node.value <= 0:
@@ -339,3 +394,70 @@ func set_bonuses():
 
 func _on_Generate_pressed():
 	game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
+
+
+func _on_Label1_mouse_entered():
+	game.show_tooltip("When customizing a universe, a new slider called \"Universe value\" will appear which will multiply the effectiveness of universe levels when calculating probe points and DRs.")
+
+
+func _on_Label2_mouse_entered():
+	game.show_tooltip("More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction speed, mining minigame etc.) is unaffected.")
+
+var DR_help_index:int = 1
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "FadeOut":
+		$ColorRect.visible = false
+	else:
+		show_DR_help()
+		game.physics_bonus.universe_value = 250#Save migration
+		refresh_univs(true)
+
+func show_DR_help():
+	var tween = $ColorRect/Tween
+	if $ColorRect/Label.modulate.a > 0:
+		tween.interpolate_property($ColorRect/Label, "modulate", null, Color(1, 1, 1, 0), 0.5)
+		tween.start()
+		yield(tween, "tween_all_completed")
+		DR_help_index += 1
+	if DR_help_index == 5:
+		$ColorRect/AnimationPlayer.play("FadeOut")
+		game.help.DR_reset = true
+	else:
+		if DR_help_index == 2:
+			$ColorRect/Label.text = tr("DR_HELP%s" % DR_help_index) % [Helper.format_num(game.stats_global.bldgs_built), Helper.format_num(game.stats_global.total_money_earned), Helper.format_num(game.stats_global.planets_conquered)]
+		else:
+			$ColorRect/Label.text = tr("DR_HELP%s" % DR_help_index)
+		tween.interpolate_property($ColorRect/Label, "modulate", null, Color.white, 0.5)
+		tween.start()
+
+func _on_ColorRect_visibility_changed():
+	if $ColorRect.visible:
+		$ColorRect/AnimationPlayer.play("Fade")
+
+
+func _on_CostGrowthFactor_mouse_entered():
+	game.show_tooltip("Cost growth factor formula. Costs (e.g. building costs, XP requirements) are multiplied by a certain value every time they level up. This value corresponds to q.")
+
+
+func _on_ShipHitChance_mouse_entered():
+	game.show_tooltip("ship_hit_chance is a number between 0 and 1. 0 means the ship will never hit enemies, 1 means it will always hit them.\nThe variable you're modifying is a, which basically multiplies a ship's accuracy stat.")
+
+func _on_Table_mouse_entered(maths_bonus:String, level_1_value:float):
+	if is_instance_valid(table):
+		table.queue_free()
+	table = preload("res://Scenes/Table.tscn").instance()
+	table.visible = false
+	game.get_node("Tooltips").add_child(table)
+	table.get_node("GridContainer/Value").text = "%s (q=%s)" % [tr("VALUE"), $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).text]
+	table.get_node("GridContainer/Default").text = "%s (q=%s)" % [tr("DEFAULT"), float(math_defaults.get_node(maths_bonus).text.right(1))]
+	table.get_node("GridContainer/1Value").text = str(level_1_value)
+	table.get_node("GridContainer/1Default").text = str(level_1_value)
+	table.get_node("GridContainer/10Value").text = Helper.format_num(round(level_1_value * pow($ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value, 10)))
+	table.get_node("GridContainer/10Default").text = Helper.format_num(round(level_1_value * pow(float(math_defaults.get_node(maths_bonus).text.right(1)), 10)))
+	table.get_node("GridContainer/100Value").text = Helper.format_num(round(level_1_value * pow($ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value, 100)))
+	table.get_node("GridContainer/100Default").text = Helper.format_num(round(level_1_value * pow(float(math_defaults.get_node(maths_bonus).text.right(1)), 100)))
+
+
+func _on_Table_mouse_exited():
+	table.queue_free()

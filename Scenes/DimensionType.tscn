@@ -13,9 +13,6 @@ rect_clip_content = true
 mouse_filter = 2
 size_flags_horizontal = 3
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="RichTextLabel" parent="." instance=ExtResource( 2 )]
 anchor_right = 1.0

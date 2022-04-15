@@ -437,7 +437,7 @@ var univ_prop_weights:Dictionary = {
 	"difficulty":10,
 	"time_speed":50,
 	"antimatter":0,
-	"universe_value":100,
+	"universe_value":250,
 	}
 
 var molar_mass = {	"H":1.008,

@@ -97,7 +97,6 @@ func _ready():
 			grid_panel.name = "Grid_%s" % g_i.l_id
 			grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
 			grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y) * grid_panel.rect_scale.y * max(sc, 1.0) - 200 * sc
-			prints(sc, g_i.l_id)
 		if not MSs.empty():
 			var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
 			MS_grid_panel.get_node("Bottom").visible = false

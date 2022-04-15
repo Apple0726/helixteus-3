@@ -643,6 +643,8 @@ func switch_music(src, pitch:float = 1.0):
 		tween.interpolate_property(music_player, "volume_db", null, -30, 1, Tween.TRANS_QUAD, Tween.EASE_IN)
 		tween.start()
 		yield(tween, "tween_all_completed")
+	if not src:
+		return
 	music_player.stream = src
 	music_player.pitch_scale = pitch * u_i.time_speed if u_i and pitch_affected else pitch
 	music_player.play()
@@ -809,7 +811,7 @@ func load_game():
 		"difficulty":10,
 		"time_speed":50,
 		"antimatter":0,
-		"universe_value":100,
+		"universe_value":250,
 	})
 	engineering_bonus = save_info_dict.get("engineering_bonus", {
 		"BCM":1.0,
@@ -4199,7 +4201,7 @@ func generate_new_univ_confirm():
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0
-	var UV_mult = (1.5 + subjects.dimensional_power.lv * 0.2) if subjects.dimensional_power.lv > 0 else 1.0
+	var UV_mult = 1.0#(1.5 + subjects.dimensional_power.lv * 0.2) if subjects.dimensional_power.lv > 0 else 1.0
 	universe_data[0].universe_value = UV_mult
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
@@ -4227,7 +4229,11 @@ func reset_dimension_confirm(DR_num:int):
 		earn_achievement("progression", 3)
 	universe_data.clear()
 	dim_num += 1
-	dimension.refresh_univs(true)
+	if not help.has("DR_reset"):
+		dimension.get_node("ColorRect").visible = true
+		switch_music(null)
+	else:
+		dimension.refresh_univs(true)
 	YN_panel.disconnect("confirmed", self, "reset_dimension_confirm")
 	stats_dim = Data.default_stats.duplicate(true)
 	fn_save_game()

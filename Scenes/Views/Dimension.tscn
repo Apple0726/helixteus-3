@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -19,6 +19,10 @@
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=17]
 [ext_resource path="res://Graphics/Misc/BarUnder.png" type="Texture" id=18]
 [ext_resource path="res://Scenes/CustomSpinBox.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=20]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=21]
+[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=22]
+[ext_resource path="res://Graphics/Icons/table.png" type="Texture" id=23]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
@@ -103,6 +107,51 @@ border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 2 )
 
+[sub_resource type="Animation" id=8]
+resource_name = "Fade"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ) ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "FadeOut"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ) ]
+}
+
 [node name="Dimension" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -126,9 +175,6 @@ margin_top = 48.0
 margin_right = 288.0
 margin_bottom = 720.0
 rect_min_size = Vector2( 288, 0 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
 margin_left = 10.0
@@ -168,18 +214,12 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "SEND_PROBES"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ColorRect" type="ColorRect" parent="Universes/SendProbes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color( 1, 1, 1, 0 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Universes/SendProbes"]
 anims/FlashButton = SubResource( 6 )
@@ -214,56 +254,55 @@ __meta__ = {
 [node name="Grid" type="GridContainer" parent="Subjects"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1022.0
-margin_bottom = 666.0
+margin_right = 822.0
+margin_bottom = 667.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 4
+columns = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Maths" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_right = 250.0
+margin_right = 268.0
 texture = ExtResource( 5 )
 btn_text = "MODIFY_FORMULAS"
 
 [node name="Physics" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 254.0
-margin_right = 504.0
+margin_left = 272.0
+margin_right = 540.0
 texture = ExtResource( 4 )
 btn_text = "REWRITE_PHYSICS_LAWS"
 
 [node name="Chemistry" parent="Subjects/Grid" instance=ExtResource( 3 )]
+visible = false
 margin_left = 508.0
 margin_right = 758.0
 texture = ExtResource( 7 )
 btn_text = "CUSTOMIZE_NEW_METALS"
 
 [node name="Biology" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 762.0
-margin_right = 1012.0
+visible = false
+margin_left = 508.0
+margin_right = 758.0
 texture = ExtResource( 11 )
 
 [node name="Philosophy" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_top = 330.0
-margin_right = 250.0
-margin_bottom = 656.0
+visible = false
+margin_left = 508.0
+margin_right = 758.0
 texture = ExtResource( 14 )
 
 [node name="Engineering" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 254.0
-margin_top = 330.0
-margin_right = 504.0
-margin_bottom = 656.0
+margin_left = 544.0
+margin_right = 812.0
 texture = ExtResource( 10 )
 btn_text = "DO_ENGINEERING"
 
 [node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 508.0
 margin_top = 330.0
-margin_right = 758.0
+margin_right = 268.0
 margin_bottom = 656.0
 texture = ExtResource( 6 )
 
@@ -352,9 +391,6 @@ margin_right = 416.0
 margin_bottom = 492.0
 text = "DRS_PER_CLICK"
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LineEdit" type="LineEdit" parent="ModifyDimension/Reset"]
 margin_left = 32.0
@@ -362,9 +398,6 @@ margin_top = 505.0
 margin_right = 108.0
 margin_bottom = 533.0
 text = "1"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Generate" type="Button" parent="ModifyDimension/Reset"]
 margin_left = 50.0
@@ -381,220 +414,35 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 32.0
-margin_top = 48.0
+margin_top = 140.0
 margin_right = 408.0
 margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
+rect_min_size = Vector2( 388, 0 )
 mouse_filter = 1
 custom_styles/bg = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control" type="Control" parent="ModifyDimension/Maths"]
 margin_left = 10.0
 margin_top = 5.0
 margin_right = 310.0
-margin_bottom = 1025.0
-rect_min_size = Vector2( 300, 1020 )
+margin_bottom = 1155.0
+rect_min_size = Vector2( 300, 1150 )
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 16.0
-margin_top = 99.0
-margin_right = 330.0
-margin_bottom = 123.0
-text = "BUCGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="CostGrowthFactors" type="Panel" parent="ModifyDimension/Maths/Control"]
+margin_left = 10.0
+margin_top = 7.0
+margin_right = 386.0
+margin_bottom = 759.0
 
-[node name="Label3" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 14.0
-margin_top = 238.0
-margin_right = 334.0
-margin_bottom = 262.0
-text = "MUCGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 14.0
-margin_top = 398.0
-margin_right = 334.0
-margin_bottom = 422.0
-text = "IRM"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label9" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 14.0
-margin_top = 502.0
-margin_right = 334.0
-margin_bottom = 526.0
-text = "SLUGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 16.0
-margin_top = 637.0
-margin_right = 347.0
-margin_bottom = 661.0
-text = "COSHEF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 14.0
-margin_top = 833.0
-margin_right = 334.0
-margin_bottom = 857.0
-text = "MMBSVR"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 22.0
-margin_top = 175.0
-margin_right = 294.0
-margin_bottom = 207.0
-text = "q = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label10" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 22.0
-margin_top = 535.0
-margin_right = 294.0
-margin_bottom = 567.0
-text = "q_XP_to_level_up = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label14" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 14.0
-margin_top = 932.0
-margin_right = 334.0
-margin_bottom = 956.0
-text = "ULUGF"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label15" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 22.0
-margin_top = 964.0
-margin_right = 294.0
-margin_bottom = 992.0
-text = "q_XP_to_level_up = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label11" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 22.0
-margin_top = 571.0
-margin_right = 294.0
-margin_bottom = 603.0
-text = "q_stats = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 22.0
-margin_top = 757.0
-margin_right = 294.0
-margin_bottom = 785.0
-text = "a = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 275.0
-margin_right = 318.0
-margin_bottom = 303.0
-bbcode_text = "q_MV =                     [img]Graphics/Icons/help.png[/img]"
-text = "q_MV =                     "
-label_text = "q_MV =                    "
-help_text = "MV_NAME"
-
-[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 311.0
-margin_right = 318.0
-margin_bottom = 339.0
-bbcode_text = "q_MSMB =                     [img]Graphics/Icons/help.png[/img]"
-text = "q_MSMB =                     "
-label_text = "q_MSMB =                    "
-help_text = "MSMB_NAME"
-
-[node name="RichTextLabel3" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 347.0
-margin_right = 318.0
-margin_bottom = 375.0
-bbcode_text = "q_AIE =                     [img]Graphics/Icons/help.png[/img]"
-text = "q_AIE =                     "
-label_text = "q_AIE =                    "
-help_text = "AIE_NAME"
-
-[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 435.0
-margin_right = 318.0
-margin_bottom = 463.0
-bbcode_text = "IR_mult =                    [img]Graphics/Icons/help.png[/img]"
-text = "IR_mult =                    "
-label_text = "IR_mult =                   "
-help_text = "IR_MULT_HELP"
-
-[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 22.0
-margin_top = 867.0
-margin_right = 318.0
-margin_bottom = 895.0
-bbcode_text = "r =                      [img]Graphics/Icons/help.png[/img]"
-text = "r =                      "
-label_text = "r =                     "
-help_text = "RATIO_HELP"
-
-[node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
-margin_left = 24.0
-margin_top = 669.0
-margin_right = 328.0
-margin_bottom = 741.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 16 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ShipHitChance2" type="TextureRect" parent="ModifyDimension/Maths/Control"]
-margin_left = 26.0
-margin_top = 130.0
-margin_right = 330.0
-margin_bottom = 162.0
+[node name="CostGrowthFactor" type="TextureRect" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 52.0
+margin_top = 74.0
+margin_right = 356.0
+margin_bottom = 106.0
 rect_min_size = Vector2( 40, 0 )
 texture = ExtResource( 15 )
 expand = true
@@ -603,72 +451,259 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BUCGF" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 70.0
-margin_top = 175.0
-margin_right = -154.0
-margin_bottom = -813.0
+[node name="Label4" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 16.0
+margin_right = 368.0
+margin_bottom = 40.0
+text = "Cost growth factors"
+align = 1
+
+[node name="Label" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 138.0
+margin_right = 338.0
+margin_bottom = 162.0
+text = "BUILDING_COSTS"
+
+[node name="Label2" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 174.0
+margin_right = 296.0
+margin_bottom = 206.0
+text = "q = "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 174.0
+margin_right = 144.0
+margin_bottom = 206.0
+step = 0.0
+
+[node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 254.0
+margin_right = 344.0
+margin_bottom = 278.0
+text = "MINERAL_UPGRADES"
+
+[node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
+margin_left = 24.0
+margin_top = 293.0
+margin_right = 248.0
+margin_bottom = 321.0
+bbcode_text = "q_MV =                     [img]Graphics/Icons/help.png[/img]"
+text = "q_MV =                     "
+label_text = "q_MV =                    "
+help_text = "MV_NAME"
+
+[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
+margin_left = 24.0
+margin_top = 342.0
+margin_right = 276.0
+margin_bottom = 370.0
+bbcode_text = "q_MSMB =                     [img]Graphics/Icons/help.png[/img]"
+text = "q_MSMB =                     "
+label_text = "q_MSMB =                    "
+help_text = "MSMB_NAME"
+
+[node name="RichTextLabel3" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
+margin_left = 24.0
+margin_top = 390.0
+margin_right = 248.0
+margin_bottom = 418.0
+bbcode_text = "q_AIE =                     [img]Graphics/Icons/help.png[/img]"
+text = "q_AIE =                     "
+label_text = "q_AIE =                    "
+help_text = "AIE_NAME"
+
+[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 104.0
+margin_top = 290.0
+margin_right = 184.0
+margin_bottom = 322.0
+step = 0.01
+
+[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 132.0
+margin_top = 339.0
+margin_right = 212.0
+margin_bottom = 371.0
+step = 0.01
+
+[node name="MUCGF_AIE" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 104.0
+margin_top = 386.0
+margin_right = 184.0
+margin_bottom = 418.0
+step = 0.01
+
+[node name="Label9" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 466.0
+margin_right = 344.0
+margin_bottom = 490.0
+text = "SHIP_XP_REQ"
+
+[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 557.0
+margin_right = 344.0
+margin_bottom = 581.0
+text = "SHIP_STATS"
+
+[node name="Label10" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 502.0
+margin_right = 296.0
+margin_bottom = 534.0
+text = "q = "
+valign = 1
+
+[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 502.0
+margin_right = 144.0
+margin_bottom = 534.0
 step = 0.001
 
-[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 102.0
-margin_top = 271.0
-margin_right = -122.0
-margin_bottom = -717.0
-step = 0.01
+[node name="Label11" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 593.0
+margin_right = 296.0
+margin_bottom = 625.0
+text = "q = "
+valign = 1
 
-[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 130.0
-margin_top = 307.0
-margin_right = -94.0
-margin_bottom = -681.0
-step = 0.01
+[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 593.0
+margin_right = 144.0
+margin_bottom = 625.0
+step = 0.001
 
-[node name="MUCGF_AIE" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 102.0
-margin_top = 343.0
-margin_right = -122.0
-margin_bottom = -645.0
-step = 0.01
+[node name="Label14" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 645.0
+margin_right = 344.0
+margin_bottom = 669.0
+text = "UNIV_XP_REQ"
+
+[node name="Label15" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+margin_left = 24.0
+margin_top = 677.0
+margin_right = 76.0
+margin_bottom = 705.0
+text = "q = "
+valign = 1
+
+[node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 676.0
+margin_right = 144.0
+margin_bottom = 708.0
+step = 0.001
+
+[node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 26.0
+margin_top = 787.0
+margin_right = 346.0
+margin_bottom = 811.0
+text = "IRM"
+
+[node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 28.0
+margin_top = 883.0
+margin_right = 359.0
+margin_bottom = 907.0
+text = "COSHEF"
+
+[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 26.0
+margin_top = 1075.0
+margin_right = 346.0
+margin_bottom = 1099.0
+text = "MMBSVR"
+
+[node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
+margin_left = 34.0
+margin_top = 999.0
+margin_right = 306.0
+margin_bottom = 1027.0
+text = "a = "
+valign = 1
+
+[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 34.0
+margin_top = 824.0
+margin_right = 330.0
+margin_bottom = 852.0
+bbcode_text = "IR_mult =                    [img]Graphics/Icons/help.png[/img]"
+text = "IR_mult =                    "
+label_text = "IR_mult =                   "
+help_text = "IR_MULT_HELP"
+
+[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
+margin_left = 34.0
+margin_top = 1109.0
+margin_right = 330.0
+margin_bottom = 1137.0
+bbcode_text = "r =                      [img]Graphics/Icons/help.png[/img]"
+text = "r =                      "
+label_text = "r =                     "
+help_text = "RATIO_HELP"
+
+[node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
+margin_left = 36.0
+margin_top = 911.0
+margin_right = 340.0
+margin_bottom = 983.0
+rect_min_size = Vector2( 40, 0 )
+texture = ExtResource( 16 )
+expand = true
+stretch_mode = 6
 
 [node name="IRM" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 118.0
-margin_top = 431.0
-margin_right = -106.0
-margin_bottom = -557.0
-
-[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 218.0
-margin_top = 535.0
-margin_right = -6.0
-margin_bottom = -453.0
-step = 0.001
-
-[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 122.0
-margin_top = 571.0
-margin_right = -102.0
-margin_bottom = -417.0
-step = 0.001
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 134.0
+margin_top = 819.0
+margin_right = 210.0
+margin_bottom = 851.0
 
 [node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 66.0
-margin_top = 755.0
-margin_right = -158.0
-margin_bottom = -233.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 78.0
+margin_top = 995.0
+margin_right = 154.0
+margin_bottom = 1027.0
 
 [node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 62.0
-margin_top = 863.0
-margin_right = -162.0
-margin_bottom = -125.0
-
-[node name="ULUGF" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
-margin_left = 218.0
-margin_top = 963.0
-margin_right = -6.0
-margin_bottom = -25.0
-step = 0.001
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 78.0
+margin_top = 1103.0
+margin_right = 154.0
+margin_bottom = 1135.0
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
 margin_right = 40.0
@@ -678,93 +713,134 @@ __meta__ = {
 }
 
 [node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 178.0
-margin_top = 179.0
-margin_right = 220.0
-margin_bottom = 203.0
+margin_left = 186.0
+margin_top = 184.0
+margin_right = 228.0
+margin_bottom = 208.0
 text = "(1.3)"
+
+[node name="BUCGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/BUCGF"]
+margin_left = 52.0
+margin_right = 80.0
+margin_bottom = 26.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
 
 [node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 250.0
-margin_top = 275.0
-margin_right = 292.0
-margin_bottom = 299.0
+margin_left = 258.296
+margin_top = 300.0
+margin_right = 300.296
+margin_bottom = 324.0
+rect_rotation = 0.70657
 text = "(1.9)"
 
+[node name="MUCGF_MV_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MV"]
+margin_left = 53.7
+margin_top = -0.662292
+margin_right = 81.7
+margin_bottom = 25.3377
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
+
 [node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 278.0
-margin_top = 311.0
-margin_right = 320.0
-margin_bottom = 335.0
+margin_left = 286.296
+margin_top = 349.0
+margin_right = 328.296
+margin_bottom = 373.0
 text = "(1.6)"
 
+[node name="MUCGF_MSMB_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB"]
+margin_left = 54.704
+margin_top = -3.05176e-05
+margin_right = 82.704
+margin_bottom = 26.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
+
 [node name="MUCGF_AIE" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 254.0
-margin_top = 347.0
-margin_right = 296.0
-margin_bottom = 371.0
+margin_left = 262.296
+margin_top = 397.0
+margin_right = 304.296
+margin_bottom = 421.0
 text = "(2.3)"
 
+[node name="MUCGF_AIE_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE"]
+margin_left = 53.704
+margin_top = 2.0
+margin_right = 81.704
+margin_bottom = 28.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
+
 [node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 262.0
-margin_top = 435.0
-margin_right = 304.0
-margin_bottom = 459.0
+margin_left = 271.0
+margin_top = 823.0
+margin_right = 313.0
+margin_bottom = 847.0
 text = "(1.2)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 334.0
-margin_top = 539.0
-margin_right = 376.0
-margin_bottom = 563.0
+margin_left = 182.0
+margin_top = 512.0
+margin_right = 224.0
+margin_bottom = 536.0
 text = "(1.3)"
 
+[node name="SLUGF_XP_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_XP"]
+margin_left = 56.0
+margin_right = 84.0
+margin_bottom = 26.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
+
 [node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 242.0
-margin_top = 575.0
-margin_right = 295.0
-margin_bottom = 599.0
+margin_left = 182.0
+margin_top = 604.0
+margin_right = 235.0
+margin_bottom = 628.0
 text = "(1.15)"
 
+[node name="SLUGF_Stats_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats"]
+margin_left = 64.0
+margin_right = 92.0
+margin_bottom = 26.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
+
 [node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
 margin_left = 194.0
-margin_top = 759.0
+margin_top = 999.0
 margin_right = 247.0
-margin_bottom = 783.0
+margin_bottom = 1023.0
 text = "(1.5)"
 
 [node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 210.0
-margin_top = 867.0
-margin_right = 263.0
-margin_bottom = 891.0
+margin_left = 226.0
+margin_top = 1108.0
+margin_right = 279.0
+margin_bottom = 1132.0
 text = "(10)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-visible = false
-margin_left = 330.0
-margin_top = 967.0
-margin_right = 372.0
-margin_bottom = 991.0
+margin_left = 182.0
+margin_top = 688.0
+margin_right = 224.0
+margin_bottom = 712.0
 text = "(1.6)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF"]
+margin_left = 52.0
+margin_right = 80.0
+margin_bottom = 26.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 6
 
 [node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -817,9 +893,6 @@ Dark energy
 Difficulty
 Time speed
 Universe value"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 118.0
@@ -934,17 +1007,14 @@ margin_top = 320.0
 margin_right = 76.0
 margin_bottom = 352.0
 step = 1.0
-value = 100.0
+value = 250.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
 margin_top = 275.0
 margin_right = 254.0
 margin_bottom = 639.0
-custom_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
 margin_right = 40.0
@@ -1058,7 +1128,7 @@ margin_left = 362.0
 margin_top = 599.0
 margin_right = 404.0
 margin_bottom = 623.0
-text = "(100)"
+text = "(250)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1151,7 +1221,6 @@ __meta__ = {
 }
 
 [node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 32.0
@@ -1171,37 +1240,31 @@ margin_top = 5.0
 margin_right = 310.0
 margin_bottom = 805.0
 rect_min_size = Vector2( 300, 800 )
-mouse_filter = 1
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Level" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 14.0
-margin_top = 107.0
+margin_top = 19.0
 margin_right = 82.0
-margin_bottom = 131.0
+margin_bottom = 43.0
 text = "LEVEL"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SpecialBonuses" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 107.0
+margin_top = 19.0
 margin_right = 322.0
-margin_bottom = 131.0
-text = "Special bonuses"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_bottom = 43.0
+text = "EFFECTS"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 42.0
-margin_top = 159.0
+margin_top = 71.0
 margin_right = 82.0
-margin_bottom = 667.0
+margin_bottom = 579.0
 custom_constants/separation = 70
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1247,85 +1310,95 @@ margin_right = 40.0
 margin_bottom = 494.0
 text = "6"
 
+[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color( 0.454902, 0, 1, 1 )
+margin_top = 564.0
+margin_right = 40.0
+margin_bottom = 588.0
+text = "7"
+
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-position = Vector2( -18, 79 )
+position = Vector2( -18, -9 )
 points = PoolVector2Array( 88, 92, 152, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 modulate = Color( 0.831373, 0.690196, 1, 1 )
-position = Vector2( -18, 175 )
+position = Vector2( -18, 87 )
 points = PoolVector2Array( 88, 92, 148, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D3" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 modulate = Color( 0.764706, 0.564706, 1, 1 )
-position = Vector2( -18, 267 )
+position = Vector2( -18, 179 )
 points = PoolVector2Array( 88, 92, 152, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D4" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 modulate = Color( 0.654902, 0.368627, 1, 1 )
-position = Vector2( -18, 359 )
+position = Vector2( -18, 271 )
 points = PoolVector2Array( 88, 92, 152, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D5" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 modulate = Color( 0.572549, 0.215686, 1, 1 )
-position = Vector2( -18, 455 )
+position = Vector2( -18, 367 )
 points = PoolVector2Array( 88, 92, 152, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D6" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 modulate = Color( 0.454902, 0, 1, 1 )
-position = Vector2( -18, 551 )
+position = Vector2( -18, 463 )
+points = PoolVector2Array( 88, 92, 152, 92 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D7" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color( 0.454902, 0, 1, 1 )
+position = Vector2( -18, 554 )
 points = PoolVector2Array( 88, 92, 152, 92 )
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="TextureProgress" type="TextureProgress" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 94.0
-margin_top = 171.0
-margin_right = 110.0
-margin_bottom = 643.0
+margin_top = 83.0
+margin_right = 113.0
+margin_bottom = 647.0
 min_value = 1.0
-max_value = 6.0
+max_value = 7.0
 step = 0.0
 value = 3.0
 texture_under = ExtResource( 18 )
 texture_progress = ExtResource( 17 )
 fill_mode = 2
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 159.0
+margin_top = 71.0
 margin_right = 386.0
-margin_bottom = 210.0
+margin_bottom = 122.0
+mouse_filter = 1
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Additional +50% boost to universe values"
+text = "Unlock \"universe value\" property"
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 255.0
+margin_top = 167.0
 margin_right = 386.0
-margin_bottom = 306.0
+margin_bottom = 218.0
+mouse_filter = 1
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Doubles the limit of all OP-meters"
+text = "\"Time speed\" affects caves/battles a lot less"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1333,78 +1406,56 @@ __meta__ = {
 
 [node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 347.0
+margin_top = 259.0
 margin_right = 386.0
-margin_bottom = 398.0
+margin_bottom = 310.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Unlock antimatter (note: not yet in-game)"
+autowrap = true
+
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 351.0
+margin_right = 386.0
+margin_bottom = 402.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "+25% capacity to all OP-meters"
+autowrap = true
+
+[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 447.0
+margin_right = 386.0
+margin_bottom = 498.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Coming soon"
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 439.0
-margin_right = 386.0
-margin_bottom = 490.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "™"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 535.0
-margin_right = 386.0
-margin_bottom = 586.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 631.0
+margin_top = 634.8
 margin_right = 386.0
-margin_bottom = 736.0
+margin_bottom = 766.8
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Desc" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 26.0
-margin_top = 19.0
-margin_right = 358.0
-margin_bottom = 70.0
-text = "Every level gives a +20% boost to all universe values."
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="OPMeter" type="Panel" parent="ModifyDimension"]
 visible = false
-margin_left = 60.0
-margin_top = 56.0
-margin_right = 420.0
-margin_bottom = 128.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 448.0
+margin_bottom = 140.0
 
 [node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource( 12 )]
 anchor_right = 1.0
-margin_top = 4.0
+margin_top = 10.0
 margin_right = 0.0
-margin_bottom = 32.0
+margin_bottom = 38.0
 bbcode_text = "[center]THE_OPMETER [img]Graphics/Icons/help.png[/img][/center]"
 text = "THE_OPMETER "
 label_text = "THE_OPMETER"
@@ -1417,35 +1468,89 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_left = 20.0
-margin_top = -4.0
+margin_top = -1.0
 margin_right = -20.0
-margin_bottom = 4.0
+margin_bottom = 26.0
 max_value = 10.0
 step = 0.0
+value = 4.0
 allow_greater = true
-texture_under = ExtResource( 18 )
-texture_progress = ExtResource( 17 )
+texture_under = ExtResource( 21 )
+texture_over = ExtResource( 22 )
+texture_progress = ExtResource( 20 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
+
+[node name="TooOP" type="Label" parent="ModifyDimension/OPMeter"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 24.0
+margin_top = -47.0
+margin_right = -23.0
+margin_bottom = -20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "TOO_OP"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TooOP" type="Label" parent="ModifyDimension/OPMeter"]
+[node name="ColorRect" type="ColorRect" parent="."]
 visible = false
-anchor_top = 1.0
+margin_right = 1280.0
+margin_bottom = 720.0
+color = Color( 0, 0, 0, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
+anims/Fade = SubResource( 8 )
+anims/FadeOut = SubResource( 10 )
+anims/RESET = SubResource( 9 )
+
+[node name="Label" type="Label" parent="ColorRect"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -28.0
-margin_bottom = -4.0
-custom_colors/font_color = Color( 1, 0, 0, 1 )
-text = "TOO_OP"
+anchor_bottom = 0.5
+margin_left = 288.0
+margin_top = -12.0
+margin_right = -288.0
+margin_bottom = 12.0
+text = "aw"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+valign = 1
+autowrap = true
+
+[node name="Tween" type="Tween" parent="ColorRect"]
 
 [connection signal="pressed" from="Universes/SendProbes" to="." method="_on_SendProbes_pressed"]
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
 [connection signal="mouse_exited" from="TopInfo/Reset" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TopInfo/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="ModifyDimension/Reset/Generate" to="." method="_on_Generate_pressed"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/CostGrowthFactors/CostGrowthFactor" to="." method="_on_CostGrowthFactor_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/CostGrowthFactors/CostGrowthFactor" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/ShipHitChance" to="." method="_on_ShipHitChance_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/ShipHitChance" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/BUCGF/BUCGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "BUCGF", 100.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/BUCGF/BUCGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MV/MUCGF_MV_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_MV", 100.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MV/MUCGF_MV_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB/MUCGF_MSMB_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_MSMB", 100.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB/MUCGF_MSMB_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE/MUCGF_AIE_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_AIE", 1000.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE/MUCGF_AIE_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_XP/SLUGF_XP_Table" to="." method="_on_Table_mouse_entered" binds= [ "SLUGF_XP", 20.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_XP/SLUGF_XP_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_entered" binds= [ "SLUGF_Stats", 10.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
+[connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_Label1_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
+[connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]
+[connection signal="animation_finished" from="ColorRect/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

@@ -842,23 +842,32 @@ func collect_RL(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
 	var stored = dict.bldg.stored
-	if stored == round(dict.bldg.path_2_value):
+	if stored >= round(dict.bldg.path_2_value):
 		dict.bldg.collect_date = curr_time
 	for el in p_i.atmosphere:
 		if el == "NH3":
 			add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
 			add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
+			game.show.H = true
+			game.show.N = true
 		elif el == "CO2":
 			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
 			add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
+			game.show.C = true
+			game.show.O = true
 		elif el == "CH4":
 			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
 			add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
+			game.show.C = true
+			game.show.H = true
 		elif el == "H2O":
 			add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
 			add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
+			game.show.H = true
+			game.show.O = true
 		else:
 			add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
+			game.show[el] = true
 	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):

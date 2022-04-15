@@ -112,7 +112,7 @@ func export_game(path:String = "user://"):
 							error2 = true
 							break
 						else:
-							save_dict.univs.append(export_univ_res.univ_data)
+							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
 					file_name = directory.get_next()
 				if not error2:
 					file.store_var(save_dict)
