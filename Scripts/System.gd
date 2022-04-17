@@ -288,26 +288,26 @@ func refresh_stars():
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if star_info.type.substr(0, 10) == "hypergiant" and not star_info.has("hypergiant"):
 			star_info.hypergiant = 1
-		if not game.achievement_data.exploration[0] and star_info.class[0] == "B":
-			game.earn_achievement("exploration", 0)
-		if not game.achievement_data.exploration[1] and star_info.class[0] == "O":
-			game.earn_achievement("exploration", 1)
-		if not game.achievement_data.exploration[2] and star_info.class[0] == "Q":
-			game.earn_achievement("exploration", 2)
-		if not game.achievement_data.exploration[3] and star_info.class[0] == "R":
-			game.earn_achievement("exploration", 3)
-		if not game.achievement_data.exploration[4] and star_info.class[0] == "Z":
-			game.earn_achievement("exploration", 4)
-		if not game.achievement_data.exploration[5] and star_info.has("hypergiant"):
-			game.earn_achievement("exploration", 5)
-		if not game.achievement_data.exploration[6] and star_info.has("hypergiant") and star_info.hypergiant >= 5:
-			game.earn_achievement("exploration", 6)
-		if not game.achievement_data.exploration[7] and star_info.has("hypergiant") and star_info.hypergiant >= 10:
-			game.earn_achievement("exploration", 7)
-		if not game.achievement_data.exploration[8] and star_info.has("hypergiant") and star_info.hypergiant >= 20:
-			game.earn_achievement("exploration", 8)
-		if not game.achievement_data.exploration[9] and star_info.has("hypergiant") and star_info.hypergiant >= 50:
-			game.earn_achievement("exploration", 9)
+		if not game.achievement_data.exploration.has("B_star") and star_info.class[0] == "B":
+			game.earn_achievement("exploration", "B_star")
+		if not game.achievement_data.exploration.has("O_star") and star_info.class[0] == "O":
+			game.earn_achievement("exploration", "O_star")
+		if not game.achievement_data.exploration.has("Q_star") and star_info.class[0] == "Q":
+			game.earn_achievement("exploration", "Q_star")
+		if not game.achievement_data.exploration.has("R_star") and star_info.class[0] == "R":
+			game.earn_achievement("exploration", "Rstar")
+		if not game.achievement_data.exploration.has("Z_star") and star_info.class[0] == "Z":
+			game.earn_achievement("exploration", "Z_star")
+		if not game.achievement_data.exploration.has("HG_star") and star_info.has("hypergiant"):
+			game.earn_achievement("exploration", "HG_star")
+		if not game.achievement_data.exploration.has("HG_V_star") and star_info.has("hypergiant") and star_info.hypergiant >= 5:
+			game.earn_achievement("exploration", "HG_V_star")
+		if not game.achievement_data.exploration.has("HG_X_star") and star_info.has("hypergiant") and star_info.hypergiant >= 10:
+			game.earn_achievement("exploration", "HG_X_star")
+		if not game.achievement_data.exploration.has("HG_XX_star") and star_info.has("hypergiant") and star_info.hypergiant >= 20:
+			game.earn_achievement("exploration", "HG_XX_star")
+		if not game.achievement_data.exploration.has("HG_L_star") and star_info.has("hypergiant") and star_info.hypergiant >= 50:
+			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars")
 		if game.enable_shaders:
 			star.material = ShaderMaterial.new()
@@ -548,8 +548,8 @@ func build_MS(obj:Dictionary, MS:String):
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
-		if not game.achievement_data.progression[0]:
-			game.earn_achievement("progression", 0)
+		if not game.achievement_data.progression.has("build_MS"):
+			game.earn_achievement("progression", "build_MS")
 		if obj.has("MS"):
 			if obj.MS == "M_DS":
 				game.autocollect.MS.energy -= Helper.get_DS_output(obj)

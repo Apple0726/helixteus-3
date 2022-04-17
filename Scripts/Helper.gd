@@ -357,6 +357,7 @@ var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
 func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
 	lb["custom_fonts/font"] = dmg_txt_rsrc
+	lb.light_mask = 0
 	if missed:
 		lb["custom_colors/font_color"] = Color(1, 1, 0, 1)
 		lb.text = tr("MISSED")

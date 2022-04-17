@@ -26,7 +26,7 @@ func set_rand():
 
 func on_time_out():
 	shoot_timer.wait_time = 0.3 / cave_ref.time_speed / cave_ref.enemy_attack_rate
-	if sees_player and modulate.a == 1.0:
+	if (sees_player or is_aggr()) and modulate.a == 1.0:
 		var rand_rot = rand_range(0, PI/2)
 		for i in range(0, 4):
 			var rot = i * PI/2 + rand_rot

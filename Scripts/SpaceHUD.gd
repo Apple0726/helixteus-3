@@ -69,4 +69,6 @@ func _on_ElementOverlay_mouse_entered():
 
 
 func _on_ElementOverlay_pressed():
+	game.get_node("UI").move_child(game.element_overlay, game.get_node("UI").get_child_count())
 	game.element_overlay.visible = not game.element_overlay.visible
+	

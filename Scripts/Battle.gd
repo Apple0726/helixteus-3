@@ -12,7 +12,7 @@ onready var ship3 = $Ship3
 onready var ship3_engine = $Ship3/Fire
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 var star_shader = preload("res://Shaders/Star.shader")
-onready var time_speed = game.u_i.time_speed if game else 2.5
+var time_speed:float = 1.0
 var hard_battle:bool = false
 var max_lv_ship:int = 0
 var green_enemy:int = -1
@@ -73,6 +73,10 @@ var stage = BattleStages.START
 var move_method = MoveMethod.STANDARD
 
 func _ready():
+	if game.subjects.dimensional_power.lv > 1:
+		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
+	else:
+		time_speed = game.u_i.time_speed
 	$CurrentPattern.visible = false#not OS.has_feature("standalone")
 	$Timer.wait_time = min(1.0, 1.0 / time_speed)
 	Helper.set_back_btn($UI/Back)
@@ -336,12 +340,12 @@ func _input(event):
 		if game.help.has("battle") and event is InputEventKey:
 			game.help.erase("battle")
 			fade_help_out()
-		elif game.help.has("battle2") and event is InputEventMouseButton:
-			game.help.erase("battle2")
+		elif green_enemy != -1 and event is InputEventMouseButton:
+			game.help.battle2 = true
 			green_enemy = -1
 			fade_help_out()
-		elif game.help.has("battle3") and event is InputEventMouseButton:
-			game.help.erase("battle3")
+		elif purple_enemy != -1 and event is InputEventMouseButton:
+			game.help.battle3 = true
 			purple_enemy = -1
 			fade_help_out()
 
@@ -584,8 +588,8 @@ func _process(delta):
 	for i in len(HXs):
 		var HX = HXs[i]
 		if HX_data[i].HP <= 0 and HX.get_node("Sprite").modulate.a > 0:
-			if HX_data[i].lv >= max_lv_ship + 30 and not game.achievement_data.random[5]:
-				game.earn_achievement("random", 5)
+			if HX_data[i].lv >= max_lv_ship + 30 and not game.achievement_data.random.has("rekt_enemy_30_levels_higher"):
+				game.earn_achievement("random", "rekt_enemy_30_levels_higher")
 			HX.get_node("Sprite").modulate.a -= 0.02 * time_mult
 			HX.get_node("Info").modulate.a -= 0.02 * time_mult
 		var pos = HX_c_d[HX.name].position
@@ -1005,7 +1009,7 @@ func enemy_attack():
 			tween.interpolate_property($UI/Help2, "rect_position", Vector2(448, 263), Vector2(448, 248), 0.5)
 			tween.start()
 			return
-		elif game.help.has("battle2") and curr_en == green_enemy:
+		elif not game.help.has("battle2") and curr_en == green_enemy:
 			tween = Tween.new()
 			add_child(tween)
 			$Help.text = tr("GREEN_ENEMY_HELP")

@@ -339,77 +339,84 @@ var element = {	"Si":{"density":2.329},
 
 var achievement_data:Dictionary = {}
 var achievements:Dictionary = {
-	"money":[
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27), false, 308), "rsrc":tr("MONEY")}),
-		tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30), false, 308), "rsrc":tr("MONEY")}),
-	],
-	"conquest":[
-		tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
-		tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "object":tr("PLANETS")}),
-		tr("FULLY_CONQUER_SYSTEM"),
-		tr("FULLY_CONQUER_GALAXY"),
-		tr("FULLY_CONQUER_CLUSTER"),
-	],
-	"construct":[
-		tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), false, 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), false, 308), "bldg":tr("BUILDINGS")}),
-		tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "bldg":tr("BUILDINGS")}),
-	],
-	"exploration":[
-		tr("FIND_CLASS_X_STAR") % "B",
-		tr("FIND_CLASS_X_STAR") % "O",
-		tr("FIND_CLASS_X_STAR") % "Q",
-		tr("FIND_CLASS_X_STAR") % "R",
-		tr("FIND_CLASS_X_STAR") % "Z",
-		tr("FIND_HYPERGIANT_STAR"),
-		tr("FIND_HYPERGIANT_X_STAR") % "V",
-		tr("FIND_HYPERGIANT_X_STAR") % "X",
-		tr("FIND_HYPERGIANT_X_STAR") % "XX",
-		tr("FIND_HYPERGIANT_X_STAR") % "L",
-		tr("FIND_X_PLANET_SYSTEM") % 20,
-		tr("FIND_X_PLANET_SYSTEM") % 25,
-		tr("FIND_X_PLANET_SYSTEM") % 30,
-		tr("FIND_X_PLANET_SYSTEM") % 35,
-		tr("FIND_X_PLANET_SYSTEM") % 40,
-		tr("FIND_X_PLANET_SYSTEM") % 45,
-		tr("FIND_X_PLANET_SYSTEM") % 50,
-		tr("FIND_X_CRATER") % tr("DIAMOND"),
-		tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
-		tr("FIND_X_CRATER") % tr("MYTHRIL"),
-	],
-	"progression":[
-		tr("BUILD_A_MS"),
-		tr("BUILD_A_GS"),
-		tr("DISCOVER_NEW_UNIV"),
-		tr("RENEW_DIMENSION"),
-		tr("FIND_2ND_SHIP"),
-		tr("FIND_3RD_SHIP"),
-		tr("FIND_4TH_SHIP"),
-	],
-	"random":[
-		tr("CLEAR_OUT_CAVE_FLOOR"),
-		tr("REACH_CENTER_OF_PLANET"),
-		tr("1000_YEAR_JOURNEY"),
-		tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
-		tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
-		tr("REKT_ENEMY_30_LEVELS_HIGHER"),
-	]
+	"money":{
+		"0":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
+		"1":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "rsrc":tr("MONEY")}),
+		"2":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 9), false, 308), "rsrc":tr("MONEY")}),
+		"3":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "rsrc":tr("MONEY")}),
+		"4":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 15), false, 308), "rsrc":tr("MONEY")}),
+		"5":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 18), false, 308), "rsrc":tr("MONEY")}),
+		"6":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 21), false, 308), "rsrc":tr("MONEY")}),
+		"7":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 24), false, 308), "rsrc":tr("MONEY")}),
+		"8":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 27), false, 308), "rsrc":tr("MONEY")}),
+		"9":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(e(1, 30), false, 308), "rsrc":tr("MONEY")}),
+	},
+	"conquest":{
+		"0":tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
+		"1":tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
+		"2":tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
+		"3":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
+		"4":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
+		"5":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
+		"6":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "object":tr("PLANETS")}),
+		"fully_conquer_system":tr("FULLY_CONQUER_SYSTEM"),
+		"fully_conquer_galaxy":tr("FULLY_CONQUER_GALAXY"),
+		"fully_conquer_cluster":tr("FULLY_CONQUER_CLUSTER"),
+	},
+	"construct":{
+		"0":tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
+		"1":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
+		"2":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "bldg":tr("BUILDINGS")}),
+		"3":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), false, 308), "bldg":tr("BUILDINGS")}),
+		"4":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), false, 308), "bldg":tr("BUILDINGS")}),
+		"5":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "bldg":tr("BUILDINGS")}),
+	},
+	"exploration":{
+		"B_star":tr("FIND_CLASS_X_STAR") % "B",
+		"O_star":tr("FIND_CLASS_X_STAR") % "O",
+		"Q_star":tr("FIND_CLASS_X_STAR") % "Q",
+		"R_star":tr("FIND_CLASS_X_STAR") % "R",
+		"Z_star":tr("FIND_CLASS_X_STAR") % "Z",
+		"HG_star":tr("FIND_HYPERGIANT_STAR"),
+		"HG_V_star":tr("FIND_HYPERGIANT_X_STAR") % "V",
+		"HG_X_star":tr("FIND_HYPERGIANT_X_STAR") % "X",
+		"HG_XX_star":tr("FIND_HYPERGIANT_X_STAR") % "XX",
+		"HG_L_star":tr("FIND_HYPERGIANT_X_STAR") % "L",
+		"20_planet_system":tr("FIND_X_PLANET_SYSTEM") % 20,
+		"25_planet_system":tr("FIND_X_PLANET_SYSTEM") % 25,
+		"30_planet_system":tr("FIND_X_PLANET_SYSTEM") % 30,
+		"35_planet_system":tr("FIND_X_PLANET_SYSTEM") % 35,
+		"40_planet_system":tr("FIND_X_PLANET_SYSTEM") % 40,
+		"45_planet_system":tr("FIND_X_PLANET_SYSTEM") % 45,
+		"50_planet_system":tr("FIND_X_PLANET_SYSTEM") % 50,
+		"diamond_crater":tr("FIND_X_CRATER") % tr("DIAMOND"),
+		"nanocrystal_crater":tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
+		"mythril_crater":tr("FIND_X_CRATER") % tr("MYTHRIL"),
+		"aurora_cave":tr("FIND_AURORA_CAVE"),
+		"volcano_cave":tr("FIND_VOLCANO_CAVE"),
+		"volcano_aurora_cave":tr("FIND_VOLCANO_AURORA_CAVE"),
+		"reach_floor_8":tr("REACH_FLOOR_X_CAVE") % 8,
+		"reach_floor_16":tr("REACH_FLOOR_X_CAVE") % 16,
+		"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
+		"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
+	},
+	"progression":{
+		"build_MS":tr("BUILD_A_MS"),
+		"build_GS":tr("BUILD_A_GS"),
+		"new_universe":tr("DISCOVER_NEW_UNIV"),
+		"new_dimension":tr("RENEW_DIMENSION"),
+		"2nd_ship":tr("FIND_2ND_SHIP"),
+		"3rd_ship":tr("FIND_3RD_SHIP"),
+		"4th_ship":tr("FIND_4TH_SHIP"),
+	},
+	"random":{
+		"clear_out_cave_floor":tr("CLEAR_OUT_CAVE_FLOOR"),
+		"reach_center_of_planet":tr("REACH_CENTER_OF_PLANET"),
+		"1000_year_journey":tr("1000_YEAR_JOURNEY"),
+		"build_tri_probe_in_slow_univ":tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
+		"use_stick_to_mine_from_surface_to_core":tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
+		"rekt_enemy_30_levels_higher":tr("REKT_ENEMY_30_LEVELS_HIGHER"),
+	}
 }
 
 #Holds information of the tooltip that can be hidden by the player by pressing F7
@@ -482,7 +489,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "17 Apr 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -819,16 +826,14 @@ func load_game():
 		"RSM":1.0,
 	})
 	achievement_data = save_info_dict.get("achievement_data", {})
-	if achievement_data.empty():#Save migration
+	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
-			achievement_data[ach] = []
-			for i in len(achievements[ach]):
-				achievement_data[ach].append(false)
+			achievement_data[ach] = {}
 	
 	if c_u == -1:
 		viewing_dimension = true
 		add_dimension()
-		dimension.refresh_univs(true)
+		dimension.refresh_univs(len(universe_data) == 0)
 	else:
 		load_univ()
 		switch_view(c_v, {"first_time":true})
@@ -893,9 +898,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"artificial_volcano":true,
 		}
 		for ach in achievements:
-			achievement_data[ach] = []
-			for i in len(achievements[ach]):
-				achievement_data[ach].append(false)
+			achievement_data[ach] = {}
 		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
@@ -1067,7 +1070,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
-	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":600, "clusters":[0], "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":200, "clusters":[0], "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
@@ -2689,20 +2692,20 @@ func generate_planets(id:int):#local id
 	system_data[id]["planets"].clear()
 	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
 	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
-	if not achievement_data.exploration[10] and planet_num >= 20:
-		earn_achievement("exploration", 10)
-	if not achievement_data.exploration[11] and planet_num >= 25:
-		earn_achievement("exploration", 11)
-	if not achievement_data.exploration[12] and planet_num >= 30:
-		earn_achievement("exploration", 12)
-	if not achievement_data.exploration[13] and planet_num >= 35:
-		earn_achievement("exploration", 13)
-	if not achievement_data.exploration[14] and planet_num >= 40:
-		earn_achievement("exploration", 14)
-	if not achievement_data.exploration[15] and planet_num >= 45:
-		earn_achievement("exploration", 15)
-	if not achievement_data.exploration[16] and planet_num >= 50:
-		earn_achievement("exploration", 16)
+	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
+		earn_achievement("exploration", "20_planet_system")
+	if not achievement_data.exploration.has("25_planet_system") and planet_num >= 25:
+		earn_achievement("exploration", "25_planet_system")
+	if not achievement_data.exploration.has("30_planet_system") and planet_num >= 30:
+		earn_achievement("exploration", "30_planet_system")
+	if not achievement_data.exploration.has("35_planet_system") and planet_num >= 35:
+		earn_achievement("exploration", "35_planet_system")
+	if not achievement_data.exploration.has("40_planet_system") and planet_num >= 40:
+		earn_achievement("exploration", "40_planet_system")
+	if not achievement_data.exploration.has("45_planet_system") and planet_num >= 45:
+		earn_achievement("exploration", "45_planet_system")
+	if not achievement_data.exploration.has("50_planet_system") and planet_num >= 50:
+		earn_achievement("exploration", "50_planet_system")
 	for i in range(1, planet_num + 1):
 		#p_i = planet_info
 		var p_i = {}
@@ -2922,6 +2925,10 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 					tile_data[t_id2].plant = {"ash":richness}
 					if artificial:
 						tile_data[t_id2].plant.artificial_ash = true
+				if not achievement_data.exploration.has("volcano_cave") and tile_data[t_id2].has("cave"):
+					earn_achievement("exploration", "volcano_cave")
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id2].has("cave") and tile_data[t_id2].has("aurora"):
+					earn_achievement("exploration", "volcano_aurora_cave")
 	tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 	tile_data[t_id].volcano = {"VEI":VEI}
 
@@ -3020,7 +3027,7 @@ func generate_tiles(id:int):
 			if randf() < 0.1 / pow(wid, 0.9):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				var floor_size:int = rand_range(25 * min(wid / 8.0, 1), 40 * rand_range(1, 1 + wid / 100.0))
-				var num_floors:int = Helper.rand_int(1, wid / 3) + 2
+				var num_floors:int = Helper.rand_int(1, int(wid / 2.5)) + 2
 				var modifiers:Dictionary = {}
 				if c_s_g != 0:
 					var N:int = log(1.0 / randf() + 1.1) * log(system_data[c_s].diff) / log(10)
@@ -3055,8 +3062,10 @@ func generate_tiles(id:int):
 				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period}
 				if not modifiers.empty():
 					tile_data[t_id].cave.modifiers = modifiers
+				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
+					earn_achievement("exploration", "aurora_cave")
 				continue
-			if randf() < volcano_probability:
+			if c_s_g != 0 and randf() < volcano_probability:
 				var VEI:float = log(1e6/(coldest_star_temp * randf()) + exp(3.0))
 				generate_volcano(t_id, VEI)
 				continue
@@ -3080,12 +3089,12 @@ func generate_tiles(id:int):
 						if c_g_g == 0 and met_info[met].rarity > 50:
 							continue
 						tile_data[t_id].crater.metal = met
-						if not achievement_data.exploration[17] and met == "diamond":
-							earn_achievement("exploration", 17)
-						if not achievement_data.exploration[18] and met == "nanocrystal":
-							earn_achievement("exploration", 18)
-						if not achievement_data.exploration[19] and met == "mythril":
-							earn_achievement("exploration", 19)
+						if not achievement_data.exploration.has("diamond_crater") and met == "diamond":
+							earn_achievement("exploration", "diamond_crater")
+						if not achievement_data.exploration.has("nanocrystal_crater") and met == "nanocrystal":
+							earn_achievement("exploration", "nanocrystal_crater")
+						if not achievement_data.exploration.has("mythril_crater") and met == "mythril":
+							earn_achievement("exploration", "mythril_crater")
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -3526,7 +3535,7 @@ func add_resources(costs):
 		elif particles.has(cost):
 			show.particles = true
 			particles[cost] += costs[cost]
-		if show.has(cost):
+		if not show.has(cost):
 			show[cost] = true
 
 func get_roman_num(num:int):
@@ -4225,8 +4234,8 @@ func reset_dimension_confirm(DR_num:int):
 	DRs += DR_num
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
-	if not achievement_data.progression[3]:
-		earn_achievement("progression", 3)
+	if not achievement_data.progression.has("new_dimension"):
+		earn_achievement("progression", "new_dimension")
 	universe_data.clear()
 	dim_num += 1
 	if not help.has("DR_reset"):
@@ -4372,8 +4381,8 @@ func get_2nd_ship():
 		Helper.add_weapon_XP(1, "laser", 50)
 		Helper.add_weapon_XP(1, "bomb", 50)
 		Helper.add_weapon_XP(1, "light", 60)
-		if not achievement_data.progression[4]:
-			earn_achievement("progression", 4)
+		if not achievement_data.progression.has("2nd_ship"):
+			earn_achievement("progression", "2nd_ship")
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
@@ -4383,8 +4392,8 @@ func get_3rd_ship():
 		Helper.add_weapon_XP(2, "laser", 140)
 		Helper.add_weapon_XP(2, "bomb", 140)
 		Helper.add_weapon_XP(2, "light", 180)
-		if not achievement_data.progression[5]:
-			earn_achievement("progression", 5)
+		if not achievement_data.progression.has("3rd_ship"):
+			earn_achievement("progression", "3rd_ship")
 
 func get_4th_ship():
 	if len(ship_data) == 3:
@@ -4395,14 +4404,14 @@ func get_4th_ship():
 		Helper.add_weapon_XP(3, "laser", 400)
 		Helper.add_weapon_XP(3, "bomb", 400)
 		Helper.add_weapon_XP(3, "light", 450)
-		if not achievement_data.progression[6]:
-			earn_achievement("progression", 6)
+		if not achievement_data.progression.has("4th_ship"):
+			earn_achievement("progression", "4th_ship")
 
 
 func _on_Command_gui_input(event):
 	get_tree().set_input_as_handled()
 
-func earn_achievement(type:String, ach_id:int):
+func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instance()
 	ach.get_node("Panel/Type").text = type.capitalize()
 	ach.get_node("Panel/Desc").text = achievements[type.to_lower()][ach_id]
@@ -4415,35 +4424,34 @@ func earn_achievement(type:String, ach_id:int):
 	ach.get_node("AnimationPlayer").play("FadeInOut")
 
 func on_ach_anim_finished(anin_name:String, node):
-	$UI.remove_child(node)
 	node.remove_from_group("achievement_nodes")
 	node.queue_free()
 
 func refresh_achievements():
-	for i in len(achievement_data.money):
-		if not achievement_data.money[i]:
+	for i in len(achievements.money):
+		if not achievement_data.money.has(str(i)):
 			if money >= pow(10, (i+1) * 3):
-				earn_achievement("money", i)
-	if not achievement_data.conquest[0]:
+				earn_achievement("money", str(i))
+	if not achievement_data.conquest.has("0"):
 		if stats_global.planets_conquered >= 2:
-			earn_achievement("conquest", 0)
+			earn_achievement("conquest", "0")
 	for i in range(1, 7):
-		if not achievement_data.conquest[i]:
+		if not achievement_data.conquest.has(str(i)):
 			if stats_global.planets_conquered >= pow(10, i):
-				earn_achievement("conquest", i)
-	if not achievement_data.conquest[7]:
+				earn_achievement("conquest", str(i))
+	if not achievement_data.conquest.has("fully_conquer_system"):
 		if stats_global.systems_conquered >= 1:
-			earn_achievement("conquest", 7)
-	if not achievement_data.conquest[8]:
+			earn_achievement("conquest", "fully_conquer_system")
+	if not achievement_data.conquest.has("fully_conquer_galaxy"):
 		if stats_global.galaxies_conquered >= 1:
-			earn_achievement("conquest", 8)
-	if not achievement_data.conquest[9]:
+			earn_achievement("conquest", "fully_conquer_galaxy")
+	if not achievement_data.conquest.has("fully_conquer_cluster"):
 		if stats_global.clusters_conquered >= 1:
-			earn_achievement("conquest", 9)
-	for i in len(achievement_data.construct):
-		if not achievement_data.construct[i]:
+			earn_achievement("conquest", "fully_conquer_cluster")
+	for i in len(achievements.construct):
+		if not achievement_data.construct.has(str(i)):
 			if stats_global.bldgs_built >= pow(10, (i+1) * 2):
-				earn_achievement("construct", i)
+				earn_achievement("construct", str(i))
 
 
 func _on_StarFade_animation_finished(anim_name):

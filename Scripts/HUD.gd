@@ -148,7 +148,7 @@ func update_XP():
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
 func update_minerals():
-	if game.c_v == "planet" and game.view.obj and game.view.obj.bldg_to_construct != "":
+	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
 		return
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]

@@ -230,8 +230,8 @@ func pickaxe_hit():
 		return
 	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):
-		if not game.achievement_data.random[1]:
-			game.earn_achievement("random", 1)
+		if not game.achievement_data.random.has("reach_center_of_planet"):
+			game.earn_achievement("random", "reach_center_of_planet")
 		var VEI:float = log(add_progress / 500.0 * rand_range(0.7, 1.3) + exp(3.0))
 		game.tile_data[id].erase("depth")
 		game.generate_volcano(id, VEI, true)
@@ -245,8 +245,8 @@ func pickaxe_hit():
 			game.get_node("Camera2D/Screenshake").start(1.5, 20, 3)
 		return
 	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):
-		if not game.achievement_data.random[4]:
-			game.earn_achievement("random", 4)
+		if not game.achievement_data.random.has("use_stick_to_mine_from_surface_to_core"):
+			game.earn_achievement("random", "use_stick_to_mine_from_surface_to_core")
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)

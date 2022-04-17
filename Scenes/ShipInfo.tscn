@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Icons/XP.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=7]
 [ext_resource path="res://Scripts/ShipInfo.gd" type="Script" id=9]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=11]
@@ -55,6 +57,7 @@ __meta__ = {
 }
 
 [node name="Bullet" type="Control" parent="."]
+visible = false
 margin_top = -12.0
 margin_right = 40.0
 margin_bottom = 28.0
@@ -80,7 +83,8 @@ margin_right = 460.0
 margin_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_progress = ExtResource( 3 )
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -93,8 +97,11 @@ margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
 value = 50.0
-texture_progress = ExtResource( 3 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -121,9 +128,6 @@ custom_fonts/font = SubResource( 1 )
 text = "0 / 20"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="Bullet"]
 margin_left = 192.0
@@ -163,7 +167,8 @@ margin_right = 460.0
 margin_bottom = 64.0
 step = 0.0
 value = 60.0
-texture_progress = ExtResource( 3 )
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -176,8 +181,11 @@ margin_top = 44.0
 margin_right = 460.0
 margin_bottom = 64.0
 value = 50.0
-texture_progress = ExtResource( 3 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -246,7 +254,8 @@ margin_right = 460.0
 margin_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_progress = ExtResource( 3 )
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -259,8 +268,11 @@ margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
 value = 50.0
-texture_progress = ExtResource( 3 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -287,9 +299,6 @@ custom_fonts/font = SubResource( 1 )
 text = "0 / 20"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="Bomb"]
 margin_left = 192.0
@@ -303,7 +312,6 @@ __meta__ = {
 }
 
 [node name="Light" type="Control" parent="."]
-visible = false
 margin_top = 96.0
 margin_right = 40.0
 margin_bottom = 136.0
@@ -329,7 +337,8 @@ margin_right = 460.0
 margin_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_progress = ExtResource( 3 )
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -342,8 +351,11 @@ margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
 value = 50.0
-texture_progress = ExtResource( 3 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -411,7 +423,8 @@ margin_right = 460.0
 margin_bottom = 72.0
 step = 0.0
 value = 60.0
-texture_progress = ExtResource( 3 )
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -424,8 +437,11 @@ margin_top = 52.0
 margin_right = 460.0
 margin_bottom = 72.0
 value = 50.0
-texture_progress = ExtResource( 3 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 __meta__ = {
 "_edit_use_anchors_": false
 }

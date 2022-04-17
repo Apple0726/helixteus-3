@@ -289,6 +289,9 @@ func _on_Send_pressed():
 			refresh()
 
 func _process(delta):
+	if not visible:
+		set_process(false)
+		return
 	if game.c_v == "galaxy" and not game.galaxy_data[game.c_g].has("conquer_start_date"):
 		set_process(false)
 		return

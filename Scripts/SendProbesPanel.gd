@@ -195,8 +195,8 @@ func discover_univ():
 			u_i.universe_value = UV_mult * float(prop.get_node("Label2").text)
 		else:
 			u_i[prop.name] = float(prop.get_node("Label2").text)
-	if not game.achievement_data.progression[2]:
-		game.earn_achievement("progression", 2)
+	if not game.achievement_data.progression.has("new_universe"):
+		game.earn_achievement("progression", "new_universe")
 	game.universe_data.append(u_i)
 	if visible:
 		game.toggle_panel(self)
@@ -280,6 +280,9 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
+		if prop == "time_speed" and game.subjects.dimensional_power.lv > 1:
+			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
+			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
 #		if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
 #			var UV_mult = 1.5 + game.subjects.dimensional_power.lv * 0.2
 #			$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]

@@ -22,7 +22,7 @@ func refresh():
 	var ach_get:int = 0
 	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
-			if game.achievement_data[grid.name][int(ach.name)]:
+			if game.achievement_data[grid.name].has(ach.name):
 				ach.modulate = Color.white
 				ach_get += 1
 			else:
@@ -37,7 +37,7 @@ func refresh():
 		$Statistics/HBox/OptionButton.add_item(tr("THIS_UNIVERSE"), 2)
 
 func on_ach_entered(ach_type:String, ach_id:String):
-	game.show_tooltip(game.achievements[ach_type.to_lower()][int(ach_id)])
+	game.show_tooltip(game.achievements[ach_type.to_lower()][ach_id])
 
 func on_ach_exited():
 	game.hide_tooltip()

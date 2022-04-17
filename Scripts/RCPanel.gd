@@ -133,6 +133,7 @@ func _on_InvSlot_pressed(index:int):
 	if select_comp.get_node("OptionButton").get_item_count() == 0:
 		return
 	select_comp.visible = true
+	game.sub_panel = select_comp
 	select_comp.refresh(default_type, inv.name if inv.has("name") else "", true, index)
 
 func _on_Slot_pressed(type:String):

@@ -453,6 +453,7 @@ __meta__ = {
 
 [node name="HP" type="TextureProgress" parent="Info"]
 modulate = Color( 0, 1, 0, 1 )
+light_mask = 0
 margin_left = 103.02
 margin_top = -5.09968
 margin_right = 167.02

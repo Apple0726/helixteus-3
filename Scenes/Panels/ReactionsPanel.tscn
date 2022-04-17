@@ -1,10 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Buttons/Switch.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
+[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=7]
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=12]
@@ -39,9 +41,6 @@ margin_right = 512.0
 margin_bottom = 296.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
@@ -78,7 +77,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 353.0
 margin_bottom = 451.0
 size_flags_horizontal = 3
@@ -124,9 +123,9 @@ __meta__ = {
 
 [node name="From" type="VBoxContainer" parent="Control2/ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -211,15 +210,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="Control3"]
-modulate = Color( 0.337255, 0, 0.52549, 1 )
-margin_left = 492.0
-margin_top = 204.0
-margin_right = 844.0
-margin_bottom = 212.0
-texture = ExtResource( 4 )
-expand = true
-
 [node name="TextureProgress" type="TextureProgress" parent="Control3"]
 modulate = Color( 0.65098, 0.27451, 1, 1 )
 margin_left = 492.0
@@ -229,8 +219,12 @@ margin_bottom = 212.0
 max_value = 1.0
 step = 0.0
 value = 0.2
+texture_under = ExtResource( 2 )
+texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 4 )
 nine_patch_stretch = true
+stretch_margin_left = 9
+stretch_margin_right = 9
 
 [node name="TimeRemainingIcon" type="TextureRect" parent="Control3"]
 margin_left = 864.0
