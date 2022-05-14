@@ -30,6 +30,11 @@ func _ready():
 
 func add_building(b, data):
 	added_buildings[b] = data
+	
+	var trans = Translation.new()
+	trans.add_message(b + "_NAME", data.name)
+	trans.add_message(b + "_DESC", data.desc)
+	TranslationServer.add_translation(trans)
 
 func add_mat(mat, data):
 	added_mats[mat] = data
@@ -42,11 +47,6 @@ func add_pick(p, data):
 
 func update():
 	for key in added_buildings:
-		var trans = Translation.new()
-		trans.add_message(key + "_NAME", added_buildings[key].name)
-		trans.add_message(key + "_DESC", added_buildings[key].desc)
-		TranslationServer.add_translation(trans)
-		
 		Data.costs[key] = added_buildings[key].costs
 		if added_buildings[key].has("path_1"):
 			Data.path_1[key] = added_buildings[key].path_1
@@ -54,3 +54,6 @@ func update():
 			Data.path_2[key] = added_buildings[key].path_2
 		if added_buildings[key].has("path_3"):
 			Data.path_3[key] = added_buildings[key].path_3
+		
+		if added_buildings[key].has("rsrc_icon"):
+			Data.rsrc_icons[key] = added_buildings[key].rsrc_icon
