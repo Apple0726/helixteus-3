@@ -59,6 +59,7 @@ default_bus_layout="res://Resources/default_bus_layout.tres"
 
 Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
+Mods="*res://Scripts/Mods.gd"
 
 [debug]
 
