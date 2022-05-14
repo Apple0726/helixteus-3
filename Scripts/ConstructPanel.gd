@@ -7,6 +7,20 @@ var support_bldgs:Array = ["GH", "CBD"]
 var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
 
 func _ready():
+	var added_buildings = Mods.added_buildings
+	for key in added_buildings:
+		match added_buildings[key].type:
+			"basic":
+				basic_bldgs.append(key)
+			"storage":
+				storage_bldgs.append(key)
+			"production":
+				production_bldgs.append(key)
+			"support":
+				support_bldgs.append(key)
+			"vehicles":
+				vehicles_bldgs.append(key)
+	
 	type = PanelType.CONSTRUCT
 	tab = "Basic"
 	$Title.text = tr("CONSTRUCT")

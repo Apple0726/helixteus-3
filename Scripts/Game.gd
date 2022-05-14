@@ -486,6 +486,13 @@ func place_BG_sc_stars():#shown in (super)cluster view
 		$Stars/WhiteStars.add_child(star)
 
 func _ready():
+	for key in Mods.added_mats:
+		mat_info[key] = Mods.added_mats[key]
+	for key in Mods.added_mets:
+		met_info[key] = Mods.added_mets[key]
+	for key in Mods.added_picks:
+		pickaxes_info[key] = Mods.added_picks[key]
+	
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
@@ -640,6 +647,10 @@ func _ready():
 		yield(tween, "tween_all_completed")
 		remove_child(tween)
 		tween.queue_free()
+	
+	for mod in Mods.mod_list:
+		var main = Mods.mod_list[mod]
+		main.phase_2()
 
 func switch_music(src, pitch:float = 1.0):
 	#Music fading
