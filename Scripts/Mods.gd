@@ -1,6 +1,6 @@
 extends Node
 
-var mods = {}
+var mod_list = {}
 var added_buildings = {}
 var added_mats = {}
 var added_mets = {}
@@ -20,7 +20,7 @@ func _ready():
 				var main = load("res://%s/Main.gd" % next)
 				main = main.new()
 				main.phase_1()
-				mods[next] = main
+				mod_list[next] = main
 			next = mods.get_next()
 		mods.list_dir_end()
 	else:

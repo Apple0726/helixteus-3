@@ -648,8 +648,8 @@ func _ready():
 		remove_child(tween)
 		tween.queue_free()
 	
-	for mod in Mods.mods:
-		var main = Mods.mods[mod]
+	for mod in Mods.mod_list:
+		var main = Mods.mod_list[mod]
 		main.phase_2()
 
 func switch_music(src, pitch:float = 1.0):
