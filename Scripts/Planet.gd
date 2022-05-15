@@ -1369,7 +1369,8 @@ func add_bldg(id2:int, st:String):
 			else:
 				add_rsrc(v, Color.white, Data.rsrc_icons.SPR, id2)
 		_:
-			add_rsrc(v, Mods.added_buildings[st].icon_color, Data.rsrc_icons[st], id2)
+			if Mods.added_buildings.has(st):
+				add_rsrc(v, Mods.added_buildings[st].icon_color, Data.rsrc_icons[st], id2)
 	var curr_time = OS.get_system_time_msecs()
 	var IR_mult = Helper.get_IR_mult(tile.bldg.name)
 	if tile.bldg.IR_mult != IR_mult:
