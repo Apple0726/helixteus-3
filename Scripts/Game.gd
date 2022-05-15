@@ -493,6 +493,10 @@ func _ready():
 		met_info[key] = Mods.added_mets[key]
 	for key in Mods.added_picks:
 		pickaxes_info[key] = Mods.added_picks[key]
+	for key in Mods.added_speedups:
+		speedups_info[key] = Mods.added_speedups[key]
+	for key in Mods.added_overclocks:
+		overclocks_info[key] = Mods.added_overclocks[key]
 	
 	place_BG_stars()
 	place_BG_sc_stars()

@@ -4,9 +4,13 @@ var mod_list = {}
 var mod_load_order = []
 var dont_load = []
 var added_buildings = {}
+var added_tech_scenes = []
+var added_tech_data = {}
 var added_mats = {}
 var added_mets = {}
 var added_picks = {}
+var added_speedups = {}
+var added_overclocks = {}
 
 func _ready():
 	var config = ConfigFile.new()
@@ -61,13 +65,25 @@ func _ready():
 	
 	update()
 
-func add_building(b, data):
-	added_buildings[b] = data
+func add_building(building, data):
+	added_buildings[building] = data
 	
 	var trans = Translation.new()
-	trans.add_message(b + "_NAME", data.name)
-	trans.add_message(b + "_DESC", data.desc)
+	trans.add_message(building + "_NAME", data.name)
+	trans.add_message(building + "_DESC", data.desc)
 	TranslationServer.add_translation(trans)
+
+func add_tech_scene(scene):
+	added_tech_scenes.append(scene)
+
+func add_tech_data(data):
+	for key in data:
+		added_tech_data[key] = data[key]
+		
+		var trans = Translation.new()
+		trans.add_message(key + "_NAME", data[key].name)
+		trans.add_message(key + "_DESC", data[key].desc)
+		TranslationServer.add_translation(trans)
 
 func add_mat(mat, data):
 	added_mats[mat] = data
@@ -75,8 +91,14 @@ func add_mat(mat, data):
 func add_met(met, data):
 	added_mets[met] = data
 
-func add_pick(p, data):
-	added_picks[p] = data
+func add_pick(pick, data):
+	added_picks[pick] = data
+
+func add_speedup(speedup, data):
+	added_speedups[speedup] = data
+
+func add_overclock(overclock, data):
+	added_overclocks[overclock] = data
 
 func update():
 	for key in added_buildings:
@@ -90,3 +112,6 @@ func update():
 		
 		if added_buildings[key].has("rsrc_icon"):
 			Data.rsrc_icons[key] = added_buildings[key].rsrc_icon
+	
+	for key in added_tech_data:
+		Data.science_unlocks[key] = added_tech_data[key]

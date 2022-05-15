@@ -5,6 +5,20 @@ var sc_over:String = ""
 var sc_type:String = "Main"
 
 func _ready():
+	for scene in Mods.added_tech_scenes:
+		var tree = scene.scene.instance()
+		var techs = tree.get_children()
+		match scene.type:
+			"ir":
+				for tech in techs:
+					$IR.add_child(tech)
+			"main":
+				for tech in techs:
+					$Main.add_child(tech)
+			"other":
+				for tech in techs:
+					$Other.add_child(tech)
+	
 	yield(get_tree().create_timer(0), "timeout")
 	refresh()
 
