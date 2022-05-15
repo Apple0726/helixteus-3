@@ -71,6 +71,7 @@ var planet_details:Control
 var overlay:Control
 var element_overlay:Control
 var annotator:Control
+var mods:Control
 var wiki:Panel
 var stats_panel:Panel
 var load_panel:Panel
@@ -577,6 +578,9 @@ func _ready():
 	load_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instance()
 	load_panel.visible = false
 	$Panels/Control.add_child(load_panel)
+	mods = load("res://Scenes/Panels/Mods.tscn").instance()
+	mods.visible = false
+	$Panels/Control.add_child(mods)
 	if TEST:
 		$Title.visible = false
 		HUD = preload("res://Scenes/HUD.tscn").instance()
@@ -4471,3 +4475,7 @@ func refresh_achievements():
 func _on_StarFade_animation_finished(anim_name):
 	if $Stars/WhiteStars.modulate.a <= 0:
 		$Stars/WhiteStars.visible = false
+
+func _on_Mods_pressed():
+	$click.play()
+	toggle_panel(mods)

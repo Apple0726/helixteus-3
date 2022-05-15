@@ -1,30 +1,63 @@
 extends Node
 
 var mod_list = {}
+var mod_load_order = []
+var dont_load = []
 var added_buildings = {}
 var added_mats = {}
 var added_mets = {}
 var added_picks = {}
 
 func _ready():
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		mod_load_order = config.get_value("mods", "load_order", [])
+		dont_load = config.get_value("mods", "dont_load", [])
+	
 	var mods = Directory.new()
 	var error = mods.open("user://Mods")
 	if error == OK:
+		var installed_mods = {}
 		mods.list_dir_begin(true)
 		var next = mods.get_next()
 		while next != "":
-			print(next)
-			if ProjectSettings.load_resource_pack("user://Mods/%s" % next, true):
-				next = next.rstrip(".zip")
-				next = next.rstrip(".pck")
-				var main = load("res://%s/Main.gd" % next)
-				main = main.new()
-				main.phase_1()
-				mod_list[next] = main
+			var mod_name = next.rstrip(".zip")
+			mod_name = mod_name.rstrip(".pck")
+			installed_mods[mod_name] = next
 			next = mods.get_next()
 		mods.list_dir_end()
+		
+		var new_mod_load_order = mod_load_order
+		for mod_name in mod_load_order:
+			if installed_mods.has(mod_name):
+				var mod = installed_mods[mod_name]
+				if ProjectSettings.load_resource_pack("user://Mods/%s" % mod, true):
+					var main = load("res://%s/Main.gd" % mod_name)
+					main = main.new()
+					if !mod_name in dont_load:
+						main.phase_1()
+					mod_list[mod_name] = main
+					installed_mods.erase(mod_name)
+			else:
+				new_mod_load_order.erase(mod_name)
+		mod_load_order = new_mod_load_order
+		
+		for mod_name in installed_mods:
+			var mod = installed_mods[mod_name]
+			if ProjectSettings.load_resource_pack("user://Mods/%s" % mod, true):
+				var main = load("res://%s/Main.gd" % mod_name)
+				main = main.new()
+				if !mod_name in dont_load:
+						main.phase_1()
+				mod_list[mod_name] = main
+				mod_load_order.append(mod_name)
+		
+		config.save("user://settings.cfg")
 	else:
 		mods.make_dir("user://Mods")
+	
+	config.set_value("mods", "load_order", mod_load_order)
 	
 	update()
 
