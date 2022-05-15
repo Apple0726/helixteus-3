@@ -78,7 +78,7 @@ func hide_help():
 	help_tween.start()
 	$Timer.paused = false
 	if fn_to_call != "":
-		pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
+		#pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 		if lv % 4 == 0:
 			graph_pattern()
 		else:
@@ -319,7 +319,6 @@ func _process(delta):
 		star.position.x -= star.scale.x * 10
 		if star.position.x < -5:
 			star.position.x = 1285
-
 	for bullet in get_tree().get_nodes_in_group("bullet_%s" % pattern):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -331,7 +330,6 @@ func _process(delta):
 			hit_test(bullet)
 			if data.remove:
 				bullet.remove_from_group("bullet_%s" % pattern)
-				remove_child(bullet)
 				bullet.queue_free()
 				if get_tree().get_nodes_in_group("bullet_%s" % pattern).empty():
 					inc_combo()

@@ -76,8 +76,7 @@ func refresh():
 		distance = 1
 	calc_costs()
 	for child in $Scroll/Enemies.get_children():
-		$Scroll/Enemies.remove_child(child)
-		child.free()
+		child.queue_free()
 	if game.planet_data[dest_p_id].has("HX_data"):
 		for HX_data in game.planet_data[dest_p_id].HX_data:
 			var HX_data_node = HX_data_scene.instance()
@@ -92,7 +91,10 @@ func refresh():
 			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, false, 4)
 			$Scroll/Enemies.add_child(HX_data_node)
 			HX_data_node.rect_min_size.y = 70
-		$Enemies.text = "%s (%s)" % [tr("ENEMIES"), len(game.planet_data[dest_p_id].HX_data)]
+		if game.planet_data[dest_p_id].has("conquered"):
+			$Enemies.text = tr("ENEMIES")
+		else:
+			$Enemies.text = "%s (%s)" % [tr("ENEMIES"), len(game.planet_data[dest_p_id].HX_data)]
 	else:
 		$Enemies.text = tr("ENEMIES")
 	$Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")

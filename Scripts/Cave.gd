@@ -1504,14 +1504,14 @@ func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2, proj_spe
 		_status_effects.burn = volcano_mult / 1.5
 		glow = 1.2
 	if _class == 1:
-		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.05 * glow, "status_effects":_status_effects})
+		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.white * 1.2 * glow, "status_effects":_status_effects})
 	elif _class == 2:
 		_status_effects.stun = 0.7
-		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.2, 1.2, 0.75) * glow, "type":Data.ProjType.LASER, "status_effects":_status_effects})
+		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) * glow, "type":Data.ProjType.LASER, "status_effects":_status_effects})
 	elif _class == 3:
-		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * glow, "type":Data.ProjType.BUBBLE, "status_effects":_status_effects})
+		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.white * 1.2 * glow, "type":Data.ProjType.BUBBLE, "status_effects":_status_effects})
 	elif _class == 4:
-		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.white * 1.1 * glow, "type":Data.ProjType.PURPLE, "status_effects":_status_effects})
+		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.white * 1.2 * glow, "type":Data.ProjType.PURPLE, "status_effects":_status_effects})
 #mod:Color = Color.white, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instance()

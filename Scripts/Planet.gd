@@ -863,6 +863,8 @@ func _unhandled_input(event):
 							_tile.bldg.erase("expected_rsrc")
 					game.HUD.refresh()
 				game.show_collect_info(items_collected)
+		if Input.is_action_pressed("shift") and placing_soil:
+			view.move_view = false
 		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
 			var path_1_value_sum:float = 0
@@ -904,6 +906,7 @@ func _unhandled_input(event):
 					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
+		view.move_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel):
 				show_tooltip(game.tile_data[tile_over])
@@ -1001,7 +1004,7 @@ func _unhandled_input(event):
 		shadow.visible = false
 	if mass_build:
 		return
-	if (Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
+	if (not Input.is_action_pressed("shift") and Input.is_action_just_released("left_click") or Input.is_action_pressed("shift") and Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry.is_point_in_polygon(mouse_pos, planet_bounds):
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
 		var tile_id = get_tile_id_from_pos(mouse_pos)
@@ -1231,7 +1234,7 @@ func place_soil(tile:Dictionary, tile_pos:Vector2):
 	if tile.has("plant") and tile.plant.has("ash"):
 		return
 	if not tile.has("plant"):
-		if available_for_plant(tile):
+		if available_for_soil(tile):
 			if game.check_enough({"soil":10}):
 				var tile_id:int = int(tile_pos.x) % wid + tile_pos.y * wid
 				game.deduct_resources({"soil":10})
@@ -1253,6 +1256,7 @@ func place_soil(tile:Dictionary, tile_pos:Vector2):
 			tile.erase("plant")
 			$Soil.set_cell(tile_pos.x, tile_pos.y, -1)
 			$Soil.update_bitmask_region()
+			game.HUD.refresh()
 
 func available_for_plant(tile):
 	if not tile or not tile.has("plant"):
@@ -1260,6 +1264,11 @@ func available_for_plant(tile):
 	if not tile.has("bldg"):
 		return true
 	return not is_obstacle(tile, tile.bldg.name != "GH")
+
+func available_for_soil(tile):
+	if not tile:
+		return true
+	return not is_obstacle(tile)
 
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if not tile:
@@ -1510,7 +1519,7 @@ func on_timeout():
 func construct(st:String, costs:Dictionary):
 	finish_construct()
 	game.help_str = "mass_build"
-	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
+	if not game.help.has("mass_build") and game.stats_univ.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)

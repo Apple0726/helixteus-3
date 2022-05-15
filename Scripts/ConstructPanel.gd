@@ -88,9 +88,6 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.universe_data[game.c_u].lv >= 50
 		elif bldg.item_name == "GH":
 			bldg.visible = game.science_unlocked.has("EGH")
-	$VBox/Tabs/Production.visible = game.show.has("stone")
-	$VBox/Tabs/Support.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
-	$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, desc, costs, _type, _dir)
@@ -121,8 +118,15 @@ func get_item(_name, _type, _dir):
 
 func refresh():
 	if game.c_v == "planet":
-		$VBox/Tabs.get_node(tab)._on_Button_pressed()
-		_on_btn_pressed(tab)
+		$VBox/Tabs/Production.visible = game.show.has("stone")
+		$VBox/Tabs/Support.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
+		$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
+		if $VBox/Tabs.get_node(tab).visible:
+			$VBox/Tabs.get_node(tab)._on_Button_pressed()
+			_on_btn_pressed(tab)
+		else:
+			$VBox/Tabs.get_node("Basic")._on_Button_pressed()
+			_on_btn_pressed("Basic")
 
 func _on_close_button_pressed():
 	if not game.tutorial or game.tutorial and not game.tutorial.BG_blocked:

@@ -122,8 +122,8 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	var rsrc = game.rsrc_stocked_scene.instance()
 	add_child(rsrc)
 	rsrc.get_node("TextureRect").texture = icon
-	rsrc.rect_scale *= sc
-	rsrc.rect_position = v + Vector2(0, 70 * sc)
+	rsrc.rect_scale *= 5.0
+	rsrc.rect_position = v + Vector2(0, 70 * 5.0)
 	rsrc.get_node("Control").modulate = mod
 	rsrcs[id] = rsrc
 	return rsrc

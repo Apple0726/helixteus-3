@@ -34,8 +34,12 @@ func update_info():
 		$Control/GalaxyInfo["custom_colors/font_color"] = Color.white
 		if bldg != "TP":
 			costs.stone = PI * 100
-			if bldg in ["ME", "MS", "RL"]:
-				costs.mythril = 1 / 80000.0
+			if bldg == "ME":
+				costs.mythril = 1 / 240000.0
+			elif bldg == "MS":
+				costs.mythril = 1 / 300000.0
+			elif bldg == "RL":
+				costs.mythril = 1 / 120000.0
 			elif bldg == "PP":
 				costs.mythril = 1 / 500000.0
 			if costs.has("energy"):

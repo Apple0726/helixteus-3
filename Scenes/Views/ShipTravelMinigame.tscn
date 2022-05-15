@@ -22,9 +22,6 @@ fallback/0 = ExtResource( 4 )
 [node name="STM" type="Control"]
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Back" type="Button" parent="."]
 margin_top = 684.0
@@ -100,5 +97,6 @@ polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 720, 0, 720 )
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
