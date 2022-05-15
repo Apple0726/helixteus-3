@@ -751,6 +751,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 #			else:
 #				rsrc_text.text = ""
 #				capacity_bar.value = 0
+		_:
+			if Mods.added_buildings.has(tile.bldg.name):
+				Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time, current_bar, capacity_bar, rsrc_text)
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
@@ -783,6 +786,9 @@ func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, ti
 			collect_AE(p_i, tile, rsrc_collected, curr_time)
 		"MM":
 			collect_MM(p_i, tile, rsrc_collected, curr_time)
+		_:
+			if Mods.added_buildings.has(bldg):
+				Mods.mod_list[Mods.added_buildings[bldg].mod].collect(p_i, tile, rsrc_collected, curr_time, bldg)
 
 func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
