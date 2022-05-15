@@ -316,10 +316,10 @@ __meta__ = {
 [node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource( 25 )]
 anchor_left = 0.0
 anchor_right = 0.0
-margin_left = 650.0
+margin_left = 622.0
 margin_top = 0.0
-margin_right = 685.0
-margin_bottom = 42.0
+margin_right = 657.0
+margin_bottom = 36.0
 grow_horizontal = 0
 grow_vertical = 0
 rect_min_size = Vector2( 35, 35 )
@@ -400,10 +400,10 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="UI/Panel"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 146.0
-margin_bottom = 12.0
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 148.0
+margin_bottom = 14.0
 
 [node name="ClusterBG" parent="." instance=ExtResource( 35 )]
 visible = false
@@ -754,15 +754,12 @@ margin_right = 307.0
 margin_bottom = 588.0
 theme = ExtResource( 7 )
 custom_styles/panel = SubResource( 14 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu"]
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 204.0
-margin_bottom = 139.0
+margin_bottom = 180.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
@@ -787,6 +784,13 @@ margin_right = 184.0
 margin_bottom = 118.0
 rect_min_size = Vector2( 0, 30 )
 text = "SETTINGS"
+
+[node name="Mods" type="Button" parent="Title/Menu/VBoxContainer"]
+margin_top = 126.0
+margin_right = 184.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 0, 30 )
+text = "MODS"
 
 [node name="Autosave" type="Timer" parent="."]
 
@@ -827,9 +831,6 @@ shortcut = SubResource( 17 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
@@ -894,6 +895,7 @@ current = true
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="pressed" from="Title/Menu/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]
