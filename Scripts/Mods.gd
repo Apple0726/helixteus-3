@@ -13,12 +13,14 @@ var added_speedups = {}
 var added_overclocks = {}
 
 func _ready():
+	# Load config
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
 		mod_load_order = config.get_value("mods", "load_order", [])
 		dont_load = config.get_value("mods", "dont_load", [])
 	
+	# Detect mods
 	var mods = Directory.new()
 	var error = mods.open("user://Mods")
 	if error == OK:
@@ -32,6 +34,7 @@ func _ready():
 			next = mods.get_next()
 		mods.list_dir_end()
 		
+		# Load mods in order as defined in the config
 		var new_mod_load_order = mod_load_order
 		for mod_name in mod_load_order:
 			if installed_mods.has(mod_name):
@@ -47,6 +50,7 @@ func _ready():
 				new_mod_load_order.erase(mod_name)
 		mod_load_order = new_mod_load_order
 		
+		# Load remaining mods
 		for mod_name in installed_mods:
 			var mod = installed_mods[mod_name]
 			if ProjectSettings.load_resource_pack("user://Mods/%s" % mod, true):
@@ -56,16 +60,17 @@ func _ready():
 						main.phase_1()
 				mod_list[mod_name] = main
 				mod_load_order.append(mod_name)
-		
-		config.save("user://settings.cfg")
 	else:
 		mods.make_dir("user://Mods")
 	
 	config.set_value("mods", "load_order", mod_load_order)
+	config.save("user://settings.cfg")
 	
 	update()
 
 func add_building(building, data):
+	# building is the internal name for the building, usually in all caps
+	# data is the building data, refer to vanilla buildings for an example
 	added_buildings[building] = data
 	
 	var trans = Translation.new()
@@ -74,9 +79,11 @@ func add_building(building, data):
 	TranslationServer.add_translation(trans)
 
 func add_tech_scene(scene):
+	# scene should match how the tech tree is structured
 	added_tech_scenes.append(scene)
 
 func add_tech_data(data):
+	# data is the tech data, refer to vanilla techs for an example
 	for key in data:
 		added_tech_data[key] = data[key]
 		
