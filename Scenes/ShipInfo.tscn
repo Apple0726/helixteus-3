@@ -468,9 +468,6 @@ custom_fonts/font = SubResource( 1 )
 text = "0 / 20"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="XP"]
 margin_left = 20.0

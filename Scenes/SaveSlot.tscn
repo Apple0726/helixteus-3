@@ -46,7 +46,7 @@ margin_left = 679.0
 margin_right = 779.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 100, 40 )
-text = "Export"
+text = "EXPORT"
 
 [node name="Delete" type="TextureButton" parent="."]
 margin_left = 784.0

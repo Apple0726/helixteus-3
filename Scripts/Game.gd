@@ -828,17 +828,10 @@ func load_game():
 	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	physics_bonus = save_info_dict.get("physics_bonus", {
 		"MVOUP":0.5,
-		"speed_of_light":10,
-		"planck":20,
-		"boltzmann":10,
-		"gravitational":30,
-		"charge":25,
-		"dark_energy":25,
-		"difficulty":10,
-		"time_speed":50,
-		"antimatter":0,
-		"universe_value":250,
 	})
+	if len(physics_bonus.keys()) == 1:
+		for bonus in Data.univ_prop_weights:
+			physics_bonus[bonus] = Data.univ_prop_weights[bonus]
 	engineering_bonus = save_info_dict.get("engineering_bonus", {
 		"BCM":1.0,
 		"PS":1.0,
@@ -4080,7 +4073,7 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1306
+	var lines_total:int = 1384 - 2
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
@@ -4090,10 +4083,10 @@ func _on_lg_mouse_entered(extra_arg_0):
 			lines_translated = 384 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1293 - 2
+			lines_translated = 1309 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1279 - 2
+			lines_translated = 1377 - 2
 		"es":
 			lg = "Español"
 			lines_translated = 1161 - 2
@@ -4103,6 +4096,15 @@ func _on_lg_mouse_entered(extra_arg_0):
 		"sv":
 			lg = "Svenska"
 			lines_translated = 197 - 1
+		"hu":
+			lg = "Magyar"
+			lines_translated = 1027 - 1
+		"ja":
+			lg = "日本語"
+			lines_translated = 1391 - 1
+		"nl":
+			lg = "Nederlands"
+			lines_translated = 1212 - 1
 	if extra_arg_0 == "en":
 		show_tooltip("English")
 	else:

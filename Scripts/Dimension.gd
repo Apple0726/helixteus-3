@@ -306,16 +306,16 @@ func _input(event):
 func calc_OP_points():
 	maths_OP_points = 0
 	num_errors = {"maths":false, "physics":false, "engineering":false}
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -15.0, 1.2)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -10.0, 1.2)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -3.0, 1.2)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -15.0, 1.5)
-	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 1.0, 3.0)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -15.0, 1.1)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 300.0, 1.0, 3.0)
-	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.5)
-	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -120.0, 2)
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.6, -150.0, 1.15)
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -12.0, 1.2)#Building upgrade cost
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.2)#Mineral value
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -2.5, 1.2)#Mining speed multiplier
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -10.0, 1.5)#Aurora intensity exponent
+	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 1.0, 3.0)#Infinite research
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -12.0, 1.1)#Ship level up XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 240.0, 1.0, 3.0)#Ship stats
+	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.4)#Chance of ship hitting enemy
+	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -100.0, 2)#Material metal buy/sell
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.6, -120.0, 1.15)#Universe level XP
 
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))

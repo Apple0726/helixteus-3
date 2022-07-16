@@ -289,7 +289,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
-			point_distribution[prop] = (1 / value - 1) * game.physics_bonus[prop]
+			point_distribution[prop] = (1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
 	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0
@@ -335,11 +335,11 @@ func _on_SendAll_pressed():
 func fill_costs(_dist_mult:float):
 	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
 	if game.c_v == "supercluster":
-		costs.energy = 50000000000000.0 * slider_factor * _dist_mult
+		costs.energy = 5e13 * slider_factor * _dist_mult
 		costs.Xe = 100000 * slider_factor * _dist_mult
 		costs.time = 1200 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
 	elif game.c_v == "universe":
-		costs.energy = 10000000000000000000.0 * slider_factor * _dist_mult
+		costs.energy = 1e19 * slider_factor * _dist_mult
 		costs.Pu = 10000 * slider_factor * _dist_mult
 		costs.time = 4500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
 	

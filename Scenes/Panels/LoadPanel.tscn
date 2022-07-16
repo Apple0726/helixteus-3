@@ -62,6 +62,7 @@ margin_left = -80.0
 margin_top = -48.0
 margin_right = 81.0
 margin_bottom = -14.0
+grow_horizontal = 2
 text = "IMPORT_SAVE"
 __meta__ = {
 "_edit_use_anchors_": false

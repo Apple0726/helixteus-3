@@ -1273,7 +1273,12 @@ func _input(event):
 				cave_floor += 1
 				if cave_floor == 8:
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				difficulty *= 2.5 if volcano_mult > 1 and not artificial_volcano else 2.0
+				if volcano_mult > 1 and not artificial_volcano and aurora:
+					difficulty *= 2.5
+				elif volcano_mult > 1 and not artificial_volcano or aurora:
+					difficulty *= 2.25
+				else:
+					difficulty *= 2.0
 				generate_cave(false, false)
 				if not game.achievement_data.exploration.has("reach_floor_8") and cave_floor == 8:
 					game.earn_achievement("exploration", "reach_floor_8")
@@ -1288,7 +1293,12 @@ func _input(event):
 				cave_floor -= 1
 				if cave_floor == 7:
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				difficulty /= 2.5 if volcano_mult > 1 and not artificial_volcano else 2.0
+				if volcano_mult > 1 and not artificial_volcano and aurora:
+					difficulty /= 2.5
+				elif volcano_mult > 1 and not artificial_volcano or aurora:
+					difficulty /= 2.25
+				else:
+					difficulty /= 2.0
 				generate_cave(true if cave_floor == 1 else false, true)
 			elif active_type == "map":
 				game.third_ship_hints.erase("map_found_at")

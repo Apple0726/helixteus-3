@@ -10,7 +10,7 @@ content_margin_left = 10.0
 content_margin_right = 10.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color( 0.0862745, 0.0862745, 0.0862745, 1 )
+bg_color = Color( 0.141176, 0.141176, 0.141176, 1 )
 border_width_top = 4
 border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
 border_blend = true
@@ -196,7 +196,7 @@ fallback/0 = ExtResource( 5 )
 [resource]
 default_font = SubResource( 26 )
 Button/colors/font_color = Color( 0.823529, 0.823529, 0.823529, 1 )
-Button/colors/font_color_disabled = Color( 0.431373, 0.431373, 0.431373, 1 )
+Button/colors/font_color_disabled = Color( 0.321569, 0.321569, 0.321569, 1 )
 Button/colors/font_color_hover = Color( 0.823529, 0.823529, 0.823529, 1 )
 Button/colors/font_color_pressed = Color( 0.823529, 0.823529, 0.823529, 1 )
 Button/constants/hseparation = 2

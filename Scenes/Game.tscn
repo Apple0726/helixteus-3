@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -36,6 +36,9 @@
 [ext_resource path="res://Shaders/ScienceTree.shader" type="Shader" id=34]
 [ext_resource path="res://Scenes/Nebula.tscn" type="PackedScene" id=35]
 [ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=36]
+[ext_resource path="res://Graphics/Buttons/ja.png" type="Texture" id=37]
+[ext_resource path="res://Graphics/Buttons/nl.png" type="Texture" id=38]
+[ext_resource path="res://Graphics/Buttons/hu.png" type="Texture" id=39]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 30 )
@@ -673,12 +676,12 @@ texture_normal = ExtResource( 12 )
 expand = true
 stretch_mode = 4
 
-[node name="zh" type="TextureButton" parent="Title/Languages"]
+[node name="ja" type="TextureButton" parent="Title/Languages"]
 margin_left = 70.0
 margin_right = 130.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 29 )
+texture_normal = ExtResource( 37 )
 expand = true
 stretch_mode = 4
 
@@ -691,18 +694,45 @@ texture_normal = ExtResource( 17 )
 expand = true
 stretch_mode = 4
 
-[node name="es" type="TextureButton" parent="Title/Languages"]
+[node name="zh" type="TextureButton" parent="Title/Languages"]
 margin_left = 210.0
 margin_right = 270.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 29 )
+expand = true
+stretch_mode = 4
+
+[node name="nl" type="TextureButton" parent="Title/Languages"]
+margin_left = 280.0
+margin_right = 340.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 38 )
+expand = true
+stretch_mode = 4
+
+[node name="es" type="TextureButton" parent="Title/Languages"]
+margin_left = 350.0
+margin_right = 410.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 16 )
 expand = true
 stretch_mode = 4
 
+[node name="hu" type="TextureButton" parent="Title/Languages"]
+margin_left = 420.0
+margin_right = 480.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 60, 0 )
+texture_normal = ExtResource( 39 )
+expand = true
+stretch_mode = 4
+
 [node name="fr" type="TextureButton" parent="Title/Languages"]
-margin_left = 280.0
-margin_right = 340.0
+margin_left = 490.0
+margin_right = 550.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 9 )
@@ -710,8 +740,8 @@ expand = true
 stretch_mode = 4
 
 [node name="it" type="TextureButton" parent="Title/Languages"]
-margin_left = 350.0
-margin_right = 410.0
+margin_left = 560.0
+margin_right = 620.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 10 )
@@ -719,8 +749,8 @@ expand = true
 stretch_mode = 4
 
 [node name="ko" type="TextureButton" parent="Title/Languages"]
-margin_left = 420.0
-margin_right = 480.0
+margin_left = 630.0
+margin_right = 690.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 18 )
@@ -728,8 +758,8 @@ expand = true
 stretch_mode = 4
 
 [node name="sv" type="TextureButton" parent="Title/Languages"]
-margin_left = 490.0
-margin_right = 550.0
+margin_left = 700.0
+margin_right = 760.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 60, 0 )
 texture_normal = ExtResource( 28 )
@@ -869,15 +899,24 @@ current = true
 [connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "en" ]]
 [connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
-[connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
+[connection signal="mouse_entered" from="Title/Languages/ja" to="." method="_on_lg_mouse_entered" binds= [ "ja" ]]
+[connection signal="mouse_exited" from="Title/Languages/ja" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/ja" to="." method="_on_lg_pressed" binds= [ "ja" ]]
 [connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
 [connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
+[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
+[connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
+[connection signal="mouse_entered" from="Title/Languages/nl" to="." method="_on_lg_mouse_entered" binds= [ "nl" ]]
+[connection signal="mouse_exited" from="Title/Languages/nl" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/nl" to="." method="_on_lg_pressed" binds= [ "nl" ]]
 [connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "es" ]]
 [connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
+[connection signal="mouse_entered" from="Title/Languages/hu" to="." method="_on_lg_mouse_entered" binds= [ "hu" ]]
+[connection signal="mouse_exited" from="Title/Languages/hu" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Title/Languages/hu" to="." method="_on_lg_pressed" binds= [ "hu" ]]
 [connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
 [connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]

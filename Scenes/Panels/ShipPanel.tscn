@@ -22,9 +22,6 @@ margin_right = 512.0
 margin_bottom = 296.0
 theme = ExtResource( 7 )
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 6 )]
 
