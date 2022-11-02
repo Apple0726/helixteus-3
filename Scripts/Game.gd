@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.24"
+const VERSION:String = "v0.25"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -113,6 +113,7 @@ var minerals:float
 var mineral_capacity:float
 var stone:Dictionary
 var energy:float
+var energy_capacity:float
 var SP:float
 var neutron_cap:float
 var electron_cap:float
@@ -429,7 +430,6 @@ var autosave_interval:int = 10
 var autosell:bool = true
 var enable_shaders:bool = true
 var screen_shake:bool = true
-var icon_animations:bool = true
 var cave_gen_info:bool = false
 var op_cursor:bool = false
 
@@ -522,7 +522,7 @@ func _ready():
 			bldg_textures[bldg] = load(dir_str)
 	game_tween = Tween.new()
 	add_child(game_tween)
-	b_i_tween = Tween.new()
+	b_i_tween = Tween.new()#bottom_info_tween
 	add_child(b_i_tween)
 	view_tween = Tween.new()
 	add_child(view_tween)
@@ -532,7 +532,7 @@ func _ready():
 	add_child(stars_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
-	if not TranslationServer.get_locale() in ["de", "zh", "es"]:
+	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
@@ -561,7 +561,6 @@ func _ready():
 			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
-		icon_animations = config.get_value("game", "icon_animations", true)
 		cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		op_cursor = config.get_value("misc", "op_cursor", false)
 		if op_cursor:
@@ -643,6 +642,7 @@ func _ready():
 		tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
 		tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 2.0, 1.2)
 		tween.interpolate_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), Color.white, 1.2)
+		tween.interpolate_property($Title/Languages, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
 		tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
 		tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
 		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
@@ -841,8 +841,27 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	
-	if c_u == -1:
+	if save_info_dict.version != "v0.25":
+		c_u = -1
+		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
+		var lv_sum:int = 0
+		for univ in universe_data:
+			lv_sum += pow(univ.lv, 2.2) * univ.universe_value
+		DRs += floor(lv_sum / 10000.0) + 1
+		for i in len(universe_data):
+			Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
+		universe_data.clear()
+		dim_num += 1
+		switch_music(null)
+		viewing_dimension = true
+		add_dimension()
+		dimension.refresh_univs(true)
+		dimension.get_node("Subjects/Grid/Maths").visible = not beginner_friendly
+		dimension.get_node("Subjects/Grid/Physics").visible = not beginner_friendly
+		dimension.get_node("Subjects/Grid/Dimensional_Power").visible = not beginner_friendly
+		stats_dim = Data.default_stats.duplicate(true)
+		fn_save_game()
+	elif c_u == -1:
 		viewing_dimension = true
 		add_dimension()
 		dimension.refresh_univs(len(universe_data) == 0)
@@ -966,6 +985,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	mineral_capacity = 200
 	stone = {}
 	energy = 200
+	energy_capacity = 2500
 	SP = 0
 	neutron_cap = 0
 	electron_cap = 0
@@ -3531,6 +3551,8 @@ func add_resources(costs):
 			stats_univ.total_money_earned += costs.money
 		elif cost == "energy":
 			energy += costs.energy
+			if energy > energy_capacity:
+				energy = energy_capacity
 		elif cost == "SP":
 			SP += costs.SP
 		elif cost == "stone":
@@ -3765,6 +3787,8 @@ func _input(event):
 				mineral_capacity = float(arr[1])
 			"setenergy":
 				energy = float(arr[1])
+			"setenergycap":
+				energy_capacity = float(arr[1])
 			"setsp":
 				SP = float(arr[1])
 			"setmat":
@@ -3927,6 +3951,7 @@ func fn_save_game():
 		"money":money,
 		"minerals":minerals,
 		"mineral_capacity":mineral_capacity,
+		"energy_capacity":energy_capacity,
 		"neutron_cap":neutron_cap,
 		"electron_cap":electron_cap,
 		"stone":stone,
@@ -4057,61 +4082,6 @@ func cancel_building():
 func cancel_building_MS():
 	$UI/Panel.visible = false
 	view.obj.finish_construct()
-
-func change_language():
-	var config = ConfigFile.new()
-	var err = config.load("user://settings.cfg")
-	if err == OK:
-		config.set_value("interface", "language", TranslationServer.get_locale())
-		config.save("user://settings.cfg")
-	Data.reload()
-
-func _on_lg_pressed(extra_arg_0):
-	TranslationServer.set_locale(extra_arg_0)
-	change_language()
-
-func _on_lg_mouse_entered(extra_arg_0):
-	var lg:String = ""
-	var lines_translated:int = 0
-	var lines_total:int = 1384 - 2
-	match extra_arg_0:
-		"fr":
-			lg = "Français"
-			lines_translated = 529 - 2
-		"it":
-			lg = "Italiano"
-			lines_translated = 384 - 2
-		"zh":
-			lg = "中文"
-			lines_translated = 1309 - 2
-		"de":
-			lg = "Deutsch"
-			lines_translated = 1377 - 2
-		"es":
-			lg = "Español"
-			lines_translated = 1161 - 2
-		"ko":
-			lg = "한국어"
-			lines_translated = 222 - 2
-		"sv":
-			lg = "Svenska"
-			lines_translated = 197 - 1
-		"hu":
-			lg = "Magyar"
-			lines_translated = 1027 - 1
-		"ja":
-			lg = "日本語"
-			lines_translated = 1391 - 1
-		"nl":
-			lg = "Nederlands"
-			lines_translated = 1212 - 1
-	if extra_arg_0 == "en":
-		show_tooltip("English")
-	else:
-		show_tooltip("%s (%s)" % [lg, tr("X_LINES") % [lines_translated, lines_total]])
-
-func _on_lg_mouse_exited():
-	hide_tooltip()
 
 func _on_Settings_mouse_entered():
 	show_tooltip(tr("SETTINGS") + " (P)")
@@ -4485,3 +4455,4 @@ func _on_StarFade_animation_finished(anim_name):
 func _on_Mods_pressed():
 	$click.play()
 	toggle_panel(mods)
+

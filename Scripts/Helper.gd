@@ -405,6 +405,16 @@ func add_minerals(amount:float, add:bool = true):
 				game.minerals = min_cap
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
+func add_energy(amount:float):
+	var energy_cap = 200 + (game.energy_capacity - 200) * get_IR_mult("MS")
+	var energy_space_available:float = round(energy_cap) - round(game.energy)
+	if energy_space_available >= amount:
+		game.energy += amount
+		return {"added":amount, "remainder":0}
+	else:
+		game.energy = energy_cap
+		return {"added":energy_space_available, "remainder":amount - energy_space_available}
+
 func get_AIE(next_lv:int = 0):
 	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
 
@@ -654,7 +664,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	if tile.bldg.is_constructing:
 		return
 	match tile.bldg.name:
-		"ME", "PP", "MM", "SP", "AE":
+		"MM", "AE":
 			#Number of seconds needed per mineral
 			var prod:float
 			if tile.bldg.name == "SP":
@@ -673,15 +683,6 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			if c_t - c_d > prod:
 				var rsrc_num:float = floor((c_t - c_d) / prod)
 				var auto_rsrc:float = 0
-				if tile.has("auto_collect") and tile.bldg.name in ["ME", "PP", "SP"]:
-					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
-					if auto_rsrc < 5 and randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
-						auto_rsrc += 1
-					if game.auto_c_p_g != -1:
-						if tile.bldg.name == "ME":
-							auto_rsrc -= add_minerals(auto_rsrc).remainder
-						elif tile.bldg.name in ["PP", "SP"]:
-							game.energy += auto_rsrc
 				tile.bldg.stored += rsrc_num - auto_rsrc
 				tile.bldg.collect_date += prod * rsrc_num
 				if tile.bldg.stored >= cap:
@@ -693,7 +694,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
 				else:
 					rsrc_text.text = String(stored)
-		"RL":
+		"ME", "PP", "SP", "RL":
 			var prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
 			var c_d = tile.bldg.collect_date
@@ -702,7 +703,11 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				tile.bldg.collect_date = curr_time
 			if c_t - c_d > prod:
 				var rsrc_num = floor((c_t - c_d) / prod)
-				if game.auto_c_p_g != -1:
+				if tile.bldg.name == "ME":
+					add_minerals(rsrc_num)
+				elif tile.bldg.name in ["PP", "SP"]:
+					add_energy(rsrc_num)
+				elif tile.bldg.name == "RL":
 					game.SP += rsrc_num
 				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
@@ -1241,7 +1246,7 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		"ME", "PP", "SP", "AE":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(round(path_2_value))]
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"AMN", "SPR":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"MM":

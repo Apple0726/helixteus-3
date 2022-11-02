@@ -16,7 +16,7 @@
 [ext_resource path="res://Graphics/Decoratives/Crust.jpg" type="Texture" id=14]
 [ext_resource path="res://Shaders/Mantle.shader" type="Shader" id=15]
 [ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=16]
-[ext_resource path="res://Graphics/Noise/noise_combined.png" type="Texture" id=17]
+[ext_resource path="res://Graphics/Misc/noise_combined.png" type="Texture" id=17]
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=18]
 
 [sub_resource type="ShaderMaterial" id=1]

@@ -183,8 +183,8 @@ func update_money_energy_SP():
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = Helper.format_num(floor(game.energy))
-	SP_text.text = Helper.format_num(floor(game.SP))
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(game.energy_capacity))]
+	SP_text.text = Helper.format_num(round(game.SP))
 	if $Top/Resources/Cellulose.visible:
 		$Top/Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
 		if game.mats.cellulose > 0:
@@ -522,24 +522,6 @@ func _on_ConvertMinerals_mouse_entered():
 	game.show_tooltip(tr("SELL_MINERALS") + " (,)")
 
 func _on_ConvertMinerals_pressed():
-	if game.minerals > 0 and game.icon_animations:
-		var mineral_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
-		mineral_icon.texture = preload("res://Graphics/Icons/minerals.png")
-		mineral_icon.scale *= 0.15
-		var node = $Top/Resources/Minerals
-		var node2 = $Top/Resources/Minerals/Texture
-		mineral_icon.position = node.rect_position + node2.rect_size / 2.0
-		mineral_icon.end_pos = $Bottom/Panel/ConvertMinerals.rect_global_position
-		game.get_node("UI").add_child(mineral_icon)
-		
-		var money_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
-		money_icon.texture = preload("res://Graphics/Icons/money.png")
-		money_icon.scale *= 0.05
-		node = $Top/Resources/Money
-		node2 = $Top/Resources/Money/Texture
-		money_icon.position = $Bottom/Panel/ConvertMinerals.rect_global_position
-		money_icon.end_pos = node.rect_position + node2.rect_size / 2.0
-		game.get_node("UI").add_child(money_icon)
 	game.sell_all_minerals()
 	if game.tutorial and game.tutorial.tut_num == 8 and not game.tutorial.tween.is_active():
 		game.tutorial.fade()

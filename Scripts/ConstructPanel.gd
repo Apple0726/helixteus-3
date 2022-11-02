@@ -1,7 +1,7 @@
 extends "GenericPanel.gd"
 
 var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE", "PC", "NC", "EC"]
-var storage_bldgs:Array = ["MS", "NSF", "ESF"]
+var storage_bldgs:Array = ["MS", "B", "NSF", "ESF"]
 var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
 var support_bldgs:Array = ["GH", "CBD"]
 var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
@@ -76,14 +76,14 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.item_name == "PP":
+		if bldg.item_name in ["PP", "B"]:
 			bldg.visible = game.tutorial and game.stats_univ.bldgs_built >= 5 or not game.tutorial and game.stats_univ.bldgs_built >= 1
 		elif bldg.item_name == "MS":
 			bldg.visible = game.stats_univ.bldgs_built >= 5
 		elif bldg.item_name == "RL":
-			bldg.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
+			bldg.visible = game.stats_univ.bldgs_built >= 18
 		elif bldg.item_name == "CBD":
-			bldg.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
+			bldg.visible = game.stats_univ.bldgs_built >= 18
 		elif bldg.item_name == "GF":
 			bldg.visible = game.show.has("sand")
 		elif bldg.item_name == "SE":
@@ -133,7 +133,7 @@ func get_item(_name, _type, _dir):
 func refresh():
 	if game.c_v == "planet":
 		$VBox/Tabs/Production.visible = game.show.has("stone")
-		$VBox/Tabs/Support.visible = not game.tutorial or game.stats_univ.bldgs_built >= 18
+		$VBox/Tabs/Support.visible = game.stats_univ.bldgs_built >= 18
 		$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
 		if $VBox/Tabs.get_node(tab).visible:
 			$VBox/Tabs.get_node(tab)._on_Button_pressed()

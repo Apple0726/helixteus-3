@@ -4,6 +4,15 @@ var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
 var save_to_delete:String = ""
 var save_to_export:String = ""
 
+func on_version_over_ok():
+	game.show_tooltip(tr("SAME_VERSION"))
+
+func on_version_over_not_ok():
+	game.show_tooltip(tr("VERSION_INCOMPATIBLE"))
+
+func on_mouse_exit():
+	game.hide_tooltip()
+
 func refresh():
 	for save in $ScrollContainer/VBox.get_children():
 		$ScrollContainer/VBox.remove_child(save)
@@ -25,7 +34,14 @@ func refresh():
 				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir])
 				save.get_node("Export").connect("pressed", self, "on_export", [next_dir])
 				save.get_node("Button").text = next_dir
-				save.get_node("Version")["custom_colors/font_color"] = Color.green
+				if save_info_dict.version == "v0.25":
+					save.get_node("Version").connect("mouse_entered", self, "on_version_over_ok")
+					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
+					save.get_node("Version")["custom_colors/font_color"] = Color.green
+				else:
+					save.get_node("Version").connect("mouse_entered", self, "on_version_over_not_ok")
+					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
+					save.get_node("Version")["custom_colors/font_color"] = Color.red
 				var now = OS.get_system_time_msecs()
 				if now - save_created < 86400000 * 2:
 					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]

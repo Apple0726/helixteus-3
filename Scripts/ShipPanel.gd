@@ -82,7 +82,7 @@ func _on_DriveButton_mouse_entered():
 	game.show_tooltip(tr("OPEN_DRIVE_MENU"))
 
 func _on_BackButton_mouse_entered():
-	game.show_tooltip(tr("GO_BACK"))
+	game.show_tooltip(tr("BACK"))
 
 func _on_UpgradeButton_mouse_entered():
 	game.show_tooltip("UP1_SC")

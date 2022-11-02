@@ -5,6 +5,7 @@ enum ProjType {STANDARD, LASER, BUBBLE, PURPLE}#For caves
 var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
+				"B":{"value":1500, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
 				"RCC":{"value":1.0, "pw":1.07, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 				"SC":{"value":50.0, "pw":1.15, "time_based":true, "is_value_integer":false, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
@@ -24,18 +25,15 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "is_value_integ
 				"NSF":{"value":50000.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"ESF":{"value":50000.0, "pw":1.15, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
-var path_2 = {	"ME":{"value":30, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
-				"PP":{"value":140, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
-				"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
+var path_2 = {	"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":100, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"MM":{"value":4, "pw":1.1, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.1, "pw":1.1, "is_value_integer":false, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
-				"SP":{"value":4200, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AMN":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"AE":{"value":120, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"CBD":{"value":10, "step":2, "cap":46, "is_value_integer":true},
+				"CBD":{"value":1.1, "pw":1.05, "is_value_integer":false, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 }
 var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
 				"GF":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
@@ -46,6 +44,7 @@ var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "is_value_integer":false,
 var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"PP":{"money":80, "time":3.0},
 				"RL":{"money":2000, "energy":600, "time":130.0},
+				"B":{"money":400, "energy":120, "time":20.0},
 				"MS":{"money":500, "energy":80, "time":20.0},
 				"RCC":{"money":5000, "energy":400, "time":140.0},
 				"SC":{"money":900, "energy":150, "time":50.0},
@@ -133,14 +132,15 @@ var proton_icon = preload("res://Graphics/Particles/proton.png")
 var neutron_icon = preload("res://Graphics/Particles/neutron.png")
 var electron_icon = preload("res://Graphics/Particles/electron.png")
 
-var desc_icons = {	"ME":[[minerals_icon], [minerals_icon]],
-					"PP":[[energy_icon], [energy_icon]],
+var desc_icons = {	"ME":[[minerals_icon]],
+					"PP":[[energy_icon]],
 					"RL":[[SP_icon]],
+					"B":[[energy_icon]],
 					"MS":[[minerals_icon]],
 					"SC":[[stone_icon], [stone_icon], []],
 					"GF":[[glass_icon], [sand_icon], []],
 					"SE":[[energy_icon], [coal_icon], []],
-					"SP":[[energy_icon], [energy_icon]],
+					"SP":[[energy_icon]],
 					"PC":[[proton_icon]],
 					"NC":[[neutron_icon]],
 					"NSF":[[neutron_icon]],
@@ -235,6 +235,7 @@ func reload():
 	path_1.RCC.desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
 	path_1.SY.desc = tr("MULT_FIGHTER_STAT_BY") % ["%s"]
 	path_1.MS.desc = tr("STORES_X") % [" @i %s"]
+	path_1.B.desc = tr("STORES_X") % [" @i %s"]
 	path_1.SC.desc = tr("CRUSHES_X") % ["@i %s kg/" + tr("S_SECOND")]
 	path_1.GF.desc = tr("PRODUCES_X") % ["@i %s kg/" + tr("S_SECOND")]
 	path_1.SE.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
@@ -248,15 +249,12 @@ func reload():
 	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1.NSF.desc = tr("STORES_X") % ["@i %s mol"]
 	path_1.ESF.desc = tr("STORES_X") % ["@i %s mol"]
-	path_2.ME.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.AE.desc = tr("STORES_X") % ["%s mol"]
-	path_2.PP.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.MM.desc = tr("X_M_AT_ONCE")
 	path_2.GH.desc = tr("X_PLANT_PRODUCE")
-	path_2.SP.desc = tr("X_CAPACITY") % [" @i %s"]
 	path_3.SC.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.GF.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.SE.desc = tr("OUTPUT_MULTIPLIER")

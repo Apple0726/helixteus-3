@@ -17,7 +17,7 @@ func _ready():
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0001
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0001
 	$ModifyDimension/Maths.rect_clip_content = true
-	if not game.help.has("flash_send_probe_btn"):
+	if not game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
@@ -70,10 +70,10 @@ func refresh_univs(reset:bool = false):
 				break
 	var lv_sum:int = 0
 	for univ in game.universe_data:
-		lv_sum += univ.lv * univ.universe_value
+		lv_sum += pow(univ.lv, 2.2) * univ.universe_value
 	for node in $Subjects/Grid.get_children():
 		node.get_node("HBox/Invest").disabled = game.DRs == 0
-	new_dim_DRs = floor(lv_sum / 50.0)
+	new_dim_DRs = floor(lv_sum / 10000.0)
 	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
 	$TopInfo/DRs.bbcode_text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]
@@ -350,9 +350,9 @@ func calc_OP_points():
 		physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 	
 	engineering_OP_points = 0
-	calc_engi_points($ModifyDimension/Engineering/Control/BCM, 8.0, false)
-	calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.2, true)
-	calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.5, true)
+	calc_engi_points($ModifyDimension/Engineering/Control/BCM, 7.0, false)
+	calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.15, true)
+	calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.4, true)
 	if $ModifyDimension/Maths.visible:
 		if is_equal_approx(maths_OP_points, 0):
 			maths_OP_points = 0

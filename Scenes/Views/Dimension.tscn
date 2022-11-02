@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=21]
 [ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=22]
 [ext_resource path="res://Graphics/Icons/table.png" type="Texture" id=23]
+[ext_resource path="res://Graphics/Formulas/DRs.png" type="Texture" id=24]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
@@ -343,6 +344,9 @@ margin_bottom = 44.0
 rect_min_size = Vector2( 384, 0 )
 bbcode_text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
 help_text = "DR_DESC"
+adv_help = true
+adv_icons = [ ExtResource( 24 ) ]
+icon_size = 80
 align = 1
 
 [node name="Reset" type="Button" parent="TopInfo"]

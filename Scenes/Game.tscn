@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -8,16 +8,10 @@
 [ext_resource path="res://Graphics/Title screen/GitHub.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Audio/SFX/click.ogg" type="AudioStream" id=8]
-[ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buttons/it.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/Languages.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Graphics/Title screen/Discord.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
-[ext_resource path="res://Graphics/Buttons/es.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Buttons/de.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Buttons/ko.png" type="Texture" id=18]
 [ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
 [ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
 [ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
@@ -27,8 +21,6 @@
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
-[ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
-[ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=29]
 [ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
 [ext_resource path="res://Shaders/Star.shader" type="Shader" id=31]
 [ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=32]
@@ -36,9 +28,6 @@
 [ext_resource path="res://Shaders/ScienceTree.shader" type="Shader" id=34]
 [ext_resource path="res://Scenes/Nebula.tscn" type="PackedScene" id=35]
 [ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=36]
-[ext_resource path="res://Graphics/Buttons/ja.png" type="Texture" id=37]
-[ext_resource path="res://Graphics/Buttons/nl.png" type="Texture" id=38]
-[ext_resource path="res://Graphics/Buttons/hu.png" type="Texture" id=39]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 30 )
@@ -658,124 +647,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Languages" type="HBoxContainer" parent="Title"]
-margin_left = 8.0
-margin_top = 692.0
-margin_right = 488.0
-margin_bottom = 720.0
-custom_constants/separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="en" type="TextureButton" parent="Title/Languages"]
-margin_right = 60.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 12 )
-expand = true
-stretch_mode = 4
-
-[node name="ja" type="TextureButton" parent="Title/Languages"]
-margin_left = 70.0
-margin_right = 130.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 37 )
-expand = true
-stretch_mode = 4
-
-[node name="de" type="TextureButton" parent="Title/Languages"]
-margin_left = 140.0
-margin_right = 200.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 17 )
-expand = true
-stretch_mode = 4
-
-[node name="zh" type="TextureButton" parent="Title/Languages"]
-margin_left = 210.0
-margin_right = 270.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 29 )
-expand = true
-stretch_mode = 4
-
-[node name="nl" type="TextureButton" parent="Title/Languages"]
-margin_left = 280.0
-margin_right = 340.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 38 )
-expand = true
-stretch_mode = 4
-
-[node name="es" type="TextureButton" parent="Title/Languages"]
-margin_left = 350.0
-margin_right = 410.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
-expand = true
-stretch_mode = 4
-
-[node name="hu" type="TextureButton" parent="Title/Languages"]
-margin_left = 420.0
-margin_right = 480.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 39 )
-expand = true
-stretch_mode = 4
-
-[node name="fr" type="TextureButton" parent="Title/Languages"]
-margin_left = 490.0
-margin_right = 550.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 9 )
-expand = true
-stretch_mode = 4
-
-[node name="it" type="TextureButton" parent="Title/Languages"]
-margin_left = 560.0
-margin_right = 620.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 10 )
-expand = true
-stretch_mode = 4
-
-[node name="ko" type="TextureButton" parent="Title/Languages"]
-margin_left = 630.0
-margin_right = 690.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 18 )
-expand = true
-stretch_mode = 4
-
-[node name="sv" type="TextureButton" parent="Title/Languages"]
-margin_left = 700.0
-margin_right = 760.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 28 )
-expand = true
-stretch_mode = 4
-
-[node name="ru" type="TextureButton" parent="Title/Languages"]
-visible = false
-margin_left = 420.0
-margin_right = 480.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 13 )
-expand = true
-stretch_mode = 4
-
 [node name="Menu" type="PanelContainer" parent="Title"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 83.0
@@ -821,6 +692,12 @@ margin_right = 184.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 0, 30 )
 text = "MODS"
+
+[node name="Languages" parent="Title" instance=ExtResource( 9 )]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 1239.0
+margin_bottom = 680.0
+mouse_filter = 2
 
 [node name="Autosave" type="Timer" parent="."]
 
@@ -896,41 +773,6 @@ current = true
 [connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
 [connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
 [connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]
-[connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "en" ]]
-[connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/ja" to="." method="_on_lg_mouse_entered" binds= [ "ja" ]]
-[connection signal="mouse_exited" from="Title/Languages/ja" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/ja" to="." method="_on_lg_pressed" binds= [ "ja" ]]
-[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
-[connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
-[connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
-[connection signal="mouse_entered" from="Title/Languages/nl" to="." method="_on_lg_mouse_entered" binds= [ "nl" ]]
-[connection signal="mouse_exited" from="Title/Languages/nl" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/nl" to="." method="_on_lg_pressed" binds= [ "nl" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "es" ]]
-[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Title/Languages/hu" to="." method="_on_lg_mouse_entered" binds= [ "hu" ]]
-[connection signal="mouse_exited" from="Title/Languages/hu" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/hu" to="." method="_on_lg_pressed" binds= [ "hu" ]]
-[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
-[connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "it" ]]
-[connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "ko" ]]
-[connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
-[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "sv" ]]
-[connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
-[connection signal="mouse_exited" from="Title/Languages/ru" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]

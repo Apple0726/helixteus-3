@@ -44,7 +44,7 @@
 [ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=42]
 [ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=43]
 [ext_resource path="res://Graphics/Tiles/Lava.png" type="Texture" id=44]
-[ext_resource path="res://Graphics/Noise/noise_combined.png" type="Texture" id=45]
+[ext_resource path="res://Graphics/Misc/noise_combined.png" type="Texture" id=45]
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;

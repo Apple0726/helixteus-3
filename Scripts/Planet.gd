@@ -387,20 +387,23 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
-		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "GH", "SP", "AE", "CBD", "AMN", "SPR"]:
+		if _bldg_to_construct in ["MM", "SC", "GF", "SE", "GH", "AE", "SP", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
-		if _bldg_to_construct in ["ME", "PP", "MM", "SC", "GF", "SE", "SP", "AE"]:
+		if _bldg_to_construct in ["MM", "SC", "GF", "SE", "AE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
 		if _bldg_to_construct in ["SC", "GF", "SE", "CBD"]:
 			tile.bldg.path_3 = 1
 			tile.bldg.path_3_value = Data.path_3[_bldg_to_construct].value
-		if _bldg_to_construct == "RL":
-			game.show.SP = true
+		if _bldg_to_construct in ["RL", "PP", "ME", "SP"]:
+			if _bldg_to_construct == "RL":
+				game.show.SP = true
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 		elif _bldg_to_construct == "MS":
-			tile.bldg.mineral_cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+			tile.bldg.cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+		elif _bldg_to_construct == "B":
+			tile.bldg.cap_upgrade = Data.path_1.B.value#The amount of cap to add once construction is done
 		elif _bldg_to_construct == "NSF":
 			tile.bldg.cap_upgrade = Data.path_1.NSF.value
 		elif _bldg_to_construct == "ESF":
@@ -535,8 +538,6 @@ func click_tile(tile, tile_id:int):
 	var bldg:String = tile.bldg.name
 	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
 		Helper.update_rsrc(p_i, tile)
-		if game.icon_animations:
-			add_anim_icon(tile, tile_id)
 		Helper.collect_rsrc(items_collected, p_i, tile, tile_id, false)
 	else:
 		if not tile.bldg.is_constructing:
@@ -585,8 +586,6 @@ func destroy_bldg(id2:int, mass:bool = false):
 	var bldg:String = tile.bldg.name
 	items_collected.clear()
 	Helper.update_rsrc(p_i, tile)
-	if game.icon_animations:
-		add_anim_icon(tile, id2)
 	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	bldgs[id2].queue_free()
 	hboxes[id2].queue_free()
@@ -596,11 +595,18 @@ func destroy_bldg(id2:int, mass:bool = false):
 	var ac:float = tile.auto_collect if tile.has("auto_collect") else 0.0
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
-			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.mineral_cap_upgrade
+			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
 		if game.mineral_capacity < 200:
 			game.mineral_capacity = 200
+	elif bldg == "B":
+		if tile.bldg.is_constructing:
+			game.energy_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
+		else:
+			game.energy_capacity -= tile.bldg.path_1_value
+		if game.energy_capacity < 2500:
+			game.energy_capacity = 2500
 	elif bldg == "NSF":
 		if tile.bldg.is_constructing:
 			game.neutron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
@@ -673,18 +679,19 @@ func destroy_bldg(id2:int, mass:bool = false):
 								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * diff / 100.0
 								game.autocollect.rsrc.energy -= prod * diff / 100.0
 	else:
-		if tile.has("auto_collect"):
-			if bldg == "ME":
-				var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-				game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * mult * ac / 100.0
-				game.autocollect.rsrc.minerals -= prod * mult * ac / 100.0
-			elif bldg == "PP":
-				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
-				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
-			elif bldg == "SP":
-				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * ac / 100.0
-				game.autocollect.rsrc.energy -= prod * ac / 100.0
+		pass
+#		if tile.has("auto_collect"):
+#			if bldg == "ME":
+#				var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+#				game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * mult * ac / 100.0
+#				game.autocollect.rsrc.minerals -= prod * mult * ac / 100.0
+#			elif bldg == "PP":
+#				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
+#				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
+#			elif bldg == "SP":
+#				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
+#				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * ac / 100.0
+#				game.autocollect.rsrc.energy -= prod * ac / 100.0
 	if tile.has("auto_GH"):
 		for p in tile.auto_GH.produce:
 			game.autocollect.mets[p] -= tile.auto_GH.produce[p]
@@ -1561,37 +1568,12 @@ func finish_construct():
 func _on_Planet_tree_exited():
 	queue_free()
 
-func add_anim_icon(tile:Dictionary, tile_id:int):
-	if not tile.bldg.has("stored") or tile.bldg.stored <= 0:
-		return
-	var rsrc_icon = preload("res://Scenes/FloatingIcon.tscn").instance()
-	var node
-	var node2
-	if tile.bldg.name == "ME":
-		node = game.HUD.get_node("Top/Resources/Minerals")
-		node2 = game.HUD.get_node("Top/Resources/Minerals/Texture")
-		rsrc_icon.texture = preload("res://Graphics/Icons/minerals.png")
-	elif tile.bldg.name in ["PP", "SP"]:
-		node = game.HUD.get_node("Top/Resources/Energy")
-		node2 = game.HUD.get_node("Top/Resources/Energy/Texture")
-		rsrc_icon.texture = preload("res://Graphics/Icons/energy.png")
-	if not node:
-		return
-	var start_pos:Vector2 = to_global(bldgs[tile_id].position)
-	var end_pos:Vector2 = node.rect_position + node2.rect_size / 2.0
-	rsrc_icon.scale *= 0.15
-	rsrc_icon.position = start_pos
-	rsrc_icon.end_pos = end_pos
-	game.get_node("UI").add_child(rsrc_icon)
-		
 func collect_all():
 	var i:int
 	items_collected.clear()
 	for tile in game.tile_data:
 		if tile and tile.has("bldg"):
 			Helper.update_rsrc(p_i, tile)
-			if game.icon_animations:
-				add_anim_icon(tile, i)
 			Helper.collect_rsrc(items_collected, p_i, tile, i, false)
 		i += 1
 	game.show_collect_info(items_collected)
