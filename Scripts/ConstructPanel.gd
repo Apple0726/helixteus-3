@@ -55,7 +55,7 @@ func _on_btn_pressed(btn_str:String):
 		elif Data.path_1.has(bldg):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
 		if Data.path_2.has(bldg):
-			if Data.path_2[bldg].is_value_integer:
+			if Data.path_2[bldg].has("is_value_integer"):
 				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg)))]
 			else:
 				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * Helper.get_IR_mult(bldg), true)]

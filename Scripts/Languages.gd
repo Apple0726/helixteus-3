@@ -28,7 +28,7 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1384 - 2
+	var lines_total:int = 1399 - 2
 	match extra_arg_0:
 		"fr":
 			lg = "Français"

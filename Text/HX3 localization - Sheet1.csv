@@ -1030,7 +1030,7 @@ STAR_NUM,Number of stars,,,恒星数目,Anzahl an Sternen,Número de estrellas,,
 CBD_NAME,Central business district,,,商业区,Zentrales Geschäftsviertel,Distrito central de negocios,,,,中心業務地区,Centrale zakenwijk,
 CBD_DESC,Gives helpful bonuses to nearby buildings.,,,提供一些邻近商业区建筑物的加成,Verstärkt umliegende Gebäude,Da bonos útiles a estructuras cercanas.,,,,近くの建物に役立つボーナスを与える。,Geeft nuttige bonussen aan omliggende gebouwen,
 CBD_PATH_1,Building costs divided by %s,,,建筑消费折扣 %s,Konstruktionskosten geteilt durch %s,Costos de construcción dividido por %s,,,Építési ár elosztva ennyivel: %s,建築費が%sで割った金額になる,Bouwkosten gedeeld door %s,
-CBD_PATH_2,Auto-collects %s%% of @i @i,,,自动收集 %s%% 的基本资源,Sammelt automatisch %s%% aller @i @i,Recolecta automáticamente %s%% de @i @i,,,Automatikusan összegyűjti %s%%-át ezeknek: @i @i,@i @iの%s%%を自動回収,Verzamelt automatisch %s%% van @i @i,
+CBD_PATH_2,x %s overclock bonus,,,,,,,,,,,
 CBD_PATH_3,{n}x{n} range,,,影响范围{n}x{n},{n}x{n} Reichweite,rango de {n}x{n},,,Hatósugár: {n}x{n},有効範囲 {n}x{n},Radius: {n}x{n} ,
 ADD_TO_BOOKMARKS,Add to bookmarks,Ajouter aux favoris,,加入收藏,Zu Favoriten hinzufügen,Añadir a marcadores,,,Hozzáadás a kedvencekhez,ブックマークへ追加,Toevoegen aan bladwijzers,Добавить в закладки
 REMOVE_FROM_BOOKMARKS,Remove from bookmarks,Retirer des favoris,,取消收藏,Aus Favoriten entfernen,Remover de marcadores,,,Eltüntetés a kedvencelkből,ブックマークから削除する,Verwijder uit bladwijzers,Убрать из закладок
@@ -1426,3 +1426,6 @@ VERSION_INCOMPATIBLE,"Major changes were made to Helixteus 3 between the time th
 B_NAME,Battery,,,,Batterie,,,,Elem,,,Аккумулятор
 B_NAME_S,Batteries,,,,Batterien,,,,Elemek,,,Аккумуляторы
 B_DESC,Increases maximum energy storage,,,,Erhöht die maximale Menge an gespeicherter Energie,,,,Energiát tárol.,,,
+DISCORD_BUTTON,Helixteus Discord server,,,,,,,,,,,
+GITHUB_BUTTON,View the game's source files,,,,,,,,,,,
+GODOT_BUTTON,View the program used to make this game,,,,,,,,,,,

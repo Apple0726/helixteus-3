@@ -643,14 +643,11 @@ func _ready():
 		tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 2.0, 1.2)
 		tween.interpolate_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), Color.white, 1.2)
 		tween.interpolate_property($Title/Languages, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
+		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
+		tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
+		tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
 		tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
 		tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
-		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1)
-		tween.interpolate_property($Title/Discord, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1)
-		tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.25)
-		tween.interpolate_property($Title/GitHub, "rect_position", Vector2(0, 15), Vector2(0, 0), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.25)
-		tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 1.5)
-		tween.interpolate_property($Title/Godot, "rect_position", Vector2(0, 13), Vector2(0, -2), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 1.5)
 		tween.start()
 		yield(tween, "tween_all_completed")
 		remove_child(tween)
@@ -3605,15 +3602,9 @@ func _process(delta):
 			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals * min_mult)
 			energy += delta * (autocollect.MS.energy + autocollect.GS.energy * energy_mult)
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
-			if not autocollect.rsrc_list.empty():
-				if auto_c_p_g == c_p_g and autocollect.rsrc_list.has(String(c_p_g)):
-					min_to_add += (autocollect.rsrc.minerals - autocollect.rsrc_list[String(c_p_g)].minerals) * delta * min_mult
-					energy += (autocollect.rsrc.energy - autocollect.rsrc_list[String(c_p_g)].energy) * delta * energy_mult
-					SP += (autocollect.rsrc.SP - autocollect.rsrc_list[String(c_p_g)].SP) * delta * SP_mult
-				else:
-					min_to_add += autocollect.rsrc.minerals * delta * min_mult
-					energy += autocollect.rsrc.energy * delta * energy_mult
-					SP += autocollect.rsrc.SP * delta * SP_mult
+			min_to_add += autocollect.rsrc.minerals * delta * min_mult
+			energy += autocollect.rsrc.energy * delta * energy_mult
+			SP += autocollect.rsrc.SP * delta * SP_mult
 			if mats.cellulose > 0:
 				for mat in autocollect.mats:
 					mats[mat] += autocollect.mats[mat] * delta
@@ -4093,9 +4084,6 @@ func _on_Settings_pressed():
 	$click.play()
 	toggle_panel(settings)
 
-func _on_Title_Button_pressed(URL:String):
-	OS.shell_open(URL)
-
 func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
 	if bottom_info_shown:
@@ -4456,3 +4444,26 @@ func _on_Mods_pressed():
 	$click.play()
 	toggle_panel(mods)
 
+
+func _on_Discord_pressed():
+	OS.shell_open("https://discord.com/invite/gDHcDA3")
+
+
+func _on_GitHub_pressed():
+	OS.shell_open("https://github.com/Apple0726/helixteus-3")
+
+
+func _on_Godot_pressed():
+	OS.shell_open("https://godotengine.org/")
+
+
+func _on_Discord_mouse_entered():
+	show_tooltip("DISCORD_BUTTON")
+
+
+func _on_GitHub_mouse_entered():
+	show_tooltip("GITHUB_BUTTON")
+
+
+func _on_Godot_mouse_entered():
+	show_tooltip("GODOT_BUTTON")

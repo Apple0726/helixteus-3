@@ -655,43 +655,6 @@ func destroy_bldg(id2:int, mass:bool = false):
 						for st in _tile.cost_div_dict:
 							div = max(div, _tile.cost_div_dict[st])
 						_tile.cost_div = div
-				if _tile.has("auto_collect_dict"):
-					_tile.auto_collect_dict.erase(String(id2))
-					if _tile.auto_collect_dict.empty():
-						_tile.erase("auto_collect_dict")
-						_tile.erase("auto_collect")
-					else:
-						var new_value:float = 0
-						for st in _tile.auto_collect_dict:
-							new_value = max(new_value, _tile.auto_collect_dict[st])
-						var diff:float = max(0, _tile.auto_collect - new_value)
-						_tile.auto_collect = new_value
-						if _tile.has("bldg"):
-							if _tile.bldg.name == "ME":
-								var prod:float = _tile.bldg.path_1_value * (_tile.plant.ash if _tile.has("plant") and _tile.plant.has("ash") else 1.0)
-								game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * diff / 100.0
-								game.autocollect.rsrc.minerals -= prod * diff / 100.0
-							elif _tile.bldg.name == "PP":
-								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= _tile.bldg.path_1_value * diff / 100.0
-								game.autocollect.rsrc.energy -= _tile.bldg.path_1_value * diff / 100.0
-							elif _tile.bldg.name == "SP":
-								var prod:float = Helper.get_SP_production(p_i.temperature, _tile.bldg.path_1_value * mult, 1.0 + (_tile.aurora.au_int if _tile.has("aurora") else 0.0))
-								game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * diff / 100.0
-								game.autocollect.rsrc.energy -= prod * diff / 100.0
-	else:
-		pass
-#		if tile.has("auto_collect"):
-#			if bldg == "ME":
-#				var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-#				game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * mult * ac / 100.0
-#				game.autocollect.rsrc.minerals -= prod * mult * ac / 100.0
-#			elif bldg == "PP":
-#				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * mult * ac / 100.0
-#				game.autocollect.rsrc.energy -= tile.bldg.path_1_value * mult * ac / 100.0
-#			elif bldg == "SP":
-#				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-#				game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * ac / 100.0
-#				game.autocollect.rsrc.energy -= prod * ac / 100.0
 	if tile.has("auto_GH"):
 		for p in tile.auto_GH.produce:
 			game.autocollect.mets[p] -= tile.auto_GH.produce[p]

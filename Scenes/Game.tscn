@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -15,9 +15,6 @@
 [ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
 [ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
 [ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
-[ext_resource path="res://Graphics/Title screen/Discord_over.png" type="Texture" id=22]
-[ext_resource path="res://Graphics/Title screen/GitHub_over.png" type="Texture" id=23]
-[ext_resource path="res://Graphics/Title screen/Godot_over.png" type="Texture" id=24]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
@@ -506,11 +503,6 @@ color = Color( 0, 0, 0, 1 )
 [node name="Title" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
 
 [node name="Background" type="TextureRect" parent="Title"]
 margin_right = 1280.0
@@ -535,113 +527,6 @@ margin_bottom = 230.313
 custom_fonts/font = SubResource( 13 )
 text = "Helixteus 3
 "
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="GitHub" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button" type="TextureButton" parent="Title/GitHub"]
-margin_left = 836.0
-margin_top = 676.0
-margin_right = 976.0
-margin_bottom = 712.0
-texture_normal = ExtResource( 6 )
-texture_pressed = ExtResource( 6 )
-texture_hover = ExtResource( 23 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/GitHub"]
-margin_left = 776.0
-margin_top = 640.0
-margin_right = 1044.0
-margin_bottom = 664.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Source files available on"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Godot" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -2.0
-margin_right = 40.0
-margin_bottom = 38.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button" type="TextureButton" parent="Title/Godot"]
-margin_left = 1120.0
-margin_top = 618.0
-margin_right = 1216.0
-margin_bottom = 714.0
-texture_normal = ExtResource( 5 )
-texture_pressed = ExtResource( 5 )
-texture_hover = ExtResource( 24 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/Godot"]
-margin_left = 1056.0
-margin_top = 582.0
-margin_right = 1279.0
-margin_bottom = 606.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Game made with"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Discord" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -2.0
-margin_right = 40.0
-margin_bottom = 38.0
-
-[node name="Button" type="TextureButton" parent="Title/Discord"]
-margin_left = 596.0
-margin_top = 678.0
-margin_right = 712.0
-margin_bottom = 714.0
-texture_normal = ExtResource( 11 )
-texture_pressed = ExtResource( 11 )
-texture_hover = ExtResource( 22 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/Discord"]
-margin_left = 540.0
-margin_top = 642.0
-margin_right = 763.0
-margin_bottom = 666.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Join us on"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -692,6 +577,36 @@ margin_right = 184.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 0, 30 )
 text = "MODS"
+
+[node name="Discord" type="TextureButton" parent="Title"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 888.0
+margin_top = 664.0
+margin_right = 944.0
+margin_bottom = 720.0
+texture_normal = ExtResource( 11 )
+expand = true
+stretch_mode = 5
+
+[node name="GitHub" type="TextureButton" parent="Title"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 968.0
+margin_top = 664.0
+margin_right = 1024.0
+margin_bottom = 712.0
+texture_normal = ExtResource( 6 )
+expand = true
+stretch_mode = 5
+
+[node name="Godot" type="TextureButton" parent="Title"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 1048.0
+margin_top = 664.0
+margin_right = 1096.0
+margin_bottom = 712.0
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
 
 [node name="Languages" parent="Title" instance=ExtResource( 9 )]
 modulate = Color( 1, 1, 1, 0 )
@@ -770,13 +685,19 @@ current = true
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
 [connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
-[connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
-[connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
-[connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="mouse_entered" from="Title/Discord" to="." method="_on_Discord_mouse_entered"]
+[connection signal="mouse_exited" from="Title/Discord" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/Discord" to="." method="_on_Discord_pressed"]
+[connection signal="mouse_entered" from="Title/GitHub" to="." method="_on_GitHub_mouse_entered"]
+[connection signal="mouse_exited" from="Title/GitHub" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="mouse_entered" from="Title/Godot" to="." method="_on_Godot_mouse_entered"]
+[connection signal="mouse_exited" from="Title/Godot" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]

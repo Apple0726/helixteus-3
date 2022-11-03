@@ -697,21 +697,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		"ME", "PP", "SP", "RL":
 			var prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d:
-				tile.bldg.collect_date = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num = floor((c_t - c_d) / prod)
-				if tile.bldg.name == "ME":
-					add_minerals(rsrc_num)
-				elif tile.bldg.name in ["PP", "SP"]:
-					add_energy(rsrc_num)
-				elif tile.bldg.name == "RL":
-					game.SP += rsrc_num
-				tile.bldg.collect_date += prod * rsrc_num
 			if rsrc:
-				current_bar.value = min((c_t - c_d) / prod, 1)
 				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"PC", "NC":
 			var prod = 1000 / (tile.bldg.path_1_value / p_i.pressure)
@@ -946,30 +932,20 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			if game.c_v == "planet":
 				update_boxes = true
 			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-			if tile.has("auto_collect"):
-				if tile.bldg.name == "ME":
-					var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += prod * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.minerals += prod * tile.auto_collect / 100.0 * mult
-				elif tile.bldg.name == "PP":
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-				elif tile.bldg.name == "SP":
-					var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-					game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.energy += prod * tile.auto_collect / 100.0 * mult
 			if tile.bldg.name == "MS":
-				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+				game.mineral_capacity += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "B":
+				game.energy_capacity += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "NSF":
 				game.neutron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "ESF":
 				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
-				if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value * mult}
-				else:
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult
 				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
+			elif tile.bldg.name == "ME":
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult
+			elif tile.bldg.name == "PP":
+				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult
 			elif tile.bldg.name == "PC":
 				game.autocollect.particles.proton += tile.bldg.path_1_value * mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
@@ -1225,7 +1201,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
 		var IR_mult:float = dict.bldg.IR_mult
-		if Data.path_2[bldg].is_value_integer:
+		if Data.path_2[bldg].has("is_value_integer"):
 			return round(dict.bldg.path_2_value * IR_mult * n)
 		else:
 			if bldg == "SPR":
@@ -1255,7 +1231,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
 		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
-		"MS", "NSF", "ESF":
+		"MS", "NSF", "ESF", "B":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]

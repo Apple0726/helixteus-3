@@ -223,7 +223,7 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	curr_value *= IR_mult
 	if first_tile_bldg_info.has("time_based"):
 		curr_value *= game.u_i.time_speed
-	if first_tile_bldg_info.is_value_integer:
+	if first_tile_bldg_info.has("is_value_integer"):
 		curr_value = round(curr_value)
 	if next:
 		if first_tile_bldg_info.has("pw"):
@@ -351,9 +351,7 @@ func _on_Upgrade_pressed():
 						prod_ratio = 1.0
 					var coll_date = tile.bldg.collect_date
 					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
-				elif tile.bldg.name == "MS":
-					tile.bldg.mineral_cap_upgrade = new_base_value - tile.bldg.path_1_value
-				elif tile.bldg.name in ["NSF", "ESF"]:
+				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):
 					for p in tile.auto_GH.produce:
