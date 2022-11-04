@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/ItemForSale.gd" type="Script" id=2]
+[ext_resource path="res://Graphics/Icons/Notification.png" type="Texture" id=3]
 
 [sub_resource type="StyleBoxFlat" id=11]
 content_margin_top = 5.0
@@ -103,9 +104,6 @@ margin_bottom = 176.0
 mouse_filter = 2
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LockItemInfo" type="Button" parent="."]
 anchor_right = 1.0
@@ -118,9 +116,6 @@ custom_styles/focus = SubResource( 14 )
 custom_styles/disabled = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
 toggle_mode = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SmallButton" type="Button" parent="."]
 anchor_top = 1.0
@@ -150,6 +145,19 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Flashing = SubResource( 17 )
 anims/RESET = SubResource( 18 )
+
+[node name="New" type="TextureRect" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -40.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
 
 [connection signal="mouse_entered" from="." to="." method="_on_ItemForSale_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_ItemForSale_mouse_exited"]

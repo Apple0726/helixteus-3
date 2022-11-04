@@ -91,9 +91,7 @@ func _process(delta):
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
-			ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
-		if game.c_v == "supercluster":
-			ship.rect_position = to_global(game.cluster_data[sh_c.c].pos) - Vector2(32, 22)
+			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.sc].pos) - Vector2(32, 22)
 		elif game.c_v == "cluster" and game.c_c_g == sh_c_g.c:
 			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
@@ -228,9 +226,7 @@ func refresh():
 	var sh_c:Dictionary = game.ships_c_coords
 	if game.c_v == "universe":
 		show_ship = true
-		ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
-	if game.c_v == "supercluster":
-		show_ship = game.ships_c_coords.sc == game.c_sc
+		ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
 		show_ship = game.ships_c_g_coords.c == game.c_c_g
 	elif game.c_v == "galaxy":
@@ -312,12 +308,8 @@ func save_zooms(obj_str:String):
 			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 		"cluster":
-			game.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
-			game.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
-		"supercluster":
-			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position# / self.scale.x
-			game.supercluster_data[game.c_sc]["view"]["zoom"] = self.scale.x
-			#game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
+			game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
+			game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"universe":
 			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x

@@ -142,14 +142,15 @@ func update_XP():
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.u_i.lv == 50:
 			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
+			game.new_bldgs.PCC = true
 		if game.u_i.lv == 60:
 			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.u_i.lv]
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
 func update_minerals():
-	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
-		return
+#	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
+#		return
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
@@ -231,7 +232,7 @@ func refresh():
 	craft.visible = game.show.has("materials")
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.has("minerals")
-	$Bottom/Panel.visible = game.show.has("minerals") and game.c_v != "science_tree"
+	#$Bottom/Panel.visible = game.show.has("minerals") and game.c_v != "science_tree"
 	update_XP()
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		$Buttons/Ships.shortcut.shortcut.action = "Z"
@@ -337,7 +338,7 @@ func refresh():
 	$Bookmarks.visible = game.show.has("bookmarks")
 	system_b_btn.visible = game.show.has("s_bk_button")
 	galaxy_b_btn.visible = game.show.has("g_bk_button")
-	cluster_b_btn.visible = game.supercluster_data[0].has("discovered")
+	cluster_b_btn.visible = game.universe_data[0].has("discovered")
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -351,9 +352,9 @@ func refresh():
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.galaxy_data[game.c_g].name
 	elif game.c_v == "cluster":
-		$Bookmarks/Bookmarked.pressed = game.cluster_data[game.c_c].has("bookmarked")
+		$Bookmarks/Bookmarked.pressed = game.u_i.cluster_data[game.c_c].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Top/Name/Name.text = game.cluster_data[game.c_c].name
+		$Top/Name/Name.text = game.u_i.cluster_data[game.c_c].name
 	else:
 		$Bookmarks/Bookmarked.visible = false
 		if game.c_v == "supercluster":
@@ -715,7 +716,7 @@ func _on_Bookmarked_pressed():
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
 			add_g_b(bookmark)
 	elif game.c_v == "cluster":
-		var c_i:Dictionary = game.cluster_data[game.c_c]
+		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]
 		if c_i.has("bookmarked"):
 			game.bookmarks.cluster.erase(str(game.c_c_g))
 			cluster_grid_btns.remove_child(cluster_grid_btns.get_node(str(game.c_c_g)))
@@ -779,11 +780,9 @@ func _on_Name_text_entered(new_text):
 		if game.bookmarks.galaxy.has(str(game.c_g_g)):
 			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":
-		game.cluster_data[game.c_c].name = new_text
+		game.u_i.cluster_data[game.c_c].name = new_text
 		if game.bookmarks.cluster.has(str(game.c_c_g)):
 			game.bookmarks.cluster[str(game.c_c_g)].name = new_text
-	elif game.c_v == "supercluster":
-		game.supercluster_data[game.c_sc].name = new_text
 	elif game.c_v == "universe":
 		game.u_i.name = new_text
 

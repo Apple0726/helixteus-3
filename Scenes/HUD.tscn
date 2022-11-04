@@ -362,9 +362,6 @@ margin_top = 108.0
 margin_right = -2.0
 margin_bottom = 226.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
 margin_left = 128.0
@@ -665,15 +662,14 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="Bottom"]
-margin_left = 1170.0
+visible = false
+margin_left = 1224.0
 margin_top = 654.0
 margin_right = 1276.0
 margin_bottom = 702.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CollectAll" type="TextureButton" parent="Bottom/Panel"]
+visible = false
 margin_left = 62.0
 margin_top = 2.0
 margin_right = 102.0
@@ -688,6 +684,7 @@ __meta__ = {
 }
 
 [node name="CollectProgress" type="TextureProgress" parent="Bottom/Panel"]
+visible = false
 margin_left = 62.0
 margin_top = 4.0
 margin_right = 102.0
@@ -702,18 +699,19 @@ __meta__ = {
 }
 
 [node name="ConvertMinerals" type="TextureButton" parent="Bottom/Panel"]
-margin_left = 6.0
-margin_top = 2.0
-margin_right = 46.0
-margin_bottom = 46.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -22.0
+margin_right = 20.0
+margin_bottom = 22.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 28 )
 texture_normal = ExtResource( 15 )
 expand = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="DimensionBtn" type="TextureButton" parent="Bottom"]
 anchor_top = 1.0

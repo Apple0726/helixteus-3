@@ -7,8 +7,17 @@ func _ready():
 	$AnimationPlayer.play("MoveButtons")
 	refresh()
 
+func is_one_element_true(dict:Dictionary):
+	var res = false
+	for key in dict.keys():
+		if dict[key]:
+			res = true
+			break
+	return res
+
 func refresh():
 	$VBoxContainer/Construct.visible = game.show.has("construct_button")
+	$VBoxContainer/Construct/New.visible = not game.new_bldgs.empty() and is_one_element_true(game.new_bldgs)
 	$VBoxContainer/PlaceSoil.visible = game.show.has("plant_button")
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.has("mining")

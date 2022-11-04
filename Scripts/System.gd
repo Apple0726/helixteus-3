@@ -263,11 +263,11 @@ func on_entity_icon_out():
 func refresh_stars():
 	for star in get_tree().get_nodes_in_group("stars"):
 		star.remove_from_group("stars")
-		remove_child(star)
+		star.queue_free()
 	for time_bar in star_time_bars:
-		remove_child(time_bar.node)
+		time_bar.node.queue_free()
 	for rsrc in star_rsrcs:
-		remove_child(rsrc.node)
+		rsrc.node.queue_free()
 	star_time_bars.clear()
 	star_rsrcs.clear()
 	#var combined_star_size = 0
@@ -937,50 +937,32 @@ func _process(_delta):
 		if star.bldg.is_constructing:
 			continue
 		var value = Helper.update_MS_rsrc(star)
-		var rsrc = rsrc_obj.node
-		var current_bar = rsrc.get_node("Control/CurrentBar")
-		current_bar.value = value
+		var rsrc:ResourceStored = rsrc_obj.node
+		rsrc.set_current_bar_value(value)
 		var prod:float
 		if star.MS == "M_DS":
 			prod = 1000.0 / Helper.get_DS_output(star)
 		elif star.MS == "M_MB":
 			prod = 1000.0 / Helper.get_MB_output(star)
-		rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")]
+		rsrc.set_text("%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
 		if planet.bldg.is_constructing:
 			continue
-		var rsrc = rsrc_obj.node
-		var current_bar = rsrc.get_node("Control/CurrentBar")
-		var capacity_bar = rsrc.get_node("Control/CapacityBar")
+		var rsrc:ResourceStored = rsrc_obj.node
 		if planet.has("tile_num"):
-			if planet.bldg.name in ["MM", "PP", "ME", "AE"]:
-				var value:float = Helper.update_MS_rsrc(planet)
-				var cap = round(planet.bldg.path_2_value * planet.bldg.IR_mult)
-				if planet.bldg.name != "MM":
-					cap = round(cap * planet.tile_num)
-				if planet.bldg.stored >= cap:
-					current_bar.value = 0
-					capacity_bar.value = 1
-				else:
-					current_bar.value = value
-					capacity_bar.value = min(planet.bldg.stored / float(cap), 1)
-				if planet.bldg.name == "MM":
-					rsrc.get_node("Control/Label").text = "%s / %s m" % [planet.depth + planet.bldg.stored, planet.depth + cap]
-				elif planet.bldg.name == "AE":
-					rsrc.get_node("Control/Label").text = "%s mol" % [Helper.format_num(planet.bldg.stored)]
-				else:
-					rsrc.get_node("Control/Label").text = Helper.format_num(planet.bldg.stored)
-			elif planet.bldg.name == "RL":
+			if planet.bldg.name in ["PP", "ME", "RL"]:
 				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.bldg.IR_mult * planet.tile_num * game.u_i.time_speed)
-				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(prod), tr("S_SECOND")]
+				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+			elif planet.bldg.name == "MM":
+				rsrc.set_text("%s m" % planet.depth)
+			elif planet.bldg.name == "AE":
+				rsrc.set_text("%s mol" % Helper.format_num(planet.bldg.stored))
 		elif planet.has("MS"):
-			current_bar.value = 0
 			var prod:float
 			if planet.MS == "M_MME":
 				prod = round(Helper.get_MME_output(planet))
-			rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(prod), tr("S_SECOND")]
-			
+			rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 
 func _on_System_tree_exited():
 	queue_free()
@@ -989,12 +971,12 @@ func finish_construct():
 	pass
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1):
-	var rsrc = game.rsrc_stocked_scene.instance()
+	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	add_child(rsrc)
-	rsrc.get_node("TextureRect").texture = icon
+	rsrc.set_icon_texture(icon)
 	rsrc.rect_scale *= sc
 	rsrc.rect_position = v + Vector2(0, 70 * sc)
-	rsrc.get_node("Control").modulate = mod
+	rsrc.set_modulate(mod)
 	if is_star:
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:

@@ -16,6 +16,9 @@ func _on_ItemForSale_mouse_entered():
 	if not game[parent].locked:
 		if not parent in ["construct_panel", "megastructures_panel"]:
 			game[parent].amount_node.value = 1
+		if parent == "construct_panel":
+			game.new_bldgs[item_name] = false
+			$New.visible = false
 		game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
 
 func _on_SmallButton_pressed():

@@ -39,17 +39,17 @@ __meta__ = {
 [node name="GridContainer" type="GridContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 8.0
 margin_top = 96.0
+margin_right = -8.0
+margin_bottom = -252.0
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
 columns = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel1" parent="GridContainer" instance=ExtResource( 5 )]
-margin_right = 513.0
-margin_bottom = 498.0
+margin_right = 505.0
+margin_bottom = 246.0
 victory_screen = false
 
 [node name="Panel2" parent="GridContainer" instance=ExtResource( 5 )]
@@ -95,8 +95,10 @@ margin_bottom = 0.0
 [node name="Panel" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 8.0
 margin_top = 40.0
-margin_bottom = -632.0
+margin_right = -8.0
+margin_bottom = -504.0
 rect_min_size = Vector2( 0, 48 )
 mouse_filter = 1
 __meta__ = {

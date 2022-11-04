@@ -56,21 +56,13 @@ func refresh():
 		depart_pos = game.galaxy_data[depart_id].pos
 		dest_pos = game.galaxy_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-	elif game.c_sc == coords.sc:
+	else:
 		travel_view = "supercluster"
-		distance = 818181
+		distance = 8181818
 		depart_id = coords.c
 		dest_id = game.galaxy_data[game.system_data[game.planet_data[dest_p_id].parent].parent].parent
-		depart_pos = game.cluster_data[depart_id].pos
-		dest_pos = game.cluster_data[dest_id].pos
-		distance *= depart_pos.distance_to(dest_pos)
-	else:
-		travel_view = "universe"
-		distance = 96969696
-		depart_id = coords.sc
-		dest_id = game.cluster_data[game.galaxy_data[game.system_data[game.planet_data[dest_p_id].parent].parent].parent].parent
-		depart_pos = game.supercluster_data[depart_id].pos
-		dest_pos = game.supercluster_data[dest_id].pos
+		depart_pos = game.u_i.cluster_data[depart_id].pos
+		dest_pos = game.u_i.cluster_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
 	if TEST:
 		distance = 1
@@ -183,7 +175,7 @@ func get_travel_cost_multiplier(lv:int):
 		return 0.75
 
 func calc_costs():
-	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 2)
+	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 1)
 	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)

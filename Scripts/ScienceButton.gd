@@ -105,6 +105,7 @@ func _input(event):
 				game.science_unlocked[name] = true
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				if name == "RC":
+					game.new_bldgs.RCC = true
 					game.show.vehicles_button = true
 				elif name == "SA":
 					game.craft_panel._on_btn_pressed("Agriculture")
@@ -112,12 +113,24 @@ func _input(event):
 					game.show.atoms = true
 				elif name == "SAP":
 					game.show.particles = true
+					game.new_bldgs.SPR = true
+					game.new_bldgs.PC = true
+					game.new_bldgs.NC = true
+					game.new_bldgs.EC = true
+					game.new_bldgs.NSF = true
+					game.new_bldgs.ESF = true
 				elif name == "CI":
 					game.stack_size = 32
 				elif name == "CI2":
 					game.stack_size = 64
 				elif name == "CI3":
 					game.stack_size = 128
+				elif name == "AM":
+					game.new_bldgs.MM = true
+				elif name == "FG":
+					game.new_bldgs.SY = true
+				elif name == "EGH":
+					game.new_bldgs.GH = true
 				game.HUD.refresh()
 				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
 				main_tree.refresh()

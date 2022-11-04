@@ -46,6 +46,7 @@ func _on_btn_pressed(btn_str:String):
 		item.item_dir = "Buildings"
 		var txt:String = ""
 		var time_speed:float = game.u_i.time_speed if Data.path_1.has(bldg) and Data.path_1[bldg].has("time_based") else 1.0
+		item.get_node("New").visible = game.new_bldgs.has(bldg) and game.new_bldgs[bldg]
 		if bldg == "SP":
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
 		elif bldg == "AE":
@@ -76,32 +77,34 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.item_name in ["PP", "B"]:
-			bldg.visible = game.tutorial and game.stats_univ.bldgs_built >= 5 or not game.tutorial and game.stats_univ.bldgs_built >= 1
-		elif bldg.item_name == "MS":
-			bldg.visible = game.stats_univ.bldgs_built >= 5
-		elif bldg.item_name == "RL":
-			bldg.visible = game.stats_univ.bldgs_built >= 18
-		elif bldg.item_name == "CBD":
-			bldg.visible = game.stats_univ.bldgs_built >= 18
-		elif bldg.item_name == "GF":
-			bldg.visible = game.show.has("sand")
-		elif bldg.item_name == "SE":
-			bldg.visible = game.show.has("coal")
-		elif bldg.item_name == "MM":
-			bldg.visible = game.science_unlocked.has("AM")
-		elif bldg.item_name == "SP":
-			bldg.visible = game.stats_global.planets_conquered > 1
-		elif bldg.item_name in ["AE", "AMN"]:
-			bldg.visible = game.science_unlocked.has("ATM")
-		elif bldg.item_name in ["SPR", "PC", "NC", "EC", "NSF", "ESF"]:
-			bldg.visible = game.science_unlocked.has("SAP")
-		elif bldg.item_name == "SY":
-			bldg.visible = game.science_unlocked.has("FG")
-		elif bldg.item_name == "PCC":
-			bldg.visible = game.universe_data[game.c_u].lv >= 50
-		elif bldg.item_name == "GH":
-			bldg.visible = game.science_unlocked.has("EGH")
+		if bldg.item_name == "ME":
+			bldg.visible = true
+		else:
+			bldg.visible = game.new_bldgs.has(bldg.item_name)
+#		if bldg.item_name in ["PP", "B", "MS"]:
+#			bldg.visible = game.stats_univ.bldgs_built >= 5
+#		elif bldg.item_name == "RL":
+#			bldg.visible = game.stats_univ.bldgs_built >= 18
+#		elif bldg.item_name == "CBD":
+#			bldg.visible = game.stats_univ.bldgs_built >= 18
+#		elif bldg.item_name == "GF":
+#			bldg.visible = game.show.has("sand")
+#		elif bldg.item_name == "SE":
+#			bldg.visible = game.show.has("coal")
+#		elif bldg.item_name == "MM":
+#			bldg.visible = game.science_unlocked.has("AM")
+#		elif bldg.item_name == "SP":
+#			bldg.visible = game.stats_global.planets_conquered > 1
+#		elif bldg.item_name in ["AE", "AMN"]:
+#			bldg.visible = game.science_unlocked.has("ATM")
+#		elif bldg.item_name in ["SPR", "PC", "NC", "EC", "NSF", "ESF"]:
+#			bldg.visible = game.science_unlocked.has("SAP")
+#		elif bldg.item_name == "SY":
+#			bldg.visible = game.science_unlocked.has("FG")
+#		elif bldg.item_name == "PCC":
+#			bldg.visible = game.universe_data[game.c_u].lv >= 50
+#		elif bldg.item_name == "GH":
+#			bldg.visible = game.science_unlocked.has("EGH")
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, desc, costs, _type, _dir)

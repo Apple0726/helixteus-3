@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -325,7 +325,7 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("RsrcMinedBtn:modulate")
+tracks/2/path = NodePath("ResourcesMined:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -383,7 +383,7 @@ tracks/2/keys = {
 [sub_resource type="Animation" id=24]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("RsrcMinedBtn:modulate")
+tracks/0/path = NodePath("ResourcesMined:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -407,12 +407,28 @@ border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 4 )
 
+[sub_resource type="StyleBoxFlat" id=25]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+border_width_left = 4
+border_width_top = 4
+border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+border_blend = true
+expand_margin_left = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+shadow_size = 2
+shadow_offset = Vector2( 1, 1 )
+
 [node name="Mining" type="Control"]
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_edit_vertical_guides_": [ 96.0 ]
+"_edit_vertical_guides_": [ 96.0, 892.0 ]
 }
 
 [node name="SurfaceBG" type="Sprite" parent="."]
@@ -483,10 +499,7 @@ frames = SubResource( 10 )
 [node name="SquareBar" parent="Tile" instance=ExtResource( 10 )]
 mouse_filter = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 3
-
-[node name="Circle" type="Sprite" parent="CanvasLayer"]
+[node name="Circle" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.509804 )
 position = Vector2( 360, 360 )
 scale = Vector2( 0.48, 0.48 )
@@ -499,9 +512,6 @@ margin_top = 512.0
 margin_right = 616.0
 margin_bottom = 552.0
 custom_constants/separation = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SpdMult" type="Label" parent="Mults"]
 margin_right = 344.0
@@ -600,8 +610,7 @@ __meta__ = {
 }
 
 [node name="LayerInfo" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-position = Vector2( -64.1282, 0 )
+position = Vector2( 15, 0 )
 
 [node name="Layer" parent="LayerInfo" instance=ExtResource( 18 )]
 margin_left = -16.0
@@ -796,34 +805,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RsrcMinedBtn" type="Button" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 912.0
-margin_top = 48.0
-margin_right = 1217.0
-margin_bottom = 82.0
-text = "RSRC_MINED_THIS_SESSION"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ResourcesMined" type="PanelContainer" parent="."]
+[node name="ResourcesMined" type="Panel" parent="."]
 visible = false
-margin_left = 832.0
-margin_top = 88.0
-margin_right = 1216.0
-margin_bottom = 160.0
-grow_horizontal = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 724.0
+margin_top = 52.0
+margin_right = 1056.0
+margin_bottom = 108.0
+custom_styles/panel = SubResource( 25 )
 
 [node name="Grid" type="GridContainer" parent="ResourcesMined"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 374.0
-margin_bottom = 62.0
+margin_top = 40.0
+margin_right = 60.0
+margin_bottom = 96.0
 columns = 6
+
+[node name="Label" type="Label" parent="ResourcesMined"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -180.0
+margin_top = 8.0
+margin_right = 180.0
+margin_bottom = 32.0
+text = "RSRC_MINED_THIS_SESSION"
+align = 1
 
 [connection signal="button_down" from="Tile/Button" to="." method="_on_Button_button_down"]
 [connection signal="button_up" from="Tile/Button" to="." method="_on_Button_button_up"]
@@ -833,4 +838,4 @@ columns = 6
 [connection signal="mouse_entered" from="AutoReplace" to="." method="_on_CheckBox_mouse_entered"]
 [connection signal="mouse_exited" from="AutoReplace" to="." method="_on_CheckBox_mouse_exited"]
 [connection signal="pressed" from="AutoReplace" to="." method="_on_AutoReplace_pressed"]
-[connection signal="pressed" from="RsrcMinedBtn" to="." method="_on_RsrcMinedBtn_pressed"]
+[connection signal="resized" from="ResourcesMined/Grid" to="." method="_on_Grid_resized"]

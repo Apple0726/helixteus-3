@@ -33,13 +33,19 @@ _global_script_classes=[ {
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://Scripts/Projectile.gd"
+}, {
+"base": "Control",
+"class": "ResourceStored",
+"language": "GDScript",
+"path": "res://Scripts/ResourceStored.gd"
 } ]
 _global_script_class_icons={
 "AuroraText": "",
 "Cave": "",
 "CaveBoss": "",
 "NPC": "",
-"Projectile": ""
+"Projectile": "",
+"ResourceStored": ""
 }
 
 [application]

@@ -97,6 +97,7 @@ border_color = Color( 0.27451, 0.27451, 0.27451, 1 )
 [node name="Languages" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 14 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -107,7 +108,7 @@ color = Color( 0, 0, 0, 0 )
 
 [node name="MouseOut" type="Polygon2D" parent="."]
 color = Color( 1, 1, 1, 0 )
-polygon = PoolVector2Array( 0, 672, 0, 720, 904, 720, 904, 672 )
+polygon = PoolVector2Array( 0, 656, 0, 720, 904, 720, 904, 656 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Control")
@@ -122,6 +123,7 @@ polygon = PoolVector2Array( 0, 676, 0, 728, 52, 728, 52, 676 )
 margin_top = 675.0
 margin_right = 912.0
 margin_bottom = 770.0
+mouse_filter = 2
 
 [node name="Panel" type="Panel" parent="Control"]
 margin_left = 7.0
@@ -297,6 +299,7 @@ stretch_mode = 5
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_pressed" binds= [ "hu" ]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "ru" ]]
+[connection signal="mouse_exited" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_exited"]

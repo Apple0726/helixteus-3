@@ -42,7 +42,6 @@ func _input(event):
 
 func change_tab(btn_str:String):
 	for item in $VBox/HBox/Items/Items.get_children():
-		$VBox/HBox/Items/Items.remove_child(item)
 		item.free()
 	item_name = ""
 	_on_BuyAmount_value_changed(1)
@@ -55,7 +54,6 @@ func change_tab(btn_str:String):
 func remove_costs():
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	for child in vbox.get_children():
-		vbox.remove_child(child)
 		child.free()
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
@@ -78,8 +76,6 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
 	if not costs.empty():
 		Helper.put_rsrc(vbox, 36, item_total_costs, true, true)
-	#desc_txt.rect_min_size.y = desc_txt.get_content_height()
-	#desc_txt.rect_size.y = desc_txt.get_content_height()
 
 func add_items(not_enough_inv:String, success:String):
 	var items_left = game.add_items(item_name, amount_node.value)

@@ -369,6 +369,13 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		game.stats_univ.bldgs_built += 1
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
+		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has("MS"):
+			game.new_bldgs.PP = true
+			game.new_bldgs.B = true
+			game.new_bldgs.MS = true
+		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has("RL"):
+			game.new_bldgs.RL = true
+			game.new_bldgs.CBD = true
 		if not tile:
 			tile = {}
 		if game.tutorial:
@@ -380,6 +387,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		tile.bldg.name = _bldg_to_construct
 		if not game.show.has("minerals") and _bldg_to_construct == "ME":
 			game.show.minerals = true
+			game.show.shop = true
 		tile.bldg.is_constructing = true
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs2.time * 1000
@@ -387,7 +395,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
-		if _bldg_to_construct in ["MM", "SC", "GF", "SE", "GH", "AE", "SP", "CBD", "AMN", "SPR"]:
+		if _bldg_to_construct in ["SC", "GF", "SE", "GH", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
 		if _bldg_to_construct in ["MM", "SC", "GF", "SE", "AE"]:
@@ -516,18 +524,6 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "EC":
 			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
-		if tile.has("auto_collect"):
-			if tile.bldg.name == "PP":
-				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
-				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * mult_diff * tile.auto_collect / 100.0
-			elif tile.bldg.name == "SP":
-				var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-				game.autocollect.rsrc.energy += prod * mult_diff  * tile.auto_collect / 100.0
-				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += prod * mult_diff * tile.auto_collect / 100.0
-			elif tile.bldg.name == "ME":
-				var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-				game.autocollect.rsrc.minerals += prod * mult_diff * tile.auto_collect / 100.0
-				game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += prod * mult_diff * tile.auto_collect / 100.0
 		var coll_date = tile.bldg.collect_date
 		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
@@ -536,63 +532,57 @@ func click_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
 		return
 	var bldg:String = tile.bldg.name
-	if bldg in ["ME", "PP", "MM", "SP", "AE"]:
-		Helper.update_rsrc(p_i, tile)
-		Helper.collect_rsrc(items_collected, p_i, tile, tile_id, false)
-	else:
-		if not tile.bldg.is_constructing:
-			game.c_t = tile_id
-			match bldg:
-				"GH":
-					if game.science_unlocked.has("GHA"):
-						game.greenhouse_panel.c_v = "planet"
-						if tiles_selected.empty():
-							game.greenhouse_panel.tiles_selected = [tile_id]
-							game.greenhouse_panel.tile_num = 1
-						else:
-							game.greenhouse_panel.tiles_selected = tiles_selected.duplicate(true)
-							game.greenhouse_panel.tile_num = len(tiles_selected)
-						game.greenhouse_panel.p_i = p_i
-						game.toggle_panel(game.greenhouse_panel)
-				"RCC":
-					game.toggle_panel(game.RC_panel)
-				"SY":
-					game.toggle_panel(game.shipyard_panel)
-				"PCC":
-					game.PC_panel.probe_tier = 0
-					game.toggle_panel(game.PC_panel)
-				"SC":
-					game.SC_panel.c_t = tile_id
-					game.toggle_panel(game.SC_panel)
-					game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
-				"GF":
-					game.toggle_panel(game.production_panel)
-					game.production_panel.refresh2(bldg, "sand", "glass", "mats", "mats")
-				"SE":
-					game.toggle_panel(game.production_panel)
-					game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
-				"AMN":
-					game.AMN_panel.tf = false
-					game.toggle_panel(game.AMN_panel)
-				"SPR":
-					game.SPR_panel.tf = false
-					game.toggle_panel(game.SPR_panel)
-					if tile.bldg.has("reaction"):
-						game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
-			game.hide_tooltip()
+	if not tile.bldg.is_constructing:
+		game.c_t = tile_id
+		match bldg:
+			"GH":
+				if game.science_unlocked.has("GHA"):
+					game.greenhouse_panel.c_v = "planet"
+					if tiles_selected.empty():
+						game.greenhouse_panel.tiles_selected = [tile_id]
+						game.greenhouse_panel.tile_num = 1
+					else:
+						game.greenhouse_panel.tiles_selected = tiles_selected.duplicate(true)
+						game.greenhouse_panel.tile_num = len(tiles_selected)
+					game.greenhouse_panel.p_i = p_i
+					game.toggle_panel(game.greenhouse_panel)
+			"RCC":
+				game.toggle_panel(game.RC_panel)
+			"SY":
+				game.toggle_panel(game.shipyard_panel)
+			"PCC":
+				game.PC_panel.probe_tier = 0
+				game.toggle_panel(game.PC_panel)
+			"SC":
+				game.SC_panel.c_t = tile_id
+				game.toggle_panel(game.SC_panel)
+				game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
+			"GF":
+				game.toggle_panel(game.production_panel)
+				game.production_panel.refresh2(bldg, "sand", "glass", "mats", "mats")
+			"SE":
+				game.toggle_panel(game.production_panel)
+				game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
+			"AMN":
+				game.AMN_panel.tf = false
+				game.toggle_panel(game.AMN_panel)
+			"SPR":
+				game.SPR_panel.tf = false
+				game.toggle_panel(game.SPR_panel)
+				if tile.bldg.has("reaction"):
+					game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
+		game.hide_tooltip()
 
 func destroy_bldg(id2:int, mass:bool = false):
 	var tile = game.tile_data[id2]
 	var bldg:String = tile.bldg.name
 	items_collected.clear()
 	Helper.update_rsrc(p_i, tile)
-	Helper.collect_rsrc(items_collected, p_i, tile, id2)
 	bldgs[id2].queue_free()
 	hboxes[id2].queue_free()
 	if is_instance_valid(rsrcs[id2]):
 		rsrcs[id2].queue_free()
 	var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-	var ac:float = tile.auto_collect if tile.has("auto_collect") else 0.0
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
@@ -847,17 +837,17 @@ func _unhandled_input(event):
 					continue
 				if tile.has("bldg"):
 					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
-						if not Input.is_action_pressed("alt") or tile2.has("auto_collect"):
+						if not Input.is_action_pressed("alt"):
 							select = true
 				elif tile.has("plant") and tile.plant.has("name"):
 					if tile2.has("plant") and tile2.plant.has("name") and tile2.plant.name == tile.plant.name:
 						select = true
 				if select:
 					if tile.has("bldg"):
-						if tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "SC", "SE", "GF"]:
+						if tile.bldg.name in ["SC", "SE", "GF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
-						elif tile.bldg.name in ["RL", "MS", "PC", "NC", "EC", "NSF", "ESF"]:
+						elif tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "RL", "MS", "PC", "NC", "EC", "NSF", "ESF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 						else:
 							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
@@ -955,7 +945,6 @@ func _unhandled_input(event):
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
 				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
-				remove_child(shadows[i])
 				shadows[i].queue_free()
 		shadow_num = 0
 		game.HUD.refresh()
@@ -1371,12 +1360,12 @@ func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "PC", "NC", "EC", "MM", "SP", "AE"]
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
-	var rsrc = game.rsrc_stocked_scene.instance()
+	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
-	rsrc.get_node("TextureRect").texture = icon
+	rsrc.set_icon_texture(icon)
 	rsrc.rect_position = v + Vector2(0, 70)
-	rsrc.get_node("Control").modulate = mod
+	rsrc.set_modulate(mod)
 	rsrcs[id2] = rsrc
 
 func on_timeout():
@@ -1442,18 +1431,6 @@ func on_timeout():
 					game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "EC":
 					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * (mult - 1)
-				if tile.has("auto_collect"):
-					if tile.bldg.name == "PP":
-						game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
-						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy -= tile.bldg.path_1_value * (mult - 1) * tile.auto_collect / 100.0
-					if tile.bldg.name == "SP":
-						var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-						game.autocollect.rsrc.energy -= prod * (mult - 1) * tile.auto_collect / 100.0
-						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy -= prod * (mult - 1) * tile.auto_collect / 100.0
-					elif tile.bldg.name == "ME":
-						var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-						game.autocollect.rsrc.minerals -= prod * (mult - 1) * tile.auto_collect / 100.0
-						game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals -= prod * (mult - 1) * tile.auto_collect / 100.0
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
@@ -1492,7 +1469,7 @@ func on_timeout():
 func construct(st:String, costs:Dictionary):
 	finish_construct()
 	game.help_str = "mass_build"
-	if not game.help.has("mass_build") and game.stats_univ.bldgs_built >= 30 and (not game.tutorial or game.tutorial.tut_num >= 26):
+	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
@@ -1517,13 +1494,11 @@ func put_shadow(spr:Sprite, pos:Vector2 = Vector2.ZERO):
 func finish_construct():
 	if is_instance_valid(shadow):
 		bldg_to_construct = ""
-		remove_child(shadow)
 		shadow.free()
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
-				remove_child(shadows[i])
 				shadows[i].queue_free()
 		shadow_num = 0
 	game.get_node("UI/Panel").visible = false

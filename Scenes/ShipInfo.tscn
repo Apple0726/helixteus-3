@@ -57,9 +57,9 @@ __meta__ = {
 }
 
 [node name="Bullet" type="Control" parent="."]
-visible = false
+margin_left = 12.0
 margin_top = -12.0
-margin_right = 40.0
+margin_right = 52.0
 margin_bottom = 28.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -141,9 +141,9 @@ __meta__ = {
 }
 
 [node name="Laser" type="Control" parent="."]
-visible = false
+margin_left = 12.0
 margin_top = 28.0
-margin_right = 40.0
+margin_right = 52.0
 margin_bottom = 68.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -228,9 +228,9 @@ __meta__ = {
 }
 
 [node name="Bomb" type="Control" parent="."]
-visible = false
+margin_left = 12.0
 margin_top = 60.0
-margin_right = 40.0
+margin_right = 52.0
 margin_bottom = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -312,8 +312,9 @@ __meta__ = {
 }
 
 [node name="Light" type="Control" parent="."]
+margin_left = 12.0
 margin_top = 96.0
-margin_right = 40.0
+margin_right = 52.0
 margin_bottom = 136.0
 __meta__ = {
 "_edit_use_anchors_": false

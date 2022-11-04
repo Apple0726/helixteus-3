@@ -88,10 +88,10 @@ func refresh():
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
 			$NoProbes.visible = true
-	elif game.c_v == "supercluster":
+	elif game.c_v == "universe":
 		undiscovered_obj_num = 0
-		n = len(game.cluster_data)
-		for cluster in game.cluster_data:
+		n = len(game.u_i.cluster_data)
+		for cluster in game.u_i.cluster_data:
 			if not cluster.visible:
 				undiscovered_obj_num += 1
 		for probe in game.probe_data:
@@ -101,7 +101,7 @@ func refresh():
 					exploring_probe_num += 1
 		dist_exp = n - undiscovered_obj_num + exploring_probe_num
 		dist_mult = pow(1.01, dist_exp)
-		sorted_objs = game.cluster_data.duplicate(true)
+		sorted_objs = game.u_i.cluster_data.duplicate(true)
 		sorted_objs.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
 		for i in len(sorted_objs):
@@ -127,46 +127,7 @@ func refresh():
 		refresh_energy()
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), min(probe_num - exploring_probe_num, undiscovered_obj_num - exploring_probe_num)]
-	elif game.c_v == "universe":
-		undiscovered_obj_num = 0
-		n = len(game.supercluster_data)
-		for sc in game.supercluster_data:
-			if not sc.visible:
-				undiscovered_obj_num += 1
-		for probe in game.probe_data:
-			if probe and probe.tier == 1:
-				probe_num += 1
-				if probe.has("start_date"):
-					exploring_probe_num += 1
-		dist_exp = n - undiscovered_obj_num + exploring_probe_num
-		dist_mult = pow(1.01, dist_exp)
-		sorted_objs = game.supercluster_data.duplicate(true)
-		sorted_objs.sort_custom(self, "dist_sort")
-		var exploring_probe_offset:int = exploring_probe_num
-		for i in len(sorted_objs):
-			if not sorted_objs[i].visible:
-				if exploring_probe_offset == 0:
-					obj_to_discover = sorted_objs[i].id
-					obj_index = i
-					break
-				else:
-					exploring_probe_offset -= 1
-		if probe_num - exploring_probe_num <= 0:
-			$NoProbes.text = tr("NO_MEGA_PROBES")
-			$NoProbes.visible = true
-			$Control.visible = false
-			$Send.visible = false
-			$SendAll.visible = false
-		else:
-			$NoProbes.visible = false
-			$Control.visible = true
-			$Send.visible = true
-			$SendAll.visible = true
-			refresh_energy()
-		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_obj_num]
-		$TP.visible = false
-		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
-
+	
 func refresh_energy(send_all:bool = false):
 	fill_costs(dist_mult)
 	var costs2:Dictionary = costs.duplicate(true)

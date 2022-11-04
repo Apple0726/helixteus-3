@@ -650,89 +650,82 @@ func get_PCNC_production(pressure:float, value:float):
 
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
-	var current_bar
-	var capacity_bar
-	var rsrc_text
-	if is_instance_valid(rsrc):
-		current_bar = rsrc.get_node("Control/CurrentBar")
-		capacity_bar = rsrc.get_node("Control/CapacityBar")
-		rsrc_text = rsrc.get_node("Control/Label")
-	else:
-		if tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
-			return
+	#var current_bar
+	var capacity_bar_value = 0
+	var rsrc_text = ""
+	if not is_instance_valid(rsrc) and tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
+		return
 	update_bldg_constr(tile, p_i)
 	if tile.bldg.is_constructing:
 		return
 	match tile.bldg.name:
 		"MM", "AE":
+			pass
 			#Number of seconds needed per mineral
-			var prod:float
-			if tile.bldg.name == "SP":
-				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 1.0))
-			elif tile.bldg.name == "ME":
-				prod = 1000 / tile.bldg.path_1_value / (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-			else:
-				prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			var cap = round(tile.bldg.path_2_value * tile.bldg.IR_mult)
-			var stored = tile.bldg.stored
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d and not tile.bldg.is_constructing:
-				tile.bldg.collect_date = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num:float = floor((c_t - c_d) / prod)
-				var auto_rsrc:float = 0
-				tile.bldg.stored += rsrc_num - auto_rsrc
-				tile.bldg.collect_date += prod * rsrc_num
-				if tile.bldg.stored >= cap:
-					tile.bldg.stored = cap
-			if rsrc:
-				current_bar.value = min((c_t - c_d) / prod, 1)
-				capacity_bar.value = min(stored / float(cap), 1)
-				if tile.bldg.name == "MM":
-					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
-				else:
-					rsrc_text.text = String(stored)
+#			var prod:float
+#			if tile.bldg.name == "SP":
+#				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 1.0))
+#			elif tile.bldg.name == "ME":
+#				prod = 1000 / tile.bldg.path_1_value / (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+#			else:
+#				prod = 1000 / tile.bldg.path_1_value
+#			prod /= get_prod_mult(tile)
+#			var cap = round(tile.bldg.path_2_value * tile.bldg.IR_mult)
+#			var stored = tile.bldg.stored
+#			var c_d = tile.bldg.collect_date
+#			var c_t = curr_time
+#			if c_t < c_d and not tile.bldg.is_constructing:
+#				tile.bldg.collect_date = curr_time
+#			if c_t - c_d > prod:
+#				var rsrc_num:float = floor((c_t - c_d) / prod)
+#				var auto_rsrc:float = 0
+#				tile.bldg.stored += rsrc_num - auto_rsrc
+#				tile.bldg.collect_date += prod * rsrc_num
+#				if tile.bldg.stored >= cap:
+#					tile.bldg.stored = cap
+#			if rsrc:
+#				current_bar.value = min((c_t - c_d) / prod, 1)
+#				capacity_bar.value = min(stored / float(cap), 1)
+#				if tile.bldg.name == "MM":
+#					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
+#				else:
+#					rsrc_text.text = String(stored)
 		"ME", "PP", "SP", "RL":
 			var prod = 1000 / tile.bldg.path_1_value
 			prod /= get_prod_mult(tile)
-			if rsrc:
-				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"PC", "NC":
 			var prod = 1000 / (tile.bldg.path_1_value / p_i.pressure)
 			prod /= get_prod_mult(tile)
-			if rsrc:
-				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"EC":
 			var prod = 1000 / (tile.bldg.path_1_value * tile.aurora.au_int)
 			prod /= get_prod_mult(tile)
-			if rsrc:
-				rsrc_text.text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = get_crush_info(tile)
-				rsrc_text.text = String(c_i.qty_left)
-				capacity_bar.value = 1 - c_i.progress
+				rsrc_text = String(c_i.qty_left)
+				capacity_bar_value = 1 - c_i.progress
 			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+				rsrc_text = ""
+				capacity_bar_value = 0
 		"GF":
 			if tile.bldg.has("qty1"):
 				var prod_i = get_prod_info(tile)
-				rsrc_text.text = "%s kg" % [prod_i.qty_made]
-				capacity_bar.value = prod_i.progress
+				rsrc_text = "%s kg" % [prod_i.qty_made]
+				capacity_bar_value = prod_i.progress
 			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+				rsrc_text = ""
+				capacity_bar_value = 0
 		"SE":
 			if tile.bldg.has("qty1"):
 				var prod_i = get_prod_info(tile)
-				rsrc_text.text = "%s" % [round(prod_i.qty_made)]
-				capacity_bar.value = prod_i.progress
+				rsrc_text = "%s" % [round(prod_i.qty_made)]
+				capacity_bar_value = prod_i.progress
 			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
+				rsrc_text = ""
+				capacity_bar_value = 0
 #		"SPR":
 #			if tile.bldg.has("qty"):
 #				var reaction_info = get_reaction_info(tile)
@@ -744,7 +737,10 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 #				capacity_bar.value = 0
 		_:
 			if Mods.added_buildings.has(tile.bldg.name):
-				Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time, current_bar, capacity_bar, rsrc_text)
+				Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
+	if is_instance_valid(rsrc):
+		rsrc.set_capacity_bar_value(capacity_bar_value)
+		rsrc.set_text(rsrc_text)
 
 func get_prod_mult(tile):
 	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
@@ -754,32 +750,6 @@ func get_prod_mult(tile):
 
 func has_IR(bldg_name:String):
 	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
-
-func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int, update:bool = true):
-	if not tile.has("bldg"):
-		return
-	var bldg:String = tile.bldg.name
-	var curr_time = OS.get_system_time_msecs()
-	if update:
-		update_rsrc(p_i, tile)
-	match bldg:
-		"ME":
-			collect_ME(p_i, tile, rsrc_collected, curr_time)
-		"PP":
-			collect_PP(p_i, tile, rsrc_collected, curr_time)
-		"SP":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
-				tile.bldg.collect_date = curr_time
-			add_item_to_coll(rsrc_collected, "energy", stored)
-			tile.bldg.stored = 0
-		"AE":
-			collect_AE(p_i, tile, rsrc_collected, curr_time)
-		"MM":
-			collect_MM(p_i, tile, rsrc_collected, curr_time)
-		_:
-			if Mods.added_buildings.has(bldg):
-				Mods.mod_list[Mods.added_buildings[bldg].mod].collect(p_i, tile, rsrc_collected, curr_time, bldg)
 
 func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
@@ -980,29 +950,6 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
-						var diff:float = tile.bldg.path_2_value
-						if not _tile.has("auto_collect_dict"):
-							_tile.auto_collect = tile.bldg.path_2_value
-							_tile.auto_collect_dict = {}
-						else:
-							diff = max(0, tile.bldg.path_2_value - _tile.auto_collect)
-							_tile.auto_collect = max(_tile.auto_collect, tile.bldg.path_2_value)
-						if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
-							game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
-						if _tile.has("bldg"):
-							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0
-							if _tile.bldg.name == "ME":
-								var prod:float = _tile.bldg.path_1_value * (_tile.plant.ash if _tile.has("plant") and _tile.plant.has("ash") else 1.0)
-								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += prod * diff / 100.0 * _mult
-								game.autocollect.rsrc.minerals += prod * diff / 100.0 * _mult
-							elif _tile.bldg.name == "PP":
-								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
-								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
-							elif _tile.bldg.name == "SP":
-								var prod:float = Helper.get_SP_production(p_i.temperature, _tile.bldg.path_1_value, 1.0 + (_tile.aurora.au_int if _tile.has("aurora") else 0.0))
-								game.autocollect.rsrc_list[String(game.c_p_g)].energy += prod * diff / 100.0 * _mult
-								game.autocollect.rsrc.energy += prod * diff / 100.0 * _mult
-						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 			if game.tutorial and game.help.tutorial < 26:

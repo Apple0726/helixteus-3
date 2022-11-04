@@ -612,7 +612,6 @@ stretch_mode = 5
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 1239.0
 margin_bottom = 680.0
-mouse_filter = 2
 
 [node name="Autosave" type="Timer" parent="."]
 

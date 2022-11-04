@@ -15,7 +15,7 @@ var overlay_scene = preload("res://Scenes/Overlay.tscn")
 var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
 var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
-var rsrc_stocked_scene = preload("res://Scenes/ResourceStocked.tscn")
+var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
 var cave_scene = preload("res://Scenes/Views/Cave.tscn")
 var ruins_scene = preload("res://Scenes/Views/Ruins.tscn")
 var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
@@ -127,9 +127,7 @@ var engineering_bonus:Dictionary
 
 #id of the universe/supercluster/etc. you're viewing the object in
 var c_u:int#c_u: current_universe
-var c_sc:int#c_sc: current_supercluster
 var c_c:int#etc.
-var c_c_g:int#etc.
 var c_g:int
 var c_g_g:int
 var c_s:int
@@ -160,10 +158,11 @@ var MUs:Dictionary#Levels of mineral upgrades
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary
 
+#Used to notify the player with an icon when new buildings are unlocked
+var new_bldgs:Dictionary = {}
+
 #Stores information of all objects discovered
 var universe_data:Array
-var supercluster_data:Array
-var cluster_data:Array
 var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.white, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array
 var planet_data:Array
@@ -676,18 +675,12 @@ func switch_music(src, pitch:float = 1.0):
 
 func load_univ():
 	if is_instance_valid(RC_panel) and $Panels/Control.is_a_parent_of(RC_panel):
-		$Panels/Control.remove_child(RC_panel)
 		RC_panel.queue_free()
 	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instance()
 	RC_panel.visible = false
 	$Panels/Control.add_child(RC_panel)
 	view_history.clear()
 	view_history_pos = -1
-	var _save_sc = File.new()
-	if _save_sc.file_exists("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u]):
-		_save_sc.open("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.READ)
-		supercluster_data = _save_sc.get_var()
-		_save_sc.close()
 	var save_game = File.new()
 	if save_game.file_exists("user://%s/Univ%s/main.hx3" % [c_sv, c_u]):
 		save_game.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], File.READ)
@@ -760,13 +753,11 @@ func load_univ():
 				planet_data = open_obj("Systems", c_s_g)
 			if file.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
 				system_data = open_obj("Galaxies", c_g_g)
-			if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c_g]):
-				galaxy_data = open_obj("Clusters", c_c_g)
+			if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
+				galaxy_data = open_obj("Clusters", c_c)
 			else:
 				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
-			if file.file_exists("user://%s/Univ%s/Superclusters/%s.hx3" % [c_sv, c_u, c_sc]):
-				cluster_data = open_obj("Superclusters", c_sc)
 			if help.tutorial >= 26:
 				tutorial = preload("res://Scenes/Tutorial.tscn").instance()
 				tutorial.visible = false
@@ -927,7 +918,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		}
 		for ach in achievements:
 			achievement_data[ach] = {}
-		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -973,7 +964,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	dir.make_dir("user://%s/Univ%s/Systems" % [c_sv, univ])
 	dir.make_dir("user://%s/Univ%s/Galaxies" % [c_sv, univ])
 	dir.make_dir("user://%s/Univ%s/Clusters" % [c_sv, univ])
-	dir.make_dir("user://%s/Univ%s/Superclusters" % [c_sv, univ])
 	l_v = ""
 
 	#Player resources
@@ -995,9 +985,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#id of the universe/supercluster/etc. you're viewing the object in
 	c_u = univ#c_u: current_universe
-	c_sc = 0#c_sc: current_supercluster
-	c_c = 0#etc.
-	c_c_g = 0#etc.
+	c_c = 0#c_c: current_cluster
 	c_g = 0
 	c_g_g = 0
 	c_s = 0
@@ -1096,11 +1084,11 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
+	new_bldgs = {}
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
-	supercluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "name":tr("LANIAKEA"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "dark_energy":u_i.dark_energy, "parent":0, "cluster_num":200, "clusters":[0], "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
-	cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
+	u_i.cluster_data = [{"id":0, "l_id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -1132,9 +1120,9 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 							"emma_joined":false,
 							"ship_spotted":false,
 	}
-	ships_c_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
+	ships_c_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
-	ships_dest_coords = {"sc":0, "c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
+	ships_dest_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
 	ships_dest_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (destination)
 	ships_depart_pos = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
 	ships_dest_pos = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
@@ -1165,14 +1153,14 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		"rsrc":{"minerals":0, "energy":0, "SP":0},
 		"rsrc_list":{}}
 	save_date = OS.get_system_time_msecs()
-	bookmarks = {"planet":{}, "system":{}, "galaxy":{}, "cluster":{}}
-	
 	generate_planets(0)
 	if univ == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
+		planet_data[2].type = 5
 		planet_data[2]["conquered"] = true
 		planet_data[2]["size"] = round(rand_range(12000, 12100))
+		planet_data[2].view = {"pos":Vector2(340, 80), "zoom":3.0 / Helper.get_wid(planet_data[2].size)}
 		stats_univ.biggest_planet = planet_data[2].size
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
@@ -1190,17 +1178,24 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2].surface.soil.amount = 60
 		planet_data[2].surface.cellulose.chance = 0.4
 		planet_data[2].surface.cellulose.amount = 10
+		planet_data[2].bookmarked = true
+	bookmarks = {"planet":{"2":{
+				"type":planet_data[2].type,
+				"name":planet_data[2].name,
+				"c_p":2,
+				"c_p_g":2,
+				"c_s":0,
+				"c_s_g":0,
+				"c_g":0,
+				"c_g_g":0,
+				"c_c":0}}, "system":{}, "galaxy":{}, "cluster":{}}
+	
 	Helper.save_obj("Systems", 0, planet_data)
 	generate_tiles(2)
 	
 	c_v = "planet"
 	Helper.save_obj("Galaxies", 0, system_data)
 	Helper.save_obj("Clusters", 0, galaxy_data)
-	Helper.save_obj("Superclusters", 0, cluster_data)
-	var save_sc = File.new()
-	save_sc.open("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, univ], File.WRITE)
-	save_sc.store_var(supercluster_data)
-	save_sc.close()
 	fn_save_game()
 	if not is_a_parent_of(HUD):
 		$UI.add_child(HUD)
@@ -1462,27 +1457,21 @@ func toggle_panel(_panel):
 	_panel.refresh()
 
 func set_to_ship_coords():
-	c_sc = ships_dest_coords.sc
-	var diff_cluster:bool = c_c_g != ships_dest_g_coords.c
-	c_c_g = ships_dest_g_coords.c
+	var diff_cluster:bool = c_c != ships_dest_coords.c
 	c_c = ships_dest_coords.c
 	c_g_g = ships_dest_g_coords.g
 	c_g = ships_dest_coords.g
 	c_s_g = ships_dest_g_coords.s
 	c_s = ships_dest_coords.s
 	if diff_cluster:
-		galaxy_data = open_obj("Clusters", c_c_g)
+		galaxy_data = open_obj("Clusters", c_c)
 
 func set_to_fighter_coords(i:int):
-	c_sc = fighter_data[i].c_sc
-	c_c_g = fighter_data[i].c_c_g
+	c_c = fighter_data[i].c_c
 	c_c = fighter_data[i].c_c
 	if fighter_data[i].has("c_g_g"):
 		c_g_g = fighter_data[i].c_g_g
 		c_g = fighter_data[i].c_g
-
-func set_to_probe_coords(sc:int):
-	c_sc = sc
 
 func set_bookmark_coords(bookmark:Dictionary):
 	if bookmark.has("c_p_g"):
@@ -1503,14 +1492,12 @@ func set_bookmark_coords(bookmark:Dictionary):
 			return true#Error
 		c_s = bookmark.c_s
 		c_s_g = bookmark.c_s_g
-	c_c_g = bookmark.c_c_g
 	c_c = bookmark.c_c
-	c_sc = bookmark.c_sc
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
 		c_g_g = bookmark.c_g_g
 		system_data = open_obj("Galaxies", c_g_g)
-		galaxy_data = open_obj("Clusters", c_c_g)
+		galaxy_data = open_obj("Clusters", c_c)
 	return false#No error
 
 func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p"], coord_values: [1, 2]
@@ -1522,13 +1509,13 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 				planet_data = open_obj("Systems", coord_values[i])
 			elif coords[i] == "c_g_g" and c_g_g != coord_values[i]:
 				system_data = open_obj("Galaxies", coord_values[i])
-			elif coords[i] == "c_c_g" and c_c_g != coord_values[i]:
+			elif coords[i] == "c_c" and c_c != coord_values[i]:
 				galaxy_data = open_obj("Clusters", coord_values[i])
 			self[coords[i]] = coord_values[i]
 
 func delete_galaxy():
 	galaxy_data[c_g].clear()
-	Helper.save_obj("Clusters", c_c_g, galaxy_data)
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 #															V function to execute after removing objects but before adding new ones
 #func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
@@ -1544,7 +1531,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
 			anim_player.play_backwards("MoveButtons")
-		if is_instance_valid(space_HUD) and not new_view in ["system", "galaxy", "cluster", "supercluster", "universe"]:
+		if is_instance_valid(space_HUD) and not new_view in ["system", "galaxy", "cluster", "universe"]:
 			var anim_player:AnimationPlayer = space_HUD.get_node("AnimationPlayer")
 			anim_player.play_backwards("MoveButtons")
 		if is_instance_valid(HUD) and new_view in ["battle", "cave", "dimension", "STM", "planet_details"]:
@@ -1573,9 +1560,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					remove_space_HUD()
 				"cluster":
 					remove_cluster()
-					remove_space_HUD()
-				"supercluster":
-					remove_supercluster()
 					remove_space_HUD()
 				"universe":
 					remove_universe()
@@ -1616,15 +1600,13 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				else:
 					viewing_dimension = true
 					add_dimension()
-	if new_view in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]:
-		var new_dict:Dictionary = {"view":new_view, "c_sc":c_sc, "c_c_g":c_c_g, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
+	if new_view in ["universe", "cluster", "galaxy", "system", "planet"]:
+		var new_dict:Dictionary = {"view":new_view, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
 		if other_params.has("fn"):
 			var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
 			if other_params.fn == "set_custom_coords":
 				new_dict = {#fn_args[0]: ["c_c_g", "c_c"], fn_args[1]: [2, 5] (c_c_g = 2, c_c = 5)
 					"view":new_view, 
-					"c_sc":(fn_args[1][fn_args[0].find("c_sc")] if fn_args[0].has("c_sc") else c_sc),
-					"c_c_g":(fn_args[1][fn_args[0].find("c_c_g")] if fn_args[0].has("c_c_g") else c_c_g),
 					"c_c":(fn_args[1][fn_args[0].find("c_c")] if fn_args[0].has("c_c") else c_c),
 					"c_g_g":(fn_args[1][fn_args[0].find("c_g_g")] if fn_args[0].has("c_g_g") else c_g_g),
 					"c_g":(fn_args[1][fn_args[0].find("c_g")] if fn_args[0].has("c_g") else c_g),
@@ -1636,8 +1618,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			elif other_params.fn == "set_bookmark_coords":
 				new_dict = {#fn_args[0]: {"c_sc":0, "c_c_g":1, "c_c":1} (bookmark dictionary)
 					"view":new_view, 
-					"c_sc":(fn_args[0].c_sc if fn_args[0].has("c_sc") else c_sc),
-					"c_c_g":(fn_args[0].c_c_g if fn_args[0].has("c_c_g") else c_c_g),
 					"c_c":(fn_args[0].c_c if fn_args[0].has("c_c") else c_c),
 					"c_g_g":(fn_args[0].c_g_g if fn_args[0].has("c_g_g") else c_g_g),
 					"c_g":(fn_args[0].c_g if fn_args[0].has("c_g") else c_g),
@@ -1681,9 +1661,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				add_galaxy()
 			"cluster":
 				add_cluster()
-			"supercluster":
-				add_supercluster()
-				add_space_HUD()
 			"universe":
 				add_universe()
 				add_space_HUD()
@@ -1723,7 +1700,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				battle = battle_scene.instance()
 				add_child(battle)
-		if c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_a_parent_of(HUD):
+		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_a_parent_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and HUD.dimension_btn.visible:
 			HUD.switch_btn.visible = false
@@ -1815,16 +1792,11 @@ func add_obj(view_str):
 			if ships_c_g_coords.g == c_g_g:
 				galaxy_data[c_g].explored = true
 		"cluster":
-			view.shapes_data = cluster_data[c_c].shapes
-			view.add_obj("Cluster", cluster_data[c_c]["view"]["pos"], cluster_data[c_c]["view"]["zoom"])
+			view.shapes_data = u_i.cluster_data[c_c].shapes
+			view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
 			add_space_HUD()
-			if ships_c_g_coords.c == c_c_g:
-				cluster_data[c_c].explored = true
-		"supercluster":
-			view.shapes_data = supercluster_data[c_sc].shapes
-			view.add_obj("Supercluster", supercluster_data[c_sc]["view"]["pos"], supercluster_data[c_sc]["view"]["zoom"], supercluster_data[c_sc]["view"]["sc_mult"])
-			if ships_c_coords.sc == c_sc:
-				supercluster_data[c_sc].explored = true
+			if ships_c_coords.c == c_c:
+				u_i.cluster_data[c_c].explored = true
 		"universe":
 			view.shapes_data = universe_data[c_u].shapes
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
@@ -1843,17 +1815,15 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
-		if c_v in ["galaxy", "cluster", "supercluster", "universe"]:
+		if c_v in ["galaxy", "cluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and universe_data[c_u].lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not cluster_data[c_c].has("conquered")
-		if c_v == "supercluster":
-			space_HUD.get_node("SendProbes").visible = c_sc == 0
-		elif c_v == "universe":
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
+		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
 		else:
 			space_HUD.get_node("SendProbes").visible = false
@@ -1902,38 +1872,24 @@ func add_dimension():
 func add_universe():
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
-		generate_superclusters(c_u)
+		generate_clusters(c_u)
 	add_obj("universe")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
 	HUD.get_node("Bottom/Panel/CollectAll").visible = false
 
-func add_supercluster():
-	if obj_exists("Superclusters", c_sc):
-		cluster_data = open_obj("Superclusters", c_sc)
-	if not supercluster_data[c_sc].has("discovered"):
-		reset_collisions()
-		if c_sc != 0:
-			cluster_data.clear()
-		generate_clusters(c_sc)
-	add_obj("supercluster")
-	HUD.get_node("Bottom/Panel/CollectAll").visible = false
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
-
 func add_cluster():
-	if obj_exists("Superclusters", c_sc):
-		cluster_data = open_obj("Superclusters", c_sc)
-	if obj_exists("Clusters", c_c_g):
-		galaxy_data = open_obj("Clusters", c_c_g)
-	if not cluster_data[c_c].has("discovered"):
+	if obj_exists("Clusters", c_c):
+		galaxy_data = open_obj("Clusters", c_c)
+	if not u_i.cluster_data[c_c].has("discovered"):
 		add_loading()
 		reset_collisions()
-		if c_c_g != 0:
+		if c_c != 0:
 			galaxy_data.clear()
-		if not cluster_data[c_c].has("name"):
-			if cluster_data[c_c].class == ClusterType.GROUP:
-				cluster_data[c_c].name = tr("GALAXY_GROUP") + " %s" % c_c
+		if not u_i.cluster_data[c_c].has("name"):
+			if u_i.cluster_data[c_c].class == ClusterType.GROUP:
+				u_i.cluster_data[c_c].name = tr("GALAXY_GROUP") + " %s" % c_c
 			else:
-				cluster_data[c_c].name = tr("GALAXY_CLUSTER") + " %s" % c_c
+				u_i.cluster_data[c_c].name = tr("GALAXY_CLUSTER") + " %s" % c_c
 		generate_galaxy_part()
 	else:
 		add_obj("cluster")
@@ -1941,19 +1897,19 @@ func add_cluster():
 	$Stars/AnimationPlayer.play("StarFade")
 	if enable_shaders:
 		$ClusterBG.fade_in()
-		var dist:Vector2 = cartesian2polar(cluster_data[c_c].pos.x, cluster_data[c_c].pos.y)
+		var dist:Vector2 = cartesian2polar(u_i.cluster_data[c_c].pos.x, u_i.cluster_data[c_c].pos.y)
 		var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SuperclusterView.png")
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
 
 func add_galaxy():
-	if obj_exists("Clusters", c_c_g):
-		galaxy_data = open_obj("Clusters", c_c_g)
+	if obj_exists("Clusters", c_c):
+		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g].has("discovered"):
@@ -2023,21 +1979,16 @@ func remove_dimension():
 func remove_universe():
 	view.remove_obj("universe")
 
-func remove_supercluster():
-	view.remove_obj("supercluster")
-	Helper.save_obj("Superclusters", c_sc, cluster_data)
-
 func remove_cluster():
 	if enable_shaders:
 		$ClusterBG.fade_out()
 	$Stars/AnimationPlayer.play_backwards("StarFade")
 	view.remove_obj("cluster")
-	Helper.save_obj("Superclusters", c_sc, cluster_data)
-	Helper.save_obj("Clusters", c_c_g, galaxy_data)
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 func remove_galaxy():
 	view.remove_obj("galaxy")
-	Helper.save_obj("Clusters", c_c_g, galaxy_data)
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 
 func remove_system():
@@ -2055,7 +2006,6 @@ func remove_planet(save_zooms:bool = true):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
-	$UI.remove_child(planet_HUD)
 	planet_HUD.queue_free()
 
 #Collision detection of systems, galaxies etc.
@@ -2091,62 +2041,32 @@ func sort_shapes (a, b):
 		return true
 	return false
 
-func generate_superclusters(id:int):
+func generate_clusters(parent_id:int):
 	randomize()
-	var total_sc_num = universe_data[id]["supercluster_num"]
-	max_dist_from_center = pow(total_sc_num, 0.5) * 300.0
-	for _i in range(1, total_sc_num):
-		var sc_i = {}
-		sc_i["type"] = 0
-		sc_i["visible"] = TEST
-		sc_i["clusters"] = []
-		sc_i["shapes"] = []
-		sc_i["cluster_num"] = Helper.rand_int(100, 1000)
-		var pos:Vector2
-		var dist_from_center:float = pow(randf(), 0.5) * max_dist_from_center
-		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
-		sc_i["pos"] = pos
-		sc_i.dark_energy = Helper.clever_round(max(pow(1 + dist_from_center / 500.0, 0.25), 1) * u_i.dark_energy, 4)
-		var sc_id = supercluster_data.size()
-		sc_i["id"] = sc_id
-		sc_i.diff = Helper.clever_round(u_i.difficulty * pos.length() * 30.0)
-		supercluster_data.append(sc_i)
-	if id != 0:
-		var view_zoom = 500.0 / max_dist_from_center
-		universe_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom, "sc_mult":1.0}
-	universe_data[id]["discovered"] = true
-	save_sc()
-
-func generate_clusters(id:int):
-	randomize()
-	if not supercluster_data[id].has("name"):
-		supercluster_data[id].name = tr("SUPERCLUSTER") + " %s" % id
-	var total_clust_num = supercluster_data[id]["cluster_num"]
+	var total_clust_num = u_i.cluster_num
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
 	for _i in range(0, total_clust_num):
-		if id == 0 and _i == 0:
+		if parent_id == 0 and _i == 0:
 			continue
 		var c_i = {}
 		c_i["type"] = Helper.rand_int(0, 0)
 		c_i["class"] = ClusterType.GROUP if randf() < 0.5 else ClusterType.CLUSTER
-		c_i["parent"] = id
-		c_i["visible"] = TEST or c_sc != 0
+		c_i["parent"] = parent_id
+		c_i["visible"] = TEST
 		c_i["galaxies"] = []
 		c_i["shapes"] = []
-		var c_id = cluster_data.size()
+		var c_id = u_i.cluster_data.size()
 		if c_i["class"] == ClusterType.GROUP:
 			c_i["galaxy_num"] = Helper.rand_int(10, 100)
-			#c_i.name = tr("GALAXY_GROUP") + " %s" % c_id
 		else:
 			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
-			#c_i.name = tr("GALAXY_CLUSTER") + " %s" % c_id
-		var pos
+		var pos:Vector2
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
-		if id == 0 and _i == 1:
+		if parent_id == 0 and _i == 1:
 			dist_from_center = 149
 			c_i.class = ClusterType.GROUP
 			c_i.galaxy_num = Helper.rand_int(80, 100)
-		if id == 0 and _i == 3:
+		if parent_id == 0 and _i == 3:
 			dist_from_center = 302
 			c_i.name = "%s 3" % tr("CLUSTER")
 			c_i.class = ClusterType.GROUP
@@ -2154,42 +2074,30 @@ func generate_clusters(id:int):
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
-		c_i["l_id"] = c_id
-		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * supercluster_data[id].dark_energy)#Ferromagnetic materials
-		if id == 0:
-			c_i.diff = Helper.clever_round(1 + pos.length() * 2.0)
-		else:
-			c_i.diff = Helper.clever_round(supercluster_data[id].diff * rand_range(0.8, 1.2))
-		supercluster_data[id]["clusters"].append(c_id)
-		cluster_data.append(c_i)
-	if id != 0:
-		var view_zoom = 500.0 / max_dist_from_center
-		supercluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom, "sc_mult":1.0}
-	supercluster_data[id]["discovered"] = true
+		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0))#Ferromagnetic materials
+		c_i.diff = Helper.clever_round(1 + pos.length() * 2.0)
+		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
-	Helper.save_obj("Superclusters", c_sc, cluster_data)
-	save_sc()
+	fn_save_game()
 
 func generate_galaxy_part():
 	var progress = 0.0
 	while progress != 1:
 		progress = generate_galaxies(c_c)
-		$Loading.update_bar(progress, tr("GENERATING_CLUSTER") % [cluster_data[c_c]["galaxies"].size(), cluster_data[c_c]["galaxy_num"]])
+		$Loading.update_bar(progress, tr("GENERATING_CLUSTER") % [u_i.cluster_data[c_c]["galaxies"].size(), u_i.cluster_data[c_c]["galaxy_num"]])
 		yield(get_tree().create_timer(0.0000000000001),"timeout")  #Progress Bar doesnt update without this
-	g_num += cluster_data[c_c].galaxy_num
-	Helper.save_obj("Clusters", c_c_g, galaxy_data)
-	Helper.save_obj("Superclusters", c_sc, cluster_data)
+	g_num += u_i.cluster_data[c_c].galaxy_num
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 	add_obj("cluster")
 	remove_child($Loading)
 
 func generate_galaxies(id:int):
 	randomize()
-	var total_gal_num = cluster_data[id]["galaxy_num"]
-	var galaxy_num = total_gal_num - cluster_data[id]["galaxies"].size()
+	var total_gal_num = u_i.cluster_data[id]["galaxy_num"]
+	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var gal_num_to_load = min(500, galaxy_num)
 	var progress = 1 - (galaxy_num - gal_num_to_load) / float(total_gal_num)
-	var dark_energy = supercluster_data[cluster_data[id].parent].dark_energy
-	var FM:float = cluster_data[id].FM
+	var FM:float = u_i.cluster_data[id].FM
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
 		g_i["parent"] = id
@@ -2197,7 +2105,7 @@ func generate_galaxies(id:int):
 		g_i["shapes"] = []
 		g_i["type"] = Helper.rand_int(0, 6)
 		var rand = randf()
-		g_i.dark_matter = rand_range(0.9, 1.1) + dark_energy - 1 #Influences planet numbers and size
+		g_i.dark_matter = rand_range(0.9, 1.1) #Influences planet numbers and size
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
@@ -2256,19 +2164,19 @@ func generate_galaxies(id:int):
 			g_i = galaxy_data[0]
 			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
-			cluster_data[id]["galaxies"].append({"global":0, "local":0})
+			u_i.cluster_data[id]["galaxies"].append({"global":0, "local":0})
 		else:
 			if id == 0:#if the galaxies are in starting cluster
 				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70)
 			else:
-				g_i.diff = Helper.clever_round(cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
-			cluster_data[id]["galaxies"].append({"global":g_i.id, "local":g_i.l_id})
+				g_i.diff = Helper.clever_round(u_i.cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
+			u_i.cluster_data[id]["galaxies"].append({"global":g_i.id, "local":g_i.l_id})
 			galaxy_data.append(g_i)
 	if progress == 1:
-		cluster_data[id]["discovered"] = true
+		u_i.cluster_data[id]["discovered"] = true
 		if id != 0:
 			var view_zoom = 500.0 / max_outer_radius
-			cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+			u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	return progress
 
 func update_loading_bar(curr:float, total:float, txt:String):
@@ -2352,7 +2260,7 @@ func generate_system_part():
 #				break
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
-	Helper.save_obj("Clusters", c_c_g, galaxy_data)
+	Helper.save_obj("Clusters", c_c, galaxy_data)
 	remove_child($Loading)
 
 func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false):
@@ -2520,8 +2428,8 @@ func generate_systems(id:int):
 		while randf() < 0.3 * log(dark_matter - 1.0 + exp(1.0)) / pow(num_stars, 1.1):
 			num_stars += 1
 		var stars = []
-		var hypergiant_system:bool = c_c_g == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
-		var dark_matter_system:bool = c_c_g == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
+		var hypergiant_system:bool = c_c == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
+		var dark_matter_system:bool = c_c == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
@@ -2968,10 +2876,6 @@ func generate_tiles(id:int):
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
 	tile_data.resize(pow(wid, 2))
-	if p_i.id == 2 and c_u == 0:
-		var view_zoom = 3.0 / wid
-		p_i.view = {"pos":Vector2(340, 80), "zoom":view_zoom}
-		p_i.type = 5
 	#Aurora spawn
 	var diff:int = 0
 	var tile_from:int = -1
@@ -3251,7 +3155,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 	var common_elements = {}
 	var uncommon_elements = {}
 	var big_planet_factor:float = lerp(1, 5, inverse_lerp(12500, 45000, size))
-	var FM:float = cluster_data[c_c].FM
+	var FM:float = u_i.cluster_data[c_c].FM
 	if not gas_giant or depth == "core":
 		if depth == "crust":
 			common_elements["O"] = rand_range(0.1, 0.19)
@@ -3568,6 +3472,10 @@ func add_resources(costs):
 			particles[cost] += costs[cost]
 		if not show.has(cost):
 			show[cost] = true
+			if cost == "sand":
+				new_bldgs.GF = true
+			elif cost == "coal":
+				new_bldgs.SE = true
 
 func get_roman_num(num:int):
 	if num > 3999:
@@ -3600,10 +3508,12 @@ func _process(delta):
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
 			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals * min_mult)
-			energy += delta * (autocollect.MS.energy + autocollect.GS.energy * energy_mult)
+			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy * energy_mult)
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
 			min_to_add += autocollect.rsrc.minerals * delta * min_mult
-			energy += autocollect.rsrc.energy * delta * energy_mult
+			energy_to_add += autocollect.rsrc.energy * delta * energy_mult
+			Helper.add_minerals(min_to_add)
+			Helper.add_energy(energy_to_add)
 			SP += autocollect.rsrc.SP * delta * SP_mult
 			if mats.cellulose > 0:
 				for mat in autocollect.mats:
@@ -3623,7 +3533,6 @@ func _process(delta):
 				particles.electron += (diff - amount_decayed) / 2.0
 			if particles.electron > electron_cap:
 				particles.electron = electron_cap
-			Helper.add_minerals(min_to_add)
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
 				HUD.update_money_energy_SP()
@@ -3639,7 +3548,6 @@ func sell_all_minerals():
 		add_resources({"money":minerals * (MUs.MV + 4)})
 		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
-		show.shop = true
 		HUD.refresh()
 
 var cmd_history:Array = []
@@ -3892,12 +3800,6 @@ func _unhandled_key_input(event):
 				if get_item_num(_name) > 0:
 					inventory.on_slot_press(_name)
 
-func save_sc():
-	var _save_sc = File.new()
-	_save_sc.open("user://%s/Univ%s/supercluster_data.hx3" % [c_sv, c_u], File.WRITE)
-	_save_sc.store_var(supercluster_data)
-	_save_sc.close()
-
 func fn_save_game():
 	var save_info_file = File.new()
 	save_info_file.open("user://%s/save_info.hx3" % [c_sv], File.WRITE)
@@ -3950,9 +3852,7 @@ func fn_save_game():
 		"SP":SP,
 		"c_v":c_v,
 		"l_v":l_v,
-		"c_sc":c_sc,
 		"c_c":c_c,
-		"c_c_g":c_c_g,
 		"c_g":c_g,
 		"c_g_g":c_g_g,
 		"c_s":c_s,
@@ -3970,6 +3870,7 @@ func fn_save_game():
 		"atoms":atoms,
 		"particles":particles,
 		"show":show,
+		"new_bldgs":new_bldgs,
 		"items":items,
 		"hotbar":hotbar,
 		"MUs":MUs,
@@ -4018,15 +3919,9 @@ func save_views(autosave:bool):
 	elif c_v == "galaxy":
 		if send_probes_panel.is_processing() or send_fighters_panel.is_processing():
 			Helper.save_obj("Galaxies", c_g_g, system_data)
-		Helper.save_obj("Clusters", c_c_g, galaxy_data)
+		Helper.save_obj("Clusters", c_c, galaxy_data)
 	elif c_v == "cluster":
-		Helper.save_obj("Clusters", c_c_g, galaxy_data)
-		Helper.save_obj("Superclusters", c_sc, cluster_data)
-	elif c_v == "supercluster":
-		Helper.save_obj("Superclusters", c_sc, cluster_data)
-		save_sc()
-	elif c_v == "universe":
-		save_sc()
+		Helper.save_obj("Clusters", c_c, galaxy_data)
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 
@@ -4182,7 +4077,7 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
 
 func generate_new_univ_confirm():
-	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "supercluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
+	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
 	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K

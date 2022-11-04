@@ -153,10 +153,6 @@ func export_univ(univ_str:String):
 		error = true
 	file.close()
 	file = File.new()
-	if file.open("user://%s/%s/supercluster_data.hx3" % [save_to_export, univ_str], File.READ) == OK:
-		univ_data.supercluster_data = file.get_var()
-	else:
-		error = true
 	file.close()
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Caves")
@@ -166,8 +162,6 @@ func export_univ(univ_str:String):
 		error = export_univ_folder(univ_data, univ_str, "Galaxies")
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Planets")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Superclusters")
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Systems")
 	return {"error":error, "univ_data":univ_data}
@@ -210,13 +204,10 @@ func _on_Import_file_selected(path):
 						var univ_file = File.new()
 						if univ_file.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], File.WRITE) == OK:
 							univ_file.store_var(save_dict.univs[i].main)
-						if univ_file.open("user://%s/Univ%s/supercluster_data.hx3" % [final_save_name, i], File.WRITE) == OK:
-							univ_file.store_var(save_dict.univs[i].supercluster_data)
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Galaxies")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Planets")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Superclusters")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Systems")
 						univ_file.close()
 						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)

@@ -114,17 +114,17 @@ func _ready():
 			MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y) * MS_grid_panel.rect_scale.y * max(sc, 1.0)
 		
 	if conquered:
-		game.cluster_data[game.c_c].conquered = true
+		game.u_i.cluster_data[game.c_c].conquered = true
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
-	var rsrc = game.rsrc_stocked_scene.instance()
+	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	add_child(rsrc)
-	rsrc.get_node("TextureRect").texture = icon
+	rsrc.set_icon_texture(icon)
 	rsrc.rect_scale *= 5.0
 	rsrc.rect_position = v + Vector2(0, 70 * 5.0)
-	rsrc.get_node("Control").modulate = mod
+	rsrc.set_modulate(mod)
 	rsrcs[id] = rsrc
 	return rsrc
 
@@ -221,7 +221,7 @@ var items_collected:Dictionary = {}
 func collect_all():
 	items_collected.clear()
 	var curr_time = OS.get_system_time_msecs()
-	var galaxies = game.cluster_data[game.c_c].galaxies
+	var galaxies = game.u_i.cluster_data[game.c_c].galaxies
 	var progress:TextureProgress = game.HUD.get_node("Bottom/Panel/CollectProgress")
 	progress.max_value = len(galaxies)
 	var cond = game.collect_speed_lag_ratio != 0

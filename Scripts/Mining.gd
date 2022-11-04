@@ -14,7 +14,7 @@ onready var met_info = game.met_info
 var metal_sprites = []
 var circ_vel:Vector2 = Vector2.ONE
 var points:float#Points for minigame
-onready var circ = $CanvasLayer/Circle
+onready var circ = $Circle
 onready var spd_mult_node = $Mults/SpdMult
 var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
 var mouse_pos:Vector2
@@ -44,7 +44,6 @@ func _ready():
 	generate_rock(false)
 	$Help.visible = game.help.has("mining")
 	circ.visible = not game.help.has("mining")
-	$RsrcMinedBtn.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
 	$LayerInfo.visible = game.show.has("mining_layer")
 	if $LayerInfo.visible:
@@ -207,22 +206,23 @@ func place_crumbles(num:int, sc:float, v:float):
 		crumble.scale *= sc
 		crumble.centered = true
 		add_child(crumble)
+		move_child($Circle, get_child_count())
 		crumble.position = mouse_pos
 		crumbles.append({"sprite":crumble, "velocity":Vector2(rand_range(-2, 2), rand_range(-8, -4)) * v, "angular_velocity":rand_range(-0.08, 0.08)})
-
-func hide_help():
-	$Help.visible = false
-	game.help.erase("mining")
-	var tween:Tween = Tween.new()
-	circ.modulate.a = 0
-	circ.visible = true
-	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
-	tween.interpolate_property($RsrcMinedBtn, "modulate", null, Color(1, 1, 1, 1.0), 2)
-	add_child(tween)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(tween)
-	tween.queue_free()
+#
+#func hide_help():
+#	$Help.visible = false
+#	game.help.erase("mining")
+#	var tween:Tween = Tween.new()
+#	circ.modulate.a = 0
+#	circ.visible = true
+#	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
+#	tween.interpolate_property($RsrcMinedBtn, "modulate", null, Color(1, 1, 1, 1.0), 2)
+#	add_child(tween)
+#	tween.start()
+#	yield(tween, "tween_all_completed")
+#	remove_child(tween)
+#	tween.queue_free()
 
 var help_counter = 0
 func pickaxe_hit():
@@ -272,6 +272,8 @@ func pickaxe_hit():
 			game.pickaxe.erase("liquid_name")
 			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
+	if progress >= 100 and $LayerInfo.visible:
+		$ResourcesMined.visible = true
 	if progress >= 1000:
 		add_rsrc_mined(contents)
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
@@ -306,10 +308,9 @@ func pickaxe_hit():
 		game.show.stone = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
-			$RsrcMinedBtn.modulate.a = 0.0
-			$RsrcMinedBtn.visible = true
 			$LayerAnim.play("Layer fade")
 			$LayerInfo.visible = true
+			$ResourcesMined.visible = true
 		place_crumbles(10, 0.2, 2)
 		game.HUD.refresh()
 	update_info()
@@ -404,5 +405,9 @@ func _on_AuroraMult_mouse_exited():
 	game.hide_tooltip()
 
 
-func _on_RsrcMinedBtn_pressed():
-	$ResourcesMined.visible = not $ResourcesMined.visible
+func _on_Grid_resized():
+	if $ResourcesMined/Grid.rect_size.x > $ResourcesMined.rect_size.x:
+		$ResourcesMined.rect_min_size.x = $ResourcesMined/Grid.rect_size.x
+		$ResourcesMined.rect_position.x = 892 - $ResourcesMined.rect_min_size.x / 2.0
+	if $ResourcesMined/Grid.rect_size.y + 40 > $ResourcesMined.rect_size.y:
+		$ResourcesMined.rect_min_size.y = $ResourcesMined/Grid.rect_size.y + 40

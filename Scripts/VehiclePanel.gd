@@ -251,22 +251,8 @@ func _on_Timer_timeout():
 		bar.get_node("Bar").value = progress
 		if progress >= 1:
 			if probe.tier == 0:
-				var cluster_data:Array
-				if game.c_sc == 0 and game.c_v in ["supercluster", "cluster"]:
-					cluster_data = game.cluster_data
-					cluster_data[probe.obj_to_discover].visible = true
-				else:
-					cluster_data = game.open_obj("Superclusters", 0)
-					cluster_data[probe.obj_to_discover].visible = true
-					Helper.save_obj("Superclusters", 0, cluster_data)
+				game.u_i.cluster_data[probe.obj_to_discover].visible = true
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
-				refresh = true
-			elif probe.tier == 1:
-				if probe.obj_to_discover >= len(game.supercluster_data):
-					game.generate_superclusters(game.c_u)
-				game.supercluster_data[probe.obj_to_discover].visible = true
-				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
-				game.save_sc()
 				refresh = true
 			game.probe_data[i] = null
 	if refresh:
