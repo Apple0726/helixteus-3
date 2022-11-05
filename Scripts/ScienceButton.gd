@@ -14,13 +14,8 @@ func _ready():
 	$Texture.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
 	if game and not infinite_research:
-		#rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
 		if game.science_unlocked.has(name):
-			$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
-	#else:
-		#var sc_lv:int = game.infinite_research[name]
-		#var st:String = tr("%s_X" % name) % sc_lv
-		#rect_min_size.x = font.get_string_size(st).x + 80
+			$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
 	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
 
 func refresh():
@@ -29,10 +24,20 @@ func refresh():
 		var sc:Dictionary = Data.infinite_research_sciences[name]
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
 		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)))
+		if round(sc.cost * pow(sc.pw, sc_lv)) > game.SP:
+			$Text["custom_colors/font_color"] = Color.red
+		else:
+			$Text["custom_colors/font_color"] = Color.green
 	else:
 		if modulate == Color.white:
 			$Label.text = get_science_name(name)
 			$Text.text = Helper.format_num(Data.science_unlocks[name].cost)
+			if game.science_unlocked.has(name):
+				$Text["custom_colors/font_color"] = Color.white
+			elif Data.science_unlocks[name].cost > game.SP:
+				$Text["custom_colors/font_color"] = Color.red
+			else:
+				$Text["custom_colors/font_color"] = Color.green
 		else:
 			$Label.text = "?"
 			$Text.text = "-"
@@ -96,7 +101,7 @@ func _input(event):
 				game.infinite_research[name] += 1
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				game.HUD.refresh()
-				refresh()
+				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
 		elif not game.science_unlocked.has(name):
@@ -132,7 +137,8 @@ func _input(event):
 				elif name == "EGH":
 					game.new_bldgs.GH = true
 				game.HUD.refresh()
-				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+				$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+				$Text["custom_colors/font_color"] = Color.white
 				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)

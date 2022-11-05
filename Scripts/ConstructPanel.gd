@@ -53,6 +53,8 @@ func _on_btn_pressed(btn_str:String):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
 		elif bldg in ["PC", "NC"]:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
+		elif bldg in ["MS", "B", "NSF", "ESF"]:
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult("S")))]
 		elif Data.path_1.has(bldg):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
 		if Data.path_2.has(bldg):
@@ -138,6 +140,12 @@ func refresh():
 		$VBox/Tabs/Production.visible = game.show.has("stone")
 		$VBox/Tabs/Support.visible = game.stats_univ.bldgs_built >= 18
 		$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
+		for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
+			$VBox/Tabs.get_node(btn_str + "/Label/Notification").visible = false
+			for bldg in self[btn_str.to_lower() + "_bldgs"]:
+				if bldg in game.new_bldgs.keys() and game.new_bldgs[bldg]:
+					$VBox/Tabs.get_node(btn_str + "/Label/Notification").visible = true
+					break
 		if $VBox/Tabs.get_node(tab).visible:
 			$VBox/Tabs.get_node(tab)._on_Button_pressed()
 			_on_btn_pressed(tab)

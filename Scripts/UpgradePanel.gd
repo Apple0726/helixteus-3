@@ -38,11 +38,16 @@ func refresh():
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
 	else:
-		path2.visible = game.tile_data[ids[0]].bldg.has("path_2")
-		path3.visible = game.tile_data[ids[0]].bldg.has("path_3")
+		var first_tile_bldg = game.tile_data[ids[0]].bldg
+		if len(ids) == 1:
+			$Label.text = tr("UPGRADE_X").format({"bldg":tr(first_tile_bldg.name + "_NAME")})
+		else:
+			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(first_tile_bldg.name + "_NAME_S"), "num":len(ids)})
+		path2.visible = first_tile_bldg.has("path_2")
+		path3.visible = first_tile_bldg.has("path_3")
 		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
 		$AutoSpeedup.pressed = $AutoSpeedup.visible
-		if game.tile_data[ids[0]].bldg.has("path_1"):
+		if first_tile_bldg.has("path_1"):
 			_on_Path1_pressed()
 			path1._on_Button_pressed()
 		else:
@@ -131,6 +136,7 @@ func update(changing_paths:bool = false):
 		while not calculated or lv_to != a:
 			if calculated:
 				costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+			var cost_div_sum:float = 0.0
 			for id in ids:
 				var tile = game.tile_data[id]
 				var tile_bldg:String = tile.bldg.name
@@ -141,6 +147,12 @@ func update(changing_paths:bool = false):
 					continue
 				all_tiles_constructing = false
 				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
+				cost_div_sum += tile.cost_div if tile.has("cost_div") else 1.0
+			cost_div_sum /= len(ids)
+			if cost_div_sum > 1.0:
+				$DivBy.text = tr("DIV_BY") % Helper.clever_round(cost_div_sum, 4)
+			else:
+				$DivBy.text = ""
 			if not changing_paths:
 				break
 			if game.check_enough(costs):
@@ -208,16 +220,19 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	var IR_mult:float = 1.0
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
-		IR_mult = first_tile.bldg.IR_mult
+		IR_mult = Helper.get_IR_mult("SP")
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.plant.ash if first_tile.has("plant") and first_tile.plant.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
-		IR_mult = first_tile.bldg.IR_mult
+		IR_mult = Helper.get_IR_mult("ME")
+	elif bldg in ["MS", "B", "NSF", "ESF"]:
+		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
+		IR_mult = Helper.get_IR_mult("S")
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
-			IR_mult = first_tile.bldg.IR_mult
+			IR_mult = Helper.get_IR_mult(bldg)
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
 	curr_value *= IR_mult

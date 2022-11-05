@@ -547,12 +547,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 					for met in game.met_info:
 						var rarity:float = game.met_info[met].rarity
 						if cave_floor >= 8:
-							rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
+							rarity = pow(rarity, range_lerp(cave_floor, 8, 32, 0.9, 0.6))
 						if aurora:
 							rarity = pow(rarity, 0.9)
 						if volcano_mult > 1 and not artificial_volcano:
 							rarity = pow(rarity, 0.9)
-						if rand2 < 1 / (pow(rarity, 0.75) + 1):
+						if rand2 < 1 / (rarity + 1):
 							base_rarity = game.met_info[met].rarity
 							met_spawned = met
 					if met_spawned != "":
@@ -1008,8 +1008,8 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 			rarity = pow(rarity, 0.9)
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
-		if rng.randf() < 0.5 / pow(rarity, 0.75):
-			contents[met] = Helper.clever_round(50 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.75) * pow(tier, 2.0) * pow(difficulty, 1.1) * treasure_mult)
+		if rng.randf() < 1 / (rarity + 1):
+			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.9) * pow(tier, 2.0) * pow(difficulty, 1.1) * treasure_mult)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1624,7 +1624,7 @@ func mine_tile(tile_pos:Vector2, tile_id:int):
 			rsrc[mat] = amount
 	if deposits.has(st):
 		var deposit = deposits[st]
-		rsrc[deposit.rsrc_name] = Helper.clever_round(pow(deposit.amount, 1.5) * rand_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, 0.75))
+		rsrc[deposit.rsrc_name] = Helper.clever_round(deposit.amount * rand_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
 		deposit.queue_free()
 		deposits.erase(st)
 	var remainder:float = 0

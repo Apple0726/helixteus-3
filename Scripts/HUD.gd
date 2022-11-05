@@ -108,7 +108,7 @@ func add_g_b(g_b:Dictionary):
 func add_c_b(c_b:Dictionary):
 	var slot = preload("res://Scenes/BookmarkSlot.tscn").instance()
 	slot.get_node("TextureButton").texture_normal = preload("res://Graphics/Clusters/0.png")
-	slot.name = str(c_b.c_c_g)
+	slot.name = str(c_b.c_c)
 	setup_b(slot, c_b, "cluster")
 	cluster_grid_btns.add_child(slot)
 
@@ -151,7 +151,7 @@ func update_XP():
 func update_minerals():
 #	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
 #		return
-	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
+	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("S"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
 		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
@@ -184,7 +184,7 @@ func update_money_energy_SP():
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(game.energy_capacity))]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(2500 + round((game.energy_capacity - 2500) * Helper.get_IR_mult("S")))]
 	SP_text.text = Helper.format_num(round(game.SP))
 	if $Top/Resources/Cellulose.visible:
 		$Top/Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
@@ -586,7 +586,7 @@ func _on_Emma_pressed():
 	game.objective.clear()
 	$Dialogue.visible = true
 	$Dialogue.NPC_id = 3
-	if game.c_c_g == 3:
+	if game.c_c == 3:
 		if game.c_v == "cluster" or game.c_v == "galaxy" and game.c_g != game.fourth_ship_hints.dark_matter_spawn_galaxy:
 			$Dialogue.dialogue_id = 8
 		if game.c_g == game.fourth_ship_hints.dark_matter_spawn_galaxy:
@@ -667,9 +667,7 @@ func _on_Bookmarked_pressed():
 				"c_s_g":game.c_s_g,
 				"c_g":game.c_g,
 				"c_g_g":game.c_g_g,
-				"c_c":game.c_c,
-				"c_c_g":game.c_c_g,
-				"c_sc":game.c_sc}
+				"c_c":game.c_c}
 			p_i.bookmarked = true
 			game.bookmarks.planet[str(game.c_p_g)] = bookmark
 			add_p_b(bookmark)
@@ -691,9 +689,7 @@ func _on_Bookmarked_pressed():
 				"c_s_g":game.c_s_g,
 				"c_g":game.c_g,
 				"c_g_g":game.c_g_g,
-				"c_c":game.c_c,
-				"c_c_g":game.c_c_g,
-				"c_sc":game.c_sc}
+				"c_c":game.c_c}
 			s_i.bookmarked = true
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
 			add_s_b(bookmark)
@@ -709,26 +705,22 @@ func _on_Bookmarked_pressed():
 				"name":g_i.name,
 				"c_g":game.c_g,
 				"c_g_g":game.c_g_g,
-				"c_c":game.c_c,
-				"c_c_g":game.c_c_g,
-				"c_sc":game.c_sc}
+				"c_c":game.c_c}
 			g_i.bookmarked = true
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
 			add_g_b(bookmark)
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]
 		if c_i.has("bookmarked"):
-			game.bookmarks.cluster.erase(str(game.c_c_g))
-			cluster_grid_btns.remove_child(cluster_grid_btns.get_node(str(game.c_c_g)))
+			game.bookmarks.cluster.erase(str(game.c_c))
+			cluster_grid_btns.remove_child(cluster_grid_btns.get_node(str(game.c_c)))
 			c_i.erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
 				"name":c_i.name,
-				"c_c":game.c_c,
-				"c_c_g":game.c_c_g,
-				"c_sc":game.c_sc}
+				"c_c":game.c_c}
 			c_i.bookmarked = true
-			game.bookmarks.cluster[str(game.c_c_g)] = bookmark
+			game.bookmarks.cluster[str(game.c_c)] = bookmark
 			add_c_b(bookmark)
 
 func _on_Bookmarked_mouse_entered():
@@ -781,8 +773,8 @@ func _on_Name_text_entered(new_text):
 			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":
 		game.u_i.cluster_data[game.c_c].name = new_text
-		if game.bookmarks.cluster.has(str(game.c_c_g)):
-			game.bookmarks.cluster[str(game.c_c_g)].name = new_text
+		if game.bookmarks.cluster.has(str(game.c_c)):
+			game.bookmarks.cluster[str(game.c_c)].name = new_text
 	elif game.c_v == "universe":
 		game.u_i.name = new_text
 

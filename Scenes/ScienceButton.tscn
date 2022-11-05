@@ -46,8 +46,9 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 margin_left = 72.0
 margin_top = 4.0
-margin_right = 252.0
+margin_right = 254.0
 margin_bottom = 28.0
+text = "Panel_SC"
 clip_text = true
 __meta__ = {
 "_edit_use_anchors_": false

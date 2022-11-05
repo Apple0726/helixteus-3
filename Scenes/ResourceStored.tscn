@@ -45,9 +45,9 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="."]
-margin_left = -37.0
+margin_left = -40.0
 margin_top = -24.0
-margin_right = 104.0
+margin_right = 85.0
 margin_bottom = 24.0
 custom_constants/separation = -2
 
@@ -77,7 +77,7 @@ texture_progress = ExtResource( 3 )
 nine_patch_stretch = true
 
 [node name="Panel3" type="Panel" parent="VBox"]
-margin_right = 141.0
+margin_right = 125.0
 margin_bottom = 48.0
 mouse_filter = 2
 size_flags_vertical = 3
@@ -108,9 +108,9 @@ texture_progress = ExtResource( 3 )
 nine_patch_stretch = true
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = -84.0
+margin_left = -87.0
 margin_top = -24.0
-margin_right = -36.0
+margin_right = -39.0
 margin_bottom = 24.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 1 )

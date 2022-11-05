@@ -55,6 +55,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
+			if not game.show.has("mining"):
+				tooltip += "\n%s" % [tr("STONE_HELP")]
 			format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
 		elif obj == "minerals":
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
@@ -387,7 +389,7 @@ func on_tween_all_completed(tween, lb):
 	lb.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
-	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
+	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("S")
 	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
@@ -406,7 +408,7 @@ func add_minerals(amount:float, add:bool = true):
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func add_energy(amount:float):
-	var energy_cap = 200 + (game.energy_capacity - 200) * get_IR_mult("MS")
+	var energy_cap = 2500 + (game.energy_capacity - 2500) * get_IR_mult("S")
 	var energy_space_available:float = round(energy_cap) - round(game.energy)
 	if energy_space_available >= amount:
 		game.energy += amount
@@ -490,6 +492,12 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
+			if content == "sand":
+				game.new_bldgs.GF = true
+			elif content == "coal":
+				game.new_bldgs.SE = true
+			elif content == "stone":
+				game.new_bldgs.SC = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
@@ -743,7 +751,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		rsrc.set_text(rsrc_text)
 
 func get_prod_mult(tile):
-	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
+	var mult = get_IR_mult(tile.bldg.name) * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
@@ -856,7 +864,7 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
-	return game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
+	return game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
 
 func update_ship_travel():
 	if game.ships_travel_view == "-":
@@ -950,6 +958,12 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
+						if not _tile.has("overclock_dict"):
+							_tile.overclock_bonus = tile.bldg.path_2_value
+							_tile.overclock_dict = {}
+						else:
+							_tile.overclock_bonus = max(_tile.overclock_bonus, tile.bldg.path_2_value)
+						_tile.overclock_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 			if game.tutorial and game.help.tutorial < 26:
@@ -1136,6 +1150,8 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, 1.0 + (dict.aurora.au_int if dict.has("aurora") else 0.0)) * n)
 		elif bldg == "AE":
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value))
+		elif bldg in ["MS", "B", "NSF", "ESF"]:
+			return dict.bldg.path_1_value * get_IR_mult("S") * n
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg in ["PC", "NC"]:
@@ -1147,14 +1163,10 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
-		var IR_mult:float = dict.bldg.IR_mult
-		if Data.path_2[bldg].has("is_value_integer"):
-			return round(dict.bldg.path_2_value * IR_mult * n)
+		if bldg == "SPR":
+			return dict.bldg.path_2_value * mult * n * game.u_i.charge
 		else:
-			if bldg == "SPR":
-				return dict.bldg.path_2_value * mult * n * game.u_i.charge
-			else:
-				return dict.bldg.path_2_value * IR_mult * n
+			return dict.bldg.path_2_value * n
 	elif path == 3:
 		return dict.bldg.path_3_value
 
@@ -1175,13 +1187,13 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 		"MM":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s\n[color=#88CCFF]%s[/color]" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
 		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"MS", "NSF", "ESF", "B":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
+			return (Data.path_1[bldg].desc % format_num(path_1_value, true)) + "\n[color=#88CCFF]" + tr("CLICK_TO_CONFIGURE") + "[/color]"
 		"GH":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"CBD":

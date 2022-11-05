@@ -305,12 +305,12 @@ var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "durat
 						"overclock6":{"costs":{"money":18000000}, "mult":5, "duration":24*60*60000},
 }
 
-var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":20}, "grow_time":3600000, "lake":"H2O", "produce":{"lead":60}},
-							"copper_seeds":{"costs":{"cellulose":10, "copper":20}, "grow_time":4800000, "lake":"H2O", "produce":{"copper":60}},
-							"iron_seeds":{"costs":{"cellulose":10, "iron":20}, "grow_time":6000000, "lake":"H2O", "produce":{"iron":60}},
-							"aluminium_seeds":{"costs":{"cellulose":15, "aluminium":20}, "grow_time":9000000, "lake":"He", "produce":{"aluminium":60}},
-							"silver_seeds":{"costs":{"cellulose":15, "silver":20}, "grow_time":14000000, "lake":"He", "produce":{"silver":60}},
-							"gold_seeds":{"costs":{"cellulose":20, "gold":20}, "grow_time":26000000, "lake":"CH4", "produce":{"gold":60}},
+var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":10}, "grow_time":1200000, "lake":"H2O", "produce":{"lead":60}},
+							"copper_seeds":{"costs":{"cellulose":10, "copper":10}, "grow_time":1500000, "lake":"H2O", "produce":{"copper":60}},
+							"iron_seeds":{"costs":{"cellulose":10, "iron":10}, "grow_time":1800000, "lake":"H2O", "produce":{"iron":60}},
+							"aluminium_seeds":{"costs":{"cellulose":15, "aluminium":10}, "grow_time":2400000, "lake":"He", "produce":{"aluminium":60}},
+							"silver_seeds":{"costs":{"cellulose":15, "silver":10}, "grow_time":3000000, "lake":"He", "produce":{"silver":60}},
+							"gold_seeds":{"costs":{"cellulose":15, "gold":10}, "grow_time":3600000, "lake":"CH4", "produce":{"gold":60}},
 							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
 
 var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
@@ -3451,9 +3451,7 @@ func add_resources(costs):
 			stats_dim.total_money_earned += costs.money
 			stats_univ.total_money_earned += costs.money
 		elif cost == "energy":
-			energy += costs.energy
-			if energy > energy_capacity:
-				energy = energy_capacity
+			Helper.add_energy(costs.energy)
 		elif cost == "SP":
 			SP += costs.SP
 		elif cost == "stone":
@@ -3476,6 +3474,8 @@ func add_resources(costs):
 				new_bldgs.GF = true
 			elif cost == "coal":
 				new_bldgs.SE = true
+			elif cost == "stone":
+				new_bldgs.SC = true
 
 func get_roman_num(num:int):
 	if num > 3999:

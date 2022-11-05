@@ -146,7 +146,7 @@ var desc_icons = {	"ME":[[minerals_icon]],
 					"NSF":[[neutron_icon]],
 					"EC":[[electron_icon]],
 					"ESF":[[electron_icon]],
-					"CBD":[[], []]
+					"CBD":[[], [], []]
 }
 
 var rsrc_icons = {	"ME":minerals_icon,
@@ -360,7 +360,7 @@ var science_unlocks = {
 var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2},
 									"EPE":{"cost":400, "pw":6.2},
 									"RLE":{"cost":1250, "pw":6.8},
-									"MSE":{"cost":350, "pw":6.2},
+									"SE":{"cost":500, "pw":6.5},
 									"MMS":{"cost":150, "pw":6.0},
 									"PME":{"cost":10000000, "pw":6.8},
 }

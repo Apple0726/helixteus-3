@@ -91,7 +91,7 @@ margin_bottom = 336.0
 rect_min_size = Vector2( 336, 0 )
 infinite_research = true
 
-[node name="MSE" parent="IR" instance=ExtResource( 1 )]
+[node name="SE" parent="IR" instance=ExtResource( 1 )]
 margin_left = 288.0
 margin_top = 368.0
 margin_right = 624.0

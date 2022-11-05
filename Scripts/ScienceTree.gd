@@ -24,6 +24,10 @@ func _ready():
 
 func refresh():
 	for sc in get_node(sc_type).get_children():
+		if Data.infinite_research_sciences.has(sc.name):
+			sc.main_tree = self
+			sc.refresh()
+			continue
 		if not sc is Line2D and not sc is Node2D and not Data.science_unlocks.has(sc.name):
 			continue
 		if sc.get_script():#A way of checking whether the node is a button
@@ -68,6 +72,8 @@ func _on_ScienceTree_tree_exited():
 
 func _on_IRAnim_animation_finished(anim_name):
 	if $IR.modulate.a == 0:
+		get_parent().position = Vector2.ZERO
+		get_parent().scale = Vector2.ONE
 		$IR.visible = false
 		get_node(sc_type).visible = true
 		get_node("%sAnim" % sc_type).play("Fade")
@@ -76,6 +82,8 @@ func _on_IRAnim_animation_finished(anim_name):
 
 func _on_MainAnim_animation_finished(anim_name):
 	if $Main.modulate.a == 0:
+		get_parent().position = Vector2.ZERO
+		get_parent().scale = Vector2.ONE
 		$Main.visible = false
 		get_node(sc_type).visible = true
 		get_node("%sAnim" % sc_type).play("Fade")
@@ -84,6 +92,8 @@ func _on_MainAnim_animation_finished(anim_name):
 
 func _on_OtherAnim_animation_finished(anim_name):
 	if $Other.modulate.a == 0:
+		get_parent().position = Vector2.ZERO
+		get_parent().scale = Vector2.ONE
 		$Other.visible = false
 		get_node(sc_type).visible = true
 		get_node("%sAnim" % sc_type).play("Fade")

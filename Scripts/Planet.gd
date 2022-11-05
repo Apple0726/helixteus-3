@@ -215,16 +215,16 @@ func show_tooltip(tile):
 		return
 	var tooltip:String = ""
 	var icons = []
-	var adv = false
 	var fiery_tooltip:int = -1
 	var fire_strength:float = 0.0
 	if tile.has("bldg"):
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
-		adv = len(icons) > 0
 		game.help_str = "tile_shortcuts"
 		if game.help.has("tile_shortcuts") and (not game.tutorial or game.tutorial.tut_num >= 26):
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
+		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
+			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
@@ -232,8 +232,7 @@ func show_tooltip(tile):
 		else:
 			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
 	elif tile.has("crater") and tile.crater.has("init_depth"):
-		adv = tile.has("aurora")
-		if adv:
+		if tile.has("aurora"):
 			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
 		game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
@@ -242,7 +241,6 @@ func show_tooltip(tile):
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("cave"):
 		var au_str:String = ""
-		adv = true
 		if tile.has("aurora"):
 			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
 			tooltip = au_str
@@ -257,7 +255,7 @@ func show_tooltip(tile):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
 			if game.help.has("cave_controls"):
-				tooltip += "\n%s\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
+				tooltip += "\n%s\n%s\n[color=#88CCFF]%s[/color]" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
 			else:
 				tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		if tile.cave.has("modifiers"):
@@ -316,7 +314,6 @@ func show_tooltip(tile):
 			if not tile.wormhole.has("investigation_length"):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time * 1000)]
 				icons = [Data.SP_icon, Data.time_icon]
-				adv = true
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
 		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif tile.has("aurora") and tooltip == "":
@@ -327,14 +324,8 @@ func show_tooltip(tile):
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
 	if tile.has("ruins"):
 		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
-	if adv:
+	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
-	else:
-		game.hide_adv_tooltip()
-		if tooltip == "":
-			game.hide_tooltip()
-		else:
-			game.show_tooltip(tooltip)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_param("seed", fiery_tooltip)
@@ -425,10 +416,10 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
-		if Helper.has_IR(_bldg_to_construct):
-			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
-		else:
-			tile.bldg.IR_mult = 1
+#		if Helper.has_IR(_bldg_to_construct):
+#			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
+#		else:
+#			tile.bldg.IR_mult = 1
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct)
 	elif not mass_build:
@@ -504,7 +495,7 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 		game.item_to_use.num -= num_needed
 
 func overclock_bldg(tile, tile_id:int, curr_time):
-	var mult:float = game.overclocks_info[game.item_to_use.name].mult
+	var mult:float = game.overclocks_info[game.item_to_use.name].mult * (tile.overclock_bonus if tile.has("overclock_bonus") else 1.0)
 	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
@@ -645,6 +636,16 @@ func destroy_bldg(id2:int, mass:bool = false):
 						for st in _tile.cost_div_dict:
 							div = max(div, _tile.cost_div_dict[st])
 						_tile.cost_div = div
+				if _tile.has("overclock_dict"):
+					_tile.overclock_dict.erase(String(id2))
+					if _tile.overclock_dict.empty():
+						_tile.erase("overclock_dict")
+						_tile.erase("overclock_bonus")
+					else:
+						var bonus:float = 1.0
+						for st in _tile.overclock_dict:
+							bonus = max(bonus, _tile.overclock_dict[st])
+						_tile.overclock_bonus = bonus
 	if tile.has("auto_GH"):
 		for p in tile.auto_GH.produce:
 			game.autocollect.mets[p] -= tile.auto_GH.produce[p]
@@ -837,7 +838,7 @@ func _unhandled_input(event):
 					continue
 				if tile.has("bldg"):
 					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
-						if not Input.is_action_pressed("alt"):
+						if not Input.is_action_pressed("alt") or tile2.has("cost_div"):
 							select = true
 				elif tile.has("plant") and tile.plant.has("name"):
 					if tile2.has("plant") and tile2.plant.has("name") and tile2.plant.name == tile.plant.name:
@@ -847,7 +848,7 @@ func _unhandled_input(event):
 						if tile.bldg.name in ["SC", "SE", "GF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
-						elif tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "RL", "MS", "PC", "NC", "EC", "NSF", "ESF"]:
+						elif tile.bldg.name in ["ME", "PP", "SP", "AE", "MM", "B", "RL", "MS", "PC", "NC", "EC", "NSF", "ESF"]:
 							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
 						else:
 							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
@@ -1340,12 +1341,12 @@ func add_bldg(id2:int, st:String):
 			if Mods.added_buildings.has(st):
 				add_rsrc(v, Mods.added_buildings[st].icon_color, Data.rsrc_icons[st], id2)
 	var curr_time = OS.get_system_time_msecs()
-	var IR_mult = Helper.get_IR_mult(tile.bldg.name)
-	if tile.bldg.IR_mult != IR_mult:
-		var diff:float = IR_mult / tile.bldg.IR_mult
-		tile.bldg.IR_mult = IR_mult
-		if not tile.bldg.is_constructing and tile.bldg.has("collect_date"):
-			tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
+#	var IR_mult = Helper.get_IR_mult(tile.bldg.name)
+#	if tile.bldg.IR_mult != IR_mult:
+#		var diff:float = IR_mult / tile.bldg.IR_mult
+#		tile.bldg.IR_mult = IR_mult
+#		if not tile.bldg.is_constructing and tile.bldg.has("collect_date"):
+#			tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
 	var hbox = Helper.add_lv_boxes(tile, v)
 	add_child(hbox)
 	hboxes[id2] = hbox

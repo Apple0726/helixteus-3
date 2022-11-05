@@ -163,9 +163,6 @@ margin_top = 96.0
 margin_right = 200.0
 margin_bottom = 128.0
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="NextLv" type="SpinBox" parent="."]
 anchor_left = 0.5

@@ -209,20 +209,15 @@ func place_crumbles(num:int, sc:float, v:float):
 		move_child($Circle, get_child_count())
 		crumble.position = mouse_pos
 		crumbles.append({"sprite":crumble, "velocity":Vector2(rand_range(-2, 2), rand_range(-8, -4)) * v, "angular_velocity":rand_range(-0.08, 0.08)})
-#
-#func hide_help():
-#	$Help.visible = false
-#	game.help.erase("mining")
-#	var tween:Tween = Tween.new()
-#	circ.modulate.a = 0
-#	circ.visible = true
-#	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
-#	tween.interpolate_property($RsrcMinedBtn, "modulate", null, Color(1, 1, 1, 1.0), 2)
-#	add_child(tween)
-#	tween.start()
-#	yield(tween, "tween_all_completed")
-#	remove_child(tween)
-#	tween.queue_free()
+
+# Called by HelpAnim node
+func hide_help():
+	$Help.visible = false
+	game.help.erase("mining")
+	var tween = create_tween()
+	circ.modulate.a = 0
+	circ.visible = true
+	tween.tween_property(circ, "modulate", Color(1, 1, 1, 0.5), 2)
 
 var help_counter = 0
 func pickaxe_hit():
