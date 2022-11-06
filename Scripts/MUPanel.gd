@@ -87,8 +87,11 @@ func _on_Upgrade_pressed(MU:String):
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
 			game.objective.current += 1
 		game.HUD.refresh()
-		if MU == "AIE" and game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
-			game.mining_HUD.refresh_aurora_bonus()
+		if MU == "AIE":
+			if game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
+				game.mining_HUD.refresh_aurora_bonus()
+			for AI in game.aurora_SPs.keys():
+				game.autocollect.rsrc.energy += game.aurora_SPs[AI] * pow(AI, Helper.get_AIE()) * (pow(AI, 1.02) - 1.0)
 		if MU == "IS":
 			game.items.append(null)
 	else:

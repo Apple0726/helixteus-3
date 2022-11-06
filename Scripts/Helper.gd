@@ -139,7 +139,9 @@ func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
 		return tr(game.speedups_info[_name].name) % game.speedups_info[_name].name_param
 	if _name.substr(0, 9) == "overclock":
-		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
+		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name[9]))
+	if _name.substr(0, 5) == "drill":
+		return tr("DRILL") + " " + game.get_roman_num(int(_name[5]))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
 		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
 	return tr(_name.to_upper())
@@ -646,8 +648,8 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 		vbox.move_child(label, idx)
 
 #solar panels
-func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
-	return value * temp * au_mult / 273.0
+func get_SP_production(temp:float, value:float):
+	return value * temp / 273.0
 
 #atm extractor
 func get_AE_production(pressure:float, value:float):
@@ -698,18 +700,21 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 #					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
 #				else:
 #					rsrc_text.text = String(stored)
-		"ME", "PP", "SP", "RL":
-			var prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+		"ME":
+			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+		"SP":
+			var prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile))
+			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+		"PP", "RL":
+			var prod = tile.bldg.path_1_value * get_prod_mult(tile)
+			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 		"PC", "NC":
-			var prod = 1000 / (tile.bldg.path_1_value / p_i.pressure)
-			prod /= get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+			var prod = tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
+			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 		"EC":
-			var prod = 1000 / (tile.bldg.path_1_value * tile.aurora.au_int)
-			prod /= get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(1000.0 / prod, true), tr("S_SECOND")]
+			var prod = tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
+			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 		"SC":
 			if tile.bldg.has("stone"):
 				var c_i = get_crush_info(tile)
@@ -909,7 +914,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
-			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+			var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 			if tile.bldg.name == "MS":
 				game.mineral_capacity += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "B":
@@ -919,17 +924,25 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			elif tile.bldg.name == "ESF":
 				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
-				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult
 			elif tile.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
 			elif tile.bldg.name == "PP":
-				game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult
+				game.autocollect.rsrc.energy += tile.bldg.path_1_value * overclock_mult
+			elif tile.bldg.name == "SP":
+				var SP_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile))
+				game.autocollect.rsrc.energy += SP_prod
+				if tile.has("aurora"):
+					if game.aurora_SPs.has(tile.aurora.au_int):
+						game.aurora_SPs[tile.aurora.au_int] += SP_prod
+					else:
+						game.aurora_SPs[tile.aurora.au_int] = SP_prod
 			elif tile.bldg.name == "PC":
-				game.autocollect.particles.proton += tile.bldg.path_1_value * mult / tile.bldg.planet_pressure
+				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
-				game.autocollect.particles.neutron += tile.bldg.path_1_value * mult / tile.bldg.planet_pressure
+				game.autocollect.particles.neutron += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "EC":
-				game.autocollect.particles.electron += tile.bldg.path_1_value * mult * tile.aurora.au_int
+				game.autocollect.particles.electron += tile.bldg.path_1_value * overclock_mult * tile.aurora.au_int
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
@@ -1147,7 +1160,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == "SP":
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, 1.0 + (dict.aurora.au_int if dict.has("aurora") else 0.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * Helper.get_au_mult(dict)) * n)
 		elif bldg == "AE":
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value))
 		elif bldg in ["MS", "B", "NSF", "ESF"]:

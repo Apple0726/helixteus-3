@@ -312,7 +312,7 @@ func _process(delta):
 	if not game or move_ship_inst:
 		ship.position = m_pos
 	else:
-		ship.position = ship.position.move_toward(m_pos, ship.position.distance_to(m_pos) / 6.0)
+		ship.position = ship.position.move_toward(m_pos, ship.position.distance_to(m_pos) / 6.0 * delta * 60)
 	point.position = m_pos
 	acc_time.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0, secs_elapsed * 1000 - penalty_time))]
 	for star in get_tree().get_nodes_in_group("stars"):
@@ -363,7 +363,7 @@ func inc_combo():
 func hit_test(bullet):
 	if red_flash.modulate.a <= 0 and Geometry.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
 		red_flash.modulate.a = 0.3 
-		penalty_time += 6000 #miliseconds removed when hit
+		penalty_time += 6000 * (1 + (game.MUs.STMB - 1) * 0.15) #miliseconds removed when hit
 		got_hit = true
 		no_hit_combo = 0
 

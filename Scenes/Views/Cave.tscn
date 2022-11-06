@@ -1,4 +1,4 @@
-[gd_scene load_steps=192 format=2]
+[gd_scene load_steps=193 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -45,18 +45,13 @@
 [ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=43]
 [ext_resource path="res://Graphics/Tiles/Lava.png" type="Texture" id=44]
 [ext_resource path="res://Graphics/Misc/noise_combined.png" type="Texture" id=45]
-
-[sub_resource type="Shader" id=5]
-code = "shader_type canvas_item;
-
-void fragment() {
-	vec4 c = texture(TEXTURE, UV);
-	COLOR.rgb = vec3(pow(length(c.rgb), 0.7) / 2.0);
-	COLOR.a = c.a;
-}"
+[ext_resource path="res://Shaders/BCS.shader" type="Shader" id=46]
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = SubResource( 5 )
+shader = ExtResource( 46 )
+shader_param/brightness = 1.0
+shader_param/contrast = 1.0
+shader_param/saturation = 1.0
 
 [sub_resource type="ConvexPolygonShape2D" id=104]
 points = PoolVector2Array( 200, 200, 40, 200, 40, 40, 200, 40 )
@@ -506,6 +501,15 @@ points = PoolVector2Array( 0, 40, 40, 40, 40, 0, 160, 0, 160, 40, 200, 40, 200, 
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 0/z_index = 0
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	COLOR.rgb = vec3(pow(length(c.rgb), 0.7) / 2.0);
+	COLOR.a = c.a;
+}"
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = SubResource( 5 )
@@ -1901,9 +1905,6 @@ margin_top = -104.0
 margin_right = 216.0
 mouse_filter = 2
 theme = ExtResource( 29 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft"]
 margin_bottom = 104.0

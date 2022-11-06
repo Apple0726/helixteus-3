@@ -13,7 +13,7 @@ func _ready():
 	_on_btn_pressed("Mining")
 	$VBox/Tabs.get_node("Mining")._on_Button_pressed()
 	buy_btn.text = tr("CRAFT")
-	buy_btn.icon = load("res://Graphics/Icons/craft.png")
+	buy_btn.icon = preload("res://Graphics/Icons/craft.png")
 	$VBox/HBox/ItemInfo/VBox/HBox.visible = true
 
 func _on_btn_pressed(btn_str:String):
@@ -80,5 +80,8 @@ func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
 		desc += "%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
 		desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
 	elif btn_str == "Cave":
-		desc += tr("%s_DESC" % item.to_upper())
+		if item.substr(0, 5) == "drill":
+			desc += tr("DRILL_DESC") % craft_info.limit
+		else:
+			desc += tr("%s_DESC" % item.to_upper())
 	return desc

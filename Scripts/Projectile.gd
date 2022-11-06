@@ -53,7 +53,7 @@ func _physics_process(delta):
 			var th:float = atan2(seeking_body.position.y - position.y, seeking_body.position.x - position.x)
 			seeking_ray.cast_to = polar2cartesian(1500, th - rotation)
 			if seeking_ray.get_collider() is KinematicBody2D:
-				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * 0.12 * speed / 30.0).normalized()
+				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * speed / 2500.0).normalized()
 				rotation = direction.angle()
 
 func collide(collision:KinematicCollision2D):

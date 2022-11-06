@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/HXs_Cave/CaveBoss.gd"
 }, {
+"base": "StaticBody2D",
+"class": "Debris",
+"language": "GDScript",
+"path": "res://Scripts/Debris.gd"
+}, {
 "base": "Area2D",
 "class": "NPC",
 "language": "GDScript",
@@ -43,6 +48,7 @@ _global_script_class_icons={
 "AuroraText": "",
 "Cave": "",
 "CaveBoss": "",
+"Debris": "",
 "NPC": "",
 "Projectile": "",
 "ResourceStored": ""

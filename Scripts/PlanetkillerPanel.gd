@@ -30,7 +30,6 @@ func refresh():
 		$StartCharging.visible = false
 		c_s_g = game.c_s_g
 	for child in $Scroll/Planets.get_children():
-		$Scroll/Planets.remove_child(child)
 		child.free()
 	for i in len(game.planet_data):
 		var p_i = game.planet_data[i]

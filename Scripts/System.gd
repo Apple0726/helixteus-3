@@ -8,7 +8,7 @@ var star_shader = preload("res://Shaders/Star.shader")
 #Used to prevent view from moving outside viewport
 var dimensions:float
 
-const PLANET_SCALE_DIV = 6400000.0 / 2.0
+const PLANET_SCALE_DIV = 1200000.0
 var glows = []
 var star_time_bars = []
 var planet_time_bars = []
@@ -33,11 +33,9 @@ func refresh_planets():
 	var curr_time = OS.get_system_time_msecs()
 	for planet_thing in get_tree().get_nodes_in_group("planet_stuff"):
 		planet_thing.remove_from_group("planet_stuff")
-		remove_child(planet_thing)
 		planet_thing.queue_free()
 	for info_node in get_tree().get_nodes_in_group("info_nodes"):
 		info_node.remove_from_group("info_nodes")
-		remove_child(info_node)
 		info_node.queue_free()
 	for rsrc in planet_rsrcs:
 		remove_child(rsrc.node)
@@ -59,39 +57,31 @@ func refresh_planets():
 			tile_datas.append([])
 			continue
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
-		if p_i.has("tile_num") and not tile_data_to_append.empty():#Save migration
-			var dir = Directory.new()
-			dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, p_i.id])
-			tile_data_to_append.clear()
+#		if p_i.has("tile_num") and not tile_data_to_append.empty():#Save migration
+#			var dir = Directory.new()
+#			dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, p_i.id])
+#			tile_data_to_append.clear()
 		tile_datas.append(tile_data_to_append)
 		
 		var v:Vector2 = polar2cartesian(p_i.distance, p_i.angle)
 		var orbit = game.orbit_scene.instance()
-		orbit.radius = p_i["distance"]
+		orbit.radius = v.length()
 		self.add_child(orbit)
 		orbit.add_to_group("planet_stuff")
-		var planet_btn = TextureButton.new()
-		var planet_glow = TextureButton.new()
-		var planet = Sprite.new()
-		var planet_glow_texture = preload("res://Graphics/Misc/Glow.png")
+		var planet = preload("res://Scenes/PlanetButton.tscn").instance()
+		var planet_btn = planet.get_node("Button")
+		var planet_glow = planet.get_node("Glow")
 		planet_btn.texture_normal = game.planet_textures[p_i.type - 3]
-		planet_glow.texture_normal = planet_glow_texture
-		self.add_child(planet)
-		planet.add_child(planet_glow)
-		planet.add_child(planet_btn)
+		add_child(planet)
 		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i.id, p_i.l_id])
 		planet_glow.connect("mouse_entered", self, "on_glow_planet_over", [p_i.id, p_i.l_id, planet_glow])
 		planet_btn.connect("mouse_exited", self, "on_btn_out")
 		planet_glow.connect("mouse_exited", self, "on_btn_out")
 		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
 		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
-		planet_btn.rect_position = Vector2(-320, -320)
-		planet_btn.rect_pivot_offset = Vector2(320, 320)
 		planet_btn.rect_scale.x = p_i["size"] / PLANET_SCALE_DIV
 		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
-		planet_glow.rect_pivot_offset = Vector2(100, 100)
-		planet_glow.rect_position = Vector2(-100, -100)
-		var sc:float = p_i["distance"] / 1200.0
+		var sc:float = p_i["distance"] / 2400.0
 		planet_glow.rect_scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
@@ -154,7 +144,7 @@ func refresh_planets():
 				planet_glow.modulate = Color.burlywood
 			else:
 				planet_glow.modulate = Color.red
-		dimensions = p_i.distance
+		dimensions = v.length()
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS = Sprite.new()
@@ -202,11 +192,11 @@ func refresh_planets():
 				p_i.bldg.IR_mult = IR_mult
 				if p_i.bldg.has("collect_date"):
 					p_i.bldg.collect_date = curr_time - (curr_time - p_i.bldg.collect_date) / diff
-		planet.position = v
+		planet.rect_position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
 		if planets_affected_by_CBS > 0 and i == planets_affected_by_CBS - 1:
-			CBS_range = p_i.distance * 1.1
+			CBS_range = v.length() * 1.1
 
 func _draw():
 	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), 1)

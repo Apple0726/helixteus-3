@@ -149,6 +149,9 @@ var mets:Dictionary
 var atoms:Dictionary
 var particles:Dictionary
 
+#Stores production values of all solar panels under an aurora (useful to recalculate energy production after buying AIE upgrade)
+var aurora_SPs:Dictionary = {}
+
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {}
 
@@ -318,7 +321,9 @@ var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "sp
 }
 
 var craft_cave_info = {
-	"drill":{"costs":{"iron":500, "aluminium":500, "titanium":70}},
+	"drill1":{"costs":{"iron":100, "aluminium":20}, "limit":8},
+	"drill2":{"costs":{"aluminium":600, "titanium":150}, "limit":16},
+	"drill3":{"costs":{"platinum":4000, "diamond":3000}, "limit":24},
 	"portable_wormhole":{"costs":{"quartz":300, "diamond":80}},
 }
 
@@ -1177,7 +1182,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2].surface.soil.chance = 0.6
 		planet_data[2].surface.soil.amount = 60
 		planet_data[2].surface.cellulose.chance = 0.4
-		planet_data[2].surface.cellulose.amount = 10
+		planet_data[2].surface.cellulose.amount = 50
 		planet_data[2].bookmarked = true
 	bookmarks = {"planet":{"2":{
 				"type":planet_data[2].type,
@@ -2992,7 +2997,7 @@ func generate_tiles(id:int):
 							modifiers[key] = modifiers2[key].treasure_if_true
 						modifiers2.erase(key)
 				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
-				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period}
+				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":randf() + 0.2}
 				if not modifiers.empty():
 					tile_data[t_id].cave.modifiers = modifiers
 				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
@@ -3047,9 +3052,9 @@ func generate_tiles(id:int):
 	planet_data[id]["discovered"] = true
 	if home_planet:
 		tile_data[42] = {}
-		tile_data[42].cave = {"num_floors":5, "floor_size":25}
+		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
 		tile_data[215] = {}
-		tile_data[215].cave = {"num_floors":8, "floor_size":30}
+		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 		if TEST:
 			var curr_time = OS.get_system_time_msecs()
 			tile_data[107] = {}
@@ -3850,6 +3855,7 @@ func fn_save_game():
 		"stone":stone,
 		"energy":energy,
 		"SP":SP,
+		"aurora_SPs":aurora_SPs,
 		"c_v":c_v,
 		"l_v":l_v,
 		"c_c":c_c,

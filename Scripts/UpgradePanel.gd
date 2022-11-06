@@ -3,6 +3,7 @@ extends "Panel.gd"
 var BASE_PW:float = 1.3
 var ids:Array = []
 var planet:Dictionary#Only for terraformed planets
+var p_i:Dictionary#Information on the planet you're on
 var bldg:String = ""#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
@@ -38,6 +39,7 @@ func refresh():
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
 	else:
+		p_i = game.planet_data[game.c_p]
 		var first_tile_bldg = game.tile_data[ids[0]].bldg
 		if len(ids) == 1:
 			$Label.text = tr("UPGRADE_X").format({"bldg":tr(first_tile_bldg.name + "_NAME")})
@@ -219,10 +221,10 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	var curr_value:float
 	var IR_mult:float = 1.0
 	if bldg == "SP" and path_selected == 1:
-		curr_value = bldg_value(Helper.get_SP_production(game.planet_data[game.c_p].temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 		IR_mult = Helper.get_IR_mult("SP")
 	elif bldg == "AE" and path_selected == 1:
-		curr_value = bldg_value(Helper.get_AE_production(game.planet_data[game.c_p].pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.plant.ash if first_tile.has("plant") and first_tile.plant.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
 		IR_mult = Helper.get_IR_mult("ME")
@@ -339,33 +341,42 @@ func _on_Upgrade_pressed():
 				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed * game.engineering_bonus.BCM)
 				if tile.has("cost_div"):
 					cost_time /= tile.cost_div
+				var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 				if auto_speedup:
 					cost_time = 0.2
-				if tile.bldg.has("collect_date"):
-					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-					if tile.has("auto_collect"):
-						if tile.bldg.name == "ME":
-							var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-							game.autocollect.rsrc_list[String(game.c_p_g)].minerals -= prod * tile.auto_collect / 100.0 * mult
-							game.autocollect.rsrc.minerals -= prod * tile.auto_collect / 100.0 * mult
-						elif tile.bldg.name == "PP":
-							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-						elif tile.bldg.name == "SP":
-							var p_i:Dictionary = game.planet_data[game.c_p]
-							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 0.0))
-							game.autocollect.rsrc_list[String(game.c_p_g)].energy -= prod * tile.auto_collect / 100.0 * mult
-							game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
-					if tile.bldg.name == "RL":
-						game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value
-						game.autocollect.rsrc.SP -= tile.bldg.path_1_value
-					var prod_ratio
-					if path_str == "path_1":
-						prod_ratio = new_base_value / tile.bldg.path_1_value
-					else:
-						prod_ratio = 1.0
-					var coll_date = tile.bldg.collect_date
-					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
+#				if tile.bldg.has("collect_date"):
+#					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+#					if tile.has("auto_collect"):
+#						if tile.bldg.name == "ME":
+#							var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+#							game.autocollect.rsrc.minerals -= prod * tile.auto_collect / 100.0 * mult
+#						elif tile.bldg.name == "PP":
+#							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+#						elif tile.bldg.name == "SP":
+#							var p_i:Dictionary = game.planet_data[game.c_p]
+#							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * Helper.get_au_mult(tile))
+#							game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
+#					if tile.bldg.name == "RL":
+#						game.autocollect.rsrc.SP -= tile.bldg.path_1_value
+#					var prod_ratio
+#					if path_str == "path_1":
+#						prod_ratio = new_base_value / tile.bldg.path_1_value
+#					else:
+#						prod_ratio = 1.0
+#					var coll_date = tile.bldg.collect_date
+#					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
+				elif tile.bldg.name == "ME":
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+				elif tile.bldg.name == "PP":
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
+				elif tile.bldg.name == "RL":
+					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult
+				elif tile.bldg.name == "SP":
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
+					game.autocollect.rsrc.energy -= SP_prod
+					if tile.has("aurora"):
+						if game.aurora_SPs.has(tile.aurora.au_int):
+							game.aurora_SPs[tile.aurora.au_int] -= SP_prod
 				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):

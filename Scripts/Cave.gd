@@ -118,6 +118,7 @@ var chests:Dictionary = {}#Random chests and their contents
 var active_chest:String = "-1"#Chest id of currently active chest (rover is touching it)
 var active_type:String = ""
 var tiles_touched_by_laser:Dictionary = {}
+var debris_touched_by_laser:Dictionary = {}
 
 ### Cave save data ###
 
@@ -126,6 +127,7 @@ var tiles_mined:Array = []#Contains data of mined tiles so they don't show up ag
 var enemies_rekt:Array = []#idem
 var chests_looted:Array = []
 var partially_looted_chests:Array = []
+var debris_rekt:Array = []
 var hole_exits:Array = []#id of hole and exit on each floor
 
 ### End cave save data ###
@@ -137,11 +139,14 @@ var tile_mod:Color = Color.white
 var tile_brightness:float
 var brightness_mult:float
 
+var big_debris:Dictionary = {}
+
 #Modifiers
 
 var enemy_attack_rate:float = 1.0
 var enemy_projectile_size:float = 1.0
 var treasure_mult:float = 1.0
+var debris_amount:float
 
 func _ready():
 	if game.subjects.dimensional_power.lv > 1:
@@ -192,13 +197,12 @@ func _ready():
 	if not game.achievement_data.random.has("clear_out_cave_floor"):
 		$CheckAchievements.start()
 	tile_brightness = game.tile_brightness[p_i.type - 3]
-	$TileMap.material.shader = preload("res://Shaders/BCS.shader")
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
 		if star.luminosity > lum:
 			tile_mod = Helper.get_star_modulate(star.class)
-			$TileMap.modulate = tile_mod
+			#$TileMap.modulate = tile_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
 				strength_mult = min(range_lerp(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
@@ -218,6 +222,11 @@ func _ready():
 		cave_type = "diamond_tower"
 	num_floors = tile[cave_type].num_floors
 	cave_size = tile[cave_type].floor_size
+	if not tile[cave_type].has("debris"):
+		tile[cave_type].debris = randf() + 0.2
+	if not tile[cave_type].has("period"):
+		tile[cave_type].period = 65
+	debris_amount = tile[cave_type].debris
 	if tile[cave_type].has("modifiers"):
 		$UI2/CaveInfo/Modifiers.visible = true
 		modifiers = tile[cave_type].modifiers
@@ -247,6 +256,7 @@ func _ready():
 		seeds = cave_data.seeds
 		tiles_mined = cave_data.tiles_mined
 		enemies_rekt = cave_data.enemies_rekt
+		debris_rekt = cave_data.get("debris_rekt", [[]])
 		chests_looted = cave_data.chests_looted
 		partially_looted_chests = cave_data.partially_looted_chests
 		hole_exits = cave_data.hole_exits
@@ -363,6 +373,7 @@ func remove_cave():
 	cave_wall.clear()
 	lava_tiles.clear()
 	minimap_cave.clear()
+	big_debris.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 		enemy.free()
@@ -375,6 +386,9 @@ func remove_cave():
 	for light in get_tree().get_nodes_in_group("lights"):
 		light.remove_from_group("lights")
 		light.free()
+	for debris in get_tree().get_nodes_in_group("debris"):
+		debris.remove_from_group("debris")
+		debris.free()
 	for enemy_icon in get_tree().get_nodes_in_group("enemy_icons"):
 		enemy_icon.remove_from_group("enemy_icons")
 		enemy_icon.free()
@@ -393,6 +407,9 @@ func remove_cave():
 	for tile in tiles_touched_by_laser:
 		tiles_touched_by_laser[tile].bar.free()
 	tiles_touched_by_laser.clear()
+	for tile in debris_touched_by_laser:
+		debris_touched_by_laser[tile].bar.free()
+	debris_touched_by_laser.clear()
 	chests.clear()
 	deposits.clear()
 
@@ -456,6 +473,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		seeds.append(sd)
 		tiles_mined.append([])
 		enemies_rekt.append([])
+		debris_rekt.append([])
 		chests_looted.append([])
 		partially_looted_chests.append({})
 		hole_exits.append({"hole":-1, "exit":-1})
@@ -464,7 +482,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		noise.seed = seeds[cave_floor - 1]
 		lava_noise.seed = seeds[cave_floor - 1] * 2
 	noise.octaves = 1
-	noise.period = tile.cave.get("period", 65)
+	noise.period = tile.cave.period
 	lava_noise.octaves = 1
 	lava_noise.period = rng.randi_range(30, 120)
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
@@ -479,6 +497,43 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			cave.set_cell(i, j, tile_type)
+			# Decorative pebbles
+#			for k in rng.randi_range(0, 2):
+#				var debris = Sprite.new()
+#				debris.texture = preload("res://Graphics/Cave/DebrisCave.png")
+#				debris.hframes = 6
+#				debris.frame = rng.randi_range(0, 5)
+#				add_child_below_node($Ash, debris)
+#				debris.modulate = tile_mod
+#				debris.rotation_degrees = rng.randf_range(0, 360)
+#				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
+#				debris.scale = Vector2.ONE * (pow(rng.randf(), 4) / 2.0 + 0.2)
+			if rng.randf() < debris_amount:
+				var debris = Sprite.new()
+				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
+				add_child_below_node($Ash, debris)
+				debris.modulate = tile_mod * rng.randf_range(0.85, 1.0) * (1.0 - cave_darkness)
+				debris.modulate.a = 1.0
+				debris.rotation_degrees = rng.randf_range(0, 360)
+				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
+				debris.scale = Vector2.ONE * rng.randf_range(0.5, 1.0)
+				debris.add_to_group("debris")
+			# Big boi rocks with collision detection
+			if rng.randf() < debris_amount / 12.0:
+				var debris = preload("res://Scenes/Debris.tscn").instance()
+				debris.sprite_frame = rng.randi_range(0, 5)
+				debris.modulate = tile_mod * rng.randf_range(0.85, 1.0) * (1.0 - cave_darkness)
+				debris.modulate.a = 1.0
+				debris.rotation_degrees = rng.randf_range(0, 360)
+				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(70, 130), rng.randf_range(70, 130))
+				debris.scale = Vector2.ONE * rng.randf_range(1.0, 3.0)
+				if debris_rekt[cave_floor - 1].has(tile_id):
+					debris.free()
+				else:
+					debris.add_to_group("debris")
+					debris.id = tile_id
+					add_child_below_node($Ash, debris)
+					big_debris[tile_id] = debris
 			if level > 0:
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < range_lerp(cave_floor, 1, 8, 0.6, 0.0):
@@ -581,12 +636,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, -1, 1)
+		cave_wall.set_cell(i, -2, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(i, cave_size, 1)
+		cave_wall.set_cell(i, cave_size + 1, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(-1, i, 1)
+		cave_wall.set_cell(-2, i, 1)
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(cave_size, i, 1)
+		cave_wall.set_cell(cave_size + 1, i, 1)
 	#tiles = cave_wall.get_used_cells_by_id(-1)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
@@ -721,13 +780,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 		hole.get_node("CollisionShape2D").disabled = false
 		hole.visible = true
 		MM_hole.visible = true
-	#No treasure chests at spawn/hole
+	#No treasure chests or rocks at spawn/hole
+	if big_debris.has(rand_hole):
+		big_debris[rand_hole].queue_free()
+	if big_debris.has(rand_spawn):
+		big_debris[rand_spawn].queue_free()
 	if chests.has(String(rand_hole)):
-		remove_child(chests[String(rand_hole)].node)
 		chests[String(rand_hole)].node.queue_free()
 		chests.erase(String(rand_hole))
 	if chests.has(String(rand_spawn)):
-		remove_child(chests[String(rand_spawn)].node)
 		chests[String(rand_spawn)].node.queue_free()
 		chests.erase(String(rand_spawn))
 	#A way to check whether cave has the relic for 2nd ship
@@ -979,8 +1040,8 @@ func on_map_exited(_body):
 	active_type = ""
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
-	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * pow(difficulty, 1.25)),
-						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * pow(difficulty, 1.2)),
+	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
+						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.6))}
 	if contents.hx_core > 8:
 		contents.hx_core2 = int(contents.hx_core / 8.0)
@@ -1003,13 +1064,13 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		var met_value = game.met_info[met]
 		var rarity = met_value.rarity
 		if cave_floor >= 8:
-			rarity = pow(rarity, range_lerp(cave_floor, 8, 16, 0.9, 0.8))
+			rarity = pow(rarity, range_lerp(cave_floor, 8, 32, 0.9, 0.6))
 		if aurora:
 			rarity = pow(rarity, 0.9)
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
 		if rng.randf() < 1 / (rarity + 1):
-			contents[met] = Helper.clever_round(20 * rng.randf_range(0.4, 0.7) / pow(rarity, 0.9) * pow(tier, 2.0) * pow(difficulty, 1.1) * treasure_mult)
+			contents[met] = Helper.clever_round(10 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1044,6 +1105,7 @@ func update_health_bar(_HP):
 
 var mouse_pos = Vector2.ZERO
 var tile_highlighted_for_mining:int = -1
+var mining_debris:int = -1
 
 func update_ray():
 	var _inv:Dictionary
@@ -1085,25 +1147,34 @@ func update_ray():
 		var laser_reach = Data.rover_mining[_inv.name].rnge
 		ray.cast_to = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
-		if coll is TileMap:
+		mining_p.emitting = holding_click if coll else false
+		if coll:
 			var pos = ray.get_collision_point() + ray.cast_to / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
 			tile_highlighted_for_mining = get_tile_index(cave_wall.world_to_map(pos))
-			var is_minable = cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
-			if tile_highlighted_for_mining != -1 and is_minable:
+			var is_wall = coll is TileMap and cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
+			mining_p.position = pos
+			if tile_highlighted_for_mining and is_wall:
 				_tile_highlight.visible = true
 				_tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
 				_tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
-				mining_p.emitting = holding_click
-				if holding_click:
-					mining_p.position = pos
 			else:
-				mining_p.emitting = false
 				tile_highlighted_for_mining = -1
+				_tile_highlight.visible = false
+			if coll is Debris:
+				mining_debris = coll.id
+				if not debris_touched_by_laser.has(mining_debris):
+					var circ_bar = preload("res://Scenes/CircleBar.tscn").instance()
+					add_child(circ_bar)
+					circ_bar.rect_scale *= big_debris[mining_debris].scale.x
+					circ_bar.rect_position = big_debris[mining_debris].position - Vector2(32, 32) * circ_bar.rect_scale
+					debris_touched_by_laser[mining_debris] = {"bar":circ_bar, "progress":0}
+			else:
+				mining_debris = -1
 		else:
 			tile_highlighted_for_mining = -1
+			mining_debris = -1
 			_tile_highlight.visible = false
-			mining_p.emitting = false
 		mining_laser.visible = holding_click
 		if holding_click:
 			mining_laser.scale.x = laser_reach / 16.0
@@ -1349,6 +1420,7 @@ func exit_cave():
 		"seeds":seeds.duplicate(true),
 		"tiles_mined":tiles_mined.duplicate(true),
 		"enemies_rekt":enemies_rekt.duplicate(true),
+		"debris_rekt":debris_rekt.duplicate(true),
 		"chests_looted":chests_looted.duplicate(true),
 		"partially_looted_chests":partially_looted_chests.duplicate(true),
 		"hole_exits":hole_exits.duplicate(true),
@@ -1456,16 +1528,22 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
 		cooldown(cooldown)
-	elif item.type == "rover_mining" and tile_highlighted_for_mining != -1:
-		hit_rock(item, _tile_highlight, delta)
+	elif item.type == "rover_mining":
+		if tile_highlighted_for_mining != -1:
+			mine_wall(item, _tile_highlight, delta)
+		elif mining_debris != -1:
+			mine_debris(item, delta)
 		update_ray()
 	elif item.type == "consumable":
 		if item.name == "portable_wormhole":
 			remove_item(item, 1)
 			exit_cave()
-		elif item.name == "drill":
+		elif item.name.substr(0, 5) == "drill":
 			if tile.cave.has("special_cave"):
 				game.popup(tr("DRILL_ERROR"), 2.0)
+				return
+			if cave_floor >= game.craft_cave_info[item.name].limit:
+				game.popup(tr("DRILL_ERROR3"), 1.5)
 				return
 			if cave_floor == num_floors:
 				game.popup(tr("DRILL_ERROR2"), 1.5)
@@ -1590,7 +1668,7 @@ func get_color(color:String):
 		"ultragammaray":
 			return Color.white
 
-func hit_rock(item:Dictionary, _tile_highlight, delta):
+func mine_wall(item:Dictionary, _tile_highlight, delta):
 	var st = str(tile_highlighted_for_mining)
 	if not tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st] = {}
@@ -1602,32 +1680,59 @@ func hit_rock(item:Dictionary, _tile_highlight, delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * (0.1 if tower else 1) * time_speed
+		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
-			mine_tile(_tile_highlight.position, tile_highlighted_for_mining)
+			mine_wall_complete(_tile_highlight.position, tile_highlighted_for_mining)
 			tile_highlighted_for_mining = -1
 
-func mine_tile(tile_pos:Vector2, tile_id:int):
-	var st = str(tile_id)
-	game.stats_univ.tiles_mined_caves += 1
-	game.stats_dim.tiles_mined_caves += 1
-	game.stats_global.tiles_mined_caves += 1
-	var map_pos = cave_wall.world_to_map(tile_pos)
-	var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
-	if volcano_mult > 1.0:
-		rsrc.minerals = round(rand_range(2, 3) * pow(difficulty, 1.2))
-	#var wall_type = cave_wall.get_cellv(map_pos)
+func mine_debris(item:Dictionary, delta):
+	var debris = big_debris[mining_debris]
+	if mining_debris != -1:
+		var circ_bar = debris_touched_by_laser[mining_debris].bar
+		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x, 3)
+		circ_bar.value = debris_touched_by_laser[mining_debris].progress
+		if debris_touched_by_laser[mining_debris].progress >= 100:
+			mine_debris_complete(mining_debris)
+			mining_debris = -1
+
+func mine_debris_complete(tile_id:int):
+	var debris = big_debris[tile_id]
+	var rsrc:Dictionary = {"stone":rand_range(350, 400),
+							"minerals":rand_range(8, 10) * difficulty * exp(cave_floor / 10.0)}
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:
 			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
 			rsrc[mat] = amount
-	if deposits.has(st):
-		var deposit = deposits[st]
-		rsrc[deposit.rsrc_name] = Helper.clever_round(deposit.amount * rand_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
-		deposit.queue_free()
-		deposits.erase(st)
-	var remainder:float = 0
+	for met in game.met_info:
+		var met_value = game.met_info[met]
+		var rarity = met_value.rarity
+		if cave_floor >= 8:
+			rarity = pow(rarity, range_lerp(cave_floor, 8, 32, 0.9, 0.6))
+		if aurora:
+			rarity = pow(rarity, 0.9)
+		if volcano_mult > 1 and not artificial_volcano:
+			rarity = pow(rarity, 0.9)
+		if randf() < 1 / (rarity + 1):
+			rsrc[met] = Helper.clever_round(4 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * treasure_mult)
+	for r in rsrc.keys():
+		if r in ["stone", "minerals"]:
+			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, 3))
+		else:
+			rsrc[r] = Helper.clever_round(rsrc[r] * pow(debris.scale.x, 3))
+		if rsrc[r] == 0:
+			rsrc.erase(r)
+	var remainder:float = filter_and_add(rsrc)
+	if remainder != 0:
+		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
+	if debris_touched_by_laser.has(mining_debris):
+		debris_touched_by_laser[mining_debris].bar.queue_free()
+		debris_touched_by_laser.erase(mining_debris)
+	debris_rekt[cave_floor - 1].append(mining_debris)
+	debris.queue_free()
+
+func filter_and_add(rsrc:Dictionary):
+	var remainder:float = 0.0
 	for r in rsrc.keys():
 		if game.cave_filters.has(r):
 			if game.cave_filters[r]:
@@ -1642,11 +1747,6 @@ func mine_tile(tile_pos:Vector2, tile_id:int):
 		else:
 			rsrc[r] *= game.u_i.planck
 			remainder += add_weight_rsrc(r, rsrc[r])
-	if remainder != 0:
-		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
-	cave_wall.set_cellv(map_pos, -1)
-	minimap_cave.set_cellv(map_pos, tile_type)
-	cave_wall.update_bitmask_region()
 	if not rsrc.empty():
 		var vbox = $UI2/Panel/VBoxContainer
 		var you_mined = Label.new()
@@ -1661,6 +1761,33 @@ func mine_tile(tile_pos:Vector2, tile_id:int):
 		var timer = $UI2/Panel/Timer
 		timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
 		timer.start()
+	return remainder
+
+func mine_wall_complete(tile_pos:Vector2, tile_id:int):
+	var st = str(tile_id)
+	game.stats_univ.tiles_mined_caves += 1
+	game.stats_dim.tiles_mined_caves += 1
+	game.stats_global.tiles_mined_caves += 1
+	var map_pos = cave_wall.world_to_map(tile_pos)
+	var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
+	if volcano_mult > 1.0:
+		rsrc.minerals = round(rand_range(2, 3) * difficulty * exp(cave_floor / 9.0))
+	#var wall_type = cave_wall.get_cellv(map_pos)
+	for mat in p_i.surface.keys():
+		if randf() < p_i.surface[mat].chance / 2.5:
+			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
+			rsrc[mat] = amount
+	if deposits.has(st):
+		var deposit = deposits[st]
+		rsrc[deposit.rsrc_name] = Helper.clever_round(deposit.amount * rand_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
+		deposit.queue_free()
+		deposits.erase(st)
+	var remainder:float = filter_and_add(rsrc)
+	if remainder != 0:
+		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
+	cave_wall.set_cellv(map_pos, -1)
+	minimap_cave.set_cellv(map_pos, tile_type)
+	cave_wall.update_bitmask_region()
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):
@@ -1823,7 +1950,7 @@ func set_border(i:int):
 	elif inventory[i].type == "rover_weapons":
 		active_item.text = Helper.get_rover_weapon_name(inventory[i].name)
 	elif inventory[i].has("name"):
-		active_item.text = tr(inventory[i].name.to_upper())
+		active_item.text = Helper.get_item_name(tr(inventory[i].name))
 	else:
 		active_item.text = ""
 	if inventory[i].has("name") and inventory[i].name == "drill":
@@ -2186,7 +2313,7 @@ func _on_BreakRocksWithDash_body_entered(body):
 	if body is TileMap:
 		if enhancements.has("wheels_5"):
 			var pos:Vector2 = Vector2(stepify(rover.position.x - 100, 200), stepify(rover.position.y - 100, 200))
-			mine_tile(pos, get_tile_index(pos / 200))
+			mine_wall_complete(pos, get_tile_index(pos / 200))
 		else:
 			$Rover/SuffocationTimer.start()
 

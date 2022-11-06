@@ -442,7 +442,6 @@ func _on_mouse_exited():
 
 func update_hotbar():
 	for child in $Bottom/Hotbar.get_children():
-		$Bottom/Hotbar.remove_child(child)
 		child.queue_free()
 	var i:int = 0
 	for item in game.hotbar:

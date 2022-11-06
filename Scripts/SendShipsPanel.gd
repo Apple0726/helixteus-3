@@ -116,8 +116,8 @@ func send_ships():
 				game.energy -= round(total_energy_cost)
 				game.ships_depart_pos = depart_pos
 				game.ships_dest_pos = dest_pos
-				game.ships_dest_coords = {"sc":game.c_sc, "c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
-				game.ships_dest_g_coords = {"c":game.c_c_g, "g":game.c_g_g, "s":game.c_s_g}
+				game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
+				game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
 				game.ships_travel_view = travel_view
 				game.ships_travel_start_date = OS.get_system_time_msecs()
 				game.ships_travel_length = time_cost

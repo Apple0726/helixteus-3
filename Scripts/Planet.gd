@@ -261,10 +261,7 @@ func show_tooltip(tile):
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
 		if game.cave_gen_info:
-			if tile.cave.has("period"):#Save migration
-				tooltip += "\n%s: %s" % [tr("PERIOD"), tile.cave.period]
-			else:
-				tooltip += "\n%s: %s" % [tr("PERIOD"), 65]
+			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), tile.cave.get("period", 0), tr("AMOUNT_OF_DEBRIS"), tile.cave.get("debris", 0)]
 	elif tile.has("plant"):
 		if tile.plant.has("ash"):
 			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.plant.ash)]
@@ -389,16 +386,14 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct in ["SC", "GF", "SE", "GH", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
-		if _bldg_to_construct in ["MM", "SC", "GF", "SE", "AE"]:
+		if _bldg_to_construct in ["SC", "GF", "SE", "AE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
 		if _bldg_to_construct in ["SC", "GF", "SE", "CBD"]:
 			tile.bldg.path_3 = 1
 			tile.bldg.path_3_value = Data.path_3[_bldg_to_construct].value
-		if _bldg_to_construct in ["RL", "PP", "ME", "SP"]:
-			if _bldg_to_construct == "RL":
-				game.show.SP = true
-			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
+		if _bldg_to_construct == "RL":
+			game.show.SP = true
 		elif _bldg_to_construct == "MS":
 			tile.bldg.cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
 		elif _bldg_to_construct == "B":
@@ -486,8 +481,6 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 			min(game.item_to_use.num / len(tiles_selected), ceil((time_remaining) / float(speedup_time)))
 		tile.bldg.construction_date -= speedup_time * num_needed
 		var time_sped_up = min(speedup_time * num_needed, time_remaining)
-		if tile.bldg.has("collect_date"):
-			tile.bldg.collect_date -= time_sped_up
 		if tile.bldg.has("overclock_date"):
 			tile.bldg.overclock_date -= time_sped_up
 		if tile.bldg.has("start_date"):
@@ -515,8 +508,6 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "EC":
 			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
-		var coll_date = tile.bldg.collect_date
-		tile.bldg.collect_date = curr_time - (curr_time - coll_date) / tile.bldg.overclock_mult
 		game.item_to_use.num -= 1
 
 func click_tile(tile, tile_id:int):
@@ -573,7 +564,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 	hboxes[id2].queue_free()
 	if is_instance_valid(rsrcs[id2]):
 		rsrcs[id2].queue_free()
-	var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+	var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 	if bldg == "MS":
 		if tile.bldg.is_constructing:
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
@@ -598,19 +589,33 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.electron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.electron_cap -= tile.bldg.path_1_value
+	elif bldg == "ME":
+		if not tile.bldg.is_constructing:
+			game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+	elif bldg == "PP":
+		if not tile.bldg.is_constructing:
+			game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
+	elif bldg == "SP":
+		if not tile.bldg.is_constructing:
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
+			game.autocollect.rsrc.energy -= SP_prod
+			if tile.has("aurora"):
+				if game.aurora_SPs.has(tile.aurora.au_int):
+					game.aurora_SPs[tile.aurora.au_int] -= SP_prod
+					if is_zero_approx(game.aurora_SPs[tile.aurora.au_int]):
+						game.aurora_SPs.erase(tile.aurora.au_int)
 	elif bldg == "RL":
 		if not tile.bldg.is_constructing:
-			game.autocollect.rsrc_list[String(game.c_p_g)].SP -= tile.bldg.path_1_value * mult
-			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * mult
+			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult
 	elif bldg == "PC":
 		if not tile.bldg.is_constructing:
-			game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * mult
+			game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * overclock_mult
 	elif bldg == "NC":
 		if not tile.bldg.is_constructing:
-			game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * mult
+			game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * overclock_mult
 	elif bldg == "EC":
 		if not tile.bldg.is_constructing:
-			game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * mult
+			game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * overclock_mult
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -1420,12 +1425,13 @@ func on_timeout():
 			length = tile.bldg.overclock_length
 			progress = 1 - (curr_time - start_date) / float(length)
 			if progress < 0:
-				var coll_date = tile.bldg.collect_date
 				var mult:float = tile.bldg.overclock_mult
-				tile.bldg.collect_date = curr_time - (curr_time - coll_date) * mult
-				if tile.bldg.name == "RL":
+				if tile.bldg.name == "PP":
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
+				elif tile.bldg.name == "ME":
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1)
+				elif tile.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP -= tile.bldg.path_1_value * (mult - 1)
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":
