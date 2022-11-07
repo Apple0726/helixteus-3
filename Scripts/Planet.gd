@@ -501,7 +501,15 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == "RL":
 			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff
-			game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult_diff
+		elif tile.bldg.name == "ME":
+			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+		elif tile.bldg.name == "PP":
+			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff
+		elif tile.bldg.name == "SP":
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile))
+			game.autocollect.rsrc.energy += SP_prod
+			if tile.has("aurora"):
+				game.aurora_SPs[tile.aurora.au_int] += SP_prod
 		elif tile.bldg.name == "PC":
 			game.autocollect.particles.proton += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "NC":
@@ -1120,7 +1128,7 @@ func _unhandled_input(event):
 							if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
 								yield(game.start_system_generation(), "completed")
 							else:
-								Helper.save_obj("Clusters", game.c_c_g, game.galaxy_data)
+								Helper.save_obj("Clusters", game.c_c, game.galaxy_data)
 							var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]
 							var orig_s_l:int = game.c_s
 							var orig_s_g:int = game.c_s_g
@@ -1417,7 +1425,6 @@ func on_timeout():
 				tile.plant.is_growing = false
 		elif type == "overclock":
 			if not tile or not tile.has("bldg") or not tile.bldg.has("overclock_date"):
-				remove_child(time_bar)
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
@@ -1429,9 +1436,14 @@ func on_timeout():
 				if tile.bldg.name == "PP":
 					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
 				elif tile.bldg.name == "ME":
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
 				elif tile.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
+				elif tile.bldg.name == "SP":
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult * Helper.get_au_mult(tile))
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
+					if tile.has("aurora"):
+						game.aurora_SPs[tile.aurora.au_int] -= SP_prod
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":

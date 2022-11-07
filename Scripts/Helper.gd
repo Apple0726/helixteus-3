@@ -587,7 +587,8 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var size = tile.current_deposit.size
 		var progress2 = tile.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-		var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
+		var amount = clever_round(20 * (3 if crater_metal else 1) * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.current_deposit.progress += 1

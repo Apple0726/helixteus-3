@@ -156,11 +156,9 @@ func update_minerals():
 	if round(game.minerals) == min_cap:
 		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			$Top/Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
-		minerals_text["custom_colors/font_color"] = Color.red
 	else:
 		if $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			 $Top/Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
-		minerals_text["custom_colors/font_color"] = Color.white
 
 func update_money_energy_SP():
 	var planet = game.view.obj
@@ -435,6 +433,8 @@ func _on_Texture_mouse_entered(extra_arg_0):
 			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
 			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP, true), tr("S_SECOND")])
+	if extra_arg_0 == "MINERALS":
+		tooltip += "\n" + tr("MINERAL_DESC")
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():

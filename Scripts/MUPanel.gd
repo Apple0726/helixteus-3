@@ -91,7 +91,7 @@ func _on_Upgrade_pressed(MU:String):
 			if game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
 				game.mining_HUD.refresh_aurora_bonus()
 			for AI in game.aurora_SPs.keys():
-				game.autocollect.rsrc.energy += game.aurora_SPs[AI] * pow(AI, Helper.get_AIE()) * (pow(AI, 1.02) - 1.0)
+				game.autocollect.rsrc.energy += game.aurora_SPs[AI] * (pow(1 + AI, 1.02) - 1.0)
 		if MU == "IS":
 			game.items.append(null)
 	else:

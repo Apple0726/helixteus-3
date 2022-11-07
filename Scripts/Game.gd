@@ -447,6 +447,7 @@ var view_tween:Tween
 var tooltip_tween:Tween
 var stars_tween:Tween
 var tile_brightness:Array = []
+var tile_avg_mod:Array = []
 
 func place_BG_stars():#shown in title screen and planet view
 	for i in 500:
@@ -513,11 +514,20 @@ func _ready():
 			var tile_img:Image = tile_texture.get_data()
 			tile_img.lock()
 			var brightness:float = 0.0
+			var rgb = {"r":0, "g":0, "b":0}
 			for x in tile_img.get_width():
 				for y in tile_img.get_height():
 					var color:Color = tile_img.get_pixel(x, y)
 					brightness += color.r + color.g + color.b
+					rgb.r += color.r
+					rgb.g += color.g
+					rgb.b += color.b
+			var num_pixels = tile_img.get_width() * tile_img.get_height()
+			rgb.r /= num_pixels
+			rgb.g /= num_pixels
+			rgb.b /= num_pixels
 			tile_brightness.append(brightness)
+			tile_avg_mod.append(Color(rgb.r, rgb.g, rgb.b, 1.0))
 	for i in range(0, 7):
 		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Data.costs:

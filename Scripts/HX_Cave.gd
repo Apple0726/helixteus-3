@@ -170,3 +170,13 @@ func on_proj_exit(body):#This signal is connected with code (during enemy genera
 	if body is Projectile:
 		body.seeking_body = null
 		body.get_node("SeekingRay").enabled = false
+
+func give_temporary_invincibility(duration:float):
+	collision_mask = 0
+	var timer = Timer.new()
+	add_child(timer)
+	timer.start(duration)
+	timer.connect("timeout", self, "reset_invincibility")
+
+func reset_invincibility():
+	collision_mask = 8

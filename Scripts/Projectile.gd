@@ -19,6 +19,7 @@ var init_mod:Color
 var deflected:bool = false
 var pierce:int = 1
 var seeking_body:KinematicBody2D = null
+var dont_hit_again = []
 
 func _ready():
 	$Sprite.texture = texture
@@ -65,6 +66,9 @@ func collide(collision:KinematicCollision2D):
 				Helper.show_dmg(round(dmg), position, cave_ref)
 				body.hit(dmg)
 			else:
+				if body.spawn_tile in dont_hit_again:
+					body.give_temporary_invincibility(0.2)
+					return
 				var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
 				var dmg:float = damage / dmg_penalty / body.def
 				Helper.show_dmg(round(dmg), position, cave_ref)
@@ -75,6 +79,7 @@ func collide(collision:KinematicCollision2D):
 							body.get_node("Sprite/Stun").visible = true
 				body.hit(dmg)
 				pierce -= 1
+				dont_hit_again.append(body.spawn_tile)
 			if pierce <= 0:
 				queue_free()
 		else:#if the projectile comes from the enemy

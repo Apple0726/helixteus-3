@@ -85,6 +85,8 @@ func _process(delta):
 			green_line.visible = false
 			red_line.visible = false
 		else:
+			red_line.points[0] = dep_pos
+			red_line.points[1] = dest_pos
 			green_line.points[1] = pos
 			ship.rect_position = to_global(pos) - Vector2(32, 22)
 	else:
@@ -252,13 +254,13 @@ func refresh():
 		red_line.points[0] = dep_pos
 		green_line.points[0] = dep_pos
 		red_line.points[1] = dest_pos
+		green_line.points[1] = dest_pos
 		if dest_pos.x < dep_pos.x:
 			ship.rect_scale.x = -1
 		else:
 			ship.rect_scale.x = 1
 	for icon_data in annotate_icons:
 		var icon = icon_data.node
-		remove_child(icon)
 		icon.queue_free()
 	annotate_icons.clear()
 	yield(get_tree().create_timer(0.0), "timeout")#This yield is needed to display annotations

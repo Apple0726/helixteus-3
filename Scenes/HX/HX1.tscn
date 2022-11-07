@@ -356,7 +356,7 @@ tracks/0/keys = {
 
 [node name="HX" type="KinematicBody2D"]
 collision_layer = 4
-collision_mask = 0
+collision_mask = 8
 
 [node name="SeekingProjSeekArea" type="Area2D" parent="."]
 rotation = 1.57413

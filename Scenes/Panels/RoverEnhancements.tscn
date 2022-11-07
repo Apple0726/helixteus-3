@@ -306,6 +306,18 @@ margin_right = 418.0
 margin_bottom = 194.0
 texture = ExtResource( 18 )
 
+[node name="wheels_6" parent="Wheels/Control" instance=ExtResource( 3 )]
+margin_left = 22.0
+margin_top = 246.0
+margin_right = 82.0
+margin_bottom = 306.0
+
+[node name="wheels_7" parent="Wheels/Control" instance=ExtResource( 3 )]
+margin_left = 134.0
+margin_top = 246.0
+margin_right = 194.0
+margin_bottom = 306.0
+
 [node name="L_wheels_0" type="Node2D" parent="Wheels/Control"]
 
 [node name="Line2D3" type="Line2D" parent="Wheels/Control/L_wheels_0"]
@@ -328,6 +340,12 @@ default_color = Color( 0.4, 0.886275, 1, 1 )
 
 [node name="L_wheels_3" type="Line2D" parent="Wheels/Control"]
 position = Vector2( 10, 174 )
+points = PoolVector2Array( 192, -8, 228, -8 )
+width = 2.0
+default_color = Color( 0.4, 0.886275, 1, 1 )
+
+[node name="L_wheels_5" type="Line2D" parent="Wheels/Control"]
+position = Vector2( -102, 286 )
 points = PoolVector2Array( 192, -8, 228, -8 )
 width = 2.0
 default_color = Color( 0.4, 0.886275, 1, 1 )
