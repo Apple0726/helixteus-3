@@ -18,6 +18,7 @@ var children:Dictionary = {
 	"wheels_1":["wheels_2"],
 	"wheels_3":["wheels_4"],
 	"wheels_4":["wheels_5"],
+	"wheels_6":["wheels_7"],
 	"CC_0":["CC_1"],
 	"CC_1":["CC_2"],
 	"laser_0":["laser_1"],

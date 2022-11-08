@@ -446,7 +446,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			if HX_c_d[HXs[i].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
 				var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * light_mult * ship_data[sh].atk_mult / HX_data[i].def
 				dmg *= log(game.u_i.speed_of_light - 1.0 + exp(1.0))
-				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.02 if game else 0)
+				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.01 if game else 0)
 				if crit:
 					dmg *= 1.5
 				damage_HX(i, dmg, crit)
@@ -482,7 +482,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 					dmg *= log(game.u_i.planck - 1.0 + exp(1.0))
 				elif weapon_type == "laser":
 					dmg *= log(game.u_i.charge - 1.0 + exp(1.0))
-			var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.025 if game else 0)
+			var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.01 if game else 0)
 			if crit:
 				dmg *= 1.5
 			damage_HX(t, dmg, crit)

@@ -2963,12 +2963,14 @@ func generate_tiles(id:int):
 			if level > 0.5:
 				if lake_1_phase != "G":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-					make_lake(tile_data[t_id], lake_1_phase.to_lower(), p_i.lake_1, 1)
+					if not tile_data[t_id].has("plant"):
+						make_lake(tile_data[t_id], lake_1_phase.to_lower(), p_i.lake_1, 1)
 					continue
 			if level < -0.5:
 				if lake_2_phase != "G":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-					make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
+					if not tile_data[t_id].has("plant"):
+						make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
 					continue
 			if home_planet:
 				continue
@@ -3008,6 +3010,8 @@ func generate_tiles(id:int):
 						modifiers2.erase(key)
 				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
 				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":randf() + 0.2}
+				if tile_data[t_id].has("plant") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
+					earn_achievement("exploration", "volcano_cave")
 				if not modifiers.empty():
 					tile_data[t_id].cave.modifiers = modifiers
 				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):

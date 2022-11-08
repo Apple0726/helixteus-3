@@ -94,7 +94,7 @@ func _process(delta):
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
 			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.sc].pos) - Vector2(32, 22)
-		elif game.c_v == "cluster" and game.c_c_g == sh_c_g.c:
+		elif game.c_v == "cluster" and game.c_c == sh_c.c:
 			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
 			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
@@ -230,7 +230,7 @@ func refresh():
 		show_ship = true
 		ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
-		show_ship = game.ships_c_g_coords.c == game.c_c_g
+		show_ship = game.ships_c_coords.c == game.c_c
 	elif game.c_v == "galaxy":
 		show_ship = game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":

@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=2]
@@ -35,6 +35,9 @@
 [ext_resource path="res://Graphics/Cave/RE/armor_11.png" type="Texture" id=33]
 [ext_resource path="res://Graphics/Cave/RE/armor_10.png" type="Texture" id=34]
 [ext_resource path="res://Graphics/Cave/RE/armor_12.png" type="Texture" id=35]
+[ext_resource path="res://Graphics/Cave/RE/wheels_7.png" type="Texture" id=36]
+[ext_resource path="res://Graphics/Cave/RE/wheels_6.png" type="Texture" id=37]
+[ext_resource path="res://Graphics/Cave/RE/wheels_8.png" type="Texture" id=38]
 
 [node name="Control" type="Panel"]
 anchor_left = 0.5
@@ -261,8 +264,8 @@ margin_bottom = 120.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 460.0
-margin_bottom = 210.0
-rect_min_size = Vector2( 450, 200 )
+margin_bottom = 460.0
+rect_min_size = Vector2( 450, 450 )
 
 [node name="wheels_0" parent="Wheels/Control" instance=ExtResource( 3 )]
 margin_left = 22.0
@@ -311,12 +314,21 @@ margin_left = 22.0
 margin_top = 246.0
 margin_right = 82.0
 margin_bottom = 306.0
+texture = ExtResource( 37 )
 
 [node name="wheels_7" parent="Wheels/Control" instance=ExtResource( 3 )]
 margin_left = 134.0
 margin_top = 246.0
 margin_right = 194.0
 margin_bottom = 306.0
+texture = ExtResource( 36 )
+
+[node name="wheels_8" parent="Wheels/Control" instance=ExtResource( 3 )]
+margin_left = 22.0
+margin_top = 358.0
+margin_right = 82.0
+margin_bottom = 418.0
+texture = ExtResource( 38 )
 
 [node name="L_wheels_0" type="Node2D" parent="Wheels/Control"]
 
@@ -344,7 +356,7 @@ points = PoolVector2Array( 192, -8, 228, -8 )
 width = 2.0
 default_color = Color( 0.4, 0.886275, 1, 1 )
 
-[node name="L_wheels_5" type="Line2D" parent="Wheels/Control"]
+[node name="L_wheels_6" type="Line2D" parent="Wheels/Control"]
 position = Vector2( -102, 286 )
 points = PoolVector2Array( 192, -8, 228, -8 )
 width = 2.0
@@ -417,9 +429,6 @@ margin_left = -256.0
 margin_top = -104.0
 margin_right = 256.0
 margin_bottom = 120.0
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Control" type="Control" parent="Laser"]
 margin_left = 10.0

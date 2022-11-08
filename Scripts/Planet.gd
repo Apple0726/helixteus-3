@@ -332,7 +332,7 @@ func show_tooltip(tile):
 		#game.tooltip.get_node("ColorRect").material.set_shader_param("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 * pow(game.stats_univ.wormholes_activated + 1, 0.2) / game.u_i.time_speed}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":

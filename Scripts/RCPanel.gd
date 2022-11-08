@@ -166,7 +166,7 @@ func _on_Button_pressed():
 			"inventory":inventory.duplicate(true),
 			"right_inventory":right_inventory.duplicate(true),
 			"i_w_w":{},
-			"enhancements":enhancements,
+			"enhancements":enhancements.duplicate(true),
 			"ability":ability,
 			"ability_num":ability_num,
 			"MK":MK,

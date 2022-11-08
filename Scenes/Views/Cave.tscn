@@ -1755,7 +1755,7 @@ wait_time = 0.7
 one_shot = true
 
 [node name="SuffocationTimer" type="Timer" parent="Rover"]
-wait_time = 0.2
+wait_time = 0.3
 
 [node name="BurnTimer" type="Timer" parent="Rover"]
 

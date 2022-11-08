@@ -534,6 +534,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var rand_scale_x = rng.randf()
 					debris.scale = Vector2.ONE * (0.005 / (1.001 - rand_scale_x) + 0.5 + 2 * pow(rand_scale_x, 4))
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
+					if aurora and rng.randf() < 0.05:
+						debris.modulate = Color.white
+						debris.aurora = true
 					if debris_rekt[cave_floor - 1].has(tile_id):
 						debris.free()
 					else:
@@ -1047,7 +1050,7 @@ func on_map_exited(_body):
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
-						"minerals":round(rng.randf_range(150, 250) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
+						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.6))}
 	if contents.hx_core > 8:
 		contents.hx_core2 = int(contents.hx_core / 8.0)
@@ -1224,9 +1227,9 @@ func _input(event):
 				rot_vec = Vector2(cos(sprite.rotation), sin(sprite.rotation)).normalized() 
 			var base_vel:Vector2 = rot_vec * max_speed * speed_mult2
 			if enhancements.has("wheels_4"):
-				velocity = base_vel * 6.0
+				velocity = base_vel * 5.0
 			else:
-				velocity = base_vel * 4.0
+				velocity = base_vel * 3.0
 			status_effects.invincible = 0.3
 			if enhancements.has("wheels_3"):
 				rover.collision_mask = 32
@@ -1695,7 +1698,9 @@ func mine_debris(item:Dictionary, delta):
 	var debris = big_debris[mining_debris]
 	if mining_debris != -1:
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
-		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3)
+		var aurora_factor:float = 1.0/3 if debris.aurora else 1.0
+		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor
+		print("debris scale: ", debris.scale.x)
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
 		circ_bar.update()
 		if debris_touched_by_laser[mining_debris].progress >= 100:
@@ -1706,24 +1711,24 @@ func mine_debris_complete(tile_id:int):
 	var debris = big_debris[tile_id]
 	if debris.scale.x > 1.5:
 		if game.screen_shake:
-			$Camera2D/Screenshake.start(range_lerp(debris.scale.x, 2.5, 7.5, 1.0, 3.0), 10, range_lerp(debris.scale.x, 1.5, 7.5, 5, 18))
+			$Camera2D/Screenshake.start(range_lerp(debris.scale.x, 1.5, 7.5, 1.0, 4.0), 10, range_lerp(debris.scale.x, 1.5, 7.5, 5, 35))
 	var rsrc:Dictionary = {"stone":rand_range(800, 900),
-							"minerals":rand_range(42, 46) * difficulty * exp(cave_floor / 10.0)}
+							"minerals":rand_range(42, 46) * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0)}
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:
 			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
 			rsrc[mat] = amount
 	for met in game.met_info:
 		var met_value = game.met_info[met]
-		var rarity = pow(met_value.rarity, 0.9)
+		var rarity = met_value.rarity
 		if cave_floor >= 8:
 			rarity = pow(rarity, range_lerp(cave_floor, 8, 32, 0.9, 0.6))
-		if aurora:
-			rarity = pow(rarity, 0.9)
+		if debris.aurora:
+			rarity = pow(rarity, 0.8)
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
 		if randf() < 1 / (rarity + 1):
-			rsrc[met] = Helper.clever_round(5 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0))
+			rsrc[met] = Helper.clever_round(5 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0))
 	for r in rsrc.keys():
 		if r in ["stone", "minerals"]:
 			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, 3))
@@ -2214,7 +2219,8 @@ func _on_Modifiers_mouse_entered():
 
 func _on_FloorCollisionDetector_body_entered(body):
 	if body.name == "Ash":
-		max_speed = 500
+		if not enhancements.has("wheels_8"):
+			max_speed = 500
 		on_ash = true
 		if $UI2/Burning.visible:
 			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing())
@@ -2230,7 +2236,8 @@ func _on_FloorCollisionDetector_body_entered(body):
 	elif body.name == "Lava":
 		on_lava = true
 		if not on_ash:
-			max_speed = 700
+			if not enhancements.has("wheels_8"):
+				max_speed = 700
 			$UI2/Burning.visible = true
 			$UI2/Burning/BurningAnim.play("Fade", -1, time_speed)
 
@@ -2239,7 +2246,8 @@ func _on_FloorCollisionDetector_body_exited(body):
 		if not on_lava:
 			max_speed = 1000
 		else:
-			max_speed = 700
+			if not enhancements.has("wheels_8"):
+				max_speed = 700
 		on_ash = false
 		if on_lava:
 			$UI2/Burning.visible = true
@@ -2249,7 +2257,8 @@ func _on_FloorCollisionDetector_body_exited(body):
 		if not on_ash:
 			max_speed = 1000
 		else:
-			max_speed = 500
+			if not enhancements.has("wheels_8"):
+				max_speed = 500
 		if $UI2/Burning.visible:
 			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing())
 			if not $Rover/LavaTimer.is_stopped():
@@ -2310,6 +2319,7 @@ func _on_DashTimer_timeout():
 		dashes_remaining = 2
 	elif enhancements.has("wheels_0"):
 		dashes_remaining = 1
+	rover.collision_mask = 37
 
 
 func _on_EnergyBallTimer_timeout():
@@ -2332,12 +2342,16 @@ func _on_BreakRocksWithDash_body_entered(body):
 			mine_wall_complete(pos, get_tile_index(pos / 200))
 		else:
 			$Rover/SuffocationTimer.start()
+	elif body is Debris:
+		if enhancements.has("wheels_5"):
+			mine_debris_complete(body.id)
+		else:
+			$Rover/SuffocationTimer.start()
 
 func _on_BreakRocksWithDash_body_exited(body):
-	if body is TileMap:
+	if body is TileMap or body is Debris:
 		if not enhancements.has("wheels_5"):
 			$Rover/SuffocationTimer.stop()
-			rover.collision_mask = 37
 
 
 func _on_SuffocationTimer_timeout():
@@ -2345,7 +2359,10 @@ func _on_SuffocationTimer_timeout():
 
 
 func _on_LavaTimer_timeout():
-	hit_player(total_HP / 10.0, {}, true)
+	if enhancements.has("wheels_6"):
+		hit_player(total_HP / 20.0, {}, true)
+	else:
+		hit_player(total_HP / 10.0, {}, true)
 
 
 func _on_BurningAnim_animation_finished(anim_name):

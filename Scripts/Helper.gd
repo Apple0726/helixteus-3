@@ -1045,7 +1045,7 @@ func get_conquer_all_data():
 		for HX in planet.HX_data:
 			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
-	var energy_cost = round(14000 * game.planet_data[-1].distance)
+	var energy_cost = round(7000 * game.planet_data[-1].distance)
 	return {"HX_data":HX_data, "energy_cost":energy_cost}
 
 var hbox_theme = preload("res://Resources/default_theme.tres")

@@ -1,7 +1,26 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Graphics/Cave/DebrisCave.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Debris.gd" type="Script" id=2]
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+
+uniform bool aurora = true;
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	if (aurora) {
+		COLOR.r += 0.1 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 7.0) + 0.3;
+		COLOR.g += 0.1 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 4.0) + 0.1;
+		COLOR.b += 0.1 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 10.0) + 0.3;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+resource_local_to_scene = true
+shader = SubResource( 7 )
+shader_param/aurora = false
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 71.0
@@ -37,17 +56,21 @@ damping = 800.0
 damping_random = 0.21
 angle = -242.4
 angle_random = 1.0
-scale = 0.2
-scale_random = 0.1
+scale = 0.03
+scale_random = 0.2
 color_ramp = SubResource( 6 )
+anim_offset = 1.0
+anim_offset_random = 1.0
 
 [node name="Debris" type="StaticBody2D"]
 collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 8 )
 texture = ExtResource( 1 )
 hframes = 6
+frame = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

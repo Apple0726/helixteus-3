@@ -365,7 +365,7 @@ func _on_Upgrade_pressed():
 #						prod_ratio = 1.0
 #					var coll_date = tile.bldg.collect_date
 #					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
-				elif tile.bldg.name == "ME":
+				if tile.bldg.name == "ME":
 					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
 				elif tile.bldg.name == "PP":
 					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
