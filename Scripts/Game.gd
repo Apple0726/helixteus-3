@@ -251,6 +251,7 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"glass":{"value":1000},
 					"sand":{"value":8},
 					"clay":{"value":12},
+					"quillite":{"value":2000000},
 					"soil":{"value":14},
 					"cellulose":{"value":100},
 					"silicon":{"value":80},
@@ -308,14 +309,13 @@ var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "durat
 						"overclock6":{"costs":{"money":18000000}, "mult":5, "duration":24*60*60000},
 }
 
-var craft_agriculture_info = {"lead_seeds":{"costs":{"cellulose":10, "lead":10}, "grow_time":1200000, "lake":"H2O", "produce":{"lead":60}},
-							"copper_seeds":{"costs":{"cellulose":10, "copper":10}, "grow_time":1500000, "lake":"H2O", "produce":{"copper":60}},
-							"iron_seeds":{"costs":{"cellulose":10, "iron":10}, "grow_time":1800000, "lake":"H2O", "produce":{"iron":60}},
-							"aluminium_seeds":{"costs":{"cellulose":15, "aluminium":10}, "grow_time":2400000, "lake":"He", "produce":{"aluminium":60}},
-							"silver_seeds":{"costs":{"cellulose":15, "silver":10}, "grow_time":3000000, "lake":"He", "produce":{"silver":60}},
-							"gold_seeds":{"costs":{"cellulose":15, "gold":10}, "grow_time":3600000, "lake":"CH4", "produce":{"gold":60}},
-							"fertilizer":{"costs":{"cellulose":50, "soil":30}, "speed_up_time":3600000}}
-
+var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead":0.1}},
+					"copper_seeds":{"costs":{"cellulose":0.06}, "produce":{"copper":0.1*met_info.lead.value / met_info.copper.value}},
+					"iron_seeds":{"costs":{"cellulose":0.07}, "produce":{"iron":0.1*met_info.lead.value / met_info.iron.value}},
+					"aluminium_seeds":{"costs":{"cellulose":0.08}, "produce":{"aluminium":0.1*met_info.lead.value / met_info.aluminium.value}},
+					"silver_seeds":{"costs":{"cellulose":0.09}, "produce":{"silver":0.1*met_info.lead.value / met_info.silver.value}},
+					"gold_seeds":{"costs":{"cellulose":0.1}, "produce":{"gold":0.1*met_info.lead.value / met_info.gold.value}},
+}
 var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
 							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
 }
@@ -324,7 +324,9 @@ var craft_cave_info = {
 	"drill1":{"costs":{"iron":100, "aluminium":20}, "limit":8},
 	"drill2":{"costs":{"aluminium":600, "titanium":150}, "limit":16},
 	"drill3":{"costs":{"platinum":4000, "diamond":3000}, "limit":24},
-	"portable_wormhole":{"costs":{"quartz":300, "diamond":80}},
+	"portable_wormhole1":{"costs":{"glass":80, "aluminium":80}, "limit":8},
+	"portable_wormhole2":{"costs":{"quartz":300, "diamond":80}, "limit":16},
+	"portable_wormhole3":{"costs":{"platinum":8000, "quillite":10000}, "limit":24},
 }
 
 var other_items_info = {
@@ -336,7 +338,6 @@ var other_items_info = {
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
-					{"dict":craft_agriculture_info, "path":"Agriculture"},
 					{"dict":other_items_info, "path":"Items/Others"},
 					]
 #Density is in g/cm^3
@@ -704,10 +705,9 @@ func load_univ():
 		for key in save_game_dict:
 			if key in self:
 				self[key] = save_game_dict[key]
-		if not help.has("battle2"):#Save migration
-			help.battle2 = true
-		if not atoms.has("Pt"):#Save migration
-			atoms.Pt = 0
+		for key in mat_info:
+			if not mats.has(key):
+				mats[key] = 0
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -1026,6 +1026,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"soil":0,
 				"cellulose":0,
 				"silicon":0,
+				"quillite":0,
 				#"he3mix":0,
 				#"graviton":0,
 	}
@@ -3982,6 +3983,11 @@ func hide_item_cursor():
 func cancel_building():
 	view.obj.finish_construct()
 	HUD.get_node("Top/Resources/Glass").visible = false
+	HUD.get_node("Top/Resources/Soil").visible = false
+	HUD.get_node("Top/Resources/Stone").visible = true
+	HUD.get_node("Top/Resources/SP").visible = true
+	HUD.get_node("Top/Resources/Minerals").visible = true
+	HUD.get_node("Top/Resources/Cellulose").visible = science_unlocked.has("SA")
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 

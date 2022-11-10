@@ -16,6 +16,9 @@ func _ready():
 	if game and not infinite_research:
 		if game.science_unlocked.has(name):
 			$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+			self_modulate = Color(0.24, 0.0, 1.0, 1.0)
+		else:
+			self_modulate = Color.green
 	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
 
 func refresh():
@@ -112,8 +115,9 @@ func _input(event):
 				if name == "RC":
 					game.new_bldgs.RCC = true
 					game.show.vehicles_button = true
+					game.HUD.get_node("Buttons/Vehicles").visible = true
 				elif name == "SA":
-					game.craft_panel._on_btn_pressed("Agriculture")
+					game.new_bldgs.GH = true
 				elif name == "ATM":
 					game.show.atoms = true
 				elif name == "SAP":
@@ -134,8 +138,6 @@ func _input(event):
 					game.new_bldgs.MM = true
 				elif name == "FG":
 					game.new_bldgs.SY = true
-				elif name == "EGH":
-					game.new_bldgs.GH = true
 				game.HUD.refresh()
 				$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
 				$Text["custom_colors/font_color"] = Color.white

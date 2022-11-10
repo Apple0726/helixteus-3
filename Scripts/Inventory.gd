@@ -89,14 +89,7 @@ func on_slot_press(_name:String):
 	game.item_to_use.num = num
 	var texture
 	var type:String = Helper.get_type_from_name(_name)
-	if type == "craft_agriculture_info":
-		if game.craft_agriculture_info[_name].has("grow_time"):
-			game.put_bottom_info(tr("PLANT_SEED_INFO"), "plant_seed", "hide_item_cursor")
-			game.item_to_use.type = "seeds"
-		elif game.craft_agriculture_info[_name].has("speed_up_time"):
-			game.put_bottom_info(tr("CLICK_TO_FERTILIZE"), "fertilize", "hide_item_cursor")
-			game.item_to_use.type = "fertilizer"
-	elif type == "craft_mining_info":
+	if type == "craft_mining_info":
 		game.remove_items(_name)
 		game.pickaxe.speed_mult = game.craft_mining_info[_name].speed_mult
 		game.pickaxe.liquid_dur = game.craft_mining_info[_name].durability

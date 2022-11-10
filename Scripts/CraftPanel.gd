@@ -3,7 +3,7 @@ extends "GenericPanel.gd"
 func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
-	for btn_str in ["Mining", "Agriculture", "Cave"]:
+	for btn_str in ["Mining", "Cave"]:
 		var btn = preload("res://Scenes/AdvButton.tscn").instance()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
@@ -36,7 +36,6 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func refresh():
-	$VBox/Tabs/Agriculture.visible = game.science_unlocked.has("SA")
 	$VBox/Tabs/Cave.visible = game.science_unlocked.has("RC")
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
@@ -44,11 +43,6 @@ func refresh():
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, _desc, costs, _type, _dir)
 	var imgs = []
-	if tab == "Agriculture":
-		var agric_info = game.craft_agriculture_info[_name]
-		if agric_info.has("grow_time"):
-			for p in agric_info.produce:
-				imgs.append(load("res://Graphics/Metals/" + p + ".png"))
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
 
 func get_item(_name, _type, _dir):
@@ -66,22 +60,14 @@ func _on_Buy_pressed():
 
 func get_item_desc(item:String, btn_str:String, craft_info:Dictionary):
 	var desc:String = ""
-	if item == "fertilizer":
-		desc = tr("FERTILIZER_DESC")
-	else:
-		var item_arr = item.split("_")
-		if len(item_arr) > 1 and item_arr[1] == "seeds":
-			desc = tr("SEEDS_DESC") % [60.0 * game.u_i.planck]
-	if btn_str == "Agriculture":
-		if craft_info.has("grow_time"):
-			desc += ("\n" + tr("GROWTH_TIME") + ": %s\n") % [Helper.time_to_str(craft_info.grow_time / game.u_i.time_speed)]
-			desc += tr("GROWS_NEXT_TO") % [tr("%s_NAME" % craft_info.lake.to_upper())]
-	elif btn_str == "Mining":
+	if btn_str == "Mining":
 		desc += "%s: %s" % [tr("SPEED_MULTIPLIER"), craft_info.speed_mult]
 		desc += "\n%s: %s" % [tr("DURABILITY"), craft_info.durability]
 	elif btn_str == "Cave":
 		if item.substr(0, 5) == "drill":
 			desc += tr("DRILL_DESC") % craft_info.limit
+		elif item.substr(0, 17) == "portable_wormhole":
+			desc += tr("PORTABLE_WORMHOLE_DESC") % craft_info.limit
 		else:
 			desc += tr("%s_DESC" % item.to_upper())
 	return desc

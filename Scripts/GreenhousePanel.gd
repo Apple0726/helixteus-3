@@ -12,14 +12,13 @@ var tiles_selected:Array
 var sys_au_mult:float = 1.0
 
 func _ready():
-	for f in game.craft_agriculture_info:
-		if game.craft_agriculture_info[f].has("speed_up_time"):
-			var slot = game.slot_scene.instance()
-			slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + f + ".png")
-			slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [f])
-			slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-			slot.get_node("Button").connect("pressed", self, "on_slot_press", [f])
-			f_hbox.add_child(slot)
+	for f in game.seeds_produce:
+		var slot = game.slot_scene.instance()
+		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + f + ".png")
+		slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [f])
+		slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
+		slot.get_node("Button").connect("pressed", self, "on_slot_press", [f])
+		f_hbox.add_child(slot)
 	
 func refresh():
 	$Plant.visible = false
@@ -42,34 +41,15 @@ func refresh():
 	else:
 		$Label.text = "%s %s" % [Helper.format_num(tile_num), tr("GREENHOUSES").to_lower()]
 	for slot in hbox.get_children():
-		hbox.remove_child(slot)
 		slot.queue_free()
-	for _seed in game.craft_agriculture_info:
-		if game.craft_agriculture_info[_seed].has("produce"):
-			var ok:bool = c_v == "system"
-			if c_v == "planet":
-				var wid:int = round(Helper.get_wid(p_i.size))
-				for tile_id in tiles_selected:
-					if Helper.check_lake(Vector2(tile_id % wid, int(tile_id / wid)), wid, _seed)[0]:
-						ok = true
-						break
-			if ok:
-				var slot = game.slot_scene.instance()
-				slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + _seed + ".png")
-				slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [_seed])
-				slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-				slot.get_node("Button").connect("pressed", self, "on_slot_press", [_seed])
-				hbox.add_child(slot)
-	if fertilizer:
-		$Fertilizer.visible = true
-		$Seeds.visible = false
-		$Plant.text = tr("USE")
-	else:
-		$Fertilizer.visible = false
-		$Seeds.visible = true
-		$Plant.text = tr("PLANT_V")
-	if game.science_unlocked.has("GHA"):
-		calc_prod_per_sec()
+	for _seed in game.seeds_produce:
+		var slot = game.slot_scene.instance()
+		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + _seed + ".png")
+		slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [_seed])
+		slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
+		slot.get_node("Button").connect("pressed", self, "on_slot_press", [_seed])
+		hbox.add_child(slot)
+	calc_prod_per_sec()
 	if seeds_to_plant != "":
 		on_slot_press(seeds_to_plant)
 
@@ -104,7 +84,7 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 	if plant_new:
 		for p in produce:
 			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)
-		var cellulose_drain:float = game.craft_agriculture_info[_name].costs.cellulose / float(game.craft_agriculture_info[_name].grow_time) * 1000.0 * obj.bldg.path_1_value
+		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value
 		if obj.has("adj_lake_state"):
 			if obj.adj_lake_state == "l":
 				cellulose_drain *= 2
@@ -121,63 +101,24 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 		game.autocollect.mats.cellulose = game.autocollect.mats.get("cellulose", 0.0) - obj.auto_GH.cellulose_drain
 
 func on_slot_press(_name:String):
-	if game.science_unlocked.has("GHA"):
-		if c_v == "system":
-			var produce:Dictionary = game.craft_agriculture_info[_name].produce.duplicate(true)
+	if c_v == "system":
+		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
+		for p in produce:
+			produce[p] *= 2.0 * tile_num * game.u_i.time_speed * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value * pow(sys_au_mult, 2.0)
+		set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
+	elif c_v == "planet":
+		for tile_id in tiles_selected:
+			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
+			var tile:Dictionary = game.tile_data[tile_id]
 			for p in produce:
-				produce[p] *= 2.0 * tile_num * game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value * pow(sys_au_mult, 2.0)
-			set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
-		elif c_v == "planet":
-			var plant_new:bool = false
-			for tile_id in tiles_selected:
-				if not game.tile_data[tile_id].has("plant"):
-					continue
-				if not game.tile_data[tile_id].has("auto_GH"):
-					plant_new = true
-			for tile_id in tiles_selected:
-				if not game.tile_data[tile_id].has("plant"):
-					continue
-				var produce:Dictionary = game.craft_agriculture_info[_name].produce.duplicate(true)
-				var tile:Dictionary = game.tile_data[tile_id]
-				for p in produce:
-					produce[p] *= game.u_i.time_speed / game.craft_agriculture_info[_name].grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value
-					if tile.adj_lake_state == "l":
+				produce[p] *= game.u_i.time_speed * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value
+				if tile.lake_state.has("H2O"):
+					if tile.lake_state.H2O == "l":
 						produce[p] *= 2
-					elif tile.adj_lake_state == "sc":
+					elif tile.lake_state.H2O == "sc":
 						produce[p] *= 4
-					produce[p] *= pow(Helper.get_au_mult(tile), 2)
-				set_auto_harvest(tile, produce, _name, plant_new)
-		calc_prod_per_sec()
-	else:
-		seeds_to_plant = _name
-		$Plant.visible = true
-		craft_costs = game.craft_agriculture_info[_name].costs.duplicate(true)
-		for cost in craft_costs:
-			craft_costs[cost] *= tile_num
-		Helper.put_rsrc($HBoxContainer, 32, craft_costs, true, true)
-
-func _on_Plant_pressed():
-	if game.check_enough(craft_costs):
-		game.deduct_resources(craft_costs)
-		var curr_time = OS.get_system_time_msecs()
-		if fertilizer:
-			p_i.plant.plant_date -= game.craft_agriculture_info.fertilizer.speed_up_time
-			if curr_time > p_i.plant.plant_date + p_i.plant.grow_time:
-				_on_close_button_pressed()
-				Helper.put_rsrc($HBoxContainer, 32, {})
-				seeds_to_plant = ""
-			game.popup("FERTILIZERS_USED", 1.5)
-		else:
-			p_i.plant = {
-				"name":seeds_to_plant,
-				"plant_date":curr_time,
-				"grow_time":game.craft_agriculture_info[seeds_to_plant].grow_time,
-				"is_growing":true,
-			}
-			if p_i.has("bldg") and p_i.bldg.name == "GH":
-				p_i.plant.grow_time /= p_i.bldg.path_1_value
-			p_i.plant.grow_time /= 2
-			game.view.obj.refresh_planets()
-			game.get_node("PlantingSounds/%s" % [Helper.rand_int(1,3)]).play()
-			_on_close_button_pressed()
-			on_slot_press("fertilizer")
+					else:
+						produce[p] *= 1.5
+				produce[p] *= pow(Helper.get_au_mult(tile), 2)
+			set_auto_harvest(tile, produce, _name, not tile.has("auto_GH"))
+	calc_prod_per_sec()

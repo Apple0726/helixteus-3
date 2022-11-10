@@ -182,10 +182,11 @@ func _on_Button_pressed():
 			game.rover_data.append(rover_data)
 		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
-		if not game.show.has("vehicles_button"):
-			game.show.vehicles_button = true
-			if game.planet_HUD:
-				game.planet_HUD.get_node("VBoxContainer/Vehicles").visible = true
+#		if not game.show.has("vehicles_button"):
+#			game.show.vehicles_button = true
+#			game.HUD.get_node("Buttons/Vehicles").visible = true
+#			if game.planet_HUD:
+#				game.planet_HUD.get_node("VBoxContainer/Vehicles").visible = true
 		game.HUD.refresh()
 	else:
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)

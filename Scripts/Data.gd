@@ -51,7 +51,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"GF":{"money":1500, "energy":1000, "time":120.0},
 				"SE":{"money":1500, "energy":500, "time":120.0},
 				"MM":{"money":13000, "energy":7000, "time":200.0},
-				"GH":{"money":10000, "energy":1500, "glass":500, "time":75.0},
+				"GH":{"money":10000, "energy":1500, "glass":50, "soil":100, "time":75.0},
 				"SP":{"money":4000, "time":90.0},
 				"AE":{"money":41500, "energy":15000, "time":180.0},
 				"AMN":{"money":580000, "energy":8200, "time":490.0},
@@ -269,9 +269,8 @@ var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
 #Science for unlocking game features
 var science_unlocks = {	
 						#Agriculture sciences
-						"SA":{"cost":100, "parents":[]},
-						"EGH":{"cost":3500, "parents":["SA"]},
-						"GHA":{"cost":3.7e7, "parents":["EGH"]},
+						"SA":{"cost":500, "parents":[]},
+						"PF":{"cost":90000, "parents":["SA"]},
 						
 						#Auto mining
 						"AM":{"cost":10000, "parents":[]},

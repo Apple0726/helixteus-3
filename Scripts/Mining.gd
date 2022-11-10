@@ -301,6 +301,7 @@ func pickaxe_hit():
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()
 		game.show.stone = true
+		game.HUD.stone.visible = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
 			$LayerAnim.play("Layer fade")

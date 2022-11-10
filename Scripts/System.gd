@@ -368,6 +368,11 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, num_stages.M_DS + 1)}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1)}, false)
+	Helper.add_label(tr("CAPACITY_INCREASE"))
+	if base and build_all_MS_stages:
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, num_stages.M_DS + 1)}, false)
+	else:
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1)}, false)
 
 func show_M_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -448,6 +453,11 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, num_stages.M_MME + 1)}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1)}, false)
+	Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+	if build_all_MS_stages:
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, num_stages.M_MME + 1)}, false)
+	else:
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1)}, false)
 
 func show_M_MPCC_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -632,7 +642,7 @@ func on_planet_click (id:int, l_id:int):
 				if p_i.has("plant"):
 					if not p_i.plant.is_growing:
 						items_collected.clear()
-						var produce:Dictionary = game.craft_agriculture_info[p_i.plant.name].produce * p_i.tile_num
+						var produce:Dictionary = game.seeds_produce[p_i.plant.name].produce * p_i.tile_num
 						for p in produce:
 							produce[p] *= p_i.bldg.path_2_value
 							Helper.add_item_to_coll(items_collected, p, produce[p])
@@ -852,6 +862,7 @@ func _process(_delta):
 				game.universe_data[game.c_u].xp += star.bldg.XP
 				if star.MS == "M_DS":
 					game.autocollect.MS.energy += Helper.get_DS_output(star)
+					game.energy_capacity += Helper.get_DS_capacity(star) - Helper.get_DS_capacity(star, -1)
 				elif star.MS == "M_MB":
 					game.autocollect.MS.SP += Helper.get_MB_output(star)
 				elif star.MS == "M_CBS":
@@ -867,13 +878,6 @@ func _process(_delta):
 							p_i.cost_div = max(p_i.cost_div, 1 + log(star.luminosity + 1))
 						else:
 							p_i.cost_div = 1 + log(star.luminosity + 1)
-						if not p_i.has("autocollect"):
-							if p_i.has("tile_num"):
-								if p_i.bldg.name == "ME":
-									game.autocollect.rsrc.minerals += p_i.bldg.path_1_value * p_i.tile_num
-								elif p_i.bldg.name == "PP":
-									game.autocollect.rsrc.energy += p_i.bldg.path_1_value * p_i.tile_num
-						p_i.autocollect = true
 					for i in len(stars_info):
 						if i != id:
 							var _star:Dictionary = stars_info[i]
@@ -883,7 +887,6 @@ func _process(_delta):
 								_star.cost_div = 1 + log(star.luminosity + 1)
 					update()
 				game.HUD.refresh()
-			remove_child(time_bar)
 			time_bar.queue_free()
 			star_time_bars.erase(time_bar_obj)
 	for time_bar_obj in planet_time_bars:
@@ -901,6 +904,7 @@ func _process(_delta):
 				if p_i.has("MS"):
 					if p_i.MS == "M_MME":
 						game.autocollect.MS.minerals += Helper.get_MME_output(p_i)
+						game.mineral_capacity += Helper.get_MME_output(p_i) - Helper.get_MME_output(p_i, -1)
 				game.HUD.refresh()
 			time_bar_obj.parent.remove_child(time_bar)
 			time_bar.queue_free()
@@ -931,10 +935,10 @@ func _process(_delta):
 		rsrc.set_current_bar_value(value)
 		var prod:float
 		if star.MS == "M_DS":
-			prod = 1000.0 / Helper.get_DS_output(star)
+			prod = Helper.get_DS_output(star)
 		elif star.MS == "M_MB":
-			prod = 1000.0 / Helper.get_MB_output(star)
-		rsrc.set_text("%s/%s" % [Helper.format_num(1000.0 / prod), tr("S_SECOND")])
+			prod = Helper.get_MB_output(star)
+		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
 		if planet.bldg.is_constructing:

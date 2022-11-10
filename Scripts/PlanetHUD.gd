@@ -18,7 +18,6 @@ func is_one_element_true(dict:Dictionary):
 func refresh():
 	$VBoxContainer/Construct.visible = game.show.has("construct_button")
 	$VBoxContainer/Construct/New.visible = not game.new_bldgs.empty() and is_one_element_true(game.new_bldgs)
-	$VBoxContainer/PlaceSoil.visible = game.show.has("plant_button")
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.has("mining")
 
@@ -41,11 +40,6 @@ func _on_Mine_pressed():
 	click_sound.play()
 	game.mine_tile()
 
-func _on_PlaceSoil_pressed():
-	click_sound.play()
-	game.HUD.get_node("Top/Resources/Soil").visible = true
-	game.put_bottom_info(tr("PLACE_SOIL_INFO"), "place_soil", "cancel_place_soil")
-
 func _on_Construct_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("CONSTRUCT") + " (C)")
@@ -53,10 +47,6 @@ func _on_Construct_mouse_entered():
 func _on_Mine_mouse_entered():
 	on_button = true
 	game.show_tooltip(tr("MINE") + " (N)")
-
-func _on_PlaceSoil_mouse_entered():
-	on_button = true
-	game.show_tooltip(tr("PLACE_SOIL") + " (L)")
 
 func _on_mouse_exited():
 	on_button = false

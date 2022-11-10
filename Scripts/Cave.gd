@@ -1543,9 +1543,12 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 			mine_debris(item, delta)
 		update_ray()
 	elif item.type == "consumable":
-		if item.name == "portable_wormhole":
-			remove_item(item, 1)
-			exit_cave()
+		if item.name.substr(0, 17) == "portable_wormhole":
+			if cave_floor <= game.craft_cave_info[item.name].limit:
+				remove_item(item, 1)
+				exit_cave()
+			else:
+				game.popup(tr("WH_ERROR"), 2.0)
 		elif item.name.substr(0, 5) == "drill":
 			if tile.cave.has("special_cave"):
 				game.popup(tr("DRILL_ERROR"), 2.0)
@@ -2343,7 +2346,7 @@ func _on_BreakRocksWithDash_body_entered(body):
 		else:
 			$Rover/SuffocationTimer.start()
 	elif body is Debris:
-		if enhancements.has("wheels_5"):
+		if enhancements.has("wheels_5") and body.scale.x < 2.0:
 			mine_debris_complete(body.id)
 		else:
 			$Rover/SuffocationTimer.start()

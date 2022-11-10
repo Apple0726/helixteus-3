@@ -142,6 +142,8 @@ func get_item_name (_name:String):
 		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name[9]))
 	if _name.substr(0, 5) == "drill":
 		return tr("DRILL") + " " + game.get_roman_num(int(_name[5]))
+	if _name.substr(0, 17) == "portable_wormhole":
+		return tr("PORTABLE_WORMHOLE") + " " + game.get_roman_num(int(_name[17]))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
 		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
 	return tr(_name.to_upper())
@@ -170,7 +172,7 @@ func get_dir_from_name(_name:String):
 		return "Items/Overclocks"
 	if get_type_from_name(_name) == "other_items_info":
 		return "Items/Others"
-	if get_type_from_name(_name) == "craft_agriculture_info":
+	if get_type_from_name(_name) == "seeds_produce":
 		return "Agriculture"
 	if get_type_from_name(_name) == "craft_mining_info":
 		return "Mining"
@@ -190,8 +192,8 @@ func get_type_from_name(_name:String):
 		return "overclocks_info"
 	if game.other_items_info.keys().has(_name):
 		return "other_items_info"
-	if game.craft_agriculture_info.keys().has(_name):
-		return "craft_agriculture_info"
+	if game.seeds_produce.keys().has(_name):
+		return "seeds_produce"
 	if game.craft_mining_info.keys().has(_name):
 		return "craft_mining_info"
 	if game.craft_cave_info.keys().has(_name):
@@ -466,6 +468,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.help.erase("materials")
 			if not game.show.has("materials"):
 				game.show.materials = true
+				game.HUD.craft.visible = true
 				game.inventory.get_node("Tabs/Materials").visible = true
 		elif game.mets.has(content):
 			if not game.help.has("metals"):
@@ -899,7 +902,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")
 			if tile.has("auto_GH"):
-				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
+				var produce_info:Dictionary = game.seeds_produce[tile.auto_GH.seed].duplicate(true)
 				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
 				for p in produce_info.produce:
 					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
@@ -1028,11 +1031,21 @@ func update_MS_rsrc(dict:Dictionary):
 func get_DS_output(star:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck * game.u_i.time_speed
 
+func get_DS_capacity(star:Dictionary, next_lv:int = 0):
+	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
+		return 0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 1000.0
+
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5)) * game.u_i.time_speed
+
+func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
+	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
+		return 0
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 500.0, 2)
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
@@ -1223,33 +1236,15 @@ func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
 
-func check_lake_presence(pos:Vector2, wid:int):
-	var state:String
-	var has_lake = false
-	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
-		if not has_lake:
-			for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
-				if Vector2(i, j) != pos:
-					var id2 = i % wid + j * wid
-					if game.tile_data[id2] and game.tile_data[id2].has("lake"):
-						has_lake = true
-						state = game.tile_data[id2].lake.state
-						break
-	return {"has_lake":has_lake, "lake_state":state}
-
-func check_lake(pos:Vector2, wid:int, seed_name:String):
-	var state
-	var has_lake = false
+func get_lake_elements(pos:Vector2, wid:int):
+	var elements:Dictionary = {}
 	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
 		for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
 			if Vector2(i, j) != pos:
 				var id2 = i % wid + j * wid
 				if game.tile_data[id2] and game.tile_data[id2].has("lake"):
-					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[seed_name].lake
-					has_lake = has_lake or okay
-					if okay:
-						state = game.tile_data[id2].lake.state
-	return [has_lake, state]
+					elements[game.tile_data[id2].lake.element] = game.tile_data[id2].lake.state
+	return elements
 
 func remove_recursive(path):
 	var directory = Directory.new()

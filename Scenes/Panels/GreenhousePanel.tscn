@@ -60,7 +60,7 @@ __meta__ = {
 
 [node name="HBox" type="HBoxContainer" parent="Seeds"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 542.0
 margin_bottom = 63.0
 size_flags_horizontal = 3
@@ -79,7 +79,7 @@ __meta__ = {
 
 [node name="HBox" type="HBoxContainer" parent="Fertilizer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 542.0
 margin_bottom = 63.0
 size_flags_horizontal = 3

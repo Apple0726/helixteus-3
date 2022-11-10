@@ -57,6 +57,16 @@ func _ready():
 	else:
 		switch_btn.shortcut.shortcut.action = "Z"
 	refresh_bookmarks()
+	minerals.visible = game.show.has("minerals")
+	shop.visible = game.show.has("shop")
+	stone.visible = game.show.has("stone")
+	SP.visible = game.show.has("SP")
+	sc_tree.visible = game.show.has("SP")
+	$Buttons/Vehicles.visible = game.show.has("vehicles_button")
+	craft.visible = game.show.has("materials")
+	ships.visible = len(game.ship_data) > 0
+	MU.visible = game.show.has("minerals")
+	$Top/Resources/Cellulose.visible = game.science_unlocked.has("SA")
 #	if not game.viewing_dimension:
 #		refresh()
 
@@ -198,8 +208,6 @@ func refresh():
 	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]
-	$Bottom/Panel/CollectProgress.visible = false
-	$Bottom/Panel/CollectAll.modulate = Color.white
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
 		if config.get_value("saving", "enable_autosave", true) and (not game.tutorial or game.tutorial.tut_num >= 26):
@@ -213,24 +221,20 @@ func refresh():
 	update_minerals()
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone) + " kg"
-	soil_text.text = Helper.format_num(game.mats.soil, true) + " kg"
-	$Top/Resources/Cellulose.visible = game.science_unlocked.has("GHA")
 	if $Top/Resources/Glass.visible:
-		if game.mats.glass >= Data.costs.GH.glass * game.engineering_bonus.BCM:
+		var GH_glass_cost = Data.costs.GH.glass * game.engineering_bonus.BCM
+		if game.mats.glass >= GH_glass_cost:
 			glass_text["custom_colors/font_color"] = Color.green
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
-		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), Data.costs.GH.glass * game.engineering_bonus.BCM]
-	minerals.visible = game.show.has("minerals")
-	stone.visible = game.show.has("stone")
-	shop.visible = game.show.has("shop")
-	SP.visible = game.show.has("SP")
-	sc_tree.visible = game.show.has("SP")
-	$Buttons/Vehicles.visible = game.show.has("vehicles_button")
-	craft.visible = game.show.has("materials")
-	ships.visible = len(game.ship_data) > 0
-	MU.visible = game.show.has("minerals")
-	#$Bottom/Panel.visible = game.show.has("minerals") and game.c_v != "science_tree"
+		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), GH_glass_cost]
+	if $Top/Resources/Soil.visible:
+		var GH_soil_cost = Data.costs.GH.soil * game.engineering_bonus.BCM
+		if game.mats.soil >= GH_soil_cost:
+			soil_text["custom_colors/font_color"] = Color.green
+		else:
+			soil_text["custom_colors/font_color"] = Color.red
+		soil_text.text = "%s / %s kg" % [Helper.format_num(game.mats.soil, true), GH_soil_cost]
 	update_XP()
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		$Buttons/Ships.shortcut.shortcut.action = "Z"
