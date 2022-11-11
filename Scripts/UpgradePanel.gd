@@ -226,11 +226,11 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.plant.ash if first_tile.has("plant") and first_tile.plant.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.ash.richness if first_tile.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
 		IR_mult = Helper.get_IR_mult("ME")
 	elif bldg in ["MS", "B", "NSF", "ESF"]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
-		IR_mult = Helper.get_IR_mult("S")
+		IR_mult = Helper.get_IR_mult(bldg)
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
@@ -366,7 +366,7 @@ func _on_Upgrade_pressed():
 #					var coll_date = tile.bldg.collect_date
 #					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				if tile.bldg.name == "ME":
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 				elif tile.bldg.name == "PP":
 					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
 				elif tile.bldg.name == "RL":
@@ -379,9 +379,14 @@ func _on_Upgrade_pressed():
 							game.aurora_SPs[tile.aurora.au_int] -= SP_prod
 				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
-				elif tile.bldg.name == "GH" and game.science_unlocked.has("GHA") and tile.has("auto_GH"):
-					for p in tile.auto_GH.produce:
-						game.autocollect.mets[p] -= tile.auto_GH.produce[p]
+				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
+					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce)
+					if path_selected == 1:
+						tile.bldg.prod_mult = new_base_value / tile.bldg.path_1_value
+						tile.bldg.cell_mult = new_base_value / tile.bldg.path_1_value
+					elif path_selected == 2:
+						tile.bldg.prod_mult = new_base_value / tile.bldg.path_2_value
+						tile.bldg.cell_mult = 1.0
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 				if tile.bldg.has("start_date"):
 					tile.bldg.start_date += cost_time * 1000

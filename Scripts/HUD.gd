@@ -8,6 +8,7 @@ onready var stone_text = $Top/Resources/Stone/Text
 onready var soil_text = $Top/Resources/Soil/Text
 onready var energy_text = $Top/Resources/Energy/Text
 onready var glass_text = $Top/Resources/Glass/Text
+onready var cellulose_text = $Top/Resources/Cellulose/Text
 onready var SP_text = $Top/Resources/SP/Text
 onready var minerals = $Top/Resources/Minerals
 onready var stone = $Top/Resources/Stone
@@ -58,6 +59,7 @@ func _ready():
 		switch_btn.shortcut.shortcut.action = "Z"
 	refresh_bookmarks()
 	minerals.visible = game.show.has("minerals")
+	$Bottom/Panel.visible = game.show.has("minerals")
 	shop.visible = game.show.has("shop")
 	stone.visible = game.show.has("stone")
 	SP.visible = game.show.has("SP")
@@ -161,7 +163,7 @@ func update_XP():
 func update_minerals():
 #	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
 #		return
-	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("S"))
+	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
 		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
@@ -173,33 +175,29 @@ func update_minerals():
 func update_money_energy_SP():
 	var planet = game.view.obj
 	if game.c_v == "planet" and is_instance_valid(planet) and planet.bldg_to_construct != "":
-		var money_cost = game.view.obj.constr_costs.money
-		var energy_cost = game.view.obj.constr_costs.energy if game.view.obj.constr_costs.has("energy") else 0
-		if planet.shadow_num > 0:
-			money_cost *= planet.shadow_num
-			energy_cost *= planet.shadow_num
+		var money_cost = game.view.obj.constr_costs_total.money
+		var energy_cost = game.view.obj.constr_costs_total.energy if game.view.obj.constr_costs_total.has("energy") else 0.0
+		var glass_cost = game.view.obj.constr_costs_total.glass if game.view.obj.constr_costs_total.has("glass") else 0.0
+		var soil_cost = game.view.obj.constr_costs_total.soil if game.view.obj.constr_costs_total.has("soil") else 0.0
 		money_text.text = "%s / %s" % [Helper.format_num(round(game.money)), Helper.format_num(round(money_cost))]
 		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(energy_cost))]
-		if game.money >= money_cost:
-			money_text["custom_colors/font_color"] = Color.green
-		else:
-			money_text["custom_colors/font_color"] = Color.red
-		if game.energy >= energy_cost:
-			energy_text["custom_colors/font_color"] = Color.green
-		else:
-			energy_text["custom_colors/font_color"] = Color.red
+		glass_text.text = "%s / %s kg" % [Helper.format_num(round(game.mats.glass)), Helper.format_num(round(glass_cost))]
+		soil_text.text = "%s / %s kg" % [Helper.format_num(round(game.mats.soil)), Helper.format_num(round(soil_cost))]
+		money_text["custom_colors/font_color"] = Color.green if game.money >= money_cost else Color.red
+		energy_text["custom_colors/font_color"] = Color.green if game.energy >= energy_cost else Color.red
+		glass_text["custom_colors/font_color"] = Color.green if game.mats.glass >= glass_cost else Color.red
+		soil_text["custom_colors/font_color"] = Color.green if game.mats.soil >= soil_cost else Color.red
 	else:
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(2500 + round((game.energy_capacity - 2500) * Helper.get_IR_mult("S")))]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(2500 + round((game.energy_capacity - 2500) * Helper.get_IR_mult("B")))]
+		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)
+		soil_text["custom_colors/font_color"] = Color.white if game.mats.soil > 0 else Color.red
 	SP_text.text = Helper.format_num(round(game.SP))
 	if $Top/Resources/Cellulose.visible:
-		$Top/Resources/Cellulose/Text.text = "%s kg" % Helper.format_num(round(game.mats.cellulose))
-		if game.mats.cellulose > 0:
-			$Top/Resources/Cellulose/Text["custom_colors/font_color"] = Color.white
-		else:
-			$Top/Resources/Cellulose/Text["custom_colors/font_color"] = Color.red
+		cellulose_text.text = "%s kg" % Helper.format_num(game.mats.cellulose, true)
+		cellulose_text["custom_colors/font_color"] = Color.white if game.mats.cellulose > 0 else Color.red
 	
 func refresh():
 	if not game:
@@ -511,16 +509,6 @@ func _input(event):
 		if not bookmark_shown and Geometry.is_point_in_polygon(event.position, $MouseIn.polygon):
 			bookmark_shown = true
 			$AnimationPlayer.play("BookmarkAnim")
-
-func _on_CollectAll_mouse_entered():
-	game.show_tooltip(tr("COLLECT_ALL_%s" % tr(game.c_v).to_upper()) + " (.)")
-
-func _on_CollectAll_pressed():
-	if not $Bottom/Panel/CollectProgress.visible:
-		$Bottom/Panel/CollectProgress.visible = true
-		$Bottom/Panel/CollectProgress.value = 0
-		$Bottom/Panel/CollectAll.modulate = Color(0.3, 0.3, 0.3, 1)
-		game.view.obj.collect_all()
 
 func _on_ConvertMinerals_mouse_entered():
 	game.show_tooltip(tr("SELL_MINERALS") + " (,)")

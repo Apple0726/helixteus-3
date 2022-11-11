@@ -13,9 +13,9 @@ var time_speed:float = 1.0
 #Aurora intensity
 onready var au_int:float = tile.aurora.au_int if aurora else 0
 onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
-onready var volcano_mult:float = tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0
-onready var artificial_volcano = tile.has("plant") and tile.plant.has("ash") and tile.plant.has("artificial_ash")
-onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (volcano_mult if tile.has("plant") and not tile.plant.has("artificial_ash") else 1.0)
+onready var volcano_mult:float = tile.ash.richness if tile.has("ash") else 1.0
+onready var artificial_volcano = tile.has("ash") and tile.ash.has("artificial")
+onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (volcano_mult if tile.has("ash") and not tile.ash.has("artificial") else 1.0)
 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
@@ -417,7 +417,7 @@ func remove_cave():
 	deposits.clear()
 
 func set_avg_dmg():
-	var avg_dmg:float = 5.5 * difficulty / def / rover_size * armor_damage_mult
+	var avg_dmg:float = 6.0 * difficulty / def / rover_size * armor_damage_mult
 	var dmg_to_HP_ratio:float = avg_dmg / total_HP
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 	var color:String = gradient.interpolate(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
@@ -517,18 +517,18 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var debris = Sprite.new()
 				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
 				add_child_below_node($Lava, debris)
-				debris.modulate = star_mod * tile_avg_mod * rng.randf_range(0.95, 1.0) * (1.0 - cave_darkness)
+				debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 				debris.modulate.a = 1.0
 				debris.rotation_degrees = rng.randf_range(0, 360)
 				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
-				debris.scale = Vector2.ONE * rng.randf_range(0.5, 1.0)
+				debris.scale = Vector2.ONE * rng.randf_range(1.0, 1.4)
 				debris.add_to_group("debris")
 			if level > 0:
 				# Big boi rocks with collision detection
 				if rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instance()
 					debris.sprite_frame = rng.randi_range(0, 5)
-					debris.modulate = star_mod * tile_avg_mod * rng.randf_range(0.85, 1.0) * (1.0 - cave_darkness)
+					debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 					debris.modulate.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x = rng.randf()
@@ -1170,8 +1170,8 @@ func update_ray():
 			else:
 				tile_highlighted_for_mining = -1
 				_tile_highlight.visible = false
-			if coll is Debris and holding_click:
-				mining_debris = coll.id
+			if coll.get_parent() is Debris and holding_click:
+				mining_debris = coll.get_parent().id
 				if not debris_touched_by_laser.has(mining_debris):
 					var circ_bar = preload("res://Scenes/CircleBar.tscn").instance()
 					add_child(circ_bar)
@@ -1719,7 +1719,7 @@ func mine_debris_complete(tile_id:int):
 							"minerals":rand_range(42, 46) * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0)}
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:
-			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.1, 0.12) * difficulty)
+			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.24) * difficulty)
 			rsrc[mat] = amount
 	for met in game.met_info:
 		var met_value = game.met_info[met]
@@ -1730,7 +1730,7 @@ func mine_debris_complete(tile_id:int):
 			rarity = pow(rarity, 0.8)
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
-		if randf() < 1 / (rarity + 1):
+		if rarity < difficulty * 2.0 and randf() < 1 / (rarity + 1):
 			rsrc[met] = Helper.clever_round(5 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0))
 	for r in rsrc.keys():
 		if r in ["stone", "minerals"]:
@@ -2120,7 +2120,7 @@ func _on_Difficulty_mouse_entered():
 	]
 	if aurora_mult > 1:
 		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
-	if volcano_mult > 1 and tile.has("plant") and not tile.plant.has("artificial_ash"):
+	if volcano_mult > 1 and not artificial_volcano:
 		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(volcano_mult)]
 	game.help_str = "cave_diff_info"
 	if game.help.has("cave_diff_info"):
@@ -2203,7 +2203,7 @@ func _on_Filter_pressed():
 
 
 func _on_CheckAchievements_timeout():
-	if cave_wall.get_used_cells_by_id(0).empty() and chests.empty() and get_tree().get_nodes_in_group("enemies").empty():
+	if cave_wall.get_used_cells_by_id(0).empty() and chests.empty() and big_debris.empty() and get_tree().get_nodes_in_group("enemies").empty():
 		game.earn_achievement("random", "clear_out_cave_floor")
 		$CheckAchievements.stop()
 		$CheckAchievements.disconnect("timeout", self, "_on_CheckAchievements_timeout")
@@ -2345,14 +2345,14 @@ func _on_BreakRocksWithDash_body_entered(body):
 			mine_wall_complete(pos, get_tile_index(pos / 200))
 		else:
 			$Rover/SuffocationTimer.start()
-	elif body is Debris:
+	elif body.get_parent() is Debris:
 		if enhancements.has("wheels_5") and body.scale.x < 2.0:
-			mine_debris_complete(body.id)
+			mine_debris_complete(body.get_parent().id)
 		else:
 			$Rover/SuffocationTimer.start()
 
 func _on_BreakRocksWithDash_body_exited(body):
-	if body is TileMap or body is Debris:
+	if body is TileMap or body.get_parent() is Debris:
 		if not enhancements.has("wheels_5"):
 			$Rover/SuffocationTimer.stop()
 

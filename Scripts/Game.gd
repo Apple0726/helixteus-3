@@ -1100,7 +1100,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
-	new_bldgs = {}
+	new_bldgs = {"ME":true}
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
@@ -1741,7 +1741,6 @@ func add_science_tree():
 			rsrc.modulate.a = 0.5
 
 func add_mining():
-	HUD.get_node("Bottom/Panel/CollectAll").visible = false
 	HUD.get_node("Bottom/Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instance()
 	add_child(mining_HUD)
@@ -1750,7 +1749,6 @@ func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	if is_instance_valid(tutorial) and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
-	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	HUD.get_node("Bottom/Hotbar").visible = true
 	if is_instance_valid(mining_HUD):
 		remove_child(mining_HUD)
@@ -1891,7 +1889,6 @@ func add_universe():
 		generate_clusters(c_u)
 	add_obj("universe")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
-	HUD.get_node("Bottom/Panel/CollectAll").visible = false
 
 func add_cluster():
 	if obj_exists("Clusters", c_c):
@@ -1918,7 +1915,6 @@ func add_cluster():
 		var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
-	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
@@ -1942,7 +1938,6 @@ func add_galaxy():
 #		HUD.refresh()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
-	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
@@ -1967,7 +1962,6 @@ func add_system():
 	show.bookmarks = true
 	add_obj("system")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
-	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
@@ -1983,7 +1977,6 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	$UI.add_child(planet_HUD)
-	HUD.get_node("Bottom/Panel/CollectAll").visible = true
 
 func remove_dimension():
 	if not $UI.is_a_parent_of(HUD):
@@ -2871,13 +2864,13 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				continue
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
 				tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
-				if tile_data[t_id2].has("plant"):
+				if tile_data[t_id2].has("ash"):
 					if not tile_data[t_id2].has("cave"):
-						tile_data[t_id2].plant.ash = max(richness, tile_data[t_id2].plant.ash)
+						tile_data[t_id2].ash = max(richness, tile_data[t_id2].ash.richness)
 				else:
-					tile_data[t_id2].plant = {"ash":richness}
+					tile_data[t_id2].ash = {"richness":richness}
 					if artificial:
-						tile_data[t_id2].plant.artificial_ash = true
+						tile_data[t_id2].ash.artificial = true
 				if not achievement_data.exploration.has("volcano_cave") and tile_data[t_id2].has("cave"):
 					earn_achievement("exploration", "volcano_cave")
 				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id2].has("cave") and tile_data[t_id2].has("aurora"):
@@ -2964,13 +2957,13 @@ func generate_tiles(id:int):
 			if level > 0.5:
 				if lake_1_phase != "G":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-					if not tile_data[t_id].has("plant"):
+					if not tile_data[t_id].has("ash"):
 						make_lake(tile_data[t_id], lake_1_phase.to_lower(), p_i.lake_1, 1)
 					continue
 			if level < -0.5:
 				if lake_2_phase != "G":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-					if not tile_data[t_id].has("plant"):
+					if not tile_data[t_id].has("ash"):
 						make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
 					continue
 			if home_planet:
@@ -3011,7 +3004,7 @@ func generate_tiles(id:int):
 						modifiers2.erase(key)
 				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
 				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":randf() + 0.2}
-				if tile_data[t_id].has("plant") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
+				if tile_data[t_id].has("ash") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
 					earn_achievement("exploration", "volcano_cave")
 				if not modifiers.empty():
 					tile_data[t_id].cave.modifiers = modifiers
@@ -3025,7 +3018,7 @@ func generate_tiles(id:int):
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
-				if tile_data[t_id].has("plant"):
+				if tile_data[t_id].has("ash"):
 					continue
 				tile_data[t_id].crater = {}
 				tile_data[t_id].crater.variant = Helper.rand_int(1, 2)
@@ -3135,7 +3128,17 @@ func generate_tiles(id:int):
 			random_tile2 = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile2)
 		tile_data[random_tile].ship = true
-		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30}
+		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+	
+	#Give lake data to adjacent tiles
+	for i in wid:
+		for j in wid:
+			var t_id = i % wid + j * wid
+			var lake_elements = Helper.get_lake_elements(Vector2(i, j), wid).duplicate()
+			if tile_data[t_id]:
+				tile_data[t_id].lake_elements = lake_elements
+			else:
+				tile_data[t_id] = {"lake_elements":lake_elements}
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -3568,7 +3571,8 @@ func sell_all_minerals():
 		add_resources({"money":minerals * (MUs.MV + 4)})
 		popup(tr("MINERAL_SOLD") % [Helper.format_num(round(minerals)), Helper.format_num(round(minerals * (MUs.MV + 4)))], 2)
 		minerals = 0
-		HUD.refresh()
+		HUD.update_money_energy_SP()
+		HUD.update_minerals()
 
 var cmd_history:Array = []
 var cmd_history_index:int = -1
@@ -3984,9 +3988,9 @@ func cancel_building():
 	view.obj.finish_construct()
 	HUD.get_node("Top/Resources/Glass").visible = false
 	HUD.get_node("Top/Resources/Soil").visible = false
-	HUD.get_node("Top/Resources/Stone").visible = true
-	HUD.get_node("Top/Resources/SP").visible = true
-	HUD.get_node("Top/Resources/Minerals").visible = true
+	HUD.get_node("Top/Resources/Stone").visible = show.has("stone")
+	HUD.get_node("Top/Resources/SP").visible = show.has("SP")
+	HUD.get_node("Top/Resources/Minerals").visible = show.has("minerals")
 	HUD.get_node("Top/Resources/Cellulose").visible = science_unlocked.has("SA")
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
@@ -4258,8 +4262,6 @@ func mine_tile(tile_id:int = -1):
 			if tutorial and tutorial.tut_num == 15 and objective.empty():
 				objective = {"type":ObjectiveType.MINE, "id":-1, "current":0, "goal":2}
 			c_t = tile_id
-			if tile_data[tile_id] and tile_data[tile_id].has("plant"):
-				tile_data[tile_id].erase("plant")
 			switch_view("mining")
 	else:
 		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))

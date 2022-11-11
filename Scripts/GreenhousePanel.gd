@@ -77,22 +77,42 @@ func calc_prod_per_sec():
 
 func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_new:bool = true):
 	if obj.has("auto_GH"):
-		for p in obj.auto_GH.produce:
-			game.autocollect.mets[p] -= obj.auto_GH.produce[p]
+		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce)
 		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
 		obj.erase("auto_GH")
 	if plant_new:
-		for p in produce:
-			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)
 		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value
-		if obj.has("adj_lake_state"):
-			if obj.adj_lake_state == "l":
-				cellulose_drain *= 2
-			elif obj.adj_lake_state == "sc":
-				cellulose_drain *= 4
+		if obj.lake_elements.has("CH4"):
+			if obj.lake_elements.CH4 == "l":
+				cellulose_drain *= 0.6
+			elif obj.lake_elements.CH4 == "sc":
+				cellulose_drain *= 0.3
+			else:
+				cellulose_drain *= 0.8
+		if obj.lake_elements.has("CO2"):
+			if obj.lake_elements.CO2 == "l":
+				produce.coal = cellulose_drain * 10
+			elif obj.lake_elements.CO2 == "sc":
+				produce.coal = cellulose_drain * 15
+			else:
+				produce.coal = cellulose_drain * 7
+		if obj.lake_elements.has("He"):
+			if obj.lake_elements.He == "l":
+				produce.minerals = cellulose_drain * 150
+			elif obj.lake_elements.He == "sc":
+				produce.minerals = cellulose_drain * 200
+			else:
+				produce.minerals = cellulose_drain * 100
+		if obj.lake_elements.has("Ne"):
+			if obj.lake_elements.Ne == "l":
+				produce.quillite = cellulose_drain * 0.2
+			elif obj.lake_elements.Ne == "sc":
+				produce.quillite = cellulose_drain * 0.3
+			else:
+				produce.quillite = cellulose_drain * 0.1
+		Helper.add_GH_produce_to_autocollect(produce)
 		if c_v == "system":
 			cellulose_drain *= 2 * tile_num
-		cellulose_drain *= Helper.get_au_mult(obj) * sys_au_mult
 		obj.auto_GH = {
 			"produce":produce,
 			"cellulose_drain":cellulose_drain,
@@ -111,14 +131,7 @@ func on_slot_press(_name:String):
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var tile:Dictionary = game.tile_data[tile_id]
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value
-				if tile.lake_state.has("H2O"):
-					if tile.lake_state.H2O == "l":
-						produce[p] *= 2
-					elif tile.lake_state.H2O == "sc":
-						produce[p] *= 4
-					else:
-						produce[p] *= 1.5
-				produce[p] *= pow(Helper.get_au_mult(tile), 2)
+				produce[p] *= game.u_i.time_speed * tile.bldg.path_1_value * tile.bldg.path_2_value * Helper.get_H2O_mult(tile)
+				produce[p] *= Helper.get_au_mult(tile)
 			set_auto_harvest(tile, produce, _name, not tile.has("auto_GH"))
 	calc_prod_per_sec()

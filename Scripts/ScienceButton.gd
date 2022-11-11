@@ -140,6 +140,7 @@ func _input(event):
 					game.new_bldgs.SY = true
 				game.HUD.refresh()
 				$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+				self_modulate = Color(0.24, 0.0, 1.0, 1.0)
 				$Text["custom_colors/font_color"] = Color.white
 				main_tree.refresh()
 			else:

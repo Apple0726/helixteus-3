@@ -23,7 +23,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 	if not is_inventory:
 		$Label.text = tr("SELECT_X").format({"select":tr("SELECT"), "something":tr(type.split("_")[1].to_upper())})
 	for node in hbox.get_children():
-		hbox.remove_child(node)
+		node.queue_free()
 	var dir:String = ""
 	if type == "":
 		type = "rover_weapons"
@@ -72,7 +72,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 				continue
 		else:
 			var l_metal = metal.to_lower()
-			if not l_metal in ["gemstone"] and not game.show.has(l_metal):
+			if l_metal != "stone" and not l_metal == "gemstone" and not game.show.has(l_metal):
 				continue
 			if l_metal == "gemstone":
 				if not game.show.has("amethyst") and not game.show.has("emerald") and not game.show.has("quartz") and not game.show.has("ruby") and not game.show.has("sapphire") and not game.show.has("topaz"):

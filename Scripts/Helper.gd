@@ -393,7 +393,7 @@ func on_tween_all_completed(tween, lb):
 	lb.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
-	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("S")
+	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
 	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
@@ -404,7 +404,7 @@ func add_minerals(amount:float, add:bool = true):
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
 				game.minerals = fmod(diff, round(min_cap))
-				game.add_resources({"money":ceil(diff / min_cap) * round(min_cap) * (game.MUs.MV + 4)})
+				game.add_resources({"money":max(1, ceil(diff / min_cap)) * round(min_cap) * (game.MUs.MV + 4)})
 			return {"added":amount, "remainder":0}
 		else:
 			if add:
@@ -412,7 +412,7 @@ func add_minerals(amount:float, add:bool = true):
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func add_energy(amount:float):
-	var energy_cap = 2500 + (game.energy_capacity - 2500) * get_IR_mult("S")
+	var energy_cap = 2500 + (game.energy_capacity - 2500) * get_IR_mult("B")
 	var energy_space_available:float = round(energy_cap) - round(game.energy)
 	if energy_space_available >= amount:
 		game.energy += amount
@@ -610,6 +610,8 @@ func get_IR_mult(bldg_name:String):
 		sc = "EPE"
 	elif bldg_name in ["AMN", "SPR"]:
 		sc = "PME"
+	elif bldg_name in ["MS", "B", "NSF", "ESF"]:
+		sc = "STE"
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
@@ -705,7 +707,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 #				else:
 #					rsrc_text.text = String(stored)
 		"ME":
-			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0)
 			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 		"SP":
 			var prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile))
@@ -903,18 +905,11 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				tile.bldg.erase("rover_id")
 			if tile.has("auto_GH"):
 				var produce_info:Dictionary = game.seeds_produce[tile.auto_GH.seed].duplicate(true)
-				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
+				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed * tile.bldg.path_1_value
 				for p in produce_info.produce:
-					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
-					if tile.adj_lake_state == "l":
-						tile.auto_GH.produce[p] *= 2
-					elif tile.adj_lake_state == "sc":
-						tile.auto_GH.produce[p] *= 4
-					game.autocollect.mets[p] += tile.auto_GH.produce[p]
-				if tile.adj_lake_state == "l":
-					tile.auto_GH.cellulose_drain *= 2
-				elif tile.adj_lake_state == "sc":
-					tile.auto_GH.cellulose_drain *= 4
+					tile.auto_GH.produce[p] *= tile.bldg.prod_mult
+				tile.auto_GH.cellulose_drain *= tile.bldg.cell_mult
+				add_GH_produce_to_autocollect(tile.auto_GH.produce)
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
@@ -930,7 +925,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			elif tile.bldg.name == "RL":
 				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult
 			elif tile.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			elif tile.bldg.name == "PP":
 				game.autocollect.rsrc.energy += tile.bldg.path_1_value * overclock_mult
 			elif tile.bldg.name == "SP":
@@ -1178,7 +1173,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		elif bldg == "AE":
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value))
 		elif bldg in ["MS", "B", "NSF", "ESF"]:
-			return dict.bldg.path_1_value * get_IR_mult("S") * n
+			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
 		elif bldg == "SPR":
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg in ["PC", "NC"]:
@@ -1186,7 +1181,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		elif bldg == "EC":
 			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
 		elif bldg == "ME":
-			return dict.bldg.path_1_value * (dict.plant.ash if dict.has("plant") and dict.plant.has("ash") else 1.0) * mult * n
+			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
@@ -1382,3 +1377,32 @@ func get_RE_info(RE_name:String):
 		return (tr("RE_" + RE_name.to_upper()) % get_time_div(11.0))
 	else:
 		return tr("RE_" + RE_name.to_upper())
+
+func get_H2O_mult(tile:Dictionary):
+	var mult = 1.0
+	if tile.lake_elements.has("H2O"):
+		if tile.lake_elements.H2O == "l":
+			mult = 2
+		elif tile.lake_elements.H2O == "sc":
+			mult = 4
+		else:
+			mult = 1.5
+	return mult
+
+func remove_GH_produce_from_autocollect(produce:Dictionary):
+	for p in produce:
+		if p == "minerals":
+			game.autocollect.rsrc.minerals -= produce[p]
+		elif game.mat_info.has(p):
+			game.autocollect.mats[p] -= produce[p]
+		elif game.met_info.has(p):
+			game.autocollect.mets[p] -= produce[p]
+
+func add_GH_produce_to_autocollect(produce:Dictionary):
+	for p in produce:
+		if p == "minerals":
+			game.autocollect.rsrc.minerals = produce[p] + game.autocollect.rsrc.get(p, 0.0)
+		elif game.mat_info.has(p):
+			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
+		elif game.met_info.has(p):
+			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)

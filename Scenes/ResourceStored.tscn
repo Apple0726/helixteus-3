@@ -49,6 +49,7 @@ margin_left = -40.0
 margin_top = -24.0
 margin_right = 85.0
 margin_bottom = 24.0
+mouse_filter = 2
 custom_constants/separation = -2
 
 [node name="Panel2" type="Panel" parent="VBox"]

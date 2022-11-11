@@ -8,8 +8,8 @@ var RE_panel
 var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 2.0
-var weight_cap:float = 3000.0
-var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {}, {}, {}, {}]
+var weight_cap:float = 5000.0
+var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {}, {}, {}, {}, {}]
 var right_inventory = [{"type":"rover_mining", "name":"red_mining_laser"}]
 var right_inv:bool = false
 var tile
@@ -203,7 +203,7 @@ func refresh():
 		HP = 750.0
 		atk = 70.0
 		def = 200.0
-		weight_cap = 200000.0 * game.u_i.planck
+		weight_cap = 400000.0 * game.u_i.planck
 		REPs += 2
 		ability_num = 4
 		MK = 3
@@ -212,7 +212,7 @@ func refresh():
 		HP = 50.0
 		atk = 15.0
 		def = 10.0
-		weight_cap = 16000.0 * game.u_i.planck
+		weight_cap = 19000.0 * game.u_i.planck
 		REPs += 1
 		ability_num = 3
 		MK = 2

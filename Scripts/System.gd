@@ -180,12 +180,6 @@ func refresh_planets():
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false, sc)
 				"MM":
 					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc)
-			if p_i.has("plant") and p_i.plant.is_growing:
-				var time_bar = game.time_scene.instance()
-				time_bar.rect_position = Vector2(0, -80)
-				planet.add_child(time_bar)
-				time_bar.modulate = Color(105/255.0, 65/255.0, 40/255.0, 1)
-				planet_plant_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
 			var IR_mult = Helper.get_IR_mult(p_i.bldg.name)
 			if p_i.bldg.IR_mult != IR_mult:
 				var diff:float = IR_mult / p_i.bldg.IR_mult
@@ -639,19 +633,7 @@ func on_planet_click (id:int, l_id:int):
 				return
 		elif p_i.has("tile_num"):
 			if p_i.bldg.name == "GH":
-				if p_i.has("plant"):
-					if not p_i.plant.is_growing:
-						items_collected.clear()
-						var produce:Dictionary = game.seeds_produce[p_i.plant.name].produce * p_i.tile_num
-						for p in produce:
-							produce[p] *= p_i.bldg.path_2_value
-							Helper.add_item_to_coll(items_collected, p, produce[p])
-						game.show_collect_info(items_collected)
-						p_i.erase("plant")
-					else:
-						toggle_GH(p_i, true)
-				else:
-					toggle_GH(p_i, false)
+				toggle_GH(p_i, false)
 			elif p_i.bldg.name == "AMN":
 				game.AMN_panel.tf = true
 				game.AMN_panel.obj = p_i

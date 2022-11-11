@@ -35,6 +35,7 @@ func refresh():
 			sc.main_tree = self
 			#parent_science
 			if p_scs.empty():
+				sc.refresh()
 				continue
 			var available:bool = true
 			for p_sc in p_scs:

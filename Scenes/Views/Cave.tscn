@@ -1606,9 +1606,9 @@ shadow_buffer_size = 1024
 [node name="HPBG" type="ColorRect" parent="Rover"]
 light_mask = 0
 margin_left = -48.0
-margin_top = 64.0
+margin_top = 76.0
 margin_right = 48.0
-margin_bottom = 76.0
+margin_bottom = 88.0
 color = Color( 0, 0.4, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1617,18 +1617,18 @@ __meta__ = {
 [node name="InvBG" type="ColorRect" parent="Rover"]
 light_mask = 0
 margin_left = -48.0
-margin_top = 84.0
+margin_top = 96.0
 margin_right = 48.0
-margin_bottom = 96.0
+margin_bottom = 108.0
 color = Color( 0.321569, 0.164706, 0, 1 )
 
 [node name="Bar" type="TextureProgress" parent="Rover"]
 modulate = Color( 0, 1, 0, 1 )
 light_mask = 0
 margin_left = -48.0
-margin_top = 64.0
+margin_top = 76.0
 margin_right = 48.0
-margin_bottom = 76.0
+margin_bottom = 88.0
 value = 50.0
 texture_progress = ExtResource( 4 )
 nine_patch_stretch = true
@@ -1640,15 +1640,12 @@ __meta__ = {
 modulate = Color( 0.678431, 0.282353, 0, 1 )
 light_mask = 0
 margin_left = -48.0
-margin_top = 84.0
+margin_top = 96.0
 margin_right = 48.0
-margin_bottom = 96.0
+margin_bottom = 108.0
 value = 50.0
 texture_progress = ExtResource( 4 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AshParticles" type="Particles2D" parent="Rover"]
 emitting = false

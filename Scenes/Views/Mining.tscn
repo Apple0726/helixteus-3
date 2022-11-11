@@ -610,7 +610,8 @@ __meta__ = {
 }
 
 [node name="LayerInfo" type="Node2D" parent="."]
-position = Vector2( 15, 0 )
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( -64.1282, 0 )
 
 [node name="Layer" parent="LayerInfo" instance=ExtResource( 18 )]
 margin_left = -16.0

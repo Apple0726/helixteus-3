@@ -434,7 +434,7 @@ func _input(event):
 			zooming = "in"
 			progress = 0
 			#check_change_scale()
-	if (event is InputEventMouse or event is InputEventScreenTouch) and move_view:
+	if (event is InputEventMouse or event is InputEventScreenTouch):
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
 			drag_position = event.position
@@ -442,7 +442,7 @@ func _input(event):
 			if is_instance_valid(game.annotator) and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
 				line_points.start = to_local(drag_initial_position)
 				drawing_shape = true
-		if dragging and Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
+		if move_view and dragging and Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
