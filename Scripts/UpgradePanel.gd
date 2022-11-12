@@ -375,12 +375,12 @@ func _on_Upgrade_pressed():
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
 					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
-						if game.aurora_SPs.has(tile.aurora.au_int):
-							game.aurora_SPs[tile.aurora.au_int] -= SP_prod
+						if game.aurora_prod.has(tile.aurora.au_int):
+							game.aurora_prod[tile.aurora.au_int] -= SP_prod
 				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
-					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce)
+					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 					if path_selected == 1:
 						tile.bldg.prod_mult = new_base_value / tile.bldg.path_1_value
 						tile.bldg.cell_mult = new_base_value / tile.bldg.path_1_value

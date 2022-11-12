@@ -430,7 +430,7 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
 		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 		if extra_arg_0 == "MINERALS":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + game.autocollect.MS.minerals, true), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0) + game.autocollect.MS.minerals, true), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
 			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":

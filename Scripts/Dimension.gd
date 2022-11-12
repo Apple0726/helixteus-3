@@ -17,7 +17,7 @@ func _ready():
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0001
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0001
 	$ModifyDimension/Maths.rect_clip_content = true
-	if not game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
+	if game.c_u != -1 and not game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
@@ -169,7 +169,7 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s\n%s: %s" % [u_i.name, tr("SUPERCLUSTERS"), u_i.supercluster_num])
+	game.show_tooltip("%s\n%s: %s" % [u_i.name, tr("CLUSTERS"), u_i.cluster_num])
 	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [

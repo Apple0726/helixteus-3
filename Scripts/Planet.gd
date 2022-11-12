@@ -41,6 +41,7 @@ var wormhole
 var timer:Timer
 var interval:float = 0.1
 var star_mod:Color
+var caves_data:Dictionary = {}
 
 func _ready():
 	shadows.resize(wid * wid)
@@ -145,6 +146,13 @@ func _ready():
 			if tile.has("rock"):
 				$Obstacles.set_cell(i, j, 0)
 			if tile.has("cave"):
+				var cave_data_file = File.new()
+				if tile.cave.has("id"):
+					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
+					cave_data_file.open(cave_file_path, File.READ)
+					var cave_data = cave_data_file.get_var()
+					cave_data_file.close()
+					caves_data[id2] = len(cave_data.seeds)
 				$Obstacles.set_cell(i, j, 1)
 			if tile.has("volcano"):
 				var volcano = Sprite.new()
@@ -185,6 +193,8 @@ func _ready():
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 0)
 				elif tile.lake.state == "sc":
 					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 1)
+			elif tile.has("ash"):
+				$Ash.set_cell(i, j, 0)
 	if p_i.has("lake_1"):
 		$Lakes1.update_bitmask_region()
 	if p_i.has("lake_2"):
@@ -205,8 +215,10 @@ var lake_bonus_values = {
 	"H":{"s":1, "l":2, "sc":2},
 	"He":{"s":100, "l":150, "sc":200},
 	"Ne":{"s":0.1, "l":0.2, "sc":0.3},
+	"O":{"s":1.5, "l":3, "sc":4},
+	"NH3":{"s":0.8, "l":0.6, "sc":0.3},
 }
-func show_tooltip(tile):
+func show_tooltip(tile:Dictionary, tile_id:int):
 	if not tile:
 		return
 	var tooltip:String = ""
@@ -251,10 +263,15 @@ func show_tooltip(tile):
 		if not game.science_unlocked.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
+			tooltip += "\n%s" % tr("NUM_FLOORS") % tile.cave.num_floors
+			if caves_data.has(tile_id):
+				if caves_data[tile_id] == tile.cave.num_floors:
+					tooltip += " [color=#00FF00](%s)[/color]" % (tr("EXPLORED_X") % caves_data[tile_id])
+				else:
+					tooltip += " [color=#FFFF00](%s)[/color]" % (tr("EXPLORED_X") % caves_data[tile_id])
+			tooltip += "\n%s" % floor_size
 			if game.help.has("cave_controls"):
-				tooltip += "\n%s\n%s\n[color=#88CCFF]%s[/color]" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size, tr("CLICK_CAVE_TO_EXPLORE")]
-			else:
-				tooltip += "\n%s\n%s" % [tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+				tooltip += "\n[color=#88CCFF]%s[/color]" % [tr("CLICK_CAVE_TO_EXPLORE")]
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
 		if game.cave_gen_info:
@@ -274,7 +291,7 @@ func show_tooltip(tile):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
-		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n" + tr("%s_LAKE_BONUS" % tile.lake.element) % lake_bonus_values[tile.lake.element][tile.lake.state]
+		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n" + tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % lake_bonus_values[tile.lake.element][tile.lake.state]
 	elif tile.has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
@@ -463,7 +480,10 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile))
 			game.autocollect.rsrc.energy += SP_prod
 			if tile.has("aurora"):
-				game.aurora_SPs[tile.aurora.au_int] += SP_prod
+				if game.aurora_prod.has(tile.aurora.au_int):
+					game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
+				else:
+					game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 		elif tile.bldg.name == "PC":
 			game.autocollect.particles.proton += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "NC":
@@ -561,10 +581,11 @@ func destroy_bldg(id2:int, mass:bool = false):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
 			game.autocollect.rsrc.energy -= SP_prod
 			if tile.has("aurora"):
-				if game.aurora_SPs.has(tile.aurora.au_int):
-					game.aurora_SPs[tile.aurora.au_int] -= SP_prod
-					if is_zero_approx(game.aurora_SPs[tile.aurora.au_int]):
-						game.aurora_SPs.erase(tile.aurora.au_int)
+				game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
+				if is_zero_approx(game.aurora_prod[tile.aurora.au_int].energy):
+					game.aurora_prod[tile.aurora.au_int].erase("energy")
+					if game.aurora_prod[tile.aurora.au_int].empty():
+						game.aurora_prod.erase(tile.aurora.au_int)
 	elif bldg == "RL":
 		if not tile.bldg.is_constructing:
 			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult
@@ -616,7 +637,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
 		$Soil.update_bitmask_region()
 	if tile.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(tile)
+		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 		tile.erase("auto_GH")
 	tile.erase("bldg")
@@ -836,7 +857,7 @@ func _unhandled_input(event):
 		view.scroll_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel):
-				show_tooltip(game.tile_data[tile_over])
+				show_tooltip(game.tile_data[tile_over], tile_over)
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:
 		mouse_pos = to_local(event.position)
@@ -872,7 +893,7 @@ func _unhandled_input(event):
 				if not tiles_selected.empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
 				var tile = game.tile_data[tile_over]
-				show_tooltip(tile)
+				show_tooltip(tile, tile_over)
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("CBD_white_rects")
@@ -1285,7 +1306,7 @@ func on_timeout():
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult * Helper.get_au_mult(tile))
 					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
 					if tile.has("aurora"):
-						game.aurora_SPs[tile.aurora.au_int] -= SP_prod
+						game.aurora_prod[tile.aurora.au_int] -= SP_prod
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":
@@ -1327,6 +1348,8 @@ func on_timeout():
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
+	var tween = get_tree().create_tween()
+	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	game.help_str = "mass_build"
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18 and (not game.tutorial or game.tutorial.tut_num >= 26):
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
@@ -1366,6 +1389,8 @@ func finish_construct():
 			if is_instance_valid(shadows[i]):
 				shadows[i].queue_free()
 		shadow_num = 0
+	var tween = get_tree().create_tween()
+	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.white, 0.2)
 	game.get_node("UI/Panel").visible = false
 
 func _on_Planet_tree_exited():

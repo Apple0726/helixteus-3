@@ -1450,3 +1450,5 @@ H_LAKE_BONUS,Allows plants to be %s more tile(s) away from a lake tile to be abl
 HE_LAKE_BONUS,Also produces %s minerals for every kilogram of cellulose consumed,,,,,,,,,,,
 O_LAKE_BONUS,x %s fertilizer power,,,,,,,,,,,
 NE_LAKE_BONUS,Also produces %s kg of quillite for every kilogram of cellulose consumed,,,,,,,,,,,
+USE_FERTILIZER,Use fertilizer,,,,,,,,,,,
+EXPLORED_X,explored %s,,,,,,,,,,,

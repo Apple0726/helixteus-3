@@ -149,8 +149,8 @@ var mets:Dictionary
 var atoms:Dictionary
 var particles:Dictionary
 
-#Stores production values of all solar panels under an aurora (useful to recalculate energy production after buying AIE upgrade)
-var aurora_SPs:Dictionary = {}
+#Stores production values boosted by an aurora (useful to recalculate resource production after buying AIE upgrade)
+var aurora_prod:Dictionary = {}
 
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {}
@@ -253,7 +253,7 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"clay":{"value":12},
 					"quillite":{"value":2000000},
 					"soil":{"value":14},
-					"cellulose":{"value":100},
+					"cellulose":{"value":70},
 					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
@@ -325,8 +325,8 @@ var craft_cave_info = {
 	"drill2":{"costs":{"aluminium":600, "titanium":150}, "limit":16},
 	"drill3":{"costs":{"platinum":4000, "diamond":3000}, "limit":24},
 	"portable_wormhole1":{"costs":{"glass":80, "aluminium":80}, "limit":8},
-	"portable_wormhole2":{"costs":{"quartz":300, "diamond":80}, "limit":16},
-	"portable_wormhole3":{"costs":{"platinum":8000, "quillite":10000}, "limit":24},
+	"portable_wormhole2":{"costs":{"quartz":300, "diamond":20}, "limit":16},
+	"portable_wormhole3":{"costs":{"platinum":5000, "quillite":7000}, "limit":24},
 }
 
 var other_items_info = {
@@ -492,7 +492,14 @@ func place_BG_sc_stars():#shown in (super)cluster view
 		star.position.y = rand_range(0, 720)
 		$Stars/WhiteStars.add_child(star)
 
+var current_viewport_dimensions:Vector2
+func update_viewport_dimensions():
+	if settings.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
+		get_viewport().size = current_viewport_dimensions
+	
 func _ready():
+	current_viewport_dimensions = get_viewport().size
+	get_viewport().connect("size_changed", self, "update_viewport_dimensions")
 	for key in Mods.added_mats:
 		mat_info[key] = Mods.added_mats[key]
 	for key in Mods.added_mets:
@@ -507,7 +514,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "17 Apr 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -738,7 +745,10 @@ func load_univ():
 			for mat in autocollect.mats:
 				if mat == "cellulose":
 					plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if autocollect.mats.cellulose != 0 else 0
-				mats[mat] += autocollect.mats[mat] * plant_time_elapsed
+				elif mat == "minerals":
+					Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed)
+				else:
+					mats[mat] += autocollect.mats[mat] * plant_time_elapsed
 			for met in autocollect.mets:
 				mets[met] += autocollect.mets[met] * plant_time_elapsed
 			if not autocollect.has("particles"):#Save migration
@@ -2866,7 +2876,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
 				if tile_data[t_id2].has("ash"):
 					if not tile_data[t_id2].has("cave"):
-						tile_data[t_id2].ash = max(richness, tile_data[t_id2].ash.richness)
+						tile_data[t_id2].ash = {"richness":max(richness, tile_data[t_id2].ash.richness)}
 				else:
 					tile_data[t_id2].ash = {"richness":richness}
 					if artificial:
@@ -3136,7 +3146,8 @@ func generate_tiles(id:int):
 			var t_id = i % wid + j * wid
 			var lake_elements = Helper.get_lake_elements(Vector2(i, j), wid).duplicate()
 			if tile_data[t_id]:
-				tile_data[t_id].lake_elements = lake_elements
+				if not tile_data[t_id].has("lake"):
+					tile_data[t_id].lake_elements = lake_elements
 			else:
 				tile_data[t_id] = {"lake_elements":lake_elements}
 	Helper.save_obj("Planets", c_p_g, tile_data)
@@ -3535,16 +3546,19 @@ func _process(delta):
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
 			min_to_add += autocollect.rsrc.minerals * delta * min_mult
 			energy_to_add += autocollect.rsrc.energy * delta * energy_mult
-			Helper.add_minerals(min_to_add)
-			Helper.add_energy(energy_to_add)
 			SP += autocollect.rsrc.SP * delta * SP_mult
 			if mats.cellulose > 0:
 				for mat in autocollect.mats:
-					mats[mat] += autocollect.mats[mat] * delta
+					if mat == "minerals":
+						min_to_add += autocollect.mats[mat] * delta
+					else:
+						mats[mat] += autocollect.mats[mat] * delta
 				for met in autocollect.mets:
 					mets[met] += autocollect.mets[met] * delta
 			else:
 				mats.cellulose = 0
+			Helper.add_minerals(min_to_add)
+			Helper.add_energy(energy_to_add)
 			particles.proton += autocollect.particles.proton * delta * u_i.time_speed
 			particles.neutron += autocollect.particles.neutron * delta * u_i.time_speed
 			particles.electron += autocollect.particles.electron * delta * u_i.time_speed
@@ -3874,7 +3888,7 @@ func fn_save_game():
 		"stone":stone,
 		"energy":energy,
 		"SP":SP,
-		"aurora_SPs":aurora_SPs,
+		"aurora_prod":aurora_prod,
 		"c_v":c_v,
 		"l_v":l_v,
 		"c_c":c_c,

@@ -430,6 +430,9 @@ func get_au_mult(tile:Dictionary):
 	else:
 		return 1.0
 
+func get_au_mult_from_int(au_int:float):
+	return pow(1 + au_int, get_AIE())
+
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
 	if tile.has("crater") and tile.crater.has("init_depth"):
@@ -904,12 +907,13 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")
 			if tile.has("auto_GH"):
-				var produce_info:Dictionary = game.seeds_produce[tile.auto_GH.seed].duplicate(true)
-				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed * tile.bldg.path_1_value
-				for p in produce_info.produce:
-					tile.auto_GH.produce[p] *= tile.bldg.prod_mult
 				tile.auto_GH.cellulose_drain *= tile.bldg.cell_mult
-				add_GH_produce_to_autocollect(tile.auto_GH.produce)
+				for p in tile.auto_GH.produce:
+					if p in game.met_info.keys():
+						tile.auto_GH.produce[p] *= tile.bldg.prod_mult
+					else:# Any production other than metal will be considered proportional to cellulose drain
+						tile.auto_GH.produce[p] *= tile.bldg.cell_mult
+				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 			if game.c_v == "planet":
 				update_boxes = true
@@ -932,10 +936,10 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				var SP_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile))
 				game.autocollect.rsrc.energy += SP_prod
 				if tile.has("aurora"):
-					if game.aurora_SPs.has(tile.aurora.au_int):
-						game.aurora_SPs[tile.aurora.au_int] += SP_prod
+					if game.aurora_prod.has(tile.aurora.au_int):
+						game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
 					else:
-						game.aurora_SPs[tile.aurora.au_int] = SP_prod
+						game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 			elif tile.bldg.name == "PC":
 				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
@@ -1389,20 +1393,93 @@ func get_H2O_mult(tile:Dictionary):
 			mult = 1.5
 	return mult
 
-func remove_GH_produce_from_autocollect(produce:Dictionary):
+func get_O_mult(tile:Dictionary):
+	var mult = 1.0
+	if tile.lake_elements.has("O"):
+		if tile.lake_elements.O == "l":
+			mult = 3
+		elif tile.lake_elements.O == "sc":
+			mult = 4
+		else:
+			mult = 1.5
+	return mult
+
+func get_NH3_mult(tile:Dictionary):
+	var mult = 1.0
+	if tile.lake_elements.has("NH3"):
+		if tile.lake_elements.NH3 == "l":
+			mult = 0.6
+		elif tile.lake_elements.NH3 == "sc":
+			mult = 0.3
+		else:
+			mult = 0.8
+	return mult
+
+func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
 		if p == "minerals":
-			game.autocollect.rsrc.minerals -= produce[p]
+			game.autocollect.mats.minerals -= produce[p]
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] -= produce[p]
 		elif game.met_info.has(p):
-			game.autocollect.mets[p] -= produce[p]
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			game.autocollect.mets[p] -=  met_prod
+			if au_int > 0:
+				game.aurora_prod[au_int][p] -= met_prod
+				if is_zero_approx(game.aurora_prod[au_int][p]):
+					game.aurora_prod[au_int].erase(p)
 
-func add_GH_produce_to_autocollect(produce:Dictionary):
+func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
 		if p == "minerals":
-			game.autocollect.rsrc.minerals = produce[p] + game.autocollect.rsrc.get(p, 0.0)
+			game.autocollect.mats.minerals = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.met_info.has(p):
-			game.autocollect.mets[p] = produce[p] + game.autocollect.mets.get(p, 0.0)
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
+			if au_int > 0:
+				if game.aurora_prod.has(au_int):
+					game.aurora_prod[au_int][p] = game.aurora_prod[au_int].get(p, 0) + met_prod
+				else:
+					game.aurora_prod[au_int] = {p:met_prod}
+
+func set_resolution(index:int):
+	var res:Vector2 = get_viewport().size
+	get_viewport().size_override_stretch = true 
+	if index == 0:
+		get_viewport().size_override_stretch = false
+		if OS.window_fullscreen:
+			res = OS.get_screen_size()
+			game.current_viewport_dimensions = res
+			get_viewport().size = res
+			OS.window_fullscreen = false
+			OS.window_fullscreen = true
+		else:
+			res = Vector2(1280, 720)
+	elif index == 1:
+		res = Vector2(3820, 2160)
+	elif index == 2:
+		res = Vector2(2560, 1440)
+	elif index == 3:
+		res = Vector2(1920, 1080)
+	elif index == 4:
+		res = Vector2(1280, 720)
+	elif index == 5:
+		res = Vector2(853, 480)
+	elif index == 6:
+		res = Vector2(640, 360)
+	elif index == 7:
+		res = Vector2(427, 240)
+	elif index == 8:
+		res = Vector2(256, 144)
+	elif index == 9:
+		res = Vector2(128, 72)
+	elif index == 10:
+		res = Vector2(64, 36)
+	elif index == 11:
+		res = Vector2(32, 18)
+	elif index == 12:
+		res = Vector2(16, 9)
+	game.current_viewport_dimensions = res
+	get_viewport().size = res

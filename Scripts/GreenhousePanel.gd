@@ -21,6 +21,7 @@ func _ready():
 		f_hbox.add_child(slot)
 	
 func refresh():
+	$UseFertilizer.visible = game.science_unlocked.has("PF")
 	$Plant.visible = false
 	set_polygon(rect_size)
 	if c_v == "system":
@@ -69,15 +70,15 @@ func calc_prod_per_sec():
 		for tile in tiles_selected:
 			if game.tile_data[tile].has("auto_GH"):
 				var tile_p:Dictionary = game.tile_data[tile].auto_GH
+				production.cellulose = production.get("cellulose", 0.0) -tile_p.cellulose_drain
 				for p in tile_p.produce:
-					production.cellulose = production.get("cellulose", 0.0) -tile_p.cellulose_drain
-					production[p] = tile_p.produce[p] + production.get(p, 0.0)
+					production[p] = tile_p.produce[p] * (Helper.get_au_mult(game.tile_data[tile]) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
 	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = $HBoxContainer.get_child_count() != 0
 
 func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_new:bool = true):
 	if obj.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce)
+		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
 		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
 		obj.erase("auto_GH")
 	if plant_new:
@@ -110,7 +111,7 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 				produce.quillite = cellulose_drain * 0.3
 			else:
 				produce.quillite = cellulose_drain * 0.1
-		Helper.add_GH_produce_to_autocollect(produce)
+		Helper.add_GH_produce_to_autocollect(produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
 		if c_v == "system":
 			cellulose_drain *= 2 * tile_num
 		obj.auto_GH = {
@@ -132,6 +133,39 @@ func on_slot_press(_name:String):
 			var tile:Dictionary = game.tile_data[tile_id]
 			for p in produce:
 				produce[p] *= game.u_i.time_speed * tile.bldg.path_1_value * tile.bldg.path_2_value * Helper.get_H2O_mult(tile)
-				produce[p] *= Helper.get_au_mult(tile)
 			set_auto_harvest(tile, produce, _name, not tile.has("auto_GH"))
 	calc_prod_per_sec()
+
+
+
+func _on_UseFertilizer_toggled(button_pressed):
+	if c_v == "planet":
+		if button_pressed:
+			for tile_id in tiles_selected:
+				var tile:Dictionary = game.tile_data[tile_id]
+				var au_mult = Helper.get_au_mult(tile)
+				if tile.has("auto_GH"):
+					var fert_mult = Helper.get_O_mult(tile)
+					var fert_cost_mult = Helper.get_NH3_mult(tile)
+					for p in tile.auto_GH.produce:
+						if p in game.met_info.keys():
+							game.autocollect.mets[p] += tile.auto_GH.produce[p] * (fert_mult - 1.0) * au_mult
+							tile.auto_GH.produce[p] *= fert_mult
+						else:
+							game.autocollect.mats[p] += tile.auto_GH.produce[p] * (0.5 * fert_cost_mult)
+							tile.auto_GH.produce[p] *= 1.0 + 0.5 * fert_cost_mult
+					tile.auto_GH.cellulose_drain *= 1.0 + 0.5 * fert_cost_mult
+		else:
+			for tile_id in tiles_selected:
+				var tile:Dictionary = game.tile_data[tile_id]
+				var au_mult = Helper.get_au_mult(tile)
+				if tile.has("auto_GH"):
+					var fert_mult = Helper.get_O_mult(tile)
+					var fert_cost_mult = Helper.get_NH3_mult(tile)
+					for p in tile.auto_GH.produce:
+						if p in game.met_info.keys():
+							game.autocollect.mets[p] -= tile.auto_GH.produce[p] * (fert_mult - 1.0) * au_mult
+							tile.auto_GH.produce[p] /= fert_mult
+						else:
+							tile.auto_GH.produce[p] *= 1.0 + 0.5 * fert_cost_mult
+					tile.auto_GH.cellulose_drain /= 1.0 + 0.5 * fert_cost_mult

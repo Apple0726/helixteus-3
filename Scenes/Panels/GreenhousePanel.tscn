@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/GreenhousePanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=5]
+[ext_resource path="res://Graphics/Agriculture/fertilizer.png" type="Texture" id=6]
 
 [sub_resource type="RichTextEffect" id=1]
 script = ExtResource( 5 )
@@ -20,9 +21,6 @@ margin_right = 320.0
 margin_bottom = 120.0
 theme = ExtResource( 4 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="."]
 anchor_right = 1.0
@@ -91,7 +89,7 @@ custom_constants/separation = -2
 [node name="ProductionPerSec" type="Label" parent="."]
 margin_left = 48.0
 margin_top = 160.0
-margin_right = 400.0
+margin_right = 352.0
 margin_bottom = 184.0
 text = "PRODUCTION_PER_SECOND"
 __meta__ = {
@@ -108,12 +106,22 @@ __meta__ = {
 }
 
 [node name="AuroraMult" parent="." instance=ExtResource( 2 )]
-margin_left = 376.0
+margin_left = 344.0
 margin_top = 160.0
-margin_right = 632.0
+margin_right = 512.0
 margin_bottom = 190.0
 custom_effects = [ SubResource( 1 ) ]
 translate_help = false
 
+[node name="UseFertilizer" type="CheckBox" parent="."]
+margin_left = 392.0
+margin_top = 164.0
+margin_right = 636.0
+margin_bottom = 192.0
+text = "USE_FERTILIZER"
+icon = ExtResource( 6 )
+expand_icon = true
+
 [connection signal="pressed" from="Plant" to="." method="_on_Plant_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="toggled" from="UseFertilizer" to="." method="_on_UseFertilizer_toggled"]

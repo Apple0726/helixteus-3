@@ -447,12 +447,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_BG.modulate.a = 1.0
 	rover.get_node("AshParticles").modulate = Color.white * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
-	cave_wall.modulate = star_mod * (1.0 - cave_darkness)
+	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.white)
 	cave_wall.modulate.a = 1.0
+	print(cave_wall.modulate)
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
-	if cave_floor >= 8:
-		cave_wall.modulate.b *= 2.5
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
 	if game.enable_shaders:
 		$TileMap.material.set_shader_param("star_mod", lerp(star_mod, Color.white, clamp(cave_floor * 0.125, 0, 1)))
@@ -1304,7 +1303,7 @@ func _input(event):
 			else:
 				$AnimationPlayer.play_backwards("RoverSprint")
 		if Input.is_action_just_released("F"):
-			if active_type == "chest":
+			if active_type == "chest" and chests.has(active_chest):
 				var remainders = {}
 				var show_notif = false
 				var contents = chests[active_chest].contents

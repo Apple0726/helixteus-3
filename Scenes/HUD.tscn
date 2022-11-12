@@ -829,13 +829,10 @@ expand_to_text_length = true
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="ColorRect" type="TextureRect" parent="Top"]
+[node name="TextureRect" type="TextureRect" parent="Top"]
 margin_right = 1280.0
 margin_bottom = 45.0
 texture = ExtResource( 21 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Resources" type="HBoxContainer" parent="Top"]
 margin_top = 4.0
@@ -915,9 +912,6 @@ size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100"
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Texture" type="TextureButton" parent="Top/Resources/Stone"]
 margin_left = -2.0

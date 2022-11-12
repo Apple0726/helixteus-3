@@ -510,7 +510,6 @@ margin_bottom = 720.0
 texture = ExtResource( 4 )
 expand = true
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 

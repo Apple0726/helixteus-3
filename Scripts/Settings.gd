@@ -10,6 +10,22 @@ func _ready():
 	set_polygon(rect_size)
 	tween = Tween.new()
 	add_child(tween)
+	var current_viewport = get_viewport().size
+	$TabContainer/GRAPHICS/DisplayRes.add_item("Auto", 0)
+	if OS.get_screen_size().y > 1440:
+		$TabContainer/GRAPHICS/DisplayRes.add_item("3840 x 2160", 1)
+	if OS.get_screen_size().y > 1080:
+		$TabContainer/GRAPHICS/DisplayRes.add_item("2560 x 1440", 2)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("1920 x 1080", 3)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("1280 x 720", 4)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("853 x 480", 5)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("640 x 360", 6)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("427 x 240", 7)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("256 x 144", 8)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("128 x 72", 9)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("64 x 36", 10)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("32 x 18", 11)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("16 x 9", 12)
 	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	if err == OK:
 		set_difficulty()
@@ -294,3 +310,10 @@ func _on_OPCursor_mouse_exited():
 		game.show_tooltip(":(")
 	yield(get_tree().create_timer(0.5), "timeout")
 	game.hide_tooltip()
+
+
+func _on_DisplayRes_item_selected(index):
+	var id:int = $TabContainer/GRAPHICS/DisplayRes.get_item_id(index)
+	Helper.set_resolution(id)
+	if not $TabContainer/GRAPHICS/KeepWindowSize.pressed and id != 0 and id < 9:
+		OS.window_size = get_viewport().size
