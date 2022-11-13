@@ -120,6 +120,7 @@ func _input(event):
 					game.new_bldgs.GH = true
 				elif name == "ATM":
 					game.show.atoms = true
+					game.new_bldgs.AE = true
 				elif name == "SAP":
 					game.show.particles = true
 					game.new_bldgs.SPR = true

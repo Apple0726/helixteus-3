@@ -512,7 +512,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 #				debris.rotation_degrees = rng.randf_range(0, 360)
 #				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
 #				debris.scale = Vector2.ONE * (pow(rng.randf(), 4) / 2.0 + 0.2)
-			if rng.randf() < debris_amount:
+			if rng.randf() < debris_amount / 2.0:
 				var debris = Sprite.new()
 				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
 				add_child_below_node($Lava, debris)
@@ -1162,7 +1162,7 @@ func update_ray():
 			tile_highlighted_for_mining = get_tile_index(cave_wall.world_to_map(pos))
 			var is_wall = coll is TileMap and cave_wall.get_cellv(cave_wall.world_to_map(pos)) == 0
 			mining_p.position = pos
-			if tile_highlighted_for_mining and is_wall:
+			if tile_highlighted_for_mining != -1 and is_wall:
 				_tile_highlight.visible = true
 				_tile_highlight.position.x = floor(pos.x / 200) * 200 + 100
 				_tile_highlight.position.y = floor(pos.y / 200) * 200 + 100
@@ -1478,7 +1478,7 @@ func remove_item(item:Dictionary, num:int = 1):
 		slots[curr_slot].get_node("TextureRect").texture = null
 		slots[curr_slot].get_node("Label").text = ""
 	else:
-		slots[curr_slot].get_node("Label").text = String(num)
+		slots[curr_slot].get_node("Label").text = String(item.num)
 	
 func _process(delta):
 	if not ability_timer.is_stopped():
@@ -1720,6 +1720,9 @@ func mine_debris_complete(tile_id:int):
 		if randf() < p_i.surface[mat].chance / 2.5:
 			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.24) * difficulty)
 			rsrc[mat] = amount
+	if debris.aurora:
+		if randf() < 0.5:
+			rsrc.quillite = Helper.clever_round(rand_range(0.1, 0.12) * difficulty)
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		var rarity = met_value.rarity

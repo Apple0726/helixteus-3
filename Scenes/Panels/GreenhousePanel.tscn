@@ -124,4 +124,6 @@ expand_icon = true
 
 [connection signal="pressed" from="Plant" to="." method="_on_Plant_pressed"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="UseFertilizer" to="." method="_on_UseFertilizer_mouse_entered"]
+[connection signal="mouse_exited" from="UseFertilizer" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="UseFertilizer" to="." method="_on_UseFertilizer_toggled"]

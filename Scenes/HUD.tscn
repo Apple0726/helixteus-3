@@ -840,7 +840,7 @@ margin_right = 1176.0
 margin_bottom = 36.0
 
 [node name="Money" type="Control" parent="Top/Resources"]
-margin_right = 184.0
+margin_right = 180.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -869,11 +869,12 @@ __meta__ = {
 }
 
 [node name="Minerals" type="Control" parent="Top/Resources"]
-margin_left = 188.0
-margin_right = 392.0
+margin_left = 184.0
+margin_right = 406.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.1
 
 [node name="Text" type="Label" parent="Top/Resources/Minerals"]
 margin_left = 44.0
@@ -897,8 +898,8 @@ __meta__ = {
 }
 
 [node name="Stone" type="Control" parent="Top/Resources"]
-margin_left = 396.0
-margin_right = 601.0
+margin_left = 410.0
+margin_right = 611.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -928,6 +929,7 @@ margin_right = 972.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.9
 
 [node name="Text" type="Label" parent="Top/Resources/Soil"]
 margin_left = 44.0
@@ -986,8 +988,8 @@ __meta__ = {
 }
 
 [node name="Cellulose" type="Control" parent="Top/Resources"]
-margin_left = 605.0
-margin_right = 769.0
+margin_left = 615.0
+margin_right = 775.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -1019,8 +1021,8 @@ __meta__ = {
 }
 
 [node name="Energy" type="Control" parent="Top/Resources"]
-margin_left = 773.0
-margin_right = 977.0
+margin_left = 779.0
+margin_right = 981.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 40, 0 )
 size_flags_horizontal = 3
@@ -1043,7 +1045,7 @@ expand = true
 stretch_mode = 5
 
 [node name="SP" type="Control" parent="Top/Resources"]
-margin_left = 981.0
+margin_left = 985.0
 margin_right = 1176.0
 margin_bottom = 32.0
 size_flags_horizontal = 3

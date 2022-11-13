@@ -344,27 +344,6 @@ func _on_Upgrade_pressed():
 				var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 				if auto_speedup:
 					cost_time = 0.2
-#				if tile.bldg.has("collect_date"):
-#					var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-#					if tile.has("auto_collect"):
-#						if tile.bldg.name == "ME":
-#							var prod:float = tile.bldg.path_1_value * (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-#							game.autocollect.rsrc.minerals -= prod * tile.auto_collect / 100.0 * mult
-#						elif tile.bldg.name == "PP":
-#							game.autocollect.rsrc.energy -= tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-#						elif tile.bldg.name == "SP":
-#							var p_i:Dictionary = game.planet_data[game.c_p]
-#							var prod:float = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * Helper.get_au_mult(tile))
-#							game.autocollect.rsrc.energy -= prod * tile.auto_collect / 100.0 * mult
-#					if tile.bldg.name == "RL":
-#						game.autocollect.rsrc.SP -= tile.bldg.path_1_value
-#					var prod_ratio
-#					if path_str == "path_1":
-#						prod_ratio = new_base_value / tile.bldg.path_1_value
-#					else:
-#						prod_ratio = 1.0
-#					var coll_date = tile.bldg.collect_date
-#					tile.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio + cost_time * 1000.0
 				if tile.bldg.name == "ME":
 					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 				elif tile.bldg.name == "PP":
@@ -377,6 +356,10 @@ func _on_Upgrade_pressed():
 					if tile.has("aurora"):
 						if game.aurora_prod.has(tile.aurora.au_int):
 							game.aurora_prod[tile.aurora.au_int] -= SP_prod
+				elif tile.bldg.name == "AE":
+					for el in p_i.atmosphere:
+						var base_prod:float = -tile.bldg.path_1_value * overclock_mult * p_i.atmosphere[el] * p_i.pressure
+						Helper.add_atom_production(el, base_prod)
 				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):

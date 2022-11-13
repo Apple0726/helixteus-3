@@ -48,7 +48,7 @@ func refresh():
 		depart_pos = game.system_data[depart_id].pos
 		dest_pos = game.system_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
-	elif game.c_c_g == g_coords.c:
+	elif game.c_c == coords.c:
 		travel_view = "cluster"
 		distance = 45454
 		depart_id = coords.g
@@ -57,7 +57,7 @@ func refresh():
 		dest_pos = game.galaxy_data[dest_id].pos
 		distance *= depart_pos.distance_to(dest_pos)
 	else:
-		travel_view = "supercluster"
+		travel_view = "universe"
 		distance = 8181818
 		depart_id = coords.c
 		dest_id = game.galaxy_data[game.system_data[game.planet_data[dest_p_id].parent].parent].parent

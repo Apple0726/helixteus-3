@@ -212,13 +212,13 @@ var lake_bonus_values = {
 	"H2O":{"s":1.5, "l":2, "sc":4},
 	"CH4":{"s":0.8, "l":0.6, "sc":0.3},
 	"CO2":{"s":7, "l":10, "sc":14},
-	"H":{"s":1, "l":2, "sc":2},
+	"H":{"s":1, "l":3, "sc":2},
 	"He":{"s":100, "l":150, "sc":200},
 	"Ne":{"s":0.1, "l":0.2, "sc":0.3},
 	"O":{"s":1.5, "l":3, "sc":4},
 	"NH3":{"s":0.8, "l":0.6, "sc":0.3},
 }
-func show_tooltip(tile:Dictionary, tile_id:int):
+func show_tooltip(tile, tile_id:int):
 	if not tile:
 		return
 	var tooltip:String = ""
@@ -343,7 +343,6 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 	if _bldg_to_construct == "":
 		return
 	var tile = game.tile_data[tile_id]
-	var lake_elements = Helper.get_lake_elements(Vector2(tile_id % wid, tile_id / wid), wid)
 	if _bldg_to_construct == "EC":
 		if not tile:
 			if not mass_build:
@@ -354,7 +353,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 				game.popup(tr("EC_ERROR"), 1.5)
 			return
 	elif _bldg_to_construct == "GH":
-		if lake_elements.empty():
+		if not tile or not tile.has("lake_elements"):
 			if not mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
@@ -398,7 +397,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct in ["SC", "GF", "SE", "GH", "CBD", "AMN", "SPR"]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
-		if _bldg_to_construct in ["SC", "GF", "SE", "AE"]:
+		if _bldg_to_construct in ["SC", "GF", "SE"]:
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 			tile.bldg.stored = 0
 		if _bldg_to_construct in ["SC", "GF", "SE", "CBD"]:
@@ -425,14 +424,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		if _bldg_to_construct == "GH":
 			$Soil.set_cell(tile_id % wid, int(tile_id / wid), 0)
 			$Soil.update_bitmask_region()
-			tile.lake_elements = lake_elements.duplicate()
 		tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM" and not tile.has("depth"):
 			tile.depth = 0
-#		if Helper.has_IR(_bldg_to_construct):
-#			tile.bldg.IR_mult = Helper.get_IR_mult(tile.bldg.name)
-#		else:
-#			tile.bldg.IR_mult = 1
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct)
 	elif not mass_build:
@@ -658,7 +652,7 @@ func add_shadows():
 			var shadow_pos:Vector2 = Vector2(i * 200, j * 200) + Vector2(100, 100)
 			var tile_rekt:Rect2 = Rect2(Vector2(i * 200, j * 200), Vector2.ONE * 200)
 			var id2:int = i % wid + j * wid
-			var tile:Dictionary = game.tile_data[id2]
+			var tile = game.tile_data[id2]
 			if is_instance_valid(shadows[id2]) and is_a_parent_of(shadows[id2]):
 				if not poly.intersects(tile_rekt):
 					shadows[id2].free()
@@ -1222,6 +1216,16 @@ func add_bldg(id2:int, st:String):
 			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SE, id2)
 		"AMN":
 			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AMN, id2)
+		"GH":
+			if tile.has("auto_GH"):
+				if tile.auto_GH.has("soil_drain"):
+					var fert = Sprite.new()
+					fert.texture = preload("res://Graphics/Agriculture/fertilizer.png")
+					bldg.add_child(fert)
+					fert.name = "Fertilizer"
+				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), load("res://Graphics/Metals/%s.png" % tile.auto_GH.seed.split("_")[0]), id2)
+			else:
+				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), null, id2)
 		"SPR":
 			if tile.bldg.has("reaction"):
 				add_rsrc(v, Color.white, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)

@@ -42,14 +42,14 @@ anchor_bottom = 1.0
 margin_left = 8.0
 margin_top = 96.0
 margin_right = -8.0
-margin_bottom = -252.0
+margin_bottom = -4.0
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
 columns = 2
 
 [node name="Panel1" parent="GridContainer" instance=ExtResource( 5 )]
 margin_right = 505.0
-margin_bottom = 246.0
+margin_bottom = 494.0
 victory_screen = false
 
 [node name="Panel2" parent="GridContainer" instance=ExtResource( 5 )]

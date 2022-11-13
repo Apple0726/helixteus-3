@@ -192,6 +192,7 @@ func update_money_energy_SP():
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
 		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(2500 + round((game.energy_capacity - 2500) * Helper.get_IR_mult("B")))]
+		$Top/Resources/Soil.visible = game.autocollect.mats.has("soil")
 		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)
 		soil_text["custom_colors/font_color"] = Color.white if game.mats.soil > 0 else Color.red
 	SP_text.text = Helper.format_num(round(game.SP))
@@ -425,6 +426,8 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
+	elif extra_arg_0 == "SOIL" and game.autocollect.mats.has("soil"):
+		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.soil), true), tr("S_SECOND")])
 	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
 		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed

@@ -170,16 +170,19 @@ func _on_Metals_pressed():
 	$Control/VBox/BuySell.visible = true
 
 func _on_Atoms_pressed():
-	set_process(false)
+	set_process(not game.autocollect.atoms.empty())
 	tab = "atoms"
 	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
 	particles_hbox.visible = false
-	var atom_data = Helper.put_rsrc(grid, 48, game.atoms)
-	for atom in atom_data:
+	hbox_data = Helper.put_rsrc(grid, 48, game.atoms)
+	for atom in hbox_data:
 		if not game.show.has(atom.name):
 			atom.rsrc.visible = false
+		var texture = atom.rsrc.get_node("Texture")
+		texture.connect("mouse_entered", self, "show_atom", [atom.name])
+		texture.connect("mouse_exited", self, "on_mouse_out")
 	$Control/VBox/BuySell.visible = false
 
 func _on_Particles_pressed():
@@ -232,6 +235,12 @@ func show_mat(mat:String):
 		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
+func show_atom(atom:String):
+	var st:String = get_str(atom)
+	if game.autocollect.atoms.has(atom):
+		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
+	game.show_tooltip(st)
+
 func on_mouse_out():
 	game.hide_tooltip()
 
@@ -277,6 +286,9 @@ func _process(delta):
 	elif tab == "metals":
 		for hbox in hbox_data:
 			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mets[hbox.name], true)]
+	elif tab == "atoms":
+		for hbox in hbox_data:
+			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.atoms[hbox.name], true)]
 	elif tab == "particles":
 		$Control/ParticlesHBox/Protons.text = "%s mol" % Helper.format_num(game.particles.proton, true)
 		if game.particles.neutron >= game.neutron_cap:

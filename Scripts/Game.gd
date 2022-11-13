@@ -741,16 +741,18 @@ func load_univ():
 			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.GS.minerals) * min_mult + autocollect.MS.minerals) * time_elapsed)
 			energy += ((autocollect.rsrc.energy + autocollect.GS.energy) * energy_mult + autocollect.MS.energy) * time_elapsed
 			SP += ((autocollect.rsrc.SP + autocollect.GS.SP) * SP_mult + autocollect.MS.SP) * time_elapsed
-			var plant_time_elapsed = time_elapsed
+			var plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if not is_zero_approx(autocollect.mats.cellulose) else 0
+			if autocollect.mats.has("soil") and not is_zero_approx(autocollect.mats.soil):
+				plant_time_elapsed = min(plant_time_elapsed, mats.soil / abs(autocollect.mats.soil))
 			for mat in autocollect.mats:
-				if mat == "cellulose":
-					plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if autocollect.mats.cellulose != 0 else 0
-				elif mat == "minerals":
+				if mat == "minerals":
 					Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed)
 				else:
 					mats[mat] += autocollect.mats[mat] * plant_time_elapsed
 			for met in autocollect.mets:
 				mets[met] += autocollect.mets[met] * plant_time_elapsed
+			for atom in autocollect.atoms:
+				atoms[atom] += autocollect.atoms[atom] * time_elapsed
 			if not autocollect.has("particles"):#Save migration
 				autocollect.particles = {"proton":0, "neutron":0, "electron":0}
 			particles.proton += autocollect.particles.proton * time_elapsed * u_i.time_speed
@@ -1173,6 +1175,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	autocollect = {
 		"mats":{"cellulose":0},
 		"mets":{},
+		"atoms":{},
 		"particles":{"proton":0, "neutron":0, "electron":0},
 		"MS":{"minerals":0, "energy":0, "SP":0},
 		"GS":{"minerals":0, "energy":0, "SP":0},
@@ -3144,12 +3147,24 @@ func generate_tiles(id:int):
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
-			var lake_elements = Helper.get_lake_elements(Vector2(i, j), wid).duplicate()
-			if tile_data[t_id]:
-				if not tile_data[t_id].has("lake"):
-					tile_data[t_id].lake_elements = lake_elements
-			else:
-				tile_data[t_id] = {"lake_elements":lake_elements}
+			var tile = tile_data[t_id]
+			if tile and tile.has("lake"):
+				var distance_from_lake:int = 1
+				if tile.lake.element == "H":
+					if tile.lake.state == "s":
+						distance_from_lake = 2
+					else:
+						distance_from_lake = 3
+				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
+					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
+						if Vector2(k, l) != Vector2(i, j):
+							var id2 = k % wid + l * wid
+							if not tile_data[id2]:
+								tile_data[id2] = {"lake_elements":{}}
+							if tile_data[id2].has("lake_elements"):
+								tile_data[id2].lake_elements[tile.lake.element] = tile.lake.state
+							else:
+								tile_data[id2].lake_elements = {tile.lake.element:tile.lake.state}
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -3548,15 +3563,21 @@ func _process(delta):
 			energy_to_add += autocollect.rsrc.energy * delta * energy_mult
 			SP += autocollect.rsrc.SP * delta * SP_mult
 			if mats.cellulose > 0:
-				for mat in autocollect.mats:
-					if mat == "minerals":
-						min_to_add += autocollect.mats[mat] * delta
-					else:
-						mats[mat] += autocollect.mats[mat] * delta
-				for met in autocollect.mets:
-					mets[met] += autocollect.mets[met] * delta
+				if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
+					for mat in autocollect.mats:
+						if mat == "minerals":
+							min_to_add += autocollect.mats[mat] * delta
+						else:
+							mats[mat] += autocollect.mats[mat] * delta
+					for met in autocollect.mets:
+						mets[met] += autocollect.mets[met] * delta
 			else:
 				mats.cellulose = 0
+			if mats.soil < 0:
+				mats.soil = 0
+			if autocollect.has("atoms"):
+				for atom in autocollect.atoms:
+					atoms[atom] += autocollect.atoms[atom] * delta
 			Helper.add_minerals(min_to_add)
 			Helper.add_energy(energy_to_add)
 			particles.proton += autocollect.particles.proton * delta * u_i.time_speed

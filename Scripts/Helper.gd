@@ -678,37 +678,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	if tile.bldg.is_constructing:
 		return
 	match tile.bldg.name:
-		"MM", "AE":
-			pass
-			#Number of seconds needed per mineral
-#			var prod:float
-#			if tile.bldg.name == "SP":
-#				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, 1.0 + (tile.aurora.au_int if tile.has("aurora") else 1.0))
-#			elif tile.bldg.name == "ME":
-#				prod = 1000 / tile.bldg.path_1_value / (tile.plant.ash if tile.has("plant") and tile.plant.has("ash") else 1.0)
-#			else:
-#				prod = 1000 / tile.bldg.path_1_value
-#			prod /= get_prod_mult(tile)
-#			var cap = round(tile.bldg.path_2_value * tile.bldg.IR_mult)
-#			var stored = tile.bldg.stored
-#			var c_d = tile.bldg.collect_date
-#			var c_t = curr_time
-#			if c_t < c_d and not tile.bldg.is_constructing:
-#				tile.bldg.collect_date = curr_time
-#			if c_t - c_d > prod:
-#				var rsrc_num:float = floor((c_t - c_d) / prod)
-#				var auto_rsrc:float = 0
-#				tile.bldg.stored += rsrc_num - auto_rsrc
-#				tile.bldg.collect_date += prod * rsrc_num
-#				if tile.bldg.stored >= cap:
-#					tile.bldg.stored = cap
-#			if rsrc:
-#				current_bar.value = min((c_t - c_d) / prod, 1)
-#				capacity_bar.value = min(stored / float(cap), 1)
-#				if tile.bldg.name == "MM":
-#					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
-#				else:
-#					rsrc_text.text = String(stored)
+		"AE":
+			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
+			rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
 		"ME":
 			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0)
 			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
@@ -748,6 +720,11 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			else:
 				rsrc_text = ""
 				capacity_bar_value = 0
+		"GH":
+			if tile.has("auto_GH"):
+				rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]], true)
+			else:
+				rsrc_text = ""
 #		"SPR":
 #			if tile.bldg.has("qty"):
 #				var reaction_info = get_reaction_info(tile)
@@ -827,37 +804,6 @@ func collect_PP(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr
 func collect_RL(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
 	update_MS_rsrc(p_i)
 	add_item_to_coll(rsrc_collected, "SP", dict.bldg.stored)
-	dict.bldg.stored = 0
-
-func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored >= round(dict.bldg.path_2_value):
-		dict.bldg.collect_date = curr_time
-	for el in p_i.atmosphere:
-		if el == "NH3":
-			add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
-			game.show.H = true
-			game.show.N = true
-		elif el == "CO2":
-			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
-			game.show.C = true
-			game.show.O = true
-		elif el == "CH4":
-			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
-			game.show.C = true
-			game.show.H = true
-		elif el == "H2O":
-			add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
-			game.show.H = true
-			game.show.O = true
-		else:
-			add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
-			game.show[el] = true
 	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
@@ -940,6 +886,11 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
 					else:
 						game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
+			elif tile.bldg.name == "AE":
+				for el in p_i.atmosphere:
+					var base_prod:float = tile.bldg.path_1_value * overclock_mult * p_i.atmosphere[el] * p_i.pressure
+					game.show[el] = true
+					add_atom_production(el, base_prod)
 			elif tile.bldg.name == "PC":
 				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
@@ -985,6 +936,22 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			if game.tutorial and game.help.tutorial < 26:
 				game.HUD.refresh()
 	return update_boxes
+
+func add_atom_production(el:String, base_prod:float):
+	if el == "NH3":
+		game.autocollect.atoms.N = 1 * base_prod + game.autocollect.atoms.get("N", 0)
+		game.autocollect.atoms.H = 3 * base_prod + game.autocollect.atoms.get("H", 0)
+	elif el == "CO2":
+		game.autocollect.atoms.C = 1 * base_prod + game.autocollect.atoms.get("C", 0)
+		game.autocollect.atoms.O = 2 * base_prod + game.autocollect.atoms.get("O", 0)
+	elif el == "CH4":
+		game.autocollect.atoms.C = 1 * base_prod + game.autocollect.atoms.get("C", 0)
+		game.autocollect.atoms.H = 4 * base_prod + game.autocollect.atoms.get("H", 0)
+	elif el == "H2O":
+		game.autocollect.atoms.H = 2 * base_prod + game.autocollect.atoms.get("H", 0)
+		game.autocollect.atoms.O = 1 * base_prod + game.autocollect.atoms.get("O", 0)
+	else:
+		game.autocollect.atoms[el] = 1 * base_prod + game.autocollect.atoms.get(el, 0)
 
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
@@ -1103,7 +1070,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 
 func on_path_enter(path:String, obj:Dictionary):
 	game.hide_adv_tooltip()
-	if not obj.empty():
+	if not obj.empty() and obj.has("bldg"):
 		game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
 
 func on_path_exit():
@@ -1234,16 +1201,6 @@ func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
-
-func get_lake_elements(pos:Vector2, wid:int):
-	var elements:Dictionary = {}
-	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
-		for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
-			if Vector2(i, j) != pos:
-				var id2 = i % wid + j * wid
-				if game.tile_data[id2] and game.tile_data[id2].has("lake"):
-					elements[game.tile_data[id2].lake.element] = game.tile_data[id2].lake.state
-	return elements
 
 func remove_recursive(path):
 	var directory = Directory.new()
@@ -1424,7 +1381,7 @@ func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 		elif game.met_info.has(p):
 			var met_prod = produce[p] * get_au_mult_from_int(au_int)
 			game.autocollect.mets[p] -=  met_prod
-			if au_int > 0:
+			if au_int > 0 and game.aurora_prod.has(au_int) and game.aurora_prod[au_int].has(p):
 				game.aurora_prod[au_int][p] -= met_prod
 				if is_zero_approx(game.aurora_prod[au_int][p]):
 					game.aurora_prod[au_int].erase(p)
