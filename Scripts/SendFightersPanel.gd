@@ -125,7 +125,7 @@ func refresh():
 			for fighter in game.fighter_data:
 				if not fighter.has("tier"):#Save migration
 					fighter.tier = 0
-				if fighter.tier == 1 and fighter.c_c_g == game.c_c_g:
+				if fighter.tier == 1 and fighter.c_c == game.c_c:
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
 					base_travel_costs += 50000000 * 2000000 * fighter.number * sys_num
@@ -255,7 +255,7 @@ func _on_Send_pressed():
 					var curr_time = OS.get_system_time_msecs()
 					var i:int = 0
 					while i < len(game.fighter_data):
-						if game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c_g == game.c_c_g:
+						if game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
 							game.fighter_data.remove(i)
 						else:
 							i += 1
@@ -403,3 +403,11 @@ func _process(delta):
 	
 func _on_HSlider_value_changed(value):
 	refresh_energy()
+
+
+func _on_SE_Hint_mouse_entered():
+	game.show_tooltip(tr("SE_HINT"))
+
+
+func _on_mouse_exited():
+	game.hide_tooltip()

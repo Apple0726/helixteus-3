@@ -152,10 +152,10 @@ func update_XP():
 			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
 		if game.u_i.lv == 32:
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
-		if game.u_i.lv == 50:
-			game.long_popup(tr("LEVEL_50_REACHED"), "%s 50" % tr("LEVEL"))
-			game.new_bldgs.PCC = true
+		if game.u_i.lv == 55:
+			game.long_popup(tr("LEVEL_55_REACHED"), "%s 55" % tr("LEVEL"))
 		if game.u_i.lv == 60:
+			game.new_bldgs.PCC = true
 			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.u_i.lv]
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
@@ -227,13 +227,6 @@ func refresh():
 		else:
 			glass_text["custom_colors/font_color"] = Color.red
 		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), GH_glass_cost]
-	if $Top/Resources/Soil.visible:
-		var GH_soil_cost = Data.costs.GH.soil * game.engineering_bonus.BCM
-		if game.mats.soil >= GH_soil_cost:
-			soil_text["custom_colors/font_color"] = Color.green
-		else:
-			soil_text["custom_colors/font_color"] = Color.red
-		soil_text.text = "%s / %s kg" % [Helper.format_num(game.mats.soil, true), GH_soil_cost]
 	update_XP()
 	if OS.get_latin_keyboard_variant() == "QWERTZ":
 		$Buttons/Ships.shortcut.shortcut.action = "Z"
@@ -358,9 +351,7 @@ func refresh():
 		$Top/Name/Name.text = game.u_i.cluster_data[game.c_c].name
 	else:
 		$Bookmarks/Bookmarked.visible = false
-		if game.c_v == "supercluster":
-			$Top/Name/Name.text = game.supercluster_data[game.c_sc].name
-		elif game.c_v == "universe":
+		if game.c_v == "universe":
 			$Top/Name/Name.text = game.u_i.name
 	$Top/Name.visible = false
 	$Top/Name.visible = true
@@ -788,18 +779,14 @@ func _on_SwitchBtn_mouse_entered():
 		view_str = tr("VIEW_DIMENSION")
 		if not game.show.has("dimensions"):
 			view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
-	elif game.c_v == "supercluster":
-		view_str = tr("VIEW_UNIVERSE")
-		if u_i.lv < 70:
-			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 70"]]
 	elif game.c_v == "cluster":
-		view_str = tr("VIEW_SUPERCLUSTER")
-		if u_i.lv < 50:
-			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 50"]]
+		view_str = tr("VIEW_UNIVERSE")
+		if u_i.lv < 60:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 60"]]
 	elif game.c_v == "galaxy":
 		view_str = tr("VIEW_CLUSTER")
-		if u_i.lv < 35:
-			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 35"]]
+		if u_i.lv < 40:
+			view_str += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 40"]]
 	elif game.c_v == "system":
 		view_str = tr("VIEW_GALAXY")
 		if u_i.lv < 18:
@@ -820,13 +807,10 @@ func _on_SwitchBtn_pressed():
 			if u_i.lv >= 18:
 				game.switch_view("galaxy")
 		"galaxy":
-			if u_i.lv >= 35:
+			if u_i.lv >= 40:
 				game.switch_view("cluster")
 		"cluster":
-			if u_i.lv >= 50:
-				game.switch_view("supercluster")
-		"supercluster":
-			if u_i.lv >= 70:
+			if u_i.lv >= 60:
 				game.switch_view("universe")
 		"universe":
 			if game.show.has("dimensions"):

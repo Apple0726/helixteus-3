@@ -28,13 +28,13 @@ func _ready():
 			cluster_btn.material.set_shader_param("color", Color.from_hsv(hue, sat, 1.0))
 		self.add_child(cluster)
 		cluster.add_child(cluster_btn)
-		cluster_btn.connect("mouse_entered", self, "on_cluster_over", [c_i.l_id])
+		cluster_btn.connect("mouse_entered", self, "on_cluster_over", [c_i.id])
 		cluster_btn.connect("mouse_exited", self, "on_cluster_out")
-		cluster_btn.connect("pressed", self, "on_cluster_click", [c_i.id, c_i.l_id])
+		cluster_btn.connect("pressed", self, "on_cluster_click", [c_i.id])
 		cluster_btn.rect_position = Vector2(-640 / 2, -640 / 2)
 		cluster_btn.rect_pivot_offset = Vector2(640 / 2, 640 / 2)
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3)
-		if game.u_i.cluster_data[game.c_sc].view.zoom > 1.5:
+		if game.u_i.cluster_data[game.c_c].view.zoom > 1.5:
 			radius *= 0.1
 		cluster_btn.rect_scale.x = radius
 		cluster_btn.rect_scale.y = radius
@@ -57,9 +57,9 @@ func on_cluster_over (id:int):
 func on_cluster_out ():
 	game.hide_tooltip()
 
-func on_cluster_click (id:int, l_id:int):
+func on_cluster_click (id:int):
 	if not view.dragged:
-		game.switch_view("cluster", {"fn":"set_custom_coords", "fn_args":[["c_c", "c_c_g"], [l_id, id]]})
+		game.switch_view("cluster", {"fn":"set_custom_coords", "fn_args":[["c_c"], [id]]})
 
 func change_scale(sc:float):
 	for i in range(0, btns.size()):

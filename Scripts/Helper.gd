@@ -613,7 +613,7 @@ func get_IR_mult(bldg_name:String):
 		sc = "EPE"
 	elif bldg_name in ["AMN", "SPR"]:
 		sc = "PME"
-	elif bldg_name in ["MS", "B", "NSF", "ESF"]:
+	elif bldg_name in ["MS", "B", "NSF", "ESF", "M_DS", "M_MME"]:
 		sc = "STE"
 	else:
 		sc = "%sE" % bldg_name

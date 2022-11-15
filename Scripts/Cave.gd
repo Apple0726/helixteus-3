@@ -829,7 +829,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	
 	if not boss_cave:
 		#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
-		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c_g == 0:
+		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c == 0:
 			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
 				var part = object_scene.instance()
 				part.get_node("Sprite").texture = preload("res://Graphics/Cave/Objects/ShipPart.png")
@@ -1174,6 +1174,7 @@ func update_ray():
 				if not debris_touched_by_laser.has(mining_debris):
 					var circ_bar = preload("res://Scenes/CircleBar.tscn").instance()
 					add_child(circ_bar)
+					circ_bar.light_mask = 0
 					circ_bar.scale *= big_debris[mining_debris].scale.x
 					circ_bar.position = big_debris[mining_debris].position
 					debris_touched_by_laser[mining_debris] = {"bar":circ_bar, "progress":0}

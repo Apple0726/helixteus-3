@@ -57,10 +57,6 @@ func refresh_planets():
 			tile_datas.append([])
 			continue
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
-#		if p_i.has("tile_num") and not tile_data_to_append.empty():#Save migration
-#			var dir = Directory.new()
-#			dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, p_i.id])
-#			tile_data_to_append.clear()
 		tile_datas.append(tile_data_to_append)
 		
 		var v:Vector2 = polar2cartesian(p_i.distance, p_i.angle)
@@ -180,12 +176,6 @@ func refresh_planets():
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false, sc)
 				"MM":
 					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc)
-			var IR_mult = Helper.get_IR_mult(p_i.bldg.name)
-			if p_i.bldg.IR_mult != IR_mult:
-				var diff:float = IR_mult / p_i.bldg.IR_mult
-				p_i.bldg.IR_mult = IR_mult
-				if p_i.bldg.has("collect_date"):
-					p_i.bldg.collect_date = curr_time - (curr_time - p_i.bldg.collect_date) / diff
 		planet.rect_position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
@@ -449,9 +439,9 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1)}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 	if build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, num_stages.M_MME + 1)}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, num_stages.M_MME + 1) * Helper.get_IR_mult("M_MME")}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1)}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1) * Helper.get_IR_mult("M_MME")}, false)
 
 func show_M_MPCC_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -486,6 +476,8 @@ func show_planet_info(id:int, l_id:int):
 		elif p_i.MS == "M_MME":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
+			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult("M_MME")}, false)
 		if not p_i.bldg.is_constructing:
 			if p_i.MS_lv < num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
@@ -644,11 +636,6 @@ func on_planet_click (id:int, l_id:int):
 				game.SPR_panel.obj = p_i
 				game.SPR_panel.tile_num = p_i.tile_num
 				game.toggle_panel(game.SPR_panel)
-			else:
-				items_collected.clear()
-				if p_i.bldg.name in ["ME", "PP", "MM", "AE"]:
-					Helper.call("collect_%s" % p_i.bldg.name, p_i, p_i, items_collected, OS.get_system_time_msecs(), p_i.tile_num)
-				game.show_collect_info(items_collected)
 		if (Input.is_action_pressed("Q") or p_i.has("conquered")) and not Input.is_action_pressed("ctrl"):
 			if not p_i.has("conquered"):
 				game.stats_univ.planets_conquered += 1
@@ -735,6 +722,8 @@ func on_star_over (id:int):
 		if star.MS == "M_DS":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star)}, false)
+			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
 		elif star.MS == "M_MB":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
@@ -886,28 +875,28 @@ func _process(_delta):
 				if p_i.has("MS"):
 					if p_i.MS == "M_MME":
 						game.autocollect.MS.minerals += Helper.get_MME_output(p_i)
-						game.mineral_capacity += Helper.get_MME_output(p_i) - Helper.get_MME_output(p_i, -1)
+						game.mineral_capacity += Helper.get_MME_capacity(p_i) - Helper.get_MME_capacity(p_i, -1)
 				game.HUD.refresh()
 			time_bar_obj.parent.remove_child(time_bar)
 			time_bar.queue_free()
 			planet_time_bars.erase(time_bar_obj)
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-	for time_bar_obj in planet_plant_bars:
-		var time_bar = time_bar_obj.node
-		if not is_instance_valid(time_bar):
-			continue
-		var p_i = time_bar_obj.p_i
-		if not p_i.plant.has("grow_time"):
-			continue
-		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
-		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
-		time_bar.get_node("Bar").value = progress
-		if progress > 1:
-			if p_i.plant.is_growing:
-				p_i.plant.is_growing = false
-			time_bar_obj.parent.remove_child(time_bar)
-			time_bar.queue_free()
-			planet_plant_bars.erase(time_bar_obj)
+#	for time_bar_obj in planet_plant_bars:
+#		var time_bar = time_bar_obj.node
+#		if not is_instance_valid(time_bar):
+#			continue
+#		var p_i = time_bar_obj.p_i
+#		if not p_i.plant.has("grow_time"):
+#			continue
+#		var progress = (curr_time - p_i.plant.plant_date) / float(p_i.plant.grow_time)
+#		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.plant.grow_time - curr_time + p_i.plant.plant_date)
+#		time_bar.get_node("Bar").value = progress
+#		if progress > 1:
+#			if p_i.plant.is_growing:
+#				p_i.plant.is_growing = false
+#			time_bar_obj.parent.remove_child(time_bar)
+#			time_bar.queue_free()
+#			planet_plant_bars.erase(time_bar_obj)
 	for rsrc_obj in star_rsrcs:
 		var star = stars_info[rsrc_obj.id]
 		if star.bldg.is_constructing:
@@ -927,13 +916,17 @@ func _process(_delta):
 			continue
 		var rsrc:ResourceStored = rsrc_obj.node
 		if planet.has("tile_num"):
-			if planet.bldg.name in ["PP", "ME", "RL"]:
-				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.bldg.IR_mult * planet.tile_num * game.u_i.time_speed)
+			if planet.bldg.name in ["PP", "RL"]:
+				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult(planet.bldg.name) * planet.tile_num * game.u_i.time_speed)
+				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+			elif planet.bldg.name == "ME":
+				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult("ME") * (planet.ash_richness if planet.has("ash_richness") else 1.0) * planet.tile_num * game.u_i.time_speed)
 				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 			elif planet.bldg.name == "MM":
 				rsrc.set_text("%s m" % planet.depth)
 			elif planet.bldg.name == "AE":
-				rsrc.set_text("%s mol" % Helper.format_num(planet.bldg.stored))
+				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.tile_num * game.u_i.time_speed * planet.pressure)
+				rsrc.set_text("%s mol/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 		elif planet.has("MS"):
 			var prod:float
 			if planet.MS == "M_MME":
@@ -957,39 +950,6 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1):
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:
 		planet_rsrcs.append({"node":rsrc, "id":id})
-
-var items_collected = {}
-
-func collect_all():
-	items_collected.clear()
-	var planets = game.system_data[game.c_s].planets
-	var progress:TextureProgress = game.HUD.get_node("Bottom/Panel/CollectProgress")
-	progress.max_value = len(planets)
-	var curr_time = OS.get_system_time_msecs()
-	for p_ids in planets:
-		if game.c_v != "system":
-			break
-		var planet = game.planet_data[p_ids.local]
-		if planet.empty() or not planet.has("discovered"):
-			progress.value += 1
-			continue
-		if planet.has("tile_num"):
-			if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
-				Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-		else:
-			var i:int
-			for tile in tile_datas[p_ids.local]:
-				if tile:
-					Helper.collect_rsrc(items_collected, planet, tile, i)
-				i += 1
-		Helper.save_obj("Planets", p_ids.global, tile_datas[p_ids.local])
-		progress.value += 1
-		if game.collect_speed_lag_ratio != 0:
-			yield(get_tree().create_timer(0.01 * game.collect_speed_lag_ratio), "timeout")
-	progress.visible = false
-	game.show_collect_info(items_collected)
-	game.HUD.refresh()
-
 
 func _on_System_draw():
 	refresh_planets()

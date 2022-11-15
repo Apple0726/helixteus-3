@@ -1,6 +1,6 @@
 extends "GenericPanel.gd"
 
-var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_CBS", "M_PK", "M_MB", "M_MPCC"]
+var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_CBS", "M_PK", "M_MB"]
 var build_all:bool = false
 
 func _ready():
@@ -30,7 +30,6 @@ func on_checkbox_toggle(button_pressed:bool):
 	build_all = button_pressed
 
 func refresh():
-	grid.get_node("M_MPCC").visible = game.science_unlocked.has("MPCC")
 	grid.get_node("M_MB").visible = game.science_unlocked.has("MB")
 		
 func get_MS_name(_name:String):

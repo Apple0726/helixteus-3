@@ -74,11 +74,11 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"notachicken_star":{"money":e(4.3, 7), "chickens":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"moon_but_not":{"money":e(8, 24), "moon_lords":e(2.1, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
 					"killer_queen":{"money":e(7.8, 13), "honey":e(7.8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
-					"M_DS_0":{"money":e(1.3, 10), "stone":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":5 * 86400},
-					"M_DS_1":{"money":e(3.8, 11), "stone":e(2.7, 10), "silicon":e(1.5, 7), "copper":e(1.2, 7), "iron":e(8, 7), "aluminium":e(2.2, 7), "titanium":e(2.1, 6), "time":30 * 86400},
-					"M_DS_2":{"money":e(1.5, 13), "stone":e(9.6, 11), "silicon":e(5.3, 8), "copper":e(4.0, 8), "iron":e(3.2, 9), "aluminium":e(8.7, 8), "titanium":e(8.8, 7), "time":60 * 86400},
-					"M_DS_3":{"money":e(6.4, 14), "stone":e(3.5, 13), "silicon":e(2.5, 10), "copper":e(1.5, 10), "iron":e(1.4, 11), "aluminium":e(3, 10), "titanium":e(3, 9), "time":90 * 86400},
-					"M_DS_4":{"money":e(2.5, 16), "stone":e(1.1, 15), "silicon":e(8.8, 11), "copper":e(5.6, 11), "iron":e(5.5, 12), "aluminium":e(1, 12), "titanium":e(9.6, 10), "time":120 * 86400},
+					"M_DS_0":{"money":e(1.3, 10), "stone":e(8, 8), "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000, "time":2 * 86400},
+					"M_DS_1":{"money":e(3.8, 11), "stone":e(2.7, 10), "silicon":e(1.5, 7), "copper":e(1.2, 7), "iron":e(8, 7), "aluminium":e(2.2, 7), "titanium":e(2.1, 6), "time":5 * 86400},
+					"M_DS_2":{"money":e(1.5, 13), "stone":e(9.6, 11), "silicon":e(5.3, 8), "copper":e(4.0, 8), "iron":e(3.2, 9), "aluminium":e(8.7, 8), "titanium":e(8.8, 7), "time":8 * 86400},
+					"M_DS_3":{"money":e(6.4, 14), "stone":e(3.5, 13), "silicon":e(2.5, 10), "copper":e(1.5, 10), "iron":e(1.4, 11), "aluminium":e(3, 10), "titanium":e(3, 9), "time":12 * 86400},
+					"M_DS_4":{"money":e(2.5, 16), "stone":e(1.1, 15), "silicon":e(8.8, 11), "copper":e(5.6, 11), "iron":e(5.5, 12), "aluminium":e(1, 12), "titanium":e(9.6, 10), "time":16 * 86400},
 					"M_SE_0":{"money":700000, "stone":50000, "energy":10000, "copper":800, "iron":1000, "aluminium":300, "time":2*3600},
 					"M_SE_1":{"money":10000000, "stone":500000, "energy":45000, "copper":6000, "iron":10000, "aluminium":3000, "time":12 * 3600},
 					"M_MME_0":{"money":e(2, 7), "stone":e(1, 6), "copper":1500, "iron":12000, "aluminium":5000, "titanium":300, "time":4 * 3600},
@@ -86,14 +86,13 @@ var MS_costs = {	"doom_ball":{"money":e(5.4, 12), "stone":e(5.4, 7), "silicon":4
 					"M_MME_2":{"money":e(2.4, 10), "stone":e(2, 9), "copper":e(2.5, 6), "iron":e(2.5, 7), "aluminium":e(7.5, 6), "titanium":500000, "time":96 * 3600},
 					"M_MME_3":{"money":e(9.5, 11), "stone":e(7, 10), "copper":e(8, 7), "iron":e(1, 9), "aluminium":e(3, 8), "titanium":e(1.5, 7), "time":150 * 3600},
 					"M_CBS_0":{"money":e(1.0, 11), "stone":e(6, 8), "silicon":1200000, "copper":750000, "iron":1400000, "platinum":90000, "time":2 * 86400},
-					"M_CBS_1":{"money":e(1.0, 11)*40, "stone":e(6, 8)*30, "silicon":1200000*40, "copper":750000*40, "iron":1400000*30, "platinum":90000*50, "time":6 * 86400},
-					"M_CBS_2":{"money":e(1.0, 11)*40*40, "stone":e(6, 8)*30*30, "silicon":1200000*40*30, "copper":750000*40*30, "iron":1400000*30*30, "platinum":90000*50*50, "time":18 * 86400},
-					"M_CBS_3":{"money":e(1.0, 11)*40*40*40, "stone":e(6, 8)*30*30*30, "silicon":1200000*40*30*30, "copper":750000*40*30*30, "iron":1400000*30*30*30, "platinum":90000*50*50*50, "time":50 * 86400},
-					"M_MB":{"money":e(5.5, 17), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 11), "aluminium":e(2, 12), "nanocrystal":e(8, 11), "time":120 * 86400},
-					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":24 * 86400},
-					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":48 * 86400},
-					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 16), "aluminium":e(1.5, 15), "time":96 * 86400},
-					"M_MPCC_0":{"money":e(4.4, 17), "stone":e(7.1, 14), "energy":e(9, 16), "quartz":e(4.8, 13), "nanocrystal":e(3.1, 13), "time":10 * 86400},
+					"M_CBS_1":{"money":e(1.0, 11)*40, "stone":e(6, 8)*30, "silicon":1200000*40, "copper":750000*40, "iron":1400000*30, "platinum":90000*50, "time":5 * 86400},
+					"M_CBS_2":{"money":e(1.0, 11)*40*40, "stone":e(6, 8)*30*30, "silicon":1200000*40*30, "copper":750000*40*30, "iron":1400000*30*30, "platinum":90000*50*50, "time":8 * 86400},
+					"M_CBS_3":{"money":e(1.0, 11)*40*40*40, "stone":e(6, 8)*30*30*30, "silicon":1200000*40*30*30, "copper":750000*40*30*30, "iron":1400000*30*30*30, "platinum":90000*50*50*50, "time":12 * 86400},
+					"M_MB":{"money":e(5.5, 17), "stone":e(1, 13), "copper":e(3, 11), "iron":e(1, 11), "aluminium":e(2, 12), "nanocrystal":e(8, 11), "time":15 * 86400},
+					"M_PK_0":{"money":e(2, 15), "stone":e(4, 14), "iron":e(1, 11), "aluminium":e(1.75, 10), "time":5 * 86400},
+					"M_PK_1":{"money":e(9.5, 16), "stone":e(4, 16), "iron":e(8.5, 12), "aluminium":e(8, 12), "time":8 * 86400},
+					"M_PK_2":{"money":e(6.5, 19), "stone":e(8.75, 20), "iron":e(2.25, 16), "aluminium":e(1.5, 15), "time":16 * 86400},
 }
 
 var MS_output = {	"M_DS_0":e(1, 8),
@@ -344,9 +343,6 @@ var science_unlocks = {
 						"PK1":{"cost":5.25e14, "parents":["MAE"]},
 						"PK2":{"cost":3.4e16, "parents":["PK1"]},
 						
-						#Mega probe construction center
-						"MPCC":{"cost":2.9e15, "parents":["MAE"]},
-						
 						#Gigastructures
 						"GS":{"cost":1e19, "parents":["MB"]},
 						
@@ -357,7 +353,7 @@ var science_unlocks = {
 var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.2},
 									"EPE":{"cost":400, "pw":6.2},
 									"RLE":{"cost":1250, "pw":6.8},
-									"STE":{"cost":500, "pw":6.5},
+									"STE":{"cost":500, "pw":6.7},
 									"MMS":{"cost":150, "pw":6.0},
 									"PME":{"cost":10000000, "pw":6.8},
 }

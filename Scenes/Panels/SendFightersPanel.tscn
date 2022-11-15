@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
+[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/SendFightersPanel.gd" type="Script" id=5]
@@ -104,9 +105,6 @@ margin_top = 520.0
 margin_right = 752.0
 margin_bottom = 544.0
 text = "1111"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label5" type="Label" parent="Control"]
 margin_left = 192.0
@@ -147,6 +145,18 @@ margin_bottom = 548.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SE_Hint" type="TextureRect" parent="Control"]
+margin_left = 704.0
+margin_top = 516.0
+margin_right = 736.0
+margin_bottom = 544.0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -216,3 +226,5 @@ __meta__ = {
 [connection signal="pressed" from="Control/CheckBox" to="." method="_on_CheckBox_pressed"]
 [connection signal="pressed" from="Control/CheckBox2" to="." method="_on_CheckBox2_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="mouse_entered" from="Control/SE_Hint" to="." method="_on_SE_Hint_mouse_entered"]
+[connection signal="mouse_exited" from="Control/SE_Hint" to="." method="_on_mouse_exited"]

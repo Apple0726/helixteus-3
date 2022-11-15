@@ -94,7 +94,7 @@ func refresh():
 	$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""]
 
 func _on_Send_pressed():
-	if game.universe_data[game.c_u].lv < 35:
+	if game.universe_data[game.c_u].lv < 40:
 		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
 			game.long_popup(tr("PLANET_PRESSURE_TOO_HIGH"), "")
 		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:

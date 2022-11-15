@@ -7,6 +7,7 @@ var pressure:float
 var tile_num:int
 var surface:float
 var lake_num:int
+var ash_mult:float
 var p_i:Dictionary
 var cost_div:float
 
@@ -101,31 +102,28 @@ func _on_Terraform_pressed():
 		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 		p_i.bldg.path_1 = 1
 		p_i.bldg.path_1_value = Data.path_1[tf_type].value
-		if tf_type in ["MM", "GH", "AE", "ME", "PP", "AMN", "SPR"]:
+		if tf_type in ["GH", "AMN", "SPR"]:
 			p_i.bldg.path_2 = 1
 			p_i.bldg.path_2_value = Data.path_2[tf_type].value
-		if tf_type in ["MM", "AE", "PP", "ME"]:
-			p_i.bldg.collect_date = OS.get_system_time_msecs()
-			p_i.bldg.stored = 0
 		if tf_type == "RL":
 			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
+		elif tf_type == "PP":
+			game.autocollect.rsrc.energy += Data.path_1.PP.value * surface
+		elif tf_type == "ME":
+			game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface
+			p_i.ash_richness = ash_mult
+		elif tf_type == "SP":
+			game.autocollect.rsrc.energy += Helper.get_SP_production(p_i.temperature, Data.path_1.SP.value * surface)
 		elif tf_type == "MS":
 			game.mineral_capacity += Data.path_1.MS.value * surface
+		elif tf_type == "B":
+			game.energy_capacity += Data.path_1.B.value * surface
 		elif tf_type == "NSF":
 			game.neutron_cap += Data.path_1.NSF.value * surface
 		elif tf_type == "ESF":
 			game.electron_cap += Data.path_1.ESF.value * surface
 		elif tf_type == "MM" and not p_i.has("depth"):
 			p_i.depth = 0
-		if Helper.has_IR(tf_type):
-			p_i.bldg.IR_mult = Helper.get_IR_mult(p_i.bldg.name)
-		else:
-			p_i.bldg.IR_mult = 1
-		if p_i.has("autocollect"):
-			if tf_type == "ME":
-				game.autocollect.rsrc.minerals += Data.path_1[tf_type].value * surface
-			elif tf_type == "PP":
-				game.autocollect.rsrc.energy += Data.path_1[tf_type].value * surface
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
 		game.switch_view("system")
@@ -151,7 +149,8 @@ func _on_ME_pressed():
 	tf_type = "ME"
 	set_bldg_cost_txt()
 	costs = Data.costs.ME.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/Note.visible = true
 	update_info()
 
 
@@ -191,5 +190,13 @@ func _on_ESF_pressed():
 	tf_type = "ESF"
 	set_bldg_cost_txt()
 	costs = Data.costs.ESF.duplicate(true)
+	$Panel/Note.visible = false
+	update_info()
+
+
+func _on_B_pressed():
+	tf_type = "B"
+	set_bldg_cost_txt()
+	costs = Data.costs.B.duplicate(true)
 	$Panel/Note.visible = false
 	update_info()
