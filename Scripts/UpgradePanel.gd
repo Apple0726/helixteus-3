@@ -145,7 +145,7 @@ func update(changing_paths:bool = false):
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
-				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg.has("is_constructing") or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				all_tiles_constructing = false
 				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
@@ -219,22 +219,18 @@ func update(changing_paths:bool = false):
 func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, n:int, text_to_modify:RichTextLabel, next:bool):
 	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	var curr_value:float
-	var IR_mult:float = 1.0
+	var IR_mult:float = Helper.get_IR_mult(bldg)
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
-		IR_mult = Helper.get_IR_mult("SP")
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.ash.richness if first_tile.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
-		IR_mult = Helper.get_IR_mult("ME")
 	elif bldg in ["MS", "B", "NSF", "ESF"]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
-		IR_mult = Helper.get_IR_mult(bldg)
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
-			IR_mult = Helper.get_IR_mult(bldg)
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
 	curr_value *= IR_mult
@@ -332,7 +328,7 @@ func _on_Upgrade_pressed():
 			var cost_time
 			for id in ids:
 				var tile = game.tile_data[id]
-				if tile.bldg.is_constructing or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg.has("is_constructing") or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
 				if Data[path_str][bldg].has("cost_mult"):
@@ -373,6 +369,8 @@ func _on_Upgrade_pressed():
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 				if tile.bldg.has("start_date"):
 					tile.bldg.start_date += cost_time * 1000
+				if tile.bldg.has("collect_date"):
+					tile.bldg.collect_date += cost_time * 1000
 				if tile.bldg.has("overclock_mult"):
 					tile.bldg.overclock_date += cost_time * 1000
 				tile.bldg[path_str] = next_lv.value
@@ -385,21 +383,29 @@ func _on_Upgrade_pressed():
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.UPGRADE:
 				game.objective.current += 1
 		else:
+			var diff:float = (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.name == "MS":
-				game.mineral_capacity += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+				game.mineral_capacity += diff
 			elif planet.bldg.name == "NSF":
-				game.neutron_cap += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+				game.neutron_cap += diff
 			elif planet.bldg.name == "ESF":
-				game.electron_cap += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+				game.electron_cap += diff
 			elif planet.bldg.name == "RL":
-				game.autocollect.rsrc.SP += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
+				game.autocollect.rsrc.SP += diff
+			elif planet.bldg.name == "ME":
+				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0)
+			elif planet.bldg.name == "PP":
+				game.autocollect.rsrc.energy += diff
 			elif planet.has("auto_GH"):
 				for p in planet.auto_GH.produce:
-					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
-					planet.auto_GH.produce[p] *= new_base_value / planet.bldg["%s_value" % path_str]
+					var upgrade_mult:float = new_base_value / planet.bldg["%s_value" % path_str]
+					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (upgrade_mult - 1)
+					planet.auto_GH.produce[p] *= upgrade_mult
 					if path_selected == 1:
-						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (new_base_value / planet.bldg["%s_value" % path_str] - 1)
-						planet.auto_GH.cellulose_drain *= new_base_value / planet.bldg["%s_value" % path_str]
+						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (upgrade_mult - 1)
+						planet.auto_GH.cellulose_drain *= upgrade_mult
+						if planet.auto_GH.has("soil_drain"):
+							 planet.auto_GH.soil_drain *= upgrade_mult
 			if planet.bldg.has("collect_date"):
 				var prod_ratio
 				if path_str == "path_1":
@@ -408,11 +414,6 @@ func _on_Upgrade_pressed():
 					prod_ratio = 1.0
 				var coll_date = planet.bldg.collect_date
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
-			if planet.has("autocollect") and path_selected == 1:
-				if planet.bldg.name == "ME":
-					game.autocollect.rsrc.minerals += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
-				elif planet.bldg.name == "PP":
-					game.autocollect.rsrc.energy += (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			planet.bldg[path_str] = next_lv.value
 			planet.bldg[path_str + "_value"] = new_base_value
 			game.universe_data[game.c_u].xp += round(cost_money / 100.0)

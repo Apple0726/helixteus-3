@@ -136,7 +136,7 @@ func _on_HSlider_value_changed(value):
 	calc_costs()
 
 func has_SE(p_i:Dictionary):
-	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.is_constructing
+	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing")
 
 func get_atm_exit_cost(pressure:float):
 	var res:float = pow(pressure * 10, 2) * 100

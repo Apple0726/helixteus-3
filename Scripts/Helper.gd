@@ -289,7 +289,7 @@ func get_crush_info(tile_obj):
 	var time = OS.get_system_time_msecs()
 	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
 	var constr_delay = 0
-	if tile_obj.bldg.is_constructing:
+	if tile_obj.bldg.has("is_constructing"):
 		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
 	var progress = (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty
 	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd))
@@ -549,10 +549,8 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		contents[met] = amount
 		other_volume += amount / met_info.density / 1000 / h_mult
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0) * h_mult))
+	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * min(tile.depth + depth, 1000.0 * p_i.size / 2.0)) / 200000.0) * h_mult))
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
-	if tile.has("ship_locator_depth"):
-		contents.ship_locator = 1
 	return contents
 
 func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
@@ -670,13 +668,15 @@ func get_PCNC_production(pressure:float, value:float):
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
 	#var current_bar
+	var current_bar_value = 0
 	var capacity_bar_value = 0
 	var rsrc_text = ""
 	if not is_instance_valid(rsrc) and tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
 		return
-	update_bldg_constr(tile, p_i)
-	if tile.bldg.is_constructing:
-		return
+	if tile.bldg.has("construction_date"):
+		update_bldg_constr(tile, p_i)
+		if tile.bldg.has("is_constructing"):
+			return
 	match tile.bldg.name:
 		"AE":
 			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
@@ -725,6 +725,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]], true)
 			else:
 				rsrc_text = ""
+		"MM":
+			rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile), true)
+			current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile), 1.0)
 #		"SPR":
 #			if tile.bldg.has("qty"):
 #				var reaction_info = get_reaction_info(tile)
@@ -738,6 +741,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			if Mods.added_buildings.has(tile.bldg.name):
 				Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
 	if is_instance_valid(rsrc):
+		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
 		rsrc.set_text(rsrc_text)
 
@@ -844,8 +848,8 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
 	if progress >= 1:
-		if tile.bldg.is_constructing:
-			tile.bldg.is_constructing = false
+		if tile.bldg.has("is_constructing"):
+			tile.bldg.erase("is_constructing")
 			game.universe_data[game.c_u].xp += tile.bldg.XP
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
@@ -1011,7 +1015,7 @@ func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 500.0, 2)
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 800.0, 2)
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
@@ -1173,11 +1177,9 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 
 func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
-		"ME", "PP", "SP", "AE":
+		"ME", "PP", "SP", "AE", "MM":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"AMN", "SPR":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
-		"MM":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
 			return "%s\n%s\n%s\n[color=#88CCFF]%s[/color]" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
@@ -1338,39 +1340,6 @@ func get_RE_info(RE_name:String):
 		return (tr("RE_" + RE_name.to_upper()) % get_time_div(11.0))
 	else:
 		return tr("RE_" + RE_name.to_upper())
-
-func get_H2O_mult(tile:Dictionary):
-	var mult = 1.0
-	if tile.lake_elements.has("H2O"):
-		if tile.lake_elements.H2O == "l":
-			mult = 2
-		elif tile.lake_elements.H2O == "sc":
-			mult = 4
-		else:
-			mult = 1.5
-	return mult
-
-func get_O_mult(tile:Dictionary):
-	var mult = 1.0
-	if tile.lake_elements.has("O"):
-		if tile.lake_elements.O == "l":
-			mult = 3
-		elif tile.lake_elements.O == "sc":
-			mult = 4
-		else:
-			mult = 1.5
-	return mult
-
-func get_NH3_mult(tile:Dictionary):
-	var mult = 1.0
-	if tile.lake_elements.has("NH3"):
-		if tile.lake_elements.NH3 == "l":
-			mult = 0.6
-		elif tile.lake_elements.NH3 == "sc":
-			mult = 0.3
-		else:
-			mult = 0.8
-	return mult
 
 func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:

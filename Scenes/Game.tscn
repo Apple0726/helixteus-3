@@ -678,6 +678,9 @@ current = true
 
 [node name="MusicTween" type="Tween" parent="."]
 
+[node name="MMTimer" type="Timer" parent="."]
+autostart = true
+
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
@@ -706,3 +709,4 @@ current = true
 [connection signal="mouse_exited" from="Settings/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="Settings/Settings" to="." method="_on_Settings_pressed"]
 [connection signal="animation_finished" from="Stars/AnimationPlayer" to="." method="_on_StarFade_animation_finished"]
+[connection signal="timeout" from="MMTimer" to="." method="_on_MMTimer_timeout"]

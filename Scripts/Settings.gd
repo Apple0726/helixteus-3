@@ -47,7 +47,6 @@ func _ready():
 		$TabContainer/GRAPHICS/Fullscreen.pressed = OS.window_fullscreen
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
-		$TabContainer/GAME/CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
 		$TabContainer/MISC/OPCursor.pressed = config.get_value("misc", "op_cursor", false)
 		set_notation()
 
@@ -137,18 +136,6 @@ func _on_AutosellMinerals_toggled(button_pressed):
 		config.set_value("game", "autosell", button_pressed)
 		game.autosell = button_pressed
 		config.save("user://settings.cfg")
-
-
-func _on_CollectSpeed_mouse_entered():
-	game.show_tooltip(tr("COLLECT_SPEED_DESC"))
-
-
-func _on_CollectSpeedSlider_value_changed(value):
-	if err == OK:
-		config.set_value("game", "collect_speed", value)
-		game.collect_speed_lag_ratio = value
-		config.save("user://settings.cfg")
-
 
 func _on_Easy_mouse_entered():
 	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1])

@@ -218,12 +218,10 @@ var bookmarks:Dictionary
 
 ############ End save data ############
 var block_scroll:bool = false
-var auto_c_p_g:int = -1
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}, null]},
 }
-var collect_speed_lag_ratio:int = 1
 var c_sv:String = ""#current_save
 var save_created
 var u_i:Dictionary
@@ -245,6 +243,12 @@ var cave_filters = {
 	"money":false,
 	"minerals":false,
 	"stone":false,
+}
+
+# Stores the locations of all boring machines the player has built
+# to make autocollecting metals possible while minimizing lag
+var MM_data = {
+	
 }
 
 var mat_info = {	"coal":{"value":15},#One kg of coal = $10
@@ -587,7 +591,6 @@ func _ready():
 		op_cursor = config.get_value("misc", "op_cursor", false)
 		if op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
-		collect_speed_lag_ratio = config.get_value("game", "collect_speed", 1)
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
 			Helper.notation = 0
@@ -725,7 +728,6 @@ func load_univ():
 					stats_univ[stat] = val
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
-		auto_c_p_g = -1
 		u_i = universe_data[c_u]
 		if science_unlocked.has("CI"):
 			stack_size = 32
@@ -1009,6 +1011,8 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		"minerals":false,
 		"stone":false,
 	}
+	MM_data = {}
+	new_bldgs = {}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
 	c_u = univ#c_u: current_universe
@@ -3023,6 +3027,8 @@ func generate_tiles(id:int):
 					tile_data[t_id].cave.modifiers = modifiers
 				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "aurora_cave")
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("cave") and tile_data[t_id].has("aurora"):
+					earn_achievement("exploration", "volcano_aurora_cave")
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
 				var VEI:float = log(1e6/(coldest_star_temp * randf()) + exp(3.0))
@@ -3081,7 +3087,6 @@ func generate_tiles(id:int):
 			tile_data[107] = {}
 			tile_data[107].bldg = {}
 			tile_data[107].bldg.name = "PCC"
-			tile_data[107].bldg.is_constructing = false
 			tile_data[107].bldg.construction_date = curr_time
 			tile_data[107].bldg.construction_length = 10
 			tile_data[107].bldg.XP = 0
@@ -3089,7 +3094,6 @@ func generate_tiles(id:int):
 			tile_data[108] = {}
 			tile_data[108].bldg = {}
 			tile_data[108].bldg.name = "RCC"
-			tile_data[108].bldg.is_constructing = false
 			tile_data[108].bldg.construction_date = curr_time
 			tile_data[108].bldg.construction_length = 10
 			tile_data[108].bldg.XP = 0
@@ -3099,7 +3103,6 @@ func generate_tiles(id:int):
 			tile_data[109] = {}
 			tile_data[109].bldg = {}
 			tile_data[109].bldg.name = "SPR"
-			tile_data[109].bldg.is_constructing = false
 			tile_data[109].bldg.construction_date = curr_time
 			tile_data[109].bldg.construction_length = 10
 			tile_data[109].bldg.XP = 0
@@ -3111,7 +3114,6 @@ func generate_tiles(id:int):
 			tile_data[110] = {}
 			tile_data[110].bldg = {}
 			tile_data[110].bldg.name = "AMN"
-			tile_data[110].bldg.is_constructing = false
 			tile_data[110].bldg.construction_date = curr_time
 			tile_data[110].bldg.construction_length = 10
 			tile_data[110].bldg.XP = 0
@@ -3123,7 +3125,6 @@ func generate_tiles(id:int):
 			tile_data[111] = {}
 			tile_data[111].bldg = {}
 			tile_data[111].bldg.name = "SY"
-			tile_data[111].bldg.is_constructing = false
 			tile_data[111].bldg.construction_date = curr_time
 			tile_data[111].bldg.construction_length = 10
 			tile_data[111].bldg.XP = 0
@@ -3777,7 +3778,7 @@ func _input(event):
 				if c_v == "planet":
 					for tile in tile_data:
 						if tile:
-							if tile.has("bldg") and tile.bldg.is_constructing:
+							if tile.has("bldg") and tile.bldg.has("is_constructing"):
 								var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - OS.get_system_time_msecs()
 								tile.bldg.construction_length = 1
 								if tile.bldg.has("collect_date"):
@@ -3963,6 +3964,7 @@ func fn_save_game():
 		"bookmarks":bookmarks,
 		"cave_filters":cave_filters,
 		"caves_generated":caves_generated,
+		"MM_data":MM_data,
 	}
 	save_game.store_var(save_game_dict)
 	save_game.close()
@@ -4425,3 +4427,56 @@ func _on_GitHub_mouse_entered():
 
 func _on_Godot_mouse_entered():
 	show_tooltip("GODOT_BUTTON")
+
+var curr_MM_p = 0
+
+func _on_MMTimer_timeout():
+	if c_sv != "":
+		var curr_time = OS.get_system_time_msecs()
+		var planets_with_MM:Array = MM_data.keys()
+		if len(planets_with_MM) == 0:
+			return
+		var p = planets_with_MM[curr_MM_p]
+		if MM_data[p].has("tiles"):
+			var p_i = open_obj("Systems", MM_data[p].c_s_g)[MM_data[p].c_p]
+			var _tile_data
+			if p == c_p_g:
+				_tile_data = tile_data
+			else:
+				_tile_data = open_obj("Planets", p)
+			for t_id in MM_data[p].tiles:
+				var tile = _tile_data[t_id]
+				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
+				if tiles_mined >= 1:
+					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
+					tile.bldg.collect_date = curr_time
+					tile.depth += int(tiles_mined)
+			if p != c_p_g:
+				Helper.save_obj("Planets", p, _tile_data)
+		else:
+			var _planet_data:Array
+			var p_i:Dictionary
+			if MM_data[p].c_s_g == c_s_g:
+				p_i = planet_data[MM_data[p].c_p]
+			else:
+				_planet_data = open_obj("Systems", MM_data[p].c_s_g)
+				p_i = _planet_data[MM_data[p].c_p]
+			var tiles_mined = (curr_time - p_i.bldg.collect_date) / 1000.0 * p_i.bldg.path_1_value * Helper.get_prod_mult(p_i)
+			if tiles_mined >= 1:
+				var rsrc_mined = Helper.mass_generate_rock(p_i, p_i, int(tiles_mined))
+				for rsrc in rsrc_mined.keys():
+					if rsrc == "stone":
+						for el in rsrc_mined[rsrc].keys():
+							rsrc_mined[rsrc][el] *= p_i.tile_num
+					else:
+						rsrc_mined[rsrc] *= p_i.tile_num
+				add_resources(rsrc_mined)
+				p_i.bldg.collect_date = curr_time
+				p_i.depth += int(tiles_mined)
+			if MM_data[p].c_s_g != c_s_g:
+				Helper.save_obj("Systems", MM_data[p].c_s_g, _planet_data)
+		curr_MM_p += 1
+		if curr_MM_p > len(planets_with_MM)-1:
+			curr_MM_p = 0
+		if is_instance_valid(HUD):
+			HUD.update_money_energy_SP()

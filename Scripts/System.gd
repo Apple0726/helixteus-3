@@ -154,7 +154,7 @@ func refresh_planets():
 				MS.scale *= 0.25
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 			planet.add_child(MS)
-			if p_i.bldg.is_constructing:
+			if p_i.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = Vector2(0, -80 * sc)
 				time_bar.rect_scale *= sc
@@ -175,7 +175,7 @@ func refresh_planets():
 				"AE":
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false, sc)
 				"MM":
-					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc)
+					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc, true)
 		planet.rect_position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
@@ -305,7 +305,7 @@ func refresh_stars():
 					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true)
 				elif star_info.MS == "M_MB":
 					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true)
-			if star_info.bldg.is_constructing:
+			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)
 				add_child(time_bar)
@@ -323,7 +323,7 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 
 func auto_speedup(bldg_costs:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 60:
+	if game.universe_data[game.c_u].lv >= 55:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 0.2
 
@@ -354,9 +354,9 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1)}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"))
 	if base and build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, num_stages.M_DS + 1)}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, num_stages.M_DS + 1) * Helper.get_IR_mult("M_DS")}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1)}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1) * Helper.get_IR_mult("M_DS")}, false)
 
 func show_M_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -478,7 +478,7 @@ func show_planet_info(id:int, l_id:int):
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i)}, false)
 			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult("M_MME")}, false)
-		if not p_i.bldg.is_constructing:
+		if not p_i.bldg.has("is_constructing"):
 			if p_i.MS_lv < num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm = false
@@ -491,6 +491,8 @@ func show_planet_info(id:int, l_id:int):
 		if p_i.has("tile_num"):
 			if p_i.bldg.name in ["MM", "GH", "AMN", "SPR"]:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
+				if p_i.bldg.name == "MM":
+					tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), p_i.depth]
 			else:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
@@ -609,7 +611,7 @@ func on_planet_click (id:int, l_id:int):
 					game.get_node("UI/Panel").visible = false
 					game.hide_tooltip()
 					return
-			elif p_i.bldg.is_constructing:
+			elif p_i.bldg.has("is_constructing"):
 				var curr_time = OS.get_system_time_msecs()
 				var orig_num:int = game.item_to_use.num
 				var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0
@@ -741,7 +743,7 @@ func on_star_over (id:int):
 				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
 			else:
 				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
-		if not star.bldg.is_constructing and star.MS_lv < num_stages[star.MS]:
+		if not star.bldg.has("is_constructing") and star.MS_lv < num_stages[star.MS]:
 			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
 				continue_upg(star)
 			elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
@@ -785,10 +787,10 @@ func on_star_pressed (id:int):
 	elif star.has("MS"):
 		var t:String = game.item_to_use.type
 		if t == "":
-			if star.MS == "M_PK" and not star.bldg.is_constructing:
+			if star.MS == "M_PK" and not star.bldg.has("is_constructing"):
 				game.planetkiller_panel.star = star
 				game.toggle_panel(game.planetkiller_panel)
-		elif star.bldg.is_constructing:
+		elif star.bldg.has("is_constructing"):
 			var orig_num:int = game.item_to_use.num
 			var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0
 			var time_remaining = star.bldg.construction_date + star.bldg.construction_length - curr_time
@@ -828,8 +830,8 @@ func _process(_delta):
 		time_bar.get_node("TimeString").text = Helper.time_to_str(star.bldg.construction_length - curr_time + star.bldg.construction_date)
 		time_bar.get_node("Bar").value = progress
 		if progress > 1:
-			if star.bldg.is_constructing:
-				star.bldg.is_constructing = false
+			if star.bldg.has("is_constructing"):
+				star.bldg.erase("is_constructing")
 				game.universe_data[game.c_u].xp += star.bldg.XP
 				if star.MS == "M_DS":
 					game.autocollect.MS.energy += Helper.get_DS_output(star)
@@ -869,8 +871,8 @@ func _process(_delta):
 		time_bar.get_node("TimeString").text = Helper.time_to_str(p_i.bldg.construction_length - curr_time + p_i.bldg.construction_date)
 		time_bar.get_node("Bar").value = progress
 		if progress > 1:
-			if p_i.bldg.is_constructing:
-				p_i.bldg.is_constructing = false
+			if p_i.bldg.has("is_constructing"):
+				p_i.bldg.erase("is_constructing")
 				game.universe_data[game.c_u].xp += p_i.bldg.XP
 				if p_i.has("MS"):
 					if p_i.MS == "M_MME":
@@ -899,7 +901,7 @@ func _process(_delta):
 #			planet_plant_bars.erase(time_bar_obj)
 	for rsrc_obj in star_rsrcs:
 		var star = stars_info[rsrc_obj.id]
-		if star.bldg.is_constructing:
+		if star.bldg.has("is_constructing"):
 			continue
 		var value = Helper.update_MS_rsrc(star)
 		var rsrc:ResourceStored = rsrc_obj.node
@@ -912,21 +914,24 @@ func _process(_delta):
 		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
-		if planet.bldg.is_constructing:
+		if planet.bldg.has("is_constructing"):
+			if not planet.bldg.is_constructing:
+				planet.bldg.erase("is_constructing")
 			continue
 		var rsrc:ResourceStored = rsrc_obj.node
 		if planet.has("tile_num"):
-			if planet.bldg.name in ["PP", "RL"]:
-				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult(planet.bldg.name) * planet.tile_num * game.u_i.time_speed)
-				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
-			elif planet.bldg.name == "ME":
-				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult("ME") * (planet.ash_richness if planet.has("ash_richness") else 1.0) * planet.tile_num * game.u_i.time_speed)
-				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
-			elif planet.bldg.name == "MM":
-				rsrc.set_text("%s m" % planet.depth)
-			elif planet.bldg.name == "AE":
-				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.tile_num * game.u_i.time_speed * planet.pressure)
-				rsrc.set_text("%s mol/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+			Helper.update_rsrc(planet, planet, rsrc)
+#			if planet.bldg.name in ["PP", "RL"]:
+#				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult(planet.bldg.name) * planet.tile_num * game.u_i.time_speed)
+#				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+#			elif planet.bldg.name == "ME":
+#				var prod:float = Helper.clever_round(planet.bldg.path_1_value * Helper.get_IR_mult("ME") * (planet.ash_richness if planet.has("ash_richness") else 1.0) * planet.tile_num * game.u_i.time_speed)
+#				rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+#			elif planet.bldg.name == "MM":
+#				rsrc.set_text("%s m" % planet.depth)
+#			elif planet.bldg.name == "AE":
+#				var prod:float = Helper.clever_round(planet.bldg.path_1_value * planet.tile_num * game.u_i.time_speed * planet.pressure)
+#				rsrc.set_text("%s mol/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 		elif planet.has("MS"):
 			var prod:float
 			if planet.MS == "M_MME":
@@ -939,13 +944,14 @@ func _on_System_tree_exited():
 func finish_construct():
 	pass
 
-func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1):
+func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, current_bar_visible = false):
 	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
 	rsrc.rect_scale *= sc
 	rsrc.rect_position = v + Vector2(0, 70 * sc)
 	rsrc.set_modulate(mod)
+	rsrc.set_current_bar_visibility(current_bar_visible)
 	if is_star:
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:

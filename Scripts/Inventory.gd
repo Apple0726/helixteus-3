@@ -236,7 +236,7 @@ func show_mat(mat:String):
 	game.show_tooltip(st)
 
 func show_atom(atom:String):
-	var st:String = get_str(atom)
+	var st:String = get_str(atom, "_NAME")
 	if game.autocollect.atoms.has(atom):
 		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
 	game.show_tooltip(st)

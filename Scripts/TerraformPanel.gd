@@ -74,7 +74,8 @@ func _on_GH_pressed():
 	set_bldg_cost_txt()
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
-	$Panel/Note.visible = false
+	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/Note.visible = true
 	update_info()
 
 
@@ -92,13 +93,16 @@ func _on_Terraform_pressed():
 			game.bookmarks.planet.erase(str(game.c_p_g))
 			game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(game.c_p_g)))
 			p_i.erase("bookmarked")
+		for id in len(game.tile_data):
+			if game.tile_data[id] and game.tile_data[id].has("bldg"):
+				game.view.obj.destroy_bldg(id, true)
 		p_i.tile_num = surface
 		game.stats_univ.bldgs_built += floor(surface)
 		game.stats_dim.bldgs_built += floor(surface)
 		game.stats_global.bldgs_built += floor(surface)
 		p_i.bldg = {}
 		p_i.bldg.name = tf_type
-		p_i.bldg.is_constructing = false
+		p_i.bldg.erase("is_constructing")
 		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 		p_i.bldg.path_1 = 1
 		p_i.bldg.path_1_value = Data.path_1[tf_type].value
@@ -107,11 +111,13 @@ func _on_Terraform_pressed():
 			p_i.bldg.path_2_value = Data.path_2[tf_type].value
 		if tf_type == "RL":
 			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
+		elif tf_type == "GH":
+			p_i.ash = {"richness":ash_mult}
 		elif tf_type == "PP":
 			game.autocollect.rsrc.energy += Data.path_1.PP.value * surface
 		elif tf_type == "ME":
 			game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface
-			p_i.ash_richness = ash_mult
+			p_i.ash = {"richness":ash_mult}
 		elif tf_type == "SP":
 			game.autocollect.rsrc.energy += Helper.get_SP_production(p_i.temperature, Data.path_1.SP.value * surface)
 		elif tf_type == "MS":
@@ -122,8 +128,15 @@ func _on_Terraform_pressed():
 			game.neutron_cap += Data.path_1.NSF.value * surface
 		elif tf_type == "ESF":
 			game.electron_cap += Data.path_1.ESF.value * surface
+		elif tf_type == "AE":
+			for el in p_i.atmosphere:
+				var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure
+				game.show[el] = true
+				Helper.add_atom_production(el, base_prod)
 		elif tf_type == "MM" and not p_i.has("depth"):
 			p_i.depth = 0
+			p_i.bldg.collect_date = OS.get_system_time_msecs()
+			game.MM_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
 		game.switch_view("system")

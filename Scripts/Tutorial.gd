@@ -123,7 +123,7 @@ func _on_RLCheckTimer_timeout():
 	for tile in game.tile_data:
 		if not tile:
 			continue
-		if tile.has("bldg") and tile.bldg.name == "RL" and not tile.bldg.is_constructing:
+		if tile.has("bldg") and tile.bldg.name == "RL" and not tile.bldg.has("is_constructing"):
 			begin()
 			$RLCheckTimer.stop()
 

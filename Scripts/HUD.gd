@@ -199,6 +199,8 @@ func update_money_energy_SP():
 	if $Top/Resources/Cellulose.visible:
 		cellulose_text.text = "%s kg" % Helper.format_num(game.mats.cellulose, true)
 		cellulose_text["custom_colors/font_color"] = Color.white if game.mats.cellulose > 0 else Color.red
+	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
+	stone_text.text = Helper.format_num(total_stone) + " kg"
 	
 func refresh():
 	if not game:
@@ -218,8 +220,6 @@ func refresh():
 	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
 	update_money_energy_SP()
 	update_minerals()
-	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
-	stone_text.text = Helper.format_num(total_stone) + " kg"
 	if $Top/Resources/Glass.visible:
 		var GH_glass_cost = Data.costs.GH.glass * game.engineering_bonus.BCM
 		if game.mats.glass >= GH_glass_cost:

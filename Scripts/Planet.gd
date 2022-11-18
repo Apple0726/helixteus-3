@@ -208,16 +208,6 @@ func add_particles(pos:Vector2):
 	particle.lifetime = 2.0 / game.u_i.time_speed
 	add_child(particle)
 
-var lake_bonus_values = {
-	"H2O":{"s":1.5, "l":2, "sc":4},
-	"CH4":{"s":0.8, "l":0.6, "sc":0.3},
-	"CO2":{"s":7, "l":10, "sc":14},
-	"H":{"s":1, "l":3, "sc":2},
-	"He":{"s":250, "l":400, "sc":200},
-	"Ne":{"s":0.1, "l":0.2, "sc":0.3},
-	"O":{"s":1.5, "l":3, "sc":4},
-	"NH3":{"s":0.8, "l":0.6, "sc":0.3},
-}
 func show_tooltip(tile, tile_id:int):
 	if not tile:
 		return
@@ -234,6 +224,8 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
+		if tile.bldg.name == "MM":
+			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile.depth]
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
@@ -291,7 +283,7 @@ func show_tooltip(tile, tile_id:int):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
-		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n" + tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % lake_bonus_values[tile.lake.element][tile.lake.state]
+		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n" + tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Data.lake_bonus_values[tile.lake.element][tile.lake.state]
 	elif tile.has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
@@ -425,8 +417,14 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			$Soil.set_cell(tile_id % wid, int(tile_id / wid), 0)
 			$Soil.update_bitmask_region()
 		tile.bldg.c_p_g = game.c_p_g
-		if _bldg_to_construct == "MM" and not tile.has("depth"):
-			tile.depth = 0
+		if _bldg_to_construct == "MM":
+			if not tile.has("depth"):
+				tile.depth = 0
+			if not game.MM_data.has(game.c_p_g):
+				game.MM_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
+			else:
+				game.MM_data[game.c_p_g].tiles.append(tile_id)
+			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct)
 	elif not mass_build:
@@ -437,7 +435,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			game.popup(tooltip, 1.2)
 
 func speedup_bldg(tile, tile_id:int, curr_time):
-	if tile.bldg.is_constructing:
+	if tile.bldg.has("is_constructing"):
 		var speedup_time = game.speedups_info[game.item_to_use.name].time
 		#Time remaining to finish construction
 		var time_remaining = tile.bldg.construction_date + tile.bldg.construction_length - curr_time
@@ -454,7 +452,7 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 
 func overclock_bldg(tile, tile_id:int, curr_time):
 	var mult:float = game.overclocks_info[game.item_to_use.name].mult * (tile.overclock_bonus if tile.has("overclock_bonus") else 1.0)
-	if overclockable(tile.bldg.name) and not tile.bldg.is_constructing and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
+	if overclockable(tile.bldg.name) and not tile.bldg.has("is_constructing") and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
 			add_time_bar(tile_id, "overclock")
@@ -484,13 +482,19 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "EC":
 			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
+		elif tile.bldg.name == "MM":
+			var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
+			if tiles_mined >= 1:
+				game.add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
+				tile.bldg.collect_date = curr_time
+				tile.depth += int(tiles_mined)
 		game.item_to_use.num -= 1
 
 func click_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
 		return
 	var bldg:String = tile.bldg.name
-	if not tile.bldg.is_constructing:
+	if not tile.bldg.has("is_constructing"):
 		game.c_t = tile_id
 		match bldg:
 			"GH":
@@ -541,37 +545,37 @@ func destroy_bldg(id2:int, mass:bool = false):
 		rsrcs[id2].queue_free()
 	var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 	if bldg == "MS":
-		if tile.bldg.is_constructing:
+		if tile.bldg.has("is_constructing"):
 			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.mineral_capacity -= tile.bldg.path_1_value
 		if game.mineral_capacity < 200:
 			game.mineral_capacity = 200
 	elif bldg == "B":
-		if tile.bldg.is_constructing:
+		if tile.bldg.has("is_constructing"):
 			game.energy_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.energy_capacity -= tile.bldg.path_1_value
 		if game.energy_capacity < 2500:
 			game.energy_capacity = 2500
 	elif bldg == "NSF":
-		if tile.bldg.is_constructing:
+		if tile.bldg.has("is_constructing"):
 			game.neutron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.neutron_cap -= tile.bldg.path_1_value
 	elif bldg == "ESF":
-		if tile.bldg.is_constructing:
+		if tile.bldg.has("is_constructing"):
 			game.electron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.electron_cap -= tile.bldg.path_1_value
 	elif bldg == "ME":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 	elif bldg == "PP":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
 	elif bldg == "SP":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
 			game.autocollect.rsrc.energy -= SP_prod
 			if tile.has("aurora"):
@@ -581,16 +585,16 @@ func destroy_bldg(id2:int, mass:bool = false):
 					if game.aurora_prod[tile.aurora.au_int].empty():
 						game.aurora_prod.erase(tile.aurora.au_int)
 	elif bldg == "RL":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult
 	elif bldg == "PC":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * overclock_mult
 	elif bldg == "NC":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * overclock_mult
 	elif bldg == "EC":
-		if not tile.bldg.is_constructing:
+		if not tile.bldg.has("is_constructing"):
 			game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * overclock_mult
 	elif bldg == "CBD":
 		var n:int = tile.bldg.path_3_value
@@ -630,6 +634,10 @@ func destroy_bldg(id2:int, mass:bool = false):
 	elif bldg == "GH":
 		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
 		$Soil.update_bitmask_region()
+	elif bldg == "MM":
+		game.MM_data[game.c_p_g].tiles.erase(id2)
+		if game.MM_data[game.c_p_g].tiles.empty():
+			game.MM_data.erase(game.c_p_g)
 	if tile.has("auto_GH"):
 		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
@@ -1207,7 +1215,7 @@ func add_bldg(id2:int, st:String):
 		"EC":
 			add_rsrc(v, Color.white, Data.electron_icon, id2)
 		"MM":
-			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, id2)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, id2, true)
 		"SC":
 			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.SC, id2)
 		"GF":
@@ -1246,7 +1254,7 @@ func add_bldg(id2:int, st:String):
 	hboxes[id2] = hbox
 	if tile.bldg.has("overclock_mult"):
 		add_time_bar(id2, "overclock")
-	if tile.bldg.is_constructing:
+	if tile.bldg.has("is_constructing"):
 		add_time_bar(id2, "bldg")
 	else:
 		Helper.update_rsrc(p_i, tile)
@@ -1254,13 +1262,14 @@ func add_bldg(id2:int, st:String):
 func overclockable(bldg:String):
 	return bldg in ["ME", "PP", "RL", "PC", "NC", "EC", "MM", "SP", "AE"]
 
-func add_rsrc(v:Vector2, mod:Color, icon, id2:int):
+func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
 	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
 	rsrc.rect_position = v + Vector2(0, 70)
 	rsrc.set_modulate(mod)
+	rsrc.set_current_bar_visibility(current_bar_visible)
 	rsrcs[id2] = rsrc
 
 func on_timeout():
@@ -1275,7 +1284,7 @@ func on_timeout():
 		var length:float
 		var progress:float
 		if type == "bldg":
-			if not tile or not tile.has("bldg") or not tile.bldg.is_constructing:
+			if not tile or not tile.has("bldg") or not tile.bldg.has("is_constructing"):
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
@@ -1342,7 +1351,7 @@ func on_timeout():
 		var tile = game.tile_data[i]
 		if not tile or not tile.has("bldg"):
 			continue
-		if tile.bldg.is_constructing:
+		if tile.bldg.has("is_constructing"):
 			continue
 		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()

@@ -291,8 +291,6 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
 		save_zooms(obj_str)
-	game.auto_c_p_g = -1
-	self.remove_child(obj)
 	obj.queue_free()
 	red_line.visible = false
 	green_line.visible = false
@@ -369,7 +367,6 @@ func _physics_process(_delta):
 					continue
 				hbox.visible = false
 			obj.icons_hidden = true
-			game.auto_c_p_g = -1
 			obj.timer.wait_time = 1.0
 		elif scale.x >= 0.25 and obj.icons_hidden:
 			for time_bar in obj.time_bars:

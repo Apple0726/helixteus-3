@@ -63,7 +63,6 @@ __meta__ = {
 }
 
 [node name="SFX" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -154,6 +153,7 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -311,72 +311,21 @@ __meta__ = {
 
 [node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME"]
 margin_left = 88.0
-margin_top = 219.0
+margin_top = 159.0
 margin_right = 352.0
-margin_bottom = 259.0
+margin_bottom = 199.0
 align = 2
 
 [node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource( 2 )]
 margin_left = 16.0
-margin_top = 227.0
+margin_top = 167.0
 margin_right = 272.0
-margin_bottom = 257.0
+margin_bottom = 197.0
 bbcode_text = "[right]SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img][/right]"
 text = "SHOW_CAVE_GEN_INFO "
 label_text = "SHOW_CAVE_GEN_INFO"
 help_text = "SHOW_CAVE_GEN_INFO_DESC"
 align = 2
-
-[node name="CollectSpeed" type="Control" parent="TabContainer/GAME"]
-margin_left = 544.0
-margin_top = 251.0
-margin_right = 584.0
-margin_bottom = 291.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CollectSpeedSlider" type="HSlider" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = 7.41623
-margin_top = 30.4259
-margin_right = 177.416
-margin_bottom = 46.4259
-max_value = 5.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CollectSpeed" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = -74.189
-margin_top = -0.664001
-margin_right = 265.811
-margin_bottom = 23.336
-mouse_filter = 1
-text = "COLLECT_SPEED"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = -75.0
-margin_top = 31.0
-margin_right = -10.0
-margin_bottom = 45.0
-text = "FAST"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label3" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = 195.649
-margin_top = 30.0172
-margin_right = 292.649
-margin_bottom = 44.0172
-text = "SLOW"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME"]
 margin_left = 480.0
@@ -538,9 +487,6 @@ __meta__ = {
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/CaveGenInfo" to="." method="_on_CaveGenInfo_toggled"]
-[connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
-[connection signal="mouse_entered" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_pressed"]

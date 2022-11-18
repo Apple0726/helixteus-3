@@ -11,7 +11,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{
 				"SC":{"value":50.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":1, "pw":1.15, "time_based":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":40.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"MM":{"value":0.01, "pw":1.1, "time_based":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
+				"MM":{"value":0.02, "pw":1.1, "time_based":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.0, "pw":1.1, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
 				"SP":{"value":2.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
 				"AE":{"value":0.2, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
@@ -28,7 +28,6 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{
 var path_2 = {	"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				"GF":{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
 				"SE":{"value":100, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
-				"MM":{"value":4, "pw":1.1, "is_value_integer":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
 				"GH":{"value":1.0, "pw":1.05, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
 				"AMN":{"value":1.0, "pw":1.05, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.05, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
@@ -100,10 +99,10 @@ var MS_output = {	"M_DS_0":e(1, 8),
 					"M_DS_2":e(1.5, 11),
 					"M_DS_3":e(5.8, 12),
 					"M_DS_4":e(2.2, 14),
-					"M_MME_0":2400,
-					"M_MME_1":127000,
-					"M_MME_2":e(4.0, 7),
-					"M_MME_3":e(1.5, 9),
+					"M_MME_0":4800,
+					"M_MME_1":254000,
+					"M_MME_2":e(8.0, 7),
+					"M_MME_3":e(3.0, 9),
 					"M_MB":e(5.0, 12),
 }
 
@@ -153,7 +152,7 @@ var rsrc_icons = {	"ME":minerals_icon,
 					"SC":stone_icon,
 					"GF":glass_icon,
 					"SE":energy_icon,
-					"MM":MM_icon,
+					"MM":stone_icon,
 					"SP":energy_icon,
 					"AE":atom_icon,
 					"AMN":atom_icon,
@@ -250,7 +249,6 @@ func reload():
 	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
-	path_2.MM.desc = tr("X_M_AT_ONCE")
 	path_2.GH.desc = tr("X_PLANT_PRODUCE")
 	path_3.SC.desc = tr("OUTPUT_MULTIPLIER")
 	path_3.GF.desc = tr("OUTPUT_MULTIPLIER")
@@ -465,9 +463,19 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"enemy_attack_rate":{"double_treasure_at":1.2, "tier":1, "max":5},
 	"enemy_number":{"double_treasure_at":1.3, "tier":1},
 	"enemy_HP":{"double_treasure_at":1.5, "tier":1},
-	"chest_number":{"double_treasure_at":0.5, "no_treasure_mult":true, "tier":1},
+	"chest_number":{"double_treasure_at":1.5, "no_treasure_mult":true, "tier":1},
 	"darkness":{"double_treasure_at":2.0, "tier":1, "max":4},
-	"enemy_size":{"double_treasure_at":0.8, "tier":2, "min":0.2, "one_direction":1},
+	"enemy_size":{"double_treasure_at":0.6, "tier":2, "min":0.2, "one_direction":1},
 	"rover_size":{"double_treasure_at":0.75, "tier":2},
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
+}
+var lake_bonus_values = {
+	"H2O":{"s":1.5, "l":2, "sc":4},
+	"CH4":{"s":0.6, "l":0.3, "sc":0.2},
+	"CO2":{"s":7, "l":10, "sc":14},
+	"H":{"s":1, "l":3, "sc":2},
+	"He":{"s":250, "l":400, "sc":200},
+	"Ne":{"s":0.1, "l":0.2, "sc":0.3},
+	"O":{"s":1.5, "l":3, "sc":4},
+	"NH3":{"s":0.6, "l":0.3, "sc":0.2},
 }

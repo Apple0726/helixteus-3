@@ -4,6 +4,9 @@ class_name ResourceStored
 func set_current_bar_value(value):
 	$VBox/Panel2/CurrentBar.value = value
 
+func set_current_bar_visibility(value):
+	$VBox/Panel2.visible = value
+
 func set_capacity_bar_value(value):
 	$VBox/Panel3/CapacityBar.value = value
 

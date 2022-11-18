@@ -9,7 +9,6 @@ var fertilizer:bool
 var craft_costs:Dictionary
 var c_v:String
 var tiles_selected:Array
-var sys_au_mult:float = 1.0
 
 func _ready():
 	for f in game.seeds_produce:
@@ -24,19 +23,6 @@ func refresh():
 	$UseFertilizer.visible = game.science_unlocked.has("PF")
 	$Plant.visible = false
 	set_polygon(rect_size)
-	if c_v == "system":
-		$AuroraMult.visible = true
-		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-		var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		sys_au_mult = pow(1 + au_int, Helper.get_AIE())
-		$AuroraMult.bbcode_text = "[aurora au_int=%s]%s: %s  %s" % [au_int, tr("AURORA_MULTIPLIER"), Helper.format_num(Helper.clever_round(sys_au_mult, 4)), "[img]Graphics/Icons/help.png[/img]"]
-		if game.science_unlocked.has("GHA"):
-			$AuroraMult.help_text = "%s\n%s" % [tr("GH_AURORA"), tr("MMM_DESC")]
-		else:
-			$AuroraMult.help_text = tr("MMM_DESC")
-	else:
-		$AuroraMult.visible = false
-		sys_au_mult = 1.0
 	if tile_num == 1:
 		$Label.text = tr("GH_NAME")
 	else:
@@ -134,7 +120,7 @@ func on_slot_press(_name:String):
 	if c_v == "system":
 		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 		for p in produce:
-			produce[p] *= 2.0 * tile_num * game.u_i.time_speed * 1000.0 * p_i.bldg.path_1_value * p_i.bldg.path_2_value * pow(sys_au_mult, 2.0)
+			produce[p] *= tile_num * game.u_i.time_speed * p_i.bldg.path_1_value * p_i.bldg.path_2_value * (p_i.ash.richness if p_i.has("ash") else 1.0)
 		set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
 	elif c_v == "planet":
 		var harvest:bool = false
@@ -146,8 +132,9 @@ func on_slot_press(_name:String):
 		for tile_id in tiles_selected:
 			var tile:Dictionary = game.tile_data[tile_id]
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
+			var H2O_mult = Data.lake_bonus_values.H2O[tile.lake_elements.H2O] if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * tile.bldg.path_1_value * tile.bldg.path_2_value * Helper.get_H2O_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0)
+				produce[p] *= game.u_i.time_speed * tile.bldg.path_1_value * tile.bldg.path_2_value * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			if harvest:
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
@@ -155,8 +142,8 @@ func on_slot_press(_name:String):
 			else:
 				game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
 			set_auto_harvest(tile, produce, _name, not harvest)
-		if $UseFertilizer.pressed:
-			_on_UseFertilizer_toggled(true)
+	if $UseFertilizer.pressed:
+		_on_UseFertilizer_toggled(true)
 	calc_prod_per_sec()
 
 
@@ -169,8 +156,8 @@ func _on_UseFertilizer_toggled(button_pressed):
 				var tile:Dictionary = game.tile_data[tile_id]
 				var au_mult = Helper.get_au_mult(tile)
 				if tile.has("auto_GH") and not tile.auto_GH.has("soil_drain"):
-					var fert_mult = Helper.get_O_mult(tile)
-					var fert_cost_mult = Helper.get_NH3_mult(tile)
+					var fert_mult = Data.lake_bonus_values.O[tile.lake_elements.O] if tile.lake_elements.has("O") else 1.0
+					var fert_cost_mult = Data.lake_bonus_values.NH3[tile.lake_elements.NH3] if tile.lake_elements.has("NH3") else 1.0
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
 							var add_amount = tile.auto_GH.produce[p] * (0.5 * fert_mult) * au_mult
@@ -194,8 +181,8 @@ func _on_UseFertilizer_toggled(button_pressed):
 				var tile:Dictionary = game.tile_data[tile_id]
 				var au_mult = Helper.get_au_mult(tile)
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
-					var fert_mult = Helper.get_O_mult(tile)
-					var fert_cost_mult = Helper.get_NH3_mult(tile)
+					var fert_mult = Data.lake_bonus_values.O[tile.lake_elements.O] if tile.lake_elements.has("O") else 1.0
+					var fert_cost_mult = Data.lake_bonus_values.NH3[tile.lake_elements.NH3] if tile.lake_elements.has("NH3") else 1.0
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
 							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_mult
@@ -211,6 +198,34 @@ func _on_UseFertilizer_toggled(button_pressed):
 					tile.auto_GH.erase("soil_drain")
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain * 0.5 * fert_cost_mult
+	else:
+		if p_i.has("auto_GH") and not p_i.auto_GH.has("soil_drain"):
+			if button_pressed:
+				for p in p_i.auto_GH.produce:
+					if p in game.met_info.keys():
+						var add_amount = p_i.auto_GH.produce[p] * 0.5
+						game.autocollect.mets[p] += add_amount
+						p_i.auto_GH.produce[p] *= 1.5
+					else:
+						game.autocollect.mats[p] += p_i.auto_GH.produce[p] * 0.5
+						p_i.auto_GH.produce[p] *= 1.5
+				p_i.auto_GH.soil_drain = p_i.auto_GH.cellulose_drain * 0.5
+				game.autocollect.mats.soil = game.autocollect.mats.get("soil", 0) - p_i.auto_GH.soil_drain
+				game.autocollect.mats.cellulose -= p_i.auto_GH.cellulose_drain * 0.5
+				p_i.auto_GH.cellulose_drain *= 1.5
+			else:
+				for p in p_i.auto_GH.produce:
+					if p in game.met_info.keys():
+						p_i.auto_GH.produce[p] /= 1.5
+						var subtr_amount = p_i.auto_GH.produce[p] * 0.5
+						game.autocollect.mets[p] -= subtr_amount
+					else:
+						p_i.auto_GH.produce[p] /= 1.5
+						game.autocollect.mats[p] -= p_i.auto_GH.produce[p] * 0.5
+				p_i.auto_GH.cellulose_drain /= 1.5
+				game.autocollect.mats.soil += p_i.auto_GH.soil_drain
+				p_i.auto_GH.erase("soil_drain")
+				game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain * 0.5
 	calc_prod_per_sec()
 
 
