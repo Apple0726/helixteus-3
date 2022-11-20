@@ -83,9 +83,9 @@ __meta__ = {
 
 [node name="Planets" type="VBoxContainer" parent="Scroll"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 390.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -212,9 +212,9 @@ __meta__ = {
 
 [node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 10.0
-margin_bottom = 5.0
+margin_bottom = 10.0
 columns = 4
 
 [node name="Control2" type="Control" parent="."]

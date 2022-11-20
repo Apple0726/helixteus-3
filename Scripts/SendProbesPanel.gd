@@ -107,7 +107,7 @@ func refresh():
 		for i in len(sorted_objs):
 			if not sorted_objs[i].visible:
 				if exploring_probe_offset == 0:
-					obj_to_discover = sorted_objs[i].l_id
+					obj_to_discover = sorted_objs[i].id
 					obj_index = i
 					break
 				else:
@@ -181,17 +181,9 @@ func _on_Send_pressed(send_all:bool = false):
 		if game.check_enough(costs):
 			var curr_time = OS.get_system_time_msecs()
 			var probe_sent:bool = false
-			if game.c_v == "supercluster":
+			if game.c_v == "universe":
 				for probe in game.probe_data:
 					if probe and probe.tier == 0 and not probe.has("start_date"):
-						probe.start_date = curr_time
-						probe.explore_length = costs.time * 1000
-						probe.obj_to_discover = obj_to_discover
-						probe_sent = true
-						break
-			elif game.c_v == "universe":
-				for probe in game.probe_data:
-					if probe and probe.tier == 1 and not probe.has("start_date"):
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
@@ -207,10 +199,7 @@ func _on_Send_pressed(send_all:bool = false):
 				dist_mult = pow(1.01, dist_exp)
 				if obj_index < n:
 					obj_index += 1
-					if game.c_v == "supercluster":
-						obj_to_discover = sorted_objs[obj_index].l_id
-					elif game.c_v == "universe":
-						obj_to_discover = sorted_objs[obj_index].id
+					obj_to_discover = sorted_objs[obj_index].id
 					refresh_energy(true)
 				else:
 					return false

@@ -8,7 +8,8 @@ var id:int
 var sprite_frame:int
 var particle_lifetime:float = 4.0
 var particle_amount:int
-var aurora:bool
+var aurora_intensity:float = 0.0
+var lava_intensity:float = 0.0
 var debris_collision_shape:CollisionPolygon2D
 
 
@@ -18,7 +19,12 @@ func _ready():
 	debris_collision_shape = get_node(str(sprite_frame) + "/CollisionPolygon2D")
 	debris_collision_shape.disabled = false
 	$LightOccluder2D.occluder.polygon = debris_collision_shape.polygon
-	$Sprite.material.set_shader_param("aurora", aurora)
+	$Sprite.material.set_shader_param("aurora", aurora_intensity > 0.0)
+	if lava_intensity > 0.0:
+		$Lava.enabled = true
+		$Lava.rotation = rand_range(0, 2 * PI)
+		$Lava.position.x = rand_range(-128, 128)
+		$Lava.position.y = rand_range(-128, 128)
 
 func destroy_rock():
 	particle_amount = int(scale.x * 20)

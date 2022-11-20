@@ -55,6 +55,9 @@ func calc_prod_per_sec():
 		production = {"cellulose":-p_i.auto_GH.cellulose_drain}
 		for p in p_i.auto_GH.produce:
 			production[p] = p_i.auto_GH.produce[p]
+		if p_i.auto_GH.has("soil_drain"):
+			$UseFertilizer.pressed = true
+			production.soil = production.get("soil", 0.0) - p_i.auto_GH.soil_drain
 	elif c_v == "planet":
 		for tile in tiles_selected:
 			if game.tile_data[tile].has("auto_GH"):
@@ -78,37 +81,38 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 		obj.erase("auto_GH")
 	if plant_new:
 		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value
-		if obj.lake_elements.has("CH4"):
-			if obj.lake_elements.CH4 == "l":
-				cellulose_drain *= 0.6
-			elif obj.lake_elements.CH4 == "sc":
-				cellulose_drain *= 0.3
-			else:
-				cellulose_drain *= 0.8
-		if obj.lake_elements.has("CO2"):
-			if obj.lake_elements.CO2 == "l":
-				produce.coal = cellulose_drain * 10
-			elif obj.lake_elements.CO2 == "sc":
-				produce.coal = cellulose_drain * 15
-			else:
-				produce.coal = cellulose_drain * 7
-		if obj.lake_elements.has("He"):
-			if obj.lake_elements.He == "l":
-				produce.minerals = cellulose_drain * 150
-			elif obj.lake_elements.He == "sc":
-				produce.minerals = cellulose_drain * 200
-			else:
-				produce.minerals = cellulose_drain * 100
-		if obj.lake_elements.has("Ne"):
-			if obj.lake_elements.Ne == "l":
-				produce.quillite = cellulose_drain * 0.2
-			elif obj.lake_elements.Ne == "sc":
-				produce.quillite = cellulose_drain * 0.3
-			else:
-				produce.quillite = cellulose_drain * 0.1
-		Helper.add_GH_produce_to_autocollect(produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
 		if c_v == "system":
-			cellulose_drain *= 2 * tile_num
+			cellulose_drain *= tile_num
+		else:
+			if obj.lake_elements.has("CH4"):
+				if obj.lake_elements.CH4 == "l":
+					cellulose_drain *= 0.6
+				elif obj.lake_elements.CH4 == "sc":
+					cellulose_drain *= 0.3
+				else:
+					cellulose_drain *= 0.8
+			if obj.lake_elements.has("CO2"):
+				if obj.lake_elements.CO2 == "l":
+					produce.coal = cellulose_drain * 10
+				elif obj.lake_elements.CO2 == "sc":
+					produce.coal = cellulose_drain * 15
+				else:
+					produce.coal = cellulose_drain * 7
+			if obj.lake_elements.has("He"):
+				if obj.lake_elements.He == "l":
+					produce.minerals = cellulose_drain * 150
+				elif obj.lake_elements.He == "sc":
+					produce.minerals = cellulose_drain * 200
+				else:
+					produce.minerals = cellulose_drain * 100
+			if obj.lake_elements.has("Ne"):
+				if obj.lake_elements.Ne == "l":
+					produce.quillite = cellulose_drain * 0.2
+				elif obj.lake_elements.Ne == "sc":
+					produce.quillite = cellulose_drain * 0.3
+				else:
+					produce.quillite = cellulose_drain * 0.1
+		Helper.add_GH_produce_to_autocollect(produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
 		obj.auto_GH = {
 			"produce":produce,
 			"cellulose_drain":cellulose_drain,
@@ -199,8 +203,8 @@ func _on_UseFertilizer_toggled(button_pressed):
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain * 0.5 * fert_cost_mult
 	else:
-		if p_i.has("auto_GH") and not p_i.auto_GH.has("soil_drain"):
-			if button_pressed:
+		if p_i.has("auto_GH"):
+			if button_pressed and not p_i.auto_GH.has("soil_drain"):
 				for p in p_i.auto_GH.produce:
 					if p in game.met_info.keys():
 						var add_amount = p_i.auto_GH.produce[p] * 0.5
@@ -213,7 +217,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 				game.autocollect.mats.soil = game.autocollect.mats.get("soil", 0) - p_i.auto_GH.soil_drain
 				game.autocollect.mats.cellulose -= p_i.auto_GH.cellulose_drain * 0.5
 				p_i.auto_GH.cellulose_drain *= 1.5
-			else:
+			elif not button_pressed and p_i.auto_GH.has("soil_drain"):
 				for p in p_i.auto_GH.produce:
 					if p in game.met_info.keys():
 						p_i.auto_GH.produce[p] /= 1.5

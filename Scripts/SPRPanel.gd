@@ -11,11 +11,11 @@ var au_mult:float
 var au_int:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.00005},
 								"He":{"Z":2, "energy_cost":4, "difficulty":0.001},
 								"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
 								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
-								"Ne":{"Z":10, "energy_cost":500, "difficulty":2},
+								"Ne":{"Z":10, "energy_cost":90, "difficulty":0.1},
 								"Na":{"Z":11, "energy_cost":12, "difficulty":0.002},
 								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
 								"Ti":{"Z":22, "energy_cost":60, "difficulty":0.02},
@@ -200,7 +200,7 @@ func _on_Transform_pressed():
 		if not tf:
 			for i in len(game.view.obj.rsrcs):
 				if i == game.c_t:
-					game.view.obj.rsrcs[i].get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % reaction)
+					game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Atoms/%s.png" % reaction))
 					break
 		set_text_to_white()
 		set_process(true)

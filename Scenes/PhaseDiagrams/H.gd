@@ -1,4 +1,4 @@
-extends Node2D
+extends "PhaseDiagram.gd"
 
 func _ready():
 	place(14, 1, $MeltPoint)
@@ -9,7 +9,3 @@ func _ready():
 var colors = {	"S":Color(0.85, 1, 0.85, 0.6),
 				"L":Color(0.7, 1, 0.7, 1.0),
 				"SC":Color(0.85, 1, 0.85, 0.3)}
-
-func place(T:float, P:float, node):
-	var v = Vector2(T / 1000.0 * 1109, -(log(P) / log(10)) * 576 / 12.0 + 290)
-	node.position = v

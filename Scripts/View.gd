@@ -10,7 +10,7 @@ var annotate_icon:Sprite
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
 var limit_to_viewport
-const CLUSTER_SCALE_THRESHOLD:float = 0.5
+const CLUSTER_SCALE_THRESHOLD:float = 1.0
 
 var rect:Sprite
 
@@ -93,7 +93,7 @@ func _process(delta):
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
-			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.sc].pos) - Vector2(32, 22)
+			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 		elif game.c_v == "cluster" and game.c_c == sh_c.c:
 			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
@@ -291,6 +291,7 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
 		save_zooms(obj_str)
+	obj.set_process(false)
 	obj.queue_free()
 	red_line.visible = false
 	green_line.visible = false
@@ -308,8 +309,9 @@ func save_zooms(obj_str:String):
 			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 		"cluster":
-			game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
-			game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
+			if game.u_i.cluster_data[game.c_c].has("view"):
+				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
+				game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"universe":
 			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x

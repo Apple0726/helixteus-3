@@ -52,6 +52,8 @@ func _ready():
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
 		if star.luminosity > lum:
 			star_mod = Helper.get_star_modulate(star.class)
+			if star_mod.get_luminance() < 0.2:
+				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
 			$TileMap.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:

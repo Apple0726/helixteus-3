@@ -19,6 +19,7 @@ var init_mod:Color
 var deflected:bool = false
 var pierce:int = 1
 var seeking_body:KinematicBody2D = null
+var seek_speed:float = 1.0
 var dont_hit_again = []
 
 func _ready():
@@ -54,7 +55,7 @@ func _physics_process(delta):
 			var th:float = atan2(seeking_body.position.y - position.y, seeking_body.position.x - position.x)
 			seeking_ray.cast_to = polar2cartesian(1500, th - rotation)
 			if seeking_ray.get_collider() is KinematicBody2D:
-				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * speed / 2500.0).normalized()
+				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * speed / 1500.0 * seek_speed).normalized()
 				rotation = direction.angle()
 
 func collide(collision:KinematicCollision2D):

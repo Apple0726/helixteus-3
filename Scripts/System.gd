@@ -110,7 +110,7 @@ func refresh_planets():
 					var grid:GridContainer = GridContainer.new()
 					grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 					grid.columns = 3
-					grid.rect_scale *= sc * 2.0
+					grid.rect_scale *= sc * 2.5
 					for bldg in bldgs:
 						var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
 						bldg_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % bldg)])
@@ -120,8 +120,8 @@ func refresh_planets():
 						bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 					add_child(grid)
 					grid.add_to_group("info_nodes")
-					grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.0
-					grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.0
+					grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.5
+					grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.5
 		else:
 			if game.element_overlay.toggle_btn.pressed:
 				add_elements(p_i, v, sc)
@@ -190,7 +190,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
 	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	grid.columns = 3
-	grid.rect_scale *= sc * 2.0
+	grid.rect_scale *= sc * 4.0
 	if game.element_overlay.option_btn.get_selected_id() == 0:#Planet interior
 		var R = p_i.size * 1000.0 / 2#in meters
 		var surface_volume = get_sph_V(R, R - p_i.crust_start_depth)#in m^3
@@ -206,7 +206,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
 			grid.add_child(atom_count)
 			atom_count.get_node("Texture").texture = load("res://Graphics/Atoms/%s.png" % atom)
-			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount) / Data.molar_mass[atom] / 1000.0
+			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount)# / Data.molar_mass[atom] / 1000.0
 			atom_count.get_node("Label").text = "%s mol" % Helper.format_num(num, true)
 	elif game.element_overlay.option_btn.get_selected_id() == 1:
 		for atom in game.show_atoms:
@@ -219,8 +219,8 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 			atom_count.get_node("Label").text = "%s%%" % Helper.clever_round(percentage)
 	add_child(grid)
 	grid.add_to_group("info_nodes")
-	grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.0
-	grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.0
+	grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 4.0
+	grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 4.0
 
 #get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
@@ -914,7 +914,7 @@ func _process(_delta):
 		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
-		if planet.bldg.has("is_constructing"):
+		if planet.has("bldg") and planet.bldg.has("is_constructing"):
 			if not planet.bldg.is_constructing:
 				planet.bldg.erase("is_constructing")
 			continue

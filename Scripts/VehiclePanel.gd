@@ -154,10 +154,8 @@ func on_fighter_press(i:int):
 func on_probe_press(tier:int):
 	_on_close_button_pressed()
 	if tier == 0:
-		game.switch_view("supercluster", {"fn":"set_to_probe_coords", "fn_args":[0]})
-	elif tier == 1:
 		game.switch_view("universe")
-	elif tier == 2:
+	else:
 		game.switch_view("dimension")
 
 func on_rover_exit():

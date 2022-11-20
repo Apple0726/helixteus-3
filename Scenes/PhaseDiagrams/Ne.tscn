@@ -25,17 +25,21 @@ polygon = PoolVector2Array( 8, 576, 20, 360, 32, 288, 44, 232, 52, 220, 1112, 18
 polygon = PoolVector2Array( 52, 180, 52, 220, 1112, 180, 1112, 112 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
+position = Vector2( 27.2326, 307.415 )
 color = Color( 1, 0, 0, 1 )
 polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
 
 [node name="MeltPoint" type="Polygon2D" parent="."]
+position = Vector2( 27.237, 290 )
 color = Color( 1, 0, 0, 1 )
 polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
 
 [node name="BoilPoint" type="Polygon2D" parent="."]
+position = Vector2( 30.0539, 290 )
 color = Color( 1, 0, 0, 1 )
 polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
 
 [node name="SuperPoint" type="Polygon2D" parent="."]
+position = Vector2( 49.3414, 220.772 )
 color = Color( 1, 0, 0, 1 )
 polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )

@@ -204,6 +204,8 @@ func _ready():
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
 		if star.luminosity > lum:
 			star_mod = Helper.get_star_modulate(star.class)
+			if star_mod.get_luminance() < 0.2:
+				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
 			cave_BG.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
@@ -533,9 +535,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var rand_scale_x = rng.randf()
 					debris.scale = Vector2.ONE * (0.005 / (1.001 - rand_scale_x) + 0.5 + 2 * pow(rand_scale_x, 4))
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
+					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
+						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
+						debris.modulate = Color.white * (1.0 + debris.lava_intensity / 10.0)
 					if aurora and rng.randf() < 0.05:
 						debris.modulate = Color.white
-						debris.aurora = true
+						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
 					if debris_rekt[cave_floor - 1].has(tile_id):
 						debris.free()
 					else:
@@ -1646,6 +1651,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		var tween = Tween.new()
 		proj.add_child(tween)
 		add_child(proj)
+		proj.seek_speed = 15.0
 		tween.interpolate_property(proj, "modulate", null, targ_mod, 0.2)
 		tween.start()
 	else:
@@ -1701,8 +1707,9 @@ func mine_debris(item:Dictionary, delta):
 	var debris = big_debris[mining_debris]
 	if mining_debris != -1:
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
-		var aurora_factor:float = 1.0/3 if debris.aurora else 1.0
-		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor
+		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
+		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
+		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor
 		print("debris scale: ", debris.scale.x)
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
 		circ_bar.update()
@@ -1715,26 +1722,26 @@ func mine_debris_complete(tile_id:int):
 	if debris.scale.x > 1.5:
 		if game.screen_shake:
 			$Camera2D/Screenshake.start(range_lerp(debris.scale.x, 1.5, 7.5, 1.0, 4.0), 10, range_lerp(debris.scale.x, 1.5, 7.5, 5, 35))
+	var debris_aurora_mult = debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
+	var debris_volcano_mult = debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
 	var rsrc:Dictionary = {"stone":rand_range(800, 900),
-							"minerals":rand_range(42, 46) * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0)}
+							"minerals":rand_range(42, 46) * difficulty * exp(cave_floor / 10.0) * debris_aurora_mult * debris_volcano_mult}
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:
-			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.24) * difficulty)
+			var amount = Helper.clever_round(p_i.surface[mat].amount * rand_range(0.2, 0.24) * difficulty * debris_aurora_mult * debris_volcano_mult)
 			rsrc[mat] = amount
-	if debris.aurora:
-		if randf() < 0.5:
-			rsrc.quillite = Helper.clever_round(rand_range(0.1, 0.12) * difficulty)
+	if debris_aurora_mult > 1.0:
+		if randf() < 0.3 + debris.aurora_intensity / 10.0:
+			rsrc.quillite = Helper.clever_round(rand_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		var rarity = met_value.rarity
 		if cave_floor >= 8:
 			rarity = pow(rarity, range_lerp(cave_floor, 8, 32, 0.9, 0.6))
-		if debris.aurora:
-			rarity = pow(rarity, 0.8)
-		if volcano_mult > 1 and not artificial_volcano:
-			rarity = pow(rarity, 0.9)
+		if debris.aurora_intensity > 0.0:
+			rarity = pow(rarity, range_lerp(debris.aurora_intensity, 1.0, 8.0, 0.95, 0.6))
 		if rarity < difficulty * 2.0 and randf() < 1 / (rarity + 1):
-			rsrc[met] = Helper.clever_round(5 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * (3.0 if debris.aurora else 1.0))
+			rsrc[met] = Helper.clever_round(5 * rand_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
 	for r in rsrc.keys():
 		if r in ["stone", "minerals"]:
 			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, 3))

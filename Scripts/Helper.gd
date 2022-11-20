@@ -120,7 +120,7 @@ func log10(n):
 	return log(n) / log(10)
 
 func get_state(T:float, P:float, node):
-	var v = Vector2(T / 1000.0 * 1109, -(log(P) / log(10)) * 576 / 12.0 + 290)
+	var v = node.get_pos_from_TP(T, P)
 	if Geometry.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
 		return "SC"
 	elif Geometry.is_point_in_polygon(v, node.get_node("Liquid").polygon):
@@ -1015,7 +1015,7 @@ func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 800.0, 2)
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0

@@ -27,6 +27,7 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 								"platinum":{"MM":"mets", "atoms":["Pt"]},
 								"diamond":{"MM":"mets", "atoms":["C"]},
 								"nanocrystal":{"MM":"mets", "atoms":["Si", "O", "Na"]},
+								"quillite":{"MM":"mats", "atoms":["Si", "O", "Ne"]},
 								"mythril":{"MM":"mets", "atoms":["W", "Os", "Ta"]},
 }
 var rsrc_nodes_from:Array
@@ -40,7 +41,7 @@ func _ready():
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/AdvButton.tscn").instance()
-		if _name in ["nanocrystal", "mythril"] and not game.science_unlocked.has("AMM"):
+		if _name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.icon_texture = Data.time_icon
@@ -131,6 +132,18 @@ func _on_quartz_pressed(_name:String, dict:Dictionary):
 	metal = "quartz"
 	energy_cost = 590
 	difficulty = 0.1
+	refresh()
+	$Control/Switch.visible = true
+
+func _on_quillite_pressed(_name:String, dict:Dictionary):
+	reset_poses(_name, dict)
+	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2), "Ne":1000.0 / 20.1797}
+	atom_costs = {"Si":0, "O":0, "Ne":0}
+	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
+	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"quillite":0})
+	metal = "quillite"
+	energy_cost = 1900000
+	difficulty = 3.2
 	refresh()
 	$Control/Switch.visible = true
 
@@ -232,7 +245,7 @@ func _on_mythril_pressed(_name:String, dict:Dictionary):
 
 func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
-		btn.visible = not btn.name in ["nanocrystal", "mythril"] or game.science_unlocked.has("AMM")
+		btn.visible = not btn.name in ["nanocrystal", "mythril", "quillite"] or game.science_unlocked.has("AMM")
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("AMN_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")

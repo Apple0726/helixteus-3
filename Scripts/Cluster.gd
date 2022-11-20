@@ -79,7 +79,7 @@ func _ready():
 			for _star in s_i.stars:
 				if _star.has("MS"):
 					Helper.add_to_dict(MSs, _star.MS, 1)
-			yield(get_tree(), "idle_frame")
+			#yield(get_tree(), "idle_frame")
 		var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		if not bldgs.empty():
 			var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()

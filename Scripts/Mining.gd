@@ -232,7 +232,7 @@ func pickaxe_hit():
 		game.generate_volcano(id, VEI, true)
 		game.switch_view("planet")
 		if game.help.has("artificial_volcano"):
-			game.long_popup("%s\n%s" % [tr("CREATED_ARITIFICAL_VOLCANO") % Helper.clever_round(VEI), tr("CREATED_ARITIFICAL_VOLCANO_NOTE")], tr("ARTIFICIAL_VOLCANO"))
+			game.long_popup("%s\n%s" % [tr("CREATED_ARITIFICAL_VOLCANO") % Helper.clever_round(VEI), tr("CREATED_ARITIFICIAL_VOLCANO_NOTE")], tr("ARTIFICIAL_VOLCANO"))
 			game.help.erase("artificial_volcano")
 		else:
 			game.popup(tr("CREATED_ARITIFICAL_VOLCANO") % Helper.clever_round(VEI), 4.0)

@@ -729,6 +729,13 @@ func load_univ():
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
 		u_i = universe_data[c_u]
+#		for c_i in u_i.cluster_data:
+#			c_i.rich_elements = {}
+#			var dist_from_center = c_i.pos.length()
+#			var _rich_elements = rich_element_list.duplicate()
+#			_rich_elements.shuffle()
+#			for j in range(0, int(range_lerp(dist_from_center, 0, 16000, 1, 5))):
+#				c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * range_lerp(dist_from_center, 0, 16000, 1, 40)
 		if science_unlocked.has("CI"):
 			stack_size = 32
 		if science_unlocked.has("CI2"):
@@ -1633,6 +1640,14 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				else:
 					viewing_dimension = true
 					add_dimension()
+	if other_params.has("fn"):
+		var fn:String = other_params.fn
+		var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
+		if fn == "set_bookmark_coords":
+			if set_bookmark_coords(fn_args[0]):
+				c_v = old_view
+		else:
+			callv(fn, fn_args)
 	if new_view in ["universe", "cluster", "galaxy", "system", "planet"]:
 		var new_dict:Dictionary = {"view":new_view, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
 		if other_params.has("fn"):
@@ -1659,6 +1674,17 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					"c_p_g":(fn_args[0].c_p_g if fn_args[0].has("c_p_g") else c_p_g),
 					"c_p":(fn_args[0].c_p if fn_args[0].has("c_p") else c_p),
 				}
+			elif other_params.fn in ["set_to_ship_coords", "set_to_fighter_coords"]:
+				new_dict = {
+					"view":new_view, 
+					"c_c":c_c,
+					"c_g_g":c_g_g,
+					"c_g":c_g,
+					"c_s_g":c_s_g,
+					"c_s":c_s,
+					"c_p_g":c_p_g,
+					"c_p":c_p,
+				}
 		if other_params.has("shift"):
 			view_history_pos += other_params.shift
 			if view_history_pos < 0:
@@ -1670,14 +1696,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				view_history.resize(view_history_pos + 1)
 			view_history.append(new_dict)
 			view_history_pos += 1
-	if other_params.has("fn"):
-		var fn:String = other_params.fn
-		var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
-		if fn == "set_bookmark_coords":
-			if set_bookmark_coords(fn_args[0]):
-				c_v = old_view
-		else:
-			callv(fn, fn_args)
 	if not viewing_dimension:
 		match c_v:
 			"planet":
@@ -1904,6 +1922,7 @@ func add_universe():
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_clusters(c_u)
+		universe_data[c_u].discovered = true
 	add_obj("universe")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
 
@@ -2067,6 +2086,8 @@ func sort_shapes (a, b):
 		return true
 	return false
 
+var rich_element_list = ["Fe", "Al", "C", "Na", "Ti", "Ta", "W", "Os", "Ne", "Xe"]
+
 func generate_clusters(parent_id:int):
 	randomize()
 	var total_clust_num = u_i.cluster_num
@@ -2088,13 +2109,13 @@ func generate_clusters(parent_id:int):
 			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
 		var pos:Vector2
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
-		if parent_id == 0 and _i == 1:
+		c_i.rich_elements = {}
+		var _rich_elements = rich_element_list.duplicate()
+		_rich_elements.shuffle()
+		for j in range(0, int(range_lerp(dist_from_center, 0, 16000, 1, 5))):
+			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * range_lerp(dist_from_center, 0, 16000, 1, 40)
+		if _i == 1:
 			dist_from_center = 149
-			c_i.class = ClusterType.GROUP
-			c_i.galaxy_num = Helper.rand_int(80, 100)
-		if parent_id == 0 and _i == 3:
-			dist_from_center = 302
-			c_i.name = "%s 3" % tr("CLUSTER")
 			c_i.class = ClusterType.GROUP
 			c_i.galaxy_num = Helper.rand_int(80, 100)
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
@@ -2682,24 +2703,6 @@ func generate_planets(id:int):#local id
 		else:
 			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
-#			if hypergiant_system:
-#				if i == 1:
-#					p_i.size = 6000
-#					p_i.pressure = rand_range(400, 500)
-#				elif i == 2:
-#					p_i.size = 11000
-#					p_i.pressure = rand_range(150, 200)
-#				elif i == 3:
-#					p_i.size = 17000
-#				elif i == 4:
-#					p_i.size = 25000
-#				elif i == 5:
-#					p_i.size = 32000
-#					p_i.type = 8
-#				p_i.conquered = true
-#			elif dark_matter_system:
-#				p_i.size = 1000
-#				p_i.conquered = true
 		p_i["angle"] = rand_range(0, 2 * PI)
 		if p_num == 0 and i == 2:
 			p_i.angle = rand_range(PI/4, 3*PI/4)
@@ -2721,14 +2724,6 @@ func generate_planets(id:int):#local id
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
 		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.25))
-#		if system_data[id].has("second_ship") and i == system_data[id].second_ship:
-#			if p_i.type in [11, 12]:
-#				if i == 0:
-#					gas_giant = false
-#				else:
-#					planet_data[0].second_ship = true
-#			else:
-#				p_i.second_ship = true
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2741,7 +2736,15 @@ func generate_planets(id:int):#local id
 			p_i["name"] = tr("PLANET") + " " + String(p_id)
 			p_i.crust_start_depth = Helper.rand_int(50, 450)
 			p_i.mantle_start_depth = round(rand_range(0.005, 0.02) * p_i.size * 1000)
-		p_i.atmosphere = make_atmosphere_composition(temp, p_i.pressure)
+		var list_of_element_probabilities = Data.elements.duplicate()
+		if u_i.cluster_data[c_c].rich_elements.has("C"):
+			list_of_element_probabilities.CO2 *= (u_i.cluster_data[c_c].rich_elements.C - 1.0) / 2.0 + 1.0
+			list_of_element_probabilities.CH4 *= (u_i.cluster_data[c_c].rich_elements.C - 1.0) / 4.0 + 1.0
+		if u_i.cluster_data[c_c].rich_elements.has("Ne"):
+			list_of_element_probabilities.Ne *= u_i.cluster_data[c_c].rich_elements.Ne
+		if u_i.cluster_data[c_c].rich_elements.has("Xe"):
+			list_of_element_probabilities.Xe *= u_i.cluster_data[c_c].rich_elements.Xe
+		p_i.atmosphere = make_atmosphere_composition(temp, p_i.pressure, list_of_element_probabilities)
 		p_i.crust = make_planet_composition(temp, "crust", p_i.size, gas_giant)
 		p_i.mantle = make_planet_composition(temp, "mantle", p_i.size, gas_giant)
 		p_i.core = make_planet_composition(temp, "core", p_i.size, gas_giant)
@@ -2749,15 +2752,14 @@ func generate_planets(id:int):#local id
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
 		p_i.liq_period = rand_range(60, 300)
-		var lakes = Data.elements.duplicate(true)
 		if id + s_num == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
 				p_i.lake_1 = "H2O"
 			if randf() < 0.2:
 				p_i.lake_2 = "H2O"
 		elif p_i.temperature <= 1000:
-			p_i.lake_1 = get_random_element(lakes)
-			p_i.lake_2 = get_random_element(lakes)
+			p_i.lake_1 = get_random_element(list_of_element_probabilities)
+			p_i.lake_2 = get_random_element(list_of_element_probabilities)
 			if hypergiant_system and i == 1:
 				p_i.lake_1 = "Xe"
 				p_i.lake_2 = "Xe"
@@ -3027,7 +3029,7 @@ func generate_tiles(id:int):
 					tile_data[t_id].cave.modifiers = modifiers
 				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "aurora_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("cave") and tile_data[t_id].has("aurora"):
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("ash") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
@@ -3180,18 +3182,19 @@ func erase_tile(random_tile:int):
 	else:
 		tile_data[random_tile] = {"aurora":tile_data[random_tile].aurora}
 
-func make_atmosphere_composition(temp:float, pressure:float):
+func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary):
 	var atm = {}
 	var S:float = 0
-	for el in Data.elements:
+	for el in list_of_element_probabilities.keys():
 		var phase_scene = load("res://Scenes/PhaseDiagrams/" + el + ".tscn")
 		var phase = phase_scene.instance()
-		var rand = Data.elements[el] / (1 - randf())
-		if Helper.get_state(temp, pressure, phase) == "L":
+		var rand = list_of_element_probabilities[el] / (1 - randf())
+		var el_state = Helper.get_state(temp, pressure, phase)
+		if el_state == "L":
 			rand *= 0.2
-		elif Helper.get_state(temp, pressure, phase) == "SC":
+		elif el_state == "SC":
 			rand *= 0.5
-		elif Helper.get_state(temp, pressure, phase) == "S":
+		elif el_state == "S":
 			rand *= 0.05
 		atm[el] = rand
 		S += rand
@@ -3202,105 +3205,92 @@ func make_atmosphere_composition(temp:float, pressure:float):
 
 func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
 	randomize()
-	var common_elements = {}
-	var uncommon_elements = {}
+	var elements = {}
 	var big_planet_factor:float = lerp(1, 5, inverse_lerp(12500, 45000, size))
 	var FM:float = u_i.cluster_data[c_c].FM
 	if not gas_giant or depth == "core":
 		if depth == "crust":
-			common_elements["O"] = rand_range(0.1, 0.19)
-			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
-			uncommon_elements = {	"Al":0.5,
-									"Fe":0.35 * FM,
-									"Ca":0.3,
-									"Na":0.25,
-									"Mg":0.2,
-									"K":0.2,
-									"Ti":0.05,
-									"H":0.1 * big_planet_factor,
-									"C":0.1 * big_planet_factor,
-									"He":0.03 * big_planet_factor,
-									"P":0.02,
-									"U":0.02,
-									"Np":0.004,
-									"Pu":0.00003
-								}
+			var O = rand_range(1.0, 1.9)
+			elements = {	"O":O,
+							"Si":O * rand_range(3.9, 4),
+							"Al":0.5 * randf(),
+							"Fe":0.35 * FM * randf(),
+							"Ca":0.3 * randf(),
+							"Na":0.25 * randf(),
+							"Mg":0.2 * randf(),
+							"K":0.2 * randf(),
+							"Ti":0.05 * randf(),
+							"H":0.1 * big_planet_factor * randf(),
+							"C":0.1 * big_planet_factor * randf(),
+							"He":0.03 * big_planet_factor * randf(),
+							"P":0.02 * randf(),
+							"U":0.02 * randf(),
+							"Np":0.004 * randf(),
+							"Pu":0.00003 * randf()
+						}
 		elif depth == "mantle":
-			common_elements["O"] = rand_range(0.15, 0.19)
-			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
-			uncommon_elements = {	"Al":0.5,
-									"Fe":0.35,
-									"Ca":0.3,
-									"Na":0.25,
-									"U":0.25,
-									"Mg":0.2,
-									"K":0.2,
-									"Np":0.1,
-									"H":0.1 * big_planet_factor,
-									"C":0.1 * big_planet_factor,
-									"Ti":0.05,
-									"Pu":0.005,
-									"He":0.03 * big_planet_factor,
-									"P":0.02,
-								}
+			var O = rand_range(1.5, 1.9)
+			elements = {	"O":O,
+							"Si":O * rand_range(3.9, 4),
+							"Al":0.5 * randf(),
+							"Fe":0.35 * randf(),
+							"Ca":0.3 * randf(),
+							"Na":0.25 * randf(),
+							"U":0.25 * randf(),
+							"Mg":0.2 * randf(),
+							"K":0.2 * randf(),
+							"Np":0.1 * randf(),
+							"H":0.1 * big_planet_factor * randf(),
+							"C":0.1 * big_planet_factor * randf(),
+							"Ti":0.05 * randf(),
+							"Pu":0.005 * randf(),
+							"He":0.03 * big_planet_factor * randf(),
+							"P":0.02 * randf(),
+						}
 		else:
 			var x:float = rand_range(1, 10) * FM
 			var y:float = rand_range(0, 5) * FM
-			common_elements["Fe"] = x/(x+1)
-			common_elements["Ni"] = (1 - Helper.get_sum_of_dict(common_elements)) * y/(y+1)
-			common_elements["O"] = (1 - Helper.get_sum_of_dict(common_elements)) * rand_range(0, 0.19)
-			common_elements["Si"] = common_elements["O"] * rand_range(3.9, 4)
-			uncommon_elements = {	"S":0.5,
-									"Ta":0.5,
-									"W":0.5,
-									"Os":0.25,
-									"Cr":0.3,
-									"Ir":0.1,
-									"Ti":0.1,
-									"Co":0.1 * FM,
-									"Mn":0.1
-								}
+			elements["Fe"] = x/(x+1)
+			elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
+			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * rand_range(0, 0.19)
+			elements["Si"] = elements["O"] * rand_range(3.9, 4)
+			elements.S = 0.5 * randf()
+			elements.Ta = 0.5 * randf()
+			elements.W = 0.5 * randf()
+			elements.Os = 0.25 * randf()
+			elements.Cr = 0.3 * randf()
+			elements.Ir = 0.1 * randf()
+			elements.Ti = 0.1 * randf()
+			elements.Co = 0.1 * FM * randf()
+			elements.Mn = 0.1 * randf()
 	else:
 		if depth == "crust":
 			return {}
 		if depth == "mantle":
-			common_elements["H"] = randf()
-			common_elements["N"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			common_elements["He"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			common_elements["C"] = (1 - Helper.get_sum_of_dict(common_elements)) * randf()
-			uncommon_elements = {	"Al":0.5,
-									"Fe":0.35 * FM,
-									"Ca":0.3,
-									"Na":0.25,
-									"U":0.25,
-									"S":0.2,
-									"Mg":0.2,
-									"K":0.2,
-									"Np":0.1,
-									"Ti":0.05,
-									"H":0.02,
-									"P":0.02,
-									"Pu":0.001
-								}
-	var remaining = 1 - Helper.get_sum_of_dict(common_elements)
-	var uncommon_element_count = 0
-	for u_el in uncommon_elements.keys():
-		if randf() < uncommon_elements[u_el] * 5.0:
-			uncommon_element_count += 1
-			uncommon_elements[u_el] = 1
-	var ucr = [0, 1]#uncommon element ratios
-	for _i in range(0, uncommon_element_count - 1):
-		ucr.append(randf())
-	ucr.sort()
-	var result = {}
-	var index = 1
-	for u_el in uncommon_elements.keys():
-		if uncommon_elements[u_el] == 1:
-			result[u_el] = (ucr[index] - ucr[index - 1]) * remaining
-			index += 1
-	for c_el in common_elements.keys():
-		result[c_el] = common_elements[c_el]
-	return result
+			elements["H"] = randf()
+			elements["N"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
+			elements["He"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
+			elements["C"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
+			elements.Al = 0.5 * randf()
+			elements.Fe = 0.35 * FM * randf()
+			elements.Ca = 0.3 * randf()
+			elements.Na = 0.25 * randf()
+			elements.U = 0.25 * randf()
+			elements.S = 0.2 * randf()
+			elements.Mg = 0.2 * randf()
+			elements.K = 0.2 * randf()
+			elements.Np = 0.1 * randf()
+			elements.Ti = 0.05 * randf()
+			elements.H = 0.02 * randf()
+			elements.P = 0.02 * randf()
+			elements.Pu = 0.001 * randf()
+	for el in elements:
+		if u_i.cluster_data[c_c].rich_elements.has(el):
+			elements[el] *= u_i.cluster_data[c_c].rich_elements[el]
+	var S = Helper.get_sum_of_dict(elements)
+	for el in elements:
+		elements[el] /= S
+	return elements
 
 func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	#temp in K
@@ -3584,14 +3574,14 @@ func _process(delta):
 			particles.proton += autocollect.particles.proton * delta * u_i.time_speed
 			particles.neutron += autocollect.particles.neutron * delta * u_i.time_speed
 			particles.electron += autocollect.particles.electron * delta * u_i.time_speed
-			if particles.neutron > neutron_cap:
-				var diff:float = particles.neutron - neutron_cap
+			if particles.neutron > neutron_cap * Helper.get_IR_mult("NSF"):
+				var diff:float = particles.neutron - neutron_cap * Helper.get_IR_mult("NSF")
 				var amount_decayed:float = diff * pow(0.5, delta * u_i.time_speed / 900.0) #900 seconds = 15 minutes
 				particles.neutron -= diff - amount_decayed
 				particles.proton += (diff - amount_decayed) / 2.0
 				particles.electron += (diff - amount_decayed) / 2.0
-			if particles.electron > electron_cap:
-				particles.electron = electron_cap
+			if particles.electron > electron_cap * Helper.get_IR_mult("ESF"):
+				particles.electron = electron_cap * Helper.get_IR_mult("ESF")
 			if is_instance_valid(HUD) and is_a_parent_of(HUD):
 				HUD.update_minerals()
 				HUD.update_money_energy_SP()
@@ -4449,7 +4439,7 @@ func _on_MMTimer_timeout():
 				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
 				if tiles_mined >= 1:
 					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
-					tile.bldg.collect_date = curr_time
+					tile.bldg.collect_date += int(tiles_mined) * 1000.0 / tile.bldg.path_1_value / Helper.get_prod_mult(tile)
 					tile.depth += int(tiles_mined)
 			if p != c_p_g:
 				Helper.save_obj("Planets", p, _tile_data)
@@ -4471,7 +4461,7 @@ func _on_MMTimer_timeout():
 					else:
 						rsrc_mined[rsrc] *= p_i.tile_num
 				add_resources(rsrc_mined)
-				p_i.bldg.collect_date = curr_time
+				p_i.bldg.collect_date += int(tiles_mined) / p_i.bldg.path_1_value / Helper.get_prod_mult(p_i) * 1000.0
 				p_i.depth += int(tiles_mined)
 			if MM_data[p].c_s_g != c_s_g:
 				Helper.save_obj("Systems", MM_data[p].c_s_g, _planet_data)

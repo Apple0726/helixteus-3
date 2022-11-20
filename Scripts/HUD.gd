@@ -355,6 +355,12 @@ func refresh():
 			$Top/Name/Name.text = game.u_i.name
 	$Top/Name.visible = false
 	$Top/Name.visible = true
+	for view in $Bottom/ViewHistory/VBox.get_children():
+		view.queue_free()
+	for view in game.view_history:
+		var label = Label.new()
+		label.text = "%s p %s, s %s" % [view.view, view.c_p_g, view.c_s_g]
+		$Bottom/ViewHistory/VBox.add_child(label)
 	yield(get_tree(), "idle_frame")
 	game.refresh_achievements()
 
@@ -417,18 +423,24 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
+		tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
 	elif extra_arg_0 == "SOIL" and game.autocollect.mats.has("soil"):
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.soil), true), tr("S_SECOND")])
+		tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("SOIL"), "time":Helper.time_to_str(1000 * game.mats.soil / abs(game.autocollect.mats.soil))})
 	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
 		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
 		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
+		var rsrc_amount = 0.0
 		if extra_arg_0 == "MINERALS":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0) + game.autocollect.MS.minerals, true), tr("S_SECOND")])
+			rsrc_amount = (game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0) + game.autocollect.MS.minerals
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy, true), tr("S_SECOND")])
+			rsrc_amount = (game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num((game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP, true), tr("S_SECOND")])
+			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP
+			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 	if extra_arg_0 == "MINERALS":
 		tooltip += "\n" + tr("MINERAL_DESC")
 	game.show_tooltip(tooltip)

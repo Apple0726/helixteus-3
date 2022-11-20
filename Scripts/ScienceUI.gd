@@ -8,7 +8,7 @@ func _ready():
 
 
 func _on_Back_pressed():
-	game.switch_view("planet")
+	game.switch_view(game.l_v)
 	if is_instance_valid(game.tutorial) and game.tutorial.tut_num == 26:
 		game.tutorial.begin()
 

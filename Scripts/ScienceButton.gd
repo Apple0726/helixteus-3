@@ -119,6 +119,7 @@ func _input(event):
 				elif name == "ATM":
 					game.show.atoms = true
 					game.new_bldgs.AE = true
+					game.new_bldgs.AMN = true
 				elif name == "SAP":
 					game.show.particles = true
 					game.new_bldgs.SPR = true

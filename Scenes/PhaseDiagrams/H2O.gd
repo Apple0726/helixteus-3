@@ -1,4 +1,4 @@
-extends Node2D
+extends "PhaseDiagram.gd"
 
 #func _ready():
 #	get_state(273, 1, $MeltPoint)

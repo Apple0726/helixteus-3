@@ -40,6 +40,9 @@ func refresh():
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
+		if not (p_i.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and p_i.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2):
+			btn.get_node("HBoxContainer/Diameter")["custom_colors/font_color"] = Color.red
+			btn.get_node("HBoxContainer/Distance")["custom_colors/font_color"] = Color.red
 		btn.get_node("TF").visible = p_i.has("tile_num")
 		btn.get_node("MS").visible = p_i.has("MS")
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
