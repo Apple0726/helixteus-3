@@ -722,7 +722,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 				capacity_bar_value = 0
 		"GH":
 			if tile.has("auto_GH"):
-				rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]], true)
+				rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
 			else:
 				rsrc_text = ""
 		"MM":

@@ -676,7 +676,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var n = room.size
 			for tile in room.tiles:
 				var rand = rng.randf()
-				var formula = 0.2 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
+				var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
 					var tier:int = clamp(pow(formula / rand, 0.4), 1, 5)
 					var contents:Dictionary = generate_treasure(tier, rng)

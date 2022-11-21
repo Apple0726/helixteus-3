@@ -172,23 +172,10 @@ width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
-[node name="FD" parent="Main" instance=ExtResource( 1 )]
+[node name="PD" parent="Main" instance=ExtResource( 1 )]
 margin_left = 2016.0
 margin_top = -272.0
 margin_right = 2272.0
-margin_bottom = -208.0
-
-[node name="L_FD" type="Line2D" parent="Main"]
-position = Vector2( 2304, -240 )
-points = PoolVector2Array( 0, 20, 96, 20 )
-width = 2.0
-default_color = Color( 0.4, 1, 0.465625, 1 )
-antialiased = true
-
-[node name="PD" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = -272.0
-margin_right = 2688.0
 margin_bottom = -208.0
 
 [node name="OL" parent="Main" instance=ExtResource( 1 )]

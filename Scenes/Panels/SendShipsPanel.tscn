@@ -75,7 +75,7 @@ __meta__ = {
 
 [node name="Enemies" type="VBoxContainer" parent="Scroll"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 416.0
 margin_bottom = 427.0
 size_flags_horizontal = 3
@@ -89,7 +89,7 @@ margin_left = 460.0
 margin_top = 480.0
 margin_right = 736.0
 margin_bottom = 536.0
-text = "TOTAL_ENERGY_COST"
+text = "TOTAL_COST"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -123,9 +123,6 @@ margin_bottom = 508.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="EnergyIcon2" type="TextureRect" parent="."]
 margin_left = 764.0
@@ -146,7 +143,6 @@ margin_left = 816.0
 margin_top = 398.0
 margin_right = 988.0
 margin_bottom = 428.0
-text = " [img]Graphics/Icons/help.png[/img]"
 adv_help = true
 translate_help = false
 
@@ -156,7 +152,7 @@ margin_top = 400.0
 margin_right = 736.0
 margin_bottom = 430.0
 bbcode_text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
-text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
+text = "PLANET_EE_COST "
 label_text = "PLANET_EE_COST"
 help_text = "PLANET_EE_COST_DESC"
 align = 2

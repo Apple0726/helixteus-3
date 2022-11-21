@@ -50,31 +50,6 @@ func refresh():
 			speed = 85000000
 			unit = "mol"
 			type = "atoms"
-		"H":
-			$Control/TextureRect.texture = hydrogen_texture
-			speed = 30
-			unit = "mol"
-			type = "atoms"
-		"He":
-			$Control/TextureRect.texture = helium_texture
-			speed = 100
-			unit = "mol"
-			type = "atoms"
-		"electron":
-			$Control/TextureRect.texture = electron_texture
-			speed = 50000
-			unit = "mol"
-			type = "particles"
-		"proton":
-			$Control/TextureRect.texture = proton_texture
-			speed = 100000
-			unit = "mol"
-			type = "particles"
-		"neutron":
-			$Control/TextureRect.texture = neutron_texture
-			speed = 25000
-			unit = "mol"
-			type = "particles"
 	refresh_costs()
 	$Control/HSlider.value = $Control/HSlider.max_value
 
@@ -120,30 +95,6 @@ func _on_IonDrive_pressed():
 	refresh()
 	refresh_drive_modulate()
 	$Panel/Drives/ID.modulate.a = 1
-
-func _on_FusionDrive_pressed():
-	op.clear()
-	op.add_item(tr("HE_NAME"))
-	op.add_item(tr("H_NAME"))
-	op.set_item_metadata(0, "He")
-	op.set_item_metadata(1, "H")
-	$Control.visible = true
-	refresh()
-	refresh_drive_modulate()
-	$Panel/Drives/FD.modulate.a = 1
-
-func _on_ParticleDrive_pressed():
-	op.clear()
-	op.add_item(tr("ELECTRON"))
-	op.add_item(tr("PROTON"))
-	op.add_item(tr("NEUTRON"))
-	op.set_item_metadata(0, "electron")
-	op.set_item_metadata(1, "proton")
-	op.set_item_metadata(2, "neutron")
-	$Control.visible = true
-	refresh()
-	refresh_drive_modulate()
-	$Panel/Drives/PD.modulate.a = 1
 
 func _on_OptionButton_item_selected(index):
 	refresh()

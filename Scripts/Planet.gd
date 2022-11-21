@@ -1275,6 +1275,8 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
 	rsrcs[id2] = rsrc
 
 func on_timeout():
+	if game.c_v != "planet":
+		return
 	var curr_time = OS.get_system_time_msecs()
 	var update_XP:bool = false
 	for time_bar_obj in time_bars:
@@ -1365,8 +1367,8 @@ func construct(st:String, costs:Dictionary):
 	finish_construct()
 	var tween = get_tree().create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
-	game.help_str = "mass_build"
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18 and (not game.tutorial or game.tutorial.tut_num >= 26):
+		game.help_str = "mass_build"
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)

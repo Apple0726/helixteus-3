@@ -1,7 +1,5 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Graphics/Buttons/FusionDrive.png" type="Texture" id=1]
-[ext_resource path="res://Graphics/Buttons/ParticleDrive.png" type="Texture" id=2]
 [ext_resource path="res://Graphics/Buttons/IonDrive.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Buttons/ChemicalDrive.png" type="Texture" id=4]
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
@@ -68,30 +66,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FD" type="TextureButton" parent="Panel/Drives"]
-modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 264.0
-margin_right = 392.0
-margin_bottom = 128.0
-theme = ExtResource( 7 )
-texture_normal = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PD" type="TextureButton" parent="Panel/Drives"]
-modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 396.0
-margin_right = 524.0
-margin_bottom = 128.0
-theme = ExtResource( 7 )
-texture_normal = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 1
@@ -205,8 +180,6 @@ __meta__ = {
 
 [connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
 [connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
-[connection signal="pressed" from="Panel/Drives/FD" to="." method="_on_FusionDrive_pressed"]
-[connection signal="pressed" from="Panel/Drives/PD" to="." method="_on_ParticleDrive_pressed"]
 [connection signal="item_selected" from="Control/OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Control/Button" to="." method="use_drive"]

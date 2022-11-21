@@ -305,9 +305,8 @@ var science_unlocks = {
 						"IGD":{"cost":9.5e7, "parents":["FTL"]},
 						"FG":{"cost":3.45e9, "parents":["IGD"]},
 						"FG2":{"cost":1.4e19, "parents":["FG"]},
-						"ID":{"cost":450000, "parents":["CD", "ATM"]},
-						"FD":{"cost":1.5e8, "parents":["ID"]},
-						"PD":{"cost":1.2e12, "parents":["FD"]},
+						"ID":{"cost":4.5e7, "parents":["CD", "ATM"]},
+						"PD":{"cost":1.2e12, "parents":["ID"]},
 						
 						"UP1":{"cost":5e7, "parents":["SCT"]},
 						"UP2":{"cost":5e10, "parents":["UP1"]},

@@ -351,7 +351,7 @@ func _on_Upgrade_pressed():
 					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
 						if game.aurora_prod.has(tile.aurora.au_int):
-							game.aurora_prod[tile.aurora.au_int] -= SP_prod
+							game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) - SP_prod
 				elif tile.bldg.name == "AE":
 					for el in p_i.atmosphere:
 						var base_prod:float = -tile.bldg.path_1_value * overclock_mult * p_i.atmosphere[el] * p_i.pressure

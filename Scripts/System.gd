@@ -38,7 +38,7 @@ func refresh_planets():
 		info_node.remove_from_group("info_nodes")
 		info_node.queue_free()
 	for rsrc in planet_rsrcs:
-		remove_child(rsrc.node)
+		rsrc.node.queue_free()
 	glows.clear()
 	planet_rsrcs.clear()
 	tile_datas.clear()

@@ -1127,7 +1127,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}}]
+	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -1964,14 +1964,6 @@ func add_galaxy():
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 		yield(start_system_generation(), "completed")
-#	if third_ship_hints.spawn_galaxy == -1 and c_c_g == 0 and c_g_g != 0 and galaxy_data[c_g].system_num < 2000 and len(ship_data) == 2:
-#		third_ship_hints.spawn_galaxy = c_g
-#		third_ship_hints.ship_sys_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-#		third_ship_hints.ship_part_id = Helper.rand_int(1, galaxy_data[c_g].system_num) - 1
-#		third_ship_hints.g_g_id = c_g_g
-#		long_popup(tr("TELEGRAM_TEXT"), tr("TELEGRAM"))
-#		objective = {"type":ObjectiveType.SIGNAL, "id":-1, "current":0, "goal":1}
-#		HUD.refresh()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
@@ -2589,11 +2581,6 @@ func generate_systems(id:int):
 			planet_num = int(16 + sqrt(planet_num))
 		if planet_num >= 50:
 			planet_num = 50
-#		if hypergiant_system:
-#			planet_num = 5
-#		elif dark_matter_system:
-#			fourth_ship_hints.dark_matter_spawn_system = system_data.size() + s_num
-#			planet_num = 1
 		s_i["planet_num"] = planet_num
 		if galaxy_data[id].has("conquered"):
 			s_i.conquered = true
@@ -3171,10 +3158,6 @@ func generate_tiles(id:int):
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
-#	if ship_signal:
-#		objective = {"type":ObjectiveType.SIGNAL, "id":11, "current":0, "goal":1}
-#		long_popup(tr("SHIP_SIGNAL"), tr("SIGNAL_DETECTED"))
-#		second_ship_hints.spawned_at_p = c_p_g
 
 func erase_tile(random_tile:int):
 	if not tile_data[random_tile] or not tile_data[random_tile].has("aurora"):
@@ -3206,46 +3189,44 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
 	randomize()
 	var elements = {}
-	var big_planet_factor:float = lerp(1, 5, inverse_lerp(12500, 45000, size))
+	var big_planet_factor:float = clamp(range_lerp(size, 12500, 45000, 1, 5), 1, 5)
 	var FM:float = u_i.cluster_data[c_c].FM
 	if not gas_giant or depth == "core":
 		if depth == "crust":
 			var O = rand_range(1.0, 1.9)
 			elements = {	"O":O,
 							"Si":O * rand_range(3.9, 4),
-							"Al":0.5 * randf(),
-							"Fe":0.35 * FM * randf(),
-							"Ca":0.3 * randf(),
-							"Na":0.25 * randf(),
-							"Mg":0.2 * randf(),
-							"K":0.2 * randf(),
-							"Ti":0.05 * randf(),
-							"H":0.1 * big_planet_factor * randf(),
-							"C":0.1 * big_planet_factor * randf(),
-							"He":0.03 * big_planet_factor * randf(),
-							"P":0.02 * randf(),
-							"U":0.02 * randf(),
+							"Al":0.05 * randf(),
+							"Fe":0.035 * FM * randf(),
+							"Ca":0.03 * randf(),
+							"Na":0.025 * randf(),
+							"Mg":0.02 * randf(),
+							"K":0.02 * randf(),
+							"Ti":0.005 * randf(),
+							"H":0.01 * big_planet_factor * randf(),
+							"C":0.01 * big_planet_factor * randf(),
+							"He":0.003 * big_planet_factor * randf(),
+							"U":0.002 * randf(),
 							"Np":0.004 * randf(),
-							"Pu":0.00003 * randf()
+							"Pu":0.0003 * randf()
 						}
 		elif depth == "mantle":
 			var O = rand_range(1.5, 1.9)
 			elements = {	"O":O,
 							"Si":O * rand_range(3.9, 4),
-							"Al":0.5 * randf(),
-							"Fe":0.35 * randf(),
-							"Ca":0.3 * randf(),
-							"Na":0.25 * randf(),
-							"U":0.25 * randf(),
-							"Mg":0.2 * randf(),
-							"K":0.2 * randf(),
-							"Np":0.1 * randf(),
-							"H":0.1 * big_planet_factor * randf(),
-							"C":0.1 * big_planet_factor * randf(),
-							"Ti":0.05 * randf(),
-							"Pu":0.005 * randf(),
-							"He":0.03 * big_planet_factor * randf(),
-							"P":0.02 * randf(),
+							"Al":0.05 * randf(),
+							"Fe":0.035 * randf(),
+							"Ca":0.03 * randf(),
+							"Na":0.025 * randf(),
+							"U":0.025 * randf(),
+							"Mg":0.02 * randf(),
+							"K":0.02 * randf(),
+							"Np":0.01 * randf(),
+							"H":0.01 * big_planet_factor * randf(),
+							"C":0.01 * big_planet_factor * randf(),
+							"Ti":0.005 * randf(),
+							"Pu":0.0005 * randf(),
+							"He":0.003 * big_planet_factor * randf(),
 						}
 		else:
 			var x:float = rand_range(1, 10) * FM
@@ -3254,15 +3235,10 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
 			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * rand_range(0, 0.19)
 			elements["Si"] = elements["O"] * rand_range(3.9, 4)
-			elements.S = 0.5 * randf()
-			elements.Ta = 0.5 * randf()
-			elements.W = 0.5 * randf()
-			elements.Os = 0.25 * randf()
-			elements.Cr = 0.3 * randf()
-			elements.Ir = 0.1 * randf()
-			elements.Ti = 0.1 * randf()
-			elements.Co = 0.1 * FM * randf()
-			elements.Mn = 0.1 * randf()
+			elements.Ta = 0.05 * randf()
+			elements.W = 0.05 * randf()
+			elements.Os = 0.025 * randf()
+			elements.Ti = 0.01 * randf()
 	else:
 		if depth == "crust":
 			return {}
@@ -3271,19 +3247,18 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements["N"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
 			elements["He"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
 			elements["C"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
-			elements.Al = 0.5 * randf()
-			elements.Fe = 0.35 * FM * randf()
-			elements.Ca = 0.3 * randf()
-			elements.Na = 0.25 * randf()
-			elements.U = 0.25 * randf()
-			elements.S = 0.2 * randf()
-			elements.Mg = 0.2 * randf()
-			elements.K = 0.2 * randf()
-			elements.Np = 0.1 * randf()
-			elements.Ti = 0.05 * randf()
-			elements.H = 0.02 * randf()
-			elements.P = 0.02 * randf()
-			elements.Pu = 0.001 * randf()
+			var r = 1 - Helper.get_sum_of_dict(elements)
+			elements.Al = r * 0.05 * randf()
+			elements.Fe = r * 0.035 * FM * randf()
+			elements.Ca = r * 0.03 * randf()
+			elements.Na = r * 0.025 * randf()
+			elements.U = r * 0.025 * randf()
+			elements.Mg = r * 0.02 * randf()
+			elements.K = r * 0.02 * randf()
+			elements.Np = r * 0.01 * randf()
+			elements.Ti = r * 0.005 * randf()
+			elements.H = r * 0.002 * randf()
+			elements.Pu = r * 0.001 * randf()
 	for el in elements:
 		if u_i.cluster_data[c_c].rich_elements.has(el):
 			elements[el] *= u_i.cluster_data[c_c].rich_elements[el]
@@ -3695,7 +3670,6 @@ func _input(event):
 		elif is_instance_valid(element_overlay):
 			element_overlay.toggle_btn.pressed = not element_overlay.toggle_btn.pressed
 		
-	
 	#J to hide help
 	if Input.is_action_just_released("hide_help") and help_str != "":
 		if help.has(help_str):
@@ -4013,6 +3987,7 @@ func hide_item_cursor():
 	
 func cancel_building():
 	view.obj.finish_construct()
+	help_str = ""
 	HUD.get_node("Top/Resources/Glass").visible = false
 	HUD.get_node("Top/Resources/Soil").visible = false
 	HUD.get_node("Top/Resources/Stone").visible = show.has("stone")
@@ -4129,6 +4104,8 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	YN_panel.popup_centered()
 	YN_str = type
 	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
+		if YN_panel.is_connected("confirmed", self, "%s_confirm" % type):
+			YN_panel.disconnect("confirmed", self, "%s_confirm" % type)
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)

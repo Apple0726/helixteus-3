@@ -66,7 +66,22 @@ func refresh():
 		distance *= depart_pos.distance_to(dest_pos)
 	if TEST:
 		distance = 1
-	calc_costs()
+	$TotalEnergyCost.visible = not game.science_unlocked.has("PD")
+	$TotalEnergyCost2.visible = not game.science_unlocked.has("PD")
+	$EnergyIcon2.visible = not game.science_unlocked.has("PD")
+	$EnergyIcon3.visible = not game.science_unlocked.has("PD")
+	$EnergyCost2.visible = not game.science_unlocked.has("PD")
+	$PlanetEECost.visible = not game.science_unlocked.has("PD")
+	$Panel.visible = not game.science_unlocked.has("PD")
+	if game.science_unlocked.has("PD"):
+		$EnergyIcon3.texture = preload("res://Graphics/Atoms/Pu.png")
+		total_energy_cost = distance / 100000.0
+		$TotalEnergyCost2.text = "%s mol" % Helper.format_num(total_energy_cost, true)
+	else:
+		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
+		calc_costs()
+		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
+		$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""]
 	for child in $Scroll/Enemies.get_children():
 		child.queue_free()
 	if game.planet_data[dest_p_id].has("HX_data"):
@@ -90,8 +105,6 @@ func refresh():
 	else:
 		$Enemies.text = tr("ENEMIES")
 	$Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
-	$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
-	$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), atm_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), gravity_exit_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), atm_entry_cost, (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), gravity_entry_cost,  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""]
 
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 40:
@@ -109,28 +122,45 @@ func _on_Send_pressed():
 func send_ships():
 	if game.ships_travel_view == "-":
 		if time_cost != 0:
-			if game.energy >= total_energy_cost:
-				if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
-					if not game.achievement_data.random.has("1000_year_journey"):
-						game.earn_achievement("random", "1000_year_journey")
-				game.energy -= round(total_energy_cost)
-				game.ships_depart_pos = depart_pos
-				game.ships_dest_pos = dest_pos
-				game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
-				game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
-				game.ships_travel_view = travel_view
-				game.ships_travel_start_date = OS.get_system_time_msecs()
-				game.ships_travel_length = time_cost
-				game.toggle_panel(self)
-				if game.c_v == travel_view:
+			if game.science_unlocked.has("PD"):
+				if game.atoms.Pu >= total_energy_cost:
+					game.atoms.Pu -= total_energy_cost
+					game.ships_c_coords.p = dest_p_id
+					game.ships_dest_coords.p = dest_p_id
+					game.ships_c_coords.s = game.c_s
+					game.ships_dest_coords.s = game.c_s
+					game.ships_c_g_coords.s = game.c_s_g
+					game.ships_dest_g_coords.s = game.c_s_g
 					game.view.refresh()
 					game.HUD.refresh()
 				else:
-					game.switch_view(travel_view)
+					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			else:
-				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+				if game.energy >= total_energy_cost:
+					if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
+						if not game.achievement_data.random.has("1000_year_journey"):
+							game.earn_achievement("random", "1000_year_journey")
+					game.energy -= round(total_energy_cost)
+					send_ships2(time_cost)
+					if game.c_v == travel_view:
+						game.view.refresh()
+						game.HUD.refresh()
+					else:
+						game.switch_view(travel_view)
+				else:
+					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
+
+func send_ships2(_time):
+	game.ships_depart_pos = depart_pos
+	game.ships_dest_pos = dest_pos
+	game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
+	game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
+	game.ships_travel_view = travel_view
+	game.ships_travel_start_date = OS.get_system_time_msecs()
+	game.ships_travel_length = time_cost
+	game.toggle_panel(self)
 	
 func _on_HSlider_value_changed(value):
 	calc_costs()
