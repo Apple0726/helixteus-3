@@ -207,13 +207,11 @@ button_text = "ELECTRON_STORAGE"
 icon_texture = ExtResource( 15 )
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 margin_left = 392.0
 margin_top = 112.0
 margin_right = 1040.0
 margin_bottom = 576.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Note" type="Label" parent="Panel"]
 margin_left = 48.0

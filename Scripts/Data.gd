@@ -305,7 +305,7 @@ var science_unlocks = {
 						"IGD":{"cost":9.5e7, "parents":["FTL"]},
 						"FG":{"cost":3.45e9, "parents":["IGD"]},
 						"FG2":{"cost":1.4e19, "parents":["FG"]},
-						"ID":{"cost":4.5e7, "parents":["CD", "ATM"]},
+						"ID":{"cost":4.5e6, "parents":["CD", "ATM"]},
 						"PD":{"cost":1.2e12, "parents":["ID"]},
 						
 						"UP1":{"cost":5e7, "parents":["SCT"]},
@@ -470,11 +470,11 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 }
 var lake_bonus_values = {
 	"H2O":{"s":1.5, "l":2, "sc":4},
-	"CH4":{"s":0.6, "l":0.3, "sc":0.2},
+	"CH4":{"s":0.4, "l":0.3, "sc":0.2},
 	"CO2":{"s":14, "l":20, "sc":28},
 	"H":{"s":1, "l":3, "sc":2},
 	"He":{"s":250, "l":400, "sc":200},
 	"Ne":{"s":0.1, "l":0.2, "sc":0.3},
 	"O":{"s":2, "l":4, "sc":3},
-	"NH3":{"s":0.6, "l":0.3, "sc":0.2},
+	"NH3":{"s":0.4, "l":0.3, "sc":0.2},
 }

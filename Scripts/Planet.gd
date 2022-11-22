@@ -1321,9 +1321,9 @@ func on_timeout():
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
 				elif tile.bldg.name == "SP":
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult * Helper.get_au_mult(tile))
-					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc.energy -= SP_prod * (mult - 1)
 					if tile.has("aurora"):
-						game.aurora_prod[tile.aurora.au_int] -= SP_prod
+						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod * (mult - 1)
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":

@@ -11,7 +11,8 @@ var particle_amount:int
 var aurora_intensity:float = 0.0
 var lava_intensity:float = 0.0
 var debris_collision_shape:CollisionPolygon2D
-
+var crack_threshold:float = 0
+var cracked_mining_factor:float = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,8 +26,29 @@ func _ready():
 		$Lava.rotation = rand_range(0, 2 * PI)
 		$Lava.position.x = rand_range(-128, 128)
 		$Lava.position.y = rand_range(-128, 128)
+	$Particles2D.modulate = self_modulate
+	$Sprite.modulate = self_modulate
+	crack_threshold = 60 * randf() / pow(scale.x, 3)
+
+func set_crack():
+	$Crack.monitoring = true
+	var L = len(debris_collision_shape.polygon)
+	var idx = randi() % L
+	var pos = debris_collision_shape.polygon[idx]
+	var next_pos:Vector2
+	if idx == L-1:
+		next_pos = debris_collision_shape.polygon[0]
+	else:
+		next_pos = debris_collision_shape.polygon[idx+1]
+	$Crack/AnimationPlayer.play("New Anim")
+	$Crack/Particles2D.emitting = true
+	$Crack/Sprite.visible = true
+	$Crack.position = (next_pos + pos) / 2.0
+	$Crack.rotation = atan2(next_pos.y - pos.y, next_pos.x - pos.x) - PI/2
+
 
 func destroy_rock():
+	_on_Timer_timeout()
 	particle_amount = int(scale.x * 20)
 	$Particles2D.process_material.damping = clamp(range_lerp(scale.x, 1.2, 0.5, 800, 1500), 800, 1500)
 	$Sprite.visible = false
@@ -40,3 +62,22 @@ func destroy_rock():
 
 func remove_debris():
 	queue_free()
+
+
+func _on_Crack_area_entered(area):
+	if $Crack/Timer.is_stopped():
+		$Crack/Timer.start(1.5 + 1.5 * randf())
+	cracked_mining_factor = 2.0
+
+
+func _on_Crack_area_exited(area):
+	cracked_mining_factor = 1.0
+
+
+func _on_Timer_timeout():
+	$Crack.monitoring = false
+	if $Crack/AnimationPlayer.is_playing():
+		$Crack/AnimationPlayer.stop()
+		$Crack/Sprite.visible = false
+	$Crack/Particles2D.emitting = false
+	cracked_mining_factor = 1.0

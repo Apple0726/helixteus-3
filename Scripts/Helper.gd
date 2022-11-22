@@ -865,6 +865,8 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						tile.auto_GH.produce[p] *= tile.bldg.cell_mult
 				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
+				if tile.auto_GH.has("soil_drain"):
+					game.autocollect.mats.soil -= tile.auto_GH.soil_drain
 			if game.c_v == "planet":
 				update_boxes = true
 			var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
@@ -1004,7 +1006,7 @@ func get_DS_output(star:Dictionary, next_lv:int = 0):
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 1000.0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 500.0
 
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed

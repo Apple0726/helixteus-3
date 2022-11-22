@@ -494,6 +494,7 @@ spacebar={
 2d_physics/layer_5="Enemy projectiles"
 2d_physics/layer_6="Interactables"
 2d_physics/layer_7="Floor"
+2d_physics/layer_8="Debris cracks"
 
 [locale]
 

@@ -64,13 +64,12 @@ func _on_Terraform_pressed():
 		var lake_num:int = 0
 		var ash_mult:float = 0.0
 		for tile in game.tile_data:
+			ash_mult += 1.0
 			if tile:
 				if tile.has("lake"):
 					lake_num += 1
 				elif tile.has("ash"):
-					ash_mult += tile.ash.richness
-				else:
-					ash_mult += 1.0
+					ash_mult += tile.ash.richness - 1.0
 			else:
 				ash_mult += 1.0
 		ash_mult /= len(game.tile_data)

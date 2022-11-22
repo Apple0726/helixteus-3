@@ -1580,6 +1580,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		yield(view_tween, "tween_all_completed")
 	hide_tooltip()
 	hide_adv_tooltip()
+	if not other_params.has("first_time"):
+		save_views(true)
 	if viewing_dimension:
 		remove_dimension()
 		switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
@@ -1757,7 +1759,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			HUD.switch_btn.visible = false
 	if not other_params.has("first_time"):
 		fn_save_game()
-		save_views(true)
 	if not other_params.has("dont_fade_anim"):
 		view_tween.interpolate_property(view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.25)
 		view_tween.start()
@@ -3187,7 +3188,6 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 	return atm
 
 func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
-	randomize()
 	var elements = {}
 	var big_planet_factor:float = clamp(range_lerp(size, 12500, 45000, 1, 5), 1, 5)
 	var FM:float = u_i.cluster_data[c_c].FM
@@ -3274,7 +3274,7 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 								"sand":{"chance":0.8, "amount":50},
 								#"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
-								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(3, 15)}
+								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(15, 45)}
 	}
 	if abs(temp - 273) > 80:
 		surface_mat_info.erase("cellulose")
@@ -4418,6 +4418,8 @@ func _on_MMTimer_timeout():
 					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
 					tile.bldg.collect_date += int(tiles_mined) * 1000.0 / tile.bldg.path_1_value / Helper.get_prod_mult(tile)
 					tile.depth += int(tiles_mined)
+					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+						tile.erase("crater")
 			if p != c_p_g:
 				Helper.save_obj("Planets", p, _tile_data)
 		else:

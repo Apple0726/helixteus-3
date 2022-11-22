@@ -54,6 +54,7 @@ onready var active_item = $UI2/BottomLeft/VBox/ActiveItem
 onready var inventory_slots = $UI2/BottomLeft/VBox/InventorySlots
 onready var use_item = $UI/UseItem
 onready var ability_timer = $UI2/Ability/Timer
+onready var crack_detector = $Rover/CrackDetector
 onready var HX1_scene = preload("res://Scenes/HX/HX1.tscn")
 onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
 onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
@@ -358,8 +359,8 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_laser.material["shader_param/color"] = c * 4.0
 		mining_laser.material["shader_param/outline_color"] = c * 4.0
 		var speed = Data.rover_mining[_inv.name].speed
-		mining_p.amount = int(25 * pow(speed, 0.7) * pow(rover_size, 2))
-		mining_p.process_material.initial_velocity = int(500 * pow(speed, 0.7) * pow(rover_size, 2))
+		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2))
+		mining_p.process_material.initial_velocity = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
 	else:
@@ -451,7 +452,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	rover.get_node("AshParticles").modulate.a = 1.0
 	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.white)
 	cave_wall.modulate.a = 1.0
-	print(cave_wall.modulate)
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
@@ -529,15 +529,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instance()
 					debris.sprite_frame = rng.randi_range(0, 5)
-					debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
-					debris.modulate.a = 1.0
+					debris.self_modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
+					debris.self_modulate.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x = rng.randf()
 					debris.scale = Vector2.ONE * (0.005 / (1.001 - rand_scale_x) + 0.5 + 2 * pow(rand_scale_x, 4))
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
-						debris.modulate = Color.white * (1.0 + debris.lava_intensity / 10.0)
+						debris.modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
 					if aurora and rng.randf() < 0.05:
 						debris.modulate = Color.white
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
@@ -1183,7 +1183,10 @@ func update_ray():
 					circ_bar.scale *= big_debris[mining_debris].scale.x
 					circ_bar.position = big_debris[mining_debris].position
 					debris_touched_by_laser[mining_debris] = {"bar":circ_bar, "progress":0}
+				crack_detector.monitorable = true
+				crack_detector.position = pos - rover.position
 			else:
+				crack_detector.monitorable = false
 				mining_debris = -1
 		else:
 			tile_highlighted_for_mining = -1
@@ -1709,13 +1712,19 @@ func mine_debris(item:Dictionary, delta):
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		debris_touched_by_laser[mining_debris].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor
-		print("debris scale: ", debris.scale.x)
+		var add_progress = Data.rover_mining[item.name].speed * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor
+		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
+		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.green
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
 		circ_bar.update()
-		if debris_touched_by_laser[mining_debris].progress >= 100:
+		var prog = debris_touched_by_laser[mining_debris].progress
+		if prog >= 100:
 			mine_debris_complete(mining_debris)
 			mining_debris = -1
+		elif debris.scale.x > 1.2:
+			if prog >= debris.crack_threshold and not debris.get_node("Crack").monitoring:
+				debris.set_crack()
+				debris.crack_threshold = prog + add_progress * 8.0
 
 func mine_debris_complete(tile_id:int):
 	var debris = big_debris[tile_id]

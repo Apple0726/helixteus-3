@@ -367,6 +367,8 @@ func _on_Upgrade_pressed():
 						tile.bldg.prod_mult = new_base_value / tile.bldg.path_2_value
 						tile.bldg.cell_mult = 1.0
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
+					if tile.auto_GH.has("soil_drain"):
+						game.autocollect.mats.soil += tile.auto_GH.soil_drain
 				if tile.bldg.has("start_date"):
 					tile.bldg.start_date += cost_time * 1000
 				if tile.bldg.has("collect_date"):
@@ -386,6 +388,8 @@ func _on_Upgrade_pressed():
 			var diff:float = (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.name == "MS":
 				game.mineral_capacity += diff
+			elif planet.bldg.name == "B":
+				game.energy_capacity += diff
 			elif planet.bldg.name == "NSF":
 				game.neutron_cap += diff
 			elif planet.bldg.name == "ESF":

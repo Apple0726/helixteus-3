@@ -77,12 +77,15 @@ victory_screen = false
 id = 3
 
 [node name="Drives" parent="." instance=ExtResource( 8 )]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 88.0
-margin_right = 0.0
-margin_bottom = 0.0
+margin_left = 8.0
+margin_top = 96.0
+margin_right = -8.0
+margin_bottom = -8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Upgrade" parent="." instance=ExtResource( 13 )]
 visible = false
