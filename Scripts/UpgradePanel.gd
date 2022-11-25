@@ -223,7 +223,7 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "AE" and path_selected == 1:
-		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(Helper.get_AE_production(planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.ash.richness if first_tile.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg in ["MS", "B", "NSF", "ESF"]:
@@ -390,6 +390,10 @@ func _on_Upgrade_pressed():
 				game.mineral_capacity += diff
 			elif planet.bldg.name == "B":
 				game.energy_capacity += diff
+			elif planet.bldg.name == "AE":
+				for el in planet.atmosphere:
+					var base_prod:float = diff * planet.atmosphere[el] * planet.pressure
+					Helper.add_atom_production(el, base_prod)
 			elif planet.bldg.name == "NSF":
 				game.neutron_cap += diff
 			elif planet.bldg.name == "ESF":

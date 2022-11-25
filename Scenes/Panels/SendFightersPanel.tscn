@@ -157,9 +157,6 @@ margin_bottom = 544.0
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 4
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control2" type="Control" parent="."]
 margin_right = 40.0

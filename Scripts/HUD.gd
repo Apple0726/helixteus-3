@@ -58,6 +58,9 @@ func _ready():
 	else:
 		switch_btn.shortcut.shortcut.action = "Z"
 	refresh_bookmarks()
+	refresh_visibility()
+
+func refresh_visibility():
 	minerals.visible = game.show.has("minerals")
 	$Bottom/Panel.visible = game.show.has("minerals")
 	shop.visible = game.show.has("shop")
@@ -69,8 +72,6 @@ func _ready():
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.has("minerals")
 	$Top/Resources/Cellulose.visible = game.science_unlocked.has("SA")
-#	if not game.viewing_dimension:
-#		refresh()
 
 func refresh_bookmarks():
 	for slot in planet_grid_btns.get_children():
@@ -423,10 +424,12 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
-		tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
+		if game.autocollect.mats.cellulose != 0:
+			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
 	elif extra_arg_0 == "SOIL" and game.autocollect.mats.has("soil"):
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.soil), true), tr("S_SECOND")])
-		tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("SOIL"), "time":Helper.time_to_str(1000 * game.mats.soil / abs(game.autocollect.mats.soil))})
+		if game.autocollect.mats.soil != 0:
+			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("SOIL"), "time":Helper.time_to_str(1000 * game.mats.soil / abs(game.autocollect.mats.soil))})
 	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
 		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed

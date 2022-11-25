@@ -225,7 +225,7 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 		else:
 			p = int(p)
 		var div = max(pow(10, stepify(p - 1, 3)), 1)
-		if notation == 2 and p >= 3 or p >= 27:
+		if notation == 2 and p >= 3 or p >= 33:
 			return e_notation(num, 3)
 		if p >= 3 and p < 6:
 			suff = "k"
@@ -243,6 +243,10 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			suff = "Z" if notation == 1 else "s"
 		elif p < 27:
 			suff = "Y" if notation == 1 else "S"
+		elif p < 30:
+			suff = "R" if notation == 1 else "O"
+		elif p < 33:
+			suff = "Q" if notation == 1 else "N"
 		return "%s%s" % [clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
@@ -754,62 +758,6 @@ func get_prod_mult(tile):
 func has_IR(bldg_name:String):
 	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
 
-func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	if dict.bldg.stored >= 1 and not dict.has("depth"):
-		dict.depth = 0
-	if dict.bldg.stored >= 3:
-		var contents:Dictionary = mass_generate_rock(dict, p_i, dict.bldg.stored)
-		get_rsrc_from_rock(contents, dict, p_i, true)
-		dict.depth += dict.bldg.stored
-		dict.erase("contents")
-		for content in contents:
-			if n > 1:
-				if contents[content] is Dictionary:
-					for el in contents[content]:
-						contents[content][el] *= n
-				else:
-					contents[content] *= n
-			add_item_to_coll(rsrc_collected, content, contents[content])
-	else:
-		for i in dict.bldg.stored:
-			var contents:Dictionary = generate_rock(dict, p_i)
-			get_rsrc_from_rock(contents, dict, p_i, true)
-			dict.depth += 1
-			for content in contents:
-				if n > 1:
-					if contents[content] is Dictionary:
-						for el in contents[content]:
-							contents[content][el] *= n
-					else:
-						contents[content] *= n
-				add_item_to_coll(rsrc_collected, content, contents[content])
-	if dict.bldg.stored == round(dict.bldg.path_2_value):
-		dict.bldg.collect_date = curr_time
-	dict.bldg.stored = 0
-
-func collect_ME(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
-		dict.bldg.collect_date = curr_time
-	var min_info:Dictionary = add_minerals(stored)
-	dict.bldg.stored = min_info.remainder
-	add_item_to_coll(rsrc_collected, "minerals", min_info.added)
-
-func collect_PP(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
-		dict.bldg.collect_date = curr_time
-	add_item_to_coll(rsrc_collected, "energy", stored)
-	dict.bldg.stored = 0
-
-func collect_RL(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	add_item_to_coll(rsrc_collected, "SP", dict.bldg.stored)
-	dict.bldg.stored = 0
-
 func add_item_to_coll(dict:Dictionary, item:String, num):
 	if num is Dictionary:
 		if not dict.has("stone"):
@@ -1148,7 +1096,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		if bldg == "SP":
 			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * Helper.get_au_mult(dict)) * n)
 		elif bldg == "AE":
-			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value))
+			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
 		elif bldg in ["MS", "B", "NSF", "ESF"]:
 			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
 		elif bldg == "SPR":

@@ -111,21 +111,30 @@ margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 button_text = "MINERAL_STORAGE"
 
-[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 132.0
 margin_right = 356.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
-button_text = "RESEARCH"
+button_text = "ENERGY_STORAGE"
 
-[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 176.0
 margin_right = 356.0
 margin_bottom = 216.0
+rect_min_size = Vector2( 0, 40 )
+button_text = "RESEARCH"
+
+[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 220.0
+margin_right = 356.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 button_text = "TRIANGULUM_PROBE"
 
@@ -222,6 +231,7 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= [ "ME" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= [ "PP" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyStorage" to="." method="_on_GS_pressed" binds= [ "B" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]

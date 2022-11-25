@@ -86,14 +86,11 @@ __meta__ = {
 
 [node name="TotalEnergyCost" type="Label" parent="."]
 margin_left = 460.0
-margin_top = 480.0
+margin_top = 460.0
 margin_right = 736.0
-margin_bottom = 536.0
+margin_bottom = 516.0
 text = "TOTAL_COST"
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Send" type="Button" parent="."]
 margin_left = 936.0
@@ -107,9 +104,9 @@ __meta__ = {
 
 [node name="TotalEnergyCost2" type="Label" parent="."]
 margin_left = 816.0
-margin_top = 480.0
+margin_top = 460.0
 margin_right = 1000.0
-margin_bottom = 504.0
+margin_bottom = 484.0
 text = "100"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -117,18 +114,18 @@ __meta__ = {
 
 [node name="EnergyIcon3" type="TextureRect" parent="."]
 margin_left = 764.0
-margin_top = 476.0
+margin_top = 456.0
 margin_right = 796.0
-margin_bottom = 508.0
+margin_bottom = 488.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
 
 [node name="EnergyIcon2" type="TextureRect" parent="."]
 margin_left = 764.0
-margin_top = 396.0
+margin_top = 388.0
 margin_right = 796.0
-margin_bottom = 428.0
+margin_bottom = 420.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -140,17 +137,17 @@ __meta__ = {
 anchor_top = 0.00333333
 anchor_bottom = 0.00333333
 margin_left = 816.0
-margin_top = 398.0
+margin_top = 390.0
 margin_right = 988.0
-margin_bottom = 428.0
+margin_bottom = 420.0
 adv_help = true
 translate_help = false
 
 [node name="PlanetEECost" parent="." instance=ExtResource( 1 )]
 margin_left = 464.0
-margin_top = 400.0
+margin_top = 392.0
 margin_right = 736.0
-margin_bottom = 430.0
+margin_bottom = 422.0
 bbcode_text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
 text = "PLANET_EE_COST "
 label_text = "PLANET_EE_COST"

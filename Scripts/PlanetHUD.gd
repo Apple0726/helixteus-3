@@ -70,8 +70,6 @@ func _on_Terraform_pressed():
 					lake_num += 1
 				elif tile.has("ash"):
 					ash_mult += tile.ash.richness - 1.0
-			else:
-				ash_mult += 1.0
 		ash_mult /= len(game.tile_data)
 		game.terraform_panel.lake_num = lake_num
 		game.terraform_panel.tile_num = len(game.tile_data)

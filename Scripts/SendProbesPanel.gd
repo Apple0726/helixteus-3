@@ -83,7 +83,7 @@ func refresh():
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
 					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / 25.0)
-			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
+			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
 			$NoProbes.visible = false
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
@@ -248,7 +248,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
-	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
+	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
 
 func get_lv_sum():
 	var lv:int = 0

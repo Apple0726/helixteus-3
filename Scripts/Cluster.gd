@@ -58,7 +58,7 @@ func _ready():
 					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
 			if rsrc:
-				rsrc.get_node("Control/Label").text = "%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")]
+				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
 		if g_i.has("discovered") and not g_i.has("GS"):
 			discovered_gal.append(g_i)
 	for g_i in discovered_gal:
@@ -134,16 +134,33 @@ func e(n, e):
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
 	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), id])
-	if g_i.has("GS") and g_i.GS == "TP":
-		tooltip += "(%s)" % tr("TPCC_SC")
-	tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
+	var icons = []
+	if g_i.has("GS"):
+		tooltip += "\n"
+		if g_i.GS == "MS":
+			icons = [Data.minerals_icon]
+			tooltip += Data.path_1.MS.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("MS"))
+		elif g_i.GS == "B":
+			icons = [Data.energy_icon]
+			tooltip += Data.path_1.B.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("B"))
+		elif g_i.GS == "ME":
+			icons = [Data.minerals_icon]
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME"))
+		elif g_i.GS == "PP":
+			icons = [Data.energy_icon]
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP"))
+		elif g_i.GS == "RL":
+			icons = [Data.SP_icon]
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL"))
+	else:
+		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		if grid.name != "Grid_%s" % g_i.l_id:
 			grid.visible = false
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
 		if grid.name != "MSGrid_%s" % g_i.l_id:
 			grid.visible = false
-	game.show_tooltip(tooltip)
+	game.show_adv_tooltip(tooltip, icons)
 
 func on_galaxy_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):

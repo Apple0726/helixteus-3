@@ -335,9 +335,9 @@ var craft_cave_info = {
 
 var other_items_info = {
 	"hx_core":{"XP":6},
-	"hx_core2":{"XP":50},
-	"hx_core3":{"XP":480},
-	"hx_core4":{"XP":3200},
+	"hx_core2":{"XP":400},
+	"hx_core3":{"XP":30000},
+	"hx_core4":{"XP":2000000},
 	"ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
@@ -422,6 +422,7 @@ var achievements:Dictionary = {
 	},
 	"random":{
 		"clear_out_cave_floor":tr("CLEAR_OUT_CAVE_FLOOR"),
+		"destroy_BBB":tr("DESTROY_BBB"),
 		"reach_center_of_planet":tr("REACH_CENTER_OF_PLANET"),
 		"1000_year_journey":tr("1000_YEAR_JOURNEY"),
 		"build_tri_probe_in_slow_univ":tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
@@ -459,7 +460,7 @@ func place_BG_stars():#shown in title screen and planet view
 		var star:Sprite = Sprite.new()
 		star.texture = star_texture
 		star.scale *= 0.15
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
 		star.rotation = rand_range(0, 2*PI)
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
@@ -468,7 +469,7 @@ func place_BG_stars():#shown in title screen and planet view
 		var star:Sprite = Sprite.new()
 		star.texture = star_texture
 		star.scale *= 0.25
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
 		star.rotation = rand_range(0, 2*PI)
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
@@ -1019,6 +1020,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		"stone":false,
 	}
 	MM_data = {}
+	aurora_prod = {}
 	new_bldgs = {}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
@@ -1651,6 +1653,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		else:
 			callv(fn, fn_args)
 	if new_view in ["universe", "cluster", "galaxy", "system", "planet"]:
+		$MMTimer.start()
 		var new_dict:Dictionary = {"view":new_view, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
 		if other_params.has("fn"):
 			var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
@@ -1698,6 +1701,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				view_history.resize(view_history_pos + 1)
 			view_history.append(new_dict)
 			view_history_pos += 1
+	else:
+		$MMTimer.stop()
 	if not viewing_dimension:
 		match c_v:
 			"planet":
@@ -2089,7 +2094,7 @@ func generate_clusters(parent_id:int):
 		if parent_id == 0 and _i == 0:
 			continue
 		var c_i = {}
-		c_i["type"] = Helper.rand_int(0, 0)
+		c_i["type"] = 0
 		c_i["class"] = ClusterType.GROUP if randf() < 0.5 else ClusterType.CLUSTER
 		c_i["parent"] = parent_id
 		c_i["visible"] = TEST
@@ -2102,15 +2107,15 @@ func generate_clusters(parent_id:int):
 			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
 		var pos:Vector2
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
+		if _i == 1:
+			dist_from_center = 200
+			c_i.class = ClusterType.GROUP
+			c_i.galaxy_num = Helper.rand_int(80, 100)
 		c_i.rich_elements = {}
 		var _rich_elements = rich_element_list.duplicate()
 		_rich_elements.shuffle()
-		for j in range(0, int(range_lerp(dist_from_center, 0, 16000, 1, 5))):
-			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * range_lerp(dist_from_center, 0, 16000, 1, 40)
-		if _i == 1:
-			dist_from_center = 149
-			c_i.class = ClusterType.GROUP
-			c_i.galaxy_num = Helper.rand_int(80, 100)
+		for j in range(0, int(range_lerp(dist_from_center, 0, 12000, 1, 5))):
+			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * range_lerp(dist_from_center, 0, 16000, 1, 40) * u_i.dark_energy
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
@@ -2143,7 +2148,7 @@ func generate_galaxies(id:int):
 		g_i["parent"] = id
 		g_i["systems"] = []
 		g_i["shapes"] = []
-		g_i["type"] = Helper.rand_int(0, 6)
+		g_i["type"] = randi() % 7
 		var rand = randf()
 		g_i.dark_matter = rand_range(0.9, 1.1) #Influences planet numbers and size
 		if g_i.type == 6:
@@ -2577,9 +2582,7 @@ func generate_systems(id:int):
 		for star in stars:
 			combined_star_mass += star.mass
 		stars.sort_custom(self, "sort_by_mass")
-		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * log(dark_matter - 1.0 + exp(1.0))), 2)
-		if planet_num >= 20:
-			planet_num = int(16 + sqrt(planet_num))
+		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.1)), 2)
 		if planet_num >= 50:
 			planet_num = 50
 		s_i["planet_num"] = planet_num
@@ -3206,9 +3209,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
 							"He":0.003 * big_planet_factor * randf(),
-							"U":0.002 * randf(),
-							"Np":0.004 * randf(),
-							"Pu":0.0003 * randf()
 						}
 		elif depth == "mantle":
 			var O = rand_range(1.5, 1.9)
@@ -3225,7 +3225,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
 							"Ti":0.005 * randf(),
-							"Pu":0.0005 * randf(),
+							"Pu":1e-7 * randf(),
 							"He":0.003 * big_planet_factor * randf(),
 						}
 		else:
@@ -3252,13 +3252,11 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements.Fe = r * 0.035 * FM * randf()
 			elements.Ca = r * 0.03 * randf()
 			elements.Na = r * 0.025 * randf()
-			elements.U = r * 0.025 * randf()
 			elements.Mg = r * 0.02 * randf()
 			elements.K = r * 0.02 * randf()
-			elements.Np = r * 0.01 * randf()
 			elements.Ti = r * 0.005 * randf()
 			elements.H = r * 0.002 * randf()
-			elements.Pu = r * 0.001 * randf()
+			elements.Pu = r * 1e-7 * randf()
 	for el in elements:
 		if u_i.cluster_data[c_c].rich_elements.has(el):
 			elements[el] *= u_i.cluster_data[c_c].rich_elements[el]
@@ -4054,21 +4052,14 @@ func fade_out_title(fn:String):
 	tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 0), 0.5)
 	tween.start()
 	yield(tween, "tween_all_completed")
-	remove_child(tween)
 	tween.queue_free()
-	$Stars/Stars.remove_child($Stars/Stars/Sprite)
-#	for star in $Stars/Stars.get_children():
-#		$Stars/Stars.remove_child(star)
-#		star.queue_free()
+	$Stars/Stars/Sprite.queue_free()
 	$Title.visible = false
 	$Settings/Settings.visible = true
 	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
-		var tut_or_no_tut = preload("res://Scenes/TutOrNoTut.tscn").instance()
-		tut_or_no_tut.modulate.a = 0.0
-		add_child(tut_or_no_tut)
-		tut_or_no_tut.connect("new_game", self, "new_game")
+		new_game(false, 0, true)
 	else:
 		call(fn)
 		add_panels()
@@ -4403,6 +4394,8 @@ func _on_MMTimer_timeout():
 		var planets_with_MM:Array = MM_data.keys()
 		if len(planets_with_MM) == 0:
 			return
+		if curr_MM_p > len(planets_with_MM)-1:
+			curr_MM_p = 0
 		var p = planets_with_MM[curr_MM_p]
 		if MM_data[p].has("tiles"):
 			var p_i = open_obj("Systems", MM_data[p].c_s_g)[MM_data[p].c_p]
@@ -4429,6 +4422,9 @@ func _on_MMTimer_timeout():
 				p_i = planet_data[MM_data[p].c_p]
 			else:
 				_planet_data = open_obj("Systems", MM_data[p].c_s_g)
+				if _planet_data.empty():
+					MM_data.erase(p)
+					return
 				p_i = _planet_data[MM_data[p].c_p]
 			var tiles_mined = (curr_time - p_i.bldg.collect_date) / 1000.0 * p_i.bldg.path_1_value * Helper.get_prod_mult(p_i)
 			if tiles_mined >= 1:
@@ -4445,7 +4441,5 @@ func _on_MMTimer_timeout():
 			if MM_data[p].c_s_g != c_s_g:
 				Helper.save_obj("Systems", MM_data[p].c_s_g, _planet_data)
 		curr_MM_p += 1
-		if curr_MM_p > len(planets_with_MM)-1:
-			curr_MM_p = 0
 		if is_instance_valid(HUD):
 			HUD.update_money_energy_SP()

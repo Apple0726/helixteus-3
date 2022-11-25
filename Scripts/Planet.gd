@@ -1086,9 +1086,9 @@ func _unhandled_input(event):
 							else:
 								game.planet_data.clear()
 								game.generate_planets(tile.wormhole.l_dest_s_id)
-							var wh_planet = game.planet_data[Helper.rand_int(0, wh_system.planet_num - 1)]
+							var wh_planet = game.planet_data[randi() % wh_system.planet_num]
 							while wh_planet.type in [11, 12]:
-								wh_planet = game.planet_data[Helper.rand_int(0, wh_system.planet_num - 1)]
+								wh_planet = game.planet_data[randi() % wh_system.planet_num]
 							game.planet_data[wh_planet.l_id].conquered = true
 							game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 							game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
@@ -1099,9 +1099,9 @@ func _unhandled_input(event):
 							if not wh_planet.has("discovered"):
 								game.generate_tiles(wh_planet.l_id)
 							game.tile_data = game.open_obj("Planets", wh_planet.id)
-							var wh_tile:int = Helper.rand_int(0, len(game.tile_data) - 1)
+							var wh_tile:int = randi() % len(game.tile_data)
 							while game.tile_data[wh_tile] and (game.tile_data[wh_tile].has("ship_locator_depth") or game.tile_data[wh_tile].has("cave")):
-								wh_tile = Helper.rand_int(0, len(game.tile_data) - 1)
+								wh_tile = randi() % len(game.tile_data)
 							game.erase_tile(wh_tile)
 							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)

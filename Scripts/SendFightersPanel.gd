@@ -43,6 +43,7 @@ func refresh():
 	var fighter_num:int = 0
 	var combined_strength2:float = 0
 	if fighter_type == 0:
+		$Control/SE_Hint.visible = true
 		if game.galaxy_data[game.c_g].has("conquer_start_date"):
 			$Send.text = tr("DISBAND")
 			sort_systems(game.galaxy_data[game.c_g].conquer_order)
@@ -99,6 +100,7 @@ func refresh():
 			if unconquered_obj == 0:
 				game.galaxy_data[game.c_g].conquered = true
 	elif fighter_type == 1:
+		$Control/SE_Hint.visible = false
 		if game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 			$Send.text = tr("DISBAND")
 			sort_galaxies(game.u_i.cluster_data[game.c_c].conquer_order)
@@ -128,7 +130,7 @@ func refresh():
 				if fighter.tier == 1 and fighter.c_c == game.c_c:
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
-					base_travel_costs += 50000000 * 2000000 * fighter.number * sys_num
+					base_travel_costs += 50000000 * 1000000 * fighter.number * sys_num
 			if combined_strength == 0:
 				RTL.text = "%s\n%s: %s" % [tr("NO_FIGHTERS"), tr("STRENGTH_REQUIRED_F2"), Helper.format_num(ceil(strength_required))]
 				$Send.visible = false

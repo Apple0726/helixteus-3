@@ -171,7 +171,7 @@ func _ready():
 		for i in len(inventory):
 			if inventory[i].get("type") == "rover_weapons":
 				laser_name = inventory[i].name.split("_")[0]
-	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * log(game.u_i.speed_of_light - 1.0 + exp(1.0))
+	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * game.u_i.charge
 	if rover_data.get("MK", 1) == 2:#Save migration
 		$Rover/Sprite.texture = preload("res://Graphics/Cave/Rover top down 2.png")
 	elif rover_data.get("MK", 1) == 3:
@@ -529,6 +529,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instance()
 					debris.sprite_frame = rng.randi_range(0, 5)
+					debris.time_speed = time_speed
 					debris.self_modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 					debris.self_modulate.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
@@ -1055,20 +1056,20 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.6))}
-	if contents.hx_core > 8:
-		contents.hx_core2 = int(contents.hx_core / 8.0)
-		contents.hx_core %= 8
+						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.9))}
+	if contents.hx_core > 64:
+		contents.hx_core2 = int(contents.hx_core / 64.0)
+		contents.hx_core %= 64
 		if contents.hx_core == 0:
 			contents.erase("hx_core")
-		if contents.hx_core2 > 8:
-			contents.hx_core3 = int(contents.hx_core2 / 8.0)
-			contents.hx_core2 %= 8
+		if contents.hx_core2 > 64:
+			contents.hx_core3 = int(contents.hx_core2 / 64.0)
+			contents.hx_core2 %= 64
 			if contents.hx_core2 == 0:
 				contents.erase("hx_core2")
-			if contents.hx_core3 > 8:
-				contents.hx_core4 = int(contents.hx_core3 / 8.0)
-				contents.hx_core3 %= 8
+			if contents.hx_core3 > 64:
+				contents.hx_core4 = int(contents.hx_core3 / 64.0)
+				contents.hx_core3 %= 64
 				if contents.hx_core3 == 0:
 					contents.erase("hx_core3")
 	if contents.has("hx_core") and contents.hx_core == 0:
@@ -1083,7 +1084,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
 		if rng.randf() < 1 / (rarity + 1):
-			contents[met] = Helper.clever_round(10 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult)
+			contents[met] = Helper.clever_round(10 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1700,7 +1701,7 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed
+		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			mine_wall_complete(_tile_highlight.position, tile_highlighted_for_mining)
@@ -1712,7 +1713,7 @@ func mine_debris(item:Dictionary, delta):
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		var add_progress = Data.rover_mining[item.name].speed * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor
+		var add_progress = Data.rover_mining[item.name].speed * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.green
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
@@ -1721,7 +1722,7 @@ func mine_debris(item:Dictionary, delta):
 		if prog >= 100:
 			mine_debris_complete(mining_debris)
 			mining_debris = -1
-		elif debris.scale.x > 1.2:
+		elif debris.scale.x > 1.0:
 			if prog >= debris.crack_threshold and not debris.get_node("Crack").monitoring:
 				debris.set_crack()
 				debris.crack_threshold = prog + add_progress * 8.0
@@ -1730,7 +1731,9 @@ func mine_debris_complete(tile_id:int):
 	var debris = big_debris[tile_id]
 	if debris.scale.x > 1.5:
 		if game.screen_shake:
-			$Camera2D/Screenshake.start(range_lerp(debris.scale.x, 1.5, 7.5, 1.0, 4.0), 10, range_lerp(debris.scale.x, 1.5, 7.5, 5, 35))
+			$Camera2D/Screenshake.start(range_lerp(debris.scale.x, 1.5, 7.5, 1.0, 7.0), 10, range_lerp(debris.scale.x, 1.5, 7.5, 5, 65))
+		if not game.achievement_data.random.has("destroy_BBB") and debris.scale.x > 6.0:
+			game.earn_achievement("random", "destroy_BBB")
 	var debris_aurora_mult = debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 	var debris_volcano_mult = debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
 	var rsrc:Dictionary = {"stone":rand_range(800, 900),

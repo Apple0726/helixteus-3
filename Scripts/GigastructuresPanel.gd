@@ -36,7 +36,7 @@ func update_info():
 			costs.stone = PI * 100
 			if bldg == "ME":
 				costs.mythril = 1 / 240000.0
-			elif bldg == "MS":
+			elif bldg in ["MS", "B"]:
 				costs.mythril = 1 / 300000.0
 			elif bldg == "RL":
 				costs.mythril = 1 / 120000.0
@@ -60,7 +60,7 @@ func update_info():
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult("ME")})
 	elif bldg == "PP":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 15.0
+		num = surface * 10.0
 		Helper.put_rsrc($Control/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
@@ -70,6 +70,10 @@ func update_info():
 		$Control/ProductionPerSec.text = tr("STORAGE")
 		num = surface
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
+	elif bldg == "B":
+		$Control/ProductionPerSec.text = tr("STORAGE")
+		num = surface * 1200.0
+		Helper.put_rsrc($Control/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
 	$Control/Convert.visible = not error
 	$Control/Costs.visible = not error
 	$Control/CostsHBox.visible = not error
@@ -95,6 +99,8 @@ func _on_Convert_pressed():
 			game.autocollect.GS.energy += num
 		elif bldg == "MS":
 			game.mineral_capacity += num
+		elif bldg == "B":
+			game.energy_capacity += num
 		elif bldg == "RL":
 			game.autocollect.GS.SP += num
 		game.toggle_panel(self)
@@ -105,6 +111,8 @@ func _on_Convert_pressed():
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
 			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(game.c_g_g)))
 			g_i.erase("bookmarked")
+		game.view_history.pop_back()
+		game.view_history_pos -= 1
 		if bldg == "TP":
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
@@ -121,6 +129,8 @@ func _on_Convert_pressed():
 			for planet_ids in system.planets:
 				if dir.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global]):
 					dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global])
+					if game.MM_data.has(planet_ids.global):
+						game.MM_data.erase(planet_ids.global)
 			if dir.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		dir2.remove("user://%s/Univ%s/Galaxies/%s.hx3" % [game.c_sv, game.c_u, game.c_g_g])

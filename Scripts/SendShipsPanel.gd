@@ -20,7 +20,7 @@ var gravity_entry_cost:float
 func _ready():
 	set_polygon($Background.rect_size)
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
-	$TotalEnergyCost.text = "%s:" % [tr("TOTAL_ENERGY_COST")]
+	$TotalEnergyCost.text = "%s:" % [tr("COSTS")]
 
 func refresh():
 	var depart_id:int
@@ -66,18 +66,18 @@ func refresh():
 		distance *= depart_pos.distance_to(dest_pos)
 	if TEST:
 		distance = 1
-	$TotalEnergyCost.visible = not game.science_unlocked.has("PD")
-	$TotalEnergyCost2.visible = not game.science_unlocked.has("PD")
 	$EnergyIcon2.visible = not game.science_unlocked.has("PD")
-	$EnergyIcon3.visible = not game.science_unlocked.has("PD")
 	$EnergyCost2.visible = not game.science_unlocked.has("PD")
 	$PlanetEECost.visible = not game.science_unlocked.has("PD")
 	$Panel.visible = not game.science_unlocked.has("PD")
 	if game.science_unlocked.has("PD"):
 		$EnergyIcon3.texture = preload("res://Graphics/Atoms/Pu.png")
 		total_energy_cost = distance / 100000.0
-		$TotalEnergyCost2.text = "%s mol" % Helper.format_num(total_energy_cost, true)
+		$TotalEnergyCost2.text = "%s/%s mol" % [Helper.format_num(game.atoms.Pu, true), Helper.format_num(total_energy_cost, true)]
+		$TotalEnergyCost2["custom_colors/font_color"] = Color.green if game.atoms.Pu > total_energy_cost else Color.red
+			
 	else:
+		$TotalEnergyCost2["custom_colors/font_color"] = Color.white
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
 		calc_costs()
 		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
@@ -121,34 +121,40 @@ func _on_Send_pressed():
 
 func send_ships():
 	if game.ships_travel_view == "-":
-		if time_cost != 0:
-			if game.science_unlocked.has("PD"):
-				if game.atoms.Pu >= total_energy_cost:
-					game.atoms.Pu -= total_energy_cost
-					game.ships_c_coords.p = dest_p_id
-					game.ships_dest_coords.p = dest_p_id
-					game.ships_c_coords.s = game.c_s
-					game.ships_dest_coords.s = game.c_s
-					game.ships_c_g_coords.s = game.c_s_g
-					game.ships_dest_g_coords.s = game.c_s_g
+		if game.science_unlocked.has("PD"):
+			if game.atoms.Pu >= total_energy_cost:
+				game.atoms.Pu -= total_energy_cost
+				game.ships_c_coords.p = dest_p_id
+				game.ships_dest_coords.p = dest_p_id
+				game.ships_c_coords.s = game.c_s
+				game.ships_dest_coords.s = game.c_s
+				game.ships_c_g_coords.s = game.c_s_g
+				game.ships_dest_g_coords.s = game.c_s_g
+				game.ships_c_coords.g = game.c_g
+				game.ships_dest_coords.g = game.c_g
+				game.ships_c_g_coords.g = game.c_g_g
+				game.ships_dest_g_coords.g = game.c_g_g
+				game.ships_c_coords.c = game.c_c
+				game.ships_dest_coords.c = game.c_c
+				game.view.obj.refresh_planets()
+				game.HUD.refresh()
+				game.toggle_panel(self)
+			else:
+				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+		elif time_cost != 0:
+			if game.energy >= total_energy_cost:
+				if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
+					if not game.achievement_data.random.has("1000_year_journey"):
+						game.earn_achievement("random", "1000_year_journey")
+				game.energy -= round(total_energy_cost)
+				send_ships2(time_cost)
+				if game.c_v == travel_view:
 					game.view.refresh()
 					game.HUD.refresh()
 				else:
-					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+					game.switch_view(travel_view)
 			else:
-				if game.energy >= total_energy_cost:
-					if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
-						if not game.achievement_data.random.has("1000_year_journey"):
-							game.earn_achievement("random", "1000_year_journey")
-					game.energy -= round(total_energy_cost)
-					send_ships2(time_cost)
-					if game.c_v == travel_view:
-						game.view.refresh()
-						game.HUD.refresh()
-					else:
-						game.switch_view(travel_view)
-				else:
-					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 

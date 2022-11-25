@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Graphics/Cave/DebrisCave.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Debris.gd" type="Script" id=2]
 [ext_resource path="res://Graphics/Cave/DebrisLava.png" type="Texture" id=3]
 [ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Cave/DebrisAnim.png" type="Texture" id=5]
 
 [sub_resource type="Shader" id=7]
 code = "shader_type canvas_item;
@@ -63,8 +64,15 @@ anim_offset_random = 1.0
 [sub_resource type="OccluderPolygon2D" id=2]
 resource_local_to_scene = true
 
+[sub_resource type="CanvasItemMaterial" id=18]
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
 [sub_resource type="Gradient" id=12]
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+offsets = PoolRealArray( 0, 0.619355, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
 
 [sub_resource type="GradientTexture" id=13]
 gradient = SubResource( 12 )
@@ -76,9 +84,11 @@ initial_velocity = 100.0
 initial_velocity_random = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 6.0
-scale_random = 1.0
+scale = 0.02
+scale_random = 0.4
 color_ramp = SubResource( 13 )
+anim_offset = 1.0
+anim_offset_random = 1.0
 
 [sub_resource type="CircleShape2D" id=15]
 radius = 8.0
@@ -201,10 +211,12 @@ modulate = Color( 1, 1, 1, 0 )
 texture = ExtResource( 4 )
 
 [node name="Particles2D" type="Particles2D" parent="Crack"]
+material = SubResource( 18 )
 emitting = false
 amount = 20
-explosiveness = 1.0
+explosiveness = 0.77
 process_material = SubResource( 14 )
+texture = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Crack"]
 shape = SubResource( 15 )

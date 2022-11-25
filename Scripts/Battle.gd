@@ -144,7 +144,7 @@ func _ready():
 			var star:Sprite = Sprite.new()
 			star.texture = star_texture
 			star.scale *= pow(rand_range(0.4, 0.7), 2)
-			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)])
+			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
 			star.modulate.a = pow(rand_range(0.5, 1), 5)
 			star.rotation = rand_range(0, 2*PI)
 			star.position.x = rand_range(0, 1280)
@@ -212,7 +212,7 @@ func add_stars(num:int, sc:float):
 		var star:Sprite = Sprite.new()
 		star.texture = star_texture
 		star.scale *= sc
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][Helper.rand_int(0, 6)], Helper.rand_int(0, 9)]) * 1.5
+		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10]) * 1.5
 		star.modulate.a = rand_range(0, 1)
 		star.rotation = rand_range(0, 2*PI)
 		star.position.x = rand_range(0, 1280)
@@ -511,7 +511,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("Info/Effects/FireLabel").text = String(weapon_lv)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
 				if game.screen_shake:
-					$Camera2D/Screenshake.start(0.7, 20, 12)
+					$Camera2D/Screenshake.start(0.5, 15, 4)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv
@@ -1294,7 +1294,7 @@ func atk_3_1(id:int):
 
 func atk_3_2(id:int):
 	put_magic(id)
-	var path:int = Helper.rand_int(0, 12)
+	var path:int = randi() % 13
 	var dir = rand_range(0.1, 0.9)
 	while abs(dir - 0.5) < 0.2:
 		dir = rand_range(0.1, 0.9)

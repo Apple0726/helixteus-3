@@ -13,6 +13,7 @@ var lava_intensity:float = 0.0
 var debris_collision_shape:CollisionPolygon2D
 var crack_threshold:float = 0
 var cracked_mining_factor:float = 1.0
+var time_speed:float = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -40,7 +41,8 @@ func set_crack():
 		next_pos = debris_collision_shape.polygon[0]
 	else:
 		next_pos = debris_collision_shape.polygon[idx+1]
-	$Crack/AnimationPlayer.play("New Anim")
+	$Crack/AnimationPlayer.play("New Anim", -1, time_speed)
+	$Crack/Particles2D.speed_scale = time_speed
 	$Crack/Particles2D.emitting = true
 	$Crack/Sprite.visible = true
 	$Crack.position = (next_pos + pos) / 2.0

@@ -711,6 +711,8 @@ func on_star_over (id:int):
 			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
+			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_M_PK_costs(star, true)
@@ -729,6 +731,8 @@ func on_star_over (id:int):
 		elif star.MS == "M_MB":
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
+			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
 		elif star.MS == "M_PK":
 			if star.MS_lv == 0:
 				Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
@@ -903,9 +907,9 @@ func _process(_delta):
 		var star = stars_info[rsrc_obj.id]
 		if star.bldg.has("is_constructing"):
 			continue
-		var value = Helper.update_MS_rsrc(star)
+		#var value = Helper.update_MS_rsrc(star)
 		var rsrc:ResourceStored = rsrc_obj.node
-		rsrc.set_current_bar_value(value)
+		#rsrc.set_current_bar_value(value)
 		var prod:float
 		if star.MS == "M_DS":
 			prod = Helper.get_DS_output(star)

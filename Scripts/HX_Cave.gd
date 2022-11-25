@@ -71,14 +71,14 @@ func move_HX():
 		if sees_player or is_aggr():
 			target_tile = cave_ref.get_tile_index(cave_tm.world_to_map(cave_ref.rover.position))
 		else:
-			target_tile = room_tiles[Helper.rand_int(0, n-1)]
+			target_tile = room_tiles[randi() % n]
 		var i = 0
 		while cave_ref.HX_tiles.has(target_tile) and i < 100:#If the tile is occupied by a HX
 			var target_neighbours = a_n.get_point_connections(target_tile)
 			var m = len(target_neighbours)
 			if m == 0:
 				break
-			target_tile = target_neighbours[Helper.rand_int(0, m-1)]
+			target_tile = target_neighbours[randi() % m]
 			i += 1
 		if target_tile != curr_tile:
 			cave_ref.HX_tiles.erase(curr_tile)

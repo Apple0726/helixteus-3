@@ -130,7 +130,7 @@ func _on_Terraform_pressed():
 			game.electron_cap += Data.path_1.ESF.value * surface
 		elif tf_type == "AE":
 			for el in p_i.atmosphere:
-				var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure
+				var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure * surface
 				game.show[el] = true
 				Helper.add_atom_production(el, base_prod)
 		elif tf_type == "MM" and not p_i.has("depth"):

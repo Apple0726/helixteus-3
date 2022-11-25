@@ -169,7 +169,7 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s\n%s: %s" % [u_i.name, tr("CLUSTERS"), u_i.cluster_num])
+	game.show_tooltip("%s (%s %s)" % [u_i.name, tr("LEVEL"), u_i.lv])
 	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
@@ -229,6 +229,7 @@ func on_univ_press(id:int):
 		game.new_game(false, id)
 		game.HUD.dimension_btn.visible = true
 		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	game.HUD.refresh_visibility()
 	game.HUD.refresh_bookmarks()
 
 func _on_SendProbes_pressed():

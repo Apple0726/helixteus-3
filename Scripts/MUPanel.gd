@@ -92,13 +92,13 @@ func _on_Upgrade_pressed(MU:String):
 				game.mining_HUD.refresh_aurora_bonus()
 			for AI in game.aurora_prod.keys():
 				for rsrc in game.aurora_prod[AI].keys():
-					game.aurora_prod[AI][rsrc] *= pow(1 + AI, 1.02) - 1.0
+					game.aurora_prod[AI][rsrc] *= pow(1 + AI, 0.02)
 					if rsrc == "energy":
-						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (pow(1 + AI, 1.02) - 1.0)
+						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (pow(1 + AI, 0.02) - 1.0)
 					elif rsrc in game.mat_info.keys():
-						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 1.02) - 1.0)
+						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 0.02) - 1.0)
 					elif rsrc in game.met_info.keys():
-						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 1.02) - 1.0)
+						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 0.02) - 1.0)
 		if MU == "IS":
 			game.items.append(null)
 	else:

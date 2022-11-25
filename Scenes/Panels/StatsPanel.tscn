@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
@@ -40,6 +40,7 @@
 [ext_resource path="res://Graphics/Icons/volcano_aurora_cave.png" type="Texture" id=38]
 [ext_resource path="res://Graphics/Icons/aurora_cave.png" type="Texture" id=39]
 [ext_resource path="res://Graphics/Icons/volcano_cave.png" type="Texture" id=40]
+[ext_resource path="res://Graphics/Icons/BBB.png" type="Texture" id=41]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -58,9 +59,6 @@ margin_right = 512.0
 margin_bottom = 296.0
 theme = ExtResource( 5 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
 
@@ -771,44 +769,52 @@ margin_right = 60.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 23 )
 
-[node name="reach_center_of_planet" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
-modulate = Color( 1, 0.952941, 0.745098, 1 )
+[node name="destroy_BBB" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 64.0
 margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 41 )
+
+[node name="reach_center_of_planet" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+modulate = Color( 1, 0.952941, 0.745098, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 22 )
 
 [node name="1000_year_journey" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 128.0
-margin_right = 188.0
+margin_left = 192.0
+margin_right = 252.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 21 )
 
 [node name="build_tri_probe_in_slow_univ" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 192.0
-margin_right = 252.0
+margin_left = 256.0
+margin_right = 316.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 25 )
 
 [node name="use_stick_to_mine_from_surface_to_core" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 256.0
-margin_right = 316.0
+margin_left = 320.0
+margin_right = 380.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 24 )
 
 [node name="rekt_enemy_30_levels_higher" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 320.0
-margin_right = 380.0
+margin_left = 384.0
+margin_right = 444.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 26 )
 
