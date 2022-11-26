@@ -191,7 +191,7 @@ func _on_Standard_pressed():
 		set_notation()
 
 func _on_Standard_mouse_entered():
-	game.show_tooltip("k < M < B < T < q < Q < s < S")
+	game.show_tooltip("k < M < B < T < q < Q < s < S < O < N")
 
 
 func _on_SI_pressed():
@@ -201,7 +201,7 @@ func _on_SI_pressed():
 		set_notation()
 
 func _on_SI_mouse_entered():
-	game.show_tooltip("k < M < G < T < P < E < Z < Y")
+	game.show_tooltip("k < M < G < T < P < E < Z < Y < R < Q")
 
 func set_notation():
 	$TabContainer/MISC/HBoxContainer2/Standard.pressed = false

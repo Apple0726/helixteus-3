@@ -538,9 +538,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
-						debris.modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
+						debris.self_modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
 					if aurora and rng.randf() < 0.05:
-						debris.modulate = Color.white
+						debris.self_modulate = Color.white
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
 					if debris_rekt[cave_floor - 1].has(tile_id):
 						debris.free()

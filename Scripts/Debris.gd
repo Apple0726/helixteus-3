@@ -68,7 +68,7 @@ func remove_debris():
 
 func _on_Crack_area_entered(area):
 	if $Crack/Timer.is_stopped():
-		$Crack/Timer.start(1.5 + 1.5 * randf())
+		$Crack/Timer.start((1.5 + 1.5 * randf()) / time_speed)
 	cracked_mining_factor = 2.0
 
 

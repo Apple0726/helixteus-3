@@ -123,6 +123,7 @@ var dim_num:int = 1
 var subjects:Dictionary
 var maths_bonus:Dictionary
 var physics_bonus:Dictionary
+var biology_bonus:Dictionary
 var engineering_bonus:Dictionary
 
 #id of the universe/supercluster/etc. you're viewing the object in
@@ -406,10 +407,13 @@ var achievements:Dictionary = {
 		"aurora_cave":tr("FIND_AURORA_CAVE"),
 		"volcano_cave":tr("FIND_VOLCANO_CAVE"),
 		"volcano_aurora_cave":tr("FIND_VOLCANO_AURORA_CAVE"),
+		"find_neon_lake":tr("FIND_NEON_LAKE"),
+		"find_xenon_lake":tr("FIND_XENON_LAKE"),
 		"reach_floor_8":tr("REACH_FLOOR_X_CAVE") % 8,
 		"reach_floor_16":tr("REACH_FLOOR_X_CAVE") % 16,
 		"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
 		"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
+		"planet_with_nothing":tr("PLANET_WITH_NOTHING"),
 	},
 	"progression":{
 		"build_MS":tr("BUILD_A_MS"),
@@ -793,7 +797,7 @@ func load_univ():
 			if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
 				galaxy_data = open_obj("Clusters", c_c)
 			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if help.tutorial >= 26:
 				tutorial = preload("res://Scenes/Tutorial.tscn").instance()
@@ -836,32 +840,13 @@ func load_game():
 				stats_dim[stat] = val.duplicate(true)
 			else:
 				stats_dim[stat] = val
-	maths_bonus = save_info_dict.get("maths_bonus", {
-		"BUCGF":1.3,
-		"MUCGF_MV":1.9,
-		"MUCGF_MSMB":1.6,
-		"MUCGF_AIE":2.3,
-		"IRM":1.2,
-		"SLUGF_XP":1.3,
-		"SLUGF_Stats":1.15,
-		"COSHEF":1.5,
-		"MMBSVR":10,
-		"ULUGF":1.63,
-	})
+	maths_bonus = save_info_dict.maths_bonus
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
 	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
-	physics_bonus = save_info_dict.get("physics_bonus", {
-		"MVOUP":0.5,
-	})
-	if len(physics_bonus.keys()) == 1:
-		for bonus in Data.univ_prop_weights:
-			physics_bonus[bonus] = Data.univ_prop_weights[bonus]
-	engineering_bonus = save_info_dict.get("engineering_bonus", {
-		"BCM":1.0,
-		"PS":1.0,
-		"RSM":1.0,
-	})
+	physics_bonus = save_info_dict.physics_bonus
+	biology_bonus = save_info_dict.biology_bonus
+	engineering_bonus = save_info_dict.engineering_bonus
 	achievement_data = save_info_dict.get("achievement_data", {})
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
@@ -883,6 +868,7 @@ func load_game():
 		dimension.refresh_univs(true)
 		dimension.get_node("Subjects/Grid/Maths").visible = not beginner_friendly
 		dimension.get_node("Subjects/Grid/Physics").visible = not beginner_friendly
+		dimension.get_node("Subjects/Grid/Biology").visible = not beginner_friendly
 		dimension.get_node("Subjects/Grid/Dimensional_Power").visible = not beginner_friendly
 		stats_dim = Data.default_stats.duplicate(true)
 		fn_save_game()
@@ -978,8 +964,21 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 			"MMBSVR":10,
 			"ULUGF":1.63,
 		}
-		physics_bonus = Data.univ_prop_weights.duplicate(true)
+		physics_bonus = Data.univ_prop_weights.duplicate()
 		physics_bonus.MVOUP = 0.5
+		biology_bonus = {
+			"PGSM":1.0,
+			"PYM":1.0,
+			"H2O":1.0,
+			"CH4":1.0,
+			"CO2":1.0,
+			"NH3":1.0,
+			"H":0.0,
+			"He":1.0,
+			"O":1.0,
+			"Ne":1.0,
+			"Xe":0.0,
+		}
 		engineering_bonus = {
 			"BCM":1.0,
 			"PS":1.0,
@@ -2119,7 +2118,7 @@ func generate_clusters(parent_id:int):
 		pos = polar2cartesian(dist_from_center, rand_range(0, 2 * PI))
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
-		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0))#Ferromagnetic materials
+		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * u_i.dark_energy)#Ferromagnetic materials
 		c_i.diff = Helper.clever_round(1 + pos.length() * 2.0)
 		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
@@ -2150,7 +2149,7 @@ func generate_galaxies(id:int):
 		g_i["shapes"] = []
 		g_i["type"] = randi() % 7
 		var rand = randf()
-		g_i.dark_matter = rand_range(0.9, 1.1) #Influences planet numbers and size
+		g_i.dark_matter = rand_range(0.9, 1.1) * u_i.dark_energy #Influences planet numbers and size
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
@@ -2906,10 +2905,11 @@ func generate_tiles(id:int):
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	var num_auroras:int = 2
 	var home_planet:bool = c_p_g == 2 and c_u == 0
+	var B_strength:float = galaxy_data[c_g].B_strength
 	for i in num_auroras:
 		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15)):
 			#au_int: aurora_intensity
-			var au_int = Helper.clever_round((rand_range(80000, 160000)) * galaxy_data[c_g].B_strength * max_star_temp)
+			var au_int = Helper.clever_round(80000 * rand_range(1, 2) * B_strength * max_star_temp)
 			if tile_from == -1:
 				tile_from = Helper.rand_int(0, wid)
 				tile_to = Helper.rand_int(0, wid)
@@ -3028,7 +3028,7 @@ func generate_tiles(id:int):
 				generate_volcano(t_id, VEI)
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
-			if randf() < 25 / crater_size / pow(coldest_star_temp, 0.8):
+			if randf() < 15 / crater_size / pow(coldest_star_temp, 0.8):
 				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 				if tile_data[t_id].has("ash"):
 					continue
@@ -3041,7 +3041,7 @@ func generate_tiles(id:int):
 				for met in met_info:
 					if met == "lead":
 						continue
-					if randf() < 0.3 / met_info[met].rarity:
+					if randf() < 0.3 / pow(met_info[met].rarity, 0.95):
 						if c_s_g == 0 and met_info[met].rarity > 8:
 							continue
 						if c_g_g == 0 and met_info[met].rarity > 50:
@@ -3138,27 +3138,65 @@ func generate_tiles(id:int):
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	
 	#Give lake data to adjacent tiles
+	
+	var lake_1_au_int:float = 0.0
+	var lake_2_au_int:float = 0.0
+	if not achievement_data.exploration.has("find_neon_lake"):
+		if p_i.has("lake_1") and p_i.lake_1 == "Ne" or p_i.has("lake_2") and p_i.lake_2 == "Ne":
+			earn_achievement("exploration", "find_neon_lake")
+	if not achievement_data.exploration.has("find_xenon_lake"):
+		if p_i.has("lake_1") and p_i.lake_1 == "Xe" or p_i.has("lake_2") and p_i.lake_2 == "Xe":
+			earn_achievement("exploration", "find_xenon_lake")
+	if p_i.has("lake_1"):
+		if p_i.lake_1 == "Ne":
+			lake_1_au_int = Helper.clever_round(2.4e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
+		elif p_i.lake_1 == "Xe":
+			lake_1_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
+	if p_i.has("lake_2"):
+		if p_i.lake_2 == "Ne":
+			lake_2_au_int = Helper.clever_round(2.4e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
+		elif p_i.lake_2 == "Xe":
+			lake_2_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
+	var planet_with_nothing = true
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
 			var tile = tile_data[t_id]
+			if tile:
+				planet_with_nothing = false
 			if tile and tile.has("lake"):
 				var distance_from_lake:int = 1
-				if tile.lake.element == "H":
-					if tile.lake.state == "s":
-						distance_from_lake = 2
-					else:
-						distance_from_lake = 3
+				if tile.lake.element in ["H", "Xe"]:
+					distance_from_lake += Data.lake_bonus_values[tile.lake.element][tile.lake.state]
 				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
 					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
-						if Vector2(k, l) != Vector2(i, j):
-							var id2 = k % wid + l * wid
-							if not tile_data[id2]:
-								tile_data[id2] = {"lake_elements":{}}
-							if tile_data[id2].has("lake_elements"):
-								tile_data[id2].lake_elements[tile.lake.element] = tile.lake.state
+						var id2 = k % wid + l * wid
+						if tile_data[id2] and tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
+							continue
+						if not tile_data[id2]:
+							tile_data[id2] = {}
+						if tile.lake.type == 1 and lake_1_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora.au_int *= lake_1_au_int + 1.0
+								else:
+									tile_data[id2].aurora.au_int = max(lake_1_au_int, tile_data[id2].aurora.au_int)
 							else:
-								tile_data[id2].lake_elements = {tile.lake.element:tile.lake.state}
+								tile_data[id2].aurora = {"au_int":lake_1_au_int}
+						elif tile.lake.type == 2 and lake_2_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora.au_int *= lake_2_au_int + 1.0
+								else:
+									tile_data[id2].aurora.au_int = max(lake_2_au_int, tile_data[id2].aurora.au_int)
+							else:
+								tile_data[id2].aurora = {"au_int":lake_2_au_int}
+						if tile_data[id2].has("lake_elements"):
+							tile_data[id2].lake_elements[tile.lake.element] = tile.lake.state
+						else:
+							tile_data[id2].lake_elements = {tile.lake.element:tile.lake.state}
+	if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
+		earn_achievement("exploration", "planet_with_nothing")
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
@@ -3250,10 +3288,8 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			var r = 1 - Helper.get_sum_of_dict(elements)
 			elements.Al = r * 0.05 * randf()
 			elements.Fe = r * 0.035 * FM * randf()
-			elements.Ca = r * 0.03 * randf()
 			elements.Na = r * 0.025 * randf()
 			elements.Mg = r * 0.02 * randf()
-			elements.K = r * 0.02 * randf()
 			elements.Ti = r * 0.005 * randf()
 			elements.H = r * 0.002 * randf()
 			elements.Pu = r * 1e-7 * randf()
@@ -3837,6 +3873,7 @@ func fn_save_game():
 		"subjects":subjects,
 		"maths_bonus":maths_bonus,
 		"physics_bonus":physics_bonus,
+		"biology_bonus":biology_bonus,
 		"engineering_bonus":engineering_bonus,
 		"stats_global":stats_global,
 		"stats_dim":stats_dim,

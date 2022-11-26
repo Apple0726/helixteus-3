@@ -8,11 +8,23 @@ const TWEEN_EASE = Tween.EASE_OUT
 var new_dim_DRs = 0#DRs you will get once you renew dimensions
 var maths_OP_points:float = 0
 var physics_OP_points:float = 0
+var biology_OP_points:float = 0
 var engineering_OP_points:float = 0
-var num_errors:Dictionary = {"maths":false, "physics":false, "engineering":false}
+var num_errors:Dictionary = {}
 
 var table
 
+var lake_params:Dictionary = {
+	"H2O":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
+	"CH4":{"operator":"÷", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
+	"CO2":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
+	"NH3":{"operator":"÷", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
+	"H":{"operator":"+", "min_value":0, "max_value":2, "value":0, "is_integer":true, "OP_factor":0.8},
+	"He":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
+	"O":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
+	"Ne":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":1.2},
+	"Xe":{"operator":"+", "min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":10},
+}
 func _ready():
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0001
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0001
@@ -28,7 +40,6 @@ func _ready():
 		univ_prop_text.help_text = tr("%s_DESC" % univ_prop.name.to_upper())
 		univ_prop_text.rect_min_size.y = 32.0
 		univ_prop_text.size_flags_horizontal = Label.SIZE_EXPAND_FILL
-		#univ_prop_text.size_flags_vertical = Label.SIZE_EXPAND_FILL
 		$ModifyDimension/Physics/Control/VBox2.add_child(univ_prop_text)
 		univ_prop_text.name = univ_prop.name
 	
@@ -49,7 +60,7 @@ func toggle_subj(subj_name:String):
 			$ModifyDimension.get_node(subj.name).visible = false
 	if $ModifyDimension.has_node(subj_name):
 		$ModifyDimension.get_node(subj_name).visible = not $ModifyDimension.get_node(subj_name).visible
-		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Engineering"]
+		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Biology", "Engineering"]
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
@@ -100,7 +111,13 @@ func refresh_univs(reset:bool = false):
 	for engineering_bonus in game.engineering_bonus:
 		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).set_value(game.engineering_bonus[engineering_bonus])
 		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).editable = reset
-	
+	for biology_bonus in game.biology_bonus:
+		if $ModifyDimension/Biology/Control.has_node(biology_bonus):
+			$ModifyDimension/Biology/Control.get_node(biology_bonus).set_value(game.biology_bonus[biology_bonus])
+			$ModifyDimension/Biology/Control.get_node(biology_bonus).editable = reset
+	$ModifyDimension/Biology/Control/Lake/Bonus.editable = reset
+	for el in lake_params.keys():
+		lake_params[el].value = game.biology_bonus[el]
 	if not reset:
 		$Subjects.margin_left = 704
 		for univ_info in game.universe_data:
@@ -141,17 +158,15 @@ func on_invest(subj_node):
 		while subject.DRs > subject.lv:
 			subject.lv += 1
 			subject.DRs -= subject.lv
-		if subj_node.name == "Maths" and $ModifyDimension/Maths.visible:
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
-		elif subj_node.name == "Physics" and $ModifyDimension/Physics.visible:
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
-		elif subj_node.name == "Engineering" and $ModifyDimension/Engineering.visible:
+		if $ModifyDimension.get_node(subj_node.name).visible:
 			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
 		if subj_node.name == "Dimensional_Power":
 			if $ModifyDimension/Maths.visible:
 				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 4 else 1.0)
 			elif $ModifyDimension/Physics.visible:
 				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 4 else 1.0)
+			elif $ModifyDimension/Biology.visible:
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 4 else 1.0)
 			elif $ModifyDimension/Engineering.visible:
 				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 4 else 1.0)
 			$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = subject.lv + subject.DRs / float(subject.lv + 1)
@@ -169,7 +184,7 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s (%s %s)" % [u_i.name, tr("LEVEL"), u_i.lv])
+	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(u_i.universe_value * pow(u_i.lv, 2.2) / 10000.0), tr("PLUS_X_IF").format({"bonus":Helper.clever_round(u_i.universe_value * (pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0), "lv":u_i.lv+1})])
 	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
@@ -269,6 +284,7 @@ func calc_math_points(node, default_value:float, op_factor:float, lower_limit:fl
 
 onready var math_defaults = $ModifyDimension/Maths/Control/Defaults
 onready var physics_defaults = $ModifyDimension/Physics/Control/Defaults
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		if is_instance_valid(table):
@@ -306,7 +322,7 @@ func _input(event):
 
 func calc_OP_points():
 	maths_OP_points = 0
-	num_errors = {"maths":false, "physics":false, "engineering":false}
+	num_errors.clear()
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -12.0, 1.2)#Building upgrade cost
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.2)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -2.5, 1.2)#Mining speed multiplier
@@ -350,44 +366,51 @@ func calc_OP_points():
 				physics_OP_points += pow(Data.univ_prop_weights[cost.name] / cost.value, 2) - 1.0
 		physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 	
+	biology_OP_points = 0
+	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.25)
+	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.5)
+	for el in lake_params.keys():
+		calc_bio_points_lake(lake_params[el])
+	
 	engineering_OP_points = 0
 	calc_engi_points($ModifyDimension/Engineering/Control/BCM, 7.0, false)
 	calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.15, true)
 	calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.4, true)
-	if $ModifyDimension/Maths.visible:
-		if is_equal_approx(maths_OP_points, 0):
-			maths_OP_points = 0
-		$ModifyDimension/OPMeter/OPMeter.value = maths_OP_points
-		$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(maths_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
-		if maths_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.maths:
+	for subj in ["Maths", "Physics", "Biology", "Engineering"]:
+		if $ModifyDimension.get_node(subj).visible:
+			if is_equal_approx(self["%s_OP_points" % subj.to_lower()], 0):
+				self["%s_OP_points" % subj.to_lower()] = 0
+		$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj.to_lower()]
+		$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
+		if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.has(subj.to_lower()):
 			$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
-			$Subjects/Grid/Maths/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
+			$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0)
 		else:
-			$Subjects/Grid/Maths/Effects["custom_colors/font_color"] = Color.white
-	elif $ModifyDimension/Physics.visible:
-		$ModifyDimension/OPMeter/OPMeter.value = physics_OP_points
-		$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(physics_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
-		if physics_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.physics:
-			$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
-			$Subjects/Grid/Physics/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
-		else:
-			$Subjects/Grid/Physics/Effects["custom_colors/font_color"] = Color.white
-	elif $ModifyDimension/Engineering.visible:
-		$ModifyDimension/OPMeter/OPMeter.value = engineering_OP_points
-		$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(engineering_OP_points), $ModifyDimension/OPMeter/OPMeter.max_value]
-		if engineering_OP_points > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.engineering:
-			$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
-			$Subjects/Grid/Engineering/Effects["custom_colors/font_color"] = Color(0.8, 0, 0)
-		else:
-			$Subjects/Grid/Engineering/Effects["custom_colors/font_color"] = Color.white
+			$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color.white
 	if $ModifyDimension/Reset.visible:
 		var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
 		$ModifyDimension/Reset/Generate.visible = true
 		#Save migration
-		$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult) or num_errors.maths or num_errors.physics or num_errors.engineering
+		#$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult) or not num_errors.empty()
+
+func calc_bio_points(node, op_factor:float):
+	if node.value <= node.min_value:
+		node["custom_colors/font_color"] = Color.red
+		num_errors.biology = true
+		return
+	else:
+		node["custom_colors/font_color"] = Color.black
+		biology_OP_points += op_factor * (node.value - 1.0)
+
+func calc_bio_points_lake(lake:Dictionary):
+	if lake.value <= lake.min_value:
+		num_errors.biology = true
+		return
+	else:
+		biology_OP_points += lake.OP_factor * (lake.value - lake.min_value)
 
 func calc_engi_points(node, op_factor:float, growth:bool):
-	if node.value <= 0:
+	if node.value <= node.min_value:
 		node["custom_colors/font_color"] = Color.red
 		num_errors.engineering = true
 		return
@@ -409,6 +432,11 @@ func set_bonuses():
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control.get_node(bonus).value
 		elif bonus != "antimatter":
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control/VBox.get_node(bonus).value
+	for bonus in game.biology_bonus:
+		if $ModifyDimension/Biology/Control.has_node(bonus):
+			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control.get_node(bonus).value
+		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):	
+			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control/LakeButtons.get_node(bonus).value
 	for bonus in game.engineering_bonus:
 		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
 
@@ -421,7 +449,7 @@ func _on_Label1_mouse_entered():
 
 
 func _on_Label2_mouse_entered():
-	game.show_tooltip("More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction speed, mining minigame etc.) is unaffected.")
+	game.show_tooltip("More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction time, production etc.) is unaffected.")
 
 var DR_help_index:int = 1
 
@@ -430,7 +458,6 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		$ColorRect.visible = false
 	else:
 		show_DR_help()
-		game.physics_bonus.universe_value = 250#Save migration
 		refresh_univs(true)
 
 func show_DR_help():
@@ -457,11 +484,11 @@ func _on_ColorRect_visibility_changed():
 
 
 func _on_CostGrowthFactor_mouse_entered():
-	game.show_tooltip("Cost growth factor formula. Costs (e.g. building costs, XP requirements) are multiplied by a certain value every time they level up. This value corresponds to q.")
+	game.show_tooltip(tr("COST_GROWTH_FACTOR_DESC"))
 
 
 func _on_ShipHitChance_mouse_entered():
-	game.show_tooltip("ship_hit_chance is a number between 0 and 1. 0 means the ship will never hit enemies, 1 means it will always hit them.\nThe variable you're modifying is a, which basically multiplies a ship's accuracy stat.")
+	game.show_tooltip(tr("SHIP_HIT_FORMULA"))
 
 func _on_Table_mouse_entered(maths_bonus:String, level_1_value:float):
 	if is_instance_valid(table):
@@ -481,3 +508,21 @@ func _on_Table_mouse_entered(maths_bonus:String, level_1_value:float):
 
 func _on_Table_mouse_exited():
 	table.queue_free()
+
+
+func _on_HelpLabel_mouse_entered(extra_arg_0):
+	game.show_tooltip(extra_arg_0)
+
+
+func _on_Lake_mouse_entered(extra_arg_0):
+	game.show_tooltip(tr("%s_NAME" % extra_arg_0))
+
+func _on_Lake_pressed(el:String):
+	$ModifyDimension/Biology/Control/Lake.visible = true
+	$ModifyDimension/Biology/Control/Lake/Operator.text = lake_params[el].operator
+	$ModifyDimension/Biology/Control/Lake/Label.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("%s/%s/%s" % [Data.lake_bonus_values[el].s, Data.lake_bonus_values[el].l, Data.lake_bonus_values[el].sc])
+	$ModifyDimension/Biology/Control/Lake/Bonus.min_value = lake_params[el].min_value
+	$ModifyDimension/Biology/Control/Lake/Bonus.max_value = lake_params[el].max_value
+	$ModifyDimension/Biology/Control/Lake/Bonus.is_integer = lake_params[el].has("is_integer")
+	$ModifyDimension/Biology/Control/Lake/Bonus.step = 1.0 if lake_params[el].has("is_integer") else 0.2
+	$ModifyDimension/Biology/Control/Lake/Bonus.set_value(lake_params[el].value)

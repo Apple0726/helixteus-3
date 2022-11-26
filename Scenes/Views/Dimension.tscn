@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -24,6 +24,16 @@
 [ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=22]
 [ext_resource path="res://Graphics/Icons/table.png" type="Texture" id=23]
 [ext_resource path="res://Graphics/Formulas/DRs.png" type="Texture" id=24]
+[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=25]
+[ext_resource path="res://Graphics/Icons/H2O.png" type="Texture" id=26]
+[ext_resource path="res://Graphics/Icons/CH4.png" type="Texture" id=27]
+[ext_resource path="res://Graphics/Icons/CO2.png" type="Texture" id=28]
+[ext_resource path="res://Graphics/Atoms/He.png" type="Texture" id=29]
+[ext_resource path="res://Graphics/Atoms/H.png" type="Texture" id=30]
+[ext_resource path="res://Graphics/Icons/NH3.png" type="Texture" id=31]
+[ext_resource path="res://Graphics/Atoms/O.png" type="Texture" id=32]
+[ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=33]
+[ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=34]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
@@ -237,9 +247,6 @@ rect_min_size = Vector2( 392, 648 )
 custom_fonts/font = SubResource( 3 )
 custom_styles/normal = SubResource( 2 )
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Subjects" type="ScrollContainer" parent="."]
 margin_left = 684.0
@@ -281,10 +288,10 @@ texture = ExtResource( 7 )
 btn_text = "CUSTOMIZE_NEW_METALS"
 
 [node name="Biology" parent="Subjects/Grid" instance=ExtResource( 3 )]
-visible = false
 margin_left = 508.0
 margin_right = 758.0
 texture = ExtResource( 11 )
+btn_text = "FIDDLE_WITH_DNA"
 
 [node name="Philosophy" parent="Subjects/Grid" instance=ExtResource( 3 )]
 visible = false
@@ -293,14 +300,16 @@ margin_right = 758.0
 texture = ExtResource( 14 )
 
 [node name="Engineering" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 508.0
-margin_right = 758.0
+margin_top = 330.0
+margin_right = 250.0
+margin_bottom = 656.0
 texture = ExtResource( 10 )
 btn_text = "DO_ENGINEERING"
 
 [node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource( 3 )]
+margin_left = 254.0
 margin_top = 330.0
-margin_right = 250.0
+margin_right = 504.0
 margin_bottom = 656.0
 texture = ExtResource( 6 )
 
@@ -1170,6 +1179,216 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+custom_styles/bg = SubResource( 5 )
+
+[node name="Control" type="Control" parent="ModifyDimension/Biology"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 655.0
+rect_min_size = Vector2( 300, 650 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ModifyDimension/Biology/Control"]
+margin_left = 16.0
+margin_top = 119.0
+margin_right = 330.0
+margin_bottom = 143.0
+text = "PLANT_GROWTH_SPEED_MULTIPLIER"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="ModifyDimension/Biology/Control"]
+margin_left = 16.0
+margin_top = 215.0
+margin_right = 330.0
+margin_bottom = 239.0
+text = "PLANT_YIELD_MULT"
+
+[node name="Label3" type="Label" parent="ModifyDimension/Biology/Control"]
+margin_left = 16.0
+margin_top = 335.0
+margin_right = 330.0
+margin_bottom = 359.0
+text = "LAKES"
+
+[node name="PGSM" parent="ModifyDimension/Biology/Control" instance=ExtResource( 19 )]
+margin_left = 22.0
+margin_top = 159.0
+margin_right = -202.0
+margin_bottom = -459.0
+step = 0.5
+value = 1.0
+min_value = 1.0
+
+[node name="PYM" parent="ModifyDimension/Biology/Control" instance=ExtResource( 19 )]
+margin_left = 22.0
+margin_top = 255.0
+margin_right = -202.0
+margin_bottom = -363.0
+step = 0.5
+value = 1.0
+min_value = 1.0
+
+[node name="PGSMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
+margin_left = 134.0
+margin_top = 159.0
+margin_right = 166.0
+margin_bottom = 191.0
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 4
+
+[node name="PYMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
+margin_left = 134.0
+margin_top = 255.0
+margin_right = 166.0
+margin_bottom = 287.0
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 4
+
+[node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Biology/Control"]
+margin_left = 14.0
+margin_top = 367.0
+margin_right = 370.0
+margin_bottom = 455.0
+columns = 5
+
+[node name="H2O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_right = 68.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 26 )
+icon_align = 1
+expand_icon = true
+
+[node name="CH4" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 72.0
+margin_right = 140.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 27 )
+icon_align = 1
+expand_icon = true
+
+[node name="CO2" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 144.0
+margin_right = 212.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 28 )
+icon_align = 1
+expand_icon = true
+
+[node name="NH3" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 216.0
+margin_right = 284.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 31 )
+icon_align = 1
+expand_icon = true
+
+[node name="H" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 288.0
+margin_right = 356.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 30 )
+icon_align = 1
+expand_icon = true
+
+[node name="He" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_top = 44.0
+margin_right = 68.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 29 )
+icon_align = 1
+expand_icon = true
+
+[node name="O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 72.0
+margin_top = 44.0
+margin_right = 140.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 32 )
+icon_align = 1
+expand_icon = true
+
+[node name="Ne" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 144.0
+margin_top = 44.0
+margin_right = 212.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 33 )
+icon_align = 1
+expand_icon = true
+
+[node name="Xe" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+margin_left = 216.0
+margin_top = 44.0
+margin_right = 284.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 34 )
+icon_align = 1
+expand_icon = true
+
+[node name="Lake" type="Control" parent="ModifyDimension/Biology/Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
+margin_left = 18.0
+margin_top = 475.0
+margin_right = 370.0
+margin_bottom = 526.0
+text = "Also produces %s minerals for every kilogram of cellulose consumed"
+autowrap = true
+
+[node name="Operator" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
+margin_left = 38.0
+margin_top = 567.0
+margin_right = 62.0
+margin_bottom = 595.0
+text = "x"
+autowrap = true
+
+[node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" instance=ExtResource( 19 )]
+margin_left = 62.0
+margin_top = 563.0
+margin_right = 98.0
+margin_bottom = 555.0
+step = 0.5
+value = 1.0
+
 [node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
 anchor_right = 1.0
@@ -1212,9 +1431,6 @@ margin_top = 215.0
 margin_right = 330.0
 margin_bottom = 239.0
 text = "PICKAXE_SPEED_MULT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 12 )]
 margin_left = 134.0
@@ -1586,6 +1802,37 @@ autowrap = true
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PGSM_DESC" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PYM_DESC" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_pressed" binds= [ "H2O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= [ "CH4" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_pressed" binds= [ "CH4" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= [ "CO2" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_pressed" binds= [ "CO2" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= [ "NH3" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_pressed" binds= [ "NH3" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= [ "H" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_pressed" binds= [ "H" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= [ "HE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_pressed" binds= [ "He" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= [ "O" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_pressed" binds= [ "O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= [ "NE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_pressed" binds= [ "Ne" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= [ "Xe" ]]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_Label1_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]

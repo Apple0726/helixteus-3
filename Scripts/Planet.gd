@@ -1320,10 +1320,10 @@ func on_timeout():
 				elif tile.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
 				elif tile.bldg.name == "SP":
-					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult * Helper.get_au_mult(tile))
-					game.autocollect.rsrc.energy -= SP_prod * (mult - 1)
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile))
+					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
-						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod * (mult - 1)
+						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":
@@ -1349,7 +1349,7 @@ func on_timeout():
 				tile.wormhole.active = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
-	if icons_hidden:
+	if icons_hidden or len(rsrcs) != len(game.tile_data):
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]

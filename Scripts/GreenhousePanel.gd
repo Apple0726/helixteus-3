@@ -124,7 +124,7 @@ func on_slot_press(_name:String):
 	if c_v == "system":
 		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 		for p in produce:
-			produce[p] *= tile_num * game.u_i.time_speed * p_i.bldg.path_1_value * p_i.bldg.path_2_value * (p_i.ash.richness if p_i.has("ash") else 1.0)
+			produce[p] *= tile_num * game.u_i.time_speed * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * (p_i.ash.richness if p_i.has("ash") else 1.0)
 		set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
 	elif c_v == "planet":
 		var harvest:bool = false
@@ -138,7 +138,7 @@ func on_slot_press(_name:String):
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var H2O_mult = Data.lake_bonus_values.H2O[tile.lake_elements.H2O] if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * tile.bldg.path_1_value * tile.bldg.path_2_value * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+				produce[p] *= game.u_i.time_speed * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			if harvest:
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()

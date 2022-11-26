@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
@@ -41,6 +41,9 @@
 [ext_resource path="res://Graphics/Icons/aurora_cave.png" type="Texture" id=39]
 [ext_resource path="res://Graphics/Icons/volcano_cave.png" type="Texture" id=40]
 [ext_resource path="res://Graphics/Icons/BBB.png" type="Texture" id=41]
+[ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=42]
+[ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=43]
+[ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=44]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -694,6 +697,33 @@ margin_top = 128.0
 margin_right = 188.0
 margin_bottom = 188.0
 achievement_icon = ExtResource( 38 )
+
+[node name="find_neon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_top = 128.0
+margin_right = 252.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 42 )
+
+[node name="find_xenon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_top = 128.0
+margin_right = 316.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 43 )
+
+[node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_top = 128.0
+margin_right = 380.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 44 )
 
 [node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 384.0
