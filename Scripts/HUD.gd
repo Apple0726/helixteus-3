@@ -333,7 +333,7 @@ func refresh():
 	$Bookmarks.visible = game.show.has("bookmarks")
 	system_b_btn.visible = game.show.has("s_bk_button")
 	galaxy_b_btn.visible = game.show.has("g_bk_button")
-	cluster_b_btn.visible = game.universe_data[0].has("discovered")
+	cluster_b_btn.visible = game.show.has("c_bk_button")
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.pressed = game.planet_data[game.c_p].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -437,13 +437,13 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		var rsrc_amount = 0.0
 		if extra_arg_0 == "MINERALS":
 			rsrc_amount = (game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0) + game.autocollect.MS.minerals
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
 			rsrc_amount = (game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
 			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP
-			tooltip += "\n" + tr("YOU_AUTOCOLLECT") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
+			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 	if extra_arg_0 == "MINERALS":
 		tooltip += "\n" + tr("MINERAL_DESC")
 	game.show_tooltip(tooltip)

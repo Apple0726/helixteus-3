@@ -209,7 +209,7 @@ func show_part(_name:String):
 				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
 			else:
 				num = game.autocollect.particles[_name]
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(num, true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(num, true), tr("S_SECOND")])
 	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
@@ -233,13 +233,13 @@ func show_buy_sell(type:String, obj:String):
 func show_mat(mat:String):
 	var st:String = "%s\n%s" % [get_str(mat), get_str(mat, "_DESC")]
 	if game.autocollect.mats.has(mat):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func show_atom(atom:String):
 	var st:String = get_str(atom, "_NAME")
 	if game.autocollect.atoms.has(atom):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func on_mouse_out():
@@ -248,7 +248,7 @@ func on_mouse_out():
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met):
-		st += "\n" + (tr("YOU_AUTOCOLLECT") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func get_str(obj:String, desc:String = ""):

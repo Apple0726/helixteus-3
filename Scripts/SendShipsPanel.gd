@@ -72,7 +72,7 @@ func refresh():
 	$Panel.visible = not game.science_unlocked.has("PD")
 	if game.science_unlocked.has("PD"):
 		$EnergyIcon3.texture = preload("res://Graphics/Atoms/Pu.png")
-		total_energy_cost = distance / 100000.0
+		total_energy_cost = distance / 400000.0
 		$TotalEnergyCost2.text = "%s/%s mol" % [Helper.format_num(game.atoms.Pu, true), Helper.format_num(total_energy_cost, true)]
 		$TotalEnergyCost2["custom_colors/font_color"] = Color.green if game.atoms.Pu > total_energy_cost else Color.red
 			

@@ -62,9 +62,9 @@ func _ready():
 				strength_mult = min(range_lerp(p_i.temperature, -273, 1000, 0.3, 1.2), 1.2)
 			var brightness:float = range_lerp(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
 			var contrast:float = sqrt(brightness)
-			$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))
-			$TileMap.material.set_shader_param("contrast", 1.5)
-			#$TileMap.material.set_shader_param("saturation", saturation)
+			#$TileMap.material.set_shader_param("brightness", min(brightness, 2.0))
+			$TileMap.material.set_shader_param("contrast", clamp(strength_mult, 1.0, 2.0))
+			$TileMap.material.set_shader_param("saturation", clamp(strength_mult, 1.0, 2.0))
 			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)

@@ -23,7 +23,6 @@ var units:Dictionary = {
 	"difficulty":"",
 	"time_speed":"",
 	"antimatter":"",
-	"universe_value":"",
 	}
 
 var point_distribution:Dictionary = {
@@ -36,7 +35,6 @@ var point_distribution:Dictionary = {
 	"difficulty":0,
 	"time_speed":0,
 	"antimatter":0,
-	"universe_value":0,
 	}
 
 
@@ -55,8 +53,6 @@ func refresh():
 	$TP/VBox/difficulty/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
 	$TP/VBox/time_speed/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED")
 	$TP/VBox/antimatter/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ANTIMATTER")
-	$TP/VBox/universe_value/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("UNIVERSE_VALUE")
-	$TP/VBox/universe_value.visible = game.subjects.dimensional_power.lv > 0
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
@@ -74,15 +70,18 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-#				if prop.name == "universe_value" and game.subjects.dimensional_power.lv > 0:
-#					var UV_mult = 1.5 + game.subjects.dimensional_power.lv * 0.2
-#					prop.get_node("Unit").text = " (x %s) = %s" % [UV_mult, prop.get_node("HSlider").value * UV_mult]
 				if prop.name == "time_speed" and game.subjects.dimensional_power.lv > 1:
 					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
 					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
-					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / 25.0)
+					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / Data.univ_prop_weights[prop.name] / 2.0)
+					prop.get_node("HSlider").step = 0.1
+					var value_range = prop.get_node("HSlider").max_value - prop.get_node("HSlider").min_value
+					if value_range > 10:
+						prop.get_node("HSlider").step = 0.2
+						if value_range > 30:
+							prop.get_node("HSlider").step = 0.5
 			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
 			$NoProbes.visible = false
 		else:
@@ -147,15 +146,11 @@ func discover_univ():
 			game.probe_data.erase(probe)
 			break
 	var id:int = len(game.universe_data)
-	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "supercluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
+	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":2, "sc_mult":0.1}}
 	for prop in $TP/VBox.get_children():
 		if prop.name == "s_b":
 			continue
-		if prop.name == "universe_value":
-			var UV_mult = 1.0#(1.5 + game.subjects.dimensional_power.lv * 0.2) if game.subjects.dimensional_power.lv > 0 else 1.0
-			u_i.universe_value = UV_mult * float(prop.get_node("Label2").text)
-		else:
-			u_i[prop.name] = float(prop.get_node("Label2").text)
+		u_i[prop.name] = float(prop.get_node("Label2").text)
 	if not game.achievement_data.progression.has("new_universe"):
 		game.earn_achievement("progression", "new_universe")
 	game.universe_data.append(u_i)
@@ -233,9 +228,6 @@ func _on_TP_value_changed(value:float, prop:String):
 		if prop == "time_speed" and game.subjects.dimensional_power.lv > 1:
 			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
 			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
-#		if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
-#			var UV_mult = 1.5 + game.subjects.dimensional_power.lv * 0.2
-#			$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
@@ -251,13 +243,14 @@ func _on_TP_value_changed(value:float, prop:String):
 	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
 
 func get_lv_sum():
-	var lv:int = 0
+	var lv:float = 0
 	for univ in game.universe_data:
-		lv += univ.lv * univ.universe_value
+		lv += pow(univ.lv, 2.2)
+	lv /= 200
 	return lv
 
 func _on_Points_mouse_entered():
-	game.show_tooltip(tr("TP_POINTS_INFO"))
+	game.show_adv_tooltip(tr("TP_POINTS_INFO"), [preload("res://Graphics/Formulas/PPs.png")], 80)
 
 func _on_mouse_exited():
 	game.hide_tooltip()

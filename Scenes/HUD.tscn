@@ -466,9 +466,6 @@ rect_min_size = Vector2( 20, 20 )
 texture = ExtResource( 31 )
 expand = true
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BookmarksList" type="PanelContainer" parent="Bookmarks"]
 margin_left = -2.0

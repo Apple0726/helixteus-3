@@ -8,6 +8,7 @@ const TWEEN_EASE = Tween.EASE_OUT
 var new_dim_DRs = 0#DRs you will get once you renew dimensions
 var maths_OP_points:float = 0
 var physics_OP_points:float = 0
+var chemistry_OP_points:float = 0
 var biology_OP_points:float = 0
 var engineering_OP_points:float = 0
 var num_errors:Dictionary = {}
@@ -50,6 +51,7 @@ func _ready():
 			$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % i)["custom_colors/font_color"] = Color.white
 		else:
 			break
+	set_grid()
 	$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = game.subjects.dimensional_power.lv + game.subjects.dimensional_power.DRs / (game.subjects.dimensional_power.lv + 1)
 	for subj in $Subjects/Grid.get_children():
 		subj.get_node("Effects/EffectButton").connect("pressed", self, "toggle_subj", [subj.name])
@@ -64,7 +66,7 @@ func toggle_subj(subj_name:String):
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
+			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj_name.to_lower()]
 			calc_OP_points()
 	else:
@@ -81,7 +83,7 @@ func refresh_univs(reset:bool = false):
 				break
 	var lv_sum:int = 0
 	for univ in game.universe_data:
-		lv_sum += pow(univ.lv, 2.2) * univ.universe_value
+		lv_sum += pow(univ.lv, 2.2)
 	for node in $Subjects/Grid.get_children():
 		node.get_node("HBox/Invest").disabled = game.DRs == 0
 	new_dim_DRs = floor(lv_sum / 10000.0)
@@ -141,12 +143,12 @@ func refresh_univs(reset:bool = false):
 	$Universes.visible = not reset
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
-	if game.subjects.dimensional_power.lv >= 1:
-		$ModifyDimension/Physics/Control/VBox/universe_value.visible = true
-		$ModifyDimension/Physics/Control/VBox2/universe_value.visible = true
-	else:
-		$ModifyDimension/Physics/Control/VBox/universe_value.visible = false
-		$ModifyDimension/Physics/Control/VBox2/universe_value.visible = false
+
+func set_grid():
+	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv > 0 else 2
+	$Subjects/Grid/Physics.visible = game.subjects.dimensional_power.lv > 0
+	$Subjects/Grid/Chemistry.visible = game.subjects.dimensional_power.lv > 0
+	$Subjects/Grid/Biology.visible = game.subjects.dimensional_power.lv > 0
 
 func on_invest(subj_node):
 	if game.DRs > 0:
@@ -159,20 +161,18 @@ func on_invest(subj_node):
 			subject.lv += 1
 			subject.DRs -= subject.lv
 		if $ModifyDimension.get_node(subj_node.name).visible:
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
+			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 		if subj_node.name == "Dimensional_Power":
+			set_grid()
 			if $ModifyDimension/Maths.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 4 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 3 else 1.0)
 			elif $ModifyDimension/Physics.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 4 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 3 else 1.0)
 			elif $ModifyDimension/Biology.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 4 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 3 else 1.0)
 			elif $ModifyDimension/Engineering.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 4 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 3 else 1.0)
 			$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = subject.lv + subject.DRs / float(subject.lv + 1)
-			if subject.lv >= 1:
-				$ModifyDimension/Physics/Control/VBox/universe_value.visible = true
-				$ModifyDimension/Physics/Control/VBox2/universe_value.visible = true
 			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject.lv):
 				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject.lv)["custom_colors/font_color"] = Color.white
 		subj_node.refresh(subject.DRs, subject.lv)
@@ -184,7 +184,7 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(u_i.universe_value * pow(u_i.lv, 2.2) / 10000.0), tr("PLUS_X_IF").format({"bonus":Helper.clever_round(u_i.universe_value * (pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0), "lv":u_i.lv+1})])
+	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0), "lv":u_i.lv+1})])
 	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
@@ -225,10 +225,10 @@ func on_univ_over(id:int):
 		tr("TIME_SPEED"),
 		u_i.time_speed,
 		]
-	if game.subjects.dimensional_power.lv > 2:
-		$UnivInfo.text += "\n%s: %s" % [tr("ANTIMATTER"), u_i.antimatter]
-	if game.subjects.dimensional_power.lv > 0:
-		$UnivInfo.text += "\n%s: %s" % [tr("UNIVERSE_VALUE"), u_i.universe_value]
+#	if game.subjects.dimensional_power.lv > 2:
+#		$UnivInfo.text += "\n%s: %s" % [tr("ANTIMATTER"), u_i.antimatter]
+#	if game.subjects.dimensional_power.lv > 2:
+#		$UnivInfo.text += "\n%s: %s" % [tr("UNIVERSE_VALUE"), u_i.universe_value]
 
 func e(n, e):
 	return n * pow(10, e)
@@ -388,7 +388,7 @@ func calc_OP_points():
 		else:
 			$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color.white
 	if $ModifyDimension/Reset.visible:
-		var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 4 else 1.0)
+		var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 		$ModifyDimension/Reset/Generate.visible = true
 		#Save migration
 		#$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult) or not num_errors.empty()
@@ -526,3 +526,7 @@ func _on_Lake_pressed(el:String):
 	$ModifyDimension/Biology/Control/Lake/Bonus.is_integer = lake_params[el].has("is_integer")
 	$ModifyDimension/Biology/Control/Lake/Bonus.step = 1.0 if lake_params[el].has("is_integer") else 0.2
 	$ModifyDimension/Biology/Control/Lake/Bonus.set_value(lake_params[el].value)
+
+
+func _on_LakePD_pressed(el:String):
+	pass # Replace with function body.

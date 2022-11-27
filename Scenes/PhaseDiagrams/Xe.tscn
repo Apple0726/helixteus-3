@@ -4,25 +4,21 @@
 
 [node name="Xenon" type="Node2D"]
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 288.0 ],
-"_edit_vertical_guides_": [ 288.0, 1112.0 ]
-}
 
 [node name="Solid" type="Polygon2D" parent="."]
 color = Color( 0.682353, 0.866667, 1, 1 )
-polygon = PoolVector2Array( 0, 0, 1112, 0, 1112, 576, 0, 576 )
+polygon = PoolVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
 color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PoolVector2Array( 192, 232, 320, 164, 320, 204, 272, 216, 180, 296 )
+polygon = PoolVector2Array( 140, 172, 236, 104, 236, 144, 136, 204, 128, 208 )
 
 [node name="Gas" type="Polygon2D" parent="."]
 color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PoolVector2Array( 160, 576, 172, 356, 180, 296, 272, 216, 320, 204, 1112, 180, 1112, 576 )
+polygon = PoolVector2Array( 96, 400, 128, 208, 136, 204, 236, 144, 800, 144, 800, 400 )
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 320, 164, 320, 204, 1112, 180, 1112, 112 )
+polygon = PoolVector2Array( 236, 104, 236, 144, 800, 144, 800, 72 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )

@@ -53,6 +53,7 @@ var vehicle_panel:Control
 var RC_panel:Control
 var MU_panel:Control
 var SC_panel:Control
+var PD_panel:Control
 var production_panel:Control
 var send_ships_panel:Control
 var send_fighters_panel:Control
@@ -123,6 +124,7 @@ var dim_num:int = 1
 var subjects:Dictionary
 var maths_bonus:Dictionary
 var physics_bonus:Dictionary
+var chemistry_bonus:Dictionary
 var biology_bonus:Dictionary
 var engineering_bonus:Dictionary
 
@@ -845,6 +847,7 @@ func load_game():
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
 	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	physics_bonus = save_info_dict.physics_bonus
+	chemistry_bonus = save_info_dict.chemistry_bonus
 	biology_bonus = save_info_dict.biology_bonus
 	engineering_bonus = save_info_dict.engineering_bonus
 	achievement_data = save_info_dict.get("achievement_data", {})
@@ -856,7 +859,7 @@ func load_game():
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
 		for univ in universe_data:
-			lv_sum += pow(univ.lv, 2.2) * univ.universe_value
+			lv_sum += pow(univ.lv, 2.2)
 		DRs += floor(lv_sum / 10000.0) + 1
 		for i in len(universe_data):
 			Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
@@ -951,7 +954,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		universe_data[0].difficulty = 1.0
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
-		universe_data[0].universe_value = 1.0
 		maths_bonus = {
 			"BUCGF":1.3,
 			"MUCGF_MV":1.9,
@@ -966,6 +968,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		}
 		physics_bonus = Data.univ_prop_weights.duplicate()
 		physics_bonus.MVOUP = 0.5
+		chemistry_bonus = {}
 		biology_bonus = {
 			"PGSM":1.0,
 			"PYM":1.0,
@@ -1274,6 +1277,7 @@ func add_panels():
 	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instance()
 	MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instance()
 	SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instance()
+	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instance()
 	production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instance()
@@ -1355,6 +1359,9 @@ func add_panels():
 
 	SC_panel.visible = false
 	$Panels/Control.add_child(SC_panel)
+
+	PD_panel.visible = false
+	$Panels/Control.add_child(PD_panel)
 
 	production_panel.visible = false
 	$Panels/Control.add_child(production_panel)
@@ -2089,6 +2096,7 @@ func generate_clusters(parent_id:int):
 	randomize()
 	var total_clust_num = u_i.cluster_num
 	max_dist_from_center = pow(total_clust_num, 0.5) * 500
+	show.c_bk_button = true
 	for _i in range(0, total_clust_num):
 		if parent_id == 0 and _i == 0:
 			continue
@@ -3149,12 +3157,12 @@ func generate_tiles(id:int):
 			earn_achievement("exploration", "find_xenon_lake")
 	if p_i.has("lake_1"):
 		if p_i.lake_1 == "Ne":
-			lake_1_au_int = Helper.clever_round(2.4e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
+			lake_1_au_int = Helper.clever_round(1.2e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_1 == "Xe":
 			lake_1_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
 	if p_i.has("lake_2"):
 		if p_i.lake_2 == "Ne":
-			lake_2_au_int = Helper.clever_round(2.4e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
+			lake_2_au_int = Helper.clever_round(1.2e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_2 == "Xe":
 			lake_2_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
 	var planet_with_nothing = true
@@ -3263,7 +3271,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
 							"Ti":0.005 * randf(),
-							"Pu":1e-7 * randf(),
 							"He":0.003 * big_planet_factor * randf(),
 						}
 		else:
@@ -3292,7 +3299,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements.Mg = r * 0.02 * randf()
 			elements.Ti = r * 0.005 * randf()
 			elements.H = r * 0.002 * randf()
-			elements.Pu = r * 1e-7 * randf()
 	for el in elements:
 		if u_i.cluster_data[c_c].rich_elements.has(el):
 			elements[el] *= u_i.cluster_data[c_c].rich_elements[el]
@@ -3873,6 +3879,7 @@ func fn_save_game():
 		"subjects":subjects,
 		"maths_bonus":maths_bonus,
 		"physics_bonus":physics_bonus,
+		"chemistry_bonus":chemistry_bonus,
 		"biology_bonus":biology_bonus,
 		"engineering_bonus":engineering_bonus,
 		"stats_global":stats_global,
@@ -4149,8 +4156,6 @@ func generate_new_univ_confirm():
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0
-	var UV_mult = 1.0#(1.5 + subjects.dimensional_power.lv * 0.2) if subjects.dimensional_power.lv > 0 else 1.0
-	universe_data[0].universe_value = UV_mult
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB

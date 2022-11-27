@@ -1,10 +1,10 @@
 extends "PhaseDiagram.gd"
 
-#func _ready():
-#	get_state(273, 1, $MeltPoint)
-#	get_state(373, 1, $BoilPoint)
-#	get_state(273, 0.00612, $CritPoint)
-#	get_state(647, 221, $SuperPoint)
+func _ready():
+	place(273, 1, $MeltPoint)
+	place(373, 1, $BoilPoint)
+	place(273, 0.00612, $TriplePoint)
+	place(647, 221, $SuperPoint)
 
 var colors = {	"S":Color(0.48, 0.76, 1.0, 0.6),
 				"L":Color(0.34, 0.84, 1.0, 1.0),

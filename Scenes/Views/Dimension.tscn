@@ -259,22 +259,23 @@ scroll_vertical_enabled = false
 [node name="Grid" type="GridContainer" parent="Subjects"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 768.0
-margin_bottom = 666.0
+margin_right = 586.0
+margin_bottom = 667.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 3
+columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Maths" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_right = 250.0
+margin_right = 286.0
 texture = ExtResource( 5 )
 btn_text = "MODIFY_FORMULAS"
 
 [node name="Physics" parent="Subjects/Grid" instance=ExtResource( 3 )]
+visible = false
 margin_left = 254.0
 margin_right = 504.0
 texture = ExtResource( 4 )
@@ -282,14 +283,15 @@ btn_text = "REWRITE_PHYSICS_LAWS"
 
 [node name="Chemistry" parent="Subjects/Grid" instance=ExtResource( 3 )]
 visible = false
-margin_left = 508.0
-margin_right = 758.0
+margin_left = 254.0
+margin_right = 504.0
 texture = ExtResource( 7 )
-btn_text = "CUSTOMIZE_NEW_METALS"
+btn_text = "EXPERIMENT_WITH_MOLECULES"
 
 [node name="Biology" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 508.0
-margin_right = 758.0
+visible = false
+margin_left = 254.0
+margin_right = 504.0
 texture = ExtResource( 11 )
 btn_text = "FIDDLE_WITH_DNA"
 
@@ -300,16 +302,14 @@ margin_right = 758.0
 texture = ExtResource( 14 )
 
 [node name="Engineering" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_top = 330.0
-margin_right = 250.0
-margin_bottom = 656.0
+margin_left = 290.0
+margin_right = 576.0
 texture = ExtResource( 10 )
 btn_text = "DO_ENGINEERING"
 
 [node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 254.0
 margin_top = 330.0
-margin_right = 504.0
+margin_right = 286.0
 margin_bottom = 656.0
 texture = ExtResource( 6 )
 
@@ -937,8 +937,7 @@ Gravitational constant
 Elementary charge
 Dark energy
 Difficulty
-Time speed
-Universe value"
+Time speed"
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 118.0
@@ -1045,15 +1044,6 @@ margin_right = 76.0
 margin_bottom = 312.0
 step = 1.0
 value = 50.0
-
-[node name="universe_value" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 320.0
-margin_right = 76.0
-margin_bottom = 352.0
-step = 1.0
-value = 250.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
@@ -1168,16 +1158,143 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="universe_value" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="Chemistry" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
-margin_left = 362.0
-margin_top = 599.0
-margin_right = 404.0
-margin_bottom = 623.0
-text = "(250)"
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 48.0
+margin_right = 408.0
+margin_bottom = 680.0
+rect_min_size = Vector2( 388, 672 )
+mouse_filter = 1
+custom_styles/bg = SubResource( 5 )
+
+[node name="Control" type="Control" parent="ModifyDimension/Chemistry"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 655.0
+rect_min_size = Vector2( 300, 650 )
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Label" type="Label" parent="ModifyDimension/Chemistry/Control"]
+margin_left = 16.0
+margin_top = 119.0
+margin_right = 330.0
+margin_bottom = 143.0
+text = "EDIT_PHASE_DIAGRAMS"
+
+[node name="PDLabel" type="TextureRect" parent="ModifyDimension/Chemistry/Control"]
+margin_left = 266.0
+margin_top = 115.0
+margin_right = 298.0
+margin_bottom = 147.0
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 4
+
+[node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Chemistry/Control"]
+margin_left = 14.0
+margin_top = 163.0
+margin_right = 370.0
+margin_bottom = 251.0
+columns = 5
+
+[node name="H2O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_right = 68.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 26 )
+icon_align = 1
+expand_icon = true
+
+[node name="CH4" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 72.0
+margin_right = 140.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 27 )
+icon_align = 1
+expand_icon = true
+
+[node name="CO2" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 144.0
+margin_right = 212.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 28 )
+icon_align = 1
+expand_icon = true
+
+[node name="NH3" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 216.0
+margin_right = 284.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 31 )
+icon_align = 1
+expand_icon = true
+
+[node name="H" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 288.0
+margin_right = 356.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 30 )
+icon_align = 1
+expand_icon = true
+
+[node name="He" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_top = 44.0
+margin_right = 68.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 29 )
+icon_align = 1
+expand_icon = true
+
+[node name="O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 72.0
+margin_top = 44.0
+margin_right = 140.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 32 )
+icon_align = 1
+expand_icon = true
+
+[node name="Ne" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 144.0
+margin_top = 44.0
+margin_right = 212.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 33 )
+icon_align = 1
+expand_icon = true
+
+[node name="Xe" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+margin_left = 216.0
+margin_top = 44.0
+margin_right = 284.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+icon = ExtResource( 34 )
+icon_align = 1
+expand_icon = true
 
 [node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -1633,17 +1750,6 @@ texture_progress = ExtResource( 17 )
 fill_mode = 2
 nine_patch_stretch = true
 
-[node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 71.0
-margin_right = 386.0
-margin_bottom = 122.0
-mouse_filter = 1
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Unlock \"universe value\" property"
-autowrap = true
-
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
 margin_top = 167.0
@@ -1658,24 +1764,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
 margin_top = 259.0
 margin_right = 386.0
 margin_bottom = 310.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Unlock antimatter (note: not yet in-game)"
+text = "+50% capacity to all OP-meters"
 autowrap = true
 
-[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 351.0
+margin_top = 71.0
 margin_right = 386.0
-margin_bottom = 402.0
+margin_bottom = 122.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "+50% capacity to all OP-meters"
+text = "Unlock Physics, Chemistry and Biology"
 autowrap = true
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
@@ -1802,6 +1908,35 @@ autowrap = true
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PHASE_DIAGRAM_HELP" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_LakePD_pressed" binds= [ "H2O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= [ "CH4" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_LakePD_pressed" binds= [ "CH4" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= [ "CO2" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_LakePD_pressed" binds= [ "CO2" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= [ "NH3" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_LakePD_pressed" binds= [ "NH3" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= [ "H" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_LakePD_pressed" binds= [ "H" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= [ "HE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_LakePD_pressed" binds= [ "He" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= [ "O" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_LakePD_pressed" binds= [ "O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= [ "NE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_LakePD_pressed" binds= [ "Ne" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_LakePD_pressed" binds= [ "Xe" ]]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PGSM_DESC" ]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PYM_DESC" ]]
@@ -1833,8 +1968,6 @@ autowrap = true
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= [ "Xe" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_Label1_mouse_entered"]
-[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]
