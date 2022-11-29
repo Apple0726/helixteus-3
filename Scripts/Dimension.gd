@@ -12,23 +12,24 @@ var chemistry_OP_points:float = 0
 var biology_OP_points:float = 0
 var engineering_OP_points:float = 0
 var num_errors:Dictionary = {}
+var selected_element:String
 
 var table
 
 var lake_params:Dictionary = {
-	"H2O":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
-	"CH4":{"operator":"÷", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
-	"CO2":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"NH3":{"operator":"÷", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
-	"H":{"operator":"+", "min_value":0, "max_value":2, "value":0, "is_integer":true, "OP_factor":0.8},
-	"He":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"O":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
-	"Ne":{"operator":"x", "min_value":1, "max_value":INF, "value":1, "OP_factor":1.2},
-	"Xe":{"operator":"+", "min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":10},
+	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.7},
+	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
+	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
+	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
+	"H":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":0.8, "pw":2},
+	"He":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
+	"O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
+	"Ne":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
+	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
-	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0001
-	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0001
+	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
+	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
 	$ModifyDimension/Maths.rect_clip_content = true
 	if game.c_u != -1 and not game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
@@ -46,7 +47,7 @@ func _ready():
 	
 	refresh_univs()
 	$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
-	for i in game.subjects.dimensional_power.lv:
+	for i in range(1, game.subjects.dimensional_power.lv + 1):
 		if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % i):
 			$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % i)["custom_colors/font_color"] = Color.white
 		else:
@@ -62,7 +63,7 @@ func toggle_subj(subj_name:String):
 			$ModifyDimension.get_node(subj.name).visible = false
 	if $ModifyDimension.has_node(subj_name):
 		$ModifyDimension.get_node(subj_name).visible = not $ModifyDimension.get_node(subj_name).visible
-		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Biology", "Engineering"]
+		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
@@ -138,7 +139,7 @@ func refresh_univs(reset:bool = false):
 		$ModifyDimension/Reset/LineEdit.visible = game.dim_num >= 3
 		$Subjects.margin_left = 448
 		for subj in $Subjects/Grid.get_children():
-			if subj.name in ["Maths", "Physics", "Engineering", "Dimensional_Power"]:
+			if subj.name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering", "Dimensional_Power"]:
 				subj.get_node("HBox/Invest").connect("pressed", self, "on_invest", [subj])
 	$Universes.visible = not reset
 	$UnivInfo.visible = not reset
@@ -323,16 +324,16 @@ func _input(event):
 func calc_OP_points():
 	maths_OP_points = 0
 	num_errors.clear()
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -12.0, 1.2)#Building upgrade cost
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -4.0, 1.2)#Building upgrade cost
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.2)#Mineral value
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -2.5, 1.2)#Mining speed multiplier
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.0, 1.2)#Mining speed multiplier
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -10.0, 1.5)#Aurora intensity exponent
-	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 80.0, 1.0, 3.0)#Infinite research
+	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 60.0, 1.0, 3.0)#Infinite research
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -12.0, 1.1)#Ship level up XP
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 240.0, 1.0, 3.0)#Ship stats
 	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.4)#Chance of ship hitting enemy
-	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -100.0, 2)#Material metal buy/sell
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.6, -120.0, 1.15)#Universe level XP
+	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -70.0, 2)#Material metal buy/sell
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -50.0, 1.15)#Universe level XP
 
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
@@ -367,8 +368,11 @@ func calc_OP_points():
 		physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 	
 	biology_OP_points = 0
-	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.25)
-	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.5)
+	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.4)
+	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.6)
+	if selected_element != "":
+		lake_params[selected_element].value = float($ModifyDimension/Biology/Control/Lake/Bonus.value)
+		update_lake_bonus_text(selected_element)
 	for el in lake_params.keys():
 		calc_bio_points_lake(lake_params[el])
 	
@@ -376,25 +380,25 @@ func calc_OP_points():
 	calc_engi_points($ModifyDimension/Engineering/Control/BCM, 7.0, false)
 	calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.15, true)
 	calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.4, true)
-	for subj in ["Maths", "Physics", "Biology", "Engineering"]:
+	for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
 		if $ModifyDimension.get_node(subj).visible:
-			if is_equal_approx(self["%s_OP_points" % subj.to_lower()], 0):
+			if is_zero_approx(self["%s_OP_points" % subj.to_lower()]):
 				self["%s_OP_points" % subj.to_lower()] = 0
-		$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj.to_lower()]
-		$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
-		if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.has(subj.to_lower()):
-			$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
-			$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0)
-		else:
-			$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color.white
+			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj.to_lower()]
+			$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
+			if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.has(subj.to_lower()):
+				$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
+				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0)
+			else:
+				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color.white
 	if $ModifyDimension/Reset.visible:
-		var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
+		#var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 		$ModifyDimension/Reset/Generate.visible = true
 		#Save migration
 		#$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult) or not num_errors.empty()
 
 func calc_bio_points(node, op_factor:float):
-	if node.value <= node.min_value:
+	if node.value < node.min_value:
 		node["custom_colors/font_color"] = Color.red
 		num_errors.biology = true
 		return
@@ -403,11 +407,16 @@ func calc_bio_points(node, op_factor:float):
 		biology_OP_points += op_factor * (node.value - 1.0)
 
 func calc_bio_points_lake(lake:Dictionary):
-	if lake.value <= lake.min_value:
+	if lake.value < lake.min_value:
 		num_errors.biology = true
+		$ModifyDimension/Biology/Control/Lake/Bonus["custom_colors/font_color"] = Color.red
 		return
 	else:
-		biology_OP_points += lake.OP_factor * (lake.value - lake.min_value)
+		if lake.has("pw"):
+			biology_OP_points += lake.OP_factor * pow(lake.value - lake.min_value, lake.pw)
+		else:
+			biology_OP_points += lake.OP_factor * (lake.value - lake.min_value)
+		$ModifyDimension/Biology/Control/Lake/Bonus["custom_colors/font_color"] = Color.black
 
 func calc_engi_points(node, op_factor:float, growth:bool):
 	if node.value <= node.min_value:
@@ -436,7 +445,7 @@ func set_bonuses():
 		if $ModifyDimension/Biology/Control.has_node(bonus):
 			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control.get_node(bonus).value
 		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):	
-			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control/LakeButtons.get_node(bonus).value
+			game.biology_bonus[bonus] = lake_params[bonus].value
 	for bonus in game.engineering_bonus:
 		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
 
@@ -518,15 +527,42 @@ func _on_Lake_mouse_entered(extra_arg_0):
 	game.show_tooltip(tr("%s_NAME" % extra_arg_0))
 
 func _on_Lake_pressed(el:String):
+	selected_element = el
 	$ModifyDimension/Biology/Control/Lake.visible = true
-	$ModifyDimension/Biology/Control/Lake/Operator.text = lake_params[el].operator
-	$ModifyDimension/Biology/Control/Lake/Label.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("%s/%s/%s" % [Data.lake_bonus_values[el].s, Data.lake_bonus_values[el].l, Data.lake_bonus_values[el].sc])
+	$ModifyDimension/Biology/Control/Lake/Operator.text = Data.lake_bonus_values[el].operator
+	update_lake_bonus_text(el)
 	$ModifyDimension/Biology/Control/Lake/Bonus.min_value = lake_params[el].min_value
 	$ModifyDimension/Biology/Control/Lake/Bonus.max_value = lake_params[el].max_value
 	$ModifyDimension/Biology/Control/Lake/Bonus.is_integer = lake_params[el].has("is_integer")
 	$ModifyDimension/Biology/Control/Lake/Bonus.step = 1.0 if lake_params[el].has("is_integer") else 0.2
 	$ModifyDimension/Biology/Control/Lake/Bonus.set_value(lake_params[el].value)
 
+func update_lake_bonus_text(el:String):
+	if Data.lake_bonus_values[el].operator == "x":
+		$ModifyDimension/Biology/Control/Lake/LakeDesc.bbcode_text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Helper.clever_round(Data.lake_bonus_values[el].s * lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].l * lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].sc * lake_params[el].value)])
+	elif Data.lake_bonus_values[el].operator == "+":
+		$ModifyDimension/Biology/Control/Lake/LakeDesc.bbcode_text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Data.lake_bonus_values[el].s + lake_params[el].value, Data.lake_bonus_values[el].l + lake_params[el].value, Data.lake_bonus_values[el].sc + lake_params[el].value])
+	elif Data.lake_bonus_values[el].operator == "÷":
+		$ModifyDimension/Biology/Control/Lake/LakeDesc.bbcode_text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Helper.clever_round(Data.lake_bonus_values[el].s / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].l / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].sc / lake_params[el].value)])
 
 func _on_LakePD_pressed(el:String):
 	pass # Replace with function body.
+
+
+func _on_LakeDesc_mouse_entered():
+	game.show_adv_tooltip("[color=#aeddff]" + tr("SOLID") + "[/color]/[color=#c6ffcc]" + tr("LIQUID") + "[/color]/" + tr("SUPERCRITICAL"))
+
+
+func _on_LakeDesc_mouse_exited():
+	game.hide_adv_tooltip()
+
+
+func _on_BSlider_value_changed(value):
+	$ModifyDimension/Physics/Control/PDFPlotter.B = value
+	$ModifyDimension/Physics/Control/BSlider.text = "for B = %s nT" % Helper.clever_round(value)
+	$ModifyDimension/Physics/Control/PDFPlotter.add_points()
+
+
+func _on_BI_text_changed(new_text):
+	$ModifyDimension/Physics/Control/PDFPlotter.p = str(new_text)
+	$ModifyDimension/Physics/Control/PDFPlotter.add_points()

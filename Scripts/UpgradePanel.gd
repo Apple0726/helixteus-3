@@ -223,7 +223,7 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	if bldg == "SP" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "AE" and path_selected == 1:
-		curr_value = bldg_value(Helper.get_AE_production(planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.ash.richness if first_tile.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg in ["MS", "B", "NSF", "ESF"]:

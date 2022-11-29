@@ -252,8 +252,6 @@ func show_tooltip(tile, tile_id:int):
 			fire_strength = tile.ash.richness
 		tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
-#		if tile.cave.has("special_cave") and tile.cave.special_cave == 1:
-#			floor_size = tr("FLOOR_SIZE").format({"size":"?"})
 		if not game.science_unlocked.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
@@ -285,7 +283,13 @@ func show_tooltip(tile, tile_id:int):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
-		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n" + tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Data.lake_bonus_values[tile.lake.element][tile.lake.state]
+		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n"
+		if Data.lake_bonus_values[tile.lake.element].operator == "x":
+			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[tile.lake.element][tile.lake.state] * game.biology_bonus[tile.lake.element])
+		elif Data.lake_bonus_values[tile.lake.element].operator == "÷":
+			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[tile.lake.element][tile.lake.state] / game.biology_bonus[tile.lake.element])
+		elif Data.lake_bonus_values[tile.lake.element].operator == "+":
+			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % (Data.lake_bonus_values[tile.lake.element][tile.lake.state] + game.biology_bonus[tile.lake.element])
 	elif tile.has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
@@ -643,6 +647,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 	if tile.has("auto_GH"):
 		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
+		if tile.auto_GH.has("soil_drain"):
+			game.autocollect.mats.soil += tile.auto_GH.soil_drain
 		tile.erase("auto_GH")
 	tile.erase("bldg")
 	if tile.empty():
@@ -1349,7 +1355,7 @@ func on_timeout():
 				tile.wormhole.active = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
-	if icons_hidden or len(rsrcs) != len(game.tile_data):
+	if icons_hidden:
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]

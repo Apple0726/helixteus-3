@@ -1315,7 +1315,7 @@ VEI,Volcanic Explosivity Index,,,火山喷发指数,Vullkan Volitalitäts index,
 VOLCANIC_ASH,Volcanic ash,,,火山灰,Vulkanasche,,,,Vukáni hamu,火山灰,Vulkanisch as,
 MINERAL_RICHNESS,Mineral richness,,,矿物丰度,Minralenreichtum,,,,Ásványgazdagság,鉱物の豊富さ,Mineraalrijkheid,
 PROXIMITY_TO_VOLCANO_MULT,Proximity to volcano multiplier,,,火山乘数估值,Vulkannähe multiplikator,,,,Vulkánközelségi szorzó,火山倍率の近さ,Afstand tot vulkaan vermenigvuldiger,
-CREATED_ARITIFICAL_VOLCANO,"You created an artificial volcano, erupting with a VEI of %s!",,,你创造了一座人工火山，火山喷发指数为 %s！,Du hast einen künstlichen Vulkan erzeugt desen Eruptionen %s VVI erreichen!,,,,,人工火山を作り、VEI%sで噴火させた！,"Je hebt een artificiële vulkaan gecreëerd, die uitbarst met een VEI van %s!",
+CREATED_ARTIFICIAL_VOLCANO,"You created an artificial volcano, erupting with a VEI of %s!",,,你创造了一座人工火山，火山喷发指数为 %s！,Du hast einen künstlichen Vulkan erzeugt desen Eruptionen %s VVI erreichen!,,,,,人工火山を作り、VEI%sで噴火させた！,"Je hebt een artificiële vulkaan gecreëerd, die uitbarst met een VEI van %s!",
 CREATED_FIRST_ARITIFICAL_VOLCANO,"As you mine through the center of this planet, you notice the entire planet trembling, forming an artificial volcano where you mined! It erupted with a VEI of %s.\nAsh from artificial volcanoes boosts plants and buildings as usual. For nearby caves, ash and extra minerals do appear but cave difficulty is unaffected.",,,当你在这个星球的中心采矿时，你注意到整个星球都在颤抖，在你采矿的地方形成了一座人工火山！ 它的火山喷发指数达到 %s 。\n人造火山的灰烬像往常一样促进植物和建筑物的生长。 对于附近的洞穴，确实会出现灰烬和额外的矿物质，但洞穴难度不受影响。,Als du durch den Kern des Planeten geborht hast spürst du ein tiefes grollen.Es entsteht ein Künstlicher Vulkan wo du gegraben hast! Er erzeugt desen Eruptionen mit %s VVI.\nAshe aus Vulkanen verbessert Planzen und Bergbau wie sonst. Bei nahen Höhlen kommen nun auch mehr Erze vor ohne das die Schwierigkeit erhöht wurde.,,,,,この惑星の中心で採掘していると、惑星全体が揺れ、採掘した場所に人工火山ができました！VEIは%s。\n人工火山の灰は、通常通り植物や建物を強化します。近くの洞窟では、灰と余分な鉱物が出現しますが、洞窟の難易度に影響はありません。,,
 ARTIFICIAL_VOLCANO,Artificial volcano,,,人工火山,Künstlicher Vulkan,,,,Mesterséges vulkán,人工火山,,Искусственный вулкан
 PT_NAME,Platinum,,,铂,Platin,,,,Platina,プラチナ,,Платина
@@ -1487,3 +1487,4 @@ PHASE_DIAGRAM_EDITOR,Phase diagram editor,,,,,,,,Halmazállapotdiagramm-módosí
 EDIT_PHASE_DIAGRAMS,Edit phase diagrams,,,,,,,,,,,
 PHASE_DIAGRAM_HELP,"Lakes on planets give different bonuses depending on the state of matter they're in.\nFor example, helium lakes give the most minerals when in liquid state. You can move the triple point and the critical point of helium to make liquid helium appear on planets with a wider range of temperatures and pressures.",,,,,,,,,,,
 EXPERIMENT_WITH_MOLECULES,Experiment with molecules,,,,,,,,,,,
+NOT_ALL_STAGES_UNLOCKED,Not all stages of this megastructure are researched.,,,,,,,,,,,

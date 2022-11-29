@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -34,6 +34,7 @@
 [ext_resource path="res://Graphics/Atoms/O.png" type="Texture" id=32]
 [ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=33]
 [ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=34]
+[ext_resource path="res://Scenes/Plotter.tscn" type="PackedScene" id=35]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
@@ -117,6 +118,16 @@ border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
 border_blend = true
 shadow_size = 1
 shadow_offset = Vector2( 0, 2 )
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0, 0.0977199, 0.192182, 0.286645, 0.394137, 0.488599, 0.583062, 0.684039, 0.785016, 0.892508, 1 )
+colors = PoolColorArray( 0.0980392, 0, 0, 1, 1, 0.709804, 0.423529, 1, 1, 0.854902, 0.709804, 1, 1, 0.929412, 0.890196, 1, 1, 1, 1, 1, 0.835294, 0.878431, 1, 1, 0.635294, 0.752941, 1, 1, 0.54902, 0.694118, 1, 1, 0.52549, 1, 0.458824, 1, 1, 0, 1, 1, 0.258824, 0, 1, 1 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="Curve" id=11]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Animation" id=8]
 resource_name = "Fade"
@@ -878,7 +889,7 @@ margin_left = 182.0
 margin_top = 688.0
 margin_right = 224.0
 margin_bottom = 712.0
-text = "(1.6)"
+text = "(1.63)"
 
 [node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF"]
 margin_left = 52.0
@@ -899,9 +910,6 @@ margin_bottom = 680.0
 rect_min_size = Vector2( 388, 672 )
 mouse_filter = 1
 custom_styles/bg = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control" type="Control" parent="ModifyDimension/Physics"]
 margin_left = 10.0
@@ -914,21 +922,89 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
+margin_left = 30.0
+margin_top = 263.0
+margin_right = 350.0
+margin_bottom = 427.0
+texture = SubResource( 13 )
+expand = true
+
+[node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control"]
+position = Vector2( -6, 15 )
+points = PoolVector2Array( 356, 412, 36, 412, 36, 232 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control"]
+position = Vector2( -14, 11 )
+points = PoolVector2Array( 44, 236, 44, 224 )
+width_curve = SubResource( 11 )
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control"]
+position = Vector2( 306, 191 )
+points = PoolVector2Array( 44, 236, 56, 236 )
+width_curve = SubResource( 11 )
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource( 35 )]
+margin_left = 30.0
+margin_top = 263.0
+margin_right = 350.0
+margin_bottom = 427.0
+
+[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 16.0
+margin_top = 111.0
+margin_right = 335.0
+margin_bottom = 135.0
+text = "INFLUENCE_OF_B_TO_MASS"
+
+[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 2.0
+margin_top = 207.0
+margin_right = 114.0
+margin_bottom = 231.0
+text = "PROBABILITY"
+
+[node name="B" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 250.0
+margin_top = 235.0
+margin_right = 386.0
+margin_bottom = 259.0
+text = "for B = 1 nT"
+
+[node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control"]
+margin_left = 114.0
+margin_top = 239.0
+margin_right = 238.0
+margin_bottom = 255.0
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 0.1
+exp_edit = true
+
 [node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 16.0
-margin_top = 119.0
-margin_right = 330.0
-margin_bottom = 143.0
+margin_top = 491.0
+margin_right = 335.0
+margin_bottom = 515.0
 text = "MIN_VAL_OF_UNIV_PROPERTIES"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 50.0
+margin_top = 431.0
+margin_right = 369.0
+margin_bottom = 455.0
+text = "M   K   G   F   A   B   O   Q   R   Z"
 
 [node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
-margin_top = 275.0
+margin_top = 647.0
 margin_right = 351.0
-margin_bottom = 603.0
+margin_bottom = 975.0
 custom_constants/line_spacing = 14
 text = "Speed of light
 Planck constant
@@ -940,35 +1016,43 @@ Difficulty
 Time speed"
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
-margin_left = 118.0
-margin_top = 163.0
-margin_right = 154.0
-margin_bottom = 193.0
+margin_left = 122.0
+margin_top = 535.0
+margin_right = 158.0
+margin_bottom = 565.0
 help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
 
 [node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 18.0
-margin_top = 219.0
+margin_top = 591.0
 margin_right = 370.0
-margin_bottom = 249.0
+margin_bottom = 621.0
 bbcode_text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
 text = "COSTS_OF_UNIV_PROPERTIES "
 label_text = "COSTS_OF_UNIV_PROPERTIES"
 help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
 
+[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
+margin_left = 18.0
+margin_top = 155.0
+margin_right = -206.0
+margin_bottom = -463.0
+step = 0.05
+value = 0.5
+
 [node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
 margin_left = 18.0
-margin_top = 159.0
+margin_top = 531.0
 margin_right = -206.0
-margin_bottom = -459.0
+margin_bottom = -87.0
 step = 0.05
 value = 0.5
 
 [node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 254.0
-margin_top = 275.0
+margin_top = 647.0
 margin_right = 330.0
-margin_bottom = 627.0
+margin_bottom = 999.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1047,20 +1131,27 @@ value = 50.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
-margin_top = 275.0
+margin_top = 647.0
 margin_right = 254.0
-margin_bottom = 639.0
+margin_bottom = 1011.0
 custom_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
+margin_top = 371.0
 margin_right = 40.0
-margin_bottom = 40.0
+margin_bottom = 411.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+margin_left = 162.0
+margin_top = -212.0
+margin_right = 204.0
+margin_bottom = -188.0
+text = "(0.3)"
+
 [node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 162.0
 margin_top = 163.0
 margin_right = 204.0
@@ -1071,18 +1162,13 @@ __meta__ = {
 }
 
 [node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 279.0
 margin_right = 404.0
 margin_bottom = 303.0
 text = "(10)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 319.0
 margin_right = 404.0
@@ -1093,7 +1179,6 @@ __meta__ = {
 }
 
 [node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 358.0
 margin_right = 404.0
@@ -1104,7 +1189,6 @@ __meta__ = {
 }
 
 [node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 398.0
 margin_right = 404.0
@@ -1115,7 +1199,6 @@ __meta__ = {
 }
 
 [node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 439.0
 margin_right = 404.0
@@ -1126,7 +1209,6 @@ __meta__ = {
 }
 
 [node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 479.0
 margin_right = 404.0
@@ -1137,7 +1219,6 @@ __meta__ = {
 }
 
 [node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 519.0
 margin_right = 404.0
@@ -1148,7 +1229,6 @@ __meta__ = {
 }
 
 [node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-visible = false
 margin_left = 362.0
 margin_top = 559.0
 margin_right = 404.0
@@ -1157,6 +1237,15 @@ text = "(50)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
+margin_left = 114.0
+margin_top = 155.0
+margin_right = 154.0
+margin_bottom = 187.0
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 4
 
 [node name="Chemistry" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -1348,7 +1437,7 @@ margin_left = 22.0
 margin_top = 159.0
 margin_right = -202.0
 margin_bottom = -459.0
-step = 0.5
+step = 0.25
 value = 1.0
 min_value = 1.0
 
@@ -1357,7 +1446,7 @@ margin_left = 22.0
 margin_top = 255.0
 margin_right = -202.0
 margin_bottom = -363.0
-step = 0.5
+step = 0.25
 value = 1.0
 min_value = 1.0
 
@@ -1479,32 +1568,38 @@ icon_align = 1
 expand_icon = true
 
 [node name="Lake" type="Control" parent="ModifyDimension/Biology/Control"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Label" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
+visible = false
 margin_left = 18.0
-margin_top = 475.0
-margin_right = 370.0
-margin_bottom = 526.0
-text = "Also produces %s minerals for every kilogram of cellulose consumed"
-autowrap = true
+margin_top = 487.0
+margin_right = 374.0
+margin_bottom = 537.0
+rect_min_size = Vector2( 0, 50 )
 
 [node name="Operator" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
-margin_left = 38.0
-margin_top = 567.0
-margin_right = 62.0
-margin_bottom = 595.0
+margin_left = 20.0
+margin_top = -4.0
+margin_right = 44.0
+margin_bottom = 24.0
 text = "x"
 autowrap = true
 
 [node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" instance=ExtResource( 19 )]
-margin_left = 62.0
-margin_top = 563.0
-margin_right = 98.0
-margin_bottom = 555.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 44.0
+margin_top = -8.0
+margin_right = 120.0
+margin_bottom = 24.0
 step = 0.5
 value = 1.0
+
+[node name="LakeDesc" type="RichTextLabel" parent="ModifyDimension/Biology/Control/Lake"]
+margin_top = 48.0
+margin_right = 356.0
+margin_bottom = 152.0
+mouse_filter = 1
+bbcode_enabled = true
+fit_content_height = true
 
 [node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -1750,6 +1845,16 @@ texture_progress = ExtResource( 17 )
 fill_mode = 2
 nine_patch_stretch = true
 
+[node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 71.0
+margin_right = 386.0
+margin_bottom = 122.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Unlock Physics, Chemistry and Biology"
+autowrap = true
+
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
 margin_top = 167.0
@@ -1764,7 +1869,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
 margin_top = 259.0
 margin_right = 386.0
@@ -1776,16 +1881,6 @@ autowrap = true
 
 [node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
-margin_top = 71.0
-margin_right = 386.0
-margin_bottom = 122.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Unlock Physics, Chemistry and Biology"
-autowrap = true
-
-[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
 margin_top = 447.0
 margin_right = 386.0
 margin_bottom = 498.0
@@ -1794,7 +1889,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Coming soon"
 autowrap = true
 
-[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
 margin_top = 634.8
 margin_right = 386.0
@@ -1908,6 +2003,9 @@ autowrap = true
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="value_changed" from="ModifyDimension/Physics/Control/BSlider" to="." method="_on_BSlider_value_changed"]
+[connection signal="text_changed" from="ModifyDimension/Physics/Control/BI" to="." method="_on_BI_text_changed"]
+[connection signal="mouse_entered" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_HelpLabel_mouse_entered" binds= [ "INFLUENCE_OF_B_TO_MASS_HELP" ]]
 [connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PHASE_DIAGRAM_HELP" ]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]
@@ -1968,6 +2066,8 @@ autowrap = true
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= [ "Xe" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]

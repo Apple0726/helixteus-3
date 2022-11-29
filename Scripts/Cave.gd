@@ -533,8 +533,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris.self_modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 					debris.self_modulate.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
-					var rand_scale_x = rng.randf()
-					debris.scale = Vector2.ONE * (0.005 / (1.001 - rand_scale_x) + 0.5 + 2 * pow(rand_scale_x, 4))
+					var rand_scale_x = -log(1 - rng.randf()) * 1.2 + 0.5
+					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))

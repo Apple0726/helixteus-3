@@ -302,9 +302,9 @@ func refresh_stars():
 			star.add_child(MS)
 			if star_info.MS in ["M_DS", "M_MB"]:
 				if star_info.MS == "M_DS":
-					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true)
+					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5))
 				elif star_info.MS == "M_MB":
-					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true)
+					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5))
 			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)

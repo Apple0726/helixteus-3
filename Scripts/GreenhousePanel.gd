@@ -80,38 +80,18 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 			game.autocollect.mats.soil += obj.auto_GH.soil_drain
 		obj.erase("auto_GH")
 	if plant_new:
-		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value
+		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value * game.biology_bonus.PGSM
 		if c_v == "system":
 			cellulose_drain *= tile_num
 		else:
 			if obj.lake_elements.has("CH4"):
-				if obj.lake_elements.CH4 == "l":
-					cellulose_drain *= 0.6
-				elif obj.lake_elements.CH4 == "sc":
-					cellulose_drain *= 0.3
-				else:
-					cellulose_drain *= 0.8
+				cellulose_drain *= Data.lake_bonus_values.CH4[obj.lake_elements.CH4] / game.biology_bonus.CH4
 			if obj.lake_elements.has("CO2"):
-				if obj.lake_elements.CO2 == "l":
-					produce.coal = cellulose_drain * 10
-				elif obj.lake_elements.CO2 == "sc":
-					produce.coal = cellulose_drain * 15
-				else:
-					produce.coal = cellulose_drain * 7
+				produce.coal = cellulose_drain * Data.lake_bonus_values.CO2[obj.lake_elements.CO2] * game.biology_bonus.CO2
 			if obj.lake_elements.has("He"):
-				if obj.lake_elements.He == "l":
-					produce.minerals = cellulose_drain * 150
-				elif obj.lake_elements.He == "sc":
-					produce.minerals = cellulose_drain * 200
-				else:
-					produce.minerals = cellulose_drain * 100
+				produce.minerals = cellulose_drain * Data.lake_bonus_values.He[obj.lake_elements.He] * game.biology_bonus.He
 			if obj.lake_elements.has("Ne"):
-				if obj.lake_elements.Ne == "l":
-					produce.quillite = cellulose_drain * 0.2
-				elif obj.lake_elements.Ne == "sc":
-					produce.quillite = cellulose_drain * 0.3
-				else:
-					produce.quillite = cellulose_drain * 0.1
+				produce.quillite = cellulose_drain * Data.lake_bonus_values.Ne[obj.lake_elements.Ne] * game.biology_bonus.Ne
 		Helper.add_GH_produce_to_autocollect(produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
 		obj.auto_GH = {
 			"produce":produce,
@@ -124,7 +104,7 @@ func on_slot_press(_name:String):
 	if c_v == "system":
 		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 		for p in produce:
-			produce[p] *= tile_num * game.u_i.time_speed * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * (p_i.ash.richness if p_i.has("ash") else 1.0)
+			produce[p] *= tile_num * game.u_i.time_speed * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * (p_i.ash.richness if p_i.has("ash") else 1.0)
 		set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
 	elif c_v == "planet":
 		var harvest:bool = false
@@ -135,10 +115,12 @@ func on_slot_press(_name:String):
 				break
 		for tile_id in tiles_selected:
 			var tile:Dictionary = game.tile_data[tile_id]
+			if tile.bldg.has("is_constructing"):
+				continue
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
-			var H2O_mult = Data.lake_bonus_values.H2O[tile.lake_elements.H2O] if tile.lake_elements.has("H2O") else 1.0
+			var H2O_mult = (Data.lake_bonus_values.H2O[tile.lake_elements.H2O] * game.biology_bonus.H2O) if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+				produce[p] *= game.u_i.time_speed * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			if harvest:
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
@@ -160,8 +142,8 @@ func _on_UseFertilizer_toggled(button_pressed):
 				var tile:Dictionary = game.tile_data[tile_id]
 				var au_mult = Helper.get_au_mult(tile)
 				if tile.has("auto_GH") and not tile.auto_GH.has("soil_drain"):
-					var fert_mult = Data.lake_bonus_values.O[tile.lake_elements.O] if tile.lake_elements.has("O") else 1.0
-					var fert_cost_mult = Data.lake_bonus_values.NH3[tile.lake_elements.NH3] if tile.lake_elements.has("NH3") else 1.0
+					var fert_mult = (Data.lake_bonus_values.O[tile.lake_elements.O] * game.biology_bonus.O) if tile.lake_elements.has("O") else 1.0
+					var fert_cost_mult = (Data.lake_bonus_values.NH3[tile.lake_elements.NH3] / game.biology_bonus.NH3) if tile.lake_elements.has("NH3") else 1.0
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
 							var add_amount = tile.auto_GH.produce[p] * (0.5 * fert_mult) * au_mult
@@ -185,8 +167,8 @@ func _on_UseFertilizer_toggled(button_pressed):
 				var tile:Dictionary = game.tile_data[tile_id]
 				var au_mult = Helper.get_au_mult(tile)
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
-					var fert_mult = Data.lake_bonus_values.O[tile.lake_elements.O] if tile.lake_elements.has("O") else 1.0
-					var fert_cost_mult = Data.lake_bonus_values.NH3[tile.lake_elements.NH3] if tile.lake_elements.has("NH3") else 1.0
+					var fert_mult = (Data.lake_bonus_values.O[tile.lake_elements.O] * game.biology_bonus.O) if tile.lake_elements.has("O") else 1.0
+					var fert_cost_mult = (Data.lake_bonus_values.NH3[tile.lake_elements.NH3] / game.biology_bonus.NH3) if tile.lake_elements.has("NH3") else 1.0
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
 							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_mult

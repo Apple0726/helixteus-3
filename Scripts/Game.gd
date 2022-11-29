@@ -1585,6 +1585,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if is_instance_valid(HUD) and new_view in ["battle", "cave", "dimension", "STM", "planet_details"]:
 			var anim_player:AnimationPlayer = HUD.get_node("AnimationPlayer2")
 			anim_player.play_backwards("MoveStuff")
+		if c_v == "planet" and is_instance_valid(view.obj):
+			view.obj.timer.stop()
 		yield(view_tween, "tween_all_completed")
 	hide_tooltip()
 	hide_adv_tooltip()
@@ -2485,44 +2487,44 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
-			a *= pow(e(1, -9) / B, 0.3)#Higher B: hotter stars
+			a *= pow(e(1, -9) / B, 0.4)#Higher B: hotter stars
 			#Solar masses
-			var mass:float = -log(1 - randf()) / a
+			var mass:float = -log(randf()) / a
 			var star_size = 1
 			var star_class = ""
 			#Temperature in K
 			var temp = 0
-			if mass < 0.08:
+			if mass < 0.08:#Y, T, L
 				star_size = range_lerp(mass, 0, 0.08, 0.01, 0.1)
 				temp = range_lerp(mass, 0, 0.08, 250, 2400)
-			if mass >= 0.08 and mass < 0.45:
+			if mass >= 0.08 and mass < 0.45:#M
 				star_size = range_lerp(mass, 0.08, 0.45, 0.1, 0.7)
 				temp = range_lerp(mass, 0.08, 0.45, 2400, 3700)
-			if mass >= 0.45 and mass < 0.8:
+			if mass >= 0.45 and mass < 0.8:#K
 				star_size = range_lerp(mass, 0.45, 0.8, 0.7, 0.96)
 				temp = range_lerp(mass, 0.45, 0.8, 3700, 5200)
-			if mass >= 0.8 and mass < 1.04:
+			if mass >= 0.8 and mass < 1.04:#G
 				star_size = range_lerp(mass, 0.8, 1.04, 0.96, 1.15)
 				temp = range_lerp(mass, 0.8, 1.04, 5200, 6000)
-			if mass >= 1.04 and mass < 1.4:
+			if mass >= 1.04 and mass < 1.4:#F
 				star_size = range_lerp(mass, 1.04, 1.4, 1.15, 1.4)
 				temp = range_lerp(mass, 1.04, 1.4, 6000, 7500)
-			if mass >= 1.4 and mass < 2.1:
+			if mass >= 1.4 and mass < 2.1:#A
 				star_size = range_lerp(mass, 1.4, 2.1, 1.4, 1.8)
 				temp = range_lerp(mass, 1.4, 2.1, 7500, 10000)
-			if mass >= 2.1 and mass < 16:
-				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6)
-				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
-			if mass >= 16 and mass < 100:
-				star_size = range_lerp(mass, 16, 100, 6.6, 22)
+			if mass >= 2.1 and mass < 9:#B
+				star_size = range_lerp(mass, 2.1, 9, 1.8, 6.6)
+				temp = range_lerp(mass, 2.1, 9, 10000, 30000)
+			if mass >= 9 and mass < 100:#O
+				star_size = range_lerp(mass, 9, 100, 6.6, 22)
 				temp = range_lerp(mass, 16, 100, 30000, 70000)
-			if mass >= 100 and mass < 1000:
+			if mass >= 100 and mass < 1000:#Q
 				star_size = range_lerp(mass, 100, 1000, 22, 60)
 				temp = range_lerp(mass, 100, 1000, 70000, 120000)
-			if mass >= 1000 and mass < 10000:
+			if mass >= 1000 and mass < 10000:#R
 				star_size = range_lerp(mass, 1000, 10000, 60, 200)
 				temp = range_lerp(mass, 1000, 10000, 120000, 210000)
-			if mass >= 10000:
+			if mass >= 10000:#Z
 				star_size = pow(mass, 1/3.0) * (200 / pow(10000, 1/3.0))
 				temp = 210000 * pow(1.45, mass / 10000.0 - 1)
 			
@@ -2532,28 +2534,27 @@ func generate_systems(id:int):
 			else:
 				star_type = "brown_dwarf"
 			var hypergiant:int = -1
-			if not dark_matter_system:
-				if mass > 0.2 and mass < 1.3 and randf() < 0.03:
-					star_type = "white_dwarf"
-					temp = 4000 + exp(10 * randf())
-					star_size = rand_range(0.008, 0.02)
-					mass = rand_range(0.4, 0.8)
-				else:
-					if mass > 0.25 and randf() < 0.08 * u_i.gravitational:
-						star_type = "giant"
-						star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
-					if star_type == "main_sequence":
-						if randf() < 0.01 * u_i.gravitational:
-							mass = rand_range(10, 50)
-							star_type = "supergiant"
-							star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
-						elif randf() < 0.0015 * u_i.gravitational:
-							mass = rand_range(5, 30)
-							star_type = "hypergiant"
-							var tier:int = floor(1 / pow(randf(), 0.35 * pow(u_i.gravitational, 0.25)))
-							star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
-							star_type = "hypergiant " + get_roman_num(tier)
-							hypergiant = tier
+			if mass > 0.2 and mass < 1.3 and randf() < 0.03:
+				star_type = "white_dwarf"
+				temp = 4000 + exp(10 * randf())
+				star_size = rand_range(0.008, 0.02)
+				mass = rand_range(0.4, 0.8)
+			else:
+				if mass > 0.25 and randf() < 0.08 * u_i.gravitational:
+					star_type = "giant"
+					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
+				if star_type == "main_sequence":
+					if randf() < 0.01 * u_i.gravitational:
+						mass = rand_range(10, 50)
+						star_type = "supergiant"
+						star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
+					elif randf() < 0.0015 * u_i.gravitational:
+						mass = rand_range(5, 30)
+						star_type = "hypergiant"
+						var tier:int = floor(1 / pow(randf(), 0.35 * pow(u_i.gravitational, 0.25)))
+						star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
+						star_type = "hypergiant " + get_roman_num(tier)
+						hypergiant = tier
 #			if hypergiant_system:
 #				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
 #				star_type = "hypergiant XV"
@@ -3175,7 +3176,7 @@ func generate_tiles(id:int):
 			if tile and tile.has("lake"):
 				var distance_from_lake:int = 1
 				if tile.lake.element in ["H", "Xe"]:
-					distance_from_lake += Data.lake_bonus_values[tile.lake.element][tile.lake.state]
+					distance_from_lake += Data.lake_bonus_values[tile.lake.element][tile.lake.state] + biology_bonus[tile.lake.element]
 				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
 					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
 						var id2 = k % wid + l * wid
@@ -3247,10 +3248,8 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"Si":O * rand_range(3.9, 4),
 							"Al":0.05 * randf(),
 							"Fe":0.035 * FM * randf(),
-							"Ca":0.03 * randf(),
 							"Na":0.025 * randf(),
 							"Mg":0.02 * randf(),
-							"K":0.02 * randf(),
 							"Ti":0.005 * randf(),
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
@@ -3262,12 +3261,8 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"Si":O * rand_range(3.9, 4),
 							"Al":0.05 * randf(),
 							"Fe":0.035 * randf(),
-							"Ca":0.03 * randf(),
 							"Na":0.025 * randf(),
-							"U":0.025 * randf(),
 							"Mg":0.02 * randf(),
-							"K":0.02 * randf(),
-							"Np":0.01 * randf(),
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
 							"Ti":0.005 * randf(),
@@ -3633,7 +3628,7 @@ func _input(event):
 			stats_dim.keyboard_presses += 1
 			stats_univ.keyboard_presses += 1
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
-		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
+		#$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
 	elif event is InputEventMouseButton and not stats_global.empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):

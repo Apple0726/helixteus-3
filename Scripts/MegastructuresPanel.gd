@@ -43,20 +43,38 @@ func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _d
 func get_item(_name, _type, _dir):
 	if _name == "" or game.c_v != "system":
 		return
-	game.toggle_panel(game.megastructures_panel)
 	if _name == "M_DS":
-		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+		else:
+			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
+			return
 	elif _name == "M_CBS":
-		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
+		if not build_all or build_all and game.science_unlocked.has("CBS1") and game.science_unlocked.has("CBS2") and game.science_unlocked.has("CBS3"):
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
+		else:
+			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
+			return
 	elif _name == "M_MB":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
 	elif _name == "M_PK":
-		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
+		if not build_all or build_all and game.science_unlocked.has("PK1") and game.science_unlocked.has("PK2"):
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
+		else:
+			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
+			return
 	elif _name == "M_SE":
-		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_SE", "cancel_building_MS")
+		if not build_all or build_all and game.science_unlocked.has("SE1"):
+			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_SE", "cancel_building_MS")
+		else:
+			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
+			return
 	elif _name == "M_MME":
-		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
-	elif _name == "M_MPCC":
-		game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MPCC", "cancel_building_MS")
+		if not build_all or build_all and game.science_unlocked.has("MME1") and game.science_unlocked.has("MME2") and game.science_unlocked.has("MME3"):
+			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-M_MME", "cancel_building_MS")
+		else:
+			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
+			return
+	game.toggle_panel(game.megastructures_panel)
 	game.view.obj.build_all_MS_stages = build_all
 
