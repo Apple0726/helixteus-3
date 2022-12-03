@@ -8,11 +8,13 @@ const DIST_MULT = 200.0
 var obj_btns:Array = []
 var overlays:Array = []
 var rsrcs:Array = []
+onready var bldg_overlay_timer = $BuildingOverlayTimer
+var discovered_gal:Array = []
+var curr_bldg_overlay:int = 0
 
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
 	var conquered = true
-	var discovered_gal:Array = []
 	for g_i in game.galaxy_data:
 		if g_i.empty():
 			continue
@@ -61,62 +63,68 @@ func _ready():
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
 		if g_i.has("discovered") and not g_i.has("GS"):
 			discovered_gal.append(g_i)
-	for g_i in discovered_gal:
-		var bldgs:Dictionary = {}
-		var MSs:Dictionary = {}
-		var system_data2:Array = game.open_obj("Galaxies", g_i.id)
-		for s_i in system_data2:
-			if not s_i.has("discovered"):
-				continue
-			var planet_data2:Array = game.open_obj("Systems", s_i.id)
-			for p_i in planet_data2:
-				if p_i.empty():
-					continue
-				if p_i.has("tile_num") and p_i.bldg.has("name"):
-					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
-				if p_i.has("MS"):
-					Helper.add_to_dict(MSs, p_i.MS, 1)
-			for _star in s_i.stars:
-				if _star.has("MS"):
-					Helper.add_to_dict(MSs, _star.MS, 1)
-			#yield(get_tree(), "idle_frame")
-		var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
-		if not bldgs.empty():
-			var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
-			grid_panel.get_node("Top").visible = false
-			var grid = grid_panel.get_node("PanelContainer/GridContainer")
-			grid_panel.rect_scale *= 7.0
-			for bldg in bldgs:
-				var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
-				grid.add_child(bldg_count)
-				bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
-				bldg_count.get_node("Texture").mouse_filter = Control.MOUSE_FILTER_IGNORE
-				bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-			add_child(grid_panel)
-			grid_panel.add_to_group("Grids")
-			grid_panel.name = "Grid_%s" % g_i.l_id
-			grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
-			grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y) * grid_panel.rect_scale.y * max(sc, 1.0) - 200 * sc
-		if not MSs.empty():
-			var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
-			MS_grid_panel.get_node("Bottom").visible = false
-			var MS_grid = MS_grid_panel.get_node("PanelContainer/GridContainer")
-			MS_grid_panel.rect_scale *= 7.0
-			for MS in MSs:
-				var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
-				MS_grid.add_child(MS_count)
-				MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
-				MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
-			add_child(MS_grid_panel)
-			MS_grid_panel.add_to_group("MSGrids")
-			MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
-			MS_grid_panel.rect_position.x = g_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
-			MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y) * MS_grid_panel.rect_scale.y * max(sc, 1.0)
-		
 	if conquered:
 		game.u_i.cluster_data[game.c_c].conquered = true
 	if game.overlay_data.cluster.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
+	if len(discovered_gal) > 0:
+		bldg_overlay_timer.start(0.05)
+
+func on_bldg_overlay_timeout():
+	var g_i = discovered_gal[curr_bldg_overlay]
+	var bldgs:Dictionary = {}
+	var MSs:Dictionary = {}
+	var system_data2:Array = game.open_obj("Galaxies", g_i.id)
+	for s_i in system_data2:
+		if not s_i.has("discovered"):
+			continue
+		var planet_data2:Array = game.open_obj("Systems", s_i.id)
+		for p_i in planet_data2:
+			if p_i.empty():
+				continue
+			if p_i.has("tile_num") and p_i.bldg.has("name"):
+				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+			if p_i.has("MS"):
+				Helper.add_to_dict(MSs, p_i.MS, 1)
+		for _star in s_i.stars:
+			if _star.has("MS"):
+				Helper.add_to_dict(MSs, _star.MS, 1)
+		#yield(get_tree(), "idle_frame")
+	var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+	if not bldgs.empty():
+		var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+		grid_panel.get_node("Top").visible = false
+		var grid = grid_panel.get_node("PanelContainer/GridContainer")
+		grid_panel.rect_scale *= 7.0
+		for bldg in bldgs:
+			var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+			grid.add_child(bldg_count)
+			bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+			bldg_count.get_node("Texture").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+		add_child(grid_panel)
+		grid_panel.add_to_group("Grids")
+		grid_panel.name = "Grid_%s" % g_i.l_id
+		grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
+		grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y) * grid_panel.rect_scale.y * max(sc, 1.0) - 200 * sc
+	if not MSs.empty():
+		var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+		MS_grid_panel.get_node("Bottom").visible = false
+		var MS_grid = MS_grid_panel.get_node("PanelContainer/GridContainer")
+		MS_grid_panel.rect_scale *= 7.0
+		for MS in MSs:
+			var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
+			MS_grid.add_child(MS_count)
+			MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
+			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+		add_child(MS_grid_panel)
+		MS_grid_panel.add_to_group("MSGrids")
+		MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
+		MS_grid_panel.rect_position.x = g_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
+		MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y) * MS_grid_panel.rect_scale.y * max(sc, 1.0)
+	curr_bldg_overlay += 1
+	if curr_bldg_overlay >= len(discovered_gal):
+		bldg_overlay_timer.stop()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()

@@ -434,6 +434,7 @@ var achievements:Dictionary = {
 		"build_tri_probe_in_slow_univ":tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
 		"use_stick_to_mine_from_surface_to_core":tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
 		"rekt_enemy_30_levels_higher":tr("REKT_ENEMY_30_LEVELS_HIGHER"),
+		"op_gh":tr("OP_GH"),
 	}
 }
 
@@ -725,6 +726,7 @@ func load_univ():
 		for key in mat_info:
 			if not mats.has(key):
 				mats[key] = 0
+		help.erase("flash_send_probe_btn")
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -941,6 +943,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"cave_diff_info":true,
 				"downgrade":true,
 				"artificial_volcano":true,
+				"flash_send_probe_btn":true,
 		}
 		for ach in achievements:
 			achievement_data[ach] = {}
@@ -968,6 +971,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		}
 		physics_bonus = Data.univ_prop_weights.duplicate()
 		physics_bonus.MVOUP = 0.5
+		physics_bonus.BI = 0.3
 		chemistry_bonus = {}
 		biology_bonus = {
 			"PGSM":1.0,
@@ -2487,7 +2491,7 @@ func generate_systems(id:int):
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = 1.65 if gc_stars_remaining == 0 else 4.0
-			a *= pow(e(1, -9) / B, 0.4)#Higher B: hotter stars
+			a *= pow(e(1, -9) / B, physics_bonus.BI)#Higher B: hotter stars
 			#Solar masses
 			var mass:float = -log(randf()) / a
 			var star_size = 1
@@ -2540,11 +2544,11 @@ func generate_systems(id:int):
 				star_size = rand_range(0.008, 0.02)
 				mass = rand_range(0.4, 0.8)
 			else:
-				if mass > 0.25 and randf() < 0.08 * u_i.gravitational:
+				if mass > 0.25 and randf() < 0.08 * log(exp(1) + u_i.gravitational - 1.0):
 					star_type = "giant"
 					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
 				if star_type == "main_sequence":
-					if randf() < 0.01 * u_i.gravitational:
+					if randf() < 0.01 * log(exp(1) + u_i.gravitational - 1.0):
 						mass = rand_range(10, 50)
 						star_type = "supergiant"
 						star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
@@ -2878,20 +2882,27 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 	for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
 		for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
 			var t_id2:int = k % wid + l * wid
-			if tile_data[t_id2] and tile_data[t_id2].has("lake"):
+			var tile2 = tile_data[t_id2]
+			if tile2 and tile2.has("lake"):
 				continue
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
-				tile_data[t_id2] = {} if not tile_data[t_id2] else tile_data[t_id2]
-				if tile_data[t_id2].has("ash"):
-					if not tile_data[t_id2].has("cave"):
-						tile_data[t_id2].ash = {"richness":max(richness, tile_data[t_id2].ash.richness)}
+				tile_data[t_id2] = {} if not tile2 else tile2
+				tile2 = tile_data[t_id2]
+				if tile2.has("ash"):
+					if not tile2.has("cave"):
+						var diff = max(richness - tile2.ash.richness, 0)
+						if tile2.has("bldg") and tile2.bldg.name == "ME":
+							autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * (tile2.bldg.overclock_mult if tile2.bldg.has("overclock_mult") else 1.0)
+						tile2.ash.richness = max(richness, tile2.ash.richness)
 				else:
-					tile_data[t_id2].ash = {"richness":richness}
+					tile2.ash = {"richness":richness}
+					if tile2.has("bldg") and tile2.bldg.name == "ME":
+						autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * (tile2.bldg.overclock_mult if tile2.bldg.has("overclock_mult") else 1.0)
 					if artificial:
-						tile_data[t_id2].ash.artificial = true
-				if not achievement_data.exploration.has("volcano_cave") and tile_data[t_id2].has("cave"):
+						tile2.ash.artificial = true
+				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
 					earn_achievement("exploration", "volcano_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id2].has("cave") and tile_data[t_id2].has("aurora"):
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile2.has("cave") and tile2.has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
 	tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 	tile_data[t_id].volcano = {"VEI":VEI}

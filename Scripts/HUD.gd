@@ -792,7 +792,7 @@ func _on_SwitchBtn_mouse_entered():
 	var view_str:String = ""
 	if game.c_v == "universe":
 		view_str = tr("VIEW_DIMENSION")
-		if not game.show.has("dimensions"):
+		if not game.show.has("dimensions") and game.help.has("flash_send_probe_btn"):
 			view_str += "\n%s" %tr("CONSTR_TP_TO_UNLOCK")
 	elif game.c_v == "cluster":
 		view_str = tr("VIEW_UNIVERSE")
@@ -828,7 +828,7 @@ func _on_SwitchBtn_pressed():
 			if u_i.lv >= 60:
 				game.switch_view("universe")
 		"universe":
-			if game.show.has("dimensions"):
+			if game.show.has("dimensions") or not game.help.has("flash_send_probe_btn"):
 				game.switch_view("dimension")
 
 

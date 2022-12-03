@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
@@ -44,6 +44,7 @@
 [ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=42]
 [ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=43]
 [ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=44]
+[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=45]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -847,6 +848,14 @@ margin_left = 384.0
 margin_right = 444.0
 margin_bottom = 60.0
 achievement_icon = ExtResource( 26 )
+
+[node name="op_gh" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 45 )
 
 [node name="Statistics" type="Control" parent="."]
 visible = false

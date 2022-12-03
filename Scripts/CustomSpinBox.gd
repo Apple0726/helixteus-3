@@ -1,5 +1,7 @@
 extends LineEdit
 
+signal value_changed
+
 export var step:float = 0.1
 export var value:float = 0.0
 export var min_value:float = 0.0
@@ -15,6 +17,7 @@ func _on_Up_pressed():
 			new_value = min(stepify(value + step, step), max_value)
 		text = String(new_value)
 		value = new_value
+		emit_signal("value_changed", new_value)
 
 func _on_Down_pressed():
 	if editable:
@@ -25,12 +28,17 @@ func _on_Down_pressed():
 			new_value = max(stepify(value - step, step), min_value)
 		text = String(new_value)
 		value = new_value
+		emit_signal("value_changed", new_value)
 
 func _on_CustomSpinBox_text_changed(new_text):
 	var new_value = clamp(float(new_text), min_value, max_value)
 	if is_integer:
 		new_value = round(new_value)
+	emit_signal("value_changed", new_value)
 	value = new_value
+	if float(new_text) != new_value:
+		text = str(new_value)
+		caret_position = len(text)
 
 func set_value(_value:float):
 	value = _value

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/PDPanel.gd" type="Script" id=1]
+[ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
 
@@ -90,4 +91,36 @@ color = Color( 0.41, 0.259667, 0, 1 )
 position = Vector2( 124, 96 )
 color = Color( 0.537255, 0.537255, 0.537255, 1 )
 
+[node name="Error" type="Label" parent="."]
+visible = false
+margin_left = 272.0
+margin_top = 64.0
+margin_right = 752.0
+margin_bottom = 88.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "INVALID_PD"
+align = 1
+
+[node name="OPPoints" type="Label" parent="."]
+margin_left = 272.0
+margin_top = 64.0
+margin_right = 752.0
+margin_bottom = 88.0
+align = 1
+
+[node name="Info" type="Label" parent="."]
+margin_left = 124.0
+margin_top = 548.0
+margin_right = 920.0
+margin_bottom = 572.0
+
+[node name="Reset" type="TextureButton" parent="."]
+visible = false
+margin_left = 848.0
+margin_top = 540.0
+margin_right = 880.0
+margin_bottom = 572.0
+texture_normal = ExtResource( 2 )
+
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]

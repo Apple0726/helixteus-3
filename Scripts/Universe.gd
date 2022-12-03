@@ -69,7 +69,7 @@ func on_cluster_click (id:int):
 func change_scale(sc:float):
 	for i in range(0, btns.size()):
 		var c_i:Dictionary = game.u_i.cluster_data[i]
-		if not c_i.visible:
+		if not c_i.visible or not btns[i]:
 			continue
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3) * sc
 		btns[i].rect_scale.x = radius

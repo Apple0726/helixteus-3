@@ -5,6 +5,6 @@ func _ready():
 	place(216, 5.18, $TriplePoint)
 	place(304, 73.8, $SuperPoint)
 
-var colors = {	"S":Color(0.88, 0.66, 0.3, 0.7),
-				"L":Color(0.88, 0.66, 0.3, 1.0),
-				"SC":Color(0.88, 0.66, 0.3, 0.4)}
+var colors = {	"S":Color(0.66, 0.66, 0.66, 0.7),
+				"L":Color(0.66, 0.66, 0.66, 1.0),
+				"SC":Color(0.66, 0.66, 0.66, 0.4)}

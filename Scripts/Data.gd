@@ -469,13 +469,13 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
 var lake_bonus_values = {
-	"H2O":{"s":1.5, "l":2, "sc":4, "operator":"x"},
-	"CH4":{"s":0.4, "l":0.3, "sc":0.2, "operator":"÷"},
+	"H2O":{"s":1.5, "l":2.5, "sc":3, "operator":"x"},
+	"CH4":{"s":0.4, "l":0.15, "sc":0.3, "operator":"÷"},
 	"CO2":{"s":120, "l":300, "sc":180, "operator":"x"},
 	"H":{"s":1, "l":2, "sc":1, "operator":"+"},
 	"He":{"s":250, "l":400, "sc":200, "operator":"x"},
 	"Ne":{"s":0.2, "l":0.4, "sc":0.2, "operator":"x"},
 	"Xe":{"s":1, "l":2, "sc":1, "operator":"+"},
 	"O":{"s":2, "l":4, "sc":3, "operator":"x"},
-	"NH3":{"s":0.4, "l":0.3, "sc":0.2, "operator":"÷"},
+	"NH3":{"s":0.4, "l":0.15, "sc":0.3, "operator":"÷"},
 }

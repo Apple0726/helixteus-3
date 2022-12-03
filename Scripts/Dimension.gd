@@ -17,21 +17,21 @@ var selected_element:String
 var table
 
 var lake_params:Dictionary = {
-	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.7},
+	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":1.0},
 	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
 	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
 	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
 	"H":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":0.8, "pw":2},
 	"He":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
-	"Ne":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.4},
+	"O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.5},
+	"Ne":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
 	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
 	$ModifyDimension/Maths.rect_clip_content = true
-	if game.c_u != -1 and not game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
+	if game.c_u != -1 and game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
@@ -44,8 +44,8 @@ func _ready():
 		univ_prop_text.size_flags_horizontal = Label.SIZE_EXPAND_FILL
 		$ModifyDimension/Physics/Control/VBox2.add_child(univ_prop_text)
 		univ_prop_text.name = univ_prop.name
-	
 	refresh_univs()
+	refresh_OP_meters()
 	$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
 	for i in range(1, game.subjects.dimensional_power.lv + 1):
 		if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % i):
@@ -57,12 +57,25 @@ func _ready():
 	for subj in $Subjects/Grid.get_children():
 		subj.get_node("Effects/EffectButton").connect("pressed", self, "toggle_subj", [subj.name])
 
+func refresh_OP_meters():
+	for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
+		if game.subjects[subj.to_lower()].lv == 0:
+			$Subjects/Grid.get_node(subj + "/OPMeter").visible = false
+			continue
+		$Subjects/Grid.get_node(subj + "/OPMeter").visible = true
+		$Subjects/Grid.get_node(subj + "/OPMeter").value = self["%s_OP_points" % subj.to_lower()]
+		$Subjects/Grid.get_node(subj + "/OPMeter").max_value = game.subjects[subj.to_lower()].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
+	
 func toggle_subj(subj_name:String):
 	for subj in $Subjects/Grid.get_children():
 		if subj.name != subj_name and $ModifyDimension.has_node(subj.name):
 			$ModifyDimension.get_node(subj.name).visible = false
+			$Subjects/Grid.get_node(subj.name + "/Selected").visible = false
+			$Subjects/Grid.get_node(subj.name + "/Selected/AnimationPlayer").stop()
 	if $ModifyDimension.has_node(subj_name):
 		$ModifyDimension.get_node(subj_name).visible = not $ModifyDimension.get_node(subj_name).visible
+		$Subjects/Grid.get_node(subj_name + "/Selected").visible = $ModifyDimension.get_node(subj_name).visible
+		$Subjects/Grid.get_node(subj_name + "/Selected/AnimationPlayer").play("New Anim")
 		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
@@ -104,6 +117,8 @@ func refresh_univs(reset:bool = false):
 		univ_prop.editable = reset
 	$ModifyDimension/Physics/Control/MVOUP.set_value(game.physics_bonus.MVOUP)
 	$ModifyDimension/Physics/Control/MVOUP.editable = reset
+	$ModifyDimension/Physics/Control/BI.set_value(game.physics_bonus.BI)
+	$ModifyDimension/Physics/Control/BI.editable = reset
 	for maths_bonus in game.maths_bonus:
 		if $ModifyDimension/Maths/Control/CostGrowthFactors.has_node(maths_bonus):
 			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
@@ -144,6 +159,7 @@ func refresh_univs(reset:bool = false):
 	$Universes.visible = not reset
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
+	$TopInfo/Reset.visible = not reset
 
 func set_grid():
 	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv > 0 else 2
@@ -249,7 +265,7 @@ func on_univ_press(id:int):
 	game.HUD.refresh_bookmarks()
 
 func _on_SendProbes_pressed():
-	game.help.flash_send_probe_btn = true
+	game.help.erase("flash_send_probe_btn")
 	$Universes/SendProbes/AnimationPlayer.play("RESET")
 	game.toggle_panel(game.send_probes_panel)
 
@@ -262,7 +278,10 @@ func _on_Reset_mouse_entered():
 
 
 func _on_Reset_pressed():
-	game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
+	if game.dim_num == 1:
+		game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
+	else:
+		game.show_YN_panel("reset_dimension", tr("RENEW_DIMENSION"), [new_dim_DRs])
 
 func calc_math_points(node, default_value:float, op_factor:float, lower_limit:float = 0.0, upper_limit:float = INF):
 	if node.value <= lower_limit or node.value >= upper_limit:
@@ -322,8 +341,15 @@ func _input(event):
 			calc_OP_points()
 
 func calc_OP_points():
-	maths_OP_points = 0
 	num_errors.clear()
+	chemistry_OP_points = 0
+	if game.PD_panel.error:
+		num_errors.chemistry = true
+	for el_node in $ModifyDimension/Chemistry/Control/OPMeters.get_children():
+		var el:String = el_node.name
+		el_node.text = "+ " + str(Helper.clever_round(game.PD_panel.op_points[el]))
+		chemistry_OP_points += game.PD_panel.op_points[el]
+	maths_OP_points = 0
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -4.0, 1.2)#Building upgrade cost
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.2)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.0, 1.2)#Mining speed multiplier
@@ -349,11 +375,17 @@ func calc_OP_points():
 	if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
 		$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.red
 		num_errors.physics = true
-		return
 	else:
 		$ModifyDimension/Physics/Control/MVOUP["custom_colors/font_color"] = Color.black
 		physics_OP_points += 0.5 / min($ModifyDimension/Physics/Control/MVOUP.value, 0.5) - 1.0
+	if $ModifyDimension/Physics/Control/BI.value < 0:
+		$ModifyDimension/Physics/Control/BI["custom_colors/font_color"] = Color.red
+		num_errors.physics = true
+	else:
+		$ModifyDimension/Physics/Control/BI["custom_colors/font_color"] = Color.black
+		physics_OP_points += pow(max(0, 9.0 * ($ModifyDimension/Physics/Control/BI.value - 0.3)), 1.5)
 	physics_defaults.get_node("MVOUP").visible = not is_equal_approx($ModifyDimension/Physics/Control/MVOUP.value, float(physics_defaults.get_node("MVOUP").text.right(1)))
+	physics_defaults.get_node("BI").visible = not is_equal_approx($ModifyDimension/Physics/Control/BI.value, float(physics_defaults.get_node("BI").text.right(1)))
 	for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 		if cost.value <= 0:
 			cost["custom_colors/font_color"] = Color.red
@@ -386,11 +418,12 @@ func calc_OP_points():
 				self["%s_OP_points" % subj.to_lower()] = 0
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj.to_lower()]
 			$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
-			if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value or num_errors.has(subj.to_lower()):
-				$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
+			if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value:
 				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0)
+				$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
 			else:
-				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color.white
+				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.white
+	refresh_OP_meters()
 	if $ModifyDimension/Reset.visible:
 		#var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 		$ModifyDimension/Reset/Generate.visible = true
@@ -437,7 +470,7 @@ func set_bonuses():
 		else:
 			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control.get_node(bonus).value
 	for bonus in game.physics_bonus:
-		if bonus == "MVOUP":
+		if bonus in ["MVOUP", "BI"]:
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control.get_node(bonus).value
 		elif bonus != "antimatter":
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control/VBox.get_node(bonus).value
@@ -546,7 +579,8 @@ func update_lake_bonus_text(el:String):
 		$ModifyDimension/Biology/Control/Lake/LakeDesc.bbcode_text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Helper.clever_round(Data.lake_bonus_values[el].s / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].l / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].sc / lake_params[el].value)])
 
 func _on_LakePD_pressed(el:String):
-	pass # Replace with function body.
+	game.PD_panel.el = el
+	game.toggle_panel(game.PD_panel)
 
 
 func _on_LakeDesc_mouse_entered():
@@ -559,10 +593,10 @@ func _on_LakeDesc_mouse_exited():
 
 func _on_BSlider_value_changed(value):
 	$ModifyDimension/Physics/Control/PDFPlotter.B = value
-	$ModifyDimension/Physics/Control/BSlider.text = "for B = %s nT" % Helper.clever_round(value)
+	$ModifyDimension/Physics/Control/B.text = "for B = %s nT" % Helper.clever_round(value)
 	$ModifyDimension/Physics/Control/PDFPlotter.add_points()
 
 
-func _on_BI_text_changed(new_text):
-	$ModifyDimension/Physics/Control/PDFPlotter.p = str(new_text)
+func _on_BI_value_changed(value):
+	$ModifyDimension/Physics/Control/PDFPlotter.p = float(value)
 	$ModifyDimension/Physics/Control/PDFPlotter.add_points()

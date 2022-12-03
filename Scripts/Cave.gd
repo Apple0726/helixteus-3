@@ -533,12 +533,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris.self_modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 					debris.self_modulate.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
-					var rand_scale_x = -log(1 - rng.randf()) * 1.2 + 0.5
-					debris.scale = Vector2.ONE * rand_scale_x
-					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
+					var rand_scale_x:float
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
+						rand_scale_x = -log(1 - rng.randf()) * 1.2 + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
 						debris.self_modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
+					else:
+						rand_scale_x = -log(1 - rng.randf()) + 0.5
+					debris.scale = Vector2.ONE * rand_scale_x
+					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if aurora and rng.randf() < 0.05:
 						debris.self_modulate = Color.white
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
@@ -582,10 +585,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						continue
 					HX_node.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
 					HX_node.get_node("Sprite").material.set_shader_param("aurora", aurora)
-					if volcano_mult > 1:
-						HX_node.get_node("Sprite/Particles2D").emitting = true
-						HX_node.get_node("Sprite/Particles2D").amount = int(sqrt(volcano_mult) * 9)
-					else:
+					if volcano_mult == 1:
 						HX_node.get_node("Sprite").material.set_shader_param("light", 1.0 - cave_darkness)
 					HX_node.get_node("Info/Label").visible = false
 					HX_node.get_node("Info/Effects").visible = false
@@ -1951,6 +1951,8 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 			st = st.replace("wrecked", "rekt")
 		call_deferred("exit_cave")
 		game.long_popup(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
+	else:
+		set_avg_dmg()
 	for effect in _status_effects:
 		if not status_effects.has(effect):
 			status_effects[effect] = _status_effects[effect]
@@ -2141,7 +2143,7 @@ func _on_Difficulty_mouse_entered():
 		Helper.format_num(pow(2.5 if volcano_mult > 1 and not artificial_volcano else 2, cave_floor - 1), true),
 	]
 	if aurora_mult > 1:
-		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), aurora_mult]
+		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), Helper.format_num(aurora_mult)]
 	if volcano_mult > 1 and not artificial_volcano:
 		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(volcano_mult)]
 	game.help_str = "cave_diff_info"

@@ -11,14 +11,14 @@ polygon = PoolVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
 color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PoolVector2Array( 140, 172, 236, 104, 236, 144, 136, 204, 128, 208 )
+polygon = PoolVector2Array( 128, 208, 140, 172, 236, 104, 236, 144 )
 
 [node name="Gas" type="Polygon2D" parent="."]
 color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PoolVector2Array( 96, 400, 128, 208, 136, 204, 236, 144, 800, 144, 800, 400 )
+polygon = PoolVector2Array( 96, 400, 128, 208, 236, 144, 800, 144, 800, 400 )
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 236, 104, 236, 144, 800, 144, 800, 72 )
+polygon = PoolVector2Array( 236, 144, 236, 104, 800, 72, 800, 144 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )

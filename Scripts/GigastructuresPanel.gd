@@ -45,8 +45,6 @@ func update_info():
 			if costs.has("energy"):
 				costs.energy *= 200.0
 			costs.erase("time")
-			for cost in costs:
-				costs[cost] *= surface
 			$Control/GalaxyInfo.text = ""
 		else:
 			if g_i.system_num <= 4999:
@@ -54,6 +52,8 @@ func update_info():
 				error = true
 			else:
 				$Control/GalaxyInfo.text = tr("TP_CONFIRM")
+		for cost in costs:
+			costs[cost] *= game.engineering_bonus.BCM * (surface if bldg != "TP" else 1.0)
 	if bldg == "ME":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.01

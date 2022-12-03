@@ -376,9 +376,6 @@ margin_right = 1233.0
 margin_bottom = 42.0
 grow_horizontal = 0
 text = "New dimension"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ModifyDimension" type="Control" parent="."]
 margin_right = 40.0
@@ -915,8 +912,8 @@ custom_styles/bg = SubResource( 5 )
 margin_left = 10.0
 margin_top = 5.0
 margin_right = 310.0
-margin_bottom = 655.0
-rect_min_size = Vector2( 300, 650 )
+margin_bottom = 1105.0
+rect_min_size = Vector2( 300, 1100 )
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -924,35 +921,35 @@ __meta__ = {
 
 [node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 margin_left = 30.0
-margin_top = 263.0
+margin_top = 293.0
 margin_right = 350.0
-margin_bottom = 427.0
+margin_bottom = 457.0
 texture = SubResource( 13 )
 expand = true
 
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( -6, 15 )
+position = Vector2( -6, 45 )
 points = PoolVector2Array( 356, 412, 36, 412, 36, 232 )
 width = 2.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( -14, 11 )
+position = Vector2( -14, 41 )
 points = PoolVector2Array( 44, 236, 44, 224 )
 width_curve = SubResource( 11 )
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( 306, 191 )
+position = Vector2( 306, 221 )
 points = PoolVector2Array( 44, 236, 56, 236 )
 width_curve = SubResource( 11 )
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource( 35 )]
 margin_left = 30.0
-margin_top = 263.0
+margin_top = 293.0
 margin_right = 350.0
-margin_bottom = 427.0
+margin_bottom = 457.0
 
 [node name="Label2" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 16.0
@@ -963,48 +960,56 @@ text = "INFLUENCE_OF_B_TO_MASS"
 
 [node name="Label4" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 2.0
-margin_top = 207.0
+margin_top = 235.0
 margin_right = 114.0
-margin_bottom = 231.0
-text = "PROBABILITY"
+margin_bottom = 259.0
+text = "AMOUNT"
 
 [node name="B" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 250.0
-margin_top = 235.0
-margin_right = 386.0
-margin_bottom = 259.0
+margin_left = 230.0
+margin_top = 239.0
+margin_right = 366.0
+margin_bottom = 263.0
 text = "for B = 1 nT"
 
 [node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control"]
-margin_left = 114.0
-margin_top = 239.0
-margin_right = 238.0
-margin_bottom = 255.0
+margin_left = 122.0
+margin_top = 243.0
+margin_right = 222.0
+margin_bottom = 259.0
 min_value = 0.1
 max_value = 1000.0
 step = 0.1
 value = 0.1
 exp_edit = true
 
-[node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 16.0
-margin_top = 491.0
-margin_right = 335.0
-margin_bottom = 515.0
-text = "MIN_VAL_OF_UNIV_PROPERTIES"
-
 [node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 50.0
-margin_top = 431.0
+margin_top = 461.0
 margin_right = 369.0
-margin_bottom = 455.0
+margin_bottom = 485.0
 text = "M   K   G   F   A   B   O   Q   R   Z"
+
+[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
+margin_left = 18.0
+margin_top = 155.0
+margin_right = -206.0
+margin_bottom = -913.0
+step = 0.01
+value = 0.3
+
+[node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
+margin_left = 16.0
+margin_top = 527.0
+margin_right = 335.0
+margin_bottom = 551.0
+text = "MIN_VAL_OF_UNIV_PROPERTIES"
 
 [node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
-margin_top = 647.0
+margin_top = 683.0
 margin_right = 351.0
-margin_bottom = 975.0
+margin_bottom = 1011.0
 custom_constants/line_spacing = 14
 text = "Speed of light
 Planck constant
@@ -1017,42 +1022,34 @@ Time speed"
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 122.0
-margin_top = 535.0
+margin_top = 571.0
 margin_right = 158.0
-margin_bottom = 565.0
+margin_bottom = 601.0
 help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
 
 [node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 18.0
-margin_top = 591.0
+margin_top = 627.0
 margin_right = 370.0
-margin_bottom = 621.0
+margin_bottom = 657.0
 bbcode_text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
 text = "COSTS_OF_UNIV_PROPERTIES "
 label_text = "COSTS_OF_UNIV_PROPERTIES"
 help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
 
-[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
-margin_left = 18.0
-margin_top = 155.0
-margin_right = -206.0
-margin_bottom = -463.0
-step = 0.05
-value = 0.5
-
 [node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
 margin_left = 18.0
-margin_top = 531.0
+margin_top = 567.0
 margin_right = -206.0
-margin_bottom = -87.0
+margin_bottom = -501.0
 step = 0.05
 value = 0.5
 
 [node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 254.0
-margin_top = 647.0
+margin_top = 683.0
 margin_right = 330.0
-margin_bottom = 999.0
+margin_bottom = 1035.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1131,24 +1128,24 @@ value = 50.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
-margin_top = 647.0
+margin_top = 683.0
 margin_right = 254.0
-margin_bottom = 1011.0
+margin_bottom = 1047.0
 custom_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
-margin_top = 371.0
+margin_top = 407.0
 margin_right = 40.0
-margin_bottom = 411.0
+margin_bottom = 447.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 margin_left = 162.0
-margin_top = -212.0
+margin_top = -248.0
 margin_right = 204.0
-margin_bottom = -188.0
+margin_bottom = -224.0
 text = "(0.3)"
 
 [node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
@@ -1173,7 +1170,7 @@ margin_left = 362.0
 margin_top = 319.0
 margin_right = 404.0
 margin_bottom = 343.0
-text = "(20)"
+text = "(30)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1183,7 +1180,7 @@ margin_left = 362.0
 margin_top = 358.0
 margin_right = 404.0
 margin_bottom = 382.0
-text = "(10)"
+text = "(30)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1193,7 +1190,7 @@ margin_left = 362.0
 margin_top = 398.0
 margin_right = 404.0
 margin_bottom = 422.0
-text = "(30)"
+text = "(20)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1203,7 +1200,7 @@ margin_left = 362.0
 margin_top = 439.0
 margin_right = 404.0
 margin_bottom = 463.0
-text = "(25)"
+text = "(40)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1213,7 +1210,7 @@ margin_left = 362.0
 margin_top = 479.0
 margin_right = 404.0
 margin_bottom = 503.0
-text = "(25)"
+text = "(50)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1286,15 +1283,14 @@ texture = ExtResource( 25 )
 expand = true
 stretch_mode = 4
 
-[node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Chemistry/Control"]
-margin_left = 14.0
+[node name="LakeButtons" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
+margin_left = 26.0
 margin_top = 163.0
-margin_right = 370.0
-margin_bottom = 251.0
-columns = 5
+margin_right = 102.0
+margin_bottom = 555.0
 
 [node name="H2O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_right = 68.0
+margin_right = 76.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
@@ -1303,9 +1299,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="CH4" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 72.0
-margin_right = 140.0
-margin_bottom = 40.0
+margin_top = 44.0
+margin_right = 76.0
+margin_bottom = 84.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 27 )
@@ -1313,9 +1309,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="CO2" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 144.0
-margin_right = 212.0
-margin_bottom = 40.0
+margin_top = 88.0
+margin_right = 76.0
+margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 28 )
@@ -1323,9 +1319,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="NH3" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 216.0
-margin_right = 284.0
-margin_bottom = 40.0
+margin_top = 132.0
+margin_right = 76.0
+margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 31 )
@@ -1333,9 +1329,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="H" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 288.0
-margin_right = 356.0
-margin_bottom = 40.0
+margin_top = 176.0
+margin_right = 76.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 30 )
@@ -1343,9 +1339,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="He" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 44.0
-margin_right = 68.0
-margin_bottom = 84.0
+margin_top = 220.0
+margin_right = 76.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 29 )
@@ -1353,10 +1349,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 72.0
-margin_top = 44.0
-margin_right = 140.0
-margin_bottom = 84.0
+margin_top = 264.0
+margin_right = 76.0
+margin_bottom = 304.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 32 )
@@ -1364,10 +1359,9 @@ icon_align = 1
 expand_icon = true
 
 [node name="Ne" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 144.0
-margin_top = 44.0
-margin_right = 212.0
-margin_bottom = 84.0
+margin_top = 308.0
+margin_right = 76.0
+margin_bottom = 348.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 33 )
@@ -1375,15 +1369,91 @@ icon_align = 1
 expand_icon = true
 
 [node name="Xe" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_left = 216.0
-margin_top = 44.0
-margin_right = 284.0
-margin_bottom = 84.0
+margin_top = 352.0
+margin_right = 76.0
+margin_bottom = 392.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 icon = ExtResource( 34 )
 icon_align = 1
 expand_icon = true
+
+[node name="OPMeters" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
+margin_left = 118.0
+margin_top = 163.0
+margin_right = 310.0
+margin_bottom = 555.0
+
+[node name="H2O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_right = 192.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="CH4" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 44.0
+margin_right = 192.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="CO2" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 88.0
+margin_right = 192.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="NH3" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 132.0
+margin_right = 192.0
+margin_bottom = 172.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="H" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 176.0
+margin_right = 192.0
+margin_bottom = 216.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="He" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 220.0
+margin_right = 192.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 264.0
+margin_right = 192.0
+margin_bottom = 304.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="Ne" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 308.0
+margin_right = 192.0
+margin_bottom = 348.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
+
+[node name="Xe" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+margin_top = 352.0
+margin_right = 192.0
+margin_bottom = 392.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+valign = 1
 
 [node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -2004,8 +2074,9 @@ autowrap = true
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="value_changed" from="ModifyDimension/Physics/Control/BSlider" to="." method="_on_BSlider_value_changed"]
-[connection signal="text_changed" from="ModifyDimension/Physics/Control/BI" to="." method="_on_BI_text_changed"]
+[connection signal="value_changed" from="ModifyDimension/Physics/Control/BI" to="." method="_on_BI_value_changed"]
 [connection signal="mouse_entered" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_HelpLabel_mouse_entered" binds= [ "INFLUENCE_OF_B_TO_MASS_HELP" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PHASE_DIAGRAM_HELP" ]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]

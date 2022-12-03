@@ -42,12 +42,12 @@ func refresh():
 			type = "mats"
 		"Ne":
 			$Control/TextureRect.texture = neon_texture
-			speed = 480000
+			speed = 48000
 			unit = "mol"
 			type = "atoms"
 		"Xe":
 			$Control/TextureRect.texture = xenon_texture
-			speed = 85000000
+			speed = 8500000
 			unit = "mol"
 			type = "atoms"
 	refresh_costs()

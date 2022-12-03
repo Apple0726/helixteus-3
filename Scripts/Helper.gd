@@ -1113,7 +1113,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		if bldg == "SPR":
 			return dict.bldg.path_2_value * mult * n * game.u_i.charge
 		else:
-			return dict.bldg.path_2_value * n
+			return dict.bldg.path_2_value * mult * n
 	elif path == 3:
 		return dict.bldg.path_3_value
 
