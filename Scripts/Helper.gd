@@ -122,13 +122,13 @@ func log10(n):
 func get_state(T:float, P:float, node):
 	var v = node.get_pos_from_TP(T, P)
 	if Geometry.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
-		return "SC"
+		return "sc"
 	elif Geometry.is_point_in_polygon(v, node.get_node("Liquid").polygon):
-		return "L"
+		return "l"
 	elif Geometry.is_point_in_polygon(v, node.get_node("Gas").polygon):
-		return "G"
+		return "g"
 	else:
-		return "S"
+		return "s"
 
 func set_visibility(node):
 	for other_node in node.get_parent_control().get_children():

@@ -1969,6 +1969,15 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
 autowrap = true
 
+[node name="EffectsHelp" type="TextureRect" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 258.0
+margin_top = 19.0
+margin_right = 286.0
+margin_bottom = 43.0
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 4
+
 [node name="OPMeter" type="Panel" parent="ModifyDimension"]
 visible = false
 margin_left = 32.0
@@ -2141,5 +2150,7 @@ autowrap = true
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_EffectsHelp_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]
 [connection signal="animation_finished" from="ColorRect/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

@@ -617,6 +617,9 @@ func _ready():
 	mods = load("res://Scenes/Panels/Mods.tscn").instance()
 	mods.visible = false
 	$Panels/Control.add_child(mods)
+	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instance()
+	PD_panel.visible = false
+	$Panels/Control.add_child(PD_panel)
 	if TEST:
 		$Title.visible = false
 		HUD = preload("res://Scenes/HUD.tscn").instance()
@@ -801,7 +804,7 @@ func load_univ():
 			if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
 				galaxy_data = open_obj("Clusters", c_c)
 			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 				Helper.save_obj("Clusters", 0, galaxy_data)
 			if help.tutorial >= 26:
 				tutorial = preload("res://Scenes/Tutorial.tscn").instance()
@@ -1136,7 +1139,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		show.construct_button = true
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":e(5, -10) * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
@@ -1213,7 +1216,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
 		planet_data[2].pressure = 1
-		planet_data[2].lake_1 = "H2O"
+		planet_data[2].lake_1 = {"element":"H2O"}
 		planet_data[2].erase("lake_2")
 		planet_data[2].liq_seed = 4
 		planet_data[2].liq_period = 100
@@ -1281,7 +1284,6 @@ func add_panels():
 	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instance()
 	MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instance()
 	SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instance()
-	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instance()
 	production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instance()
 	send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instance()
 	send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instance()
@@ -1363,9 +1365,6 @@ func add_panels():
 
 	SC_panel.visible = false
 	$Panels/Control.add_child(SC_panel)
-
-	PD_panel.visible = false
-	$Panels/Control.add_child(PD_panel)
 
 	production_panel.visible = false
 	$Panels/Control.add_child(production_panel)
@@ -2166,14 +2165,14 @@ func generate_galaxies(id:int):
 		g_i.dark_matter = rand_range(0.9, 1.1) * u_i.dark_energy #Influences planet numbers and size
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(1e-9 * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
 			g_i.dark_matter -= 0.1
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(e(1, -9) * rand_range(0.5, 4) * FM * u_i.charge)
+			g_i["B_strength"] = Helper.clever_round(1e-9 * rand_range(0.5, 4) * FM * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
 		if rand < 0.02:
@@ -2757,15 +2756,12 @@ func generate_planets(id:int):#local id
 		p_i.liq_period = rand_range(60, 300)
 		if id + s_num == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
-				p_i.lake_1 = "H2O"
+				p_i.lake_1 = {"element":"H2O"}
 			if randf() < 0.2:
-				p_i.lake_2 = "H2O"
+				p_i.lake_2 = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
-			p_i.lake_1 = get_random_element(list_of_element_probabilities)
-			p_i.lake_2 = get_random_element(list_of_element_probabilities)
-			if hypergiant_system and i == 1:
-				p_i.lake_1 = "Xe"
-				p_i.lake_2 = "Xe"
+			p_i.lake_1 = {"element":get_random_element(list_of_element_probabilities)}
+			p_i.lake_2 = {"element":get_random_element(list_of_element_probabilities)}
 		p_i.HX_data = []
 		var diff:float = system_data[id].diff
 		var power:float = diff * pow(p_i.size / 2500.0, 0.5)
@@ -2869,9 +2865,6 @@ func get_brightest_star_luminosity(s_id):
 			res = system_data[s_id].stars[i].luminosity
 	return res
 
-func make_lake(tile, state:String, lake:String, which_lake):
-	tile.lake = {"state":state, "element":lake, "type":which_lake}#type: 1 or 2
-
 func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 	var richness:float = VEI if VEI <= 7.0 else pow(VEI - 6.0, 1.6) + 6.0
 	var size:int = stepify(VEI - 2, 2) + 1
@@ -2965,17 +2958,19 @@ func generate_tiles(id:int):
 	noise.seed = p_i.liq_seed
 	noise.octaves = 1
 	noise.period = p_i.liq_period#Higher period = bigger lakes
-	var lake_1_phase = "G"
-	var lake_2_phase = "G"
 	if p_i.has("lake_1"):
-		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
+		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1.element + ".tscn")
 		var phase_1 = phase_1_scene.instance()
-		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
+		if chemistry_bonus.has(p_i.lake_1.element):
+			phase_1.modify_PD(chemistry_bonus[p_i.lake_1.element])
+		p_i.lake_1.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
 		phase_1.free()
 	if p_i.has("lake_2"):
-		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
+		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2.element + ".tscn")
 		var phase_2 = phase_2_scene.instance()
-		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
+		if chemistry_bonus.has(p_i.lake_2.element):
+			phase_2.modify_PD(chemistry_bonus[p_i.lake_2.element])
+		p_i.lake_2.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		phase_2.free()
 	var volcano_probability:float = 0.0
 	if randf() < log(pow(coldest_star_temp, -0.12) + 1.0):
@@ -2984,17 +2979,17 @@ func generate_tiles(id:int):
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
 			var t_id = i % wid + j * wid
-			if level > 0.5:
-				if lake_1_phase != "G":
+			if level > 0.5 and p_i.has("lake_1"):
+				if p_i.lake_1.state != "g":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
-						make_lake(tile_data[t_id], lake_1_phase.to_lower(), p_i.lake_1, 1)
+						tile_data[t_id].lake = 1
 					continue
-			if level < -0.5:
-				if lake_2_phase != "G":
+			if level < -0.5 and p_i.has("lake_2"):
+				if p_i.lake_2.state != "g":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
-						make_lake(tile_data[t_id], lake_2_phase.to_lower(), p_i.lake_2, 2)
+						tile_data[t_id].lake = 2
 					continue
 			if home_planet:
 				continue
@@ -3085,9 +3080,9 @@ func generate_tiles(id:int):
 		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
 		p_i.wormhole = true#								new: whether the wormhole should generate a new wormhole on another planet
-	if lake_1_phase == "G":
+	if p_i.has("lake_1") and p_i.lake_1.state == "g":
 		p_i.erase("lake_1")
-	if lake_2_phase == "G":
+	if p_i.has("lake_2") and p_i.lake_2.state == "g":
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
 	if home_planet:
@@ -3162,20 +3157,20 @@ func generate_tiles(id:int):
 	var lake_1_au_int:float = 0.0
 	var lake_2_au_int:float = 0.0
 	if not achievement_data.exploration.has("find_neon_lake"):
-		if p_i.has("lake_1") and p_i.lake_1 == "Ne" or p_i.has("lake_2") and p_i.lake_2 == "Ne":
+		if p_i.has("lake_1") and p_i.lake_1.element == "Ne" or p_i.has("lake_2") and p_i.lake_2.element == "Ne":
 			earn_achievement("exploration", "find_neon_lake")
 	if not achievement_data.exploration.has("find_xenon_lake"):
-		if p_i.has("lake_1") and p_i.lake_1 == "Xe" or p_i.has("lake_2") and p_i.lake_2 == "Xe":
+		if p_i.has("lake_1") and p_i.lake_1.element == "Xe" or p_i.has("lake_2") and p_i.lake_2.element == "Xe":
 			earn_achievement("exploration", "find_xenon_lake")
 	if p_i.has("lake_1"):
-		if p_i.lake_1 == "Ne":
+		if p_i.lake_1.element == "Ne":
 			lake_1_au_int = Helper.clever_round(1.2e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
-		elif p_i.lake_1 == "Xe":
+		elif p_i.lake_1.element == "Xe":
 			lake_1_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
 	if p_i.has("lake_2"):
-		if p_i.lake_2 == "Ne":
+		if p_i.lake_2.element == "Ne":
 			lake_2_au_int = Helper.clever_round(1.2e5 * (rand_range(1, 2)) * B_strength * max_star_temp)
-		elif p_i.lake_2 == "Xe":
+		elif p_i.lake_2.element == "Xe":
 			lake_2_au_int = Helper.clever_round(3.6e6 * (rand_range(1, 2)) * B_strength * max_star_temp)
 	var planet_with_nothing = true
 	for i in wid:
@@ -3185,9 +3180,10 @@ func generate_tiles(id:int):
 			if tile:
 				planet_with_nothing = false
 			if tile and tile.has("lake"):
+				var lake_info = p_i["lake_%s" % tile.lake]
 				var distance_from_lake:int = 1
-				if tile.lake.element in ["H", "Xe"]:
-					distance_from_lake += Data.lake_bonus_values[tile.lake.element][tile.lake.state] + biology_bonus[tile.lake.element]
+				if lake_info.element in ["H", "Xe"]:
+					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
 				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
 					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
 						var id2 = k % wid + l * wid
@@ -3195,7 +3191,7 @@ func generate_tiles(id:int):
 							continue
 						if not tile_data[id2]:
 							tile_data[id2] = {}
-						if tile.lake.type == 1 and lake_1_au_int > 0.0:
+						if tile.lake == 1 and lake_1_au_int > 0.0:
 							if tile_data[id2].has("aurora"):
 								if not tile_data[id2].has("lake_elements"):
 									tile_data[id2].aurora.au_int *= lake_1_au_int + 1.0
@@ -3203,7 +3199,7 @@ func generate_tiles(id:int):
 									tile_data[id2].aurora.au_int = max(lake_1_au_int, tile_data[id2].aurora.au_int)
 							else:
 								tile_data[id2].aurora = {"au_int":lake_1_au_int}
-						elif tile.lake.type == 2 and lake_2_au_int > 0.0:
+						elif tile.lake == 2 and lake_2_au_int > 0.0:
 							if tile_data[id2].has("aurora"):
 								if not tile_data[id2].has("lake_elements"):
 									tile_data[id2].aurora.au_int *= lake_2_au_int + 1.0
@@ -3212,9 +3208,9 @@ func generate_tiles(id:int):
 							else:
 								tile_data[id2].aurora = {"au_int":lake_2_au_int}
 						if tile_data[id2].has("lake_elements"):
-							tile_data[id2].lake_elements[tile.lake.element] = tile.lake.state
+							tile_data[id2].lake_elements[lake_info.element] = lake_info.state
 						else:
-							tile_data[id2].lake_elements = {tile.lake.element:tile.lake.state}
+							tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
 	if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
 		earn_achievement("exploration", "planet_with_nothing")
 	Helper.save_obj("Planets", c_p_g, tile_data)
@@ -3233,13 +3229,15 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 	for el in list_of_element_probabilities.keys():
 		var phase_scene = load("res://Scenes/PhaseDiagrams/" + el + ".tscn")
 		var phase = phase_scene.instance()
+		if chemistry_bonus.has(el):
+			phase.modify_PD(chemistry_bonus[el])
 		var rand = list_of_element_probabilities[el] / (1 - randf())
 		var el_state = Helper.get_state(temp, pressure, phase)
-		if el_state == "L":
+		if el_state == "l":
 			rand *= 0.2
-		elif el_state == "SC":
+		elif el_state == "sc":
 			rand *= 0.5
-		elif el_state == "S":
+		elif el_state == "s":
 			rand *= 0.05
 		atm[el] = rand
 		S += rand
@@ -4166,6 +4164,8 @@ func generate_new_univ_confirm():
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
 	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
+	for el in PD_panel.bonuses.keys():
+		chemistry_bonus[el] = PD_panel.bonuses[el]
 	dimension.refresh_univs()
 	YN_panel.disconnect("confirmed", self, "generate_new_univ_confirm")
 

@@ -84,25 +84,12 @@ func _ready():
 	$TileMap.tile_set = game.planet_TS
 	$Obstacles.tile_set = game.obstacles_TS
 	$Obstacles.modulate = star_mod
-	var lake_1_phase = "G"
-	var lake_2_phase = "G"
 	if p_i.has("lake_1"):
 		$Lakes1.tile_set = game.lake_TS
-		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1 + ".tscn")
-		var phase_1 = phase_1_scene.instance()
-		lake_1_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
-		if lake_1_phase != "G":
-			$Lakes1.modulate = phase_1.colors[lake_1_phase]
-		phase_1.free()
+		$Lakes1.modulate = Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state]
 	if p_i.has("lake_2"):
 		$Lakes2.tile_set = game.lake_TS
-		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2 + ".tscn")
-		var phase_2 = phase_2_scene.instance()
-		lake_2_phase = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
-		if lake_2_phase != "G":
-			$Lakes2.modulate = phase_2.colors[lake_2_phase]
-			#$Lakes2.modulate = Color(0.3, 0.3, 0.3, 1)
-		phase_2.free()
+		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
@@ -188,13 +175,14 @@ func _ready():
 				add_child(tower)
 				tower.position = Vector2(i, j) * 200 + Vector2(100, 0)
 			if tile.has("lake"):
-				if tile.lake.state == "l":
-					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 2)
+				var state = p_i["lake_%s" % tile.lake].state
+				if state == "l":
+					get_node("Lakes%s" % tile.lake).set_cell(i, j, 2)
 					add_particles(Vector2(i*200, j*200))
-				elif tile.lake.state == "s":
-					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 0)
-				elif tile.lake.state == "sc":
-					get_node("Lakes%s" % tile.lake.type).set_cell(i, j, 1)
+				elif state == "s":
+					get_node("Lakes%s" % tile.lake).set_cell(i, j, 0)
+				elif state == "sc":
+					get_node("Lakes%s" % tile.lake).set_cell(i, j, 1)
 			elif tile.has("ash"):
 				$Ash.set_cell(i, j, 0)
 	if p_i.has("lake_1"):
@@ -271,25 +259,26 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("ash"):
 			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
 	elif tile.has("lake"):
-		if tile.lake.state == "s" and tile.lake.element == "H2O":
+		var lake_info = p_i["lake_%s" % tile.lake]
+		if lake_info.state == "s" and lake_info.element == "H2O":
 			tooltip = tr("ICE")
-		elif tile.lake.state == "l" and tile.lake.element == "H2O":
+		elif lake_info.state == "l" and lake_info.element == "H2O":
 			tooltip = tr("H2O_NAME")
 		else:
-			match tile.lake.state:
+			match lake_info.state:
 				"l":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("LIQUID"), "contents":tr("%s_NAME" % lake_info.element.to_upper())})
 				"s":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % lake_info.element.to_upper())})
 				"sc":
-					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % tile.lake.element.to_upper())})
+					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % lake_info.element.to_upper())})
 		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n"
-		if Data.lake_bonus_values[tile.lake.element].operator == "x":
-			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[tile.lake.element][tile.lake.state] * game.biology_bonus[tile.lake.element])
-		elif Data.lake_bonus_values[tile.lake.element].operator == "÷":
-			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[tile.lake.element][tile.lake.state] / game.biology_bonus[tile.lake.element])
-		elif Data.lake_bonus_values[tile.lake.element].operator == "+":
-			tooltip += tr("%s_LAKE_BONUS" % tile.lake.element.to_upper()) % (Data.lake_bonus_values[tile.lake.element][tile.lake.state] + game.biology_bonus[tile.lake.element])
+		if Data.lake_bonus_values[lake_info.element].operator == "x":
+			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[lake_info.element][lake_info.state] * game.biology_bonus[lake_info.element])
+		elif Data.lake_bonus_values[lake_info.element].operator == "÷":
+			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[lake_info.element][lake_info.state] / game.biology_bonus[lake_info.element])
+		elif Data.lake_bonus_values[lake_info.element].operator == "+":
+			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % (Data.lake_bonus_values[lake_info.element][lake_info.state] + game.biology_bonus[lake_info.element])
 	elif tile.has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
@@ -1068,6 +1057,7 @@ func _unhandled_input(event):
 						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
 						game.view_tween.start()
 						yield(game.view_tween, "tween_all_completed")
+						rsrcs.clear()
 						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 							visible = false
 							if game.galaxy_data[game.c_g].has("wormholes"):

@@ -11,6 +11,7 @@ var default_dT = 0.0
 var error = false
 var state_moused_over = ""
 var point_colors = [Color.violet, Color.red, Color.green, Color.blue]
+var editable = false
 
 func _ready():
 	set_polygon(rect_size)
@@ -18,6 +19,7 @@ func _ready():
 		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Liquid").polygon
 		if game.chemistry_bonus.has(el):
 			bonuses[el] = game.chemistry_bonus[el]
+			op_points[el] = 0.0
 			for i in 4:
 				op_points[el] += abs(default[i].x - bonuses[el][i].x) / 150.0
 				op_points[el] += abs(default[i].y - bonuses[el][i].y) / 50.0
@@ -53,8 +55,9 @@ func refresh():
 		pt.expand = true
 		pt.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		pt.rect_size = Vector2(16, 16)
-		pt.connect("button_down", self, "on_drag_start", [pt, i])
-		pt.connect("button_up", self, "on_drag_end")
+		if editable:
+			pt.connect("button_down", self, "on_drag_start", [pt, i])
+			pt.connect("button_up", self, "on_drag_end")
 		pt.rect_position = $Liquid.polygon[i] + $Liquid.position - Vector2(8, 8)
 		pt.add_to_group("PD_points")
 		pt.modulate = point_colors[i]
@@ -95,7 +98,7 @@ func update_OP_points():
 		else:
 			$OPPoints.text = ""
 	bonuses[el] = $Liquid.polygon
-	$Reset.visible = op_points[el] != 0
+	$Reset.visible = op_points[el] != 0 and editable
 
 func _input(event):
 	if event is InputEventMouseMotion:

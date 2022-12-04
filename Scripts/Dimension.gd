@@ -13,6 +13,8 @@ var biology_OP_points:float = 0
 var engineering_OP_points:float = 0
 var num_errors:Dictionary = {}
 var selected_element:String
+var DR_mult:float = 1.0
+var OP_cap_mult:float = 1.0
 
 var table
 
@@ -64,7 +66,7 @@ func refresh_OP_meters():
 			continue
 		$Subjects/Grid.get_node(subj + "/OPMeter").visible = true
 		$Subjects/Grid.get_node(subj + "/OPMeter").value = self["%s_OP_points" % subj.to_lower()]
-		$Subjects/Grid.get_node(subj + "/OPMeter").max_value = game.subjects[subj.to_lower()].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
+		$Subjects/Grid.get_node(subj + "/OPMeter").max_value = game.subjects[subj.to_lower()].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
 	
 func toggle_subj(subj_name:String):
 	for subj in $Subjects/Grid.get_children():
@@ -80,13 +82,16 @@ func toggle_subj(subj_name:String):
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
+			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj_name.to_lower()]
 			calc_OP_points()
 	else:
 		$ModifyDimension/OPMeter.visible = false
 
 func refresh_univs(reset:bool = false):
+	DR_mult = 1 + 0.25 * game.subjects.dimensional_power.lv
+	OP_cap_mult = 1 + 0.15 * game.subjects.dimensional_power.lv
+	game.PD_panel.editable = reset
 	$TopInfo/Reset.disabled = true
 	$Subjects/Grid.visible = game.dim_num > 1
 	$DimBonusesInfo.visible = game.dim_num == 1
@@ -100,7 +105,7 @@ func refresh_univs(reset:bool = false):
 		lv_sum += pow(univ.lv, 2.2)
 	for node in $Subjects/Grid.get_children():
 		node.get_node("HBox/Invest").disabled = game.DRs == 0
-	new_dim_DRs = floor(lv_sum / 10000.0)
+	new_dim_DRs = floor(lv_sum / 10000.0 * DR_mult)
 	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
 	$TopInfo/DRs.bbcode_text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]
@@ -160,6 +165,7 @@ func refresh_univs(reset:bool = false):
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
 	$TopInfo/Reset.visible = not reset
+	calc_OP_points()
 
 func set_grid():
 	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv > 0 else 2
@@ -178,17 +184,17 @@ func on_invest(subj_node):
 			subject.lv += 1
 			subject.DRs -= subject.lv
 		if $ModifyDimension.get_node(subj_node.name).visible:
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
+			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
 		if subj_node.name == "Dimensional_Power":
 			set_grid()
 			if $ModifyDimension/Maths.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 3 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
 			elif $ModifyDimension/Physics.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 3 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
 			elif $ModifyDimension/Biology.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 3 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
 			elif $ModifyDimension/Engineering.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 3 else 1.0)
+				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
 			$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = subject.lv + subject.DRs / float(subject.lv + 1)
 			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject.lv):
 				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject.lv)["custom_colors/font_color"] = Color.white
@@ -201,7 +207,7 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0), "lv":u_i.lv+1})])
+	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})])
 	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
@@ -281,7 +287,7 @@ func _on_Reset_pressed():
 	if game.dim_num == 1:
 		game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
 	else:
-		game.show_YN_panel("reset_dimension", tr("RENEW_DIMENSION"), [new_dim_DRs])
+		game.show_YN_panel("reset_dimension", tr("RENEW_DIMENSION_CONFIRM"), [new_dim_DRs])
 
 func calc_math_points(node, default_value:float, op_factor:float, lower_limit:float = 0.0, upper_limit:float = INF):
 	if node.value <= lower_limit or node.value >= upper_limit:
@@ -600,3 +606,7 @@ func _on_BSlider_value_changed(value):
 func _on_BI_value_changed(value):
 	$ModifyDimension/Physics/Control/PDFPlotter.p = float(value)
 	$ModifyDimension/Physics/Control/PDFPlotter.add_points()
+
+
+func _on_EffectsHelp_mouse_entered():
+	game.show_tooltip(tr("DIM_POWER_EFFECTS"))

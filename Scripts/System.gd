@@ -687,7 +687,7 @@ func on_star_over (id:int):
 		tr("STAR_TEMPERATURE") % [star.temperature], 
 		tr("STAR_SIZE") % [star.size], tr("SOLAR_RADII"),
 		tr("STAR_MASS") % [star.mass],
-		tr("STAR_LUMINOSITY") % Helper.format_num(star.luminosity)
+		tr("STAR_LUMINOSITY") % Helper.clever_round(star.luminosity, 3, true)
 	]
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")

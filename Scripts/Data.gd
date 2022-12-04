@@ -259,8 +259,6 @@ func reload():
 	path_2.AMN.desc = tr("DIVIDES_ENERGY_COSTS_BY")
 	path_2.SPR.desc = tr("DIVIDES_ENERGY_COSTS_BY")
 
-var lakes = {	"water":{"color":Color(0.38, 0.81, 1.0, 1.0)}}
-
 #Science for unlocking game features
 var science_unlocks = {	
 						#Agriculture sciences
@@ -468,13 +466,42 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"rover_size":{"double_treasure_at":0.9, "tier":2},
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
+var lake_colors = {
+	"H2O":	{	"s":Color(0.48, 0.76, 1.0, 0.6),
+				"l":Color(0.34, 0.84, 1.0, 1.0),
+				"sc":Color(0.68, 0.86, 1.0, 0.4)},
+	"CO2":{ 	"s":Color(0.66, 0.66, 0.66, 0.7),
+				"l":Color(0.66, 0.66, 0.66, 1.0),
+				"sc":Color(0.66, 0.66, 0.66, 0.4)},
+	"CH4":{		"s":Color(0.63, 0.39, 0.13, 0.7),
+				"l":Color(0.63, 0.39, 0.13, 1.0),
+				"sc":Color(0.63, 0.39, 0.13, 0.4)},
+	"H":{		"s":Color(0.85, 1, 0.85, 0.6),
+				"l":Color(0.7, 1, 0.7, 1.0),
+				"sc":Color(0.85, 1, 0.85, 0.3)},
+	"He":{		"s":Color(0.87, 0.66, 1.0, 0.7),
+				"l":Color(0.78, 0.43, 1.0, 1.0),
+				"sc":Color(0.87, 0.66, 1.0, 0.4)},
+	"Ne":{		"s":Color(0.0, 1.0, 0.0, 0.8),
+				"l":Color(0.0, 1.0, 0.0, 1.0),
+				"sc":Color(0.0, 1.0, 0.0, 0.5)},
+	"Xe":{		"s":Color(0.4, 0.15, 1.0, 0.7),
+				"l":Color(0.4, 0.15, 1.0, 1.0),
+				"sc":Color(0.4, 0.15, 1.0, 0.4)},
+	"NH3":{		"s":Color(0.5, 0.45, 1.0, 0.6),
+				"l":Color(0.7, 0.65, 1.0, 1.0),
+				"sc":Color(0.5, 0.45, 1.0, 0.4)},
+	"O":{		"s":Color(0.8, 0.8, 1, 0.7),
+				"l":Color(0.8, 0.8, 1, 1.0),
+				"sc":Color(0.8, 0.8, 1, 0.4)},
+}
 var lake_bonus_values = {
 	"H2O":{"s":1.5, "l":2.5, "sc":3, "operator":"x"},
 	"CH4":{"s":0.4, "l":0.15, "sc":0.3, "operator":"÷"},
 	"CO2":{"s":120, "l":300, "sc":180, "operator":"x"},
 	"H":{"s":1, "l":2, "sc":1, "operator":"+"},
-	"He":{"s":250, "l":400, "sc":200, "operator":"x"},
-	"Ne":{"s":0.2, "l":0.4, "sc":0.2, "operator":"x"},
+	"He":{"s":250, "l":600, "sc":200, "operator":"x"},
+	"Ne":{"s":0.4, "l":1.0, "sc":0.6, "operator":"x"},
 	"Xe":{"s":1, "l":2, "sc":1, "operator":"+"},
 	"O":{"s":2, "l":4, "sc":3, "operator":"x"},
 	"NH3":{"s":0.4, "l":0.15, "sc":0.3, "operator":"÷"},
