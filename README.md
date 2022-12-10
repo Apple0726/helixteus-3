@@ -1,9 +1,9 @@
 <h1 align="center">Helixteus 3</h1>
 <p align="center">
-<img src="https://img.itch.zone/aW1hZ2UvNzE3NjE4LzY4NjUzNDAucG5n/original/L2Wz3Q.png" alt="Game screenshot">
+<img src="https://img.itch.zone/aW1hZ2UvNzE3NjE4LzEwNjg3NTk2LnBuZw==/original/z8BCCM.png" alt="Game screenshot">
 </p>
 
-Helixteus 3 is a a 2D space conquest/resource management game with incremental mechanics. You start with only one planet, construct buildings to produce resources that will allow you to conquer other procedurally generated planets, systems, galaxies, and eventually entire universes.
+Helixteus 3 is a 2D space conquest/resource management game with incremental mechanics. You start with only one planet, construct buildings to produce resources that will allow you to conquer other procedurally generated planets, systems, galaxies, and eventually entire universes.
 
 [Play the game on itch.io](https://apple0726.itch.io/helixteus-3)
 
@@ -62,5 +62,5 @@ Found something that should probably not be happening? Please make a detailed [i
 All contributions and kind words are very appreciated! This game will always be available for free on itch.io (only Steam version is paid). If you want to financially support the development, you can buy the game on either Steam or itch.io, or [directly donate](https://paypal.me/apple0726) to avoid all the platform fees/taxes.
 
 <p align="center">
-<img src="https://img.itch.zone/aW1hZ2UvNzE3NjE4LzgxODIzNDUucG5n/original/L%2BzMMy.png" alt="Game screenshot">
+<img src="https://img.itch.zone/aW1hZ2UvNzE3NjE4LzEwNjg3MTc0LnBuZw==/original/hAVm%2Fg.png" alt="Game screenshot">
 </p>
