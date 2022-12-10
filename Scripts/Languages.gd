@@ -19,6 +19,14 @@ func change_language():
 	if err == OK:
 		config.set_value("interface", "language", TranslationServer.get_locale())
 		config.save("user://settings.cfg")
+	if tr("TRANSLATORS_CREDITS") == "TRANSLATORS_CREDITS":
+		$Control/TranslatedBy.visible = false
+	else:
+		$Control/TranslatedBy.text = tr("TRANSLATED_BY").format({"translators":tr("TRANSLATORS_CREDITS")})
+		yield(get_tree(), "idle_frame")
+		$Control/TranslatedBy.rect_size.x = 0.0
+		$Control/TranslatedBy.visible = true
+	game.hide_tooltip()
 	Data.reload()
 
 func _on_lg_pressed(extra_arg_0):
@@ -28,41 +36,41 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1399 - 2
+	var lines_total:int = 1482 - 2
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
-			lines_translated = 529 - 2
+			lines_translated = 523 - 2
 		"it":
 			lg = "Italiano"
-			lines_translated = 384 - 2
+			lines_translated = 378 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1309 - 2
+			lines_translated = 1312 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1377 - 2
+			lines_translated = 1504 - 2
 		"es":
 			lg = "Español"
-			lines_translated = 1161 - 2
+			lines_translated = 1160 - 2
 		"ko":
 			lg = "한국어"
-			lines_translated = 222 - 2
+			lines_translated = 220 - 2
 		"sv":
 			lg = "Svenska"
-			lines_translated = 197 - 1
+			lines_translated = 192 - 1
 		"hu":
 			lg = "Magyar"
-			lines_translated = 1027 - 1
+			lines_translated = 1256 - 1
 		"ja":
 			lg = "日本語"
-			lines_translated = 1391 - 1
+			lines_translated = 1420 - 2
 		"nl":
 			lg = "Nederlands"
-			lines_translated = 1212 - 1
+			lines_translated = 1211 - 2
 		"ru":
 			lg = "Русский"
-			lines_translated = 665 - 1
+			lines_translated = 659 - 1
 	if extra_arg_0 == "en":
 		game.show_tooltip("English")
 	else:

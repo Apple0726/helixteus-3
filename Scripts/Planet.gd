@@ -210,12 +210,27 @@ func show_tooltip(tile, tile_id:int):
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
 		if game.help_str == "":
 			game.help_str = "tile_shortcuts"
-		if game.help.has("tile_shortcuts") and (not game.tutorial or game.tutorial.tut_num >= 26):
-			tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
+		if game.help.has("tile_shortcuts") and bldg_to_construct == "":
+			if game.get_node("UI").has_node("BuildingShortcuts"):
+				game.get_node("UI").get_node("BuildingShortcuts").free()
+			var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instance()
+			shortcuts.keys.clear()
+			shortcuts.add_key("F", "UPGRADE")
+			shortcuts.add_key("Q", "DUPLICATE")
+			shortcuts.add_key("X", "DESTROY")
+			shortcuts.add_key("Shift", "SELECT_ALL")
+			shortcuts.add_key("J", "HIDE_THIS_PANEL")
+			shortcuts.center_position.x = 1048
+			shortcuts.center_position.y = 360
+			shortcuts.name = "BuildingShortcuts"
+			game.get_node("UI").add_child(shortcuts)
+			#tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == "MM":
 			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile.depth]
+		elif tile.bldg.name in ["GF", "SE", "SC"]:
+			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
@@ -527,7 +542,7 @@ func click_tile(tile, tile_id:int):
 				game.toggle_panel(game.SPR_panel)
 				if tile.bldg.has("reaction"):
 					game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
-		game.hide_tooltip()
+		hide_tooltip()
 
 func destroy_bldg(id2:int, mass:bool = false):
 	var tile = game.tile_data[id2]
@@ -551,8 +566,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.energy_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
 		else:
 			game.energy_capacity -= tile.bldg.path_1_value
-		if game.energy_capacity < 2500:
-			game.energy_capacity = 2500
+		if game.energy_capacity < 7500:
+			game.energy_capacity = 7500
 	elif bldg == "NSF":
 		if tile.bldg.has("is_constructing"):
 			game.neutron_cap -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
@@ -697,6 +712,72 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 	elif new_y < old_y:
 		callv(fn, fn_args)
 
+func collect_prod_bldgs(tile_id:int):
+	var _tile = game.tile_data[tile_id]
+	if _tile.bldg.name in ["GF", "SE"]:
+		if _tile.bldg.has("qty1"):
+			var prod_i = Helper.get_prod_info(_tile)
+			if _tile.bldg.name == "GF":
+				Helper.add_item_to_coll(items_collected, "sand", prod_i.qty_left)
+				Helper.add_item_to_coll(items_collected, "glass", prod_i.qty_made)
+			elif _tile.bldg.name == "SE":
+				Helper.add_item_to_coll(items_collected, "coal", prod_i.qty_left)
+				Helper.add_item_to_coll(items_collected, "energy", prod_i.qty_made)
+			_tile.bldg.erase("qty1")
+			_tile.bldg.erase("start_date")
+			_tile.bldg.erase("ratio")
+			_tile.bldg.erase("qty2")
+		else:
+			var rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
+			if game.check_enough(rsrc_to_deduct):
+				game.deduct_resources(rsrc_to_deduct)
+				_tile.bldg.qty1 = _tile.bldg.path_2_value
+				_tile.bldg.start_date = OS.get_system_time_msecs()
+				var ratio:float = _tile.bldg.path_3_value
+				if _tile.bldg.name == "GF":
+					ratio /= 15.0
+				elif _tile.bldg.name == "SE":
+					ratio *= 40.0
+				_tile.bldg.ratio = ratio
+				_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
+	elif _tile.bldg.name == "SC":
+		if not _tile.bldg.has("stone"):
+			var stone_qty = _tile.bldg.path_2_value
+			var stone_total = Helper.get_sum_of_dict(game.stone)
+			if stone_total >= stone_qty:
+				var stone_to_crush:Dictionary = {}
+				for el in game.stone:
+					stone_to_crush[el] = stone_qty / stone_total * game.stone[el]
+					game.stone[el] *= (1.0 - stone_qty / stone_total)
+				_tile.bldg.stone = stone_to_crush
+				_tile.bldg.stone_qty = stone_qty
+				_tile.bldg.start_date = OS.get_system_time_msecs()
+				var expected_rsrc:Dictionary = {}
+				Helper.get_SC_output(expected_rsrc, stone_qty, _tile.bldg.path_3_value, stone_total)
+				_tile.bldg.expected_rsrc = expected_rsrc
+		else:
+			var time = OS.get_system_time_msecs()
+			var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
+			var qty_left = max(0, round(_tile.bldg.stone_qty - (time - _tile.bldg.start_date) / 1000.0 * crush_spd))
+			if qty_left > 0:
+				var progress = (time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
+				for el in _tile.bldg.stone:
+					game.stone[el] += qty_left / _tile.bldg.stone_qty * _tile.bldg.stone[el]
+				var rsrc_collected = _tile.bldg.expected_rsrc.duplicate(true)
+				for rsrc in rsrc_collected:
+					rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
+					Helper.add_item_to_coll(items_collected, rsrc, rsrc_collected[rsrc])
+				game.add_resources(rsrc_collected)
+			else:
+				for rsrc in _tile.bldg.expected_rsrc:
+					Helper.add_item_to_coll(items_collected, rsrc, _tile.bldg.expected_rsrc[rsrc])
+				game.add_resources(_tile.bldg.expected_rsrc)
+			_tile.bldg.erase("stone")
+			_tile.bldg.erase("stone_qty")
+			_tile.bldg.erase("start_date")
+			_tile.bldg.erase("expected_rsrc")
+
+
 func _unhandled_input(event):
 	if game.tutorial and game.tutorial.BG_blocked:
 		return
@@ -723,8 +804,7 @@ func _unhandled_input(event):
 					game.upgrade_panel.ids = tiles_selected.duplicate(true)
 				game.toggle_panel(game.upgrade_panel)
 			elif Input.is_action_just_released("X") and not game.active_panel:
-				game.hide_adv_tooltip()
-				game.hide_tooltip()
+				hide_tooltip()
 				if tiles_selected.empty():
 					var bldg:String = tile.bldg.name
 					var money_cost = 0.0
@@ -744,78 +824,31 @@ func _unhandled_input(event):
 						game.HUD.refresh()
 				else:
 					game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
-			elif Input.is_action_just_released("G") and not tiles_selected.empty():
+			elif Input.is_action_just_released("G") and not is_instance_valid(game.active_panel):
 				items_collected.clear()
-				if tile.bldg.name in ["GF", "SE"]:
+				if not tiles_selected.empty():
 					for tile_id in tiles_selected:
-						var _tile = game.tile_data[tile_id]
-						if _tile.bldg.has("qty1"):
-							var prod_i = Helper.get_prod_info(_tile)
-							if _tile.bldg.name == "GF":
-								Helper.add_item_to_coll(items_collected, "sand", prod_i.qty_left)
-								Helper.add_item_to_coll(items_collected, "glass", prod_i.qty_made)
-							elif _tile.bldg.name == "SE":
-								Helper.add_item_to_coll(items_collected, "coal", prod_i.qty_left)
-								Helper.add_item_to_coll(items_collected, "energy", prod_i.qty_made)
-							_tile.bldg.erase("qty1")
-							_tile.bldg.erase("start_date")
-							_tile.bldg.erase("ratio")
-							_tile.bldg.erase("qty2")
-						else:
-							var rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
-							if game.check_enough(rsrc_to_deduct):
-								game.deduct_resources(rsrc_to_deduct)
-								_tile.bldg.qty1 = _tile.bldg.path_2_value
-								_tile.bldg.start_date = OS.get_system_time_msecs()
-								var ratio:float = _tile.bldg.path_3_value
-								if _tile.bldg.name == "GF":
-									ratio /= 15.0
-								elif _tile.bldg.name == "SE":
-									ratio *= 40.0
-								_tile.bldg.ratio = ratio
-								_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
-				elif tile.bldg.name == "SC":
-					for tile_id in tiles_selected:
-						var _tile = game.tile_data[tile_id]
-						if not _tile.bldg.has("stone"):
-							var stone_qty = _tile.bldg.path_2_value
-							var stone_total = Helper.get_sum_of_dict(game.stone)
-							if stone_total >= stone_qty:
-								var stone_to_crush:Dictionary = {}
-								for el in game.stone:
-									stone_to_crush[el] = stone_qty / stone_total * game.stone[el]
-									game.stone[el] *= (1.0 - stone_qty / stone_total)
-								_tile.bldg.stone = stone_to_crush
-								_tile.bldg.stone_qty = stone_qty
-								_tile.bldg.start_date = OS.get_system_time_msecs()
-								var expected_rsrc:Dictionary = {}
-								Helper.get_SC_output(expected_rsrc, stone_qty, _tile.bldg.path_3_value, stone_total)
-								_tile.bldg.expected_rsrc = expected_rsrc
-						else:
-							var time = OS.get_system_time_msecs()
-							var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
-							var qty_left = max(0, round(_tile.bldg.stone_qty - (time - _tile.bldg.start_date) / 1000.0 * crush_spd))
-							if qty_left > 0:
-								var progress = (time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
-								for el in _tile.bldg.stone:
-									game.stone[el] += qty_left / _tile.bldg.stone_qty * _tile.bldg.stone[el]
-								var rsrc_collected = _tile.bldg.expected_rsrc.duplicate(true)
-								for rsrc in rsrc_collected:
-									rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
-									Helper.add_item_to_coll(items_collected, rsrc, rsrc_collected[rsrc])
-								game.add_resources(rsrc_collected)
-							else:
-								for rsrc in _tile.bldg.expected_rsrc:
-									Helper.add_item_to_coll(items_collected, rsrc, _tile.bldg.expected_rsrc[rsrc])
-								game.add_resources(_tile.bldg.expected_rsrc)
-							_tile.bldg.erase("stone")
-							_tile.bldg.erase("stone_qty")
-							_tile.bldg.erase("start_date")
-							_tile.bldg.erase("expected_rsrc")
-					game.HUD.refresh()
+						collect_prod_bldgs(tile_id)
+				else:
+					collect_prod_bldgs(tile_over)
 				game.show_collect_info(items_collected)
+				game.HUD.refresh()
 		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
+			if game.help.has("tile_shortcuts"):
+				if game.get_node("UI").has_node("BuildingShortcuts"):
+					game.get_node("UI").get_node("BuildingShortcuts").free()
+				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instance()
+				shortcuts.keys.clear()
+				shortcuts.add_key("F", "UPGRADE_ALL")
+				shortcuts.add_key("Q", "DUPLICATE")
+				shortcuts.add_key("X", "DESTROY_ALL")
+				shortcuts.add_key("Shift", "SELECT_ALL")
+				shortcuts.add_key("J", "HIDE_THIS_PANEL")
+				shortcuts.center_position.x = 1048
+				shortcuts.center_position.y = 360
+				shortcuts.name = "BuildingShortcuts"
+				game.get_node("UI").add_child(shortcuts)
 			var path_1_value_sum:float = 0
 			var path_2_value_sum:float = 0
 			var path_3_value_sum:float = 0
@@ -847,11 +880,24 @@ func _unhandled_input(event):
 					white_rect.add_to_group("white_rects")
 			if tile.has("bldg"):
 				if Data.desc_icons.has(tile.bldg.name):
-					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected), Helper.flatten(Data.desc_icons[tile.bldg.name]))
+					var tooltip:String = Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
+					if tile.bldg.name in ["GF", "SE", "SC"]:
+						tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
+					tooltip += "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected)
+					game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
 				else:
 					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
+		if game.get_node("UI").has_node("BuildingShortcuts"):
+			var shortcuts = game.get_node("UI").get_node("BuildingShortcuts")
+			shortcuts.keys.clear()
+			shortcuts.add_key("F", "UPGRADE_ALL")
+			shortcuts.add_key("Q", "DUPLICATE")
+			shortcuts.add_key("X", "DESTROY_ALL")
+			shortcuts.add_key("Shift", "SELECT_ALL")
+			shortcuts.add_key("J", "HIDE_THIS_PANEL")
+			shortcuts.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
@@ -887,8 +933,7 @@ func _unhandled_input(event):
 			var y_over:int = int(mouse_pos.y / 200)
 			tile_over = x_over % wid + y_over * wid
 			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel:
-				game.hide_tooltip()
-				game.hide_adv_tooltip()
+				hide_tooltip()
 				if not tiles_selected.empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
 				var tile = game.tile_data[tile_over]
@@ -914,10 +959,9 @@ func _unhandled_input(event):
 			prev_tile_over = tile_over
 		else:
 			if tile_over != -1 and not_on_button:
-				game.hide_tooltip()
 				tile_over = -1
 				prev_tile_over = -1
-			game.hide_adv_tooltip()
+			hide_tooltip()
 		if is_instance_valid(shadow):
 			shadow.visible = mouse_on_tiles and not mass_build
 			shadow.modulate.a = 0.5
@@ -1141,6 +1185,12 @@ func _unhandled_input(event):
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
 
+func hide_tooltip():
+	if game.get_node("UI").has_node("BuildingShortcuts"):
+		game.get_node("UI").get_node("BuildingShortcuts").queue_free()
+	game.hide_tooltip()
+	game.hide_adv_tooltip()
+
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if not tile:
 		return false
@@ -1361,6 +1411,8 @@ func on_timeout():
 
 func construct(st:String, costs:Dictionary):
 	finish_construct()
+	if game.get_node("UI").has_node("BuildingShortcuts"):
+		game.get_node("UI").get_node("BuildingShortcuts").queue_free()
 	var tween = get_tree().create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18 and (not game.tutorial or game.tutorial.tut_num >= 26):

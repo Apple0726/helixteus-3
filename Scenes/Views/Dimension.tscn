@@ -423,9 +423,6 @@ margin_top = 268.0
 margin_right = 400.0
 margin_bottom = 302.0
 text = "GENERATE_STARTING_UNIVERSE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
 visible = false

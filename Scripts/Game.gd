@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.25"
+const VERSION:String = "v0.25.2"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -526,7 +526,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "10 Dec 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -566,7 +566,7 @@ func _ready():
 	add_child(stars_tween)
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
-	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja"]:
+	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
 	YN_panel.connect("popup_hide", self, "popup_close")
@@ -585,6 +585,7 @@ func _ready():
 	if err == OK:
 		switch_music(load("res://Audio/Title.ogg"))
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
+		$Title/Languages.change_language()
 		OS.vsync_enabled = config.get_value("graphics", "vsync", true)
 		pitch_affected = config.get_value("audio", "pitch_affected", true)
 		enable_shaders = config.get_value("graphics", "enable_shaders", true)
@@ -785,32 +786,24 @@ func load_univ():
 				particles.neutron -= diff - amount_decayed
 				particles.proton += (diff - amount_decayed) / 2.0
 				particles.electron += (diff - amount_decayed) / 2.0
-		if help.tutorial >= 1 and help.tutorial <= 25:
-			new_game(true, 0, true)
+		tile_data = open_obj("Planets", c_p_g)
+		if c_v == "mining" or c_v == "cave":
+			c_v = "planet"
+		elif c_v == "science_tree":
+			c_v = l_v
+		elif c_v == "battle":
+			c_v = "system"
+		view.set_process(true)
+		var file = Directory.new()
+		if file.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
+			planet_data = open_obj("Systems", c_s_g)
+		if file.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
+			system_data = open_obj("Galaxies", c_g_g)
+		if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
+			galaxy_data = open_obj("Clusters", c_c)
 		else:
-			tile_data = open_obj("Planets", c_p_g)
-			if c_v == "mining" or c_v == "cave":
-				c_v = "planet"
-			elif c_v == "science_tree":
-				c_v = l_v
-			elif c_v == "battle":
-				c_v = "system"
-			view.set_process(true)
-			var file = Directory.new()
-			if file.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
-				planet_data = open_obj("Systems", c_s_g)
-			if file.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
-				system_data = open_obj("Galaxies", c_g_g)
-			if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
-				galaxy_data = open_obj("Clusters", c_c)
-			else:
-				galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
-				Helper.save_obj("Clusters", 0, galaxy_data)
-			if help.tutorial >= 26:
-				tutorial = preload("res://Scenes/Tutorial.tscn").instance()
-				tutorial.visible = false
-				tutorial.tut_num = help.tutorial
-				$UI.add_child(tutorial)
+			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+			Helper.save_obj("Clusters", 0, galaxy_data)
 	else:
 		popup("load error", 1.5)
 
@@ -859,7 +852,7 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if save_info_dict.version != "v0.25":
+	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2"]:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -915,39 +908,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		save_created = OS.get_system_time_msecs()
 		DRs = 0
 		dim_num = 1
-		help = {
-				"tutorial":1 if tut else -1,
-				"materials":true,
-				"close_btn1":true,
-				"close_btn2":true,
-				"mining":true,
-				"STM":true,
-				"battle":true,
-				"battle2":true,
-				"plant_something_here":true,
-				"boulder_desc":true,
-				"aurora_desc":true,
-				"crater_desc":true,
-				"autosave_light_desc":true,
-				"tile_shortcuts":true,
-				"inventory_shortcuts":true,
-				"hotbar_shortcuts":true,
-				"rover_shortcuts":true,
-				"mass_buy":true,
-				"rover_inventory_shortcuts":true,
-				"planet_details":true,
-				"mass_build":true,
-				"abandoned_ship":true,
-				"science_tree":true,
-				"sprint_mode":true,
-				"cave_controls":true,
-				"active_wormhole":true,
-				"inactive_wormhole":true,
-				"cave_diff_info":true,
-				"downgrade":true,
-				"artificial_volcano":true,
-				"flash_send_probe_btn":true,
-		}
+		help = Data.default_help.duplicate()
 		for ach in achievements:
 			achievement_data[ach] = {}
 		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
@@ -1018,7 +979,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	mineral_capacity = 200
 	stone = {}
 	energy = 200
-	energy_capacity = 2500
+	energy_capacity = 7500
 	SP = 0
 	neutron_cap = 0
 	electron_cap = 0
@@ -1572,6 +1533,8 @@ func delete_galaxy():
 #func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 func switch_view(new_view:String, other_params:Dictionary = {}):
 	_on_BottomInfo_close_button_pressed()
+	if $UI.has_node("BuildingShortcuts"):
+		$UI.get_node("BuildingShortcuts").queue_free()
 	$UI/Panel.visible = false
 	var old_view:String = c_v
 	if view_tween.is_active():
@@ -3637,7 +3600,7 @@ func _input(event):
 			stats_dim.keyboard_presses += 1
 			stats_univ.keyboard_presses += 1
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
-		#$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
+		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
 	elif event is InputEventMouseButton and not stats_global.empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):
@@ -3662,14 +3625,14 @@ func _input(event):
 			else:
 				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
 		else:
-			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left):
-				tooltip.rect_position = mouse_pos + Vector2(9, 9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_top_right):
-				tooltip.rect_position = mouse_pos - Vector2(tooltip.rect_size.x + 9, -9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
-			elif Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_right):
-				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+			if mouse_pos.x < 1280 - tooltip.rect_size.x:
+				tooltip.rect_position.x = mouse_pos.x + 9
+			else:
+				tooltip.rect_position.x = mouse_pos.x - tooltip.rect_size.x - 9
+			if mouse_pos.y < 720 - tooltip.rect_size.y - 16:
+				tooltip.rect_position.y = mouse_pos.y + 9
+			else:
+				tooltip.rect_position.y = mouse_pos.y - tooltip.rect_size.y - 9
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
 #	if ship_locator:
@@ -3715,7 +3678,7 @@ func _input(event):
 			element_overlay.toggle_btn.pressed = not element_overlay.toggle_btn.pressed
 		
 	#J to hide help
-	if Input.is_action_just_released("hide_help") and help_str != "":
+	if Input.is_action_just_released("J") and help_str != "":
 		if help.has(help_str):
 			help.erase(help_str)
 		else:
@@ -3723,6 +3686,8 @@ func _input(event):
 		hide_tooltip()
 		hide_adv_tooltip()
 		$UI/Panel.visible = false
+		if $UI.has_node("BuildingShortcuts"):
+			$UI.get_node("BuildingShortcuts").queue_free()
 	
 	var cmd_node = $Tooltips/Command
 	#/ to type a command

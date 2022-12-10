@@ -10,6 +10,7 @@
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=8]
 [ext_resource path="res://Graphics/Planets/BGs/9.png" type="Texture" id=9]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Scenes/Key.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Ship.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Graphics/Ships/Ship3.png" type="Texture" id=13]
 [ext_resource path="res://Graphics/Icons/HX_icon.png" type="Texture" id=14]
@@ -103,19 +104,6 @@ shortcut = SubResource( 19 )
 shader = ExtResource( 15 )
 shader_param/amplitude = 8.0
 shader_param/frequency = 12.0
-
-[sub_resource type="StyleBoxFlat" id=35]
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 1, 1, 1, 1 )
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [sub_resource type="Animation" id=38]
 resource_name = "Fade"
@@ -619,65 +607,26 @@ margin_right = 40.0
 margin_bottom = -24.0
 theme = ExtResource( 2 )
 
-[node name="GoUp" type="Panel" parent="UI/ControlKeyboard"]
+[node name="GoUp" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
 margin_left = 548.0
 margin_top = 560.0
-margin_right = 580.0
-margin_bottom = 592.0
-custom_styles/panel = SubResource( 35 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="UI/ControlKeyboard/GoUp"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_right = 584.0
+margin_bottom = 594.0
 text = "W"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="GoDown" type="Panel" parent="UI/ControlKeyboard"]
+[node name="GoDown" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
 margin_left = 548.0
 margin_top = 600.0
-margin_right = 580.0
-margin_bottom = 632.0
-custom_styles/panel = SubResource( 35 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="UI/ControlKeyboard/GoDown"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_right = 584.0
+margin_bottom = 634.0
 text = "S"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Boost" type="Panel" parent="UI/ControlKeyboard"]
-margin_left = 680.0
+[node name="Boost" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
+margin_left = 656.0
 margin_top = 600.0
-margin_right = 772.0
-margin_bottom = 632.0
-custom_styles/panel = SubResource( 35 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="UI/ControlKeyboard/Boost"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_right = 706.0
+margin_bottom = 634.0
 text = "Shift"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlKeyboard"]
 anims/Fade = SubResource( 38 )

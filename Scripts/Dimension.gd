@@ -66,7 +66,7 @@ func refresh_OP_meters():
 			continue
 		$Subjects/Grid.get_node(subj + "/OPMeter").visible = true
 		$Subjects/Grid.get_node(subj + "/OPMeter").value = self["%s_OP_points" % subj.to_lower()]
-		$Subjects/Grid.get_node(subj + "/OPMeter").max_value = game.subjects[subj.to_lower()].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
+		$Subjects/Grid.get_node(subj + "/OPMeter").max_value = get_OP_cap(subj.to_lower())
 	
 func toggle_subj(subj_name:String):
 	for subj in $Subjects/Grid.get_children():
@@ -82,7 +82,7 @@ func toggle_subj(subj_name:String):
 		if $ModifyDimension/OPMeter.visible:
 			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
+			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_name.to_lower())
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj_name.to_lower()]
 			calc_OP_points()
 	else:
@@ -184,7 +184,7 @@ func on_invest(subj_node):
 			subject.lv += 1
 			subject.DRs -= subject.lv
 		if $ModifyDimension.get_node(subj_node.name).visible:
-			$ModifyDimension/OPMeter/OPMeter.max_value = subject.lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
+			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_node.name.to_lower())
 		if subj_node.name == "Dimensional_Power":
 			set_grid()
 			if $ModifyDimension/Maths.visible:
@@ -426,15 +426,20 @@ func calc_OP_points():
 			$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
 			if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value:
 				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0)
+				num_errors[subj.to_lower()] = true
 				$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
 			else:
 				$Subjects/Grid.get_node(subj + "/Effects")["custom_colors/font_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.white
+		else:
+			if self["%s_OP_points" % subj.to_lower()] > get_OP_cap(subj.to_lower()):
+				num_errors[subj.to_lower()] = true
 	refresh_OP_meters()
 	if $ModifyDimension/Reset.visible:
-		#var OP_mult:float = (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0)
 		$ModifyDimension/Reset/Generate.visible = true
-		#Save migration
-		#$ModifyDimension/Reset/Generate.disabled = not (maths_OP_points <= game.subjects.maths.lv * OP_mult and (game.subjects.physics.lv == 0 or physics_OP_points <= game.subjects.physics.lv * OP_mult) and engineering_OP_points <= game.subjects.engineering.lv * OP_mult) or not num_errors.empty()
+		$ModifyDimension/Reset/Generate.disabled = not num_errors.empty()
+
+func get_OP_cap(subj:String):
+	return game.subjects[subj].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
 
 func calc_bio_points(node, op_factor:float):
 	if node.value < node.min_value:
@@ -483,7 +488,7 @@ func set_bonuses():
 	for bonus in game.biology_bonus:
 		if $ModifyDimension/Biology/Control.has_node(bonus):
 			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control.get_node(bonus).value
-		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):	
+		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):
 			game.biology_bonus[bonus] = lake_params[bonus].value
 	for bonus in game.engineering_bonus:
 		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value

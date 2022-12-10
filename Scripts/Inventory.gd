@@ -232,13 +232,13 @@ func show_buy_sell(type:String, obj:String):
 
 func show_mat(mat:String):
 	var st:String = "%s\n%s" % [get_str(mat), get_str(mat, "_DESC")]
-	if game.autocollect.mats.has(mat):
+	if game.autocollect.mats.has(mat) and not is_zero_approx(game.autocollect.mats[mat]):
 		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mats[mat] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats[mat]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func show_atom(atom:String):
 	var st:String = get_str(atom, "_NAME")
-	if game.autocollect.atoms.has(atom):
+	if game.autocollect.atoms.has(atom) and not is_zero_approx(game.autocollect.atoms[atom]):
 		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
@@ -247,7 +247,7 @@ func on_mouse_out():
 
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
-	if game.autocollect.mets.has(met):
+	if game.autocollect.mets.has(met) and not is_zero_approx(game.autocollect.mets[met]):
 		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
 	game.show_tooltip(st)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=194 format=2]
+[gd_scene load_steps=195 format=2]
 
 [ext_resource path="res://Shaders/Laser.shader" type="Shader" id=1]
 [ext_resource path="res://Scripts/Cave.gd" type="Script" id=2]
@@ -46,6 +46,7 @@
 [ext_resource path="res://Graphics/Tiles/Lava.png" type="Texture" id=44]
 [ext_resource path="res://Graphics/Misc/noise_combined.png" type="Texture" id=45]
 [ext_resource path="res://Shaders/BCS.shader" type="Shader" id=46]
+[ext_resource path="res://Scenes/KeyboardShortcuts.tscn" type="PackedScene" id=47]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 46 )
@@ -1498,11 +1499,7 @@ tracks/0/keys = {
 [sub_resource type="Environment" id=19]
 background_mode = 4
 glow_enabled = true
-glow_levels/2 = true
-glow_levels/3 = false
-glow_levels/4 = true
 glow_levels/5 = false
-glow_levels/6 = true
 glow_intensity = 0.3
 glow_blend_mode = 1
 glow_hdr_luminance_cap = 4.0
@@ -1517,6 +1514,7 @@ __meta__ = {
 
 [node name="TileMap" type="TileMap" parent="."]
 material = SubResource( 1 )
+z_index = -1024
 tile_set = ExtResource( 33 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
@@ -1526,6 +1524,7 @@ format = 1
 [node name="Lava" type="TileMap" parent="."]
 modulate = Color( 1.4, 1.2, 1, 1 )
 light_mask = 0
+z_index = -1023
 tile_set = SubResource( 98 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
@@ -1535,6 +1534,7 @@ format = 1
 
 [node name="Ash" type="TileMap" parent="."]
 material = SubResource( 6 )
+z_index = -1022
 tile_set = SubResource( 2 )
 cell_size = Vector2( 200, 200 )
 cell_quadrant_size = 100
@@ -2204,20 +2204,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Controls" type="Label" parent="UI2"]
+[node name="Controls" parent="UI2" instance=ExtResource( 47 )]
 visible = false
 margin_left = 544.0
-margin_top = 128.0
-margin_right = 736.0
-margin_bottom = 156.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource( 29 )
-custom_styles/normal = SubResource( 12 )
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_top = 125.0
+margin_right = 792.0
+margin_bottom = 285.0
 
 [node name="Dialogue" parent="UI2" instance=ExtResource( 24 )]
 

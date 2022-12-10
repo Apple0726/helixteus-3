@@ -257,9 +257,7 @@ func _on_EnableShaders_toggled(button_pressed):
 
 
 func _on_ResetTooltips_pressed():
-	for h in game.help:
-		if h != "tutorial":
-			game.help[h] = true
+	game.help = Data.default_help.duplicate()
 
 
 func _on_Screenshake_toggled(button_pressed):

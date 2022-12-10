@@ -230,6 +230,9 @@ tracks/0/keys = {
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_vertical_guides_": [ 1044.0 ]
+}
 
 [node name="click" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
@@ -510,7 +513,7 @@ margin_bottom = 720.0
 texture = ExtResource( 4 )
 expand = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_lock_": true
 }
 
 [node name="Label" type="Label" parent="Title"]
@@ -611,6 +614,9 @@ stretch_mode = 5
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 1239.0
 margin_bottom = 680.0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Autosave" type="Timer" parent="."]
 
@@ -662,6 +668,9 @@ material = SubResource( 18 )
 position = Vector2( 1064.25, 171.865 )
 scale = Vector2( 0.725823, 0.725823 )
 texture = ExtResource( 32 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="WhiteStars" type="Node2D" parent="Stars"]
 visible = false
@@ -679,6 +688,7 @@ current = true
 [node name="MusicTween" type="Tween" parent="."]
 
 [node name="MMTimer" type="Timer" parent="."]
+wait_time = 0.5
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

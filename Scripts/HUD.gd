@@ -192,7 +192,7 @@ func update_money_energy_SP():
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(2500 + round((game.energy_capacity - 2500) * Helper.get_IR_mult("B")))]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(7500 + round((game.energy_capacity - 7500) * Helper.get_IR_mult("B")))]
 		$Top/Resources/Soil.visible = game.autocollect.mats.has("soil")
 		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)
 		soil_text["custom_colors/font_color"] = Color.white if game.mats.soil > 0 else Color.red
@@ -424,11 +424,11 @@ func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
-		if game.autocollect.mats.cellulose != 0:
+		if not is_zero_approx(game.autocollect.mats.cellulose):
 			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
 	elif extra_arg_0 == "SOIL" and game.autocollect.mats.has("soil"):
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.soil), true), tr("S_SECOND")])
-		if game.autocollect.mats.soil != 0:
+		if not is_zero_approx(game.autocollect.mats.soil):
 			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("SOIL"), "time":Helper.time_to_str(1000 * game.mats.soil / abs(game.autocollect.mats.soil))})
 	elif game.autocollect.has("rsrc"):
 		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed

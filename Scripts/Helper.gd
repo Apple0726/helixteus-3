@@ -416,7 +416,7 @@ func add_minerals(amount:float, add:bool = true):
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func add_energy(amount:float):
-	var energy_cap = 2500 + (game.energy_capacity - 2500) * get_IR_mult("B")
+	var energy_cap = 7500 + (game.energy_capacity - 7500) * get_IR_mult("B")
 	var energy_space_available:float = round(energy_cap) - round(game.energy)
 	if energy_space_available >= amount:
 		game.energy += amount
@@ -954,7 +954,7 @@ func get_DS_output(star:Dictionary, next_lv:int = 0):
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 500.0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 5000.0
 
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed
@@ -1132,7 +1132,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 		"AMN", "SPR":
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n[color=#88CCFF]%s[/color]" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value), tr("CLICK_TO_CONFIGURE")]
+			return "%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value)]
 		"RL", "PC", "NC", "EC":
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"MS", "NSF", "ESF", "B":

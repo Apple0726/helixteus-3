@@ -151,6 +151,13 @@ var treasure_mult:float = 1.0
 var debris_amount:float
 
 func _ready():
+	$UI2/Controls.center_position = Vector2(640, 160)
+	$UI2/Controls.add_key("WASD", "MOVE_ROVER")
+	$UI2/Controls.add_key(tr("SCROLL_WHEEL"), "CHANGE_ACTIVE_ITEM")
+	$UI2/Controls.add_key(tr("HOLD_LEFT_RIGHT_CLICK"), "USE_ACTIVE_ITEM")
+	$UI2/Controls.add_key("M", "TOGGLE_MINIMAP")
+	$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
+	$UI2/Controls.refresh()
 	if game.subjects.dimensional_power.lv > 1:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:
@@ -442,8 +449,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
 	if game.help.has("cave_controls"):
 		$UI2/Controls.visible = true
+		$UI2/Controls/Label.text = tr("CONTROLS")
 		game.help_str = "cave_controls"
-		$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
+		#$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
 	if not game.objective.empty() and game.objective.type == game.ObjectiveType.CAVE:
 		game.objective.current += 1
 	cave_BG.modulate = star_mod * (1.0 - cave_darkness)
@@ -497,6 +505,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
 	var seeking_proj = enhancements.has("laser_3")
+	var debris_height:int = -1020
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
@@ -518,6 +527,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var debris = Sprite.new()
 				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
 				add_child_below_node($Lava, debris)
+				debris.z_index = -1021
 				debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 				debris.modulate.a = 1.0
 				debris.rotation_degrees = rng.randf_range(0, 360)
@@ -538,8 +548,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 						rand_scale_x = -log(1 - rng.randf()) * 1.2 + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
 						debris.self_modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
+						debris.get_node("Lava").range_z_min = debris_height
+						debris.get_node("Lava").range_z_max = debris_height
 					else:
 						rand_scale_x = -log(1 - rng.randf()) + 0.5
+					debris.get_node("Sprite").z_index = debris_height
+					debris_height += 1
 					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if aurora and rng.randf() < 0.05:
@@ -1362,6 +1376,8 @@ func _input(event):
 				cave_floor += 1
 				if cave_floor == 8:
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
+				elif cave_floor == 16:
+					game.switch_music(preload("res://Audio/cave3.mp3"), 0.95 if tile.has("aurora") else 1.0)
 				if volcano_mult > 1 and not artificial_volcano and aurora:
 					difficulty *= 2.5
 				elif volcano_mult > 1 and not artificial_volcano or aurora:
@@ -1382,6 +1398,8 @@ func _input(event):
 				cave_floor -= 1
 				if cave_floor == 7:
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
+				if cave_floor == 15:
+					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				if volcano_mult > 1 and not artificial_volcano and aurora:
 					difficulty /= 2.5
 				elif volcano_mult > 1 and not artificial_volcano or aurora:
@@ -1407,7 +1425,7 @@ func _input(event):
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
 			MM_hole.position *= 1.5
 			MM_exit.position *= 1.5
-		if Input.is_action_just_released("hide_help"):
+		if Input.is_action_just_released("J"):
 			$UI2/Controls.visible = false
 		update_ray()
 
@@ -1947,7 +1965,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 			st = tr("ROVER_DEATH_MESSAGE_OVERLOAD")
 		elif cave_darkness > 0.9:
 			st = tr("ROVER_DEATH_MESSAGE_DARK")
-		if randf() < 0.01:
+		if game.op_cursor or randf() < 0.01:
 			st = st.replace("wrecked", "rekt")
 		call_deferred("exit_cave")
 		game.long_popup(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
@@ -2260,7 +2278,7 @@ func _on_FloorCollisionDetector_body_entered(body):
 					$Rover/BurnTimer.start(1.0 / time_speed)
 				$Rover/Sprite.modulate = Color.orangered
 				$Rover/LavaTimer.stop()
-	elif body.name == "Lava":
+	elif body.name == "Lava" and not enhancements.has("wheels_7"):
 		on_lava = true
 		if not on_ash:
 			if not enhancements.has("wheels_8"):

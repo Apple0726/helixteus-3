@@ -167,7 +167,7 @@ func _ready():
 			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
 	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$UI/ControlKeyboard/GoUp/Label.text = "Z"
+		$UI/ControlKeyboard/GoUp.text = "Z"
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
 	else:
 		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
