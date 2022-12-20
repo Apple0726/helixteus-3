@@ -366,8 +366,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		game.stats_univ.bldgs_built += 1
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
-		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has("MS"):
+		if game.stats_univ.bldgs_built >= 1 and not game.new_bldgs.has("PP"):
 			game.new_bldgs.PP = true
+		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has("MS"):
 			game.new_bldgs.B = true
 			game.new_bldgs.MS = true
 		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has("RL"):
@@ -878,7 +879,7 @@ func _unhandled_input(event):
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
-			if tile.has("bldg"):
+			if tile.has("bldg") and not game.item_cursor.visible:
 				if Data.desc_icons.has(tile.bldg.name):
 					var tooltip:String = Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
 					if tile.bldg.name in ["GF", "SE", "SC"]:
@@ -886,7 +887,7 @@ func _unhandled_input(event):
 					tooltip += "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected)
 					game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
 				else:
-					game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
+					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
 		if game.get_node("UI").has_node("BuildingShortcuts"):
@@ -901,7 +902,7 @@ func _unhandled_input(event):
 		view.move_view = true
 		view.scroll_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
-			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel):
+			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:

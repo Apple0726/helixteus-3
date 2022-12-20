@@ -19,10 +19,13 @@ var gravity_entry_cost:float
 
 func _ready():
 	set_polygon($Background.rect_size)
+	$Drive.add_item(tr("STANDARD_DRIVE"))
+	$Drive.add_item(tr("PD_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("COSTS")]
 
 func refresh():
+	$Drive.visible = game.science_unlocked.has("PD")
 	var depart_id:int
 	var dest_id:int
 	var coords:Dictionary = game.ships_c_coords
@@ -66,17 +69,17 @@ func refresh():
 		distance *= depart_pos.distance_to(dest_pos)
 	if TEST:
 		distance = 1
-	$EnergyIcon2.visible = not game.science_unlocked.has("PD")
-	$EnergyCost2.visible = not game.science_unlocked.has("PD")
-	$PlanetEECost.visible = not game.science_unlocked.has("PD")
-	$Panel.visible = not game.science_unlocked.has("PD")
-	if game.science_unlocked.has("PD"):
+	$EnergyIcon2.visible = $Drive.selected == 0
+	$EnergyCost2.visible = $Drive.selected == 0
+	$PlanetEECost.visible = $Drive.selected == 0
+	$Panel.visible = $Drive.selected == 0
+	if $Drive.selected == 1:
 		$EnergyIcon3.texture = preload("res://Graphics/Atoms/Pu.png")
 		total_energy_cost = distance / 400000.0
 		$TotalEnergyCost2.text = "%s/%s mol" % [Helper.format_num(game.atoms.Pu, true), Helper.format_num(total_energy_cost, true)]
 		$TotalEnergyCost2["custom_colors/font_color"] = Color.green if game.atoms.Pu > total_energy_cost else Color.red
 			
-	else:
+	elif $Drive.selected == 0:
 		$TotalEnergyCost2["custom_colors/font_color"] = Color.white
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
 		calc_costs()
@@ -121,7 +124,7 @@ func _on_Send_pressed():
 
 func send_ships():
 	if game.ships_travel_view == "-":
-		if game.science_unlocked.has("PD"):
+		if $Drive.selected == 1:
 			if game.atoms.Pu >= total_energy_cost:
 				game.atoms.Pu -= total_energy_cost
 				game.ships_c_coords.p = dest_p_id
@@ -137,6 +140,8 @@ func send_ships():
 				game.ships_c_coords.c = game.c_c
 				game.ships_dest_coords.c = game.c_c
 				game.view.obj.refresh_planets()
+				game.view.refresh()
+				game.space_HUD.get_node("ConquerAll").visible = game.u_i.lv >= 32 and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(self)
 			else:
@@ -237,3 +242,7 @@ func calc_costs():
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+
+
+func _on_Drive_item_selected(index):
+	refresh()

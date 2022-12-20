@@ -427,7 +427,6 @@ shadow_offset = Vector2( 1, 1 )
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 __meta__ = {
-"_edit_use_anchors_": false,
 "_edit_vertical_guides_": [ 96.0, 892.0 ]
 }
 

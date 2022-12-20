@@ -149,8 +149,8 @@ func update_XP():
 		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * game.maths_bonus.ULUGF)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
-		if game.u_i.lv == 30:
-			game.long_popup(tr("LEVEL_30_REACHED"), "%s 30" % tr("LEVEL"))
+		if game.u_i.lv == 28:
+			game.long_popup(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
 		if game.u_i.lv == 32:
 			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.u_i.lv == 55:

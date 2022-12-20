@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.25.2"
+const VERSION:String = "v0.25.3"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -526,7 +526,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "10 Dec 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "14 Dec 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -852,7 +852,7 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2"]:
+	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3"]:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -2436,6 +2436,7 @@ func generate_systems(id:int):
 	#Open clusters are
 	var B = galaxy_data[id].B_strength#Magnetic field strength
 	var dark_matter = galaxy_data[id].dark_matter
+	var G = u_i.gravitational
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
 			show.s_bk_button = true
@@ -2463,36 +2464,37 @@ func generate_systems(id:int):
 			if mass < 0.08:#Y, T, L
 				star_size = range_lerp(mass, 0, 0.08, 0.01, 0.1)
 				temp = range_lerp(mass, 0, 0.08, 250, 2400)
-			if mass >= 0.08 and mass < 0.45:#M
+			elif mass >= 0.08 and mass < 0.45:#M
 				star_size = range_lerp(mass, 0.08, 0.45, 0.1, 0.7)
 				temp = range_lerp(mass, 0.08, 0.45, 2400, 3700)
-			if mass >= 0.45 and mass < 0.8:#K
+			elif mass >= 0.45 and mass < 0.8:#K
 				star_size = range_lerp(mass, 0.45, 0.8, 0.7, 0.96)
 				temp = range_lerp(mass, 0.45, 0.8, 3700, 5200)
-			if mass >= 0.8 and mass < 1.04:#G
+			elif mass >= 0.8 and mass < 1.04:#G
 				star_size = range_lerp(mass, 0.8, 1.04, 0.96, 1.15)
 				temp = range_lerp(mass, 0.8, 1.04, 5200, 6000)
-			if mass >= 1.04 and mass < 1.4:#F
+			elif mass >= 1.04 and mass < 1.4:#F
 				star_size = range_lerp(mass, 1.04, 1.4, 1.15, 1.4)
 				temp = range_lerp(mass, 1.04, 1.4, 6000, 7500)
-			if mass >= 1.4 and mass < 2.1:#A
+			elif mass >= 1.4 and mass < 2.1:#A
 				star_size = range_lerp(mass, 1.4, 2.1, 1.4, 1.8)
 				temp = range_lerp(mass, 1.4, 2.1, 7500, 10000)
-			if mass >= 2.1 and mass < 9:#B
+			elif mass >= 2.1 and mass < 9:#B
 				star_size = range_lerp(mass, 2.1, 9, 1.8, 6.6)
 				temp = range_lerp(mass, 2.1, 9, 10000, 30000)
-			if mass >= 9 and mass < 100:#O
+			elif mass >= 9 and mass < 100:#O
 				star_size = range_lerp(mass, 9, 100, 6.6, 22)
 				temp = range_lerp(mass, 16, 100, 30000, 70000)
-			if mass >= 100 and mass < 1000:#Q
+			elif mass >= 100 and mass < 1000:#Q
 				star_size = range_lerp(mass, 100, 1000, 22, 60)
 				temp = range_lerp(mass, 100, 1000, 70000, 120000)
-			if mass >= 1000 and mass < 10000:#R
+			elif mass >= 1000 and mass < 10000:#R
 				star_size = range_lerp(mass, 1000, 10000, 60, 200)
 				temp = range_lerp(mass, 1000, 10000, 120000, 210000)
-			if mass >= 10000:#Z
-				star_size = pow(mass, 1/3.0) * (200 / pow(10000, 1/3.0))
-				temp = 210000 * pow(1.45, mass / 10000.0 - 1)
+			elif mass >= 10000:#Z
+				var pw = pow(mass, 1/3.0) / pow(10000, 1/3.0)
+				star_size = pw * 200
+				temp = pw * 210000
 			
 			var star_type = ""
 			if mass >= 0.08:
@@ -2505,29 +2507,22 @@ func generate_systems(id:int):
 				temp = 4000 + exp(10 * randf())
 				star_size = rand_range(0.008, 0.02)
 				mass = rand_range(0.4, 0.8)
-			else:
-				if mass > 0.25 and randf() < 0.08 * log(exp(1) + u_i.gravitational - 1.0):
+			elif mass > 0.25:
+				var r = randf()
+				var star_size_tier = log(G/r) - log(G)*pow(r, 4) + 1
+				if star_size_tier > 7.0:
+					mass = rand_range(5, 30)
+					star_type = "hypergiant"
+					var tier:int = ceil(star_size_tier - 7.0)
+					star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
+					star_type = "hypergiant " + get_roman_num(tier)
+					hypergiant = tier
+				elif star_size_tier > 5.0:
+					star_type = "supergiant"
+					star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
+				elif star_size_tier > 3.5:
 					star_type = "giant"
 					star_size *= max(rand_range(240000, 280000) / temp, rand_range(1.2, 1.4))
-				if star_type == "main_sequence":
-					if randf() < 0.01 * log(exp(1) + u_i.gravitational - 1.0):
-						mass = rand_range(10, 50)
-						star_type = "supergiant"
-						star_size *= max(rand_range(360000, 440000) / temp, rand_range(1.7, 2.1))
-					elif randf() < 0.0015 * u_i.gravitational:
-						mass = rand_range(5, 30)
-						star_type = "hypergiant"
-						var tier:int = floor(1 / pow(randf(), 0.35 * pow(u_i.gravitational, 0.25)))
-						star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
-						star_type = "hypergiant " + get_roman_num(tier)
-						hypergiant = tier
-#			if hypergiant_system:
-#				fourth_ship_hints.hypergiant_system_spawn_system = system_data.size() + s_num
-#				star_type = "hypergiant XV"
-#				hypergiant = 15
-#				mass = rand_range(4, 4.05)
-#				temp = range_lerp(mass, 2.1, 16, 10000, 30000)
-#				star_size = range_lerp(mass, 2.1, 16, 1.8, 6.6) * pow(1.2, 15) * 15
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 			stats_univ.biggest_star = max(star_size, stats_univ.biggest_star)
@@ -3306,7 +3301,9 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	tooltip.modulate.a = 0.0
 	$Tooltips.add_child(tooltip)
 	add_text_icons(tooltip, txt, imgs, size, true)
-	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.04)
+	yield(get_tree(), "idle_frame")
+	set_tooltip_position()
+	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.1)
 	tooltip_tween.start()
 
 func show_tooltip(txt:String, hide:bool = true):
@@ -3319,13 +3316,13 @@ func show_tooltip(txt:String, hide:bool = true):
 	if tooltip.rect_size.x > 400:
 		tooltip.autowrap = true
 		tooltip.rect_size.x = 400
-	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.05)
+	set_tooltip_position()
+	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.1)
 	tooltip_tween.start()
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):
-		tooltip_tween.interpolate_property(tooltip, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.05)
-		tooltip_tween.start()
+		tooltip.visible = false
 
 func hide_adv_tooltip():
 	hide_tooltip()
@@ -3424,8 +3421,8 @@ func get_star_class (temp):
 		cl = "Q" + String(floor(10 - (temp - 70000) / 50000 * 10))
 	elif temp < 210000:
 		cl = "R" + String(floor(10 - (temp - 120000) / 90000 * 10))
-	else:
-		cl = "Z"
+	elif temp < 1000000:
+		cl = "Z" + String(max(floor(10 - (temp - 210000) / 790000 * 10), 0))
 	return cl
 
 #Checks if player has enough resources to buy/craft/build something
@@ -3586,6 +3583,22 @@ var cmd_history:Array = []
 var cmd_history_index:int = -1
 var sub_panel
 
+func set_tooltip_position():
+	if op_cursor:
+		if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left) or Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
+			tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
+		else:
+			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
+	else:
+		if mouse_pos.x < 1280 - tooltip.rect_size.x:
+			tooltip.rect_position.x = mouse_pos.x + 9
+		else:
+			tooltip.rect_position.x = mouse_pos.x - tooltip.rect_size.x - 9
+		if mouse_pos.y < 720 - tooltip.rect_size.y - 16:
+			tooltip.rect_position.y = mouse_pos.y + 9
+		else:
+			tooltip.rect_position.y = mouse_pos.y - tooltip.rect_size.y - 9
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
@@ -3618,21 +3631,7 @@ func _input(event):
 	if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Statistics").visible and stats_panel.curr_stat_tab == "_on_UserInput_pressed":
 		stats_panel._on_UserInput_pressed()
 	if is_instance_valid(tooltip):
-		yield(get_tree(), "idle_frame")
-		if op_cursor:
-			if Geometry.is_point_in_polygon(mouse_pos, quadrant_top_left) or Geometry.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-				tooltip.rect_position = mouse_pos - Vector2(-9, tooltip.rect_size.y + 9)
-			else:
-				tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
-		else:
-			if mouse_pos.x < 1280 - tooltip.rect_size.x:
-				tooltip.rect_position.x = mouse_pos.x + 9
-			else:
-				tooltip.rect_position.x = mouse_pos.x - tooltip.rect_size.x - 9
-			if mouse_pos.y < 720 - tooltip.rect_size.y - 16:
-				tooltip.rect_position.y = mouse_pos.y + 9
-			else:
-				tooltip.rect_position.y = mouse_pos.y - tooltip.rect_size.y - 9
+		set_tooltip_position()
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
 #	if ship_locator:

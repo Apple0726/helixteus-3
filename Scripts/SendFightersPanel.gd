@@ -103,6 +103,7 @@ func refresh():
 		$Control/SE_Hint.visible = false
 		if game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 			$Send.text = tr("DISBAND")
+			$Send.visible = true
 			sort_galaxies(game.u_i.cluster_data[game.c_c].conquer_order)
 			set_process(true)
 			$Control.visible = false
@@ -341,6 +342,7 @@ func _process(delta):
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F1")
 		if fighters_rekt:
 			RTL.text += "\n%s" % tr("ALL_FIGHTERS_REKT")
+			$Send.visible = true
 			$Control2.visible = false
 		elif galaxy_conquered:
 			RTL.text += "\n%s" % tr("CONQUERED_GALAXY")
@@ -391,6 +393,7 @@ func _process(delta):
 		if fighters_rekt:
 			RTL.text += "\n%s" % tr("ALL_FIGHTERS_REKT")
 			$Control2.visible = false
+			$Send.visible = true
 		elif cluster_conquered:
 			RTL.text += "\n%s" % tr("CONQUERED_CLUSTER")
 			$Control2.visible = false

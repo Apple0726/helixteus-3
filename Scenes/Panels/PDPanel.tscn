@@ -1,9 +1,80 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/PDPanel.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Tiles/water.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Misc/noise_combined.png" type="Texture" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec4 c1 = texture(TEXTURE, 0.8 * UV + vec2(0, -0.03 * TIME));
+	vec4 c2 = texture(TEXTURE, 2.0 * UV + vec2(0, -0.02 * TIME));
+	COLOR.rgb = vec3(pow(length(1.0-c2), 10.0))/40.0+c1.rgb;
+	COLOR.a = 0.8;
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform vec4 color:hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float speed = 0.03;
+
+void fragment() {
+	vec2 uv = vec2(UV.x * 2.5, UV.y * 1.406);
+	vec2 uv1 = vec2(uv.x + TIME * speed, uv.y);
+	vec2 uv2 = vec2(uv.x - TIME * speed, uv.y);
+	vec2 uv3 = vec2(uv.x, uv.y + TIME * speed);
+	
+	float noise_r = texture(TEXTURE, uv1).r;
+	float noise_g = texture(TEXTURE, uv2).g;
+	float noise_b = texture(TEXTURE, uv3).b;
+	
+	float new_alpha = noise_r * noise_g * noise_b;
+	
+	vec3 new_color = vec3(noise_r, noise_g, noise_b);
+	COLOR.rgb = color.rgb;
+	COLOR.a = new_alpha * 5.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/speed = 0.03
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform vec4 color:hint_color = vec4(1.1, 1.1, 1.1, 1.0);
+uniform float speed = 0.2;
+
+void fragment() {
+	vec2 uv = vec2(UV.x * 1.4, UV.y * 1.406);
+	vec2 uv1 = vec2(uv.x + TIME * speed, uv.y);
+	vec2 uv2 = vec2(uv.x - TIME * speed, uv.y);
+	vec2 uv3 = vec2(uv.x, uv.y + TIME * speed);
+	
+	float noise_r = texture(TEXTURE, uv1).r;
+	float noise_g = texture(TEXTURE, uv2).g;
+	float noise_b = texture(TEXTURE, uv3).b;
+	
+	float new_alpha = noise_r * noise_g * noise_b;
+	
+	vec3 new_color = vec3(noise_r, noise_g, noise_b);
+	COLOR.rgb = color.rgb;
+	COLOR.a = new_alpha * 5.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/color = Color( 1.1, 1.1, 1.1, 1 )
+shader_param/speed = 0.2
 
 [node name="Background" type="Panel"]
 anchor_left = 0.5
@@ -76,20 +147,25 @@ align = 1
 
 [node name="Solid" type="Polygon2D" parent="."]
 position = Vector2( 124, 96 )
-color = Color( 0, 0.28, 0.48, 1 )
+color = Color( 0.235294, 0.235294, 0.235294, 1 )
 polygon = PoolVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
+material = SubResource( 8 )
 position = Vector2( 124, 96 )
-color = Color( 0, 0.34, 0.034, 1 )
+texture = ExtResource( 3 )
 
 [node name="Gas" type="Polygon2D" parent="."]
+material = SubResource( 4 )
 position = Vector2( 124, 96 )
 color = Color( 0.41, 0.259667, 0, 1 )
+texture = ExtResource( 4 )
 
 [node name="Supercritical" type="Polygon2D" parent="."]
+material = SubResource( 6 )
 position = Vector2( 124, 96 )
 color = Color( 0.537255, 0.537255, 0.537255, 1 )
+texture = ExtResource( 4 )
 
 [node name="Error" type="Label" parent="."]
 visible = false

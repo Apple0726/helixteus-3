@@ -15,6 +15,10 @@ var editable = false
 
 func _ready():
 	set_polygon(rect_size)
+
+func calc_OP_points():
+	bonuses.clear()
+	op_points.clear()
 	for el in Data.lake_bonus_values.keys():
 		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Liquid").polygon
 		if game.chemistry_bonus.has(el):
@@ -28,6 +32,7 @@ func _ready():
 			op_points[el] = 0.0
 
 func refresh():
+	calc_OP_points()
 	for pt in get_tree().get_nodes_in_group("PD_points"):
 		pt.queue_free()
 	$Title.text = "%s (%s)" % [tr("PHASE_DIAGRAM_EDITOR"), tr(el.to_upper() + "_NAME")]
@@ -37,7 +42,10 @@ func refresh():
 	default_dP = default_sc[1].y - default_sc[2].y
 	default_dT = default_g[1].x - default_g[0].x
 	$Liquid.polygon = bonuses[el]
+	$Liquid.modulate = Data.lake_colors[el].l
 	$Gas.polygon = default_g
+	$Gas.modulate = Data.lake_colors[el].s
+	$Solid.modulate = Data.lake_colors[el].s
 	$Supercritical.polygon = default_sc
 	for i in 4:
 		var pt_default = TextureRect.new()
@@ -123,31 +131,27 @@ func _input(event):
 			update_OP_points()
 		var info:String = ""
 		if Geometry.is_point_in_polygon(pos, $Gas.polygon):
-			info = tr("GAS")
-			if state_moused_over != "g":
-				game.hide_tooltip()
+			if state_moused_over != "g" and moving_l_index == -1:
+				game.show_tooltip(tr("GAS"))
 			state_moused_over = "g"
 		elif Geometry.is_point_in_polygon(pos, $Supercritical.polygon):
-			info = tr("SUPERCRITICAL")
 			if state_moused_over != "sc" and moving_l_index == -1:
-				game.show_tooltip(tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].sc)
+				game.show_tooltip(tr("SUPERCRITICAL") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].sc)
 			state_moused_over = "sc"
 		elif Geometry.is_point_in_polygon(pos, $Liquid.polygon):
-			info = tr("LIQUID")
 			if state_moused_over != "l" and moving_l_index == -1:
-				game.show_tooltip(tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].l)
+				game.show_tooltip(tr("LIQUID") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].l)
 			state_moused_over = "l"
 		elif Geometry.is_point_in_polygon(pos, $Solid.polygon):
-			info = tr("SOLID")
 			if state_moused_over != "s" and moving_l_index == -1:
-				game.show_tooltip(tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].s)
+				game.show_tooltip(tr("SOLID") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].s)
 			state_moused_over = "s"
 		else:
 			if state_moused_over != "":
 				game.hide_tooltip()
 			state_moused_over = ""
-		if info != "":
-			info += " (T = %s K, P = %s bar)" % [round(1000 * pos.x / 800), Helper.clever_round(pow(10, -12.0 * (pos.y - 200)/400.0))]
+		if state_moused_over != "":
+			info = "T = %s K, P = %s bar" % [round(1000 * pos.x / 800), Helper.clever_round(pow(10, -12.0 * (pos.y - 200)/400.0))]
 		$Info.text = info
 
 func valid_polygon(polygon:PoolVector2Array):

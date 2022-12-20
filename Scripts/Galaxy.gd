@@ -256,8 +256,8 @@ const A0 = Color(213, 224, 255, 255) / 255.0
 const B0 = Color(162, 192, 255, 255) / 255.0
 const O0 = Color(140, 177, 255, 255) / 255.0
 const Q0 = Color(134, 255, 117, 255) / 255.0
-const R0 = Color(255, 0, 255, 255) / 255.0
-const Z0 = Color(66, 0, 255, 255) / 255.0
+const R0 = Color(255, 100, 255, 255) / 255.0
+const Z0 = Color(100, 30, 255, 255) / 255.0
 
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps

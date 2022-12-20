@@ -277,14 +277,10 @@ func _on_SendAll_pressed():
 
 func fill_costs(_dist_mult:float):
 	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
-	if game.c_v == "supercluster":
-		costs.energy = 5e13 * slider_factor * _dist_mult
-		costs.Xe = 100000 * slider_factor * _dist_mult
-		costs.time = 1200 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
-	elif game.c_v == "universe":
-		costs.energy = 1e19 * slider_factor * _dist_mult
-		costs.Pu = 10000 * slider_factor * _dist_mult
-		costs.time = 4500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
+	if game.c_v == "universe":
+		costs.energy = 2e18 * slider_factor * _dist_mult
+		costs.Pu = 1000 * slider_factor * _dist_mult
+		costs.time = 1500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
 	
 func _on_SendAll_mouse_entered():
 	var costs2:Dictionary = {}

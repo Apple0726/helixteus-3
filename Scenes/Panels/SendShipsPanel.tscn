@@ -260,6 +260,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Drive" type="OptionButton" parent="."]
+margin_left = 636.0
+margin_top = 100.0
+margin_right = 895.0
+margin_bottom = 134.0
+text = "STANDARD_DRIVE"
+align = 1
+
 [connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
 [connection signal="value_changed" from="Panel/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="item_selected" from="Drive" to="." method="_on_Drive_item_selected"]

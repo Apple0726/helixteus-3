@@ -14,7 +14,6 @@ var engineering_OP_points:float = 0
 var num_errors:Dictionary = {}
 var selected_element:String
 var DR_mult:float = 1.0
-var OP_cap_mult:float = 1.0
 
 var table
 
@@ -90,7 +89,6 @@ func toggle_subj(subj_name:String):
 
 func refresh_univs(reset:bool = false):
 	DR_mult = 1 + 0.25 * game.subjects.dimensional_power.lv
-	OP_cap_mult = 1 + 0.15 * game.subjects.dimensional_power.lv
 	game.PD_panel.editable = reset
 	$TopInfo/Reset.disabled = true
 	$Subjects/Grid.visible = game.dim_num > 1
@@ -187,14 +185,17 @@ func on_invest(subj_node):
 			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_node.name.to_lower())
 		if subj_node.name == "Dimensional_Power":
 			set_grid()
+			refresh_OP_meters()
 			if $ModifyDimension/Maths.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.maths.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
+				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("maths")
 			elif $ModifyDimension/Physics.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.physics.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
+				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("physics")
+			elif $ModifyDimension/Chemistry.visible:
+				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("chemistry")
 			elif $ModifyDimension/Biology.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.biology.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
+				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("biology")
 			elif $ModifyDimension/Engineering.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = game.subjects.engineering.lv * (1.5 if subject.lv >= 3 else 1.0) * OP_cap_mult
+				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("engineering")
 			$ModifyDimension/Dimensional_Power/Control/TextureProgress.value = subject.lv + subject.DRs / float(subject.lv + 1)
 			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject.lv):
 				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject.lv)["custom_colors/font_color"] = Color.white
@@ -349,6 +350,8 @@ func _input(event):
 func calc_OP_points():
 	num_errors.clear()
 	chemistry_OP_points = 0
+	if not game.PD_panel.visible:
+		game.PD_panel.calc_OP_points()
 	if game.PD_panel.error:
 		num_errors.chemistry = true
 	for el_node in $ModifyDimension/Chemistry/Control/OPMeters.get_children():
@@ -439,6 +442,7 @@ func calc_OP_points():
 		$ModifyDimension/Reset/Generate.disabled = not num_errors.empty()
 
 func get_OP_cap(subj:String):
+	var OP_cap_mult:float = 1 + 0.15 * game.subjects.dimensional_power.lv
 	return game.subjects[subj].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
 
 func calc_bio_points(node, op_factor:float):

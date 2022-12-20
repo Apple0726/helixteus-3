@@ -47,7 +47,7 @@ func refresh():
 			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(first_tile_bldg.name + "_NAME_S"), "num":len(ids)})
 		path2.visible = first_tile_bldg.has("path_2")
 		path3.visible = first_tile_bldg.has("path_3")
-		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 30
+		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28
 		$AutoSpeedup.pressed = $AutoSpeedup.visible
 		if first_tile_bldg.has("path_1"):
 			_on_Path1_pressed()
@@ -378,7 +378,7 @@ func _on_Upgrade_pressed():
 				tile.bldg[path_str] = next_lv.value
 				tile.bldg[path_str + "_value"] = new_base_value
 				tile.bldg.construction_date = curr_time
-				tile.bldg.XP = cost_money / 100.0
+				tile.bldg.XP = cost_money / 100.0 / len(ids)
 				tile.bldg.construction_length = cost_time * 1000.0
 				tile.bldg.is_constructing = true
 				game.view.obj.add_time_bar(id, "bldg")

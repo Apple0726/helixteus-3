@@ -72,7 +72,7 @@ func update_info():
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
 	elif bldg == "B":
 		$Control/ProductionPerSec.text = tr("STORAGE")
-		num = surface * 1200.0
+		num = surface * 60000.0
 		Helper.put_rsrc($Control/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
 	$Control/Convert.visible = not error
 	$Control/Costs.visible = not error

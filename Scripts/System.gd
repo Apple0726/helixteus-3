@@ -269,7 +269,7 @@ func refresh_stars():
 		if not game.achievement_data.exploration.has("Q_star") and star_info.class[0] == "Q":
 			game.earn_achievement("exploration", "Q_star")
 		if not game.achievement_data.exploration.has("R_star") and star_info.class[0] == "R":
-			game.earn_achievement("exploration", "Rstar")
+			game.earn_achievement("exploration", "R_star")
 		if not game.achievement_data.exploration.has("Z_star") and star_info.class[0] == "Z":
 			game.earn_achievement("exploration", "Z_star")
 		if not game.achievement_data.exploration.has("HG_star") and star_info.has("hypergiant"):
@@ -443,16 +443,6 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 	else:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1) * Helper.get_IR_mult("M_MME")}, false)
 
-func show_M_MPCC_costs(p_i:Dictionary, base:bool = false):
-	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
-	bldg_costs = Data.MS_costs.M_MPCC_0.duplicate(true)
-	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
-	auto_speedup(bldg_costs)
-	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-	add_constr_costs(vbox, p_i)
-
 func show_planet_info(id:int, l_id:int):
 	planet_hovered = l_id
 	var p_i = game.planet_data[l_id]
@@ -501,7 +491,7 @@ func show_planet_info(id:int, l_id:int):
 			var temp_color:String = T_gradient.interpolate(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
 			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 			var pressure_color:String = P_gradient.interpolate(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
+			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C (%s K)[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), Helper.clever_round(p_i.temperature, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
 			if p_i.has("conquered"):
 				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
 				if p_i.has("tile_num"):
@@ -684,10 +674,10 @@ func on_star_over (id:int):
 		star_tier = " %s" % star.type.split(" ")[1]
 	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star.class})
 	tooltip += "\n%s\n%s %s\n%s\n%s" % [
-		tr("STAR_TEMPERATURE") % [star.temperature], 
-		tr("STAR_SIZE") % [star.size], tr("SOLAR_RADII"),
-		tr("STAR_MASS") % [star.mass],
-		tr("STAR_LUMINOSITY") % Helper.clever_round(star.luminosity, 3, true)
+		tr("STAR_TEMPERATURE") % [Helper.format_num(star.temperature, false, 9)], 
+		tr("STAR_SIZE") % [(Helper.clever_round(star.size, 3, true) if star.size < 1000 else Helper.format_num(star.size))], tr("SOLAR_RADII"),
+		tr("STAR_MASS") % (Helper.clever_round(star.mass, 3, true) if star.mass < 1000 else Helper.format_num(star.mass)),
+		tr("STAR_LUMINOSITY") % (Helper.clever_round(star.luminosity, 3, true) if star.luminosity < 1000 else Helper.format_num(star.luminosity))
 	]
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -702,17 +692,17 @@ func on_star_over (id:int):
 			game.get_node("UI/Panel").visible = true
 			bldg_costs = Data.MS_costs.M_MB.duplicate(true)
 			for cost in bldg_costs:
-				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2))
+				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) / (star.cost_div if star.has("cost_div") else 1.0))
 			bldg_costs.time /= game.u_i.time_speed
 			if game.universe_data[game.c_u].lv >= 60:
 				bldg_costs.money += bldg_costs.time * 200
 				bldg_costs.time = 0.2
 			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+			add_constr_costs(vbox, star)
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star)}, false)
 			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Data.MS_output["M_DS_4"] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 5000.0 * Helper.get_IR_mult("M_DS")}, false)
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_M_PK_costs(star, true)
