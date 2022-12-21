@@ -323,7 +323,7 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 
 func auto_speedup(bldg_costs:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 55:
+	if game.universe_data[game.c_u].lv >= 55 or game.subjects.dimensional_power.lv >= 1:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 0.2
 

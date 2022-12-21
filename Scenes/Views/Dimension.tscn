@@ -1160,7 +1160,7 @@ margin_left = 362.0
 margin_top = 279.0
 margin_right = 404.0
 margin_bottom = 303.0
-text = "(10)"
+text = "(25)"
 
 [node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 margin_left = 362.0
@@ -1187,7 +1187,7 @@ margin_left = 362.0
 margin_top = 398.0
 margin_right = 404.0
 margin_bottom = 422.0
-text = "(20)"
+text = "(25)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1207,7 +1207,7 @@ margin_left = 362.0
 margin_top = 479.0
 margin_right = 404.0
 margin_bottom = 503.0
-text = "(50)"
+text = "(40)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1917,9 +1917,10 @@ margin_left = 146.0
 margin_top = 71.0
 margin_right = 386.0
 margin_bottom = 122.0
+mouse_filter = 1
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Unlock Physics, Chemistry and Biology"
+text = "QOL_PERKS"
 autowrap = true
 
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
@@ -1930,11 +1931,8 @@ margin_bottom = 218.0
 mouse_filter = 1
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "\"Time speed\" affects caves/battles a lot less"
+text = "UNLOCK_PHY_CHEM_BIO"
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
@@ -1943,8 +1941,22 @@ margin_right = 386.0
 margin_bottom = 310.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "+50% capacity to all OP-meters"
+text = "MORE_OP_CAPACITY"
 autowrap = true
+
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 351.0
+margin_right = 386.0
+margin_bottom = 402.0
+mouse_filter = 1
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "MODIFY_CAVE_BATTLE_TIME"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 margin_left = 146.0
@@ -1954,6 +1966,16 @@ margin_bottom = 498.0
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Coming soon"
+autowrap = true
+
+[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+margin_left = 146.0
+margin_top = 543.0
+margin_right = 386.0
+margin_bottom = 594.0
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "™"
 autowrap = true
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
@@ -2145,8 +2167,11 @@ autowrap = true
 [connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= [ "Xe" ]]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_Label2_mouse_entered"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_text_mouse_entered" binds= [ "QOL_PERKS_DESC" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_text_mouse_entered" binds= [ "MODIFY_CAVE_BATTLE_TIME_DESC" ]]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_EffectsHelp_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]

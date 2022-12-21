@@ -166,10 +166,10 @@ func refresh_univs(reset:bool = false):
 	calc_OP_points()
 
 func set_grid():
-	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv > 0 else 2
-	$Subjects/Grid/Physics.visible = game.subjects.dimensional_power.lv > 0
-	$Subjects/Grid/Chemistry.visible = game.subjects.dimensional_power.lv > 0
-	$Subjects/Grid/Biology.visible = game.subjects.dimensional_power.lv > 0
+	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv >= 2 else 2
+	$Subjects/Grid/Physics.visible = game.subjects.dimensional_power.lv >= 2
+	$Subjects/Grid/Chemistry.visible = game.subjects.dimensional_power.lv >= 2
+	$Subjects/Grid/Biology.visible = game.subjects.dimensional_power.lv >= 2
 
 func on_invest(subj_node):
 	if game.DRs > 0:
@@ -501,12 +501,8 @@ func _on_Generate_pressed():
 	game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
 
 
-func _on_Label1_mouse_entered():
-	game.show_tooltip("When customizing a universe, a new slider called \"Universe value\" will appear which will multiply the effectiveness of universe levels when calculating probe points and DRs.")
-
-
-func _on_Label2_mouse_entered():
-	game.show_tooltip("More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction time, production etc.) is unaffected.")
+func _on_text_mouse_entered(text:String):
+	game.show_tooltip(tr(text))
 
 var DR_help_index:int = 1
 

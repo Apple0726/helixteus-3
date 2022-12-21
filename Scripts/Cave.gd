@@ -158,7 +158,7 @@ func _ready():
 	$UI2/Controls.add_key("M", "TOGGLE_MINIMAP")
 	$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
 	$UI2/Controls.refresh()
-	if game.subjects.dimensional_power.lv > 1:
+	if game.subjects.dimensional_power.lv >= 4:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:
 		time_speed = game.u_i.time_speed

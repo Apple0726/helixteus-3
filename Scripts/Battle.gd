@@ -73,7 +73,7 @@ var stage = BattleStages.START
 var move_method = MoveMethod.STANDARD
 
 func _ready():
-	if game.subjects.dimensional_power.lv > 1:
+	if game.subjects.dimensional_power.lv >= 4:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:
 		time_speed = game.u_i.time_speed

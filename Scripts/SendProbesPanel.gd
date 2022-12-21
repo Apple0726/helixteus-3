@@ -70,7 +70,7 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-				if prop.name == "time_speed" and game.subjects.dimensional_power.lv > 1:
+				if prop.name == "time_speed" and game.subjects.dimensional_power.lv >= 4:
 					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
 					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
 				if prop.has_node("HSlider"):
@@ -225,7 +225,7 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
-		if prop == "time_speed" and game.subjects.dimensional_power.lv > 1:
+		if prop == "time_speed" and game.subjects.dimensional_power.lv >= 4:
 			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
 			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
 		if value >= 1:
@@ -278,9 +278,9 @@ func _on_SendAll_pressed():
 func fill_costs(_dist_mult:float):
 	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
 	if game.c_v == "universe":
-		costs.energy = 2e18 * slider_factor * _dist_mult
-		costs.Pu = 1000 * slider_factor * _dist_mult
-		costs.time = 1500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
+		costs.energy = 2e18 * slider_factor * _dist_mult / game.u_i.speed_of_light
+		costs.Pu = 1000 * slider_factor * _dist_mult / game.u_i.speed_of_light
+		costs.time = 1500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed / game.u_i.speed_of_light
 	
 func _on_SendAll_mouse_entered():
 	var costs2:Dictionary = {}

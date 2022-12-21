@@ -47,7 +47,7 @@ func refresh():
 			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(first_tile_bldg.name + "_NAME_S"), "num":len(ids)})
 		path2.visible = first_tile_bldg.has("path_2")
 		path3.visible = first_tile_bldg.has("path_3")
-		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28
+		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28 or game.subjects.dimensional_power.lv >= 1
 		$AutoSpeedup.pressed = $AutoSpeedup.visible
 		if first_tile_bldg.has("path_1"):
 			_on_Path1_pressed()

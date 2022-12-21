@@ -1,4 +1,3 @@
-tool
 extends Panel
 
 var main_tree

@@ -74,7 +74,10 @@ func _on_btn_pressed(btn_str:String):
 		if bldg == "GH":
 			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 		if item.costs.has("time"):
-			item.costs.time /= game.u_i.time_speed
+			if game.subjects.dimensional_power.lv >= 1:
+				item.costs.time = 0.2
+			else:
+				item.costs.time /= game.u_i.time_speed
 		item.parent = "construct_panel"
 		item.add_to_group("bldgs")
 		grid.add_child(item)
@@ -83,30 +86,6 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = true
 		else:
 			bldg.visible = game.new_bldgs.has(bldg.item_name)
-#		if bldg.item_name in ["PP", "B", "MS"]:
-#			bldg.visible = game.stats_univ.bldgs_built >= 5
-#		elif bldg.item_name == "RL":
-#			bldg.visible = game.stats_univ.bldgs_built >= 18
-#		elif bldg.item_name == "CBD":
-#			bldg.visible = game.stats_univ.bldgs_built >= 18
-#		elif bldg.item_name == "GF":
-#			bldg.visible = game.show.has("sand")
-#		elif bldg.item_name == "SE":
-#			bldg.visible = game.show.has("coal")
-#		elif bldg.item_name == "MM":
-#			bldg.visible = game.science_unlocked.has("AM")
-#		elif bldg.item_name == "SP":
-#			bldg.visible = game.stats_global.planets_conquered > 1
-#		elif bldg.item_name in ["AE", "AMN"]:
-#			bldg.visible = game.science_unlocked.has("ATM")
-#		elif bldg.item_name in ["SPR", "PC", "NC", "EC", "NSF", "ESF"]:
-#			bldg.visible = game.science_unlocked.has("SAP")
-#		elif bldg.item_name == "SY":
-#			bldg.visible = game.science_unlocked.has("FG")
-#		elif bldg.item_name == "PCC":
-#			bldg.visible = game.universe_data[game.c_u].lv >= 50
-#		elif bldg.item_name == "GH":
-#			bldg.visible = game.science_unlocked.has("EGH")
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	.set_item_info(_name, desc, costs, _type, _dir)
