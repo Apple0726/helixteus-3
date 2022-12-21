@@ -339,7 +339,7 @@ func show_tooltip(tile, tile_id:int):
 		#game.tooltip.get_node("ColorRect").material.set_shader_param("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subjects.dimensional_power.lv == 0 else 0.2}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":
@@ -360,7 +360,10 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
 	var constr_costs2:Dictionary = constr_costs_total.duplicate()
-	constr_costs2.time /= game.u_i.time_speed
+	if game.subjects.dimensional_power.lv >= 1:
+		constr_costs2.time = 0.2
+	else:
+		constr_costs2.time /= game.u_i.time_speed
 	if game.check_enough(constr_costs2):
 		game.deduct_resources(constr_costs2)
 		game.stats_univ.bldgs_built += 1
@@ -457,6 +460,8 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 		var time_sped_up = min(speedup_time * num_needed, time_remaining)
 		if tile.bldg.has("overclock_date"):
 			tile.bldg.overclock_date -= time_sped_up
+		if tile.bldg.has("collect_date"):
+			tile.bldg.collect_date -= time_sped_up
 		if tile.bldg.has("start_date"):
 			tile.bldg.start_date -= time_sped_up
 		game.item_to_use.num -= num_needed
@@ -743,18 +748,19 @@ func collect_prod_bldgs(tile_id:int):
 				_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
 	elif _tile.bldg.name == "SC":
 		if not _tile.bldg.has("stone"):
-			var stone_qty = _tile.bldg.path_2_value
+			var stone_max_qty = _tile.bldg.path_2_value
 			var stone_total = Helper.get_sum_of_dict(game.stone)
-			if stone_total >= stone_qty:
+			if stone_total > 0:
 				var stone_to_crush:Dictionary = {}
+				var qty_to_crush = min(stone_max_qty, stone_total)
 				for el in game.stone:
-					stone_to_crush[el] = stone_qty / stone_total * game.stone[el]
-					game.stone[el] *= (1.0 - stone_qty / stone_total)
+					stone_to_crush[el] = qty_to_crush / stone_total * game.stone[el]
+					game.stone[el] *= (1.0 - qty_to_crush / stone_total)
 				_tile.bldg.stone = stone_to_crush
-				_tile.bldg.stone_qty = stone_qty
+				_tile.bldg.stone_qty = qty_to_crush
 				_tile.bldg.start_date = OS.get_system_time_msecs()
 				var expected_rsrc:Dictionary = {}
-				Helper.get_SC_output(expected_rsrc, stone_qty, _tile.bldg.path_3_value, stone_total)
+				Helper.get_SC_output(expected_rsrc, qty_to_crush, _tile.bldg.path_3_value, stone_total)
 				_tile.bldg.expected_rsrc = expected_rsrc
 		else:
 			var time = OS.get_system_time_msecs()
@@ -798,6 +804,8 @@ func _unhandled_input(event):
 					base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 				construct(tile.bldg.name, base_cost)
 			elif Input.is_action_just_released("F"):
+				if game.get_node("UI").has_node("BuildingShortcuts"):
+					game.get_node("UI").get_node("BuildingShortcuts").free()
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():
 					game.upgrade_panel.ids = [tile_over]

@@ -36,7 +36,7 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1482 - 2
+	var lines_total:int = 1483 - 2
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
@@ -46,10 +46,10 @@ func _on_lg_mouse_entered(extra_arg_0):
 			lines_translated = 378 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1312 - 2
+			lines_translated = 1404 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1504 - 2
+			lines_translated = 1514 - 2
 		"es":
 			lg = "Español"
 			lines_translated = 1160 - 2

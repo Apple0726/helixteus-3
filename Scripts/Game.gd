@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.25.3"
+const VERSION:String = "v0.25.4"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -526,7 +526,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "14 Dec 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "21 Dec 2022"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -742,13 +742,6 @@ func load_univ():
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
 		u_i = universe_data[c_u]
-#		for c_i in u_i.cluster_data:
-#			c_i.rich_elements = {}
-#			var dist_from_center = c_i.pos.length()
-#			var _rich_elements = rich_element_list.duplicate()
-#			_rich_elements.shuffle()
-#			for j in range(0, int(range_lerp(dist_from_center, 0, 16000, 1, 5))):
-#				c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * range_lerp(dist_from_center, 0, 16000, 1, 40)
 		if science_unlocked.has("CI"):
 			stack_size = 32
 		if science_unlocked.has("CI2"):
@@ -760,9 +753,9 @@ func load_univ():
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
 			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
-			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.GS.minerals) * min_mult + autocollect.MS.minerals) * time_elapsed)
-			energy += ((autocollect.rsrc.energy + autocollect.GS.energy) * energy_mult + autocollect.MS.energy) * time_elapsed
-			SP += ((autocollect.rsrc.SP + autocollect.GS.SP) * SP_mult + autocollect.MS.SP) * time_elapsed
+			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed)
+			energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed
+			SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed
 			var plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if not is_zero_approx(autocollect.mats.cellulose) else 0
 			if autocollect.mats.has("soil") and not is_zero_approx(autocollect.mats.soil):
 				plant_time_elapsed = min(plant_time_elapsed, mats.soil / abs(autocollect.mats.soil))
@@ -802,7 +795,7 @@ func load_univ():
 		if file.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
 			galaxy_data = open_obj("Clusters", c_c)
 		else:
-			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
+			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500 + 1280 * 2, 7500 + 720 * 2), "zoom":0.25}}]
 			Helper.save_obj("Clusters", 0, galaxy_data)
 	else:
 		popup("load error", 1.5)
@@ -852,7 +845,7 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3"]:
+	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4"]:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -1095,12 +1088,17 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
+	if subjects.dimensional_power.lv >= 1:
+		for mat in mat_info.keys():
+			show[mat] = true
+		for met in met_info.keys():
+			show[met] = true
 	new_bldgs = {"ME":true}
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":u_i.dark_energy, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
@@ -1850,7 +1848,7 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and universe_data[c_u].lv >= 32 and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (universe_data[c_u].lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
@@ -2125,24 +2123,20 @@ func generate_galaxies(id:int):
 		g_i["shapes"] = []
 		g_i["type"] = randi() % 7
 		var rand = randf()
-		g_i.dark_matter = rand_range(0.9, 1.1) * u_i.dark_energy #Influences planet numbers and size
+		g_i.dark_matter = rand_range(0.85, 1.15) #Influences planet numbers and size
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(1e-9 * rand_range(3, 5) * FM * u_i.charge)#Influences star classes
 			var sat:float = rand_range(0, 0.5)
 			var hue:float = rand_range(sat / 5.0, 1 - sat / 5.0)
 			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
-			g_i.dark_matter -= 0.1
+			g_i.dark_matter -= 0.05
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			g_i["B_strength"] = Helper.clever_round(1e-9 * rand_range(0.5, 4) * FM * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i["system_num"] /= 10
-		if rand < 0.02:
-			g_i.dark_matter = pow(g_i.dark_matter, 2.5)
-		elif rand < 0.2:
-			g_i.dark_matter = pow(g_i.dark_matter, 1.8)
-		g_i.dark_matter = Helper.clever_round(g_i.dark_matter)
+		g_i.dark_matter = Helper.clever_round(pow(g_i.dark_matter, -log(rand)*u_i.dark_energy/2.5 + 1))
 		g_i["rotation"] = rand_range(0, 2 * PI)
 		g_i["view"] = {"pos":Vector2(640, 360), "zoom":0.2}
 		var pos
@@ -2445,9 +2439,7 @@ func generate_systems(id:int):
 		s_i["parent"] = id
 		s_i["planets"] = []
 		
-		var num_stars = 1
-		while randf() < 0.3 * log(dark_matter - 1.0 + exp(1.0)) / pow(num_stars, 1.1):
-			num_stars += 1
+		var num_stars:int = max(-log(randf()/dark_matter)/1.5 + 1, 1)
 		var stars = []
 		var hypergiant_system:bool = c_c == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
 		var dark_matter_system:bool = c_c == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
@@ -2551,9 +2543,7 @@ func generate_systems(id:int):
 		for star in stars:
 			combined_star_mass += star.mass
 		stars.sort_custom(self, "sort_by_mass")
-		var planet_num:int = max(round(pow(combined_star_mass, 0.25) * Helper.rand_int(3, 9) * pow(dark_matter, 0.1)), 2)
-		if planet_num >= 50:
-			planet_num = 50
+		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * rand_range(3, 9) * pow(dark_matter, 0.25)), 2, 50)
 		s_i["planet_num"] = planet_num
 		if galaxy_data[id].has("conquered"):
 			s_i.conquered = true
@@ -2931,8 +2921,8 @@ func generate_tiles(id:int):
 		p_i.lake_2.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		phase_2.free()
 	var volcano_probability:float = 0.0
-	if randf() < log(pow(coldest_star_temp, -0.12) + 1.0):
-		volcano_probability = min(1.0 / sqrt(randf()) / pow(wid, 2), 0.15)
+	if randf() < log(20.0 * pow(coldest_star_temp/u_i.gravitational, -0.5) + 1.0):
+		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / pow(wid, 2), 0.15)
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
@@ -2997,7 +2987,7 @@ func generate_tiles(id:int):
 					earn_achievement("exploration", "volcano_aurora_cave")
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
-				var VEI:float = log(1e6/(coldest_star_temp * randf()) + exp(3.0))
+				var VEI:float = log(1e6/(coldest_star_temp * u_i.gravitational * randf()) + exp(3.0))
 				generate_volcano(t_id, VEI)
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
@@ -3526,8 +3516,8 @@ func _process(delta):
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
-			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals * min_mult)
-			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy * energy_mult)
+			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals) * min_mult
+			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy) * energy_mult
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
 			min_to_add += autocollect.rsrc.minerals * delta * min_mult
 			energy_to_add += autocollect.rsrc.energy * delta * energy_mult

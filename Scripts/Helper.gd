@@ -301,7 +301,8 @@ func get_crush_info(tile_obj):
 
 func get_prod_info(tile_obj):
 	var time = OS.get_system_time_msecs()
-	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed#qty1: resource being used. qty2: resource being produced
+	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * Helper.get_IR_mult(tile_obj.bldg.name)
+	#qty1: resource being used. qty2: resource being produced
 	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio))
 	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd))
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
@@ -611,7 +612,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 func get_IR_mult(bldg_name:String):
 	var mult = 1.0
 	var sc:String
-	if bldg_name in ["PP", "SP"]:
+	if bldg_name in ["PP", "SP", "SE"]:
 		sc = "EPE"
 	elif bldg_name in ["AMN", "SPR"]:
 		sc = "PME"
@@ -949,7 +950,7 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck * game.u_i.time_speed
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck * game.u_i.time_speed * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
@@ -972,14 +973,22 @@ func get_conquer_all_data():
 	var HX_data:Array = []
 	for ship in game.ship_data:
 		max_ship_lv = max(ship.lv, max_ship_lv)
+	var furthest_unconquered_planet_distance = 0
+	var closest_unconquered_planet_distance = INF
 	for planet in game.planet_data:
-		if not planet.has("HX_data"):
+		if planet.has("conquered") or not planet.has("HX_data"):
 			continue
+		closest_unconquered_planet_distance = min(closest_unconquered_planet_distance, planet.distance)
+		furthest_unconquered_planet_distance = max(furthest_unconquered_planet_distance, planet.distance)
 		for HX in planet.HX_data:
 			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
-	var energy_cost = round(7000 * game.planet_data[-1].distance)
-	return {"HX_data":HX_data, "energy_cost":energy_cost}
+	var energy_cost = 70000 * (furthest_unconquered_planet_distance - closest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
+	if game.science_unlocked.has("FTL"):
+		energy_cost /= 10.0
+	if game.science_unlocked.has("IGD"):
+		energy_cost /= 100.0
+	return {"HX_data":HX_data, "energy_cost":round(energy_cost)}
 
 var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
@@ -1113,6 +1122,8 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	elif path == 2:
 		if bldg == "SPR":
 			return dict.bldg.path_2_value * mult * n * game.u_i.charge
+		elif bldg == "SE":
+			return dict.bldg.path_2_value * n
 		else:
 			return dict.bldg.path_2_value * mult * n
 	elif path == 3:

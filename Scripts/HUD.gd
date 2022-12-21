@@ -149,12 +149,13 @@ func update_XP():
 		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * game.maths_bonus.ULUGF)
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			game.objective.current += 1
-		if game.u_i.lv == 28:
-			game.long_popup(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
-		if game.u_i.lv == 32:
-			game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
-		if game.u_i.lv == 55:
-			game.long_popup(tr("LEVEL_55_REACHED"), "%s 55" % tr("LEVEL"))
+		if game.subjects.dimensional_power.lv == 0:
+			if game.u_i.lv == 28:
+				game.long_popup(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
+			if game.u_i.lv == 32:
+				game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
+			if game.u_i.lv == 55:
+				game.long_popup(tr("LEVEL_55_REACHED"), "%s 55" % tr("LEVEL"))
 		if game.u_i.lv == 60:
 			game.new_bldgs.PCC = true
 			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
@@ -436,13 +437,13 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
 		var rsrc_amount = 0.0
 		if extra_arg_0 == "MINERALS":
-			rsrc_amount = (game.autocollect.rsrc.minerals + game.autocollect.GS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0) + game.autocollect.MS.minerals
+			rsrc_amount = (game.autocollect.rsrc.minerals + game.autocollect.GS.minerals + game.autocollect.MS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0)
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "ENERGY":
-			rsrc_amount = (game.autocollect.rsrc.energy + game.autocollect.GS.energy) * energy_mult + game.autocollect.MS.energy
+			rsrc_amount = (game.autocollect.rsrc.energy + game.autocollect.GS.energy + game.autocollect.MS.energy) * energy_mult
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 		elif extra_arg_0 == "SP":
-			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP) * SP_mult + game.autocollect.MS.SP
+			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP + game.autocollect.MS.SP) * SP_mult
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
 	if extra_arg_0 == "MINERALS":
 		tooltip += "\n" + tr("MINERAL_DESC")
