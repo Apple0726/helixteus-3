@@ -59,84 +59,83 @@ func refresh_aurora_bonus():
 	$Mults/AuroraMult.bbcode_text = "[aurora au_int=%s]%s: x %s" % [tile.aurora.au_int, tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info(first_time:bool = false):
-	if tile.has("depth"):
-		var upper_depth
-		var lower_depth 
-		var unit:String = "m"
-		if tile.has("crater"):
-			layer = "crater"
-			upper_depth = tile.crater.init_depth
-			lower_depth = 3 * tile.crater.init_depth
-		elif tile.depth <= p_i.crust_start_depth:
-			layer = "surface"
-			upper_depth = 0
-			lower_depth = p_i.crust_start_depth
-		elif tile.depth <= p_i.mantle_start_depth:
-			if layer != "crust":
-				if first_time:
-					$SurfaceBG.modulate.a = 0
-					$CrustBG.modulate.a = 0.25
+	var upper_depth
+	var lower_depth 
+	var unit:String = "m"
+	if tile.has("crater"):
+		layer = "crater"
+		upper_depth = tile.crater.init_depth
+		lower_depth = 3 * tile.crater.init_depth
+	elif tile.depth <= p_i.crust_start_depth:
+		layer = "surface"
+		upper_depth = 0
+		lower_depth = p_i.crust_start_depth
+	elif tile.depth <= p_i.mantle_start_depth:
+		if layer != "crust":
+			if first_time:
+				$SurfaceBG.modulate.a = 0
+				$CrustBG.modulate.a = 0.25
+			else:
+				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+				BG_tween.start()
+		layer = "crust"
+		upper_depth = p_i.crust_start_depth + 1
+		lower_depth = p_i.mantle_start_depth
+	elif tile.depth <= p_i.core_start_depth:
+		if tile.has("ship_part"):
+			tile.erase("ship_part")
+			if not game.objective.empty():
+				game.objective.current += 1
+			game.popup(tr("SHIP_PART_FOUND"), 2.5)
+			game.third_ship_hints.parts[4] = true
+		if layer != "mantle":
+			if first_time:
+				$SurfaceBG.modulate.a = 0
+				$CrustBG.modulate.a = 0
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					$MantleBG.modulate.a = 0.25
 				else:
-					BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
-					BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
-					BG_tween.start()
-			layer = "crust"
-			upper_depth = p_i.crust_start_depth + 1
-			lower_depth = p_i.mantle_start_depth
-		elif tile.depth <= p_i.core_start_depth:
-			if tile.has("ship_part"):
-				tile.erase("ship_part")
-				if not game.objective.empty():
-					game.objective.current += 1
-				game.popup(tr("SHIP_PART_FOUND"), 2.5)
-				game.third_ship_hints.parts[4] = true
-			if layer != "mantle":
-				if first_time:
-					$SurfaceBG.modulate.a = 0
-					$CrustBG.modulate.a = 0
-					if game.enable_shaders:
-						$MantleBG.visible = true
-						$MantleBG.modulate.a = 0.25
-					else:
-						$MantleBGNoShader.visible = true
-						$MantleBGNoShader.modulate.a = 0.45
+					$MantleBGNoShader.visible = true
+					$MantleBGNoShader.modulate.a = 0.45
+			else:
+				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				if game.enable_shaders:
+					$MantleBG.visible = true
+					BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
 				else:
-					BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
-					BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
-					if game.enable_shaders:
-						$MantleBG.visible = true
-						BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
-					else:
-						$MantleBGNoShader.visible = true
-						BG_tween.interpolate_property($MantleBGNoShader, "modulate", null, Color(1, 1, 1, 0.45), 3)
-					BG_tween.start()
-			layer = "mantle"
-			upper_depth = floor(p_i.mantle_start_depth / 1000.0)
-			lower_depth = floor(p_i.core_start_depth / 1000.0)
-			unit = "km"
-		else:
-			if tile.has("ship_part"):
-				tile.erase("ship_part")
-				if not game.objective.empty():
-					game.objective.current += 1
-				game.popup(tr("SHIP_PART_FOUND"), 2.5)
-				game.third_ship_hints.parts[4] = true
-			layer = "core"
-			upper_depth = floor(p_i.core_start_depth / 1000.0)
-			lower_depth = floor(p_i.size / 2.0)
-			unit = "km"
-		$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
-		$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
-		$LayerInfo/Layer.bbcode_text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
-		$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
-		if unit == "m":
-			$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
-			$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
-		else:
-			$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
-			$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
-		$Tile/SquareBar.set_progress(progress)
-		$Tile/Cracks.frame = min(floor(progress / 20), 4)
+					$MantleBGNoShader.visible = true
+					BG_tween.interpolate_property($MantleBGNoShader, "modulate", null, Color(1, 1, 1, 0.45), 3)
+				BG_tween.start()
+		layer = "mantle"
+		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
+		lower_depth = floor(p_i.core_start_depth / 1000.0)
+		unit = "km"
+	else:
+		if tile.has("ship_part"):
+			tile.erase("ship_part")
+			if not game.objective.empty():
+				game.objective.current += 1
+			game.popup(tr("SHIP_PART_FOUND"), 2.5)
+			game.third_ship_hints.parts[4] = true
+		layer = "core"
+		upper_depth = floor(p_i.core_start_depth / 1000.0)
+		lower_depth = floor(p_i.size / 2.0)
+		unit = "km"
+	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
+	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
+	$LayerInfo/Layer.bbcode_text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
+	$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
+	if unit == "m":
+		$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
+	else:
+		$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
+	$Tile/SquareBar.set_progress(progress)
+	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 
 func update_pickaxe():
 	$HBox/Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]
@@ -225,7 +224,7 @@ func pickaxe_hit():
 	if not game.pickaxe.has("name"):
 		return
 	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
-	if tile.has("depth") && tile.depth > floor(p_i.size * 500.0):
+	if tile.depth > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
 		var VEI:float = log(add_progress / 500.0 * rand_range(0.7, 1.3) + exp(3.0))
@@ -277,8 +276,7 @@ func pickaxe_hit():
 		add_rsrc_mined(new_contents)
 		game.add_resources(new_contents)
 		var tiles_mined:int = int(progress / 100)
-		if tile.has("depth"):
-			tile.depth += tiles_mined
+		tile.depth += tiles_mined
 		game.stats_univ.tiles_mined_mining += tiles_mined
 		game.stats_dim.tiles_mined_mining += tiles_mined
 		game.stats_global.tiles_mined_mining += tiles_mined
