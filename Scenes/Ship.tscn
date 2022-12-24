@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Ship.gd" type="Script" id=2]
@@ -6,6 +6,17 @@
 [ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Icons/Fire.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Icons/Stun.png" type="Texture" id=11]
+[ext_resource path="res://icon.png" type="Texture" id=12]
+[ext_resource path="res://Shaders/Fire.shader" type="Shader" id=13]
+[ext_resource path="res://Shaders/Laser.shader" type="Shader" id=14]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=15]
+[ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=16]
+[ext_resource path="res://Cursor.png" type="Texture" id=17]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.300469, 0.746479, 0.995305, 1 )
@@ -28,6 +39,21 @@ orbit_velocity_random = 0.0
 scale = 0.03
 color_ramp = SubResource( 2 )
 
+[sub_resource type="Gradient" id=34]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=35]
+gradient = SubResource( 34 )
+
+[sub_resource type="ParticlesMaterial" id=36]
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 500.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+color_ramp = SubResource( 35 )
+
 [sub_resource type="ShaderMaterial" id=4]
 shader = ExtResource( 3 )
 shader_param/amplitude = 20.0
@@ -36,6 +62,101 @@ shader_param/frequency = 6.0
 [sub_resource type="CapsuleShape2D" id=5]
 radius = 12.0
 height = 96.0
+
+[sub_resource type="Shader" id=25]
+code = "shader_type canvas_item;
+uniform float amplitude = 5;
+uniform float frequency = 3.0;
+uniform bool aurora = false;
+uniform float light = 1.0;
+
+void vertex() {
+  VERTEX += vec2(0, amplitude * sin(frequency * TIME));
+}
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	if (aurora) {
+		COLOR.rb += 0.3 * sin((UV.x + UV.y) * 6.0 + TIME * 10.0) + 0.3;
+	}
+	COLOR.rgb *= light;
+}"
+
+[sub_resource type="ShaderMaterial" id=28]
+resource_local_to_scene = true
+shader = SubResource( 25 )
+shader_param/amplitude = 6.0
+shader_param/frequency = 6.0
+shader_param/aurora = false
+shader_param/light = 1.0
+
+[sub_resource type="ShaderMaterial" id=29]
+shader = ExtResource( 13 )
+shader_param/color = Color( 1, 0, 0, 1 )
+shader_param/fog_size = 6.0
+shader_param/fog_mvt_spd = 1.0
+shader_param/OCTAVES = 4
+
+[sub_resource type="ShaderMaterial" id=30]
+shader = ExtResource( 14 )
+shader_param/beams = 1
+shader_param/energy = 20.0
+shader_param/roughness = 3
+shader_param/frequency = 10
+shader_param/speed = 1.0
+shader_param/thickness = 0.021
+shader_param/outline_thickness = 0.044
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 1.5, 1.5, 1 )
+shader_param/outline_color = Color( 0.501961, 1, 0.960784, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=31]
+shader = ExtResource( 14 )
+shader_param/beams = 1
+shader_param/energy = 10.0
+shader_param/roughness = 8
+shader_param/frequency = 15
+shader_param/speed = 1.0
+shader_param/thickness = 0.012
+shader_param/outline_thickness = 0.043
+shader_param/beam_difference = 0.0
+shader_param/glow = 0.0
+shader_param/outline_glow = 0.0
+shader_param/color = Color( 0.91, 2, 2, 1 )
+shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
+shader_param/progress = 1.0
+shader_param/y_offset = 0.0
+shader_param/fixed_edge_size = 0.05
+shader_param/noise_scale = Vector2( 1, 1 )
+
+[sub_resource type="Gradient" id=32]
+offsets = PoolRealArray( 0, 0.518692, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=27]
+gradient = SubResource( 32 )
+
+[sub_resource type="ParticlesMaterial" id=33]
+emission_shape = 2
+emission_box_extents = Vector3( 70, 1, 1 )
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 75.94
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 45.31
+linear_accel_random = 1.0
+tangential_accel = 15.63
+color = Color( 1, 0.603922, 0, 1 )
+color_ramp = SubResource( 27 )
+hue_variation = 0.33
+hue_variation_random = 0.51
 
 [node name="Ship" type="Area2D"]
 visible = false
@@ -47,6 +168,15 @@ script = ExtResource( 2 )
 [node name="Fire" parent="." instance=ExtResource( 4 )]
 position = Vector2( -60, -4 )
 process_material = SubResource( 3 )
+
+[node name="Charge" type="Particles2D" parent="."]
+modulate = Color( 1, 1, 0, 1 )
+scale = Vector2( 0.1, 0.1 )
+emitting = false
+amount = 10
+lifetime = 1.5
+process_material = SubResource( 36 )
+texture = ExtResource( 17 )
 
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 4 )
@@ -85,12 +215,160 @@ __meta__ = {
 
 [node name="HP" type="TextureProgress" parent="."]
 modulate = Color( 0, 1, 0, 1 )
-margin_left = -100.125
+margin_left = -112.0
 margin_top = 32.0
-margin_right = -36.125
+margin_right = -48.0
 margin_bottom = 40.0
 rect_rotation = -90.0
 value = 50.0
 texture_under = ExtResource( 1 )
 texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+
+[node name="Rage" type="TextureProgress" parent="."]
+modulate = Color( 1, 0, 0, 1 )
+margin_left = -99.875
+margin_top = 32.0
+margin_right = -35.875
+margin_bottom = 40.0
+rect_rotation = -90.0
+value = 50.0
+texture_under = ExtResource( 1 )
+texture_progress = ExtResource( 6 )
+nine_patch_stretch = true
+
+[node name="Info" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Effects" type="HBoxContainer" parent="Info"]
+margin_left = -80.0
+margin_top = -80.0
+margin_right = 80.0
+margin_bottom = -42.0
+theme = ExtResource( 15 )
+alignment = 1
+
+[node name="Fire" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 65.0
+margin_right = 95.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 6
+
+[node name="FireLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 74.0
+margin_top = 7.0
+margin_right = 85.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stun" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 65.0
+margin_right = 95.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 6
+
+[node name="StunLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 91.0
+margin_top = 7.0
+margin_right = 102.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Acc" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 57.0
+margin_right = 87.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 6
+
+[node name="AccLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 74.0
+margin_top = 7.0
+margin_right = 85.0
+margin_bottom = 31.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Atk" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 65.0
+margin_right = 95.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 16 )
+expand = true
+stretch_mode = 6
+
+[node name="AtkLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 6.0
+margin_right = 80.0
+margin_bottom = 30.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite2" type="Sprite" parent="."]
+material = SubResource( 28 )
+position = Vector2( 0, 6.29962 )
+
+[node name="Fire" type="Sprite" parent="Sprite2"]
+visible = false
+material = SubResource( 29 )
+position = Vector2( 32, 31.2004 )
+scale = Vector2( 12, 12 )
+texture = ExtResource( 12 )
+
+[node name="Stun" type="Node2D" parent="Sprite2"]
+visible = false
+position = Vector2( 0, -6.29962 )
+
+[node name="Sprite" type="Sprite" parent="Sprite2/Stun"]
+material = SubResource( 30 )
+position = Vector2( 47.1782, 64.5085 )
+rotation = 0.496553
+scale = Vector2( 2.36037, 2.36037 )
+texture = ExtResource( 8 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Sprite2" type="Sprite" parent="Sprite2/Stun"]
+material = SubResource( 31 )
+position = Vector2( 11.3541, 50.4711 )
+rotation = -0.583007
+scale = Vector2( 1.67193, 1.67193 )
+texture = ExtResource( 8 )
+offset = Vector2( -21.4132, -17.9986 )
+
+[node name="Particles2D" type="Particles2D" parent="Sprite2"]
+visible = false
+modulate = Color( 2, 2, 2, 1 )
+amount = 24
+lifetime = 2.0
+local_coords = false
+process_material = SubResource( 33 )
+texture = ExtResource( 10 )

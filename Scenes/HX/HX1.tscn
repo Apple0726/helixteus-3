@@ -22,7 +22,7 @@ radius = 1252.0
 radius = 51.7997
 height = 96.3995
 
-[sub_resource type="Shader" id=25]
+[sub_resource type="Shader" id=29]
 code = "shader_type canvas_item;
 uniform float amplitude = 5;
 uniform float frequency = 3.0;
@@ -42,7 +42,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=2]
 resource_local_to_scene = true
-shader = SubResource( 25 )
+shader = SubResource( 29 )
 shader_param/amplitude = 6.0
 shader_param/frequency = 6.0
 shader_param/aurora = false
@@ -97,7 +97,7 @@ shader_param/noise_scale = Vector2( 1, 1 )
 offsets = PoolRealArray( 0, 0.518692, 1 )
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=27]
+[sub_resource type="GradientTexture" id=30]
 gradient = SubResource( 26 )
 
 [sub_resource type="ParticlesMaterial" id=28]
@@ -113,7 +113,7 @@ linear_accel = 45.31
 linear_accel_random = 1.0
 tangential_accel = 15.63
 color = Color( 1, 0.603922, 0, 1 )
-color_ramp = SubResource( 27 )
+color_ramp = SubResource( 30 )
 hue_variation = 0.33
 hue_variation_random = 0.51
 
@@ -471,15 +471,12 @@ margin_right = 123.472
 margin_bottom = -100.064
 theme = ExtResource( 2 )
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Fire" type="TextureRect" parent="Info/Effects"]
 visible = false
-margin_left = 27.0
-margin_right = 57.0
-margin_bottom = 38.0
+margin_left = 59.0
+margin_right = 89.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 9 )
 expand = true
@@ -487,10 +484,10 @@ stretch_mode = 6
 
 [node name="FireLabel" type="Label" parent="Info/Effects"]
 visible = false
-margin_left = 44.0
-margin_top = 7.0
-margin_right = 55.0
-margin_bottom = 31.0
+margin_left = 86.0
+margin_top = 6.0
+margin_right = 97.0
+margin_bottom = 30.0
 text = "9"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -498,9 +495,9 @@ __meta__ = {
 
 [node name="Stun" type="TextureRect" parent="Info/Effects"]
 visible = false
-margin_left = 52.0
-margin_right = 82.0
-margin_bottom = 38.0
+margin_left = 84.0
+margin_right = 114.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 13 )
 expand = true
@@ -508,10 +505,10 @@ stretch_mode = 6
 
 [node name="StunLabel" type="Label" parent="Info/Effects"]
 visible = false
-margin_left = 69.0
-margin_top = 7.0
-margin_right = 80.0
-margin_bottom = 31.0
+margin_left = 110.0
+margin_top = 6.0
+margin_right = 121.0
+margin_bottom = 30.0
 text = "9"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -519,9 +516,9 @@ __meta__ = {
 
 [node name="Acc" type="TextureRect" parent="Info/Effects"]
 visible = false
-margin_left = 59.0
-margin_right = 89.0
-margin_bottom = 38.0
+margin_left = 52.0
+margin_right = 82.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 30, 0 )
 texture = ExtResource( 15 )
 expand = true
@@ -530,9 +527,30 @@ stretch_mode = 6
 [node name="AccLabel" type="Label" parent="Info/Effects"]
 visible = false
 margin_left = 69.0
-margin_top = 7.0
+margin_top = 6.0
 margin_right = 80.0
-margin_bottom = 31.0
+margin_bottom = 30.0
+text = "9"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Atk" type="TextureRect" parent="Info/Effects"]
+visible = false
+margin_left = 52.0
+margin_right = 82.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 30, 0 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="AtkLabel" type="Label" parent="Info/Effects"]
+visible = false
+margin_left = 69.0
+margin_top = 6.0
+margin_right = 80.0
+margin_bottom = 30.0
 text = "9"
 __meta__ = {
 "_edit_use_anchors_": false
