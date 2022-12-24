@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -47,6 +47,22 @@ action = "4"
 
 [sub_resource type="ShortCut" id=34]
 shortcut = SubResource( 33 )
+
+[sub_resource type="Animation" id=40]
+resource_name = "Glow"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="Animation" id=18]
 length = 0.3
@@ -298,16 +314,15 @@ __meta__ = {
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="FightPanel" type="Panel" parent="UI"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 352.0
-margin_top = 700.0
-margin_right = 928.0
-margin_bottom = 764.0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -416.0
+margin_top = -64.0
+margin_right = 416.0
 grow_horizontal = 2
 theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Bullet" type="Button" parent="UI/FightPanel"]
 margin_left = 56.0
@@ -316,9 +331,6 @@ margin_right = 128.0
 margin_bottom = 52.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 28 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bullet"]
 anchor_left = 0.5
@@ -436,9 +448,9 @@ align = 2
 valign = 2
 
 [node name="Light" type="Button" parent="UI/FightPanel"]
-margin_left = 448.0
+margin_left = 444.0
 margin_top = 12.0
-margin_right = 520.0
+margin_right = 516.0
 margin_bottom = 52.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 34 )
@@ -470,6 +482,90 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 custom_fonts/font = SubResource( 9 )
 text = "            4"
+align = 2
+valign = 2
+
+[node name="Ability" type="Button" parent="UI/FightPanel"]
+margin_left = 572.0
+margin_top = 12.0
+margin_right = 644.0
+margin_bottom = 52.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 34 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Ability"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -23.0
+margin_top = -15.0
+margin_right = 22.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/Ability"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -20.0
+margin_right = -4.0
+margin_bottom = -4.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            5"
+align = 2
+valign = 2
+
+[node name="Superweapon" type="Button" parent="UI/FightPanel"]
+margin_left = 704.0
+margin_top = 12.0
+margin_right = 776.0
+margin_bottom = 52.0
+shortcut_in_tooltip = false
+shortcut = SubResource( 34 )
+
+[node name="Glow" type="Polygon2D" parent="UI/FightPanel/Superweapon"]
+modulate = Color( 1, 1, 1, 0 )
+color = Color( 1, 1, 0, 1 )
+polygon = PoolVector2Array( 16, 4, 35.9863, -0.0164795, 56, 4, 72, 20, 56, 36, 36.0976, 39.9626, 16, 36, 0, 20 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel/Superweapon/Glow"]
+anims/Glow = SubResource( 40 )
+
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Superweapon"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -23.0
+margin_top = -15.0
+margin_right = 22.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 40, 0 )
+size_flags_horizontal = 4
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/FightPanel/Superweapon"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -20.0
+margin_right = -4.0
+margin_bottom = -4.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 9 )
+text = "            6"
 align = 2
 valign = 2
 
@@ -573,10 +669,9 @@ size_flags_horizontal = 3
 text = "HARD"
 
 [node name="Back" type="Button" parent="UI"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 700.0
+margin_top = 684.0
 margin_right = 136.0
-margin_bottom = 736.0
+margin_bottom = 720.0
 theme = ExtResource( 2 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 20 )
@@ -737,6 +832,8 @@ anims/SceneFade = SubResource( 26 )
 [connection signal="mouse_entered" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_entered" binds= [ "light" ]]
 [connection signal="mouse_exited" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_exited"]
 [connection signal="pressed" from="UI/FightPanel/Light" to="." method="_on_weapon_pressed" binds= [ "light" ]]
+[connection signal="pressed" from="UI/FightPanel/Ability" to="." method="_on_Ability_pressed"]
+[connection signal="pressed" from="UI/FightPanel/Superweapon" to="." method="_on_Superweapon_pressed"]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_mouse_exited"]
 [connection signal="pressed" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_pressed" binds= [ 0 ]]

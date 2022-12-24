@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Buff.png-e523b4b49081b96730e2c82686d524de.stex"
+path="res://.import/buff.png-f83b2138c40b3ba9d32758b644fb4fb2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/Buff.png"
-dest_files=[ "res://.import/Buff.png-e523b4b49081b96730e2c82686d524de.stex" ]
+source_file="res://Graphics/Buttons/buff.png"
+dest_files=[ "res://.import/buff.png-f83b2138c40b3ba9d32758b644fb4fb2.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

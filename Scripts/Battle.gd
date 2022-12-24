@@ -46,7 +46,7 @@ var w_4_3 = preload("res://Scenes/HX/Weapons/4_3.tscn")
 
 var star:Sprite#Shown right before HX magic
 
-var ship_data:Array = []# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???" "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0]}]
+var ship_data:Array = []# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???" "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0], "rage":0, "ability":"none", "superweapon":"none"}]
 var HX_data
 var HXs = []
 var HX_c_d:Dictionary = {}#HX_custom_data
@@ -63,6 +63,8 @@ var tgt_sh:int = -1#target_ship
 var hit_amount:int#Number of times your ships got hit (combined)
 var pattern:String = "" #"1_1", "2_3" etc.
 var light_mult:float
+var ship_buffs = []
+var pending_supers = {}
 
 var victory_panel
 
@@ -154,7 +156,7 @@ func _ready():
 			star.material.set_shader_param("time_offset", 10.0 * randf())
 			$Stars.add_child(star)
 		HX_data = []
-		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 		for k in 4:
 			var lv = 1
 			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
@@ -175,6 +177,7 @@ func _ready():
 	for i in len(ship_data):
 		max_lv_ship = max(max_lv_ship, ship_data[i].lv)
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
+		ship_data[i].rage = 0
 		total_ship_stats += pow(ship_data[i].total_HP, 2)
 		total_ship_stats += pow(ship_data[i].atk * (Data.bullet_data[ship_data[i].bullet.lv - 1].damage + Data.laser_data[ship_data[i].laser.lv - 1].damage + Data.bomb_data[ship_data[i].bomb.lv - 1].damage + Data.light_data[ship_data[i].light.lv - 1].damage) / 4.0, 2)
 		total_ship_stats += pow(ship_data[i].acc, 2)
@@ -184,7 +187,9 @@ func _ready():
 		weapon_XPs.append({"bullet":0, "laser":0, "bomb":0, "light":0})
 		get_node("Ship%s/HP" % i).max_value = ship_data[i].total_HP * ship_data[i].HP_mult
 		get_node("Ship%s/HP" % i).value = ship_data[i].HP
+		get_node("Ship%s/Rage" % i).value = ship_data[i].rage
 		get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
+		ship_buffs.append({"acc":0, "atk":0})
 	total_ship_stats *= max(log(game.u_i.speed_of_light - 1.0 + exp(1.0)), max(log(game.u_i.planck - 1.0 + exp(1.0)), log(game.u_i.charge - 1.0 + exp(1.0))))
 	if bright_star:
 		$WorldEnvironment.environment.adjustment_enabled = true
@@ -227,6 +232,18 @@ func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		get_node("UI/FightPanel/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[curr_sh][weapon.to_lower()].lv])
+	$UI/FightPanel/Ability.visible = false
+	if ship_data[curr_sh].ability != "none":
+		$UI/FightPanel/Ability.visible = true
+		$UI/FightPanel/Ability/TextureRect.texture = load("res://Graphics/Buttons/%s.png" % ship_data[curr_sh].ability)
+	$UI/FightPanel/Superweapon.visible = false
+	if ship_data[curr_sh].superweapon != "none":
+		$UI/FightPanel/Superweapon.visible = true
+		$UI/FightPanel/Superweapon/TextureRect.texture = load("res://Graphics/Buttons/%s.png" % ship_data[curr_sh].superweapon)
+	$UI/FightPanel/Superweapon/Glow/AnimationPlayer.seek(0)
+	$UI/FightPanel/Superweapon/Glow/AnimationPlayer.stop()
+	if curr_sh in pending_supers.keys() && pending_supers[curr_sh] == 0:
+		$UI/FightPanel/Superweapon/Glow/AnimationPlayer.play("Glow")
 
 func send_HXs():
 	for j in 4:
@@ -274,7 +291,7 @@ func on_HX_over(id:int):
 		game.show_adv_tooltip("@i %s / %s\n@i %s   @i %s\n@i %s   @i %s" % [
 			ceil(HX_data[id].HP),
 			HX_data[id].total_HP,
-			HX_data[id].atk,
+			round(HX_data[id].atk * (1.0 + HX_c_d[HXs[id].name].atk if HX_c_d[HXs[id].name].has("atk") else 1.0)),
 			HX_data[id].def,
 			round(HX_data[id].acc * (1.0 + HX_c_d[HXs[id].name].acc if HX_c_d[HXs[id].name].has("acc") else 1.0)),
 			HX_data[id].eva,
@@ -378,7 +395,7 @@ func display_stats(type:String):
 		if type == "HP":
 			get_node("Ship%s/Label" % i).text = "%s / %s" % [Helper.format_num(ship_data[i].HP), Helper.format_num(ship_data[i].total_HP * ship_data[i].HP_mult)]
 		else:
-			get_node("Ship%s/Label" % i).text = Helper.format_num(ship_data[i][type] * ship_data[i]["%s_mult" % type])
+			get_node("Ship%s/Label" % i).text = Helper.format_num(round(ship_data[i][type] * ship_data[i]["%s_mult" % type] * (1 + ship_buffs[i][type]) if ship_buffs[i].has(type) else 1.0))
 
 func _on_Back_pressed():
 	if $UI/Back.modulate.a < 1:
@@ -430,6 +447,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	var t = w_c_d.target
 	var remove_weapon_b:bool = false
 	var weapon_lv:int = ship_data[sh][weapon_type].lv
+	var acc_buff
+	var atk_buff
 	if weapon_type == "light":
 		remove_weapon_b = true
 		var light = Sprite.new()
@@ -443,8 +462,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		for i in len(HXs):
 			if HX_data[i].HP <= 0:
 				continue
-			if HX_c_d[HXs[i].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[i].eva):
-				var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * light_mult * ship_data[sh].atk_mult / HX_data[i].def
+			if HX_c_d[HXs[i].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult * (1 + ship_buffs[sh].acc), HX_data[i].eva):
+				var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * light_mult * ship_data[sh].atk_mult * (1 + ship_buffs[sh].atk) / HX_data[i].def
 				dmg *= log(game.u_i.speed_of_light - 1.0 + exp(1.0))
 				var crit = randf() < 0.1 + ((game.MUs.CHR - 1) * 0.01 if game else 0)
 				if crit:
@@ -475,8 +494,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		if light_hit:
 			weapon_XPs[sh].light += 1
 	else:
-		if HX_c_d[HXs[t].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult, HX_data[t].eva):
-			var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult / HX_data[w_c_d.target].def
+		if HX_c_d[HXs[t].name].has("stun") or randf() < hit_formula(ship_data[sh].acc * w_c_d.acc_mult * ship_data[sh].acc_mult * (1 + ship_buffs[sh].acc), HX_data[t].eva):
+			var dmg = ship_data[sh].atk * Data[w_data][weapon_lv - 1].damage * ship_data[sh].atk_mult * (1 + ship_buffs[sh].atk) / HX_data[w_c_d.target].def
 			if game:
 				if weapon_type in ["bullet", "bomb"]:
 					dmg *= log(game.u_i.planck - 1.0 + exp(1.0))
@@ -835,55 +854,75 @@ func remove_targets():
 			continue
 		HXs[i].modulate.a = 1
 
-func place_targets():
+func place_targets(attacking:bool = true):
 	remove_targets()
 	stage = BattleStages.TARGETING
 	var one_enemy:bool = false
 	var target_id:int = -1
-	for i in len(HXs):
-		if HX_data[i].HP <= 0:
-			continue
-		if target_id == -1:#A way to not show target buttons if there's only one target alive
-			target_id = i
-			one_enemy = true
-		else:
-			target_id = -2
-		var HX = HXs[i]
-		HX.modulate.a = 0.5
-		var target = target_scene.instance()
-		target.position = HX.position
-		add_child(target)
-		target.get_node("TextureButton").shortcut = ShortCut.new()
-		target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
-		target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
-		target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
-		target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
-		target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
-		target.get_node("Label").text = String((i % 4) + 1)
-		target.add_to_group("targets")
-	if target_id != -2:
-		on_target_pressed(target_id, one_enemy)
+	if attacking:
+		for i in len(HXs):
+			if HX_data[i].HP <= 0:
+				continue
+			if target_id == -1:#A way to not show target buttons if there's only one target alive
+				target_id = i
+				one_enemy = true
+			else:
+				target_id = -2
+			var HX = HXs[i]
+			HX.modulate.a = 0.5
+			var target = target_scene.instance()
+			target.position = HX.position
+			add_child(target)
+			target.get_node("TextureButton").shortcut = ShortCut.new()
+			target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
+			target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
+			target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
+			target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
+			target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
+			target.get_node("Label").text = String((i % 4) + 1)
+			target.add_to_group("targets")
+		if target_id != -2:
+			on_target_pressed(target_id, one_enemy)
+	else:
+		for i in len(ship_data): #Target your ships instead
+			if ship_data[i].HP > 0:
+				var target = target_scene.instance()
+				target.position = get_node("Ship%s" % i).position
+				add_child(target)
+				target.get_node("TextureButton").shortcut = ShortCut.new()
+				target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
+				target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
+				target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
+				target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
+				target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
+				target.get_node("Label").text = String((i % 4) + 1)
+				target.add_to_group("targets")
 
 func on_target_over(target:int):
-	var acc:float = ship_data[curr_sh].acc
-	var acc_mult:float = Data["%s_data" % weapon_type][ship_data[curr_sh][weapon_type].lv - 1].accuracy
-	var eva:float = HX_data[target].eva
-	var chance:float = hit_formula(acc * acc_mult * ship_data[curr_sh].acc_mult, eva)
-	game.show_tooltip("%s: %s%%" % [tr("CHANCE_OF_HITTING"), round(chance * 100.0)])
+	if weapon_type in ["bullet", "laser", "bomb", "light"]:
+		var acc:float = ship_data[curr_sh].acc
+		var acc_mult:float = Data["%s_data" % weapon_type][ship_data[curr_sh][weapon_type].lv - 1].accuracy
+		var eva:float = HX_data[target].eva
+		var chance:float = hit_formula(acc * acc_mult * ship_data[curr_sh].acc_mult * (1 + ship_buffs[curr_sh].acc), eva)
+		game.show_tooltip("%s: %s%%" % [tr("CHANCE_OF_HITTING"), round(chance * 100.0)])
+	else:
+		game.show_tooltip("attac")
 
 func on_target_out():
 	game.hide_tooltip()
 
 func on_target_pressed(target:int, one_enemy:bool = false):
 	game.hide_tooltip()
-	var weapon_data = ship_data[curr_sh][weapon_type]
+	var weapon_data
+	if ship_data[curr_sh].has(weapon_type):
+		weapon_data = ship_data[curr_sh][weapon_type]
 	if $UI/FightPanel.modulate.a > 0:
 		$UI/FightPanel/AnimationPlayer.play_backwards("FightPanelAnim")
 	$UI/Current.visible = false
 	stage = BattleStages.PLAYER
 	var ship_pos = self["ship%s" % [curr_sh]].position
-	var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 	if weapon_type == "laser":
+		var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 		$Laser.visible = true
 		$Laser.rect_position = ship_pos
 		$Laser.rect_rotation = rad2deg(atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x))
@@ -902,7 +941,35 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 			"shooter":curr_sh,
 			"acc_mult":Data.laser_data[weapon_data.lv - 1].accuracy,
 			"has_hit":true})
+	elif weapon_type in ["buff", "debuff", "repair"]:
+		if weapon_type == "buff":
+			#Buff attack and accuracy by 20%
+			var ship = get_node("Ship%s" % target)
+			ship_buffs[target].atk += 0.2
+			ship_buffs[target].acc += 0.2
+			set_buff_text(ship_buffs[target].atk, "Atk", ship)
+			set_buff_text(ship_buffs[target].acc, "Acc", ship)
+		elif weapon_type == "debuff":
+			#Debuff attack and accuracy by 20%
+			var i = target
+			var acc_buff = -0.2
+			if HX_c_d[HXs[i].name].has("acc"):
+				acc_buff += HX_c_d[HXs[i].name].acc
+			HX_c_d[HXs[i].name].acc = acc_buff
+			set_buff_text(acc_buff, "Acc", HXs[i])
+			var atk_buff = -0.2
+			if HX_c_d[HXs[i].name].has("atk"):
+				atk_buff += HX_c_d[HXs[i].name].atk
+			HX_c_d[HXs[i].name].atk = atk_buff
+			set_buff_text(atk_buff, "Atk", HXs[i])
+		else:
+			#Heal for 20%
+			ship_data[target].HP = min(ship_data[target].HP + ship_data[target].total_HP * 0.2, ship_data[target].total_HP)
+			var ship = get_node("Ship%s" % target)
+			ship.get_node("HP").value = ship_data[target].HP
+		$Timer.start(min(0.5, 1 / time_speed))
 	else:
+		var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 		var weapon = Sprite.new()
 		weapon.add_to_group("weapon")
 		weapon.texture = load("res://Graphics/Weapons/%s%s.png" % [weapon_type, weapon_data.lv])
@@ -1064,6 +1131,27 @@ func enemy_attack():
 					elif HX_c_d[HXs[i].name].acc < 0: 
 						HX_c_d[HXs[i].name].acc = min(0.0, HX_c_d[HXs[i].name].acc + 0.05)
 					set_buff_text(HX_c_d[HXs[i].name].acc, "Acc", HXs[i])
+				if HX_c_d[HXs[i].name].has("atk"):
+					if HX_c_d[HXs[i].name].atk > 0:
+						HX_c_d[HXs[i].name].atk = max(0.0, HX_c_d[HXs[i].name].atk - 0.05)
+					elif HX_c_d[HXs[i].name].atk < 0: 
+						HX_c_d[HXs[i].name].atk = min(0.0, HX_c_d[HXs[i].name].atk + 0.05)
+					set_buff_text(HX_c_d[HXs[i].name].atk, "Atk", HXs[i])
+		for id in len(ship_data):
+			var acc_buff = ship_buffs[id].acc
+			if acc_buff > 0:
+				acc_buff = max(acc_buff - 0.05, 0)
+			elif acc_buff < 0:
+				acc_buff = min(acc_buff + 0.05, 0)
+			ship_buffs[id].acc = acc_buff
+			set_buff_text(acc_buff, "Acc", get_node("Ship%s" % id))
+			var atk_buff = ship_buffs[id].atk
+			if atk_buff > 0:
+				atk_buff = max(atk_buff - 0.05, 0)
+			elif atk_buff < 0:
+				atk_buff = min(atk_buff + 0.05, 0)
+			ship_buffs[id].atk = atk_buff
+			set_buff_text(atk_buff, "Atk", get_node("Ship%s" % id))
 		if $UI/ControlKeyboard.visible:
 			$UI/ControlKeyboard/AnimationPlayer.play_backwards("Fade")
 		if $UI/ControlMouse.visible:
@@ -1440,9 +1528,10 @@ func _on_Ship_area_entered(area, ship_id:int):
 	var shooter:int = HX_w_c_d[area.name].id
 	var HX = HX_data[shooter]
 	if randf() < hit_formula(HX.acc * (1.0 + HX_c_d[HXs[shooter].name].acc if HX_c_d[HXs[shooter].name].has("acc") else 1.0), ship_data[ship_id].eva * ship_data[ship_id].eva_mult):
-		var dmg:int = HX_w_c_d[area.name].damage * HX.atk / (ship_data[ship_id].def * ship_data[ship_id].def_mult)
+		var dmg:int = HX_w_c_d[area.name].damage * HX.atk * (1.0 + HX_c_d[HXs[shooter].name].atk if HX_c_d[HXs[shooter].name].has("atk") else 1.0) / (ship_data[ship_id].def * ship_data[ship_id].def_mult)
 		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
 		ship_data[ship_id].HP -= dmg
+		ship_data[ship_id].rage = min(ship_data[ship_id].rage + float(dmg) / float(ship_data[ship_id].total_HP) * 300, 100) #Add rage based on the percentage of health lost
 	else:
 		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 0.6, true)
 	$ImmuneTimer.start()
@@ -1451,6 +1540,7 @@ func _on_Ship_area_entered(area, ship_id:int):
 	if not HX_w_c_d[area.name].group in ["w_1_2", "w_2_1", "w_3_3"]:
 		remove_weapon(area, HX_w_c_d[area.name].group)
 	get_node("Ship%s/HP" % [ship_id]).value = ship_data[ship_id].HP
+	get_node("Ship%s/Rage" % [ship_id]).value = ship_data[ship_id].rage
 
 func _on_ImmuneTimer_timeout():
 	immune = false
@@ -1504,7 +1594,6 @@ func _on_Normal_mouse_entered():
 func _on_Hard_mouse_entered():
 	$UI/Help2/Loot.text = "%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5]
 
-
 func _on_diff_pressed(diff:int):
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
@@ -1524,16 +1613,81 @@ func _on_diff_pressed(diff:int):
 	tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
 	tween.start()
 
-
 func _on_AnimationPlayer_animation_finished(anim_name):
 	$Laser.visible = false
-
 
 func _on_ControlKeyboard_animation_finished(anim_name):
 	if $UI/ControlKeyboard.modulate.a <= 0:
 		$UI/ControlKeyboard.visible = false
 
-
 func _on_ControlMouse_animation_finished(anim_name):
 	if $UI/ControlMouse.modulate.a <= 0:
 		$UI/ControlMouse.visible = false
+
+func _on_Ability_pressed():
+	if game:
+		game.hide_tooltip()
+	if stage != BattleStages.CHOOSING:
+		return
+	if $UI/FightPanel.modulate.a > 0:
+		$UI/FightPanel/AnimationPlayer.play_backwards("FightPanelAnim")
+	var ability = ship_data[curr_sh].ability
+	weapon_type = ability
+	var attacking = true
+	if ability in ["buff", "repair"]:
+		attacking = false
+	place_targets(attacking)
+
+func _on_Superweapon_pressed():
+	if game:
+		game.hide_tooltip()
+	if stage != BattleStages.CHOOSING:
+		return
+	var super = ship_data[curr_sh].superweapon
+	
+	if curr_sh in pending_supers.keys(): #If this ship is charging a superweapon
+		if $UI/FightPanel.modulate.a > 0:
+			$UI/FightPanel/AnimationPlayer.play_backwards("FightPanelAnim")
+		if pending_supers[curr_sh] > 0: #If the amount of turns to charge is greater than zero
+			pending_supers[curr_sh] -= 1
+		else:
+			pending_supers.erase(curr_sh)
+			get_node("Ship%s/Charge" % [curr_sh]).emitting = false
+			weapon_type = super
+			var dmg = 50 * ship_data[curr_sh].atk * ship_data[curr_sh].atk_mult * ship_buffs[curr_sh].atk #op damage calculation
+			for id in len(HXs):
+				if HX_data[id].HP > 0:
+					HX_data[id].HP -= dmg / HX_data[id].def
+					HXs[id].get_node("Info/HP").value = HX_data[id].HP
+					Helper.show_dmg(dmg, HXs[id].position, self, 0.6, false)
+					HXs[id].get_node("HurtAnimation").stop()
+					HXs[id].get_node("HurtAnimation").play("Hurt", -1, time_speed)
+					HXs[id].get_node("KnockbackAnimation").stop()
+					HXs[id].get_node("KnockbackAnimation").play("Small knockback" if HX_data[id].HP > 0 else "Dead", -1, time_speed)
+					if HX_data[id].HP <= 0 and not HX_data[id].has("rekt"):
+						HXs_rekt += 1
+						HX_data[id].rekt = true
+						$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
+			if super == "charge":
+				ship_data[curr_sh].HP -= dmg / (ship_data[curr_sh].def * ship_data[curr_sh].def_mult)
+				get_node("Ship%s/HP" % [curr_sh]).value = ship_data[curr_sh].HP
+			curr_sh += 1
+			while ship_data[curr_sh].HP <= 0: #Find the next ship that can take a turn
+				curr_sh += 1
+				if curr_sh == 4:
+					curr_sh = 0
+			$Timer.start(min(1, 1 / time_speed))
+	elif ship_data[curr_sh].rage == 100:
+		if $UI/FightPanel.modulate.a > 0:
+			$UI/FightPanel/AnimationPlayer.play_backwards("FightPanelAnim")
+		ship_data[curr_sh].rage = 0
+		get_node("Ship%s/Rage" % [curr_sh]).value = 0
+		get_node("Ship%s/Charge" % [curr_sh]).emitting = true
+		pending_supers[curr_sh] = 0
+		curr_sh += 1
+		while ship_data[curr_sh].HP <= 0: #Find the next ship that can take a turn
+			curr_sh += 1
+			if curr_sh == 4:
+				curr_sh = 0
+		$Timer.start(min(0.5, 0.5 / time_speed))
+	

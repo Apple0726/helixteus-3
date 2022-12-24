@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/LOL.png-b693014896227597a0c8a4c4e3a63ba6.stex"
+path="res://.import/lol.png-d076fca5f4751717a916c31f99c21abd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/LOL.png"
-dest_files=[ "res://.import/LOL.png-b693014896227597a0c8a4c4e3a63ba6.stex" ]
+source_file="res://Graphics/Buttons/lol.png"
+dest_files=[ "res://.import/lol.png-d076fca5f4751717a916c31f99c21abd.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true
