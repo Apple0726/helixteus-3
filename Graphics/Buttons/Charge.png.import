@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Charge.png-b81d542f679b48b1fbfe50d315fe64b7.stex"
+path="res://.import/charge.png-fe49c9da62bed91d092676051200baa5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/Charge.png"
-dest_files=[ "res://.import/Charge.png-b81d542f679b48b1fbfe50d315fe64b7.stex" ]
+source_file="res://Graphics/Buttons/charge.png"
+dest_files=[ "res://.import/charge.png-fe49c9da62bed91d092676051200baa5.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true
