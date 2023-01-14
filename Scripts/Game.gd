@@ -29,7 +29,6 @@ var aurora_scene = preload("res://Scenes/Aurora.tscn")
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
-var orbit_scene = preload("res://Scenes/Orbit.tscn")
 var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
@@ -257,7 +256,7 @@ var MM_data = {
 var mat_info = {	"coal":{"value":15},#One kg of coal = $10
 					"glass":{"value":1000},
 					"sand":{"value":8},
-					"clay":{"value":12},
+					#"clay":{"value":12},
 					"quillite":{"value":2000000},
 					"soil":{"value":14},
 					"cellulose":{"value":70},
@@ -1088,12 +1087,12 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
+	new_bldgs = {"ME":true}
 	if subjects.dimensional_power.lv >= 1:
 		for mat in mat_info.keys():
 			show[mat] = true
 		for met in met_info.keys():
 			show[met] = true
-	new_bldgs = {"ME":true}
 	if not tut:
 		show.construct_button = true
 	#Stores information of all objects discovered
@@ -1189,6 +1188,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2].surface.cellulose.chance = 0.4
 		planet_data[2].surface.cellulose.amount = 50
 		planet_data[2].bookmarked = true
+		planet_data[2].unique_bldgs = {"spaceport":{"tile":113, "tier":1}}
 	bookmarks = {"planet":{"2":{
 				"type":planet_data[2].type,
 				"name":planet_data[2].name,
@@ -1792,7 +1792,7 @@ func open_obj(type:String, id:int):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	if save.file_exists(file_path):
 		save.open(file_path, File.READ)
-		arr = save.get_var()
+		arr = save.get_var() if save.get_len() > 0 else []
 		save.close()
 	return arr
 	
@@ -3038,58 +3038,8 @@ func generate_tiles(id:int):
 		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
 		tile_data[215] = {}
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-		if TEST:
-			var curr_time = OS.get_system_time_msecs()
-			tile_data[107] = {}
-			tile_data[107].bldg = {}
-			tile_data[107].bldg.name = "PCC"
-			tile_data[107].bldg.construction_date = curr_time
-			tile_data[107].bldg.construction_length = 10
-			tile_data[107].bldg.XP = 0
-			tile_data[107].bldg.IR_mult = 1
-			tile_data[108] = {}
-			tile_data[108].bldg = {}
-			tile_data[108].bldg.name = "RCC"
-			tile_data[108].bldg.construction_date = curr_time
-			tile_data[108].bldg.construction_length = 10
-			tile_data[108].bldg.XP = 0
-			tile_data[108].bldg.path_1 = 1
-			tile_data[108].bldg.path_1_value = Data.path_1.SPR.value
-			tile_data[108].bldg.IR_mult = 1
-			tile_data[109] = {}
-			tile_data[109].bldg = {}
-			tile_data[109].bldg.name = "SPR"
-			tile_data[109].bldg.construction_date = curr_time
-			tile_data[109].bldg.construction_length = 10
-			tile_data[109].bldg.XP = 0
-			tile_data[109].bldg.path_1 = 1
-			tile_data[109].bldg.path_2 = 1
-			tile_data[109].bldg.path_1_value = Data.path_1.SPR.value
-			tile_data[109].bldg.path_2_value = Data.path_2.SPR.value
-			tile_data[109].bldg.IR_mult = 1
-			tile_data[110] = {}
-			tile_data[110].bldg = {}
-			tile_data[110].bldg.name = "AMN"
-			tile_data[110].bldg.construction_date = curr_time
-			tile_data[110].bldg.construction_length = 10
-			tile_data[110].bldg.XP = 0
-			tile_data[110].bldg.path_1 = 1
-			tile_data[110].bldg.path_2 = 1
-			tile_data[110].bldg.path_1_value = Data.path_1.AMN.value
-			tile_data[110].bldg.path_2_value = Data.path_2.AMN.value
-			tile_data[110].bldg.IR_mult = 1
-			tile_data[111] = {}
-			tile_data[111].bldg = {}
-			tile_data[111].bldg.name = "SY"
-			tile_data[111].bldg.construction_date = curr_time
-			tile_data[111].bldg.construction_length = 10
-			tile_data[111].bldg.XP = 0
-			tile_data[111].bldg.path_1 = 1
-			tile_data[111].bldg.path_1_value = Data.path_1.SY.value
-			tile_data[111].bldg.IR_mult = 1
-		else:
-			tile_data[112] = {}
-			tile_data[112].ship = true
+		tile_data[112] = {}
+		tile_data[112].ship = true
 	elif c_p_g == 2:
 		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
 		erase_tile(random_tile)
@@ -3099,9 +3049,14 @@ func generate_tiles(id:int):
 		erase_tile(random_tile2)
 		tile_data[random_tile].ship = true
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+	if p_i.has("unique_bldgs"):
+		for bldg in p_i.unique_bldgs.keys():
+			if tile_data[p_i.unique_bldgs[bldg].tile]:
+				tile_data[p_i.unique_bldgs[bldg].tile].unique_bldg = {"name":bldg, "tier":p_i.unique_bldgs[bldg].tier}
+			else:
+				tile_data[p_i.unique_bldgs[bldg].tile] = {"unique_bldg":{"name":bldg, "tier":p_i.unique_bldgs[bldg].tier}}
 	
 	#Give lake data to adjacent tiles
-	
 	var lake_1_au_int:float = 0.0
 	var lake_2_au_int:float = 0.0
 	if not achievement_data.exploration.has("find_neon_lake"):
@@ -3142,7 +3097,7 @@ func generate_tiles(id:int):
 						if tile.lake == 1 and lake_1_au_int > 0.0:
 							if tile_data[id2].has("aurora"):
 								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora.au_int *= lake_1_au_int + 1.0
+									tile_data[id2].aurora.au_int += lake_1_au_int + 1.0
 								else:
 									tile_data[id2].aurora.au_int = max(lake_1_au_int, tile_data[id2].aurora.au_int)
 							else:
@@ -3150,7 +3105,7 @@ func generate_tiles(id:int):
 						elif tile.lake == 2 and lake_2_au_int > 0.0:
 							if tile_data[id2].has("aurora"):
 								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora.au_int *= lake_2_au_int + 1.0
+									tile_data[id2].aurora.au_int += lake_2_au_int + 1.0
 								else:
 									tile_data[id2].aurora.au_int = max(lake_2_au_int, tile_data[id2].aurora.au_int)
 							else:
@@ -3518,7 +3473,7 @@ func _process(delta):
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
 			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals) * min_mult
 			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy) * energy_mult
-			SP += delta * (autocollect.MS.SP + autocollect.GS.SP * SP_mult)
+			SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
 			min_to_add += autocollect.rsrc.minerals * delta * min_mult
 			energy_to_add += autocollect.rsrc.energy * delta * energy_mult
 			SP += autocollect.rsrc.SP * delta * SP_mult
@@ -4406,8 +4361,12 @@ func _on_MMTimer_timeout():
 				_tile_data = tile_data
 			else:
 				_tile_data = open_obj("Planets", p)
+			if len(_tile_data) == 0:
+				return
 			for t_id in MM_data[p].tiles:
 				var tile = _tile_data[t_id]
+				if not tile or not tile.has("bldg"):
+					continue
 				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
 				if tiles_mined >= 1:
 					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))

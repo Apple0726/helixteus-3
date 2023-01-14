@@ -153,13 +153,13 @@ func on_galaxy_over (id:int):
 			tooltip += Data.path_1.B.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("B"))
 		elif g_i.GS == "ME":
 			icons = [Data.minerals_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME"))
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME") * game.u_i.time_speed)
 		elif g_i.GS == "PP":
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP"))
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
 		elif g_i.GS == "RL":
 			icons = [Data.SP_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL"))
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
 	else:
 		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):

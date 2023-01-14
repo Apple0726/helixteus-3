@@ -221,7 +221,7 @@ func hide_help():
 
 var help_counter = 0
 func pickaxe_hit():
-	if not game.pickaxe.has("name"):
+	if not game.pickaxe.has("name") or not tile.has("depth"):
 		return
 	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):

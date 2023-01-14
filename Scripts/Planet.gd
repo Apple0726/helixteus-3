@@ -792,7 +792,7 @@ func _unhandled_input(event):
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building"
 	view.move_view = not mass_build
 	view.scroll_view = not mass_build
-	if tile_over != -1 and game.bottom_info_action != "building":
+	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
 		if tile and tile.has("bldg"):
 			if Input.is_action_just_released("Q"):

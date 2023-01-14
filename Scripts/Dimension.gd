@@ -90,6 +90,8 @@ func toggle_subj(subj_name:String):
 func refresh_univs(reset:bool = false):
 	DR_mult = 1 + 0.25 * game.subjects.dimensional_power.lv
 	game.PD_panel.editable = reset
+	if not reset:
+		game.PD_panel.calc_OP_points()
 	$TopInfo/Reset.disabled = true
 	$Subjects/Grid.visible = game.dim_num > 1
 	$DimBonusesInfo.visible = game.dim_num == 1
@@ -350,8 +352,6 @@ func _input(event):
 func calc_OP_points():
 	num_errors.clear()
 	chemistry_OP_points = 0
-	if not game.PD_panel.visible:
-		game.PD_panel.calc_OP_points()
 	if game.PD_panel.error:
 		num_errors.chemistry = true
 	for el_node in $ModifyDimension/Chemistry/Control/OPMeters.get_children():
@@ -359,16 +359,16 @@ func calc_OP_points():
 		el_node.text = "+ " + str(Helper.clever_round(game.PD_panel.op_points[el]))
 		chemistry_OP_points += game.PD_panel.op_points[el]
 	maths_OP_points = 0
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -4.0, 1.2)#Building upgrade cost
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -8.0, 1.2)#Mineral value
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.0, 1.2)#Mining speed multiplier
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -3.0, 1.2)#Building upgrade cost
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -6.0, 1.2)#Mineral value
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.5, 1.2)#Mining speed multiplier
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -10.0, 1.5)#Aurora intensity exponent
-	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 60.0, 1.0, 3.0)#Infinite research
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -12.0, 1.1)#Ship level up XP
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 240.0, 1.0, 3.0)#Ship stats
-	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.4)#Chance of ship hitting enemy
-	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -70.0, 2)#Material metal buy/sell
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -50.0, 1.15)#Universe level XP
+	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 180.0, 1.0, 3.0)#Infinite research
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -10.0, 1.1)#Ship level up XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 200.0, 1.0, 3.0)#Ship stats
+	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.3)#Chance of ship hitting enemy
+	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -50.0, 2)#Material metal buy/sell
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -40.0, 1.15)#Universe level XP
 
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
@@ -439,7 +439,12 @@ func calc_OP_points():
 	refresh_OP_meters()
 	if $ModifyDimension/Reset.visible:
 		$ModifyDimension/Reset/Generate.visible = true
-		$ModifyDimension/Reset/Generate.disabled = not num_errors.empty()
+		var disable_button = false
+		for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
+			if num_errors.has(subj.to_lower()) and $Subjects/Grid.get_node(subj).visible:
+				disable_button = true
+				break
+		$ModifyDimension/Reset/Generate.disabled = disable_button
 
 func get_OP_cap(subj:String):
 	var OP_cap_mult:float = 1 + 0.15 * game.subjects.dimensional_power.lv

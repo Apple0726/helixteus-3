@@ -505,12 +505,12 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-			if content == "sand":
-				game.new_bldgs.GF = true
-			elif content == "coal":
-				game.new_bldgs.SE = true
-			elif content == "stone":
-				game.new_bldgs.SC = true
+		if content == "sand" and not game.new_bldgs.has("GF"):
+			game.new_bldgs.GF = true
+		if content == "coal" and not game.new_bldgs.has("SE"):
+			game.new_bldgs.SE = true
+		if content == "stone" and not game.new_bldgs.has("SC"):
+			game.new_bldgs.SC = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
@@ -950,18 +950,18 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck * game.u_i.time_speed * 0.5
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 5000.0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0
 
 func get_MB_output(star:Dictionary):
-	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed
+	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5)) * game.u_i.time_speed
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
 
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:

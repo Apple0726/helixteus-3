@@ -38,6 +38,7 @@ func refresh():
 		auto_speedup = true
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
+		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(planet.bldg.name + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
 	else:
 		p_i = game.planet_data[game.c_p]
 		var first_tile_bldg = game.tile_data[ids[0]].bldg

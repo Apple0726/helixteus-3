@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -12,9 +12,6 @@
 [ext_resource path="res://Graphics/Title screen/Discord.png" type="Texture" id=11]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
-[ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
-[ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
-[ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
@@ -262,20 +259,6 @@ mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="PlantingSounds" type="Node" parent="."]
-
-[node name="1" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 21 )
-bus = "SFX"
-
-[node name="2" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 20 )
-bus = "SFX"
-
-[node name="3" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 19 )
-bus = "SFX"
 
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 3
