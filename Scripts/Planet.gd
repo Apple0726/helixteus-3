@@ -90,6 +90,10 @@ func _ready():
 	if p_i.has("lake_2"):
 		$Lakes2.tile_set = game.lake_TS
 		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
+	var nuclear_fusion_reactor_main_tiles = []
+	if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("nuclear_fusion_reactor"):
+		for i in len(p_i.unique_bldgs.nuclear_fusion_reactor):
+			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs.nuclear_fusion_reactor[i].tile)
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
@@ -97,23 +101,6 @@ func _ready():
 			$TileMap.set_cell(i, j, p_i.type - 3)
 			if not tile:
 				continue
-			if tile.has("bldg"):
-				add_bldg(id2, tile.bldg.name)
-				if tile.bldg.name == "GH":
-					$Soil.set_cell(id2 % wid, int(id2 / wid), 0)
-					$Soil.update_bitmask_region()
-			if tile.has("aurora"):
-				var aurora = game.aurora_scene.instance()
-				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
-				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
-				#aurora.get_node("Particles2D").process_material["shader_param/strength"] = 1.0 if randf() < 0.5 else 0.0
-				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
-				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora.au_int) / 10.0, 1.0)
-				#aurora.modulate.a = min(1.0, 0.5 + floor(hue - 0.4) / 5.0)
-				add_child(aurora)
 			if tile.has("crater"):
 				var metal = Sprite.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
@@ -132,9 +119,21 @@ func _ready():
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
 				$Obstacles.set_cell(i, j, 6)
-			if tile.has("rock"):
-				$Obstacles.set_cell(i, j, 0)
-			if tile.has("cave"):
+			if tile.has("bldg"):
+				add_bldg(id2, tile.bldg.name)
+				if tile.bldg.name == "GH":
+					$Soil.set_cell(id2 % wid, int(id2 / wid), 0)
+					$Soil.update_bitmask_region()
+			elif tile.has("unique_bldg"):
+				var mod:Color = Color.white
+				if tile.unique_bldg.has("broken"):
+					mod = Color(0.3, 0.3, 0.3)
+				if tile.unique_bldg.name == "nuclear_fusion_reactor":
+					if id2 in nuclear_fusion_reactor_main_tiles:
+						add_bldg_sprite(Vector2(i, j) * 200, tile.unique_bldg.name, mod, 1.0, Vector2(200, 200))
+				else:
+					add_bldg_sprite(Vector2(i, j) * 200, tile.unique_bldg.name, mod)
+			elif tile.has("cave"):
 				var cave_data_file = File.new()
 				if tile.cave.has("id"):
 					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
@@ -143,19 +142,15 @@ func _ready():
 					cave_data_file.close()
 					caves_data[id2] = len(cave_data.seeds)
 				$Obstacles.set_cell(i, j, 1)
-			if tile.has("volcano"):
+			elif tile.has("volcano"):
 				var volcano = Sprite.new()
 				volcano.texture = preload("res://Graphics/Tiles/Volcano.png")
 				add_child(volcano)
 				volcano.position = Vector2(i, j) * 200 + Vector2(100, 100)
-			if tile.has("ship"):
+			elif tile.has("ship"):
 				if len(game.ship_data) == 0:
 					$Obstacles.set_cell(i, j, 5)
-				elif len(game.ship_data) == 1:
-					$Obstacles.set_cell(i, j, 7)
-				elif len(game.ship_data) == 2:
-					$Obstacles.set_cell(i, j, 10)
-			if tile.has("wormhole"):
+			elif tile.has("wormhole"):
 				wormhole = game.wormhole_scene.instance()
 				wormhole.get_node("Active").visible = tile.wormhole.active
 				wormhole.get_node("Inactive").visible = not tile.wormhole.active
@@ -164,17 +159,7 @@ func _ready():
 				if tile.wormhole.has("investigation_length"):
 					add_time_bar(id2, "wormhole")
 				p_i.wormhole = true
-			if (tile.has("ship_part") or tile.has("artifact")) and not tile.has("depth"):
-				$Obstacles.set_cell(i, j, 11)
-			if tile.has("ruins"):
-				$Obstacles.set_cell(i, j, 12)
-			if tile.has("diamond_tower"):
-				var tower = Sprite.new()
-				tower.texture = load("res://Graphics/Tiles/diamond_tower.png")
-				tower.scale *= 0.4
-				add_child(tower)
-				tower.position = Vector2(i, j) * 200 + Vector2(100, 0)
-			if tile.has("lake"):
+			elif tile.has("lake"):
 				var state = p_i["lake_%s" % tile.lake].state
 				if state == "l":
 					get_node("Lakes%s" % tile.lake).set_cell(i, j, 2)
@@ -183,8 +168,19 @@ func _ready():
 					get_node("Lakes%s" % tile.lake).set_cell(i, j, 0)
 				elif state == "sc":
 					get_node("Lakes%s" % tile.lake).set_cell(i, j, 1)
-			elif tile.has("ash"):
+			if tile.has("ash"):
 				$Ash.set_cell(i, j, 0)
+			if tile.has("aurora"):
+				var aurora = game.aurora_scene.instance()
+				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				aurora.get_node("Particles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
+				aurora.get_node("Particles2D").lifetime = 3.0 / game.u_i.time_speed
+				#aurora.get_node("Particles2D").process_material["shader_param/strength"] = 1.0 if randf() < 0.5 else 0.0
+				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
+				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora.au_int) / 10.0, 1.0)
+				add_child(aurora)
 	if p_i.has("lake_1"):
 		$Lakes1.update_bitmask_region()
 	if p_i.has("lake_2"):
@@ -231,6 +227,24 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile.depth]
 		elif tile.bldg.name in ["GF", "SE", "SC"]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
+	elif tile.has("unique_bldg"):
+		var tier_colors = ["FFFFFF", "00EE00", "2222FF", "FF22FF", "FF8800", "FFFF22", "FF0000"]
+		tooltip += "[color=#%s]" % tier_colors[tile.unique_bldg.tier - 1]
+		if tile.unique_bldg.has("broken"):
+			tooltip += tr("BROKEN_X").format({"building_name":tr(tile.unique_bldg.name.to_upper())})
+		else:
+			tooltip += tr(tile.unique_bldg.name.to_upper())
+		if tile.unique_bldg.tier > 1:
+			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
+		tooltip += "[/color]\n"
+		tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper()) + "\n"
+		tooltip += tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
+		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
+		if tile.unique_bldg.has("broken"):
+			tooltip += "\n" + tr("BROKEN_BLDG_DESC1") + "\n"
+			icons.append(Data.money_icon)
+			tooltip += tr("BROKEN_BLDG_DESC2") % 0.0
+			icons.append(Data.money_icon)
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
@@ -1233,26 +1247,26 @@ func add_time_bar(id2:int, type:String):
 	match type:
 		"bldg":
 			time_bar.modulate = Color(0, 0.74, 0, 1)
-		#"plant":
-		#	time_bar.modulate = Color(105/255.0, 65/255.0, 40/255.0, 1)
 		"overclock":
 			time_bar.modulate = Color(0, 0, 1, 1)
 		"wormhole":
 			time_bar.modulate = Color(105/255.0, 0, 1, 1)
 	time_bars.append({"node":time_bar, "id":id2, "type":type})
 
-func add_bldg(id2:int, st:String):
+func add_bldg_sprite(pos:Vector2, st:String, mod:Color = Color.white, sc:float = 0.4, offset:Vector2 = Vector2(100, 100)):
 	var bldg = Sprite.new()
 	bldg.texture = game.bldg_textures[st]
-	bldg.scale *= 0.4
-	var local_id = id2
-	var v = Vector2.ZERO
-	v.x = (local_id % wid) * 200
-	v.y = floor(local_id / wid) * 200
-	v += Vector2(100, 100)
-	bldg.position = v
+	bldg.scale *= sc
+	bldg.position = pos + offset
+	bldg.modulate = mod
 	add_child(bldg)
-	bldgs[id2] = bldg
+	return bldg
+	
+func add_bldg(id2:int, st:String):
+	var v = Vector2.ZERO
+	v.x = (id2 % wid) * 200
+	v.y = floor(id2 / wid) * 200
+	bldgs[id2] = add_bldg_sprite(v, st)
 	var tile = game.tile_data[id2]
 	match st:
 		"ME":
@@ -1286,7 +1300,7 @@ func add_bldg(id2:int, st:String):
 				if tile.auto_GH.has("soil_drain"):
 					var fert = Sprite.new()
 					fert.texture = preload("res://Graphics/Agriculture/fertilizer.png")
-					bldg.add_child(fert)
+					bldgs[id2].add_child(fert)
 					fert.name = "Fertilizer"
 				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), load("res://Graphics/Metals/%s.png" % tile.auto_GH.seed.split("_")[0]), id2)
 			else:
@@ -1300,12 +1314,6 @@ func add_bldg(id2:int, st:String):
 			if Mods.added_buildings.has(st):
 				add_rsrc(v, Mods.added_buildings[st].icon_color, Data.rsrc_icons[st], id2)
 	var curr_time = OS.get_system_time_msecs()
-#	var IR_mult = Helper.get_IR_mult(tile.bldg.name)
-#	if tile.bldg.IR_mult != IR_mult:
-#		var diff:float = IR_mult / tile.bldg.IR_mult
-#		tile.bldg.IR_mult = IR_mult
-#		if not tile.bldg.is_constructing and tile.bldg.has("collect_date"):
-#			tile.bldg.collect_date = curr_time - (curr_time - tile.bldg.collect_date) / diff
 	var hbox = Helper.add_lv_boxes(tile, v)
 	add_child(hbox)
 	hboxes[id2] = hbox

@@ -139,11 +139,11 @@ func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
 		return tr(game.speedups_info[_name].name) % game.speedups_info[_name].name_param
 	if _name.substr(0, 9) == "overclock":
-		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name[9]))
+		return tr("OVERCLOCK") + " " + get_roman_num(int(_name[9]))
 	if _name.substr(0, 5) == "drill":
-		return tr("DRILL") + " " + game.get_roman_num(int(_name[5]))
+		return tr("DRILL") + " " + get_roman_num(int(_name[5]))
 	if _name.substr(0, 17) == "portable_wormhole":
-		return tr("PORTABLE_WORMHOLE") + " " + game.get_roman_num(int(_name[17]))
+		return tr("PORTABLE_WORMHOLE") + " " + get_roman_num(int(_name[17]))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
 		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
 	return tr(_name.to_upper())
@@ -1371,3 +1371,17 @@ func set_resolution(index:int):
 		res = Vector2(16, 9)
 	game.current_viewport_dimensions = res
 	get_viewport().size = res
+
+func get_roman_num(num:int):
+	if num > 3999:
+		return String(num)
+	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
+	var num_str:String = String(num)
+
+	var res = ""
+	var n = num_str.length()
+	var c = 0;
+	while c < n:
+		res = strs[c][int(num_str[n - c - 1])] + res
+		c += 1
+	return res

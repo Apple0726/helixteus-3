@@ -240,7 +240,7 @@ func refresh_fight_panel():
 	if ship_data[curr_sh].superweapon != "none":
 		$UI/FightPanel/Superweapon.visible = true
 		$UI/FightPanel/Superweapon/TextureRect.texture = load("res://Graphics/Buttons/%s.png" % ship_data[curr_sh].superweapon)
-	$UI/FightPanel/Superweapon/Glow/AnimationPlayer.seek(0)
+	#$UI/FightPanel/Superweapon/Glow/AnimationPlayer.seek(0)
 	$UI/FightPanel/Superweapon/Glow/AnimationPlayer.stop()
 	if curr_sh in pending_supers.keys() && pending_supers[curr_sh] == 0:
 		$UI/FightPanel/Superweapon/Glow/AnimationPlayer.play("Glow")

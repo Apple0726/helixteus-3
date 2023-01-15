@@ -693,7 +693,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var rand = rng.randf()
 				var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
-					var tier:int = clamp(pow(formula / rand, 0.4), 1, 5)
+					var tier:int = min(-log(rand/formula) / 2.5, 5)
 					var contents:Dictionary = generate_treasure(tier, rng)
 					if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 						continue

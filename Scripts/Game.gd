@@ -415,6 +415,11 @@ var achievements:Dictionary = {
 		"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
 		"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
 		"planet_with_nothing":tr("PLANET_WITH_NOTHING"),
+		"tier_2_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 2,
+		"tier_3_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 3,
+		"tier_4_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 4,
+		"tier_5_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 5,
+		"find_all_unique_bldgs":tr("FIND_ALL_UNIQUE_BLDGS"),
 	},
 	"progression":{
 		"build_MS":tr("BUILD_A_MS"),
@@ -551,6 +556,10 @@ func _ready():
 		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Data.costs:
 		var dir_str = "res://Graphics/Buildings/%s.png" % bldg
+		if ResourceLoader.exists(dir_str):
+			bldg_textures[bldg] = load(dir_str)
+	for bldg in Data.unique_bldg_icons:
+		var dir_str = "res://Graphics/Buildings/Unique/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
 			bldg_textures[bldg] = load(dir_str)
 	game_tween = Tween.new()
@@ -910,6 +919,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
 		universe_data[0].charge = 1.0#e(1.602, -19)#C
 		universe_data[0].dark_energy = 1.0
+		universe_data[0].age = 1.0
 		universe_data[0].difficulty = 1.0
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
@@ -1188,7 +1198,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2].surface.cellulose.chance = 0.4
 		planet_data[2].surface.cellulose.amount = 50
 		planet_data[2].bookmarked = true
-		planet_data[2].unique_bldgs = {"spaceport":{"tile":113, "tier":1}}
 	bookmarks = {"planet":{"2":{
 				"type":planet_data[2].type,
 				"name":planet_data[2].name,
@@ -2507,7 +2516,7 @@ func generate_systems(id:int):
 					star_type = "hypergiant"
 					var tier:int = ceil(star_size_tier - 7.0)
 					star_size *= max(rand_range(550000, 700000) / temp, rand_range(3.0, 4.0)) * pow(1.2, tier - 1)
-					star_type = "hypergiant " + get_roman_num(tier)
+					star_type = "hypergiant " + Helper.get_roman_num(tier)
 					hypergiant = tier
 				elif star_size_tier > 5.0:
 					star_type = "supergiant"
@@ -2921,12 +2930,21 @@ func generate_tiles(id:int):
 		p_i.lake_2.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
 		phase_2.free()
 	var volcano_probability:float = 0.0
-	if randf() < log(20.0 * pow(coldest_star_temp/u_i.gravitational, -0.5) + 1.0):
+	if randf() < log(20.0 / sqrt(coldest_star_temp/u_i.gravitational) + 1.0):
 		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / pow(wid, 2), 0.15)
+	var unique_bldgs_list = ["spaceport", "mineral_replicator", "observatory", "mining_outpost", "aurora_generator", "substation"]
+	if c_s_g != 0:
+		unique_bldgs_list.append("nuclear_fusion_reactor")
+	var base_unique_bldg_probability = 0.0
+	if randf() < 20.0 / sqrt(coldest_star_temp):
+		base_unique_bldg_probability = -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	var nuclear_fusion_reactor_tiles = []
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
 			var t_id = i % wid + j * wid
+			if t_id in nuclear_fusion_reactor_tiles:
+				continue
 			if level > 0.5 and p_i.has("lake_1"):
 				if p_i.lake_1.state != "g":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
@@ -3016,16 +3034,37 @@ func generate_tiles(id:int):
 							earn_achievement("exploration", "nanocrystal_crater")
 						if not achievement_data.exploration.has("mythril_crater") and met == "mythril":
 							earn_achievement("exploration", "mythril_crater")
+				continue
+			
+			if randf() < 0.1 / pow(wid, 0.5) * base_unique_bldg_probability:
+				var unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
+				while unique_bldg == "nuclear_fusion_reactor" and (i == wid-1 or j == wid-1):
+					unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
+				if unique_bldg == "nuclear_fusion_reactor":
+					nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
+				if unique_bldg == "spaceport":
+					unique_bldgs_list.erase("spaceport") # 				Save migration
+				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0)}
+				if randf() < -atan(coldest_star_temp / 100.0 - 10.0) / (1.2 * PI) + 0.6:
+					obj.broken = true
+				if p_i.has("unique_bldgs"):
+					if p_i.unique_bldgs.has(unique_bldg):
+						p_i.unique_bldgs[unique_bldg].append(obj)
+					else:
+						p_i.unique_bldgs[unique_bldg] = [obj]
+				else:
+					p_i.unique_bldgs = {unique_bldg:[obj]}
+			
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
 		var dest_id:int = Helper.rand_int(1, SYS_NUM - 1)#				local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
 		p_i.wormhole = true
 	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
-		var dest_id:int = Helper.rand_int(1, len(system_data)) - 1
+		var dest_id:int = randi() % len(system_data)
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
 		p_i.wormhole = true#								new: whether the wormhole should generate a new wormhole on another planet
 	if p_i.has("lake_1") and p_i.lake_1.state == "g":
@@ -3040,21 +3079,33 @@ func generate_tiles(id:int):
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 		tile_data[112] = {}
 		tile_data[112].ship = true
+		p_i.unique_bldgs = {"spaceport":[{"tile":113, "tier":1, "broken":true}]}
 	elif c_p_g == 2:
-		var random_tile:int = Helper.rand_int(1, len(tile_data)) - 1
+		var N:int = len(tile_data)
+		var random_tile:int = randi() % N
 		erase_tile(random_tile)
 		var random_tile2:int = random_tile
 		while random_tile == random_tile2:
-			random_tile2 = Helper.rand_int(1, len(tile_data)) - 1
+			random_tile2 = randi() % N
 		erase_tile(random_tile2)
 		tile_data[random_tile].ship = true
+		if random_tile == N-1:
+			erase_tile(random_tile - 1) 														# Save migration
+			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0), "broken":true}]}
+		else:
+			erase_tile(random_tile + 1)
+			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0), "broken":true}]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	if p_i.has("unique_bldgs"):
 		for bldg in p_i.unique_bldgs.keys():
-			if tile_data[p_i.unique_bldgs[bldg].tile]:
-				tile_data[p_i.unique_bldgs[bldg].tile].unique_bldg = {"name":bldg, "tier":p_i.unique_bldgs[bldg].tier}
-			else:
-				tile_data[p_i.unique_bldgs[bldg].tile] = {"unique_bldg":{"name":bldg, "tier":p_i.unique_bldgs[bldg].tier}}
+			for i in len(p_i.unique_bldgs[bldg]):
+				for j in ([i, i+1, i+wid, i+1+wid] if bldg == "nuclear_fusion_reactor" else [i]):
+					if tile_data[p_i.unique_bldgs[bldg][j].tile]:
+						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg = {"name":bldg, "tier":p_i.unique_bldgs[bldg][j].tier}
+					else:
+						tile_data[p_i.unique_bldgs[bldg][j].tile] = {"unique_bldg":{"name":bldg, "tier":p_i.unique_bldgs[bldg][j].tier}}
+					if p_i.unique_bldgs[bldg][j].has("broken"):
+						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg.broken = true
 	
 	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0
@@ -3440,20 +3491,6 @@ func add_resources(costs):
 				new_bldgs.SE = true
 			elif cost == "stone":
 				new_bldgs.SC = true
-
-func get_roman_num(num:int):
-	if num > 3999:
-		return String(num)
-	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
-	var num_str:String = String(num)
-
-	var res = ""
-	var n = num_str.length()
-	var c = 0;
-	while c < n:
-		res = strs[c][int(num_str[n - c - 1])] + res
-		c += 1
-	return res
 
 func e(n, e):
 	return n * pow(10, e)
@@ -4069,6 +4106,7 @@ func generate_new_univ_confirm():
 	universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
 	universe_data[0].charge = 1.0#e(1.602, -19)#C
 	universe_data[0].dark_energy = 1.0
+	universe_data[0].age = 1.0
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0

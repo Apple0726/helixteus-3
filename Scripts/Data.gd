@@ -115,6 +115,7 @@ var MUs = {	"MV":{"base_cost":100, "pw":1.9},
 			"SHSR":{"base_cost":2000, "pw":1.9},
 			"CHR":{"base_cost":2000, "pw":1.7},
 }
+var money_icon = preload("res://Graphics/Icons/money.png")
 var minerals_icon = preload("res://Graphics/Icons/minerals.png")
 var energy_icon = preload("res://Graphics/Icons/energy.png")
 var time_icon = preload("res://Graphics/Icons/Time.png")
@@ -219,6 +220,7 @@ var univ_prop_weights:Dictionary = {
 	"gravitational":25,
 	"charge":40,
 	"dark_energy":40,
+	"age":15,
 	"difficulty":10,
 	"time_speed":50,
 	"antimatter":100,
@@ -539,3 +541,13 @@ var default_help = {
 				"artificial_volcano":true,
 				"flash_send_probe_btn":true,
 		}
+
+var unique_bldg_icons = {
+	"spaceport":[energy_icon, energy_icon],
+	"mineral_replicator":[minerals_icon],
+	"substation":[energy_icon, energy_icon, energy_icon],
+	"aurora_generator":[],
+	"nuclear_fusion_reactor":[energy_icon],
+	"mining_outpost":[],
+	"observatory":[SP_icon],
+}

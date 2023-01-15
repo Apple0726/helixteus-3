@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
@@ -45,6 +45,8 @@
 [ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=43]
 [ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=44]
 [ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=45]
+[ext_resource path="res://Graphics/Buildings/Unique/mineral_replicator.png" type="Texture" id=46]
+[ext_resource path="res://Graphics/Achievements/UniqueBuildings.png" type="Texture" id=47]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -725,6 +727,55 @@ margin_top = 128.0
 margin_right = 380.0
 margin_bottom = 188.0
 achievement_icon = ExtResource( 44 )
+
+[node name="tier_2_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_top = 128.0
+margin_right = 444.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 2.0
+
+[node name="tier_3_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_top = 128.0
+margin_right = 508.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 3.0
+
+[node name="tier_4_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_top = 128.0
+margin_right = 572.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 4.0
+
+[node name="tier_5_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_top = 128.0
+margin_right = 636.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 5.0
+
+[node name="find_all_unique_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_top = 128.0
+margin_right = 700.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 47 )
 
 [node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 margin_top = 384.0
