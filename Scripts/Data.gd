@@ -550,4 +550,5 @@ var unique_bldg_icons = {
 	"nuclear_fusion_reactor":[energy_icon],
 	"mining_outpost":[],
 	"observatory":[SP_icon],
+	"cellulose_synthesizer":[preload("res://Graphics/Materials/cellulose.png")],
 }

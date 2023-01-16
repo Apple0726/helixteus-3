@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=2]
+[gd_scene load_steps=70 format=2]
 
 [ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Graphics/Materials/soil.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/SP.png" type="Texture" id=12]
 [ext_resource path="res://Graphics/Buttons/ScienceTree.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Buttons/MainMenu.png" type="Texture" id=14]
 [ext_resource path="res://Graphics/Buttons/convert_minerals.png" type="Texture" id=15]
 [ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=16]
 [ext_resource path="res://Graphics/Buttons/Ships.png" type="Texture" id=17]
@@ -332,9 +333,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 theme = ExtResource( 7 )
 script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/BookmarkAnim = SubResource( 1 )
@@ -564,9 +562,9 @@ __meta__ = {
 }
 
 [node name="Ships" type="TextureButton" parent="Buttons"]
-margin_top = 168.0
+margin_top = 144.0
 margin_right = 48.0
-margin_bottom = 216.0
+margin_bottom = 192.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
@@ -576,9 +574,9 @@ expand = true
 stretch_mode = 5
 
 [node name="Vehicles" type="TextureButton" parent="Buttons"]
-margin_top = 216.0
+margin_top = 192.0
 margin_right = 48.0
-margin_bottom = 264.0
+margin_bottom = 240.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
@@ -588,9 +586,9 @@ expand = true
 stretch_mode = 5
 
 [node name="Craft" type="TextureButton" parent="Buttons"]
-margin_top = 264.0
+margin_top = 240.0
 margin_right = 48.0
-margin_bottom = 312.0
+margin_bottom = 288.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 keep_pressed_outside = true
@@ -600,9 +598,9 @@ expand = true
 stretch_mode = 5
 
 [node name="Inventory" type="TextureButton" parent="Buttons"]
-margin_top = 312.0
+margin_top = 288.0
 margin_right = 48.0
-margin_bottom = 360.0
+margin_bottom = 336.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 18 )
@@ -611,9 +609,9 @@ expand = true
 stretch_mode = 5
 
 [node name="Shop" type="TextureButton" parent="Buttons"]
-margin_top = 360.0
+margin_top = 336.0
 margin_right = 48.0
-margin_bottom = 408.0
+margin_bottom = 384.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 20 )
@@ -622,9 +620,9 @@ expand = true
 stretch_mode = 5
 
 [node name="MineralUpgrades" type="TextureButton" parent="Buttons"]
-margin_top = 408.0
+margin_top = 384.0
 margin_right = 48.0
-margin_bottom = 456.0
+margin_bottom = 432.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 22 )
@@ -633,9 +631,9 @@ expand = true
 stretch_mode = 5
 
 [node name="ScienceTree" type="TextureButton" parent="Buttons"]
-margin_top = 456.0
+margin_top = 432.0
 margin_right = 48.0
-margin_bottom = 504.0
+margin_bottom = 480.0
 rect_min_size = Vector2( 0, 48 )
 shortcut_in_tooltip = false
 shortcut = SubResource( 24 )
@@ -643,13 +641,21 @@ texture_normal = ExtResource( 13 )
 expand = true
 stretch_mode = 5
 
+[node name="MainMenu" type="TextureButton" parent="Buttons"]
+margin_top = 480.0
+margin_right = 48.0
+margin_bottom = 528.0
+rect_min_size = Vector2( 0, 48 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 24 )
+texture_normal = ExtResource( 14 )
+expand = true
+stretch_mode = 5
+
 [node name="Bottom" type="Control" parent="."]
 margin_top = 84.0
 margin_right = 40.0
 margin_bottom = 124.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel" type="Panel" parent="Bottom"]
 margin_left = 1220.0
@@ -1204,6 +1210,9 @@ mouse_filter = 2
 [connection signal="mouse_entered" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_mouse_entered"]
 [connection signal="mouse_exited" from="Buttons/ScienceTree" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Buttons/ScienceTree" to="." method="_on_ScienceTree_pressed"]
+[connection signal="mouse_entered" from="Buttons/MainMenu" to="." method="_on_MainMenu_mouse_entered"]
+[connection signal="mouse_exited" from="Buttons/MainMenu" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Buttons/MainMenu" to="." method="_on_MainMenu_pressed"]
 [connection signal="mouse_entered" from="Bottom/Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_mouse_entered"]
 [connection signal="mouse_exited" from="Bottom/Panel/ConvertMinerals" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Bottom/Panel/ConvertMinerals" to="." method="_on_ConvertMinerals_pressed"]

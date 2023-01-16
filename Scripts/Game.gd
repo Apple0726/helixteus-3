@@ -217,6 +217,7 @@ var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":
 var autocollect:Dictionary
 var save_date:int
 var bookmarks:Dictionary
+var unique_bldgs_discovered:Dictionary
 
 ############ End save data ############
 var block_scroll:bool = false
@@ -629,79 +630,25 @@ func _ready():
 	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instance()
 	PD_panel.visible = false
 	$Panels/Control.add_child(PD_panel)
-	if TEST:
-		$Title.visible = false
-		HUD = preload("res://Scenes/HUD.tscn").instance()
-		new_game(false, 0, true)
-		Helper.save_obj("Galaxies", 0, system_data)
-		universe_data[0].lv = 90
-		money = e(1, 24)
-		probe_data.append({"tier":2})
-		show.dimensions = true
-		show.plant_button = true
-		show.mining = true
-		show.shop = true
-		show.vehicles_button = true
-		show.minerals = true
-		energy = e(1, 24)
-		SP = e(2, 19)
-		science_unlocked.RC = true
-		science_unlocked.CD = true
-		science_unlocked.SCT = true
-		science_unlocked.SA = true
-		science_unlocked.EGH = true
-		science_unlocked.ATM = true
-		science_unlocked.MAE = true
-		science_unlocked.FTL = true
-		science_unlocked.TF = true
-		science_unlocked.FG = true
-		science_unlocked.DS1 = true
-		science_unlocked.DS2 = true
-		science_unlocked.DS3 = true
-		science_unlocked.DS4 = true
-		science_unlocked.MB = true
-		science_unlocked.GS = true
-		science_unlocked.UP1 = true
-		stone.O = e(1, 24)
-		mets.quartz = e(1, 18)
-		mets.nanocrystal = e(1, 18)
-		show.SP = true
-		show.stone = true
-		show.glass = true
-		help.materials = true
-		help.metals = true
-		show.atoms = true
-		atoms.C = 100
-		atoms.Xe = 10000
-		items[2] = {"name":"hx_core", "type":"other_items_info", "num":5}
-		items[3] = {"name":"lead_seeds", "num":500}
-		items[4] = {"name":"fertilizer", "num":500}
-		pickaxe = {"name":"stick", "speed":3400, "durability":700}
-		rover_data = [{"c_p":2, "ready":true, "HP":200000.0, "atk":5000.0, "def":50000.0, "spd":3.0, "weight_cap":80000.0, "inventory":[{"type":"rover_weapons", "name":"gammaray_laser"}, {"type":"rover_mining", "name":"UV_mining_laser"}, {"type":""}, {"type":""}, {"type":""}], "i_w_w":{}}]
-		ship_data = [{"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":100, "def":5, "acc":100, "eva":100, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
-		add_panels()
-		$Autosave.start()
-	else:
-		var tween:Tween = Tween.new()
-		add_child(tween)
-		tween.interpolate_property($Title/Background, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1)
-		tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 2.0, 1.2)
-		tween.interpolate_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), Color.white, 1.2)
-		tween.interpolate_property($Title/Languages, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-		tween.interpolate_property($Title/Discord, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-		tween.interpolate_property($Title/GitHub, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-		tween.interpolate_property($Title/Godot, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-		tween.interpolate_property($Title/Menu, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.5)
-		tween.interpolate_property($Title/Menu, "rect_position", Vector2(44, 464), Vector2(84, 464), 1, Tween.TRANS_CIRC, Tween.EASE_OUT, 0.5)
-		tween.start()
-		yield(tween, "tween_all_completed")
-		remove_child(tween)
-		tween.queue_free()
-	
+	animate_title_buttons()
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
 		main.phase_2()
 
+func animate_title_buttons():
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	$TitleBackground.modulate.a = 0.0
+	$Title.modulate.a = 0.0
+	$Title/Menu.modulate.a = 0.0
+	$Title/Menu.rect_position = Vector2(83, 464)
+	tween.tween_property($TitleBackground, "modulate", Color.white, 1)
+	tween.tween_property($Title, "modulate", Color.white, 1).set_delay(0.2)
+	tween.tween_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", 2.0, 1.2).set_delay(0.5)
+	tween.tween_property($Stars/Stars, "modulate", Color.white, 1.2)
+	tween.tween_property($Title/Menu, "modulate", Color.white, 1).set_delay(0.5)
+	tween.tween_property($Title/Menu, "rect_position", Vector2(103, 464), 1).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_OUT).set_delay(0.5)
+	
 func switch_music(src, pitch:float = 1.0):
 	#Music fading
 	var tween = $MusicTween
@@ -1208,7 +1155,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"c_g":0,
 				"c_g_g":0,
 				"c_c":0}}, "system":{}, "galaxy":{}, "cluster":{}}
-	
+	unique_bldgs_discovered = {}
 	Helper.save_obj("Systems", 0, planet_data)
 	generate_tiles(2)
 	
@@ -1443,7 +1390,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
-	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 20), Vector2(-s.x / 2.0, -s.y / 2.0 + 10), 0.1)
+	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 20), Vector2(-s.x / 2.0, -s.y / 2.0), 0.3, Tween.TRANS_BACK, Tween.EASE_OUT)
 	panel.tween.interpolate_property($Panels/Blur.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
@@ -1454,7 +1401,6 @@ func fade_in_panel(panel:Control):
 func fade_out_panel(panel:Control):
 	var s = panel.rect_size
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 0), 0.1)
-	panel.tween.interpolate_property(panel, "rect_position", null, Vector2(-s.x / 2.0, -s.y / 2.0 + 20), 0.1)
 	panel.tween.interpolate_property($Panels/Blur.material, "shader_param/amount", null, 0.0, 0.2)
 	panel.tween.start()
 	if not panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
@@ -1555,7 +1501,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if is_instance_valid(space_HUD) and not new_view in ["system", "galaxy", "cluster", "universe"]:
 			var anim_player:AnimationPlayer = space_HUD.get_node("AnimationPlayer")
 			anim_player.play_backwards("MoveButtons")
-		if is_instance_valid(HUD) and new_view in ["battle", "cave", "dimension", "STM", "planet_details"]:
+		if is_instance_valid(HUD) and new_view in ["battle", "cave", "dimension", "STM", "planet_details", ""]:
 			var anim_player:AnimationPlayer = HUD.get_node("AnimationPlayer2")
 			anim_player.play_backwards("MoveStuff")
 		if c_v == "planet" and is_instance_valid(view.obj):
@@ -1600,12 +1546,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 						remove_child(cave)
 					cave = null
 					switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
-				"ruins":
-					$UI.add_child(HUD)
-					if is_instance_valid(ruins):
-						remove_child(ruins)
-					ruins = null
-					switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
 				"STM":
 					$UI.add_child(HUD)
 					remove_child(STM)
@@ -1614,11 +1554,10 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"battle":
 					$UI.add_child(HUD)
 					HUD.refresh()
-					remove_child(battle)
-					battle = null
+					battle.queue_free()
 			if c_v in  ["science_tree", "STM"]:
 				c_v = l_v
-			else:
+			elif new_view != "":
 				l_v = c_v
 				if new_view != "dimension":
 					c_v = new_view
@@ -1685,7 +1624,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	else:
 		$MMTimer.stop()
 	if not viewing_dimension:
-		match c_v:
+		match new_view:
 			"planet":
 				add_planet()
 			"planet_details":
@@ -1718,14 +1657,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				cave.rover_data = rover_data[rover_id]
 				add_child(cave)
 				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
-			"ruins":
-				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
-					$UI.remove_child(HUD)
-				ruins = ruins_scene.instance()
-				ruins.ruins_id = tile_data[c_t].ruins
-				add_child(ruins)
-				ruins.rover_data = rover_data[rover_id]
-				switch_music(preload("res://Audio/ruins.mp3"), 0.9)
 			"STM":
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
@@ -2932,19 +2863,13 @@ func generate_tiles(id:int):
 	var volcano_probability:float = 0.0
 	if randf() < log(20.0 / sqrt(coldest_star_temp/u_i.gravitational) + 1.0):
 		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / pow(wid, 2), 0.15)
-	var unique_bldgs_list = ["spaceport", "mineral_replicator", "observatory", "mining_outpost", "aurora_generator", "substation"]
-	if c_s_g != 0:
-		unique_bldgs_list.append("nuclear_fusion_reactor")
-	var base_unique_bldg_probability = 0.0
-	if randf() < 20.0 / sqrt(coldest_star_temp):
-		base_unique_bldg_probability = -pow((p_i.temperature / 273.0 - 1), 2) + 1
-	var nuclear_fusion_reactor_tiles = []
+	var empty_tiles = []
+	var crater_num:int = 0
+	var total_VEI:float = 0.0
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
 			var t_id = i % wid + j * wid
-			if t_id in nuclear_fusion_reactor_tiles:
-				continue
 			if level > 0.5 and p_i.has("lake_1"):
 				if p_i.lake_1.state != "g":
 					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
@@ -3006,6 +2931,7 @@ func generate_tiles(id:int):
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
 				var VEI:float = log(1e6/(coldest_star_temp * u_i.gravitational * randf()) + exp(3.0))
+				total_VEI += VEI
 				generate_volcano(t_id, VEI)
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
@@ -3014,11 +2940,12 @@ func generate_tiles(id:int):
 				if tile_data[t_id].has("ash"):
 					continue
 				tile_data[t_id].crater = {}
-				tile_data[t_id].crater.variant = Helper.rand_int(1, 2)
+				tile_data[t_id].crater.variant = randi() % 2 + 1
 				var depth = ceil(pow(10, rand_range(2, 3)) * pow(crater_size, 0.8))
 				tile_data[t_id].crater.init_depth = depth
 				tile_data[t_id].depth = depth
 				tile_data[t_id].crater.metal = "lead"
+				crater_num += 1
 				for met in met_info:
 					if met == "lead":
 						continue
@@ -3035,8 +2962,27 @@ func generate_tiles(id:int):
 						if not achievement_data.exploration.has("mythril_crater") and met == "mythril":
 							earn_achievement("exploration", "mythril_crater")
 				continue
-			
+			empty_tiles.append(t_id)
+	var unique_bldgs_list = {	"spaceport":log(p_i.pressure + 1), 
+								"mineral_replicator":1.0 + total_VEI / 6.0,
+								"observatory":-log(p_i.pressure / 2.0 + 0.001),
+								"mining_outpost":1.0 + 15.0 * crater_num / pow(wid, 2),
+								"aurora_generator":5.0 if diff == 0 else 1.0,
+								"substation":-log(p_i.pressure / 10.0 + 0.1),
+								"cellulose_synthesizer":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)}
+	if c_s_g != 0:
+		unique_bldgs_list.append({"nuclear_fusion_reactor":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)})
+	var nuclear_fusion_reactor_tiles = []
+	var base_unique_bldg_probability = 0.0
+	if randf() < 20.0 / sqrt(coldest_star_temp):
+		base_unique_bldg_probability = -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	if not home_planet:
+		for t_id in empty_tiles:
+			if t_id in nuclear_fusion_reactor_tiles:
+				continue
 			if randf() < 0.1 / pow(wid, 0.5) * base_unique_bldg_probability:
+				var i = t_id % wid
+				var j = t_id / wid
 				var unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
 				while unique_bldg == "nuclear_fusion_reactor" and (i == wid-1 or j == wid-1):
 					unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
@@ -3044,7 +2990,7 @@ func generate_tiles(id:int):
 					nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
 				if unique_bldg == "spaceport":
 					unique_bldgs_list.erase("spaceport") # 				Save migration
-				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0)}
+				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 				if randf() < -atan(coldest_star_temp / 100.0 - 10.0) / (1.2 * PI) + 0.6:
 					obj.broken = true
 				if p_i.has("unique_bldgs"):
@@ -3054,7 +3000,6 @@ func generate_tiles(id:int):
 						p_i.unique_bldgs[unique_bldg] = [obj]
 				else:
 					p_i.unique_bldgs = {unique_bldg:[obj]}
-			
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
@@ -3091,19 +3036,34 @@ func generate_tiles(id:int):
 		tile_data[random_tile].ship = true
 		if random_tile == N-1:
 			erase_tile(random_tile - 1) 														# Save migration
-			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0), "broken":true}]}
+			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1), "broken":true}]}
 		else:
 			erase_tile(random_tile + 1)
-			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0), "broken":true}]}
+			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1), "broken":true}]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	if p_i.has("unique_bldgs"):
 		for bldg in p_i.unique_bldgs.keys():
 			for i in len(p_i.unique_bldgs[bldg]):
 				for j in ([i, i+1, i+wid, i+1+wid] if bldg == "nuclear_fusion_reactor" else [i]):
+					var tier = p_i.unique_bldgs[bldg][j].tier
 					if tile_data[p_i.unique_bldgs[bldg][j].tile]:
-						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg = {"name":bldg, "tier":p_i.unique_bldgs[bldg][j].tier}
+						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg = {"name":bldg, "tier":tier}
 					else:
-						tile_data[p_i.unique_bldgs[bldg][j].tile] = {"unique_bldg":{"name":bldg, "tier":p_i.unique_bldgs[bldg][j].tier}}
+						tile_data[p_i.unique_bldgs[bldg][j].tile] = {"unique_bldg":{"name":bldg, "tier":tier}}
+					if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
+						earn_achievement("exploration", "tier_2_unique_bldg")
+					if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
+						earn_achievement("exploration", "tier_3_unique_bldg")
+					if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
+						earn_achievement("exploration", "tier_4_unique_bldg")
+					if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
+						earn_achievement("exploration", "tier_5_unique_bldg")
+					if not unique_bldgs_discovered.has(bldg):
+						unique_bldgs_discovered[bldg] += 1
+					else:
+						unique_bldgs_discovered[bldg] = 1
+					if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 7:
+						earn_achievement("exploration", "find_all_unique_bldgs")
 					if p_i.unique_bldgs[bldg][j].has("broken"):
 						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg.broken = true
 	
@@ -3921,6 +3881,7 @@ func fn_save_game():
 		"autocollect":autocollect,
 		"save_date":save_date,
 		"bookmarks":bookmarks,
+		"unique_bldgs_discovered":unique_bldgs_discovered,
 		"cave_filters":cave_filters,
 		"caves_generated":caves_generated,
 		"MM_data":MM_data,
@@ -4042,18 +4003,17 @@ func _on_CloseButton_close_button_out():
 
 func fade_out_title(fn:String):
 	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed", self, "_on_NewGame_pressed")
-	var tween:Tween = Tween.new()
-	add_child(tween)
-	tween.interpolate_property($Title, "modulate", null, Color(1, 1, 1, 0), 0.5)
-	tween.interpolate_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", null, 0.0, 0.5)
-	tween.interpolate_property($Stars/Stars, "modulate", null, Color(1, 1, 1, 0), 0.5)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	tween.queue_free()
-	$Stars/Stars/Sprite.queue_free()
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	tween.tween_property($Title, "modulate", Color(1, 1, 1, 0), 0.5)
+	tween.tween_property($TitleBackground, "modulate", Color(1, 1, 1, 0), 0.5)
+	tween.tween_property($Stars/Stars/Sprite.material, "shader_param/brightness_offset", 0.0, 0.5)
+	tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.5)
+	yield(tween, "finished")
+	$Stars/Stars/Sprite.visible = false
 	$Title.visible = false
 	$Settings/Settings.visible = true
-	switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instance()
 	if fn == "new_game":
 		new_game(false, 0, true)
@@ -4067,8 +4027,6 @@ func _on_NewGame_pressed():
 
 func _on_LoadGame_pressed():
 	toggle_panel(load_panel)
-	#fade_out_title("load_game")
-	#$Title/Menu/VBoxContainer/LoadGame.disconnect("pressed", self, "_on_LoadGame_pressed")
 
 func _on_Autosave_timeout():
 	var config = ConfigFile.new()
@@ -4097,6 +4055,17 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.connect("confirmed", self, "%s_confirm" % type, args)
 	else:
 		YN_panel.connect("confirmed", self, "%s_confirm" % type)
+
+func return_to_menu_confirm():
+	$Ship.visible = false
+	$Autosave.stop()
+	switch_view("")
+	switch_music(load("res://Audio/Title.ogg"))
+	HUD.queue_free()
+	$Title/Menu/VBoxContainer/NewGame.connect("pressed", self, "_on_NewGame_pressed")
+	$Title.visible = true
+	$Stars/Stars/Sprite.visible = true
+	animate_title_buttons()
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})

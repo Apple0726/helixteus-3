@@ -1385,3 +1385,42 @@ func get_roman_num(num:int):
 		res = strs[c][int(num_str[n - c - 1])] + res
 		c += 1
 	return res
+
+func get_spaceport_exit_cost_reduction(tier:int):
+	if tier > 1:
+		return 1.0
+	else:
+		return 0.5
+
+func get_spaceport_travel_cost_reduction(tier:int):
+	if tier > 4:
+		return 1.0
+	else:
+		return [0.25, 0.75, 0.99, 0.9999][tier-1]
+
+func get_spaceport_xp_mult(tier:int):
+	return pow(4, tier-1)
+
+func get_unique_bldg_area(tier:int):
+	return tier * 2 + 1
+
+func get_MR_Obs_Outpost_prod_mult(tier:int):
+	return 1.5 * pow(4, tier-1)
+
+func get_substation_prod_mult(tier:int):
+	return 1.25 * pow(3, tier-1)
+
+func get_substation_capacity_bonus(tier:int):
+	return 1200 * pow(3, tier-1)
+
+func get_AG_au_int_mult(tier:int):
+	return 2.0 * pow(3, tier-1)
+
+func get_AG_num_auroras(tier:int):
+	return 10 * pow(2, tier-1)
+
+func get_NFR_prod_mult(tier:int):
+	return 100 * pow(4, tier-1)
+
+func get_CS_prod_mult(tier:int):
+	return 25 * pow(4, tier-1)

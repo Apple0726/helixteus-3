@@ -238,7 +238,20 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
 		tooltip += "[/color]\n"
 		tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper()) + "\n"
-		tooltip += tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
+		var desc = tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
+		match tile.unique_bldg.name:
+			"spaceport":
+				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tile.unique_bldg.tier) * 100,
+								Helper.get_spaceport_travel_cost_reduction(tile.unique_bldg.tier) * 100]
+			"mineral_replicator", "mining_outpost", "observatory":
+				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.unique_bldg.tier)
+			"substation":
+				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier), "time":Helper.time_to_str(1000 * Helper.get_substation_capacity_bonus(tile.unique_bldg.tier))}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.unique_bldg.tier)
+			"aurora_generator":
+				desc = desc % [Helper.get_AG_au_int_mult(tile.unique_bldg.tier), Helper.get_AG_num_auroras(tile.unique_bldg.tier)]
+			"nuclear_fusion_reactor":
+				desc = desc % Helper.get_NFR_prod_mult(tile.unique_bldg.tier)
+		tooltip += desc
 		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
 		if tile.unique_bldg.has("broken"):
 			tooltip += "\n" + tr("BROKEN_BLDG_DESC1") + "\n"
@@ -1267,6 +1280,7 @@ func add_bldg(id2:int, st:String):
 	v.x = (id2 % wid) * 200
 	v.y = floor(id2 / wid) * 200
 	bldgs[id2] = add_bldg_sprite(v, st)
+	v += Vector2(100, 100)
 	var tile = game.tile_data[id2]
 	match st:
 		"ME":

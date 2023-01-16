@@ -866,3 +866,11 @@ func _on_NextView_mouse_entered():
 
 func _on_HUD_tree_entered():
 	$AnimationPlayer2.play("MoveStuff")
+
+
+func _on_MainMenu_mouse_entered():
+	game.show_tooltip(tr("RETURN_TO_MENU"))
+
+
+func _on_MainMenu_pressed():
+	game.show_YN_panel("return_to_menu", tr("ARE_YOU_SURE"))
