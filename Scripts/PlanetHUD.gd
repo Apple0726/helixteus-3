@@ -34,6 +34,7 @@ func _on_Construct_pressed():
 			if not game.tutorial.tut_num in [2, 3, 4, 5] or not game.tutorial.visible and game.tutorial.tut_num == 4 and game.bottom_info_action == "":
 				game.toggle_panel(game.construct_panel)
 		else:
+			$VBoxContainer/Construct.material.set_shader_param("enabled", false)
 			game.toggle_panel(game.construct_panel)
 
 func _on_Mine_pressed():

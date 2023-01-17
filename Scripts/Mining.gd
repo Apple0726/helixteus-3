@@ -223,7 +223,7 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name") or not tile.has("depth"):
 		return
-	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
+	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
@@ -341,7 +341,6 @@ func _process(delta):
 		cr.velocity.y += 0.6 * delta * 60 * game.u_i.time_speed
 		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed
 		if cr.sprite.position.y > 1000:
-			remove_child(cr.sprite)
 			cr.sprite.free()
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
@@ -359,7 +358,7 @@ func _process(delta):
 			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0))
+			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0))
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):

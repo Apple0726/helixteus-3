@@ -1731,7 +1731,7 @@ func mine_debris(item:Dictionary, delta):
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		var add_progress = Data.rover_mining[item.name].speed * 60 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
+		var add_progress = Data.rover_mining[item.name].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.green
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress

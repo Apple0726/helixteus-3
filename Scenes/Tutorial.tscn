@@ -240,7 +240,6 @@ script = ExtResource( 2 )
 anims/Blinking = SubResource( 1 )
 
 [node name="1" type="Node2D" parent="."]
-visible = false
 
 [node name="Polygon" type="Polygon2D" parent="1"]
 color = Color( 0, 0, 0, 0.615686 )

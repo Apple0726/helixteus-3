@@ -1923,6 +1923,8 @@ func add_planet():
 	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instance()
 	$UI.add_child(planet_HUD)
+	if stats_global.bldgs_built == 0:
+		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_param("enabled", true)
 
 func remove_dimension():
 	if not $UI.is_a_parent_of(HUD):
@@ -2970,8 +2972,19 @@ func generate_tiles(id:int):
 								"aurora_generator":5.0 if diff == 0 else 1.0,
 								"substation":-log(p_i.pressure / 10.0 + 0.1),
 								"cellulose_synthesizer":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)}
+	var unique_bldgs_list_without_NFR = unique_bldgs_list.duplicate()
 	if c_s_g != 0:
-		unique_bldgs_list.append({"nuclear_fusion_reactor":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)})
+		unique_bldgs_list.nuclear_fusion_reactor = log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)
+	var S = 0.0
+	var S2 = 0.0
+	for unique_bldg in unique_bldgs_list.keys():
+		S += unique_bldgs_list[unique_bldg]
+	for unique_bldg in unique_bldgs_list.keys():
+		unique_bldgs_list[unique_bldg] /= S
+	for unique_bldg in unique_bldgs_list_without_NFR.keys():
+		S2 += unique_bldgs_list_without_NFR[unique_bldg]
+	for unique_bldg in unique_bldgs_list_without_NFR.keys():
+		unique_bldgs_list_without_NFR[unique_bldg] /= S2
 	var nuclear_fusion_reactor_tiles = []
 	var base_unique_bldg_probability = 0.0
 	if randf() < 20.0 / sqrt(coldest_star_temp):
@@ -2983,16 +2996,30 @@ func generate_tiles(id:int):
 			if randf() < 0.1 / pow(wid, 0.5) * base_unique_bldg_probability:
 				var i = t_id % wid
 				var j = t_id / wid
-				var unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
-				while unique_bldg == "nuclear_fusion_reactor" and (i == wid-1 or j == wid-1):
-					unique_bldg = unique_bldgs_list[randi() % len(unique_bldgs_list)]
-				if unique_bldg == "nuclear_fusion_reactor":
-					nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
+				var unique_bldg
+				var rand2 = randf()
+				var k = 0
+				if i == wid-1 or j == wid-1:
+					for _unique_bldg in unique_bldgs_list_without_NFR.keys():
+						if rand2 < unique_bldgs_list_without_NFR[_unique_bldg]:
+							unique_bldg = _unique_bldg
+							break
+						else:
+							k += 1
+				else:
+					for _unique_bldg in unique_bldgs_list.keys():
+						if rand2 < unique_bldgs_list[_unique_bldg]:
+							unique_bldg = _unique_bldg
+							break
+						else:
+							k += 1
+					if unique_bldg == "nuclear_fusion_reactor":
+						nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
 				if unique_bldg == "spaceport":
 					unique_bldgs_list.erase("spaceport") # 				Save migration
 				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
-				if randf() < -atan(coldest_star_temp / 100.0 - 10.0) / (1.2 * PI) + 0.6:
-					obj.broken = true
+				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 1000.0) / pow(obj.tier, 2):
+					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.has("unique_bldgs"):
 					if p_i.unique_bldgs.has(unique_bldg):
 						p_i.unique_bldgs[unique_bldg].append(obj)
@@ -3024,7 +3051,8 @@ func generate_tiles(id:int):
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 		tile_data[112] = {}
 		tile_data[112].ship = true
-		p_i.unique_bldgs = {"spaceport":[{"tile":113, "tier":1, "broken":true}]}
+		p_i.unique_bldgs = {"spaceport":[{"tile":113, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers.spaceport}],
+							"mineral_replicator":[{"tile":55, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers.mineral_replicator}]}
 	elif c_p_g == 2:
 		var N:int = len(tile_data)
 		var random_tile:int = randi() % N
@@ -3032,40 +3060,50 @@ func generate_tiles(id:int):
 		var random_tile2:int = random_tile
 		while random_tile == random_tile2:
 			random_tile2 = randi() % N
+		var random_tile3:int = random_tile
+		while random_tile == random_tile3 or random_tile2 == random_tile3:
+			random_tile3 = randi() % N
 		erase_tile(random_tile2)
+		erase_tile(random_tile3)
 		tile_data[random_tile].ship = true
+		var mineral_replicator = {"tile":random_tile3, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
+		var spaceport:Dictionary
+		mineral_replicator.repair_cost = 10000 * system_data[c_s].diff * pow(mineral_replicator.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
 		if random_tile == N-1:
+			spaceport = {"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile - 1) 														# Save migration
-			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1), "broken":true}]}
 		else:
+			spaceport = {"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile + 1)
-			p_i.unique_bldgs = {"spaceport":[{"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1), "broken":true}]}
+		spaceport.repair_cost = 10000 * system_data[c_s].diff * pow(spaceport.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
+		p_i.unique_bldgs = {"spaceport":[spaceport], "mineral_replicator":[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	if p_i.has("unique_bldgs"):
 		for bldg in p_i.unique_bldgs.keys():
 			for i in len(p_i.unique_bldgs[bldg]):
-				for j in ([i, i+1, i+wid, i+1+wid] if bldg == "nuclear_fusion_reactor" else [i]):
-					var tier = p_i.unique_bldgs[bldg][j].tier
-					if tile_data[p_i.unique_bldgs[bldg][j].tile]:
-						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg = {"name":bldg, "tier":tier}
+				var tier = p_i.unique_bldgs[bldg][i].tier
+				var t_id = p_i.unique_bldgs[bldg][i].tile
+				for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == "nuclear_fusion_reactor" else [t_id]):
+					if tile_data[j]:
+						tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
 					else:
-						tile_data[p_i.unique_bldgs[bldg][j].tile] = {"unique_bldg":{"name":bldg, "tier":tier}}
-					if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
-						earn_achievement("exploration", "tier_2_unique_bldg")
-					if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
-						earn_achievement("exploration", "tier_3_unique_bldg")
-					if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
-						earn_achievement("exploration", "tier_4_unique_bldg")
-					if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
-						earn_achievement("exploration", "tier_5_unique_bldg")
-					if not unique_bldgs_discovered.has(bldg):
-						unique_bldgs_discovered[bldg] += 1
-					else:
-						unique_bldgs_discovered[bldg] = 1
-					if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 7:
-						earn_achievement("exploration", "find_all_unique_bldgs")
-					if p_i.unique_bldgs[bldg][j].has("broken"):
-						tile_data[p_i.unique_bldgs[bldg][j].tile].unique_bldg.broken = true
+						tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
+					if p_i.unique_bldgs[bldg][i].has("repair_cost"):
+						tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
+				if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
+					earn_achievement("exploration", "tier_2_unique_bldg")
+				if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
+					earn_achievement("exploration", "tier_3_unique_bldg")
+				if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
+					earn_achievement("exploration", "tier_4_unique_bldg")
+				if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
+					earn_achievement("exploration", "tier_5_unique_bldg")
+				if unique_bldgs_discovered.has(bldg):
+					unique_bldgs_discovered[bldg] += 1
+				else:
+					unique_bldgs_discovered[bldg] = 1
+				if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 7:
+					earn_achievement("exploration", "find_all_unique_bldgs")
 	
 	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0

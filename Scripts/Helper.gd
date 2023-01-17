@@ -731,7 +731,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			else:
 				rsrc_text = ""
 		"MM":
-			rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile), true)
+			rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0), true)
 			current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile), 1.0)
 #		"SPR":
 #			if tile.bldg.has("qty"):
@@ -828,13 +828,13 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			elif tile.bldg.name == "ESF":
 				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
-				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 			elif tile.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 			elif tile.bldg.name == "PP":
-				game.autocollect.rsrc.energy += tile.bldg.path_1_value * overclock_mult
+				game.autocollect.rsrc.energy += tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 			elif tile.bldg.name == "SP":
-				var SP_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile))
+				var SP_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 				game.autocollect.rsrc.energy += SP_prod
 				if tile.has("aurora"):
 					if game.aurora_prod.has(tile.aurora.au_int):
@@ -842,10 +842,16 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					else:
 						game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 			elif tile.bldg.name == "AE":
+				var base = tile.bldg.path_1_value * overclock_mult
 				for el in p_i.atmosphere:
-					var base_prod:float = tile.bldg.path_1_value * overclock_mult * p_i.atmosphere[el] * p_i.pressure
+					var base_prod:float = base * p_i.atmosphere[el] * p_i.pressure
 					game.show[el] = true
 					add_atom_production(el, base_prod)
+				if p_i.has("unique_bldg"):
+					if p_i.unique_bldg.has("nuclear_fusion_reactor"):
+						add_energy_from_nfr(p_i, base)
+					elif p_i.unique_bldg.has("cellulose_synthesizer"):
+						add_energy_from_cs(p_i, base)
 			elif tile.bldg.name == "PC":
 				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
@@ -891,6 +897,36 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			if game.tutorial and game.help.tutorial < 26:
 				game.HUD.refresh()
 	return update_boxes
+
+func add_energy_from_nfr(p_i:Dictionary, base:float):
+	for nfr in p_i.unique_bldg.nuclear_fusion_reactor:
+		var unique_mult = Helper.get_NFR_prod_mult(nfr.tier)
+		if not nfr.has("repair_cost"):
+			for el in ["NH3", "CH4", "H2O", "H"]:
+				if not p_i.atmosphere.has(el):
+					continue
+				if el == "NH3":
+					game.autocollect.rsrc.energy += base * unique_mult * 3
+				elif el == "CH4":
+					game.autocollect.rsrc.energy += base * unique_mult * 4
+				elif el == "H2O":
+					game.autocollect.rsrc.energy += base * unique_mult * 2
+				elif el == "H":
+					game.autocollect.rsrc.energy += base * unique_mult
+
+func add_energy_from_cs(p_i:Dictionary, base:float):
+	for cs in p_i.unique_bldg.cellulose_synthesizer:
+		var unique_mult = Helper.get_CS_prod_mult(cs.tier)
+		if not cs.has("repair_cost"):
+			for el in ["H", "NH3", "CO2", "O", "CH4", "H2O"]:
+				if not p_i.atmosphere.has(el):
+					continue
+				if el == "NH3":
+					game.autocollect.mats.cellulose += base * unique_mult * 3
+				elif el == "CH4":
+					game.autocollect.rsrc.energy += base * unique_mult * 4
+				elif el == "H2O":
+					game.autocollect.rsrc.energy += base * unique_mult * 2
 
 func add_atom_production(el:String, base_prod:float):
 	if el == "NH3":
@@ -1405,10 +1441,10 @@ func get_unique_bldg_area(tier:int):
 	return tier * 2 + 1
 
 func get_MR_Obs_Outpost_prod_mult(tier:int):
-	return 1.5 * pow(4, tier-1)
+	return 2.5 * pow(4, tier-1)
 
 func get_substation_prod_mult(tier:int):
-	return 1.25 * pow(3, tier-1)
+	return 1.5 * pow(3, tier-1)
 
 func get_substation_capacity_bonus(tier:int):
 	return 1200 * pow(3, tier-1)

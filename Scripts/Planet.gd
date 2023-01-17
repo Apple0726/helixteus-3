@@ -126,7 +126,7 @@ func _ready():
 					$Soil.update_bitmask_region()
 			elif tile.has("unique_bldg"):
 				var mod:Color = Color.white
-				if tile.unique_bldg.has("broken"):
+				if tile.unique_bldg.has("repair_cost"):
 					mod = Color(0.3, 0.3, 0.3)
 				if tile.unique_bldg.name == "nuclear_fusion_reactor":
 					if id2 in nuclear_fusion_reactor_main_tiles:
@@ -230,7 +230,7 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("unique_bldg"):
 		var tier_colors = ["FFFFFF", "00EE00", "2222FF", "FF22FF", "FF8800", "FFFF22", "FF0000"]
 		tooltip += "[color=#%s]" % tier_colors[tile.unique_bldg.tier - 1]
-		if tile.unique_bldg.has("broken"):
+		if tile.unique_bldg.has("repair_cost"):
 			tooltip += tr("BROKEN_X").format({"building_name":tr(tile.unique_bldg.name.to_upper())})
 		else:
 			tooltip += tr(tile.unique_bldg.name.to_upper())
@@ -253,10 +253,10 @@ func show_tooltip(tile, tile_id:int):
 				desc = desc % Helper.get_NFR_prod_mult(tile.unique_bldg.tier)
 		tooltip += desc
 		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
-		if tile.unique_bldg.has("broken"):
+		if tile.unique_bldg.has("repair_cost"):
 			tooltip += "\n" + tr("BROKEN_BLDG_DESC1") + "\n"
 			icons.append(Data.money_icon)
-			tooltip += tr("BROKEN_BLDG_DESC2") % 0.0
+			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.unique_bldg.repair_cost, true)
 			icons.append(Data.money_icon)
 	elif tile.has("volcano"):
 		game.help_str = "volcano_desc"
@@ -722,7 +722,6 @@ func add_shadows():
 func remove_selected_tiles():
 	tiles_selected.clear()
 	for white_rect in get_tree().get_nodes_in_group("white_rects"):
-		remove_child(white_rect)
 		white_rect.queue_free()
 		white_rect.remove_from_group("white_rects")
 
@@ -739,7 +738,6 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 		callv(fn, fn_args)
 	elif new_x < old_x:
 		callv(fn, fn_args)
-	#prints(round(mouse_pos.y - 100), round(mouse_pos.y - delta.y - 100))
 	if new_y > old_y:
 		callv(fn, fn_args)
 	elif new_y < old_y:
@@ -939,6 +937,8 @@ func _unhandled_input(event):
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
+	if not is_instance_valid(game.planet_HUD):
+		return
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:
 		mouse_pos = to_local(event.position)
@@ -977,8 +977,8 @@ func _unhandled_input(event):
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("CBD_white_rects")
-				if tile and tile.has("bldg") and tile.bldg.name == "CBD":
-					var n:int = tile.bldg.path_3_value
+				if tile and (tile.has("bldg") and tile.bldg.name == "CBD" or tile.has("unique_bldg") and tile.unique_bldg.name in ["mineral_replicator", "observatory", "substation", "mining_outpost"]):
+					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_unique_bldg_area(tile.unique_bldg.tier)
 					for i in n:
 						var x:int = x_over + i - n / 2
 						if x < 0 or x >= wid:
@@ -1069,26 +1069,17 @@ func _unhandled_input(event):
 				else:
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
-			elif tile.has("cave") or tile.has("ruins") or tile.has("diamond_tower"):
-				if tile.has("cave") and tile.cave.has("special_cave") and tile.cave.special_cave == 4:
-					if not game.fourth_ship_hints.barrier_broken:
-						if not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
-							game.popup(tr("CAVE_BLOCKED"), 2.0)
-							return
-						var rsrc = {"sapphire":1000000, "emerald":1000000, "ruby":1000000, "topaz":1000000, "amethyst":1000000, "quartz":1000000}
-						if game.check_enough(rsrc):
-							game.deduct_resources(rsrc)
-							game.fourth_ship_hints.barrier_broken = true
-						else:
-							game.popup(tr("CAVE_BLOCKED"), 2.0)
-							return
+			elif tile.has("unique_bldg"):
+				if tile.unique_bldg.has("repair_cost") and game.money >= tile.unique_bldg.repair_cost:
+					game.money -= tile.unique_bldg.repair_cost
+					tile.unique_bldg.erase("repair_cost")
+					p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
+					set_unique_bldg_bonuses(tile.unique_bldg, x_pos, y_pos)
+			elif tile.has("cave"):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
 					game.rover_id = rover_selected
-					if tile.has("cave") or tile.has("diamond_tower"):
-						game.switch_view("cave")
-					else:
-						game.switch_view("ruins")
+					game.switch_view("cave")
 				else:
 					if (game.show.has("vehicles_button") or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
 						game.toggle_panel(game.vehicle_panel)
@@ -1123,103 +1114,162 @@ func _unhandled_input(event):
 					elif not game.get_node("UI/PopupBackground").visible:
 						game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 			elif tile.has("wormhole"):
-				if tile.wormhole.active:
-					if game.universe_data[game.c_u].lv < 18:
-						game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
-						return
-					Helper.update_ship_travel()
-					if game.ships_travel_view != "-":
-						game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
-						return
-					if Helper.ships_on_planet(p_id):
-						if game.view_tween.is_active():
-							return
-						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
-						game.view_tween.start()
-						yield(game.view_tween, "tween_all_completed")
-						rsrcs.clear()
-						if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
-							visible = false
-							if game.galaxy_data[game.c_g].has("wormholes"):
-								game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
-							else:
-								game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
-							if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
-								yield(game.start_system_generation(), "completed")
-							else:
-								Helper.save_obj("Clusters", game.c_c, game.galaxy_data)
-							var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]
-							var orig_s_l:int = game.c_s
-							var orig_s_g:int = game.c_s_g
-							var orig_p_l:int = game.c_p
-							var orig_p_g:int = game.c_p_g
-							view.save_zooms("planet")
-							Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-							game.c_s = tile.wormhole.l_dest_s_id
-							game.c_s_g = tile.wormhole.g_dest_s_id
-							if wh_system.has("discovered"):#if system generated planets
-								game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
-							else:
-								game.planet_data.clear()
-								game.generate_planets(tile.wormhole.l_dest_s_id)
-							var wh_planet = game.planet_data[randi() % wh_system.planet_num]
-							while wh_planet.type in [11, 12]:
-								wh_planet = game.planet_data[randi() % wh_system.planet_num]
-							game.planet_data[wh_planet.l_id].conquered = true
-							game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
-							game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
-							game.tile_data[tile_id].wormhole.new = false
-							Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
-							game.c_p = wh_planet.l_id
-							game.c_p_g = wh_planet.id
-							if not wh_planet.has("discovered"):
-								game.generate_tiles(wh_planet.l_id)
-							game.tile_data = game.open_obj("Planets", wh_planet.id)
-							var wh_tile:int = randi() % len(game.tile_data)
-							while game.tile_data[wh_tile] and (game.tile_data[wh_tile].has("ship_locator_depth") or game.tile_data[wh_tile].has("cave")):
-								wh_tile = randi() % len(game.tile_data)
-							game.erase_tile(wh_tile)
-							game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
-							Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
-						else:
-							game.switch_view("", {"dont_fade_anim":true})
-							game.c_p = tile.wormhole.l_dest_p_id
-							game.c_p_g = tile.wormhole.g_dest_p_id
-							game.c_s = tile.wormhole.l_dest_s_id
-							game.c_s_g = tile.wormhole.g_dest_s_id
-							game.tile_data = game.open_obj("Planets", game.c_p_g)
-							game.planet_data = game.open_obj("Systems", game.c_s_g)
-						game.ships_c_coords.p = game.c_p
-						game.ships_dest_coords.p = game.c_p
-						game.ships_c_coords.s = game.c_s
-						game.ships_dest_coords.s = game.c_s
-						game.ships_c_g_coords.s = game.c_s_g
-						game.ships_dest_g_coords.s = game.c_s_g
-						game.switch_view("planet", {"dont_save_zooms":true, "dont_fade_anim":true})
-						game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
-						game.view_tween.start()
-					else:
-						game.send_ships_panel.dest_p_id = p_id
-						game.toggle_panel(game.send_ships_panel)
-				else:
-					if not tile.wormhole.has("investigation_length"):
-						var costs:Dictionary = get_wh_costs()
-						if game.SP >= costs.SP:
-							if not game.objective.empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
-								game.objective.current += 1
-							game.SP -= costs.SP
-							game.stats_univ.wormholes_activated += 1
-							game.stats_dim.wormholes_activated += 1
-							game.stats_global.wormholes_activated += 1
-							tile.wormhole.investigation_length = costs.time * 1000
-							tile.wormhole.investigation_date = curr_time
-							game.popup(tr("INVESTIGATION_STARTED"), 2.0)
-							add_time_bar(tile_id, "wormhole")
-						else:
-							game.popup(tr("NOT_ENOUGH_SP"), 1.5)
+				on_wormhole_click(tile, tile_id)
 			game.show_collect_info(items_collected)
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
+
+func on_wormhole_click(tile:Dictionary, tile_id:int):
+	if tile.wormhole.active:
+		if game.universe_data[game.c_u].lv < 18:
+			game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
+			return
+		Helper.update_ship_travel()
+		if game.ships_travel_view != "-":
+			game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
+			return
+		if Helper.ships_on_planet(p_id):
+			if game.view_tween.is_active():
+				return
+			game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+			game.view_tween.start()
+			yield(game.view_tween, "tween_all_completed")
+			rsrcs.clear()
+			if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
+				visible = false
+				if game.galaxy_data[game.c_g].has("wormholes"):
+					game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
+				else:
+					game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
+				if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
+					yield(game.start_system_generation(), "completed")
+				else:
+					Helper.save_obj("Clusters", game.c_c, game.galaxy_data)
+				var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]
+				var orig_s_l:int = game.c_s
+				var orig_s_g:int = game.c_s_g
+				var orig_p_l:int = game.c_p
+				var orig_p_g:int = game.c_p_g
+				view.save_zooms("planet")
+				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+				game.c_s = tile.wormhole.l_dest_s_id
+				game.c_s_g = tile.wormhole.g_dest_s_id
+				if wh_system.has("discovered"):#if system generated planets
+					game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
+				else:
+					game.planet_data.clear()
+					game.generate_planets(tile.wormhole.l_dest_s_id)
+				var wh_planet = game.planet_data[randi() % wh_system.planet_num]
+				while wh_planet.type in [11, 12]:
+					wh_planet = game.planet_data[randi() % wh_system.planet_num]
+				game.planet_data[wh_planet.l_id].conquered = true
+				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
+				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
+				game.tile_data[tile_id].wormhole.new = false
+				Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
+				game.c_p = wh_planet.l_id
+				game.c_p_g = wh_planet.id
+				if not wh_planet.has("discovered"):
+					game.generate_tiles(wh_planet.l_id)
+				game.tile_data = game.open_obj("Planets", wh_planet.id)
+				var wh_tile:int = randi() % len(game.tile_data)
+				while game.tile_data[wh_tile] and (game.tile_data[wh_tile].has("ship_locator_depth") or game.tile_data[wh_tile].has("cave")):
+					wh_tile = randi() % len(game.tile_data)
+				game.erase_tile(wh_tile)
+				game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
+				Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
+			else:
+				game.switch_view("", {"dont_fade_anim":true})
+				game.c_p = tile.wormhole.l_dest_p_id
+				game.c_p_g = tile.wormhole.g_dest_p_id
+				game.c_s = tile.wormhole.l_dest_s_id
+				game.c_s_g = tile.wormhole.g_dest_s_id
+				game.tile_data = game.open_obj("Planets", game.c_p_g)
+				game.planet_data = game.open_obj("Systems", game.c_s_g)
+			game.ships_c_coords.p = game.c_p
+			game.ships_dest_coords.p = game.c_p
+			game.ships_c_coords.s = game.c_s
+			game.ships_dest_coords.s = game.c_s
+			game.ships_c_g_coords.s = game.c_s_g
+			game.ships_dest_g_coords.s = game.c_s_g
+			game.switch_view("planet", {"dont_save_zooms":true, "dont_fade_anim":true})
+			game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
+			game.view_tween.start()
+		else:
+			game.send_ships_panel.dest_p_id = p_id
+			game.toggle_panel(game.send_ships_panel)
+	else:
+		if not tile.wormhole.has("investigation_length"):
+			var costs:Dictionary = get_wh_costs()
+			if game.SP >= costs.SP:
+				if not game.objective.empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
+					game.objective.current += 1
+				game.SP -= costs.SP
+				game.stats_univ.wormholes_activated += 1
+				game.stats_dim.wormholes_activated += 1
+				game.stats_global.wormholes_activated += 1
+				tile.wormhole.investigation_length = costs.time * 1000
+				tile.wormhole.investigation_date = OS.get_system_time_msecs()
+				game.popup(tr("INVESTIGATION_STARTED"), 2.0)
+				add_time_bar(tile_id, "wormhole")
+			else:
+				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
+
+func set_unique_bldg_bonuses(unique_bldg:Dictionary, x_pos:int, y_pos:int):
+	var tier = unique_bldg.tier
+	var n = Helper.get_unique_bldg_area(tier)
+	if unique_bldg.name in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
+		for i in n:
+			var x:int = x_pos + i - n / 2
+			if x < 0 or x >= wid:
+				continue
+			for j in n:
+				var y:int = y_pos + j - n / 2
+				if y < 0 or y >= wid or x == x_pos and y == y_pos:
+					continue
+				var id:int = x + y * wid
+				var tile = game.tile_data[id]
+				if tile:
+					var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
+					tile[str(unique_bldg.name + "_bonus")] = mult
+					if tile.has("bldg") and not tile.bldg.has("is_constructing") and unique_bldg.name != "mining_outpost":
+						var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+						var base = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+						if unique_bldg.name == "mineral_replicator" and tile.bldg.name == "ME":
+							game.autocollect.rsrc.minerals += base * (tile.ash.richness if tile.has("ash") else 1.0)
+						elif unique_bldg.name == "observatory" and tile.bldg.name == "RL":
+							game.autocollect.rsrc.SP += base
+						elif unique_bldg.name == "substation":
+							if tile.bldg.name == "PP":
+								game.autocollect.rsrc.energy += base
+							elif tile.bldg.name == "SP":
+								var SP_prod = Helper.get_SP_production(p_i.temperature, base * Helper.get_au_mult(tile))
+								game.autocollect.rsrc.energy += SP_prod
+								if tile.has("aurora"):
+									if game.aurora_prod.has(tile.aurora.au_int):
+										game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
+									else:
+										game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
+				else:
+					game.tile_data[id] = {str(unique_bldg.name + "_bonus"):Helper.get_MR_Obs_Outpost_prod_mult(tier)}
+	elif unique_bldg.name == "nuclear_fusion_reactor":
+		for tile in game.tile_data:
+			if tile and tile.has("bldg") and not tile.bldg.name == "AE" and tile.bldg.has("is_constructing"):
+				var mult = Helper.get_NFR_prod_mult(unique_bldg.tier)
+				var overclock_mult = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+				var base = tile.bldg.path_1_value * overclock_mult * mult
+				for el in ["NH3", "CH4", "H2O", "H"]:
+					if not p_i.atmosphere.has(el):
+						continue
+					var base_prod:float = base * p_i.atmosphere[el] * p_i.pressure
+					if el == "NH3":
+						game.autocollect.rsrc.energy += mult * base_prod * 3
+					elif el == "CH4":
+						game.autocollect.rsrc.energy += mult * base_prod * 4
+					elif el == "H2O":
+						game.autocollect.rsrc.energy += mult * base_prod * 2
+					elif el == "H":
+						game.autocollect.rsrc.energy += mult * base_prod
 
 func hide_tooltip():
 	if game.get_node("UI").has_node("BuildingShortcuts"):

@@ -552,3 +552,14 @@ var unique_bldg_icons = {
 	"observatory":[SP_icon],
 	"cellulose_synthesizer":[preload("res://Graphics/Materials/cellulose.png")],
 }
+
+var unique_bldg_repair_cost_multipliers = {
+	"spaceport":1.2,
+	"mineral_replicator":2.4,
+	"substation":2.5,
+	"aurora_generator":3.0,
+	"nuclear_fusion_reactor":8.5,
+	"mining_outpost":1.0,
+	"observatory":2.8,
+	"cellulose_synthesizer":1.5,
+}
