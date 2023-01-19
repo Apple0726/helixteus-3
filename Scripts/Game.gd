@@ -2967,10 +2967,10 @@ func generate_tiles(id:int):
 			empty_tiles.append(t_id)
 	var unique_bldgs_list = {	"spaceport":log(p_i.pressure + 1), 
 								"mineral_replicator":1.0 + total_VEI / 6.0,
-								"observatory":-log(p_i.pressure / 2.0 + 0.001),
+								"observatory":max(-log(p_i.pressure / 2.0 + 0.001), 0),
 								"mining_outpost":1.0 + 15.0 * crater_num / pow(wid, 2),
 								"aurora_generator":5.0 if diff == 0 else 1.0,
-								"substation":-log(p_i.pressure / 10.0 + 0.1),
+								"substation":max(-log(p_i.pressure / 10.0 + 0.1), 0),
 								"cellulose_synthesizer":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)}
 	var unique_bldgs_list_without_NFR = unique_bldgs_list.duplicate()
 	if c_s_g != 0:
@@ -2989,7 +2989,9 @@ func generate_tiles(id:int):
 	var base_unique_bldg_probability = 0.0
 	if randf() < 20.0 / sqrt(coldest_star_temp):
 		base_unique_bldg_probability = -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	planet_data[id].unique_bldgs = {}
 	if not home_planet:
+		var spaceport_spawned = false
 		for t_id in empty_tiles:
 			if t_id in nuclear_fusion_reactor_tiles:
 				continue
@@ -2999,34 +3001,36 @@ func generate_tiles(id:int):
 				var unique_bldg
 				var rand2 = randf()
 				var k = 0
+				var S3 = 0
 				if i == wid-1 or j == wid-1:
 					for _unique_bldg in unique_bldgs_list_without_NFR.keys():
-						if rand2 < unique_bldgs_list_without_NFR[_unique_bldg]:
+						if rand2 < unique_bldgs_list_without_NFR[_unique_bldg] + S3:
 							unique_bldg = _unique_bldg
 							break
 						else:
 							k += 1
+							S += unique_bldgs_list_without_NFR[_unique_bldg]
 				else:
 					for _unique_bldg in unique_bldgs_list.keys():
-						if rand2 < unique_bldgs_list[_unique_bldg]:
+						if rand2 < unique_bldgs_list[_unique_bldg] + S3:
 							unique_bldg = _unique_bldg
 							break
 						else:
 							k += 1
+							S3 += unique_bldgs_list[_unique_bldg]
 					if unique_bldg == "nuclear_fusion_reactor":
 						nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
 				if unique_bldg == "spaceport":
-					unique_bldgs_list.erase("spaceport") # 				Save migration
+					if spaceport_spawned:
+						continue
+					spaceport_spawned = true					#Save migration
 				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 1000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
-				if p_i.has("unique_bldgs"):
-					if p_i.unique_bldgs.has(unique_bldg):
-						p_i.unique_bldgs[unique_bldg].append(obj)
-					else:
-						p_i.unique_bldgs[unique_bldg] = [obj]
+				if p_i.unique_bldgs.has(unique_bldg):
+					p_i.unique_bldgs[unique_bldg].append(obj)
 				else:
-					p_i.unique_bldgs = {unique_bldg:[obj]}
+					p_i.unique_bldgs[unique_bldg] = [obj]
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
@@ -3078,32 +3082,31 @@ func generate_tiles(id:int):
 		spaceport.repair_cost = 10000 * system_data[c_s].diff * pow(spaceport.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
 		p_i.unique_bldgs = {"spaceport":[spaceport], "mineral_replicator":[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-	if p_i.has("unique_bldgs"):
-		for bldg in p_i.unique_bldgs.keys():
-			for i in len(p_i.unique_bldgs[bldg]):
-				var tier = p_i.unique_bldgs[bldg][i].tier
-				var t_id = p_i.unique_bldgs[bldg][i].tile
-				for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == "nuclear_fusion_reactor" else [t_id]):
-					if tile_data[j]:
-						tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
-					else:
-						tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
-					if p_i.unique_bldgs[bldg][i].has("repair_cost"):
-						tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
-				if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
-					earn_achievement("exploration", "tier_2_unique_bldg")
-				if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
-					earn_achievement("exploration", "tier_3_unique_bldg")
-				if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
-					earn_achievement("exploration", "tier_4_unique_bldg")
-				if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
-					earn_achievement("exploration", "tier_5_unique_bldg")
-				if unique_bldgs_discovered.has(bldg):
-					unique_bldgs_discovered[bldg] += 1
+	for bldg in p_i.unique_bldgs.keys():
+		for i in len(p_i.unique_bldgs[bldg]):
+			var tier = p_i.unique_bldgs[bldg][i].tier
+			var t_id = p_i.unique_bldgs[bldg][i].tile
+			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == "nuclear_fusion_reactor" else [t_id]):
+				if tile_data[j]:
+					tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
 				else:
-					unique_bldgs_discovered[bldg] = 1
-				if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 7:
-					earn_achievement("exploration", "find_all_unique_bldgs")
+					tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
+				if p_i.unique_bldgs[bldg][i].has("repair_cost"):
+					tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
+			if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
+				earn_achievement("exploration", "tier_2_unique_bldg")
+			if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
+				earn_achievement("exploration", "tier_3_unique_bldg")
+			if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
+				earn_achievement("exploration", "tier_4_unique_bldg")
+			if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
+				earn_achievement("exploration", "tier_5_unique_bldg")
+			if unique_bldgs_discovered.has(bldg):
+				unique_bldgs_discovered[bldg] += 1
+			else:
+				unique_bldgs_discovered[bldg] = 1
+			if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 8:
+				earn_achievement("exploration", "find_all_unique_bldgs")
 	
 	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0
@@ -4415,10 +4418,11 @@ func _on_MMTimer_timeout():
 				var tile = _tile_data[t_id]
 				if not tile or not tile.has("bldg"):
 					continue
-				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
+				var prod_mult = Helper.get_prod_mult(tile)
+				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * prod_mult
 				if tiles_mined >= 1:
 					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
-					tile.bldg.collect_date += int(tiles_mined) * 1000.0 / tile.bldg.path_1_value / Helper.get_prod_mult(tile)
+					tile.bldg.collect_date += int(tiles_mined) * 1000.0 / tile.bldg.path_1_value / prod_mult
 					tile.depth += int(tiles_mined)
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
 						tile.erase("crater")
@@ -4435,7 +4439,8 @@ func _on_MMTimer_timeout():
 					MM_data.erase(p)
 					return
 				p_i = _planet_data[MM_data[p].c_p]
-			var tiles_mined = (curr_time - p_i.bldg.collect_date) / 1000.0 * p_i.bldg.path_1_value * Helper.get_prod_mult(p_i)
+			var prod_mult = Helper.get_prod_mult(p_i)
+			var tiles_mined = (curr_time - p_i.bldg.collect_date) / 1000.0 * p_i.bldg.path_1_value * prod_mult
 			if tiles_mined >= 1:
 				var rsrc_mined = Helper.mass_generate_rock(p_i, p_i, int(tiles_mined))
 				for rsrc in rsrc_mined.keys():
@@ -4445,7 +4450,7 @@ func _on_MMTimer_timeout():
 					else:
 						rsrc_mined[rsrc] *= p_i.tile_num
 				add_resources(rsrc_mined)
-				p_i.bldg.collect_date += int(tiles_mined) / p_i.bldg.path_1_value / Helper.get_prod_mult(p_i) * 1000.0
+				p_i.bldg.collect_date += int(tiles_mined) / p_i.bldg.path_1_value / prod_mult * 1000.0
 				p_i.depth += int(tiles_mined)
 			if MM_data[p].c_s_g != c_s_g:
 				Helper.save_obj("Systems", MM_data[p].c_s_g, _planet_data)

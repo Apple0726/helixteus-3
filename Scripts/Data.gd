@@ -122,6 +122,7 @@ var time_icon = preload("res://Graphics/Icons/Time.png")
 var stone_icon = preload("res://Graphics/Icons/stone.png")
 var SP_icon = preload("res://Graphics/Icons/SP.png")
 var glass_icon = preload("res://Graphics/Materials/glass.png")
+var cellulose_icon = preload("res://Graphics/Materials/cellulose.png")
 var sand_icon = preload("res://Graphics/Materials/sand.png")
 var coal_icon = preload("res://Graphics/Materials/coal.png")
 var MM_icon = preload("res://Graphics/Icons/MM.png")
@@ -550,7 +551,7 @@ var unique_bldg_icons = {
 	"nuclear_fusion_reactor":[energy_icon],
 	"mining_outpost":[],
 	"observatory":[SP_icon],
-	"cellulose_synthesizer":[preload("res://Graphics/Materials/cellulose.png")],
+	"cellulose_synthesizer":[cellulose_icon],
 }
 
 var unique_bldg_repair_cost_multipliers = {

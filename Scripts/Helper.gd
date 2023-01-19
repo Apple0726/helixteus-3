@@ -676,75 +676,80 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var current_bar_value = 0
 	var capacity_bar_value = 0
 	var rsrc_text = ""
+	if tile.has("unique_bldg"):
+		current_bar_value = tile.unique_bldg.production if tile.unique_bldg.has("production") else 0.0
+		if tile.unique_bldg.name == "cellulose_synthesizer":
+			rsrc_text = "%s kg/s" % current_bar_value
+		elif tile.unique_bldg.name == "nuclear_fusion_reactor":
+			rsrc_text = "%s/s" % current_bar_value
+		if is_instance_valid(rsrc):
+			rsrc.set_current_bar_value(current_bar_value)
+			rsrc.set_capacity_bar_value(capacity_bar_value)
+			rsrc.set_text(rsrc_text)
+		return
 	if not is_instance_valid(rsrc) and tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
 		return
 	if tile.bldg.has("construction_date"):
 		update_bldg_constr(tile, p_i)
 		if tile.bldg.has("is_constructing"):
 			return
-	match tile.bldg.name:
-		"AE":
-			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
-			rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"ME":
-			var prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0)
-			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"SP":
-			var prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile))
-			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"PP", "RL":
-			var prod = tile.bldg.path_1_value * get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"PC", "NC":
-			var prod = tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"EC":
-			var prod = tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
-			rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-		"SC":
-			if tile.bldg.has("stone"):
-				var c_i = get_crush_info(tile)
-				rsrc_text = String(c_i.qty_left)
-				capacity_bar_value = 1 - c_i.progress
-			else:
-				rsrc_text = ""
-				capacity_bar_value = 0
-		"GF":
-			if tile.bldg.has("qty1"):
-				var prod_i = get_prod_info(tile)
-				rsrc_text = "%s kg" % [prod_i.qty_made]
-				capacity_bar_value = prod_i.progress
-			else:
-				rsrc_text = ""
-				capacity_bar_value = 0
-		"SE":
-			if tile.bldg.has("qty1"):
-				var prod_i = get_prod_info(tile)
-				rsrc_text = "%s" % [round(prod_i.qty_made)]
-				capacity_bar_value = prod_i.progress
-			else:
-				rsrc_text = ""
-				capacity_bar_value = 0
-		"GH":
-			if tile.has("auto_GH"):
-				rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
-			else:
-				rsrc_text = ""
-		"MM":
-			rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0), true)
-			current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile), 1.0)
-#		"SPR":
-#			if tile.bldg.has("qty"):
-#				var reaction_info = get_reaction_info(tile)
-#				var MM_value = reaction_info.MM_value
-#				capacity_bar.value = reaction_info.progress
-#				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
-#			else:
-#				rsrc_text.text = ""
-#				capacity_bar.value = 0
-		_:
-			if Mods.added_buildings.has(tile.bldg.name):
-				Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
+	var prod:float
+	if tile.bldg.name == "AE":
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
+		rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "ME":
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "SP":
+		prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "PP":
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "RL":
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name in ["PC", "NC"]:
+		prod = tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "EC":
+		prod = tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "SC":
+		if tile.bldg.has("stone"):
+			var c_i = get_crush_info(tile)
+			rsrc_text = String(c_i.qty_left)
+			capacity_bar_value = 1 - c_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "GF":
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
+			rsrc_text = "%s kg" % [prod_i.qty_made]
+			capacity_bar_value = prod_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "SE":
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
+			rsrc_text = "%s" % [round(prod_i.qty_made)]
+			capacity_bar_value = prod_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "GH":
+		if tile.has("auto_GH"):
+			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
+		else:
+			rsrc_text = ""
+	elif tile.bldg.name == "MM":
+		rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0), true)
+		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * get_prod_mult(tile), 1.0)
+	else:
+		if Mods.added_buildings.has(tile.bldg.name):
+			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
 	if is_instance_valid(rsrc):
 		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
@@ -842,16 +847,13 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					else:
 						game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 			elif tile.bldg.name == "AE":
-				var base = tile.bldg.path_1_value * overclock_mult
+				var base = tile.bldg.path_1_value * overclock_mult * p_i.pressure
 				for el in p_i.atmosphere:
-					var base_prod:float = base * p_i.atmosphere[el] * p_i.pressure
+					var base_prod:float = base * p_i.atmosphere[el]
 					game.show[el] = true
 					add_atom_production(el, base_prod)
-				if p_i.has("unique_bldg"):
-					if p_i.unique_bldg.has("nuclear_fusion_reactor"):
-						add_energy_from_nfr(p_i, base)
-					elif p_i.unique_bldg.has("cellulose_synthesizer"):
-						add_energy_from_cs(p_i, base)
+				add_energy_from_NFR(p_i, base)
+				add_energy_from_CS(p_i, base)
 			elif tile.bldg.name == "PC":
 				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
 			elif tile.bldg.name == "NC":
@@ -898,35 +900,52 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.HUD.refresh()
 	return update_boxes
 
-func add_energy_from_nfr(p_i:Dictionary, base:float):
+func add_energy_from_NFR(p_i:Dictionary, base:float):
+	if not p_i.unique_bldg.has("nuclear_fusion_reactor"):
+		return
 	for nfr in p_i.unique_bldg.nuclear_fusion_reactor:
 		var unique_mult = Helper.get_NFR_prod_mult(nfr.tier)
 		if not nfr.has("repair_cost"):
-			for el in ["NH3", "CH4", "H2O", "H"]:
-				if not p_i.atmosphere.has(el):
-					continue
-				if el == "NH3":
-					game.autocollect.rsrc.energy += base * unique_mult * 3
-				elif el == "CH4":
-					game.autocollect.rsrc.energy += base * unique_mult * 4
-				elif el == "H2O":
-					game.autocollect.rsrc.energy += base * unique_mult * 2
-				elif el == "H":
-					game.autocollect.rsrc.energy += base * unique_mult
+			var S = 0.0
+			if p_i.atmosphere.has("NH3"):
+				S += base * unique_mult * 3 * p_i.atmosphere.NH3
+			if p_i.atmosphere.has("CH4"):
+				S += base * unique_mult * 4 * p_i.atmosphere.CH4
+			if p_i.atmosphere.has("H2O"):
+				S += base * unique_mult * 2 * p_i.atmosphere.H2O
+			if p_i.atmosphere.has("H"):
+				S += base * unique_mult * 1 * p_i.atmosphere.H
+			game.autocollect.rsrc.energy += S
+			game.tile_data[nfr.tile].unique_bldg.production = S
 
-func add_energy_from_cs(p_i:Dictionary, base:float):
+func add_energy_from_CS(p_i:Dictionary, base:float):
+	if not p_i.unique_bldg.has("cellulose_synthesizer"):
+		return
 	for cs in p_i.unique_bldg.cellulose_synthesizer:
 		var unique_mult = Helper.get_CS_prod_mult(cs.tier)
 		if not cs.has("repair_cost"):
-			for el in ["H", "NH3", "CO2", "O", "CH4", "H2O"]:
-				if not p_i.atmosphere.has(el):
-					continue
-				if el == "NH3":
-					game.autocollect.mats.cellulose += base * unique_mult * 3
-				elif el == "CH4":
-					game.autocollect.rsrc.energy += base * unique_mult * 4
-				elif el == "H2O":
-					game.autocollect.rsrc.energy += base * unique_mult * 2
+			var cellulose = {"C":0, "H":0, "O":0}
+			if p_i.atmosphere.has("NH3"):
+				cellulose.H += p_i.atmosphere.NH3 * 3
+			if p_i.atmosphere.has("CH4"):
+				cellulose.C += p_i.atmosphere.CH4
+				cellulose.H += p_i.atmosphere.CH4 * 4
+			if p_i.atmosphere.has("H2O"):
+				cellulose.H += p_i.atmosphere.H2O * 2
+				cellulose.O += p_i.atmosphere.H2O
+			if p_i.atmosphere.has("CO2"):
+				cellulose.C += p_i.atmosphere.CO2
+				cellulose.O += p_i.atmosphere.CO2 * 2
+			if p_i.atmosphere.has("H"):
+				cellulose.H += p_i.atmosphere.H
+			if p_i.atmosphere.has("O"):
+				cellulose.O += p_i.atmosphere.O
+			cellulose.C /= 6.0
+			cellulose.H /= 10.0
+			cellulose.O /= 5.0
+			var cellulose_molecules:float = [cellulose.C, cellulose.H, cellulose.O].min()
+			game.autocollect.mats.cellulose += base * unique_mult * cellulose_molecules
+			game.tile_data[cs.tile].unique_bldg.production = base * unique_mult * cellulose_molecules
 
 func add_atom_production(el:String, base_prod:float):
 	if el == "NH3":
@@ -1140,7 +1159,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == "SP":
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * Helper.get_au_mult(dict)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
 		elif bldg == "AE":
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
 		elif bldg in ["MS", "B", "NSF", "ESF"]:
@@ -1152,7 +1171,13 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		elif bldg == "EC":
 			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
 		elif bldg == "ME":
-			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n
+			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n * (dict.mineral_replicator_bonus if dict.has("mineral_replicator_bonus") else 1.0)
+		elif bldg == "PP":
+			return dict.bldg.path_1_value * mult * n * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)
+		elif bldg == "RL":
+			return dict.bldg.path_1_value * mult * n * (dict.observatory_bonus if dict.has("observatory_bonus") else 1.0)
+		elif bldg == "MM":
+			return dict.bldg.path_1_value * mult * n * (dict.mining_outpost_bonus if dict.has("mining_outpost_bonus") else 1.0)
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
@@ -1456,7 +1481,7 @@ func get_AG_num_auroras(tier:int):
 	return 10 * pow(2, tier-1)
 
 func get_NFR_prod_mult(tier:int):
-	return 100 * pow(4, tier-1)
+	return 5000 * pow(4, tier-1)
 
 func get_CS_prod_mult(tier:int):
 	return 25 * pow(4, tier-1)

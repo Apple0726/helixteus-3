@@ -4,7 +4,7 @@ onready var op = $Control/OptionButton
 onready var game = get_node("/root/Game")
 
 var coal_texture = preload("res://Graphics/Materials/coal.png")
-var cellulose_texture = preload("res://Graphics/Materials/cellulose.png")
+var cellulose_texture = Data.cellulose_icon
 var helium_texture = preload("res://Graphics/Atoms/He.png")
 var neon_texture = preload("res://Graphics/Atoms/Ne.png")
 var xenon_texture = preload("res://Graphics/Atoms/Xe.png")

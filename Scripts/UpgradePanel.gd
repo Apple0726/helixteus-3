@@ -354,9 +354,11 @@ func _on_Upgrade_pressed():
 						if game.aurora_prod.has(tile.aurora.au_int):
 							game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) - SP_prod
 				elif tile.bldg.name == "AE":
+					var base_prod = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
 					for el in p_i.atmosphere:
-						var base_prod:float = -tile.bldg.path_1_value * overclock_mult * p_i.atmosphere[el] * p_i.pressure
-						Helper.add_atom_production(el, base_prod)
+						Helper.add_atom_production(el, base_prod * p_i.atmosphere[el])
+					Helper.add_energy_from_NFR(p_i, base_prod)
+					Helper.add_energy_from_CS(p_i, base_prod)
 				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
@@ -392,9 +394,11 @@ func _on_Upgrade_pressed():
 			elif planet.bldg.name == "B":
 				game.energy_capacity += diff
 			elif planet.bldg.name == "AE":
+				var base_prod:float = diff * planet.pressure
 				for el in planet.atmosphere:
-					var base_prod:float = diff * planet.atmosphere[el] * planet.pressure
-					Helper.add_atom_production(el, base_prod)
+					Helper.add_atom_production(el, base_prod * planet.atmosphere[el])
+				Helper.add_energy_from_NFR(planet, base_prod)
+				Helper.add_energy_from_CS(planet, base_prod)
 			elif planet.bldg.name == "NSF":
 				game.neutron_cap += diff
 			elif planet.bldg.name == "ESF":

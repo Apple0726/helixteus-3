@@ -91,7 +91,7 @@ func _ready():
 		$Lakes2.tile_set = game.lake_TS
 		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
 	var nuclear_fusion_reactor_main_tiles = []
-	if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("nuclear_fusion_reactor"):
+	if p_i.unique_bldgs.has("nuclear_fusion_reactor"):
 		for i in len(p_i.unique_bldgs.nuclear_fusion_reactor):
 			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs.nuclear_fusion_reactor[i].tile)
 	for i in wid:
@@ -128,11 +128,15 @@ func _ready():
 				var mod:Color = Color.white
 				if tile.unique_bldg.has("repair_cost"):
 					mod = Color(0.3, 0.3, 0.3)
+				var v = Vector2(i, j) * 200
 				if tile.unique_bldg.name == "nuclear_fusion_reactor":
 					if id2 in nuclear_fusion_reactor_main_tiles:
-						add_bldg_sprite(Vector2(i, j) * 200, tile.unique_bldg.name, mod, 1.0, Vector2(200, 200))
+						bldgs[id2] = add_bldg_sprite(v, tile.unique_bldg.name, mod, 0.8, Vector2(200, 200))
+						add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
 				else:
-					add_bldg_sprite(Vector2(i, j) * 200, tile.unique_bldg.name, mod)
+					bldgs[id2] = add_bldg_sprite(v, tile.unique_bldg.name, mod)
+					if tile.unique_bldg.name == "cellulose_synthesizer":
+						add_rsrc(v + Vector2(100, 100), Color.brown, Data.cellulose_icon, id2)
 			elif tile.has("cave"):
 				var cave_data_file = File.new()
 				if tile.cave.has("id"):
@@ -248,9 +252,11 @@ func show_tooltip(tile, tile_id:int):
 			"substation":
 				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier), "time":Helper.time_to_str(1000 * Helper.get_substation_capacity_bonus(tile.unique_bldg.tier))}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.unique_bldg.tier)
 			"aurora_generator":
-				desc = desc % [Helper.get_AG_au_int_mult(tile.unique_bldg.tier), Helper.get_AG_num_auroras(tile.unique_bldg.tier)]
+				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.unique_bldg.tier), "n":Helper.get_AG_num_auroras(tile.unique_bldg.tier)})
 			"nuclear_fusion_reactor":
 				desc = desc % Helper.get_NFR_prod_mult(tile.unique_bldg.tier)
+			"cellulose_synthesizer":
+				desc = desc % Helper.get_CS_prod_mult(tile.unique_bldg.tier)
 		tooltip += desc
 		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
 		if tile.unique_bldg.has("repair_cost"):
@@ -506,13 +512,13 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == "RL":
-			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff
+			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 		elif tile.bldg.name == "ME":
-			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * (tile.ash.richness if tile.has("ash") else 1.0)
+			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 		elif tile.bldg.name == "PP":
-			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff
+			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		elif tile.bldg.name == "SP":
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile))
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 			game.autocollect.rsrc.energy += SP_prod
 			if tile.has("aurora"):
 				if game.aurora_prod.has(tile.aurora.au_int):
@@ -526,7 +532,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		elif tile.bldg.name == "EC":
 			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
 		elif tile.bldg.name == "MM":
-			var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile)
+			var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
 			if tiles_mined >= 1:
 				game.add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
 				tile.bldg.collect_date = curr_time
@@ -1073,6 +1079,9 @@ func _unhandled_input(event):
 				if tile.unique_bldg.has("repair_cost") and game.money >= tile.unique_bldg.repair_cost:
 					game.money -= tile.unique_bldg.repair_cost
 					tile.unique_bldg.erase("repair_cost")
+					bldgs[tile_id].modulate = Color.white
+					game.popup(tr("BUILDING_REPAIRED"), 1.5)
+					game.hide_adv_tooltip()
 					p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
 					set_unique_bldg_bonuses(tile.unique_bldg, x_pos, y_pos)
 			elif tile.has("cave"):
@@ -1252,24 +1261,20 @@ func set_unique_bldg_bonuses(unique_bldg:Dictionary, x_pos:int, y_pos:int):
 										game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 				else:
 					game.tile_data[id] = {str(unique_bldg.name + "_bonus"):Helper.get_MR_Obs_Outpost_prod_mult(tier)}
-	elif unique_bldg.name == "nuclear_fusion_reactor":
+	elif unique_bldg.name in ["nuclear_fusion_reactor", "cellulose_synthesizer"]:
 		for tile in game.tile_data:
 			if tile and tile.has("bldg") and not tile.bldg.name == "AE" and tile.bldg.has("is_constructing"):
-				var mult = Helper.get_NFR_prod_mult(unique_bldg.tier)
 				var overclock_mult = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-				var base = tile.bldg.path_1_value * overclock_mult * mult
-				for el in ["NH3", "CH4", "H2O", "H"]:
-					if not p_i.atmosphere.has(el):
-						continue
-					var base_prod:float = base * p_i.atmosphere[el] * p_i.pressure
-					if el == "NH3":
-						game.autocollect.rsrc.energy += mult * base_prod * 3
-					elif el == "CH4":
-						game.autocollect.rsrc.energy += mult * base_prod * 4
-					elif el == "H2O":
-						game.autocollect.rsrc.energy += mult * base_prod * 2
-					elif el == "H":
-						game.autocollect.rsrc.energy += mult * base_prod
+				var mult = 1.0
+				var base = 1.0
+				if unique_bldg.name == "nuclear_fusion_reactor":
+					mult = Helper.get_NFR_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
+					Helper.add_energy_from_NFR(p_i, base)
+				elif unique_bldg.name == "cellulose_synthesizer":
+					mult = Helper.get_CS_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
+					Helper.add_energy_from_CS(p_i, base)
 
 func hide_tooltip():
 	if game.get_node("UI").has_node("BuildingShortcuts"):
@@ -1441,13 +1446,13 @@ func on_timeout():
 			if progress < 0:
 				var mult:float = tile.bldg.overclock_mult
 				if tile.bldg.name == "PP":
-					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 				elif tile.bldg.name == "ME":
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * (tile.ash.richness if tile.has("ash") else 1.0)
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 				elif tile.bldg.name == "RL":
-					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1)
+					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 				elif tile.bldg.name == "SP":
-					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile))
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
 						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
@@ -1480,9 +1485,7 @@ func on_timeout():
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
-		if not tile or not tile.has("bldg"):
-			continue
-		if tile.bldg.has("is_constructing"):
+		if not tile or not tile.has("bldg") and not tile.has("unique_bldg"):
 			continue
 		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()
