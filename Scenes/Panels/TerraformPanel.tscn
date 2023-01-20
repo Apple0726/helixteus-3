@@ -215,13 +215,10 @@ margin_bottom = 576.0
 
 [node name="Note" type="Label" parent="Panel"]
 margin_left = 48.0
-margin_top = 368.0
+margin_top = 300.0
 margin_right = 636.0
-margin_bottom = 392.0
+margin_bottom = 460.0
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TerraformingCosts" type="Label" parent="Panel"]
 margin_left = 44.0
@@ -251,11 +248,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BCVBox" type="VBoxContainer" parent="Panel"]
+[node name="BCGrid" type="GridContainer" parent="Panel"]
 margin_left = 48.0
 margin_top = 208.0
-margin_right = 88.0
-margin_bottom = 248.0
+margin_right = 632.0
+margin_bottom = 284.0
+columns = 2
 
 [node name="CostMult" type="RichTextLabel" parent="Panel"]
 margin_left = 352.0

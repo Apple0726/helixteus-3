@@ -342,17 +342,21 @@ func _on_Upgrade_pressed():
 				if auto_speedup:
 					cost_time = 0.2
 				if tile.bldg.name == "ME":
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 				elif tile.bldg.name == "PP":
-					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+					if tile.has("substation_tile"):
+						tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 				elif tile.bldg.name == "RL":
-					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult
+					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 				elif tile.bldg.name == "SP":
-					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
-					game.autocollect.rsrc.energy -= SP_prod
+					var energy_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
+					game.autocollect.rsrc.energy -= energy_prod
+					if tile.has("substation_tile"):
+						tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 					if tile.has("aurora"):
 						if game.aurora_prod.has(tile.aurora.au_int):
-							game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) - SP_prod
+							game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) - energy_prod
 				elif tile.bldg.name == "AE":
 					var base_prod = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
 					for el in p_i.atmosphere:

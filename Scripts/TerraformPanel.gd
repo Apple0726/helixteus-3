@@ -39,7 +39,7 @@ func update_info():
 	var lake_mult_color = gradient.interpolate(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
 	$Panel/CostMult.bbcode_text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
 	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
-	Helper.put_rsrc($Panel/BCVBox, 32, costs, true, true)
+	Helper.put_rsrc($Panel/BCGrid, 32, costs, true, true)
 	$Panel.visible = true
 
 func set_bldg_cost_txt():
@@ -47,36 +47,6 @@ func set_bldg_cost_txt():
 		$Panel/BuildingCosts.text = "%s (%s) (%s %s)" % [tr("BUILDING_COSTS"), tr("DIV_BY") % cost_div, Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
 	else:
 		$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
-
-func _on_MS_pressed():
-	tf_type = "MS"
-	set_bldg_cost_txt()
-	costs = Data.costs.MS.duplicate(true)
-	$Panel/Note.visible = false
-	update_info()
-
-func _on_AE_pressed():
-	tf_type = "AE"
-	set_bldg_cost_txt()
-	costs = Data.costs.AE.duplicate(true)
-	$Panel/Note.visible = false
-	update_info()
-
-func _on_MM_pressed():
-	tf_type = "MM"
-	set_bldg_cost_txt()
-	costs = Data.costs.MM.duplicate(true)
-	$Panel/Note.visible = false
-	update_info()
-
-func _on_GH_pressed():
-	tf_type = "GH"
-	set_bldg_cost_txt()
-	costs = Data.costs.GH.duplicate(true)
-	costs.soil = 10
-	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
-	$Panel/Note.visible = true
-	update_info()
 
 
 func _on_Terraform_pressed():
@@ -154,7 +124,23 @@ func _on_PP_pressed():
 	tf_type = "PP"
 	set_bldg_cost_txt()
 	costs = Data.costs.PP.duplicate(true)
-	$Panel/Note.visible = false
+	var st = ""
+	if p_i.unique_bldgs.has("substation"):
+		var bonus = 0
+		var bonus_cap = 0
+		var n_total = 0
+		for sub in p_i.unique_bldgs.substation:
+			if not sub.has("repair_cost"):
+				var n = (pow(Helper.get_unique_bldg_area(sub.tier), 2) - 1)
+				bonus += Helper.get_substation_prod_mult(sub.tier) * n
+				bonus_cap += Helper.get_substation_capacity_bonus(sub.tier) * n
+				n_total += n
+		bonus += len(game.tile_data) - n_total
+		bonus /= len(game.tile_data)
+		bonus_cap /= len(game.tile_data)
+		st += tr("ENERGY_MULT_FROM_SUBSTATION") + " " + str(Helper.clever_round(bonus))
+		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(bonus_cap * 1000)
+	$Panel/Note.text = st
 	update_info()
 
 
@@ -162,8 +148,21 @@ func _on_ME_pressed():
 	tf_type = "ME"
 	set_bldg_cost_txt()
 	costs = Data.costs.ME.duplicate(true)
-	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
-	$Panel/Note.visible = true
+	var st = ""
+	if p_i.unique_bldgs.has("mineral_replicator"):
+		var bonus = 0
+		var n_total = 0
+		for mr in p_i.unique_bldgs.mineral_replicator:
+			if not mr.has("repair_cost"):
+				var n = (pow(Helper.get_unique_bldg_area(mr.tier), 2) - 1)
+				bonus += Helper.get_MR_Obs_Outpost_prod_mult(mr.tier) * n
+				n_total += n
+		bonus += len(game.tile_data) - n_total
+		bonus /= len(game.tile_data)
+		st += tr("MIN_MULT_FROM_MR") + " " + str(Helper.clever_round(bonus))
+	if ash_mult > 1:
+		st += "\n" + tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/Note.text = st
 	update_info()
 
 
@@ -171,7 +170,19 @@ func _on_RL_pressed():
 	tf_type = "RL"
 	set_bldg_cost_txt()
 	costs = Data.costs.RL.duplicate(true)
-	$Panel/Note.visible = false
+	var st = ""
+	if p_i.unique_bldgs.has("observatory"):
+		var bonus = 0
+		var n_total = 0
+		for obs in p_i.unique_bldgs.observatory:
+			if not obs.has("repair_cost"):
+				var n = (pow(Helper.get_unique_bldg_area(obs.tier), 2) - 1)
+				bonus += Helper.get_MR_Obs_Outpost_prod_mult(obs.tier) * n
+				n_total += n
+		bonus += len(game.tile_data) - n_total
+		bonus /= len(game.tile_data)
+		st += tr("SP_MULT_FROM_OBS") + " " + str(Helper.clever_round(bonus))
+	$Panel/Note.text = st
 	update_info()
 
 
@@ -212,4 +223,57 @@ func _on_B_pressed():
 	set_bldg_cost_txt()
 	costs = Data.costs.B.duplicate(true)
 	$Panel/Note.visible = false
+	update_info()
+
+func _on_MS_pressed():
+	tf_type = "MS"
+	set_bldg_cost_txt()
+	costs = Data.costs.MS.duplicate(true)
+	$Panel/Note.visible = false
+	update_info()
+
+func _on_AE_pressed():
+	tf_type = "AE"
+	set_bldg_cost_txt()
+	costs = Data.costs.AE.duplicate(true)
+	$Panel/Note.visible = true
+	var st = ""
+	if p_i.unique_bldgs.has("nuclear_fusion_reactor"):
+		var needs_repair = false
+		for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
+			if nfr.has("repair_cost"):
+				needs_repair = true
+				break
+		if needs_repair:
+			st += tr("REPAIR_NFR_TO_GET_ENERGY")
+		else:
+			st += tr("WILL_PROVIDE_EXTRA_ENERGY")
+		st += "\n"
+	if p_i.unique_bldgs.has("cellulose_synthesizer"):
+		var needs_repair = false
+		for cs in p_i.unique_bldgs.cellulose_synthesizer:
+			if cs.has("repair_cost"):
+				needs_repair = true
+				break
+		if needs_repair:
+			st += tr("REPAIR_CS_TO_GET_CELLULOSE")
+		else:
+			st += tr("WILL_PROVIDE_EXTRA_CELLULOSE")
+	$Panel/Note.text = st
+	update_info()
+
+func _on_MM_pressed():
+	tf_type = "MM"
+	set_bldg_cost_txt()
+	costs = Data.costs.MM.duplicate(true)
+	$Panel/Note.visible = false
+	update_info()
+
+func _on_GH_pressed():
+	tf_type = "GH"
+	set_bldg_cost_txt()
+	costs = Data.costs.GH.duplicate(true)
+	costs.soil = 10
+	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/Note.visible = true
 	update_info()

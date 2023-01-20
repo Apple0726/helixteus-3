@@ -220,9 +220,6 @@ tracks/0/keys = {
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_vertical_guides_": [ 1044.0 ]
-}
 
 [node name="click" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )

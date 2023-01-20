@@ -114,6 +114,7 @@ var mineral_capacity:float
 var stone:Dictionary
 var energy:float
 var energy_capacity:float
+var capacity_bonus_from_substation:float
 var SP:float
 var neutron_cap:float
 var electron_cap:float
@@ -696,6 +697,7 @@ func load_univ():
 					stats_univ[stat] = val
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
+		capacity_bonus_from_substation = 0
 		u_i = universe_data[c_u]
 		if science_unlocked.has("CI"):
 			stack_size = 32
@@ -929,6 +931,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	stone = {}
 	energy = 200
 	energy_capacity = 7500
+	capacity_bonus_from_substation = 0
 	SP = 0
 	neutron_cap = 0
 	electron_cap = 0
@@ -2987,8 +2990,8 @@ func generate_tiles(id:int):
 		unique_bldgs_list_without_NFR[unique_bldg] /= S2
 	var nuclear_fusion_reactor_tiles = []
 	var base_unique_bldg_probability = 0.0
-	if randf() < 20.0 / sqrt(coldest_star_temp):
-		base_unique_bldg_probability = -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	if randf() < 500.0 / coldest_star_temp:
+		base_unique_bldg_probability = 1 if p_i.temperature < 273 else -pow((p_i.temperature / 273.0 - 1), 2) + 1
 	planet_data[id].unique_bldgs = {}
 	if not home_planet:
 		var spaceport_spawned = false
@@ -3009,7 +3012,7 @@ func generate_tiles(id:int):
 							break
 						else:
 							k += 1
-							S += unique_bldgs_list_without_NFR[_unique_bldg]
+							S3 += unique_bldgs_list_without_NFR[_unique_bldg]
 				else:
 					for _unique_bldg in unique_bldgs_list.keys():
 						if rand2 < unique_bldgs_list[_unique_bldg] + S3:
@@ -3025,8 +3028,8 @@ func generate_tiles(id:int):
 						continue
 					spaceport_spawned = true					#Save migration
 				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
-				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 1000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
+				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
+					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
 					p_i.unique_bldgs[unique_bldg].append(obj)
 				else:
@@ -3093,6 +3096,8 @@ func generate_tiles(id:int):
 					tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
 				if p_i.unique_bldgs[bldg][i].has("repair_cost"):
 					tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
+			if not p_i.unique_bldgs[bldg][i].has("repair_cost"):
+				Helper.set_unique_bldg_bonuses(p_i, tile_data[t_id].unique_bldg, t_id, wid)
 			if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
 				earn_achievement("exploration", "tier_2_unique_bldg")
 			if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
@@ -3865,6 +3870,7 @@ func fn_save_game():
 		"minerals":minerals,
 		"mineral_capacity":mineral_capacity,
 		"energy_capacity":energy_capacity,
+		"capacity_bonus_from_substation":capacity_bonus_from_substation,
 		"neutron_cap":neutron_cap,
 		"electron_cap":electron_cap,
 		"stone":stone,

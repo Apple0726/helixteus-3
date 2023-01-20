@@ -193,7 +193,7 @@ func update_money_energy_SP():
 		money_text["custom_colors/font_color"] = Color.white
 		energy_text["custom_colors/font_color"] = Color.white
 		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(7500 + round((game.energy_capacity - 7500) * Helper.get_IR_mult("B")))]
+		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(Helper.get_total_energy_cap())]
 		$Top/Resources/Soil.visible = game.autocollect.mats.has("soil")
 		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)
 		soil_text["custom_colors/font_color"] = Color.white if game.mats.soil > 0 else Color.red
