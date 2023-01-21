@@ -199,6 +199,8 @@ func _ready():
 	$CurrentPattern.text = "Ship strength: %s | Enemy strength: %s" % [Helper.format_num(total_ship_stats), Helper.format_num(total_enemy_stats)]
 	if total_enemy_stats > total_ship_stats:
 		hard_battle = true
+		$UI/FightPanel.modulate.a = 0
+		$UI/Back.modulate.a = 0
 		$InitialFade.play("SceneFade", -1, 0.5)
 		game.switch_music(preload("res://Audio/op_battle.ogg"))
 		yield(get_tree().create_timer(0.5), "timeout")
@@ -455,7 +457,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 		light.texture = preload("res://Graphics/Decoratives/light.png")
 		light.position = Vector2(1000, 360)
 		light.scale *= 0.2
-		light.modulate *= 0.8 + weapon_lv / 8.0
+		light.modulate *= 0.8 + weapon_lv / 16.0
 		add_child(light)
 		light.add_to_group("lights")
 		var light_hit:bool = false

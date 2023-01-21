@@ -701,27 +701,27 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		update_bldg_constr(tile, p_i)
 		if tile.bldg.has("is_constructing"):
 			return
-	var prod:float
+	var prod:float = p_i.tile_num if p_i.has("tile_num") else 1
 	if tile.bldg.name == "AE":
-		prod = tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
 		rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "ME":
-		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "SP":
-		prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "PP":
-		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "RL":
-		prod = tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name in ["PC", "NC"]:
-		prod = tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
+		prod *= tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "EC":
-		prod = tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
+		prod *= tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == "SC":
 		if tile.bldg.has("stone"):
@@ -801,6 +801,10 @@ func update_ship_travel():
 		game.ships_travel_view = "-"
 		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
+		var p_i = game.open_obj("Systems", game.ships_c_g_coords.s)[game.ships_c_coords.p]
+		
+		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
+			game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
 	return progress
 
 func update_bldg_constr(tile:Dictionary, p_i:Dictionary):

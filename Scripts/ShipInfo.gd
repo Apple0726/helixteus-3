@@ -32,13 +32,13 @@ func refresh():
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 4 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 4 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
-	$XP/Label2.text = "%s / %s" % [Helper.format_num(game.ship_data[id].XP), Helper.format_num(game.ship_data[id].XP_to_lv)]
+		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
+	$XP/Label2.text = "%s / %s" % [Helper.format_num(round(game.ship_data[id].XP)), Helper.format_num(game.ship_data[id].XP_to_lv)]
 	set_visibility()
 	$Stats/HP.text = Helper.format_num(game.ship_data[id].total_HP * game.ship_data[id].HP_mult)
 	$Stats/Atk.text = Helper.format_num(game.ship_data[id].atk * game.ship_data[id].atk_mult)

@@ -1554,3 +1554,4 @@ WILL_PROVIDE_EXTRA_CELLULOSE,Will produce extra cellulose after terraforming tha
 WILL_PROVIDE_EXTRA_ENERGY,Will produce extra energy after terraforming thanks to nuclear fusion reactors.,,,,,,,,,,,
 REPAIR_CS_TO_GET_CELLULOSE,Repair cellulose synthesizers on this planet to get extra cellulose after terraforming!,,,,,,,,,,,
 REPAIR_NFR_TO_GET_ENERGY,Repair nuclear fusion reactors on this planet to get extra energy after terraforming!,,,,,,,,,,,
+SHIPS_BENEFITING_FROM_SPACEPORT,Your ships are getting passive XP from a spaceport!,,,,,,,,,,,

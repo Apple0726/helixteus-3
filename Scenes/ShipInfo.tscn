@@ -91,11 +91,12 @@ __meta__ = {
 }
 
 [node name="TextureProgress" type="TextureProgress" parent="Bullet"]
-modulate = Color( 0, 0.46097, 0.813477, 1 )
+modulate = Color( 0, 0.462745, 0.811765, 1 )
 margin_left = 228.0
 margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
+step = 0.0
 value = 50.0
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
@@ -180,15 +181,13 @@ margin_left = 228.0
 margin_top = 44.0
 margin_right = 460.0
 margin_bottom = 64.0
+step = 0.0
 value = 50.0
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Laser"]
 margin_left = 476.0
@@ -267,6 +266,7 @@ margin_left = 228.0
 margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
+step = 0.0
 value = 50.0
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
@@ -351,6 +351,7 @@ margin_left = 228.0
 margin_top = 48.0
 margin_right = 460.0
 margin_bottom = 68.0
+step = 0.0
 value = 50.0
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 6 )
@@ -432,11 +433,12 @@ __meta__ = {
 }
 
 [node name="TextureProgress" type="TextureProgress" parent="XP"]
-modulate = Color( 0.92, 0.63296, 0.2024, 1 )
+modulate = Color( 0.921569, 0.631373, 0.203922, 1 )
 margin_left = 60.0
 margin_top = 52.0
 margin_right = 460.0
 margin_bottom = 72.0
+step = 0.0
 value = 50.0
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 6 )

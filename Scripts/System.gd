@@ -66,15 +66,6 @@ func refresh_planets():
 		orbit.radius = p_i.distance
 		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.3, 1)
 		orbit.add_to_group("orbits")
-#		var orbit = AntialiasedRegularPolygon2D.new()
-#		orbit.set_sides(200)
-#		orbit.set_size(Vector2(p_i.distance, p_i.distance) * 2.0)
-#		orbit.set_angle_degrees(360)
-#		orbit.set_stroke_color(Color.yellow)
-#		orbit.set_stroke_width(sc * 10.0)
-#		orbit.color.a = 0.0
-#		add_child(orbit)
-#		orbit.add_to_group("orbits")
 		var planet = preload("res://Scenes/PlanetButton.tscn").instance()
 		var planet_btn = planet.get_node("Button")
 		var planet_glow = planet.get_node("Glow")
@@ -140,7 +131,6 @@ func refresh_planets():
 				HX_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("ENEMIES")])
 				HX_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
 				HX_count.rect_scale *= sc * 3.0
-				#HX_count.rect_position = v - Vector2(0, 80) * sc * 3.0
 				HX_count.get_node("Label").text = "x %s" % len(p_i.HX_data)
 				add_child(HX_count)
 				HX_count.add_to_group("info_nodes")
@@ -893,9 +883,7 @@ func _process(_delta):
 		var star = stars_info[rsrc_obj.id]
 		if star.bldg.has("is_constructing"):
 			continue
-		#var value = Helper.update_MS_rsrc(star)
 		var rsrc:ResourceStored = rsrc_obj.node
-		#rsrc.set_current_bar_value(value)
 		var prod:float
 		if star.MS == "M_DS":
 			prod = Helper.get_DS_output(star) * Helper.get_IR_mult("PP") * game.u_i.time_speed

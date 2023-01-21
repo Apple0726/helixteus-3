@@ -91,6 +91,8 @@ func _ready():
 		$Lakes2.tile_set = game.lake_TS
 		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
 	var nuclear_fusion_reactor_main_tiles = []
+	if not p_i.has("unique_bldgs"): # Save migration
+		p_i.unique_bldgs = {}
 	if p_i.unique_bldgs.has("nuclear_fusion_reactor"):
 		for i in len(p_i.unique_bldgs.nuclear_fusion_reactor):
 			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs.nuclear_fusion_reactor[i].tile)
@@ -1406,13 +1408,15 @@ func on_timeout():
 			start_date = tile.bldg.construction_date
 			length = tile.bldg.construction_length
 			progress = (curr_time - start_date) / float(length)
+			print("A")
 			if Helper.update_bldg_constr(tile, p_i):
+				print("B")
 				if tile.bldg.has("path_1"):
-					hboxes[id2].get_node("Path1").text = String(tile.bldg.path_1)
+					hboxes[id2].get_node("Path1").text = str(tile.bldg.path_1)
 				if tile.bldg.has("path_2"):
-					hboxes[id2].get_node("Path2").text = String(tile.bldg.path_2)
+					hboxes[id2].get_node("Path2").text = str(tile.bldg.path_2)
 				if tile.bldg.has("path_3"):
-					hboxes[id2].get_node("Path3").text = String(tile.bldg.path_3)
+					hboxes[id2].get_node("Path3").text = str(tile.bldg.path_3)
 				update_XP = true
 		elif type == "overclock":
 			if not tile or not tile.has("bldg") or not tile.bldg.has("overclock_date"):
@@ -1447,7 +1451,6 @@ func on_timeout():
 		elif type == "wormhole":
 			if tile.wormhole.active:
 				$Obstacles.set_cell(id2 % wid, int(id2 / wid), 8)
-				remove_child(time_bar)
 				wormhole.get_node("Active").visible = true
 				wormhole.get_node("Inactive").visible = false
 				time_bar.queue_free()
@@ -1464,7 +1467,7 @@ func on_timeout():
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
-		if not tile or not tile.has("bldg") and not tile.has("unique_bldg"):
+		if not tile or not tile.has("bldg") and not tile.has("unique_bldg") or tile.has("bldg") and tile.bldg.has("is_constructing"):
 			continue
 		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()

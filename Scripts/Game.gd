@@ -706,10 +706,16 @@ func load_univ():
 		if science_unlocked.has("CI3"):
 			stack_size = 128
 		if not autocollect.empty():
+			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
+			if autocollect.has("ship_XP"):
+				var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
+				for i in len(ship_data):
+					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP))
+					for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.04, u_i.lv) / 16.0 * time_elapsed / (4.0 / autocollect.ship_XP))
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
-			var time_elapsed = (OS.get_system_time_msecs() - save_date) / 1000.0
 			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed)
 			energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed
 			SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed
@@ -969,13 +975,10 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
-				#"clay":0,
 				"soil":0,
 				"cellulose":0,
 				"silicon":0,
 				"quillite":0,
-				#"he3mix":0,
-				#"graviton":0,
 	}
 
 	mets = {	"lead":0,
@@ -1005,27 +1008,15 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 				"F":0,
 				"Ne":0,
 				"Na":0,
-				#"Mg":0,
 				"Al":0,
 				"Si":0,
-				#"P":0,
-				#"S":0,
-				#"K":0,
-				#"Ca":0,
 				"Ti":0,
-				#"Cr":0,
-				#"Mn":0,
 				"Fe":0,
-				#"Co":0,
-				#"Ni":0,
 				"Xe":0,
 				"Ta":0,
 				"W":0,
 				"Os":0,
-				#"Ir":0,
 				"Pt":0,
-				#"U":0,
-				#"Np":0,
 				"Pu":0,
 	}
 
@@ -3027,7 +3018,7 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
+				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1) / u_i.cluster_data[c_c].FM) / 4.0 + 1)}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -3218,7 +3209,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"Al":0.05 * randf(),
 							"Fe":0.035 * FM * randf(),
 							"Na":0.025 * randf(),
-							"Mg":0.02 * randf(),
 							"Ti":0.005 * randf(),
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
@@ -3231,7 +3221,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"Al":0.05 * randf(),
 							"Fe":0.035 * randf(),
 							"Na":0.025 * randf(),
-							"Mg":0.02 * randf(),
 							"H":0.01 * big_planet_factor * randf(),
 							"C":0.01 * big_planet_factor * randf(),
 							"Ti":0.005 * randf(),

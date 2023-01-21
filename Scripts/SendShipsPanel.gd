@@ -16,6 +16,7 @@ var atm_exit_cost:float
 var gravity_exit_cost:float
 var atm_entry_cost:float
 var gravity_entry_cost:float
+var spaceport_cost_reduction:float = 1.0
 
 func _ready():
 	set_polygon($Background.rect_size)
@@ -84,7 +85,11 @@ func refresh():
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
 		calc_costs()
 		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
-		$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), Helper.format_num(atm_exit_cost), (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("GRAVITY_EXIT"), Helper.format_num(gravity_exit_cost), (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else "", tr("ATMOSPHERE_ENTRY"), Helper.format_num(atm_entry_cost), (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else "", tr("GRAVITY_ENTRY"), Helper.format_num(gravity_entry_cost),  (" (-%s%%)" % (100 - 100 * get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv))) if has_SE(game.planet_data[dest_p_id]) else ""]
+		var exit_mult_percentage = spaceport_cost_reduction * (get_entry_exit_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
+		exit_mult_percentage = 100 - 100 * exit_mult_percentage
+		var entry_mult_percentage = get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv) if has_SE(game.planet_data[dest_p_id]) else 1.0
+		entry_mult_percentage = 100 - 100 * entry_mult_percentage
+		$EnergyCost2.help_text = "%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s\n%s: @i %s%s" % [tr("ATMOSPHERE_EXIT"), Helper.format_num(atm_exit_cost), (" (-%s%%)" % exit_mult_percentage) if exit_mult_percentage > 0 else "", tr("GRAVITY_EXIT"), Helper.format_num(gravity_exit_cost), (" (-%s%%)" % exit_mult_percentage) if exit_mult_percentage > 0 else "", tr("ATMOSPHERE_ENTRY"), Helper.format_num(atm_entry_cost), (" (-%s%%)" % entry_mult_percentage) if entry_mult_percentage > 0 else "", tr("GRAVITY_ENTRY"), Helper.format_num(gravity_entry_cost), (" (-%s%%)" % entry_mult_percentage) if entry_mult_percentage > 0 else ""]
 	for child in $Scroll/Enemies.get_children():
 		child.queue_free()
 	if game.planet_data[dest_p_id].has("HX_data"):
@@ -141,6 +146,12 @@ func send_ships():
 				game.ships_dest_coords.c = game.c_c
 				game.view.obj.refresh_planets()
 				game.view.refresh()
+				var p_i = game.planet_data[game.ships_c_coords.p]
+				if p_i.has("unique_bldgs"):
+					if p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
+						game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
+					else:
+						game.autocollect.erase("ship_XP")
 				game.space_HUD.get_node("ConquerAll").visible = game.u_i.lv >= 32 and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(self)
@@ -152,6 +163,7 @@ func send_ships():
 					if not game.achievement_data.random.has("1000_year_journey"):
 						game.earn_achievement("random", "1000_year_journey")
 				game.energy -= round(total_energy_cost)
+				game.autocollect.erase("ship_XP")
 				send_ships2(time_cost)
 				if game.c_v == travel_view:
 					game.view.refresh()
@@ -219,6 +231,11 @@ func calc_costs():
 	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 1)
 	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
+	spaceport_cost_reduction = 1.0
+	if depart_planet_data.has("unique_bldgs") and depart_planet_data.unique_bldgs.has("spaceport") and not depart_planet_data.unique_bldgs.spaceport[0].has("repair_cost"):
+		spaceport_cost_reduction = Helper.get_spaceport_exit_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
+		atm_exit_cost *= spaceport_cost_reduction
+		gravity_exit_cost *= spaceport_cost_reduction
 	atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
 	gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	if depart_planet_data.type in [11, 12]:
