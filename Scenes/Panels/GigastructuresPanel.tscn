@@ -181,6 +181,13 @@ margin_right = 376.0
 margin_bottom = 414.0
 help_text = "PCM_DESC"
 
+[node name="ProdMult" parent="Control" instance=ExtResource( 2 )]
+margin_left = 24.0
+margin_top = 340.0
+margin_right = 292.0
+margin_bottom = 370.0
+help_text = "GS_PROD_MULT_BY_X"
+
 [node name="ProductionPerSec" type="Label" parent="Control"]
 margin_left = 24.0
 margin_top = 232.0

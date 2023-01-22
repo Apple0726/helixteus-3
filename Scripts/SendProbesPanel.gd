@@ -22,6 +22,7 @@ var units:Dictionary = {
 	"dark_energy":"",
 	"difficulty":"",
 	"time_speed":"",
+	"age":"x " + tr("DEFAULT_UNIVERSE_AGE"),
 	"antimatter":"",
 	}
 
@@ -34,6 +35,7 @@ var point_distribution:Dictionary = {
 	"dark_energy":0,
 	"difficulty":0,
 	"time_speed":0,
+	"age":0,
 	"antimatter":0,
 	}
 
@@ -43,16 +45,12 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
-	$TP/VBox/speed_of_light/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("SPEED_OF_LIGHT")
-	$TP/VBox/planck/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("PLANCK")
-	$TP/VBox/boltzmann/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("BOLTZMANN")
+	for prop in point_distribution.keys():
+		if prop == "age":
+			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("AGE_OF_THE_UNIVERSE")
+		else:
+			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
 	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
-	$TP/VBox/gravitational/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("GRAVITATIONAL")
-	$TP/VBox/charge/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("CHARGE")
-	$TP/VBox/dark_energy/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DARK_ENERGY")
-	$TP/VBox/difficulty/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
-	$TP/VBox/time_speed/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED")
-	$TP/VBox/antimatter/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ANTIMATTER")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
@@ -82,7 +80,7 @@ func refresh():
 						prop.get_node("HSlider").step = 0.2
 						if value_range > 30:
 							prop.get_node("HSlider").step = 0.5
-			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
+			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 			$NoProbes.visible = false
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
@@ -240,7 +238,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
-	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.clever_round(PP)]
+	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 
 func get_lv_sum():
 	var lv:float = 0
@@ -307,3 +305,19 @@ func _on_SendAll_mouse_entered():
 
 func _on_SendAll_mouse_exited():
 	refresh_energy()
+
+
+func _on_TierDistribution_mouse_entered():
+	var st = tr("UNIQUE_BLDG_TIER_DISTRIBUTION")
+	for tier in range(1, 7):
+		var age = float($TP/VBox/age/Label2.text)
+		var prob:float
+		if tier == 1:
+			prob = max(1 - age * exp(-4 * tier), 0)
+		else:
+			prob = max(min(age * exp(-4 * (tier-1)), 1) - age * exp(-4 * tier), 0)
+		st += "\n" + tr("TIER_X") % tier + ": " + str(Helper.clever_round(100 * prob)) + "%"
+	game.show_tooltip(st)
+
+func _on_TierDistribution_mouse_exited():
+	game.hide_tooltip()

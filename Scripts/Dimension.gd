@@ -210,25 +210,27 @@ func on_univ_out():
 
 func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
-	game.show_tooltip("%s (%s %s)\n%s: %s (%s)" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})])
-	$UnivInfo.text = tr("FUNDAMENTAL_PROPERTIES") + "\n"
+	$UnivInfo.text = "%s (%s %s)\n%s: %s (%s)\n\n" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})]
+	$UnivInfo.text += tr("FUNDAMENTAL_PROPERTIES") + "\n"
 	if id == 0:
-		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n" % [
+		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n%s: %s\n" % [
 			tr("SPEED_OF_LIGHT"),
-			Helper.e_notation(e(3, 8)),
+			Helper.e_notation(3e8),
 			tr("PLANCK"),
-			Helper.e_notation(e(6.626, -34)),
+			Helper.e_notation(6.626e-34),
 			tr("BOLTZMANN"),
-			Helper.e_notation(e(1.381, -23)),
+			Helper.e_notation(1.381e-23),
 			tr("S_B_CTE"),
-			Helper.e_notation(e(5.67, -8)),
+			Helper.e_notation(5.67e-8),
 			tr("GRAVITATIONAL"),
-			Helper.e_notation(e(6.674, -11)),
+			Helper.e_notation(6.674e-11),
 			tr("CHARGE"),
-			Helper.e_notation(e(1.6, -19)),
+			Helper.e_notation(1.6e-19),
+			tr("AGE_OF_THE_UNIVERSE"),
+			tr("DEFAULT_UNIVERSE_AGE"),
 			]
 	else:
-		$UnivInfo.text += "%s: %sc\n%s: %sh\n%s: %sk\n%s: %s\u03C3\n%s: %sG\n%s: %se\n" % [
+		$UnivInfo.text += "%s: %sc\n%s: %sh\n%s: %sk\n%s: %s\u03C3\n%s: %sG\n%s: %se\n%s: %s x %s\n" % [
 			tr("SPEED_OF_LIGHT"),
 			u_i.speed_of_light,
 			tr("PLANCK"),
@@ -241,6 +243,9 @@ func on_univ_over(id:int):
 			u_i.gravitational,
 			tr("CHARGE"),
 			u_i.charge,
+			tr("AGE_OF_THE_UNIVERSE"),
+			u_i.age,
+			tr("DEFAULT_UNIVERSE_AGE"),
 			]
 	$UnivInfo.text += "\n%s\n" % tr("MULTIPLIERS")
 	$UnivInfo.text += "%s: %s\n%s: %s\n%s: %s" % [

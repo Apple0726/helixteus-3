@@ -157,7 +157,7 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
-	if game.c_v in ["supercluster", "universe"] and not changed:
+	if game.c_v == "universe" and not changed:
 		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
 			$AnimationPlayer.play("Fade")
 		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:

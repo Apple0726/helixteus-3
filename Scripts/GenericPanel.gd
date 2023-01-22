@@ -48,7 +48,6 @@ func change_tab(btn_str:String):
 	remove_costs()
 	item_info.visible = false
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
-	#Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
 	locked = false
 	
 func remove_costs():
@@ -72,7 +71,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	item_dir = _dir
 	for cost in costs:
 		item_total_costs[cost] = costs[cost] * num
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
 	if not costs.empty():
 		Helper.put_rsrc(vbox, 36, item_total_costs, true, true)

@@ -17,7 +17,6 @@ var star_rsrcs = []
 var planet_rsrcs = []
 var planet_hovered:int = -1
 var tile_datas:Array = []
-var num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 var build_all_MS_stages:bool = false
 var CBS_range:float = 0.0
 
@@ -53,10 +52,10 @@ func refresh_planets():
 				planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
 	for i in p_num:
 		var p_i:Dictionary = game.planet_data[i]
-		var sc:float = p_i["distance"] / 2400.0
 		if p_i.empty():
 			tile_datas.append([])
 			continue
+		var sc:float = p_i["distance"] / 2400.0
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
 		tile_datas.append(tile_data_to_append)
 		
@@ -348,12 +347,12 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 	if base and build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, num_stages.M_DS + 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, Data.MS_num_stages.M_DS + 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"))
 	if base and build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, num_stages.M_DS + 1) * Helper.get_IR_mult("M_DS")}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, Data.MS_num_stages.M_DS + 1) * Helper.get_IR_mult("M_DS")}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1) * Helper.get_IR_mult("M_DS")}, false)
 
@@ -433,12 +432,12 @@ func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 	add_constr_costs(vbox, p_i)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 	if build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, num_stages.M_MME + 1) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, Data.MS_num_stages.M_MME + 1) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 	if build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, num_stages.M_MME + 1) * Helper.get_IR_mult("M_MME")}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, Data.MS_num_stages.M_MME + 1) * Helper.get_IR_mult("M_MME")}, false)
 	else:
 		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1) * Helper.get_IR_mult("M_MME")}, false)
 
@@ -456,22 +455,34 @@ func show_planet_info(id:int, l_id:int):
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		var stage:String = tr("%s_NAME" % p_i.MS)
-		if num_stages[p_i.MS] > 0:
-			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, num_stages[p_i.MS]]]
-		Helper.add_label(stage)
-		if p_i.MS == "M_SE":
-			Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
-		elif p_i.MS == "M_MME":
-			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
-			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult("M_MME")}, false)
-		if not p_i.bldg.has("is_constructing"):
-			if p_i.MS_lv < num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
-				MS_constr_data.obj = p_i
-				MS_constr_data.confirm = false
-				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+		var stage:String
+		if p_i.has("repair_cost"):
+			stage = tr("BROKEN_X").format({"building_name":tr("%s_NAME" % p_i.MS)})
+		else:
+			stage = tr("%s_NAME" % p_i.MS)
+		if Data.MS_num_stages[p_i.MS] > 0:
+			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, Data.MS_num_stages[p_i.MS]]]
+		Helper.add_label(stage, -1, true, true)
+		if p_i.has("repair_cost"):
+			Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
+			Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
+			MS_constr_data.obj = p_i
+			MS_constr_data.confirm = true
+			bldg_costs = {"money":p_i.repair_cost, "time":0.2}
+			Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
+		else:
+			if p_i.MS == "M_SE":
+				Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
+			elif p_i.MS == "M_MME":
+				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
+				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult("M_MME")}, false)
+			if not p_i.bldg.has("is_constructing"):
+				if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
+					MS_constr_data.obj = p_i
+					MS_constr_data.confirm = false
+					Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
@@ -527,15 +538,23 @@ func build_MS(obj:Dictionary, MS:String):
 		game.deduct_resources(bldg_costs)
 		if not game.achievement_data.progression.has("build_MS"):
 			game.earn_achievement("progression", "build_MS")
+		if MS == "M_MME":
+			if not obj.has("MS_lv") or obj.has("repair_cost"):
+				obj.min_cap_to_add = Helper.get_MME_capacity(obj)
+			else:
+				obj.min_cap_to_add = Helper.get_MME_capacity(obj) - Helper.get_MME_capacity(obj, -1)
 		if obj.has("MS"):
-			if obj.MS == "M_DS":
-				game.autocollect.MS.energy -= Helper.get_DS_output(obj)
-			elif obj.MS == "M_MME":
-				game.autocollect.MS.minerals -= Helper.get_MME_output(obj)
-			obj.MS_lv += 1
+			if not obj.has("repair_cost"):
+				if obj.MS == "M_DS":
+					game.autocollect.MS.energy -= Helper.get_DS_output(obj)
+				elif obj.MS == "M_MME":
+					game.autocollect.MS.minerals -= Helper.get_MME_output(obj)
+				obj.MS_lv += 1
+			else:
+				obj.erase("repair_cost")
 		else:
 			if build_all_MS_stages:
-				obj.MS_lv = num_stages[MS]
+				obj.MS_lv = Data.MS_num_stages[MS]
 			else:
 				obj.MS_lv = 0
 			game.stats_univ.MS_constructed += 1
@@ -708,41 +727,53 @@ func on_star_over (id:int):
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
-		var stage:String = tr("%s_NAME" % star.MS)
-		if num_stages[star.MS] > 0:
-			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, num_stages[star.MS]]]
+		var stage:String
+		if star.has("repair_cost"):
+			stage = tr("BROKEN_X").format({"building_name":tr("%s_NAME" % star.MS)})
+		else:
+			stage = tr("%s_NAME" % star.MS)
+		if Data.MS_num_stages[star.MS] > 0:
+			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)
-		if star.MS == "M_DS":
-			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
-			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
-		elif star.MS == "M_MB":
-			Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star) * Helper.get_IR_mult("RL") * game.u_i.time_speed}, false)
-			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
-		elif star.MS == "M_PK":
-			if star.MS_lv == 0:
-				Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
-			elif star.MS_lv == 1:
-				Helper.add_label(tr("PK1_POWER") % int(40000 * sqrt(game.u_i.gravitational)), -1, true, true)
-			elif star.MS_lv == 2:
-				Helper.add_label(tr("PK2_POWER"), -1, true, true)
-		elif star.MS == "M_CBS":
-			var p_num:int = len(game.planet_data)
-			Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
-			if star.MS_lv == 0:
-				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
-			else:
-				Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
-		if not star.bldg.has("is_constructing") and star.MS_lv < num_stages[star.MS]:
-			if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
-				continue_upg(star)
-			elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
-				continue_upg(star)
-			elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
-				continue_upg(star)
+		if star.has("repair_cost"):
+			Helper.add_label(tr("REPAIR_COST"), -1, false)
+			Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
+			MS_constr_data.obj = star
+			MS_constr_data.confirm = true
+			bldg_costs = {"money":star.repair_cost, "time":0.2}
+			Helper.add_label(tr("PRESS_F_TO_REPAIR"))
+		else:
+			if star.MS == "M_DS":
+				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
+				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
+			elif star.MS == "M_MB":
+				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star) * Helper.get_IR_mult("RL") * game.u_i.time_speed}, false)
+				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
+			elif star.MS == "M_PK":
+				if star.MS_lv == 0:
+					Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
+				elif star.MS_lv == 1:
+					Helper.add_label(tr("PK1_POWER") % int(40000 * sqrt(game.u_i.gravitational)), -1, true, true)
+				elif star.MS_lv == 2:
+					Helper.add_label(tr("PK2_POWER"), -1, true, true)
+			elif star.MS == "M_CBS":
+				var p_num:int = len(game.planet_data)
+				Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
+				if star.MS_lv == 0:
+					Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
+				else:
+					Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
+			if not star.bldg.has("is_constructing") and star.MS_lv < Data.MS_num_stages[star.MS]:
+				if star.MS == "M_DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
+					continue_upg(star)
+				elif star.MS == "M_PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
+					continue_upg(star)
+				elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
+					continue_upg(star)
 	game.show_tooltip(tooltip)
 
 func continue_upg(obj:Dictionary):
@@ -780,7 +811,7 @@ func on_star_pressed (id:int):
 	elif star.has("MS"):
 		var t:String = game.item_to_use.type
 		if t == "":
-			if star.MS == "M_PK" and not star.bldg.has("is_constructing"):
+			if star.MS == "M_PK" and not star.bldg.has("is_constructing") and not star.has("repair_cost"):
 				game.planetkiller_panel.star = star
 				game.toggle_panel(game.planetkiller_panel)
 		elif star.bldg.has("is_constructing"):
@@ -873,7 +904,7 @@ func _process(_delta):
 				if p_i.has("MS"):
 					if p_i.MS == "M_MME":
 						game.autocollect.MS.minerals += Helper.get_MME_output(p_i)
-						game.mineral_capacity += Helper.get_MME_capacity(p_i) - Helper.get_MME_capacity(p_i, -1)
+						game.mineral_capacity += p_i.min_cap_to_add
 				game.HUD.refresh()
 			time_bar_obj.parent.remove_child(time_bar)
 			time_bar.queue_free()
@@ -881,7 +912,7 @@ func _process(_delta):
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	for rsrc_obj in star_rsrcs:
 		var star = stars_info[rsrc_obj.id]
-		if star.bldg.has("is_constructing"):
+		if star.bldg.has("is_constructing") or star.has("repair_cost"):
 			continue
 		var rsrc:ResourceStored = rsrc_obj.node
 		var prod:float
@@ -899,7 +930,7 @@ func _process(_delta):
 		var rsrc:ResourceStored = rsrc_obj.node
 		if planet.has("tile_num"):
 			Helper.update_rsrc(planet, planet, rsrc)
-		elif planet.has("MS"):
+		elif planet.has("MS") and not planet.has("repair_cost"):
 			var prod:float
 			if planet.MS == "M_MME":
 				prod = round(Helper.get_MME_output(planet) * Helper.get_IR_mult("ME") * game.u_i.time_speed)

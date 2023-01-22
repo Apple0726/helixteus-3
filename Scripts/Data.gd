@@ -218,7 +218,7 @@ var univ_prop_weights:Dictionary = {
 	"speed_of_light":25,
 	"planck":30,
 	"boltzmann":30,
-	"gravitational":25,
+	"gravitational":40,
 	"charge":40,
 	"dark_energy":40,
 	"age":15,
@@ -521,7 +521,7 @@ var default_help = {
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,
-				"mineral_replictor_desc":true,
+				"mineral_replicator_desc":true,
 				"substation_desc":true,
 				"observatory_desc":true,
 				"nuclear_fusion_reactor_desc":true,
@@ -572,3 +572,5 @@ var unique_bldg_repair_cost_multipliers = {
 	"observatory":2.8,
 	"cellulose_synthesizer":1.5,
 }
+
+var MS_num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}

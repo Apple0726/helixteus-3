@@ -106,7 +106,7 @@ func on_bldg_overlay_timeout():
 		grid_panel.add_to_group("Grids")
 		grid_panel.name = "Grid_%s" % g_i.l_id
 		grid_panel.rect_position.x = g_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
-		grid_panel.rect_position.y = g_i.pos.y - (grid.rect_size.y) * grid_panel.rect_scale.y * max(sc, 1.0) - 200 * sc
+		grid_panel.rect_position.y = g_i.pos.y - grid_panel.rect_size.y * grid_panel.rect_scale.y - 170 * sc
 	if not MSs.empty():
 		var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
 		MS_grid_panel.get_node("Bottom").visible = false
@@ -121,7 +121,7 @@ func on_bldg_overlay_timeout():
 		MS_grid_panel.add_to_group("MSGrids")
 		MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
 		MS_grid_panel.rect_position.x = g_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
-		MS_grid_panel.rect_position.y = g_i.pos.y + (MS_grid.rect_size.y) * MS_grid_panel.rect_scale.y * max(sc, 1.0)
+		MS_grid_panel.rect_position.y = g_i.pos.y + 170 * sc
 	curr_bldg_overlay += 1
 	if curr_bldg_overlay >= len(discovered_gal):
 		bldg_overlay_timer.stop()
@@ -129,6 +129,7 @@ func on_bldg_overlay_timeout():
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
 	add_child(rsrc)
+	rsrc.set_current_bar_visibility(false)
 	rsrc.set_icon_texture(icon)
 	rsrc.rect_scale *= 5.0
 	rsrc.rect_position = v + Vector2(0, 70 * 5.0)

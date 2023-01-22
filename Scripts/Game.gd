@@ -339,9 +339,9 @@ var craft_cave_info = {
 
 var other_items_info = {
 	"hx_core":{"XP":6},
-	"hx_core2":{"XP":400},
-	"hx_core3":{"XP":30000},
-	"hx_core4":{"XP":2000000},
+	"hx_core2":{"XP":800},
+	"hx_core3":{"XP":120000},
+	"hx_core4":{"XP":1.6e7},
 	"ship_locator":{}}
 
 var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
@@ -742,7 +742,6 @@ func load_univ():
 				particles.neutron -= diff - amount_decayed
 				particles.proton += (diff - amount_decayed) / 2.0
 				particles.electron += (diff - amount_decayed) / 2.0
-		tile_data = open_obj("Planets", c_p_g)
 		if c_v == "mining" or c_v == "cave":
 			c_v = "planet"
 		elif c_v == "science_tree":
@@ -801,6 +800,8 @@ func load_game():
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
 	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	physics_bonus = save_info_dict.physics_bonus
+	if not physics_bonus.has("age"):
+		physics_bonus.age = 15
 	chemistry_bonus = save_info_dict.chemistry_bonus
 	biology_bonus = save_info_dict.biology_bonus
 	engineering_bonus = save_info_dict.engineering_bonus
@@ -1170,6 +1171,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	add_panels()
 	view.modulate.a = 0
 	view.first_zoom = true
+	view.progress = 0
 	view.zoom_factor = 1.03
 	view.zooming = "in"
 	view.set_process(true)
@@ -2381,7 +2383,7 @@ func generate_systems(id:int):
 		var dark_matter_system:bool = c_c == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
-			var a = 1.65 if gc_stars_remaining == 0 else 4.0
+			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.age, 0.25)
 			a *= pow(e(1, -9) / B, physics_bonus.BI)#Higher B: hotter stars
 			#Solar masses
 			var mass:float = -log(randf()) / a
@@ -2533,7 +2535,8 @@ func generate_planets(id:int):#local id
 	var star_size_in_km = max_star_size * e(6.957, 5)
 	var center_star_r_in_pixels:float = star_size_in_pixels(first_star.size) / 2.0
 	var circles:Array = [{"pos":Vector2.ZERO, "radius":center_star_r_in_pixels}]
-	for i in range(1, len(system_data[id].stars)):
+	var N_stars = len(system_data[id].stars)
+	for i in range(1, N_stars):
 		var colliding = true
 		var pos:Vector2
 		var star = system_data[id].stars[i]
@@ -2553,6 +2556,26 @@ func generate_planets(id:int):#local id
 		star.pos = pos
 		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
 		circles.append({"pos":pos, "radius":radius_in_pixels})
+	for i in range(0, N_stars):
+		var star = system_data[id].stars[i]
+		var star_size = star.size
+		var star_temp = star.temperature
+		var star_lum = star.luminosity
+		var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
+		if c_g_g == 0:
+			MSes.erase("M_MB")
+		var MS = MSes[randi() % len(MSes)]
+		if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
+			star.MS = MS
+		elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
+			star.MS = MS
+		if star.has("MS"):
+			star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
+			star.bldg = {}
+			if star.MS == "M_MB":
+				star.repair_cost = Data.MS_costs[star.MS].money * 72 * rand_range(1, 3)
+			else:
+				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3)
 	var planet_num = system_data[id].planet_num
 	var max_distance
 	var j = 0
@@ -2577,13 +2600,13 @@ func generate_planets(id:int):#local id
 	if not achievement_data.exploration.has("50_planet_system") and planet_num >= 50:
 		earn_achievement("exploration", "50_planet_system")
 	for i in range(1, planet_num + 1):
-		#p_i = planet_info
+		# p_i = planet_info
 		var p_i = {}
 		if system_data[id].has("conquered"):
 			p_i["conquered"] = true
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		if p_num == 0:#Starting solar system has smaller planets
+		if p_num == 0:# Starting solar system has smaller planets
 			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
@@ -2596,8 +2619,8 @@ func generate_planets(id:int):#local id
 		p_i["distance"] = pow(1.3,i + j) * rand_range(240, 270)
 		if hypergiant_system:
 			p_i.distance *= 60
-		#1 solar radius = 2.63 px = 0.0046 AU
-		#569 px = 1 AU = 215.6 solar radii
+		# 1 solar radius = 2.63 px = 0.0046 AU
+		# 569 px = 1 AU = 215.6 solar radii
 		max_distance = p_i["distance"]
 		p_i["parent"] = id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
@@ -2696,6 +2719,16 @@ func generate_planets(id:int):#local id
 		stats_univ.biggest_planet = max(p_i.size, stats_univ.biggest_planet)
 		stats_dim.biggest_planet = max(p_i.size, stats_dim.biggest_planet)
 		stats_global.biggest_planet = max(p_i.size, stats_global.biggest_planet)
+		if c_s_g != 0:
+			if p_i.type in [11, 12]:
+				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.15) * pow(u_i.age, 0.15):
+					p_i.MS = "M_MME"
+			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.15) * pow(u_i.age, 0.15):
+				p_i.MS = "M_SE"
+			if p_i.has("MS"):
+				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
+				p_i.bldg = {}
+				p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3)
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		var view_zoom = 400 / max_distance

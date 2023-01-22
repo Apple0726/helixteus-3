@@ -27,6 +27,7 @@ func refresh():
 	if game.ships_travel_view != "-":
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
+		$Panel/TravelETA["custom_colors/font_color"] = Color.white
 	else:
 		if game.autocollect.has("ship_XP"):
 			$Panel/TravelETA["custom_colors/font_color"] = Color.greenyellow

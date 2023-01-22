@@ -203,6 +203,10 @@ func get_type_from_name(_name:String):
 func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 	if clever_round:
 		num = clever_round(num)
+	var sgn = ""
+	if num < 0:
+		num *= -1
+		sgn = "-"
 	if num < pow(10, threshold):
 		var string = str(num)
 		var arr = string.split(".")
@@ -216,7 +220,7 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			if i != 0 and i % 3 == mod:
 				res += ","
 			res += string[i]
-		return res + arr[1]
+		return sgn + res + arr[1]
 	else:
 		var suff:String = ""
 		var p:float = log(num) / log(10)
@@ -247,7 +251,7 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			suff = "R" if notation == 1 else "O"
 		elif p < 33:
 			suff = "Q" if notation == 1 else "N"
-		return "%s%s" % [clever_round(num / div, 3), suff]
+		return "%s%s%s" % [sgn, clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
@@ -295,7 +299,7 @@ func get_crush_info(tile_obj):
 	var constr_delay = 0
 	if tile_obj.bldg.has("is_constructing"):
 		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
-	var progress = (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty
+	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty)
 	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
@@ -851,7 +855,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			elif tile.bldg.name == "PP":
 				var energy_prod = tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 				game.autocollect.rsrc.energy += energy_prod
-				if tile.bldg.has("cap_upgrade"): # Save migration
+				if tile.bldg.has("cap_upgrade") and tile.bldg.cap_upgrade > 0: # Save migration
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
 					game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "SP":
@@ -1052,12 +1056,12 @@ func get_conquer_all_data():
 	for planet in game.planet_data:
 		if planet.has("conquered") or not planet.has("HX_data"):
 			continue
-		closest_unconquered_planet_distance = min(closest_unconquered_planet_distance, planet.distance)
+		#closest_unconquered_planet_distance = min(closest_unconquered_planet_distance, planet.distance)
 		furthest_unconquered_planet_distance = max(furthest_unconquered_planet_distance, planet.distance)
 		for HX in planet.HX_data:
 			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
-	var energy_cost = 70000 * (furthest_unconquered_planet_distance - closest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
+	var energy_cost = 70000 * (furthest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
 	if game.science_unlocked.has("FTL"):
 		energy_cost /= 10.0
 	if game.science_unlocked.has("IGD"):
@@ -1569,3 +1573,6 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 					mult = Helper.get_CS_prod_mult(unique_bldg.tier)
 					base = tile.bldg.path_1_value * overclock_mult * mult
 					Helper.add_energy_from_CS(p_i, base)
+	elif unique_bldg.name == "spaceport":
+		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
+			game.autocollect.ship_XP = unique_bldg.tier

@@ -246,9 +246,9 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
 		tooltip += "[/color]\n"
 		if game.help.has("%s_desc" % tile.unique_bldg.name):
-			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper()) + "\n"
+			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper())
 			game.help_str = "%s_desc" % tile.unique_bldg.name
-			tooltip += "\n" + tr("HIDE_HELP")
+			tooltip += "\n" + tr("HIDE_HELP") + "\n"
 		var desc = tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
 		match tile.unique_bldg.name:
 			"spaceport":
@@ -951,6 +951,9 @@ func _unhandled_input(event):
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
+			if game.shop_panel.tab in ["Speedups", "Overclocks"] and game.shop_panel.locked:
+				game.shop_panel.get_node("VBox/HBox/ItemInfo/VBox/HBox/BuyAmount").value = len(tiles_selected)
+				game.shop_panel.num = len(tiles_selected)
 			if tile.has("bldg") and not game.item_cursor.visible:
 				if Data.desc_icons.has(tile.bldg.name):
 					var tooltip:String = Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
@@ -976,7 +979,7 @@ func _unhandled_input(event):
 		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
-	if not is_instance_valid(game.planet_HUD):
+	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
 		return
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:
@@ -1117,6 +1120,8 @@ func _unhandled_input(event):
 					game.hide_adv_tooltip()
 					p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
 					Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id, wid)
+				else:
+					game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 			elif tile.has("cave"):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
@@ -1266,10 +1271,10 @@ func hide_tooltip():
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if not tile:
 		return false
-	return tile.has("rock") or (tile.has("bldg") if bldg_is_obstacle else true) or tile.has("ship") or tile.has("wormhole") or tile.has("lake") or tile.has("cave") or tile.has("volcano") or ((tile.has("depth") or tile.has("crater")) and not tile.has("bridge"))
+	return tile.has("rock") or (tile.has("bldg") if bldg_is_obstacle else true) or tile.has("unique_bldg") or tile.has("ship") or tile.has("wormhole") or tile.has("lake") or tile.has("cave") or tile.has("volcano") or ((tile.has("depth") or tile.has("crater")) and not tile.has("bridge"))
 
 func available_for_mining(tile):
-	return not tile or not tile.has("bldg") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
+	return not tile or not tile.has("bldg") and not tile.has("unique_bldg") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
 
 func available_to_build(tile):
 	if bldg_to_construct == "MM":
@@ -1408,9 +1413,7 @@ func on_timeout():
 			start_date = tile.bldg.construction_date
 			length = tile.bldg.construction_length
 			progress = (curr_time - start_date) / float(length)
-			print("A")
 			if Helper.update_bldg_constr(tile, p_i):
-				print("B")
 				if tile.bldg.has("path_1"):
 					hboxes[id2].get_node("Path1").text = str(tile.bldg.path_1)
 				if tile.bldg.has("path_2"):

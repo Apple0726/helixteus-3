@@ -545,13 +545,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x:float
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < range_lerp(cave_floor, 1, 16, 0.05, 1.0):
-						rand_scale_x = -log(1 - rng.randf()) * 1.2 + 0.5
+						rand_scale_x = -log(rng.randf()) + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
 						debris.self_modulate = Color.white * (0.9 + debris.lava_intensity / 10.0)
 						debris.get_node("Lava").range_z_min = debris_height
 						debris.get_node("Lava").range_z_max = debris_height
 					else:
-						rand_scale_x = -log(1 - rng.randf()) + 0.5
+						rand_scale_x = -log(rng.randf()) / 1.2 + 0.5
 					debris.get_node("Sprite").z_index = debris_height
 					debris_height += 1
 					debris.scale = Vector2.ONE * rand_scale_x
@@ -693,7 +693,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var rand = rng.randf()
 				var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
 				if rand < formula:
-					var tier:int = min(-log(rand/formula) / 2.5, 5)
+					var tier:int = min(-log(rand/formula) / 2.5 + 1, 5)
 					var contents:Dictionary = generate_treasure(tier, rng)
 					if contents.empty() or chests_looted[cave_floor - 1].has(int(tile)):
 						continue
@@ -1071,19 +1071,19 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.9))}
-	if contents.hx_core > 64:
-		contents.hx_core2 = int(contents.hx_core / 64.0)
-		contents.hx_core %= 64
+	if contents.hx_core > 128:
+		contents.hx_core2 = int(contents.hx_core / 128.0)
+		contents.hx_core %= 128
 		if contents.hx_core == 0:
 			contents.erase("hx_core")
-		if contents.hx_core2 > 64:
-			contents.hx_core3 = int(contents.hx_core2 / 64.0)
-			contents.hx_core2 %= 64
+		if contents.hx_core2 > 128:
+			contents.hx_core3 = int(contents.hx_core2 / 128.0)
+			contents.hx_core2 %= 128
 			if contents.hx_core2 == 0:
 				contents.erase("hx_core2")
-			if contents.hx_core3 > 64:
-				contents.hx_core4 = int(contents.hx_core3 / 64.0)
-				contents.hx_core3 %= 64
+			if contents.hx_core3 > 128:
+				contents.hx_core4 = int(contents.hx_core3 / 128.0)
+				contents.hx_core3 %= 128
 				if contents.hx_core3 == 0:
 					contents.erase("hx_core3")
 	if contents.has("hx_core") and contents.hx_core == 0:

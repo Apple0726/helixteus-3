@@ -46,6 +46,8 @@ func _input(event):
 		_on_close_button_pressed()
 
 func _on_close_button_pressed():
+	if not game.planet_data[p_id].has("HX_data"):
+		return
 	game.add_resources({"money":money})
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)

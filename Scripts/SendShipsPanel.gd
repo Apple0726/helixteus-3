@@ -16,7 +16,8 @@ var atm_exit_cost:float
 var gravity_exit_cost:float
 var atm_entry_cost:float
 var gravity_entry_cost:float
-var spaceport_cost_reduction:float = 1.0
+var spaceport_exit_cost_reduction:float = 1.0
+var spaceport_travel_cost_reduction:float = 1.0
 
 func _ready():
 	set_polygon($Background.rect_size)
@@ -85,7 +86,7 @@ func refresh():
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
 		calc_costs()
 		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
-		var exit_mult_percentage = spaceport_cost_reduction * (get_entry_exit_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
+		var exit_mult_percentage = spaceport_exit_cost_reduction * (get_entry_exit_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
 		exit_mult_percentage = 100 - 100 * exit_mult_percentage
 		var entry_mult_percentage = get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv) if has_SE(game.planet_data[dest_p_id]) else 1.0
 		entry_mult_percentage = 100 - 100 * entry_mult_percentage
@@ -189,7 +190,7 @@ func _on_HSlider_value_changed(value):
 	calc_costs()
 
 func has_SE(p_i:Dictionary):
-	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing")
+	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing") and not p_i.has("repair_cost")
 
 func get_atm_exit_cost(pressure:float):
 	var res:float = pow(pressure * 10, 2) * 100
@@ -198,7 +199,7 @@ func get_atm_exit_cost(pressure:float):
 	return round(res)
 
 func get_grav_exit_cost(size:float):
-	var res:float = pow(size / 250.0, 2.5) * game.u_i.gravitational
+	var res:float = pow(size / 250.0, 2.5)
 	if has_SE(depart_planet_data):
 		res *= get_entry_exit_multiplier(depart_planet_data.MS_lv)
 	return round(res)
@@ -210,7 +211,7 @@ func get_atm_entry_cost(pressure:float):
 	return round(res)
 
 func get_grav_entry_cost(size:float):
-	var res:float = pow(size / 600.0, 2.5) * 3 * game.u_i.gravitational
+	var res:float = pow(size / 600.0, 2.5) * 3
 	if has_SE(game.planet_data[dest_p_id]):
 		res *= get_entry_exit_multiplier(game.planet_data[dest_p_id].MS_lv)
 	return round(res)
@@ -231,11 +232,13 @@ func calc_costs():
 	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 1)
 	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
-	spaceport_cost_reduction = 1.0
+	spaceport_exit_cost_reduction = 1.0
+	spaceport_travel_cost_reduction = 1.0
 	if depart_planet_data.has("unique_bldgs") and depart_planet_data.unique_bldgs.has("spaceport") and not depart_planet_data.unique_bldgs.spaceport[0].has("repair_cost"):
-		spaceport_cost_reduction = Helper.get_spaceport_exit_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
-		atm_exit_cost *= spaceport_cost_reduction
-		gravity_exit_cost *= spaceport_cost_reduction
+		spaceport_exit_cost_reduction = 1.0 - Helper.get_spaceport_exit_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
+		spaceport_travel_cost_reduction = 1.0 - Helper.get_spaceport_travel_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
+		atm_exit_cost *= spaceport_exit_cost_reduction
+		gravity_exit_cost *= spaceport_exit_cost_reduction
 	atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
 	gravity_entry_cost = get_grav_entry_cost(game.planet_data[dest_p_id].size)
 	if depart_planet_data.type in [11, 12]:
@@ -246,13 +249,15 @@ func calc_costs():
 		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
 	$EnergyCost2.bbcode_text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
-	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light
+	var travel_cost_mult = spaceport_travel_cost_reduction * (get_travel_cost_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
+	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light * travel_cost_mult
 	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
 	if game.science_unlocked.has("FTL"):
 		time_cost /= 10.0
 	if game.science_unlocked.has("IGD"):
 		time_cost /= 100.0
-	$Panel/EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % (100 - 100 * get_travel_cost_multiplier(depart_planet_data.MS_lv))) if has_SE(depart_planet_data) else ""]
+	var travel_cost_mult_percentage = 100 - 100 * travel_cost_mult
+	$Panel/EnergyCost.text = "%s%s" % [Helper.format_num(round(travel_energy_cost)), (" (-%s%%)" % travel_cost_mult_percentage) if travel_cost_mult_percentage > 0 else ""]
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
 	$Panel/TimeCost.text = Helper.time_to_str(time_cost)

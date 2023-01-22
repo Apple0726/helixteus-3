@@ -63,7 +63,7 @@ func set_upg_text(MU:String, next_lv:int = 0):
 		"IS":
 			$Panel/VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"AIE":
-			$Panel/VBox/AIE/Effects.text = String(Helper.get_AIE(next_lv))
+			$Panel/VBox/AIE/Effects.text = str(Helper.get_AIE(next_lv))
 		"STMB":
 			$Panel/VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
@@ -92,13 +92,14 @@ func _on_Upgrade_pressed(MU:String):
 				game.mining_HUD.refresh_aurora_bonus()
 			for AI in game.aurora_prod.keys():
 				for rsrc in game.aurora_prod[AI].keys():
-					game.aurora_prod[AI][rsrc] *= pow(1 + AI, 0.02)
+					var m = pow(1 + AI, 0.02)
 					if rsrc == "energy":
-						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (pow(1 + AI, 0.02) - 1.0)
+						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (m - 1.0)
 					elif rsrc in game.mat_info.keys():
-						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 0.02) - 1.0)
+						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
 					elif rsrc in game.met_info.keys():
-						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (pow(1 + AI, 0.02) - 1.0)
+						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
+					game.aurora_prod[AI][rsrc] *= m
 		if MU == "IS":
 			game.items.append(null)
 	else:

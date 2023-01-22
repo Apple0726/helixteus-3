@@ -14,9 +14,8 @@ func _ready():
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
-	var cte:float = 1.3 * 4.0 * PI * pow(1000000.0 + 6000000.0 * 2.5, 2)
-	surface = cte * g_i.system_num * pow(g_i.dark_matter, 3)
-	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(surface / cte / 200.0), "[img]Graphics/Icons/help.png[/img]"]
+	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(g_i.system_num * pow(g_i.dark_matter, 3) / 200.0), "[img]Graphics/Icons/help.png[/img]"]
+	surface = 4.2e15 * g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3)
 	if bldg != "":
 		update_info()
 
@@ -26,6 +25,14 @@ func update_info():
 	$Control/ProdCostMult.visible = bldg != "TP"
 	$Control/ProductionPerSec.visible = bldg != "TP"
 	$Control/Production.visible = bldg != "TP"
+	var prod_mult = 1.0
+	if bldg in ["PP", "RL"]:
+		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
+		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
+		$Control/ProdMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult), "[img]Graphics/Icons/help.png[/img]"]
+		$Control/ProdMult.visible = true
+	else:
+		$Control/ProdMult.visible = false
 	if game.c_g_g == game.ships_c_g_coords.g:
 		$Control/GalaxyInfo.text = tr("GS_ERROR3")
 		$Control/GalaxyInfo["custom_colors/font_color"] = Color.yellow
@@ -36,12 +43,10 @@ func update_info():
 			costs.stone = PI * 100
 			if bldg == "ME":
 				costs.mythril = 1 / 240000.0
-			elif bldg in ["MS", "B"]:
+			elif bldg in ["MS", "B", "PP"]:
 				costs.mythril = 1 / 300000.0
 			elif bldg == "RL":
 				costs.mythril = 1 / 120000.0
-			elif bldg == "PP":
-				costs.mythril = 1 / 500000.0
 			if costs.has("energy"):
 				costs.energy *= 200.0
 			costs.erase("time")
@@ -60,11 +65,11 @@ func update_info():
 		Helper.put_rsrc($Control/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult("ME")})
 	elif bldg == "PP":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 10.0
+		num = surface * 20.0 * prod_mult
 		Helper.put_rsrc($Control/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
 		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 0.5
+		num = surface * 0.5 * prod_mult
 		Helper.put_rsrc($Control/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult("RL")})
 	elif bldg == "MS":
 		$Control/ProductionPerSec.text = tr("STORAGE")
