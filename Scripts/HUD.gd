@@ -424,9 +424,12 @@ func _on_MineralUpgrades_mouse_entered():
 func _on_Texture_mouse_entered(extra_arg_0):
 	var tooltip:String = tr(extra_arg_0)
 	if extra_arg_0 == "CELLULOSE":
-		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
-		if not is_zero_approx(game.autocollect.mats.cellulose):
-			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
+		if game.autocollect.mats.cellulose > 0:
+			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
+		else:
+			tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.cellulose), true), tr("S_SECOND")])
+			if not is_zero_approx(game.autocollect.mats.cellulose):
+				tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("CELLULOSE"), "time":Helper.time_to_str(1000 * game.mats.cellulose / abs(game.autocollect.mats.cellulose))})
 	elif extra_arg_0 == "SOIL" and game.autocollect.mats.has("soil"):
 		tooltip += "\n" + tr("YOU_USE") % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mats.soil), true), tr("S_SECOND")])
 		if not is_zero_approx(game.autocollect.mats.soil):

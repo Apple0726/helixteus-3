@@ -937,6 +937,8 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 			$Laser/Texture.material["shader_param/outline_color"] = Color.yellow
 		elif weapon_data.lv == 4:
 			$Laser/Texture.material["shader_param/outline_color"] = Color.green
+		elif weapon_data.lv == 5:
+			$Laser/Texture.material["shader_param/outline_color"] = Color.blue
 		$Laser/AnimationPlayer.play("LaserFade", -1, time_speed)
 		weapon_hit_HX(curr_sh, {
 			"target":target,

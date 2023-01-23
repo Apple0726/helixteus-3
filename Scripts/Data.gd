@@ -18,7 +18,7 @@ var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{
 				"AMN":{"value":1.0, "pw":1.16, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
 				"SPR":{"value":1.0, "pw":1.16, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				"SY":{"value":1.0, "pw":1.16, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
-				"CBD":{"value":1.111111, "pw":1.04, "cost_mult":1.5, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				"CBD":{"value":1.111111, "pw":1.03, "cost_mult":1.5, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
@@ -420,10 +420,26 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"gammaray_mining_laser":{"speed":12, "rnge":380, "costs":{"money":e(9.4, 10), "silicon":1000, "quartz":500, "time":65000}},
 						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000, "time":100000}},
 }
-var bullet_data = [{"damage":3.5, "accuracy":1.0}, {"damage":5, "accuracy":1.05}, {"damage":9, "accuracy":1.1}, {"damage":19, "accuracy":1.3}]
-var laser_data = [{"damage":2.5, "accuracy":2.2}, {"damage":3.5, "accuracy":2.4}, {"damage":6.5, "accuracy":2.7}, {"damage":13, "accuracy":3.3}]
-var bomb_data = [{"damage":6, "accuracy":0.7}, {"damage":8, "accuracy":0.72}, {"damage":15, "accuracy":0.75}, {"damage":34, "accuracy":0.8}]
-var light_data = [{"damage":1.5, "accuracy":1.3}, {"damage":2.5, "accuracy":1.35}, {"damage":4.0, "accuracy":1.45}, {"damage":8.0, "accuracy":1.7}]
+var bullet_data = [	{"damage":3.5, "accuracy":1.0},
+					{"damage":5, "accuracy":1.05},
+					{"damage":9, "accuracy":1.1},
+					{"damage":19, "accuracy":1.3},
+					{"damage":44, "accuracy":1.7},]
+var laser_data = [	{"damage":2.5, "accuracy":2.2},
+					{"damage":3.5, "accuracy":2.4},
+					{"damage":6.5, "accuracy":2.7},
+					{"damage":13, "accuracy":3.3},
+					{"damage":29, "accuracy":5.5},]
+var bomb_data = [	{"damage":6, "accuracy":0.7},
+					{"damage":8, "accuracy":0.72},
+					{"damage":15, "accuracy":0.75},
+					{"damage":34, "accuracy":0.8},
+					{"damage":90, "accuracy":1.0},]
+var light_data = [	{"damage":1.5, "accuracy":1.3},
+					{"damage":2.5, "accuracy":1.35},
+					{"damage":4.0, "accuracy":1.45},
+					{"damage":8.0, "accuracy":1.7},
+					{"damage":17.5, "accuracy":2.8},]
 
 #the numbers are the elements' abundance relative to hydrogen
 var elements = {"NH3":0.05, "CO2":0.01, "H":1.0, "He":0.325, "CH4":0.2, "O":0.014, "H2O":0.15, "Ne":0.001813, "Xe":0.0000022}

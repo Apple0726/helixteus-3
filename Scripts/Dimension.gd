@@ -162,6 +162,7 @@ func refresh_univs(reset:bool = false):
 			if subj.name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering", "Dimensional_Power"]:
 				subj.get_node("HBox/Invest").connect("pressed", self, "on_invest", [subj])
 	$Universes.visible = not reset
+	$Panel.visible = not reset
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
 	$TopInfo/Reset.visible = not reset
@@ -206,9 +207,10 @@ func on_invest(subj_node):
 
 func on_univ_out():
 	game.hide_tooltip()
-	$UnivInfo.text = ""
+	$UnivInfo/AnimationPlayer.play_backwards("Fade")
 
 func on_univ_over(id:int):
+	$UnivInfo/AnimationPlayer.play("Fade")
 	var u_i = game.universe_data[id] #universe_info
 	$UnivInfo.text = "%s (%s %s)\n%s: %s (%s)\n\n" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})]
 	$UnivInfo.text += tr("FUNDAMENTAL_PROPERTIES") + "\n"

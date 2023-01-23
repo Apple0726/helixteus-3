@@ -10,6 +10,9 @@ var lake_num:int
 var ash_mult:float
 var p_i:Dictionary
 var cost_div:float
+var unique_bldg_str:String
+var unique_bldg_bonus:float
+var unique_bldg_bonus_cap:float
 
 func _ready():
 	set_polygon(rect_size)
@@ -43,6 +46,7 @@ func update_info():
 	$Panel.visible = true
 
 func set_bldg_cost_txt():
+	unique_bldg_str = ""
 	if cost_div > 1.0:
 		$Panel/BuildingCosts.text = "%s (%s) (%s %s)" % [tr("BUILDING_COSTS"), tr("DIV_BY") % cost_div, Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
 	else:
@@ -76,20 +80,31 @@ func _on_Terraform_pressed():
 		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 		p_i.bldg.path_1 = 1
 		p_i.bldg.path_1_value = Data.path_1[tf_type].value
+		if unique_bldg_str in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
+			p_i[unique_bldg_str + "_bonus"] = unique_bldg_bonus
+			if unique_bldg_str == "substation":
+				p_i.capacity_bonus = Data.path_1.PP.value * surface * unique_bldg_bonus_cap
+				game.capacity_bonus_from_substation += p_i.capacity_bonus
+		elif unique_bldg_str == "nuclear_fusion_reactor":
+			for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
+				if not nfr.has("repair_cost"):
+					Helper.add_energy_from_NFR(p_i, p_i.bldg.path_1_value * Helper.get_NFR_prod_mult(nfr.tier))
+		elif unique_bldg_str == "cellulose_synthesizer":
+			for cs in p_i.unique_bldgs.cellulose_synthesizer:
+				if not cs.has("repair_cost"):
+					Helper.add_energy_from_CS(p_i, p_i.bldg.path_1_value * Helper.get_CS_prod_mult(cs.tier))
 		if tf_type in ["GH", "AMN", "SPR"]:
 			p_i.bldg.path_2 = 1
 			p_i.bldg.path_2_value = Data.path_2[tf_type].value
 		if tf_type == "RL":
-			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface
+			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface * p_i.get("observatory_bonus", 1)
 		elif tf_type == "GH":
 			p_i.ash = {"richness":ash_mult}
 		elif tf_type == "PP":
-			game.autocollect.rsrc.energy += Data.path_1.PP.value * surface
+			game.autocollect.rsrc.energy += Data.path_1.PP.value * surface * p_i.get("substation_bonus", 1)
 		elif tf_type == "ME":
-			game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface
+			game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface * p_i.get("mineral_replicator_bonus", 1)
 			p_i.ash = {"richness":ash_mult}
-		elif tf_type == "SP":
-			game.autocollect.rsrc.energy += Helper.get_SP_production(p_i.temperature, Data.path_1.SP.value * surface)
 		elif tf_type == "MS":
 			game.mineral_capacity += Data.path_1.MS.value * surface
 		elif tf_type == "B":
@@ -126,20 +141,22 @@ func _on_PP_pressed():
 	costs = Data.costs.PP.duplicate(true)
 	var st = ""
 	if p_i.unique_bldgs.has("substation"):
-		var bonus = 0
-		var bonus_cap = 0
+		unique_bldg_bonus = 0
+		unique_bldg_bonus_cap = 0
 		var n_total = 0
 		for sub in p_i.unique_bldgs.substation:
 			if not sub.has("repair_cost"):
 				var n = (pow(Helper.get_unique_bldg_area(sub.tier), 2) - 1)
-				bonus += Helper.get_substation_prod_mult(sub.tier) * n
-				bonus_cap += Helper.get_substation_capacity_bonus(sub.tier) * n
+				unique_bldg_bonus += Helper.get_substation_prod_mult(sub.tier) * n
+				unique_bldg_bonus_cap += Helper.get_substation_capacity_bonus(sub.tier) * n
 				n_total += n
-		bonus += len(game.tile_data) - n_total
-		bonus /= len(game.tile_data)
-		bonus_cap /= len(game.tile_data)
-		st += tr("ENERGY_MULT_FROM_SUBSTATION") + " " + str(Helper.clever_round(bonus))
-		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(bonus_cap * 1000)
+		unique_bldg_bonus += len(game.tile_data) - n_total
+		unique_bldg_bonus /= len(game.tile_data)
+		if unique_bldg_bonus > 1:
+			unique_bldg_str = "substation"
+		unique_bldg_bonus_cap /= len(game.tile_data)
+		st += tr("ENERGY_MULT_FROM_SUBSTATION") + " " + str(Helper.clever_round(unique_bldg_bonus))
+		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(unique_bldg_bonus_cap * 1000)
 	$Panel/Note.text = st
 	update_info()
 
@@ -150,16 +167,18 @@ func _on_ME_pressed():
 	costs = Data.costs.ME.duplicate(true)
 	var st = ""
 	if p_i.unique_bldgs.has("mineral_replicator"):
-		var bonus = 0
+		unique_bldg_bonus = 0
 		var n_total = 0
 		for mr in p_i.unique_bldgs.mineral_replicator:
 			if not mr.has("repair_cost"):
 				var n = (pow(Helper.get_unique_bldg_area(mr.tier), 2) - 1)
-				bonus += Helper.get_MR_Obs_Outpost_prod_mult(mr.tier) * n
+				unique_bldg_bonus += Helper.get_MR_Obs_Outpost_prod_mult(mr.tier) * n
 				n_total += n
-		bonus += len(game.tile_data) - n_total
-		bonus /= len(game.tile_data)
-		st += tr("MIN_MULT_FROM_MR") + " " + str(Helper.clever_round(bonus))
+		unique_bldg_bonus += len(game.tile_data) - n_total
+		unique_bldg_bonus /= len(game.tile_data)
+		if unique_bldg_bonus > 1:
+			unique_bldg_str = "mineral_replicator"
+		st += tr("MIN_MULT_FROM_MR") + " " + str(Helper.clever_round(unique_bldg_bonus))
 	if ash_mult > 1:
 		st += "\n" + tr("MIN_MULT_FROM_ASH") % ash_mult
 	$Panel/Note.text = st
@@ -172,16 +191,18 @@ func _on_RL_pressed():
 	costs = Data.costs.RL.duplicate(true)
 	var st = ""
 	if p_i.unique_bldgs.has("observatory"):
-		var bonus = 0
+		unique_bldg_bonus = 0
 		var n_total = 0
 		for obs in p_i.unique_bldgs.observatory:
 			if not obs.has("repair_cost"):
 				var n = (pow(Helper.get_unique_bldg_area(obs.tier), 2) - 1)
-				bonus += Helper.get_MR_Obs_Outpost_prod_mult(obs.tier) * n
+				unique_bldg_bonus += Helper.get_MR_Obs_Outpost_prod_mult(obs.tier) * n
 				n_total += n
-		bonus += len(game.tile_data) - n_total
-		bonus /= len(game.tile_data)
-		st += tr("SP_MULT_FROM_OBS") + " " + str(Helper.clever_round(bonus))
+		unique_bldg_bonus += len(game.tile_data) - n_total
+		unique_bldg_bonus /= len(game.tile_data)
+		if unique_bldg_bonus > 1:
+			unique_bldg_str = "observatory"
+		st += tr("SP_MULT_FROM_OBS") + " " + str(Helper.clever_round(unique_bldg_bonus))
 	$Panel/Note.text = st
 	update_info()
 
@@ -190,7 +211,7 @@ func _on_AMN_pressed():
 	tf_type = "AMN"
 	set_bldg_cost_txt()
 	costs = Data.costs.AMN.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 
@@ -198,7 +219,7 @@ func _on_SPR_pressed():
 	tf_type = "SPR"
 	set_bldg_cost_txt()
 	costs = Data.costs.SPR.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 
@@ -206,7 +227,7 @@ func _on_NSF_pressed():
 	tf_type = "NSF"
 	set_bldg_cost_txt()
 	costs = Data.costs.NSF.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 
@@ -214,7 +235,7 @@ func _on_ESF_pressed():
 	tf_type = "ESF"
 	set_bldg_cost_txt()
 	costs = Data.costs.ESF.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 
@@ -222,21 +243,20 @@ func _on_B_pressed():
 	tf_type = "B"
 	set_bldg_cost_txt()
 	costs = Data.costs.B.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 func _on_MS_pressed():
 	tf_type = "MS"
 	set_bldg_cost_txt()
 	costs = Data.costs.MS.duplicate(true)
-	$Panel/Note.visible = false
+	$Panel/Note.text = ""
 	update_info()
 
 func _on_AE_pressed():
 	tf_type = "AE"
 	set_bldg_cost_txt()
 	costs = Data.costs.AE.duplicate(true)
-	$Panel/Note.visible = true
 	var st = ""
 	if p_i.unique_bldgs.has("nuclear_fusion_reactor"):
 		var needs_repair = false
@@ -248,6 +268,7 @@ func _on_AE_pressed():
 			st += tr("REPAIR_NFR_TO_GET_ENERGY")
 		else:
 			st += tr("WILL_PROVIDE_EXTRA_ENERGY")
+			unique_bldg_str = "nuclear_fusion_reactor"
 		st += "\n"
 	if p_i.unique_bldgs.has("cellulose_synthesizer"):
 		var needs_repair = false
@@ -259,6 +280,7 @@ func _on_AE_pressed():
 			st += tr("REPAIR_CS_TO_GET_CELLULOSE")
 		else:
 			st += tr("WILL_PROVIDE_EXTRA_CELLULOSE")
+			unique_bldg_str = "cellulose_synthesizer"
 	$Panel/Note.text = st
 	update_info()
 
@@ -266,7 +288,21 @@ func _on_MM_pressed():
 	tf_type = "MM"
 	set_bldg_cost_txt()
 	costs = Data.costs.MM.duplicate(true)
-	$Panel/Note.visible = false
+	var st = ""
+	if p_i.unique_bldgs.has("mining_outpost"):
+		unique_bldg_bonus = 0
+		var n_total = 0
+		for sub in p_i.unique_bldgs.mining_outpost:
+			if not sub.has("repair_cost"):
+				var n = (pow(Helper.get_unique_bldg_area(sub.tier), 2) - 1)
+				unique_bldg_bonus += Helper.get_MR_Obs_Outpost_prod_mult(sub.tier) * n
+				n_total += n
+		unique_bldg_bonus += len(game.tile_data) - n_total
+		unique_bldg_bonus /= len(game.tile_data)
+		if unique_bldg_bonus > 1:
+			unique_bldg_str = "mining_outpost"
+		st += tr("MINING_MULT_FROM_OUTPOST") + " " + str(Helper.clever_round(unique_bldg_bonus))
+	$Panel/Note.text = st
 	update_info()
 
 func _on_GH_pressed():
@@ -275,5 +311,4 @@ func _on_GH_pressed():
 	costs = Data.costs.GH.duplicate(true)
 	costs.soil = 10
 	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
-	$Panel/Note.visible = true
 	update_info()

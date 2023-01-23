@@ -647,7 +647,7 @@ func add_ship_XP(id:int, XP:float):
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
 	ship_data[id][weapon].XP += XP
-	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 4:
+	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 5:
 		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
 		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 0][ship_data[id][weapon].lv - 1]
 		ship_data[id][weapon].lv += 1
@@ -757,8 +757,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		else:
 			rsrc_text = ""
 	elif tile.bldg.name == "MM":
-		rsrc_text = "%s m/s" % format_num(tile.bldg.path_1_value * get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0), true)
-		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * get_prod_mult(tile), 1.0)
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
+		rsrc_text = "%s m/s" % format_num(prod, true)
+		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * prod, 1.0)
 	else:
 		if Mods.added_buildings.has(tile.bldg.name):
 			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
@@ -1028,23 +1029,23 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0
 
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
 
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
@@ -1504,10 +1505,10 @@ func get_AG_num_auroras(tier:int):
 	return 10 * pow(2, tier-1)
 
 func get_NFR_prod_mult(tier:int):
-	return 5000 * pow(4, tier-1)
+	return 500 * pow(4, tier-1)
 
 func get_CS_prod_mult(tier:int):
-	return 25 * pow(4, tier-1)
+	return 10 * pow(4, tier-1)
 
 func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int, wid:int):
 	var x_pos = tile_id % wid
@@ -1525,13 +1526,11 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 					continue
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
+				var mult = Helper.get_substation_prod_mult(tier) if unique_bldg.name == "substation" else Helper.get_MR_Obs_Outpost_prod_mult(tier)
 				if tile:
-					var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 					if tile.has(str(unique_bldg.name + "_bonus")) and mult < tile[str(unique_bldg.name + "_bonus")]:
 						return
 					tile[str(unique_bldg.name + "_bonus")] = mult
-					if unique_bldg.name == "substation":
-						tile.substation_tile = tile_id
 					if tile.has("bldg") and not tile.bldg.has("is_constructing") and unique_bldg.name != "mining_outpost":
 						var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 						var base = tile.bldg.path_1_value * overclock_mult * mult
@@ -1545,23 +1544,26 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 							if tile.bldg.name == "PP":
 								game.autocollect.rsrc.energy += diff
 								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
-								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus + base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
 							elif tile.bldg.name == "SP":
 								var energy_prod = Helper.get_SP_production(p_i.temperature, diff * Helper.get_au_mult(tile))
 								var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * Helper.get_au_mult(tile))
 								game.autocollect.rsrc.energy += energy_prod
 								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
-								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus + energy_prod_base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
 								if tile.has("aurora"):
 									if game.aurora_prod.has(tile.aurora.au_int):
 										game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod
 									else:
 										game.aurora_prod[tile.aurora.au_int] = {"energy":energy_prod}
 				else:
-					game.tile_data[id] = {str(unique_bldg.name + "_bonus"):Helper.get_MR_Obs_Outpost_prod_mult(tier)}
+					game.tile_data[id] = {str(unique_bldg.name + "_bonus"): mult}
+				if unique_bldg.name == "substation":
+					game.tile_data[id].substation_tile = tile_id
+					unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0)
 	elif unique_bldg.name in ["nuclear_fusion_reactor", "cellulose_synthesizer"]:
 		for tile in game.tile_data:
-			if tile and tile.has("bldg") and not tile.bldg.name == "AE" and tile.bldg.has("is_constructing"):
+			if tile and tile.has("bldg") and tile.bldg.name == "AE" and not tile.bldg.has("is_constructing"):
 				var overclock_mult = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 				var mult = 1.0
 				var base = 1.0

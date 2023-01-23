@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
@@ -83,22 +83,36 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-expand_margin_left = 12.0
-expand_margin_right = 12.0
-expand_margin_top = 12.0
-expand_margin_bottom = 12.0
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
+[sub_resource type="Animation" id=14]
+resource_name = "Fade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=15]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="DynamicFont" id=4]
 size = 25
@@ -247,7 +261,14 @@ color = Color( 1, 1, 1, 0 )
 anims/FlashButton = SubResource( 6 )
 anims/RESET = SubResource( 7 )
 
+[node name="Panel" type="Panel" parent="."]
+margin_left = 288.0
+margin_top = 48.0
+margin_right = 684.0
+margin_bottom = 720.0
+
 [node name="UnivInfo" type="Label" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 300.0
@@ -256,8 +277,11 @@ margin_right = -588.0
 margin_bottom = -12.0
 rect_min_size = Vector2( 392, 648 )
 custom_fonts/font = SubResource( 3 )
-custom_styles/normal = SubResource( 2 )
 autowrap = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UnivInfo"]
+anims/Fade = SubResource( 14 )
+anims/RESET = SubResource( 15 )
 
 [node name="Subjects" type="ScrollContainer" parent="."]
 margin_left = 684.0

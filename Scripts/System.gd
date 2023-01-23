@@ -298,11 +298,10 @@ func refresh_stars():
 			if star_info.MS == "M_DS":
 				MS.scale *= 0.7
 			star.add_child(MS)
-			if star_info.MS in ["M_DS", "M_MB"]:
-				if star_info.MS == "M_DS":
-					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5))
-				elif star_info.MS == "M_MB":
-					add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5))
+			if star_info.MS == "M_DS":
+				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5))
+			elif star_info.MS == "M_MB":
+				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5))
 			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
 				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)
@@ -464,12 +463,13 @@ func show_planet_info(id:int, l_id:int):
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, Data.MS_num_stages[p_i.MS]]]
 		Helper.add_label(stage, -1, true, true)
 		if p_i.has("repair_cost"):
-			Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
-			Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
-			MS_constr_data.obj = p_i
-			MS_constr_data.confirm = true
-			bldg_costs = {"money":p_i.repair_cost, "time":0.2}
-			Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
+			if p_i.has("conquered"):
+				Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
+				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
+				MS_constr_data.obj = p_i
+				MS_constr_data.confirm = true
+				bldg_costs = {"money":p_i.repair_cost, "time":0.2}
+				Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
 		else:
 			if p_i.MS == "M_SE":
 				Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
@@ -538,25 +538,33 @@ func build_MS(obj:Dictionary, MS:String):
 		game.deduct_resources(bldg_costs)
 		if not game.achievement_data.progression.has("build_MS"):
 			game.earn_achievement("progression", "build_MS")
-		if MS == "M_MME":
-			if not obj.has("MS_lv") or obj.has("repair_cost"):
-				obj.min_cap_to_add = Helper.get_MME_capacity(obj)
-			else:
-				obj.min_cap_to_add = Helper.get_MME_capacity(obj) - Helper.get_MME_capacity(obj, -1)
 		if obj.has("MS"):
 			if not obj.has("repair_cost"):
-				if obj.MS == "M_DS":
-					game.autocollect.MS.energy -= Helper.get_DS_output(obj)
-				elif obj.MS == "M_MME":
-					game.autocollect.MS.minerals -= Helper.get_MME_output(obj)
 				obj.MS_lv += 1
+				if obj.MS == "M_DS":
+					game.autocollect.MS.energy -= Helper.get_DS_output(obj, -1)
+					if MS == "M_MB":
+						obj.energy_cap_to_add = 0
+					else:
+						obj.energy_cap_to_add = Helper.get_DS_capacity(obj) - Helper.get_DS_capacity(obj, -1)
+				elif obj.MS == "M_MME":
+					game.autocollect.MS.minerals -= Helper.get_MME_output(obj, -1)
+					obj.min_cap_to_add = Helper.get_MME_capacity(obj) - Helper.get_MME_capacity(obj, -1)
 			else:
 				obj.erase("repair_cost")
+				if obj.MS in ["M_DS", "M_MB"]:
+					obj.energy_cap_to_add = Helper.get_DS_capacity(obj)
+				elif obj.MS == "M_MME":
+					obj.min_cap_to_add = Helper.get_MME_capacity(obj)
 		else:
 			if build_all_MS_stages:
 				obj.MS_lv = Data.MS_num_stages[MS]
 			else:
 				obj.MS_lv = 0
+			if MS == "M_DS":
+				obj.energy_cap_to_add = Helper.get_DS_capacity(obj)
+			elif MS == "M_MME":
+				obj.min_cap_to_add = Helper.get_MME_capacity(obj)
 			game.stats_univ.MS_constructed += 1
 			game.stats_dim.MS_constructed += 1
 			game.stats_global.MS_constructed += 1
@@ -592,7 +600,7 @@ func on_planet_click (id:int, l_id:int):
 			game.c_p_g = id
 			game.switch_view("planet_details")
 			return
-		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME", "building-M_MPCC"]
+		var building:bool = game.bottom_info_action in ["building-M_SE", "building-M_MME"]
 		if building:
 			if p_i.has("conquered"):
 				if not p_i.has("MS"):
@@ -736,12 +744,13 @@ func on_star_over (id:int):
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)
 		if star.has("repair_cost"):
-			Helper.add_label(tr("REPAIR_COST"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
-			MS_constr_data.obj = star
-			MS_constr_data.confirm = true
-			bldg_costs = {"money":star.repair_cost, "time":0.2}
-			Helper.add_label(tr("PRESS_F_TO_REPAIR"))
+			if game.system_data[game.c_s].has("conquered"):
+				Helper.add_label(tr("REPAIR_COST"), -1, false)
+				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
+				MS_constr_data.obj = star
+				MS_constr_data.confirm = true
+				bldg_costs = {"money":star.repair_cost, "time":0.2}
+				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
 			if star.MS == "M_DS":
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
@@ -862,9 +871,10 @@ func _process(_delta):
 				game.universe_data[game.c_u].xp += star.bldg.XP
 				if star.MS == "M_DS":
 					game.autocollect.MS.energy += Helper.get_DS_output(star)
-					game.energy_capacity += Helper.get_DS_capacity(star) - Helper.get_DS_capacity(star, -1)
+					game.energy_capacity += star.energy_cap_to_add
 				elif star.MS == "M_MB":
 					game.autocollect.MS.SP += Helper.get_MB_output(star)
+					game.energy_capacity += star.energy_cap_to_add
 				elif star.MS == "M_CBS":
 					var p_num_total:int = len(game.planet_data)
 					var p_num:int = ceil(p_num_total * star.MS_lv * 0.333)

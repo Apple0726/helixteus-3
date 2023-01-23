@@ -408,11 +408,11 @@ func _on_Upgrade_pressed():
 			elif planet.bldg.name == "ESF":
 				game.electron_cap += diff
 			elif planet.bldg.name == "RL":
-				game.autocollect.rsrc.SP += diff
+				game.autocollect.rsrc.SP += diff * planet.get("observatory_bonus", 1.0)
 			elif planet.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0)
+				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0) * planet.get("mineral_replicator_bonus", 1.0)
 			elif planet.bldg.name == "PP":
-				game.autocollect.rsrc.energy += diff
+				game.autocollect.rsrc.energy += diff * planet.get("substation_bonus", 1.0)
 			elif planet.has("auto_GH"):
 				for p in planet.auto_GH.produce:
 					var upgrade_mult:float = new_base_value / planet.bldg["%s_value" % path_str]

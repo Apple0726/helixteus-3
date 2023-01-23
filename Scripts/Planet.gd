@@ -137,6 +137,18 @@ func _ready():
 						add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
 				else:
 					bldgs[id2] = add_bldg_sprite(v, tile.unique_bldg.name, mod)
+					if tile.unique_bldg.tier > 1:
+						var particle_props = [	{"c":Color(1.2, 2.4, 1.2), "amount":50, "lifetime":2.4},
+												{"c":Color(1.2, 1.2, 2.4), "amount":60, "lifetime":2.8},
+												{"c":Color(2.4, 1.2, 2.4), "amount":70, "lifetime":3.2},
+												{"c":Color(2.4, 1.8, 1.2), "amount":80, "lifetime":3.6},
+												{"c":Color(2.4, 2.4, 1.8), "amount":90, "lifetime":4.0},
+												{"c":Color(2.4, 1.2, 1.2), "amount":100, "lifetime":4.4}]
+						var particles = preload("res://Scenes/UniqueBuildingParticles.tscn").instance()
+						particles.modulate = particle_props[tile.unique_bldg.tier - 2].c
+						particles.amount = particle_props[tile.unique_bldg.tier - 2].amount
+						particles.lifetime = particle_props[tile.unique_bldg.tier - 2].lifetime
+						bldgs[id2].add_child(particles)
 					if tile.unique_bldg.name == "cellulose_synthesizer":
 						add_rsrc(v + Vector2(100, 100), Color.brown, Data.cellulose_icon, id2)
 					elif tile.unique_bldg.name == "substation":
@@ -261,9 +273,9 @@ func show_tooltip(tile, tile_id:int):
 			"aurora_generator":
 				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.unique_bldg.tier), "n":Helper.get_AG_num_auroras(tile.unique_bldg.tier)})
 			"nuclear_fusion_reactor":
-				desc = desc % Helper.get_NFR_prod_mult(tile.unique_bldg.tier)
+				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tile.unique_bldg.tier))
 			"cellulose_synthesizer":
-				desc = desc % Helper.get_CS_prod_mult(tile.unique_bldg.tier)
+				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tile.unique_bldg.tier))
 		tooltip += desc
 		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
 		if tile.unique_bldg.has("repair_cost"):
@@ -542,6 +554,13 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 					game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
 				else:
 					game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
+		elif tile.bldg.name == "AE":
+			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure
+			for el in p_i.atmosphere:
+				var base_prod:float = base * p_i.atmosphere[el]
+				Helper.add_atom_production(el, base_prod)
+			Helper.add_energy_from_NFR(p_i, base)
+			Helper.add_energy_from_CS(p_i, base)
 		elif tile.bldg.name == "PC":
 			game.autocollect.particles.proton += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "NC":
@@ -1112,16 +1131,24 @@ func _unhandled_input(event):
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("unique_bldg"):
-				if tile.unique_bldg.has("repair_cost") and game.money >= tile.unique_bldg.repair_cost:
-					game.money -= tile.unique_bldg.repair_cost
-					tile.unique_bldg.erase("repair_cost")
-					bldgs[tile_id].modulate = Color.white
-					game.popup(tr("BUILDING_REPAIRED"), 1.5)
-					game.hide_adv_tooltip()
-					p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
-					Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id, wid)
-				else:
-					game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
+				if tile.unique_bldg.has("repair_cost"):
+					if game.money >= tile.unique_bldg.repair_cost:
+						game.money -= tile.unique_bldg.repair_cost
+						p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
+						if tile.unique_bldg.name == "nuclear_fusion_reactor":
+							var tile_id2 = p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].tile
+							for j in [tile_id2, tile_id2+1, tile_id2+wid, tile_id2+wid+1]:
+								game.tile_data[j].unique_bldg.erase("repair_cost")
+							bldgs[tile_id2].self_modulate = Color.white
+							Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id2, wid)
+						else:
+							tile.unique_bldg.erase("repair_cost")
+							bldgs[tile_id].self_modulate = Color.white
+							Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id, wid)
+						game.popup(tr("BUILDING_REPAIRED"), 1.5)
+						game.hide_adv_tooltip()
+					else:
+						game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 			elif tile.has("cave"):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
@@ -1312,7 +1339,7 @@ func add_bldg_sprite(pos:Vector2, st:String, mod:Color = Color.white, sc:float =
 	bldg.texture = game.bldg_textures[st]
 	bldg.scale *= sc
 	bldg.position = pos + offset
-	bldg.modulate = mod
+	bldg.self_modulate = mod
 	add_child(bldg)
 	return bldg
 	
@@ -1442,6 +1469,13 @@ func on_timeout():
 					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
 						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
+				elif tile.bldg.name == "AE":
+					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure
+					for el in p_i.atmosphere:
+						var base_prod:float = base * p_i.atmosphere[el]
+						Helper.add_atom_production(el, base_prod)
+					Helper.add_energy_from_NFR(p_i, base)
+					Helper.add_energy_from_CS(p_i, base)
 				elif tile.bldg.name == "PC":
 					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "NC":

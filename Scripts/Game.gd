@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.25.4"
+const VERSION:String = "v0.26"
 const SYS_NUM:int = 400
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -532,7 +532,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "21 Dec 2022"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -809,7 +809,7 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4"]:
+	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26"]:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -1784,7 +1784,7 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (universe_data[c_u].lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (universe_data[c_u].lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
@@ -2031,7 +2031,7 @@ func generate_clusters(parent_id:int):
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
 		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * u_i.dark_energy)#Ferromagnetic materials
-		c_i.diff = Helper.clever_round(1 + pos.length() * 2.0)
+		c_i.diff = Helper.clever_round((1 + pos.length() * 2.0) * u_i.difficulty)
 		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
 	fn_save_game()
@@ -2119,7 +2119,7 @@ func generate_galaxies(id:int):
 			u_i.cluster_data[id]["galaxies"].append({"global":0, "local":0})
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i.diff = Helper.clever_round(1 + pos.distance_to(galaxy_data[0].pos) / 70)
+				g_i.diff = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * u_i.cluster_data[id].diff)
 			else:
 				g_i.diff = Helper.clever_round(u_i.cluster_data[id].diff * rand_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append({"global":g_i.id, "local":g_i.l_id})
@@ -2556,26 +2556,6 @@ func generate_planets(id:int):#local id
 		star.pos = pos
 		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
 		circles.append({"pos":pos, "radius":radius_in_pixels})
-	for i in range(0, N_stars):
-		var star = system_data[id].stars[i]
-		var star_size = star.size
-		var star_temp = star.temperature
-		var star_lum = star.luminosity
-		var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
-		if c_g_g == 0:
-			MSes.erase("M_MB")
-		var MS = MSes[randi() % len(MSes)]
-		if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
-			star.MS = MS
-		elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
-			star.MS = MS
-		if star.has("MS"):
-			star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
-			star.bldg = {}
-			if star.MS == "M_MB":
-				star.repair_cost = Data.MS_costs[star.MS].money * 72 * rand_range(1, 3)
-			else:
-				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3)
 	var planet_num = system_data[id].planet_num
 	var max_distance
 	var j = 0
@@ -2728,8 +2708,37 @@ func generate_planets(id:int):#local id
 			if p_i.has("MS"):
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
 				p_i.bldg = {}
-				p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3)
+				if p_i.MS == "M_MME":
+					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * rand_range(1, 3) * 72 * pow(p_i.size / 13000.0, 2)
+				elif p_i.MS == "M_SE":
+					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3) * p_i.size / 12000.0
+				p_i.repair_cost *= engineering_bonus.BCM
 		planet_data.append(p_i)
+	for i in range(0, N_stars):
+		var star = system_data[id].stars[i]
+		var star_size = star.size
+		var star_temp = star.temperature
+		var star_lum = star.luminosity
+		var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
+		if c_g_g == 0:
+			MSes.erase("M_MB")
+		var MS = MSes[randi() % len(MSes)]
+		if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
+			star.MS = MS
+		elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
+			star.MS = MS
+		if star.has("MS"):
+			star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
+			star.bldg = {}
+			if star.MS == "M_MB":
+				star.repair_cost = Data.MS_costs[star.MS].money * 72 * rand_range(1, 3) * pow(star.size, 2)
+			elif star.MS == "M_DS":
+				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * pow(star.size, 2)
+			elif star.MS == "M_CBS":
+				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3)
+			elif star.MS == "M_PK":
+				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
+			star.repair_cost *= engineering_bonus.BCM
 	if c_s_g != 0:
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
@@ -3051,9 +3060,9 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1) / u_i.cluster_data[c_c].FM) / 4.0 + 1)}
+				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1)}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 50) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
+					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 30) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
 					p_i.unique_bldgs[unique_bldg].append(obj)
 				else:
@@ -3099,14 +3108,14 @@ func generate_tiles(id:int):
 		tile_data[random_tile].ship = true
 		var mineral_replicator = {"tile":random_tile3, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 		var spaceport:Dictionary
-		mineral_replicator.repair_cost = 10000 * system_data[c_s].diff * pow(mineral_replicator.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
+		mineral_replicator.repair_cost = 10000 * system_data[c_s].diff * pow(mineral_replicator.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
 		if random_tile == N-1:
 			spaceport = {"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile - 1) 														# Save migration
 		else:
 			spaceport = {"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile + 1)
-		spaceport.repair_cost = 10000 * system_data[c_s].diff * pow(spaceport.tier, 50) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
+		spaceport.repair_cost = 10000 * system_data[c_s].diff * pow(spaceport.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
 		p_i.unique_bldgs = {"spaceport":[spaceport], "mineral_replicator":[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	for bldg in p_i.unique_bldgs.keys():
@@ -3634,6 +3643,11 @@ func _input(event):
 			stats_global.right_clicks += 1
 			stats_dim.right_clicks += 1
 			stats_univ.right_clicks += 1
+			if is_instance_valid(tooltip):
+				tooltip.get_node("AnimationPlayer").play("Fade")
+		elif Input.is_action_just_released("right_click"):
+			if is_instance_valid(tooltip):
+				tooltip.get_node("AnimationPlayer").play_backwards("Fade")
 		if Input.is_action_just_pressed("scroll"):
 			stats_global.scrolls += 1
 			stats_dim.scrolls += 1
@@ -4441,12 +4455,13 @@ func _on_MMTimer_timeout():
 			else:
 				_tile_data = open_obj("Planets", p)
 			if len(_tile_data) == 0:
+				curr_MM_p += 1
 				return
 			for t_id in MM_data[p].tiles:
 				var tile = _tile_data[t_id]
 				if not tile or not tile.has("bldg"):
 					continue
-				var prod_mult = Helper.get_prod_mult(tile)
+				var prod_mult = Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 				var tiles_mined = (curr_time - tile.bldg.collect_date) / 1000.0 * tile.bldg.path_1_value * prod_mult
 				if tiles_mined >= 1:
 					add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
@@ -4467,7 +4482,7 @@ func _on_MMTimer_timeout():
 					MM_data.erase(p)
 					return
 				p_i = _planet_data[MM_data[p].c_p]
-			var prod_mult = Helper.get_prod_mult(p_i)
+			var prod_mult = Helper.get_prod_mult(p_i) * p_i.get("mining_outpost_bonus", 1.0)
 			var tiles_mined = (curr_time - p_i.bldg.collect_date) / 1000.0 * p_i.bldg.path_1_value * prod_mult
 			if tiles_mined >= 1:
 				var rsrc_mined = Helper.mass_generate_rock(p_i, p_i, int(tiles_mined))
