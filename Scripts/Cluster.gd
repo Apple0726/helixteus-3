@@ -165,17 +165,25 @@ func on_galaxy_over (id:int):
 		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		if grid.name != "Grid_%s" % g_i.l_id:
-			grid.visible = false
+			var tween = get_tree().create_tween()
+			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
+			#grid.visible = false
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
 		if grid.name != "MSGrid_%s" % g_i.l_id:
-			grid.visible = false
+			var tween = get_tree().create_tween()
+			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
+			#grid.visible = false
 	game.show_adv_tooltip(tooltip, icons)
 
 func on_galaxy_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):
-		grid.visible = true
+		#grid.visible = true
+		var tween = get_tree().create_tween()
+		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
-		grid.visible = true
+		#grid.visible = true
+		var tween = get_tree().create_tween()
+		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
 
 func on_galaxy_click (id:int, l_id:int):

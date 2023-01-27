@@ -21,7 +21,7 @@ func _on_HSlider_value_changed(value):
 	refresh_values()
 
 func refresh_values():
-	$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value), input_unit]
+	$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value, true), input_unit]
 	if output_type in ["mats", "mets"]:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value * ratio, true), output_unit]
 	else:

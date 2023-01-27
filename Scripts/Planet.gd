@@ -228,7 +228,7 @@ func show_tooltip(tile, tile_id:int):
 			game.help_str = "tile_shortcuts"
 		if game.help.has("tile_shortcuts") and bldg_to_construct == "":
 			if game.get_node("UI").has_node("BuildingShortcuts"):
-				game.get_node("UI").get_node("BuildingShortcuts").free()
+				game.get_node("UI").get_node("BuildingShortcuts").close()
 			var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instance()
 			shortcuts.keys.clear()
 			shortcuts.add_key("F", "UPGRADE")
@@ -888,7 +888,7 @@ func _unhandled_input(event):
 				construct(tile.bldg.name, base_cost)
 			elif Input.is_action_just_released("F"):
 				if game.get_node("UI").has_node("BuildingShortcuts"):
-					game.get_node("UI").get_node("BuildingShortcuts").free()
+					game.get_node("UI").get_node("BuildingShortcuts").close()
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.empty():
 					game.upgrade_panel.ids = [tile_over]
@@ -929,7 +929,7 @@ func _unhandled_input(event):
 			tiles_selected.clear()
 			if game.help.has("tile_shortcuts"):
 				if game.get_node("UI").has_node("BuildingShortcuts"):
-					game.get_node("UI").get_node("BuildingShortcuts").free()
+					game.get_node("UI").get_node("BuildingShortcuts").close()
 				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instance()
 				shortcuts.keys.clear()
 				shortcuts.add_key("F", "UPGRADE_ALL")
@@ -970,7 +970,7 @@ func _unhandled_input(event):
 					white_rect.position.y = (i / wid) * 200
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
-			if game.shop_panel.tab in ["Speedups", "Overclocks"] and game.shop_panel.locked:
+			if game.shop_panel.tab in ["Speedups", "Overclocks"]:
 				game.shop_panel.get_node("VBox/HBox/ItemInfo/VBox/HBox/BuyAmount").value = len(tiles_selected)
 				game.shop_panel.num = len(tiles_selected)
 			if tile.has("bldg") and not game.item_cursor.visible:
@@ -1291,7 +1291,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 
 func hide_tooltip():
 	if game.get_node("UI").has_node("BuildingShortcuts"):
-		game.get_node("UI").get_node("BuildingShortcuts").queue_free()
+		game.get_node("UI").get_node("BuildingShortcuts").close()
 	game.hide_tooltip()
 	game.hide_adv_tooltip()
 
@@ -1515,7 +1515,7 @@ func on_timeout():
 func construct(st:String, costs:Dictionary):
 	finish_construct()
 	if game.get_node("UI").has_node("BuildingShortcuts"):
-		game.get_node("UI").get_node("BuildingShortcuts").queue_free()
+		game.get_node("UI").get_node("BuildingShortcuts").close()
 	var tween = get_tree().create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18 and (not game.tutorial or game.tutorial.tut_num >= 26):
@@ -1524,6 +1524,7 @@ func construct(st:String, costs:Dictionary):
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
 		game.get_node("UI/Panel").visible = true
+		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	bldg_to_construct = st
 	constr_costs = costs
 	constr_costs_total = costs.duplicate()
@@ -1559,7 +1560,7 @@ func finish_construct():
 		shadow_num = 0
 	var tween = get_tree().create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.white, 0.2)
-	game.get_node("UI/Panel").visible = false
+	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 
 func _on_Planet_tree_exited():
 	queue_free()

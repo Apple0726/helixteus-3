@@ -2154,11 +2154,16 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Difficulty_mouse_entered():
+	var floor_mult = pow(2, cave_floor - 1)
+	if volcano_mult > 1 and not artificial_volcano and aurora:
+		floor_mult = pow(2.5, cave_floor - 1)
+	elif volcano_mult > 1 and not artificial_volcano or aurora:
+		floor_mult = pow(2.25, cave_floor - 1)
 	var tooltip:String = "%s: %s\n%s: %s" % [
 		tr("STAR_SYSTEM_DIFFICULTY"),
 		Helper.format_num(game.system_data[game.c_s].diff),
 		tr("FLOOR_MULTIPLIER"),
-		Helper.format_num(pow(2.5 if volcano_mult > 1 and not artificial_volcano else 2, cave_floor - 1), true),
+		Helper.format_num(floor_mult, true),
 	]
 	if aurora_mult > 1:
 		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), Helper.format_num(aurora_mult)]

@@ -44,7 +44,6 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
 	if remove:
 		for child in container.get_children():
-			container.remove_child(child)
 			child.free()
 	var data = []
 	for obj in objs:
@@ -409,7 +408,12 @@ func add_minerals(amount:float, add:bool = true):
 			game.minerals += amount
 		return {"added":amount, "remainder":0}
 	else:
-		if game.autosell:
+		if game.science_unlocked.has("ASM2") and game.autosell:
+			if add:
+				game.add_resources({"money":round(game.minerals + amount - min_cap) * (game.MUs.MV + 4)})
+				game.minerals = min_cap
+			return {"added":amount, "remainder":0}
+		elif game.science_unlocked.has("ASM") and game.autosell:
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
 				game.minerals = fmod(diff, round(min_cap))
@@ -1212,7 +1216,10 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		else:
 			return dict.bldg.path_2_value * mult * n
 	elif path == 3:
-		return dict.bldg.path_3_value
+		if bldg == "SE":
+			return dict.bldg.path_3_value * get_IR_mult("SE")
+		else:
+			return dict.bldg.path_3_value
 
 func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 	var tooltip:String = ""

@@ -712,7 +712,7 @@ func load_univ():
 				for i in len(ship_data):
 					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP))
 					for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.04, u_i.lv) / 16.0 * time_elapsed / (4.0 / autocollect.ship_XP))
+						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP))
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
@@ -1484,7 +1484,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	_on_BottomInfo_close_button_pressed()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").queue_free()
-	$UI/Panel.visible = false
+	$UI/Panel/AnimationPlayer.play("FadeOut")
 	var old_view:String = c_v
 	if view_tween.is_active():
 		return
@@ -2587,10 +2587,10 @@ func generate_planets(id:int):#local id
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
 		if p_num == 0:# Starting solar system has smaller planets
-			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
+			p_i["size"] = int((2000 + rand_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
-			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5))
+			p_i["size"] = int((2000 + rand_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i.pressure = pow(10, rand_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
 		p_i["angle"] = rand_range(0, 2 * PI)
 		if p_num == 0 and i == 2:
@@ -2612,7 +2612,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.25))
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.5) * dark_matter)
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2709,7 +2709,7 @@ func generate_planets(id:int):#local id
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
 				p_i.bldg = {}
 				if p_i.MS == "M_MME":
-					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * rand_range(1, 3) * 72 * pow(p_i.size / 13000.0, 2)
+					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * rand_range(1, 3) * 24 * pow(p_i.size / 13000.0, 2)
 				elif p_i.MS == "M_SE":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
@@ -3056,6 +3056,10 @@ func generate_tiles(id:int):
 							S3 += unique_bldgs_list[_unique_bldg]
 					if unique_bldg == "nuclear_fusion_reactor":
 						nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
+						erase_tile(t_id)
+						erase_tile(t_id+1)
+						erase_tile(t_id+wid)
+						erase_tile(t_id+wid+1)
 				if unique_bldg == "spaceport":
 					if spaceport_spawned:
 						continue
@@ -3210,11 +3214,12 @@ func generate_tiles(id:int):
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	tile_data.clear()
 
-func erase_tile(random_tile:int):
-	if not tile_data[random_tile] or not tile_data[random_tile].has("aurora"):
-		tile_data[random_tile] = {}
-	else:
-		tile_data[random_tile] = {"aurora":tile_data[random_tile].aurora}
+func erase_tile(tile:int):
+	if not tile_data[tile]:
+		tile_data[tile] = {}
+	for key in tile_data[tile].keys():
+		if not key in ["aurora", "ash"]:
+			tile_data[tile].erase(key)
 
 func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary):
 	var atm = {}
@@ -3537,9 +3542,12 @@ var quadrant_top_right:PoolVector2Array = [Vector2(640, 0), Vector2(1280, 0), Ve
 var quadrant_bottom_left:PoolVector2Array = [Vector2(0, 360), Vector2(640, 360), Vector2(640, 720), Vector2(0, 720)]
 var quadrant_bottom_right:PoolVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
 onready var fps_text = $Tooltips/FPS
+var last_process_time = OS.get_system_time_msecs()
 
-func _process(delta):
-	if delta != 0:
+func _process(_delta):
+	if _delta != 0:
+		var delta = (OS.get_system_time_msecs() - last_process_time) / 1000.0
+		last_process_time = OS.get_system_time_msecs()
 		fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
 		if autocollect:
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
@@ -3708,7 +3716,7 @@ func _input(event):
 			help[help_str] = true
 		hide_tooltip()
 		hide_adv_tooltip()
-		$UI/Panel.visible = false
+		$UI/Panel/AnimationPlayer.play("FadeOut")
 		if $UI.has_node("BuildingShortcuts"):
 			$UI.get_node("BuildingShortcuts").queue_free()
 	
@@ -4037,7 +4045,7 @@ func cancel_building():
 		tiles[id]._on_Button_button_out()
 
 func cancel_building_MS():
-	$UI/Panel.visible = false
+	$UI/Panel/AnimationPlayer.play("FadeOut")
 	view.obj.finish_construct()
 
 func _on_Settings_mouse_entered():
@@ -4264,7 +4272,7 @@ func show_collect_info(info:Dictionary):
 	Helper.put_rsrc($UI/Panel/VBox, 32, info2)
 	Helper.add_label(tr("YOU_COLLECTED"), 0)
 	$UI/Panel.visible = true
-	$UI/Panel.modulate.a = 1.0
+	$UI/Panel/AnimationPlayer.play("Fade")
 	$CollectPanelTimer.start(min(2.5, 0.5 + 0.3 * $UI/Panel/VBox.get_child_count()))
 	$CollectPanelAnim.stop()
 
@@ -4273,7 +4281,6 @@ func _on_CollectPanelTimer_timeout():
 
 func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.visible = false
-	$UI/Panel.modulate.a = 1.0
 
 func _on_Ship_pressed():
 	if Input.is_action_pressed("shift"):
@@ -4500,3 +4507,8 @@ func _on_MMTimer_timeout():
 		curr_MM_p += 1
 		if is_instance_valid(HUD):
 			HUD.update_money_energy_SP()
+
+
+func _on_PanelAnimationPlayer_animation_finished(anim_name):
+	if anim_name == "FadeOut":
+		$UI/Panel.visible = false

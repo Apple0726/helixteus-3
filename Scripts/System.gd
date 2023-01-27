@@ -329,10 +329,10 @@ func add_constr_costs(vbox:VBoxContainer, dict:Dictionary):
 		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(dict.cost_div)], 0)
 	else:
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	
 func show_M_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_1)
@@ -357,7 +357,6 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 
 func show_M_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
 	var stage:int = (star.MS_lv + 1) if not base else 0
 	bldg_costs = Data.MS_costs["M_CBS_%s" % stage].duplicate(true)
 	if base and build_all_MS_stages:
@@ -380,7 +379,6 @@ func show_M_CBS_costs(star:Dictionary, base:bool = false):
 
 func show_M_PK_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_PK_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_PK_1)
@@ -403,7 +401,6 @@ func show_M_PK_costs(star:Dictionary, base:bool = false):
 	
 func show_M_SE_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_SE_%s" % ((p_i.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_SE_1)
@@ -418,7 +415,6 @@ func show_M_SE_costs(p_i:Dictionary, base:bool = false):
 
 func show_M_MME_costs(p_i:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	game.get_node("UI/Panel").visible = true
 	bldg_costs = Data.MS_costs["M_MME_%s" % ((p_i.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_MME_1)
@@ -453,6 +449,7 @@ func show_planet_info(id:int, l_id:int):
 			call("show_%s_costs" % MS, p_i, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
+		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if p_i.has("repair_cost"):
@@ -575,7 +572,7 @@ func build_MS(obj:Dictionary, MS:String):
 		obj.bldg.construction_date = curr_time
 		obj.bldg.construction_length = bldg_costs.time * 1000
 		obj.bldg.XP = round(bldg_costs.money / 100.0)
-		game.get_node("UI/Panel").visible = false
+		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 		MS_constr_data.clear()
 		Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 		refresh_planets()
@@ -624,7 +621,7 @@ func on_planet_click (id:int, l_id:int):
 					game.PC_panel.l_id = l_id
 					game.PC_panel.probe_tier = 1
 					game.toggle_panel(game.PC_panel)
-					game.get_node("UI/Panel").visible = false
+					game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 					game.hide_tooltip()
 					return
 			elif p_i.bldg.has("is_constructing"):
@@ -716,6 +713,7 @@ func on_star_over (id:int):
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "M_MB":
 			game.get_node("UI/Panel").visible = true
+			game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 			bldg_costs = Data.MS_costs.M_MB.duplicate(true)
 			for cost in bldg_costs:
 				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) / (star.cost_div if star.has("cost_div") else 1.0))
@@ -734,6 +732,7 @@ func on_star_over (id:int):
 			show_M_PK_costs(star, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
+		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if star.has("repair_cost"):
@@ -840,7 +839,7 @@ func on_star_pressed (id:int):
 func on_btn_out ():
 	planet_hovered = -1
 	glow_over = null
-	game.get_node("UI/Panel").visible = false
+	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.hide_tooltip()
 	game.hide_adv_tooltip()
 	MS_constr_data.clear()

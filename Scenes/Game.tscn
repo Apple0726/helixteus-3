@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -94,6 +94,53 @@ expand_margin_bottom = 9.0
 shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 3
 shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="Animation" id=21]
+resource_name = "Fade"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=23]
+resource_name = "FadeOut"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1 )
@@ -352,6 +399,7 @@ dialog_autowrap = true
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 1008.0
 margin_top = 368.0
 margin_right = 1156.0
@@ -360,15 +408,17 @@ grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource( 7 )
 custom_styles/panel = SubResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="UI/Panel"]
 margin_left = 3.0
 margin_top = 3.0
 margin_right = 148.0
 margin_bottom = 14.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Panel"]
+anims/Fade = SubResource( 21 )
+anims/FadeOut = SubResource( 23 )
+anims/RESET = SubResource( 22 )
 
 [node name="ClusterBG" parent="." instance=ExtResource( 35 )]
 visible = false
@@ -645,6 +695,7 @@ wait_time = 0.5
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
+[connection signal="animation_finished" from="UI/Panel/AnimationPlayer" to="." method="_on_PanelAnimationPlayer_animation_finished"]
 [connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]

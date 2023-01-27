@@ -46,7 +46,7 @@ func change_tab(btn_str:String):
 	item_name = ""
 	_on_BuyAmount_value_changed(1)
 	remove_costs()
-	item_info.visible = false
+	item_info.modulate.a = 0
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
 	locked = false
 	
@@ -57,7 +57,6 @@ func remove_costs():
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
-	item_info.visible = true
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	if _dir == "Buildings":
 		name_node.text = tr("%s_NAME" % name)

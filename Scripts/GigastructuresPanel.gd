@@ -24,7 +24,8 @@ func update_info():
 	costs = Data.costs[bldg].duplicate(true)
 	$Control/ProdCostMult.visible = bldg != "TP"
 	$Control/ProductionPerSec.visible = bldg != "TP"
-	$Control/Production.visible = bldg != "TP"
+	$Control/Production.visible = not bldg in ["TP", "GK"]
+	$Control/StoneMM.visible = bldg == "GK"
 	var prod_mult = 1.0
 	if bldg in ["PP", "RL"]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
@@ -39,7 +40,13 @@ func update_info():
 		error = true
 	if not error:
 		$Control/GalaxyInfo["custom_colors/font_color"] = Color.white
-		if bldg != "TP":
+		if bldg == "TP":
+			if g_i.system_num <= 4999:
+				$Control/GalaxyInfo.text = tr("TP_ERROR")
+				error = true
+			else:
+				$Control/GalaxyInfo.text = tr("TP_CONFIRM")
+		elif bldg != "GK":
 			costs.stone = PI * 100
 			if bldg == "ME":
 				costs.mythril = 1 / 240000.0
@@ -51,12 +58,6 @@ func update_info():
 				costs.energy *= 200.0
 			costs.erase("time")
 			$Control/GalaxyInfo.text = ""
-		else:
-			if g_i.system_num <= 4999:
-				$Control/GalaxyInfo.text = tr("TP_ERROR")
-				error = true
-			else:
-				$Control/GalaxyInfo.text = tr("TP_CONFIRM")
 		for cost in costs:
 			costs[cost] *= game.engineering_bonus.BCM * (surface if bldg != "TP" else 1.0)
 	if bldg == "ME":
@@ -79,6 +80,10 @@ func update_info():
 		$Control/ProductionPerSec.text = tr("STORAGE")
 		num = surface * 60000.0
 		Helper.put_rsrc($Control/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
+	elif bldg == "GK":
+		$Control/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
+		num = surface
+		Helper.put_rsrc($Control/StoneMM, 32, {"stone":num})
 	$Control/Convert.visible = not error
 	$Control/Costs.visible = not error
 	$Control/CostsHBox.visible = not error

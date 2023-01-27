@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 export var victory_screen = true
 export var id:int
 var show_weapon_XPs:bool
+var tween
 
 func _ready():
 	$Bullet/Label.visible = victory_screen
@@ -15,12 +16,35 @@ func _ready():
 	$Ship.texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 
 func set_visibility():
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.set_parallel(true)
 	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
-	$Bullet.visible = show_weapon_XPs
-	$Laser.visible = show_weapon_XPs
-	$Bomb.visible = show_weapon_XPs
-	$Light.visible = show_weapon_XPs
-	$Stats.visible = not show_weapon_XPs
+	if show_weapon_XPs:
+		tween.tween_property($Stats, "modulate", Color(1, 1, 1, 0), 0.15)
+		$Bullet.visible = true
+		$Laser.visible = true
+		$Bomb.visible = true
+		$Light.visible = true
+		tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 1), 0.15)
+		tween.tween_property($Laser, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+		tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+		tween.tween_property($Light, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+		yield(tween, "finished")
+		$Stats.visible = false
+	else:
+		$Stats.visible = true
+		tween.tween_property($Stats, "modulate", Color(1, 1, 1, 1), 0.15)
+		tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Laser, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Light, "modulate", Color(1, 1, 1, 0), 0.15)
+		yield(tween, "finished")
+		$Bullet.visible = false
+		$Laser.visible = false
+		$Bomb.visible = false
+		$Light.visible = false
 
 func refresh():
 	if id >= len(game.ship_data):

@@ -129,17 +129,25 @@ margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
 button_text = "RESEARCH"
 
-[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+[node name="GalaxyKiller" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 220.0
 margin_right = 356.0
 margin_bottom = 260.0
 rect_min_size = Vector2( 0, 40 )
+button_text = "GALAXY_KILLER"
+
+[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 264.0
+margin_right = 356.0
+margin_bottom = 304.0
+rect_min_size = Vector2( 0, 40 )
 button_text = "TRIANGULUM_PROBE"
 
 [node name="Control" type="Panel" parent="."]
-visible = false
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -149,9 +157,6 @@ margin_top = -160.0
 margin_right = -24.0
 margin_bottom = 272.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="GalaxyInfo" type="Label" parent="Control"]
 margin_left = 24.0
@@ -159,9 +164,6 @@ margin_top = 16.0
 margin_right = 536.0
 margin_bottom = 100.0
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Costs" type="Label" parent="Control"]
 margin_left = 24.0
@@ -191,7 +193,7 @@ help_text = "GS_PROD_MULT_BY_X"
 [node name="ProductionPerSec" type="Label" parent="Control"]
 margin_left = 24.0
 margin_top = 232.0
-margin_right = 612.0
+margin_right = 524.0
 margin_bottom = 256.0
 text = "PRODUCTION_PER_SECOND"
 autowrap = true
@@ -209,14 +211,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="StoneMM" type="ScrollContainer" parent="Control"]
+visible = false
+margin_left = 28.0
+margin_top = 272.0
+margin_right = 512.0
+margin_bottom = 324.0
+
+[node name="GridContainer" type="GridContainer" parent="Control/StoneMM"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
+columns = 6
+
 [node name="Production" type="VBoxContainer" parent="Control"]
 margin_left = 16.0
 margin_top = 264.0
 margin_right = 56.0
 margin_bottom = 304.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Convert" type="Button" parent="Control"]
 anchor_left = 1.0
@@ -240,5 +253,6 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyStorage" to="." method="_on_GS_pressed" binds= [ "B" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/GalaxyKiller" to="." method="_on_GS_pressed" binds= [ "GK" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]

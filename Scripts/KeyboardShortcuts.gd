@@ -2,8 +2,12 @@ extends Panel
 
 var keys:Array = []
 var center_position:Vector2
+var tween
 
 func _ready():
+	modulate.a = 0
+	tween = get_tree().create_tween()
+	tween.tween_property(self, "modulate", Color.white, 0.1)
 	refresh()
 
 func refresh():
@@ -38,3 +42,11 @@ func _on_Panel_mouse_entered():
 
 func _on_Panel_mouse_exited():
 	modulate.a = 1.0
+
+func close():
+	name = "BuildingShortcutsClosing"
+	tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.1)
+	yield(tween, "finished")
+	queue_free()

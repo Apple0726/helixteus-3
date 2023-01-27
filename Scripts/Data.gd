@@ -58,6 +58,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"PCC":{"money":2.5e12, "energy":7.8e10, "time":840000},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(1.5, 24), "energy":e(1.5, 24)},#Triangulum probe
+				"GK":{"money":e(7.5, 23), "energy":e(1.0, 24)},#Galaxy-killer
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"PC":{"money":1000000, "energy":50000, "time":600.0},
 				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
@@ -267,6 +268,10 @@ var science_unlocks = {
 						#Agriculture sciences
 						"SA":{"cost":500, "parents":[]},
 						"PF":{"cost":90000, "parents":["SA"]},
+						
+						#Auto-sell minerals
+						"ASM":{"cost":100, "parents":[]},
+						"ASM2":{"cost":20000, "parents":["ASM"]},
 						
 						#Auto mining
 						"AM":{"cost":10000, "parents":[]},
