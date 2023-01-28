@@ -85,14 +85,15 @@ func refresh_planet_info():
 		charging_time = 1000
 	$Control/TimeCost.text = Helper.time_to_str(charging_time)
 	var R = target.size * 1000.0 / 2#in meters
-	var surface_volume = get_sph_V(R, R - target.crust_start_depth)#in m^3
-	var crust_volume = get_sph_V(R - target.crust_start_depth, R - target.mantle_start_depth)
-	var mantle_volume = get_sph_V(R - target.mantle_start_depth, R - target.core_start_depth)
-	var core_volume = get_sph_V(R - target.core_start_depth)
+	var surface_volume = Helper.get_sph_V(R, R - target.crust_start_depth)#in m^3
+	var crust_volume = Helper.get_sph_V(R - target.crust_start_depth, R - target.mantle_start_depth)
+	var mantle_volume = Helper.get_sph_V(R - target.mantle_start_depth, R - target.core_start_depth)
+	var core_volume = Helper.get_sph_V(R - target.core_start_depth)
 	var stone = {}
 	add_stone(stone, target.crust, (surface_volume + crust_volume) * ((5600 + target.mantle_start_depth * 0.01) / 2.0))
 	add_stone(stone, target.mantle, mantle_volume * ((5690 + (target.mantle_start_depth + target.core_start_depth) * 0.01) / 2.0))
 	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
+	print(R)
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
@@ -101,14 +102,8 @@ func refresh_planet_info():
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
-		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
+		rsrc[met] = Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
-
-#get_sphere_volume
-func get_sph_V(outer:float, inner:float = 0):
-	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
-	inner /= 150.0
-	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
 
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
 	for comp in layer:

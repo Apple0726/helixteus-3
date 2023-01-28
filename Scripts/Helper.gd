@@ -1038,7 +1038,7 @@ func get_DS_output(star:Dictionary, next_lv:int = 0):
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
 	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0 * game.u_i.charge
 
 func get_MB_output(star:Dictionary):
 	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
@@ -1585,3 +1585,9 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 	elif unique_bldg.name == "spaceport":
 		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
 			game.autocollect.ship_XP = unique_bldg.tier
+
+# get_sphere_volume
+func get_sph_V(outer:float, inner:float = 0):
+	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
+	inner /= 150.0
+	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))

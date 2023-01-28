@@ -478,7 +478,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 			else:
 				tile.bldg.cap_upgrade = 0
 		elif _bldg_to_construct == "B":
-			tile.bldg.cap_upgrade = Data.path_1.B.value#The amount of cap to add once construction is done
+			tile.bldg.cap_upgrade = Data.path_1.B.value * game.u_i.charge#The amount of cap to add once construction is done
 		elif _bldg_to_construct == "NSF":
 			tile.bldg.cap_upgrade = Data.path_1.NSF.value
 		elif _bldg_to_construct == "ESF":
@@ -638,9 +638,9 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.mineral_capacity = 200
 	elif bldg == "B":
 		if tile.bldg.has("is_constructing"):
-			game.energy_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
+			game.energy_capacity -= (tile.bldg.path_1_value - tile.bldg.cap_upgrade) * game.u_i.charge
 		else:
-			game.energy_capacity -= tile.bldg.path_1_value
+			game.energy_capacity -= tile.bldg.path_1_value * game.u_i.charge
 		if game.energy_capacity < 7500:
 			game.energy_capacity = 7500
 	elif bldg == "NSF":

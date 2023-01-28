@@ -404,9 +404,6 @@ text = "New dimension"
 [node name="ModifyDimension" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Reset" type="Control" parent="ModifyDimension"]
 margin_right = 40.0
@@ -926,6 +923,7 @@ margin_top = 48.0
 margin_right = 408.0
 margin_bottom = 680.0
 rect_min_size = Vector2( 388, 672 )
+rect_clip_content = false
 mouse_filter = 1
 custom_styles/bg = SubResource( 5 )
 
@@ -1039,7 +1037,8 @@ Gravitational constant
 Elementary charge
 Dark energy
 Difficulty
-Time speed"
+Time speed
+Age of the universe"
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
 margin_left = 122.0
@@ -1147,6 +1146,15 @@ margin_bottom = 312.0
 step = 1.0
 value = 50.0
 
+[node name="age" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 320.0
+margin_right = 76.0
+margin_bottom = 352.0
+step = 1.0
+value = 50.0
+
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 margin_left = 18.0
 margin_top = 683.0
@@ -1211,7 +1219,7 @@ margin_left = 362.0
 margin_top = 398.0
 margin_right = 404.0
 margin_bottom = 422.0
-text = "(25)"
+text = "(40)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1252,9 +1260,13 @@ margin_top = 559.0
 margin_right = 404.0
 margin_bottom = 583.0
 text = "(50)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="age" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+margin_left = 362.0
+margin_top = 600.0
+margin_right = 404.0
+margin_bottom = 624.0
+text = "(15)"
 
 [node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 margin_left = 114.0

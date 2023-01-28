@@ -168,6 +168,8 @@ func update_minerals():
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if round(game.minerals) == min_cap:
+		if not game.science_unlocked.has("ASM"):
+			$Bottom/Panel/AnimationPlayer.play("Flash")
 		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			$Top/Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 	else:
@@ -448,8 +450,6 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		elif extra_arg_0 == "SP":
 			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP + game.autocollect.MS.SP) * SP_mult
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
-	if extra_arg_0 == "MINERALS":
-		tooltip += "\n" + tr("MINERAL_DESC")
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():
@@ -528,6 +528,8 @@ func _on_ConvertMinerals_mouse_entered():
 
 func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()
+	$Bottom/Panel/AnimationPlayer.stop()
+	$Bottom/Panel/ColorRect.modulate.a = 0.0
 	if game.tutorial and game.tutorial.tut_num == 8 and not game.tutorial.tween.is_active():
 		game.tutorial.fade()
 

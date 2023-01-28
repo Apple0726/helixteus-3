@@ -371,6 +371,7 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
 	else:
+		print(_inv.num)
 		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.name), _inv.name])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)

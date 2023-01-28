@@ -7,6 +7,8 @@ var tile_num:int
 var bldg:String = ""
 var surface:float
 var num:float
+var prod_cost_mult:float
+var stone_from_GK = {}
 
 func _ready():
 	set_polygon(rect_size)
@@ -14,8 +16,9 @@ func _ready():
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
-	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(g_i.system_num * pow(g_i.dark_matter, 3) / 200.0), "[img]Graphics/Icons/help.png[/img]"]
-	surface = 4.2e15 * g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3)
+	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
+	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
+	surface = 4.2e15 * prod_cost_mult * 200.0
 	if bldg != "":
 		update_info()
 
@@ -23,9 +26,10 @@ func update_info():
 	var error:bool = false
 	costs = Data.costs[bldg].duplicate(true)
 	$Control/ProdCostMult.visible = bldg != "TP"
-	$Control/ProductionPerSec.visible = bldg != "TP"
-	$Control/Production.visible = not bldg in ["TP", "GK"]
-	$Control/StoneMM.visible = bldg == "GK"
+	$Control/VBox/ProductionPerSec.visible = bldg != "TP"
+	$Control/VBox/Production.visible = not bldg in ["TP", "GK"]
+	$Control/VBox/StoneMM.visible = bldg == "GK"
+	$Control/VBox/GalaxyInfo.visible = bldg in ["TP", "GK"]
 	var prod_mult = 1.0
 	if bldg in ["PP", "RL"]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
@@ -35,18 +39,21 @@ func update_info():
 	else:
 		$Control/ProdMult.visible = false
 	if game.c_g_g == game.ships_c_g_coords.g:
-		$Control/GalaxyInfo.text = tr("GS_ERROR3")
-		$Control/GalaxyInfo["custom_colors/font_color"] = Color.yellow
+		$Control/VBox/GalaxyInfo.visible = true
+		$Control/VBox/GalaxyInfo.text = tr("GS_ERROR3")
+		$Control/VBox/GalaxyInfo["custom_colors/font_color"] = Color.yellow
 		error = true
 	if not error:
-		$Control/GalaxyInfo["custom_colors/font_color"] = Color.white
+		$Control/VBox/GalaxyInfo["custom_colors/font_color"] = Color.white
 		if bldg == "TP":
 			if g_i.system_num <= 4999:
-				$Control/GalaxyInfo.text = tr("TP_ERROR")
+				$Control/VBox/GalaxyInfo.text = tr("TP_ERROR")
 				error = true
 			else:
-				$Control/GalaxyInfo.text = tr("TP_CONFIRM")
+				$Control/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
 		elif bldg != "GK":
+			$Control/VBox/Production.visible = true
+			$Control/VBox/GalaxyInfo.visible = false
 			costs.stone = PI * 100
 			if bldg == "ME":
 				costs.mythril = 1 / 240000.0
@@ -57,42 +64,81 @@ func update_info():
 			if costs.has("energy"):
 				costs.energy *= 200.0
 			costs.erase("time")
-			$Control/GalaxyInfo.text = ""
-		for cost in costs:
-			costs[cost] *= game.engineering_bonus.BCM * (surface if bldg != "TP" else 1.0)
+			for cost in costs.keys():
+				costs[cost] *= game.engineering_bonus.BCM * surface
+		else:
+			$Control/VBox/GalaxyInfo.text = tr("GALAXY_KILLER_DESC")
+			for cost in costs.keys():
+				costs[cost] *= game.engineering_bonus.BCM * prod_cost_mult
 	if bldg == "ME":
-		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.01
-		Helper.put_rsrc($Control/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult("ME")})
+		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult("ME")})
 	elif bldg == "PP":
-		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 20.0 * prod_mult
-		Helper.put_rsrc($Control/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
+		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
 	elif bldg == "RL":
-		$Control/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.5 * prod_mult
-		Helper.put_rsrc($Control/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult("RL")})
+		Helper.put_rsrc($Control/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult("RL")})
 	elif bldg == "MS":
-		$Control/ProductionPerSec.text = tr("STORAGE")
+		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface
-		Helper.put_rsrc($Control/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
+		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
 	elif bldg == "B":
-		$Control/ProductionPerSec.text = tr("STORAGE")
+		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface * 60000.0
-		Helper.put_rsrc($Control/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
+		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
 	elif bldg == "GK":
-		$Control/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
-		num = surface
-		Helper.put_rsrc($Control/StoneMM, 32, {"stone":num})
+		stone_from_GK.clear()
+		$Control/VBox/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
+		var num_planets = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) * 8
+		var avg_planet_size = 30000
+		var R = avg_planet_size * 1000.0 / 2#in meters
+		var surface_volume = Helper.get_sph_V(R, R - 250)#in m^3
+		var mantle_start_depth = 0.01 * avg_planet_size * 1000
+		var core_start_depth = 0.43 * avg_planet_size * 1000
+		var crust_volume = Helper.get_sph_V(R - 250, R - mantle_start_depth)
+		var mantle_volume = Helper.get_sph_V(R - mantle_start_depth, R - core_start_depth)
+		var core_volume = Helper.get_sph_V(R - core_start_depth)
+		var crust = game.make_planet_composition(273, "crust", avg_planet_size, false)
+		var mantle = game.make_planet_composition(273, "mantle", avg_planet_size, false)
+		var core = game.make_planet_composition(273, "core", avg_planet_size, false)
+		add_stone(stone_from_GK, crust, num_planets * (surface_volume + crust_volume) * ((5600 + mantle_start_depth * 0.01) / 2.0))
+		add_stone(stone_from_GK, mantle, num_planets * mantle_volume * ((5690 + (mantle_start_depth + core_start_depth) * 0.01) / 2.0))
+		add_stone(stone_from_GK, core, num_planets * core_volume * ((5700 + (core_start_depth + R) * 0.01) / 2.0))
+		var rsrc = {"stone":stone_from_GK}
+		var surface_mat_info = {	"coal":{"chance":1, "amount":100},
+									"glass":{"chance":0.1, "amount":4},
+									"sand":{"chance":0.8, "amount":50},
+									"soil":{"chance":0.45, "amount":65},
+									"cellulose":{"chance":1, "amount":30}
+		}
+		for mat in surface_mat_info.keys():
+			rsrc[mat] = num_planets * surface_volume * surface_mat_info[mat].chance * surface_mat_info[mat].amount * game.u_i.planck
+		for met in game.met_info.keys():
+			rsrc[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * game.u_i.planck
+		Helper.put_rsrc($Control/VBox/StoneMM/GridContainer, 32, rsrc)
 	$Control/Convert.visible = not error
-	$Control/Costs.visible = not error
-	$Control/CostsHBox.visible = not error
-	Helper.put_rsrc($Control/CostsHBox, 32, costs, true, true)
-	$Control.visible = true
+	$Control/VBox/Costs.visible = not error
+	$Control/VBox/CostsHBox.visible = not error
+	Helper.put_rsrc($Control/VBox/CostsHBox, 32, costs, true, true)
+
+func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
+	for comp in layer:
+		if stone.has(comp):
+			stone[comp] += layer[comp] * amount * game.u_i.planck
+		else:
+			stone[comp] = layer[comp] * amount * game.u_i.planck
 
 func _on_GS_pressed(extra_arg_0):
 	bldg = extra_arg_0
-	update_info()
+	if $Control.modulate.a > 0:
+		$Control/AnimationPlayer.play_backwards("Fade")
+	else:
+		$Control/AnimationPlayer.play("Fade")
+		update_info()
 
 func _on_Convert_pressed():
 	if game.check_enough(costs):
@@ -150,3 +196,9 @@ func _on_Convert_pressed():
 
 func _on_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if $Control.modulate.a == 0:
+		$Control/AnimationPlayer.play("Fade")
+		update_info()

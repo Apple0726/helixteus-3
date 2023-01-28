@@ -63,7 +63,7 @@ func on_slot_over (_name:String, num:int, slot:int):
 	var st:String = Helper.get_item_name(_name)
 	if game.other_items_info.has(_name):
 		if _name.substr(0, 7) == "hx_core":
-			st += "\n%s" % [tr("HX_CORE_DESC") % game.other_items_info[_name].XP]
+			st += "\n%s" % [tr("HX_CORE_DESC") % Helper.format_num(game.other_items_info[_name].XP)]
 	item_slot = slot
 	item_hovered = _name
 	item_stack = num

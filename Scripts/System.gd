@@ -19,6 +19,7 @@ var planet_hovered:int = -1
 var tile_datas:Array = []
 var build_all_MS_stages:bool = false
 var CBS_range:float = 0.0
+var broken_CBS_range:float = 0.0
 
 func _ready():
 	refresh_stars()
@@ -29,6 +30,8 @@ func _ready():
 			game.tutorial.begin()
 
 func refresh_planets():
+	CBS_range = 0.0
+	broken_CBS_range = 0.0
 	var curr_time = OS.get_system_time_msecs()
 	for planet_thing in get_tree().get_nodes_in_group("planet_stuff"):
 		planet_thing.queue_free()
@@ -42,14 +45,21 @@ func refresh_planets():
 	planet_rsrcs.clear()
 	tile_datas.clear()
 	var planets_affected_by_CBS:int = 0
+	var planets_affected_by_broken_CBS:int = 0
 	var p_num:int = len(game.planet_data)
 	for i in len(stars_info):
 		var star_info:Dictionary = stars_info[i]
 		if star_info.has("MS") and star_info.MS == "M_CBS":
 			if star_info.MS_lv == 0:
-				planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * 0.1))
+				if star_info.has("repair_cost"):
+					planets_affected_by_broken_CBS = max(planets_affected_by_broken_CBS, ceil(p_num * 0.1))
+				else:
+					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * 0.1))
 			else:
-				planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
+				if star_info.has("repair_cost"):
+					planets_affected_by_broken_CBS = max(planets_affected_by_broken_CBS, ceil(p_num * star_info.MS_lv * 0.333))
+				else:
+					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
 	for i in p_num:
 		var p_i:Dictionary = game.planet_data[i]
 		if p_i.empty():
@@ -180,10 +190,14 @@ func refresh_planets():
 		glows.append(planet_glow)
 		if planets_affected_by_CBS > 0 and i == planets_affected_by_CBS - 1:
 			CBS_range = v.length() * 1.1
+		if planets_affected_by_broken_CBS > planets_affected_by_CBS and i == planets_affected_by_broken_CBS - 1:
+			broken_CBS_range = v.length() * 1.1
 
 func _draw():
 	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), 1)
 	draw_circle(Vector2.ZERO, CBS_range, Color(0.4, 0.4, 1.0, 0.15))
+	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.8), 1)
+	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.15))
 
 func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
@@ -192,10 +206,10 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	grid.rect_scale *= sc * 4.0
 	if game.element_overlay.option_btn.get_selected_id() == 0:#Planet interior
 		var R = p_i.size * 1000.0 / 2#in meters
-		var surface_volume = get_sph_V(R, R - p_i.crust_start_depth)#in m^3
-		var crust_volume = get_sph_V(R - p_i.crust_start_depth, R - p_i.mantle_start_depth)
-		var mantle_volume = get_sph_V(R - p_i.mantle_start_depth, R - p_i.core_start_depth)
-		var core_volume = get_sph_V(R - p_i.core_start_depth)
+		var surface_volume = Helper.get_sph_V(R, R - p_i.crust_start_depth)#in m^3
+		var crust_volume = Helper.get_sph_V(R - p_i.crust_start_depth, R - p_i.mantle_start_depth)
+		var mantle_volume = Helper.get_sph_V(R - p_i.mantle_start_depth, R - p_i.core_start_depth)
+		var core_volume = Helper.get_sph_V(R - p_i.core_start_depth)
 		var crust_stone_amount = (surface_volume + crust_volume) * ((5600 + p_i.mantle_start_depth * 0.01) / 2.0)
 		var mantle_stone_amount = mantle_volume * ((5690 + (p_i.mantle_start_depth + p_i.core_start_depth) * 0.01) / 2.0)
 		var core_stone_amount = core_volume * ((5700 + (p_i.core_start_depth + R) * 0.01) / 2.0)
@@ -220,12 +234,6 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	grid.add_to_group("info_nodes")
 	grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 4.0
 	grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 4.0
-
-#get_sphere_volume
-func get_sph_V(outer:float, inner:float = 0):
-	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
-	inner /= 150.0
-	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
 
 func on_entity_icon_over(txt:String):
 	game.show_tooltip(txt)
@@ -329,6 +337,7 @@ func add_constr_costs(vbox:VBoxContainer, dict:Dictionary):
 		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(dict.cost_div)], 0)
 	else:
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	game.get_node("UI/Panel").visible = true
 	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	
 func show_M_DS_costs(star:Dictionary, base:bool = false):

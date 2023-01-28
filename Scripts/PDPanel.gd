@@ -17,12 +17,11 @@ func _ready():
 	set_polygon(rect_size)
 
 func calc_OP_points():
-	bonuses.clear()
-	op_points.clear()
 	for el in Data.lake_bonus_values.keys():
 		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Liquid").polygon
 		if game.chemistry_bonus.has(el):
-			bonuses[el] = game.chemistry_bonus[el]
+			if not bonuses.has(el):
+				bonuses[el] = game.chemistry_bonus[el]
 			op_points[el] = 0.0
 			for i in 4:
 				op_points[el] += abs(default[i].x - bonuses[el][i].x) / 150.0

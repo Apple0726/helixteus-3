@@ -53,8 +53,10 @@ func _on_btn_pressed(btn_str:String):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
 		elif bldg in ["PC", "NC"]:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
-		elif bldg in ["MS", "B", "NSF", "ESF"]:
+		elif bldg in ["MS", "NSF", "ESF"]:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg)))]
+		elif bldg == "B":
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * game.u_i.charge))]
 		elif Data.path_1.has(bldg):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
 		if Data.path_2.has(bldg):

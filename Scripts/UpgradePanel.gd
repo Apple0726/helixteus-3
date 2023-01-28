@@ -236,6 +236,8 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
 	if bldg == "SE" and path_selected != 3:
 		IR_mult = 1.0
+	if bldg == "B":
+		curr_value *= game.u_i.charge
 	curr_value *= IR_mult
 	if first_tile_bldg_info.has("time_based"):
 		curr_value *= game.u_i.time_speed
@@ -365,8 +367,10 @@ func _on_Upgrade_pressed():
 						Helper.add_atom_production(el, base_prod * p_i.atmosphere[el])
 					Helper.add_energy_from_NFR(p_i, base_prod)
 					Helper.add_energy_from_CS(p_i, base_prod)
-				elif tile.bldg.name in ["MS", "B", "NSF", "ESF"]:
+				elif tile.bldg.name in ["MS", "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
+				elif tile.bldg.name == "B":
+					tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
 					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 					if path_selected == 1:
@@ -398,7 +402,7 @@ func _on_Upgrade_pressed():
 			if planet.bldg.name == "MS":
 				game.mineral_capacity += diff
 			elif planet.bldg.name == "B":
-				game.energy_capacity += diff
+				game.energy_capacity += diff * game.u_i.charge
 			elif planet.bldg.name == "AE":
 				var base_prod:float = diff * planet.pressure
 				for el in planet.atmosphere:

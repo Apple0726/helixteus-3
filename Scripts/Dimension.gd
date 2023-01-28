@@ -29,6 +29,7 @@ var lake_params:Dictionary = {
 	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
+	var prop_text:String = ""
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
 	$ModifyDimension/Maths.rect_clip_content = true
@@ -37,14 +38,20 @@ func _ready():
 	$ModifyDimension/Reset/DimResetInfo.text = tr("DIM_JUST_RESET_INFO") % tr("GENERATE_STARTING_UNIVERSE")
 	$ModifyDimension/Physics/Control/UnivPropertiesLabel.visible = false
 	for univ_prop in $ModifyDimension/Physics/Control/VBox.get_children():
-		univ_prop.value = game.physics_bonus[univ_prop.name]
 		var univ_prop_text = preload("res://Scenes/HelpText.tscn").instance()
-		univ_prop_text.label_text = tr(univ_prop.name.to_upper())
-		univ_prop_text.help_text = tr("%s_DESC" % univ_prop.name.to_upper())
+		if univ_prop.name == "age":
+			prop_text = tr("AGE_OF_THE_UNIVERSE")
+			univ_prop_text.help_text = tr("AGE_OF_THE_UNIVERSE_DESC")
+		else:
+			prop_text = tr(univ_prop.name.to_upper())
+			univ_prop_text.help_text = tr("%s_DESC" % univ_prop.name.to_upper())
+		univ_prop.value = game.physics_bonus[univ_prop.name]
+		univ_prop_text.label_text = prop_text
 		univ_prop_text.rect_min_size.y = 32.0
 		univ_prop_text.size_flags_horizontal = Label.SIZE_EXPAND_FILL
 		$ModifyDimension/Physics/Control/VBox2.add_child(univ_prop_text)
 		univ_prop_text.name = univ_prop.name
+	$ModifyDimension/Physics/Control/UnivPropertiesLabel.text = prop_text
 	refresh_univs()
 	refresh_OP_meters()
 	$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
@@ -367,15 +374,15 @@ func calc_OP_points():
 		chemistry_OP_points += game.PD_panel.op_points[el]
 	maths_OP_points = 0
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -3.0, 1.2)#Building upgrade cost
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -6.0, 1.2)#Mineral value
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -3.0, 1.2)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.5, 1.2)#Mining speed multiplier
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -10.0, 1.5)#Aurora intensity exponent
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -7.0, 1.5)#Aurora intensity exponent
 	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 180.0, 1.0, 3.0)#Infinite research
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -10.0, 1.1)#Ship level up XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -2.0, 1.1)#Ship level up XP
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 200.0, 1.0, 3.0)#Ship stats
 	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.3)#Chance of ship hitting enemy
 	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -50.0, 2)#Material metal buy/sell
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -40.0, 1.15)#Universe level XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -30.0, 1.15)#Universe level XP
 
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))

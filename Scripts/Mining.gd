@@ -371,12 +371,9 @@ func _process(delta):
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
-		if tile.depth <= floor(p_i.size * 500.0):
-			circ_disabled = false
-			$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-			$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
-		else:
-			game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		circ_disabled = false
+		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
 
 func _on_Button_button_up():
 	circ_disabled = true

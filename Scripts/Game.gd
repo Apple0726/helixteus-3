@@ -3312,7 +3312,6 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(50, 150)},
 								"glass":{"chance":0.1, "amount":4},
 								"sand":{"chance":0.8, "amount":50},
-								#"clay":{"chance":rand_range(0.05, 0.3), "amount":rand_range(30, 80)},
 								"soil":{"chance":rand_range(0.1, 0.8), "amount":rand_range(30, 100)},
 								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rand_range(15, 45)}
 	}

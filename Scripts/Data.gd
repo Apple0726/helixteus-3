@@ -5,7 +5,7 @@ enum ProjType {STANDARD, LASER, BUBBLE, PURPLE}#For caves
 var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
 				"PP":{"value":0.6, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
 				"RL":{"value":0.06, "pw":1.15, "time_based":true, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
-				"B":{"value":12000, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
+				"B":{"value":12000, "pw":1.17, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
 				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
 				"RCC":{"value":1.0, "pw":1.07, "metal_costs":{"lead":1500, "copper":3500, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 				"SC":{"value":50.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
@@ -58,7 +58,7 @@ var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
 				"PCC":{"money":2.5e12, "energy":7.8e10, "time":840000},
 				"CBD":{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(1.5, 24), "energy":e(1.5, 24)},#Triangulum probe
-				"GK":{"money":e(7.5, 23), "energy":e(1.0, 24)},#Galaxy-killer
+				"GK":{"money":e(7.5, 23), "energy":e(5.0, 24)},#Galaxy-killer
 				"rover":{"money":2000, "energy":400, "time":50.0},
 				"PC":{"money":1000000, "energy":50000, "time":600.0},
 				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
@@ -486,7 +486,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"enemy_HP":{"double_treasure_at":1.5, "tier":1},
 	"chest_number":{"double_treasure_at":0.8, "no_treasure_mult":true, "tier":1},
 	"darkness":{"double_treasure_at":2.0, "tier":1, "max":3},
-	"enemy_size":{"double_treasure_at":0.6, "tier":2, "min":0.2, "one_direction":1},
+	"enemy_size":{"double_treasure_at":0.6, "tier":2, "min":0.3, "one_direction":1},
 	"rover_size":{"double_treasure_at":0.9, "tier":2},
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
