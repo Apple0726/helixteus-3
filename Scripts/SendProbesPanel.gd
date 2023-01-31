@@ -10,6 +10,7 @@ var obj_to_discover:int = -1
 var undiscovered_obj_num:int = 0
 var dist_mult:float = 1
 var PP:float
+var init_PP:float
 var dist_exp:int
 
 var units:Dictionary = {
@@ -50,13 +51,19 @@ func refresh():
 			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("AGE_OF_THE_UNIVERSE")
 		else:
 			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
+		_on_TP_value_changed(float(get_node("TP/VBox/%s/Label2" % prop).text), prop)
 	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
 	if game.viewing_dimension:
-		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
+		init_PP = get_lv_sum()
+		if game.subjects.dimensional_power.lv >= 5:
+			init_PP += 150
+		PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
+		if len(game.universe_data) == 0 and game.subjects.dimensional_power.lv >= 5:
+			ok = true
 		for probe in game.probe_data:
 			if probe and probe.tier == 2:
 				ok = true
@@ -73,7 +80,7 @@ func refresh():
 					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
-					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / Data.univ_prop_weights[prop.name] / 2.0)
+					prop.get_node("HSlider").max_value = ceil(init_PP / Data.univ_prop_weights[prop.name] / 2.0)
 					prop.get_node("HSlider").step = 0.1
 					var value_range = prop.get_node("HSlider").max_value - prop.get_node("HSlider").min_value
 					if value_range > 10:
@@ -139,10 +146,11 @@ func dist_sort(a:Dictionary, b:Dictionary):
 	return false
 
 func discover_univ():
-	for probe in game.probe_data:
-		if probe and probe.tier == 2:
-			game.probe_data.erase(probe)
-			break
+	if len(game.universe_data) > 0:
+		for probe in game.probe_data:
+			if probe and probe.tier == 2:
+				game.probe_data.erase(probe)
+				break
 	var id:int = len(game.universe_data)
 	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":2, "sc_mult":0.1}}
 	for prop in $TP/VBox.get_children():
@@ -152,9 +160,16 @@ func discover_univ():
 	if not game.achievement_data.progression.has("new_universe"):
 		game.earn_achievement("progression", "new_universe")
 	game.universe_data.append(u_i)
+	if len(game.universe_data) == 1:
+		game.dimension.set_bonuses()
+		Data.MUs.MV.pw = game.maths_bonus.MUCGF_MV
+		Data.MUs.MSMB.pw = game.maths_bonus.MUCGF_MSMB
+		Data.MUs.AIE.pw = game.maths_bonus.MUCGF_AIE
+		for el in game.PD_panel.bonuses.keys():
+			game.chemistry_bonus[el] = game.PD_panel.bonuses[el]
+	game.dimension.refresh_univs()
 	if visible:
 		game.toggle_panel(self)
-	game.dimension.refresh_univs()
 
 func _on_Send_pressed(send_all:bool = false):
 	if game.viewing_dimension:
@@ -211,7 +226,7 @@ func _on_HSlider_value_changed(value):
 
 func e(n, e):
 	return n * pow(10, e)
-
+	
 func _on_TP_value_changed(value:float, prop:String):
 	var text_node:LineEdit = get_node("TP/VBox/%s/Label2" % prop)
 	if get_focus_owner() is HSlider:
@@ -230,7 +245,7 @@ func _on_TP_value_changed(value:float, prop:String):
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
 			point_distribution[prop] = (1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
-	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
+	PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0
 	var s_b:float = pow(float($TP/VBox/boltzmann/Label2.text), 4) / pow(float($TP/VBox/planck/Label2.text), 3) / pow(float($TP/VBox/speed_of_light/Label2.text), 2)

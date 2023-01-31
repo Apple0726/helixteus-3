@@ -163,15 +163,11 @@ func update_XP():
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
 func update_minerals():
-#	if game.c_v == "planet" and is_instance_valid(game.view.obj) and game.view.obj.bldg_to_construct != "":
-#		return
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
-	if round(game.minerals) == min_cap:
-		if not game.science_unlocked.has("ASM"):
+	if game.minerals >= min_cap:
+		if not game.science_unlocked.has("ASM") and not $Bottom/Panel/AnimationPlayer.is_playing():
 			$Bottom/Panel/AnimationPlayer.play("Flash")
-		if not $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
-			$Top/Resources/Minerals/Text.connect("mouse_entered", self, "_on_MineralsText_mouse_entered")
 	else:
 		if $Top/Resources/Minerals/Text.is_connected("mouse_entered", self, "_on_MineralsText_mouse_entered"):
 			 $Top/Resources/Minerals/Text.disconnect("mouse_entered", self, "_on_MineralsText_mouse_entered")
@@ -333,7 +329,7 @@ func refresh():
 		tween.start()
 	else:
 		$Top/Objectives.rect_position.y = 4
-	$Bookmarks.visible = game.show.has("bookmarks")
+	$Bookmarks.visible = game.show.has("bookmarks") and game.c_v != "science_tree"
 	system_b_btn.visible = game.show.has("s_bk_button")
 	galaxy_b_btn.visible = game.show.has("g_bk_button")
 	cluster_b_btn.visible = game.show.has("c_bk_button")
@@ -529,7 +525,7 @@ func _on_ConvertMinerals_mouse_entered():
 func _on_ConvertMinerals_pressed():
 	game.sell_all_minerals()
 	$Bottom/Panel/AnimationPlayer.stop()
-	$Bottom/Panel/ColorRect.modulate.a = 0.0
+	$Bottom/Panel/ColorRect.color.a = 0.0
 	if game.tutorial and game.tutorial.tut_num == 8 and not game.tutorial.tween.is_active():
 		game.tutorial.fade()
 

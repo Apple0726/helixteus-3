@@ -83,8 +83,8 @@ func _on_Terraform_pressed():
 		if unique_bldg_str in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
 			p_i[unique_bldg_str + "_bonus"] = unique_bldg_bonus
 			if unique_bldg_str == "substation":
-				p_i.capacity_bonus = Data.path_1.PP.value * surface * unique_bldg_bonus_cap
-				game.capacity_bonus_from_substation += p_i.capacity_bonus
+				p_i.unique_bldg_bonus_cap = unique_bldg_bonus_cap
+				game.capacity_bonus_from_substation += Data.path_1.PP.value * surface * p_i.unique_bldg_bonus_cap
 		elif unique_bldg_str == "nuclear_fusion_reactor":
 			for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
 				if not nfr.has("repair_cost"):

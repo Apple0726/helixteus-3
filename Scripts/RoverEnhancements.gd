@@ -97,7 +97,7 @@ func refresh():
 			else:
 				RE.modulate = Color(0.6, 0.6, 0.6)
 		else:
-			var enhancement:String = RE.name.substr(2, 99)
+			var enhancement:String = RE.name.substr(2)
 			var color:Color
 			if enhancements.has(enhancement):
 				color = Color(0.4, 0.88, 1.0)

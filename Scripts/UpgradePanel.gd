@@ -226,7 +226,11 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	elif bldg == "AE" and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == "ME" and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * (first_tile.ash.richness if first_tile.has("ash") else 1.0), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("mineral_replicator_bonus", 1.0), lv, first_tile_bldg_info.pw)
+	elif bldg == "PP" and path_selected == 1:
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("substation_bonus", 1.0), lv, first_tile_bldg_info.pw)
+	elif bldg == "RL" and path_selected == 1:
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("observatory_bonus", 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg in ["MS", "B", "NSF", "ESF"]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
 	else:
@@ -419,6 +423,7 @@ func _on_Upgrade_pressed():
 				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0) * planet.get("mineral_replicator_bonus", 1.0)
 			elif planet.bldg.name == "PP":
 				game.autocollect.rsrc.energy += diff * planet.get("substation_bonus", 1.0)
+				game.capacity_bonus_from_substation += diff * planet.get("unique_bldg_bonus_cap", 0.0)
 			elif planet.has("auto_GH"):
 				for p in planet.auto_GH.produce:
 					var upgrade_mult:float = new_base_value / planet.bldg["%s_value" % path_str]

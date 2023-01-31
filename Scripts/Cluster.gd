@@ -28,8 +28,6 @@ func _ready():
 		galaxy_btn.connect("mouse_entered", self, "on_galaxy_over", [g_i.l_id])
 		galaxy_btn.connect("mouse_exited", self, "on_galaxy_out")
 		galaxy_btn.connect("pressed", self, "on_galaxy_click", [g_i.id, g_i.l_id])
-		#galaxy_btn.rect_pivot_offset = Vector2(galaxy_btn.texture_normal.get_width(), galaxy_btn.texture_normal.get_height()) / 2.0
-		#galaxy_btn.rect_rotation = rad2deg(g_i["rotation"])
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.rect_position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
 		galaxy_btn.rect_scale.x = radius
@@ -43,7 +41,6 @@ func _ready():
 		if g_i.has("GS"):
 			var GS_marker:Sprite = Sprite.new()
 			GS_marker.scale *= 2.0
-			#GS_marker.show_behind_parent = true
 			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
 			galaxy.add_child(GS_marker)
 			var rsrc

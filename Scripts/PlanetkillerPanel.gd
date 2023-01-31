@@ -93,7 +93,6 @@ func refresh_planet_info():
 	add_stone(stone, target.crust, (surface_volume + crust_volume) * ((5600 + target.mantle_start_depth * 0.01) / 2.0))
 	add_stone(stone, target.mantle, mantle_volume * ((5690 + (target.mantle_start_depth + target.core_start_depth) * 0.01) / 2.0))
 	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
-	print(R)
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp

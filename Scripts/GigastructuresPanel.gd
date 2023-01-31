@@ -8,7 +8,7 @@ var bldg:String = ""
 var surface:float
 var num:float
 var prod_cost_mult:float
-var stone_from_GK = {}
+var rsrc_from_GK = {}
 
 func _ready():
 	set_polygon(rect_size)
@@ -88,10 +88,10 @@ func update_info():
 		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
 	elif bldg == "B":
 		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
-		num = surface * 60000.0
+		num = surface * 60000.0 * game.u_i.charge
 		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
 	elif bldg == "GK":
-		stone_from_GK.clear()
+		var stone_from_GK = {}
 		$Control/VBox/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
 		var num_planets = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) * 8
 		var avg_planet_size = 30000
@@ -108,7 +108,7 @@ func update_info():
 		add_stone(stone_from_GK, crust, num_planets * (surface_volume + crust_volume) * ((5600 + mantle_start_depth * 0.01) / 2.0))
 		add_stone(stone_from_GK, mantle, num_planets * mantle_volume * ((5690 + (mantle_start_depth + core_start_depth) * 0.01) / 2.0))
 		add_stone(stone_from_GK, core, num_planets * core_volume * ((5700 + (core_start_depth + R) * 0.01) / 2.0))
-		var rsrc = {"stone":stone_from_GK}
+		rsrc_from_GK = {"stone":stone_from_GK}
 		var surface_mat_info = {	"coal":{"chance":1, "amount":100},
 									"glass":{"chance":0.1, "amount":4},
 									"sand":{"chance":0.8, "amount":50},
@@ -116,10 +116,10 @@ func update_info():
 									"cellulose":{"chance":1, "amount":30}
 		}
 		for mat in surface_mat_info.keys():
-			rsrc[mat] = num_planets * surface_volume * surface_mat_info[mat].chance * surface_mat_info[mat].amount * game.u_i.planck
+			rsrc_from_GK[mat] = num_planets * surface_volume * surface_mat_info[mat].chance * surface_mat_info[mat].amount * game.u_i.planck
 		for met in game.met_info.keys():
-			rsrc[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * game.u_i.planck
-		Helper.put_rsrc($Control/VBox/StoneMM/GridContainer, 32, rsrc)
+			rsrc_from_GK[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * game.u_i.planck
+		Helper.put_rsrc($Control/VBox/StoneMM/GridContainer, 32, rsrc_from_GK)
 	$Control/Convert.visible = not error
 	$Control/VBox/Costs.visible = not error
 	$Control/VBox/CostsHBox.visible = not error
@@ -174,6 +174,9 @@ func _on_Convert_pressed():
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
+			game.switch_view("cluster", {"fn":"delete_galaxy"})
+		elif bldg == "GK":
+			game.add_resources(rsrc_from_GK)
 			game.switch_view("cluster", {"fn":"delete_galaxy"})
 		else:
 			game.switch_view("cluster")

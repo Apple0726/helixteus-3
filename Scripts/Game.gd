@@ -3,6 +3,7 @@ extends Node2D
 const TEST:bool = false
 const VERSION:String = "v0.26"
 const SYS_NUM:int = 400
+const UNIQUE_BLDGS = 7
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -421,7 +422,7 @@ var achievements:Dictionary = {
 		"tier_3_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 3,
 		"tier_4_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 4,
 		"tier_5_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 5,
-		"find_all_unique_bldgs":tr("FIND_ALL_UNIQUE_BLDGS"),
+		"find_all_unique_bldgs":tr("FIND_ALL_UNIQUE_BLDGS") % UNIQUE_BLDGS,
 	},
 	"progression":{
 		"build_MS":tr("BUILD_A_MS"),
@@ -463,7 +464,6 @@ var metal_textures:Dictionary = {}
 var game_tween:Tween
 var b_i_tween:Tween#bottom_info_tween
 var view_tween:Tween
-var tooltip_tween:Tween
 var stars_tween:Tween
 var tile_brightness:Array = []
 var tile_avg_mod:Array = []
@@ -532,7 +532,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, ""]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, "31 Jan 2023"]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -570,8 +570,6 @@ func _ready():
 	add_child(b_i_tween)
 	view_tween = Tween.new()
 	add_child(view_tween)
-	tooltip_tween = Tween.new()
-	add_child(tooltip_tween)
 	stars_tween = Tween.new()
 	add_child(stars_tween)
 	for metal in met_info:
@@ -943,6 +941,9 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	neutron_cap = 0
 	electron_cap = 0
 	science_unlocked = {}
+	if subjects.dimensional_power.lv >= 1:
+		science_unlocked.ASM = true
+		science_unlocked.ASM2 = true
 	cave_filters = {
 		"money":false,
 		"minerals":false,
@@ -1386,7 +1387,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	panel.tween.interpolate_property(panel, "modulate", null, Color(1, 1, 1, 1), 0.1)
 	var s = panel.rect_size
-	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 20), Vector2(-s.x / 2.0, -s.y / 2.0), 0.3, Tween.TRANS_BACK, Tween.EASE_OUT)
+	panel.tween.interpolate_property(panel, "rect_position", Vector2(-s.x / 2.0, -s.y / 2.0 + 10), Vector2(-s.x / 2.0, -s.y / 2.0), 0.3, Tween.TRANS_BACK, Tween.EASE_OUT)
 	panel.tween.interpolate_property($Panels/Blur.material, "shader_param/amount", null, 1.0, 0.2)
 	if panel.tween.is_connected("tween_all_completed", self, "on_fade_complete"):
 		panel.tween.disconnect("tween_all_completed", self, "on_fade_complete")
@@ -1698,10 +1699,10 @@ func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	if is_instance_valid(tutorial) and tutorial.tut_num == 15 and objective.empty():
 		tutorial.fade()
-	HUD.get_node("Bottom/Hotbar").visible = true
+	if is_instance_valid(HUD):
+		HUD.get_node("Bottom/Hotbar").visible = true
 	if is_instance_valid(mining_HUD):
-		remove_child(mining_HUD)
-	mining_HUD = null
+		mining_HUD.queue_free()
 
 func remove_science_tree():
 	$ScienceTreeBG.visible = false
@@ -2383,7 +2384,7 @@ func generate_systems(id:int):
 		var dark_matter_system:bool = c_c == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
-			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.age, 0.25)
+			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.get("age", 1.0), 0.25)
 			a *= pow(e(1, -9) / B, physics_bonus.BI)#Higher B: hotter stars
 			#Solar masses
 			var mass:float = -log(randf()) / a
@@ -2701,9 +2702,9 @@ func generate_planets(id:int):#local id
 		stats_global.biggest_planet = max(p_i.size, stats_global.biggest_planet)
 		if c_s_g != 0:
 			if p_i.type in [11, 12]:
-				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.15) * pow(u_i.age, 0.15):
+				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.15) * pow(u_i.get("age", 1.0), 0.15):
 					p_i.MS = "M_MME"
-			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.15) * pow(u_i.age, 0.15):
+			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.15) * pow(u_i.get("age", 1.0), 0.15):
 				p_i.MS = "M_SE"
 			if p_i.has("MS"):
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
@@ -2714,32 +2715,32 @@ func generate_planets(id:int):#local id
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
 		planet_data.append(p_i)
-	for i in range(0, N_stars):
-		var star = system_data[id].stars[i]
-		var star_size = star.size
-		var star_temp = star.temperature
-		var star_lum = star.luminosity
-		var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
-		if c_g_g == 0:
-			MSes.erase("M_MB")
-		var MS = MSes[randi() % len(MSes)]
-		if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
-			star.MS = MS
-		elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
-			star.MS = MS
-		if star.has("MS"):
-			star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
-			star.bldg = {}
-			if star.MS == "M_MB":
-				star.repair_cost = Data.MS_costs[star.MS].money * 72 * rand_range(1, 3) * pow(star.size, 2)
-			elif star.MS == "M_DS":
-				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * pow(star.size, 2)
-			elif star.MS == "M_CBS":
-				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3)
-			elif star.MS == "M_PK":
-				star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
-			star.repair_cost *= engineering_bonus.BCM
 	if c_s_g != 0:
+		for i in range(0, N_stars):
+			var star = system_data[id].stars[i]
+			var star_size = star.size
+			var star_temp = star.temperature
+			var star_lum = star.luminosity
+			var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
+			if c_g_g == 0:
+				MSes.erase("M_MB")
+			var MS = MSes[randi() % len(MSes)]
+			if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
+				star.MS = MS
+			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
+				star.MS = MS
+			if star.has("MS"):
+				star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
+				star.bldg = {}
+				if star.MS == "M_MB":
+					star.repair_cost = Data.MS_costs[star.MS].money * 72 * rand_range(1, 3) * pow(star.size, 2)
+				elif star.MS == "M_DS":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * pow(star.size, 2)
+				elif star.MS == "M_CBS":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3)
+				elif star.MS == "M_PK":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
+				star.repair_cost *= engineering_bonus.BCM
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["discovered"] = true
@@ -3005,7 +3006,7 @@ func generate_tiles(id:int):
 								"mineral_replicator":1.0 + total_VEI / 6.0,
 								"observatory":max(-log(p_i.pressure / 2.0 + 0.001), 0),
 								"mining_outpost":1.0 + 15.0 * crater_num / pow(wid, 2),
-								"aurora_generator":5.0 if diff == 0 else 1.0,
+								#"aurora_generator":5.0 if diff == 0 else 1.0,
 								"substation":max(-log(p_i.pressure / 10.0 + 0.1), 0),
 								"cellulose_synthesizer":log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)}
 	var unique_bldgs_list_without_NFR = unique_bldgs_list.duplicate()
@@ -3066,7 +3067,7 @@ func generate_tiles(id:int):
 					spaceport_spawned = true					#Save migration
 				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1)}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * system_data[c_s].diff * pow(obj.tier, 30) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
+					obj.repair_cost = 250000 * pow(obj.tier, 30) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
 					p_i.unique_bldgs[unique_bldg].append(obj)
 				else:
@@ -3112,14 +3113,14 @@ func generate_tiles(id:int):
 		tile_data[random_tile].ship = true
 		var mineral_replicator = {"tile":random_tile3, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 		var spaceport:Dictionary
-		mineral_replicator.repair_cost = 10000 * system_data[c_s].diff * pow(mineral_replicator.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
+		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
 		if random_tile == N-1:
 			spaceport = {"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile - 1) 														# Save migration
 		else:
 			spaceport = {"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
 			erase_tile(random_tile + 1)
-		spaceport.repair_cost = 10000 * system_data[c_s].diff * pow(spaceport.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
+		spaceport.repair_cost = 10000 * pow(spaceport.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
 		p_i.unique_bldgs = {"spaceport":[spaceport], "mineral_replicator":[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	for bldg in p_i.unique_bldgs.keys():
@@ -3147,7 +3148,7 @@ func generate_tiles(id:int):
 				unique_bldgs_discovered[bldg] += 1
 			else:
 				unique_bldgs_discovered[bldg] = 1
-			if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == 8:
+			if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == UNIQUE_BLDGS:
 				earn_achievement("exploration", "find_all_unique_bldgs")
 	
 	#Give lake data to adjacent tiles
@@ -3338,10 +3339,10 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	tooltip.modulate.a = 0.0
 	$Tooltips.add_child(tooltip)
 	add_text_icons(tooltip, txt, imgs, size, true)
-	yield(get_tree(), "idle_frame")
+	yield(get_tree().create_timer(0.01), "timeout")
 	set_tooltip_position()
-	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.1)
-	tooltip_tween.start()
+	var tween = get_tree().create_tween()
+	tween.tween_property(tooltip, "modulate", Color.white, 0.1)#.set_delay(0.1)
 
 func show_tooltip(txt:String, hide:bool = true):
 	if is_instance_valid(tooltip):
@@ -3353,9 +3354,10 @@ func show_tooltip(txt:String, hide:bool = true):
 	if tooltip.rect_size.x > 400:
 		tooltip.autowrap = true
 		tooltip.rect_size.x = 400
+	yield(get_tree().create_timer(0.0), "timeout")
 	set_tooltip_position()
-	tooltip_tween.interpolate_property(tooltip, "modulate", null, Color.white, 0.1)
-	tooltip_tween.start()
+	var tween = get_tree().create_tween()
+	tween.tween_property(tooltip, "modulate", Color.white, 0.1)#.set_delay(0.1)
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):
@@ -3616,7 +3618,7 @@ func set_tooltip_position():
 		else:
 			tooltip.rect_position = mouse_pos - tooltip.rect_size - Vector2(9, 9)
 	else:
-		if mouse_pos.x < 1280 - tooltip.rect_size.x:
+		if mouse_pos.x < (1262 if $UI/Panel.modulate.a == 0.0 else 800) - tooltip.rect_size.x:
 			tooltip.rect_position.x = mouse_pos.x + 9
 		else:
 			tooltip.rect_position.x = mouse_pos.x - tooltip.rect_size.x - 9
@@ -3665,13 +3667,6 @@ func _input(event):
 		set_tooltip_position()
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
-#	if ship_locator:
-#		ship_locator.position = mouse_pos
-#		var ship_pos:Vector2 = system_data[second_ship_hints.spawned_at].pos
-#		var local_mouse_pos:Vector2 = view.obj.to_local(mouse_pos)
-#		ship_locator.get_node("Arrow").rotation = atan2(ship_pos.y - local_mouse_pos.y, ship_pos.x - local_mouse_pos.x)
-#		if c_v == "STM" and event.get_relative() != Vector2.ZERO:
-#			STM.move_ship_inst = true
 
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):

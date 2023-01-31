@@ -18,7 +18,7 @@ var DR_mult:float = 1.0
 var table
 
 var lake_params:Dictionary = {
-	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":1.0},
+	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":1.5},
 	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
 	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
 	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
@@ -221,7 +221,7 @@ func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
 	$UnivInfo.text = "%s (%s %s)\n%s: %s (%s)\n\n" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})]
 	$UnivInfo.text += tr("FUNDAMENTAL_PROPERTIES") + "\n"
-	if id == 0:
+	if id == 0 and game.subjects.dimensional_power.lv < 5:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n%s: %s\n" % [
 			tr("SPEED_OF_LIGHT"),
 			Helper.e_notation(3e8),
@@ -253,7 +253,7 @@ func on_univ_over(id:int):
 			tr("CHARGE"),
 			u_i.charge,
 			tr("AGE_OF_THE_UNIVERSE"),
-			u_i.age,
+			u_i.get("age", 1.0),
 			tr("DEFAULT_UNIVERSE_AGE"),
 			]
 	$UnivInfo.text += "\n%s\n" % tr("MULTIPLIERS")
@@ -374,15 +374,15 @@ func calc_OP_points():
 		chemistry_OP_points += game.PD_panel.op_points[el]
 	maths_OP_points = 0
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -3.0, 1.2)#Building upgrade cost
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -3.0, 1.2)#Mineral value
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -2.0, 1.2)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.5, 1.2)#Mining speed multiplier
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -7.0, 1.5)#Aurora intensity exponent
-	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 180.0, 1.0, 3.0)#Infinite research
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -2.0, 1.1)#Ship level up XP
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 200.0, 1.0, 3.0)#Ship stats
-	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.3)#Chance of ship hitting enemy
-	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -50.0, 2)#Material metal buy/sell
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -30.0, 1.15)#Universe level XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -6.0, 1.5)#Aurora intensity exponent
+	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 300.0, 1.0, 3.0)#Infinite research
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -1.3, 1.1)#Ship level up XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 150.0, 1.0, 3.0)#Ship stats
+	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.2)#Chance of ship hitting enemy
+	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -40.0, 2)#Material metal buy/sell
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -20.0, 1.15)#Universe level XP
 
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
@@ -423,8 +423,8 @@ func calc_OP_points():
 		physics_defaults.get_node(cost.name).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(cost.name).text.right(1)))
 	
 	biology_OP_points = 0
-	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.4)
-	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.6)
+	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.8)
+	calc_bio_points($ModifyDimension/Biology/Control/PYM, 1.2)
 	if selected_element != "":
 		lake_params[selected_element].value = float($ModifyDimension/Biology/Control/Lake/Bonus.value)
 		update_lake_bonus_text(selected_element)
@@ -517,7 +517,11 @@ func set_bonuses():
 		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
 
 func _on_Generate_pressed():
-	game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
+	if game.subjects.dimensional_power.lv >= 5:
+		set_bonuses()
+		game.toggle_panel(game.send_probes_panel)
+	else:
+		game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
 
 
 func _on_text_mouse_entered(text:String):
@@ -568,14 +572,22 @@ func _on_Table_mouse_entered(maths_bonus:String, level_1_value:float):
 	table = preload("res://Scenes/Table.tscn").instance()
 	table.visible = false
 	game.get_node("Tooltips").add_child(table)
+	var q = $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value
+	var q_default = float(math_defaults.get_node(maths_bonus).text.right(1))
 	table.get_node("GridContainer/Value").text = "%s (q=%s)" % [tr("VALUE"), $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).text]
-	table.get_node("GridContainer/Default").text = "%s (q=%s)" % [tr("DEFAULT"), float(math_defaults.get_node(maths_bonus).text.right(1))]
+	table.get_node("GridContainer/Default").text = "%s (q=%s)" % [tr("DEFAULT"), q_default]
 	table.get_node("GridContainer/1Value").text = str(level_1_value)
 	table.get_node("GridContainer/1Default").text = str(level_1_value)
-	table.get_node("GridContainer/10Value").text = Helper.format_num(round(level_1_value * pow($ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value, 10)))
-	table.get_node("GridContainer/10Default").text = Helper.format_num(round(level_1_value * pow(float(math_defaults.get_node(maths_bonus).text.right(1)), 10)))
-	table.get_node("GridContainer/100Value").text = Helper.format_num(round(level_1_value * pow($ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value, 100)))
-	table.get_node("GridContainer/100Default").text = Helper.format_num(round(level_1_value * pow(float(math_defaults.get_node(maths_bonus).text.right(1)), 100)))
+	table.get_node("GridContainer/10Value").text = Helper.format_num(round(level_1_value * pow(q, 10)))
+	table.get_node("GridContainer/10Default").text = Helper.format_num(round(level_1_value * pow(q_default, 10)))
+	table.get_node("GridContainer/100Value").text = Helper.format_num(round(level_1_value * pow(q, 100)))
+	table.get_node("GridContainer/100Default").text = Helper.format_num(round(level_1_value * pow(q_default, 100)))
+	if not maths_bonus.begins_with("MUCGF"):
+		table.get_node("GridContainer/200").visible = true
+		table.get_node("GridContainer/200Value").visible = true
+		table.get_node("GridContainer/200Default").visible = true
+		table.get_node("GridContainer/200Value").text = Helper.format_num(round(level_1_value * pow(q, 200)))
+		table.get_node("GridContainer/200Default").text = Helper.format_num(round(level_1_value * pow(q_default, 200)))
 
 
 func _on_Table_mouse_exited():

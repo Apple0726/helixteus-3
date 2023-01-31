@@ -539,6 +539,19 @@ func build_MS(obj:Dictionary, MS:String):
 	if obj.has("tile_num"):
 		game.popup(tr("MS_ON_TF_PLANET"), 2.0)
 		return
+	if obj.has("repair_cost"):
+		var error = false
+		if obj.MS_lv == 0 and not game.science_unlocked.has("MAE"):
+			error = true
+		elif obj.MS == "MB":
+			if not game.science_unlocked.has("MB"):
+				error = true
+		else:
+			if not game.science_unlocked.has(obj.MS.substr(2) + str(obj.MS_lv)):
+				error = true
+		if error:
+			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)
+			return 
 	var curr_time = OS.get_system_time_msecs()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)

@@ -44,7 +44,7 @@ func change_tab(btn_str:String):
 	for item in $VBox/HBox/Items/Items.get_children():
 		item.free()
 	item_name = ""
-	_on_BuyAmount_value_changed(1)
+	_on_BuyAmount_value_changed(num)
 	remove_costs()
 	item_info.modulate.a = 0
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())

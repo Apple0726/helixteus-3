@@ -410,7 +410,7 @@ func add_minerals(amount:float, add:bool = true):
 	else:
 		if game.science_unlocked.has("ASM2") and game.autosell:
 			if add:
-				game.add_resources({"money":round(game.minerals + amount - min_cap) * (game.MUs.MV + 4)})
+				game.add_resources({"money":(game.minerals + amount - min_cap) * (game.MUs.MV + 4)})
 				game.minerals = min_cap
 			return {"added":amount, "remainder":0}
 		elif game.science_unlocked.has("ASM") and game.autosell:
@@ -1190,9 +1190,11 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
 		elif bldg == "AE":
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
-		elif bldg in ["MS", "B", "NSF", "ESF"]:
+		elif bldg in ["MS", "NSF", "ESF"]:
 			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
-		elif bldg == "SPR":
+		elif bldg == "B":
+			return dict.bldg.path_1_value * mult * get_IR_mult("B") * n * game.u_i.charge
+		elif bldg in ["SPR"]:
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg in ["PC", "NC"]:
 			return dict.bldg.path_1_value * mult * n / p_i.pressure

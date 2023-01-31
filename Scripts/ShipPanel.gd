@@ -59,7 +59,6 @@ func _process(delta):
 	elif game.ships_travel_view != "-":
 		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date)]
 	if not visible:
-		$SpaceportTimer.stop()
 		set_process(false)
 
 func _on_CheckBox_toggled(button_pressed):

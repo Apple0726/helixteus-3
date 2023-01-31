@@ -46,8 +46,6 @@ func _input(event):
 		_on_close_button_pressed()
 
 func _on_close_button_pressed():
-	if not game.planet_data[p_id].has("HX_data"):
-		return
 	game.add_resources({"money":money})
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)
@@ -70,11 +68,11 @@ func _on_close_button_pressed():
 			game.objective.current += 1
 	else:
 		for planet in game.planet_data:
-			if not planet.has("conquered") and game.planet_data[p_id].has("HX_data"):
+			if not planet.has("conquered") and planet.has("HX_data"):
 				planet.conquered = true
-				game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
-				game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
-				game.stats_global.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
 				planet.erase("HX_data")
 				game.stats_univ.planets_conquered += 1
 				game.stats_dim.planets_conquered += 1

@@ -46,7 +46,6 @@ func refresh_overlay():
 			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
 			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
-		#game.get_node("GrayscaleRect").visible = colorblind_btn.pressed and toggle_btn.pressed
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
 

@@ -121,6 +121,8 @@ func refresh():
 			$Send.visible = true
 			set_process(false)
 			for gal in game.galaxy_data:
+				if gal.empty():
+					continue
 				if not gal.has("conquered"):
 					strength_required += gal.diff
 					sys_num += gal.system_num
@@ -140,7 +142,7 @@ func refresh():
 			combined_strength2 = combined_strength
 			sort_galaxies($Control/CheckBox.pressed)
 			for galaxy in sorted_objs:
-				if galaxy.has("conquered"):
+				if galaxy.empty() or galaxy.has("conquered"):
 					continue
 				if combined_strength2 < galaxy.diff:
 					if obj_num == 0:
@@ -168,7 +170,9 @@ func sort_galaxies(ascending:bool):
 		sorted_objs.invert()
 
 func diff_sort(a:Dictionary, b:Dictionary):
-	if a.diff < b.diff:
+	if b.empty():
+		return false
+	if a.empty() or a.diff < b.diff:
 		return true
 	return false
 
@@ -365,7 +369,7 @@ func _process(delta):
 			if not fighters_rekt and progress.value >= 100:
 				for i in range(start_index, len(sorted_objs)):
 					var galaxy = sorted_objs[i]
-					if galaxy.has("conquered"):
+					if galaxy.empty() or galaxy.has("conquered"):
 						start_index = i
 						continue
 					cluster_conquered = false
