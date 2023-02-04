@@ -240,7 +240,6 @@ func show_tooltip(tile, tile_id:int):
 			shortcuts.center_position.y = 360
 			shortcuts.name = "BuildingShortcuts"
 			game.get_node("UI").add_child(shortcuts)
-			#tooltip += "\n%s\n%s\n%s\n%s\n%s" % [tr("PRESS_F_TO_UPGRADE"), tr("PRESS_Q_TO_DUPLICATE"), tr("PRESS_X_TO_DESTROY"), tr("HOLD_SHIFT_TO_SELECT_SIMILAR"), tr("HIDE_SHORTCUTS")]
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == "MM":
@@ -248,15 +247,16 @@ func show_tooltip(tile, tile_id:int):
 		elif tile.bldg.name in ["GF", "SE", "SC"]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
 	elif tile.has("unique_bldg"):
-		var tier_colors = ["FFFFFF", "00EE00", "2222FF", "FF22FF", "FF8800", "FFFF22", "FF0000"]
-		tooltip += "[color=#%s]" % tier_colors[tile.unique_bldg.tier - 1]
+		
 		if tile.unique_bldg.has("repair_cost"):
+			tooltip += "[color=#%s]" % Data.tier_colors[tile.unique_bldg.tier - 1].to_html(false)
 			tooltip += tr("BROKEN_X").format({"building_name":tr(tile.unique_bldg.name.to_upper())})
 		else:
 			tooltip += tr(tile.unique_bldg.name.to_upper())
 		if tile.unique_bldg.tier > 1:
 			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
-		tooltip += "[/color]\n"
+			tooltip += "[/color]"
+		tooltip += "\n"
 		if game.help.has("%s_desc" % tile.unique_bldg.name):
 			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper())
 			game.help_str = "%s_desc" % tile.unique_bldg.name

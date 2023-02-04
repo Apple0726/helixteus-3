@@ -36,6 +36,7 @@ onready var dimension_btn = $Bottom/DimensionBtn
 onready var switch_btn = $Bottom/SwitchBtn
 onready var prev_btn = $Bottom/PrevView
 onready var next_btn = $Bottom/NextView
+onready var ships_btn = $Buttons/Ships
 var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
@@ -875,3 +876,9 @@ func _on_MainMenu_mouse_entered():
 
 func _on_MainMenu_pressed():
 	game.show_YN_panel("return_to_menu", tr("ARE_YOU_SURE"))
+
+func set_ship_btn_shader(active:bool, tier:int = -1):
+	ships_btn.material.set_shader_param("active", active)
+	if tier != -1:
+		ships_btn.material.set_shader_param("color", Data.tier_colors[tier - 1])
+		ships_btn.material.set_shader_param("speed", 1.0 / tier)

@@ -1,7 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const VERSION:String = "v0.26"
+const DATE:String = "4 Feb 2023"
+const VERSION:String = "v0.26.1"
+const COMPATIBLE_SAVES = ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26", "v0.26.1"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -532,7 +534,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, "31 Jan 2023"]
+	$UI/Version.text = "Alpha %s: %s" % [VERSION, DATE]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -807,7 +809,7 @@ func load_game():
 	if achievement_data.empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if not save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26"]:
+	if not save_info_dict.version in COMPATIBLE_SAVES:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -2200,17 +2202,6 @@ func generate_system_part():
 			systems_collision_detection(c_g, i)
 			update_loading_bar(i, N, tr("GENERATING_GALAXY"))
 			yield(get_tree().create_timer(0.0000000000001),"timeout")
-#	if c_g_g == 0 and second_ship_hints.spawned_at == -1:
-#		#Second ship can only appear in a system in the rectangle formed by solar system and center of galaxy
-#		var rect:Rect2 = Rect2(Vector2.ZERO, system_data[0].pos)
-#		rect = rect.abs()
-#		for system in system_data:
-#			if system.id == 0:
-#				continue
-#			if rect.has_point(system.pos) and randf() < 0.1:
-#				system.second_ship = Helper.rand_int(1, system.planet_num)
-#				second_ship_hints.spawned_at = system.id
-#				break
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c, galaxy_data)
@@ -2613,7 +2604,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass * u_i.gravitational, 0.5) * dark_matter)
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass / u_i.planck * u_i.gravitational, 0.5) * dark_matter)
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2714,6 +2705,7 @@ func generate_planets(id:int):#local id
 				elif p_i.MS == "M_SE":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rand_range(1, 3) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
+				system_data[id].has_MS = true
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		for i in range(0, N_stars):
@@ -2741,6 +2733,7 @@ func generate_planets(id:int):#local id
 				elif star.MS == "M_PK":
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
+				system_data[id].has_MS = true
 		var view_zoom = 400 / max_distance
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["discovered"] = true
@@ -2812,12 +2805,12 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 					if not tile2.has("cave"):
 						var diff = max(richness - tile2.ash.richness, 0)
 						if tile2.has("bldg") and tile2.bldg.name == "ME":
-							autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * (tile2.bldg.overclock_mult if tile2.bldg.has("overclock_mult") else 1.0)
+							autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
 						tile2.ash.richness = max(richness, tile2.ash.richness)
 				else:
 					tile2.ash = {"richness":richness}
 					if tile2.has("bldg") and tile2.bldg.name == "ME":
-						autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * (tile2.bldg.overclock_mult if tile2.bldg.has("overclock_mult") else 1.0)
+						autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
 					if artificial:
 						tile2.ash.artificial = true
 				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
@@ -4244,6 +4237,8 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 			stats_univ.systems_conquered += 1
 			stats_dim.systems_conquered += 1
 			stats_global.systems_conquered += 1
+			if not new_bldgs.has("SP"):
+				new_bldgs.SP = true
 			system_data[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false

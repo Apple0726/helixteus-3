@@ -87,12 +87,10 @@ margin_bottom = 472.0
 size_flags_vertical = 3
 
 [node name="ItemInfo" type="Panel" parent="VBox/HBox"]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 656.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Name" type="Label" parent="VBox/HBox/ItemInfo"]
 anchor_right = 1.0
@@ -102,9 +100,6 @@ text = "a"
 align = 1
 valign = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo"]
 anchor_right = 1.0

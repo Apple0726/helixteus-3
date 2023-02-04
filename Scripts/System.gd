@@ -541,8 +541,9 @@ func build_MS(obj:Dictionary, MS:String):
 		return
 	if obj.has("repair_cost"):
 		var error = false
-		if obj.MS_lv == 0 and not game.science_unlocked.has("MAE"):
-			error = true
+		if obj.MS_lv == 0:
+			if not game.science_unlocked.has("MAE"):
+				error = true
 		elif obj.MS == "MB":
 			if not game.science_unlocked.has("MB"):
 				error = true

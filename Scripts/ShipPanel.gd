@@ -32,8 +32,8 @@ func refresh():
 		if game.autocollect.has("ship_XP"):
 			$Panel/TravelETA["custom_colors/font_color"] = Color.greenyellow
 			$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
+			spaceport_tier = game.autocollect.ship_XP
 			if $SpaceportTimer.is_stopped():
-				spaceport_tier = game.autocollect.ship_XP
 				$SpaceportTimer.start(4.0 / spaceport_tier)
 		else:
 			$SpaceportTimer.stop()

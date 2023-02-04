@@ -37,7 +37,7 @@ func refresh():
 				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir])
 				save.get_node("Export").connect("pressed", self, "on_export", [next_dir])
 				save.get_node("Button").text = next_dir
-				if save_info_dict.version in ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26"]:
+				if save_info_dict.version in game.COMPATIBLE_SAVES:
 					if save_info_dict.version == game.VERSION:
 						save.get_node("Version").connect("mouse_entered", self, "on_version_over_ok")
 						save.get_node("Version")["custom_colors/font_color"] = Color.green

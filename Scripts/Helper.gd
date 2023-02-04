@@ -690,13 +690,13 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		if tile.unique_bldg.has("repair_cost"):
 			return
 		if tile.unique_bldg.name == "cellulose_synthesizer":
-			current_bar_value = tile.unique_bldg.production if tile.unique_bldg.has("production") else 0.0
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
 			rsrc_text = "%s kg/s" % format_num(current_bar_value, true)
 		elif tile.unique_bldg.name == "nuclear_fusion_reactor":
-			current_bar_value = tile.unique_bldg.production if tile.unique_bldg.has("production") else 0.0
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
 			rsrc_text = "%s/s" % format_num(current_bar_value)
 		elif tile.unique_bldg.name == "substation":
-			current_bar_value = tile.unique_bldg.capacity_bonus if tile.unique_bldg.has("capacity_bonus") else 0.0
+			current_bar_value = tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed
 			rsrc_text = "+ %s" % format_num(current_bar_value)
 		if is_instance_valid(rsrc):
 			rsrc.set_current_bar_value(current_bar_value)
@@ -811,9 +811,11 @@ func update_ship_travel():
 		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
 		var p_i = game.open_obj("Systems", game.ships_c_g_coords.s)[game.ships_c_coords.p]
-		
 		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
-			game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
+			var tier = p_i.unique_bldgs.spaceport[0].tier
+			game.autocollect.ship_XP = tier
+			if is_instance_valid(game.HUD):
+				game.HUD.set_ship_btn_shader(true, tier)
 	return progress
 
 func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
@@ -854,9 +856,9 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 			elif tile.bldg.name == "ESF":
 				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
-				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * tile.get("observatory_bonus", 1.0)
 			elif tile.bldg.name == "ME":
-				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * tile.get("mineral_replicator_bonus", 1.0)
 			elif tile.bldg.name == "PP":
 				var energy_prod = tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 				game.autocollect.rsrc.energy += energy_prod
@@ -864,7 +866,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
 					game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "SP":
-				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
+				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
 				game.autocollect.rsrc.energy += energy_prod
 				if tile.bldg.has("cap_upgrade"): # Save migration
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
@@ -1587,6 +1589,7 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 	elif unique_bldg.name == "spaceport":
 		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
 			game.autocollect.ship_XP = unique_bldg.tier
+			game.HUD.set_ship_btn_shader(true, unique_bldg.tier)
 
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):

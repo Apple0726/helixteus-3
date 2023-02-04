@@ -243,16 +243,8 @@ func _on_Send_pressed():
 			game.galaxy_data[game.c_g].erase("sys_conquered")
 			game.galaxy_data[game.c_g].erase("combined_strength")
 			game.galaxy_data[game.c_g].erase("conquer_order")
-#			var galaxy_conquered = true
-#			for system in sorted_objs:
-#				if not system.has("conquered"):
-#					galaxy_conquered = false
-#					break
-#			if galaxy_conquered and not game.galaxy_data[game.c_g].has("conquered"):
-#				game.stats_univ.galaxies_conquered += 1
-#				game.stats_dim.galaxies_conquered += 1
-#				game.stats_global.galaxies_conquered += 1
-#				game.galaxy_data[game.c_g].conquered = true
+			if not game.new_bldgs.has("SP"):
+				game.new_bldgs.SP = true
 			refresh()
 	elif fighter_type == 1:
 		if not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
@@ -283,16 +275,8 @@ func _on_Send_pressed():
 			game.u_i.cluster_data[game.c_c].erase("gal_conquered")
 			game.u_i.cluster_data[game.c_c].erase("combined_strength")
 			game.u_i.cluster_data[game.c_c].erase("conquer_order")
-#			var galaxy_conquered = true
-#			for system in sorted_objs:
-#				if not system.has("conquered"):
-#					galaxy_conquered = false
-#					break
-#			if galaxy_conquered and not game.cluster_data[game.c_c].has("conquered"):
-#				game.stats_univ.clusters_conquered += 1
-#				game.stats_dim.clusters_conquered += 1
-#				game.stats_global.clusters_conquered += 1
-#				game.cluster_data[game.c_c].conquered = true
+			if not game.new_bldgs.has("SP"):
+				game.new_bldgs.SP = true
 			refresh()
 
 func _process(delta):

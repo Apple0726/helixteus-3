@@ -7,7 +7,6 @@ func _ready():
 	$VBox/CheckBox.visible = true
 	$VBox/CheckBox.text = tr("BUILD_ALL_AT_ONCE")
 	$VBox/CheckBox.connect("toggled", self, "on_checkbox_toggle")
-	item_info.visible = false
 	type = PanelType.MEGASTRUCTURES
 	$Title.text = tr("MEGASTRUCTURES")
 	$Desc.text = tr("MEGASTRUCTURES_DESC")

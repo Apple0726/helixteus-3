@@ -25,6 +25,8 @@ func _ready():
 	$Drive.add_item(tr("PD_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("COSTS")]
+	if game.autocollect.has("ship_XP"):
+		game.HUD.set_ship_btn_shader(true, game.autocollect.ship_XP)
 
 func refresh():
 	$Drive.visible = game.science_unlocked.has("PD")
@@ -151,8 +153,10 @@ func send_ships():
 				if p_i.has("unique_bldgs"):
 					if p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
 						game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
+						game.HUD.set_ship_btn_shader(true, p_i.unique_bldgs.spaceport[0].tier)
 					else:
 						game.autocollect.erase("ship_XP")
+						game.HUD.set_ship_btn_shader(false)
 				game.space_HUD.get_node("ConquerAll").visible = game.u_i.lv >= 32 and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(self)
@@ -165,6 +169,7 @@ func send_ships():
 						game.earn_achievement("random", "1000_year_journey")
 				game.energy -= round(total_energy_cost)
 				game.autocollect.erase("ship_XP")
+				game.HUD.set_ship_btn_shader(false)
 				send_ships2(time_cost)
 				if game.c_v == travel_view:
 					game.view.refresh()
