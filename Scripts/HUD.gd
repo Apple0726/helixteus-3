@@ -485,7 +485,7 @@ func on_slot_press(i:int):
 	game.inventory.on_slot_press(name)
 
 func _on_Label_mouse_entered():
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(game.u_i.xp, 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(round(game.u_i.xp), 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
 
 func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
@@ -881,4 +881,6 @@ func set_ship_btn_shader(active:bool, tier:int = -1):
 	ships_btn.material.set_shader_param("active", active)
 	if tier != -1:
 		ships_btn.material.set_shader_param("color", Data.tier_colors[tier - 1])
-		ships_btn.material.set_shader_param("speed", 1.0 / tier)
+		ships_btn.material.set_shader_param("speed", tier * game.u_i.time_speed)
+		yield(get_tree(), "idle_frame")
+		game.ship_panel.get_node("SpaceportTimer").start(4.0 / tier)

@@ -476,7 +476,7 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
 	if game.c_v == "planet":
-		if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x > 10000 / obj.dimensions and zoom_change > 1: #max zoom in
+		if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
 			return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)

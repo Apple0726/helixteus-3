@@ -237,7 +237,10 @@ func _on_MusicPitch_toggled(button_pressed):
 	if err == OK:
 		game.pitch_affected = button_pressed
 		if button_pressed and game.u_i:
-			game.music_player.pitch_scale = game.u_i.time_speed
+			if game.c_v in ["cave", "battle"] and game.subjects.dimensional_power.lv >= 4:
+				game.music_player.pitch_scale = log(game.u_i.time_speed - 1.0 + exp(1.0))
+			else:
+				game.music_player.pitch_scale = game.u_i.time_speed
 		else:
 			game.music_player.pitch_scale = 1.0
 		config.set_value("audio", "pitch_affected", button_pressed)

@@ -9,6 +9,7 @@ var star_shader = preload("res://Shaders/Star.shader")
 var dimensions:float
 
 const PLANET_SCALE_DIV = 1200000.0
+var scale_mult = 1.0
 var glows = []
 var star_time_bars = []
 var planet_time_bars = []
@@ -23,13 +24,9 @@ var broken_CBS_range:float = 0.0
 
 func _ready():
 	refresh_stars()
-	if game.tutorial:
-		if game.tutorial.tut_num == 27:
-			game.tutorial.begin()
-		elif game.tutorial.tut_num == 30 and len(game.ship_data) > 0:
-			game.tutorial.begin()
 
 func refresh_planets():
+	scale_mult = 70.0 / game.planet_data[0].distance
 	CBS_range = 0.0
 	broken_CBS_range = 0.0
 	var curr_time = OS.get_system_time_msecs()
@@ -65,14 +62,14 @@ func refresh_planets():
 		if p_i.empty():
 			tile_datas.append([])
 			continue
-		var sc:float = p_i["distance"] / 2400.0
+		var sc:float = p_i["distance"] / 2400.0 * scale_mult
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
 		tile_datas.append(tile_data_to_append)
 		
-		var v:Vector2 = polar2cartesian(p_i.distance, p_i.angle)
+		var v:Vector2 = polar2cartesian(p_i.distance * scale_mult, p_i.angle)
 		var orbit = preload("res://Scenes/Orbit.tscn").instance()
 		add_child(orbit)
-		orbit.radius = p_i.distance
+		orbit.radius = p_i.distance * scale_mult
 		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.3, 1)
 		orbit.add_to_group("orbits")
 		var planet = preload("res://Scenes/PlanetButton.tscn").instance()
@@ -86,8 +83,8 @@ func refresh_planets():
 		planet_glow.connect("mouse_exited", self, "on_btn_out")
 		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
 		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
-		planet_btn.rect_scale.x = p_i["size"] / PLANET_SCALE_DIV
-		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV
+		planet_btn.rect_scale.x = p_i["size"] / PLANET_SCALE_DIV * scale_mult
+		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV * scale_mult
 		planet_glow.rect_scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
@@ -156,12 +153,13 @@ func refresh_planets():
 			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [p_i.MS, p_i.MS_lv])
 			MS.scale *= 0.2
 			if p_i.MS == "M_SE":
-				MS.position.x = -50 * cos(p_i.angle)
-				MS.position.y = -50 * sin(p_i.angle)
+				MS.position.x = -50 * cos(p_i.angle) * scale_mult
+				MS.position.y = -50 * sin(p_i.angle) * scale_mult
 				MS.rotation = p_i.angle + PI / 2
 			elif p_i.MS == "M_MME":
 				MS.scale *= 0.25
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
+			MS.scale *= scale_mult
 			planet.add_child(MS)
 			if p_i.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
@@ -242,6 +240,7 @@ func on_entity_icon_out():
 	game.hide_tooltip()
 
 func refresh_stars():
+	scale_mult = 70.0 / game.planet_data[0].distance
 	for star in get_tree().get_nodes_in_group("stars"):
 		star.queue_free()
 	for time_bar in star_time_bars:
@@ -250,7 +249,6 @@ func refresh_stars():
 		rsrc.node.queue_free()
 	star_time_bars.clear()
 	star_rsrcs.clear()
-	#var combined_star_size = 0
 	for i in len(stars_info):
 		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
@@ -258,10 +256,9 @@ func refresh_stars():
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		self.add_child(star)
 		star.rect_pivot_offset = Vector2(512, 512)
-		#combined_star_size += star_info["size"]
-		star.rect_scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
-		star.rect_scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008)
-		star.rect_position = star_info["pos"] - Vector2(512, 512)
+		star.rect_scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.rect_scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.rect_position = star_info["pos"] * scale_mult - Vector2(512, 512)
 		star.connect("mouse_entered", self, "on_star_over", [i])
 		star.connect("mouse_exited", self, "on_btn_out")
 		star.connect("pressed", self, "on_star_pressed", [i])
@@ -307,13 +304,13 @@ func refresh_stars():
 				MS.scale *= 0.7
 			star.add_child(MS)
 			if star_info.MS == "M_DS":
-				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5))
+				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "M_MB":
-				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5))
+				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
-				time_bar.rect_position = star_info["pos"] - Vector2(0, 80)
-				add_child(time_bar)
+				time_bar.rect_position = - Vector2(0, 80)
+				star.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				star_time_bars.append({"node":time_bar, "id":i})
 
@@ -541,11 +538,11 @@ func build_MS(obj:Dictionary, MS:String):
 		return
 	if obj.has("repair_cost"):
 		var error = false
-		if obj.MS_lv == 0:
-			if not game.science_unlocked.has("MAE"):
-				error = true
-		elif obj.MS == "MB":
+		if obj.MS == "MB":
 			if not game.science_unlocked.has("MB"):
+				error = true
+		elif obj.MS_lv == 0:
+			if not game.science_unlocked.has("MAE"):
 				error = true
 		else:
 			if not game.science_unlocked.has(obj.MS.substr(2) + str(obj.MS_lv)):
@@ -938,7 +935,6 @@ func _process(_delta):
 						game.autocollect.MS.minerals += Helper.get_MME_output(p_i)
 						game.mineral_capacity += p_i.min_cap_to_add
 				game.HUD.refresh()
-			time_bar_obj.parent.remove_child(time_bar)
 			time_bar.queue_free()
 			planet_time_bars.erase(time_bar_obj)
 			Helper.save_obj("Systems", game.c_s_g, game.planet_data)

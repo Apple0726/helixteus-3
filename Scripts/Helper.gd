@@ -696,7 +696,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			current_bar_value = tile.unique_bldg.get("production", 0.0)
 			rsrc_text = "%s/s" % format_num(current_bar_value)
 		elif tile.unique_bldg.name == "substation":
-			current_bar_value = tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed
+			current_bar_value = round(tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed)
 			rsrc_text = "+ %s" % format_num(current_bar_value)
 		if is_instance_valid(rsrc):
 			rsrc.set_current_bar_value(current_bar_value)
@@ -864,13 +864,15 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.autocollect.rsrc.energy += energy_prod
 				if tile.bldg.has("cap_upgrade") and tile.bldg.cap_upgrade > 0: # Save migration
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
-					game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "SP":
 				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
 				game.autocollect.rsrc.energy += energy_prod
 				if tile.bldg.has("cap_upgrade"): # Save migration
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
-					game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
 				if tile.has("aurora"):
 					if game.aurora_prod.has(tile.aurora.au_int):
 						game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod

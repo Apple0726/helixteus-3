@@ -115,7 +115,7 @@ uniform float speed = 1.0;
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
 	if (active) {
-		COLOR.rgb += (1.0 - UV.y) * (pow(sin(speed * TIME + 3.0 * UV.y), 20));
+		COLOR.rgb += (1.0 - UV.y) * (pow(sin(speed * TIME + 3.0 * UV.y), 20)) * color.rgb;
 	}
 }"
 

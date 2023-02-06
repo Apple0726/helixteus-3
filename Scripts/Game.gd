@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "4 Feb 2023"
-const VERSION:String = "v0.26.1"
-const COMPATIBLE_SAVES = ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26", "v0.26.1"]
+const DATE:String = "6 Feb 2023"
+const VERSION:String = "v0.26.2"
+const COMPATIBLE_SAVES = ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26", "v0.26.1", "v0.26.2"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -13,7 +13,6 @@ var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
 var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
 var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
-var science_tree_scene = preload("res://Scenes/Views/ScienceTree.tscn")
 var overlay_scene = preload("res://Scenes/Overlay.tscn")
 var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
 var annotator_scene = preload("res://Scenes/Annotator.tscn")
@@ -258,7 +257,7 @@ var MM_data = {
 	
 }
 
-var mat_info = {	"coal":{"value":15},#One kg of coal = $10
+var mat_info = {	"coal":{"value":15},#One kg of coal = $15
 					"glass":{"value":1000},
 					"sand":{"value":8},
 					#"clay":{"value":12},
@@ -662,7 +661,13 @@ func switch_music(src, pitch:float = 1.0):
 	if not src:
 		return
 	music_player.stream = src
-	music_player.pitch_scale = pitch * u_i.time_speed if u_i and pitch_affected else pitch
+	if pitch_affected and u_i:
+		if c_v in ["cave", "battle"] and subjects.dimensional_power.lv >= 4:
+			music_player.pitch_scale = pitch * log(u_i.time_speed - 1.0 + exp(1.0))
+		else:
+			music_player.pitch_scale = pitch * u_i.time_speed
+	else:
+		music_player.pitch_scale = pitch
 	music_player.play()
 	tween.interpolate_property(music_player, "volume_db", -20, 0, 2, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
@@ -710,27 +715,27 @@ func load_univ():
 			if autocollect.has("ship_XP"):
 				var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
 				for i in len(ship_data):
-					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP))
+					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
 					for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP))
+						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
-			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed)
-			energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed
-			SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed
+			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed * u_i.time_speed)
+			energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed * u_i.time_speed
+			SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed * u_i.time_speed
 			var plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if not is_zero_approx(autocollect.mats.cellulose) else 0
 			if autocollect.mats.has("soil") and not is_zero_approx(autocollect.mats.soil):
 				plant_time_elapsed = min(plant_time_elapsed, mats.soil / abs(autocollect.mats.soil))
 			for mat in autocollect.mats:
 				if mat == "minerals":
-					Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed)
+					Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed)
 				else:
-					mats[mat] += autocollect.mats[mat] * plant_time_elapsed
+					mats[mat] += autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed
 			for met in autocollect.mets:
-				mets[met] += autocollect.mets[met] * plant_time_elapsed
+				mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
 			for atom in autocollect.atoms:
-				atoms[atom] += autocollect.atoms[atom] * time_elapsed
+				atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
 			if not autocollect.has("particles"):#Save migration
 				autocollect.particles = {"proton":0, "neutron":0, "electron":0}
 			particles.proton += autocollect.particles.proton * time_elapsed * u_i.time_speed
@@ -1054,7 +1059,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.white, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -100), "zoom":1}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	caves_generated = 0
@@ -1681,6 +1686,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
+	var tween = get_tree().create_tween()
+	tween.tween_property($ScienceTreeBG, "modulate", Color.white, 0.5)
 	$ClusterBG.visible = false
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Bottom/Panel").visible = false
@@ -1769,9 +1776,15 @@ func add_obj(view_str):
 		"science_tree":
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
 			var sc_UI = preload("res://Scenes/ScienceUI.tscn").instance()
+			sc_UI.modulate.a = 0.0
 			$UI.add_child(sc_UI)
 			sc_UI.sc_tree = view.obj
+			view.obj.modulate.a = 0.0
 			sc_UI.name = "ScienceUI"
+			var tween = get_tree().create_tween()
+			tween.set_parallel(true)
+			tween.tween_property(sc_UI, "modulate", Color.white, 0.2).set_delay(0.1)
+			tween.tween_property(view.obj, "modulate", Color.white, 0.2).set_delay(0.1)
 	view.update()
 
 func add_space_HUD():
@@ -1787,7 +1800,7 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (universe_data[c_u].lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
@@ -1833,7 +1846,10 @@ func add_dimension():
 		$Ship.visible = false
 	else:
 		dimension = preload("res://Scenes/Views/Dimension.tscn").instance()
+		dimension.modulate.a = 0.0
 		add_child(dimension)
+	var tween = get_tree().create_tween()
+	tween.tween_property(dimension, "modulate", Color.white, 0.2)
 
 func add_universe():
 	if not universe_data[c_u].has("discovered"):
@@ -2604,7 +2620,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(18000, 30000 * pow(combined_star_mass / u_i.planck * u_i.gravitational, 0.5) * dark_matter)
+		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(22000, 40000 * pow(combined_star_mass / u_i.planck, 0.5) / dark_matter)
 		if gas_giant:
 			p_i.crust_start_depth = 0
 			p_i.mantle_start_depth = 0
@@ -2693,9 +2709,9 @@ func generate_planets(id:int):#local id
 		stats_global.biggest_planet = max(p_i.size, stats_global.biggest_planet)
 		if c_s_g != 0:
 			if p_i.type in [11, 12]:
-				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.15) * pow(u_i.get("age", 1.0), 0.15):
+				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.03) * pow(u_i.get("age", 1.0), 0.15):
 					p_i.MS = "M_MME"
-			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.15) * pow(u_i.get("age", 1.0), 0.15):
+			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.03) * pow(u_i.get("age", 1.0), 0.15):
 				p_i.MS = "M_SE"
 			if p_i.has("MS"):
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
@@ -2717,9 +2733,9 @@ func generate_planets(id:int):#local id
 			if c_g_g == 0:
 				MSes.erase("M_MB")
 			var MS = MSes[randi() % len(MSes)]
-			if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.15):
+			if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.03):
 				star.MS = MS
-			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.15):
+			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.03):
 				star.MS = MS
 			if star.has("MS"):
 				star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
@@ -2734,7 +2750,7 @@ func generate_planets(id:int):#local id
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		var view_zoom = 400 / max_distance
+		var view_zoom = 400.0 / max_distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["discovered"] = true
 	p_num += planet_num
@@ -3634,7 +3650,7 @@ func _input(event):
 			stats_dim.keyboard_presses += 1
 			stats_univ.keyboard_presses += 1
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
-		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
+		#$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
 	elif event is InputEventMouseButton and not stats_global.empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):

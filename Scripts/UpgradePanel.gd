@@ -444,7 +444,7 @@ func _on_Upgrade_pressed():
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
 			planet.bldg[path_str] = next_lv.value
 			planet.bldg[path_str + "_value"] = new_base_value
-			game.universe_data[game.c_u].xp += round(cost_money / 100.0)
+			game.universe_data[game.c_u].xp += cost_money / 100.0
 			game.view.obj.refresh_planets()
 		game.HUD.refresh()
 		game.toggle_panel(self)

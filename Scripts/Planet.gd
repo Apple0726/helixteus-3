@@ -137,22 +137,23 @@ func _ready():
 						add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
 				else:
 					bldgs[id2] = add_bldg_sprite(v, tile.unique_bldg.name, mod)
-					if tile.unique_bldg.tier > 1:
-						var particle_props = [	{"c":Color(1.2, 2.4, 1.2), "amount":50, "lifetime":2.4},
-												{"c":Color(1.2, 1.2, 2.4), "amount":60, "lifetime":2.8},
-												{"c":Color(2.4, 1.2, 2.4), "amount":70, "lifetime":3.2},
-												{"c":Color(2.4, 1.8, 1.2), "amount":80, "lifetime":3.6},
-												{"c":Color(2.4, 2.4, 1.8), "amount":90, "lifetime":4.0},
-												{"c":Color(2.4, 1.2, 1.2), "amount":100, "lifetime":4.4}]
-						var particles = preload("res://Scenes/UniqueBuildingParticles.tscn").instance()
-						particles.modulate = particle_props[tile.unique_bldg.tier - 2].c
-						particles.amount = particle_props[tile.unique_bldg.tier - 2].amount
-						particles.lifetime = particle_props[tile.unique_bldg.tier - 2].lifetime
-						bldgs[id2].add_child(particles)
 					if tile.unique_bldg.name == "cellulose_synthesizer":
 						add_rsrc(v + Vector2(100, 100), Color.brown, Data.cellulose_icon, id2)
 					elif tile.unique_bldg.name == "substation":
 						add_rsrc(v + Vector2(100, 100), Color(0, 0.8, 0, 1), Data.energy_icon, id2)
+				if tile.unique_bldg.tier > 1 and bldgs[id2]:
+					var particle_props = [	{"c":Color(1.2, 2.4, 1.2), "amount":50, "lifetime":2.4},
+											{"c":Color(1.2, 1.2, 2.4), "amount":60, "lifetime":2.8},
+											{"c":Color(2.4, 1.2, 2.4), "amount":70, "lifetime":3.2},
+											{"c":Color(2.4, 1.8, 1.2), "amount":80, "lifetime":3.6},
+											{"c":Color(2.4, 2.4, 1.8), "amount":90, "lifetime":4.0},
+											{"c":Color(2.4, 1.2, 1.2), "amount":100, "lifetime":4.4}]
+					var particles = preload("res://Scenes/UniqueBuildingParticles.tscn").instance()
+					particles.modulate = particle_props[tile.unique_bldg.tier - 2].c
+					particles.amount = particle_props[tile.unique_bldg.tier - 2].amount
+					particles.lifetime = particle_props[tile.unique_bldg.tier - 2].lifetime
+					particles.speed_scale = game.u_i.time_speed
+					bldgs[id2].add_child(particles)
 			elif tile.has("cave"):
 				var cave_data_file = File.new()
 				if tile.cave.has("id"):
@@ -247,15 +248,14 @@ func show_tooltip(tile, tile_id:int):
 		elif tile.bldg.name in ["GF", "SE", "SC"]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
 	elif tile.has("unique_bldg"):
-		
+		tooltip += "[color=#%s]" % Data.tier_colors[tile.unique_bldg.tier - 1].to_html(false)
 		if tile.unique_bldg.has("repair_cost"):
-			tooltip += "[color=#%s]" % Data.tier_colors[tile.unique_bldg.tier - 1].to_html(false)
 			tooltip += tr("BROKEN_X").format({"building_name":tr(tile.unique_bldg.name.to_upper())})
 		else:
 			tooltip += tr(tile.unique_bldg.name.to_upper())
 		if tile.unique_bldg.tier > 1:
 			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
-			tooltip += "[/color]"
+		tooltip += "[/color]"
 		tooltip += "\n"
 		if game.help.has("%s_desc" % tile.unique_bldg.name):
 			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper())
@@ -448,7 +448,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		tile.bldg.is_constructing = true
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs2.time * 1000
-		tile.bldg.XP = round(constr_costs2.money / 100.0)
+		tile.bldg.XP = constr_costs2.money / 100.0
 		if _bldg_to_construct != "PCC":
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value

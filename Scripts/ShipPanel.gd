@@ -128,8 +128,8 @@ func _on_SpaceportTimer_timeout():
 	var xp_mult = Helper.get_spaceport_xp_mult(spaceport_tier)
 	for i in len(game.ship_data):
 		var weapon = ["Bullet", "Laser", "Bomb", "Light"][randi() % 4]
-		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv))
-		Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult / 16.0 * pow(1.07, game.u_i.lv))
+		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
+		Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult / 16.0 * pow(1.07, game.u_i.lv) * game.u_i.time_speed)
 		if visible:
 			grid.get_node("Panel%s/XP/TextureProgress2" % (i+1)).value = 0
 			grid.get_node("Panel%s/%s/TextureProgress2" % [i+1, weapon]).value = 0

@@ -157,7 +157,7 @@ func send_ships():
 					else:
 						game.autocollect.erase("ship_XP")
 						game.HUD.set_ship_btn_shader(false)
-				game.space_HUD.get_node("ConquerAll").visible = game.u_i.lv >= 32 and not game.system_data[game.c_s].has("conquered")
+				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subjects.dimensional_power.lv >= 1) and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(self)
 			else:

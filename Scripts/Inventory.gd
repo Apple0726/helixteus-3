@@ -213,19 +213,26 @@ func show_part(_name:String):
 	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
-	if game.money == 0:
-		if type == "Materials" and game.mats[obj] == 0:
-			game.popup("PURCHASE_SALE_IMPOSSIBLE", 1.5)
-			return
-		if type == "Metals" and game.mets[obj] == 0:
+	var amount = 0
+	var value = 0
+	if type == "Materials":
+		amount = game.mats[obj]
+		value = game.mat_info[obj].value
+	elif type == "Metals":
+		amount = game.mets[obj]
+		value = game.met_info[obj].value
+	var forced = false
+	if game.money <= 0:
+		if amount <= 0:
 			game.popup("PURCHASE_SALE_IMPOSSIBLE", 1.5)
 			return
 		buy_sell.is_selling = true
-	else:
-		if type == "Materials" and game.mats[obj] <= 0:
-			buy_sell.is_selling = false
-		if type == "Metals" and game.mets[obj] <= 0:
-			buy_sell.is_selling = false
+		forced = true
+	elif amount <= 0:
+		buy_sell.is_selling = false
+		forced = true
+	if not forced:
+		buy_sell.is_selling = game.money < amount * value * game.maths_bonus.MMBSVR * 5.0
 	buy_sell.visible = true
 	game.sub_panel = buy_sell
 	buy_sell.refresh(type, obj)

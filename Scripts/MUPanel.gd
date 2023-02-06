@@ -38,7 +38,16 @@ func _ready():
 		btn.align = Button.ALIGN_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
-		$Panel/VBox.add_child(hbox)
+		if game.achievement_data.progression.has("new_universe"):
+			btn.rect_min_size.x = 178 - 45
+			var btn_max = Button.new()
+			btn_max.connect("pressed", self, "_on_UpgradeMax_pressed", [MU])
+			btn_max.rect_min_size.x = 45
+			btn_max.name = "UpgradeMax"
+			btn_max.expand_icon = true
+			btn_max.icon = preload("res://Graphics/Science/UP2.png")
+			hbox.add_child(btn_max)
+			$Panel/VBox.add_child(hbox)
 
 func refresh():
 	$Panel/VBox/AIE.visible = game.show.has("auroras")
@@ -47,7 +56,9 @@ func refresh():
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
+	$Panel/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
 	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
+	$Panel/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
@@ -78,6 +89,32 @@ func set_upg_text(MU:String, next_lv:int = 0):
 func get_min_cost(upg:String):
 	return round(Data.MUs[upg].base_cost * pow(Data.MUs[upg].pw, game.MUs[upg] - 1))
 
+func _on_UpgradeMax_pressed(MU:String):
+	var min_cost = get_min_cost(MU)
+	while game.minerals >= min_cost:
+		if MU == "SHSR" and game.MUs.SHSR >= 50 or MU == "CHR" and game.MUs.CHR >= 90:
+			break
+		game.minerals -= min_cost
+		game.MUs[MU] += 1
+		min_cost = get_min_cost(MU)
+		if MU == "AIE":
+			for AI in game.aurora_prod.keys():
+				for rsrc in game.aurora_prod[AI].keys():
+					var m = pow(1 + AI, 0.02)
+					if rsrc == "energy":
+						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (m - 1.0)
+					elif rsrc in game.mat_info.keys():
+						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
+					elif rsrc in game.met_info.keys():
+						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
+					game.aurora_prod[AI][rsrc] *= m
+		elif MU == "IS":
+			game.items.append(null)
+	if MU == "AIE" and game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
+		game.mining_HUD.refresh_aurora_bonus()
+	refresh()
+	game.HUD.refresh()
+
 func _on_Upgrade_pressed(MU:String):
 	var min_cost = get_min_cost(MU)
 	if game.minerals >= min_cost:
@@ -100,7 +137,7 @@ func _on_Upgrade_pressed(MU:String):
 					elif rsrc in game.met_info.keys():
 						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
 					game.aurora_prod[AI][rsrc] *= m
-		if MU == "IS":
+		elif MU == "IS":
 			game.items.append(null)
 	else:
 		game.popup(tr("NOT_ENOUGH_MINERALS"), 1.5)

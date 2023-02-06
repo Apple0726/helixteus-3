@@ -295,7 +295,7 @@ func _process(delta):
 		var galaxy_conquered = true
 		var breaker:int = 0
 		progress.value = (curr_time - game.galaxy_data[game.c_g].conquer_start_date) / game.galaxy_data[game.c_g].time_for_one_sys * 100
-		while breaker < 50:
+		while breaker < 100:
 			breaker += 1
 			if not fighters_rekt and progress.value >= 100:
 				for i in range(start_index, len(sorted_objs)):
@@ -307,7 +307,7 @@ func _process(delta):
 					if game.galaxy_data[game.c_g].combined_strength < system.diff:
 						game.galaxy_data[game.c_g].combined_strength = 0
 						fighters_rekt = true
-						breaker = 50
+						breaker = 100
 						break
 					if not system.has("conquered"):
 						game.galaxy_data[game.c_g].combined_strength -= system.diff
@@ -325,7 +325,7 @@ func _process(delta):
 						break
 			elif not fighters_rekt:
 				galaxy_conquered = false
-				breaker = 50
+				breaker = 100
 		RTL.text = "%s: %s / %s" % [tr("SYSTEMS_CONQUERED"), game.galaxy_data[game.c_g].sys_conquered, game.galaxy_data[game.c_g].sys_num]
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F1")
 		if fighters_rekt:
@@ -348,7 +348,7 @@ func _process(delta):
 		var cluster_conquered = true
 		var breaker:int = 0
 		progress.value = (curr_time - game.u_i.cluster_data[game.c_c].conquer_start_date) / game.u_i.cluster_data[game.c_c].time_for_one_gal * 100
-		while breaker < 50:
+		while breaker < 100:
 			breaker += 1
 			if not fighters_rekt and progress.value >= 100:
 				for i in range(start_index, len(sorted_objs)):
@@ -360,7 +360,7 @@ func _process(delta):
 					if game.u_i.cluster_data[game.c_c].combined_strength < galaxy.diff:
 						game.u_i.cluster_data[game.c_c].combined_strength = 0
 						fighters_rekt = true
-						breaker = 50
+						breaker = 100
 						break
 					if not galaxy.has("conquered"):
 						game.u_i.cluster_data[game.c_c].combined_strength -= galaxy.diff
@@ -375,7 +375,7 @@ func _process(delta):
 						break
 			elif not fighters_rekt:
 				cluster_conquered = false
-				breaker = 50
+				breaker = 100
 		RTL.text = "%s: %s / %s" % [tr("GALAXIES_CONQUERED"), game.u_i.cluster_data[game.c_c].gal_conquered, game.u_i.cluster_data[game.c_c].gal_num]
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F2")
 		if fighters_rekt:

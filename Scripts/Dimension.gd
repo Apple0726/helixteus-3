@@ -275,6 +275,9 @@ func e(n, e):
 
 func on_univ_press(id:int):
 	var u_i:Dictionary = game.universe_data[id]
+	if modulate.a == 1.0:
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.2)
 	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
 		game.load_univ()
