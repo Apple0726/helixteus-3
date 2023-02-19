@@ -47,7 +47,7 @@ func _ready():
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")
 			hbox.add_child(btn_max)
-			$Panel/VBox.add_child(hbox)
+		$Panel/VBox.add_child(hbox)
 
 func refresh():
 	$Panel/VBox/AIE.visible = game.show.has("auroras")
