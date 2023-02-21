@@ -3074,7 +3074,7 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1)}
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * pow(obj.tier, 30) * rand_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -3120,14 +3120,14 @@ func generate_tiles(id:int):
 		erase_tile(random_tile2)
 		erase_tile(random_tile3)
 		tile_data[random_tile].ship = true
-		var mineral_replicator = {"tile":random_tile3, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
+		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
 		var spaceport:Dictionary
 		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.mineral_replicator
 		if random_tile == N-1:
-			spaceport = {"tile":random_tile - 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
+			spaceport = {"tile":random_tile - 1, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
 			erase_tile(random_tile - 1) 														# Save migration
 		else:
-			spaceport = {"tile":random_tile + 1, "tier":int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1)}
+			spaceport = {"tile":random_tile + 1, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
 			erase_tile(random_tile + 1)
 		spaceport.repair_cost = 10000 * pow(spaceport.tier, 30) * rand_range(1, 5) * Data.unique_bldg_repair_cost_multipliers.spaceport
 		p_i.unique_bldgs = {"spaceport":[spaceport], "mineral_replicator":[mineral_replicator]}

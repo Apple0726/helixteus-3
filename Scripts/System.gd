@@ -631,7 +631,7 @@ func on_planet_click (id:int, l_id:int):
 			else:
 				game.popup(tr("PLANET_MS_ERROR"), 2.5)
 			return
-		elif p_i.has("MS"):
+		elif p_i.has("MS") and not p_i.has("repair_cost"):
 			var t:String = game.item_to_use.type
 			if t == "":
 				if p_i.MS == "M_MME":

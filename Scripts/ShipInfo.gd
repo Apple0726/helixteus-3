@@ -27,12 +27,13 @@ func set_visibility():
 		$Laser.visible = true
 		$Bomb.visible = true
 		$Light.visible = true
-		tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 1), 0.15)
-		tween.tween_property($Laser, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
-		tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
-		tween.tween_property($Light, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
-		yield(tween, "finished")
-		$Stats.visible = false
+		if not victory_screen:
+			tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 1), 0.15)
+			tween.tween_property($Laser, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			tween.tween_property($Light, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			yield(tween, "finished")
+			$Stats.visible = false
 	else:
 		$Stats.visible = true
 		tween.tween_property($Stats, "modulate", Color(1, 1, 1, 1), 0.15)

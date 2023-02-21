@@ -135,9 +135,12 @@ func check_distance():
 		if move_timer:
 			move_timer.start()
 
+var HP_tween
+
 func hit(damage:float):
 	HP -= damage
-	$Info/HP.value = HP
+	if is_instance_valid(HP_tween):
+		HP_tween.kill()
 	if HP <= 0:
 		cave_ref.game.stats_univ.enemies_rekt_in_caves += 1
 		cave_ref.game.stats_dim.enemies_rekt_in_caves += 1
@@ -147,6 +150,11 @@ func hit(damage:float):
 		queue_free()
 	else:
 		chase_player()
+		$Info/HP.modulate = Color.red
+		HP_tween = get_tree().create_tween()
+		HP_tween.set_parallel(true)
+		HP_tween.tween_property($Info/HP, "modulate", Color.green, 0.3)
+		HP_tween.tween_property($Info/HP, "value", HP, 1.0).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	$HurtAnimation.stop()
 	$HurtAnimation.play("Hurt")
 

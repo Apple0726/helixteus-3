@@ -1120,6 +1120,8 @@ func connect_points(tile:Vector2, bidir:bool = false):
 		if cave_wall.get_cellv(neighbor_tile) == -1:
 			astar_node.connect_points(tile_index, neighbor_tile_index, bidir)
 
+var HP_tween
+
 func update_health_bar(_HP):
 	HP = _HP
 	var gradient:Gradient = preload("res://Resources/HPGradient.tres")
@@ -1127,9 +1129,7 @@ func update_health_bar(_HP):
 	$UI2/HP/Bar.tint_progress = bar_color
 	$UI2/HP/Bar.tint_over = bar_color
 	$UI2/HP/Bar.tint_under = bar_color
-	$UI2/HP/Bar.value = HP
 	$Rover/Bar.value = HP
-	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil(HP)), Helper.format_num(total_HP)]
 
 var mouse_pos = Vector2.ZERO
 var tile_highlighted_for_mining:int = -1
@@ -1509,6 +1509,8 @@ func remove_item(item:Dictionary, num:int = 1):
 		slots[curr_slot].get_node("Label").text = String(item.num)
 	
 func _process(delta):
+	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round($UI2/Inventory/Bar.value)), Helper.format_num(weight_cap)]
+	$UI2/HP/Label.text = "%s / %s" % [Helper.format_num(ceil($UI2/HP/Bar.value)), Helper.format_num(total_HP)]
 	if not ability_timer.is_stopped():
 		$UI2/Ability/TextureProgress.value = ability_timer.time_left / ability_timer.wait_time
 	for effect in status_effects.keys():
@@ -1852,6 +1854,8 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	cave_BG.set_cellv(map_pos, tile_type)
 	tiles_mined[cave_floor - 1].append(tile_id)
 
+var inv_bar_tween
+
 func add_weight_rsrc(r, rsrc_amount):
 	weight += rsrc_amount
 	if i_w_w.has(r):
@@ -1882,9 +1886,16 @@ func add_weight_rsrc(r, rsrc_amount):
 			var float_error:float = weight - weight_cap
 			weight -= float_error
 			i_w_w[r] -= float_error
-	$UI2/Inventory/Bar.value = weight
+	#$UI2/Inventory/Bar.value = weight
 	$Rover/InvBar.value = weight
-	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
+	if is_instance_valid(inv_bar_tween):
+		inv_bar_tween.kill()
+	inv_bar_tween = get_tree().create_tween()
+	inv_bar_tween.set_parallel(true)
+	$UI2/Inventory/Bar.tint_progress = Color(1.0, 0.7, 0.4)
+	inv_bar_tween.tween_property($UI2/Inventory/Bar, "value", weight, 1.0).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	inv_bar_tween.tween_property($UI2/Inventory/Bar, "tint_progress", Color(0.67, 0.37, 0.0), 1.0)
+	$UI2/Inventory/Bar
 	return max(diff, 0.0)
 
 func _on_Timer_timeout():
@@ -1971,6 +1982,10 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 		game.long_popup(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
 	else:
 		set_avg_dmg()
+		if is_instance_valid(HP_tween):
+			HP_tween.kill()
+		HP_tween = get_tree().create_tween()
+		HP_tween.tween_property($UI2/HP/Bar, "value", HP, 1.0).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	for effect in _status_effects:
 		if not status_effects.has(effect):
 			status_effects[effect] = _status_effects[effect]

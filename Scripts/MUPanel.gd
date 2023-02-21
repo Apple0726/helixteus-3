@@ -47,7 +47,7 @@ func _ready():
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")
 			hbox.add_child(btn_max)
-			$Panel/VBox.add_child(hbox)
+		$Panel/VBox.add_child(hbox)
 
 func refresh():
 	$Panel/VBox/AIE.visible = game.show.has("auroras")
@@ -56,9 +56,10 @@ func refresh():
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
-	$Panel/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
+	if game.achievement_data.progression.has("new_universe"):
+		$Panel/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
+		$Panel/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
 	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
-	$Panel/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
