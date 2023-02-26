@@ -9,6 +9,7 @@ var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
 var probe_over_id:int = -1
+var fighter_over_id:int = -1
 var probe_time_bars:Array = []
 
 func _ready():
@@ -29,6 +30,11 @@ func _input(event):
 				probe_over_id = -1
 				game.hide_tooltip()
 				refresh()
+		elif fighter_over_id != -1:
+			game.fighter_data[fighter_over_id] = null
+			fighter_over_id = -1
+			game.hide_adv_tooltip()
+			refresh()
 
 func refresh():
 	$Panel.visible = game.science_unlocked.has("FG")
@@ -66,6 +72,8 @@ func refresh():
 			rover.connect("mouse_exited", self, "on_rover_exit")
 			rover.connect("pressed", self, "on_rover_press", [rov, i])
 	for i in len(game.fighter_data):
+		if not game.fighter_data[i]:
+			continue
 		var fighter_info = game.fighter_data[i]
 		var fighter = TextureButton.new()
 		var fighter_num = Label.new()
@@ -83,7 +91,7 @@ func refresh():
 		fighter.rect_min_size = Vector2(160, 60)
 		fighter.add_child(fighter_num)
 		hbox2.add_child(fighter)
-		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info])
+		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info, i])
 		fighter.connect("mouse_exited", self, "on_fighter_exit")
 		fighter.connect("pressed", self, "on_fighter_press", [i])
 	var probe_num:int = 0
@@ -129,8 +137,12 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
 	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
 
-func on_fighter_enter(fighter_info:Dictionary):
-	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), Helper.format_num(fighter_info.strength, true), tr("CLICK_TO_VIEW_GALAXY")])
+func on_fighter_enter(fighter_info:Dictionary, fighter_id:int):
+	fighter_over_id = fighter_id
+	var st = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.format_num(fighter_info.strength, true)]
+	if game.help.has("rover_shortcuts"):
+		st += "\n%s\n%s" % [tr("CLICK_TO_VIEW_GALAXY"), tr("PRESS_X_TO_DESTROY")]
+	game.show_tooltip(st)
 
 func on_probe_enter(tier:int, probe_id:int):
 	probe_over_id = probe_id

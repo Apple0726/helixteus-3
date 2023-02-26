@@ -36,41 +36,41 @@ func _on_lg_pressed(extra_arg_0):
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
 	var lines_translated:int = 0
-	var lines_total:int = 1483 - 2
+	var lines_total:int = 1536 - 2
 	match extra_arg_0:
 		"fr":
 			lg = "Français"
-			lines_translated = 523 - 2
+			lines_translated = 537 - 2
 		"it":
 			lg = "Italiano"
-			lines_translated = 378 - 2
+			lines_translated = 380 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1404 - 2
+			lines_translated = 1547 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1514 - 2
+			lines_translated = 1567 - 2
 		"es":
 			lg = "Español"
-			lines_translated = 1160 - 2
+			lines_translated = 1162 - 2
 		"ko":
 			lg = "한국어"
-			lines_translated = 220 - 2
+			lines_translated = 221 - 2
 		"sv":
 			lg = "Svenska"
-			lines_translated = 192 - 1
+			lines_translated = 194 - 2
 		"hu":
 			lg = "Magyar"
-			lines_translated = 1256 - 1
+			lines_translated = 1249 - 1
 		"ja":
 			lg = "日本語"
-			lines_translated = 1420 - 2
+			lines_translated = 1422 - 2
 		"nl":
 			lg = "Nederlands"
-			lines_translated = 1211 - 2
+			lines_translated = 1213 - 2
 		"ru":
 			lg = "Русский"
-			lines_translated = 659 - 1
+			lines_translated = 962 - 2
 	if extra_arg_0 == "en":
 		game.show_tooltip("English")
 	else:

@@ -78,7 +78,9 @@ func _process(delta):
 		return
 	ship.get_node("Fire").visible = game.ships_travel_view != "-"
 	if game.ships_travel_view == game.c_v:
-		var scale_mult = 70.0 / game.planet_data[0].distance
+		var scale_mult = 1.0
+		if game.c_v == "system":
+			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 		var dep_pos = game.ships_depart_pos * scale_mult
 		var dest_pos = game.ships_dest_pos * scale_mult
 		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
@@ -101,7 +103,7 @@ func _process(delta):
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
 			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
-			var scale_mult = 70.0 / game.planet_data[0].distance
+			var scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance * scale_mult, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
 	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
@@ -252,7 +254,9 @@ func refresh():
 		move_child(red_line, get_child_count())
 		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
-		var scale_mult = 70.0 / game.planet_data[0].distance
+		var scale_mult = 1.0
+		if game.c_v == "system":
+			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 		var dep_pos:Vector2 = game.ships_depart_pos * scale_mult
 		var dest_pos:Vector2 = game.ships_dest_pos * scale_mult
 		red_line.points[0] = dep_pos

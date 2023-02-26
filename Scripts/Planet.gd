@@ -803,6 +803,7 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 
 func collect_prod_bldgs(tile_id:int):
 	var _tile = game.tile_data[tile_id]
+	var curr_time = OS.get_system_time_msecs()
 	if _tile.bldg.name in ["GF", "SE"]:
 		if _tile.bldg.has("qty1"):
 			var prod_i = Helper.get_prod_info(_tile)
@@ -821,7 +822,7 @@ func collect_prod_bldgs(tile_id:int):
 			if game.check_enough(rsrc_to_deduct):
 				game.deduct_resources(rsrc_to_deduct)
 				_tile.bldg.qty1 = _tile.bldg.path_2_value
-				_tile.bldg.start_date = OS.get_system_time_msecs()
+				_tile.bldg.start_date = curr_time
 				var ratio:float = _tile.bldg.path_3_value
 				if _tile.bldg.name == "GF":
 					ratio /= 15.0
@@ -841,16 +842,15 @@ func collect_prod_bldgs(tile_id:int):
 					game.stone[el] *= (1.0 - qty_to_crush / stone_total)
 				_tile.bldg.stone = stone_to_crush
 				_tile.bldg.stone_qty = qty_to_crush
-				_tile.bldg.start_date = OS.get_system_time_msecs()
+				_tile.bldg.start_date = curr_time
 				var expected_rsrc:Dictionary = {}
 				Helper.get_SC_output(expected_rsrc, qty_to_crush, _tile.bldg.path_3_value, stone_total)
 				_tile.bldg.expected_rsrc = expected_rsrc
 		else:
-			var time = OS.get_system_time_msecs()
 			var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
-			var qty_left = max(0, round(_tile.bldg.stone_qty - (time - _tile.bldg.start_date) / 1000.0 * crush_spd))
+			var qty_left = max(0, round(_tile.bldg.stone_qty - (curr_time - _tile.bldg.start_date) / 1000.0 * crush_spd))
 			if qty_left > 0:
-				var progress = (time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
+				var progress = (curr_time - _tile.bldg.start_date) / 1000.0 * crush_spd / _tile.bldg.stone_qty
 				for el in _tile.bldg.stone:
 					game.stone[el] += qty_left / _tile.bldg.stone_qty * _tile.bldg.stone[el]
 				var rsrc_collected = _tile.bldg.expected_rsrc.duplicate(true)

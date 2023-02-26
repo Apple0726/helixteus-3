@@ -91,7 +91,7 @@ func _on_Back_pressed():
 	game.STM_lv = lv
 	game.ships_travel_start_date -= max(0, secs_elapsed * 1000 - penalty_time)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	game.switch_view("a")
+	game.switch_view("system")
 
 var mouse_pos:Vector2 = Vector2.ZERO
 func _input(event):

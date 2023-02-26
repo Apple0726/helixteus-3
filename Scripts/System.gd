@@ -26,7 +26,7 @@ func _ready():
 	refresh_stars()
 
 func refresh_planets():
-	scale_mult = 70.0 / game.planet_data[0].distance
+	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 	CBS_range = 0.0
 	broken_CBS_range = 0.0
 	var curr_time = OS.get_system_time_msecs()
@@ -240,8 +240,8 @@ func on_entity_icon_out():
 	game.hide_tooltip()
 
 func refresh_stars():
-	scale_mult = 70.0 / game.planet_data[0].distance
-	for star in get_tree().get_nodes_in_group("stars"):
+	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+	for star in get_tree().get_nodes_in_group("stars_system"):
 		star.queue_free()
 	for time_bar in star_time_bars:
 		time_bar.node.queue_free()
@@ -285,7 +285,7 @@ func refresh_stars():
 			game.earn_achievement("exploration", "HG_XX_star")
 		if not game.achievement_data.exploration.has("HG_L_star") and star_info.has("hypergiant") and star_info.hypergiant >= 50:
 			game.earn_achievement("exploration", "HG_L_star")
-		star.add_to_group("stars")
+		star.add_to_group("stars_system")
 		if game.enable_shaders:
 			star.material = ShaderMaterial.new()
 			star.material.shader = star_shader
@@ -304,12 +304,14 @@ func refresh_stars():
 				MS.scale *= 0.7
 			star.add_child(MS)
 			if star_info.MS == "M_DS":
-				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
+				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "M_MB":
-				add_rsrc(star_info.pos, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
+				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instance()
-				time_bar.rect_position = - Vector2(0, 80)
+				time_bar.rect_scale *= 8.0
+				time_bar.rect_position.x += 512
+				time_bar.rect_position.y -= 100
 				star.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				star_time_bars.append({"node":time_bar, "id":i})
@@ -738,7 +740,7 @@ func on_star_over (id:int):
 			for cost in bldg_costs:
 				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) / (star.cost_div if star.has("cost_div") else 1.0))
 			bldg_costs.time /= game.u_i.time_speed
-			if game.universe_data[game.c_u].lv >= 60:
+			if game.universe_data[game.c_u].lv >= 55:
 				bldg_costs.money += bldg_costs.time * 200
 				bldg_costs.time = 0.2
 			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)

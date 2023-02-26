@@ -694,7 +694,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			rsrc_text = "%s kg/s" % format_num(current_bar_value, true)
 		elif tile.unique_bldg.name == "nuclear_fusion_reactor":
 			current_bar_value = tile.unique_bldg.get("production", 0.0)
-			rsrc_text = "%s/s" % format_num(current_bar_value)
+			rsrc_text = "%s/s" % format_num(round(current_bar_value))
 		elif tile.unique_bldg.name == "substation":
 			current_bar_value = round(tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed)
 			rsrc_text = "+ %s" % format_num(current_bar_value)

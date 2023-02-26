@@ -187,23 +187,23 @@ texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
 
-[node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages"]
 margin_left = 162.0
 margin_right = 222.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 60, 0 )
 mouse_filter = 1
-texture_normal = ExtResource( 7 )
+texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
 
-[node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages"]
 margin_left = 237.0
 margin_right = 297.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 60, 0 )
 mouse_filter = 1
-texture_normal = ExtResource( 6 )
+texture_normal = ExtResource( 7 )
 expand = true
 stretch_mode = 5
 
@@ -293,12 +293,12 @@ stretch_mode = 5
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_entered" binds= [ "ja" ]]
-[connection signal="mouse_exited" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_pressed" binds= [ "ja" ]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_entered" binds= [ "ja" ]]
+[connection signal="mouse_exited" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_pressed" binds= [ "ja" ]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_entered" binds= [ "hu" ]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_pressed" binds= [ "hu" ]]

@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "6 Feb 2023"
-const VERSION:String = "v0.26.2"
-const COMPATIBLE_SAVES = ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26", "v0.26.1", "v0.26.2"]
+const DATE:String = "26 Feb 2023"
+const VERSION:String = "v0.26.3"
+const COMPATIBLE_SAVES = ["v0.25", "v0.25.1", "v0.25.2", "v0.25.3", "v0.25.4", "v0.26", "v0.26.1", "v0.26.2", "v0.26.3"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -747,6 +747,7 @@ func load_univ():
 				particles.neutron -= diff - amount_decayed
 				particles.proton += (diff - amount_decayed) / 2.0
 				particles.electron += (diff - amount_decayed) / 2.0
+		tile_data = open_obj("Planets", c_p_g)
 		if c_v == "mining" or c_v == "cave":
 			c_v = "planet"
 		elif c_v == "science_tree":
@@ -755,6 +756,8 @@ func load_univ():
 			c_v = "system"
 		view.set_process(true)
 		var file = Directory.new()
+		if file.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [c_sv, c_u, c_p_g]):
+			planet_data = open_obj("Systems", c_s_g)
 		if file.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
 			planet_data = open_obj("Systems", c_s_g)
 		if file.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
@@ -1667,7 +1670,10 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				STM = STM_scene.instance()
 				add_child(STM)
-				switch_music(preload("res://Audio/STM.mp3"))
+				if randf() < 0.5:
+					switch_music(preload("res://Audio/STM.mp3"))
+				else:
+					switch_music(preload("res://Audio/hx3 minigame 2.ogg"))
 			"battle":
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_a_parent_of(HUD):
@@ -2750,6 +2756,7 @@ func generate_planets(id:int):#local id
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rand_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
+		system_data[id].closest_planet_distance = planet_data[0].distance
 		var view_zoom = 400.0 / max_distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["discovered"] = true
