@@ -63,7 +63,6 @@ __meta__ = {
 }
 
 [node name="SFX" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -154,6 +153,7 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="Tabs" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 33.0
@@ -163,34 +163,25 @@ __meta__ = {
 }
 
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 68.0
-margin_top = 31.0
-margin_right = 360.0
-margin_bottom = 71.0
+margin_left = 480.0
+margin_top = 43.0
+margin_right = 772.0
+margin_bottom = 83.0
 text = "Vsync (requires restart)"
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 112.0
-margin_top = 95.0
-margin_right = 360.0
-margin_bottom = 135.0
+margin_left = 524.0
+margin_top = 107.0
+margin_right = 772.0
+margin_bottom = 147.0
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="FPS" type="Control" parent="TabContainer/GRAPHICS"]
-margin_left = 620.0
-margin_top = -1.0
-margin_right = 660.0
-margin_bottom = 39.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_left = 168.0
+margin_top = 163.0
+margin_right = 208.0
+margin_bottom = 203.0
 
 [node name="Label" type="Label" parent="TabContainer/GRAPHICS/FPS"]
 margin_left = 5.68961
@@ -198,19 +189,13 @@ margin_top = 39.129
 margin_right = 87.69
 margin_bottom = 63.129
 text = "Max FPS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="TabContainer/GRAPHICS/FPS"]
-margin_left = 150.046
-margin_top = 67.129
-margin_right = 202.046
-margin_bottom = 91.129
+margin_left = 152.0
+margin_top = 64.0
+margin_right = 204.0
+margin_bottom = 88.0
 text = "60"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="FPS" type="HSlider" parent="TabContainer/GRAPHICS/FPS"]
 margin_left = -85.954
@@ -221,26 +206,20 @@ min_value = 1.0
 max_value = 144.0
 value = 1.0
 rounded = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 80.0
-margin_top = 155.0
-margin_right = 360.0
-margin_bottom = 195.0
+margin_left = 492.0
+margin_top = 167.0
+margin_right = 772.0
+margin_bottom = 207.0
 pressed = true
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" instance=ExtResource( 2 )]
-margin_left = 72.0
-margin_top = 163.0
-margin_right = 280.0
-margin_bottom = 203.0
+margin_left = 484.0
+margin_top = 175.0
+margin_right = 692.0
+margin_bottom = 215.0
 bbcode_text = "[right]ENABLE_SHADERS [img]Graphics/Icons/help.png[/img][/right]"
 text = "ENABLE_SHADERS "
 label_text = "ENABLE_SHADERS"
@@ -248,27 +227,46 @@ help_text = "ENABLE_SHADERS_DESC"
 align = 2
 
 [node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 104.0
-margin_top = 215.0
-margin_right = 360.0
-margin_bottom = 255.0
+margin_left = 516.0
+margin_top = 227.0
+margin_right = 772.0
+margin_bottom = 267.0
 text = "AUTOSAVE_LIGHT"
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Screenshake" type="CheckButton" parent="TabContainer/GRAPHICS"]
-margin_left = 64.0
-margin_top = 275.0
-margin_right = 360.0
-margin_bottom = 315.0
+margin_left = 476.0
+margin_top = 287.0
+margin_right = 772.0
+margin_bottom = 327.0
 pressed = true
 text = "ENABLE_SCREEN_SHAKE"
 align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="DisplayRes" type="OptionButton" parent="TabContainer/GRAPHICS"]
+margin_left = 140.0
+margin_top = 87.0
+margin_right = 272.0
+margin_bottom = 116.0
+text = "Auto"
+align = 1
+
+[node name="Label" type="Label" parent="TabContainer/GRAPHICS"]
+margin_left = 72.0
+margin_top = 51.0
+margin_right = 332.0
+margin_bottom = 74.0
+text = "Display resolution"
+align = 1
+
+[node name="KeepWindowSize" type="CheckBox" parent="TabContainer/GRAPHICS"]
+margin_left = 108.0
+margin_top = 127.0
+margin_right = 294.0
+margin_bottom = 158.0
+pressed = true
+text = "Keep window size"
+align = 1
 
 [node name="GAME" type="Tabs" parent="TabContainer"]
 visible = false
@@ -290,7 +288,7 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" parent="TabContainer/GAME" instance=ExtResource( 2 )]
-margin_left = 40.0
+margin_left = 16.0
 margin_top = 99.0
 margin_right = 272.0
 margin_bottom = 129.0
@@ -311,53 +309,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CollectSpeed" type="Control" parent="TabContainer/GAME"]
-margin_left = 126.189
-margin_top = 155.0
-margin_right = 166.189
-margin_bottom = 195.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME"]
+margin_left = 88.0
+margin_top = 159.0
+margin_right = 352.0
+margin_bottom = 199.0
+align = 2
 
-[node name="CollectSpeedSlider" type="HSlider" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = 7.41623
-margin_top = 30.4259
-margin_right = 177.416
-margin_bottom = 46.4259
-max_value = 5.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CollectSpeed" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = -74.189
-margin_top = -0.664001
-margin_right = 265.811
-margin_bottom = 23.336
-mouse_filter = 1
-text = "COLLECT_SPEED"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = -75.0
-margin_top = 31.0
-margin_right = -10.0
-margin_bottom = 45.0
-text = "FAST"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label3" type="Label" parent="TabContainer/GAME/CollectSpeed"]
-margin_left = 195.649
-margin_top = 30.0172
-margin_right = 292.649
-margin_bottom = 44.0172
-text = "SLOW"
+[node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource( 2 )]
+margin_left = 16.0
+margin_top = 167.0
+margin_right = 272.0
+margin_bottom = 197.0
+bbcode_text = "[right]SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img][/right]"
+text = "SHOW_CAVE_GEN_INFO "
+label_text = "SHOW_CAVE_GEN_INFO"
+help_text = "SHOW_CAVE_GEN_INFO_DESC"
+align = 2
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME"]
 margin_left = 480.0
@@ -436,10 +404,10 @@ __meta__ = {
 }
 
 [node name="ResetTooltips" type="Button" parent="TabContainer/GAME"]
-margin_left = 100.0
-margin_top = 253.0
-margin_right = 325.0
-margin_bottom = 282.0
+margin_left = 328.0
+margin_top = 411.0
+margin_right = 553.0
+margin_bottom = 440.0
 text = "RESET_HIDDEN_TOOLTIPS"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -452,6 +420,16 @@ anchor_bottom = 1.0
 margin_top = 33.0
 __meta__ = {
 "_edit_lock_": true
+}
+
+[node name="OPCursor" type="CheckBox" parent="TabContainer/MISC"]
+margin_left = 576.0
+margin_top = 43.0
+margin_right = 695.0
+margin_bottom = 83.0
+text = "op cursor"
+__meta__ = {
+"_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC"]
@@ -505,11 +483,10 @@ __meta__ = {
 [connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
+[connection signal="item_selected" from="TabContainer/GRAPHICS/DisplayRes" to="." method="_on_DisplayRes_item_selected"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
-[connection signal="value_changed" from="TabContainer/GAME/CollectSpeed/CollectSpeedSlider" to="." method="_on_CollectSpeedSlider_value_changed"]
-[connection signal="mouse_entered" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_CollectSpeed_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/CollectSpeed/CollectSpeed" to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="TabContainer/GAME/CaveGenInfo" to="." method="_on_CaveGenInfo_toggled"]
 [connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_pressed"]
@@ -521,6 +498,9 @@ __meta__ = {
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="pressed" from="TabContainer/GAME/ResetTooltips" to="." method="_on_ResetTooltips_pressed"]
+[connection signal="mouse_entered" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_entered"]
+[connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
+[connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
 [connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]

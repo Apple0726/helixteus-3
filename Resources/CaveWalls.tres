@@ -3,56 +3,56 @@
 [ext_resource path="res://Graphics/Tiles/CaveSpritesheet.png" type="Texture" id=1]
 [ext_resource path="res://Graphics/Tiles/Empty.jpg" type="Texture" id=2]
 
-[sub_resource type="OccluderPolygon2D" id=1]
-polygon = PoolVector2Array( 12.5, 12.5, 200, 12.5, 200, 200, 12.5, 200 )
+[sub_resource type="OccluderPolygon2D" id=103]
+polygon = PoolVector2Array( 16, 200, 16, 32, 20, 20, 32, 12, 200, 12, 200, 200 )
 
-[sub_resource type="OccluderPolygon2D" id=2]
-polygon = PoolVector2Array( 12.5, 1.52588e-05, 200, 0, 200, 200, 12.5, 200 )
+[sub_resource type="OccluderPolygon2D" id=97]
+polygon = PoolVector2Array( 200, 200, 16, 200, 16, 0, 200, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=3]
-polygon = PoolVector2Array( 12.5, 3.05176e-05, 200, 0, 200, 187.5, 12.5, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=104]
+polygon = PoolVector2Array( 16, 0, 200, 0, 200, 188, 32, 188, 20, 180, 16, 168 )
 
-[sub_resource type="OccluderPolygon2D" id=4]
-polygon = PoolVector2Array( 12.5, 12.5001, 200, 12.5001, 200, 187.5, 12.5, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=107]
+polygon = PoolVector2Array( 200, 12, 32, 12, 20, 20, 16, 32, 16, 168, 20, 180, 32, 188, 200, 188 )
 
-[sub_resource type="OccluderPolygon2D" id=5]
-polygon = PoolVector2Array( 1.52588e-05, 12.5, 200, 12.5, 200, 200, 0, 200 )
+[sub_resource type="OccluderPolygon2D" id=99]
+polygon = PoolVector2Array( 0, 12, 200, 12, 200, 200, 0, 200 )
 
 [sub_resource type="OccluderPolygon2D" id=6]
 polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 
-[sub_resource type="OccluderPolygon2D" id=7]
-polygon = PoolVector2Array( 0, 0, 200, 0, 200, 187.5, 1.52588e-05, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=100]
+polygon = PoolVector2Array( 200, 188, 0, 188, 0, 0, 200, 0 )
 
 [sub_resource type="OccluderPolygon2D" id=8]
 polygon = PoolVector2Array( 1.52588e-05, 12.5001, 200, 12.5001, 200, 187.5, 1.52588e-05, 187.5 )
 
-[sub_resource type="OccluderPolygon2D" id=9]
-polygon = PoolVector2Array( 3.05176e-05, 12.5, 187.5, 12.5, 187.5, 200, 0, 200 )
+[sub_resource type="OccluderPolygon2D" id=105]
+polygon = PoolVector2Array( 0, 12, 172, 12, 180, 20, 188, 32, 188, 200, 0, 200 )
 
-[sub_resource type="OccluderPolygon2D" id=10]
-polygon = PoolVector2Array( 0, 0, 187.5, 1.52588e-05, 187.5, 200, 0, 200 )
+[sub_resource type="OccluderPolygon2D" id=102]
+polygon = PoolVector2Array( 188, 200, 0, 200, 0, 0, 188, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=11]
-polygon = PoolVector2Array( 0, 0, 187.5, 3.05176e-05, 187.5, 187.5, 3.05176e-05, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=106]
+polygon = PoolVector2Array( 0, 0, 188, 0, 188, 164, 180, 180, 172, 188, 0, 188 )
 
-[sub_resource type="OccluderPolygon2D" id=12]
-polygon = PoolVector2Array( 3.05176e-05, 12.5001, 187.5, 12.5001, 187.5, 187.5, 3.05176e-05, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=108]
+polygon = PoolVector2Array( 0, 12, 168, 12, 180, 20, 188, 32, 188, 168, 180, 180, 168, 188, 0, 188 )
 
-[sub_resource type="OccluderPolygon2D" id=13]
-polygon = PoolVector2Array( 12.5001, 12.5, 187.5, 12.5, 187.5, 200, 12.5001, 200 )
+[sub_resource type="OccluderPolygon2D" id=109]
+polygon = PoolVector2Array( 12, 32, 16, 20, 28, 12, 168, 12, 180, 20, 188, 32, 188, 200, 12, 200 )
 
 [sub_resource type="OccluderPolygon2D" id=14]
 polygon = PoolVector2Array( 12.5001, 1.52588e-05, 187.5, 1.52588e-05, 187.5, 200, 12.5001, 200 )
 
-[sub_resource type="OccluderPolygon2D" id=15]
-polygon = PoolVector2Array( 12.5001, 3.05176e-05, 187.5, 3.05176e-05, 187.5, 187.5, 12.5001, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=110]
+polygon = PoolVector2Array( 12, 0, 12, 164, 20, 180, 32, 184, 168, 184, 180, 180, 188, 164, 188, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=16]
-polygon = PoolVector2Array( 12.5001, 12.5001, 187.5, 12.5001, 187.5, 187.5, 12.5001, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=111]
+polygon = PoolVector2Array( 12, 32, 20, 20, 32, 16, 172, 16, 184, 24, 188, 32, 188, 164, 184, 176, 172, 184, 36, 184, 20, 176, 12, 164 )
 
-[sub_resource type="OccluderPolygon2D" id=17]
-polygon = PoolVector2Array( 12.5001, 200, 12.5001, 12.5, 200, 12.5, 200, 187.5, 187.5, 200 )
+[sub_resource type="OccluderPolygon2D" id=112]
+polygon = PoolVector2Array( 12, 200, 12, 32, 20, 20, 32, 12, 200, 12, 200, 184, 192, 188, 184, 200 )
 
 [sub_resource type="OccluderPolygon2D" id=18]
 polygon = PoolVector2Array( 12.5, 0, 12.5, 200, 187.5, 200, 200, 187.5, 200, 0 )
@@ -60,8 +60,8 @@ polygon = PoolVector2Array( 12.5, 0, 12.5, 200, 187.5, 200, 200, 187.5, 200, 0 )
 [sub_resource type="OccluderPolygon2D" id=19]
 polygon = PoolVector2Array( 12.5, 200, 200, 200, 200, 12.5, 187.5, 0, 12.5, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=20]
-polygon = PoolVector2Array( 12.5001, 6.10352e-05, 12.5001, 187.5, 200, 187.5, 200, 12.5, 187.5, 0 )
+[sub_resource type="OccluderPolygon2D" id=113]
+polygon = PoolVector2Array( 12, 0, 12, 168, 20, 180, 32, 188, 200, 188, 200, 16, 192, 12, 184, 0 )
 
 [sub_resource type="OccluderPolygon2D" id=21]
 polygon = PoolVector2Array( 12.5, 0, 12.5, 200, 187.5, 200, 200, 187.5, 200, 12.5, 187.5, 0 )
@@ -96,8 +96,8 @@ polygon = PoolVector2Array( 12.5, 0, 0, 12.5, 0, 187.5, 200, 187.5, 200, 0 )
 [sub_resource type="OccluderPolygon2D" id=31]
 polygon = PoolVector2Array( 12.5, 0, 0, 12.5, 0, 187.5, 12.5, 200, 200, 200, 200, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=32]
-polygon = PoolVector2Array( 0, 12.5, 187.5, 12.5, 187.5, 200, 12.5, 200, 0, 187.5 )
+[sub_resource type="OccluderPolygon2D" id=114]
+polygon = PoolVector2Array( 0, 12, 168, 12, 180, 20, 188, 32, 188, 200, 16, 200, 12, 192, 0, 184 )
 
 [sub_resource type="OccluderPolygon2D" id=33]
 polygon = PoolVector2Array( 0, 0, 187.5, 0, 187.5, 200, 12.5, 200, 0, 187.5 )
@@ -105,8 +105,8 @@ polygon = PoolVector2Array( 0, 0, 187.5, 0, 187.5, 200, 12.5, 200, 0, 187.5 )
 [sub_resource type="OccluderPolygon2D" id=34]
 polygon = PoolVector2Array( 12.5, 0, 0, 12.5, 0, 200, 187.5, 200, 187.5, 0 )
 
-[sub_resource type="OccluderPolygon2D" id=35]
-polygon = PoolVector2Array( 12.5, 0, 0, 12.5, 0, 187.5, 187.5, 187.5, 187.5, 0 )
+[sub_resource type="OccluderPolygon2D" id=115]
+polygon = PoolVector2Array( 0, 16, 8, 12, 16, 0, 188, 0, 188, 168, 180, 180, 168, 188, 0, 188 )
 
 [sub_resource type="OccluderPolygon2D" id=36]
 polygon = PoolVector2Array( 12.5, 0, 0, 12.5, 0, 187.5, 12.5, 200, 187.5, 200, 187.5, 0 )
@@ -300,7 +300,7 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 0/autotile/icon_coordinate = Vector2( 0, 0 )
 0/autotile/tile_size = Vector2( 200, 200 )
 0/autotile/spacing = 0
-0/autotile/occluder_map = [ Vector2( 0, 0 ), SubResource( 1 ), Vector2( 0, 1 ), SubResource( 2 ), Vector2( 0, 2 ), SubResource( 3 ), Vector2( 0, 3 ), SubResource( 4 ), Vector2( 1, 0 ), SubResource( 5 ), Vector2( 1, 1 ), SubResource( 6 ), Vector2( 1, 2 ), SubResource( 7 ), Vector2( 1, 3 ), SubResource( 8 ), Vector2( 2, 0 ), SubResource( 9 ), Vector2( 2, 1 ), SubResource( 10 ), Vector2( 2, 2 ), SubResource( 11 ), Vector2( 2, 3 ), SubResource( 12 ), Vector2( 3, 0 ), SubResource( 13 ), Vector2( 3, 1 ), SubResource( 14 ), Vector2( 3, 2 ), SubResource( 15 ), Vector2( 3, 3 ), SubResource( 16 ), Vector2( 4, 0 ), SubResource( 17 ), Vector2( 4, 1 ), SubResource( 18 ), Vector2( 4, 2 ), SubResource( 19 ), Vector2( 4, 3 ), SubResource( 20 ), Vector2( 4, 4 ), SubResource( 21 ), Vector2( 5, 0 ), SubResource( 22 ), Vector2( 5, 1 ), SubResource( 23 ), Vector2( 5, 2 ), SubResource( 24 ), Vector2( 5, 3 ), SubResource( 25 ), Vector2( 5, 4 ), SubResource( 26 ), Vector2( 6, 0 ), SubResource( 27 ), Vector2( 6, 1 ), SubResource( 28 ), Vector2( 6, 2 ), SubResource( 29 ), Vector2( 6, 3 ), SubResource( 30 ), Vector2( 6, 4 ), SubResource( 31 ), Vector2( 7, 0 ), SubResource( 32 ), Vector2( 7, 1 ), SubResource( 33 ), Vector2( 7, 2 ), SubResource( 34 ), Vector2( 7, 3 ), SubResource( 35 ), Vector2( 7, 4 ), SubResource( 36 ), Vector2( 8, 0 ), SubResource( 37 ), Vector2( 8, 1 ), SubResource( 38 ), Vector2( 8, 2 ), SubResource( 39 ), Vector2( 8, 3 ), SubResource( 40 ), Vector2( 8, 4 ), SubResource( 41 ), Vector2( 9, 0 ), SubResource( 42 ), Vector2( 9, 1 ), SubResource( 43 ), Vector2( 9, 2 ), SubResource( 44 ), Vector2( 9, 3 ), SubResource( 45 ), Vector2( 10, 2 ), SubResource( 46 ), Vector2( 10, 3 ), SubResource( 47 ) ]
+0/autotile/occluder_map = [ Vector2( 0, 0 ), SubResource( 103 ), Vector2( 0, 1 ), SubResource( 97 ), Vector2( 0, 2 ), SubResource( 104 ), Vector2( 0, 3 ), SubResource( 107 ), Vector2( 1, 0 ), SubResource( 99 ), Vector2( 1, 1 ), SubResource( 6 ), Vector2( 1, 2 ), SubResource( 100 ), Vector2( 1, 3 ), SubResource( 8 ), Vector2( 2, 0 ), SubResource( 105 ), Vector2( 2, 1 ), SubResource( 102 ), Vector2( 2, 2 ), SubResource( 106 ), Vector2( 2, 3 ), SubResource( 108 ), Vector2( 3, 0 ), SubResource( 109 ), Vector2( 3, 1 ), SubResource( 14 ), Vector2( 3, 2 ), SubResource( 110 ), Vector2( 3, 3 ), SubResource( 111 ), Vector2( 4, 0 ), SubResource( 112 ), Vector2( 4, 1 ), SubResource( 18 ), Vector2( 4, 2 ), SubResource( 19 ), Vector2( 4, 3 ), SubResource( 113 ), Vector2( 4, 4 ), SubResource( 21 ), Vector2( 5, 0 ), SubResource( 22 ), Vector2( 5, 1 ), SubResource( 23 ), Vector2( 5, 2 ), SubResource( 24 ), Vector2( 5, 3 ), SubResource( 25 ), Vector2( 5, 4 ), SubResource( 26 ), Vector2( 6, 0 ), SubResource( 27 ), Vector2( 6, 1 ), SubResource( 28 ), Vector2( 6, 2 ), SubResource( 29 ), Vector2( 6, 3 ), SubResource( 30 ), Vector2( 6, 4 ), SubResource( 31 ), Vector2( 7, 0 ), SubResource( 114 ), Vector2( 7, 1 ), SubResource( 33 ), Vector2( 7, 2 ), SubResource( 34 ), Vector2( 7, 3 ), SubResource( 115 ), Vector2( 7, 4 ), SubResource( 36 ), Vector2( 8, 0 ), SubResource( 37 ), Vector2( 8, 1 ), SubResource( 38 ), Vector2( 8, 2 ), SubResource( 39 ), Vector2( 8, 3 ), SubResource( 40 ), Vector2( 8, 4 ), SubResource( 41 ), Vector2( 9, 0 ), SubResource( 42 ), Vector2( 9, 1 ), SubResource( 43 ), Vector2( 9, 2 ), SubResource( 44 ), Vector2( 9, 3 ), SubResource( 45 ), Vector2( 10, 2 ), SubResource( 46 ), Vector2( 10, 3 ), SubResource( 47 ) ]
 0/autotile/navpoly_map = [  ]
 0/autotile/priority_map = [  ]
 0/autotile/z_index_map = [  ]

@@ -12,18 +12,27 @@ var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_5.png"),
 						preload("res://Graphics/Effects/spotlight_6.png"),
 ]
+onready var bldg_overlay_timer = $BuildingOverlayTimer
+var curr_bldg_overlay:int = 0
+var discovered_sys:Array
 
 func _ready():
+	discovered_sys = []
 	for s_i in game.system_data:
 		var star:Dictionary = s_i.stars[0]
 		for i in range(1, len(s_i.stars)):
 			if s_i.stars[i].luminosity > star.luminosity:
 				star = s_i.stars[i]
+		if game.galaxy_data[game.c_g].has("conquered") and not s_i.has("conquered"):
+			s_i.conquered = true
+			game.stats_univ.planets_conquered += s_i.planet_num
+			game.stats_dim.planets_conquered += s_i.planet_num
+			game.stats_global.planets_conquered += s_i.planet_num
 		var star_btn = TextureButton.new()
 		var system = Sprite.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.modulate = get_star_modulate(star["class"])
+		star_btn.modulate = get_star_modulate(star["class"]) * 1.5
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
@@ -33,18 +42,13 @@ func _ready():
 		star_btn.rect_rotation = sin(star.temperature) * 180
 		star_btn.rect_position = Vector2(-1024 / 2, -1024 / 2)
 		star_btn.rect_pivot_offset = Vector2(1024 / 2, 1024 / 2)
-		if game.enable_shaders and len(game.system_data) < 4000:
-			star_btn.material = ShaderMaterial.new()
-			star_btn.material.shader = star_shader
-			star_btn.material.set_shader_param("amplitude", 0.1)
-			star_btn.material.set_shader_param("time_offset", 10.0 * randf())
-			star_btn.material.set_shader_param("twinkle_speed", 0.5)
-			star_btn.material.set_shader_param("brightness_offset", 1.1)
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.rect_scale *= radius
 		system.position = s_i["pos"]
 		dimensions = max(dimensions, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
+		if s_i.has("discovered"):
+			discovered_sys.append(s_i)
 	if game.galaxy_data[game.c_g].has("wormholes"):
 		for wh_data in game.galaxy_data[game.c_g].wormholes:
 			var blue_line = Line2D.new()
@@ -56,6 +60,8 @@ func _ready():
 			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
+	if len(discovered_sys) > 0:
+		bldg_overlay_timer.start(0.05)
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
@@ -73,17 +79,29 @@ func on_system_over (l_id:int):
 				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), l_id]
 			5:
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		if grid.name != "Grid_%s" % l_id:
+			var tween = get_tree().create_tween()
+			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		if grid.name != "MSGrid_%s" % l_id:
+			var tween = get_tree().create_tween()
+			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
 
 func on_system_out ():
+	for grid in get_tree().get_nodes_in_group("Grids"):
+		var tween = get_tree().create_tween()
+		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
+	for grid in get_tree().get_nodes_in_group("MSGrids"):
+		var tween = get_tree().create_tween()
+		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
 
 func on_system_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
-		game.c_s = l_id
-		game.c_s_g = id
-		game.switch_view("system")
+		game.switch_view("system", {"fn":"set_custom_coords", "fn_args":[["c_s", "c_s_g"], [l_id, id]]})
 	view.dragged = false
 
 func change_overlay(overlay_id:int, gradient:Gradient):
@@ -150,7 +168,7 @@ func collect_all():
 	items_collected.clear()
 	var curr_time = OS.get_system_time_msecs()
 	var systems = game.galaxy_data[game.c_g].systems
-	var progress:TextureProgress = game.HUD.get_node("Panel/CollectProgress")
+	var progress:TextureProgress = game.HUD.get_node("Bottom/Panel/CollectProgress")
 	progress.max_value = len(systems)
 	var cond = game.collect_speed_lag_ratio != 0
 	for s_ids in systems:
@@ -196,7 +214,8 @@ const A0 = Color(213, 224, 255, 255) / 255.0
 const B0 = Color(162, 192, 255, 255) / 255.0
 const O0 = Color(140, 177, 255, 255) / 255.0
 const Q0 = Color(134, 255, 117, 255) / 255.0
-const R0 = Color(255, 151, 255, 255) / 255.0
+const R0 = Color(255, 100, 255, 255) / 255.0
+const Z0 = Color(100, 30, 255, 255) / 255.0
 
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps
@@ -227,5 +246,62 @@ func get_star_modulate (star_class:String):
 		"R":
 			m = lerp(R0, Q0, w)
 		"Z":
-			m = Color(0.05, 0.05, 0.05, 1)
+			m = lerp(Z0, R0, w)
 	return m
+
+
+func _on_BuildingOverlayTimer_timeout():
+	var s_i = discovered_sys[curr_bldg_overlay]
+	var planet_data:Array = game.open_obj("Systems", s_i.id)
+	var bldgs:Dictionary = {}
+	var MSs:Dictionary = {}
+	for p_i in planet_data:
+		if p_i.empty():
+			continue
+		if p_i.has("tile_num") and p_i.bldg.has("name"):
+			Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
+		if p_i.has("MS"):
+			Helper.add_to_dict(MSs, p_i.MS, 1)
+		var tile_data:Array = game.open_obj("Planets", p_i.id)
+		for tile in tile_data:
+			if tile and tile.has("bldg"):
+				Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+	#yield(get_tree(), "idle_frame")
+	for _star in s_i.stars:
+		if _star.has("MS"):
+			Helper.add_to_dict(MSs, _star.MS, 1)
+	if not bldgs.empty():
+		var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+		grid_panel.get_node("Top").visible = false
+		var grid = grid_panel.get_node("PanelContainer/GridContainer")
+		grid_panel.rect_scale *= 5.0
+		for bldg in bldgs:
+			var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
+			grid.add_child(bldg_count)
+			bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+			bldg_count.get_node("Texture").mouse_filter = Control.MOUSE_FILTER_IGNORE
+			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+		add_child(grid_panel)
+		grid_panel.add_to_group("Grids")
+		grid_panel.name = "Grid_%s" % s_i.l_id
+		grid_panel.rect_position.x = s_i.pos.x - grid.rect_size.x / 2.0 * grid_panel.rect_scale.x
+		grid_panel.rect_position.y = s_i.pos.y - (grid.rect_size.y + 30) * grid_panel.rect_scale.y
+	if not MSs.empty():
+		var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instance()
+		MS_grid_panel.get_node("Bottom").visible = false
+		var MS_grid = MS_grid_panel.get_node("PanelContainer/GridContainer")
+		MS_grid_panel.rect_scale *= 5.0
+		for MS in MSs:
+			var MS_count = preload("res://Scenes/EntityCount.tscn").instance()
+			MS_grid.add_child(MS_count)
+			MS_count.get_node("Texture").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
+			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+		add_child(MS_grid_panel)
+		MS_grid_panel.add_to_group("MSGrids")
+		MS_grid_panel.name = "MSGrid_%s" % s_i.l_id
+		MS_grid_panel.rect_position.x = s_i.pos.x - MS_grid.rect_size.x / 2.0 * MS_grid_panel.rect_scale.x
+		MS_grid_panel.rect_position.y = s_i.pos.y + MS_grid.rect_size.y * MS_grid_panel.rect_scale.y
+		
+	curr_bldg_overlay += 1
+	if curr_bldg_overlay >= len(discovered_sys):
+		bldg_overlay_timer.stop()

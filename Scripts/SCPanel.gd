@@ -19,7 +19,7 @@ func _ready():
 	set_process(false)
 
 func refresh():
-	tile = game.tile_data[game.c_t]
+	tile = game.tile_data[c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.bldg.has("stone")
 	set_process(is_crushing)
@@ -112,7 +112,7 @@ func _process(delta):
 	CC_stone.text = "%s kg" % [c_i.qty_left]
 	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd * 1000)
 	for hbox in rsrc_nodes:
-		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(Helper.clever_round(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value)))]
+		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
 
 func _on_HSlider_value_changed(value):
 	refresh()

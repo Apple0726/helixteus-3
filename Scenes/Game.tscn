@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -8,27 +8,13 @@
 [ext_resource path="res://Graphics/Title screen/GitHub.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 [ext_resource path="res://Audio/SFX/click.ogg" type="AudioStream" id=8]
-[ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buttons/it.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/Languages.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Graphics/Title screen/Discord.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=13]
 [ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
-[ext_resource path="res://Graphics/Buttons/es.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Buttons/de.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Buttons/ko.png" type="Texture" id=18]
-[ext_resource path="res://Audio/SFX/planting3.ogg" type="AudioStream" id=19]
-[ext_resource path="res://Audio/SFX/planting2.ogg" type="AudioStream" id=20]
-[ext_resource path="res://Audio/SFX/planting1.ogg" type="AudioStream" id=21]
-[ext_resource path="res://Graphics/Title screen/Discord_over.png" type="Texture" id=22]
-[ext_resource path="res://Graphics/Title screen/GitHub_over.png" type="Texture" id=23]
-[ext_resource path="res://Graphics/Title screen/Godot_over.png" type="Texture" id=24]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
 [ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
-[ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=28]
-[ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=29]
 [ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
 [ext_resource path="res://Shaders/Star.shader" type="Shader" id=31]
 [ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=32]
@@ -42,21 +28,44 @@ shader = ExtResource( 30 )
 shader_param/amount = 0.0
 
 [sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 11.0
-content_margin_right = 11.0
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 9.0
+content_margin_bottom = 9.0
+bg_color = Color( 0.197242, 0.197242, 0.197242, 1 )
+border_width_left = 2
+border_width_top = 2
+border_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_blend = true
 shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="Animation" id=3]
+resource_name = "Flashing"
+length = 0.6
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Text:custom_styles/normal:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.329412, 0.329412, 0.329412, 1 ), Color( 0.129412, 0.129412, 0.129412, 1 ), Color( 0.329412, 0.329412, 0.329412, 1 ) ]
+}
+
+[sub_resource type="DynamicFont" id=5]
+size = 20
+use_filter = true
+font_data = ExtResource( 15 )
+fallback/0 = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -72,21 +81,6 @@ shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 1
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="DynamicFont" id=4]
-size = 20
-use_filter = true
-font_data = ExtResource( 15 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 25
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 14 )
-fallback/0 = ExtResource( 1 )
-
 [sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
 border_width_left = 3
@@ -101,16 +95,60 @@ shadow_color = Color( 0, 0, 0, 0.258824 )
 shadow_size = 3
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="ShaderMaterial" id=7]
-shader = ExtResource( 34 )
+[sub_resource type="Animation" id=21]
+resource_name = "Fade"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
-[sub_resource type="Gradient" id=8]
+[sub_resource type="Animation" id=23]
+resource_name = "FadeOut"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1 )
 
-[sub_resource type="GradientTexture" id=9]
-gradient = SubResource( 8 )
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=9]
 resource_name = "Fade"
 length = 0.2
 tracks/0/type = "value"
@@ -126,14 +164,36 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
+[sub_resource type="StyleBoxFlat" id=10]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 1.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.101961, 0.101961, 0.101961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.278431, 0.278431, 0.278431, 1 )
+border_blend = true
+expand_margin_left = 3.0
+expand_margin_right = 3.0
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+
 [sub_resource type="DynamicFont" id=11]
-size = 50
+size = 25
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 15 )
+font_data = ExtResource( 14 )
+fallback/0 = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=12]
+[sub_resource type="ShaderMaterial" id=12]
+shader = ExtResource( 34 )
+
+[sub_resource type="StyleBoxFlat" id=14]
 content_margin_left = 20.0
 content_margin_right = 20.0
 content_margin_top = 20.0
@@ -146,7 +206,7 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2( 1, 1 )
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=15]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("UI/Panel:modulate")
@@ -161,18 +221,49 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="InputEventAction" id=14]
+[sub_resource type="InputEventAction" id=16]
 action = "P"
 
-[sub_resource type="ShortCut" id=15]
-shortcut = SubResource( 14 )
+[sub_resource type="ShortCut" id=17]
+shortcut = SubResource( 16 )
 
-[sub_resource type="ShaderMaterial" id=16]
+[sub_resource type="ShaderMaterial" id=18]
 shader = ExtResource( 31 )
 shader_param/time_offset = 0.0
 shader_param/brightness_offset = 0.0
 shader_param/twinkle_speed = 1.0
 shader_param/amplitude = 0.15
+
+[sub_resource type="Animation" id=19]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("WhiteStars:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=20]
+resource_name = "StarFade"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("WhiteStars:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -206,20 +297,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlantingSounds" type="Node" parent="."]
-
-[node name="1" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 21 )
-bus = "SFX"
-
-[node name="2" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 20 )
-bus = "SFX"
-
-[node name="3" type="AudioStreamPlayer" parent="PlantingSounds"]
-stream = ExtResource( 19 )
-bus = "SFX"
-
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 3
 
@@ -230,7 +307,7 @@ margin_right = 1280.0
 margin_bottom = 756.0
 mouse_filter = 2
 theme = ExtResource( 7 )
-custom_constants/separation = -2
+custom_constants/separation = 1
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -238,9 +315,9 @@ __meta__ = {
 
 [node name="Text" type="Label" parent="UI/BottomInfo"]
 visible = false
-margin_left = 599.0
-margin_right = 648.0
-margin_bottom = 36.0
+margin_left = 594.0
+margin_right = 649.0
+margin_bottom = 42.0
 custom_styles/normal = SubResource( 2 )
 text = "dsf"
 align = 1
@@ -249,13 +326,20 @@ __meta__ = {
 }
 
 [node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource( 25 )]
-margin_left = 646.0
-margin_right = 681.0
+anchor_left = 0.0
+anchor_right = 0.0
+margin_left = 622.0
+margin_top = 0.0
+margin_right = 657.0
 margin_bottom = 36.0
 grow_horizontal = 0
 grow_vertical = 0
 rect_min_size = Vector2( 35, 35 )
 close_button_type = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/BottomInfo"]
+autoplay = "Flashing"
+anims/Flashing = SubResource( 3 )
 
 [node name="Version" type="Label" parent="UI"]
 margin_left = 944.0
@@ -286,8 +370,8 @@ margin_left = 490.0
 margin_top = 83.0
 margin_right = 790.0
 margin_bottom = 109.0
-custom_styles/normal = SubResource( 3 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
+custom_styles/normal = SubResource( 4 )
 text = "Popup information"
 align = 1
 __meta__ = {
@@ -305,35 +389,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ItemCursor" type="Node2D" parent="UI"]
-visible = false
-
-[node name="Sprite" type="Sprite" parent="UI/ItemCursor"]
-position = Vector2( 32, 32 )
-scale = Vector2( 0.25, 0.25 )
-
-[node name="Polygon2D" type="Polygon2D" parent="UI/ItemCursor"]
-polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
-
-[node name="Num" type="Label" parent="UI/ItemCursor"]
-margin_left = 56.0
-margin_top = 48.0
-margin_right = 96.0
-margin_bottom = 77.0
-custom_fonts/font = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="UI"]
-margin_right = 200.0
-margin_bottom = 70.0
+margin_right = 225.0
+margin_bottom = 82.0
+rect_min_size = Vector2( 200, 30 )
 theme = ExtResource( 7 )
 window_title = "Veuillez confirmer…"
 dialog_autowrap = true
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 1008.0
 margin_top = 368.0
 margin_right = 1156.0
@@ -342,15 +408,39 @@ grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource( 7 )
 custom_styles/panel = SubResource( 6 )
+
+[node name="VBox" type="VBoxContainer" parent="UI/Panel"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 148.0
+margin_bottom = 14.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Panel"]
+anims/Fade = SubResource( 21 )
+anims/FadeOut = SubResource( 23 )
+anims/RESET = SubResource( 22 )
+
+[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+color = Color( 0.686275, 0, 1, 1 )
+
+[node name="GrayscaleRect" type="TextureRect" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 720.0
+margin_right = 720.0
+margin_bottom = 2000.0
+rect_rotation = -90.0
+mouse_filter = 2
+texture = SubResource( 8 )
+expand = true
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="VBox" type="VBoxContainer" parent="UI/Panel"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 146.0
-margin_bottom = 12.0
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
+anims/Fade = SubResource( 9 )
 
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 5
@@ -371,288 +461,99 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="CtrlShift" type="HBoxContainer" parent="Tooltips"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 89.0
+margin_bottom = 19.0
+grow_horizontal = 0
+mouse_filter = 2
+custom_constants/separation = 6
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ctrl" type="Label" parent="Tooltips/CtrlShift"]
+visible = false
+margin_right = 22.0
+margin_bottom = 15.0
+custom_styles/normal = SubResource( 10 )
+text = "Ctrl"
+
+[node name="Shift" type="Label" parent="Tooltips/CtrlShift"]
+visible = false
+margin_left = 28.0
+margin_right = 56.0
+margin_bottom = 15.0
+custom_styles/normal = SubResource( 10 )
+text = "Shift"
+
+[node name="Alt" type="Label" parent="Tooltips/CtrlShift"]
+visible = false
+margin_left = 28.0
+margin_right = 56.0
+margin_bottom = 15.0
+custom_styles/normal = SubResource( 10 )
+text = "Alt"
+
+[node name="ItemCursor" type="Node2D" parent="Tooltips"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="Tooltips/ItemCursor"]
+position = Vector2( 32, 32 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor"]
+polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
+
+[node name="Num" type="Label" parent="Tooltips/ItemCursor"]
+margin_left = 56.0
+margin_top = 48.0
+margin_right = 96.0
+margin_bottom = 77.0
+custom_fonts/font = SubResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="ScienceTreeBG" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 7 )
-margin_right = 1276.0
-margin_bottom = 716.0
+modulate = Color( 1, 1, 1, 0 )
+material = SubResource( 12 )
+margin_right = 1280.0
+margin_bottom = 720.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
-visible = false
-modulate = Color( 1, 1, 1, 0 )
-color = Color( 0.686275, 0, 1, 1 )
-
-[node name="GrayscaleRect" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 720.0
-margin_right = 720.0
-margin_bottom = 2000.0
-rect_rotation = -90.0
+[node name="TitleBackground" type="TextureRect" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
 mouse_filter = 2
-texture = SubResource( 9 )
+texture = ExtResource( 4 )
 expand = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_lock_": true
 }
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
-anims/Fade = SubResource( 10 )
 
 [node name="Title" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Background" type="TextureRect" parent="Title"]
-margin_right = 1280.0
-margin_bottom = 720.0
-texture = ExtResource( 4 )
-expand = true
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Title"]
-visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 456.0
-margin_top = 69.313
-margin_right = 784.0
-margin_bottom = 230.313
-custom_fonts/font = SubResource( 11 )
-text = "Helixteus 3
-"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="GitHub" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button" type="TextureButton" parent="Title/GitHub"]
-margin_left = 836.0
-margin_top = 676.0
-margin_right = 976.0
-margin_bottom = 712.0
-texture_normal = ExtResource( 6 )
-texture_pressed = ExtResource( 6 )
-texture_hover = ExtResource( 23 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/GitHub"]
-margin_left = 776.0
-margin_top = 640.0
-margin_right = 1044.0
-margin_bottom = 664.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Source files available on"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Godot" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -2.0
-margin_right = 40.0
-margin_bottom = 38.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button" type="TextureButton" parent="Title/Godot"]
-margin_left = 1120.0
-margin_top = 618.0
-margin_right = 1216.0
-margin_bottom = 714.0
-texture_normal = ExtResource( 5 )
-texture_pressed = ExtResource( 5 )
-texture_hover = ExtResource( 24 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/Godot"]
-margin_left = 1056.0
-margin_top = 582.0
-margin_right = 1279.0
-margin_bottom = 606.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Game made with"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Discord" type="Control" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -2.0
-margin_right = 40.0
-margin_bottom = 38.0
-
-[node name="Button" type="TextureButton" parent="Title/Discord"]
-margin_left = 596.0
-margin_top = 678.0
-margin_right = 712.0
-margin_bottom = 714.0
-texture_normal = ExtResource( 11 )
-texture_pressed = ExtResource( 11 )
-texture_hover = ExtResource( 22 )
-expand = true
-stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Text" type="Label" parent="Title/Discord"]
-margin_left = 540.0
-margin_top = 642.0
-margin_right = 763.0
-margin_bottom = 666.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-text = "Join us on"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Languages" type="HBoxContainer" parent="Title"]
-margin_left = 8.0
-margin_top = 692.0
-margin_right = 488.0
-margin_bottom = 720.0
-custom_constants/separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="en" type="TextureButton" parent="Title/Languages"]
-margin_right = 60.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 12 )
-expand = true
-stretch_mode = 4
-
-[node name="zh" type="TextureButton" parent="Title/Languages"]
-margin_left = 70.0
-margin_right = 130.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 29 )
-expand = true
-stretch_mode = 4
-
-[node name="de" type="TextureButton" parent="Title/Languages"]
-margin_left = 140.0
-margin_right = 200.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 17 )
-expand = true
-stretch_mode = 4
-
-[node name="es" type="TextureButton" parent="Title/Languages"]
-margin_left = 210.0
-margin_right = 270.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 16 )
-expand = true
-stretch_mode = 4
-
-[node name="fr" type="TextureButton" parent="Title/Languages"]
-margin_left = 280.0
-margin_right = 340.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 9 )
-expand = true
-stretch_mode = 4
-
-[node name="it" type="TextureButton" parent="Title/Languages"]
-margin_left = 350.0
-margin_right = 410.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 10 )
-expand = true
-stretch_mode = 4
-
-[node name="ko" type="TextureButton" parent="Title/Languages"]
-margin_left = 420.0
-margin_right = 480.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 18 )
-expand = true
-stretch_mode = 4
-
-[node name="sv" type="TextureButton" parent="Title/Languages"]
-margin_left = 490.0
-margin_right = 550.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 28 )
-expand = true
-stretch_mode = 4
-
-[node name="ru" type="TextureButton" parent="Title/Languages"]
-visible = false
-margin_left = 420.0
-margin_right = 480.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 60, 0 )
-texture_normal = ExtResource( 13 )
-expand = true
-stretch_mode = 4
 
 [node name="Menu" type="PanelContainer" parent="Title"]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = 83.0
-margin_top = 429.0
+margin_top = 464.0
 margin_right = 307.0
-margin_bottom = 588.0
+margin_bottom = 664.0
 theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 12 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_styles/panel = SubResource( 14 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu"]
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 204.0
-margin_bottom = 139.0
+margin_bottom = 180.0
 custom_constants/separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
@@ -678,13 +579,54 @@ margin_bottom = 118.0
 rect_min_size = Vector2( 0, 30 )
 text = "SETTINGS"
 
+[node name="Mods" type="Button" parent="Title/Menu/VBoxContainer"]
+margin_top = 126.0
+margin_right = 184.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 0, 30 )
+text = "MODS"
+
+[node name="Discord" type="TextureButton" parent="Title"]
+margin_left = 888.0
+margin_top = 664.0
+margin_right = 944.0
+margin_bottom = 720.0
+texture_normal = ExtResource( 11 )
+expand = true
+stretch_mode = 5
+
+[node name="GitHub" type="TextureButton" parent="Title"]
+margin_left = 968.0
+margin_top = 664.0
+margin_right = 1024.0
+margin_bottom = 712.0
+texture_normal = ExtResource( 6 )
+expand = true
+stretch_mode = 5
+
+[node name="Godot" type="TextureButton" parent="Title"]
+margin_left = 1048.0
+margin_top = 664.0
+margin_right = 1096.0
+margin_bottom = 712.0
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
+
+[node name="Languages" parent="Title" instance=ExtResource( 9 )]
+margin_right = 1239.0
+margin_bottom = 680.0
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Autosave" type="Timer" parent="."]
 
 [node name="CollectPanelTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-anims/Fade = SubResource( 13 )
+anims/Fade = SubResource( 15 )
 
 [node name="Ship" type="TextureButton" parent="."]
 visible = false
@@ -713,13 +655,10 @@ margin_top = 4.0
 margin_right = 1276.0
 margin_bottom = 36.0
 shortcut_in_tooltip = false
-shortcut = SubResource( 15 )
+shortcut = SubResource( 17 )
 texture_normal = ExtResource( 3 )
 expand = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
@@ -727,10 +666,20 @@ layer = -1
 [node name="Stars" type="Node2D" parent="Stars"]
 
 [node name="Sprite" type="Sprite" parent="Stars/Stars"]
-material = SubResource( 16 )
+material = SubResource( 18 )
 position = Vector2( 1064.25, 171.865 )
 scale = Vector2( 0.725823, 0.725823 )
 texture = ExtResource( 32 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="WhiteStars" type="Node2D" parent="Stars"]
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Stars"]
+anims/RESET = SubResource( 19 )
+anims/StarFade = SubResource( 20 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 640, 360 )
@@ -738,43 +687,30 @@ current = true
 
 [node name="Screenshake" parent="Camera2D" instance=ExtResource( 36 )]
 
+[node name="MusicTween" type="Tween" parent="."]
+
+[node name="MMTimer" type="Timer" parent="."]
+wait_time = 0.5
+
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
+[connection signal="animation_finished" from="UI/Panel/AnimationPlayer" to="." method="_on_PanelAnimationPlayer_animation_finished"]
 [connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
-[connection signal="pressed" from="Title/GitHub/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://github.com/Apple0726/helixteus-3" ]]
-[connection signal="pressed" from="Title/Godot/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://godotengine.org/" ]]
-[connection signal="pressed" from="Title/Discord/Button" to="." method="_on_Title_Button_pressed" binds= [ "https://discord.com/invite/gDHcDA3" ]]
-[connection signal="mouse_entered" from="Title/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "en" ]]
-[connection signal="mouse_exited" from="Title/Languages/en" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Title/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
-[connection signal="mouse_exited" from="Title/Languages/zh" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
-[connection signal="mouse_entered" from="Title/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
-[connection signal="mouse_exited" from="Title/Languages/de" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Title/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "es" ]]
-[connection signal="mouse_exited" from="Title/Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Title/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
-[connection signal="mouse_exited" from="Title/Languages/fr" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Title/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "it" ]]
-[connection signal="mouse_exited" from="Title/Languages/it" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Title/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "ko" ]]
-[connection signal="mouse_exited" from="Title/Languages/ko" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
-[connection signal="mouse_entered" from="Title/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "sv" ]]
-[connection signal="mouse_exited" from="Title/Languages/sv" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
-[connection signal="mouse_exited" from="Title/Languages/ru" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Title/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="pressed" from="Title/Menu/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="mouse_entered" from="Title/Discord" to="." method="_on_Discord_mouse_entered"]
+[connection signal="mouse_exited" from="Title/Discord" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/Discord" to="." method="_on_Discord_pressed"]
+[connection signal="mouse_entered" from="Title/GitHub" to="." method="_on_GitHub_mouse_entered"]
+[connection signal="mouse_exited" from="Title/GitHub" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="mouse_entered" from="Title/Godot" to="." method="_on_Godot_mouse_entered"]
+[connection signal="mouse_exited" from="Title/Godot" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Title/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]
@@ -784,3 +720,5 @@ current = true
 [connection signal="mouse_entered" from="Settings/Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="Settings/Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="Settings/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="animation_finished" from="Stars/AnimationPlayer" to="." method="_on_StarFade_animation_finished"]
+[connection signal="timeout" from="MMTimer" to="." method="_on_MMTimer_timeout"]

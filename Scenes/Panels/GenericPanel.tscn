@@ -74,6 +74,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="CheckBox" type="CheckBox" parent="VBox"]
+visible = false
+margin_top = 4.0
+margin_right = 976.0
+margin_bottom = 32.0
+
 [node name="HBox" type="Control" parent="VBox"]
 margin_top = 4.0
 margin_right = 976.0
@@ -81,12 +87,10 @@ margin_bottom = 472.0
 size_flags_vertical = 3
 
 [node name="ItemInfo" type="Panel" parent="VBox/HBox"]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 656.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Name" type="Label" parent="VBox/HBox/ItemInfo"]
 anchor_right = 1.0
@@ -96,9 +100,6 @@ text = "a"
 align = 1
 valign = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo"]
 anchor_right = 1.0
@@ -125,14 +126,7 @@ margin_bottom = 192.0
 rect_clip_content = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "a
-a
-a
-a
-a
-a
-a
-"
+bbcode_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -148,10 +142,10 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo/VBox/Costs"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 5.0
-margin_bottom = 5.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
 
 [node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox"]
 margin_top = 382.0
@@ -195,10 +189,10 @@ __meta__ = {
 }
 
 [node name="Items" type="GridContainer" parent="VBox/HBox/Items"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 659.0
-margin_bottom = 5.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 654.0
+margin_bottom = 10.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 5
 custom_constants/hseparation = 5

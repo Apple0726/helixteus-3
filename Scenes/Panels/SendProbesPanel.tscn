@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/SendProbesPanel.gd" type="Script" id=5]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
@@ -150,7 +151,6 @@ __meta__ = {
 }
 
 [node name="TP" type="Panel" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 32.0
@@ -549,7 +549,58 @@ margin_top = 1.0
 margin_right = 654.0
 margin_bottom = 25.0
 
+[node name="age" type="HBoxContainer" parent="TP/VBox"]
+margin_top = 295.0
+margin_right = 840.0
+margin_bottom = 321.0
+custom_constants/separation = 10
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/age"]
+margin_right = 300.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 300, 0 )
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/age"]
+margin_left = 310.0
+margin_right = 560.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 250, 0 )
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/age"]
+margin_left = 570.0
+margin_right = 644.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 70, 0 )
+text = "1"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/age"]
+margin_left = 654.0
+margin_top = 1.0
+margin_right = 654.0
+margin_bottom = 25.0
+
+[node name="TierDistribution" type="TextureButton" parent="TP/VBox/age"]
+margin_left = 664.0
+margin_right = 680.0
+margin_bottom = 26.0
+texture_normal = ExtResource( 2 )
+
 [node name="antimatter" type="HBoxContainer" parent="TP/VBox"]
+visible = false
 margin_top = 295.0
 margin_right = 840.0
 margin_bottom = 321.0
@@ -586,50 +637,6 @@ caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="Unit" type="Label" parent="TP/VBox/antimatter"]
-margin_left = 654.0
-margin_top = 1.0
-margin_right = 654.0
-margin_bottom = 25.0
-
-[node name="universe_value" type="HBoxContainer" parent="TP/VBox"]
-margin_top = 328.0
-margin_right = 840.0
-margin_bottom = 354.0
-custom_constants/separation = 10
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/universe_value"]
-margin_right = 300.0
-margin_bottom = 26.0
-rect_min_size = Vector2( 300, 0 )
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/universe_value"]
-margin_left = 310.0
-margin_right = 560.0
-margin_bottom = 26.0
-rect_min_size = Vector2( 250, 0 )
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/universe_value"]
-margin_left = 570.0
-margin_right = 644.0
-margin_bottom = 26.0
-rect_min_size = Vector2( 70, 0 )
-text = "1"
-caret_blink = true
-caret_blink_speed = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/universe_value"]
 margin_left = 654.0
 margin_top = 1.0
 margin_right = 654.0
@@ -710,14 +717,16 @@ __meta__ = {
 [connection signal="mouse_exited" from="TP/VBox/time_speed/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/time_speed/HSlider" to="." method="_on_TP_value_changed" binds= [ "time_speed" ]]
 [connection signal="text_changed" from="TP/VBox/time_speed/Label2" to="." method="_on_Label2_text_changed" binds= [ "time_speed" ]]
+[connection signal="mouse_entered" from="TP/VBox/age/Label" to="." method="_on_Label_mouse_entered" binds= [ "AGE_OF_THE_UNIVERSE_DESC" ]]
+[connection signal="mouse_exited" from="TP/VBox/age/Label" to="." method="_on_mouse_exited"]
+[connection signal="value_changed" from="TP/VBox/age/HSlider" to="." method="_on_TP_value_changed" binds= [ "age" ]]
+[connection signal="text_changed" from="TP/VBox/age/Label2" to="." method="_on_Label2_text_changed" binds= [ "age" ]]
+[connection signal="mouse_entered" from="TP/VBox/age/TierDistribution" to="." method="_on_TierDistribution_mouse_entered"]
+[connection signal="mouse_exited" from="TP/VBox/age/TierDistribution" to="." method="_on_TierDistribution_mouse_exited"]
 [connection signal="mouse_entered" from="TP/VBox/antimatter/Label" to="." method="_on_Label_mouse_entered" binds= [ "ANTIMATTER_DESC" ]]
 [connection signal="mouse_exited" from="TP/VBox/antimatter/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/antimatter/HSlider" to="." method="_on_TP_value_changed" binds= [ "antimatter" ]]
 [connection signal="text_changed" from="TP/VBox/antimatter/Label2" to="." method="_on_Label2_text_changed" binds= [ "antimatter" ]]
-[connection signal="mouse_entered" from="TP/VBox/universe_value/Label" to="." method="_on_Label_mouse_entered" binds= [ "UNIVERSE_VALUE_DESC" ]]
-[connection signal="mouse_exited" from="TP/VBox/universe_value/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/universe_value/HSlider" to="." method="_on_TP_value_changed" binds= [ "universe_value" ]]
-[connection signal="text_changed" from="TP/VBox/universe_value/Label2" to="." method="_on_Label2_text_changed" binds= [ "universe_value" ]]
 [connection signal="mouse_entered" from="TP/Points" to="." method="_on_Points_mouse_entered"]
 [connection signal="mouse_exited" from="TP/Points" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]

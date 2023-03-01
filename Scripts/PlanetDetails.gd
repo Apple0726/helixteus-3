@@ -135,7 +135,6 @@ func make_pie_chart(arr:Array, name:String):
 func remove_pie_chart(_name:String):
 	if $ScrollContainer/VBoxContainer.has_node(_name):
 		var node = $ScrollContainer/VBoxContainer.get_node(_name)
-		$ScrollContainer/VBoxContainer.remove_child(node)
 		node.queue_free()
 
 func on_crust_exit():
@@ -208,7 +207,6 @@ func _on_Atmosphere_mouse_entered():
 	game.show_tooltip(tooltip)
 
 func _on_Atmosphere_mouse_exited():
-	yield(get_tree().create_timer(0), "timeout")
 	if not atm_always_visible:
 		remove_pie_chart(tr("ATMOSPHERE_COMPOSITION"))
 	game.hide_tooltip()

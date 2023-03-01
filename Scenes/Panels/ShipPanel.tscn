@@ -22,9 +22,6 @@ margin_right = 512.0
 margin_bottom = 296.0
 theme = ExtResource( 7 )
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 6 )]
 
@@ -35,27 +32,24 @@ rect_min_size = Vector2( 0, 38 )
 text = "SHIPS"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="Grid" type="GridContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 8.0
 margin_top = 96.0
+margin_right = -8.0
+margin_bottom = -4.0
 custom_constants/vseparation = -2
 custom_constants/hseparation = -2
 columns = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Panel1" parent="GridContainer" instance=ExtResource( 5 )]
-margin_right = 513.0
-margin_bottom = 498.0
+[node name="Panel1" parent="Grid" instance=ExtResource( 5 )]
+margin_right = 505.0
+margin_bottom = 494.0
 victory_screen = false
 
-[node name="Panel2" parent="GridContainer" instance=ExtResource( 5 )]
+[node name="Panel2" parent="Grid" instance=ExtResource( 5 )]
 visible = false
 margin_left = 531.0
 margin_right = 1064.0
@@ -63,7 +57,7 @@ margin_bottom = 496.0
 victory_screen = false
 id = 1
 
-[node name="Panel3" parent="GridContainer" instance=ExtResource( 5 )]
+[node name="Panel3" parent="Grid" instance=ExtResource( 5 )]
 visible = false
 margin_left = 531.0
 margin_right = 1064.0
@@ -71,7 +65,7 @@ margin_bottom = 496.0
 victory_screen = false
 id = 2
 
-[node name="Panel4" parent="GridContainer" instance=ExtResource( 5 )]
+[node name="Panel4" parent="Grid" instance=ExtResource( 5 )]
 visible = false
 margin_left = 531.0
 margin_right = 1064.0
@@ -83,9 +77,13 @@ id = 3
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 88.0
-margin_right = 0.0
-margin_bottom = 0.0
+margin_left = 8.0
+margin_top = 96.0
+margin_right = -8.0
+margin_bottom = -8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Upgrade" parent="." instance=ExtResource( 13 )]
 visible = false
@@ -98,8 +96,10 @@ margin_bottom = 0.0
 [node name="Panel" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 8.0
 margin_top = 40.0
-margin_bottom = -632.0
+margin_right = -8.0
+margin_bottom = -504.0
 rect_min_size = Vector2( 0, 48 )
 mouse_filter = 1
 __meta__ = {
@@ -113,20 +113,15 @@ anchor_bottom = 0.5
 margin_top = -12.0
 margin_bottom = 12.0
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CheckBox" type="CheckBox" parent="Panel"]
 anchor_bottom = 1.0
-margin_left = 40.0
-margin_right = 290.0
+margin_left = 20.0
+margin_right = 270.0
+margin_bottom = 4.0
 theme = ExtResource( 7 )
 custom_constants/hseparation = 11
 text = "SHOW_WEAPON_XPS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="DriveButton" type="TextureButton" parent="Panel"]
 anchor_left = 1.0
@@ -190,6 +185,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SpaceportTimer" type="Timer" parent="."]
+
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="toggled" from="Panel/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="mouse_entered" from="Panel/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
@@ -204,3 +201,4 @@ __meta__ = {
 [connection signal="mouse_entered" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/UpgradeButton" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_pressed"]
+[connection signal="timeout" from="SpaceportTimer" to="." method="_on_SpaceportTimer_timeout"]

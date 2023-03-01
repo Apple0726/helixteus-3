@@ -2,6 +2,7 @@ extends "Panel.gd"
 
 var tile
 onready var storage_txt = $Control/HBox/AmountInStorage
+onready var time_txt = $Control/TimeRemaining
 onready var amount_produced_txt = $Control/AmountProduced
 var ratio:float
 var bldg_type:String
@@ -20,14 +21,13 @@ func _on_HSlider_value_changed(value):
 	refresh_values()
 
 func refresh_values():
-	if input_type in ["mats", "mets"]:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value), input_unit]
-	else:
-		$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value), input_unit]
+	$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value, true), input_unit]
 	if output_type in ["mats", "mets"]:
-		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(Helper.clever_round($Control/HBox/HSlider.value * ratio)), output_unit]
+		$Control/AmountProduced.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value * ratio, true), output_unit]
 	else:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round($Control/HBox/HSlider.value * ratio)), output_unit]
+	var spd = tile.bldg.path_1_value * game.u_i.time_speed * Helper.get_IR_mult(tile.bldg.name)
+	time_txt.text = Helper.time_to_str($Control/HBox/HSlider.value * ratio / spd * 1000.0)
 	
 func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
@@ -41,7 +41,7 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 			ratio = 1 / 15.0
 			$Title.text = tr("GF_NAME")
 		"SE":
-			ratio = 40.0
+			ratio = 40.0 * Helper.get_IR_mult("SE")
 			$Title.text = tr("SE_NAME")
 		_:
 			ratio = 0.0
@@ -113,7 +113,7 @@ func _on_Start_pressed():
 		tile.bldg.erase("qty2")
 		_on_HSlider_value_changed($Control/HBox/HSlider.value)
 		refresh2(bldg_type, input, output, input_type, output_type)
-	else:
+	elif $Control/HBox/HSlider.value > 0:
 		var rsrc = $Control/HBox/HSlider.value
 		var rsrc_to_deduct = {}
 		rsrc_to_deduct[input] = rsrc
@@ -137,12 +137,10 @@ func _process(delta):
 		set_process(false)
 		return
 	var prod_i = Helper.get_prod_info(tile)
-	if input_type in ["mats", "mets"]:
-		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
-	else:
-		storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
+	storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
+	time_txt.text = Helper.time_to_str(prod_i.qty_left / prod_i.spd * tile.bldg.ratio * 1000.0)
 	if output_type in ["mats", "mets"]:
-		amount_produced_txt.text = "%s %s" % [Helper.format_num(Helper.clever_round(prod_i.qty_made)), output_unit]
+		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made, true), output_unit]
 	else:
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(round(prod_i.qty_made)), output_unit]
 

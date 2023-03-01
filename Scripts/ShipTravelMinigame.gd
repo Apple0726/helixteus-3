@@ -1,6 +1,6 @@
 extends Control
 
-onready var star_scene = preload("res://Scenes/Decoratives/Star.tscn")
+onready var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
 onready var bullet_texture = preload("res://Graphics/Misc/bullet.png")
 
 onready var game = get_node("/root/Game")
@@ -38,21 +38,22 @@ func _ready():
 	tween.start()
 
 	for i in 100: #number of stars to render
-		var star = star_scene.instance()
-		star.scale *= rand_range(0.02, 0.05)
+		var star = Sprite.new()
+		star.texture = star_texture
+		star.scale *= rand_range(0.15, 0.25)
 		star.rotation = rand_range(0, 2 * PI)
 		add_child(star)
 		star.position.x = rand_range(0, 1280)
 		star.position.y = rand_range(0, 720)
 		star.add_to_group("stars")
-	if not game or game.help.STM:
+	if not game or game.help.has("STM"):
 		if lv % 4 == 0:
 			fn_to_call = "graph_pattern"
 		else:
 			fn_to_call = "pattern_%s" % pattern
 		$Help.visible = true
 		show_help(tr("MOVE_SHIP_WITH_MOUSE"))
-	if game and not game.help.STM:
+	if game and not game.help.has("STM"):
 		pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 		if lv % 4 == 0:
 			graph_pattern()
@@ -77,6 +78,7 @@ func hide_help():
 	help_tween.start()
 	$Timer.paused = false
 	if fn_to_call != "":
+		#pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
 		if lv % 4 == 0:
 			graph_pattern()
 		else:
@@ -89,7 +91,7 @@ func _on_Back_pressed():
 	game.STM_lv = lv
 	game.ships_travel_start_date -= max(0, secs_elapsed * 1000 - penalty_time)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	game.switch_view("a")
+	game.switch_view("system")
 
 var mouse_pos:Vector2 = Vector2.ZERO
 func _input(event):
@@ -310,14 +312,13 @@ func _process(delta):
 	if not game or move_ship_inst:
 		ship.position = m_pos
 	else:
-		ship.position = ship.position.move_toward(m_pos, ship.position.distance_to(m_pos) / 6.0)
+		ship.position = ship.position.move_toward(m_pos, ship.position.distance_to(m_pos) / 6.0 * delta * 60)
 	point.position = m_pos
 	acc_time.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0, secs_elapsed * 1000 - penalty_time))]
 	for star in get_tree().get_nodes_in_group("stars"):
-		star.position.x -= star.scale.x * 20
+		star.position.x -= star.scale.x * 10
 		if star.position.x < -5:
 			star.position.x = 1285
-
 	for bullet in get_tree().get_nodes_in_group("bullet_%s" % pattern):
 		bullet_data[bullet.name].delay -= delta
 		if bullet_data[bullet.name].delay < 0:
@@ -329,7 +330,6 @@ func _process(delta):
 			hit_test(bullet)
 			if data.remove:
 				bullet.remove_from_group("bullet_%s" % pattern)
-				remove_child(bullet)
 				bullet.queue_free()
 				if get_tree().get_nodes_in_group("bullet_%s" % pattern).empty():
 					inc_combo()
@@ -344,7 +344,7 @@ func _process(delta):
 							fn_to_call = "pattern_%s" % pattern
 							if pattern == 4:
 								go_up_lv()
-								game.help.STM = false
+								game.help.erase("STM")
 							else:
 								show_help(tr("STM_AFTER_PATTERN_%s" % [pattern - 1]))
 						else:
@@ -363,7 +363,7 @@ func inc_combo():
 func hit_test(bullet):
 	if red_flash.modulate.a <= 0 and Geometry.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
 		red_flash.modulate.a = 0.3 
-		penalty_time += 6000 #miliseconds removed when hit
+		penalty_time += 6000 * (1 + (game.MUs.STMB - 1) * 0.15) #miliseconds removed when hit
 		got_hit = true
 		no_hit_combo = 0
 

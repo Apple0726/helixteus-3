@@ -30,9 +30,9 @@ func e(n, e):
 
 func _on_SpinBox_value_changed(value):
 	if probe_tier == 0:
-		costs = {"money":e(2, 11), "nanocrystal":2700000}
+		costs = {"money":2e12, "nanocrystal":2.7e6}
 	elif probe_tier == 1:
-		costs = {"money":e(5, 18), "nanocrystal":e(4, 13)}
+		costs = {"money":5e18, "nanocrystal":e(4, 13)}
 	for cost in costs:
 		costs[cost] *= value
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs, true, true)
@@ -58,8 +58,6 @@ func _on_Construct_pressed():
 func _on_ViewPlanet_pressed():
 	game.toggle_panel(self)
 	if probe_tier == 1:
-		game.c_p_g = id
-		game.c_p = l_id
-		game.switch_view("planet")
+		game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})
 
 

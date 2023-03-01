@@ -4,6 +4,7 @@ onready var game = get_node("/root/Game")
 export var victory_screen = true
 export var id:int
 var show_weapon_XPs:bool
+var tween
 
 func _ready():
 	$Bullet/Label.visible = victory_screen
@@ -15,12 +16,36 @@ func _ready():
 	$Ship.texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 
 func set_visibility():
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.set_parallel(true)
 	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
-	$Bullet.visible = show_weapon_XPs
-	$Laser.visible = show_weapon_XPs
-	$Bomb.visible = show_weapon_XPs
-	$Light.visible = show_weapon_XPs
-	$Stats.visible = not show_weapon_XPs
+	if show_weapon_XPs:
+		tween.tween_property($Stats, "modulate", Color(1, 1, 1, 0), 0.15)
+		$Bullet.visible = true
+		$Laser.visible = true
+		$Bomb.visible = true
+		$Light.visible = true
+		if not victory_screen:
+			tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 1), 0.15)
+			tween.tween_property($Laser, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			tween.tween_property($Light, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
+			yield(tween, "finished")
+			$Stats.visible = false
+	else:
+		$Stats.visible = true
+		tween.tween_property($Stats, "modulate", Color(1, 1, 1, 1), 0.15)
+		tween.tween_property($Bullet, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Laser, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 0), 0.15)
+		tween.tween_property($Light, "modulate", Color(1, 1, 1, 0), 0.15)
+		yield(tween, "finished")
+		$Bullet.visible = false
+		$Laser.visible = false
+		$Bomb.visible = false
+		$Light.visible = false
 
 func refresh():
 	if id >= len(game.ship_data):
@@ -32,13 +57,13 @@ func refresh():
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 7 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [weapon_data.XP, weapon_data.XP_to_lv]
-	$XP/Label2.text = "%s / %s" % [Helper.format_num(game.ship_data[id].XP), Helper.format_num(game.ship_data[id].XP_to_lv)]
+		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
+	$XP/Label2.text = "%s / %s" % [Helper.format_num(round(game.ship_data[id].XP)), Helper.format_num(game.ship_data[id].XP_to_lv)]
 	set_visibility()
 	$Stats/HP.text = Helper.format_num(game.ship_data[id].total_HP * game.ship_data[id].HP_mult)
 	$Stats/Atk.text = Helper.format_num(game.ship_data[id].atk * game.ship_data[id].atk_mult)

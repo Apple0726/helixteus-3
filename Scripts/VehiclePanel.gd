@@ -1,14 +1,15 @@
 extends "Panel.gd"
 
-var HP_icon = load("res://Graphics/Icons/HP.png")
-var atk_icon = load("res://Graphics/Icons/atk.png")
-var def_icon = load("res://Graphics/Icons/def.png")
-var inv_icon = load("res://Graphics/Icons/Inventory.png")
-var spd_icon = load("res://Graphics/Icons/eva.png")
+var HP_icon = preload("res://Graphics/Icons/HP.png")
+var atk_icon = preload("res://Graphics/Icons/atk.png")
+var def_icon = preload("res://Graphics/Icons/def.png")
+var inv_icon = preload("res://Graphics/Icons/Inventory.png")
+var spd_icon = preload("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var rover_over_id:int = -1
 var probe_over_id:int = -1
+var fighter_over_id:int = -1
 var probe_time_bars:Array = []
 
 func _ready():
@@ -29,21 +30,23 @@ func _input(event):
 				probe_over_id = -1
 				game.hide_tooltip()
 				refresh()
+		elif fighter_over_id != -1:
+			game.fighter_data[fighter_over_id] = null
+			fighter_over_id = -1
+			game.hide_adv_tooltip()
+			refresh()
 
 func refresh():
 	$Panel.visible = game.science_unlocked.has("FG")
-	$Probes.visible = game.universe_data[game.c_u].lv >= 50
-	var hbox = $Rovers/HBox
+	$Probes.visible = game.universe_data[game.c_u].lv >= 60
+	var hbox = $Rovers/ScrollContainer/HBox
 	var hbox2 = $Panel/GridContainer
 	var hbox3 = $Probes/ScrollContainer/GridContainer
 	for rov in hbox.get_children():
-		hbox.remove_child(rov)
 		rov.queue_free()
 	for fgh in hbox2.get_children():
-		hbox2.remove_child(fgh)
 		fgh.queue_free()
 	for probe in hbox3.get_children():
-		hbox3.remove_child(probe)
 		probe.queue_free()
 	probe_time_bars.clear()
 	for i in len(game.rover_data):
@@ -53,26 +56,42 @@ func refresh():
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()
-			rover.texture_normal = load("res://Graphics/Cave/Rover.png")
+			rover.expand = true
+			rover.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			rover.rect_min_size.x = 200
+			rover.rect_min_size.y = 200
+			if rov.get("MK", 1) == 2:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover2.png")
+			elif rov.get("MK", 1) == 3:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover3.png")
+			else:
+				rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
 			rover.set_anchors_and_margins_preset(Control.PRESET_CENTER)
 			hbox.add_child(rover)
 			rover.connect("mouse_entered", self, "on_rover_enter", [rov, i])
 			rover.connect("mouse_exited", self, "on_rover_exit")
 			rover.connect("pressed", self, "on_rover_press", [rov, i])
 	for i in len(game.fighter_data):
+		if not game.fighter_data[i]:
+			continue
 		var fighter_info = game.fighter_data[i]
 		var fighter = TextureButton.new()
 		var fighter_num = Label.new()
 		fighter_num.text = "x %s" % [fighter_info.number]
 		fighter_num.align = Label.ALIGN_CENTER
 		fighter_num.rect_position = Vector2(110, 40)
-		fighter.texture_normal = load("res://Graphics/Ships/Fighter.png")
+		if not fighter_info.has("tier"):#Save migration
+			fighter_info.tier = 0
+		if fighter_info.tier == 0:
+			fighter.texture_normal = preload("res://Graphics/Ships/Fighter.png")
+		elif fighter_info.tier == 1:
+			fighter.texture_normal = preload("res://Graphics/Ships/Fighter2.png")
 		fighter.expand = true
 		fighter.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		fighter.rect_min_size = Vector2(160, 60)
 		fighter.add_child(fighter_num)
 		hbox2.add_child(fighter)
-		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info])
+		fighter.connect("mouse_entered", self, "on_fighter_enter", [fighter_info, i])
 		fighter.connect("mouse_exited", self, "on_fighter_exit")
 		fighter.connect("pressed", self, "on_fighter_press", [i])
 	var probe_num:int = 0
@@ -106,20 +125,24 @@ func refresh():
 func on_rover_enter(rov:Dictionary, rov_id:int):
 	rover_over_id = rov_id
 	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [Helper.format_num(rov.HP), Helper.format_num(rov.atk), Helper.format_num(rov.def), Helper.format_num(rov.weight_cap), Helper.clever_round(rov.spd)]
-	if game.help.rover_shortcuts:
+	if game.help.has("rover_shortcuts"):
 		rover_has_items = false
 		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]
 		for inv in rov.inventory:
-			if inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
+			if not inv.empty() and inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				rover_has_items = true
 				break
+		game.help_str = "rover_shortcuts"
 		if rover_has_items:
-			game.help_str = "rover_shortcuts"
 			st += "\n%s\n%s" % [tr("SHIFT_CLICK_TO_LOOT_ROVER"), tr("HIDE_SHORTCUTS")]
 	game.show_adv_tooltip(st, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
 
-func on_fighter_enter(fighter_info:Dictionary):
-	game.show_tooltip("%s: %s\n%s" % [tr("FLEET_STRENGTH"), fighter_info.strength, tr("CLICK_TO_VIEW_GALAXY")])
+func on_fighter_enter(fighter_info:Dictionary, fighter_id:int):
+	fighter_over_id = fighter_id
+	var st = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.format_num(fighter_info.strength, true)]
+	if game.help.has("rover_shortcuts"):
+		st += "\n%s\n%s" % [tr("CLICK_TO_VIEW_GALAXY"), tr("PRESS_X_TO_DESTROY")]
+	game.show_tooltip(st)
 
 func on_probe_enter(tier:int, probe_id:int):
 	probe_over_id = probe_id
@@ -135,15 +158,16 @@ func on_fighter_exit():
 
 func on_fighter_press(i:int):
 	_on_close_button_pressed()
-	game.switch_view("galaxy", false, "set_to_fighter_coords", [i])
+	if game.fighter_data[i].tier == 0:
+		game.switch_view("galaxy", {"fn":"set_to_fighter_coords", "fn_args":[i]})
+	elif game.fighter_data[i].tier == 1:
+		game.switch_view("cluster", {"fn":"set_to_fighter_coords", "fn_args":[i]})
 
 func on_probe_press(tier:int):
 	_on_close_button_pressed()
 	if tier == 0:
-		game.switch_view("supercluster", false, "set_to_probe_coords", [0])
-	elif tier == 1:
 		game.switch_view("universe")
-	elif tier == 2:
+	else:
 		game.switch_view("dimension")
 
 func on_rover_exit():
@@ -156,26 +180,31 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 		if rover_has_items:
 			var remaining:bool = false
 			for i in len(rov.inventory):
-				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining" and rov.inventory[i].has("name"):
+				if rov.inventory[i].empty():
+					continue
+				if rov.inventory[i].type != "rover_weapons" and rov.inventory[i].type != "rover_mining":
 					if rov.inventory[i].name == "minerals":
 						rov.inventory[i].num = Helper.add_minerals(rov.inventory[i].num).remainder
 						if rov.inventory[i].num <= 0:
-							rov.inventory[i] = {"type":""}
+							rov.inventory[i].clear()
 						else:
 							remaining = true
+					elif rov.inventory[i].name == "money":
+						game.money += rov.inventory[i].num
+						rov.inventory[i].clear()
 					else:
 						var remainder:int = game.add_items(rov.inventory[i].name, rov.inventory[i].num)
 						if remainder > 0:
 							remaining = true
 							rov.inventory[i].num = remainder
 						else:
-							rov.inventory[i] = {"type":""}
+							rov.inventory[i].clear()
 			if remaining:
 				game.popup(tr("NOT_ENOUGH_INV_SPACE_COLLECT"), 2)
 			else:
 				game.popup(tr("ITEMS_COLLECTED"), 1.5)
 			game.HUD.refresh()
-	elif game.c_v == "planet":
+	elif game.c_v == "planet" and game.item_to_use.type == "":
 		if tile_id == -1:
 			game.view.obj.rover_selected = rov_id
 			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"), "enter_cave")
@@ -189,6 +218,26 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			else:
 				game.switch_view("ruins")
 			game.toggle_panel(self)
+	elif game.item_to_use.type == "cave":
+		var ok:bool = false
+		for i in len(rov.inventory):
+			if rov.inventory[i].has("name") and rov.inventory[i].name == game.item_to_use.name:
+				rov.inventory[i].num += game.item_to_use.num
+				ok = true
+				break
+			if not rov.inventory[i].has("name"):
+				rov.inventory[i].type = "consumable"
+				rov.inventory[i].name = game.item_to_use.name
+				rov.inventory[i].num = game.item_to_use.num
+				ok = true
+				break
+		if ok:
+			game.remove_items(game.item_to_use.name, game.item_to_use.num)
+			game.item_to_use.num = 0
+			game.update_item_cursor()
+			game.popup(tr("ITEMS_SENT_TO_ROVER"), 2.0)
+		else:
+			game.popup(tr("ROVERS_INV_FULL"), 2.0)
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
@@ -212,22 +261,8 @@ func _on_Timer_timeout():
 		bar.get_node("Bar").value = progress
 		if progress >= 1:
 			if probe.tier == 0:
-				var cluster_data:Array
-				if game.c_sc == 0 and game.c_v in ["supercluster", "cluster"]:
-					cluster_data = game.cluster_data
-					cluster_data[probe.obj_to_discover].visible = true
-				else:
-					cluster_data = game.open_obj("Superclusters", 0)
-					cluster_data[probe.obj_to_discover].visible = true
-					Helper.save_obj("Superclusters", 0, cluster_data)
+				game.u_i.cluster_data[probe.obj_to_discover].visible = true
 				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
-				refresh = true
-			elif probe.tier == 1:
-				if probe.obj_to_discover >= len(game.supercluster_data):
-					game.generate_superclusters(game.c_u)
-				game.supercluster_data[probe.obj_to_discover].visible = true
-				game.popup(tr("SC_DISCOVERED_BY_PROBE"), 3)
-				game.save_sc()
 				refresh = true
 			game.probe_data[i] = null
 	if refresh:

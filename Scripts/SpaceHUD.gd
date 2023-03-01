@@ -2,6 +2,9 @@ extends Control
 onready var game = get_node("/root/Game")
 onready var click_sound = game.get_node("click")
 
+func _ready():
+	$AnimationPlayer.play("MoveButtons")
+
 func _on_Overlay_mouse_entered():
 	game.show_tooltip(tr("OVERLAY") + " (O)\n" + tr("OVERLAY_DESC"))
 
@@ -32,6 +35,10 @@ func _on_Annotate_mouse_entered():
 
 
 func _on_SendFighters_pressed():
+	if game.c_v == "galaxy":
+		game.send_fighters_panel.fighter_type = 0
+	if game.c_v == "cluster":
+		game.send_fighters_panel.fighter_type = 1
 	game.toggle_panel(game.send_fighters_panel)
 
 
@@ -55,3 +62,13 @@ func _on_Gigastructures_mouse_entered():
 
 func _on_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_ElementOverlay_mouse_entered():
+	game.show_tooltip(tr("ELEMENT_OVERLAY") + " (O)\n" + tr("ELEMENT_OVERLAY_DESC"))
+
+
+func _on_ElementOverlay_pressed():
+	game.get_node("UI").move_child(game.element_overlay, game.get_node("UI").get_child_count())
+	game.element_overlay.visible = not game.element_overlay.visible
+	

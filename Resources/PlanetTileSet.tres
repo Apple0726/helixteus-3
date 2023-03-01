@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=13 format=2]
+[gd_resource type="TileSet" load_steps=11 format=2]
 
 [ext_resource path="res://Graphics/Tiles/Empty.jpg" type="Texture" id=1]
 [ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=2]
@@ -9,8 +9,6 @@
 [ext_resource path="res://Graphics/Tiles/7.jpg" type="Texture" id=7]
 [ext_resource path="res://Graphics/Tiles/6.jpg" type="Texture" id=8]
 [ext_resource path="res://Graphics/Tiles/10.jpg" type="Texture" id=9]
-[ext_resource path="res://Resources/Lava.tres" type="Texture" id=10]
-[ext_resource path="res://Graphics/Tiles/diamond_tile.jpg" type="Texture" id=11]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
@@ -128,20 +126,6 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 7/shape_one_way_margin = 0.0
 7/shapes = [  ]
 7/z_index = 0
-8/name = "Lava.tres 8"
-8/texture = ExtResource( 10 )
-8/tex_offset = Vector2( 0, 0 )
-8/modulate = Color( 1, 1, 1, 1 )
-8/region = Rect2( 0, 0, 200, 200 )
-8/tile_mode = 0
-8/occluder_offset = Vector2( 0, 0 )
-8/navigation_offset = Vector2( 0, 0 )
-8/shape_offset = Vector2( 0, 0 )
-8/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-8/shape_one_way = false
-8/shape_one_way_margin = 0.0
-8/shapes = [  ]
-8/z_index = 0
 9/name = "Empty.jpg 9"
 9/texture = ExtResource( 1 )
 9/tex_offset = Vector2( 0, 0 )
@@ -172,17 +156,3 @@ points = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 9/z_index = 0
-10/name = "diamond_tile.jpg 10"
-10/texture = ExtResource( 11 )
-10/tex_offset = Vector2( 0, 0 )
-10/modulate = Color( 1, 1, 1, 1 )
-10/region = Rect2( 0, 0, 200, 200 )
-10/tile_mode = 0
-10/occluder_offset = Vector2( 0, 0 )
-10/navigation_offset = Vector2( 0, 0 )
-10/shape_offset = Vector2( 0, 0 )
-10/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-10/shape_one_way = false
-10/shape_one_way_margin = 0.0
-10/shapes = [  ]
-10/z_index = 0

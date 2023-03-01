@@ -43,9 +43,9 @@ func _downgrade(stat:String):
 		ship.points += 1
 		ship[stat_mult] -= 0.1
 		_refresh()
-		if game.help.downgrade:
+		if game.help.has("downgrade"):
 			game.popup(tr("WHY_DID_YOU_DOWNGRADE"), 1.5)
-			game.help.downgrade = false
+			game.help.erase("downgrade")
 
 func _on_OptionButton_item_selected(i):
 	_refresh()

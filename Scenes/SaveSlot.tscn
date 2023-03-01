@@ -6,9 +6,6 @@
 margin_right = 816.0
 margin_bottom = 40.0
 custom_constants/separation = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button" type="Button" parent="."]
 margin_right = 150.0
@@ -22,6 +19,7 @@ margin_top = 13.0
 margin_right = 295.0
 margin_bottom = 27.0
 rect_min_size = Vector2( 140, 0 )
+mouse_filter = 1
 size_flags_horizontal = 5
 align = 1
 
@@ -46,7 +44,7 @@ margin_left = 679.0
 margin_right = 779.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 100, 40 )
-text = "Export"
+text = "EXPORT"
 
 [node name="Delete" type="TextureButton" parent="."]
 margin_left = 784.0

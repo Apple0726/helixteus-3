@@ -4,6 +4,18 @@ var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
 var save_to_delete:String = ""
 var save_to_export:String = ""
 
+func on_version_over_ok():
+	game.show_tooltip(tr("SAME_VERSION"))
+
+func on_version_over_compatible():
+	game.show_tooltip(tr("VERSION_COMPATIBLE"))
+
+func on_version_over_not_ok():
+	game.show_tooltip(tr("VERSION_INCOMPATIBLE"))
+
+func on_mouse_exit():
+	game.hide_tooltip()
+
 func refresh():
 	for save in $ScrollContainer/VBox.get_children():
 		$ScrollContainer/VBox.remove_child(save)
@@ -25,7 +37,18 @@ func refresh():
 				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir])
 				save.get_node("Export").connect("pressed", self, "on_export", [next_dir])
 				save.get_node("Button").text = next_dir
-				save.get_node("Version")["custom_colors/font_color"] = Color.green
+				if save_info_dict.version in game.COMPATIBLE_SAVES:
+					if save_info_dict.version == game.VERSION:
+						save.get_node("Version").connect("mouse_entered", self, "on_version_over_ok")
+						save.get_node("Version")["custom_colors/font_color"] = Color.green
+					else:
+						save.get_node("Version").connect("mouse_entered", self, "on_version_over_compatible")
+						save.get_node("Version")["custom_colors/font_color"] = Color.yellow
+					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
+				else:
+					save.get_node("Version").connect("mouse_entered", self, "on_version_over_not_ok")
+					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
+					save.get_node("Version")["custom_colors/font_color"] = Color.red
 				var now = OS.get_system_time_msecs()
 				if now - save_created < 86400000 * 2:
 					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
@@ -43,10 +66,19 @@ func refresh():
 
 func on_export(save_str:String):
 	save_to_export = save_str
-	$PopupBackground.visible = true
-	$Export.current_file = save_str
-	$Export.window_title = tr("EXPORT_X") % save_str
-	$Export.popup_centered()
+	if OS.get_name() == "HTML5":
+		export_game("user://%s.hx3" % save_str)
+		var file = File.new()
+		file.open("user://%s.hx3" % save_str, File.READ)
+		var L = file.get_len()
+		var buffer = file.get_buffer(L)
+		file.close()
+		JavaScript.download_buffer(buffer, save_str + ".hx3")
+	else:
+		$PopupBackground.visible = true
+		$Export.current_file = save_str
+		$Export.window_title = tr("EXPORT_X") % save_str
+		$Export.popup_centered()
 
 func on_load(sv:String):
 	if modulate.a == 1:
@@ -80,6 +112,9 @@ func _on_Import_popup_hide():
 
 
 func _on_Export_file_selected(path):
+	export_game(path)
+
+func export_game(path:String = "user://"):
 	var file = File.new()
 	var error = file.open(path, File.WRITE)
 	var error2 = false
@@ -100,14 +135,14 @@ func _on_Export_file_selected(path):
 							error2 = true
 							break
 						else:
-							save_dict.univs.append(export_univ_res.univ_data)
+							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
 					file_name = directory.get_next()
 				if not error2:
 					file.store_var(save_dict)
 					game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 					$PopupBackground.visible = false
 	file.close()
-
+	
 func export_univ(univ_str:String):
 	var error = false
 	var univ_data:Dictionary = {
@@ -125,10 +160,6 @@ func export_univ(univ_str:String):
 		error = true
 	file.close()
 	file = File.new()
-	if file.open("user://%s/%s/supercluster_data.hx3" % [save_to_export, univ_str], File.READ) == OK:
-		univ_data.supercluster_data = file.get_var()
-	else:
-		error = true
 	file.close()
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Caves")
@@ -138,8 +169,6 @@ func export_univ(univ_str:String):
 		error = export_univ_folder(univ_data, univ_str, "Galaxies")
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Planets")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Superclusters")
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Systems")
 	return {"error":error, "univ_data":univ_data}
@@ -182,13 +211,10 @@ func _on_Import_file_selected(path):
 						var univ_file = File.new()
 						if univ_file.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], File.WRITE) == OK:
 							univ_file.store_var(save_dict.univs[i].main)
-						if univ_file.open("user://%s/Univ%s/supercluster_data.hx3" % [final_save_name, i], File.WRITE) == OK:
-							univ_file.store_var(save_dict.univs[i].supercluster_data)
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Galaxies")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Planets")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Superclusters")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Systems")
 						univ_file.close()
 						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)

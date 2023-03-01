@@ -46,7 +46,6 @@ func refresh_overlay():
 			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
 			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
-		#game.get_node("GrayscaleRect").visible = colorblind_btn.pressed and toggle_btn.pressed
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
 
@@ -270,10 +269,11 @@ func _on_Colorblind_toggled(button_pressed):
 
 
 func _on_CheckBox_toggled(button_pressed):
-	if colorblind_btn.pressed and button_pressed:
-		game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
-	else:
-		game.get_node("GrayscaleRect/AnimationPlayer").play_backwards("Fade")
+	if colorblind_btn.pressed:
+		if button_pressed:
+			game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
+		else:
+			game.get_node("GrayscaleRect/AnimationPlayer").play_backwards("Fade")
 	game.overlay_data[game.c_v].visible = button_pressed
 	if game.overlay_data[game.c_v].visible:
 		send_overlay_info(game.overlay_data[game.c_v].overlay)

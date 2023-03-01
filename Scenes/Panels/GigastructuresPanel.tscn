@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=2]
@@ -25,6 +25,38 @@ action = "G"
 [sub_resource type="ShortCut" id=3]
 shortcut = SubResource( 2 )
 
+[sub_resource type="Animation" id=4]
+resource_name = "Fade"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
 [node name="TerraformPanel" type="Panel"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -37,9 +69,6 @@ margin_bottom = 296.0
 rect_pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 6 )
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CloseButton" parent="." instance=ExtResource( 5 )]
 
@@ -81,7 +110,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 10.0
 margin_right = 366.0
 margin_bottom = 435.0
 size_flags_horizontal = 3
@@ -114,26 +143,50 @@ margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 button_text = "MINERAL_STORAGE"
 
-[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 132.0
 margin_right = 356.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
-button_text = "RESEARCH"
+button_text = "ENERGY_STORAGE"
 
-[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 176.0
 margin_right = 356.0
 margin_bottom = 216.0
 rect_min_size = Vector2( 0, 40 )
+button_text = "RESEARCH"
+
+[node name="GalaxyKiller" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 220.0
+margin_right = 356.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 0, 40 )
+button_text = "GALAXY_KILLER"
+
+[node name="TriangulumProbe" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 264.0
+margin_right = 356.0
+margin_bottom = 304.0
+rect_min_size = Vector2( 0, 40 )
 button_text = "TRIANGULUM_PROBE"
 
-[node name="Control" type="Panel" parent="."]
-visible = false
+[node name="Panel" type="Panel" parent="."]
+margin_left = 472.0
+margin_top = 136.0
+margin_right = 1000.0
+margin_bottom = 568.0
+
+[node name="Control" type="Control" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -143,30 +196,61 @@ margin_top = -160.0
 margin_right = -24.0
 margin_bottom = 272.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="GalaxyInfo" type="Label" parent="Control"]
-margin_left = 24.0
+[node name="VBox" type="VBoxContainer" parent="Control"]
+margin_left = 20.0
 margin_top = 16.0
-margin_right = 536.0
-margin_bottom = 100.0
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_right = 520.0
+margin_bottom = 424.0
+custom_constants/separation = 10
 
-[node name="Costs" type="Label" parent="Control"]
-margin_left = 24.0
-margin_top = 112.0
-margin_right = 612.0
-margin_bottom = 136.0
+[node name="GalaxyInfo" type="Label" parent="Control/VBox"]
+margin_right = 500.0
+margin_bottom = 24.0
+autowrap = true
+
+[node name="Costs" type="Label" parent="Control/VBox"]
+margin_top = 34.0
+margin_right = 500.0
+margin_bottom = 58.0
 text = "COSTS"
 autowrap = true
+
+[node name="CostsHBox" type="GridContainer" parent="Control/VBox"]
+margin_top = 68.0
+margin_right = 500.0
+margin_bottom = 68.0
+columns = 3
+
+[node name="ProductionPerSec" type="Label" parent="Control/VBox"]
+margin_top = 78.0
+margin_right = 500.0
+margin_bottom = 102.0
+text = "PRODUCTION_PER_SECOND"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="StoneMM" type="ScrollContainer" parent="Control/VBox"]
+visible = false
+margin_top = 188.0
+margin_right = 500.0
+margin_bottom = 338.0
+rect_min_size = Vector2( 0, 170 )
+
+[node name="GridContainer" type="GridContainer" parent="Control/VBox/StoneMM"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
+columns = 4
+
+[node name="Production" type="VBoxContainer" parent="Control/VBox"]
+margin_top = 112.0
+margin_right = 500.0
+margin_bottom = 212.0
+rect_min_size = Vector2( 0, 100 )
 
 [node name="ProdCostMult" parent="Control" instance=ExtResource( 2 )]
 margin_left = 24.0
@@ -175,35 +259,12 @@ margin_right = 376.0
 margin_bottom = 414.0
 help_text = "PCM_DESC"
 
-[node name="ProductionPerSec" type="Label" parent="Control"]
+[node name="ProdMult" parent="Control" instance=ExtResource( 2 )]
 margin_left = 24.0
-margin_top = 232.0
-margin_right = 612.0
-margin_bottom = 256.0
-text = "PRODUCTION_PER_SECOND"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CostsHBox" type="GridContainer" parent="Control"]
-margin_left = 16.0
-margin_top = 144.0
-margin_right = 56.0
-margin_bottom = 184.0
-columns = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Production" type="VBoxContainer" parent="Control"]
-margin_left = 16.0
-margin_top = 264.0
-margin_right = 56.0
-margin_bottom = 304.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_top = 340.0
+margin_right = 292.0
+margin_bottom = 370.0
+help_text = "GS_PROD_MULT_BY_X"
 
 [node name="Convert" type="Button" parent="Control"]
 anchor_left = 1.0
@@ -217,14 +278,18 @@ margin_bottom = -16.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 3 )
 text = "CONVERT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control"]
+anims/Fade = SubResource( 4 )
+anims/RESET = SubResource( 5 )
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= [ "ME" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= [ "PP" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= [ "MS" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyStorage" to="." method="_on_GS_pressed" binds= [ "B" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= [ "RL" ]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/GalaxyKiller" to="." method="_on_GS_pressed" binds= [ "GK" ]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= [ "TP" ]]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]
+[connection signal="animation_finished" from="Control/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

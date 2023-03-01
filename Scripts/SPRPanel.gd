@@ -11,11 +11,11 @@ var au_mult:float
 var au_int:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.00005},
 								"He":{"Z":2, "energy_cost":4, "difficulty":0.001},
 								"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
 								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
-								"Ne":{"Z":10, "energy_cost":500, "difficulty":2},
+								"Ne":{"Z":10, "energy_cost":90, "difficulty":0.1},
 								"Na":{"Z":11, "energy_cost":12, "difficulty":0.002},
 								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
 								"Ti":{"Z":22, "energy_cost":60, "difficulty":0.02},
@@ -24,7 +24,8 @@ var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.0005},
 								"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
 								"W":{"Z":74, "energy_cost":100000, "difficulty":5},
 								"Os":{"Z":76, "energy_cost":120000, "difficulty":5},
-								"Pu":{"Z":94, "energy_cost":14000000000000, "difficulty":80000},
+								"Pt":{"Z":78, "energy_cost":180000, "difficulty":6},
+								"Pu":{"Z":94, "energy_cost":1.4e16, "difficulty":8e6},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array
@@ -67,7 +68,7 @@ func refresh():
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("SPR")
-	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * tile_num * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
@@ -91,10 +92,12 @@ func refresh():
 		max_value = game.atoms[reaction]
 	else:
 		for particle in game.particles:
+			if not particle in ["proton", "electron", "neutron"]:
+				continue
 			var max_value2 = game.particles[particle] / Z
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
-	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, max_value)
+	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
 	$Control/HSlider.step = $Control/HSlider.max_value / 500.0
 	$Control/HSlider.visible = $Control/HSlider.max_value != 0
 	if $Control3.visible:
@@ -164,7 +167,7 @@ func _on_Transform_pressed():
 		rsrc_to_add.proton = num
 		rsrc_to_add.neutron = num
 		rsrc_to_add.electron = num
-		rsrc_to_add.energy = round((1 - progress) * energy_cost * tile_num / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
+		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
@@ -184,7 +187,7 @@ func _on_Transform_pressed():
 			rsrc_to_deduct[reaction] = rsrc
 		else:
 			rsrc_to_deduct = {"proton":rsrc * Z, "neutron":rsrc * Z, "electron":rsrc * Z}
-		rsrc_to_deduct.energy = round(energy_cost * tile_num * rsrc / au_mult / game.u_i.charge / path_2_value)
+		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / game.u_i.charge / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
@@ -197,7 +200,7 @@ func _on_Transform_pressed():
 		if not tf:
 			for i in len(game.view.obj.rsrcs):
 				if i == game.c_t:
-					game.view.obj.rsrcs[i].get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % reaction)
+					game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Atoms/%s.png" % reaction))
 					break
 		set_text_to_white()
 		set_process(true)
@@ -230,9 +233,9 @@ func _process(delta):
 		atom_dict[reaction] = MM_value
 	MM_dict = {"proton":num, "neutron":num, "electron":num}
 	for hbox in rsrc_nodes_from:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(atom_dict[hbox.name]))]
+		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
 	for hbox in rsrc_nodes_to:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(Helper.clever_round(MM_dict[hbox.name]))]
+		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(MM_dict[hbox.name], true)]
 	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge))
 
 func refresh_time_icon():
@@ -241,7 +244,7 @@ func refresh_time_icon():
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost / tile_num * path_2_value, game.atoms[reaction])
+		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[reaction])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

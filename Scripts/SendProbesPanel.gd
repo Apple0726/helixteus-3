@@ -10,6 +10,7 @@ var obj_to_discover:int = -1
 var undiscovered_obj_num:int = 0
 var dist_mult:float = 1
 var PP:float
+var init_PP:float
 var dist_exp:int
 
 var units:Dictionary = {
@@ -22,8 +23,8 @@ var units:Dictionary = {
 	"dark_energy":"",
 	"difficulty":"",
 	"time_speed":"",
+	"age":"x " + tr("DEFAULT_UNIVERSE_AGE"),
 	"antimatter":"",
-	"universe_value":"",
 	}
 
 var point_distribution:Dictionary = {
@@ -35,8 +36,8 @@ var point_distribution:Dictionary = {
 	"dark_energy":0,
 	"difficulty":0,
 	"time_speed":0,
+	"age":0,
 	"antimatter":0,
-	"universe_value":0,
 	}
 
 
@@ -45,23 +46,24 @@ func _ready():
 	set_polygon(rect_size)
 
 func refresh():
-	$TP/VBox/speed_of_light/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("SPEED_OF_LIGHT")
-	$TP/VBox/planck/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("PLANCK")
-	$TP/VBox/boltzmann/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("BOLTZMANN")
+	for prop in point_distribution.keys():
+		if prop == "age":
+			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("AGE_OF_THE_UNIVERSE")
+		else:
+			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
+		_on_TP_value_changed(float(get_node("TP/VBox/%s/Label2" % prop).text), prop)
 	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
-	$TP/VBox/gravitational/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("GRAVITATIONAL")
-	$TP/VBox/charge/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("CHARGE")
-	$TP/VBox/dark_energy/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DARK_ENERGY")
-	$TP/VBox/difficulty/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
-	$TP/VBox/time_speed/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED")
-	$TP/VBox/antimatter/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("ANTIMATTER")
-	$TP/VBox/universe_value/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("UNIVERSE_VALUE")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
 	if game.viewing_dimension:
-		PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
+		init_PP = get_lv_sum()
+		if game.subjects.dimensional_power.lv >= 5:
+			init_PP += 150
+		PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
+		if len(game.universe_data) == 0 and game.subjects.dimensional_power.lv >= 5:
+			ok = true
 		for probe in game.probe_data:
 			if probe and probe.tier == 2:
 				ok = true
@@ -73,21 +75,27 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-				if prop.name == "universe_value" and game.subjects.dimensional_power.lv > 0:
-					var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
-					prop.get_node("Unit").text = " (x %s) = %s" % [UV_mult, prop.get_node("HSlider").value * UV_mult]
+				if prop.name == "time_speed" and game.subjects.dimensional_power.lv >= 4:
+					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
+					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
-					prop.get_node("HSlider").max_value = ceil(get_lv_sum() / 25.0)
-			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
+					prop.get_node("HSlider").max_value = ceil(init_PP / Data.univ_prop_weights[prop.name] / 2.0)
+					prop.get_node("HSlider").step = 0.1
+					var value_range = prop.get_node("HSlider").max_value - prop.get_node("HSlider").min_value
+					if value_range > 10:
+						prop.get_node("HSlider").step = 0.2
+						if value_range > 30:
+							prop.get_node("HSlider").step = 0.5
+			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 			$NoProbes.visible = false
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
 			$NoProbes.visible = true
-	elif game.c_v == "supercluster":
+	elif game.c_v == "universe":
 		undiscovered_obj_num = 0
-		n = len(game.cluster_data)
-		for cluster in game.cluster_data:
+		n = len(game.u_i.cluster_data)
+		for cluster in game.u_i.cluster_data:
 			if not cluster.visible:
 				undiscovered_obj_num += 1
 		for probe in game.probe_data:
@@ -97,13 +105,13 @@ func refresh():
 					exploring_probe_num += 1
 		dist_exp = n - undiscovered_obj_num + exploring_probe_num
 		dist_mult = pow(1.01, dist_exp)
-		sorted_objs = game.cluster_data.duplicate(true)
+		sorted_objs = game.u_i.cluster_data.duplicate(true)
 		sorted_objs.sort_custom(self, "dist_sort")
 		var exploring_probe_offset:int = exploring_probe_num
 		for i in len(sorted_objs):
 			if not sorted_objs[i].visible:
 				if exploring_probe_offset == 0:
-					obj_to_discover = sorted_objs[i].l_id
+					obj_to_discover = sorted_objs[i].id
 					obj_index = i
 					break
 				else:
@@ -123,46 +131,7 @@ func refresh():
 		refresh_energy()
 		$TP.visible = false
 		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), min(probe_num - exploring_probe_num, undiscovered_obj_num - exploring_probe_num)]
-	elif game.c_v == "universe":
-		undiscovered_obj_num = 0
-		n = len(game.supercluster_data)
-		for sc in game.supercluster_data:
-			if not sc.visible:
-				undiscovered_obj_num += 1
-		for probe in game.probe_data:
-			if probe and probe.tier == 1:
-				probe_num += 1
-				if probe.has("start_date"):
-					exploring_probe_num += 1
-		dist_exp = n - undiscovered_obj_num + exploring_probe_num
-		dist_mult = pow(1.01, dist_exp)
-		sorted_objs = game.supercluster_data.duplicate(true)
-		sorted_objs.sort_custom(self, "dist_sort")
-		var exploring_probe_offset:int = exploring_probe_num
-		for i in len(sorted_objs):
-			if not sorted_objs[i].visible:
-				if exploring_probe_offset == 0:
-					obj_to_discover = sorted_objs[i].id
-					obj_index = i
-					break
-				else:
-					exploring_probe_offset -= 1
-		if probe_num - exploring_probe_num <= 0:
-			$NoProbes.text = tr("NO_MEGA_PROBES")
-			$NoProbes.visible = true
-			$Control.visible = false
-			$Send.visible = false
-			$SendAll.visible = false
-		else:
-			$NoProbes.visible = false
-			$Control.visible = true
-			$Send.visible = true
-			$SendAll.visible = true
-			refresh_energy()
-		$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_U"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_SC_NUM"), undiscovered_obj_num]
-		$TP.visible = false
-		$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), probe_num - exploring_probe_num]
-
+	
 func refresh_energy(send_all:bool = false):
 	fill_costs(dist_mult)
 	var costs2:Dictionary = costs.duplicate(true)
@@ -177,24 +146,30 @@ func dist_sort(a:Dictionary, b:Dictionary):
 	return false
 
 func discover_univ():
-	for probe in game.probe_data:
-		if probe and probe.tier == 2:
-			game.probe_data.erase(probe)
-			break
+	if len(game.universe_data) > 0:
+		for probe in game.probe_data:
+			if probe and probe.tier == 2:
+				game.probe_data.erase(probe)
+				break
 	var id:int = len(game.universe_data)
-	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "supercluster_num":8000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
+	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":2, "sc_mult":0.1}}
 	for prop in $TP/VBox.get_children():
 		if prop.name == "s_b":
 			continue
-		if prop.name == "universe_value":
-			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
-			u_i.universe_value = UV_mult * float(prop.get_node("Label2").text)
-		else:
-			u_i[prop.name] = float(prop.get_node("Label2").text)
+		u_i[prop.name] = float(prop.get_node("Label2").text)
+	if not game.achievement_data.progression.has("new_universe"):
+		game.earn_achievement("progression", "new_universe")
 	game.universe_data.append(u_i)
+	if len(game.universe_data) == 1:
+		game.dimension.set_bonuses()
+		Data.MUs.MV.pw = game.maths_bonus.MUCGF_MV
+		Data.MUs.MSMB.pw = game.maths_bonus.MUCGF_MSMB
+		Data.MUs.AIE.pw = game.maths_bonus.MUCGF_AIE
+		for el in game.PD_panel.bonuses.keys():
+			game.chemistry_bonus[el] = game.PD_panel.bonuses[el]
+	game.dimension.refresh_univs()
 	if visible:
 		game.toggle_panel(self)
-	game.dimension.refresh_univs()
 
 func _on_Send_pressed(send_all:bool = false):
 	if game.viewing_dimension:
@@ -214,17 +189,9 @@ func _on_Send_pressed(send_all:bool = false):
 		if game.check_enough(costs):
 			var curr_time = OS.get_system_time_msecs()
 			var probe_sent:bool = false
-			if game.c_v == "supercluster":
+			if game.c_v == "universe":
 				for probe in game.probe_data:
 					if probe and probe.tier == 0 and not probe.has("start_date"):
-						probe.start_date = curr_time
-						probe.explore_length = costs.time * 1000
-						probe.obj_to_discover = obj_to_discover
-						probe_sent = true
-						break
-			elif game.c_v == "universe":
-				for probe in game.probe_data:
-					if probe and probe.tier == 1 and not probe.has("start_date"):
 						probe.start_date = curr_time
 						probe.explore_length = costs.time * 1000
 						probe.obj_to_discover = obj_to_discover
@@ -240,10 +207,7 @@ func _on_Send_pressed(send_all:bool = false):
 				dist_mult = pow(1.01, dist_exp)
 				if obj_index < n:
 					obj_index += 1
-					if game.c_v == "supercluster":
-						obj_to_discover = sorted_objs[obj_index].l_id
-					elif game.c_v == "universe":
-						obj_to_discover = sorted_objs[obj_index].id
+					obj_to_discover = sorted_objs[obj_index].id
 					refresh_energy(true)
 				else:
 					return false
@@ -262,7 +226,7 @@ func _on_HSlider_value_changed(value):
 
 func e(n, e):
 	return n * pow(10, e)
-
+	
 func _on_TP_value_changed(value:float, prop:String):
 	var text_node:LineEdit = get_node("TP/VBox/%s/Label2" % prop)
 	if get_focus_owner() is HSlider:
@@ -274,14 +238,14 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
-		if prop == "universe_value" and game.subjects.dimensional_power.lv > 0:
-			var UV_mult = 2.0 + game.subjects.dimensional_power.lv * 0.5
-			$TP/VBox/universe_value/Unit.text = " (x %s) = %s" % [UV_mult, value * UV_mult]
+		if prop == "time_speed" and game.subjects.dimensional_power.lv >= 4:
+			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
+			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
-			point_distribution[prop] = (1 / value - 1) * game.physics_bonus[prop]
-	PP = get_lv_sum() + Helper.get_sum_of_dict(point_distribution)
+			point_distribution[prop] = (1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
+	PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0
 	var s_b:float = pow(float($TP/VBox/boltzmann/Label2.text), 4) / pow(float($TP/VBox/planck/Label2.text), 3) / pow(float($TP/VBox/speed_of_light/Label2.text), 2)
@@ -289,16 +253,17 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
-	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), PP]
+	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 
 func get_lv_sum():
-	var lv:int = 0
+	var lv:float = 0
 	for univ in game.universe_data:
-		lv += univ.lv * univ.universe_value
+		lv += pow(univ.lv, 2.2)
+	lv /= 200
 	return lv
 
 func _on_Points_mouse_entered():
-	game.show_tooltip(tr("TP_POINTS_INFO"))
+	game.show_adv_tooltip(tr("TP_POINTS_INFO"), [preload("res://Graphics/Formulas/PPs.png")], 80)
 
 func _on_mouse_exited():
 	game.hide_tooltip()
@@ -325,14 +290,10 @@ func _on_SendAll_pressed():
 
 func fill_costs(_dist_mult:float):
 	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
-	if game.c_v == "supercluster":
-		costs.energy = 50000000000000.0 * slider_factor * _dist_mult
-		costs.Xe = 100000 * slider_factor * _dist_mult
-		costs.time = 1200 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
-	elif game.c_v == "universe":
-		costs.energy = 10000000000000000000.0 * slider_factor * _dist_mult
-		costs.Pu = 10000 * slider_factor * _dist_mult
-		costs.time = 4500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed
+	if game.c_v == "universe":
+		costs.energy = 2e18 * slider_factor * _dist_mult / game.u_i.speed_of_light
+		costs.Pu = 1000 * slider_factor * _dist_mult / game.u_i.speed_of_light
+		costs.time = 1500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed / game.u_i.speed_of_light
 	
 func _on_SendAll_mouse_entered():
 	var costs2:Dictionary = {}
@@ -359,3 +320,19 @@ func _on_SendAll_mouse_entered():
 
 func _on_SendAll_mouse_exited():
 	refresh_energy()
+
+
+func _on_TierDistribution_mouse_entered():
+	var st = tr("UNIQUE_BLDG_TIER_DISTRIBUTION")
+	for tier in range(1, 7):
+		var age = float($TP/VBox/age/Label2.text)
+		var prob:float
+		if tier == 1:
+			prob = max(1 - age * exp(-4 * tier), 0)
+		else:
+			prob = max(min(age * exp(-4 * (tier-1)), 1) - age * exp(-4 * tier), 0)
+		st += "\n" + tr("TIER_X") % tier + ": " + str(Helper.clever_round(100 * prob)) + "%"
+	game.show_tooltip(st)
+
+func _on_TierDistribution_mouse_exited():
+	game.hide_tooltip()

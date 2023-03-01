@@ -2,28 +2,26 @@
 
 [ext_resource path="res://Scenes/PhaseDiagrams/H.gd" type="Script" id=1]
 
-
 [node name="Hydrogen" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
-"_edit_horizontal_guides_": [ 288.0, 240.0, 196.0, 148.0, 100.0, 52.0 ],
-"_edit_vertical_guides_": [ 288.0, 1112.0 ]
+"_edit_vertical_guides_": [ 1112.0 ]
 }
 
 [node name="Solid" type="Polygon2D" parent="."]
 color = Color( 0.682353, 0.866667, 1, 1 )
-polygon = PoolVector2Array( 0, 0, 1112, 0, 1112, 576, 0, 576 )
+polygon = PoolVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
 color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PoolVector2Array( 16, 348, 16, 292, 28, 228, 40, 224, 40, 236, 24, 292 )
+polygon = PoolVector2Array( 12, 240, 16, 160, 28, 144, 28, 164 )
 
 [node name="Gas" type="Polygon2D" parent="."]
 color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PoolVector2Array( 8, 576, 16, 348, 24, 292, 40, 236, 1112, 200, 1112, 576 )
+polygon = PoolVector2Array( 8, 400, 12, 240, 28, 164, 800, 164, 800, 400 )
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 40, 224, 40, 236, 1112, 236, 1112, 180 )
+polygon = PoolVector2Array( 28, 164, 28, 144, 800, 112, 800, 164 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
 color = Color( 0.87451, 0, 1, 1 )
@@ -40,74 +38,3 @@ polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
 [node name="SuperPoint" type="Polygon2D" parent="."]
 color = Color( 0.364706, 0.282353, 0, 1 )
 polygon = PoolVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
-
-[node name="Label" type="Label" parent="."]
-margin_left = 464.0
-margin_top = -24.0
-margin_right = 566.0
-margin_bottom = -10.0
-text = "Temperature (K)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="."]
-margin_left = 4.0
-margin_top = -20.0
-margin_right = 106.0
-margin_bottom = -6.0
-text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label3" type="Label" parent="."]
-margin_left = 1088.0
-margin_top = -24.0
-margin_right = 1132.0
-margin_bottom = -10.0
-text = "1000"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label4" type="Label" parent="."]
-margin_left = -64.0
-margin_top = 240.0
-margin_right = 24.0
-margin_bottom = 271.0
-text = "Pressure (bar)"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label6" type="Label" parent="."]
-margin_left = -36.0
-margin_top = 4.0
-margin_right = 52.0
-margin_bottom = 18.0
-text = "1e6"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label7" type="Label" parent="."]
-margin_left = -40.0
-margin_top = 280.0
-margin_right = -8.0
-margin_bottom = 294.0
-text = "1"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label5" type="Label" parent="."]
-margin_left = -44.0
-margin_top = 568.0
-margin_right = 44.0
-margin_bottom = 582.0
-text = "1e-6"
-__meta__ = {
-"_edit_use_anchors_": false
-}

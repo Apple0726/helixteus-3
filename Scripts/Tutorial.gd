@@ -22,6 +22,8 @@ func begin():
 	if tut_num == 2:
 		game.show.construct_button = true
 		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
+	elif tut_num == 4:
+		game._on_BottomInfo_close_button_pressed()
 	elif tut_num == 10:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"ME", "id":-1, "current":0, "goal":6}
 		game.HUD.refresh()
@@ -30,16 +32,6 @@ func begin():
 		game.HUD.refresh()
 	elif tut_num == 26:
 		game.objective = {"type":game.ObjectiveType.UPGRADE, "id":0, "current":0, "goal":1}
-#		game.show.construct_button = true
-#		game.planet_HUD.get_node("VBoxContainer/Construct").visible = true
-#		game.stats.bldgs_built = 20
-#		game.money = 100000
-#		game.energy = 100000
-#		game.SP = 10000
-#		game.mats.silicon = 30
-#		game.stone.O = 600
-#		for sh in game.show:
-#			game.show[sh] = true
 		game.HUD.refresh()
 	var node = get_node(String(tut_num)) if tut_num <= 26 else get_node("26")
 	var node_label
@@ -77,6 +69,8 @@ func fade(spd:float = 0.4, begin:bool = true):
 	elif tut_num == 6:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":3}
 		game.HUD.refresh()
+	elif tut_num == 8:
+		yield(get_tree().create_timer(1.5), "timeout")
 	elif tut_num == 9:
 		game.objective = {"type":game.ObjectiveType.BUILD, "data":"PP", "id":-1, "current":0, "goal":4}
 		game.HUD.refresh()
@@ -129,7 +123,7 @@ func _on_RLCheckTimer_timeout():
 	for tile in game.tile_data:
 		if not tile:
 			continue
-		if tile.has("bldg") and tile.bldg.name == "RL" and not tile.bldg.is_constructing:
+		if tile.has("bldg") and tile.bldg.name == "RL" and not tile.bldg.has("is_constructing"):
 			begin()
 			$RLCheckTimer.stop()
 

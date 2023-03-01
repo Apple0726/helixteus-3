@@ -1,0 +1,1169 @@
+[gd_scene load_steps=49 format=2]
+
+[ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Achievement.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
+[ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Achievements/Construct.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Megastructures/M_DS_0.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Achievements/ZStar.png" type="Texture" id=10]
+[ext_resource path="res://Graphics/Achievements/HypergiantL.png" type="Texture" id=11]
+[ext_resource path="res://Graphics/Achievements/HypergiantX.png" type="Texture" id=12]
+[ext_resource path="res://Graphics/Achievements/HypergiantV.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Achievements/Hypergiant.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Achievements/HypergiantXX.png" type="Texture" id=15]
+[ext_resource path="res://Graphics/Achievements/20Planets.png" type="Texture" id=16]
+[ext_resource path="res://Graphics/Science/GS.png" type="Texture" id=17]
+[ext_resource path="res://Graphics/Ships/Ship2.png" type="Texture" id=18]
+[ext_resource path="res://Graphics/Ships/Ship1.png" type="Texture" id=19]
+[ext_resource path="res://Graphics/Ships/Ship3.png" type="Texture" id=20]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=21]
+[ext_resource path="res://Graphics/Planets/Other/BG.png" type="Texture" id=22]
+[ext_resource path="res://Graphics/Tiles/cave.png" type="Texture" id=23]
+[ext_resource path="res://Graphics/Items/Pickaxes/stick.png" type="Texture" id=24]
+[ext_resource path="res://Graphics/Ships/Probe2.png" type="Texture" id=25]
+[ext_resource path="res://Graphics/HX/2_4.png" type="Texture" id=26]
+[ext_resource path="res://Graphics/Misc/Physics.png" type="Texture" id=27]
+[ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=28]
+[ext_resource path="res://Graphics/Galaxies/1.png" type="Texture" id=29]
+[ext_resource path="res://Graphics/Metals/nanocrystal.png" type="Texture" id=30]
+[ext_resource path="res://Graphics/Metals/diamond.png" type="Texture" id=31]
+[ext_resource path="res://Graphics/Metals/mythril.png" type="Texture" id=32]
+[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=33]
+[ext_resource path="res://Graphics/Achievements/BStar.png" type="Texture" id=34]
+[ext_resource path="res://Graphics/Achievements/RStar.png" type="Texture" id=35]
+[ext_resource path="res://Graphics/Achievements/OStar.png" type="Texture" id=36]
+[ext_resource path="res://Graphics/Achievements/QStar.png" type="Texture" id=37]
+[ext_resource path="res://Graphics/Icons/volcano_aurora_cave.png" type="Texture" id=38]
+[ext_resource path="res://Graphics/Icons/aurora_cave.png" type="Texture" id=39]
+[ext_resource path="res://Graphics/Icons/volcano_cave.png" type="Texture" id=40]
+[ext_resource path="res://Graphics/Icons/BBB.png" type="Texture" id=41]
+[ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=42]
+[ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=43]
+[ext_resource path="res://Graphics/Tiles/3.jpg" type="Texture" id=44]
+[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=45]
+[ext_resource path="res://Graphics/Buildings/Unique/mineral_replicator.png" type="Texture" id=46]
+[ext_resource path="res://Graphics/Achievements/UniqueBuildings.png" type="Texture" id=47]
+
+[sub_resource type="DynamicFont" id=1]
+size = 14
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 33 )
+
+[node name="StatsPanel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -296.0
+margin_right = 512.0
+margin_bottom = 296.0
+theme = ExtResource( 5 )
+script = ExtResource( 1 )
+
+[node name="CloseButton" parent="." instance=ExtResource( 3 )]
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 38 )
+text = "Achievements & statistics"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+margin_left = 24.0
+margin_top = 48.0
+margin_right = 1000.0
+margin_bottom = 82.0
+custom_constants/separation = 0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Achievements" parent="Tabs" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 488.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+button_text = "ACHIEVEMENTS"
+
+[node name="Statistics" parent="Tabs" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 488.0
+margin_right = 976.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+button_text = "STATISTICS"
+
+[node name="Achievements" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Progress" type="Label" parent="Achievements"]
+margin_left = 48.0
+margin_top = 80.0
+margin_right = 303.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 38 )
+text = "Achievements earned: 31/47"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Achievements"]
+margin_left = 24.0
+margin_top = 128.0
+margin_right = 1000.0
+margin_bottom = 568.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="Achievements/ScrollContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 932.0
+margin_bottom = 522.0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Labels" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox"]
+margin_right = 148.0
+margin_bottom = 512.0
+
+[node name="Money" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_right = 148.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 60 )
+size_flags_vertical = 1
+text = "MONEY"
+align = 2
+valign = 1
+
+[node name="Conquest" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_top = 64.0
+margin_right = 148.0
+margin_bottom = 124.0
+rect_min_size = Vector2( 0, 60 )
+text = "CONQUEST"
+align = 2
+valign = 1
+
+[node name="Construct" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_top = 128.0
+margin_right = 148.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 0, 60 )
+text = "CONSTRUCT"
+align = 2
+valign = 1
+
+[node name="Exploration" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_top = 192.0
+margin_right = 148.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 0, 192 )
+text = "EXPLORATION"
+align = 2
+valign = 1
+
+[node name="Progression" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_top = 388.0
+margin_right = 148.0
+margin_bottom = 448.0
+rect_min_size = Vector2( 0, 60 )
+text = "PROGRESSION"
+align = 2
+valign = 1
+
+[node name="Random" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+margin_top = 452.0
+margin_right = 148.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 0, 60 )
+size_flags_vertical = 6
+text = "RANDOM"
+align = 2
+valign = 1
+
+[node name="Slots" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox"]
+margin_left = 158.0
+margin_right = 922.0
+margin_bottom = 512.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="money" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_right = 764.0
+margin_bottom = 60.0
+columns = 12
+
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1000.0
+
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+06
+
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+09
+
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+12
+
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+15
+
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+18
+
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+21
+
+[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+24
+
+[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 572.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+27
+
+[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_right = 636.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 6 )
+number = 1e+30
+
+[node name="conquest" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_top = 64.0
+margin_right = 764.0
+margin_bottom = 124.0
+columns = 12
+
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 2.0
+
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 10.0
+
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 100.0
+
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 1000.0
+
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 10000.0
+
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 100000.0
+
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 7 )
+number = 1e+06
+
+[node name="fully_conquer_system" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 16 )
+
+[node name="fully_conquer_galaxy" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 572.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 29 )
+
+[node name="fully_conquer_cluster" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_right = 636.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 28 )
+
+[node name="construct" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_top = 128.0
+margin_right = 764.0
+margin_bottom = 188.0
+columns = 12
+
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 100.0
+
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 10000.0
+
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 1e+06
+
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 1e+08
+
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 1e+10
+
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 8 )
+number = 1e+12
+
+[node name="exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_top = 192.0
+margin_right = 764.0
+margin_bottom = 380.0
+columns = 12
+
+[node name="B_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 34 )
+
+[node name="O_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 36 )
+
+[node name="Q_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 37 )
+
+[node name="R_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 35 )
+
+[node name="Z_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 10 )
+
+[node name="HG_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 14 )
+
+[node name="HG_V_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 13 )
+
+[node name="HG_X_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 12 )
+
+[node name="HG_XX_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 572.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 15 )
+
+[node name="HG_L_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_right = 636.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 11 )
+
+[node name="20_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_right = 700.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 16 )
+number = 20.0
+
+[node name="25_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 704.0
+margin_right = 764.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 16 )
+number = 25.0
+
+[node name="30_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 64.0
+margin_right = 60.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+number = 30.0
+
+[node name="35_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 124.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+number = 35.0
+
+[node name="40_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_top = 64.0
+margin_right = 188.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+number = 40.0
+
+[node name="45_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_top = 64.0
+margin_right = 252.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+number = 45.0
+
+[node name="50_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_top = 64.0
+margin_right = 316.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 16 )
+number = 50.0
+
+[node name="diamond_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_top = 64.0
+margin_right = 380.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 31 )
+
+[node name="nanocrystal_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_top = 64.0
+margin_right = 444.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 30 )
+
+[node name="mythril_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_top = 64.0
+margin_right = 508.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 32 )
+
+[node name="reach_floor_8" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_top = 64.0
+margin_right = 572.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 23 )
+number = 8.0
+
+[node name="reach_floor_16" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_top = 64.0
+margin_right = 636.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 23 )
+number = 16.0
+
+[node name="reach_floor_24" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_top = 64.0
+margin_right = 700.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 23 )
+number = 24.0
+
+[node name="reach_floor_32" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 704.0
+margin_top = 64.0
+margin_right = 764.0
+margin_bottom = 124.0
+achievement_icon = ExtResource( 23 )
+number = 32.0
+
+[node name="aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 128.0
+margin_right = 60.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 39 )
+
+[node name="volcano_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 128.0
+margin_right = 124.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 40 )
+
+[node name="volcano_aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_top = 128.0
+margin_right = 188.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 38 )
+
+[node name="find_neon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_top = 128.0
+margin_right = 252.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 42 )
+
+[node name="find_xenon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_top = 128.0
+margin_right = 316.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 43 )
+
+[node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_top = 128.0
+margin_right = 380.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 44 )
+
+[node name="tier_2_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_top = 128.0
+margin_right = 444.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 2.0
+
+[node name="tier_3_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_top = 128.0
+margin_right = 508.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 3.0
+
+[node name="tier_4_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_top = 128.0
+margin_right = 572.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 4.0
+
+[node name="tier_5_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 576.0
+margin_top = 128.0
+margin_right = 636.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 46 )
+number = 5.0
+
+[node name="find_all_unique_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_top = 128.0
+margin_right = 700.0
+margin_bottom = 188.0
+achievement_icon = ExtResource( 47 )
+
+[node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_top = 384.0
+margin_right = 764.0
+margin_bottom = 444.0
+columns = 12
+
+[node name="build_MS" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 9 )
+
+[node name="build_GS" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 17 )
+
+[node name="new_universe" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 25 )
+
+[node name="new_dimension" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 27 )
+
+[node name="2nd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 19 )
+
+[node name="3rd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 18 )
+
+[node name="4th_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 20 )
+
+[node name="random" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+margin_top = 448.0
+margin_right = 764.0
+margin_bottom = 508.0
+columns = 12
+
+[node name="clear_out_cave_floor" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 23 )
+
+[node name="destroy_BBB" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 41 )
+
+[node name="reach_center_of_planet" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+modulate = Color( 1, 0.952941, 0.745098, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 128.0
+margin_right = 188.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 22 )
+
+[node name="1000_year_journey" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 192.0
+margin_right = 252.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 21 )
+
+[node name="build_tri_probe_in_slow_univ" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 25 )
+
+[node name="use_stick_to_mine_from_surface_to_core" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_right = 380.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 24 )
+
+[node name="rekt_enemy_30_levels_higher" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 444.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 26 )
+
+[node name="op_gh" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 448.0
+margin_right = 508.0
+margin_bottom = 60.0
+achievement_icon = ExtResource( 45 )
+
+[node name="Statistics" type="Control" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -488.0
+margin_top = -464.0
+margin_right = 488.0
+margin_bottom = -24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="Statistics"]
+visible = false
+anchor_right = 1.0
+margin_top = -40.0
+margin_bottom = -6.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Prefix" type="Label" parent="Statistics/HBox"]
+margin_left = 443.0
+margin_top = 5.0
+margin_right = 443.0
+margin_bottom = 29.0
+
+[node name="OptionButton" type="OptionButton" parent="Statistics/HBox"]
+margin_left = 447.0
+margin_right = 529.0
+margin_bottom = 34.0
+
+[node name="Suffix" type="Label" parent="Statistics/HBox"]
+margin_left = 533.0
+margin_top = 5.0
+margin_right = 533.0
+margin_bottom = 29.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Statistics"]
+anchor_bottom = 1.0
+margin_right = 264.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 254.0
+margin_bottom = 435.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="General" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 244.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "GENERAL"
+
+[node name="Records" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 49.0
+margin_right = 244.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "RECORDS"
+
+[node name="StarClasses" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 98.0
+margin_right = 244.0
+margin_bottom = 143.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "STAR_CLASSES"
+
+[node name="StarTypes" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 147.0
+margin_right = 244.0
+margin_bottom = 192.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "STAR_TYPES"
+
+[node name="UserInput" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 196.0
+margin_right = 244.0
+margin_bottom = 241.0
+rect_min_size = Vector2( 0, 45 )
+button_text = "USER_INPUT"
+
+[node name="Panel" type="Panel" parent="Statistics"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -704.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Statistics/Panel"]
+margin_left = 24.0
+margin_top = 16.0
+margin_right = 56.0
+margin_bottom = 40.0
+custom_constants/line_spacing = 12
+text = "asd"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="Statistics"]
+visible = false
+margin_left = 272.0
+margin_right = 976.0
+margin_bottom = 440.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Statistics/ScrollContainer2"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 660.0
+margin_bottom = 410.0
+rect_min_size = Vector2( 650, 400 )
+
+[node name="HBox" type="HBoxContainer" parent="Statistics/ScrollContainer2/Control"]
+margin_left = 46.0
+margin_top = 43.0
+margin_right = 670.0
+margin_bottom = 355.0
+size_flags_vertical = 3
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox"]
+margin_right = 11.0
+margin_bottom = 312.0
+rect_min_size = Vector2( 10, 0 )
+custom_constants/separation = 0
+
+[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer"]
+margin_top = 258.0
+margin_right = 11.0
+margin_bottom = 288.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+size_flags_vertical = 10
+
+[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer"]
+margin_top = 288.0
+margin_right = 11.0
+margin_bottom = 312.0
+text = "0"
+align = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox"]
+margin_left = 11.0
+margin_right = 22.0
+margin_bottom = 312.0
+rect_min_size = Vector2( 10, 0 )
+custom_constants/separation = 0
+
+[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2"]
+margin_right = 11.0
+margin_bottom = 288.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2"]
+margin_top = 288.0
+margin_right = 11.0
+margin_bottom = 312.0
+text = "1"
+align = 1
+
+[node name="Line2D" type="Line2D" parent="Statistics/ScrollContainer2/Control"]
+position = Vector2( 18, 2 )
+points = PoolVector2Array( 28, 337, 28, 33, 20, 41 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D2" type="Line2D" parent="Statistics/ScrollContainer2/Control"]
+position = Vector2( 18, 2 )
+points = PoolVector2Array( 28, 33, 36, 41 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="MaxNum" type="Label" parent="Statistics/ScrollContainer2/Control"]
+margin_left = -2.0
+margin_top = 35.0
+margin_right = 30.0
+margin_bottom = 59.0
+custom_fonts/font = SubResource( 1 )
+text = "24"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Zero" type="Label" parent="Statistics/ScrollContainer2/Control"]
+margin_left = -2.0
+margin_top = 315.0
+margin_right = 30.0
+margin_bottom = 339.0
+custom_fonts/font = SubResource( 1 )
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ZoomLabel" type="Label" parent="Statistics/ScrollContainer2/Control"]
+margin_left = 38.0
+margin_top = 379.0
+margin_right = 110.0
+margin_bottom = 403.0
+text = "ZOOM"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Zoom" type="HSlider" parent="Statistics/ScrollContainer2/Control"]
+margin_left = 134.0
+margin_top = 379.0
+margin_right = 334.0
+margin_bottom = 403.0
+min_value = 3.0
+max_value = 25.0
+value = 20.0
+scrollable = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Tabs/Achievements" to="." method="_on_Achievements_pressed"]
+[connection signal="pressed" from="Tabs/Statistics" to="." method="_on_Statistics_pressed"]
+[connection signal="item_selected" from="Statistics/HBox/OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/General" to="." method="_on_General_pressed"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/Records" to="." method="_on_Records_pressed"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/StarClasses" to="." method="_on_StarClasses_pressed"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/StarTypes" to="." method="_on_StarTypes_pressed"]
+[connection signal="pressed" from="Statistics/ScrollContainer/VBoxContainer/UserInput" to="." method="_on_UserInput_pressed"]
+[connection signal="value_changed" from="Statistics/ScrollContainer2/Control/Zoom" to="." method="_on_Zoom_value_changed"]

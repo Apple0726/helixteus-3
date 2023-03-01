@@ -30,7 +30,6 @@ func refresh():
 		$StartCharging.visible = false
 		c_s_g = game.c_s_g
 	for child in $Scroll/Planets.get_children():
-		$Scroll/Planets.remove_child(child)
 		child.free()
 	for i in len(game.planet_data):
 		var p_i = game.planet_data[i]
@@ -41,6 +40,9 @@ func refresh():
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
+		if not (p_i.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and p_i.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2):
+			btn.get_node("HBoxContainer/Diameter")["custom_colors/font_color"] = Color.red
+			btn.get_node("HBoxContainer/Distance")["custom_colors/font_color"] = Color.red
 		btn.get_node("TF").visible = p_i.has("tile_num")
 		btn.get_node("MS").visible = p_i.has("MS")
 		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
@@ -83,10 +85,10 @@ func refresh_planet_info():
 		charging_time = 1000
 	$Control/TimeCost.text = Helper.time_to_str(charging_time)
 	var R = target.size * 1000.0 / 2#in meters
-	var surface_volume = get_sph_V(R, R - target.crust_start_depth)#in m^3
-	var crust_volume = get_sph_V(R - target.crust_start_depth, R - target.mantle_start_depth)
-	var mantle_volume = get_sph_V(R - target.mantle_start_depth, R - target.core_start_depth)
-	var core_volume = get_sph_V(R - target.core_start_depth)
+	var surface_volume = Helper.get_sph_V(R, R - target.crust_start_depth)#in m^3
+	var crust_volume = Helper.get_sph_V(R - target.crust_start_depth, R - target.mantle_start_depth)
+	var mantle_volume = Helper.get_sph_V(R - target.mantle_start_depth, R - target.core_start_depth)
+	var core_volume = Helper.get_sph_V(R - target.core_start_depth)
 	var stone = {}
 	add_stone(stone, target.crust, (surface_volume + crust_volume) * ((5600 + target.mantle_start_depth * 0.01) / 2.0))
 	add_stone(stone, target.mantle, mantle_volume * ((5690 + (target.mantle_start_depth + target.core_start_depth) * 0.01) / 2.0))
@@ -99,14 +101,8 @@ func refresh_planet_info():
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
-		rsrc[met] = get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
+		rsrc[met] = Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
-
-#get_sphere_volume
-func get_sph_V(outer:float, inner:float = 0):
-	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
-	inner /= 150.0
-	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
 
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
 	for comp in layer:
@@ -126,7 +122,7 @@ func _on_StartCharging_pressed():
 		var p_i:Dictionary = game.planet_data[star.p_id]
 		if not p_i.empty():
 			if game.screen_shake:
-				game.get_node("Camera2D/Screenshake").start(1.5, 20, 12)
+				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
 			if p_i.has("bookmarked"):
 				game.bookmarks.planet.erase(str(target.id))
@@ -172,7 +168,7 @@ func _on_StartCharging_pressed():
 			game.popup(tr("PK_ERROR"), 2.0)
 			return
 		for fighter in game.fighter_data:
-			if c_s_g == fighter.c_s_g and p_id == fighter.c_p:
+			if fighter.tier == 0 and c_s_g == fighter.c_s_g and p_id == fighter.c_p:
 				game.popup(tr("PK_ERROR"), 2.0)
 				return
 		if game.energy >= additional_energy:

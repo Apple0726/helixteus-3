@@ -10,6 +10,22 @@ func _ready():
 	set_polygon(rect_size)
 	tween = Tween.new()
 	add_child(tween)
+	var current_viewport = get_viewport().size
+	$TabContainer/GRAPHICS/DisplayRes.add_item("Auto", 0)
+	if OS.get_screen_size().y > 1440:
+		$TabContainer/GRAPHICS/DisplayRes.add_item("3840 x 2160", 1)
+	if OS.get_screen_size().y > 1080:
+		$TabContainer/GRAPHICS/DisplayRes.add_item("2560 x 1440", 2)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("1920 x 1080", 3)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("1280 x 720", 4)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("853 x 480", 5)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("640 x 360", 6)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("427 x 240", 7)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("256 x 144", 8)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("128 x 72", 9)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("64 x 36", 10)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("32 x 18", 11)
+	$TabContainer/GRAPHICS/DisplayRes.add_item("16 x 9", 12)
 	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	if err == OK:
 		set_difficulty()
@@ -25,12 +41,13 @@ func _ready():
 		$TabContainer/GRAPHICS/EnableShaders.pressed = config.get_value("graphics", "enable_shaders", true)
 		$TabContainer/GAME/EnableAutosave.pressed = config.get_value("saving", "enable_autosave", true)
 		$TabContainer/GAME/AutosellMinerals.pressed = config.get_value("game", "autosell", true)
+		$TabContainer/GAME/CaveGenInfo.pressed = config.get_value("game", "cave_gen_info", false)
 		var autosave_interval = config.get_value("saving", "autosave", 10)
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		$TabContainer/GRAPHICS/Fullscreen.pressed = OS.window_fullscreen
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
-		$TabContainer/GAME/CollectSpeed/CollectSpeedSlider.value = config.get_value("game", "collect_speed", 1)
+		$TabContainer/MISC/OPCursor.pressed = config.get_value("misc", "op_cursor", false)
 		set_notation()
 
 func _on_Main_audio_value_changed(value):
@@ -120,18 +137,6 @@ func _on_AutosellMinerals_toggled(button_pressed):
 		game.autosell = button_pressed
 		config.save("user://settings.cfg")
 
-
-func _on_CollectSpeed_mouse_entered():
-	game.show_tooltip(tr("COLLECT_SPEED_DESC"))
-
-
-func _on_CollectSpeedSlider_value_changed(value):
-	if err == OK:
-		config.set_value("game", "collect_speed", value)
-		game.collect_speed_lag_ratio = value
-		config.save("user://settings.cfg")
-
-
 func _on_Easy_mouse_entered():
 	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1])
 
@@ -186,7 +191,7 @@ func _on_Standard_pressed():
 		set_notation()
 
 func _on_Standard_mouse_entered():
-	game.show_tooltip("k < M < B < T < q < Q < s < S")
+	game.show_tooltip("k < M < B < T < q < Q < s < S < O < N")
 
 
 func _on_SI_pressed():
@@ -196,7 +201,7 @@ func _on_SI_pressed():
 		set_notation()
 
 func _on_SI_mouse_entered():
-	game.show_tooltip("k < M < G < T < P < E < Z < Y")
+	game.show_tooltip("k < M < G < T < P < E < Z < Y < R < Q")
 
 func set_notation():
 	$TabContainer/MISC/HBoxContainer2/Standard.pressed = false
@@ -232,7 +237,10 @@ func _on_MusicPitch_toggled(button_pressed):
 	if err == OK:
 		game.pitch_affected = button_pressed
 		if button_pressed and game.u_i:
-			game.music_player.pitch_scale = game.u_i.time_speed
+			if game.c_v in ["cave", "battle"] and game.subjects.dimensional_power.lv >= 4:
+				game.music_player.pitch_scale = log(game.u_i.time_speed - 1.0 + exp(1.0))
+			else:
+				game.music_player.pitch_scale = game.u_i.time_speed
 		else:
 			game.music_player.pitch_scale = 1.0
 		config.set_value("audio", "pitch_affected", button_pressed)
@@ -252,9 +260,7 @@ func _on_EnableShaders_toggled(button_pressed):
 
 
 func _on_ResetTooltips_pressed():
-	for h in game.help:
-		if h != "tutorial":
-			game.help[h] = true
+	game.help = Data.default_help.duplicate()
 
 
 func _on_Screenshake_toggled(button_pressed):
@@ -262,3 +268,40 @@ func _on_Screenshake_toggled(button_pressed):
 		game.screen_shake = button_pressed
 		config.set_value("graphics", "screen_shake", button_pressed)
 		config.save("user://settings.cfg")
+
+
+func _on_CaveGenInfo_toggled(button_pressed):
+	if err == OK:
+		game.cave_gen_info = button_pressed
+		config.set_value("game", "cave_gen_info", button_pressed)
+		config.save("user://settings.cfg")
+
+func _on_OPCursor_toggled(button_pressed):
+	game.op_cursor = button_pressed
+	if err == OK:
+		config.set_value("misc", "op_cursor", button_pressed)
+		config.save("user://settings.cfg")
+	if button_pressed:
+		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
+	else:
+		Input.set_custom_mouse_cursor(null)
+
+
+func _on_OPCursor_mouse_entered():
+	game.show_tooltip("it's pretty op")
+
+
+func _on_OPCursor_mouse_exited():
+	if game.op_cursor:
+		game.show_tooltip(":)")
+	else:
+		game.show_tooltip(":(")
+	yield(get_tree().create_timer(0.5), "timeout")
+	game.hide_tooltip()
+
+
+func _on_DisplayRes_item_selected(index):
+	var id:int = $TabContainer/GRAPHICS/DisplayRes.get_item_id(index)
+	Helper.set_resolution(id)
+	if not $TabContainer/GRAPHICS/KeepWindowSize.pressed and id != 0 and id < 9:
+		OS.window_size = get_viewport().size

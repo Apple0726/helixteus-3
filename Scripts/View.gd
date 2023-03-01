@@ -10,6 +10,7 @@ var annotate_icon:Sprite
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
 var limit_to_viewport
+const CLUSTER_SCALE_THRESHOLD:float = 1.0
 
 var rect:Sprite
 
@@ -23,6 +24,8 @@ var drag_delta = Vector2.ZERO
 var move_view = true
 #Whether the view should be zoomed when scrolling
 var scroll_view = true
+#Whether the view should be moved with WASD
+var move_with_keyboard = true
 
 #Variables for smoothly moving the tiles
 var acceleration = 90
@@ -49,7 +52,7 @@ func _ready():
 	add_child(red_line)
 	red_line.add_point(Vector2.ZERO)
 	red_line.add_point(Vector2.ZERO)
-	red_line.width = 1
+	red_line.width = 0.1
 	red_line.default_color = Color.red
 	red_line.antialiased = true
 	green_line = Line2D.new()
@@ -57,7 +60,7 @@ func _ready():
 	add_child(green_line)
 	green_line.add_point(Vector2.ZERO)
 	green_line.add_point(Vector2.ZERO)
-	green_line.width = 1
+	green_line.width = 0.1
 	green_line.default_color = Color.green
 	green_line.antialiased = true
 	refresh()
@@ -75,28 +78,33 @@ func _process(delta):
 		return
 	ship.get_node("Fire").visible = game.ships_travel_view != "-"
 	if game.ships_travel_view == game.c_v:
-		var dep_pos = game.ships_depart_pos
-		var dest_pos = game.ships_dest_pos
+		var scale_mult = 1.0
+		if game.c_v == "system":
+			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+		var dep_pos = game.ships_depart_pos * scale_mult
+		var dest_pos = game.ships_dest_pos * scale_mult
 		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		if game.ships_travel_view == "-":
 			green_line.visible = false
 			red_line.visible = false
 		else:
+			red_line.points[0] = dep_pos
+			red_line.points[1] = dest_pos
+			green_line.points[0] = dep_pos
 			green_line.points[1] = pos
 			ship.rect_position = to_global(pos) - Vector2(32, 22)
 	else:
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
-			ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
-		if game.c_v == "supercluster":
-			ship.rect_position = to_global(game.cluster_data[sh_c.c].pos) - Vector2(32, 22)
-		elif game.c_v == "cluster" and game.c_c_g == sh_c_g.c:
+			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
+		elif game.c_v == "cluster" and game.c_c == sh_c.c:
 			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
 			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
-			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
+			var scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance * scale_mult, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
 	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
 		annotate_icon.modulate = game.annotator.shape_color
@@ -154,10 +162,10 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
-	if game.c_v in ["supercluster", "universe"] and not changed:
-		if obj_scaled and scale.x > 0.3:
+	if game.c_v == "universe" and not changed:
+		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
 			$AnimationPlayer.play("Fade")
-		elif not obj_scaled and scale.x < 0.3:
+		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
 			$AnimationPlayer.play("Fade")
 
 func _draw():
@@ -225,11 +233,9 @@ func refresh():
 	var sh_c:Dictionary = game.ships_c_coords
 	if game.c_v == "universe":
 		show_ship = true
-		ship.rect_position = to_global(game.supercluster_data[sh_c.sc].pos) - Vector2(32, 22)
-	if game.c_v == "supercluster":
-		show_ship = game.ships_c_coords.sc == game.c_sc
+		ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
-		show_ship = game.ships_c_g_coords.c == game.c_c_g
+		show_ship = game.ships_c_coords.c == game.c_c
 	elif game.c_v == "galaxy":
 		show_ship = game.ships_c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
@@ -248,18 +254,21 @@ func refresh():
 		move_child(red_line, get_child_count())
 		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
-		var dep_pos:Vector2 = game.ships_depart_pos
-		var dest_pos:Vector2 = game.ships_dest_pos
+		var scale_mult = 1.0
+		if game.c_v == "system":
+			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+		var dep_pos:Vector2 = game.ships_depart_pos * scale_mult
+		var dest_pos:Vector2 = game.ships_dest_pos * scale_mult
 		red_line.points[0] = dep_pos
 		green_line.points[0] = dep_pos
 		red_line.points[1] = dest_pos
+		green_line.points[1] = dest_pos
 		if dest_pos.x < dep_pos.x:
 			ship.rect_scale.x = -1
 		else:
 			ship.rect_scale.x = 1
 	for icon_data in annotate_icons:
 		var icon = icon_data.node
-		remove_child(icon)
 		icon.queue_free()
 	annotate_icons.clear()
 	yield(get_tree().create_timer(0.0), "timeout")#This yield is needed to display annotations
@@ -285,13 +294,12 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	scale = Vector2(sc, sc)
 	obj_scaled = scale.x < 1.5
 	refresh()
-	limit_to_viewport = game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
+	limit_to_viewport = game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 
 func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
 		save_zooms(obj_str)
-	game.auto_c_p_g = -1
-	self.remove_child(obj)
+	obj.set_process(false)
 	obj.queue_free()
 	red_line.visible = false
 	green_line.visible = false
@@ -309,12 +317,9 @@ func save_zooms(obj_str:String):
 			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
 		"cluster":
-			game.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
-			game.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
-		"supercluster":
-			game.supercluster_data[game.c_sc]["view"]["pos"] = self.position# / self.scale.x
-			game.supercluster_data[game.c_sc]["view"]["zoom"] = self.scale.x
-			#game.supercluster_data[game.c_sc]["view"]["sc_mult"] = scale_mult
+			if game.u_i.cluster_data[game.c_c].has("view"):
+				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
+				game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"universe":
 			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
@@ -328,20 +333,21 @@ var first_zoom:bool = false
 func _physics_process(_delta):
 	if not is_instance_valid(obj):
 		return
-	#Moving tiles code
-	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
-	else:
-		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
-	input_vector = input_vector.normalized()
-	if input_vector != Vector2.ZERO:
-		velocity = velocity.move_toward(input_vector * max_speed, acceleration)
-	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction)
-	velocity = move_and_slide(velocity)
+	if move_with_keyboard:
+		#Moving tiles code
+		var input_vector = Vector2.ZERO
+		if OS.get_latin_keyboard_variant() == "AZERTY":
+			input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
+			input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
+		else:
+			input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
+			input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
+		input_vector = input_vector.normalized()
+		if input_vector != Vector2.ZERO:
+			velocity = velocity.move_toward(input_vector * max_speed, acceleration)
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, friction)
+		velocity = move_and_slide(velocity)
 
 	#Zooming animation
 	if zooming == "in":
@@ -371,7 +377,6 @@ func _physics_process(_delta):
 					continue
 				hbox.visible = false
 			obj.icons_hidden = true
-			game.auto_c_p_g = -1
 			obj.timer.wait_time = 1.0
 		elif scale.x >= 0.25 and obj.icons_hidden:
 			for time_bar in obj.time_bars:
@@ -411,7 +416,12 @@ func _unhandled_input(event):
 			var drag_distance = touch_events[0].position.distance_to(touch_events[1].position)
 			var touch_center = (touch_events[0].position + touch_events[1].position) / 2.0
 			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
-				_zoom_at_point(abs(drag_distance - last_drag_distance), touch_center)
+				if drag_distance > last_drag_distance:
+					zooming = "in"
+					progress = 0
+				else:
+					zooming = "out"
+					progress = 0
 				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
@@ -422,22 +432,16 @@ func _input(event):
 			zooming = ""
 	if scroll_view and not game.block_scroll:
 		if event.is_action_released("scroll_down"):
-			if event is InputEventMouse:
-				zoom_factor = 1.1
-			else:
-				zoom_factor = 1.2
+			zoom_factor = 1.1
 			zooming = "out"
 			progress = 0
 			#check_change_scale()
 		elif event.is_action_released("scroll_up"):
-			if event is InputEventMouse:
-				zoom_factor = 1.1
-			else:
-				zoom_factor = 1.2
+			zoom_factor = 1.1
 			zooming = "in"
 			progress = 0
 			#check_change_scale()
-	if (event is InputEventMouse or event is InputEventScreenTouch) and move_view:
+	if (event is InputEventMouse or event is InputEventScreenTouch):
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
 			drag_position = event.position
@@ -445,7 +449,7 @@ func _input(event):
 			if is_instance_valid(game.annotator) and game.annotator.visible and not game.annotator.mouse_in_panel and game.annotator.mode != "":
 				line_points.start = to_local(drag_initial_position)
 				drawing_shape = true
-		if dragging and Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
+		if move_view and dragging and Input.is_action_pressed("left_click") and (not is_instance_valid(game.annotator) or not game.annotator.visible):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
@@ -477,14 +481,11 @@ func _input(event):
 
 #Zooming code
 func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
-	#if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1:
-	#	return
-	var max_zoom_out = 250 / obj.dimensions
-	var max_zoom_in = 5000 / obj.dimensions
-	if zoom_change < 1 and scale.x < max_zoom_out:
+	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
-	if zoom_change > 1 and scale.x > max_zoom_in:
-		return
+	if game.c_v == "planet":
+		if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
+			return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
 	var delta_y = (center.y - global_position.y) * (zoom_change - 1)
@@ -493,7 +494,7 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:
-		if scale.x < 0.3:
+		if scale.x < CLUSTER_SCALE_THRESHOLD:
 			obj_scaled = true
 			obj.change_scale(1.0)
 		else:

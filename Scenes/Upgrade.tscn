@@ -7,17 +7,17 @@
 [ext_resource path="res://Graphics/Buttons/Down.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Graphics/Buttons/Orb.png" type="Texture" id=8]
+[ext_resource path="res://Graphics/Buttons/buff.png" type="Texture" id=8]
 [ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=9]
 [ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=10]
 [ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=11]
 [ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buttons/Repair.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Buttons/None.png" type="Texture" id=14]
-[ext_resource path="res://Graphics/Buttons/Debuff.png" type="Texture" id=15]
-[ext_resource path="res://Graphics/Buttons/Charge.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Buttons/LOL.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Buttons/Buff.png" type="Texture" id=18]
+[ext_resource path="res://Graphics/Buttons/orb.png" type="Texture" id=13]
+[ext_resource path="res://Graphics/Buttons/debuff.png" type="Texture" id=14]
+[ext_resource path="res://Graphics/Buttons/none.png" type="Texture" id=15]
+[ext_resource path="res://Graphics/Buttons/lol.png" type="Texture" id=16]
+[ext_resource path="res://Graphics/Buttons/repair.png" type="Texture" id=17]
+[ext_resource path="res://Graphics/Buttons/charge.png" type="Texture" id=18]
 [ext_resource path="res://Scripts/AbilitySuperweapon.gd" type="Script" id=19]
 
 [node name="Upgrade" type="Panel"]
@@ -444,7 +444,7 @@ __meta__ = {
 margin_left = 17.0
 margin_right = 81.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 14 )
+texture_normal = ExtResource( 15 )
 
 [node name="Buff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
 margin_left = 85.0
@@ -453,7 +453,7 @@ margin_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-texture_normal = ExtResource( 18 )
+texture_normal = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -465,13 +465,13 @@ margin_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-texture_normal = ExtResource( 15 )
+texture_normal = ExtResource( 14 )
 
 [node name="Repair" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
 margin_left = 221.0
 margin_right = 285.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 13 )
+texture_normal = ExtResource( 17 )
 
 [node name="Superweapons" type="Control" parent="Specials"]
 margin_top = 216.0
@@ -531,25 +531,25 @@ __meta__ = {
 margin_left = 17.0
 margin_right = 81.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 14 )
+texture_normal = ExtResource( 15 )
 
 [node name="LOL" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 margin_left = 85.0
 margin_right = 149.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 17 )
+texture_normal = ExtResource( 16 )
 
 [node name="Orb" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 margin_left = 153.0
 margin_right = 217.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 8 )
+texture_normal = ExtResource( 13 )
 
 [node name="Charge" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 margin_left = 221.0
 margin_right = 285.0
 margin_bottom = 64.0
-texture_normal = ExtResource( 16 )
+texture_normal = ExtResource( 18 )
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Upgrades/HP/Up" to="Upgrades/HP" method="_on_Up_pressed"]

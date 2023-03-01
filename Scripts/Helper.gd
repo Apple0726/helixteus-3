@@ -24,7 +24,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	if show_available:
 		if path == "Icons/stone" and rsrc_available is Dictionary:
 			rsrc_available = get_sum_of_dict(rsrc_available)
-		text = "%s/%s" % [format_num(clever_round(rsrc_available), threshold / 2), format_num(clever_round(rsrc_cost), threshold / 2)] + mass_str
+		text = "%s/%s" % [format_num(clever_round(rsrc_available, 3, false, true), threshold / 2), format_num(clever_round(rsrc_cost, 3, false, true), threshold / 2)] + mass_str
 		if rsrc_available >= rsrc_cost:
 			color = Color(0.0, 1.0, 0.0, 1.0)
 		else:
@@ -34,7 +34,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 			rsrc_cost = get_sum_of_dict(rsrc_cost)
 		var minus:String = "-" if rsrc_cost < 0 else ""
 		rsrc_cost = abs(rsrc_cost)
-		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost), threshold)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3, false, true), threshold)
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = "%s%s%s" % [minus, num_str, mass_str]
@@ -44,7 +44,6 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
 	if remove:
 		for child in container.get_children():
-			container.remove_child(child)
 			child.free()
 	var data = []
 	for obj in objs:
@@ -55,6 +54,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
+			if not game.show.has("mining"):
+				tooltip += "\n%s" % [tr("STONE_HELP")]
 			format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
 		elif obj == "minerals":
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
@@ -66,7 +67,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			texture.texture_normal = Data.time_icon
 			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
 		elif game.mats.has(obj):
-			if obj == "silicon" and not game.show.silicon:
+			if obj == "silicon" and not game.show.has("silicon"):
 				tooltip += "\n%s" % [tr("HOW2SILICON")]
 			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
 		elif game.mets.has(obj):
@@ -118,15 +119,15 @@ func log10(n):
 	return log(n) / log(10)
 
 func get_state(T:float, P:float, node):
-	var v = Vector2(T / 1000.0 * 1109, -(log(P) / log(10)) * 576 / 12.0 + 290)
+	var v = node.get_pos_from_TP(T, P)
 	if Geometry.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
-		return "SC"
+		return "sc"
 	elif Geometry.is_point_in_polygon(v, node.get_node("Liquid").polygon):
-		return "L"
+		return "l"
 	elif Geometry.is_point_in_polygon(v, node.get_node("Gas").polygon):
-		return "G"
+		return "g"
 	else:
-		return "S"
+		return "s"
 
 func set_visibility(node):
 	for other_node in node.get_parent_control().get_children():
@@ -135,9 +136,13 @@ func set_visibility(node):
 
 func get_item_name (_name:String):
 	if _name.substr(0, 7) == "speedup":
-		return tr("SPEEDUP") + " " + game.get_roman_num(int(_name.substr(7, 1)))
+		return tr(game.speedups_info[_name].name) % game.speedups_info[_name].name_param
 	if _name.substr(0, 9) == "overclock":
-		return tr("OVERCLOCK") + " " + game.get_roman_num(int(_name.substr(9, 1)))
+		return tr("OVERCLOCK") + " " + get_roman_num(int(_name[9]))
+	if _name.substr(0, 5) == "drill":
+		return tr("DRILL") + " " + get_roman_num(int(_name[5]))
+	if _name.substr(0, 17) == "portable_wormhole":
+		return tr("PORTABLE_WORMHOLE") + " " + get_roman_num(int(_name[17]))
 	if len(_name.split("_")) > 1 and _name.split("_")[1] == "seeds":
 		return tr("X_SEEDS") % tr(_name.split("_")[0].to_upper())
 	return tr(_name.to_upper())
@@ -160,42 +165,47 @@ func e_notation(num:float, sd:int = 4):#e notation
 	return "%se%s" %  [n2, e]
 
 func get_dir_from_name(_name:String):
-	if _name.substr(0, 7) == "speedup":
+	if get_type_from_name(_name) == "speedups_info":
 		return "Items/Speedups"
-	if _name.substr(0, 9) == "overclock":
+	if get_type_from_name(_name) == "overclocks_info":
 		return "Items/Overclocks"
-	if _name.substr(0, 7) == "hx_core":
+	if get_type_from_name(_name) == "other_items_info":
 		return "Items/Others"
+	if get_type_from_name(_name) == "seeds_produce":
+		return "Agriculture"
+	if get_type_from_name(_name) == "craft_mining_info":
+		return "Mining"
+	if get_type_from_name(_name) == "craft_cave_info":
+		return "Cave"
 	match _name:
-		"fertilizer":
-			return "Agriculture"
-		"mining_liquid", "purple_mining_liquid":
-			return "Mining"
 		"money":
 			return "Icons"
 		"minerals":
 			return "Icons"
-	if _name.split("_")[1] == "seeds":
-		return "Agriculture"
 	return ""
 
 func get_type_from_name(_name:String):
-	if _name.substr(0, 7) == "speedup":
+	if game.speedups_info.keys().has(_name):
 		return "speedups_info"
-	if _name.substr(0, 9) == "overclock":
+	if game.overclocks_info.keys().has(_name):
 		return "overclocks_info"
-	if _name.substr(0, 7) == "hx_core":
+	if game.other_items_info.keys().has(_name):
 		return "other_items_info"
-	match _name:
-		"fertilizer":
-			return "craft_agriculture_info"
-		"mining_liquid", "purple_mining_liquid":
-			return "craft_mining_info"
-	if len(_name.split("_")) > 0 and _name.split("_")[1] == "seeds":
-		return "craft_agriculture_info"
+	if game.seeds_produce.keys().has(_name):
+		return "seeds_produce"
+	if game.craft_mining_info.keys().has(_name):
+		return "craft_mining_info"
+	if game.craft_cave_info.keys().has(_name):
+		return "craft_cave_info"
 	return ""
 
-func format_num(num:float, threshold:int = 6):
+func format_num(num:float, clever_round:bool = false, threshold:int = 6):
+	if clever_round:
+		num = clever_round(num)
+	var sgn = ""
+	if num < 0:
+		num *= -1
+		sgn = "-"
 	if num < pow(10, threshold):
 		var string = str(num)
 		var arr = string.split(".")
@@ -209,7 +219,7 @@ func format_num(num:float, threshold:int = 6):
 			if i != 0 and i % 3 == mod:
 				res += ","
 			res += string[i]
-		return res + arr[1]
+		return sgn + res + arr[1]
 	else:
 		var suff:String = ""
 		var p:float = log(num) / log(10)
@@ -218,7 +228,7 @@ func format_num(num:float, threshold:int = 6):
 		else:
 			p = int(p)
 		var div = max(pow(10, stepify(p - 1, 3)), 1)
-		if notation == 2 and p >= 3 or p >= 27:
+		if notation == 2 and p >= 3 or p >= 33:
 			return e_notation(num, 3)
 		if p >= 3 and p < 6:
 			suff = "k"
@@ -236,7 +246,11 @@ func format_num(num:float, threshold:int = 6):
 			suff = "Z" if notation == 1 else "s"
 		elif p < 27:
 			suff = "Y" if notation == 1 else "S"
-		return "%s%s" % [clever_round(num / div, 3), suff]
+		elif p < 30:
+			suff = "R" if notation == 1 else "O"
+		elif p < 33:
+			suff = "Q" if notation == 1 else "N"
+		return "%s%s%s" % [sgn, clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
@@ -282,15 +296,16 @@ func get_crush_info(tile_obj):
 	var time = OS.get_system_time_msecs()
 	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
 	var constr_delay = 0
-	if tile_obj.bldg.is_constructing:
+	if tile_obj.bldg.has("is_constructing"):
 		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
-	var progress = (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty
+	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty)
 	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
 func get_prod_info(tile_obj):
 	var time = OS.get_system_time_msecs()
-	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed#qty1: resource being used. qty2: resource being produced
+	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * get_IR_mult(tile_obj.bldg.name)
+	#qty1: resource being used. qty2: resource being produced
 	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio))
 	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd))
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
@@ -356,6 +371,7 @@ var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
 func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
 	lb["custom_fonts/font"] = dmg_txt_rsrc
+	lb.light_mask = 0
 	if missed:
 		lb["custom_colors/font_color"] = Color(1, 1, 0, 1)
 		lb.text = tr("MISSED")
@@ -374,16 +390,15 @@ func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = fals
 	var tween:Tween = Tween.new()
 	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), dur)
 	tween.interpolate_property(lb, "rect_position", null, pos - Vector2(0, 55), dur, Tween.TRANS_BACK, Tween.EASE_OUT)
-	add_child(tween)
+	parent.add_child(tween)
 	tween.start()
+	tween.connect("tween_all_completed", self, "on_tween_all_completed", [tween, lb])
 	#lb.light_mask = 2
 	parent.add_child(lb)
-	yield(tween, "tween_all_completed")
-	if is_instance_valid(parent):
-		parent.remove_child(lb)
-		lb.queue_free()
-		remove_child(tween)
-		tween.queue_free()
+
+func on_tween_all_completed(tween, lb):
+	tween.queue_free()
+	lb.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
 	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
@@ -393,16 +408,34 @@ func add_minerals(amount:float, add:bool = true):
 			game.minerals += amount
 		return {"added":amount, "remainder":0}
 	else:
-		if game.autosell:
+		if game.science_unlocked.has("ASM2") and game.autosell:
+			if add:
+				game.add_resources({"money":(game.minerals + amount - min_cap) * (game.MUs.MV + 4)})
+				game.minerals = min_cap
+			return {"added":amount, "remainder":0}
+		elif game.science_unlocked.has("ASM") and game.autosell:
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
 				game.minerals = fmod(diff, round(min_cap))
-				game.money += ceil(diff / min_cap) * round(min_cap) * (game.MUs.MV + 4)
+				game.add_resources({"money":max(1, ceil(diff / min_cap)) * round(min_cap) * (game.MUs.MV + 4)})
 			return {"added":amount, "remainder":0}
 		else:
 			if add:
 				game.minerals = min_cap
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
+
+func get_total_energy_cap():
+	return 7500 + (game.energy_capacity - 7500) * get_IR_mult("B") + game.capacity_bonus_from_substation * get_IR_mult("PP") * game.u_i.time_speed
+
+func add_energy(amount:float):
+	var energy_cap = get_total_energy_cap()
+	var energy_space_available:float = round(energy_cap) - round(game.energy)
+	if energy_space_available >= amount:
+		game.energy += amount
+		return {"added":amount, "remainder":0}
+	else:
+		game.energy = energy_cap
+		return {"added":energy_space_available, "remainder":amount - energy_space_available}
 
 func get_AIE(next_lv:int = 0):
 	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
@@ -412,6 +445,9 @@ func get_au_mult(tile:Dictionary):
 		return pow(1 + tile.aurora.au_int, get_AIE())
 	else:
 		return 1.0
+
+func get_au_mult_from_int(au_int:float):
+	return pow(1 + au_int, get_AIE())
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
@@ -443,19 +479,24 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		var amount = contents[content]
 		if game.mats.has(content):
 			game.mats[content] += amount
-			if not game.show.plant_button and content == "soil":
+			if not game.show.has("plant_button") and content == "soil":
 				game.show.plant_button = true
-			if not game.show.materials:
-				if not is_MM and is_instance_valid(game.tutorial):
+			if game.help.has("materials"):
+				if not is_MM:
 					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
-				game.inventory.get_node("Tabs/Materials").visible = true
+				game.help.erase("materials")
+			if not game.show.has("materials"):
 				game.show.materials = true
+				game.HUD.craft.visible = true
+				game.inventory.get_node("Tabs/Materials").visible = true
 		elif game.mets.has(content):
-			if not game.show.metals:
+			if not game.help.has("metals"):
 				if not is_MM and is_instance_valid(game.tutorial):
 					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
-				game.inventory.get_node("Tabs/Metals").visible = true
+				game.help.metals = true
+			if not game.show.has("metals"):
 				game.show.metals = true
+				game.inventory.get_node("Tabs/Metals").visible = true
 			game.mets[content] += amount
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
@@ -473,8 +514,14 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.long_popup("%s\n%s" % [tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND_DESC2")], tr("ARTIFACT_FOUND"))
 			else:
 				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
-		if game.show.has(content):
+		if not game.show.has(content):
 			game.show[content] = true
+		if content == "sand" and not game.new_bldgs.has("GF"):
+			game.new_bldgs.GF = true
+		if content == "coal" and not game.new_bldgs.has("SE"):
+			game.new_bldgs.SE = true
+		if content == "stone" and not game.new_bldgs.has("SC"):
+			game.new_bldgs.SC = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
@@ -518,10 +565,8 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		contents[met] = amount
 		other_volume += amount / met_info.density / 1000 / h_mult
 		#   									                          	    V Every km, rock density goes up by 0.01
-	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * tile.depth + depth) / 200000.0) * h_mult))
+	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * min(tile.depth + depth, 1000.0 * p_i.size / 2.0)) / 200000.0) * h_mult))
 	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
-	if tile.has("ship_locator_depth"):
-		contents.ship_locator = 1
 	return contents
 
 func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
@@ -562,7 +607,8 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var size = tile.current_deposit.size
 		var progress2 = tile.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
-		var amount = clever_round(20 * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
+		var amount = clever_round(20 * (3 if crater_metal else 1) * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.current_deposit.progress += 1
@@ -577,10 +623,12 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 func get_IR_mult(bldg_name:String):
 	var mult = 1.0
 	var sc:String
-	if bldg_name in ["PP", "SP"]:
+	if bldg_name in ["PP", "SP", "SE"]:
 		sc = "EPE"
 	elif bldg_name in ["AMN", "SPR"]:
 		sc = "PME"
+	elif bldg_name in ["MS", "B", "NSF", "ESF", "M_DS", "M_MME"]:
+		sc = "STE"
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
@@ -603,9 +651,9 @@ func add_ship_XP(id:int, XP:float):
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data
 	ship_data[id][weapon].XP += XP
-	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 7:
+	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 5:
 		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
-		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 20000, 75000, 0][ship_data[id][weapon].lv - 1]
+		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 0][ship_data[id][weapon].lv - 1]
 		ship_data[id][weapon].lv += 1
 
 func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
@@ -623,223 +671,115 @@ func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = fal
 		vbox.move_child(label, idx)
 
 #solar panels
-func get_SP_production(temp:float, value:float, au_mult:float = 1.0):
-	return clever_round(value * temp * au_mult / 273.0)
+func get_SP_production(temp:float, value:float):
+	return value * temp / 273.0
 
 #atm extractor
 func get_AE_production(pressure:float, value:float):
-	return clever_round(value * pressure)
+	return value * pressure
+
+func get_PCNC_production(pressure:float, value:float):
+	return value / pressure
 
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = OS.get_system_time_msecs()
-	var current_bar
-	var capacity_bar
-	var rsrc_text
-	if is_instance_valid(rsrc):
-		current_bar = rsrc.get_node("Control/CurrentBar")
-		capacity_bar = rsrc.get_node("Control/CapacityBar")
-		rsrc_text = rsrc.get_node("Control/Label")
-	else:
-		if tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
+	var current_bar_value = 0
+	var capacity_bar_value = 0
+	var rsrc_text = ""
+	if tile.has("unique_bldg"):
+		if tile.unique_bldg.has("repair_cost"):
 			return
-	update_bldg_constr(tile)
-	if tile.bldg.is_constructing:
+		if tile.unique_bldg.name == "cellulose_synthesizer":
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
+			rsrc_text = "%s kg/s" % format_num(current_bar_value, true)
+		elif tile.unique_bldg.name == "nuclear_fusion_reactor":
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
+			rsrc_text = "%s/s" % format_num(round(current_bar_value))
+		elif tile.unique_bldg.name == "substation":
+			current_bar_value = round(tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed)
+			rsrc_text = "+ %s" % format_num(current_bar_value)
+		if is_instance_valid(rsrc):
+			rsrc.set_current_bar_value(current_bar_value)
+			rsrc.set_capacity_bar_value(capacity_bar_value)
+			rsrc.set_text(rsrc_text)
 		return
-	match tile.bldg.name:
-		"ME", "PP", "MM", "SP", "AE":
-			#Number of seconds needed per mineral
-			var prod:float
-			if tile.bldg.name == "SP":
-				prod = 1000 / get_SP_production(p_i.temperature, tile.bldg.path_1_value, get_au_mult(tile))
-			else:
-				prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			var cap = round(tile.bldg.path_2_value * tile.bldg.IR_mult)
-			var stored = tile.bldg.stored
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d and not tile.bldg.is_constructing:
-				tile.bldg.collect_date = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num:float = floor((c_t - c_d) / prod)
-				var auto_rsrc:float = 0
-				if tile.has("auto_collect") and tile.bldg.name in ["ME", "PP", "SP"]:
-					auto_rsrc = floor(tile.auto_collect / 100.0 * rsrc_num)
-					if auto_rsrc < 5 and randf() < fmod(tile.auto_collect / 100.0 * rsrc_num, 1.0):
-						auto_rsrc += 1
-					if game.auto_c_p_g != -1:
-						if tile.bldg.name == "ME":
-							auto_rsrc -= add_minerals(auto_rsrc).remainder
-						elif tile.bldg.name in ["PP", "SP"]:
-							game.energy += auto_rsrc
-				tile.bldg.stored += rsrc_num - auto_rsrc
-				tile.bldg.collect_date += prod * rsrc_num
-				if tile.bldg.stored >= cap:
-					tile.bldg.stored = cap
-			if rsrc:
-				current_bar.value = min((c_t - c_d) / prod, 1)
-				capacity_bar.value = min(stored / float(cap), 1)
-				if tile.bldg.name == "MM":
-					rsrc_text.text = "%s / %s m" % [tile.depth + tile.bldg.stored, tile.depth + cap]
-				else:
-					rsrc_text.text = String(stored)
-		"RL":
-			var prod = 1000 / tile.bldg.path_1_value
-			prod /= get_prod_mult(tile)
-			var c_d = tile.bldg.collect_date
-			var c_t = curr_time
-			if c_t < c_d:
-				tile.bldg.collect_date = curr_time
-			if c_t - c_d > prod:
-				var rsrc_num = floor((c_t - c_d) / prod)
-				if game.auto_c_p_g != -1:
-					game.SP += rsrc_num
-				tile.bldg.collect_date += prod * rsrc_num
-			if rsrc:
-				current_bar.value = min((c_t - c_d) / prod, 1)
-				rsrc_text.text = "%s/%s" % [format_num(clever_round(1000.0 / prod, 3)), tr("S_SECOND")]
-		"SC":
-			if tile.bldg.has("stone"):
-				var c_i = get_crush_info(tile)
-				rsrc_text.text = String(c_i.qty_left)
-				capacity_bar.value = 1 - c_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
-		"GF":
-			if tile.bldg.has("qty1"):
-				var prod_i = get_prod_info(tile)
-				rsrc_text.text = "%s kg" % [prod_i.qty_made]
-				capacity_bar.value = prod_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
-		"SE":
-			if tile.bldg.has("qty1"):
-				var prod_i = get_prod_info(tile)
-				rsrc_text.text = "%s" % [round(prod_i.qty_made)]
-				capacity_bar.value = prod_i.progress
-			else:
-				rsrc_text.text = ""
-				capacity_bar.value = 0
-#		"SPR":
-#			if tile.bldg.has("qty"):
-#				var reaction_info = get_reaction_info(tile)
-#				var MM_value = reaction_info.MM_value
-#				capacity_bar.value = reaction_info.progress
-#				rsrc_text.text = "%s mol" % [clever_round(MM_value, 2)]
-#			else:
-#				rsrc_text.text = ""
-#				capacity_bar.value = 0
+	if not is_instance_valid(rsrc) and tile.bldg.name in ["SC", "GF", "SE", "SPR"]:
+		return
+	if tile.bldg.has("construction_date"):
+		update_bldg_constr(tile, p_i)
+		if tile.bldg.has("is_constructing"):
+			return
+	var prod:float = p_i.tile_num if p_i.has("tile_num") else 1
+	if tile.bldg.name == "AE":
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
+		rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "ME":
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "SP":
+		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "PP":
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "RL":
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name in ["PC", "NC"]:
+		prod *= tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "EC":
+		prod *= tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "SC":
+		if tile.bldg.has("stone"):
+			var c_i = get_crush_info(tile)
+			rsrc_text = String(c_i.qty_left)
+			capacity_bar_value = 1 - c_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "GF":
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
+			rsrc_text = "%s kg" % [prod_i.qty_made]
+			capacity_bar_value = prod_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "SE":
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
+			rsrc_text = "%s" % [round(prod_i.qty_made)]
+			capacity_bar_value = prod_i.progress
+		else:
+			rsrc_text = ""
+			capacity_bar_value = 0
+	elif tile.bldg.name == "GH":
+		if tile.has("auto_GH"):
+			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
+		else:
+			rsrc_text = ""
+	elif tile.bldg.name == "MM":
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
+		rsrc_text = "%s m/s" % format_num(prod, true)
+		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * prod, 1.0)
+	else:
+		if Mods.added_buildings.has(tile.bldg.name):
+			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
+	if is_instance_valid(rsrc):
+		rsrc.set_current_bar_value(current_bar_value)
+		rsrc.set_capacity_bar_value(capacity_bar_value)
+		rsrc.set_text(rsrc_text)
 
 func get_prod_mult(tile):
-	var mult = tile.bldg.IR_mult * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
+	var mult = get_IR_mult(tile.bldg.name) * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
 	if tile.bldg.has("overclock_mult"):
 		mult *= tile.bldg.overclock_mult
 	return mult
 
 func has_IR(bldg_name:String):
 	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
-
-func collect_rsrc(rsrc_collected:Dictionary, p_i:Dictionary, tile:Dictionary, tile_id:int):
-	if not tile.has("bldg"):
-		return
-	var bldg:String = tile.bldg.name
-	var curr_time = OS.get_system_time_msecs()
-	update_rsrc(p_i, tile)
-	match bldg:
-		"ME":
-			collect_ME(p_i, tile, rsrc_collected, curr_time)
-		"PP":
-			collect_PP(p_i, tile, rsrc_collected, curr_time)
-		"SP":
-			var stored = tile.bldg.stored
-			if stored == round(tile.bldg.path_2_value * tile.bldg.IR_mult):
-				tile.bldg.collect_date = curr_time
-			add_item_to_coll(rsrc_collected, "energy", stored)
-			tile.bldg.stored = 0
-		"AE":
-			collect_AE(p_i, tile, rsrc_collected, curr_time)
-		"MM":
-			collect_MM(p_i, tile, rsrc_collected, curr_time)
-
-func collect_MM(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	if dict.bldg.stored >= 1 and not dict.has("depth"):
-		dict.depth = 0
-	if dict.bldg.stored >= 3:
-		var contents:Dictionary = mass_generate_rock(dict, p_i, dict.bldg.stored)
-		get_rsrc_from_rock(contents, dict, p_i, true)
-		dict.depth += dict.bldg.stored
-		dict.erase("contents")
-		for content in contents:
-			if n > 1:
-				if contents[content] is Dictionary:
-					for el in contents[content]:
-						contents[content][el] *= n
-				else:
-					contents[content] *= n
-			add_item_to_coll(rsrc_collected, content, contents[content])
-	else:
-		for i in dict.bldg.stored:
-			var contents:Dictionary = generate_rock(dict, p_i)
-			get_rsrc_from_rock(contents, dict, p_i, true)
-			dict.depth += 1
-			for content in contents:
-				if n > 1:
-					if contents[content] is Dictionary:
-						for el in contents[content]:
-							contents[content][el] *= n
-					else:
-						contents[content] *= n
-				add_item_to_coll(rsrc_collected, content, contents[content])
-	if dict.bldg.stored == round(dict.bldg.path_2_value):
-		dict.bldg.collect_date = curr_time
-	dict.bldg.stored = 0
-
-func collect_ME(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
-		dict.bldg.collect_date = curr_time
-	var min_info:Dictionary = add_minerals(stored)
-	dict.bldg.stored = min_info.remainder
-	add_item_to_coll(rsrc_collected, "minerals", min_info.added)
-
-func collect_PP(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored >= round(dict.bldg.path_2_value * dict.bldg.IR_mult * n):
-		dict.bldg.collect_date = curr_time
-	add_item_to_coll(rsrc_collected, "energy", stored)
-	dict.bldg.stored = 0
-
-func collect_RL(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	add_item_to_coll(rsrc_collected, "SP", dict.bldg.stored)
-	dict.bldg.stored = 0
-
-func collect_AE(p_i:Dictionary, dict:Dictionary, rsrc_collected:Dictionary, curr_time, n:float = 1):
-	update_MS_rsrc(p_i)
-	var stored = dict.bldg.stored
-	if stored == round(dict.bldg.path_2_value):
-		dict.bldg.collect_date = curr_time
-	for el in p_i.atmosphere:
-		if el == "NH3":
-			add_item_to_coll(rsrc_collected, "H", 3 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "N", 1 * stored * p_i.atmosphere[el])
-		elif el == "CO2":
-			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "O", 2 * stored * p_i.atmosphere[el])
-		elif el == "CH4":
-			add_item_to_coll(rsrc_collected, "C", 1 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "H", 4 * stored * p_i.atmosphere[el])
-		elif el == "H2O":
-			add_item_to_coll(rsrc_collected, "H", 2 * stored * p_i.atmosphere[el])
-			add_item_to_coll(rsrc_collected, "O", 1 * stored * p_i.atmosphere[el])
-		else:
-			add_item_to_coll(rsrc_collected, el, 1 * stored * p_i.atmosphere[el])
-	dict.bldg.stored = 0
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
 	if num is Dictionary:
@@ -859,7 +799,7 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
-	return game.c_sc == game.ships_c_coords.sc and game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
+	return game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
 
 func update_ship_travel():
 	if game.ships_travel_view == "-":
@@ -870,17 +810,23 @@ func update_ship_travel():
 		game.ships_travel_view = "-"
 		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
 		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
+		var p_i = game.open_obj("Systems", game.ships_c_g_coords.s)[game.ships_c_coords.p]
+		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
+			var tier = p_i.unique_bldgs.spaceport[0].tier
+			game.autocollect.ship_XP = tier
+			if is_instance_valid(game.HUD):
+				game.HUD.set_ship_btn_shader(true, tier)
 	return progress
 
-func update_bldg_constr(tile):
+func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	var curr_time = OS.get_system_time_msecs()
 	var start_date = tile.bldg.construction_date
 	var length = tile.bldg.construction_length
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
 	if progress >= 1:
-		if tile.bldg.is_constructing:
-			tile.bldg.is_constructing = false
+		if tile.bldg.has("is_constructing"):
+			tile.bldg.erase("is_constructing")
 			game.universe_data[game.c_u].xp += tile.bldg.XP
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
@@ -888,38 +834,64 @@ func update_bldg_constr(tile):
 				game.rover_data[tile.bldg.rover_id].ready = true
 				tile.bldg.erase("rover_id")
 			if tile.has("auto_GH"):
-				var produce_info:Dictionary = game.craft_agriculture_info[tile.auto_GH.seed].duplicate(true)
-				tile.auto_GH.cellulose_drain = produce_info.costs.cellulose * game.u_i.time_speed / float(produce_info.grow_time) * 1000.0 * tile.bldg.path_1_value * Helper.get_au_mult(tile)
-				for p in produce_info.produce:
-					tile.auto_GH.produce[p] = produce_info.produce[p] * game.u_i.time_speed / produce_info.grow_time * 1000.0 * tile.bldg.path_1_value * tile.bldg.path_2_value * pow(Helper.get_au_mult(tile), 2)
-					if tile.adj_lake_state == "l":
-						tile.auto_GH.produce[p] *= 2
-					elif tile.adj_lake_state == "sc":
-						tile.auto_GH.produce[p] *= 4
-					game.autocollect.mets[p] += tile.auto_GH.produce[p]
-				if tile.adj_lake_state == "l":
-					tile.auto_GH.cellulose_drain *= 2
-				elif tile.adj_lake_state == "sc":
-					tile.auto_GH.cellulose_drain *= 4
+				tile.auto_GH.cellulose_drain *= tile.bldg.cell_mult
+				for p in tile.auto_GH.produce:
+					if p in game.met_info.keys():
+						tile.auto_GH.produce[p] *= tile.bldg.prod_mult
+					else:# Any production other than metal will be considered proportional to cellulose drain
+						tile.auto_GH.produce[p] *= tile.bldg.cell_mult
+				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
+				if tile.auto_GH.has("soil_drain"):
+					game.autocollect.mats.soil -= tile.auto_GH.soil_drain
 			if game.c_v == "planet":
 				update_boxes = true
-			var mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-			if tile.has("auto_collect"):
-				if tile.bldg.name == "ME":
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.minerals += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-				elif tile.bldg.name in ["PP", "SP"]:
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
-					game.autocollect.rsrc.energy += tile.bldg.path_1_value * tile.auto_collect / 100.0 * mult
+			var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 			if tile.bldg.name == "MS":
-				game.mineral_capacity += tile.bldg.mineral_cap_upgrade
+				game.mineral_capacity += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "B":
+				game.energy_capacity += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "NSF":
+				game.neutron_cap += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "ESF":
+				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == "RL":
-				if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":tile.bldg.path_1_value * mult}
-				else:
-					game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].SP += tile.bldg.path_1_value * mult
-				game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * tile.get("observatory_bonus", 1.0)
+			elif tile.bldg.name == "ME":
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * tile.get("mineral_replicator_bonus", 1.0)
+			elif tile.bldg.name == "PP":
+				var energy_prod = tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+				game.autocollect.rsrc.energy += energy_prod
+				if tile.bldg.has("cap_upgrade") and tile.bldg.cap_upgrade > 0: # Save migration
+					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "SP":
+				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
+				game.autocollect.rsrc.energy += energy_prod
+				if tile.bldg.has("cap_upgrade"): # Save migration
+					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+				if tile.has("aurora"):
+					if game.aurora_prod.has(tile.aurora.au_int):
+						game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod
+					else:
+						game.aurora_prod[tile.aurora.au_int] = {"energy":energy_prod}
+			elif tile.bldg.name == "AE":
+				var base = tile.bldg.path_1_value * overclock_mult * p_i.pressure
+				for el in p_i.atmosphere:
+					var base_prod:float = base * p_i.atmosphere[el]
+					game.show[el] = true
+					add_atom_production(el, base_prod)
+				add_energy_from_NFR(p_i, base)
+				add_energy_from_CS(p_i, base)
+			elif tile.bldg.name == "PC":
+				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "NC":
+				game.autocollect.particles.neutron += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "EC":
+				game.autocollect.particles.electron += tile.bldg.path_1_value * overclock_mult * tile.aurora.au_int
 			elif tile.bldg.name == "CBD":
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
@@ -948,29 +920,80 @@ func update_bldg_constr(tile):
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
-						var diff:float = tile.bldg.path_2_value
-						if not _tile.has("auto_collect_dict"):
-							_tile.auto_collect = tile.bldg.path_2_value
-							_tile.auto_collect_dict = {}
+						if not _tile.has("overclock_dict"):
+							_tile.overclock_bonus = tile.bldg.path_2_value
+							_tile.overclock_dict = {}
 						else:
-							diff = max(0, tile.bldg.path_2_value - _tile.auto_collect)
-							_tile.auto_collect = max(_tile.auto_collect, tile.bldg.path_2_value)
-						if not game.autocollect.rsrc_list.has(String(tile.bldg.c_p_g)):
-							game.autocollect.rsrc_list[String(tile.bldg.c_p_g)] = {"minerals":0, "energy":0, "SP":0}
-						if _tile.has("bldg"):
-							var _mult:float = _tile.bldg.overclock_mult if _tile.bldg.has("overclock_mult") else 1.0
-							if _tile.bldg.name == "ME":
-								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
-								game.autocollect.rsrc.minerals += _tile.bldg.path_1_value * diff / 100.0 * _mult
-							elif _tile.bldg.name in ["PP", "SP"]:
-								game.autocollect.rsrc_list[String(tile.bldg.c_p_g)].energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
-								game.autocollect.rsrc.energy += _tile.bldg.path_1_value * diff / 100.0 * _mult
-						_tile.auto_collect_dict[id_str] = tile.bldg.path_2_value
+							_tile.overclock_bonus = max(_tile.overclock_bonus, tile.bldg.path_2_value)
+						_tile.overclock_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
-			if game.tutorial:
+			if game.tutorial and game.help.tutorial < 26:
 				game.HUD.refresh()
 	return update_boxes
+
+func add_energy_from_NFR(p_i:Dictionary, base:float):
+	if not p_i.unique_bldgs.has("nuclear_fusion_reactor"):
+		return
+	for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
+		var unique_mult = get_NFR_prod_mult(nfr.tier)
+		if not nfr.has("repair_cost"):
+			var S = 0.0
+			if p_i.atmosphere.has("NH3"):
+				S += base * unique_mult * 3 * p_i.atmosphere.NH3
+			if p_i.atmosphere.has("CH4"):
+				S += base * unique_mult * 4 * p_i.atmosphere.CH4
+			if p_i.atmosphere.has("H2O"):
+				S += base * unique_mult * 2 * p_i.atmosphere.H2O
+			if p_i.atmosphere.has("H"):
+				S += base * unique_mult * 1 * p_i.atmosphere.H
+			game.autocollect.rsrc.energy += S
+			game.tile_data[nfr.tile].unique_bldg.production = game.tile_data[nfr.tile].unique_bldg.get("production", 0) + S
+
+func add_energy_from_CS(p_i:Dictionary, base:float):
+	if not p_i.unique_bldgs.has("cellulose_synthesizer"):
+		return
+	for cs in p_i.unique_bldgs.cellulose_synthesizer:
+		var unique_mult = get_CS_prod_mult(cs.tier)
+		if not cs.has("repair_cost"):
+			var cellulose = {"C":0, "H":0, "O":0}
+			if p_i.atmosphere.has("NH3"):
+				cellulose.H += p_i.atmosphere.NH3 * 3
+			if p_i.atmosphere.has("CH4"):
+				cellulose.C += p_i.atmosphere.CH4
+				cellulose.H += p_i.atmosphere.CH4 * 4
+			if p_i.atmosphere.has("H2O"):
+				cellulose.H += p_i.atmosphere.H2O * 2
+				cellulose.O += p_i.atmosphere.H2O
+			if p_i.atmosphere.has("CO2"):
+				cellulose.C += p_i.atmosphere.CO2
+				cellulose.O += p_i.atmosphere.CO2 * 2
+			if p_i.atmosphere.has("H"):
+				cellulose.H += p_i.atmosphere.H
+			if p_i.atmosphere.has("O"):
+				cellulose.O += p_i.atmosphere.O
+			cellulose.C /= 6.0
+			cellulose.H /= 10.0
+			cellulose.O /= 5.0
+			var cellulose_molecules:float = [cellulose.C, cellulose.H, cellulose.O].min()
+			game.autocollect.mats.cellulose += base * unique_mult * cellulose_molecules
+			game.tile_data[cs.tile].unique_bldg.production = game.tile_data[cs.tile].unique_bldg.get("production", 0) + base * unique_mult * cellulose_molecules
+
+func add_atom_production(el:String, base_prod:float):
+	if el == "NH3":
+		game.autocollect.atoms.N = 1 * base_prod + game.autocollect.atoms.get("N", 0)
+		game.autocollect.atoms.H = 3 * base_prod + game.autocollect.atoms.get("H", 0)
+	elif el == "CO2":
+		game.autocollect.atoms.C = 1 * base_prod + game.autocollect.atoms.get("C", 0)
+		game.autocollect.atoms.O = 2 * base_prod + game.autocollect.atoms.get("O", 0)
+	elif el == "CH4":
+		game.autocollect.atoms.C = 1 * base_prod + game.autocollect.atoms.get("C", 0)
+		game.autocollect.atoms.H = 4 * base_prod + game.autocollect.atoms.get("H", 0)
+	elif el == "H2O":
+		game.autocollect.atoms.H = 2 * base_prod + game.autocollect.atoms.get("H", 0)
+		game.autocollect.atoms.O = 1 * base_prod + game.autocollect.atoms.get("O", 0)
+	else:
+		game.autocollect.atoms[el] = 1 * base_prod + game.autocollect.atoms.get(el, 0)
 
 func get_reaction_info(tile):
 	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
@@ -996,44 +1019,63 @@ func update_MS_rsrc(dict:Dictionary):
 				cap = round(cap * dict.tile_num)
 			else:
 				cap = round(cap)
-			if stored < cap:
-				if c_t - c_d > prod:
-					var rsrc_num = floor((c_t - c_d) / prod)
-					dict.bldg.stored += rsrc_num
-					dict.bldg.collect_date += prod * rsrc_num
-					if dict.bldg.stored >= cap:
-						dict.bldg.stored = cap
-		else:
-			if c_t - c_d > prod:
+			var ac_b:bool = dict.bldg.name in ["PP", "ME"]
+			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") and ac_b or not ac_b):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
 				dict.bldg.collect_date += prod * rsrc_num
+				if dict.bldg.stored >= cap:
+					dict.bldg.stored = cap
+		else:
+			if c_t - c_d > prod:
+				if not dict.has("autocollect"):
+					var rsrc_num = floor((c_t - c_d) / prod)
+					dict.bldg.stored += rsrc_num
+					dict.bldg.collect_date += prod * rsrc_num
 		return min((c_t - c_d) / prod, 1)
 	else:
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS") else 0)] * star.luminosity * game.u_i.planck * game.u_i.time_speed
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
+
+func get_DS_capacity(star:Dictionary, next_lv:int = 0):
+	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
+		return 0
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0 * game.u_i.charge
 
 func get_MB_output(star:Dictionary):
-	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck * game.u_i.time_speed
+	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS") else 0)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5)) * game.u_i.time_speed
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
+
+func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
+	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
+		return 0
+	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
 
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
 	var HX_data:Array = []
 	for ship in game.ship_data:
 		max_ship_lv = max(ship.lv, max_ship_lv)
+	var furthest_unconquered_planet_distance = 0
+	var closest_unconquered_planet_distance = INF
 	for planet in game.planet_data:
-		if not planet.has("HX_data"):
+		if planet.has("conquered") or not planet.has("HX_data"):
 			continue
+		#closest_unconquered_planet_distance = min(closest_unconquered_planet_distance, planet.distance)
+		furthest_unconquered_planet_distance = max(furthest_unconquered_planet_distance, planet.distance)
 		for HX in planet.HX_data:
 			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
-	var energy_cost = round(14000 * game.planet_data[-1].distance)
-	return {"HX_data":HX_data, "energy_cost":energy_cost}
+	var energy_cost = 70000 * (furthest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
+	if game.science_unlocked.has("FTL"):
+		energy_cost /= 10.0
+	if game.science_unlocked.has("IGD"):
+		energy_cost /= 100.0
+	return {"HX_data":HX_data, "energy_cost":round(energy_cost)}
 
 var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
@@ -1078,18 +1120,21 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 
 func on_path_enter(path:String, obj:Dictionary):
 	game.hide_adv_tooltip()
-	if not obj.empty():
+	if not obj.empty() and obj.has("bldg"):
 		game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
 
 func on_path_exit():
 	game.hide_tooltip()
 
-func clever_round (num:float, sd:int = 3, st:bool = false):#sd: significant digits
+func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):#sd: significant digits
 	var e = floor(log10(abs(num)))
 	if e < -4 and st:
 		return e_notation(num, sd)
 	if sd < e + 1:
-		return round(num)
+		if _floor:
+			return floor(num)
+		else:
+			return round(num)
 	return stepify(num, pow(10, e - sd + 1))
 
 const Y9 = Color(25, 0, 0, 255) / 255.0
@@ -1104,7 +1149,8 @@ const A0 = Color(213, 224, 255, 255) / 255.0
 const B0 = Color(162, 192, 255, 255) / 255.0
 const O0 = Color(140, 177, 255, 255) / 255.0
 const Q0 = Color(134, 255, 117, 255) / 255.0
-const R0 = Color(255, 151, 255, 255) / 255.0
+const R0 = Color(255, 100, 255, 255) / 255.0
+const Z0 = Color(100, 30, 255, 255) / 255.0
 
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps
@@ -1135,32 +1181,51 @@ func get_star_modulate (star_class:String):
 		"R":
 			m = lerp(R0, Q0, w)
 		"Z":
-			m = Color(0.05, 0.05, 0.05, 1)
+			m = lerp(Z0, R0, w)
 	return m
 
 func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	var bldg:String = dict.bldg.name
 	var mult:float = get_prod_mult(dict)
-	var IR_mult:float = dict.bldg.IR_mult
 	if bldg in ["MM", "GH", "AMN", "SPR"]:
 		n = 1
 	if path == 1:
 		if bldg == "SP":
-			return get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult, get_au_mult(dict)) * n
-		elif bldg == "SPR":
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
+		elif bldg == "AE":
+			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
+		elif bldg in ["MS", "NSF", "ESF"]:
+			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
+		elif bldg == "B":
+			return dict.bldg.path_1_value * mult * get_IR_mult("B") * n * game.u_i.charge
+		elif bldg in ["SPR"]:
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
+		elif bldg in ["PC", "NC"]:
+			return dict.bldg.path_1_value * mult * n / p_i.pressure
+		elif bldg == "EC":
+			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
+		elif bldg == "ME":
+			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n * (dict.mineral_replicator_bonus if dict.has("mineral_replicator_bonus") else 1.0)
+		elif bldg == "PP":
+			return dict.bldg.path_1_value * mult * n * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)
+		elif bldg == "RL":
+			return dict.bldg.path_1_value * mult * n * (dict.observatory_bonus if dict.has("observatory_bonus") else 1.0)
+		elif bldg == "MM":
+			return dict.bldg.path_1_value * mult * n * (dict.mining_outpost_bonus if dict.has("mining_outpost_bonus") else 1.0)
 		else:
 			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
-		if Data.path_2[bldg].is_value_integer:
-			return round(dict.bldg.path_2_value * IR_mult * n)
+		if bldg == "SPR":
+			return dict.bldg.path_2_value * mult * n * game.u_i.charge
+		elif bldg == "SE":
+			return dict.bldg.path_2_value * n
 		else:
-			if bldg == "SPR":
-				return dict.bldg.path_2_value * mult * n * game.u_i.charge
-			else:
-				return dict.bldg.path_2_value * IR_mult * n
+			return dict.bldg.path_2_value * mult * n
 	elif path == 3:
-		return dict.bldg.path_3_value
+		if bldg == "SE":
+			return dict.bldg.path_3_value * get_IR_mult("SE")
+		else:
+			return dict.bldg.path_3_value
 
 func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 	var tooltip:String = ""
@@ -1172,22 +1237,20 @@ func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 
 func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
-		"ME", "PP", "SP", "AE":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(round(path_2_value), 6)]
+		"ME", "PP", "SP", "AE", "MM":
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		"AMN", "SPR":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
-		"MM":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"SC", "GF", "SE":
-			return "%s\n%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(clever_round(path_1_value)), Data.path_2[bldg].desc % format_num(clever_round(path_2_value)), Data.path_3[bldg].desc % path_3_value, tr("CLICK_TO_CONFIGURE")]
-		"RL":
-			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
-		"MS":
+			return "%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value)]
+		"RL", "PC", "NC", "EC":
+			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
+		"MS", "NSF", "ESF", "B":
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
 		"RCC", "SY":
-			return (Data.path_1[bldg].desc) % [format_num(clever_round(path_1_value))]
+			return (Data.path_1[bldg].desc % format_num(path_1_value, true)) + "\n[color=#88CCFF]" + tr("CLICK_TO_CONFIGURE") + "[/color]"
 		"GH":
-			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(clever_round(path_1_value)), format_num(clever_round(path_2_value))]
+			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
 		"CBD":
 			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % clever_round(path_1_value),
@@ -1200,34 +1263,6 @@ func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.interpolate(offset)
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
-
-func check_lake_presence(pos:Vector2, wid:int):
-	var state:String
-	var has_lake = false
-	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
-		if not has_lake:
-			for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
-				if Vector2(i, j) != pos:
-					var id2 = i % wid + j * wid
-					if game.tile_data[id2] and game.tile_data[id2].has("lake"):
-						has_lake = true
-						state = game.tile_data[id2].lake.state
-						break
-	return {"has_lake":has_lake, "lake_state":state}
-
-func check_lake(pos:Vector2, wid:int, seed_name:String):
-	var state
-	var has_lake = false
-	for i in range(max(0, pos.x - 1), min(pos.x + 2, wid)):
-		for j in range(max(0, pos.y - 1), min(pos.y + 2, wid)):
-			if Vector2(i, j) != pos:
-				var id2 = i % wid + j * wid
-				if game.tile_data[id2] and game.tile_data[id2].has("lake"):
-					var okay = game.tile_data[id2].lake.element == game.craft_agriculture_info[seed_name].lake
-					has_lake = has_lake or okay
-					if okay:
-						state = game.tile_data[id2].lake.state
-	return [has_lake, state]
 
 func remove_recursive(path):
 	var directory = Directory.new()
@@ -1272,3 +1307,294 @@ func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, t
 		el_num = stepify(el_num * path_3_value, 0.001)
 		if el_num != 0:
 			expected_rsrc[item] = el_num
+
+func flatten(arr:Array):
+	var arr2:Array = []
+	for i in len(arr):
+		arr2.append_array(arr[i])
+	return arr2
+
+func add_to_dict(dict:Dictionary, key:String, value):
+	if dict.has(key):
+		dict[key] += value
+	else:
+		dict[key] = value
+
+func add_dict_to_dict(dict1:Dictionary, dict2:Dictionary):
+	for key in dict2:
+		if dict1.has(key):
+			dict1[key] += dict2[key]
+		else:
+			dict1[key] = dict2[key]
+
+func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
+	var au_str_end:String = "[/aurora]" if au_str != "" else ""
+	var st:String = ""
+	for modifier in modifiers:
+		if Data.cave_modifiers[modifier].has("double_treasure_at"):
+			var treasure_bonus_str:String = ""
+			var cave_mod:float = modifiers[modifier]
+			var double_treasure_at:float = Data.cave_modifiers[modifier].double_treasure_at
+			var mod_color:String = ""
+			if cave_mod > 1.0:
+				if double_treasure_at > 1.0:
+					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
+						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(range_lerp(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						icons.append(preload("res://Graphics/Icons/Inventory.png"))
+				else:
+					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+				st += "\n%s: %s+%s%%[/color]%s%s" % [
+					tr(modifier.to_upper()),
+					au_str_end + "[color=#%s]" % mod_color,
+					clever_round((cave_mod - 1.0) * 100.0),
+					au_str,
+					treasure_bonus_str,
+				]
+			else:
+				if double_treasure_at < 1.0:
+					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
+						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(range_lerp(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						icons.append(preload("res://Graphics/Icons/Inventory.png"))
+				else:
+					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+				st += "\n%s: %s-%s%%[/color]%s%s" % [
+					tr(modifier.to_upper()),
+					au_str_end + "[color=#%s]" % mod_color,
+					clever_round((1.0 - cave_mod) * 100.0),
+					au_str,
+					treasure_bonus_str,
+				]
+		elif Data.cave_modifiers[modifier].has("treasure_if_true"):
+			st += "\n%s[color=red]%s[/color]%s (x%s %s@i%s)" % [
+				"[/aurora]" if au_str != "" else "",
+				tr(modifier.to_upper()),
+				au_str,
+				Data.cave_modifiers[modifier].treasure_if_true,
+				au_str_end,
+				au_str,
+			]
+			icons.append(preload("res://Graphics/Icons/Inventory.png"))
+	return st
+
+func get_time_div(time:float):
+	return round(time / game.u_i.time_speed * 10.0) / 10.0
+
+func get_RE_info(RE_name:String):
+	if RE_name == "armor_3":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(15.0))
+	elif RE_name == "armor_4":
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(0.5), get_time_div(2.0)])
+	elif RE_name == "armor_5":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(1.5))
+	elif RE_name == "laser_2":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(10.0))
+	elif RE_name == "laser_4":
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(1.0), get_time_div(0.8)])
+	elif RE_name == "laser_5":
+		return (tr("RE_" + RE_name.to_upper()) % [get_time_div(0.5), get_time_div(1.0)])
+	elif RE_name == "laser_8":
+		return (tr("RE_" + RE_name.to_upper()) % get_time_div(11.0))
+	else:
+		return tr("RE_" + RE_name.to_upper())
+
+func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
+	for p in produce:
+		if p == "minerals":
+			game.autocollect.mats.minerals -= produce[p]
+		elif game.mat_info.has(p):
+			game.autocollect.mats[p] -= produce[p]
+		elif game.met_info.has(p):
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			game.autocollect.mets[p] -=  met_prod
+			if au_int > 0 and game.aurora_prod.has(au_int) and game.aurora_prod[au_int].has(p):
+				game.aurora_prod[au_int][p] -= met_prod
+				if is_zero_approx(game.aurora_prod[au_int][p]):
+					game.aurora_prod[au_int].erase(p)
+
+func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
+	for p in produce:
+		if p == "minerals":
+			game.autocollect.mats.minerals = produce[p] + game.autocollect.mats.get(p, 0.0)
+		elif game.mat_info.has(p):
+			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
+		elif game.met_info.has(p):
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
+			if au_int > 0:
+				if game.aurora_prod.has(au_int):
+					game.aurora_prod[au_int][p] = game.aurora_prod[au_int].get(p, 0) + met_prod
+				else:
+					game.aurora_prod[au_int] = {p:met_prod}
+
+func set_resolution(index:int):
+	var res:Vector2 = get_viewport().size
+	get_viewport().size_override_stretch = true 
+	if index == 0:
+		get_viewport().size_override_stretch = false
+		if OS.window_fullscreen:
+			res = OS.get_screen_size()
+			game.current_viewport_dimensions = res
+			get_viewport().size = res
+			OS.window_fullscreen = false
+			OS.window_fullscreen = true
+		else:
+			res = Vector2(1280, 720)
+	elif index == 1:
+		res = Vector2(3820, 2160)
+	elif index == 2:
+		res = Vector2(2560, 1440)
+	elif index == 3:
+		res = Vector2(1920, 1080)
+	elif index == 4:
+		res = Vector2(1280, 720)
+	elif index == 5:
+		res = Vector2(853, 480)
+	elif index == 6:
+		res = Vector2(640, 360)
+	elif index == 7:
+		res = Vector2(427, 240)
+	elif index == 8:
+		res = Vector2(256, 144)
+	elif index == 9:
+		res = Vector2(128, 72)
+	elif index == 10:
+		res = Vector2(64, 36)
+	elif index == 11:
+		res = Vector2(32, 18)
+	elif index == 12:
+		res = Vector2(16, 9)
+	game.current_viewport_dimensions = res
+	get_viewport().size = res
+
+func get_roman_num(num:int):
+	if num > 3999:
+		return String(num)
+	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
+	var num_str:String = String(num)
+
+	var res = ""
+	var n = num_str.length()
+	var c = 0;
+	while c < n:
+		res = strs[c][int(num_str[n - c - 1])] + res
+		c += 1
+	return res
+
+func get_spaceport_exit_cost_reduction(tier:int):
+	if tier > 1:
+		return 1.0
+	else:
+		return 0.5
+
+func get_spaceport_travel_cost_reduction(tier:int):
+	if tier > 4:
+		return 1.0
+	else:
+		return [0.25, 0.75, 0.99, 0.9999][tier-1]
+
+func get_spaceport_xp_mult(tier:int):
+	return pow(4, tier-1)
+
+func get_unique_bldg_area(tier:int):
+	return tier * 2 + 1
+
+func get_MR_Obs_Outpost_prod_mult(tier:int):
+	return 2.5 * pow(4, tier-1)
+
+func get_substation_prod_mult(tier:int):
+	return 1.5 * pow(3, tier-1)
+
+func get_substation_capacity_bonus(tier:int):
+	return 1200 * pow(3, tier-1)
+
+func get_AG_au_int_mult(tier:int):
+	return 2.0 * pow(3, tier-1)
+
+func get_AG_num_auroras(tier:int):
+	return 10 * pow(2, tier-1)
+
+func get_NFR_prod_mult(tier:int):
+	return 500 * pow(4, tier-1)
+
+func get_CS_prod_mult(tier:int):
+	return 10 * pow(4, tier-1)
+
+func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int, wid:int):
+	var x_pos = tile_id % wid
+	var y_pos = tile_id / wid
+	var tier = unique_bldg.tier
+	var n = Helper.get_unique_bldg_area(tier)
+	if unique_bldg.name in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
+		for i in n:
+			var x:int = x_pos + i - n / 2
+			if x < 0 or x >= wid:
+				continue
+			for j in n:
+				var y:int = y_pos + j - n / 2
+				if y < 0 or y >= wid or x == x_pos and y == y_pos:
+					continue
+				var id:int = x + y * wid
+				var tile = game.tile_data[id]
+				var mult = Helper.get_substation_prod_mult(tier) if unique_bldg.name == "substation" else Helper.get_MR_Obs_Outpost_prod_mult(tier)
+				if tile:
+					if tile.has(str(unique_bldg.name + "_bonus")) and mult < tile[str(unique_bldg.name + "_bonus")]:
+						return
+					tile[str(unique_bldg.name + "_bonus")] = mult
+					if tile.has("bldg") and not tile.bldg.has("is_constructing") and unique_bldg.name != "mining_outpost":
+						var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+						var base = tile.bldg.path_1_value * overclock_mult * mult
+						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+						if unique_bldg.name == "mineral_replicator" and tile.bldg.name == "ME":
+							game.autocollect.rsrc.minerals += diff * (tile.ash.richness if tile.has("ash") else 1.0)
+						elif unique_bldg.name == "observatory" and tile.bldg.name == "RL":
+							game.autocollect.rsrc.SP += diff
+						elif unique_bldg.name == "substation":
+							var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
+							if tile.bldg.name == "PP":
+								game.autocollect.rsrc.energy += diff
+								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
+							elif tile.bldg.name == "SP":
+								var energy_prod = Helper.get_SP_production(p_i.temperature, diff * Helper.get_au_mult(tile))
+								var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * Helper.get_au_mult(tile))
+								game.autocollect.rsrc.energy += energy_prod
+								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
+								if tile.has("aurora"):
+									if game.aurora_prod.has(tile.aurora.au_int):
+										game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod
+									else:
+										game.aurora_prod[tile.aurora.au_int] = {"energy":energy_prod}
+				else:
+					game.tile_data[id] = {str(unique_bldg.name + "_bonus"): mult}
+				if unique_bldg.name == "substation":
+					game.tile_data[id].substation_tile = tile_id
+					unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0)
+	elif unique_bldg.name in ["nuclear_fusion_reactor", "cellulose_synthesizer"]:
+		for tile in game.tile_data:
+			if tile and tile.has("bldg") and tile.bldg.name == "AE" and not tile.bldg.has("is_constructing"):
+				var overclock_mult = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+				var mult = 1.0
+				var base = 1.0
+				if unique_bldg.name == "nuclear_fusion_reactor":
+					mult = Helper.get_NFR_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
+					Helper.add_energy_from_NFR(p_i, base)
+				elif unique_bldg.name == "cellulose_synthesizer":
+					mult = Helper.get_CS_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
+					Helper.add_energy_from_CS(p_i, base)
+	elif unique_bldg.name == "spaceport":
+		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
+			game.autocollect.ship_XP = unique_bldg.tier
+			game.HUD.set_ship_btn_shader(true, unique_bldg.tier)
+
+# get_sphere_volume
+func get_sph_V(outer:float, inner:float = 0):
+	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
+	inner /= 150.0
+	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))

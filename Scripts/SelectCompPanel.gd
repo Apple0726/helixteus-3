@@ -23,7 +23,7 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 	if not is_inventory:
 		$Label.text = tr("SELECT_X").format({"select":tr("SELECT"), "something":tr(type.split("_")[1].to_upper())})
 	for node in hbox.get_children():
-		hbox.remove_child(node)
+		node.queue_free()
 	var dir:String = ""
 	if type == "":
 		type = "rover_weapons"
@@ -72,10 +72,10 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 				continue
 		else:
 			var l_metal = metal.to_lower()
-			if not l_metal in ["gemstone"] and not game.show[l_metal]:
+			if l_metal != "stone" and not l_metal == "gemstone" and not game.show.has(l_metal):
 				continue
 			if l_metal == "gemstone":
-				if not game.show.amethyst and not game.show.emerald and not game.show.quartz and not game.show.ruby and not game.show.sapphire and not game.show.topaz:
+				if not game.show.has("amethyst") and not game.show.has("emerald") and not game.show.has("quartz") and not game.show.has("ruby") and not game.show.has("sapphire") and not game.show.has("topaz"):
 					continue
 		var slot = game.slot_scene.instance()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/%s/%s.png" % [dir, cmp])
@@ -110,7 +110,7 @@ func _on_Slot_pressed(type:String, cmp:String, _slot):
 	for slot in hbox.get_children():
 		if slot == _slot and not slot.has_node("border"):
 			var border = TextureRect.new()
-			border.texture = load("res://Graphics/Cave/SlotBorder.png")
+			border.texture = preload("res://Graphics/Cave/SlotBorder.png")
 			border.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			slot.add_child(border)
 			border.name = "border"
@@ -129,8 +129,13 @@ func _input(event):
 func set_cmp():
 	if s_cmp != "":
 		if is_inventory:
-			get_parent().inventory[index].type = "rover_" + g_cmp
-			get_parent().inventory[index].name = s_cmp
+			if get_parent().right_inv:
+				get_parent().right_inventory[0].type = "rover_" + g_cmp
+				get_parent().right_inventory[0].name = s_cmp
+			else:
+				get_parent().inventory[index].type = "rover_" + g_cmp
+				get_parent().inventory[index].name = s_cmp
+			get_parent()["rover_" + g_cmp] = true
 		else:
 			get_parent()[g_cmp] = s_cmp
 	get_parent().refresh()

@@ -46,34 +46,54 @@ func _input(event):
 		_on_close_button_pressed()
 
 func _on_close_button_pressed():
-	game.money += money
+	game.add_resources({"money":money})
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)
 		for weapon in ["bullet", "laser", "bomb", "light"]:
 			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult * diff_mult))
 	var all_conquered = true
 	if not game.is_conquering_all:
+		game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+		game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
+		game.stats_global.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 		game.planet_data[p_id].conquered = true
 		game.planet_data[p_id].erase("HX_data")
 		for planet in game.planet_data:
 			if not planet.has("conquered"):
 				all_conquered = false
-		game.stats.planets_conquered += 1
+		game.stats_univ.planets_conquered += 1
+		game.stats_dim.planets_conquered += 1
+		game.stats_global.planets_conquered += 1
 		if not game.objective.empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
 			game.objective.current += 1
 	else:
 		for planet in game.planet_data:
-			if not planet.has("conquered"):
+			if not planet.has("conquered") and planet.has("HX_data"):
 				planet.conquered = true
+				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
 				planet.erase("HX_data")
-				game.stats.planets_conquered += 1
+				game.stats_univ.planets_conquered += 1
+				game.stats_dim.planets_conquered += 1
+				game.stats_global.planets_conquered += 1
 	if all_conquered:
-		game.system_data[game.c_s].conquered = all_conquered
+		game.system_data[game.c_s].conquered = true
+		game.stats_univ.systems_conquered += 1
+		game.stats_dim.systems_conquered += 1
+		game.stats_global.systems_conquered += 1
+	if not game.new_bldgs.has("SP") and game.stats_univ.planets_conquered > 1:
+		game.new_bldgs.SP = true
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
-	game.battle.remove_child(self)
-	game.switch_view("system", false, "", [], true, false)
+	if game.battle.hard_battle:
+		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+	queue_free()
+	if not game.help.has("SP"):
+		game.long_popup(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
+		game.help.SP = true
+	game.switch_view("system", {"dont_fade_anim":true})
 
 func _on_mouse_exited():
 	game.hide_tooltip()

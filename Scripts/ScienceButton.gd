@@ -1,4 +1,3 @@
-tool
 extends Panel
 
 var main_tree
@@ -14,13 +13,11 @@ func _ready():
 	$Texture.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
 	if game and not infinite_research:
-		#rect_min_size.x = font.get_string_size(get_science_name(name)).x + 80
 		if game.science_unlocked.has(name):
-			$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
-	#else:
-		#var sc_lv:int = game.infinite_research[name]
-		#var st:String = tr("%s_X" % name) % sc_lv
-		#rect_min_size.x = font.get_string_size(st).x + 80
+			$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+			self_modulate = Color(0.24, 0.0, 1.0, 1.0)
+		else:
+			self_modulate = Color.green
 	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
 
 func refresh():
@@ -28,11 +25,21 @@ func refresh():
 		var sc_lv:int = game.infinite_research[name] if game else 1
 		var sc:Dictionary = Data.infinite_research_sciences[name]
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
-		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)), 6)
+		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)))
+		if round(sc.cost * pow(sc.pw, sc_lv)) > game.SP:
+			$Text["custom_colors/font_color"] = Color.red
+		else:
+			$Text["custom_colors/font_color"] = Color.green
 	else:
 		if modulate == Color.white:
 			$Label.text = get_science_name(name)
-			$Text.text = Helper.format_num(Data.science_unlocks[name].cost, 6)
+			$Text.text = Helper.format_num(Data.science_unlocks[name].cost)
+			if game.science_unlocked.has(name):
+				$Text["custom_colors/font_color"] = Color.white
+			elif Data.science_unlocks[name].cost > game.SP:
+				$Text["custom_colors/font_color"] = Color.red
+			else:
+				$Text["custom_colors/font_color"] = Color.green
 		else:
 			$Label.text = "?"
 			$Text.text = "-"
@@ -63,12 +70,12 @@ func get_science_name(sc:String):
 		return "%s %s" % [tr("M_SE_NAME"), sc[2]]
 	elif sc.substr(0, 3) == "MME":
 		return "%s %s" % [tr("M_MME_NAME"), sc[3]]
+	elif sc.substr(0, 3) == "CBS":
+		return "%s %s" % [tr("M_CBS_NAME"), sc[3]]
 	elif sc.substr(0, 2) == "PK":
 		return "%s %s" % [tr("M_PK_NAME"), sc[2]]
 	elif sc.substr(0, 2) == "MB":
 		return tr("M_MB_NAME")
-	elif sc.substr(0, 4) == "MPCC":
-		return tr("M_MPCC_NAME")
 	return tr("%s_SC" % sc)
 
 func on_mouse_entered():
@@ -94,7 +101,7 @@ func _input(event):
 				game.infinite_research[name] += 1
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				game.HUD.refresh()
-				refresh()
+				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
 		elif not game.science_unlocked.has(name):
@@ -103,25 +110,37 @@ func _input(event):
 				game.science_unlocked[name] = true
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				if name == "RC":
+					game.new_bldgs.RCC = true
 					game.show.vehicles_button = true
+					game.HUD.get_node("Buttons/Vehicles").visible = true
 				elif name == "SA":
-					game.craft_panel._on_btn_pressed("Agriculture")
+					game.new_bldgs.GH = true
 				elif name == "ATM":
 					game.show.atoms = true
+					game.new_bldgs.AE = true
+					game.new_bldgs.AMN = true
 				elif name == "SAP":
 					game.show.particles = true
+					game.new_bldgs.SPR = true
+					game.new_bldgs.PC = true
+					game.new_bldgs.NC = true
+					game.new_bldgs.EC = true
+					game.new_bldgs.NSF = true
+					game.new_bldgs.ESF = true
 				elif name == "CI":
 					game.stack_size = 32
 				elif name == "CI2":
 					game.stack_size = 64
 				elif name == "CI3":
 					game.stack_size = 128
-				elif name == "RMK2":
-					game.RC_panel.inventory.append({"type":""})
-				elif name == "RMK3":
-					game.RC_panel.inventory.append({"type":""})
+				elif name == "AM":
+					game.new_bldgs.MM = true
+				elif name == "FG":
+					game.new_bldgs.SY = true
 				game.HUD.refresh()
-				$Label["custom_colors/font_color"] = Color(0, 1, 0, 1)
+				$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+				self_modulate = Color(0.24, 0.0, 1.0, 1.0)
+				$Text["custom_colors/font_color"] = Color.white
 				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)

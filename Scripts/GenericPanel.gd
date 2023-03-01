@@ -42,25 +42,24 @@ func _input(event):
 
 func change_tab(btn_str:String):
 	for item in $VBox/HBox/Items/Items.get_children():
-		$VBox/HBox/Items/Items.remove_child(item)
 		item.free()
 	item_name = ""
-	_on_BuyAmount_value_changed(1)
+	if btn_str == "Pickaxes":
+		_on_BuyAmount_value_changed(1)
+	else:
+		_on_BuyAmount_value_changed(num)
 	remove_costs()
-	item_info.visible = false
+	item_info.modulate.a = 0
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
-	#Helper.set_btn_color(get_node("VBox/Tabs/%s" % btn_str))
 	locked = false
 	
 func remove_costs():
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	for child in vbox.get_children():
-		vbox.remove_child(child)
 		child.free()
 
 func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	remove_costs()
-	item_info.visible = true
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	if _dir == "Buildings":
 		name_node.text = tr("%s_NAME" % name)
@@ -74,12 +73,10 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	item_dir = _dir
 	for cost in costs:
 		item_total_costs[cost] = costs[cost] * num
-	yield(get_tree().create_timer(0), "timeout")
+	yield(get_tree(), "idle_frame")
 	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
 	if not costs.empty():
-		Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
-	#desc_txt.rect_min_size.y = desc_txt.get_content_height()
-	#desc_txt.rect_size.y = desc_txt.get_content_height()
+		Helper.put_rsrc(vbox, 36, item_total_costs, true, true)
 
 func add_items(not_enough_inv:String, success:String):
 	var items_left = game.add_items(item_name, amount_node.value)

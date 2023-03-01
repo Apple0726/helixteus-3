@@ -14,19 +14,17 @@ onready var met_info = game.met_info
 var metal_sprites = []
 var circ_vel:Vector2 = Vector2.ONE
 var points:float#Points for minigame
-onready var circ = $CanvasLayer/Circle
+onready var circ = $Circle
 onready var spd_mult_node = $Mults/SpdMult
 var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
 var mouse_pos:Vector2
 var speed_mult:float = 1.0
 var aurora_mult:float = 1.0
+var rsrc_mined:Dictionary = {}
 
 func _ready():
 	Helper.set_back_btn($Back)
-	if p_i.temperature > 1000:
-		$Tile/TextureRect.texture = load("res://Resources/Lava.tres")
-	else:
-		$Tile/TextureRect.texture = tile_texture
+	$Tile/TextureRect.texture = tile_texture
 	if not tile:
 		game.tile_data[id] = {}
 		tile = game.tile_data[id]
@@ -36,16 +34,18 @@ func _ready():
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
 		tile.depth = 0
+	if tile.has("bridge"):
+		tile.erase("bridge")
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
-	$Help.visible = game.help.mining
-	circ.visible = not game.help.mining
+	$Help.visible = game.help.has("mining")
+	circ.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
-	$LayerInfo.visible = game.show.mining_layer
+	$LayerInfo.visible = game.show.has("mining_layer")
 	if $LayerInfo.visible:
 		$LayerAnim.play("Layer fade")
 		$LayerAnim.seek(1, true)
@@ -202,36 +202,46 @@ var crumbles = []
 func place_crumbles(num:int, sc:float, v:float):
 	for i in num:
 		var crumble = Sprite.new()
-		if p_i.temperature > 1000:
-			crumble.texture = load("res://Resources/Lava.tres")
-		else:
-			crumble.texture = tile_texture
+		crumble.texture = tile_texture
 		crumble.scale *= sc
 		crumble.centered = true
 		add_child(crumble)
+		move_child($Circle, get_child_count())
 		crumble.position = mouse_pos
 		crumbles.append({"sprite":crumble, "velocity":Vector2(rand_range(-2, 2), rand_range(-8, -4)) * v, "angular_velocity":rand_range(-0.08, 0.08)})
 
+# Called by HelpAnim node
 func hide_help():
 	$Help.visible = false
-	game.help.mining = false
-	var tween:Tween = Tween.new()
+	game.help.erase("mining")
+	var tween = create_tween()
 	circ.modulate.a = 0
 	circ.visible = true
-	tween.interpolate_property(circ, "modulate", null, Color(1, 1, 1, 0.5), 2)
-	add_child(tween)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	remove_child(tween)
-	tween.queue_free()
+	tween.tween_property(circ, "modulate", Color(1, 1, 1, 0.5), 2)
 
 var help_counter = 0
 func pickaxe_hit():
-	if not game.pickaxe.has("name"):
+	if not game.pickaxe.has("name") or not tile.has("depth"):
 		return
+	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
 	if tile.depth > floor(p_i.size * 500.0):
-		game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		if not game.achievement_data.random.has("reach_center_of_planet"):
+			game.earn_achievement("random", "reach_center_of_planet")
+		var VEI:float = log(add_progress / 500.0 * rand_range(0.7, 1.3) + exp(3.0))
+		game.tile_data[id].erase("depth")
+		game.generate_volcano(id, VEI, true)
+		game.switch_view("planet")
+		if game.help.has("artificial_volcano"):
+			game.long_popup(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))
+			game.help.erase("artificial_volcano")
+		else:
+			game.popup(tr("CREATED_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), 4.0)
+		if game.screen_shake:
+			game.get_node("Camera2D/Screenshake").start(1.5, 20, 3)
 		return
+	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):
+		if not game.achievement_data.random.has("use_stick_to_mine_from_surface_to_core"):
+			game.earn_achievement("random", "use_stick_to_mine_from_surface_to_core")
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
@@ -248,7 +258,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(3, 0.1, 1)
-	progress += 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0)
+	progress += add_progress
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_dur"):
 		game.pickaxe.liquid_dur -= 1
@@ -257,20 +267,33 @@ func pickaxe_hit():
 			game.pickaxe.erase("liquid_name")
 			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
+	if progress >= 100 and $LayerInfo.visible:
+		$ResourcesMined.visible = true
 	if progress >= 1000:
+		add_rsrc_mined(contents)
 		Helper.get_rsrc_from_rock(contents, tile, p_i)
-		game.add_resources(Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100))
-		tile.depth += int(progress / 100)
+		var new_contents:Dictionary = Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100)
+		add_rsrc_mined(new_contents)
+		game.add_resources(new_contents)
+		var tiles_mined:int = int(progress / 100)
+		tile.depth += tiles_mined
+		game.stats_univ.tiles_mined_mining += tiles_mined
+		game.stats_dim.tiles_mined_mining += tiles_mined
+		game.stats_global.tiles_mined_mining += tiles_mined
 		progress = fmod(progress, 100)
 		rock_gen = true
 		generate_rock(true)
 	else:
 		while progress >= 100:
+			add_rsrc_mined(contents)
 			Helper.get_rsrc_from_rock(contents, tile, p_i)
 			progress -= 100
 			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
 				game.objective.current += 1
 			rock_gen = true
+			game.stats_univ.tiles_mined_mining += 1
+			game.stats_dim.tiles_mined_mining += 1
+			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
 			generate_rock(true)
 	tile.mining_progress = progress
@@ -278,14 +301,17 @@ func pickaxe_hit():
 		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
 		$MiningSound.play()
 		game.show.stone = true
+		game.HUD.stone.visible = true
 		if not $LayerInfo.visible and tile.depth >= 5:
 			game.show.mining_layer = true
 			$LayerAnim.play("Layer fade")
 			$LayerInfo.visible = true
+			$ResourcesMined.visible = true
 		place_crumbles(10, 0.2, 2)
 		game.HUD.refresh()
 	update_info()
 	update_pickaxe()
+	Helper.put_rsrc($ResourcesMined/Grid, 32, rsrc_mined)
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
@@ -301,13 +327,20 @@ func pickaxe_hit():
 			game.popup(tr("PICKAXE_BROKE"), 1.5)
 			$Pickaxe.visible = false
 
+func add_rsrc_mined(_contents:Dictionary):
+	for content in _contents:
+		if content == "stone":
+			var stone_amount:float = Helper.get_sum_of_dict(_contents[content])
+			rsrc_mined[content] = (rsrc_mined[content] + stone_amount) if rsrc_mined.has(content) else stone_amount
+		else:
+			rsrc_mined[content] = (rsrc_mined[content] + _contents[content]) if rsrc_mined.has(content) else _contents[content]
+
 func _process(delta):
 	for cr in crumbles:
 		cr.sprite.position += cr.velocity * delta * 60 * game.u_i.time_speed
 		cr.velocity.y += 0.6 * delta * 60 * game.u_i.time_speed
 		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed
 		if cr.sprite.position.y > 1000:
-			remove_child(cr.sprite)
 			cr.sprite.free()
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
@@ -325,7 +358,7 @@ func _process(delta):
 			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0))
+			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0))
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
@@ -338,12 +371,9 @@ func _process(delta):
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
-		if tile.depth <= floor(p_i.size * 500.0):
-			circ_disabled = false
-			$PickaxeAnim.get_animation("Pickaxe swing").loop = true
-			$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
-		else:
-			game.popup(tr("CENTER_OF_PLANET"), 2.0)
+		circ_disabled = false
+		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
 
 func _on_Button_button_up():
 	circ_disabled = true
@@ -365,3 +395,11 @@ func _on_AuroraMult_mouse_entered():
 
 func _on_AuroraMult_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_Grid_resized():
+	if $ResourcesMined/Grid.rect_size.x > $ResourcesMined.rect_size.x:
+		$ResourcesMined.rect_min_size.x = $ResourcesMined/Grid.rect_size.x
+		$ResourcesMined.rect_position.x = 892 - $ResourcesMined.rect_min_size.x / 2.0
+	if $ResourcesMined/Grid.rect_size.y + 40 > $ResourcesMined.rect_size.y:
+		$ResourcesMined.rect_min_size.y = $ResourcesMined/Grid.rect_size.y + 40
