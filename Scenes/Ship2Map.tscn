@@ -1,159 +1,109 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://dhw427sv7cmr0"]
 
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Graphics/Cave/Map.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/Ship2Map.gd" type="Script" id=3]
+[ext_resource type="Texture2D" uid="uid://cw07b6m0lkm27" path="res://Graphics/Cave/Map.png" id="2"]
+[ext_resource type="Script" path="res://Scripts/Ship2Map.gd" id="3"]
 
-[sub_resource type="DynamicFont" id=1]
-size = 35
-use_mipmaps = true
-use_filter = true
-extra_spacing_char = 2
-font_data = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=2]
-size = 60
-use_mipmaps = true
-use_filter = true
-extra_spacing_char = 2
-font_data = ExtResource( 1 )
-
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id="3"]
 resource_name = "Map fade"
 length = 0.1
 step = 0.02
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath(".:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 0.392292 ),
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 0.392292),
 "update": 0,
-"values": [ Vector2( 0, 10 ), Vector2( 0, 0 ) ]
+"values": [Vector2(0, 10), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6djs1"]
+_data = {
+"Map fade": SubResource("3")
 }
 
 [node name="Ship2Map" type="Node2D"]
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 368.0 ]
-}
+script = ExtResource("3")
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 light_mask = 0
-texture = ExtResource( 2 )
+texture = ExtResource("2")
 centered = false
 
 [node name="Label" type="Label" parent="."]
 light_mask = 0
-margin_left = 168.0
-margin_top = 212.0
-margin_right = 444.0
-margin_bottom = 263.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.14902, 1, 0.180392, 1 )
-custom_colors/font_color_shadow = Color( 0, 0.552941, 0.113725, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
+offset_left = 168.0
+offset_top = 212.0
+offset_right = 444.0
+offset_bottom = 263.0
 text = "STAR_SYSTEM"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label3" type="Label" parent="."]
 light_mask = 0
-margin_left = 184.0
-margin_top = 360.0
-margin_right = 404.0
-margin_bottom = 428.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.14902, 1, 0.180392, 1 )
-custom_colors/font_color_shadow = Color( 0, 0.552941, 0.113725, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
+offset_left = 184.0
+offset_top = 360.0
+offset_right = 404.0
+offset_bottom = 428.0
 text = "1234"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label4" type="Label" parent="."]
 light_mask = 0
-margin_left = 888.0
-margin_top = 360.0
-margin_right = 1096.0
-margin_bottom = 428.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.14902, 1, 0.180392, 1 )
-custom_colors/font_color_shadow = Color( 0, 0.552941, 0.113725, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
+offset_left = 888.0
+offset_top = 360.0
+offset_right = 1096.0
+offset_bottom = 428.0
 text = "1234"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="."]
 light_mask = 0
-margin_left = 832.0
-margin_top = 212.0
-margin_right = 1108.0
-margin_bottom = 263.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.14902, 1, 0.180392, 1 )
-custom_colors/font_color_shadow = Color( 0, 0.552941, 0.113725, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
+offset_left = 832.0
+offset_top = 212.0
+offset_right = 1108.0
+offset_bottom = 263.0
 text = "STAR_SYSTEM"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Line2D" type="Line2D" parent="."]
 light_mask = 0
-points = PoolVector2Array( 408, 392, 476, 264, 568, 264 )
+points = PackedVector2Array(408, 392, 476, 264, 568, 264)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 antialiased = true
 
 [node name="Line2D2" type="Line2D" parent="."]
 light_mask = 0
-points = PoolVector2Array( 720, 312, 792, 312, 864, 396 )
+points = PackedVector2Array(720, 312, 792, 312, 864, 396)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 antialiased = true
 
 [node name="Line2D3" type="Line2D" parent="."]
 light_mask = 0
-points = PoolVector2Array( 640, 192, 640, 528 )
+points = PackedVector2Array(640, 192, 640, 528)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 antialiased = true
 
 [node name="Line2D4" type="Line2D" parent="."]
 light_mask = 0
-points = PoolVector2Array( 808, 360, 472, 360 )
+points = PackedVector2Array(808, 360, 472, 360)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 antialiased = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-"anims/Map fade" = SubResource( 3 )
+libraries = {
+"": SubResource("AnimationLibrary_6djs1")
+}
+
 [connection signal="tree_exited" from="." to="." method="_on_Ship2Map_tree_exited"]

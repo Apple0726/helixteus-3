@@ -1,11 +1,11 @@
 extends "Panel.gd"
 
 var spaceport_tier:int
-onready var travel_ETA = $Panel/TravelETA
-onready var grid = $Grid
+@onready var travel_ETA = $Panel/TravelETA
+@onready var grid = $Grid
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 	for panel in $Grid.get_children():
 		panel.show_weapon_XPs = false
 	refresh()
@@ -27,10 +27,10 @@ func refresh():
 	if game.ships_travel_view != "-":
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
-		$Panel/TravelETA["custom_colors/font_color"] = Color.white
+		$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
 	else:
 		if game.autocollect.has("ship_XP"):
-			$Panel/TravelETA["custom_colors/font_color"] = Color.greenyellow
+			$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
 			$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
 			spaceport_tier = game.autocollect.ship_XP
 			if $SpaceportTimer.is_stopped():
@@ -38,26 +38,26 @@ func refresh():
 		else:
 			$SpaceportTimer.stop()
 			spaceport_tier = -1
-			$Panel/TravelETA["custom_colors/font_color"] = Color.white
+			$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
 			$Panel/TravelETA.text = ""
 	set_process(true)
 
 func _process(delta):
 	if spaceport_tier != -1:
 		for i in len(game.ship_data):
-			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-				var node = grid.get_node("Panel%s/%s/TextureProgress" % [i + 1, weapon])
+			for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+				var node = grid.get_node("Panel%s/%s/TextureProgressBar" % [i + 1, weapon])
 				var text_node = grid.get_node("Panel%s/%s/Label2" % [i + 1, weapon])
 				var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
 				node.value = move_toward(node.value, curr_weapon_XP, abs(curr_weapon_XP - node.value) * delta * 0.5)
 				text_node.text = "%s / %s" % [round(node.value), game.ship_data[i][weapon.to_lower()].XP_to_lv]
-			var XP_node = grid.get_node("Panel%s/XP/TextureProgress" % (i + 1))
+			var XP_node = grid.get_node("Panel%s/XP/TextureProgressBar" % (i + 1))
 			var XP_text_node = grid.get_node("Panel%s/XP/Label2" % (i + 1))
 			var curr_XP = game.ship_data[i].XP
 			XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
 			XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
 	elif game.ships_travel_view != "-":
-		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date)]
+		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date)]
 	if not visible:
 		set_process(false)
 
@@ -127,23 +127,23 @@ var bar_colors = {
 func _on_SpaceportTimer_timeout():
 	var xp_mult = Helper.get_spaceport_xp_mult(spaceport_tier)
 	for i in len(game.ship_data):
-		var weapon = ["Bullet", "Laser", "Bomb", "Light"][randi() % 4]
+		var weapon = ["Bullet", "Laser", "Bomb", "Light3D"][randi() % 4]
 		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
 		Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult / 16.0 * pow(1.07, game.u_i.lv) * game.u_i.time_speed)
 		if visible:
 			grid.get_node("Panel%s/XP/TextureProgress2" % (i+1)).value = 0
 			grid.get_node("Panel%s/%s/TextureProgress2" % [i+1, weapon]).value = 0
 			grid.get_node("Panel%s/Lv" % (i+1)).text = "%s %s" % [tr("LV"), game.ship_data[i].lv]
-			grid.get_node("Panel%s/XP/TextureProgress" % (i+1)).max_value = game.ship_data[i].XP_to_lv
-			grid.get_node("Panel%s/XP/TextureProgress" % (i+1)).modulate = Color.white
-			grid.get_node("Panel%s/%s/TextureProgress" % [i+1, weapon]).modulate = Color.white
+			grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)).max_value = game.ship_data[i].XP_to_lv
+			grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
+			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).modulate = Color.WHITE
 			var weapon_data = game.ship_data[i][weapon.to_lower()]
 			var tween = get_tree().create_tween()
-			tween.tween_property(grid.get_node("Panel%s/XP/TextureProgress" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
+			tween.tween_property(grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property(grid.get_node("Panel%s/%s/TextureProgress" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
+			tween2.tween_property(grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
 			grid.get_node("Panel%s/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-			grid.get_node("Panel%s/%s/TextureProgress" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 			grid.get_node("Panel%s/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].total_HP * game.ship_data[i].HP_mult)
 			grid.get_node("Panel%s/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
 			grid.get_node("Panel%s/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)

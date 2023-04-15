@@ -1,15 +1,15 @@
 extends "Panel.gd"
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 	for MU in game.MUs:
 		var hbox = HBoxContainer.new()
-		var title = preload("res://Scenes/HelpText.tscn").instance()
+		var title = preload("res://Scenes/HelpText.tscn").instantiate()
 		title.name = "Label"
 		title.label_text = "%s_NAME" % MU
 		title.help_text = "%s_DESC" % MU
-		title.rect_min_size.x = 450
-		title.rect_min_size.y = 30
+		title.custom_minimum_size.x = 450
+		title.custom_minimum_size.y = 30
 		title.size_flags_horizontal = Label.SIZE_EXPAND_FILL
 		title.size_flags_vertical = Label.SIZE_SHRINK_CENTER
 		title.mouse_filter = Label.MOUSE_FILTER_PASS
@@ -22,6 +22,7 @@ func _ready():
 		if MU == "MV":
 			effects = RichTextLabel.new()
 			effects.size_flags_vertical = Label.SIZE_SHRINK_CENTER
+			effects.fit_content = true
 		else:
 			effects = Label.new()
 		effects.name = "Effects"
@@ -29,20 +30,20 @@ func _ready():
 		hbox.add_child(effects)
 		var btn = Button.new()
 		btn.name = "Upgrade"
-		btn.connect("mouse_entered", self, "_on_Upgrade_mouse_entered", [MU])
-		btn.connect("mouse_exited", self, "_on_Upgrade_mouse_exited", [MU])
-		btn.connect("pressed", self, "_on_Upgrade_pressed", [MU])
-		btn.rect_min_size.x = 178
+		btn.connect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered").bind(MU))
+		btn.connect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited").bind(MU))
+		btn.connect("pressed",Callable(self,"_on_Upgrade_pressed").bind(MU))
+		btn.custom_minimum_size.x = 178
 		btn.expand_icon = true
 		btn.icon = Data.minerals_icon
-		btn.align = Button.ALIGN_LEFT
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
 		if game.achievement_data.progression.has("new_universe"):
-			btn.rect_min_size.x = 178 - 45
+			btn.custom_minimum_size.x = 178 - 45
 			var btn_max = Button.new()
-			btn_max.connect("pressed", self, "_on_UpgradeMax_pressed", [MU])
-			btn_max.rect_min_size.x = 45
+			btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
+			btn_max.custom_minimum_size.x = 45
 			btn_max.name = "UpgradeMax"
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")
@@ -62,14 +63,14 @@ func refresh():
 	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
 	for hbox in $Panel/VBox.get_children():
 		if hbox.name != "Titles":
-			hbox.get_node("Lv").text = String(game.MUs[hbox.name])
+			hbox.get_node("Lv").text = str(game.MUs[hbox.name])
 			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name))]
 			set_upg_text(hbox.name)
 
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($Panel/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, load("res://Graphics/Icons/money.png")], 15)
+			game.add_text_icons($Panel/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
 		"MSMB":
 			$Panel/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
@@ -83,9 +84,9 @@ func set_upg_text(MU:String, next_lv:int = 0):
 		"CHR":
 			$Panel/VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
 	if next_lv == 0:
-		get_node("Panel/VBox/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.white
+		get_node("Panel/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
 	else:
-		get_node("Panel/VBox/%s/Effects" % [MU])["custom_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.green
+		get_node("Panel/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.GREEN
 			
 func get_min_cost(upg:String):
 	return round(Data.MUs[upg].base_cost * pow(Data.MUs[upg].pw, game.MUs[upg] - 1))
@@ -122,7 +123,7 @@ func _on_Upgrade_pressed(MU:String):
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
 		refresh()
-		if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
+		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
 			game.objective.current += 1
 		game.HUD.refresh()
 		if MU == "AIE":

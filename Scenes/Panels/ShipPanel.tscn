@@ -1,189 +1,170 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=11 format=3 uid="uid://csljwgggftgxb"]
 
-[ext_resource path="res://Scripts/ShipPanel.gd" type="Script" id=3]
-[ext_resource path="res://Scenes/ShipInfo.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Scenes/Drives.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Science/SCT.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Science/CD.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buttons/Upgrade.png" type="Texture" id=12]
-[ext_resource path="res://Scenes/Upgrade.tscn" type="PackedScene" id=13]
+[ext_resource type="Script" path="res://Scripts/ShipPanel.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://gy6plqno7n0y" path="res://Scenes/ShipInfo.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://Scenes/CloseButton.tscn" id="6"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
+[ext_resource type="PackedScene" path="res://Scenes/Drives.tscn" id="8"]
+[ext_resource type="Texture2D" uid="uid://cdtiu2f8f4j5i" path="res://Graphics/Icons/Arrow.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://c8geuvu71t67v" path="res://Graphics/Science/SCT.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://ovbk80lvrf6p" path="res://Graphics/Science/CD.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://baacknechc33h" path="res://Graphics/Buttons/Upgrade.png" id="12"]
+[ext_resource type="PackedScene" path="res://Scenes/Upgrade.tscn" id="13"]
 
 [node name="Background" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -512.0
-margin_top = -296.0
-margin_right = 512.0
-margin_bottom = 296.0
-theme = ExtResource( 7 )
-script = ExtResource( 3 )
+offset_left = -512.0
+offset_top = -296.0
+offset_right = 512.0
+offset_bottom = 296.0
+theme = ExtResource("7")
+script = ExtResource("3")
 
-[node name="CloseButton" parent="." instance=ExtResource( 6 )]
+[node name="CloseButton" parent="." instance=ExtResource("6")]
+layout_mode = 0
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 35.0
 text = "SHIPS"
-align = 1
-valign = 1
 
 [node name="Grid" type="GridContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 96.0
-margin_right = -8.0
-margin_bottom = -4.0
-custom_constants/vseparation = -2
-custom_constants/hseparation = -2
+offset_left = 8.0
+offset_top = 96.0
+offset_right = -8.0
+offset_bottom = -4.0
 columns = 2
 
-[node name="Panel1" parent="Grid" instance=ExtResource( 5 )]
-margin_right = 505.0
-margin_bottom = 494.0
+[node name="Panel1" parent="Grid" instance=ExtResource("5")]
+layout_mode = 2
 victory_screen = false
 
-[node name="Panel2" parent="Grid" instance=ExtResource( 5 )]
+[node name="Panel2" parent="Grid" instance=ExtResource("5")]
 visible = false
-margin_left = 531.0
-margin_right = 1064.0
-margin_bottom = 496.0
+layout_mode = 2
 victory_screen = false
 id = 1
 
-[node name="Panel3" parent="Grid" instance=ExtResource( 5 )]
+[node name="Panel3" parent="Grid" instance=ExtResource("5")]
 visible = false
-margin_left = 531.0
-margin_right = 1064.0
-margin_bottom = 496.0
+layout_mode = 2
 victory_screen = false
 id = 2
 
-[node name="Panel4" parent="Grid" instance=ExtResource( 5 )]
+[node name="Panel4" parent="Grid" instance=ExtResource("5")]
 visible = false
-margin_left = 531.0
-margin_right = 1064.0
-margin_bottom = 496.0
+layout_mode = 2
 victory_screen = false
 id = 3
 
-[node name="Drives" parent="." instance=ExtResource( 8 )]
+[node name="Drives" parent="." instance=ExtResource("8")]
 visible = false
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 96.0
-margin_right = -8.0
-margin_bottom = -8.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 8.0
+offset_top = 96.0
+offset_right = -8.0
+offset_bottom = -8.0
 
-[node name="Upgrade" parent="." instance=ExtResource( 13 )]
+[node name="Upgrade" parent="." instance=ExtResource("13")]
 visible = false
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 88.0
-margin_right = 0.0
-margin_bottom = 0.0
+offset_top = 88.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 40.0
-margin_right = -8.0
-margin_bottom = -504.0
-rect_min_size = Vector2( 0, 48 )
+offset_left = 8.0
+offset_top = 40.0
+offset_right = -8.0
+offset_bottom = -504.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TravelETA" type="Label" parent="Panel"]
+layout_mode = 0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_top = -12.0
-margin_bottom = 12.0
-align = 1
+offset_top = -12.0
+offset_bottom = 12.0
 
 [node name="CheckBox" type="CheckBox" parent="Panel"]
+layout_mode = 0
 anchor_bottom = 1.0
-margin_left = 20.0
-margin_right = 270.0
-margin_bottom = 4.0
-theme = ExtResource( 7 )
-custom_constants/hseparation = 11
+offset_left = 20.0
+offset_right = 270.0
+offset_bottom = 4.0
+theme = ExtResource("7")
 text = "SHOW_WEAPON_XPS"
 
 [node name="DriveButton" type="TextureButton" parent="Panel"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -120.0
-margin_top = -24.0
-margin_right = -72.0
-margin_bottom = 20.0
-texture_normal = ExtResource( 11 )
-expand = true
+offset_left = -120.0
+offset_top = -24.0
+offset_right = -72.0
+offset_bottom = 20.0
+texture_normal = ExtResource("11")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BackButton" type="TextureButton" parent="Panel"]
 visible = false
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -128.0
-margin_top = -24.0
-margin_right = -60.0
-margin_bottom = 24.0
-texture_normal = ExtResource( 10 )
-expand = true
+offset_left = -128.0
+offset_top = -24.0
+offset_right = -60.0
+offset_bottom = 24.0
+texture_normal = ExtResource("10")
 stretch_mode = 5
 
 [node name="GoToShips" type="TextureButton" parent="Panel"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -64.0
-margin_top = -24.0
-margin_right = -14.0
-margin_bottom = 24.0
-texture_normal = ExtResource( 9 )
-expand = true
+offset_left = -64.0
+offset_top = -24.0
+offset_right = -14.0
+offset_bottom = 24.0
+texture_normal = ExtResource("9")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="UpgradeButton" type="TextureButton" parent="Panel"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -168.0
-margin_top = -20.0
-margin_right = -128.0
-margin_bottom = 20.0
-texture_normal = ExtResource( 12 )
-expand = true
+offset_left = -168.0
+offset_top = -20.0
+offset_right = -128.0
+offset_bottom = 20.0
+texture_normal = ExtResource("12")
 stretch_mode = 4
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SpaceportTimer" type="Timer" parent="."]
 

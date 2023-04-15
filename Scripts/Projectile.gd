@@ -1,8 +1,8 @@
 class_name Projectile
-extends KinematicBody2D
+extends CharacterBody2D
 
-onready var seeking_ray:RayCast2D = $SeekingRay
-onready var sprite = $Sprite
+@onready var seeking_ray:RayCast2D = $SeekingRay
+@onready var sprite = $Sprite2D
 
 var speed:float = 0.0
 var direction:Vector2 = Vector2.ZERO#Normalized
@@ -18,12 +18,12 @@ var time_speed:float
 var init_mod:Color
 var deflected:bool = false
 var pierce:int = 1
-var seeking_body:KinematicBody2D = null
+var seeking_body:CharacterBody2D = null
 var seek_speed:float = 1.0
 var dont_hit_again = []
 
 func _ready():
-	$Sprite.texture = texture
+	$Sprite2D.texture = texture
 	if type == Data.ProjType.LASER:
 		$Round.disabled = true
 		$Line.disabled = false
@@ -32,8 +32,8 @@ func _ready():
 		add_child(timer)
 		timer.start(3.0)
 		timer.one_shot = true
-		timer.connect("timeout", self, "on_timeout")
-	init_mod = $Sprite.modulate
+		timer.connect("timeout",Callable(self,"on_timeout"))
+	init_mod = $Sprite2D.modulate
 
 func on_timeout():
 	fading = true
@@ -53,14 +53,14 @@ func _physics_process(delta):
 	if not enemy and not deflected:
 		if seeking_body and is_instance_valid(seeking_body):
 			var th:float = atan2(seeking_body.position.y - position.y, seeking_body.position.x - position.x)
-			seeking_ray.cast_to = polar2cartesian(1500, th - rotation)
-			if seeking_ray.get_collider() is KinematicBody2D:
-				direction = direction.move_toward(polar2cartesian(1, th), delta * 60.0 * speed / 1500.0 * seek_speed).normalized()
+			seeking_ray.target_position = 1500 * Vector2.from_angle(th - rotation)
+			if seeking_ray.get_collider() is CharacterBody2D:
+				direction = direction.move_toward(Vector2.from_angle(th), delta * 60.0 * speed / 1500.0 * seek_speed).normalized()
 				rotation = direction.angle()
 
 func collide(collision:KinematicCollision2D):
 	var body = collision.collider
-	if body is KinematicBody2D:#If the projectile collides with an entity (not walls)
+	if body is CharacterBody2D:#If the projectile collides with an entity (not walls)
 		if not enemy:#if the projectile comes from the player
 			if deflected:#No distance penalty for deflected projectiles
 				var dmg:float = damage / body.def
@@ -77,7 +77,7 @@ func collide(collision:KinematicCollision2D):
 					if not body.status_effects.has(effect):
 						body.status_effects[effect] = status_effects[effect]
 						if effect == "stun":
-							body.get_node("Sprite/Stun").visible = true
+							body.get_node("Sprite2D/Stun").visible = true
 				body.hit(dmg)
 				pierce -= 1
 				dont_hit_again.append(body.spawn_tile)

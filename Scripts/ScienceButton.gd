@@ -2,23 +2,23 @@ extends Panel
 
 var main_tree
 var is_over:bool = false
-export var infinite_research:bool = false
+@export var infinite_research:bool = false
 var game
 
 func _ready():
-	game = get_node("/root/Game") if not Engine.editor_hint else null
+	game = get_node("/root/Game") if not Engine.is_editor_hint() else null
 	var font = theme.default_font
-	connect("mouse_entered", self, "on_mouse_entered")
-	connect("mouse_exited", self, "on_mouse_exited")
-	$Texture.texture = load("res://Graphics/Science/" + name + ".png")
+	connect("mouse_entered",Callable(self,"on_mouse_entered"))
+	connect("mouse_exited",Callable(self,"on_mouse_exited"))
+	$Texture2D.texture = load("res://Graphics/Science/" + name + ".png")
 	refresh()
 	if game and not infinite_research:
 		if game.science_unlocked.has(name):
-			$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+			$Label["theme_override_colors/font_color"] = Color(0.4, 0.9, 1, 1)
 			self_modulate = Color(0.24, 0.0, 1.0, 1.0)
 		else:
-			self_modulate = Color.green
-	$Label.rect_size.x = rect_size.x - $Texture.rect_size.x - 10
+			self_modulate = Color.GREEN
+	$Label.size.x = size.x - $Texture2D.size.x - 10
 
 func refresh():
 	if infinite_research:
@@ -27,19 +27,19 @@ func refresh():
 		$Label.text = tr("%s_X" % name) % [sc_lv + 1]
 		$Text.text = Helper.format_num(round(sc.cost * pow(sc.pw, sc_lv)))
 		if round(sc.cost * pow(sc.pw, sc_lv)) > game.SP:
-			$Text["custom_colors/font_color"] = Color.red
+			$Text["theme_override_colors/font_color"] = Color.RED
 		else:
-			$Text["custom_colors/font_color"] = Color.green
+			$Text["theme_override_colors/font_color"] = Color.GREEN
 	else:
-		if modulate == Color.white:
+		if modulate == Color.WHITE:
 			$Label.text = get_science_name(name)
 			$Text.text = Helper.format_num(Data.science_unlocks[name].cost)
 			if game.science_unlocked.has(name):
-				$Text["custom_colors/font_color"] = Color.white
+				$Text["theme_override_colors/font_color"] = Color.WHITE
 			elif Data.science_unlocks[name].cost > game.SP:
-				$Text["custom_colors/font_color"] = Color.red
+				$Text["theme_override_colors/font_color"] = Color.RED
 			else:
-				$Text["custom_colors/font_color"] = Color.green
+				$Text["theme_override_colors/font_color"] = Color.GREEN
 		else:
 			$Label.text = "?"
 			$Text.text = "-"
@@ -138,9 +138,9 @@ func _input(event):
 				elif name == "FG":
 					game.new_bldgs.SY = true
 				game.HUD.refresh()
-				$Label["custom_colors/font_color"] = Color(0.4, 0.9, 1, 1)
+				$Label["theme_override_colors/font_color"] = Color(0.4, 0.9, 1, 1)
 				self_modulate = Color(0.24, 0.0, 1.0, 1.0)
-				$Text["custom_colors/font_color"] = Color.white
+				$Text["theme_override_colors/font_color"] = Color.WHITE
 				main_tree.refresh()
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)

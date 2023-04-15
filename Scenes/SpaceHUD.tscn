@@ -1,186 +1,130 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=13 format=3 uid="uid://cgbd1tgsqupqm"]
 
-[ext_resource path="res://Graphics/Buttons/Overlay.png" type="Texture" id=1]
-[ext_resource path="res://Scripts/SpaceHUD.gd" type="Script" id=2]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Graphics/Buttons/Megastructures.png" type="Texture" id=4]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=5]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=6]
-[ext_resource path="res://Graphics/Buttons/Annotate.png" type="Texture" id=7]
-[ext_resource path="res://Graphics/Buttons/Gigastructures.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Buttons/ElementOverlay.png" type="Texture" id=9]
+[ext_resource type="Texture2D" uid="uid://bqsl32377fxnf" path="res://Graphics/Buttons/Overlay.png" id="1"]
+[ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://w1tpm8qjsx2w" path="res://Graphics/Buttons/Megastructures.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cd6irvbek5dux" path="res://Graphics/Buttons/Annotate.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://fdrcuyuxv13v" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://b5al6qltymgbo" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
 
-[sub_resource type="InputEventAction" id=1]
-action = "O"
+[sub_resource type="Shortcut" id="2"]
 
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+[sub_resource type="Shortcut" id="4"]
 
-[sub_resource type="InputEventAction" id=3]
-action = "N"
+[sub_resource type="Shortcut" id="6"]
 
-[sub_resource type="ShortCut" id=4]
-shortcut = SubResource( 3 )
-
-[sub_resource type="InputEventAction" id=5]
-action = "C"
-
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
-
-[sub_resource type="DynamicFont" id=7]
-size = 20
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 5 )
-fallback/0 = ExtResource( 6 )
-
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id="8"]
 resource_name = "MoveButtons"
 length = 0.3
 step = 0.05
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("VBoxContainer:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( -51.8981, -0.25, 0, 0, 51.1188, 1.14971, -0.0757132, -1.31548, 0.25, 0 ),
-"times": PoolRealArray( 0.15, 0.3 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sslco"]
+_data = {
+"MoveButtons": SubResource("8")
 }
 
 [node name="SpaceHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-theme = ExtResource( 3 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme = ExtResource("3")
+script = ExtResource("2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = -51.8981
-margin_right = -3.89813
-margin_bottom = 720.0
+layout_mode = 0
+offset_left = -51.8981
+offset_right = -3.89813
+offset_bottom = 720.0
 mouse_filter = 2
-custom_constants/separation = 0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ElementOverlay" type="TextureButton" parent="VBoxContainer"]
 visible = false
-margin_top = 240.0
-margin_right = 48.0
-margin_bottom = 288.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
-texture_normal = ExtResource( 9 )
-expand = true
+texture_normal = ExtResource("9")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Overlay" type="TextureButton" parent="VBoxContainer"]
 visible = false
-margin_top = 264.0
-margin_right = 48.0
-margin_bottom = 312.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
-texture_normal = ExtResource( 1 )
-expand = true
+texture_normal = ExtResource("1")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Annotate" type="TextureButton" parent="VBoxContainer"]
 visible = false
-margin_top = 288.0
-margin_right = 48.0
-margin_bottom = 336.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("4")
 shortcut_in_tooltip = false
-shortcut = SubResource( 4 )
-texture_normal = ExtResource( 7 )
-expand = true
+texture_normal = ExtResource("7")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Megastructures" type="TextureButton" parent="VBoxContainer"]
 visible = false
-margin_top = 312.0
-margin_right = 48.0
-margin_bottom = 360.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("6")
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
-texture_normal = ExtResource( 4 )
-expand = true
+texture_normal = ExtResource("4")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Gigastructures" type="TextureButton" parent="VBoxContainer"]
 visible = false
-margin_top = 336.0
-margin_right = 48.0
-margin_bottom = 384.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("6")
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
-texture_normal = ExtResource( 8 )
-expand = true
+texture_normal = ExtResource("8")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ConquerAll" type="Button" parent="."]
-margin_left = 184.0
-margin_top = 680.0
-margin_right = 376.0
-margin_bottom = 720.0
-custom_fonts/font = SubResource( 7 )
-text = "CONQUER_ALL"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SendFighters" type="Button" parent="."]
-margin_left = 184.0
-margin_top = 680.0
-margin_right = 376.0
-margin_bottom = 720.0
-custom_fonts/font = SubResource( 7 )
+layout_mode = 0
+offset_left = 184.0
+offset_top = 680.0
+offset_right = 376.0
+offset_bottom = 720.0
 text = "SEND_FIGHTERS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="ConquerAll" type="Button" parent="."]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 680.0
+offset_right = 376.0
+offset_bottom = 720.0
+text = "CONQUER_ALL"
 
 [node name="SendProbes" type="Button" parent="."]
-margin_left = 184.0
-margin_top = 680.0
-margin_right = 376.0
-margin_bottom = 720.0
-custom_fonts/font = SubResource( 7 )
+layout_mode = 0
+offset_left = 184.0
+offset_top = 680.0
+offset_right = 376.0
+offset_bottom = 720.0
 text = "SEND_PROBES"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/MoveButtons = SubResource( 8 )
+libraries = {
+"": SubResource("AnimationLibrary_sslco")
+}
 
 [connection signal="mouse_entered" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/ElementOverlay" to="." method="_on_mouse_exited"]
@@ -197,8 +141,8 @@ anims/MoveButtons = SubResource( 8 )
 [connection signal="mouse_entered" from="VBoxContainer/Gigastructures" to="." method="_on_Gigastructures_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Gigastructures" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Gigastructures" to="." method="_on_Gigastructures_pressed"]
+[connection signal="pressed" from="SendFighters" to="." method="_on_SendFighters_pressed"]
 [connection signal="mouse_entered" from="ConquerAll" to="." method="_on_ConquerAll_mouse_entered"]
 [connection signal="mouse_exited" from="ConquerAll" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ConquerAll" to="." method="_on_ConquerAll_pressed"]
-[connection signal="pressed" from="SendFighters" to="." method="_on_SendFighters_pressed"]
 [connection signal="pressed" from="SendProbes" to="." method="_on_SendProbes_pressed"]

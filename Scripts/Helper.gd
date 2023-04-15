@@ -1,7 +1,7 @@
 extends Node
 #A place to put frequently used functions
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 #var game
 var notation:int = 1#0: standard, 1: SI, 2: scientific
 
@@ -9,12 +9,12 @@ func set_btn_color(btn):
 	if not btn.get_parent_control():
 		return
 	for other_btn in btn.get_parent_control().get_children():
-		other_btn["custom_colors/font_color"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_hover"] = Color(1, 1, 1, 1)
-		other_btn["custom_colors/font_color_pressed"] = Color(1, 1, 1, 1)
-	btn["custom_colors/font_color"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	btn["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
+		other_btn["theme_override_colors/font_color"] = Color(1, 1, 1, 1)
+		other_btn["theme_override_colors/font_color_hover"] = Color(1, 1, 1, 1)
+		other_btn["theme_override_colors/font_color_pressed"] = Color(1, 1, 1, 1)
+	btn["theme_override_colors/font_color"] = Color(0, 1, 1, 1)
+	btn["theme_override_colors/font_color_hover"] = Color(0, 1, 1, 1)
+	btn["theme_override_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
 #put_rsrc helper function
 func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost, rsrc_available, mass_str:String = "", threshold:int = 6):
@@ -39,7 +39,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 			num_str = "0"
 		text = "%s%s%s" % [minus, num_str, mass_str]
 	text_node.text = text
-	text_node["custom_colors/font_color"] = color
+	text_node["theme_override_colors/font_color"] = color
 
 func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
 	if remove:
@@ -47,8 +47,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			child.free()
 	var data = []
 	for obj in objs:
-		var rsrc = game.rsrc_scene.instance()
-		var texture = rsrc.get_node("Texture")
+		var rsrc = game.rsrc_scene.instantiate()
+		var texture = rsrc.get_node("Texture2D")
 		var atom:bool = false
 		var tooltip:String = tr(obj.to_upper())
 		if obj == "money":
@@ -65,7 +65,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
 		elif obj == "time":
 			texture.texture_normal = Data.time_icon
-			rsrc.get_node("Text").text = time_to_str(objs[obj] * 1000.0)
+			rsrc.get_node("Text").text = time_to_str(objs[obj])
 		elif game.mats.has(obj):
 			if obj == "silicon" and not game.show.has("silicon"):
 				tooltip += "\n%s" % [tr("HOW2SILICON")]
@@ -82,9 +82,9 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
 					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
-		rsrc.get_node("Texture").connect("mouse_entered", self, "on_rsrc_over", [tooltip])
-		rsrc.get_node("Texture").connect("mouse_exited", self, "on_rsrc_out")
-		texture.rect_min_size = Vector2(1, 1) * min_size
+		rsrc.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_rsrc_over").bind(tooltip))
+		rsrc.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_rsrc_out"))
+		texture.custom_minimum_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})
 	return data
@@ -95,17 +95,17 @@ func on_rsrc_over(st:String):
 func on_rsrc_out():
 	game.hide_tooltip()
 
-#Converts time in milliseconds to string format
+#Converts time in seconds to string format
 func time_to_str (time:float):
 	if time < 0:
 		time = 0
-	var seconds = int(floor(time / 1000)) % 60
+	var seconds = int(floor(time)) % 60
 	var second_zero = "0" if seconds < 10 else ""
-	var minutes = int(floor(time / 60000)) % 60
+	var minutes = int(floor(time / 60)) % 60
 	var minute_zero = "0" if minutes < 10 else ""
-	var hours = int(floor(time / 3600000)) % 24
-	var days = int(floor (time / 86400000)) % 365
-	var years = int(floor (time / 31536000000))
+	var hours = int(floor(time / 3600)) % 24
+	var days = int(floor (time / 86400)) % 365
+	var years = int(floor (time / 31536000))
 	var year_str = "" if years == 0 else ("%s%s " % [years, tr("YEARS")])
 	var day_str = "" if days == 0 else ("%s%s " % [days, tr("DAYS")])
 	var hour_str = "" if hours == 0 else ("%s:" % hours)
@@ -120,11 +120,11 @@ func log10(n):
 
 func get_state(T:float, P:float, node):
 	var v = node.get_pos_from_TP(T, P)
-	if Geometry.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
+	if Geometry2D.is_point_in_polygon(v, node.get_node("Superfluid").polygon):
 		return "sc"
-	elif Geometry.is_point_in_polygon(v, node.get_node("Liquid").polygon):
+	elif Geometry2D.is_point_in_polygon(v, node.get_node("Liquid").polygon):
 		return "l"
-	elif Geometry.is_point_in_polygon(v, node.get_node("Gas").polygon):
+	elif Geometry2D.is_point_in_polygon(v, node.get_node("Gas").polygon):
 		return "g"
 	else:
 		return "s"
@@ -227,7 +227,7 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			p = ceil(p)
 		else:
 			p = int(p)
-		var div = max(pow(10, stepify(p - 1, 3)), 1)
+		var div = max(pow(10, snapped(p - 1, 3)), 1)
 		if notation == 2 and p >= 3 or p >= 33:
 			return e_notation(num, 3)
 		if p >= 3 and p < 6:
@@ -293,21 +293,21 @@ func mult_dict_by(dict:Dictionary, value:float):
 	return dict2
 
 func get_crush_info(tile_obj):
-	var time = OS.get_system_time_msecs()
+	var time = Time.get_unix_time_from_system()
 	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
 	var constr_delay = 0
 	if tile_obj.bldg.has("is_constructing"):
 		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
-	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd / tile_obj.bldg.stone_qty)
-	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) / 1000.0 * crush_spd))
+	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) * crush_spd / tile_obj.bldg.stone_qty)
+	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) * crush_spd))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
 func get_prod_info(tile_obj):
-	var time = OS.get_system_time_msecs()
+	var time = Time.get_unix_time_from_system()
 	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * get_IR_mult(tile_obj.bldg.name)
 	#qty1: resource being used. qty2: resource being produced
-	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) / 1000.0 * spd / tile_obj.bldg.ratio))
-	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) / 1000.0 * spd))
+	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) * spd / tile_obj.bldg.ratio))
+	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) * spd))
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
@@ -319,11 +319,11 @@ func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Ar
 	overlay.visible = false
 	parent.add_child(overlay)
 	overlays.append({"circle":overlay, "id":obj_info.l_id})
-	overlay.connect("mouse_entered", self_node, "on_%s_over" % [c_v], [obj_info.l_id])
-	overlay.connect("mouse_exited", self_node, "on_%s_out" % [c_v])
-	overlay.connect("pressed", self_node, "on_%s_click" % [c_v], [obj_info.id, obj_info.l_id])
-	overlay.rect_position = Vector2(-300 / 2, -300 / 2)
-	overlay.rect_pivot_offset = Vector2(300 / 2, 300 / 2)
+	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(obj_info.l_id))
+	overlay.connect("mouse_exited",Callable(self_node,"on_%s_out" % [c_v]))
+	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(obj_info.id, obj_info.l_id))
+	overlay.position = Vector2(-300 / 2, -300 / 2)
+	overlay.pivot_offset = Vector2(300 / 2, 300 / 2)
 
 func toggle_overlay(obj_btns, overlays, overlay_visible):
 	for obj_btn in obj_btns:
@@ -333,13 +333,12 @@ func toggle_overlay(obj_btns, overlays, overlay_visible):
 
 func change_circle_size(value, overlays):
 	for overlay in overlays:
-		overlay.circle.rect_scale.x = 2 * value
-		overlay.circle.rect_scale.y = 2 * value
+		overlay.circle.scale.x = 2 * value
+		overlay.circle.scale.y = 2 * value
 
 func save_obj(type:String, id:int, arr:Array):
-	var save:File = File.new()
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
-	save.open(file_path, File.WRITE)
+	var save = FileAccess.open(file_path, FileAccess.WRITE)
 	save.store_var(arr)
 	save.close()
 
@@ -357,48 +356,34 @@ func get_rover_mining_name(_name:String):
 	var laser = _name.split("_", true, 1)
 	return tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())})
 
-func set_back_btn(back_btn, set_text:bool = true):
-	if OS.get_latin_keyboard_variant() == "QWERTZ":
-		back_btn.shortcut.shortcut.action = "Y"
-	elif OS.get_latin_keyboard_variant() == "AZERTY":
-		back_btn.shortcut.shortcut.action = "W"
-	else:
-		back_btn.shortcut.shortcut.action = "Z"
-	if set_text:
-		back_btn.text = "<- %s (%s)" % [tr("BACK"), back_btn.shortcut.shortcut.action]
+func set_back_btn(back_btn):
+	back_btn.text = "<- %s (%s)" % [tr("BACK"), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_Z))]
 
-var dmg_txt_rsrc = preload("res://Resources/DamageText.tres")
 func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
-	lb["custom_fonts/font"] = dmg_txt_rsrc
+	#lb["custom_fonts/font"] = dmg_txt_rsrc
 	lb.light_mask = 0
 	if missed:
-		lb["custom_colors/font_color"] = Color(1, 1, 0, 1)
+		lb["theme_override_colors/font_color"] = Color(1, 1, 0, 1)
 		lb.text = tr("MISSED")
 	else:
-		lb["custom_colors/font_color"] = Color(1, 0.2, 0.2, 1)
+		lb["theme_override_colors/font_color"] = Color(1, 0.2, 0.2, 1)
 		lb.text = "- %s" % format_num(dmg)
 		if crit:
 			lb.text = "%s\n- %s" % [tr("CRITICAL"), format_num(dmg)]
 		else:
 			lb.text = "- %s" % format_num(dmg)
-	lb.rect_position = pos - Vector2(0, 40)
-	lb.rect_scale *= sc
+	lb.position = pos - Vector2(0, 40)
+	lb.scale *= sc
 	var dur = 1.5 if crit else 1.0
 	if game:
 		dur /= game.u_i.time_speed
-	var tween:Tween = Tween.new()
-	tween.interpolate_property(lb, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), dur)
-	tween.interpolate_property(lb, "rect_position", null, pos - Vector2(0, 55), dur, Tween.TRANS_BACK, Tween.EASE_OUT)
-	parent.add_child(tween)
-	tween.start()
-	tween.connect("tween_all_completed", self, "on_tween_all_completed", [tween, lb])
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(lb, "modulate", Color(1, 1, 1, 0), dur)
+	tween.tween_property(lb, "position", pos - Vector2(0, 55), dur).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(lb.queue_free).set_delay(dur)
 	#lb.light_mask = 2
-	parent.add_child(lb)
-
-func on_tween_all_completed(tween, lb):
-	tween.queue_free()
-	lb.queue_free()
 
 func add_minerals(amount:float, add:bool = true):
 	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
@@ -488,20 +473,20 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			if not game.show.has("materials"):
 				game.show.materials = true
 				game.HUD.craft.visible = true
-				game.inventory.get_node("Tabs/Materials").visible = true
+				game.inventory.get_node("TabBar/Materials").visible = true
 		elif game.mets.has(content):
 			if not game.help.has("metals"):
-				if not is_MM and is_instance_valid(game.tutorial):
+				if not is_MM:
 					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.help.metals = true
 			if not game.show.has("metals"):
 				game.show.metals = true
-				game.inventory.get_node("Tabs/Metals").visible = true
+				game.inventory.get_node("TabBar/Metals").visible = true
 			game.mets[content] += amount
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
 		elif content == "ship_locator":
-			if not game.objective.empty() and game.objective.type == game.ObjectiveType.SIGNAL and game.objective.id == 11:
+			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.SIGNAL and game.objective.id == 11:
 				game.objective.current += 1
 			game.second_ship_hints.ship_locator = true
 			tile.erase("ship_locator_depth")
@@ -538,7 +523,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	var depth_limit_mult = max(1, 1 + (((2 * tile.depth + depth) / 2.0) - p_i.crust_start_depth) / float(p_i.crust_start_depth))
 	for mat in p_i.surface.keys():
 		var chance_mult:float = min(p_i.surface[mat].chance / depth_limit_mult * aurora_mult, 1)
-		var amount = p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult * chance_mult * depth * h_mult
+		var amount = p_i.surface[mat].amount * randf_range(0.8, 1.2) / depth_limit_mult * aurora_mult * chance_mult * depth * h_mult
 		if amount < 1:
 			continue
 		contents[mat] = amount
@@ -549,7 +534,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		var amount:float
 		if tile.has("crater") and met == tile.crater.metal:
 			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
-			amount = rand_range(0.2, 0.225) * min(depth, 2 * tile.crater.init_depth)
+			amount = randf_range(0.2, 0.225) * min(depth, 2 * tile.crater.init_depth)
 		else:
 			chance_mult = min(7.0 / (7.0 + 1 / chance_mult), 1)
 			var end_depth:int = tile.depth + depth
@@ -558,7 +543,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles:int = end_depth - met_start_depth
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
-			amount = rand_range(0.4, 0.45) * num_tiles3
+			amount = randf_range(0.4, 0.45) * num_tiles3
 		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.5)
 		if amount < 1:
 			continue
@@ -591,7 +576,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 				contents[mat] = amount
 				other_volume += amount / rho / 1000 / h_mult
 			elif randf() < p_i.surface[mat].chance / depth_limit_mult * aurora_mult:
-				var amount = clever_round(p_i.surface[mat].amount * rand_range(0.8, 1.2) / depth_limit_mult * aurora_mult * h_mult)
+				var amount = clever_round(p_i.surface[mat].amount * randf_range(0.8, 1.2) / depth_limit_mult * aurora_mult * h_mult)
 				if amount < 1:
 					continue
 				contents[mat] = amount
@@ -608,7 +593,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var progress2 = tile.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-		var amount = clever_round(20 * (3 if crater_metal else 1) * rand_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		var amount = clever_round(20 * (3 if crater_metal else 1) * randf_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.current_deposit.progress += 1
@@ -659,12 +644,14 @@ func add_weapon_XP(id:int, weapon:String, XP:float):
 func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	var label = Label.new()
-	label.autowrap = autowrap
 	if autowrap:
-		label.rect_size.x = 250
-		label.rect_min_size.x = 250
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if autowrap:
+		label.size.x = 250
+		label.custom_minimum_size.x = 250
 	if center:
-		label.align = Label.ALIGN_CENTER
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.text = txt
 	vbox.add_child(label)
 	if idx != -1:
@@ -682,7 +669,7 @@ func get_PCNC_production(pressure:float, value:float):
 	return value / pressure
 
 func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	var current_bar_value = 0
 	var capacity_bar_value = 0
 	var rsrc_text = ""
@@ -734,7 +721,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	elif tile.bldg.name == "SC":
 		if tile.bldg.has("stone"):
 			var c_i = get_crush_info(tile)
-			rsrc_text = String(c_i.qty_left)
+			rsrc_text = str(c_i.qty_left)
 			capacity_bar_value = 1 - c_i.progress
 		else:
 			rsrc_text = ""
@@ -804,7 +791,7 @@ func ships_on_planet(p_id:int):#local planet id
 func update_ship_travel():
 	if game.ships_travel_view == "-":
 		return 1
-	var progress:float = (OS.get_system_time_msecs() - game.ships_travel_start_date) / float(game.ships_travel_length)
+	var progress:float = (Time.get_unix_time_from_system() - game.ships_travel_start_date) / float(game.ships_travel_length)
 	if progress >= 1:
 		game.get_node("Ship").mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 		game.ships_travel_view = "-"
@@ -819,7 +806,7 @@ func update_ship_travel():
 	return progress
 
 func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	var start_date = tile.bldg.construction_date
 	var length = tile.bldg.construction_length
 	var progress = (curr_time - start_date) / float(length)
@@ -828,7 +815,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 		if tile.bldg.has("is_constructing"):
 			tile.bldg.erase("is_constructing")
 			game.universe_data[game.c_u].xp += tile.bldg.XP
-			if not game.objective.empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
+			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
 			if tile.bldg.has("rover_id"):
 				game.rover_data[tile.bldg.rover_id].ready = true
@@ -910,10 +897,10 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						if y < 0 or y >= tile.bldg.wid or x == tile.bldg.x_pos and y == tile.bldg.y_pos:
 							continue
 						var id:int = x % wid + y * wid
-						if not tile_data[id]:
+						if tile_data[id] == null:
 							tile_data[id] = {}
 						var _tile = tile_data[id]
-						var id_str:String = String(tile_data.find(tile))
+						var id_str:String = str(tile_data.find(tile))
 						if not _tile.has("cost_div_dict"):
 							_tile.cost_div = tile.bldg.path_1_value
 							_tile.cost_div_dict = {}
@@ -928,8 +915,6 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						_tile.overclock_dict[id_str] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
-			if game.tutorial and game.help.tutorial < 26:
-				game.HUD.refresh()
 	return update_boxes
 
 func add_energy_from_NFR(p_i:Dictionary, base:float):
@@ -996,17 +981,17 @@ func add_atom_production(el:String, base_prod:float):
 		game.autocollect.atoms[el] = 1 * base_prod + game.autocollect.atoms.get(el, 0)
 
 func get_reaction_info(tile):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - tile.bldg.start_date) / (1000 * tile.bldg.difficulty) * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - tile.bldg.start_date) / tile.bldg.difficulty * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func update_MS_rsrc(dict:Dictionary):
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	var prod:float
 	if dict.has("tile_num"):
 		if dict.bldg.name == "AE":
-			prod = 1000 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num / game.u_i.time_speed
+			prod = 1.0 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num / game.u_i.time_speed
 		else:
-			prod = 1000 / dict.bldg.path_1_value
+			prod = 1.0 / dict.bldg.path_1_value
 			if dict.bldg.name != "MM":
 				prod /= dict.tile_num
 			prod /= get_prod_mult(dict)
@@ -1081,46 +1066,46 @@ var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
 func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	var hbox = HBoxContainer.new()
-	hbox.alignment = hbox.ALIGN_CENTER
+	hbox.alignment = hbox.ALIGNMENT_CENTER
 	hbox.theme = hbox_theme
-	hbox["custom_constants/separation"] = -1
+	hbox["theme_override_constants/separation"] = -1
 	if obj.bldg.has("path_1"):
 		var path_1 = Label.new()
 		path_1.name = "Path1"
-		path_1.text = String(obj.bldg.path_1)
-		path_1.connect("mouse_entered", self, "on_path_enter", ["1", obj])
-		path_1.connect("mouse_exited", self, "on_path_exit")
-		path_1["custom_styles/normal"] = text_border_theme
+		path_1.text = str(obj.bldg.path_1)
+		path_1.connect("mouse_entered",Callable(self,"on_path_enter").bind("1", obj))
+		path_1.connect("mouse_exited",Callable(self,"on_path_exit"))
+		path_1["theme_override_styles/normal"] = text_border_theme
 		hbox.add_child(path_1)
 		hbox.mouse_filter = hbox.MOUSE_FILTER_IGNORE
 		path_1.mouse_filter = path_1.MOUSE_FILTER_PASS
 	if obj.bldg.has("path_2"):
 		var path_2 = Label.new()
 		path_2.name = "Path2"
-		path_2.text = String(obj.bldg.path_2)
-		path_2.connect("mouse_entered", self, "on_path_enter", ["2", obj])
-		path_2.connect("mouse_exited", self, "on_path_exit")
-		path_2["custom_styles/normal"] = text_border_theme
+		path_2.text = str(obj.bldg.path_2)
+		path_2.connect("mouse_entered",Callable(self,"on_path_enter").bind("2", obj))
+		path_2.connect("mouse_exited",Callable(self,"on_path_exit"))
+		path_2["theme_override_styles/normal"] = text_border_theme
 		path_2.mouse_filter = path_2.MOUSE_FILTER_PASS
 		hbox.add_child(path_2)
 	if obj.bldg.has("path_3"):
 		var path_3 = Label.new()
 		path_3.name = "Path3"
-		path_3.text = String(obj.bldg.path_3)
-		path_3.connect("mouse_entered", self, "on_path_enter", ["3", obj])
-		path_3.connect("mouse_exited", self, "on_path_exit")
-		path_3["custom_styles/normal"] = text_border_theme
+		path_3.text = str(obj.bldg.path_3)
+		path_3.connect("mouse_entered",Callable(self,"on_path_enter").bind("3", obj))
+		path_3.connect("mouse_exited",Callable(self,"on_path_exit"))
+		path_3["theme_override_styles/normal"] = text_border_theme
 		path_3.mouse_filter = path_3.MOUSE_FILTER_PASS
 		hbox.add_child(path_3)
-	hbox.rect_size.x = 200
-	hbox.rect_scale *= sc
-	hbox.rect_position = v - Vector2(100, 90) * sc
+	hbox.size.x = 200
+	hbox.scale *= sc
+	hbox.position = v - Vector2(100, 90) * sc
 	#hbox.visible = get_parent().scale.x >= 0.25
 	return hbox
 
 func on_path_enter(path:String, obj:Dictionary):
 	game.hide_adv_tooltip()
-	if not obj.empty() and obj.has("bldg"):
+	if not obj.is_empty() and obj.has("bldg"):
 		game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
 
 func on_path_exit():
@@ -1135,7 +1120,7 @@ func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):
 			return floor(num)
 		else:
 			return round(num)
-	return stepify(num, pow(10, e - sd + 1))
+	return snapped(num, pow(10, e - sd + 1))
 
 const Y9 = Color(25, 0, 0, 255) / 255.0
 const Y0 = Color(66, 0, 0, 255) / 255.0
@@ -1260,18 +1245,16 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 			return ""
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
-	overlay.circle.modulate = gradient.interpolate(offset)
+	overlay.circle.modulate = gradient.sample(offset)
 	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
 
 func remove_recursive(path):
-	var directory = Directory.new()
-	
 	# Open directory
-	var error = directory.open(path)
-	if error == OK:
+	var directory = DirAccess.open(path)
+	if directory:
 		# List directory content
-		directory.list_dir_begin(true)
+		directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = directory.get_next()
 		while file_name != "":
 			if directory.current_is_dir():
@@ -1304,7 +1287,7 @@ func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, t
 		elif el == "Ti" and game.science_unlocked.has("ISC"):
 			item = "titanium"
 			el_num = game.stone[el] * amount / total_stone / 500.0
-		el_num = stepify(el_num * path_3_value, 0.001)
+		el_num = snapped(el_num * path_3_value, 0.001)
 		if el_num != 0:
 			expected_rsrc[item] = el_num
 
@@ -1339,12 +1322,12 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			if cave_mod > 1.0:
 				if double_treasure_at > 1.0:
 					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					mod_color = gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
-						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(range_lerp(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(remap(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))
 				else:
-					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+					mod_color = lerp(Color.GREEN, Color.WHITE, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
 				st += "\n%s: %s+%s%%[/color]%s%s" % [
 					tr(modifier.to_upper()),
 					au_str_end + "[color=#%s]" % mod_color,
@@ -1355,12 +1338,12 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			else:
 				if double_treasure_at < 1.0:
 					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.interpolate(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					mod_color = gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
-						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(range_lerp(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
+						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(remap(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))
 				else:
-					mod_color = lerp(Color.green, Color.white, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
+					mod_color = lerp(Color.GREEN, Color.WHITE, inverse_lerp(1.0 / double_treasure_at, 1.0, cave_mod)).to_html(false)
 				st += "\n%s: %s-%s%%[/color]%s%s" % [
 					tr(modifier.to_upper()),
 					au_str_end + "[color=#%s]" % mod_color,
@@ -1432,15 +1415,15 @@ func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 
 func set_resolution(index:int):
 	var res:Vector2 = get_viewport().size
-	get_viewport().size_override_stretch = true 
+	get_viewport().size_2d_override_stretch = true 
 	if index == 0:
-		get_viewport().size_override_stretch = false
-		if OS.window_fullscreen:
-			res = OS.get_screen_size()
+		get_viewport().size_2d_override_stretch = false
+		if ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN)):
+			res = DisplayServer.screen_get_size()
 			game.current_viewport_dimensions = res
 			get_viewport().size = res
-			OS.window_fullscreen = false
-			OS.window_fullscreen = true
+			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (false) else Window.MODE_WINDOWED
+			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (true) else Window.MODE_WINDOWED
 		else:
 			res = Vector2(1280, 720)
 	elif index == 1:
@@ -1472,9 +1455,9 @@ func set_resolution(index:int):
 
 func get_roman_num(num:int):
 	if num > 3999:
-		return String(num)
+		return str(num)
 	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
-	var num_str:String = String(num)
+	var num_str:String = str(num)
 
 	var res = ""
 	var n = num_str.length()

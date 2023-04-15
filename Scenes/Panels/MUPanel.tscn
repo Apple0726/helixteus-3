@@ -1,102 +1,96 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://ev7ll8hmf3xe"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
-[ext_resource path="res://Scripts/MUPanel.gd" type="Script" id=6]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=7]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+[ext_resource type="Script" path="res://Scripts/MUPanel.gd" id="6"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="7"]
 
 [node name="Background" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -512.0
-margin_top = -296.0
-margin_right = 512.0
-margin_bottom = 296.0
-theme = ExtResource( 5 )
-script = ExtResource( 6 )
-
-[node name="CloseButton" parent="." instance=ExtResource( 7 )]
+offset_left = -512.0
+offset_top = -296.0
+offset_right = 512.0
+offset_bottom = 296.0
+theme = ExtResource("5")
+script = ExtResource("6")
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 29.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 29.0
+theme_override_font_sizes/font_size = 18
 text = "MINERAL_UPGRADES"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" parent="." instance=ExtResource("7")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 992.0
+offset_top = 8.0
+offset_right = 1016.0
+offset_bottom = 32.0
+grow_horizontal = 1
 
 [node name="Desc" type="Label" parent="."]
+layout_mode = 0
 anchor_right = 1.0
-margin_top = 40.0
-margin_bottom = 77.0
+offset_top = 40.0
+offset_bottom = 77.0
 text = "MU_DESC"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 24.0
-margin_top = -496.0
-margin_right = -24.0
-margin_bottom = -24.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 24.0
+offset_top = -496.0
+offset_right = -24.0
+offset_bottom = -24.0
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 16.0
-margin_right = -16.0
-margin_bottom = -24.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 16.0
+offset_right = -16.0
+offset_bottom = -24.0
 
 [node name="Titles" type="HBoxContainer" parent="Panel/VBox"]
-margin_right = 944.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 0, 50 )
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Panel/VBox/Titles"]
-margin_top = 13.0
-margin_right = 450.0
-margin_bottom = 37.0
-rect_min_size = Vector2( 450, 0 )
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 text = "UPGRADE_NOUN"
 
 [node name="Lv" type="Label" parent="Panel/VBox/Titles"]
-margin_left = 454.0
-margin_top = 13.0
-margin_right = 614.0
-margin_bottom = 37.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "LEVEL"
 
 [node name="Info" type="Label" parent="Panel/VBox/Titles"]
-margin_left = 618.0
-margin_top = 13.0
-margin_right = 779.0
-margin_bottom = 37.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "EFFECTS"
 
 [node name="Lv3" type="Label" parent="Panel/VBox/Titles"]
-margin_left = 783.0
-margin_top = 13.0
-margin_right = 944.0
-margin_bottom = 37.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "UPGRADE"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/VBox/Titles"]
+layout_mode = 2
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

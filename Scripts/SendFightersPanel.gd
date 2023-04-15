@@ -12,13 +12,13 @@ var strength_required:float = 0
 var sorted_objs:Array = []
 var start_index:int = 0
 var fighter_type:int = 0
-onready var RTL:RichTextLabel = $Label
-onready var time_left:Label = $Control2/TimeLeft
-onready var progress:TextureProgress = $Control2/TextureProgress
+@onready var RTL:RichTextLabel = $Label
+@onready var time_left:Label = $Control2/TimeLeft
+@onready var progress:TextureProgressBar = $Control2/TextureProgressBar
 
 func _ready():
 	set_process(false)
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh_energy():
 	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1) * 5.0
@@ -70,8 +70,7 @@ func refresh():
 				if not fighter.has("tier"):#Save migration
 					fighter.tier = 0
 				if fighter.tier == 0 and fighter.c_g_g == game.c_g_g:
-					var file = File.new()
-					file.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], File.READ)
+					var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], FileAccess.READ)
 					var planets_in_depart_system = file.get_var()
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
@@ -121,7 +120,7 @@ func refresh():
 			$Send.visible = true
 			set_process(false)
 			for gal in game.galaxy_data:
-				if gal.empty():
+				if gal.is_empty():
 					continue
 				if not gal.has("conquered"):
 					strength_required += gal.diff
@@ -142,7 +141,7 @@ func refresh():
 			combined_strength2 = combined_strength
 			sort_galaxies($Control/CheckBox.pressed)
 			for galaxy in sorted_objs:
-				if galaxy.empty() or galaxy.has("conquered"):
+				if galaxy.is_empty() or galaxy.has("conquered"):
 					continue
 				if combined_strength2 < galaxy.diff:
 					if obj_num == 0:
@@ -159,20 +158,20 @@ func refresh():
 
 func sort_systems(ascending:bool):
 	sorted_objs = game.system_data.duplicate(true)
-	sorted_objs.sort_custom(self, "diff_sort")
+	sorted_objs.sort_custom(Callable(self,"diff_sort"))
 	if not ascending:
-		sorted_objs.invert()
+		sorted_objs.reverse()
 	
 func sort_galaxies(ascending:bool):
 	sorted_objs = game.galaxy_data.duplicate(true)
-	sorted_objs.sort_custom(self, "diff_sort")
+	sorted_objs.sort_custom(Callable(self,"diff_sort"))
 	if not ascending:
-		sorted_objs.invert()
+		sorted_objs.reverse()
 
 func diff_sort(a:Dictionary, b:Dictionary):
-	if b.empty():
+	if b.is_empty():
 		return false
-	if a.empty() or a.diff < b.diff:
+	if a.is_empty() or a.diff < b.diff:
 		return true
 	return false
 
@@ -204,13 +203,13 @@ func get_travel_cost_multiplier(lv:int):
 		return 0.75
 
 func _on_CheckBox_pressed():
-	$Control/CheckBox.pressed = true
-	$Control/CheckBox2.pressed = false
+	$Control/CheckBox.button_pressed = true
+	$Control/CheckBox2.button_pressed = false
 	refresh()
 
 func _on_CheckBox2_pressed():
-	$Control/CheckBox2.pressed = true
-	$Control/CheckBox.pressed = false
+	$Control/CheckBox2.button_pressed = true
+	$Control/CheckBox.button_pressed = false
 	refresh()
 
 func _on_Send_pressed():
@@ -219,7 +218,7 @@ func _on_Send_pressed():
 			if obj_num > 0:
 				if game.energy >= total_energy_cost:
 					game.energy -= total_energy_cost
-					var curr_time = OS.get_system_time_msecs()
+					var curr_time = Time.get_unix_time_from_system()
 					var i:int = 0
 					while i < len(game.fighter_data):
 						if game.fighter_data[i].tier == 0 and game.fighter_data[i].c_g_g == game.c_g_g:
@@ -251,7 +250,7 @@ func _on_Send_pressed():
 			if obj_num > 0:
 				if game.energy >= total_energy_cost:
 					game.energy -= total_energy_cost
-					var curr_time = OS.get_system_time_msecs()
+					var curr_time = Time.get_unix_time_from_system()
 					var i:int = 0
 					while i < len(game.fighter_data):
 						if game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
@@ -289,7 +288,7 @@ func _process(delta):
 	if game.c_v == "cluster" and not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 		set_process(false)
 		return
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	if fighter_type == 0:
 		var fighters_rekt = game.galaxy_data[game.c_g].combined_strength <= 0
 		var galaxy_conquered = true
@@ -342,7 +341,7 @@ func _process(delta):
 				game.stats_global.galaxies_conquered += 1
 				game.galaxy_data[game.c_g].conquered = true
 		else:
-			time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - OS.get_system_time_msecs() + game.galaxy_data[game.c_g].conquer_start_date)
+			time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - Time.get_unix_time_from_system() + game.galaxy_data[game.c_g].conquer_start_date)
 	elif fighter_type == 1:
 		var fighters_rekt = game.u_i.cluster_data[game.c_c].combined_strength <= 0
 		var cluster_conquered = true
@@ -353,7 +352,7 @@ func _process(delta):
 			if not fighters_rekt and progress.value >= 100:
 				for i in range(start_index, len(sorted_objs)):
 					var galaxy = sorted_objs[i]
-					if galaxy.empty() or galaxy.has("conquered"):
+					if galaxy.is_empty() or galaxy.has("conquered"):
 						start_index = i
 						continue
 					cluster_conquered = false
@@ -392,7 +391,7 @@ func _process(delta):
 				game.stats_global.clusters_conquered += 1
 				game.u_i.cluster_data[game.c_c].conquered = true
 		else:
-			time_left.text = Helper.time_to_str(game.u_i.cluster_data[game.c_c].time_for_one_gal - OS.get_system_time_msecs() + game.u_i.cluster_data[game.c_c].conquer_start_date)
+			time_left.text = Helper.time_to_str(game.u_i.cluster_data[game.c_c].time_for_one_gal - Time.get_unix_time_from_system() + game.u_i.cluster_data[game.c_c].conquer_start_date)
 	
 func _on_HSlider_value_changed(value):
 	refresh_energy()

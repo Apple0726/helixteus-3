@@ -1,15 +1,15 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Graphics/Buttons/IonDrive.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Buttons/ChemicalDrive.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Buttons/IonDrive.png" type="Texture2D" id=3]
+[ext_resource path="res://Graphics/Buttons/ChemicalDrive.png" type="Texture2D" id=4]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture2D" id=5]
 [ext_resource path="res://Scripts/DrivePanel.gd" type="Script" id=6]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
 
 [node name="Drives" type="Panel"]
-margin_top = 104.0
-margin_right = 1064.0
-margin_bottom = 600.0
+offset_top = 104.0
+offset_right = 1064.0
+offset_bottom = 600.0
 theme = ExtResource( 7 )
 script = ExtResource( 6 )
 __meta__ = {
@@ -22,10 +22,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -204.0
-margin_top = -220.0
-margin_right = 204.0
-margin_bottom = -188.0
+offset_left = -204.0
+offset_top = -220.0
+offset_right = 204.0
+offset_bottom = -188.0
 text = "CLICK_DRIVE_TO_USE"
 align = 1
 valign = 1
@@ -35,16 +35,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -204.0
-margin_top = -184.0
-margin_right = 204.0
-margin_bottom = -40.0
+offset_left = -204.0
+offset_top = -184.0
+offset_right = 204.0
+offset_bottom = -40.0
 
 [node name="Drives" type="HBoxContainer" parent="Panel"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 398.0
-margin_bottom = 138.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 398.0
+offset_bottom = 138.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -52,9 +52,9 @@ __meta__ = {
 
 [node name="CD" type="TextureButton" parent="Panel/Drives"]
 modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 64.0
-margin_right = 192.0
-margin_bottom = 128.0
+offset_left = 64.0
+offset_right = 192.0
+offset_bottom = 128.0
 theme = ExtResource( 7 )
 texture_normal = ExtResource( 4 )
 __meta__ = {
@@ -63,9 +63,9 @@ __meta__ = {
 
 [node name="ID" type="TextureButton" parent="Panel/Drives"]
 modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 196.0
-margin_right = 324.0
-margin_bottom = 128.0
+offset_left = 196.0
+offset_right = 324.0
+offset_bottom = 128.0
 theme = ExtResource( 7 )
 texture_normal = ExtResource( 3 )
 __meta__ = {
@@ -74,32 +74,32 @@ __meta__ = {
 
 [node name="Control" type="Control" parent="."]
 visible = false
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 mouse_filter = 1
 
 [node name="OptionButton" type="OptionButton" parent="Control"]
-margin_left = 460.0
-margin_top = 240.0
-margin_right = 669.0
-margin_bottom = 272.0
+offset_left = 460.0
+offset_top = 240.0
+offset_right = 669.0
+offset_bottom = 272.0
 expand_icon = true
 
 [node name="HSlider" type="HSlider" parent="Control"]
-margin_left = 392.0
-margin_top = 320.0
-margin_right = 548.0
-margin_bottom = 336.0
+offset_left = 392.0
+offset_top = 320.0
+offset_right = 548.0
+offset_bottom = 336.0
 step = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
-margin_left = 564.0
-margin_top = 308.0
-margin_right = 596.0
-margin_bottom = 340.0
+offset_left = 564.0
+offset_top = 308.0
+offset_right = 596.0
+offset_bottom = 340.0
 grow_horizontal = 0
 grow_vertical = 2
 expand = true
@@ -109,10 +109,10 @@ __meta__ = {
 }
 
 [node name="TextureRect2" type="TextureRect" parent="Control"]
-margin_left = 580.0
-margin_top = 376.0
-margin_right = 608.0
-margin_bottom = 408.0
+offset_left = 580.0
+offset_top = 376.0
+offset_right = 608.0
+offset_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource( 5 )
@@ -123,10 +123,10 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Control"]
-margin_left = 612.0
-margin_top = 309.0
-margin_right = 732.0
-margin_bottom = 341.0
+offset_left = 612.0
+offset_top = 309.0
+offset_right = 732.0
+offset_bottom = 341.0
 text = "0"
 valign = 1
 __meta__ = {
@@ -134,10 +134,10 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="Control"]
-margin_left = 620.0
-margin_top = 376.0
-margin_right = 740.0
-margin_bottom = 408.0
+offset_left = 620.0
+offset_top = 376.0
+offset_right = 740.0
+offset_bottom = 408.0
 text = "0"
 valign = 1
 __meta__ = {
@@ -145,10 +145,10 @@ __meta__ = {
 }
 
 [node name="Label3" type="Label" parent="Control"]
-margin_left = 324.0
-margin_top = 376.0
-margin_right = 544.0
-margin_bottom = 408.0
+offset_left = 324.0
+offset_top = 376.0
+offset_right = 544.0
+offset_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "TIME_REDUCTION"
@@ -159,10 +159,10 @@ __meta__ = {
 }
 
 [node name="Label4" type="Label" parent="Control"]
-margin_left = 332.0
-margin_top = 240.0
-margin_right = 436.0
-margin_bottom = 272.0
+offset_left = 332.0
+offset_top = 240.0
+offset_right = 436.0
+offset_bottom = 272.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "FUEL"
@@ -173,10 +173,10 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="Control"]
-margin_left = 404.0
-margin_top = 444.0
-margin_right = 696.0
-margin_bottom = 480.0
+offset_left = 404.0
+offset_top = 444.0
+offset_right = 696.0
+offset_bottom = 480.0
 text = "SPEED_UP_SHIPS"
 __meta__ = {
 "_edit_use_anchors_": false

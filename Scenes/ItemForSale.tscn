@@ -1,162 +1,140 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://dlqxgji41vl6b"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/ItemForSale.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Icons/Notification.png" type="Texture" id=3]
+[ext_resource type="Script" path="res://Scripts/ItemForSale.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://coom6uj3cg1hn" path="res://Graphics/Icons/Notification.png" id="3"]
 
-[sub_resource type="StyleBoxFlat" id=11]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o15vs"]
+bg_color = Color(0.317647, 0.317647, 0.317647, 1)
 border_width_left = 4
 border_width_top = 4
-border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
+border_color = Color(0.458824, 0.458824, 0.458824, 1)
 border_blend = true
 shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxEmpty" id=12]
-
-[sub_resource type="StyleBoxEmpty" id=13]
-
-[sub_resource type="StyleBoxEmpty" id=14]
-
-[sub_resource type="StyleBoxEmpty" id=15]
-
-[sub_resource type="StyleBoxEmpty" id=16]
-
-[sub_resource type="StyleBoxFlat" id=7]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.372549, 0.368627, 0.368627, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfqg6"]
+bg_color = Color(0.396078, 0.396078, 0.396078, 1)
 border_width_left = 4
 border_width_top = 4
-border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
+border_color = Color(0.458824, 0.458824, 0.458824, 1)
 border_blend = true
 shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxFlat" id=8]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.529412, 0.529412, 0.529412, 1 )
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="StyleBoxEmpty" id=9]
-
-[sub_resource type="StyleBoxEmpty" id=10]
-
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id="17"]
 resource_name = "Flashing"
 length = 0.6
-loop = true
+loop_mode = 1
 step = 0.05
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.25, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.25, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.121569 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.121569), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id="18"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_th1nx"]
+_data = {
+"Flashing": SubResource("17"),
+"RESET": SubResource("18")
 }
 
 [node name="ItemForSale" type="Panel"]
-margin_right = 140.0
-margin_bottom = 212.0
-rect_min_size = Vector2( 140, 212 )
-mouse_filter = 1
+custom_minimum_size = Vector2(140, 212)
+offset_right = 140.0
+offset_bottom = 212.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource( 1 )
-custom_styles/panel = SubResource( 11 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ItemTexture" type="TextureRect" parent="."]
-anchor_right = 1.0
-margin_bottom = 176.0
-mouse_filter = 2
-expand = true
-stretch_mode = 6
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_o15vs")
+script = ExtResource("2")
 
 [node name="LockItemInfo" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -28.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
-custom_styles/hover = SubResource( 12 )
-custom_styles/pressed = SubResource( 13 )
-custom_styles/focus = SubResource( 14 )
-custom_styles/disabled = SubResource( 15 )
-custom_styles/normal = SubResource( 16 )
 toggle_mode = true
 
+[node name="ItemTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -12.0
+offset_bottom = 160.0
+grow_horizontal = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
 [node name="SmallButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -34.0
+offset_top = -34.0
+grow_horizontal = 2
+grow_vertical = 0
 mouse_filter = 1
-custom_styles/hover = SubResource( 7 )
-custom_styles/pressed = SubResource( 8 )
-custom_styles/focus = SubResource( 9 )
-custom_styles/disabled = SubResource( 10 )
-custom_styles/normal = SubResource( 8 )
+theme_override_styles/normal = SubResource("StyleBoxFlat_o15vs")
+theme_override_styles/hover = SubResource("StyleBoxFlat_rfqg6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_o15vs")
+theme_override_styles/focus = SubResource("StyleBoxFlat_o15vs")
 text = "BUY"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Flashing = SubResource( 17 )
-anims/RESET = SubResource( 18 )
+libraries = {
+"": SubResource("AnimationLibrary_th1nx")
+}
 
 [node name="New" type="TextureRect" parent="."]
 visible = false
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -40.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = 40.0
+offset_left = -40.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 40.0
 mouse_filter = 2
-texture = ExtResource( 3 )
-expand = true
+texture = ExtResource("3")
+expand_mode = 1
 stretch_mode = 6
 
 [connection signal="mouse_entered" from="." to="." method="_on_ItemForSale_mouse_entered"]

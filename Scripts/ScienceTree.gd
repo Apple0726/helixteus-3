@@ -1,12 +1,12 @@
 extends Node2D
 
-onready var game = get_node('/root/Game')
+@onready var game = get_node('/root/Game')
 var sc_over:String = ""
 var sc_type:String = "Main"
 
 func _ready():
 	for scene in Mods.added_tech_scenes:
-		var tree = scene.scene.instance()
+		var tree = scene.scene.instantiate()
 		var techs = tree.get_children()
 		match scene.type:
 			"ir":
@@ -19,7 +19,7 @@ func _ready():
 				for tech in techs:
 					$Other.add_child(tech)
 	
-	yield(get_tree().create_timer(0), "timeout")
+	await get_tree().create_timer(0).timeout
 	refresh()
 
 func refresh():
@@ -34,7 +34,7 @@ func refresh():
 			var p_scs:Array = Data.science_unlocks[sc.name].parents
 			sc.main_tree = self
 			#parent_science
-			if p_scs.empty():
+			if p_scs.is_empty():
 				sc.refresh()
 				continue
 			var available:bool = true
@@ -43,12 +43,12 @@ func refresh():
 					available = false
 					break
 			if available:
-				sc.modulate = Color.white
-				sc.get_node("Texture").modulate = Color.white
+				sc.modulate = Color.WHITE
+				sc.get_node("Texture2D").modulate = Color.WHITE
 				sc.mouse_filter = Control.MOUSE_FILTER_PASS
 			else:
 				sc.modulate = Color(0.5, 0.5, 0.5, 1)
-				sc.get_node("Texture").modulate = Color.black
+				sc.get_node("Texture2D").modulate = Color.BLACK
 				sc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			sc.is_over = false
 			sc.refresh()

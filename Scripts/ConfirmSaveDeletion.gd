@@ -1,7 +1,7 @@
 extends Panel
 signal delete_save
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 
 func _on_close_button_pressed():
 	get_node("../PopupBackground").visible = false

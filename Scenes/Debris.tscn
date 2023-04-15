@@ -1,10 +1,10 @@
 [gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://Graphics/Cave/DebrisCave.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Cave/DebrisCave.png" type="Texture2D" id=1]
 [ext_resource path="res://Scripts/Debris.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Cave/DebrisLava.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Cave/DebrisAnim.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Cave/DebrisLava.png" type="Texture2D" id=3]
+[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture2D" id=4]
+[ext_resource path="res://Graphics/Cave/DebrisAnim.png" type="Texture2D" id=5]
 
 [sub_resource type="Shader" id=7]
 code = "shader_type canvas_item;
@@ -34,13 +34,13 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="Gradient" id=5]
-offsets = PoolRealArray( 0, 0.529032, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+offsets = PackedFloat32Array( 0, 0.529032, 1 )
+colors = PackedColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=6]
+[sub_resource type="GradientTexture2D" id=6]
 gradient = SubResource( 5 )
 
-[sub_resource type="ParticlesMaterial" id=3]
+[sub_resource type="ParticleProcessMaterial" id=3]
 emission_shape = 1
 emission_sphere_radius = 20.0
 flag_disable_z = true
@@ -71,13 +71,13 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="Gradient" id=12]
-offsets = PoolRealArray( 0, 0.619355, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+offsets = PackedFloat32Array( 0, 0.619355, 1 )
+colors = PackedColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=13]
+[sub_resource type="GradientTexture2D" id=13]
 gradient = SubResource( 12 )
 
-[sub_resource type="ParticlesMaterial" id=14]
+[sub_resource type="ParticleProcessMaterial" id=14]
 flag_disable_z = true
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 100.0
@@ -98,14 +98,14 @@ resource_name = "New Anim"
 length = 0.6
 loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/path = NodePath("Sprite2D:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.3, 0.6 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
@@ -113,14 +113,14 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=17]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/path = NodePath("Sprite2D:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
@@ -128,20 +128,20 @@ tracks/0/keys = {
 [node name="Debris" type="Node2D"]
 script = ExtResource( 2 )
 
-[node name="Lava" type="Light2D" parent="."]
+[node name="Lava" type="PointLight2D" parent="."]
 enabled = false
 texture = ExtResource( 3 )
 energy = 1.85
 mode = 2
 range_item_cull_mask = 2
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 light_mask = 3
 material = SubResource( 8 )
 texture = ExtResource( 1 )
 hframes = 6
 
-[node name="Particles2D" type="Particles2D" parent="."]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 material = SubResource( 4 )
 emitting = false
 amount = 30
@@ -158,7 +158,7 @@ occluder = SubResource( 2 )
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="0"]
-polygon = PoolVector2Array( -3, -50, 20, -50, 36, -48, 48, -41, 62, -36, 74, -30, 85, -20, 95, -6, 97, 7, 95, 19, 88, 29, 74, 38, 62, 43, 30, 48, -6, 51, -63, 52, -72, 47, -78, 39, -81, 29, -78, 16, -72, 7, -60, -3 )
+polygon = PackedVector2Array( -3, -50, 20, -50, 36, -48, 48, -41, 62, -36, 74, -30, 85, -20, 95, -6, 97, 7, 95, 19, 88, 29, 74, 38, 62, 43, 30, 48, -6, 51, -63, 52, -72, 47, -78, 39, -81, 29, -78, 16, -72, 7, -60, -3 )
 disabled = true
 
 [node name="1" type="StaticBody2D" parent="."]
@@ -166,7 +166,7 @@ visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="1"]
-polygon = PoolVector2Array( 8, -54, 18, -54, 31, -46, 37, -44, 43, -40, 48, -32, 63, -16, 71, -2, 81, 18, 83, 29, 82, 46, 69, 62, 48, 66, 16, 66, -19, 58, -36, 49, -47, 39, -55, 28, -60, 14, -57, -7, -49, -25, -38, -35, -16, -46 )
+polygon = PackedVector2Array( 8, -54, 18, -54, 31, -46, 37, -44, 43, -40, 48, -32, 63, -16, 71, -2, 81, 18, 83, 29, 82, 46, 69, 62, 48, 66, 16, 66, -19, 58, -36, 49, -47, 39, -55, 28, -60, 14, -57, -7, -49, -25, -38, -35, -16, -46 )
 disabled = true
 
 [node name="2" type="StaticBody2D" parent="."]
@@ -174,7 +174,7 @@ visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="2"]
-polygon = PoolVector2Array( -34, -28, -23, -43, -21, -50, -8, -65, 5, -73, 24, -74, 38, -67, 49, -55, 55, -44, 59, -31, 66, -7, 68, 14, 68, 36, 62, 53, 50, 61, 38, 63, 27, 60, 18, 60, -11, 52, -19, 52, -56, 36, -67, 25, -73, 11, -70, -4, -62, -16, -41, -26 )
+polygon = PackedVector2Array( -34, -28, -23, -43, -21, -50, -8, -65, 5, -73, 24, -74, 38, -67, 49, -55, 55, -44, 59, -31, 66, -7, 68, 14, 68, 36, 62, 53, 50, 61, 38, 63, 27, 60, 18, 60, -11, 52, -19, 52, -56, 36, -67, 25, -73, 11, -70, -4, -62, -16, -41, -26 )
 disabled = true
 
 [node name="3" type="StaticBody2D" parent="."]
@@ -182,7 +182,7 @@ visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="3"]
-polygon = PoolVector2Array( -30, -56, 3, -57, 28, -36, 30, -26, 44, -16, 55, 15, 57, 50, 50, 63, 26, 74, 18, 83, 4, 85, -9, 80, -28, 51, -46, 47, -61, 34, -62, 7, -50, -44, -43, -50 )
+polygon = PackedVector2Array( -30, -56, 3, -57, 28, -36, 30, -26, 44, -16, 55, 15, 57, 50, 50, 63, 26, 74, 18, 83, 4, 85, -9, 80, -28, 51, -46, 47, -61, 34, -62, 7, -50, -44, -43, -50 )
 disabled = true
 
 [node name="4" type="StaticBody2D" parent="."]
@@ -190,7 +190,7 @@ visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="4"]
-polygon = PoolVector2Array( -59, -50, -44, -66, -38, -77, -8, -82, 12, -77, 24, -65, 30, -55, 32, -46, 45, -34, 55, -17, 63, -9, 68, 9, 68, 21, 60, 35, 56, 40, 38, 50, 21, 56, 0, 60, -18, 59, -37, 53, -54, 41, -64, 30, -72, 16, -72, -4, -65, -14, -69, -25, -66, -40 )
+polygon = PackedVector2Array( -59, -50, -44, -66, -38, -77, -8, -82, 12, -77, 24, -65, 30, -55, 32, -46, 45, -34, 55, -17, 63, -9, 68, 9, 68, 21, 60, 35, 56, 40, 38, 50, 21, 56, 0, 60, -18, 59, -37, 53, -54, 41, -64, 30, -72, 16, -72, -4, -65, -14, -69, -25, -66, -40 )
 disabled = true
 
 [node name="5" type="StaticBody2D" parent="."]
@@ -198,7 +198,7 @@ visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="5"]
-polygon = PoolVector2Array( -35, -33, -19, -37, -1, -40, 33, -38, 45, -34, 57, -34, 72, -26, 79, -9, 75, 4, 65, 19, 57, 30, 39, 40, 0, 53, -11, 55, -31, 55, -56, 55, -80, 50, -83, 43, -83, 24, -81, 17, -77, 11, -69, 8, -63, -2, -58, -17, -47, -27 )
+polygon = PackedVector2Array( -35, -33, -19, -37, -1, -40, 33, -38, 45, -34, 57, -34, 72, -26, 79, -9, 75, 4, 65, 19, 57, 30, 39, 40, 0, 53, -11, 55, -31, 55, -56, 55, -80, 50, -83, 43, -83, 24, -81, 17, -77, 11, -69, 8, -63, -2, -58, -17, -47, -27 )
 disabled = true
 
 [node name="Crack" type="Area2D" parent="."]
@@ -206,11 +206,11 @@ collision_layer = 0
 collision_mask = 128
 monitoring = false
 
-[node name="Sprite" type="Sprite" parent="Crack"]
+[node name="Sprite2D" type="Sprite2D" parent="Crack"]
 modulate = Color( 1, 1, 1, 0 )
 texture = ExtResource( 4 )
 
-[node name="Particles2D" type="Particles2D" parent="Crack"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Crack"]
 material = SubResource( 18 )
 emitting = false
 amount = 20

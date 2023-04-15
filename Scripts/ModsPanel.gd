@@ -3,20 +3,17 @@ extends "Panel.gd"
 var mod_slot_scene = preload("res://Scenes/ModSlot.tscn")
 
 func _ready():
-	tween = Tween.new()
-	add_child(tween)
-	
 	for key in Mods.mod_list:
 		var mod = Mods.mod_list[key]
-		var mod_slot = mod_slot_scene.instance()
+		var mod_slot = mod_slot_scene.instantiate()
 		mod_slot.get_node("Name").text = mod.mod_info.name
 		mod_slot.get_node("Version").text = mod.mod_info.version
 		mod_slot.get_node("Author").text = mod.mod_info.author
 		mod_slot.get_node("Description").text = mod.mod_info.description
-		mod_slot.get_node("Load").pressed = !key in Mods.dont_load
-		mod_slot.get_node("LoadOrder/Up").connect("pressed", self, "on_up", [key, mod_slot])
-		mod_slot.get_node("LoadOrder/Down").connect("pressed", self, "on_down", [key, mod_slot])
-		mod_slot.get_node("Load").connect("pressed", self, "on_load", [key, mod_slot])
+		mod_slot.get_node("Load").button_pressed = !key in Mods.dont_load
+		mod_slot.get_node("LoadOrder/Up").connect("pressed",Callable(self,"on_up").bind(key, mod_slot))
+		mod_slot.get_node("LoadOrder/Down").connect("pressed",Callable(self,"on_down").bind(key, mod_slot))
+		mod_slot.get_node("Load").connect("pressed",Callable(self,"on_load").bind(key, mod_slot))
 		$ScrollContainer/VBox.add_child(mod_slot)
 
 func on_up(key, mod_slot):

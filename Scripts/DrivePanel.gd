@@ -1,7 +1,7 @@
 extends Panel
 
-onready var op = $Control/OptionButton
-onready var game = get_node("/root/Game")
+@onready var op = $Control/OptionButton
+@onready var game = get_node("/root/Game")
 
 var coal_texture = preload("res://Graphics/Materials/coal.png")
 var cellulose_texture = Data.cellulose_icon
@@ -60,7 +60,7 @@ func refresh_costs():
 			$Control/HSlider.value = 0
 		else:
 			$Control/HSlider.visible = true
-			$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date) / float(speed))
+			$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
 		cost = $Control/HSlider.value
 		$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
 	$Control/Label2.text = Helper.time_to_str(cost * speed)

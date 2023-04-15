@@ -27,17 +27,17 @@ border_color = Color( 0.4, 0.501961, 1, 1 )
 [node name="Slot" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1280.0
-margin_bottom = -720.0
-rect_min_size = Vector2( 60, 60 )
+offset_right = -1280.0
+offset_bottom = -720.0
+custom_minimum_size = Vector2( 60, 60 )
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Button" type="Button" parent="."]
-margin_right = 64.0
-margin_bottom = 64.0
+offset_right = 64.0
+offset_bottom = 64.0
 mouse_filter = 1
 custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 4 )
@@ -47,10 +47,10 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 60.0
-margin_bottom = 60.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 60.0
+offset_bottom = 60.0
 mouse_filter = 2
 expand = true
 stretch_mode = 6

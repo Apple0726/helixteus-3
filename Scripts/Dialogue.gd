@@ -2,13 +2,13 @@ extends Control
 
 signal dialogue_finished;
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var NPC_id:int = -1
 var dialogue_id:int = -1
 var dialogue_part_id:int = -1
 var dialogue_lengths:Array = [[5, 3], [3, 1], [15, 1, 3, 5, 5, 4, 1, 2, 1, 1, 4, 4], [4, 3, 2], [3]]
 var choices:Dictionary = {"4_2_3":2}
-onready var vbox = $PanelContainer/VBoxContainer
+@onready var vbox = $PanelContainer/VBoxContainer
 
 func _ready():
 	pass # Replace with function body.
@@ -31,7 +31,7 @@ func _input(event):
 					var btn = Button.new()
 					btn.text = tr("NPC_%s_%s" % [identifier, i + 1])
 					vbox.add_child(btn)
-					btn.connect("pressed", self, "on_btn_pressed", [identifier, i + 1])
+					btn.connect("pressed",Callable(self,"on_btn_pressed").bind(identifier, i + 1))
 			elif dialogue_part_id >= dialogue_lengths[NPC_id - 1][dialogue_id - 1] and $Text.visible_characters >= len($Text.text):
 				$Text.visible = false
 				dialogue_part_id = -1

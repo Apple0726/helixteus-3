@@ -1,624 +1,686 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=56 format=3 uid="uid://dt6rr51kda1rb"]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Buttons/settings.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Title screen/Background.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Title screen/Godot.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Title screen/GitHub.png" type="Texture" id=6]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Audio/SFX/click.ogg" type="AudioStream" id=8]
-[ext_resource path="res://Scenes/Languages.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Graphics/Title screen/Discord.png" type="Texture" id=11]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=14]
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=15]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=25]
-[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=26]
-[ext_resource path="res://Graphics/Ships/Ship0CM.png" type="BitMap" id=27]
-[ext_resource path="res://Shaders/Blur.shader" type="Shader" id=30]
-[ext_resource path="res://Shaders/Star.shader" type="Shader" id=31]
-[ext_resource path="res://Graphics/Effects/spotlight_4.png" type="Texture" id=32]
-[ext_resource path="res://Scenes/Fire.tscn" type="PackedScene" id=33]
-[ext_resource path="res://Shaders/ScienceTree.shader" type="Shader" id=34]
-[ext_resource path="res://Scenes/Nebula.tscn" type="PackedScene" id=35]
-[ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=36]
+[ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://ca0hkrufqi0yq" path="res://Graphics/Buttons/settings.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://djts0kcqdqgy2" path="res://Graphics/Title screen/Background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dkwpshcqk1eb6" path="res://Graphics/Title screen/Godot.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c6ugjbqmwrbur" path="res://Graphics/Title screen/GitHub.png" id="6"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
+[ext_resource type="AudioStream" uid="uid://v4wb6pb6bn7q" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://osgmueey4qpn" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
+[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="26"]
+[ext_resource type="BitMap" uid="uid://6wlgq4xn1hau" path="res://Graphics/Ships/Ship0CM.png" id="27"]
+[ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
+[ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
+[ext_resource type="Texture2D" uid="uid://bbj2b187jybgd" path="res://Graphics/Effects/spotlight_4.png" id="32"]
+[ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
+[ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
+[ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
+[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 
-[sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 30 )
-shader_param/amount = 0.0
+[sub_resource type="ShaderMaterial" id="1"]
+shader = ExtResource("30")
+shader_parameter/amount = 0.0
 
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 14.0
-content_margin_right = 14.0
-content_margin_top = 9.0
-content_margin_bottom = 9.0
-bg_color = Color( 0.197242, 0.197242, 0.197242, 1 )
-border_width_left = 2
-border_width_top = 2
-border_color = Color( 0.388235, 0.388235, 0.388235, 1 )
-border_blend = true
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="Animation" id=3]
-resource_name = "Flashing"
-length = 0.6
-loop = true
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Text:custom_styles/normal:bg_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 0.329412, 0.329412, 0.329412, 1 ), Color( 0.129412, 0.129412, 0.129412, 1 ), Color( 0.329412, 0.329412, 0.329412, 1 ) ]
-}
-
-[sub_resource type="DynamicFont" id=5]
-size = 20
-use_filter = true
-font_data = ExtResource( 15 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfoca"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+bg_color = Color(0.329412, 0.329412, 0.329412, 1)
 border_width_left = 1
 border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.490196, 0.490196, 0.490196, 1 )
+border_color = Color(0.647059, 0.647059, 0.647059, 1)
 border_blend = true
-expand_margin_left = 14.0
-expand_margin_right = 14.0
-expand_margin_top = 9.0
-expand_margin_bottom = 9.0
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 3
-border_width_top = 3
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-expand_margin_left = 9.0
-expand_margin_right = 9.0
-expand_margin_top = 9.0
-expand_margin_bottom = 9.0
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 3
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="Animation" id=21]
-resource_name = "Fade"
-length = 0.1
+[sub_resource type="Animation" id="3"]
+resource_name = "Flashing"
+length = 0.3
+loop_mode = 2
+step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[sub_resource type="Animation" id=23]
-resource_name = "FadeOut"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
+tracks/0/path = NodePath("Text:theme_override_styles/normal:bg_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(0.329412, 0.329412, 0.329412, 1), Color(0.129412, 0.129412, 0.129412, 1)]
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id="Animation_e6054"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
+tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(720, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
 }
 
-[sub_resource type="Gradient" id=7]
-colors = PoolColorArray( 0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ci5uo"]
+_data = {
+"Flashing": SubResource("3"),
+"RESET": SubResource("Animation_e6054")
+}
 
-[sub_resource type="GradientTexture" id=8]
-gradient = SubResource( 7 )
+[sub_resource type="Animation" id="Animation_afeh0"]
+resource_name = "MoveLabel"
+length = 0.3
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(720, -0.25, 0, 0.1, -45.3446, 687.855, -0.1, -0.444641, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
+}
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nyjun"]
+_data = {
+"MoveLabel": SubResource("Animation_afeh0"),
+"RESET": SubResource("Animation_e6054")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycps2"]
+font_size = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mabe5"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xulw5"]
+font_size = 18
+
+[sub_resource type="Animation" id="Animation_yskog"]
 resource_name = "Fade"
 length = 0.2
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(100, -0.25, 0, 0.1, -8.93139, 89.5431, -0.1, -0.346718, 0.25, 0),
+"times": PackedFloat32Array(0, 0.2)
 }
 
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 0.0
-content_margin_right = 0.0
-content_margin_top = 1.0
-content_margin_bottom = 0.0
-bg_color = Color( 0.101961, 0.101961, 0.101961, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.278431, 0.278431, 0.278431, 1 )
+[sub_resource type="Animation" id="Animation_x0yr1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(100, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rtolb"]
+_data = {
+"Fade": SubResource("Animation_yskog"),
+"RESET": SubResource("Animation_x0yr1")
+}
+
+[sub_resource type="Animation" id="21"]
+resource_name = "Fade"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="23"]
+resource_name = "FadeOut"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="22"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dnrnq"]
+_data = {
+"Fade": SubResource("21"),
+"FadeOut": SubResource("23"),
+"RESET": SubResource("22")
+}
+
+[sub_resource type="Gradient" id="7"]
+colors = PackedColorArray(0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1)
+
+[sub_resource type="GradientTexture2D" id="8"]
+gradient = SubResource("7")
+
+[sub_resource type="Animation" id="9"]
+resource_name = "Fade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ju8om"]
+_data = {
+"Fade": SubResource("9")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xr3d"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5acvv"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3pnlf"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_g0rgc"]
+resource_name = "FadeMusic"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-30, -0.25, 0, 0.25, 0, 0, -0.2, -7.24913, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
+}
+
+[sub_resource type="Animation" id="Animation_bbkxg"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g33d0"]
+_data = {
+"FadeMusic": SubResource("Animation_g0rgc"),
+"RESET": SubResource("Animation_bbkxg")
+}
+
+[sub_resource type="ShaderMaterial" id="12"]
+shader = ExtResource("34")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3we6a"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
 border_blend = true
-expand_margin_left = 3.0
-expand_margin_right = 3.0
-expand_margin_top = 3.0
-expand_margin_bottom = 3.0
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="DynamicFont" id=11]
-size = 25
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 14 )
-fallback/0 = ExtResource( 1 )
-
-[sub_resource type="ShaderMaterial" id=12]
-shader = ExtResource( 34 )
-
-[sub_resource type="StyleBoxFlat" id=14]
-content_margin_left = 20.0
-content_margin_right = 20.0
-content_margin_top = 20.0
-content_margin_bottom = 20.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id="15"]
 length = 0.5
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("UI/Panel:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="InputEventAction" id=16]
-action = "P"
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0twxn"]
+_data = {
+"Fade": SubResource("15")
+}
 
-[sub_resource type="ShortCut" id=17]
-shortcut = SubResource( 16 )
+[sub_resource type="Shortcut" id="17"]
 
-[sub_resource type="ShaderMaterial" id=18]
-shader = ExtResource( 31 )
-shader_param/time_offset = 0.0
-shader_param/brightness_offset = 0.0
-shader_param/twinkle_speed = 1.0
-shader_param/amplitude = 0.15
+[sub_resource type="ShaderMaterial" id="18"]
+shader = ExtResource("31")
+shader_parameter/time_offset = 0.0
+shader_parameter/brightness_offset = 0.0
+shader_parameter/twinkle_speed = 1.0
+shader_parameter/amplitude = 0.15
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id="19"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("WhiteStars:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id="20"]
 resource_name = "StarFade"
 length = 3.0
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("WhiteStars:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 3 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f72sx"]
+_data = {
+"RESET": SubResource("19"),
+"StarFade": SubResource("20")
 }
 
 [node name="Game" type="Node2D"]
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="click" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 8 )
+stream = ExtResource("8")
 volume_db = 14.116
-bus = "SFX"
+bus = &"SFX"
 
 [node name="Panels" type="CanvasLayer" parent="."]
 layer = 2
 
 [node name="Blur" type="ColorRect" parent="Panels"]
-material = SubResource( 1 )
+material = SubResource("1")
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-color = Color( 0.364706, 0.968627, 0.968627, 1 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+color = Color(0.364706, 0.968627, 0.968627, 1)
 
 [node name="Control" type="Control" parent="Panels"]
+layout_mode = 3
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 3
 
 [node name="BottomInfo" type="HBoxContainer" parent="UI"]
 visible = false
-margin_top = 720.0
-margin_right = 1280.0
-margin_bottom = 756.0
+offset_top = 720.0
+offset_right = 1280.0
+offset_bottom = 755.0
 mouse_filter = 2
-theme = ExtResource( 7 )
-custom_constants/separation = 1
+theme = ExtResource("7")
+theme_override_constants/separation = 0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Text" type="Label" parent="UI/BottomInfo"]
 visible = false
-margin_left = 594.0
-margin_right = 649.0
-margin_bottom = 42.0
-custom_styles/normal = SubResource( 2 )
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_rfoca")
 text = "dsf"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource( 25 )]
-anchor_left = 0.0
-anchor_right = 0.0
-margin_left = 622.0
-margin_top = 0.0
-margin_right = 657.0
-margin_bottom = 36.0
-grow_horizontal = 0
-grow_vertical = 0
-rect_min_size = Vector2( 35, 35 )
+[node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource("25")]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
 close_button_type = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/BottomInfo"]
+[node name="FlashAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
 autoplay = "Flashing"
-anims/Flashing = SubResource( 3 )
+libraries = {
+"": SubResource("AnimationLibrary_ci5uo")
+}
+
+[node name="MoveAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
+libraries = {
+"": SubResource("AnimationLibrary_nyjun")
+}
 
 [node name="Version" type="Label" parent="UI"]
-margin_left = 944.0
-margin_top = 704.0
-margin_right = 1280.0
-margin_bottom = 718.0
-custom_colors/font_color = Color( 0.737255, 0.737255, 0.737255, 1 )
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Help" type="Label" parent="UI"]
-visible = false
-margin_top = 108.0
-margin_right = 1280.0
-margin_bottom = 132.0
-theme = ExtResource( 7 )
-text = "Help"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 944.0
+offset_top = 696.0
+offset_right = 1280.0
+offset_bottom = 719.0
+label_settings = SubResource("LabelSettings_ycps2")
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="Popup" type="Label" parent="UI"]
-visible = false
-margin_left = 490.0
-margin_top = 83.0
-margin_right = 790.0
-margin_bottom = 109.0
-custom_fonts/font = SubResource( 5 )
-custom_styles/normal = SubResource( 4 )
+modulate = Color(1, 1, 1, 0)
+offset_left = 490.0
+offset_top = 100.0
+offset_right = 790.0
+offset_bottom = 141.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_mabe5")
 text = "Popup information"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+label_settings = SubResource("LabelSettings_xulw5")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Tween" type="Tween" parent="UI/Popup"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Popup"]
+libraries = {
+"": SubResource("AnimationLibrary_rtolb")
+}
 
 [node name="PopupBackground" type="ColorRect" parent="UI"]
 visible = false
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0, 0, 0, 0.564706 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.564706)
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="UI"]
-margin_right = 225.0
-margin_bottom = 82.0
-rect_min_size = Vector2( 200, 30 )
-theme = ExtResource( 7 )
-window_title = "Veuillez confirmer…"
+unresizable = true
 dialog_autowrap = true
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 1008.0
-margin_top = 368.0
-margin_right = 1156.0
-margin_bottom = 382.0
+modulate = Color(1, 1, 1, 0)
+offset_left = 1008.0
+offset_top = 368.0
+offset_right = 1156.0
+offset_bottom = 382.0
 grow_horizontal = 0
 grow_vertical = 2
-theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 6 )
+theme = ExtResource("7")
 
 [node name="VBox" type="VBoxContainer" parent="UI/Panel"]
-margin_left = 3.0
-margin_top = 3.0
-margin_right = 148.0
-margin_bottom = 14.0
+layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Panel"]
-anims/Fade = SubResource( 21 )
-anims/FadeOut = SubResource( 23 )
-anims/RESET = SubResource( 22 )
-
-[node name="ClusterBG" parent="." instance=ExtResource( 35 )]
-visible = false
-modulate = Color( 1, 1, 1, 0 )
-color = Color( 0.686275, 0, 1, 1 )
-
-[node name="GrayscaleRect" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 720.0
-margin_right = 720.0
-margin_bottom = 2000.0
-rect_rotation = -90.0
-mouse_filter = 2
-texture = SubResource( 8 )
-expand = true
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
+libraries = {
+"": SubResource("AnimationLibrary_dnrnq")
 }
 
+[node name="ClusterBG" parent="." instance=ExtResource("35")]
+visible = false
+modulate = Color(1, 1, 1, 0)
+color = Color(0.686275, 0, 1, 1)
+
+[node name="GrayscaleRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_top = 720.0
+offset_right = 720.0
+offset_bottom = 2000.0
+rotation = -1.5708
+mouse_filter = 2
+texture = SubResource("8")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
-anims/Fade = SubResource( 9 )
+libraries = {
+"": SubResource("AnimationLibrary_ju8om")
+}
 
 [node name="Tooltips" type="CanvasLayer" parent="."]
 layer = 5
 
 [node name="FPS" type="Label" parent="Tooltips"]
-margin_right = 74.0
-margin_bottom = 14.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_right = 184.0
+offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_ycps2")
 
 [node name="Command" type="LineEdit" parent="Tooltips"]
 visible = false
-margin_top = 696.0
-margin_right = 336.0
-margin_bottom = 720.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_top = 696.0
+offset_right = 336.0
+offset_bottom = 720.0
 
 [node name="CtrlShift" type="HBoxContainer" parent="Tooltips"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 89.0
-margin_bottom = 19.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 89.0
+offset_bottom = 19.0
 grow_horizontal = 0
 mouse_filter = 2
-custom_constants/separation = 6
 alignment = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Ctrl" type="Label" parent="Tooltips/CtrlShift"]
 visible = false
-margin_right = 22.0
-margin_bottom = 15.0
-custom_styles/normal = SubResource( 10 )
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_3xr3d")
 text = "Ctrl"
 
 [node name="Shift" type="Label" parent="Tooltips/CtrlShift"]
 visible = false
-margin_left = 28.0
-margin_right = 56.0
-margin_bottom = 15.0
-custom_styles/normal = SubResource( 10 )
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_5acvv")
 text = "Shift"
 
 [node name="Alt" type="Label" parent="Tooltips/CtrlShift"]
 visible = false
-margin_left = 28.0
-margin_right = 56.0
-margin_bottom = 15.0
-custom_styles/normal = SubResource( 10 )
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_3pnlf")
 text = "Alt"
 
 [node name="ItemCursor" type="Node2D" parent="Tooltips"]
 visible = false
 
-[node name="Sprite" type="Sprite" parent="Tooltips/ItemCursor"]
-position = Vector2( 32, 32 )
-scale = Vector2( 0.25, 0.25 )
+[node name="Sprite2D" type="Sprite2D" parent="Tooltips/ItemCursor"]
+position = Vector2(32, 32)
+scale = Vector2(0.25, 0.25)
 
 [node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor"]
-polygon = PoolVector2Array( 0, 0, 0, 24, 24, 0 )
+polygon = PackedVector2Array(0, 0, 0, 24, 24, 0)
 
 [node name="Num" type="Label" parent="Tooltips/ItemCursor"]
-margin_left = 56.0
-margin_top = 48.0
-margin_right = 96.0
-margin_bottom = 77.0
-custom_fonts/font = SubResource( 11 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 56.0
+offset_top = 48.0
+offset_right = 96.0
+offset_bottom = 77.0
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer"]
+libraries = {
+"": SubResource("AnimationLibrary_g33d0")
+}
 
 [node name="ScienceTreeBG" type="ColorRect" parent="."]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
-material = SubResource( 12 )
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0, 0, 0, 1 )
+modulate = Color(1, 1, 1, 0)
+material = SubResource("12")
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 1)
 
 [node name="TitleBackground" type="TextureRect" parent="."]
-margin_right = 1280.0
-margin_bottom = 720.0
+offset_right = 1280.0
+offset_bottom = 720.0
 mouse_filter = 2
-texture = ExtResource( 4 )
-expand = true
-__meta__ = {
-"_edit_lock_": true
-}
+texture = ExtResource("4")
+expand_mode = 1
+metadata/_edit_lock_ = true
 
 [node name="Title" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Menu" type="PanelContainer" parent="Title"]
-margin_left = 83.0
-margin_top = 464.0
-margin_right = 307.0
-margin_bottom = 664.0
-theme = ExtResource( 7 )
-custom_styles/panel = SubResource( 14 )
+layout_mode = 0
+offset_left = 83.0
+offset_top = 464.0
+offset_right = 264.0
+offset_bottom = 637.0
+theme = ExtResource("7")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3we6a")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 204.0
-margin_bottom = 180.0
-custom_constants/separation = 8
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="NewGame" type="Button" parent="Title/Menu/VBoxContainer"]
-margin_right = 184.0
-margin_bottom = 34.0
-rect_min_size = Vector2( 0, 30 )
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 6
 text = "NEW_GAME"
 
 [node name="LoadGame" type="Button" parent="Title/Menu/VBoxContainer"]
-margin_top = 42.0
-margin_right = 184.0
-margin_bottom = 76.0
-rect_min_size = Vector2( 0, 30 )
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 6
 text = "LOAD_GAME"
 
 [node name="Settings" type="Button" parent="Title/Menu/VBoxContainer"]
-margin_top = 84.0
-margin_right = 184.0
-margin_bottom = 118.0
-rect_min_size = Vector2( 0, 30 )
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 6
 text = "SETTINGS"
 
 [node name="Mods" type="Button" parent="Title/Menu/VBoxContainer"]
-margin_top = 126.0
-margin_right = 184.0
-margin_bottom = 160.0
-rect_min_size = Vector2( 0, 30 )
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 6
 text = "MODS"
 
 [node name="Discord" type="TextureButton" parent="Title"]
-margin_left = 888.0
-margin_top = 664.0
-margin_right = 944.0
-margin_bottom = 720.0
-texture_normal = ExtResource( 11 )
-expand = true
+layout_mode = 0
+offset_left = 888.0
+offset_top = 664.0
+offset_right = 944.0
+offset_bottom = 720.0
+texture_normal = ExtResource("11")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="GitHub" type="TextureButton" parent="Title"]
-margin_left = 968.0
-margin_top = 664.0
-margin_right = 1024.0
-margin_bottom = 712.0
-texture_normal = ExtResource( 6 )
-expand = true
+layout_mode = 0
+offset_left = 968.0
+offset_top = 664.0
+offset_right = 1024.0
+offset_bottom = 712.0
+texture_normal = ExtResource("6")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Godot" type="TextureButton" parent="Title"]
-margin_left = 1048.0
-margin_top = 664.0
-margin_right = 1096.0
-margin_bottom = 712.0
-texture_normal = ExtResource( 5 )
-expand = true
+layout_mode = 0
+offset_left = 1048.0
+offset_top = 664.0
+offset_right = 1096.0
+offset_bottom = 712.0
+texture_normal = ExtResource("5")
+ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Languages" parent="Title" instance=ExtResource( 9 )]
-margin_right = 1239.0
-margin_bottom = 680.0
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="Languages" parent="Title" instance=ExtResource("9")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 1
+grow_vertical = 1
+metadata/_edit_lock_ = true
 
 [node name="Autosave" type="Timer" parent="."]
 
@@ -626,68 +688,64 @@ __meta__ = {
 one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-anims/Fade = SubResource( 15 )
+libraries = {
+"": SubResource("AnimationLibrary_0twxn")
+}
 
 [node name="Ship" type="TextureButton" parent="."]
 visible = false
-margin_right = 68.0
-margin_bottom = 44.0
-rect_pivot_offset = Vector2( 34, 22 )
-texture_normal = ExtResource( 26 )
-texture_click_mask = ExtResource( 27 )
-expand = true
+offset_right = 68.0
+offset_bottom = 44.0
+pivot_offset = Vector2(34, 22)
+texture_normal = ExtResource("26")
+texture_click_mask = ExtResource("27")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Fire" parent="Ship" instance=ExtResource( 33 )]
+[node name="Fire" parent="Ship" instance=ExtResource("33")]
 show_behind_parent = true
-position = Vector2( 8, 20 )
-scale = Vector2( 0.7, 0.7 )
+position = Vector2(8, 20)
+scale = Vector2(0.7, 0.7)
 
 [node name="Settings" type="CanvasLayer" parent="."]
 layer = 4
 
 [node name="Settings" type="TextureButton" parent="Settings"]
-margin_left = 1244.0
-margin_top = 4.0
-margin_right = 1276.0
-margin_bottom = 36.0
+offset_left = 1244.0
+offset_top = 4.0
+offset_right = 1276.0
+offset_bottom = 36.0
+shortcut = SubResource("17")
 shortcut_in_tooltip = false
-shortcut = SubResource( 17 )
-texture_normal = ExtResource( 3 )
-expand = true
+texture_normal = ExtResource("3")
+ignore_texture_size = true
 stretch_mode = 5
+
+[node name="Star" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Star"]
+material = SubResource("18")
+position = Vector2(1064.25, 171.865)
+scale = Vector2(0.725823, 0.725823)
+texture = ExtResource("32")
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
-
-[node name="Stars" type="Node2D" parent="Stars"]
-
-[node name="Sprite" type="Sprite" parent="Stars/Stars"]
-material = SubResource( 18 )
-position = Vector2( 1064.25, 171.865 )
-scale = Vector2( 0.725823, 0.725823 )
-texture = ExtResource( 32 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="WhiteStars" type="Node2D" parent="Stars"]
 visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Stars"]
-anims/RESET = SubResource( 19 )
-anims/StarFade = SubResource( 20 )
+libraries = {
+"": SubResource("AnimationLibrary_f72sx")
+}
+
+[node name="Stars" type="Node2D" parent="Stars"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 640, 360 )
-current = true
+position = Vector2(640, 360)
 
-[node name="Screenshake" parent="Camera2D" instance=ExtResource( 36 )]
-
-[node name="MusicTween" type="Tween" parent="."]
+[node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
 
 [node name="MMTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -695,7 +753,6 @@ wait_time = 0.5
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
-[connection signal="popup_hide" from="UI/ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
 [connection signal="animation_finished" from="UI/Panel/AnimationPlayer" to="." method="_on_PanelAnimationPlayer_animation_finished"]
 [connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]

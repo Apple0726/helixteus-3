@@ -1,7 +1,7 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
-export var item_name:String = ""
+@onready var game = get_node("/root/Game")
+@export var item_name:String = ""
 var item_desc:String = ""
 var item_type:String = ""
 var item_dir:String = ""#Directory of the item sprite
@@ -56,7 +56,7 @@ func _on_LockItemInfo_toggled(button_pressed):
 		$AnimationPlayer.play("Flashing")
 		for item in game[parent].grid.get_children():
 			if item != self:
-				item.get_node("LockItemInfo").pressed = false
+				item.get_node("LockItemInfo").button_pressed = false
 		_on_ItemForSale_mouse_entered()
 		game[parent].locked = true
 	else:

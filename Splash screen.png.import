@@ -2,12 +2,13 @@
 
 importer="image"
 type="Image"
-path="res://.import/Splash screen.png-c7c6869bc1f0befcc506f2c3cddc3de4.image"
+uid="uid://bs3uowhnk058p"
+path="res://.godot/imported/Splash screen.png-c7c6869bc1f0befcc506f2c3cddc3de4.image"
 
 [deps]
 
 source_file="res://Splash screen.png"
-dest_files=[ "res://.import/Splash screen.png-c7c6869bc1f0befcc506f2c3cddc3de4.image" ]
+dest_files=["res://.godot/imported/Splash screen.png-c7c6869bc1f0befcc506f2c3cddc3de4.image"]
 
 [params]
 

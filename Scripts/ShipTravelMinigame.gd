@@ -1,16 +1,15 @@
 extends Control
 
-onready var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
-onready var bullet_texture = preload("res://Graphics/Misc/bullet.png")
+@onready var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
+@onready var bullet_texture = preload("res://Graphics/Misc/bullet.png")
 
-onready var game = get_node("/root/Game")
-onready var ship = $Ship
-onready var acc_time = $AccTime
-onready var point = $Point
-onready var red_flash = $RedFlash
+@onready var game = get_node("/root/Game")
+@onready var ship = $Ship
+@onready var acc_time = $AccTime
+@onready var point = $Point
+@onready var red_flash = $RedFlash
 var secs_elapsed:int = 0
 var move_ship_inst:bool = false
-var help_tween:Tween
 var fn_to_call:String = ""
 var penalty_time:int = 0 #miliseconds
 var lv:int #minigame level
@@ -29,22 +28,18 @@ func _ready():
 		lv = game.STM_lv
 	else:
 		lv = 4
-	help_tween = Tween.new()
-	add_child(help_tween)
 	set_level()
-	var tween:Tween = Tween.new()
-	tween.interpolate_property($Level, "modulate", null, Color.white, 0.5)
-	add_child(tween)
-	tween.start()
+	var tween = get_tree().create_tween()
+	tween.tween_property($Level, "modulate", Color.WHITE, 0.5)
 
 	for i in 100: #number of stars to render
-		var star = Sprite.new()
+		var star = Sprite2D.new()
 		star.texture = star_texture
-		star.scale *= rand_range(0.15, 0.25)
-		star.rotation = rand_range(0, 2 * PI)
+		star.scale *= randf_range(0.15, 0.25)
+		star.rotation = randf_range(0, 2 * PI)
 		add_child(star)
-		star.position.x = rand_range(0, 1280)
-		star.position.y = rand_range(0, 720)
+		star.position.x = randf_range(0, 1280)
+		star.position.y = randf_range(0, 720)
 		star.add_to_group("stars")
 	if not game or game.help.has("STM"):
 		if lv % 4 == 0:
@@ -63,9 +58,7 @@ func _ready():
 
 func show_help(st:String):
 	$Help.text = "%s (%s)" % [st, tr("CLICK_ANYWHERE_TO_CONTINUE")]
-	help_tween.interpolate_property($Help, "modulate", null, Color.white, 0.5)
-	help_tween.interpolate_property($Help, "rect_position", Vector2(192, 332), Vector2(192, 317), 0.5)
-	help_tween.start()
+	$Help/AnimationPlayer.play("Fade")
 	ship.modulate.a = 1.0
 	$Timer.paused = true
 
@@ -73,9 +66,7 @@ func hide_help():
 	if game and game.settings.visible:
 		return
 	set_process(true)
-	help_tween.interpolate_property($Help, "modulate", Color.white, Color(1, 1, 1, 0), 0.5)
-	help_tween.interpolate_property($Help, "rect_position", null, $Help.rect_position + Vector2(0, 30), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
-	help_tween.start()
+	$Help/AnimationPlayer.play_backwards("Fade")
 	$Timer.paused = false
 	if fn_to_call != "":
 		#pattern = Helper.rand_int(lvpatterns[lv - 1][0], lvpatterns[lv - 1][-1])
@@ -89,7 +80,7 @@ func hide_help():
 
 func _on_Back_pressed():
 	game.STM_lv = lv
-	game.ships_travel_start_date -= max(0, secs_elapsed * 1000 - penalty_time)
+	game.ships_travel_start_date -= max(0, secs_elapsed - penalty_time)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	game.switch_view("system")
 
@@ -97,7 +88,7 @@ var mouse_pos:Vector2 = Vector2.ZERO
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
-	if Input.is_action_just_released("left_click") and $Help.modulate == Color.white:
+	if Input.is_action_just_released("left_click") and $Help.modulate == Color.WHITE:
 		hide_help()
 	Helper.set_back_btn($Back)
 
@@ -198,7 +189,7 @@ func process_10(bullet, delta):
 
 func process_11(bullet, delta):
 	bullet.position += bullet_data[bullet.name].speed * delta
-	var cond:bool = not Geometry.is_point_in_polygon(bullet.position, playfield)
+	var cond:bool = not Geometry2D.is_point_in_polygon(bullet.position, playfield)
 	return {"remove":cond, "fn":"pattern_%s" % [[8, 9, 10, 12][Helper.rand_int(0, 3)]]}
 
 func process_12(bullet, delta):
@@ -213,7 +204,7 @@ func process_12(bullet, delta):
 		cond = bullet_data[bullet.name].t > 1280 * 7
 	else:
 		if not bullet_data[bullet.name].has("dir"):
-			bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
+			bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + randf_range(-0.1, 0.1)
 		bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir) * delta
 		bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir) * delta
 		cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
@@ -275,7 +266,7 @@ func process_19(bullet, delta):
 #	if bullet_data[bullet.name].delay < 0:
 #		var cond:bool = false
 #		if not bullet_data[bullet.name].has("dir"):
-#			bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + rand_range(-0.1, 0.1)
+#			bullet_data[bullet.name].dir = atan2(mouse_pos.y - 720, mouse_pos.x - bullet.position.x) + randf_range(-0.1, 0.1)
 #		bullet.position.x += bullet_data[bullet.name].v * cos(bullet_data[bullet.name].dir)
 #		bullet.position.y += bullet_data[bullet.name].v * sin(bullet_data[bullet.name].dir)
 #		cond = bullet.position.y < -20 or bullet.position.x < -20 or bullet.position.x > 1300
@@ -283,7 +274,7 @@ func process_19(bullet, delta):
 #		if cond:
 #			bullet.remove_from_group("bullet_13")
 #			remove_child(bullet)
-#			if get_tree().get_nodes_in_group("bullet_13").empty():
+#			if get_tree().get_nodes_in_group("bullet_13").is_empty():
 #				inc_combo()
 #				call("pattern_%s" % [[13][Helper.rand_int(0, 0)]])
 
@@ -304,7 +295,7 @@ func process_21(bullet, delta):
 		bullet.position.x -= 1280
 
 #func process_16(bullet, delta):	
-var playfield:PoolVector2Array = [Vector2(-40, -40), Vector2(1320, -40), Vector2(1320, 760), Vector2(-40, 760)]
+var playfield:PackedVector2Array = [Vector2(-40, -40), Vector2(1320, -40), Vector2(1320, 760), Vector2(-40, 760)]
 func _process(delta):
 	if red_flash.modulate.a > 0:
 		red_flash.modulate.a -= 0.01
@@ -314,7 +305,7 @@ func _process(delta):
 	else:
 		ship.position = ship.position.move_toward(m_pos, ship.position.distance_to(m_pos) / 6.0 * delta * 60)
 	point.position = m_pos
-	acc_time.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0, secs_elapsed * 1000 - penalty_time))]
+	acc_time.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0, secs_elapsed - penalty_time))]
 	for star in get_tree().get_nodes_in_group("stars"):
 		star.position.x -= star.scale.x * 10
 		if star.position.x < -5:
@@ -331,7 +322,7 @@ func _process(delta):
 			if data.remove:
 				bullet.remove_from_group("bullet_%s" % pattern)
 				bullet.queue_free()
-				if get_tree().get_nodes_in_group("bullet_%s" % pattern).empty():
+				if get_tree().get_nodes_in_group("bullet_%s" % pattern).is_empty():
 					inc_combo()
 					bullet_data.clear()
 					pattern = int(data.fn.split("_")[1])
@@ -361,7 +352,7 @@ func inc_combo():
 	bullet_data.clear()
 
 func hit_test(bullet):
-	if red_flash.modulate.a <= 0 and Geometry.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
+	if red_flash.modulate.a <= 0 and Geometry2D.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
 		red_flash.modulate.a = 0.3 
 		penalty_time += 6000 * (1 + (game.MUs.STMB - 1) * 0.15) #miliseconds removed when hit
 		got_hit = true
@@ -370,13 +361,13 @@ func hit_test(bullet):
 func pattern_1():
 	var delay:float = 0
 	for i in 100:
-		put_bullet(Vector2(1300, rand_range(0, 720)), rand_range(0.3, 0.5), 1, {"delay":delay})
+		put_bullet(Vector2(1300, randf_range(0, 720)), randf_range(0.3, 0.5), 1, {"delay":delay})
 		delay += 0.5 if (i+1) % 10 == 0 else 0.02
 
 func pattern_2():
 	for i in 10:
 		for j in 36:
-			put_bullet(Vector2(1300, j * 60), rand_range(0.35, 0.45), 2, {"delay":0.6 * i, "i":i})
+			put_bullet(Vector2(1300, j * 60), randf_range(0.35, 0.45), 2, {"delay":0.6 * i, "i":i})
 
 func pattern_3():
 	for i in 10:
@@ -385,51 +376,51 @@ func pattern_3():
 			pos.x = 1320
 			var rand:float = randf()
 			if rand < 0.5:
-				pos.y = rand_range(0, 360)
+				pos.y = randf_range(0, 360)
 			else:
-				pos.y = rand_range(360, 720)
-			put_bullet(pos, rand_range(1.1, 1.2), 3, {"delay":0.7 * i, "rand":rand < 0.5})
+				pos.y = randf_range(360, 720)
+			put_bullet(pos, randf_range(1.1, 1.2), 3, {"delay":0.7 * i, "rand":rand < 0.5})
 
 func pattern_4():
 	for i in 45:
 		var pos:Vector2 = Vector2.ZERO
-		pos.x = rand_range(1300, 5000)
+		pos.x = randf_range(1300, 5000)
 		if randf() < 0.5:
-			pos.y = rand_range(180, 540)
+			pos.y = randf_range(180, 540)
 		else:
-			pos.y = rand_range(0, 720)
-		put_bullet(pos, rand_range(0.3, 1.5), 4, {"b_type":"b", "delay":0})
+			pos.y = randf_range(0, 720)
+		put_bullet(pos, randf_range(0.3, 1.5), 4, {"b_type":"b", "delay":0})
 	for i in 200:
 		for j in 2:
 			var pos:Vector2 = Vector2.ZERO
 			pos.x = 1300
-			pos.y = sin(i / 20.0 * PI) * 360 * (1 if j == 0 else -1) + 360 + rand_range(-20, 20)
+			pos.y = sin(i / 20.0 * PI) * 360 * (1 if j == 0 else -1) + 360 + randf_range(-20, 20)
 			put_bullet(pos, 0.4, 4, {"delay":0.06 * i})
 
 func pattern_5():
 	for i in 20:
-		var y_pos = rand_range(0, 720)
+		var y_pos = randf_range(0, 720)
 		for j in 40:
 			put_bullet(Vector2(1300, y_pos), 0.35, 5, {"delay":0.5 * i}, j / 40.0 * PI + PI / 2)
 
 func pattern_6():
 	for i in 15:
 		for j in 8:
-			put_bullet(Vector2(1350, rand_range(0, 720)), 2, 6, {"delay":0.5 * i})
+			put_bullet(Vector2(1350, randf_range(0, 720)), 2, 6, {"delay":0.5 * i})
 
 func pattern_7():
 	for i in 300:
 		var pos:Vector2 = Vector2.ZERO
-		var sc = rand_range(0.2, 1.3)
-		pos.x = 1300 + rand_range(0, (2.5 - sc) * 2800)
-		pos.y = rand_range(0, 720)
+		var sc = randf_range(0.2, 1.3)
+		pos.x = 1300 + randf_range(0, (2.5 - sc) * 2800)
+		pos.y = randf_range(0, 720)
 		put_bullet(pos, sc, 7, {"delay":0})
 
 func pattern_8():
 	for i in 15:
 		for dir in ["r", "l", "u", "d"]:
-			var rand_x = rand_range(0, 1280)
-			var rand_y = rand_range(0, 720)
+			var rand_x = randf_range(0, 1280)
+			var rand_y = randf_range(0, 720)
 			for j in 8:
 				var pos:Vector2 = Vector2.ZERO
 				if dir == "r":
@@ -448,7 +439,7 @@ func pattern_8():
 
 func pattern_9():
 	for i in 800:
-		put_bullet(Vector2(rand_range(0, 1280), -15 - rand_range(0, 1300)), 0.4, 9, {"spd":Vector2(0, 2), "b_type":"b", "delay":0})
+		put_bullet(Vector2(randf_range(0, 1280), -15 - randf_range(0, 1300)), 0.4, 9, {"spd":Vector2(0, 2), "b_type":"b", "delay":0})
 	for i in 130:
 		put_bullet(Vector2(-i * 15, 720 + i * 5), 0.5, 9, {"spd":Vector2(3, -1), "b_type":"b2", "delay":0})
 	for i in 100:
@@ -458,34 +449,34 @@ func pattern_9():
 
 func pattern_10():
 	for i in 100:
-		put_bullet(Vector2(rand_range(0, 1280), 740), 0.4, 10, {"delay":i * 5 / 60.0, "b_type":"b", "speed":Vector2(0, -10), "acceleration":Vector2(0, 0.1)})
+		put_bullet(Vector2(randf_range(0, 1280), 740), 0.4, 10, {"delay":i * 5 / 60.0, "b_type":"b", "speed":Vector2(0, -10), "acceleration":Vector2(0, 0.1)})
 	for i in 100:
-		put_bullet(Vector2(rand_range(0, 1280), -20), 0.4, 10, {"delay":i * 5 / 60.0, "b_type":"b2", "speed":Vector2(0, 10), "acceleration":Vector2(0, -0.1)})
+		put_bullet(Vector2(randf_range(0, 1280), -20), 0.4, 10, {"delay":i * 5 / 60.0, "b_type":"b2", "speed":Vector2(0, 10), "acceleration":Vector2(0, -0.1)})
 
 func pattern_11():
 	for i in 10:
 		var pos:Vector2 = Vector2.ZERO
 		var side = ["l", "u", "d", "r"][Helper.rand_int(0, 3)]
 		if side == "l":
-			pos = Vector2(-20, rand_range(0, 720))
+			pos = Vector2(-20, randf_range(0, 720))
 		elif side == "u":
-			pos = Vector2(rand_range(0, 1280), -20)
+			pos = Vector2(randf_range(0, 1280), -20)
 		elif side == "d":
-			pos = Vector2(rand_range(0, 1280), 740)
+			pos = Vector2(randf_range(0, 1280), 740)
 		else:
-			pos = Vector2(1300, rand_range(0, 720))
+			pos = Vector2(1300, randf_range(0, 720))
 		for j in 30:
 			var v:Vector2 = Vector2.ZERO
-			var r:float = rand_range(2, 4)
+			var r:float = randf_range(2, 4)
 			if side == "l":
-				v = polar2cartesian(r, rand_range(-PI / 2, PI / 2))
+				v = r * Vector2.from_angle(randf_range(-PI / 2, PI / 2))
 			elif side == "u":
-				v = polar2cartesian(r, rand_range(0, PI))
+				v = r * Vector2.from_angle(randf_range(0, PI))
 			elif side == "d":
-				v = polar2cartesian(r, rand_range(-PI, 0))
+				v = r * Vector2.from_angle(randf_range(-PI, 0))
 			else:
-				v = polar2cartesian(r, rand_range(PI / 2, 3 * PI / 2))
-			put_bullet(pos, rand_range(0.3, 0.6), 11, {"speed":v, "delay":0.8 * i})
+				v = r * Vector2.from_angle(randf_range(PI / 2, 3 * PI / 2))
+			put_bullet(pos, randf_range(0.3, 0.6), 11, {"speed":v, "delay":0.8 * i})
 
 func pattern_12():
 	for i in 128:
@@ -493,14 +484,14 @@ func pattern_12():
 	for i in 128:
 		put_bullet(Vector2.ZERO, 0.25, 12, {"t":-i * 10, "b_type":"c", "y":190, "delay":0})
 	for i in 20:
-		var x_pos = rand_range(0, 1280)
+		var x_pos = randf_range(0, 1280)
 		for j in 100:
-			put_bullet(Vector2(x_pos, 740), 0.4, 12, {"v":rand_range(3, 8), "delay":0.7 * i})
+			put_bullet(Vector2(x_pos, 740), 0.4, 12, {"v":randf_range(3, 8), "delay":0.7 * i})
 
 func graph_pattern():
-	var image:Image = load("res://Graphics/STM/%s.png" % pattern)
-	image.lock()
-	var blacks:PoolVector2Array = []
+	var graph_texture = load("res://Graphics/STM/%s.png" % pattern)
+	var image = graph_texture.get_image()
+	var blacks:PackedVector2Array = []
 	for i in range(0, image.get_width(), 2):
 		for j in range(0, image.get_height(), 2):
 			if image.get_pixel(i, j).a > 0.99:
@@ -521,7 +512,7 @@ func graph_pattern():
 		else:
 			start_pos.x = 1280 - 4 * (ratio - 0.75) * 1280
 			start_pos.y = -5
-		put_bullet(start_pos, 0.15, pattern, {"b_type":"function", "start":start_pos, "target":blacks[i] + Vector2(100, 100), "delay":lerp(0, 5, i / float(n)), "delay2":6.0 + lerp(0, 5, (n - i) / float(n)) * 2.0}, 0, Color.white)
+		put_bullet(start_pos, 0.15, pattern, {"b_type":"function", "start":start_pos, "target":blacks[i] + Vector2(100, 100), "delay":lerp(0, 5, i / float(n)), "delay2":6.0 + lerp(0, 5, (n - i) / float(n)) * 2.0}, 0, Color.WHITE)
 	for i in 300:
 		put_bullet(Vector2(0, get_y_from_x("fn_%s" % pattern, 0)), 0.3, pattern, {"b_type":"graph", "loops":1, "delay":i / 30.0 + 0.15})
 	for i in 128:
@@ -529,7 +520,7 @@ func graph_pattern():
 	for i in 72:
 		put_bullet(Vector2(640, 720 + i * 10), 0.2, pattern, {"b_type":"y_axis", "loops":7, "delay":0})
 	for i in 150:
-		put_bullet(Vector2(rand_range(0, 1280), 740), rand_range(0.2, 0.5), pattern, {"b_type":"obstacle", "delay":i / 15.0})
+		put_bullet(Vector2(randf_range(0, 1280), 740), randf_range(0.2, 0.5), pattern, {"b_type":"obstacle", "delay":i / 15.0})
 
 func adjust_pos_to_playfield(pos:Vector2):
 	return Vector2((pos.x + 3.0) * 1280.0 / 6, (3.0 - pos.y) * 720.0 / 6)
@@ -582,8 +573,8 @@ func adjust_v_to_playfield(v:Vector2):
 
 func pattern_19():
 	for i in 120:
-		var x_pos = rand_range(1280, 1300)
-		var y_pos = rand_range(0, 1300)
+		var x_pos = randf_range(1280, 1300)
+		var y_pos = randf_range(0, 1300)
 		for j in 2:
 			put_bullet(Vector2(x_pos, y_pos), 0, 13, {"v":8, "delay":0.06 * i,}) 
 
@@ -599,10 +590,10 @@ func pattern_21():
 		var y_pos = 360 * sin((5 * PI * x_pos) / 1280) + 720 / 2
 		put_bullet(Vector2(x_pos, y_pos), 0.3, 15, {"delay":1 * i})
 
-func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0, color:Color = Color.black):
-	var bullet = Sprite.new()
+func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:float = 0, color:Color = Color.BLACK):
+	var bullet = Sprite2D.new()
 	bullet.texture = bullet_texture
-	if color == Color.black:
+	if color == Color.BLACK:
 		bullet.modulate = [Color(1, 0.6, 0.6, 1), Color(0.6, 1, 0.6, 1), Color(0.6, 0.6, 1, 1)][Helper.rand_int(0, 2)]
 	else:
 		bullet.modulate = color
@@ -610,7 +601,7 @@ func put_bullet(pos:Vector2, sc:float, group:int, data:Dictionary = {}, rot:floa
 	bullet.position = pos
 	bullet.rotation = rot
 	add_child(bullet)
-	if not data.empty():
+	if not data.is_empty():
 		bullet_data[bullet.name] = data
 	bullet.add_to_group("bullet_%s" % [group])
 

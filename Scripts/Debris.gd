@@ -17,18 +17,18 @@ var time_speed:float = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$Sprite.frame = sprite_frame
+	$Sprite2D.frame = sprite_frame
 	debris_collision_shape = get_node(str(sprite_frame) + "/CollisionPolygon2D")
 	debris_collision_shape.disabled = false
 	$LightOccluder2D.occluder.polygon = debris_collision_shape.polygon
-	$Sprite.material.set_shader_param("aurora", aurora_intensity > 0.0)
+	$Sprite2D.material.set_shader_parameter("aurora", aurora_intensity > 0.0)
 	if lava_intensity > 0.0:
 		$Lava.enabled = true
-		$Lava.rotation = rand_range(0, 2 * PI)
-		$Lava.position.x = rand_range(-128, 128)
-		$Lava.position.y = rand_range(-128, 128)
-	$Particles2D.modulate = self_modulate
-	$Sprite.modulate = self_modulate
+		$Lava.rotation = randf_range(0, 2 * PI)
+		$Lava.position.x = randf_range(-128, 128)
+		$Lava.position.y = randf_range(-128, 128)
+	$GPUParticles2D.modulate = self_modulate
+	$Sprite2D.modulate = self_modulate
 	crack_threshold = 60 * randf() / pow(scale.x, 3)
 
 func set_crack():
@@ -42,9 +42,9 @@ func set_crack():
 	else:
 		next_pos = debris_collision_shape.polygon[idx+1]
 	$Crack/AnimationPlayer.play("New Anim", -1, time_speed)
-	$Crack/Particles2D.speed_scale = time_speed
-	$Crack/Particles2D.emitting = true
-	$Crack/Sprite.visible = true
+	$Crack/GPUParticles2D.speed_scale = time_speed
+	$Crack/GPUParticles2D.emitting = true
+	$Crack/Sprite2D.visible = true
 	$Crack.position = (next_pos + pos) / 2.0
 	$Crack.rotation = atan2(next_pos.y - pos.y, next_pos.x - pos.x) - PI/2
 
@@ -52,14 +52,14 @@ func set_crack():
 func destroy_rock():
 	_on_Timer_timeout()
 	particle_amount = int(scale.x * 20)
-	$Particles2D.process_material.damping = clamp(range_lerp(scale.x, 1.2, 0.5, 800, 1500), 800, 1500)
-	$Sprite.visible = false
+	$GPUParticles2D.process_material.damping = clamp(remap(scale.x, 1.2, 0.5, 800, 1500), 800, 1500)
+	$Sprite2D.visible = false
 	debris_collision_shape.disabled = true
 	$LightOccluder2D.light_mask = 0
-	$Particles2D.emitting = true
+	$GPUParticles2D.emitting = true
 	var timer = Timer.new()
 	add_child(timer)
-	timer.connect("timeout", self, "remove_debris")
+	timer.connect("timeout",Callable(self,"remove_debris"))
 	timer.start(particle_lifetime)
 
 func remove_debris():
@@ -80,6 +80,6 @@ func _on_Timer_timeout():
 	$Crack.monitoring = false
 	if $Crack/AnimationPlayer.is_playing():
 		$Crack/AnimationPlayer.stop()
-		$Crack/Sprite.visible = false
-	$Crack/Particles2D.emitting = false
+		$Crack/Sprite2D.visible = false
+	$Crack/GPUParticles2D.emitting = false
 	cracked_mining_factor = 1.0

@@ -1,6 +1,6 @@
 extends Panel
-onready var game = get_node("/root/Game")
-onready var REs:Array = $Armor/Control.get_children()
+@onready var game = get_node("/root/Game")
+@onready var REs:Array = $Armor/Control.get_children()
 var enhancements:Dictionary
 var abilities:Array = ["armor_3", "laser_2", "laser_8"]
 
@@ -35,9 +35,9 @@ func _ready():
 	REs.append_array($Laser/Control.get_children())
 	for RE in REs:
 		if RE.has_node("Button"):
-			RE.get_node("Button").connect("mouse_entered", self, "on_RE_mouse_entered", [RE.name])
-			RE.get_node("Button").connect("mouse_exited", self, "on_RE_mouse_exited")
-			RE.get_node("Button").connect("pressed", self, "on_RE_clicked", [RE.name, RE.texture])
+			RE.get_node("Button").connect("mouse_entered",Callable(self,"on_RE_mouse_entered").bind(RE.name))
+			RE.get_node("Button").connect("mouse_exited",Callable(self,"on_RE_mouse_exited"))
+			RE.get_node("Button").connect("pressed",Callable(self,"on_RE_clicked").bind(RE.name, RE.texture))
 
 func on_RE_mouse_entered(RE_name:String):
 	game.show_tooltip(Helper.get_RE_info(RE_name))
@@ -45,7 +45,7 @@ func on_RE_mouse_entered(RE_name:String):
 func on_RE_mouse_exited():
 	game.hide_tooltip()
 
-func on_RE_clicked(RE_name:String, texture:Texture):
+func on_RE_clicked(RE_name:String, texture:Texture2D):
 	game.hide_tooltip()
 	if enhancements.has(RE_name):
 		remove_recursive(RE_name)
@@ -93,7 +93,7 @@ func refresh():
 	for RE in REs:
 		if RE.has_node("Button"):
 			if enhancements.has(RE.name):
-				RE.modulate = Color.white
+				RE.modulate = Color.WHITE
 			else:
 				RE.modulate = Color(0.6, 0.6, 0.6)
 		else:
@@ -102,7 +102,7 @@ func refresh():
 			if enhancements.has(enhancement):
 				color = Color(0.4, 0.88, 1.0)
 			else:
-				color = Color.black
+				color = Color.BLACK
 			if RE is Line2D:
 				RE.default_color = color
 			elif RE is Node2D:

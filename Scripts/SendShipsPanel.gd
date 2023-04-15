@@ -1,5 +1,5 @@
 extends "Panel.gd"
-onready var HX_data_scene = preload("res://Scenes/HXData.tscn")
+@onready var HX_data_scene = preload("res://Scenes/HXData.tscn")
 
 const TEST:bool = false
 var travel_view:String
@@ -20,7 +20,7 @@ var spaceport_exit_cost_reduction:float = 1.0
 var spaceport_travel_cost_reduction:float = 1.0
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon($Background.size)
 	$Drive.add_item(tr("STANDARD_DRIVE"))
 	$Drive.add_item(tr("PD_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
@@ -35,8 +35,7 @@ func refresh():
 	var coords:Dictionary = game.ships_c_coords
 	var g_coords:Dictionary = game.ships_c_g_coords
 	var g_s:int = game.ships_c_g_coords.s
-	var file = File.new()
-	file.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], File.READ)
+	var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
 	depart_planet_data = planets_in_depart_system[coords.p]
@@ -44,8 +43,8 @@ func refresh():
 		travel_view = "system"
 		depart_id = coords.p
 		dest_id = dest_p_id
-		depart_pos = polar2cartesian(depart_planet_data.distance, depart_planet_data.angle)
-		dest_pos = polar2cartesian(game.planet_data[dest_id].distance, game.planet_data[dest_id].angle)
+		depart_pos = depart_planet_data.distance * Vector2.from_angle(depart_planet_data.angle)
+		dest_pos = game.planet_data[dest_id].distance * Vector2.from_angle(game.planet_data[dest_id].angle)
 		distance = depart_pos.distance_to(dest_pos)
 	elif game.c_g_g == g_coords.g:
 		travel_view = "galaxy"
@@ -81,10 +80,10 @@ func refresh():
 		$EnergyIcon3.texture = preload("res://Graphics/Atoms/Pu.png")
 		total_energy_cost = distance / 400000.0
 		$TotalEnergyCost2.text = "%s/%s mol" % [Helper.format_num(game.atoms.Pu, true), Helper.format_num(total_energy_cost, true)]
-		$TotalEnergyCost2["custom_colors/font_color"] = Color.green if game.atoms.Pu > total_energy_cost else Color.red
+		$TotalEnergyCost2["theme_override_colors/font_color"] = Color.GREEN if game.atoms.Pu > total_energy_cost else Color.RED
 			
 	elif $Drive.selected == 0:
-		$TotalEnergyCost2["custom_colors/font_color"] = Color.white
+		$TotalEnergyCost2["theme_override_colors/font_color"] = Color.WHITE
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
 		calc_costs()
 		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
@@ -97,10 +96,10 @@ func refresh():
 		child.queue_free()
 	if game.planet_data[dest_p_id].has("HX_data"):
 		for HX_data in game.planet_data[dest_p_id].HX_data:
-			var HX_data_node = HX_data_scene.instance()
+			var HX_data_node = HX_data_scene.instantiate()
 			if not HX_data.has("class"):
-				HX_data.class = 1
-			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data.class, HX_data.type])
+				HX_data["class"] = 1
+			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data["class"], HX_data.type])
 			HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, false, 4), Helper.format_num(HX_data.total_HP, false, 4)]
 			HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
 			HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, false, 4)
@@ -108,7 +107,7 @@ func refresh():
 			HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, false, 4)
 			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, false, 4)
 			$Scroll/Enemies.add_child(HX_data_node)
-			HX_data_node.rect_min_size.y = 70
+			HX_data_node.custom_minimum_size.y = 70
 		if game.planet_data[dest_p_id].has("conquered"):
 			$Enemies.text = tr("ENEMIES")
 		else:
@@ -123,7 +122,7 @@ func _on_Send_pressed():
 			game.long_popup(tr("PLANET_PRESSURE_TOO_HIGH"), "")
 		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:
 			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
-		elif time_cost > 4 * 60 * 60 * 1000:
+		elif time_cost > 4 * 60 * 60:
 			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"))
 		else:
 			send_ships()
@@ -164,7 +163,7 @@ func send_ships():
 				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 		elif time_cost != 0:
 			if game.energy >= total_energy_cost:
-				if time_cost >= 1000 * 365 * 24 * 60 * 60 * 1000:
+				if time_cost >= 365 * 24 * 60 * 60 * 1000:
 					if not game.achievement_data.random.has("1000_year_journey"):
 						game.earn_achievement("random", "1000_year_journey")
 				game.energy -= round(total_energy_cost)
@@ -187,7 +186,7 @@ func send_ships2(_time):
 	game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
 	game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
 	game.ships_travel_view = travel_view
-	game.ships_travel_start_date = OS.get_system_time_msecs()
+	game.ships_travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_length = time_cost
 	game.toggle_panel(self)
 	
@@ -253,7 +252,7 @@ func calc_costs():
 		atm_entry_cost = 0
 		gravity_entry_cost = 0
 	var entry_exit_cost:float = round(atm_entry_cost + atm_exit_cost + gravity_entry_cost + gravity_exit_cost)
-	$EnergyCost2.bbcode_text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
+	$EnergyCost2.text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
 	var travel_cost_mult = spaceport_travel_cost_reduction * (get_travel_cost_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light * travel_cost_mult
 	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed

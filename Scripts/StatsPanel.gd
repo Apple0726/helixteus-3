@@ -6,16 +6,16 @@ var star_class_bar_width:float = 20.0
 var ach_num:int = 0
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
 	$Statistics/HBox/Prefix.text = show_stats_for[0]
 	$Statistics/HBox/Suffix.text = show_stats_for[1]
-	$Tabs/Achievements._on_Button_pressed()
+	$TabBar/Achievements._on_Button_pressed()
 	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
 			ach_num += 1
-			ach.connect("mouse_entered", self, "on_ach_entered", [grid.name, ach.name])
-			ach.connect("mouse_exited", self, "on_ach_exited")
+			ach.connect("mouse_entered",Callable(self,"on_ach_entered").bind(grid.name, ach.name))
+			ach.connect("mouse_exited",Callable(self,"on_ach_exited"))
 	refresh()
 
 func refresh():
@@ -23,7 +23,7 @@ func refresh():
 	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
 			if game.achievement_data[grid.name].has(ach.name):
-				ach.modulate = Color.white
+				ach.modulate = Color.WHITE
 				ach_get += 1
 			else:
 				ach.modulate = Color(0.2, 0.2, 0.2, 1.0)
@@ -100,30 +100,30 @@ func _on_StarClasses_pressed():
 			max_num = max(max_num, star_num)
 			var vbox = VBoxContainer.new()
 			var bar = ColorRect.new()
-			vbox["custom_constants/separation"] = 0
-			vbox.rect_min_size.x = star_class_bar_width
-			bar.rect_min_size.y = star_num
+			vbox["theme_override_constants/separation"] = 0
+			vbox.custom_minimum_size.x = star_class_bar_width
+			bar.custom_minimum_size.y = star_num
 			bar.name = "ColorRect"
-			bar.connect("mouse_entered", self, "on_star_class_bar_entered", [star_class, i])
-			bar.connect("mouse_exited", self, "on_bar_exited")
+			bar.connect("mouse_entered",Callable(self,"on_star_class_bar_entered").bind(star_class, i))
+			bar.connect("mouse_exited",Callable(self,"on_bar_exited"))
 			bar.color = Helper.get_star_modulate("%s%s" % [star_class, i])
 			bar.size_flags_vertical = 10
 			vbox.add_child(bar)
 			var label = Label.new()
-			label.align = Label.ALIGN_CENTER
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.mouse_filter = Control.MOUSE_FILTER_PASS
-			label.connect("mouse_entered", self, "on_star_class_bar_entered", [star_class, i])
-			label.connect("mouse_exited", self, "on_bar_exited")
-			label["custom_fonts/font"] = max_label["custom_fonts/font"]
+			label.connect("mouse_entered",Callable(self,"on_star_class_bar_entered").bind(star_class, i))
+			label.connect("mouse_exited",Callable(self,"on_bar_exited"))
+			label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
 			if star_class_bar_width > 15:
 				label.text = "%s%s" % [star_class, i]
 			vbox.add_child(label)
 			graph.add_child(vbox)
 	for vbox in graph.get_children():
-		vbox.get_node("ColorRect").rect_min_size.y *= 288.0 / max_num
-	max_label.text = String(max_num)
-	yield(get_tree(), "idle_frame")
-	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
+		vbox.get_node("ColorRect").theme_override_minimum_size.y *= 288.0 / max_num
+	max_label.text = str(max_num)
+	await get_tree().process_frame
+	$Statistics/ScrollContainer2/Control.theme_override_minimum_size.x = graph.size.x + 100
 
 func on_star_class_bar_entered(star_class:String, i:int):
 	game.show_tooltip("%s%s: %s" % [star_class, i, game["stats_%s" % stats_for].star_classes[star_class][i]])
@@ -155,32 +155,32 @@ func _on_StarTypes_pressed():
 		var vbox = VBoxContainer.new()
 		var bar = ColorRect.new()
 		var label = Label.new()
-		label.align = Label.ALIGN_CENTER
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.mouse_filter = Control.MOUSE_FILTER_PASS
-		vbox["custom_constants/separation"] = 0
-		vbox.rect_min_size.x = 100
-		bar.rect_min_size.y = star_num
+		vbox["theme_override_constants/separation"] = 0
+		vbox.theme_override_minimum_size.x = 100
+		bar.theme_override_minimum_size.y = star_num
 		bar.name = "ColorRect"
 		bar.size_flags_vertical = 10
-		label["custom_fonts/font"] = max_label["custom_fonts/font"]
+		label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
 		if star_type.substr(0, 11) == "hypergiant ":
 			var arr:Array = star_type.split(" ")
 			var star_tier:String = arr[1]
 			label.text = "%s %s" % [tr(arr[0].to_upper()), star_tier]
 		else:
 			label.text = tr(star_type.to_upper())
-		bar.connect("mouse_entered", self, "on_star_type_bar_entered", [star_type, label.text])
-		label.connect("mouse_entered", self, "on_star_type_bar_entered", [star_type, label.text])
-		bar.connect("mouse_exited", self, "on_bar_exited")
-		label.connect("mouse_exited", self, "on_bar_exited")
+		bar.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
+		label.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
+		bar.connect("mouse_exited",Callable(self,"on_bar_exited"))
+		label.connect("mouse_exited",Callable(self,"on_bar_exited"))
 		vbox.add_child(bar)
 		vbox.add_child(label)
 		graph.add_child(vbox)
-	max_label.text = String(max_num)
+	max_label.text = str(max_num)
 	for vbox in graph.get_children():
-		vbox.get_node("ColorRect").rect_min_size.y *= 288.0 / max_num
-	yield(get_tree(), "idle_frame")
-	$Statistics/ScrollContainer2/Control.rect_min_size.x = graph.rect_size.x + 100
+		vbox.get_node("ColorRect").theme_override_minimum_size.y *= 288.0 / max_num
+	await get_tree().process_frame
+	$Statistics/ScrollContainer2/Control.theme_override_minimum_size.x = graph.size.x + 100
 
 func _on_OptionButton_item_selected(index):
 	var id:int = $Statistics/HBox/OptionButton.get_item_id(index)

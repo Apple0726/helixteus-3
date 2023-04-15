@@ -2,15 +2,15 @@ extends "Panel.gd"
 var editable:bool = false
 var is_int:bool = true
 var hovered_over:String = ""
-onready var option_btn = $HBoxContainer/OptionButton
-onready var toggle_btn = $HBoxContainer/CheckBox
-onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
-onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
+@onready var option_btn = $HBoxContainer/OptionButton
+@onready var toggle_btn = $HBoxContainer/CheckBox
+@onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
+@onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
 var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
 
 func _ready():
-	set_polygon(rect_size, Vector2(0, 308))
+	set_polygon(size, Vector2(0, 308))
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
 	$ClickToEdit.visible = not game.help.has("overlay")
 
@@ -38,10 +38,10 @@ func refresh_overlay():
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
 			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
-	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
-		colorblind_btn.pressed = config.get_value("misc", "colorblind", false)
-		hide_obj_btn.pressed = config.get_value("misc", "hide_obj", false)
+		colorblind_btn.button_pressed = config.get_value("misc", "colorblind", false)
+		hide_obj_btn.button_pressed = config.get_value("misc", "hide_obj", false)
 		if colorblind_btn.pressed:
 			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
@@ -277,7 +277,7 @@ func _on_CheckBox_toggled(button_pressed):
 	game.overlay_data[game.c_v].visible = button_pressed
 	if game.overlay_data[game.c_v].visible:
 		send_overlay_info(game.overlay_data[game.c_v].overlay)
-	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	Helper.toggle_overlay(game.view.obj.obj_btns, game.view.obj.overlays, button_pressed)
 
 

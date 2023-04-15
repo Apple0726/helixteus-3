@@ -1,6 +1,6 @@
 extends Control
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var HX_data# = [{"money":100, "XP":14}]
 var ship_data# = [{"lv":1, "HP":20, "total_HP":20, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
 var weapon_XPs:Array# = [{"bullet":0, "laser":2, "bomb":0, "light":0}]
@@ -21,16 +21,16 @@ func _ready():
 		else:
 			$Grid.get_node("Panel%s" % (i + 1)).visible = true
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
-			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+			for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
 				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [round(weapon_XPs[i][weapon.to_lower()] * mult * diff_mult)]
 			$Grid.get_node("Panel%s" % (i + 1)).show_weapon_XPs = true
 			$Grid.get_node("Panel%s" % (i + 1)).refresh()
-	$Bonus.bbcode_text = "%s: %sx %s" % [tr("LOOT_XP_BONUS"), mult * diff_mult, "[img]Graphics/Icons/help.png[/img]"]
+	$Bonus.text = "%s: %sx %s" % [tr("LOOT_XP_BONUS"), mult * diff_mult, "[img]Graphics/Icons/help.png[/img]"]
 	$Bonus.help_text = "%s: x %s\n%s: x %s\n%s:\n%s" % [tr("PERFORMANCE_MULTIPLIER"), mult, tr("DIFFICULTY"), diff_mult, tr("PERFORMANCE_MULTIPLIER_VALUES"), tr("LOOT_XP_BONUS_DESC")]
 
 func _process(delta):
 	for i in len(ship_data):
-		for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
 			var node = get_node("Grid/Panel%s/%s/TextureProgress2" % [i + 1, weapon])
 			var text_node = get_node("Grid/Panel%s/%s/Label2" % [i + 1, weapon])
 			var XP_get = round(weapon_XPs[i][weapon.to_lower()] * mult * diff_mult)
@@ -64,7 +64,7 @@ func _on_close_button_pressed():
 		game.stats_univ.planets_conquered += 1
 		game.stats_dim.planets_conquered += 1
 		game.stats_global.planets_conquered += 1
-		if not game.objective.empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
+		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
 			game.objective.current += 1
 	else:
 		for planet in game.planet_data:
@@ -88,7 +88,7 @@ func _on_close_button_pressed():
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	if game.battle.hard_battle:
-		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	queue_free()
 	if not game.help.has("SP"):
 		game.long_popup(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))

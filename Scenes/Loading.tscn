@@ -1,51 +1,25 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://c73x6qht0nam3"]
 
-[ext_resource path="res://Scripts/Loading.gd" type="Script" id=1]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
-
-[sub_resource type="DynamicFont" id=1]
-size = 25
-font_data = ExtResource( 2 )
-
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 1, 1, 1 )
+[ext_resource type="Script" path="res://Scripts/Loading.gd" id="1"]
 
 [node name="Loading" type="Node2D"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="Text" type="Label" parent="."]
-margin_left = -384.0
-margin_top = -8.0
-margin_right = 384.0
-margin_bottom = 21.0
-custom_fonts/font = SubResource( 1 )
+offset_left = -384.0
+offset_top = -8.0
+offset_right = 384.0
+offset_bottom = 21.0
 text = "Loading..."
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = -256.0
-margin_top = 40.0
-margin_right = 256.0
-margin_bottom = 56.0
-custom_styles/panel = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -256.0
+offset_top = 40.0
+offset_right = 256.0
+offset_bottom = 56.0
 
 [node name="Bar" type="ColorRect" parent="."]
-margin_left = -256.0
-margin_top = 40.0
-margin_right = 256.0
-margin_bottom = 56.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -256.0
+offset_top = 40.0
+offset_right = 256.0
+offset_bottom = 56.0

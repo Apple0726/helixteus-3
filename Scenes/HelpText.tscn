@@ -1,17 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://c8jr3e5aiyj1n"]
 
-[ext_resource path="res://Scripts/HelpText.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://Scripts/HelpText.gd" id="1"]
 
 [node name="RichTextLabel" type="RichTextLabel"]
-margin_right = 200.0
-margin_bottom = 30.0
+offset_right = 200.0
+offset_bottom = 30.0
 bbcode_enabled = true
-bbcode_text = " [img]Graphics/Icons/help.png[/img]"
-text = " "
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+text = " [img]Graphics/Icons/help.png[/img]"
+script = ExtResource("1")
 
 [connection signal="mouse_entered" from="." to="." method="_on_RichTextLabel_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_RichTextLabel_mouse_exited"]

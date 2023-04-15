@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture2D" id=2]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
@@ -21,11 +21,11 @@ shadow_offset = Vector2( 0, 4 )
 [node name="UpgradePanel" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 256.0
-margin_top = 144.0
-margin_right = -256.0
-margin_bottom = -208.0
-rect_min_size = Vector2( 768, 368 )
+offset_left = 256.0
+offset_top = 144.0
+offset_right = -256.0
+offset_bottom = -208.0
+custom_minimum_size = Vector2( 768, 368 )
 mouse_filter = 1
 theme = ExtResource( 3 )
 script = ExtResource( 4 )
@@ -35,11 +35,11 @@ __meta__ = {
 
 [node name="PathButtons" type="HBoxContainer" parent="."]
 anchor_right = 1.0
-margin_left = 8.0
-margin_top = 40.0
-margin_right = -8.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 0, 35 )
+offset_left = 8.0
+offset_top = 40.0
+offset_right = -8.0
+offset_bottom = 75.0
+custom_minimum_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 custom_constants/separation = -2
 __meta__ = {
@@ -49,24 +49,24 @@ __meta__ = {
 [node name="Path1" parent="PathButtons" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 252.0
-margin_bottom = 35.0
+offset_right = 252.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Path2" parent="PathButtons" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 250.0
-margin_right = 502.0
-margin_bottom = 35.0
+offset_left = 250.0
+offset_right = 502.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Path3" parent="PathButtons" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 500.0
-margin_right = 752.0
-margin_bottom = 35.0
+offset_left = 500.0
+offset_right = 752.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 
 [node name="Current" type="RichTextLabel" parent="."]
@@ -74,10 +74,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -384.0
-margin_bottom = 24.0
+offset_left = -384.0
+offset_bottom = 24.0
 grow_vertical = 2
-rect_clip_content = false
+clip_contents = false
 size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
@@ -91,10 +91,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -72.0
-margin_right = 32.0
-margin_bottom = -24.0
+offset_left = -32.0
+offset_top = -72.0
+offset_right = 32.0
+offset_bottom = -24.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource( 2 )
@@ -109,10 +109,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_right = 384.0
-margin_bottom = 24.0
+offset_right = 384.0
+offset_bottom = 24.0
 grow_vertical = 2
-rect_clip_content = false
+clip_contents = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
@@ -126,10 +126,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -224.0
-margin_top = -64.0
-margin_right = -160.0
-margin_bottom = -32.0
+offset_left = -224.0
+offset_top = -64.0
+offset_right = -160.0
+offset_bottom = -32.0
 text = "Level 1"
 align = 1
 valign = 1
@@ -142,10 +142,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 72.0
-margin_top = -64.0
-margin_right = 174.0
-margin_bottom = -32.0
+offset_left = 72.0
+offset_top = -64.0
+offset_right = 174.0
+offset_bottom = -32.0
 text = "LEVEL"
 align = 2
 valign = 1
@@ -158,10 +158,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -376.0
-margin_top = 96.0
-margin_right = 200.0
-margin_bottom = 128.0
+offset_left = -376.0
+offset_top = 96.0
+offset_right = 200.0
+offset_bottom = 128.0
 align = 1
 
 [node name="NextLv" type="SpinBox" parent="."]
@@ -169,10 +169,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 184.0
-margin_top = -64.0
-margin_right = 276.0
-margin_bottom = -32.0
+offset_left = 184.0
+offset_top = -64.0
+offset_right = 276.0
+offset_bottom = -32.0
 value = 2.0
 rounded = true
 allow_greater = true
@@ -184,11 +184,11 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = -56.0
-margin_right = 584.0
-margin_bottom = -8.0
-rect_min_size = Vector2( 200, 40 )
+offset_left = 8.0
+offset_top = -56.0
+offset_right = 584.0
+offset_bottom = -8.0
+custom_minimum_size = Vector2( 200, 40 )
 custom_styles/bg = SubResource( 1 )
 scroll_vertical_enabled = false
 __meta__ = {
@@ -196,9 +196,9 @@ __meta__ = {
 }
 
 [node name="Costs" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_right = 566.0
-margin_bottom = 48.0
+offset_left = 10.0
+offset_right = 566.0
+offset_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
@@ -208,11 +208,11 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -176.0
-margin_top = -56.0
-margin_right = -6.0
-margin_bottom = -8.0
-rect_min_size = Vector2( 0, 40 )
+offset_left = -176.0
+offset_top = -56.0
+offset_right = -6.0
+offset_bottom = -8.0
+custom_minimum_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "UPGRADE"
@@ -222,8 +222,8 @@ __meta__ = {
 
 [node name="Label" type="Label" parent="."]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 0, 38 )
 size_flags_vertical = 3
 text = "UPGRADE"
 align = 1
@@ -239,10 +239,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -104.0
-margin_top = 56.0
-margin_right = 104.0
-margin_bottom = 84.0
+offset_left = -104.0
+offset_top = 56.0
+offset_right = 104.0
+offset_bottom = 84.0
 theme = ExtResource( 3 )
 pressed = true
 text = "AUTO_SPEEDUP"

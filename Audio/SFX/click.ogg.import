@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/click.ogg-6c25af25ca2d198da9caf75694d776c1.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://v4wb6pb6bn7q"
+path="res://.godot/imported/click.ogg-6c25af25ca2d198da9caf75694d776c1.oggvorbisstr"
 
 [deps]
 
 source_file="res://Audio/SFX/click.ogg"
-dest_files=[ "res://.import/click.ogg-6c25af25ca2d198da9caf75694d776c1.oggstr" ]
+dest_files=["res://.godot/imported/click.ogg-6c25af25ca2d198da9caf75694d776c1.oggvorbisstr"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

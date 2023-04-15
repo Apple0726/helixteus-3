@@ -1,6 +1,6 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var type:String
 var obj:String
 var polygon
@@ -9,9 +9,9 @@ var obj_node
 var money_node
 
 func _ready():
-	$Resource/Texture.rect_min_size = Vector2(36, 36)
-	$Resource2/Texture.rect_min_size = Vector2(36, 36)
-	$Resource2/Texture.texture_normal = preload("res://Graphics/Icons/money.png")
+	$Resource/Texture2D.custom_minimum_size = Vector2(36, 36)
+	$Resource2/Texture2D.custom_minimum_size = Vector2(36, 36)
+	$Resource2/Texture2D.texture_normal = preload("res://Graphics/Icons/money.png")
 
 var max_value:float
 
@@ -34,8 +34,8 @@ func refresh(_type:String = type, _obj:String = obj):
 		money_node = $Resource
 		max_value = game.money
 		$Buy.text = tr("BUY")
-	obj_node.get_node("Texture").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
-	money_node.get_node("Texture").texture_normal = load("res://Graphics/Icons/money.png")
+	obj_node.get_node("Texture2D").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
+	money_node.get_node("Texture2D").texture_normal = load("res://Graphics/Icons/money.png")
 	obj_node.get_node("Text").text = "0 kg"
 	money_node.get_node("Text").text = "0"
 

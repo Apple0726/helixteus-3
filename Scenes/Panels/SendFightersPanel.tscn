@@ -1,17 +1,17 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=1]
+[ext_resource path="res://Graphics/Icons/help.png" type="Texture2D" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture2D" id=4]
 [ext_resource path="res://Scripts/SendFightersPanel.gd" type="Script" id=5]
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture2D" id=7]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=9]
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture2D" id=9]
 
 [node name="SendFightersPanel" type="Panel"]
-margin_right = 1067.0
-margin_bottom = 600.0
-rect_pivot_offset = Vector2( 533, 300 )
+offset_right = 1067.0
+offset_bottom = 600.0
+pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 3 )
 script = ExtResource( 5 )
 __meta__ = {
@@ -22,8 +22,8 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="."]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 0, 38 )
 text = "SEND_FIGHTERS"
 align = 1
 valign = 1
@@ -32,46 +32,46 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 24.0
-margin_top = 60.0
-margin_right = 1040.0
-margin_bottom = 560.0
+offset_left = 24.0
+offset_top = 60.0
+offset_right = 1040.0
+offset_bottom = 560.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="RichTextLabel" parent="."]
-margin_left = 52.0
-margin_top = 96.0
-margin_right = 1016.0
-margin_bottom = 308.0
+offset_left = 52.0
+offset_top = 96.0
+offset_right = 1016.0
+offset_bottom = 308.0
 custom_constants/line_separation = 8
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Send" type="Button" parent="."]
-margin_left = 864.0
-margin_top = 512.0
-margin_right = 1032.0
-margin_bottom = 552.0
+offset_left = 864.0
+offset_top = 512.0
+offset_right = 1032.0
+offset_bottom = 552.0
 text = "SEND"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Control" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CheckBox" type="CheckBox" parent="Control"]
-margin_left = 44.0
-margin_top = 352.0
-margin_right = 329.0
-margin_bottom = 380.0
+offset_left = 44.0
+offset_top = 352.0
+offset_right = 329.0
+offset_bottom = 380.0
 pressed = true
 text = "LEAST_DIFFICULT_FIRST"
 __meta__ = {
@@ -79,20 +79,20 @@ __meta__ = {
 }
 
 [node name="CheckBox2" type="CheckBox" parent="Control"]
-margin_left = 44.0
-margin_top = 400.0
-margin_right = 325.0
-margin_bottom = 428.0
+offset_left = 44.0
+offset_top = 400.0
+offset_right = 325.0
+offset_bottom = 428.0
 text = "MOST_DIFFICULT_FIRST"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label2" type="Label" parent="Control"]
-margin_left = 416.0
-margin_top = 376.0
-margin_right = 560.0
-margin_bottom = 400.0
+offset_left = 416.0
+offset_top = 376.0
+offset_right = 560.0
+offset_bottom = 400.0
 text = "LESS_ENERGY"
 align = 2
 __meta__ = {
@@ -100,17 +100,17 @@ __meta__ = {
 }
 
 [node name="EnergyCost" type="Label" parent="Control"]
-margin_left = 608.0
-margin_top = 520.0
-margin_right = 752.0
-margin_bottom = 544.0
+offset_left = 608.0
+offset_top = 520.0
+offset_right = 752.0
+offset_bottom = 544.0
 text = "1111"
 
 [node name="Label5" type="Label" parent="Control"]
-margin_left = 192.0
-margin_top = 520.0
-margin_right = 512.0
-margin_bottom = 544.0
+offset_left = 192.0
+offset_top = 520.0
+offset_right = 512.0
+offset_bottom = 544.0
 text = "TOTAL_ENERGY_COST"
 align = 2
 __meta__ = {
@@ -118,30 +118,30 @@ __meta__ = {
 }
 
 [node name="Label3" type="Label" parent="Control"]
-margin_left = 840.0
-margin_top = 376.0
-margin_right = 1004.0
-margin_bottom = 400.0
+offset_left = 840.0
+offset_top = 376.0
+offset_right = 1004.0
+offset_bottom = 400.0
 text = "FASTER_TRAVEL"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HSlider" type="HSlider" parent="Control"]
-margin_left = 580.0
-margin_top = 380.0
-margin_right = 820.0
-margin_bottom = 396.0
+offset_left = 580.0
+offset_top = 380.0
+offset_right = 820.0
+offset_bottom = 396.0
 value = 50.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
-margin_left = 544.0
-margin_top = 512.0
-margin_right = 612.0
-margin_bottom = 548.0
+offset_left = 544.0
+offset_top = 512.0
+offset_right = 612.0
+offset_bottom = 548.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -150,34 +150,34 @@ __meta__ = {
 }
 
 [node name="SE_Hint" type="TextureRect" parent="Control"]
-margin_left = 704.0
-margin_top = 516.0
-margin_right = 736.0
-margin_bottom = 544.0
+offset_left = 704.0
+offset_top = 516.0
+offset_right = 736.0
+offset_bottom = 544.0
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 4
 
 [node name="Control2" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Control2"]
-margin_left = 96.0
-margin_top = 196.0
-margin_right = 576.0
-margin_bottom = 220.0
+offset_left = 96.0
+offset_top = 196.0
+offset_right = 576.0
+offset_bottom = 220.0
 color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureProgress" type="TextureProgress" parent="Control2"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2"]
 modulate = Color( 0.396078, 0.396078, 0.396078, 1 )
-margin_left = 96.0
-margin_top = 196.0
-margin_right = 576.0
-margin_bottom = 220.0
+offset_left = 96.0
+offset_top = 196.0
+offset_right = 576.0
+offset_bottom = 220.0
 step = 0.0
 value = 50.0
 texture_progress = ExtResource( 9 )
@@ -187,28 +187,28 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="Control2"]
-margin_left = 248.0
-margin_top = 232.0
-margin_right = 284.0
-margin_bottom = 272.0
+offset_left = 248.0
+offset_top = 232.0
+offset_right = 284.0
+offset_bottom = 272.0
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
 [node name="TimeLeft" type="Label" parent="Control2"]
-margin_left = 304.0
-margin_top = 240.0
-margin_right = 468.0
-margin_bottom = 264.0
+offset_left = 304.0
+offset_top = 240.0
+offset_right = 468.0
+offset_bottom = 264.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeLeft2" type="Label" parent="Control2"]
-margin_left = 96.0
-margin_top = 156.0
-margin_right = 576.0
-margin_bottom = 180.0
+offset_left = 96.0
+offset_top = 156.0
+offset_right = 576.0
+offset_bottom = 180.0
 text = "TIME_TO_NEXT_CONQUER"
 align = 1
 __meta__ = {

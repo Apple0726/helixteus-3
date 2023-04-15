@@ -1,16 +1,15 @@
 extends Control
 
 const C = Vector2(640, 360)
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 #Tween for fading in/out panel
-var tween:Tween
-var polygon:PoolVector2Array# = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
+var polygon:PackedVector2Array# = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
+var tween
 
 func _ready():
-	tween = Tween.new()
-	add_child(tween)
 	set_process_input(false)
-	connect("visibility_changed", self, "set_input")
+	set_process(false)
+	connect("visibility_changed",Callable(self,"set_input"))
 
 func refresh():
 	pass
@@ -29,5 +28,5 @@ func _on_close_button_pressed():
 	game.toggle_panel(self)
 
 func _input(event):
-	if event is InputEventMouseMotion:
-		game.block_scroll = Geometry.is_point_in_polygon(event.position, polygon)
+	if event is InputEventMouseMotion and visible:
+		game.block_scroll = Geometry2D.is_point_in_polygon(event.position, polygon)

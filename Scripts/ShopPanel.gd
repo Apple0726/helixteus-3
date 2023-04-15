@@ -4,25 +4,23 @@ func _ready():
 	type = PanelType.SHOP
 	$Title.text = tr("SHOP")
 	for btn_str in ["Speedups", "Overclocks", "Pickaxes"]:
-		var btn = preload("res://Scenes/AdvButton.tscn").instance()
+		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$VBox/Tabs.add_child(btn)
+		btn.connect("pressed",Callable(self,"_on_btn_pressed").bind(btn_str))
+		$VBox/TabBar.add_child(btn)
 	_on_btn_pressed("Speedups")
-	$VBox/Tabs.get_node("Speedups")._on_Button_pressed()
+	$VBox/TabBar.get_node("Speedups")._on_Button_pressed()
 
 func _on_btn_pressed(btn_str:String):
-	if game.tutorial and game.tutorial.tut_num == 12 and btn_str == "Pickaxes" and not game.tutorial.tween.is_active():
-		game.tutorial.fade()
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
 	tab = btn_str
 	change_tab(btn_str)
 	for obj in game["%s_info" % btn_str_l]:
 		var obj_info = game["%s_info" % btn_str_l][obj]
-		var item = item_for_sale_scene.instance()
+		var item = item_for_sale_scene.instantiate()
 		item.get_node("SmallButton").text = tr("BUY")
 		item.item_name = obj
 		item.item_dir = "Items/%s" % btn_str
@@ -39,7 +37,7 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
-	.set_item_info(_name, _desc, costs, _type, _dir)
+	super.set_item_info(_name, _desc, costs, _type, _dir)
 	desc_txt.text = _desc
 	$VBox/HBox/ItemInfo/VBox/HBox.visible = tab in ["Speedups", "Overclocks"]
 
@@ -74,17 +72,14 @@ func buy_pickaxe(_costs:Dictionary):
 		game.planet_HUD.refresh()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
-		game.mining_HUD.get_node("Pickaxe/Sprite").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
+		game.mining_HUD.get_node("Pickaxe/Sprite2D").texture = load("res://Graphics/Items/Pickaxes/" + item_name + ".png")
 	game.pickaxe.name = item_name
 	game.pickaxe.speed = game.pickaxes_info[item_name].speed * game.engineering_bonus.PS
 	game.pickaxe.durability = game.pickaxes_info[item_name].durability
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
-	if game.tutorial and game.tutorial.tut_num == 13 and not game.tutorial.tween.is_active():
-		game.tutorial.fade()
 
 func _on_close_button_pressed():
-	if not game.tutorial or game.tutorial and not game.tutorial.BG_blocked:
-		._on_close_button_pressed()
+	super._on_close_button_pressed()
 
 func _on_BuyAmount_value_changed(value):
-	._on_BuyAmount_value_changed(value)
+	super._on_BuyAmount_value_changed(value)

@@ -1,96 +1,104 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://ba8tbwvf85ejf"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/ScienceUI.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Icons/OtherBranches.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Icons/InfiniteResearch.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Icons/MainBranch.png" type="Texture" id=5]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" path="res://Scripts/ScienceUI.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://dt20fdb1x5n4d" path="res://Graphics/Icons/OtherBranches.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bi3q7w4xmbt7" path="res://Graphics/Icons/InfiniteResearch.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cy8uwxmtpkihh" path="res://Graphics/Icons/MainBranch.png" id="5"]
 
-[sub_resource type="InputEventAction" id=1]
-action = "Z"
+[sub_resource type="InputEventKey" id="InputEventKey_ekqg7"]
+device = -1
+physical_keycode = 90
+unicode = 122
 
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+[sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_ekqg7")]
 
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
+theme = ExtResource("1")
+script = ExtResource("2")
 
 [node name="Back" type="Button" parent="."]
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -36.0
-margin_right = 112.0
+offset_top = -36.0
+offset_right = 112.0
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_top = -68.0
-margin_right = 52.0
-margin_bottom = 72.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_top = -68.0
+offset_right = 52.0
+offset_bottom = 72.0
 
 [node name="MainBranch" type="Button" parent="Panel"]
+layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 8.0
-margin_top = -62.0
-margin_right = 44.0
-margin_bottom = -26.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 8.0
+offset_top = -62.0
+offset_right = 44.0
+offset_bottom = -26.0
 
 [node name="TextureRect" type="TextureRect" parent="Panel/MainBranch"]
-modulate = Color( 0, 1, 0, 1 )
+modulate = Color(0, 1, 0, 1)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-texture = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("5")
 
 [node name="OtherBranches" type="Button" parent="Panel"]
+layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 8.0
-margin_top = -18.0
-margin_right = 44.0
-margin_bottom = 18.0
+offset_left = 8.0
+offset_top = -18.0
+offset_right = 44.0
+offset_bottom = 18.0
 
 [node name="TextureRect" type="TextureRect" parent="Panel/OtherBranches"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-texture = ExtResource( 3 )
+texture = ExtResource("3")
 
 [node name="InfiniteResearch" type="Button" parent="Panel"]
+layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 8.0
-margin_top = 26.0
-margin_right = 44.0
-margin_bottom = 62.0
+offset_left = 8.0
+offset_top = 26.0
+offset_right = 44.0
+offset_bottom = 62.0
 
 [node name="TextureRect" type="TextureRect" parent="Panel/InfiniteResearch"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-texture = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("4")
+
+[node name="ZoomHelp" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_top = 152.0
+offset_right = 1280.0
+offset_bottom = 171.0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
 [connection signal="mouse_entered" from="Panel/MainBranch" to="." method="_on_MainBranch_mouse_entered"]

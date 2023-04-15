@@ -14,8 +14,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.15 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
@@ -31,8 +31,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.15 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
@@ -48,8 +48,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.15 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
@@ -61,550 +61,550 @@ script = ExtResource( 2 )
 [node name="IR" type="Control" parent="."]
 visible = false
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MEE" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 80.0
-margin_right = 624.0
-margin_bottom = 144.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 80.0
+offset_right = 624.0
+offset_bottom = 144.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="EPE" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 176.0
-margin_right = 624.0
-margin_bottom = 240.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 176.0
+offset_right = 624.0
+offset_bottom = 240.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="RLE" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 272.0
-margin_right = 624.0
-margin_bottom = 336.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 272.0
+offset_right = 624.0
+offset_bottom = 336.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="STE" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 368.0
-margin_right = 624.0
-margin_bottom = 432.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 368.0
+offset_right = 624.0
+offset_bottom = 432.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="MMS" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 464.0
-margin_right = 624.0
-margin_bottom = 528.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 464.0
+offset_right = 624.0
+offset_bottom = 528.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="PME" parent="IR" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 560.0
-margin_right = 624.0
-margin_bottom = 624.0
-rect_min_size = Vector2( 336, 0 )
+offset_left = 288.0
+offset_top = 560.0
+offset_right = 624.0
+offset_bottom = 624.0
+custom_minimum_size = Vector2( 336, 0 )
 infinite_research = true
 
 [node name="Main" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RC" parent="Main" instance=ExtResource( 1 )]
-margin_left = 224.0
-margin_top = 336.0
-margin_right = 480.0
-margin_bottom = 400.0
+offset_left = 224.0
+offset_top = 336.0
+offset_right = 480.0
+offset_bottom = 400.0
 size_flags_horizontal = 13
 
 [node name="SCT" parent="Main" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 336.0
-margin_right = 960.0
-margin_bottom = 400.0
+offset_left = 704.0
+offset_top = 336.0
+offset_right = 960.0
+offset_bottom = 400.0
 
 [node name="CD" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1184.0
-margin_top = -272.0
-margin_right = 1440.0
-margin_bottom = -208.0
+offset_left = 1184.0
+offset_top = -272.0
+offset_right = 1440.0
+offset_bottom = -208.0
 
 [node name="ATM" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1184.0
-margin_top = -368.0
-margin_right = 1440.0
-margin_bottom = -304.0
+offset_left = 1184.0
+offset_top = -368.0
+offset_right = 1440.0
+offset_bottom = -304.0
 
 [node name="SAP" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = -368.0
-margin_right = 1856.0
-margin_bottom = -304.0
+offset_left = 1600.0
+offset_top = -368.0
+offset_right = 1856.0
+offset_bottom = -304.0
 
 [node name="AMM" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = -464.0
-margin_right = 1856.0
-margin_bottom = -400.0
+offset_left = 1600.0
+offset_top = -464.0
+offset_right = 1856.0
+offset_bottom = -400.0
 
 [node name="ID" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = -272.0
-margin_right = 1856.0
-margin_bottom = -208.0
+offset_left = 1600.0
+offset_top = -272.0
+offset_right = 1856.0
+offset_bottom = -208.0
 
 [node name="L_ID" type="Line2D" parent="Main"]
 position = Vector2( 1888, -240 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="PD" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = -272.0
-margin_right = 2272.0
-margin_bottom = -208.0
+offset_left = 2016.0
+offset_top = -272.0
+offset_right = 2272.0
+offset_bottom = -208.0
 
 [node name="OL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 692.0
-margin_right = 960.0
-margin_bottom = 756.0
+offset_left = 704.0
+offset_top = 692.0
+offset_right = 960.0
+offset_bottom = 756.0
 
 [node name="YL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1120.0
-margin_top = 692.0
-margin_right = 1376.0
-margin_bottom = 756.0
+offset_left = 1120.0
+offset_top = 692.0
+offset_right = 1376.0
+offset_bottom = 756.0
 
 [node name="L_OL" type="Line2D" parent="Main"]
 position = Vector2( 992, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="FTL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1184.0
-margin_top = -20.0
-margin_right = 1440.0
-margin_bottom = 44.0
+offset_left = 1184.0
+offset_top = -20.0
+offset_right = 1440.0
+offset_bottom = 44.0
 
 [node name="L_FTL" type="Line2D" parent="Main"]
 position = Vector2( 1472, 16 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="IGD" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = -20.0
-margin_right = 1856.0
-margin_bottom = 44.0
+offset_left = 1600.0
+offset_top = -20.0
+offset_right = 1856.0
+offset_bottom = 44.0
 
 [node name="L_IGD" type="Line2D" parent="Main"]
 position = Vector2( 1888, 16 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="FG" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = -20.0
-margin_right = 2272.0
-margin_bottom = 44.0
+offset_left = 2016.0
+offset_top = -20.0
+offset_right = 2272.0
+offset_bottom = 44.0
 
 [node name="L_FG" type="Line2D" parent="Main"]
 position = Vector2( 2304, 16 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="FG2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = -20.0
-margin_right = 2688.0
-margin_bottom = 44.0
+offset_left = 2432.0
+offset_top = -20.0
+offset_right = 2688.0
+offset_bottom = 44.0
 
 [node name="L_YL" type="Line2D" parent="Main"]
 position = Vector2( 1408, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="GL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1536.0
-margin_top = 692.0
-margin_right = 1792.0
-margin_bottom = 756.0
+offset_left = 1536.0
+offset_top = 692.0
+offset_right = 1792.0
+offset_bottom = 756.0
 
 [node name="L_GL" type="Line2D" parent="Main"]
 position = Vector2( 1824, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="BL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1952.0
-margin_top = 692.0
-margin_right = 2208.0
-margin_bottom = 756.0
+offset_left = 1952.0
+offset_top = 692.0
+offset_right = 2208.0
+offset_bottom = 756.0
 
 [node name="L_BL" type="Line2D" parent="Main"]
 position = Vector2( 2240, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="PL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2368.0
-margin_top = 692.0
-margin_right = 2624.0
-margin_bottom = 756.0
+offset_left = 2368.0
+offset_top = 692.0
+offset_right = 2624.0
+offset_bottom = 756.0
 
 [node name="L_PL" type="Line2D" parent="Main"]
 position = Vector2( 2656, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="UVL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2792.0
-margin_top = 692.0
-margin_right = 3048.0
-margin_bottom = 756.0
+offset_left = 2792.0
+offset_top = 692.0
+offset_right = 3048.0
+offset_bottom = 756.0
 
 [node name="L_UVL" type="Line2D" parent="Main"]
 position = Vector2( 3072, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="XRL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 3200.0
-margin_top = 692.0
-margin_right = 3456.0
-margin_bottom = 756.0
+offset_left = 3200.0
+offset_top = 692.0
+offset_right = 3456.0
+offset_bottom = 756.0
 
 [node name="L_XRL" type="Line2D" parent="Main"]
 position = Vector2( 3488, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="GRL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 3616.0
-margin_top = 692.0
-margin_right = 3872.0
-margin_bottom = 756.0
+offset_left = 3616.0
+offset_top = 692.0
+offset_right = 3872.0
+offset_bottom = 756.0
 
 [node name="L_GRL" type="Line2D" parent="Main"]
 position = Vector2( 3904, 724 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="UGRL" parent="Main" instance=ExtResource( 1 )]
-margin_left = 4032.0
-margin_top = 692.0
-margin_right = 4288.0
-margin_bottom = 756.0
+offset_left = 4032.0
+offset_top = 692.0
+offset_right = 4288.0
+offset_bottom = 756.0
 
 [node name="RMK2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 804.0
-margin_right = 960.0
-margin_bottom = 868.0
+offset_left = 704.0
+offset_top = 804.0
+offset_right = 960.0
+offset_bottom = 868.0
 
 [node name="L_RMK2" type="Line2D" parent="Main"]
 position = Vector2( 992, 836 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="RMK3" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1120.0
-margin_top = 804.0
-margin_right = 1376.0
-margin_bottom = 868.0
+offset_left = 1120.0
+offset_top = 804.0
+offset_right = 1376.0
+offset_bottom = 868.0
 
 [node name="MAE" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1184.0
-margin_top = 336.0
-margin_right = 1440.0
-margin_bottom = 400.0
+offset_left = 1184.0
+offset_top = 336.0
+offset_right = 1440.0
+offset_bottom = 400.0
 size_flags_horizontal = 13
 
 [node name="TF" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 212.0
-margin_right = 1856.0
-margin_bottom = 276.0
+offset_left = 1600.0
+offset_top = 212.0
+offset_right = 1856.0
+offset_bottom = 276.0
 size_flags_horizontal = 13
 
 [node name="DS1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 372.0
-margin_right = 1856.0
-margin_bottom = 436.0
+offset_left = 1600.0
+offset_top = 372.0
+offset_right = 1856.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_DS1" type="Line2D" parent="Main"]
 position = Vector2( 1888, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_CBS1" type="Line2D" parent="Main"]
 position = Vector2( 1888, 484 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="DS2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = 372.0
-margin_right = 2272.0
-margin_bottom = 436.0
+offset_left = 2016.0
+offset_top = 372.0
+offset_right = 2272.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_DS2" type="Line2D" parent="Main"]
 position = Vector2( 2304, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_CBS2" type="Line2D" parent="Main"]
 position = Vector2( 2304, 484 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="DS3" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = 372.0
-margin_right = 2688.0
-margin_bottom = 436.0
+offset_left = 2432.0
+offset_top = 372.0
+offset_right = 2688.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_DS3" type="Line2D" parent="Main"]
 position = Vector2( 2720, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="DS4" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2848.0
-margin_top = 372.0
-margin_right = 3104.0
-margin_bottom = 436.0
+offset_left = 2848.0
+offset_top = 372.0
+offset_right = 3104.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_DS4" type="Line2D" parent="Main"]
 position = Vector2( 3138, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="MB" parent="Main" instance=ExtResource( 1 )]
-margin_left = 3266.0
-margin_top = 372.0
-margin_right = 3522.0
-margin_bottom = 436.0
+offset_left = 3266.0
+offset_top = 372.0
+offset_right = 3522.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_MB" type="Line2D" parent="Main"]
 position = Vector2( 3568, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="GS" parent="Main" instance=ExtResource( 1 )]
-margin_left = 3696.0
-margin_top = 372.0
-margin_right = 3952.0
-margin_bottom = 436.0
+offset_left = 3696.0
+offset_top = 372.0
+offset_right = 3952.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="L_GS" type="Line2D" parent="Main"]
 position = Vector2( 3984, 404 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="TPCC" parent="Main" instance=ExtResource( 1 )]
-margin_left = 4112.0
-margin_top = 372.0
-margin_right = 4368.0
-margin_bottom = 436.0
+offset_left = 4112.0
+offset_top = 372.0
+offset_right = 4368.0
+offset_bottom = 436.0
 size_flags_horizontal = 13
 
 [node name="SE1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 132.0
-margin_right = 1856.0
-margin_bottom = 196.0
+offset_left = 1600.0
+offset_top = 132.0
+offset_right = 1856.0
+offset_bottom = 196.0
 size_flags_horizontal = 13
 
 [node name="PK1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 532.0
-margin_right = 1856.0
-margin_bottom = 596.0
+offset_left = 1600.0
+offset_top = 532.0
+offset_right = 1856.0
+offset_bottom = 596.0
 size_flags_horizontal = 13
 
 [node name="CBS1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 452.0
-margin_right = 1856.0
-margin_bottom = 516.0
+offset_left = 1600.0
+offset_top = 452.0
+offset_right = 1856.0
+offset_bottom = 516.0
 size_flags_horizontal = 13
 
 [node name="CBS2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = 452.0
-margin_right = 2272.0
-margin_bottom = 516.0
+offset_left = 2016.0
+offset_top = 452.0
+offset_right = 2272.0
+offset_bottom = 516.0
 size_flags_horizontal = 13
 
 [node name="CBS3" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = 452.0
-margin_right = 2688.0
-margin_bottom = 516.0
+offset_left = 2432.0
+offset_top = 452.0
+offset_right = 2688.0
+offset_bottom = 516.0
 size_flags_horizontal = 13
 
 [node name="L_PK1" type="Line2D" parent="Main"]
 position = Vector2( 1888, 556 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="PK2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = 532.0
-margin_right = 2272.0
-margin_bottom = 596.0
+offset_left = 2016.0
+offset_top = 532.0
+offset_right = 2272.0
+offset_bottom = 596.0
 size_flags_horizontal = 13
 
 [node name="MME1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = 292.0
-margin_right = 1856.0
-margin_bottom = 356.0
+offset_left = 1600.0
+offset_top = 292.0
+offset_right = 1856.0
+offset_bottom = 356.0
 size_flags_horizontal = 13
 
 [node name="L_MME2" type="Line2D" parent="Main"]
 position = Vector2( 1888, 324 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="MME2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = 292.0
-margin_right = 2272.0
-margin_bottom = 356.0
+offset_left = 2016.0
+offset_top = 292.0
+offset_right = 2272.0
+offset_bottom = 356.0
 size_flags_horizontal = 13
 
 [node name="L_MME3" type="Line2D" parent="Main"]
 position = Vector2( 2304, 324 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="MME3" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = 292.0
-margin_right = 2688.0
-margin_bottom = 356.0
+offset_left = 2432.0
+offset_top = 292.0
+offset_right = 2688.0
+offset_bottom = 356.0
 size_flags_horizontal = 13
 
 [node name="UP1" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1184.0
-margin_top = -148.0
-margin_right = 1440.0
-margin_bottom = -84.0
+offset_left = 1184.0
+offset_top = -148.0
+offset_right = 1440.0
+offset_bottom = -84.0
 size_flags_horizontal = 13
 
 [node name="L_UP1" type="Line2D" parent="Main"]
 position = Vector2( -576, -656 )
-points = PoolVector2Array( 2048, 560, 2144, 560 )
+points = PackedVector2Array( 2048, 560, 2144, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
 [node name="UP2" parent="Main" instance=ExtResource( 1 )]
-margin_left = 1600.0
-margin_top = -148.0
-margin_right = 1856.0
-margin_bottom = -84.0
+offset_left = 1600.0
+offset_top = -148.0
+offset_right = 1856.0
+offset_bottom = -84.0
 size_flags_horizontal = 13
 
 [node name="L_UP2" type="Line2D" parent="Main"]
 position = Vector2( -576, -656 )
-points = PoolVector2Array( 2464, 560, 2560, 560 )
+points = PackedVector2Array( 2464, 560, 2560, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
 [node name="UP3" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2016.0
-margin_top = -148.0
-margin_right = 2272.0
-margin_bottom = -84.0
+offset_left = 2016.0
+offset_top = -148.0
+offset_right = 2272.0
+offset_bottom = -84.0
 size_flags_horizontal = 13
 
 [node name="L_UP3" type="Line2D" parent="Main"]
 position = Vector2( -160, -656 )
-points = PoolVector2Array( 2464, 560, 2560, 560 )
+points = PackedVector2Array( 2464, 560, 2560, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
 [node name="UP4" parent="Main" instance=ExtResource( 1 )]
-margin_left = 2432.0
-margin_top = -148.0
-margin_right = 2688.0
-margin_bottom = -84.0
+offset_left = 2432.0
+offset_top = -148.0
+offset_right = 2688.0
+offset_bottom = -84.0
 size_flags_horizontal = 13
 
 [node name="L_CD" type="Line2D" parent="Main"]
 position = Vector2( 1484.25, -288 )
 scale = Vector2( 0.875, 1 )
-points = PoolVector2Array( -14, 68, 96, 68 )
+points = PackedVector2Array( -14, 68, 96, 68 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
@@ -613,21 +613,21 @@ antialiased = true
 
 [node name="L_SCT" type="Line2D" parent="Main/L_RC"]
 position = Vector2( 508, 768 )
-points = PoolVector2Array( 84, -380, 164, -380 )
+points = PackedVector2Array( 84, -380, 164, -380 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.466667, 1 )
 antialiased = true
 
 [node name="L_OL" type="Line2D" parent="Main/L_RC"]
 position = Vector2( 510, 354 )
-points = PoolVector2Array( 2, 34, 81.5562, 34 )
+points = PackedVector2Array( 2, 34, 81.5562, 34 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_OL2" type="Line2D" parent="Main/L_RC"]
 position = Vector2( 510, 354 )
-points = PoolVector2Array( 82, 34, 82, 506 )
+points = PackedVector2Array( 82, 34, 82, 506 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.466667, 1 )
 begin_cap_mode = 1
@@ -636,13 +636,13 @@ antialiased = true
 
 [node name="L_OL3" type="Line2D" parent="Main/L_RC"]
 position = Vector2( -576, 80 )
-points = PoolVector2Array( 1168, 664, 1248, 664 )
+points = PackedVector2Array( 1168, 664, 1248, 664 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
 [node name="L_RMK2" type="Line2D" parent="Main/L_RC"]
 position = Vector2( 504, 576 )
-points = PoolVector2Array( 88, 284, 168, 284 )
+points = PackedVector2Array( 88, 284, 168, 284 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
@@ -651,14 +651,14 @@ antialiased = true
 
 [node name="L_CD" type="Line2D" parent="Main/L_SCT"]
 position = Vector2( 992, 368 )
-points = PoolVector2Array( 0, 20, 160, 20 )
+points = PackedVector2Array( 0, 20, 160, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_CD2" type="Line2D" parent="Main/L_SCT"]
 position = Vector2( 992, 80 )
-points = PoolVector2Array( 80, -300, 80, 308 )
+points = PackedVector2Array( 80, -300, 80, 308 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 begin_cap_mode = 1
@@ -667,21 +667,21 @@ antialiased = true
 
 [node name="L_YL" type="Line2D" parent="Main/L_SCT"]
 position = Vector2( 992, -288 )
-points = PoolVector2Array( 80, 324, 160, 324 )
+points = PackedVector2Array( 80, 324, 160, 324 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_MAE" type="Line2D" parent="Main/L_SCT"]
 position = Vector2( 984, -232 )
-points = PoolVector2Array( 88, 12, 168, 12 )
+points = PackedVector2Array( 88, 12, 168, 12 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_UP1" type="Line2D" parent="Main/L_SCT"]
 position = Vector2( -576, -656 )
-points = PoolVector2Array( 1648, 560, 1728, 560 )
+points = PackedVector2Array( 1648, 560, 1728, 560 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 
@@ -689,42 +689,42 @@ default_color = Color( 0.4, 1, 0.465625, 1 )
 
 [node name="L_TF2" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, -200 )
+points = PackedVector2Array( 4, 0, 100, -200 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_TF3" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, -124 )
+points = PackedVector2Array( 4, 0, 100, -124 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_TF4" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, -40 )
+points = PackedVector2Array( 4, 0, 100, -40 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_TF5" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, 40 )
+points = PackedVector2Array( 4, 0, 100, 40 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_TF6" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, 196 )
+points = PackedVector2Array( 4, 0, 100, 196 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_TF8" type="Line2D" parent="Main/L_MAE"]
 position = Vector2( 1468, 388 )
-points = PoolVector2Array( 4, 0, 100, 116 )
+points = PackedVector2Array( 4, 0, 100, 116 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
@@ -733,21 +733,21 @@ antialiased = true
 
 [node name="L_SAP" type="Line2D" parent="Main/L_ATM"]
 position = Vector2( 1472, -288 )
-points = PoolVector2Array( 0, -28, 96, -28 )
+points = PackedVector2Array( 0, -28, 96, -28 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_AMM" type="Line2D" parent="Main/L_ATM"]
 position = Vector2( 1472, -288 )
-points = PoolVector2Array( 0, -28, 96, -124 )
+points = PackedVector2Array( 0, -28, 96, -124 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_ID_2" type="Line2D" parent="Main/L_ATM"]
 position = Vector2( 1460, -336 )
-points = PoolVector2Array( 12, 20, 108, 100 )
+points = PackedVector2Array( 12, 20, 108, 100 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
@@ -755,93 +755,93 @@ antialiased = true
 [node name="Other" type="Control" parent="."]
 visible = false
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AM" parent="Other" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 588.0
-margin_right = 544.0
-margin_bottom = 652.0
+offset_left = 288.0
+offset_top = 588.0
+offset_right = 544.0
+offset_bottom = 652.0
 
 [node name="CI" parent="Other" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 76.0
-margin_right = 544.0
-margin_bottom = 140.0
+offset_left = 288.0
+offset_top = 76.0
+offset_right = 544.0
+offset_bottom = 140.0
 
 [node name="L_CI" type="Line2D" parent="Other"]
 position = Vector2( 576, 108 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="CI2" parent="Other" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 76.0
-margin_right = 960.0
-margin_bottom = 140.0
+offset_left = 704.0
+offset_top = 76.0
+offset_right = 960.0
+offset_bottom = 140.0
 
 [node name="L_CI2" type="Line2D" parent="Other"]
 position = Vector2( 992, 108 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="CI3" parent="Other" instance=ExtResource( 1 )]
-margin_left = 1120.0
-margin_top = 76.0
-margin_right = 1376.0
-margin_bottom = 140.0
+offset_left = 1120.0
+offset_top = 76.0
+offset_right = 1376.0
+offset_bottom = 140.0
 
 [node name="ISC" parent="Other" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 460.0
-margin_right = 544.0
-margin_bottom = 524.0
+offset_left = 288.0
+offset_top = 460.0
+offset_right = 544.0
+offset_bottom = 524.0
 
 [node name="SA" parent="Other" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 204.0
-margin_right = 544.0
-margin_bottom = 268.0
+offset_left = 288.0
+offset_top = 204.0
+offset_right = 544.0
+offset_bottom = 268.0
 
 [node name="ASM" parent="Other" instance=ExtResource( 1 )]
-margin_left = 288.0
-margin_top = 332.0
-margin_right = 544.0
-margin_bottom = 396.0
+offset_left = 288.0
+offset_top = 332.0
+offset_right = 544.0
+offset_bottom = 396.0
 
 [node name="ASM2" parent="Other" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 332.0
-margin_right = 960.0
-margin_bottom = 396.0
+offset_left = 704.0
+offset_top = 332.0
+offset_right = 960.0
+offset_bottom = 396.0
 
 [node name="L_SA" type="Line2D" parent="Other"]
 position = Vector2( 576, 236 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="L_ASM" type="Line2D" parent="Other"]
 position = Vector2( 576, 364 )
-points = PoolVector2Array( 0, 20, 96, 20 )
+points = PackedVector2Array( 0, 20, 96, 20 )
 width = 2.0
 default_color = Color( 0.4, 1, 0.465625, 1 )
 antialiased = true
 
 [node name="PF" parent="Other" instance=ExtResource( 1 )]
-margin_left = 704.0
-margin_top = 204.0
-margin_right = 960.0
-margin_bottom = 268.0
+offset_left = 704.0
+offset_top = 204.0
+offset_right = 960.0
+offset_bottom = 268.0
 
 [node name="IRAnim" type="AnimationPlayer" parent="."]
 anims/Fade = SubResource( 1 )

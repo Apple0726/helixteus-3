@@ -1,8 +1,8 @@
 extends Node2D
 
-onready var game = get_node("/root/Game")
-onready var rover = $Rover
-onready var camera = $Camera2D
+@onready var game = get_node("/root/Game")
+@onready var rover = $Rover
+@onready var camera = $Camera2D
 
 var ruins_id:int
 var velocity = Vector2.ZERO
@@ -17,15 +17,15 @@ var moving_fast:bool = false
 func _ready():
 	speed_mult = rover_data.spd
 	set_process(false)
-	var ruins = load("res://Scenes/Ruins/%s.tscn"  % ruins_id).instance()
+	var ruins = load("res://Scenes/Ruins/%s.tscn"  % ruins_id).instantiate()
 	add_child(ruins)
 	if ruins_id == 1:
 		if game.planet_data[game.c_p].has("MS") and game.planet_data[game.c_p].MS == "M_SE" and game.planet_data[game.c_p].MS_lv == 3:
 			$Ruins/NPC1.visible = false
 			$Ruins/NPC2.visible = false
 			$Ruins/Letter.visible = true
-			$Ruins/Letter.connect("body_entered", self, "_on_Letter_body_entered")
-			$Ruins/Letter.connect("body_exited", self, "_on_Letter_body_exited")
+			$Ruins/Letter.connect("body_entered",Callable(self,"_on_Letter_body_entered"))
+			$Ruins/Letter.connect("body_exited",Callable(self,"_on_Letter_body_exited"))
 			game.fourth_ship_hints.SE_constructed = true
 		else:
 			$Ruins/NPC1.connect_events(1, $UI/Dialogue)
@@ -41,18 +41,16 @@ func _ready():
 func _physics_process(delta):
 	var speed_mult2 = min(2.5, (speed_mult if moving_fast else 1.0) * rover_size)
 	var input_vector = Vector2.ZERO
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("Q"))
-		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("Z"))
-	else:
-		input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
-		input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
+	input_vector.x = int(Input.is_action_pressed("D")) - int(Input.is_action_pressed("A"))
+	input_vector.y = int(Input.is_action_pressed("S")) - int(Input.is_action_pressed("W"))
 	input_vector = input_vector.normalized()
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * delta * speed_mult2)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_mult2)
-	velocity = rover.move_and_slide(velocity)
+	rover.set_velocity(velocity)
+	rover.move_and_slide()
+	velocity = rover.velocity
 	camera.position = rover.position
 
 func _on_NPC_body_entered(body, _NPC_id:int, _dialogue_id:int):

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Graphics/Planets/Other/Shadow.png" type="Texture" id=1]
-[ext_resource path="res://Graphics/Planets/Other/BG.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Planets/Other/Shadow.png" type="Texture2D" id=1]
+[ext_resource path="res://Graphics/Planets/Other/BG.png" type="Texture2D" id=2]
 [ext_resource path="res://Graphics/Planets/Other/BG_mask.png" type="BitMap" id=3]
 
 [node name="PlanetComposition" type="Control"]
@@ -13,11 +13,11 @@ __meta__ = {
 }
 
 [node name="Background" type="TextureButton" parent="."]
-margin_left = -247.0
-margin_top = -402.0
-margin_right = 393.0
-margin_bottom = 238.0
-rect_pivot_offset = Vector2( 247, 402 )
+offset_left = -247.0
+offset_top = -402.0
+offset_right = 393.0
+offset_bottom = 238.0
+pivot_offset = Vector2( 247, 402 )
 texture_normal = ExtResource( 2 )
 texture_click_mask = ExtResource( 3 )
 __meta__ = {
@@ -25,12 +25,12 @@ __meta__ = {
 }
 
 [node name="Shadow" type="TextureRect" parent="."]
-margin_left = -241.171
-margin_top = -397.762
-margin_right = 391.829
-margin_bottom = 236.238
-rect_scale = Vector2( 1.005, 1.005 )
-rect_pivot_offset = Vector2( 247, 402 )
+offset_left = -241.171
+offset_top = -397.762
+offset_right = 391.829
+offset_bottom = 236.238
+scale = Vector2( 1.005, 1.005 )
+pivot_offset = Vector2( 247, 402 )
 mouse_filter = 2
 texture = ExtResource( 1 )
 __meta__ = {

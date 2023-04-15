@@ -1,7 +1,7 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
-onready var upgrade_panel = get_parent()
+@onready var game = get_node("/root/Game")
+@onready var upgrade_panel = get_parent()
 var ship:Dictionary
 
 var ability = ""

@@ -6,7 +6,7 @@ var id:int = -1#Used when clicking "view planet" or "view galaxy" button
 var l_id:int = -1#Used when clicking "view planet" or "view galaxy" button
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh():
 	_on_SpinBox_value_changed($SpinBox.value)

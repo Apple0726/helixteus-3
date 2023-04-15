@@ -1,19 +1,19 @@
 extends "GenericPanel.gd"
 
-var MSes:PoolStringArray = ["M_DS", "M_SE", "M_MME", "M_CBS", "M_PK", "M_MB"]
+var MSes:PackedStringArray = ["M_DS", "M_SE", "M_MME", "M_CBS", "M_PK", "M_MB"]
 var build_all:bool = false
 
 func _ready():
 	$VBox/CheckBox.visible = true
 	$VBox/CheckBox.text = tr("BUILD_ALL_AT_ONCE")
-	$VBox/CheckBox.connect("toggled", self, "on_checkbox_toggle")
+	$VBox/CheckBox.connect("toggled",Callable(self,"on_checkbox_toggle"))
 	type = PanelType.MEGASTRUCTURES
 	$Title.text = tr("MEGASTRUCTURES")
 	$Desc.text = tr("MEGASTRUCTURES_DESC")
-	set_polygon(rect_size)
-	$VBox/Tabs.visible = false
+	set_polygon(size)
+	$VBox/TabBar.visible = false
 	for MS in MSes:
-		var item = item_for_sale_scene.instance()
+		var item = item_for_sale_scene.instantiate()
 		item.get_node("SmallButton").text = tr("CONSTRUCT")
 		item.name = MS
 		item.item_name = MS
@@ -35,7 +35,7 @@ func get_MS_name(_name:String):
 	return tr("%s_NAME" % _name)
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
-	.set_item_info(_name, desc, costs, _type, _dir)
+	super.set_item_info(_name, desc, costs, _type, _dir)
 	name_node.text = get_MS_name(_name)
 	desc_txt.text = desc
 

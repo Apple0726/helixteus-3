@@ -1,9 +1,9 @@
 extends "Panel.gd"
 
 var tile
-onready var storage_txt = $Control/HBox/AmountInStorage
-onready var time_txt = $Control/TimeRemaining
-onready var amount_produced_txt = $Control/AmountProduced
+@onready var storage_txt = $Control/HBox/AmountInStorage
+@onready var time_txt = $Control/TimeRemaining
+@onready var amount_produced_txt = $Control/AmountProduced
 var ratio:float
 var bldg_type:String
 var input_type:String
@@ -14,7 +14,7 @@ var input_unit:String
 var output_unit:String
 
 func _ready():
-	set_polygon($Background.rect_size)
+	set_polygon($Background.size)
 	set_process(false)
 
 func _on_HSlider_value_changed(value):
@@ -27,7 +27,7 @@ func refresh_values():
 	else:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round($Control/HBox/HSlider.value * ratio)), output_unit]
 	var spd = tile.bldg.path_1_value * game.u_i.time_speed * Helper.get_IR_mult(tile.bldg.name)
-	time_txt.text = Helper.time_to_str($Control/HBox/HSlider.value * ratio / spd * 1000.0)
+	time_txt.text = Helper.time_to_str($Control/HBox/HSlider.value * ratio / spd)
 	
 func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
@@ -57,19 +57,19 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	var rsrc:float
 	if input_type == "":#energy, money, minerals
 		rsrc = min(game[input], tile.bldg.path_2_value)
-		$Control/HBox/Texture.texture = load("res://Graphics/Icons/%s.png" % [input])
+		$Control/HBox/Texture2D.texture = load("res://Graphics/Icons/%s.png" % [input])
 	else:#mat, met, etc.
 		rsrc = min(game[input_type][input], tile.bldg.path_2_value)
 		if input_type == "mats":
-			$Control/HBox/Texture.texture = load("res://Graphics/Materials/%s.png" % [input])
+			$Control/HBox/Texture2D.texture = load("res://Graphics/Materials/%s.png" % [input])
 		elif input_type == "mets":
-			$Control/HBox/Texture.texture = load("res://Graphics/Metals/%s.png" % [input])
+			$Control/HBox/Texture2D.texture = load("res://Graphics/Metals/%s.png" % [input])
 	if output_type == "":
-		$Control/Texture.texture = load("res://Graphics/Icons/%s.png" % [output])
+		$Control/Texture2D.texture = load("res://Graphics/Icons/%s.png" % [output])
 	elif output_type == "mats":
-		$Control/Texture.texture = load("res://Graphics/Materials/%s.png" % [output])
+		$Control/Texture2D.texture = load("res://Graphics/Materials/%s.png" % [output])
 	elif output_type == "mets":
-		$Control/Texture.texture = load("res://Graphics/Metals/%s.png" % [output])
+		$Control/Texture2D.texture = load("res://Graphics/Metals/%s.png" % [output])
 	if tile.bldg.has("qty1"):
 		set_process(true)
 		var has_rsrc:bool = rsrc > 0
@@ -119,7 +119,7 @@ func _on_Start_pressed():
 		rsrc_to_deduct[input] = rsrc
 		game.deduct_resources(rsrc_to_deduct)
 		tile.bldg.qty1 = rsrc
-		tile.bldg.start_date = OS.get_system_time_msecs()
+		tile.bldg.start_date = Time.get_unix_time_from_system()
 		tile.bldg.ratio = ratio
 		tile.bldg.qty2 = rsrc * ratio
 		set_process(true)
@@ -129,7 +129,7 @@ func _on_Start_pressed():
 	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
 
 func _process(delta):
-	if not tile or tile.empty():
+	if tile == null or tile.is_empty():
 		_on_close_button_pressed()
 		set_process(false)
 		return
@@ -138,7 +138,7 @@ func _process(delta):
 		return
 	var prod_i = Helper.get_prod_info(tile)
 	storage_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_left), input_unit]
-	time_txt.text = Helper.time_to_str(prod_i.qty_left / prod_i.spd * tile.bldg.ratio * 1000.0)
+	time_txt.text = Helper.time_to_str(prod_i.qty_left / prod_i.spd * tile.bldg.ratio)
 	if output_type in ["mats", "mets"]:
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made, true), output_unit]
 	else:

@@ -1,642 +1,522 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=12 format=3 uid="uid://gy6plqno7n0y"]
 
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Graphics/Stars/Star.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Icons/XP.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=7]
-[ext_resource path="res://Scripts/ShipInfo.gd" type="Script" id=9]
-[ext_resource path="res://Graphics/Icons/HP.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Icons/eva.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Icons/atk.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Icons/def.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Icons/acc.png" type="Texture" id=14]
-
-[sub_resource type="DynamicFont" id=1]
-size = 25
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 1 )
+[ext_resource type="Texture2D" uid="uid://bjsgoqg3rjyni" path="res://Graphics/Stars/Star.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://da3bmtmmpxqtg" path="res://Graphics/Icons/XP.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cm16c10pt6j1e" path="res://Graphics/Misc/BarOver.png" id="7"]
+[ext_resource type="Script" path="res://Scripts/ShipInfo.gd" id="9"]
+[ext_resource type="Texture2D" uid="uid://dync1wk0hbhni" path="res://Graphics/Icons/HP.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://kadlona6cum" path="res://Graphics/Icons/eva.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://c4usa0pcp5myt" path="res://Graphics/Icons/def.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://b0l3bslpgrtw5" path="res://Graphics/Icons/acc.png" id="14"]
 
 [node name="Panel1" type="Panel"]
-margin_right = 533.0
-margin_bottom = 239.0
+offset_right = 533.0
+offset_bottom = 239.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 9 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+script = ExtResource("9")
 
 [node name="TextureRect" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0.560784 )
-margin_left = 20.0
-margin_top = 100.0
-margin_right = 204.0
-margin_bottom = 144.0
-texture = ExtResource( 2 )
-expand = true
+modulate = Color(1, 1, 1, 0.560784)
+layout_mode = 0
+offset_left = 20.0
+offset_top = 100.0
+offset_right = 204.0
+offset_bottom = 144.0
+texture = ExtResource("2")
+expand_mode = 1
 stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Ship" type="TextureButton" parent="."]
-margin_left = 28.0
-margin_top = 56.0
-margin_right = 188.0
-margin_bottom = 140.0
-expand = true
+layout_mode = 0
+offset_left = 28.0
+offset_top = 56.0
+offset_right = 188.0
+offset_bottom = 140.0
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Bullet" type="Control" parent="."]
-margin_left = 12.0
-margin_top = -12.0
-margin_right = 52.0
-margin_bottom = 28.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_left = 12.0
+offset_top = -12.0
+offset_right = 52.0
+offset_bottom = 28.0
 
 [node name="ColorRect" type="ColorRect" parent="Bullet"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
-color = Color( 0, 0.235294, 0.411765, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
+color = Color(0, 0.235294, 0.411765, 1)
 
-[node name="TextureProgress2" type="TextureProgress" parent="Bullet"]
-modulate = Color( 0.34902, 0.682353, 0.941176, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgress2" type="TextureProgressBar" parent="Bullet"]
+modulate = Color(0.34902, 0.682353, 0.941176, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
 
-[node name="TextureProgress" type="TextureProgress" parent="Bullet"]
-modulate = Color( 0, 0.462745, 0.811765, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Bullet"]
+modulate = Color(0, 0.462745, 0.811765, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 50.0
-texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_over = ExtResource("7")
+texture_progress = ExtResource("6")
 
 [node name="Label" type="Label" parent="Bullet"]
-margin_left = 476.0
-margin_top = 44.0
-margin_right = 516.0
-margin_bottom = 75.0
-rect_scale = Vector2( 0.9, 0.9 )
+layout_mode = 0
+offset_left = 476.0
+offset_top = 44.0
+offset_right = 516.0
+offset_bottom = 75.0
+scale = Vector2(0.9, 0.9)
 text = "+ 5"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="Bullet"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 559.0
-margin_bottom = 71.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 1 )
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 559.0
+offset_bottom = 71.0
+scale = Vector2(0.7, 0.7)
 text = "0 / 20"
-align = 1
-valign = 1
 
 [node name="TextureRect" type="TextureRect" parent="Bullet"]
-margin_left = 192.0
-margin_top = 52.0
-margin_right = 220.0
-margin_bottom = 64.0
-expand = true
+layout_mode = 0
+offset_left = 192.0
+offset_top = 52.0
+offset_right = 220.0
+offset_bottom = 64.0
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Laser" type="Control" parent="."]
-margin_left = 12.0
-margin_top = 28.0
-margin_right = 52.0
-margin_bottom = 68.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 28.0
+offset_right = 52.0
+offset_bottom = 68.0
 
 [node name="ColorRect" type="ColorRect" parent="Laser"]
-margin_left = 228.0
-margin_top = 44.0
-margin_right = 460.0
-margin_bottom = 64.0
-color = Color( 0.55, 0.2475, 0.2475, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 228.0
+offset_top = 44.0
+offset_right = 460.0
+offset_bottom = 64.0
+color = Color(0.55, 0.2475, 0.2475, 1)
 
-[node name="TextureProgress2" type="TextureProgress" parent="Laser"]
-modulate = Color( 0.94, 0.5546, 0.5546, 1 )
-margin_left = 228.0
-margin_top = 44.0
-margin_right = 460.0
-margin_bottom = 64.0
+[node name="TextureProgress2" type="TextureProgressBar" parent="Laser"]
+modulate = Color(0.94, 0.5546, 0.5546, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 44.0
+offset_right = 460.0
+offset_bottom = 64.0
 step = 0.0
 value = 60.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
 
-[node name="TextureProgress" type="TextureProgress" parent="Laser"]
-modulate = Color( 1, 0.28, 0.28, 1 )
-margin_left = 228.0
-margin_top = 44.0
-margin_right = 460.0
-margin_bottom = 64.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Laser"]
+modulate = Color(1, 0.28, 0.28, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 44.0
+offset_right = 460.0
+offset_bottom = 64.0
 step = 0.0
 value = 50.0
-texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
+texture_over = ExtResource("7")
+texture_progress = ExtResource("6")
 
 [node name="Label" type="Label" parent="Laser"]
-margin_left = 476.0
-margin_top = 40.0
-margin_right = 516.0
-margin_bottom = 71.0
-rect_scale = Vector2( 0.9, 0.9 )
+layout_mode = 0
+offset_left = 476.0
+offset_top = 40.0
+offset_right = 516.0
+offset_bottom = 71.0
+scale = Vector2(0.9, 0.9)
 text = "+ 5"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="Laser"]
-margin_left = 228.0
-margin_top = 44.0
-margin_right = 559.0
-margin_bottom = 68.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 1 )
+layout_mode = 0
+offset_left = 228.0
+offset_top = 44.0
+offset_right = 559.0
+offset_bottom = 68.0
+scale = Vector2(0.7, 0.7)
 text = "0 / 20"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="Laser"]
-margin_left = 192.0
-margin_top = 44.0
-margin_right = 220.0
-margin_bottom = 64.0
-expand = true
+layout_mode = 0
+offset_left = 192.0
+offset_top = 44.0
+offset_right = 220.0
+offset_bottom = 64.0
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Bomb" type="Control" parent="."]
-margin_left = 12.0
-margin_top = 60.0
-margin_right = 52.0
-margin_bottom = 100.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 60.0
+offset_right = 52.0
+offset_bottom = 100.0
 
 [node name="ColorRect" type="ColorRect" parent="Bomb"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
-color = Color( 0.137255, 0.137255, 0.137255, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
+color = Color(0.137255, 0.137255, 0.137255, 1)
 
-[node name="TextureProgress2" type="TextureProgress" parent="Bomb"]
-modulate = Color( 0.454902, 0.454902, 0.454902, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgress2" type="TextureProgressBar" parent="Bomb"]
+modulate = Color(0.454902, 0.454902, 0.454902, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
 
-[node name="TextureProgress" type="TextureProgress" parent="Bomb"]
-modulate = Color( 0.286275, 0.286275, 0.286275, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Bomb"]
+modulate = Color(0.286275, 0.286275, 0.286275, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 50.0
-texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_over = ExtResource("7")
+texture_progress = ExtResource("6")
 
 [node name="Label" type="Label" parent="Bomb"]
-margin_left = 476.0
-margin_top = 44.0
-margin_right = 516.0
-margin_bottom = 75.0
-rect_scale = Vector2( 0.9, 0.9 )
+layout_mode = 0
+offset_left = 476.0
+offset_top = 44.0
+offset_right = 516.0
+offset_bottom = 75.0
+scale = Vector2(0.9, 0.9)
 text = "+ 5"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="Bomb"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 559.0
-margin_bottom = 72.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 1 )
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 559.0
+offset_bottom = 72.0
+scale = Vector2(0.7, 0.7)
 text = "0 / 20"
-align = 1
-valign = 1
 
 [node name="TextureRect" type="TextureRect" parent="Bomb"]
-margin_left = 192.0
-margin_top = 48.0
-margin_right = 220.0
-margin_bottom = 68.0
-expand = true
+layout_mode = 0
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 220.0
+offset_bottom = 68.0
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Light" type="Control" parent="."]
-margin_left = 12.0
-margin_top = 96.0
-margin_right = 52.0
-margin_bottom = 136.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Light3D" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 96.0
+offset_right = 52.0
+offset_bottom = 136.0
 
-[node name="ColorRect" type="ColorRect" parent="Light"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
-color = Color( 0.51, 0.50796, 0.3876, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ColorRect" type="ColorRect" parent="Light3D"]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
+color = Color(0.51, 0.50796, 0.3876, 1)
 
-[node name="TextureProgress2" type="TextureProgress" parent="Light"]
-modulate = Color( 1, 1, 0.61, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgress2" type="TextureProgressBar" parent="Light3D"]
+modulate = Color(1, 1, 0.61, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 60.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
 
-[node name="TextureProgress" type="TextureProgress" parent="Light"]
-modulate = Color( 0.81, 0.81, 0.3645, 1 )
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 460.0
-margin_bottom = 68.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Light3D"]
+modulate = Color(0.81, 0.81, 0.3645, 1)
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 460.0
+offset_bottom = 68.0
 step = 0.0
 value = 50.0
-texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_over = ExtResource("7")
+texture_progress = ExtResource("6")
 
-[node name="Label" type="Label" parent="Light"]
-margin_left = 476.0
-margin_top = 44.0
-margin_right = 516.0
-margin_bottom = 75.0
-rect_scale = Vector2( 0.9, 0.9 )
+[node name="Label" type="Label" parent="Light3D"]
+layout_mode = 0
+offset_left = 476.0
+offset_top = 44.0
+offset_right = 516.0
+offset_bottom = 75.0
+scale = Vector2(0.9, 0.9)
 text = "+ 5"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label2" type="Label" parent="Light"]
-margin_left = 228.0
-margin_top = 48.0
-margin_right = 559.0
-margin_bottom = 77.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 1 )
+[node name="Label2" type="Label" parent="Light3D"]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 48.0
+offset_right = 559.0
+offset_bottom = 77.0
+scale = Vector2(0.7, 0.7)
 text = "0 / 20"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Light"]
-margin_left = 192.0
-margin_top = 48.0
-margin_right = 220.0
-margin_bottom = 68.0
-expand = true
+[node name="TextureRect" type="TextureRect" parent="Light3D"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 220.0
+offset_bottom = 68.0
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="XP" type="Control" parent="."]
-margin_top = 148.0
-margin_right = 40.0
-margin_bottom = 188.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_top = 148.0
+offset_right = 40.0
+offset_bottom = 188.0
 
 [node name="ColorRect" type="ColorRect" parent="XP"]
-margin_left = 60.0
-margin_top = 52.0
-margin_right = 460.0
-margin_bottom = 72.0
-color = Color( 0.59, 0.46669, 0.2537, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 60.0
+offset_top = 52.0
+offset_right = 460.0
+offset_bottom = 72.0
+color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgress2" type="TextureProgress" parent="XP"]
-modulate = Color( 1, 0.819608, 0.611765, 1 )
-margin_left = 60.0
-margin_top = 52.0
-margin_right = 460.0
-margin_bottom = 72.0
+[node name="TextureProgress2" type="TextureProgressBar" parent="XP"]
+modulate = Color(1, 0.819608, 0.611765, 1)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 52.0
+offset_right = 460.0
+offset_bottom = 72.0
 step = 0.0
 value = 60.0
-texture_under = ExtResource( 5 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
 
-[node name="TextureProgress" type="TextureProgress" parent="XP"]
-modulate = Color( 0.921569, 0.631373, 0.203922, 1 )
-margin_left = 60.0
-margin_top = 52.0
-margin_right = 460.0
-margin_bottom = 72.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="XP"]
+modulate = Color(0.921569, 0.631373, 0.203922, 1)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 52.0
+offset_right = 460.0
+offset_bottom = 72.0
 step = 0.0
 value = 50.0
-texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_over = ExtResource("7")
+texture_progress = ExtResource("6")
 
 [node name="Label" type="Label" parent="XP"]
-margin_left = 476.0
-margin_top = 48.0
-margin_right = 516.0
-margin_bottom = 79.0
-rect_scale = Vector2( 0.9, 0.9 )
+layout_mode = 0
+offset_left = 476.0
+offset_top = 48.0
+offset_right = 516.0
+offset_bottom = 79.0
+scale = Vector2(0.9, 0.9)
 text = "+ 5"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="XP"]
-margin_left = 60.0
-margin_top = 52.0
-margin_right = 631.0
-margin_bottom = 81.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 1 )
+layout_mode = 0
+offset_left = 60.0
+offset_top = 52.0
+offset_right = 631.0
+offset_bottom = 81.0
+scale = Vector2(0.7, 0.7)
 text = "0 / 20"
-align = 1
-valign = 1
 
 [node name="TextureRect" type="TextureRect" parent="XP"]
-margin_left = 20.0
-margin_top = 48.0
-margin_right = 52.0
-margin_bottom = 76.0
-texture = ExtResource( 4 )
-expand = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 48.0
+offset_right = 52.0
+offset_bottom = 76.0
+texture = ExtResource("4")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Lv" type="Label" parent="."]
-margin_left = 28.0
-margin_top = 20.0
-margin_right = 184.0
-margin_bottom = 44.0
+layout_mode = 0
+offset_left = 28.0
+offset_top = 20.0
+offset_right = 184.0
+offset_bottom = 44.0
 text = "Lv 5"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stats" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="HPIcon" type="TextureRect" parent="Stats"]
-margin_left = 244.0
-margin_top = 24.0
-margin_right = 268.0
-margin_bottom = 48.0
-texture = ExtResource( 10 )
-expand = true
+layout_mode = 0
+offset_left = 244.0
+offset_top = 24.0
+offset_right = 268.0
+offset_bottom = 48.0
+texture = ExtResource("10")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AtkIcon" type="TextureRect" parent="Stats"]
-margin_left = 244.0
-margin_top = 52.0
-margin_right = 268.0
-margin_bottom = 76.0
-texture = ExtResource( 12 )
-expand = true
+layout_mode = 0
+offset_left = 244.0
+offset_top = 52.0
+offset_right = 268.0
+offset_bottom = 76.0
+texture = ExtResource("12")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="DefIcon" type="TextureRect" parent="Stats"]
-margin_left = 244.0
-margin_top = 80.0
-margin_right = 268.0
-margin_bottom = 104.0
-texture = ExtResource( 13 )
-expand = true
+layout_mode = 0
+offset_left = 244.0
+offset_top = 80.0
+offset_right = 268.0
+offset_bottom = 104.0
+texture = ExtResource("13")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AccIcon" type="TextureRect" parent="Stats"]
-margin_left = 244.0
-margin_top = 108.0
-margin_right = 268.0
-margin_bottom = 132.0
-texture = ExtResource( 14 )
-expand = true
+layout_mode = 0
+offset_left = 244.0
+offset_top = 108.0
+offset_right = 268.0
+offset_bottom = 132.0
+texture = ExtResource("14")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="EvaIcon" type="TextureRect" parent="Stats"]
-margin_left = 244.0
-margin_top = 136.0
-margin_right = 268.0
-margin_bottom = 160.0
-texture = ExtResource( 11 )
-expand = true
+layout_mode = 0
+offset_left = 244.0
+offset_top = 136.0
+offset_right = 268.0
+offset_bottom = 160.0
+texture = ExtResource("11")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HP" type="Label" parent="Stats"]
-margin_left = 288.0
-margin_top = 24.0
-margin_right = 444.0
-margin_bottom = 38.0
+layout_mode = 0
+offset_left = 288.0
+offset_top = 24.0
+offset_right = 444.0
+offset_bottom = 38.0
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Atk" type="Label" parent="Stats"]
-margin_left = 288.0
-margin_top = 52.0
-margin_right = 444.0
-margin_bottom = 66.0
+layout_mode = 0
+offset_left = 288.0
+offset_top = 52.0
+offset_right = 444.0
+offset_bottom = 66.0
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Def" type="Label" parent="Stats"]
-margin_left = 288.0
-margin_top = 80.0
-margin_right = 444.0
-margin_bottom = 94.0
+layout_mode = 0
+offset_left = 288.0
+offset_top = 80.0
+offset_right = 444.0
+offset_bottom = 94.0
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Acc" type="Label" parent="Stats"]
-margin_left = 288.0
-margin_top = 108.0
-margin_right = 444.0
-margin_bottom = 122.0
+layout_mode = 0
+offset_left = 288.0
+offset_top = 108.0
+offset_right = 444.0
+offset_bottom = 122.0
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Eva" type="Label" parent="Stats"]
-margin_left = 288.0
-margin_top = 136.0
-margin_right = 444.0
-margin_bottom = 150.0
+layout_mode = 0
+offset_left = 288.0
+offset_top = 136.0
+offset_right = 444.0
+offset_bottom = 150.0
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextEdit" type="TextEdit" parent="."]
-margin_left = 24.0
-margin_top = 152.0
-margin_right = 200.0
-margin_bottom = 184.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 24.0
+offset_top = 152.0
+offset_right = 200.0
+offset_bottom = 184.0
 
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
-[connection signal="mouse_entered" from="Bullet/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "BULLET" ]]
+[connection signal="mouse_entered" from="Bullet/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["BULLET"]]
 [connection signal="mouse_exited" from="Bullet/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Laser/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "LASER" ]]
+[connection signal="mouse_entered" from="Laser/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LASER"]]
 [connection signal="mouse_exited" from="Laser/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Bomb/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "BOMB" ]]
+[connection signal="mouse_entered" from="Bomb/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["BOMB"]]
 [connection signal="mouse_exited" from="Bomb/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Light/TextureRect" to="." method="_on_weapon_mouse_entered" binds= [ "LIGHT" ]]
-[connection signal="mouse_exited" from="Light/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/HPIcon" to="." method="_on_icon_mouse_entered" binds= [ "HEALTH_POINTS" ]]
+[connection signal="mouse_entered" from="Light3D/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LIGHT"]]
+[connection signal="mouse_exited" from="Light3D/TextureRect" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/HPIcon" to="." method="_on_icon_mouse_entered" binds= ["HEALTH_POINTS"]]
 [connection signal="mouse_exited" from="Stats/HPIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/AtkIcon" to="." method="_on_icon_mouse_entered" binds= [ "ATTACK" ]]
+[connection signal="mouse_entered" from="Stats/AtkIcon" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]
 [connection signal="mouse_exited" from="Stats/AtkIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/DefIcon" to="." method="_on_icon_mouse_entered" binds= [ "DEFENSE" ]]
+[connection signal="mouse_entered" from="Stats/DefIcon" to="." method="_on_icon_mouse_entered" binds= ["DEFENSE"]]
 [connection signal="mouse_exited" from="Stats/DefIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/AccIcon" to="." method="_on_icon_mouse_entered" binds= [ "ACCURACY" ]]
+[connection signal="mouse_entered" from="Stats/AccIcon" to="." method="_on_icon_mouse_entered" binds= ["ACCURACY"]]
 [connection signal="mouse_exited" from="Stats/AccIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/EvaIcon" to="." method="_on_icon_mouse_entered" binds= [ "EVADE" ]]
+[connection signal="mouse_entered" from="Stats/EvaIcon" to="." method="_on_icon_mouse_entered" binds= ["EVADE"]]
 [connection signal="mouse_exited" from="Stats/EvaIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="text_changed" from="TextEdit" to="." method="_on_TextEdit_text_changed"]

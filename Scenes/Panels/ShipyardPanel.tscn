@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/ShipyardPanel.gd" type="Script" id=1]
-[ext_resource path="res://Graphics/Ships/Fighter.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Ships/Fighter.png" type="Texture2D" id=2]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
 [ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=5]
@@ -11,10 +11,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -320.0
-margin_top = -152.0
-margin_right = 320.0
-margin_bottom = 136.0
+offset_left = -320.0
+offset_top = -152.0
+offset_right = 320.0
+offset_bottom = 136.0
 theme = ExtResource( 4 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -25,10 +25,10 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -320.0
-margin_right = 320.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 38 )
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 40.0
+custom_minimum_size = Vector2( 0, 38 )
 text = "CONSTRUCT_FIGHTERS"
 align = 1
 valign = 1
@@ -41,10 +41,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -176.0
-margin_top = -48.0
-margin_right = -8.0
-margin_bottom = -8.0
+offset_left = -176.0
+offset_top = -48.0
+offset_right = -8.0
+offset_bottom = -8.0
 text = "CONSTRUCT"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -53,20 +53,20 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = -48.0
-margin_right = 456.0
-margin_bottom = -8.0
+offset_left = 8.0
+offset_top = -48.0
+offset_right = 456.0
+offset_bottom = -8.0
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 438.0
-margin_bottom = 35.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 438.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -2
@@ -74,10 +74,10 @@ custom_constants/separation = -2
 [node name="CloseButton" parent="." instance=ExtResource( 3 )]
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 24.0
-margin_top = 88.0
-margin_right = 232.0
-margin_bottom = 192.0
+offset_left = 24.0
+offset_top = 88.0
+offset_right = 232.0
+offset_bottom = 192.0
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -86,10 +86,10 @@ __meta__ = {
 }
 
 [node name="SpinBox" type="SpinBox" parent="."]
-margin_left = 264.0
-margin_top = 112.0
-margin_right = 356.0
-margin_bottom = 140.0
+offset_left = 264.0
+offset_top = 112.0
+offset_right = 356.0
+offset_bottom = 140.0
 value = 1.0
 rounded = true
 allow_greater = true
@@ -98,17 +98,17 @@ __meta__ = {
 }
 
 [node name="Strength" parent="." instance=ExtResource( 5 )]
-margin_left = 384.0
-margin_top = 112.0
-margin_right = 632.0
-margin_bottom = 142.0
+offset_left = 384.0
+offset_top = 112.0
+offset_right = 632.0
+offset_bottom = 142.0
 help_text = "FLEET_STRENGTH_INFO"
 
 [node name="OptionButton" type="OptionButton" parent="."]
-margin_left = 48.0
-margin_top = 48.0
-margin_right = 217.0
-margin_bottom = 82.0
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 217.0
+offset_bottom = 82.0
 grow_horizontal = 2
 text = "FIGHTER"
 __meta__ = {

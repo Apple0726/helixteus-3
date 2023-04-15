@@ -2,12 +2,13 @@
 
 importer="bitmap"
 type="BitMap"
-path="res://.import/Ship2CM.png-e93fc0ff03b79958b95a1a75c007bbe6.res"
+uid="uid://bqfh0mp37pwm0"
+path="res://.godot/imported/Ship2CM.png-e93fc0ff03b79958b95a1a75c007bbe6.res"
 
 [deps]
 
 source_file="res://Graphics/Ships/Ship2CM.png"
-dest_files=[ "res://.import/Ship2CM.png-e93fc0ff03b79958b95a1a75c007bbe6.res" ]
+dest_files=["res://.godot/imported/Ship2CM.png-e93fc0ff03b79958b95a1a75c007bbe6.res"]
 
 [params]
 

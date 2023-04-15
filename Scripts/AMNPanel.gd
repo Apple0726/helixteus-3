@@ -36,17 +36,17 @@ var path_2_value:float = 1.0
 
 func _ready():
 	set_process(false)
-	set_polygon(rect_size)
+	set_polygon(size)
 	$Title.text = tr("AMN_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = preload("res://Scenes/AdvButton.tscn").instance()
+		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
 		if _name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
 		btn.name = _name
 		btn.icon_texture = Data.time_icon
 		btn.button_text = tr(_name.to_upper())
-		btn.connect("pressed", self, "_on_%s_pressed" % _name, [_name, reactions[_name]])
+		btn.connect("pressed",Callable(self,"_on_%s_pressed" % _name).bind(_name, reactions[_name]))
 		$ScrollContainer/VBoxContainer.add_child(btn)
 
 func _on_stone_pressed(_name:String, dict:Dictionary):
@@ -258,16 +258,16 @@ func refresh():
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("AMN")
-	$Control/EnergyCostText.bbcode_text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
 		$Control/EnergyCostText.help_text = tr("AMN_TIP")
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
-	$Transform.visible = $Control3.visible or $Control.visible
+	$Transform3D.visible = $Control3.visible or $Control.visible
 	refresh_time_icon()
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)
 	for reaction_name in reactions:
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
@@ -300,28 +300,28 @@ func refresh():
 	$Control/HSlider.visible = not is_equal_approx($Control/HSlider.max_value, 0)
 	if $Control3.visible:
 		set_text_to_white()
-		$Transform.visible = true
-		$Transform.text = "%s (G)" % tr("STOP")
+		$Transform3D.visible = true
+		$Transform3D.text = "%s (G)" % tr("STOP")
 	else:
-		$Transform.visible = $Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
-		$Transform.text = "%s (G)" % tr("TRANSFORM")
+		$Transform3D.visible = $Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
+		$Transform3D.text = "%s (G)" % tr("TRANSFORM")
 
 func reset_poses(_name:String, dict:Dictionary):
 	for btn in $ScrollContainer/VBoxContainer.get_children():
-		btn["custom_colors/font_color"] = null
-		btn["custom_colors/font_color_hover"] = null
-		btn["custom_colors/font_color_pressed"] = null
-		btn["custom_colors/font_color_disabled"] = null
-	$ScrollContainer/VBoxContainer.get_node(_name)["custom_colors/font_color"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["custom_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["custom_colors/font_color_pressed"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["custom_colors/font_color_disabled"] = Color(0, 1, 1, 1)
+		btn["theme_override_colors/font_color"] = null
+		btn["theme_override_colors/font_color_hover"] = null
+		btn["theme_override_colors/font_color_pressed"] = null
+		btn["theme_override_colors/font_color_disabled"] = null
+	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color"] = Color(0, 1, 1, 1)
+	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_hover"] = Color(0, 1, 1, 1)
+	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_pressed"] = Color(0, 1, 1, 1)
+	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_disabled"] = Color(0, 1, 1, 1)
 	reaction = _name
 	MM = dict.MM
 	atom_to_MM = true
 	$Control2.visible = true
-	$Control2/ScrollContainer.rect_position = Vector2(480, 240)
-	$Control2/To.rect_position = Vector2(772, 240)
+	$Control2/ScrollContainer.position = Vector2(480, 240)
+	$Control2/To.position = Vector2(772, 240)
 	$Control3.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
 	$Control.visible = not $Control3.visible
 	if $Control3.visible and not obj.bldg.atom_to_MM and reaction != "stone":
@@ -331,9 +331,9 @@ func reset_poses(_name:String, dict:Dictionary):
 		atom_costs[atom] = 0
 
 func _on_Switch_pressed(refresh:bool = true):
-	var pos = $Control2/To.rect_position
-	$Control2/To.rect_position = $Control2/ScrollContainer.rect_position
-	$Control2/ScrollContainer.rect_position = pos
+	var pos = $Control2/To.position
+	$Control2/To.position = $Control2/ScrollContainer.position
+	$Control2/ScrollContainer.position = pos
 	atom_to_MM = not atom_to_MM
 	if refresh:
 		_on_HSlider_value_changed($Control/HSlider.value)
@@ -387,7 +387,7 @@ func _on_Transform_pressed():
 		obj.bldg.erase("AMN_stone")
 		$Control.visible = true
 		$Control3.visible = false
-		$Transform.text = "%s (G)" % tr("TRANSFORM")
+		$Transform3D.text = "%s (G)" % tr("TRANSFORM")
 		refresh_time_icon()
 		_on_HSlider_value_changed($Control/HSlider.value)
 	else:
@@ -405,7 +405,7 @@ func _on_Transform_pressed():
 			return
 		obj.bldg.qty = rsrc
 		obj.bldg.AMN_stone = game.stone.duplicate(true)
-		obj.bldg.start_date = OS.get_system_time_msecs()
+		obj.bldg.start_date = Time.get_unix_time_from_system()
 		obj.bldg.reaction = reaction
 		obj.bldg.atom_to_MM = atom_to_MM
 		game.deduct_resources(rsrc_to_deduct)
@@ -413,15 +413,15 @@ func _on_Transform_pressed():
 		set_process(true)
 		$Control.visible = false
 		$Control3.visible = true
-		$Transform.text = "%s (G)" % tr("STOP")
+		$Transform3D.text = "%s (G)" % tr("STOP")
 		refresh_time_icon()
 	game.HUD.refresh()
 
 func set_text_to_white():
 	for hbox in rsrc_nodes_from:
-		hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
+		hbox.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.WHITE
 	for hbox in rsrc_nodes_to:
-		hbox.rsrc.get_node("Text")["custom_colors/font_color"] = Color.white
+		hbox.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.WHITE
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
@@ -429,7 +429,7 @@ func refresh_time_icon():
 		icon.visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _process(delta):
-	if not obj or obj.empty():
+	if obj == null or obj.is_empty():
 		_on_close_button_pressed()
 		set_process(false)
 		return
@@ -439,7 +439,7 @@ func _process(delta):
 	var reaction_info = get_reaction_info(obj)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
-	$Control3/TextureProgress.value = reaction_info.progress
+	$Control3/TextureProgressBar.value = reaction_info.progress
 	var MM_dict = {}
 	var atom_dict:Dictionary = atom_costs.duplicate(true)
 	if obj.bldg.atom_to_MM:
@@ -462,10 +462,10 @@ func _process(delta):
 		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(round(MM_dict[hbox.name]))]
 	#Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	#Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) * 1000 / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((OS.get_system_time_msecs() - obj.bldg.start_date) / (1000 * difficulty) * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN") * game.u_i.time_speed, 0, obj.bldg.qty)
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN") * game.u_i.time_speed, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_entered():

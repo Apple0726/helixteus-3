@@ -2,10 +2,10 @@
 
 [ext_resource path="res://Scripts/TextEffects/AuroraText.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture" id=5]
+[ext_resource path="res://Graphics/Icons/energy.png" type="Texture2D" id=4]
+[ext_resource path="res://Graphics/Icons/Time.png" type="Texture2D" id=5]
 [ext_resource path="res://Scripts/PlanetkillerPanel.gd" type="Script" id=6]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=7]
+[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture2D" id=7]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RichTextEffect" id=1]
@@ -16,11 +16,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -512.0
-margin_top = -296.0
-margin_right = 512.0
-margin_bottom = 296.0
-rect_pivot_offset = Vector2( 533, 300 )
+offset_left = -512.0
+offset_top = -296.0
+offset_right = 512.0
+offset_bottom = 296.0
+pivot_offset = Vector2( 533, 300 )
 theme = ExtResource( 3 )
 script = ExtResource( 6 )
 __meta__ = {
@@ -31,8 +31,8 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="."]
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 0, 38 )
 text = "M_PK_NAME"
 align = 1
 valign = 1
@@ -42,8 +42,8 @@ __meta__ = {
 
 [node name="Desc" type="Label" parent="."]
 anchor_right = 1.0
-margin_top = 40.0
-margin_bottom = 64.0
+offset_top = 40.0
+offset_bottom = 64.0
 text = "PK_DESC"
 align = 1
 __meta__ = {
@@ -51,10 +51,10 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_left = 24.0
-margin_top = 104.0
-margin_right = 452.0
-margin_bottom = 128.0
+offset_left = 24.0
+offset_top = 104.0
+offset_right = 452.0
+offset_bottom = 128.0
 text = "PLANETS"
 align = 1
 __meta__ = {
@@ -62,47 +62,47 @@ __meta__ = {
 }
 
 [node name="StartCharging" type="Button" parent="."]
-margin_left = 750.0
-margin_top = 528.0
-margin_right = 1002.0
-margin_bottom = 568.0
+offset_left = 750.0
+offset_top = 528.0
+offset_right = 1002.0
+offset_bottom = 568.0
 text = "START_CHARGING"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Scroll" type="ScrollContainer" parent="."]
-margin_left = 24.0
-margin_top = 136.0
-margin_right = 424.0
-margin_bottom = 568.0
+offset_left = 24.0
+offset_top = 136.0
+offset_right = 424.0
+offset_bottom = 568.0
 size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Planets" type="VBoxContainer" parent="Scroll"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 390.0
-margin_bottom = 10.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 390.0
+offset_bottom = 10.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Control" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HSlider" type="HSlider" parent="Control"]
-margin_left = 736.0
-margin_top = 440.0
-margin_right = 848.0
-margin_bottom = 456.0
+offset_left = 736.0
+offset_top = 440.0
+offset_right = 848.0
+offset_bottom = 456.0
 max_value = 1.0
 step = 0.01
 __meta__ = {
@@ -110,10 +110,10 @@ __meta__ = {
 }
 
 [node name="LessEnergy" type="Label" parent="Control"]
-margin_left = 456.0
-margin_top = 434.0
-margin_right = 704.0
-margin_bottom = 458.0
+offset_left = 456.0
+offset_top = 434.0
+offset_right = 704.0
+offset_bottom = 458.0
 text = "ACCELERATE_CHARGING"
 valign = 1
 __meta__ = {
@@ -121,10 +121,10 @@ __meta__ = {
 }
 
 [node name="EnergyCost" type="Label" parent="Control"]
-margin_left = 904.0
-margin_top = 432.0
-margin_right = 1018.0
-margin_bottom = 464.0
+offset_left = 904.0
+offset_top = 432.0
+offset_right = 1018.0
+offset_bottom = 464.0
 text = "100"
 valign = 1
 __meta__ = {
@@ -132,10 +132,10 @@ __meta__ = {
 }
 
 [node name="ChargingTime" type="Label" parent="Control"]
-margin_left = 456.0
-margin_top = 392.0
-margin_right = 684.0
-margin_bottom = 424.0
+offset_left = 456.0
+offset_top = 392.0
+offset_right = 684.0
+offset_bottom = 424.0
 mouse_filter = 1
 text = "CHARGING_TIME"
 valign = 1
@@ -144,10 +144,10 @@ __meta__ = {
 }
 
 [node name="MMM" type="RichTextLabel" parent="Control"]
-margin_left = 456.0
-margin_top = 472.0
-margin_right = 888.0
-margin_bottom = 500.0
+offset_left = 456.0
+offset_top = 472.0
+offset_right = 888.0
+offset_bottom = 500.0
 mouse_filter = 1
 bbcode_enabled = true
 custom_effects = [ SubResource( 1 ) ]
@@ -156,10 +156,10 @@ __meta__ = {
 }
 
 [node name="ChargingTime2" type="Label" parent="Control"]
-margin_left = 448.0
-margin_top = 104.0
-margin_right = 1000.0
-margin_bottom = 128.0
+offset_left = 448.0
+offset_top = 104.0
+offset_right = 1000.0
+offset_bottom = 128.0
 text = "EXPECTED_RESOURCES"
 align = 1
 __meta__ = {
@@ -167,10 +167,10 @@ __meta__ = {
 }
 
 [node name="TimeCost" type="Label" parent="Control"]
-margin_left = 768.0
-margin_top = 392.0
-margin_right = 952.0
-margin_bottom = 424.0
+offset_left = 768.0
+offset_top = 392.0
+offset_right = 952.0
+offset_bottom = 424.0
 text = "30:00"
 valign = 1
 __meta__ = {
@@ -178,10 +178,10 @@ __meta__ = {
 }
 
 [node name="EnergyIcon" type="TextureRect" parent="Control"]
-margin_left = 864.0
-margin_top = 432.0
-margin_right = 896.0
-margin_bottom = 464.0
+offset_left = 864.0
+offset_top = 432.0
+offset_right = 896.0
+offset_bottom = 464.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -190,10 +190,10 @@ __meta__ = {
 }
 
 [node name="TimeIcon" type="TextureRect" parent="Control"]
-margin_left = 728.0
-margin_top = 392.0
-margin_right = 760.0
-margin_bottom = 424.0
+offset_left = 728.0
+offset_top = 392.0
+offset_right = 760.0
+offset_bottom = 424.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6
@@ -202,44 +202,44 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Control"]
-margin_left = 448.0
-margin_top = 136.0
-margin_right = 1000.0
-margin_bottom = 372.0
+offset_left = 448.0
+offset_top = 136.0
+offset_right = 1000.0
+offset_bottom = 372.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 10.0
+offset_bottom = 10.0
 columns = 4
 
 [node name="Control2" type="Control" parent="."]
 visible = false
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeCost" type="Label" parent="Control2"]
-margin_left = 714.0
-margin_top = 268.0
-margin_right = 898.0
-margin_bottom = 292.0
+offset_left = 714.0
+offset_top = 268.0
+offset_right = 898.0
+offset_bottom = 292.0
 text = "30:00"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Charging" type="Label" parent="Control2"]
-margin_left = 498.0
-margin_top = 176.0
-margin_right = 968.0
-margin_bottom = 232.0
+offset_left = 498.0
+offset_top = 176.0
+offset_right = 968.0
+offset_bottom = 232.0
 text = "30:00"
 align = 1
 autowrap = true
@@ -248,10 +248,10 @@ __meta__ = {
 }
 
 [node name="TimeIcon" type="TextureRect" parent="Control2"]
-margin_left = 664.0
-margin_top = 264.0
-margin_right = 696.0
-margin_bottom = 296.0
+offset_left = 664.0
+offset_top = 264.0
+offset_right = 696.0
+offset_bottom = 296.0
 texture = ExtResource( 5 )
 expand = true
 stretch_mode = 6
@@ -260,18 +260,18 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="Control2"]
-margin_left = 496.0
-margin_top = 240.0
-margin_right = 968.0
-margin_bottom = 256.0
+offset_left = 496.0
+offset_top = 240.0
+offset_right = 968.0
+offset_bottom = 256.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="TextureProgress" type="TextureProgress" parent="Control2"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2"]
 modulate = Color( 0.737255, 0.737255, 0.737255, 1 )
-margin_left = 496.0
-margin_top = 240.0
-margin_right = 968.0
-margin_bottom = 256.0
+offset_left = 496.0
+offset_top = 240.0
+offset_right = 968.0
+offset_bottom = 256.0
 max_value = 1.0
 step = 0.0
 texture_progress = ExtResource( 7 )

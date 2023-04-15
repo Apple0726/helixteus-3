@@ -12,12 +12,12 @@ var c_s_g:int = -1
 
 func _ready():
 	set_process(false)
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func select_planet(p_i:Dictionary, id:int, btn):
 	for child in $Scroll/Planets.get_children():
 		if child != btn:
-			child.pressed = false
+			child.button_pressed = false
 	if star.has("charging_time"):
 		return
 	p_id = id
@@ -33,23 +33,23 @@ func refresh():
 		child.free()
 	for i in len(game.planet_data):
 		var p_i = game.planet_data[i]
-		if p_i.empty():
+		if p_i.is_empty():
 			continue
-		var btn = planet_btn_scene.instance()
+		var btn = planet_btn_scene.instantiate()
 		$Scroll/Planets.add_child(btn)
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
 		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
 		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
 		if not (p_i.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and p_i.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2):
-			btn.get_node("HBoxContainer/Diameter")["custom_colors/font_color"] = Color.red
-			btn.get_node("HBoxContainer/Distance")["custom_colors/font_color"] = Color.red
+			btn.get_node("HBoxContainer/Diameter")["theme_override_colors/font_color"] = Color.RED
+			btn.get_node("HBoxContainer/Distance")["theme_override_colors/font_color"] = Color.RED
 		btn.get_node("TF").visible = p_i.has("tile_num")
 		btn.get_node("MS").visible = p_i.has("MS")
-		btn.connect("pressed", self, "select_planet", [p_i, i, btn])
-		btn.get_node("TF").connect("mouse_entered", self, "on_TF_over")
-		btn.get_node("TF").connect("mouse_exited", self, "on_mouse_exit")
-		btn.get_node("MS").connect("mouse_entered", self, "on_MS_over")
-		btn.get_node("MS").connect("mouse_exited", self, "on_mouse_exit")
+		btn.connect("pressed",Callable(self,"select_planet").bind(p_i, i, btn))
+		btn.get_node("TF").connect("mouse_entered",Callable(self,"on_TF_over"))
+		btn.get_node("TF").connect("mouse_exited",Callable(self,"on_mouse_exit"))
+		btn.get_node("MS").connect("mouse_entered",Callable(self,"on_MS_over"))
+		btn.get_node("MS").connect("mouse_exited",Callable(self,"on_mouse_exit"))
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
 		set_process(true)
@@ -81,8 +81,8 @@ func refresh_planet_info():
 	$Control.visible = true
 	$StartCharging.visible = true
 	$Control/EnergyCost.text = Helper.format_num(additional_energy)
-	if charging_time <= 1000:
-		charging_time = 1000
+	if charging_time <= 1.0:
+		charging_time = 1.0
 	$Control/TimeCost.text = Helper.time_to_str(charging_time)
 	var R = target.size * 1000.0 / 2#in meters
 	var surface_volume = Helper.get_sph_V(R, R - target.crust_start_depth)#in m^3
@@ -97,7 +97,7 @@ func refresh_planet_info():
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
 	var au_mult = pow(1 + au_int, Helper.get_AIE())
-	$Control/MMM.bbcode_text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
+	$Control/MMM.text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
@@ -120,7 +120,7 @@ func _on_StartCharging_pressed():
 		if game.c_v != "system":
 			return
 		var p_i:Dictionary = game.planet_data[star.p_id]
-		if not p_i.empty():
+		if not p_i.is_empty():
 			if game.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
@@ -139,8 +139,8 @@ func _on_StartCharging_pressed():
 					for p in p_i.auto_GH.produce:
 						game.autocollect.mets[p] -= p_i.auto_GH.produce[p]
 					game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain
-			var dir = Directory.new()
-			if dir.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id]):
+			var dir = DirAccess.open("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
+			if dir:
 				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 			target.clear()
 			game.view.obj.refresh_planets()
@@ -173,7 +173,7 @@ func _on_StartCharging_pressed():
 				return
 		if game.energy >= additional_energy:
 			game.energy -= additional_energy
-			star.charge_start_date = OS.get_system_time_msecs()
+			star.charge_start_date = Time.get_unix_time_from_system()
 			star.charging_time = charging_time
 			star.p_id = p_id
 			star.rsrc = rsrc.duplicate(true)
@@ -188,12 +188,12 @@ func _on_StartCharging_pressed():
 		game.popup(tr("PLANET_TOO_OP"), 2.0)
 
 func _process(delta):
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	var start_date = star.charge_start_date
 	var length = star.charging_time
 	var progress = (curr_time - start_date) / float(length)
 	$Control2/TimeCost.text = Helper.time_to_str(length - (curr_time - start_date))
-	$Control2/TextureProgress.value = progress
+	$Control2/TextureProgressBar.value = progress
 	if progress <= 0.5:
 		$Control2/Charging.text = tr("PK_CHARGING_MESSAGE_1")
 	elif progress <= 0.9:

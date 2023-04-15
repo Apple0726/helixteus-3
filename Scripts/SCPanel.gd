@@ -1,13 +1,13 @@
 extends "Panel.gd"
 
-onready var pie = $Control/PieGraph
-onready var hbox = $Control/HBoxContainer
-onready var vbox = $Control/VBoxContainer
-onready var hslider = $Control/HBoxContainer/HSlider
-onready var CC = $Control/Control
-onready var CC_bar = $Control/Control/TextureProgress
-onready var CC_stone = $Control/Control/Stone
-onready var CC_time = $Control/Control/Time
+@onready var pie = $Control/PieGraph
+@onready var hbox = $Control/HBoxContainer
+@onready var vbox = $Control/VBoxContainer
+@onready var hslider = $Control/HBoxContainer/HSlider
+@onready var CC = $Control/Control
+@onready var CC_bar = $Control/Control/TextureProgressBar
+@onready var CC_stone = $Control/Control/Stone
+@onready var CC_time = $Control/Control/Time
 var c_t:int
 var tile
 var stone_to_crush:Dictionary = {}
@@ -15,8 +15,7 @@ var expected_rsrc:Dictionary
 var rsrc_nodes:Array
 
 func _ready():
-	set_polygon($Background.rect_size)
-	set_process(false)
+	set_polygon($Background.size)
 
 func refresh():
 	tile = game.tile_data[c_t]
@@ -52,7 +51,6 @@ func refresh():
 				stone_to_crush[el] = game.stone[el] * hslider.value / total_stone
 			Helper.put_rsrc(vbox, 44, expected_rsrc)
 	for el in stone_dict:
-		var file = File.new()
 		var dir_str = "res://Graphics/Elements/" + el + ".png"
 		var texture
 		if ResourceLoader.exists(dir_str):
@@ -80,14 +78,14 @@ func _on_Button_pressed():
 			game.stone[el] = max(0, game.stone[el] - stone_to_crush[el])
 		tile.bldg.stone = stone_to_crush
 		tile.bldg.stone_qty = stone_qty
-		tile.bldg.start_date = OS.get_system_time_msecs()
+		tile.bldg.start_date = Time.get_unix_time_from_system()
 		tile.bldg.expected_rsrc = expected_rsrc
 	else:
-		var time = OS.get_system_time_msecs()
+		var time = Time.get_unix_time_from_system()
 		var crush_spd = tile.bldg.path_1_value * game.u_i.time_speed
-		var qty_left = max(0, round(tile.bldg.stone_qty - (time - tile.bldg.start_date) / 1000.0 * crush_spd))
+		var qty_left = max(0, round(tile.bldg.stone_qty - (time - tile.bldg.start_date) * crush_spd))
 		if qty_left > 0:
-			var progress = (time - tile.bldg.start_date) / 1000.0 * crush_spd / tile.bldg.stone_qty
+			var progress = (time - tile.bldg.start_date) * crush_spd / tile.bldg.stone_qty
 			for el in tile.bldg.stone:
 				game.stone[el] += qty_left / tile.bldg.stone_qty * tile.bldg.stone[el]
 			var rsrc_collected = tile.bldg.expected_rsrc.duplicate(true)
@@ -107,10 +105,11 @@ func _on_Button_pressed():
 func _process(delta):
 	if not visible:
 		set_process(false)
+		return
 	var c_i = Helper.get_crush_info(tile)
 	CC_bar.value = 1 - c_i.progress
 	CC_stone.text = "%s kg" % [c_i.qty_left]
-	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd * 1000)
+	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd)
 	for hbox in rsrc_nodes:
 		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
 

@@ -1,18 +1,20 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=3 uid="uid://b4u80l6nm3dei"]
 
-[ext_resource path="res://Graphics/Buttons/ConstructBuildings.png" type="Texture" id=1]
-[ext_resource path="res://Scripts/PlanetHUD.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Icons/Notification.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Buttons/Mine.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Buttons/Terraform.png" type="Texture" id=7]
+[ext_resource type="Texture2D" uid="uid://cv5uo4bvqefcc" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
+[ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://coom6uj3cg1hn" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://2pi3y8irvjbs" path="res://Graphics/Buttons/Mine.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dwrod6758e4tc" path="res://Graphics/Buttons/Terraform.png" id="7"]
 
-[sub_resource type="InputEventAction" id=3]
-action = "N"
+[sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
+device = -1
+physical_keycode = 78
+unicode = 110
 
-[sub_resource type="ShortCut" id=4]
-shortcut = SubResource( 3 )
+[sub_resource type="Shortcut" id="4"]
+events = [SubResource("InputEventKey_gr57q")]
 
-[sub_resource type="Shader" id=9]
+[sub_resource type="Shader" id="9"]
 code = "shader_type canvas_item;
 
 uniform bool enabled = true;
@@ -25,134 +27,127 @@ void fragment() {
 	}
 }"
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 9 )
-shader_param/enabled = false
+[sub_resource type="ShaderMaterial" id="10"]
+shader = SubResource("9")
+shader_parameter/enabled = false
 
-[sub_resource type="InputEventAction" id=5]
-action = "C"
+[sub_resource type="InputEventKey" id="InputEventKey_5kixi"]
+device = -1
+keycode = 67
+unicode = 99
 
-[sub_resource type="ShortCut" id=6]
-shortcut = SubResource( 5 )
+[sub_resource type="Shortcut" id="6"]
+events = [SubResource("InputEventKey_5kixi")]
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id="7"]
 resource_name = "MoveButtons"
 length = 0.3
 step = 0.05
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("VBoxContainer:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( -48, -0.25, 0, 0, 33.5524, 0, -0.05, 0.0646114, 0.1, -1.00469 ),
-"times": PoolRealArray( 0.15, 0.3 )
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-48, -0.25, 0, 0.0725896, 48.5, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id="8"]
 length = 0.001
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("VBoxContainer:rect_size:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:size:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 48, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath("VBoxContainer:rect_position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
+tracks/1/path = NodePath("VBoxContainer:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
 tracks/1/keys = {
-"points": PoolRealArray( -48, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-48, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
 }
-tracks/2/type = "bezier"
-tracks/2/path = NodePath("VBoxContainer:rect_position:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"points": PoolRealArray( 48, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qgp35"]
+_data = {
+"MoveButtons": SubResource("7"),
+"RESET": SubResource("8")
 }
 
 [node name="PlanetHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = -48.0
-margin_top = 48.0
-margin_bottom = 720.0
+layout_mode = 0
+offset_left = -48.0
+offset_top = 48.0
+offset_bottom = 720.0
 mouse_filter = 2
-custom_constants/separation = 0
+theme_override_constants/separation = 0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Terraform" type="TextureButton" parent="VBoxContainer"]
-margin_top = 264.0
-margin_right = 48.0
-margin_bottom = 312.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
 shortcut_in_tooltip = false
-texture_normal = ExtResource( 7 )
-expand = true
+texture_normal = ExtResource("7")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Mine" type="TextureButton" parent="VBoxContainer"]
-margin_top = 312.0
-margin_right = 48.0
-margin_bottom = 360.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("4")
 shortcut_in_tooltip = false
-shortcut = SubResource( 4 )
-texture_normal = ExtResource( 5 )
-expand = true
+texture_normal = ExtResource("5")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Construct" type="TextureButton" parent="VBoxContainer"]
-material = SubResource( 10 )
-margin_top = 360.0
-margin_right = 48.0
-margin_bottom = 408.0
-rect_min_size = Vector2( 0, 48 )
+material = SubResource("10")
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("6")
 shortcut_in_tooltip = false
-shortcut = SubResource( 6 )
-texture_normal = ExtResource( 1 )
-expand = true
+texture_normal = ExtResource("1")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="New" type="TextureRect" parent="VBoxContainer/Construct"]
 visible = false
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -24.0
-margin_bottom = 24.0
+offset_left = -24.0
+offset_bottom = 24.0
 mouse_filter = 2
-texture = ExtResource( 4 )
-expand = true
+texture = ExtResource("4")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/MoveButtons = SubResource( 7 )
-anims/RESET = SubResource( 8 )
+libraries = {
+"": SubResource("AnimationLibrary_qgp35")
+}
 
 [connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]

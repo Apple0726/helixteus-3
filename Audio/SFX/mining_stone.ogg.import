@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/mining_stone.ogg-ae3c8f691a990f8bb598873857577877.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://p2ck0q8trkib"
+path="res://.godot/imported/mining_stone.ogg-ae3c8f691a990f8bb598873857577877.oggvorbisstr"
 
 [deps]
 
 source_file="res://Audio/SFX/mining_stone.ogg"
-dest_files=[ "res://.import/mining_stone.ogg-ae3c8f691a990f8bb598873857577877.oggstr" ]
+dest_files=["res://.godot/imported/mining_stone.ogg-ae3c8f691a990f8bb598873857577877.oggvorbisstr"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

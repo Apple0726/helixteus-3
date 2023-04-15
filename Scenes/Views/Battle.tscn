@@ -1,296 +1,279 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=38 format=3 uid="uid://dkeiijs55u4pd"]
 
-[ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
-[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Icons/current.png" type="Texture" id=4]
-[ext_resource path="res://Scenes/Screenshake.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Graphics/Ships/Ship1.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Ships/Ship2.png" type="Texture" id=7]
-[ext_resource path="res://Shaders/Laser.shader" type="Shader" id=8]
-[ext_resource path="res://Graphics/Planets/BGs/9.png" type="Texture" id=9]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=10]
-[ext_resource path="res://Scenes/Key.tscn" type="PackedScene" id=11]
-[ext_resource path="res://Scenes/Ship.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Graphics/Ships/Ship3.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Icons/HX_icon.png" type="Texture" id=14]
-[ext_resource path="res://Shaders/FloatAnimation.shader" type="Shader" id=15]
+[ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://nnhnywqb8dcf" path="res://Graphics/Icons/current.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://dd1km55c3fsi2" path="res://Graphics/Ships/Ship1.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dqgb7d45axjj" path="res://Graphics/Ships/Ship2.png" id="7"]
+[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="8"]
+[ext_resource type="Texture2D" uid="uid://d4hr6mh2xys1r" path="res://Graphics/Planets/BGs/9.png" id="9"]
+[ext_resource type="PackedScene" path="res://Scenes/Key.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Ship.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://c4y54yskrjds4" path="res://Graphics/Ships/Ship3.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bwcakchueppui" path="res://Graphics/Icons/HX_icon.png" id="14"]
+[ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="15"]
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id="6"]
 
-[sub_resource type="InputEventAction" id=27]
-action = "1"
+[sub_resource type="Shortcut" id="28"]
 
-[sub_resource type="ShortCut" id=28]
-shortcut = SubResource( 27 )
+[sub_resource type="Shortcut" id="30"]
 
-[sub_resource type="DynamicFont" id=9]
-size = 14
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 10 )
+[sub_resource type="Shortcut" id="32"]
 
-[sub_resource type="InputEventAction" id=29]
-action = "2"
+[sub_resource type="Shortcut" id="34"]
 
-[sub_resource type="ShortCut" id=30]
-shortcut = SubResource( 29 )
-
-[sub_resource type="InputEventAction" id=31]
-action = "3"
-
-[sub_resource type="ShortCut" id=32]
-shortcut = SubResource( 31 )
-
-[sub_resource type="InputEventAction" id=33]
-action = "4"
-
-[sub_resource type="ShortCut" id=34]
-shortcut = SubResource( 33 )
-
-[sub_resource type="Animation" id=40]
+[sub_resource type="Animation" id="40"]
 resource_name = "Glow"
-loop = true
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0.1, 0.5, 1 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array(0.1, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rurq5"]
+_data = {
+"Glow": SubResource("40")
+}
+
+[sub_resource type="Animation" id="18"]
 length = 0.3
 tracks/0/type = "bezier"
-tracks/0/path = NodePath(".:rect_position:y")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 700, -0.25, 0, 0, -24.6195, 653.62, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.3 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath(".:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.3 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("../Back:rect_position:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
+tracks/2/path = NodePath("../Back:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
 tracks/2/keys = {
-"points": PoolRealArray( 700, -0.25, 0, 0.03, -7.03973, 684, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.3 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
 tracks/3/path = NodePath("../Back:modulate")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.3 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="InputEventAction" id=19]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wxx8k"]
+_data = {
+"FightPanelAnim": SubResource("18")
+}
 
-[sub_resource type="ShortCut" id=20]
-shortcut = SubResource( 19 )
+[sub_resource type="Shortcut" id="20"]
 
-[sub_resource type="ShaderMaterial" id=21]
-shader = ExtResource( 15 )
-shader_param/amplitude = 8.0
-shader_param/frequency = 12.0
+[sub_resource type="ShaderMaterial" id="21"]
+shader = ExtResource("15")
+shader_parameter/amplitude = 8.0
+shader_parameter/frequency = 12.0
 
-[sub_resource type="Animation" id=38]
+[sub_resource type="Animation" id="38"]
 resource_name = "Fade"
 length = 0.4
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="StyleBoxFlat" id=36]
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 1, 1, 1, 1 )
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dex2d"]
+_data = {
+"Fade": SubResource("38")
+}
 
-[sub_resource type="StyleBoxFlat" id=37]
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 1, 1, 1, 1 )
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="Animation" id=39]
+[sub_resource type="Animation" id="39"]
 resource_name = "Fade"
 length = 0.4
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="ShaderMaterial" id=22]
-shader = ExtResource( 8 )
-shader_param/beams = 1
-shader_param/energy = 3.0
-shader_param/roughness = 3
-shader_param/frequency = 10
-shader_param/speed = 0.1
-shader_param/thickness = 0.006
-shader_param/outline_thickness = 0.034
-shader_param/beam_difference = 0.0
-shader_param/glow = 0.0
-shader_param/outline_glow = 1.0
-shader_param/color = Color( 1, 0.937255, 0.937255, 1 )
-shader_param/outline_color = Color( 1, 0, 0, 1 )
-shader_param/progress = 1.0
-shader_param/y_offset = 0.0
-shader_param/fixed_edge_size = 0.05
-shader_param/noise_scale = Vector2( 1, 1 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gaiwo"]
+_data = {
+"Fade": SubResource("39")
+}
 
-[sub_resource type="Animation" id=23]
+[sub_resource type="ShaderMaterial" id="22"]
+shader = ExtResource("8")
+shader_parameter/beams = 1
+shader_parameter/energy = 3.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 0.1
+shader_parameter/thickness = 0.006
+shader_parameter/outline_thickness = 0.034
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 1.0
+shader_parameter/color = Color(1, 0.937255, 0.937255, 1)
+shader_parameter/outline_color = Color(1, 0, 0, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="Animation" id="23"]
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Texture:material:shader_param/progress")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("Texture2D:material:shader_param/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Environment" id=24]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ry58s"]
+_data = {
+"LaserFade": SubResource("23")
+}
+
+[sub_resource type="Environment" id="24"]
 background_mode = 4
 glow_enabled = true
-glow_levels/1 = true
-glow_levels/2 = true
-glow_levels/5 = false
+glow_levels/1 = 1.0
+glow_levels/2 = 1.0
+glow_levels/5 = 0.0
 glow_blend_mode = 1
-glow_hdr_luminance_cap = 1.01
 glow_hdr_scale = 1.13
-glow_bicubic_upscale = true
+glow_hdr_luminance_cap = 1.01
 adjustment_enabled = true
 adjustment_brightness = 0.9
 adjustment_contrast = 0.9
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id="25"]
 length = 3.0
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("WorldEnvironment:environment:adjustment_brightness")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 3 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ 0.9, 1.0 ]
+"values": [0.9, 1.0]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("WorldEnvironment:environment:adjustment_contrast")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 3 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ 0.9, 1.0 ]
+"values": [0.9, 1.0]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g31an"]
+_data = {
+"WorldAnim": SubResource("25")
+}
+
+[sub_resource type="Animation" id="26"]
 length = 0.4
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("UI/FadeOutRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ox1th"]
+_data = {
+"SceneFade": SubResource("26")
 }
 
 [node name="Battle" type="Control"]
-rect_pivot_offset = Vector2( -160, 36 )
-theme = ExtResource( 2 )
-script = ExtResource( 1 )
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(-160, 36)
+theme = ExtResource("2")
+script = ExtResource("1")
 
-[node name="BG" type="Sprite" parent="."]
-material = SubResource( 6 )
-position = Vector2( 658.397, 658.258 )
-scale = Vector2( 0.952953, 0.952953 )
-texture = ExtResource( 9 )
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="BG" type="Sprite2D" parent="."]
+material = SubResource("6")
+position = Vector2(658.397, 658.258)
+scale = Vector2(0.952953, 0.952953)
+texture = ExtResource("9")
 
-[node name="Ship0" parent="." instance=ExtResource( 12 )]
-texture = ExtResource( 3 )
+[node name="Ship0" parent="." instance=ExtResource("12")]
+texture = ExtResource("3")
 
-[node name="Ship1" parent="." instance=ExtResource( 12 )]
-texture = ExtResource( 6 )
+[node name="Ship1" parent="." instance=ExtResource("12")]
+texture = ExtResource("6")
 
-[node name="Ship2" parent="." instance=ExtResource( 12 )]
-texture = ExtResource( 7 )
+[node name="Ship2" parent="." instance=ExtResource("12")]
+texture = ExtResource("7")
 
-[node name="Ship3" parent="." instance=ExtResource( 12 )]
-texture = ExtResource( 13 )
+[node name="Ship3" parent="." instance=ExtResource("12")]
+texture = ExtResource("13")
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
@@ -300,549 +283,512 @@ one_shot = true
 
 [node name="Help" type="Label" parent="."]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 324.0
-margin_right = 1280.0
-margin_bottom = 348.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_top = 324.0
+offset_right = 1280.0
+offset_bottom = 348.0
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="FightPanel" type="Panel" parent="UI"]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -416.0
-margin_top = -64.0
-margin_right = 416.0
+offset_left = -416.0
+offset_top = -64.0
+offset_right = 416.0
 grow_horizontal = 2
-theme = ExtResource( 2 )
+theme = ExtResource("2")
 
 [node name="Bullet" type="Button" parent="UI/FightPanel"]
-margin_left = 56.0
-margin_top = 12.0
-margin_right = 128.0
-margin_bottom = 52.0
+layout_mode = 0
+offset_left = 56.0
+offset_top = 12.0
+offset_right = 128.0
+offset_bottom = 52.0
+shortcut = SubResource("28")
 shortcut_in_tooltip = false
-shortcut = SubResource( 28 )
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bullet"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -24.0
-margin_top = -12.0
-margin_right = 24.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 40, 0 )
+offset_left = -24.0
+offset_top = -12.0
+offset_right = 24.0
+offset_bottom = 13.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="UI/FightPanel/Bullet"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -18.0
-margin_right = -4.0
-margin_bottom = -2.0
+offset_left = -60.0
+offset_top = -18.0
+offset_right = -4.0
+offset_bottom = -2.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            1"
-align = 2
-valign = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Laser" type="Button" parent="UI/FightPanel"]
-margin_left = 188.0
-margin_top = 12.0
-margin_right = 260.0
-margin_bottom = 52.0
+layout_mode = 0
+offset_left = 188.0
+offset_top = 12.0
+offset_right = 260.0
+offset_bottom = 52.0
+shortcut = SubResource("30")
 shortcut_in_tooltip = false
-shortcut = SubResource( 30 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Laser"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -22.0
-margin_top = -16.0
-margin_right = 22.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 40, 0 )
+offset_left = -22.0
+offset_top = -16.0
+offset_right = 22.0
+offset_bottom = 17.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Label" type="Label" parent="UI/FightPanel/Laser"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -20.0
-margin_right = -4.0
-margin_bottom = -4.0
+offset_left = -60.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = -4.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            2"
-align = 2
-valign = 2
 
 [node name="Bomb" type="Button" parent="UI/FightPanel"]
-margin_left = 316.0
-margin_top = 12.0
-margin_right = 388.0
-margin_bottom = 52.0
+layout_mode = 0
+offset_left = 316.0
+offset_top = 12.0
+offset_right = 388.0
+offset_bottom = 52.0
+shortcut = SubResource("32")
 shortcut_in_tooltip = false
-shortcut = SubResource( 32 )
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bomb"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -22.0
-margin_top = -14.0
-margin_right = 22.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 30, 0 )
+offset_left = -22.0
+offset_top = -14.0
+offset_right = 22.0
+offset_bottom = 14.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Label" type="Label" parent="UI/FightPanel/Bomb"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -20.0
-margin_right = -4.0
-margin_bottom = -4.0
+offset_left = -60.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = -4.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            3"
-align = 2
-valign = 2
 
-[node name="Light" type="Button" parent="UI/FightPanel"]
-margin_left = 444.0
-margin_top = 12.0
-margin_right = 516.0
-margin_bottom = 52.0
+[node name="Light3D" type="Button" parent="UI/FightPanel"]
+layout_mode = 0
+offset_left = 444.0
+offset_top = 12.0
+offset_right = 516.0
+offset_bottom = 52.0
+shortcut = SubResource("34")
 shortcut_in_tooltip = false
-shortcut = SubResource( 34 )
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light3D"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -23.0
-margin_top = -15.0
-margin_right = 22.0
-margin_bottom = 15.0
-rect_min_size = Vector2( 40, 0 )
+offset_left = -23.0
+offset_top = -15.0
+offset_right = 22.0
+offset_bottom = 15.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="UI/FightPanel/Light"]
+[node name="Label" type="Label" parent="UI/FightPanel/Light3D"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -20.0
-margin_right = -4.0
-margin_bottom = -4.0
+offset_left = -60.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = -4.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            4"
-align = 2
-valign = 2
 
 [node name="Ability" type="Button" parent="UI/FightPanel"]
-margin_left = 572.0
-margin_top = 12.0
-margin_right = 644.0
-margin_bottom = 52.0
+layout_mode = 0
+offset_left = 572.0
+offset_top = 12.0
+offset_right = 644.0
+offset_bottom = 52.0
+shortcut = SubResource("34")
 shortcut_in_tooltip = false
-shortcut = SubResource( 34 )
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Ability"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -23.0
-margin_top = -15.0
-margin_right = 22.0
-margin_bottom = 15.0
-rect_min_size = Vector2( 40, 0 )
+offset_left = -23.0
+offset_top = -15.0
+offset_right = 22.0
+offset_bottom = 15.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Label" type="Label" parent="UI/FightPanel/Ability"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -20.0
-margin_right = -4.0
-margin_bottom = -4.0
+offset_left = -60.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = -4.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            5"
-align = 2
-valign = 2
 
 [node name="Superweapon" type="Button" parent="UI/FightPanel"]
-margin_left = 704.0
-margin_top = 12.0
-margin_right = 776.0
-margin_bottom = 52.0
+layout_mode = 0
+offset_left = 704.0
+offset_top = 12.0
+offset_right = 776.0
+offset_bottom = 52.0
+shortcut = SubResource("34")
 shortcut_in_tooltip = false
-shortcut = SubResource( 34 )
 
 [node name="Glow" type="Polygon2D" parent="UI/FightPanel/Superweapon"]
-modulate = Color( 1, 1, 1, 0 )
-color = Color( 1, 1, 0, 1 )
-polygon = PoolVector2Array( 16, 4, 35.9863, -0.0164795, 56, 4, 72, 20, 56, 36, 36.0976, 39.9626, 16, 36, 0, 20 )
+modulate = Color(1, 1, 1, 0)
+color = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(16, 4, 35.9863, -0.0164795, 56, 4, 72, 20, 56, 36, 36.0976, 39.9626, 16, 36, 0, 20)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel/Superweapon/Glow"]
-anims/Glow = SubResource( 40 )
+libraries = {
+"": SubResource("AnimationLibrary_rurq5")
+}
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Superweapon"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -23.0
-margin_top = -15.0
-margin_right = 22.0
-margin_bottom = 15.0
-rect_min_size = Vector2( 40, 0 )
+offset_left = -23.0
+offset_top = -15.0
+offset_right = 22.0
+offset_bottom = 15.0
 size_flags_horizontal = 4
-expand = true
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Label" type="Label" parent="UI/FightPanel/Superweapon"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -20.0
-margin_right = -4.0
-margin_bottom = -4.0
+offset_left = -60.0
+offset_top = -20.0
+offset_right = -4.0
+offset_bottom = -4.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-custom_fonts/font = SubResource( 9 )
 text = "            6"
-align = 2
-valign = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel"]
-anims/FightPanelAnim = SubResource( 18 )
+libraries = {
+"": SubResource("AnimationLibrary_wxx8k")
+}
 
 [node name="Panel" type="Panel" parent="UI/FightPanel"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -132.0
-margin_top = -32.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -132.0
+offset_top = -32.0
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Panel"]
-margin_left = 12.0
-margin_right = 44.0
-margin_bottom = 34.0
-texture = ExtResource( 14 )
-expand = true
+layout_mode = 0
+offset_left = 12.0
+offset_right = 44.0
+offset_bottom = 34.0
+texture = ExtResource("14")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BattleProgress" type="Label" parent="UI/FightPanel/Panel"]
-margin_left = 52.0
-margin_right = 132.0
-margin_bottom = 34.0
+layout_mode = 0
+offset_left = 52.0
+offset_right = 132.0
+offset_bottom = 34.0
 text = "99 / 99"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Help2" type="Panel" parent="UI"]
 visible = false
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -192.0
-margin_top = -112.0
-margin_right = 192.0
-margin_bottom = 60.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -192.0
+offset_top = -112.0
+offset_right = 192.0
+offset_bottom = 60.0
+theme = ExtResource("2")
 
 [node name="Label" type="Label" parent="UI/Help2"]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 372.0
-margin_bottom = 68.0
+layout_mode = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 372.0
+offset_bottom = 68.0
 text = "CHOOSE_DIFF"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Loot" type="Label" parent="UI/Help2"]
-margin_left = 12.0
-margin_top = 132.0
-margin_right = 372.0
-margin_bottom = 156.0
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 12.0
+offset_top = 132.0
+offset_right = 372.0
+offset_bottom = 156.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2"]
-margin_left = 4.0
-margin_top = 92.0
-margin_right = 380.0
-margin_bottom = 120.0
+layout_mode = 0
+offset_left = 4.0
+offset_top = 92.0
+offset_right = 380.0
+offset_bottom = 120.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Easy" type="Button" parent="UI/Help2/HBoxContainer"]
-margin_right = 122.0
-margin_bottom = 34.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "EASY"
 
 [node name="Normal" type="Button" parent="UI/Help2/HBoxContainer"]
-margin_left = 126.0
-margin_right = 249.0
-margin_bottom = 34.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "NORMAL"
 
 [node name="Hard" type="Button" parent="UI/Help2/HBoxContainer"]
-margin_left = 253.0
-margin_right = 376.0
-margin_bottom = 34.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "HARD"
 
 [node name="Back" type="Button" parent="UI"]
-margin_top = 684.0
-margin_right = 136.0
-margin_bottom = 720.0
-theme = ExtResource( 2 )
+offset_top = 684.0
+offset_right = 136.0
+offset_bottom = 720.0
+theme = ExtResource("2")
+shortcut = SubResource("20")
 shortcut_in_tooltip = false
-shortcut = SubResource( 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Current" type="Sprite" parent="UI"]
-material = SubResource( 21 )
-scale = Vector2( 0.4, 0.4 )
-texture = ExtResource( 4 )
+[node name="Current" type="Sprite2D" parent="UI"]
+material = SubResource("21")
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("4")
 
 [node name="FadeOutRect" type="ColorRect" parent="UI"]
-margin_right = 1280.0
-margin_bottom = 720.0
+offset_right = 1280.0
+offset_bottom = 720.0
 mouse_filter = 2
-color = Color( 0, 0, 0, 0 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+color = Color(0, 0, 0, 0)
 
 [node name="ControlKeyboard" type="Control" parent="UI"]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -64.0
-margin_right = 40.0
-margin_bottom = -24.0
-theme = ExtResource( 2 )
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_top = -64.0
+offset_right = 40.0
+offset_bottom = -24.0
+theme = ExtResource("2")
 
-[node name="GoUp" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
-margin_left = 548.0
-margin_top = 560.0
-margin_right = 584.0
-margin_bottom = 594.0
+[node name="GoUp" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 560.0
+offset_right = 584.0
+offset_bottom = 594.0
 text = "W"
 
-[node name="GoDown" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
-margin_left = 548.0
-margin_top = 600.0
-margin_right = 584.0
-margin_bottom = 634.0
+[node name="GoDown" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 600.0
+offset_right = 584.0
+offset_bottom = 634.0
 text = "S"
 
-[node name="Boost" parent="UI/ControlKeyboard" instance=ExtResource( 11 )]
-margin_left = 656.0
-margin_top = 600.0
-margin_right = 706.0
-margin_bottom = 634.0
+[node name="Boost" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+layout_mode = 0
+offset_left = 656.0
+offset_top = 600.0
+offset_right = 706.0
+offset_bottom = 634.0
 text = "Shift"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlKeyboard"]
-anims/Fade = SubResource( 38 )
+libraries = {
+"": SubResource("AnimationLibrary_dex2d")
+}
 
 [node name="ControlMouse" type="Control" parent="UI"]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
-margin_top = -56.0
-margin_right = 40.0
-margin_bottom = -16.0
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_top = -56.0
+offset_right = 40.0
+offset_bottom = -16.0
 
 [node name="Boost2" type="Panel" parent="UI/ControlMouse"]
-margin_left = 612.0
-margin_top = 544.0
-margin_right = 640.0
-margin_bottom = 576.0
-custom_styles/panel = SubResource( 36 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 612.0
+offset_top = 544.0
+offset_right = 640.0
+offset_bottom = 576.0
 
 [node name="Boost3" type="Panel" parent="UI/ControlMouse"]
-margin_left = 640.0
-margin_top = 544.0
-margin_right = 668.0
-margin_bottom = 576.0
-custom_styles/panel = SubResource( 36 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 640.0
+offset_top = 544.0
+offset_right = 668.0
+offset_bottom = 576.0
 
 [node name="Boost4" type="Panel" parent="UI/ControlMouse"]
-margin_left = 612.0
-margin_top = 544.0
-margin_right = 668.0
-margin_bottom = 628.0
-custom_styles/panel = SubResource( 37 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 612.0
+offset_top = 544.0
+offset_right = 668.0
+offset_bottom = 628.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlMouse"]
-anims/Fade = SubResource( 39 )
+libraries = {
+"": SubResource("AnimationLibrary_gaiwo")
+}
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
 
 [node name="Laser" type="Control" parent="."]
 visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="Texture" type="ColorRect" parent="Laser"]
-material = SubResource( 22 )
-margin_top = -332.0
-margin_right = 664.0
-margin_bottom = 332.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Texture2D" type="ColorRect" parent="Laser"]
+material = SubResource("22")
+layout_mode = 0
+offset_top = -332.0
+offset_right = 664.0
+offset_bottom = 332.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Laser"]
-anims/LaserFade = SubResource( 23 )
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 640, 360 )
-current = true
-
-[node name="Screenshake" parent="Camera2D" instance=ExtResource( 5 )]
-
-[node name="CurrentPattern" type="Label" parent="."]
-margin_left = 2.33598
-margin_top = 40.2633
-margin_right = 42.336
-margin_bottom = 64.2633
-__meta__ = {
-"_edit_use_anchors_": false
+libraries = {
+"": SubResource("AnimationLibrary_ry58s")
 }
 
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+
+[node name="Screenshake" parent="Camera2D" instance=ExtResource("5")]
+
+[node name="CurrentPattern" type="Label" parent="."]
+layout_mode = 0
+offset_left = 2.33598
+offset_top = 40.2633
+offset_right = 42.336
+offset_bottom = 64.2633
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 24 )
+environment = SubResource("24")
 
 [node name="WorldAnim" type="AnimationPlayer" parent="."]
-anims/WorldAnim = SubResource( 25 )
+libraries = {
+"": SubResource("AnimationLibrary_g31an")
+}
 
 [node name="InitialFade" type="AnimationPlayer" parent="."]
-anims/SceneFade = SubResource( 26 )
+libraries = {
+"": SubResource("AnimationLibrary_ox1th")
+}
 
 [connection signal="tree_exited" from="." to="." method="_on_Battle_tree_exited"]
-[connection signal="area_entered" from="Ship0" to="." method="_on_Ship_area_entered" binds= [ 0 ]]
-[connection signal="area_entered" from="Ship1" to="." method="_on_Ship_area_entered" binds= [ 1 ]]
-[connection signal="area_entered" from="Ship2" to="." method="_on_Ship_area_entered" binds= [ 2 ]]
-[connection signal="area_entered" from="Ship3" to="." method="_on_Ship_area_entered" binds= [ 3 ]]
+[connection signal="area_entered" from="Ship0" to="." method="_on_Ship_area_entered" binds= [0]]
+[connection signal="area_entered" from="Ship1" to="." method="_on_Ship_area_entered" binds= [1]]
+[connection signal="area_entered" from="Ship2" to="." method="_on_Ship_area_entered" binds= [2]]
+[connection signal="area_entered" from="Ship3" to="." method="_on_Ship_area_entered" binds= [3]]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ImmuneTimer" to="." method="_on_ImmuneTimer_timeout"]
-[connection signal="mouse_entered" from="UI/FightPanel/Bullet" to="." method="_on_weapon_mouse_entered" binds= [ "bullet" ]]
+[connection signal="mouse_entered" from="UI/FightPanel/Bullet" to="." method="_on_weapon_mouse_entered" binds= ["bullet"]]
 [connection signal="mouse_exited" from="UI/FightPanel/Bullet" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="UI/FightPanel/Bullet" to="." method="_on_weapon_pressed" binds= [ "bullet" ]]
-[connection signal="mouse_entered" from="UI/FightPanel/Laser" to="." method="_on_weapon_mouse_entered" binds= [ "laser" ]]
+[connection signal="pressed" from="UI/FightPanel/Bullet" to="." method="_on_weapon_pressed" binds= ["bullet"]]
+[connection signal="mouse_entered" from="UI/FightPanel/Laser" to="." method="_on_weapon_mouse_entered" binds= ["laser"]]
 [connection signal="mouse_exited" from="UI/FightPanel/Laser" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="UI/FightPanel/Laser" to="." method="_on_weapon_pressed" binds= [ "laser" ]]
-[connection signal="mouse_entered" from="UI/FightPanel/Bomb" to="." method="_on_weapon_mouse_entered" binds= [ "bomb" ]]
+[connection signal="pressed" from="UI/FightPanel/Laser" to="." method="_on_weapon_pressed" binds= ["laser"]]
+[connection signal="mouse_entered" from="UI/FightPanel/Bomb" to="." method="_on_weapon_mouse_entered" binds= ["bomb"]]
 [connection signal="mouse_exited" from="UI/FightPanel/Bomb" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="UI/FightPanel/Bomb" to="." method="_on_weapon_pressed" binds= [ "bomb" ]]
-[connection signal="mouse_entered" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_entered" binds= [ "light" ]]
-[connection signal="mouse_exited" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="UI/FightPanel/Light" to="." method="_on_weapon_pressed" binds= [ "light" ]]
+[connection signal="pressed" from="UI/FightPanel/Bomb" to="." method="_on_weapon_pressed" binds= ["bomb"]]
+[connection signal="mouse_entered" from="UI/FightPanel/Light3D" to="." method="_on_weapon_mouse_entered" binds= ["light"]]
+[connection signal="mouse_exited" from="UI/FightPanel/Light3D" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/Light3D" to="." method="_on_weapon_pressed" binds= ["light"]]
 [connection signal="pressed" from="UI/FightPanel/Ability" to="." method="_on_Ability_pressed"]
 [connection signal="pressed" from="UI/FightPanel/Superweapon" to="." method="_on_Superweapon_pressed"]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_mouse_exited"]
-[connection signal="pressed" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_pressed" binds= [ 0 ]]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_diff_pressed" binds= [0]]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_diff_mouse_exited"]
-[connection signal="pressed" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_diff_pressed" binds= [ 1 ]]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Normal" to="." method="_on_diff_pressed" binds= [1]]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_mouse_exited"]
-[connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [ 2 ]]
+[connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [2]]
 [connection signal="pressed" from="UI/Back" to="." method="_on_Back_pressed"]
 [connection signal="animation_finished" from="UI/ControlKeyboard/AnimationPlayer" to="." method="_on_ControlKeyboard_animation_finished"]
 [connection signal="animation_finished" from="UI/ControlMouse/AnimationPlayer" to="." method="_on_ControlMouse_animation_finished"]

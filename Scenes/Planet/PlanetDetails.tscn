@@ -2,15 +2,15 @@
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=3]
+[ext_resource path="res://Graphics/Planets/3.png" type="Texture2D" id=3]
 [ext_resource path="res://Graphics/Planets/Other/mask.png" type="BitMap" id=4]
 [ext_resource path="res://Scenes/PieGraph.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Graphics/Misc/bullet.png" type="Texture" id=6]
+[ext_resource path="res://Graphics/Misc/bullet.png" type="Texture2D" id=6]
 
 [sub_resource type="InputEventAction" id=1]
 action = "Z"
 
-[sub_resource type="ShortCut" id=2]
+[sub_resource type="Shortcut" id=2]
 shortcut = SubResource( 1 )
 
 [sub_resource type="StyleBoxEmpty" id=3]
@@ -18,7 +18,7 @@ shortcut = SubResource( 1 )
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 1280, 720 )
+custom_minimum_size = Vector2( 1280, 720 )
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
@@ -29,8 +29,8 @@ __meta__ = {
 }
 
 [node name="ColorRect2" type="ColorRect" parent="."]
-margin_right = 1280.0
-margin_bottom = 720.0
+offset_right = 1280.0
+offset_bottom = 720.0
 focus_mode = 1
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
@@ -39,10 +39,10 @@ __meta__ = {
 }
 
 [node name="Atmosphere" type="TextureButton" parent="."]
-margin_left = 224.0
-margin_top = 8.0
-margin_right = 1032.0
-margin_bottom = 719.0
+offset_left = 224.0
+offset_top = 8.0
+offset_right = 1032.0
+offset_bottom = 719.0
 texture_normal = ExtResource( 6 )
 expand = true
 stretch_mode = 5
@@ -55,13 +55,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -320.0
-margin_top = -320.0
-margin_right = 320.0
-margin_bottom = 320.0
-rect_min_size = Vector2( 640, 640 )
-rect_scale = Vector2( 0.9, 0.9 )
-rect_pivot_offset = Vector2( 320, 320 )
+offset_left = -320.0
+offset_top = -320.0
+offset_right = 320.0
+offset_bottom = 320.0
+custom_minimum_size = Vector2( 640, 640 )
+scale = Vector2( 0.9, 0.9 )
+pivot_offset = Vector2( 320, 320 )
 texture_normal = ExtResource( 3 )
 texture_click_mask = ExtResource( 4 )
 __meta__ = {
@@ -70,9 +70,9 @@ __meta__ = {
 }
 
 [node name="Back" type="Button" parent="."]
-margin_top = 680.0
-margin_right = 128.0
-margin_bottom = 720.0
+offset_top = 680.0
+offset_right = 128.0
+offset_bottom = 720.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 2 )
 text = "<- Back (Z)"
@@ -83,9 +83,9 @@ __meta__ = {
 [node name="Name" type="LineEdit" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -128.0
-margin_right = 128.0
-margin_bottom = 26.0
+offset_left = -128.0
+offset_right = 128.0
+offset_bottom = 26.0
 text = "Planet"
 align = 1
 clear_button_enabled = true
@@ -101,10 +101,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -288.0
-margin_top = -40.0001
-margin_right = 288.0
-margin_bottom = -16.0001
+offset_left = -288.0
+offset_top = -40.0001
+offset_right = 288.0
+offset_bottom = -16.0001
 text = "12000 km"
 align = 1
 __meta__ = {
@@ -115,17 +115,17 @@ __meta__ = {
 position = Vector2( 0, 10 )
 
 [node name="Line2D" type="Line2D" parent="Arrow"]
-points = PoolVector2Array( 355, 657, 925, 657 )
+points = PackedVector2Array( 355, 657, 925, 657 )
 width = 2.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="Arrow"]
-points = PoolVector2Array( 363, 648, 354, 657, 363, 666 )
+points = PackedVector2Array( 363, 648, 354, 657, 363, 666 )
 width = 2.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D3" type="Line2D" parent="Arrow"]
-points = PoolVector2Array( 916, 648, 925, 657, 916, 666 )
+points = PackedVector2Array( 916, 648, 925, 657, 916, 666 )
 width = 2.0
 default_color = Color( 1, 1, 1, 1 )
 
@@ -134,9 +134,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -320.0
-margin_top = -360.0
-margin_bottom = 360.0
+offset_left = -320.0
+offset_top = -360.0
+offset_bottom = 360.0
 grow_vertical = 2
 custom_styles/bg = SubResource( 3 )
 scroll_horizontal_enabled = false
@@ -152,7 +152,7 @@ __meta__ = {
 
 [node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 5 )]
 visible = false
-margin_bottom = 328.0
+offset_bottom = 328.0
 
 [connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
 [connection signal="mouse_entered" from="Atmosphere" to="." method="_on_Atmosphere_mouse_entered"]

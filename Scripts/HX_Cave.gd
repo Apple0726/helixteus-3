@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 var HP:float
 var total_HP:float
@@ -23,7 +23,7 @@ var idle_move_speed:float
 var atk_move_speed:float
 var ray_length:float
 var status_effects:Dictionary = {}
-onready var ray:RayCast2D = $RayCast2D
+@onready var ray:RayCast2D = $RayCast2D
 
 enum {IDLE, MOVE}
 
@@ -37,8 +37,8 @@ func _ready():
 	add_child(check_distance_timer)
 	check_distance_timer.start(0.2)
 	check_distance_timer.autostart = true
-	check_distance_timer.connect("timeout", self, "check_distance")
-	connect("tree_exited", self, "on_tree_exited")
+	check_distance_timer.connect("timeout",Callable(self,"check_distance"))
+	connect("tree_exited",Callable(self,"on_tree_exited"))
 	
 	aggressive_timer = Timer.new()
 	aggressive_timer.one_shot = true
@@ -65,11 +65,11 @@ func move_HX():
 		move_timer.stop()
 		move_path_v = []
 		var target_tile
-		var curr_tile = cave_ref.get_tile_index(cave_tm.world_to_map(position))
+		var curr_tile = cave_ref.get_tile_index(cave_tm.local_to_map(position))
 		var room_tiles = cave_ref.rooms[room].tiles
 		var n = len(room_tiles)
 		if sees_player or is_aggr():
-			target_tile = cave_ref.get_tile_index(cave_tm.world_to_map(cave_ref.rover.position))
+			target_tile = cave_ref.get_tile_index(cave_tm.local_to_map(cave_ref.rover.position))
 		else:
 			target_tile = room_tiles[randi() % n]
 		var i = 0
@@ -90,7 +90,7 @@ func _process(delta):
 	if not status_effects.has("stun"):
 		if state == MOVE:
 			if len(move_path_v) > 0:
-				var move_to = cave_tm.map_to_world(move_path_v[0]) + Vector2(100, 100)
+				var move_to = cave_tm.map_to_local(move_path_v[0]) + Vector2(100, 100)
 				position = position.move_toward(move_to, delta * move_speed)
 				if position == move_to:
 					move_path_v.remove(0)
@@ -98,8 +98,8 @@ func _process(delta):
 				state = IDLE
 				move_timer.start()
 		if ray.enabled and is_not_aggr():
-			ray.cast_to = (cave_ref.rover.position - position).normalized() * ray_length
-			if ray.get_collider() is KinematicBody2D:
+			ray.target_position = (cave_ref.rover.position - position).normalized() * ray_length
+			if ray.get_collider() is CharacterBody2D:
 				if not sees_player:
 					sees_player = true
 					if move_timer:
@@ -113,7 +113,7 @@ func _process(delta):
 		if status_effects[effect] < 0:
 			status_effects.erase(effect)
 			if effect == "stun":
-				$Sprite/Stun.visible = false
+				$Sprite2D/Stun.visible = false
 
 func chase_player():
 	var not_chasing = aggressive_timer.is_stopped()
@@ -150,10 +150,10 @@ func hit(damage:float):
 		queue_free()
 	else:
 		chase_player()
-		$Info/HP.modulate = Color.red
+		$Info/HP.modulate = Color.RED
 		HP_tween = get_tree().create_tween()
 		HP_tween.set_parallel(true)
-		HP_tween.tween_property($Info/HP, "modulate", Color.green, 0.3)
+		HP_tween.tween_property($Info/HP, "modulate", Color.GREEN, 0.3)
 		HP_tween.tween_property($Info/HP, "value", HP, 1.0).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	$HurtAnimation.stop()
 	$HurtAnimation.play("Hurt")
@@ -184,7 +184,7 @@ func give_temporary_invincibility(duration:float):
 	var timer = Timer.new()
 	add_child(timer)
 	timer.start(duration)
-	timer.connect("timeout", self, "reset_invincibility")
+	timer.connect("timeout",Callable(self,"reset_invincibility"))
 
 func reset_invincibility():
 	collision_mask = 8

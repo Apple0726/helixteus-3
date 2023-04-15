@@ -18,62 +18,62 @@ func on_mouse_exit():
 
 func refresh():
 	for save in $ScrollContainer/VBox.get_children():
-		$ScrollContainer/VBox.remove_child(save)
 		save.queue_free()
-	var file = Directory.new()
-	file.open("user://")
-	file.list_dir_begin(true)
+	var file = DirAccess.open("user://")
+	file.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	var next_dir:String = file.get_next()
 	while next_dir != "":
-		var save_info = File.new()
-		if save_info.open("user://%s/save_info.hx3" % [next_dir], File.READ) == OK:
-			var save_info_dict:Dictionary = save_info.get_var()
-			var save = save_slot_scene.instance()
-			if save_info.get_len() == save_info.get_position():
+		var save_info = FileAccess.open("user://%s/save_info.hx3" % [next_dir], FileAccess.READ)
+		if save_info:
+			var save_info_dict = save_info.get_var()
+			if not save_info_dict is Dictionary:
+				next_dir = file.get_next()
+				continue
+			var save = save_slot_scene.instantiate()
+			if save_info.get_length() == save_info.get_position():
 				var save_created = save_info_dict.save_created
 				var save_modified = save_info_dict.save_modified
 				save.get_node("Version").text = save_info_dict.version
-				save.get_node("Button").connect("pressed", self, "on_load", [next_dir])
-				save.get_node("Delete").connect("pressed", self, "on_delete", [next_dir])
-				save.get_node("Export").connect("pressed", self, "on_export", [next_dir])
+				save.get_node("Button").connect("pressed",Callable(self,"on_load").bind(next_dir))
+				save.get_node("Delete").connect("pressed",Callable(self,"on_delete").bind(next_dir))
+				save.get_node("Export").connect("pressed",Callable(self,"on_export").bind(next_dir))
 				save.get_node("Button").text = next_dir
 				if save_info_dict.version in game.COMPATIBLE_SAVES:
 					if save_info_dict.version == game.VERSION:
-						save.get_node("Version").connect("mouse_entered", self, "on_version_over_ok")
-						save.get_node("Version")["custom_colors/font_color"] = Color.green
+						save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
+						save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
 					else:
-						save.get_node("Version").connect("mouse_entered", self, "on_version_over_compatible")
-						save.get_node("Version")["custom_colors/font_color"] = Color.yellow
-					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
+						save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
+						save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
+					save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
 				else:
-					save.get_node("Version").connect("mouse_entered", self, "on_version_over_not_ok")
-					save.get_node("Version").connect("mouse_exited", self, "on_mouse_exit")
-					save.get_node("Version")["custom_colors/font_color"] = Color.red
-				var now = OS.get_system_time_msecs()
-				if now - save_created < 86400000 * 2:
-					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % ((now - save_created) / 3600000)]
+					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_not_ok"))
+					save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
+					save.get_node("Version")["theme_override_colors/font_color"] = Color.RED
+				var now = Time.get_unix_time_from_system()
+				if now - save_created < 86400 * 2:
+					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % int((now - save_created) / 3600)]
 				else:
-					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % ((now - save_created) / 86400000)]
-				if now - save_modified < 86400000 * 2:
-					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % ((now - save_modified) / 3600000)]
+					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % int((now - save_created) / 86400)]
+				if now - save_modified < 86400 * 2:
+					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % int((now - save_modified) / 3600)]
 				else:
-					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % ((now - save_modified) / 86400000)]
+					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % int((now - save_modified) / 86400)]
 				$ScrollContainer/VBox.add_child(save)
 			else:
 				Helper.remove_recursive("user://%s" % next_dir)
-		save_info.close()
+			save_info.close()
 		next_dir = file.get_next()
 
 func on_export(save_str:String):
 	save_to_export = save_str
 	if OS.get_name() == "HTML5":
 		export_game("user://%s.hx3" % save_str)
-		var file = File.new()
-		file.open("user://%s.hx3" % save_str, File.READ)
-		var L = file.get_len()
+		var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
+		var L = file.get_length()
 		var buffer = file.get_buffer(L)
 		file.close()
-		JavaScript.download_buffer(buffer, save_str + ".hx3")
+		JavaScriptBridge.download_buffer(buffer, save_str + ".hx3")
 	else:
 		$PopupBackground.visible = true
 		$Export.current_file = save_str
@@ -115,18 +115,17 @@ func _on_Export_file_selected(path):
 	export_game(path)
 
 func export_game(path:String = "user://"):
-	var file = File.new()
-	var error = file.open(path, File.WRITE)
+	var file = FileAccess.open(path, FileAccess.WRITE)
 	var error2 = false
-	if error == OK:
+	if file:
 		var save_dict = {"univs":[]}
-		var file2 = File.new()
-		if file2.open("user://%s/save_info.hx3" % save_to_export, File.READ) == OK:
+		var file2 = FileAccess.open("user://%s/save_info.hx3" % save_to_export, FileAccess.READ)
+		if file2:
 			save_dict.save_info = file2.get_var()
 			file2.close()
-			var directory = Directory.new()
-			if directory.open("user://%s" % save_to_export) == OK:
-				directory.list_dir_begin(true)
+			var directory = DirAccess.open("user://%s" % save_to_export)
+			if directory:
+				directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 				var file_name = directory.get_next()
 				while file_name != "":
 					if directory.current_is_dir():
@@ -153,13 +152,11 @@ func export_univ(univ_str:String):
 		"superclusters":{},
 		"systems":{},
 	}
-	var file = File.new()
-	if file.open("user://%s/%s/main.hx3" % [save_to_export, univ_str], File.READ) == OK:
+	var file = FileAccess.open("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ)
+	if file:
 		univ_data.main = file.get_var()
 	else:
 		error = true
-	file.close()
-	file = File.new()
 	file.close()
 	if not error:
 		error = export_univ_folder(univ_data, univ_str, "Caves")
@@ -175,14 +172,14 @@ func export_univ(univ_str:String):
 
 func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String):
 	var error = false
-	var directory = Directory.new()
-	if directory.open("user://%s/%s/%s" % [save_to_export, univ_str, folder]) == OK:
-		directory.list_dir_begin(true)
+	var directory = DirAccess.open("user://%s/%s/%s" % [save_to_export, univ_str, folder])
+	if directory:
+		directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = directory.get_next()
 		while file_name != "":
 			if not directory.current_is_dir():
-				var file = File.new()
-				if file.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], File.READ) == OK:
+				var file = FileAccess.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ)
+				if file:
 					univ_data[folder.to_lower()][file_name] = file.get_var()
 				else:
 					error = true
@@ -191,25 +188,25 @@ func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String):
 
 
 func _on_Import_file_selected(path):
-	var importing_file = File.new()
+	var importing_file = FileAccess.open(path, FileAccess.READ)
 	var import_save_name:String = $Import.current_file.replace(".hx3", "")
-	if importing_file.open(path, File.READ) == OK:
+	if importing_file:
 		var save_dict:Dictionary = importing_file.get_var()
-		var directory = Directory.new()
+		var directory = DirAccess.open("user://%s" % import_save_name)
 		var final_save_name:String = import_save_name
-		if directory.dir_exists("user://%s" % import_save_name):
+		if directory:
 			var dupl:int = 2
-			while directory.dir_exists("user://%s%s" % [import_save_name, dupl]):
+			while DirAccess.open("user://%s%s" % [import_save_name, dupl]):
 				dupl += 1
 			final_save_name = "%s%s" % [import_save_name, dupl]
 		if directory.make_dir("user://%s" % final_save_name) == OK:
-			var save_info_file = File.new()
-			if save_info_file.open("user://%s/save_info.hx3" % final_save_name, File.WRITE) == OK:
+			var save_info_file = FileAccess.open("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE)
+			if save_info_file:
 				save_info_file.store_var(save_dict.save_info)
 				for i in len(save_dict.univs):
 					if directory.make_dir("user://%s/Univ%s" % [final_save_name, i]) == OK:
-						var univ_file = File.new()
-						if univ_file.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], File.WRITE) == OK:
+						var univ_file = FileAccess.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE)
+						if univ_file:
 							univ_file.store_var(save_dict.univs[i].main)
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
@@ -223,11 +220,11 @@ func _on_Import_file_selected(path):
 	refresh()
 
 func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
-	var directory = Directory.new()
+	var directory = DirAccess.open(path)
 	if directory.make_dir("%s/%s" % [path, obj]) == OK:
 		for obj_file_name in save_dict.univs[univ][obj.to_lower()].keys():
-			var file = File.new()
-			if file.open("%s/%s/%s" % [path, obj, obj_file_name], File.WRITE) == OK:
+			var file = FileAccess.open("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE)
+			if file:
 				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
 			file.close()
 

@@ -2,12 +2,13 @@
 
 importer="bitmap"
 type="BitMap"
-path="res://.import/StarCM.png-90eca79989af7a1b3979e95e3ad7332b.res"
+uid="uid://b6k2nnr3jkjqt"
+path="res://.godot/imported/StarCM.png-90eca79989af7a1b3979e95e3ad7332b.res"
 
 [deps]
 
 source_file="res://Graphics/Misc/StarCM.png"
-dest_files=[ "res://.import/StarCM.png-90eca79989af7a1b3979e95e3ad7332b.res" ]
+dest_files=["res://.godot/imported/StarCM.png-90eca79989af7a1b3979e95e3ad7332b.res"]
 
 [params]
 

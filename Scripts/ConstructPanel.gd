@@ -25,12 +25,12 @@ func _ready():
 	tab = "Basic"
 	$Title.text = tr("CONSTRUCT")
 	for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
-		var btn = preload("res://Scenes/AdvButton.tscn").instance()
+		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$VBox/Tabs.add_child(btn)
+		btn.connect("pressed",Callable(self,"_on_btn_pressed").bind(btn_str))
+		$VBox/TabBar.add_child(btn)
 	buy_hbox.visible = false
 	refresh()
 
@@ -40,7 +40,7 @@ func _on_btn_pressed(btn_str:String):
 	tab = btn_str
 	change_tab(btn_str)
 	for bldg in self["%s_bldgs" % btn_str_l]:
-		var item = item_for_sale_scene.instance()
+		var item = item_for_sale_scene.instantiate()
 		item.get_node("SmallButton").text = tr("CONSTRUCT")
 		item.item_name = bldg
 		item.item_dir = "Buildings"
@@ -90,11 +90,11 @@ func _on_btn_pressed(btn_str:String):
 			bldg.visible = game.new_bldgs.has(bldg.item_name)
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
-	.set_item_info(_name, desc, costs, _type, _dir)
+	super.set_item_info(_name, desc, costs, _type, _dir)
 	desc_txt.text = ""
 	var icons = []
-	var has_icon = Data.desc_icons.has(_name)
-	if has_icon:
+	var has_theme_icon = Data.desc_icons.has(_name)
+	if has_theme_icon:
 		icons = Helper.flatten(Data.desc_icons[_name])
 	game.add_text_icons(desc_txt, desc, icons, 22)
 
@@ -104,7 +104,7 @@ func _on_Buy_pressed():
 func get_item(_name, _type, _dir):
 	if _name == "" or game.c_v != "planet":
 		return
-	yield(get_tree().create_timer(0.01), "timeout")
+	await get_tree().create_timer(0.01).timeout
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.costs[_name].duplicate(true)
@@ -113,27 +113,24 @@ func get_item(_name, _type, _dir):
 	if _name == "GH":
 		base_cost.energy = round(base_cost.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 	game.view.obj.construct(_name, base_cost)
-	if game.tutorial and game.tutorial.tut_num in [3, 5]:
-		game.tutorial.fade(0.15, false)
 
 func refresh():
 	if game.c_v == "planet":
-		$VBox/Tabs/Production.visible = game.show.has("stone")
-		$VBox/Tabs/Support.visible = game.stats_univ.bldgs_built >= 18
-		$VBox/Tabs/Vehicles.visible = game.show.has("vehicles_button")
+		$VBox/TabBar/Production.visible = game.show.has("stone")
+		$VBox/TabBar/Support.visible = game.stats_univ.bldgs_built >= 18
+		$VBox/TabBar/Vehicles.visible = game.show.has("vehicles_button")
 		for btn_str in ["Basic", "Storage", "Production", "Support", "Vehicles"]:
-			$VBox/Tabs.get_node(btn_str + "/Label/Notification").visible = false
+			$VBox/TabBar.get_node(btn_str + "/Label/Notification").visible = false
 			for bldg in self[btn_str.to_lower() + "_bldgs"]:
 				if bldg in game.new_bldgs.keys() and game.new_bldgs[bldg]:
-					$VBox/Tabs.get_node(btn_str + "/Label/Notification").visible = true
+					$VBox/TabBar.get_node(btn_str + "/Label/Notification").visible = true
 					break
-		if $VBox/Tabs.get_node(tab).visible:
-			$VBox/Tabs.get_node(tab)._on_Button_pressed()
+		if $VBox/TabBar.get_node(tab).visible:
+			$VBox/TabBar.get_node(tab)._on_Button_pressed()
 			_on_btn_pressed(tab)
 		else:
-			$VBox/Tabs.get_node("Basic")._on_Button_pressed()
+			$VBox/TabBar.get_node("Basic")._on_Button_pressed()
 			_on_btn_pressed("Basic")
 
 func _on_close_button_pressed():
-	if not game.tutorial or game.tutorial and not game.tutorial.BG_blocked:
-		._on_close_button_pressed()
+	super._on_close_button_pressed()

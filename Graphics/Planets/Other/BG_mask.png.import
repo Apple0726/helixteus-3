@@ -2,12 +2,13 @@
 
 importer="bitmap"
 type="BitMap"
-path="res://.import/BG_mask.png-d1259cf844f6faf8124ac9384e308d33.res"
+uid="uid://kq4b2ygvyb3k"
+path="res://.godot/imported/BG_mask.png-d1259cf844f6faf8124ac9384e308d33.res"
 
 [deps]
 
 source_file="res://Graphics/Planets/Other/BG_mask.png"
-dest_files=[ "res://.import/BG_mask.png-d1259cf844f6faf8124ac9384e308d33.res" ]
+dest_files=["res://.godot/imported/BG_mask.png-d1259cf844f6faf8124ac9384e308d33.res"]
 
 [params]
 

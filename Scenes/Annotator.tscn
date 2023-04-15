@@ -4,12 +4,12 @@
 [ext_resource path="res://Scenes/AnnotatorShape.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Annotator.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture" id=5]
+[ext_resource path="res://Graphics/Tiles/Highlight.jpg" type="Texture2D" id=5]
 
 [sub_resource type="InputEventAction" id=1]
 action = "C"
 
-[sub_resource type="ShortCut" id=2]
+[sub_resource type="Shortcut" id=2]
 shortcut = SubResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
@@ -26,9 +26,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -384.0
-margin_top = -64.0
-margin_right = 384.0
+offset_left = -384.0
+offset_top = -64.0
+offset_right = 384.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -36,11 +36,11 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 48.0
-margin_top = 16.0
-margin_right = 720.0
-margin_bottom = 76.0
-rect_scale = Vector2( 0.5, 0.5 )
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 720.0
+offset_bottom = 76.0
+scale = Vector2( 0.5, 0.5 )
 custom_constants/separation = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -49,45 +49,45 @@ __meta__ = {
 [node name="Line" parent="HBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 60.0
-margin_bottom = 60.0
+offset_right = 60.0
+offset_bottom = 60.0
 
 [node name="Rectangle" parent="HBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 62.0
-margin_right = 122.0
-margin_bottom = 60.0
+offset_left = 62.0
+offset_right = 122.0
+offset_bottom = 60.0
 
 [node name="Circle" parent="HBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 124.0
-margin_right = 184.0
-margin_bottom = 60.0
+offset_left = 124.0
+offset_right = 184.0
+offset_bottom = 60.0
 
 [node name="Icons" parent="HBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 186.0
-margin_right = 246.0
-margin_bottom = 60.0
+offset_left = 186.0
+offset_right = 246.0
+offset_bottom = 60.0
 
 [node name="Eraser" parent="HBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 248.0
-margin_right = 308.0
-margin_bottom = 60.0
+offset_left = 248.0
+offset_right = 308.0
+offset_bottom = 60.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 141.311
-margin_top = -325.124
-margin_right = 201.311
-margin_bottom = 354.876
+offset_left = 141.311
+offset_top = -325.124
+offset_right = 201.311
+offset_bottom = 354.876
 grow_vertical = 0
-rect_scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.5, 0.5 )
 custom_constants/separation = 2
 alignment = 2
 __meta__ = {
@@ -97,86 +97,86 @@ __meta__ = {
 [node name="Greenhouse" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 60.0
-margin_bottom = 60.0
+offset_right = 60.0
+offset_bottom = 60.0
 
 [node name="Mining" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 62.0
-margin_right = 60.0
-margin_bottom = 122.0
+offset_top = 62.0
+offset_right = 60.0
+offset_bottom = 122.0
 
 [node name="Cave" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 124.0
-margin_right = 60.0
-margin_bottom = 184.0
+offset_top = 124.0
+offset_right = 60.0
+offset_bottom = 184.0
 
 [node name="SP" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 186.0
-margin_right = 60.0
-margin_bottom = 246.0
+offset_top = 186.0
+offset_right = 60.0
+offset_bottom = 246.0
 
 [node name="Energy" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 248.0
-margin_right = 60.0
-margin_bottom = 308.0
+offset_top = 248.0
+offset_right = 60.0
+offset_bottom = 308.0
 
 [node name="Stone" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 310.0
-margin_right = 60.0
-margin_bottom = 370.0
+offset_top = 310.0
+offset_right = 60.0
+offset_bottom = 370.0
 
 [node name="Minerals" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 372.0
-margin_right = 60.0
-margin_bottom = 432.0
+offset_top = 372.0
+offset_right = 60.0
+offset_bottom = 432.0
 
 [node name="Money" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 434.0
-margin_right = 60.0
-margin_bottom = 494.0
+offset_top = 434.0
+offset_right = 60.0
+offset_bottom = 494.0
 
 [node name="Arrow" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 496.0
-margin_right = 60.0
-margin_bottom = 556.0
+offset_top = 496.0
+offset_right = 60.0
+offset_bottom = 556.0
 
 [node name="Cross" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 558.0
-margin_right = 60.0
-margin_bottom = 618.0
+offset_top = 558.0
+offset_right = 60.0
+offset_bottom = 618.0
 
 [node name="Check" parent="VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 620.0
-margin_right = 60.0
-margin_bottom = 680.0
+offset_top = 620.0
+offset_right = 60.0
+offset_bottom = 680.0
 
 [node name="CloseButton" parent="." instance=ExtResource( 4 )]
 
 [node name="ColorPickerBtn" type="TextureButton" parent="."]
-margin_left = 524.0
-margin_top = 20.0
-margin_right = 548.0
-margin_bottom = 44.0
+offset_left = 524.0
+offset_top = 20.0
+offset_right = 548.0
+offset_bottom = 44.0
 shortcut_in_tooltip = false
 shortcut = SubResource( 2 )
 texture_normal = ExtResource( 5 )
@@ -187,10 +187,10 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 524.0
-margin_top = 20.0
-margin_right = 548.0
-margin_bottom = 44.0
+offset_left = 524.0
+offset_top = 20.0
+offset_right = 548.0
+offset_bottom = 44.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
@@ -201,27 +201,27 @@ __meta__ = {
 visible = false
 anchor_left = 0.698
 anchor_right = 0.698
-margin_left = -132.064
-margin_top = -500.0
-margin_right = 231.936
+offset_left = -132.064
+offset_top = -500.0
+offset_right = 231.936
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorPicker"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 370.0
-margin_bottom = 506.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 370.0
+offset_bottom = 506.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Thickness" type="HSlider" parent="."]
-margin_left = 240.0
-margin_top = 24.0
-margin_right = 480.0
-margin_bottom = 40.0
+offset_left = 240.0
+offset_top = 24.0
+offset_right = 480.0
+offset_bottom = 40.0
 min_value = 1.0
 max_value = 500.0
 value = 10.0
@@ -232,10 +232,10 @@ __meta__ = {
 
 [node name="ThicknessLabel" type="Label" parent="."]
 visible = false
-margin_left = 488.0
-margin_top = 20.0
-margin_right = 548.0
-margin_bottom = 44.0
+offset_left = 488.0
+offset_top = 20.0
+offset_right = 548.0
+offset_bottom = 44.0
 text = "10"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -243,15 +243,15 @@ __meta__ = {
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 0, 0, 768, 0, 768, 64, 0, 64 )
+polygon = PackedVector2Array( 0, 0, 768, 0, 768, 64, 0, 64 )
 
 [node name="Polygon2D2" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 140, -324, 172, -324, 172, 16, 140, 16 )
+polygon = PackedVector2Array( 140, -324, 172, -324, 172, 16, 140, 16 )
 
 [node name="Polygon2D3" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 404, -484, 768, -484, 768, 0, 404, 0 )
+polygon = PackedVector2Array( 404, -484, 768, -484, 768, 0, 404, 0 )
 
 [connection signal="visibility_changed" from="." to="." method="_on_Annotator_visibility_changed"]
 [connection signal="mouse_entered" from="HBoxContainer/Icons" to="." method="_on_Icons_mouse_entered"]
