@@ -36,7 +36,7 @@ func _new_shake():
 
 func _reset():
 	var tween = create_tween()
-	tween.interpolate_property(camera, "offset", Vector2.ZERO, $Frequency.wait_time).set_trans(TRANS).set_ease(EASE)
+	tween.tween_property(camera, "offset", Vector2.ZERO, $Frequency.wait_time).set_trans(TRANS).set_ease(EASE)
 
 	priority = 0
 

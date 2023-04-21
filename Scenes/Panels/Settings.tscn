@@ -122,9 +122,9 @@ offset_bottom = 147.0
 [node name="FPS" type="Control" parent="TabContainer/GRAPHICS"]
 anchors_preset = 0
 offset_left = 168.0
-offset_top = 163.0
+offset_top = 12.0
 offset_right = 208.0
-offset_bottom = 203.0
+offset_bottom = 52.0
 
 [node name="Label" type="Label" parent="TabContainer/GRAPHICS/FPS"]
 layout_mode = 0
@@ -188,6 +188,7 @@ offset_bottom = 327.0
 text = "ENABLE_SCREEN_SHAKE"
 
 [node name="DisplayRes" type="OptionButton" parent="TabContainer/GRAPHICS"]
+visible = false
 layout_mode = 0
 offset_left = 140.0
 offset_top = 87.0
@@ -195,6 +196,7 @@ offset_right = 272.0
 offset_bottom = 116.0
 
 [node name="Label" type="Label" parent="TabContainer/GRAPHICS"]
+visible = false
 layout_mode = 0
 offset_left = 72.0
 offset_top = 51.0
@@ -203,6 +205,7 @@ offset_bottom = 74.0
 text = "Display resolution"
 
 [node name="KeepWindowSize" type="CheckBox" parent="TabContainer/GRAPHICS"]
+visible = false
 layout_mode = 0
 offset_left = 108.0
 offset_top = 127.0

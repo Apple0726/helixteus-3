@@ -128,7 +128,7 @@ func on_slot_press(_name:String):
 			else:
 				game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
 			set_auto_harvest(tile, produce, _name, not harvest)
-	if $UseFertilizer.pressed:
+	if $UseFertilizer.button_pressed:
 		_on_UseFertilizer_toggled(true)
 	calc_prod_per_sec()
 

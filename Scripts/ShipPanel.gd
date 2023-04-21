@@ -45,7 +45,7 @@ func refresh():
 func _process(delta):
 	if spaceport_tier != -1:
 		for i in len(game.ship_data):
-			for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 				var node = grid.get_node("Panel%s/%s/TextureProgressBar" % [i + 1, weapon])
 				var text_node = grid.get_node("Panel%s/%s/Label2" % [i + 1, weapon])
 				var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
@@ -127,7 +127,7 @@ var bar_colors = {
 func _on_SpaceportTimer_timeout():
 	var xp_mult = Helper.get_spaceport_xp_mult(spaceport_tier)
 	for i in len(game.ship_data):
-		var weapon = ["Bullet", "Laser", "Bomb", "Light3D"][randi() % 4]
+		var weapon = ["Bullet", "Laser", "Bomb", "Light"][randi() % 4]
 		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
 		Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult / 16.0 * pow(1.07, game.u_i.lv) * game.u_i.time_speed)
 		if visible:

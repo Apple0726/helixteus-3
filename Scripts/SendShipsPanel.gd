@@ -20,7 +20,7 @@ var spaceport_exit_cost_reduction:float = 1.0
 var spaceport_travel_cost_reduction:float = 1.0
 
 func _ready():
-	set_polygon($Background.size)
+	set_polygon(size)
 	$Drive.add_item(tr("STANDARD_DRIVE"))
 	$Drive.add_item(tr("PD_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
@@ -119,7 +119,7 @@ func refresh():
 func _on_Send_pressed():
 	if game.universe_data[game.c_u].lv < 40:
 		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
-			game.long_popup(tr("PLANET_PRESSURE_TOO_HIGH"), "")
+			game.popup_window(tr("PLANET_PRESSURE_TOO_HIGH"), "")
 		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:
 			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
 		elif time_cost > 4 * 60 * 60:
@@ -255,7 +255,7 @@ func calc_costs():
 	$EnergyCost2.text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
 	var travel_cost_mult = spaceport_travel_cost_reduction * (get_travel_cost_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light * travel_cost_mult
-	time_cost = 5000 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
+	time_cost = 5.0 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
 	if game.science_unlocked.has("FTL"):
 		time_cost /= 10.0
 	if game.science_unlocked.has("IGD"):

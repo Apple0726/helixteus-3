@@ -54,6 +54,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
+			if tooltip == "Stone" and game.op_cursor:
+				tooltip = "Rok"
 			if not game.show.has("mining"):
 				tooltip += "\n%s" % [tr("STONE_HELP")]
 			format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
@@ -468,7 +470,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.show.plant_button = true
 			if game.help.has("materials"):
 				if not is_MM:
-					game.long_popup(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
+					game.popup_window(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
 				game.help.erase("materials")
 			if not game.show.has("materials"):
 				game.show.materials = true
@@ -477,7 +479,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 		elif game.mets.has(content):
 			if not game.help.has("metals"):
 				if not is_MM:
-					game.long_popup(tr("YOU_MINED_METALS"), tr("METALS"))
+					game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.help.metals = true
 			if not game.show.has("metals"):
 				game.show.metals = true
@@ -496,9 +498,9 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			game.fourth_ship_hints.artifact_found = true
 			tile.erase("artifact")
 			if game.fourth_ship_hints.boss_rekt:
-				game.long_popup("%s\n%s" % [tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND_DESC2")], tr("ARTIFACT_FOUND"))
+				game.popup_window("%s\n%s" % [tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND_DESC2")], tr("ARTIFACT_FOUND"))
 			else:
-				game.long_popup(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
+				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
 		if content == "sand" and not game.new_bldgs.has("GF"):
@@ -1066,7 +1068,7 @@ var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
 func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	var hbox = HBoxContainer.new()
-	hbox.alignment = hbox.ALIGNMENT_CENTER
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	hbox.theme = hbox_theme
 	hbox["theme_override_constants/separation"] = -1
 	if obj.bldg.has("path_1"):
@@ -1246,7 +1248,7 @@ func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.circle.modulate = gradient.sample(offset)
-	overlay.circle.visible = game.overlay.toggle_btn.pressed and (not game.overlay.hide_obj_btn.pressed or offset >= 0 and offset <= 1)
+	overlay.circle.visible = game.overlay.toggle_btn.button_pressed and (not game.overlay.hide_obj_btn.button_pressed or offset >= 0 and offset <= 1)
 	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
 
 func remove_recursive(path):
@@ -1415,7 +1417,7 @@ func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 
 func set_resolution(index:int):
 	var res:Vector2 = get_viewport().size
-	get_viewport().size_2d_override_stretch = true 
+	#get_viewport().size_2d_override_stretch = true 
 	if index == 0:
 		get_viewport().size_2d_override_stretch = false
 		if ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN)):

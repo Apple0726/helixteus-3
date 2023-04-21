@@ -82,7 +82,7 @@ func refresh():
 				$Control.visible = false
 				return
 			combined_strength2 = combined_strength
-			sort_systems($Control/CheckBox.pressed)
+			sort_systems($Control/CheckBox.button_pressed)
 			for system in sorted_objs:#Calculates the actual number of systems the fighters will conquer
 				if system.has("conquered"):
 					continue
@@ -139,7 +139,7 @@ func refresh():
 				$Control.visible = false
 				return
 			combined_strength2 = combined_strength
-			sort_galaxies($Control/CheckBox.pressed)
+			sort_galaxies($Control/CheckBox.button_pressed)
 			for galaxy in sorted_objs:
 				if galaxy.is_empty() or galaxy.has("conquered"):
 					continue
@@ -230,7 +230,7 @@ func _on_Send_pressed():
 					game.galaxy_data[game.c_g].sys_num = obj_num
 					game.galaxy_data[game.c_g].sys_conquered = 0
 					game.galaxy_data[game.c_g].combined_strength = combined_strength
-					game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
+					game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
 					refresh()
 					game.HUD.refresh()
 				else:
@@ -262,7 +262,7 @@ func _on_Send_pressed():
 					game.u_i.cluster_data[game.c_c].gal_num = obj_num
 					game.u_i.cluster_data[game.c_c].gal_conquered = 0
 					game.u_i.cluster_data[game.c_c].combined_strength = combined_strength
-					game.u_i.cluster_data[game.c_c].conquer_order = $Control/CheckBox.pressed#true: ascending difficulty
+					game.u_i.cluster_data[game.c_c].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
 					refresh()
 					game.HUD.refresh()
 				else:

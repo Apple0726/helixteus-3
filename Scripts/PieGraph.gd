@@ -51,7 +51,7 @@ func refresh():
 func add_pie_text(txt:String, angle:float):
 	var text = Label.new()
 	$Pies.add_child(text)
-	text.align = text.ALIGNMENT_CENTER
+	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text.text = txt
 	text.visible = false
 	text.visible = true

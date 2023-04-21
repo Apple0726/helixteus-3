@@ -5,13 +5,14 @@
 [ext_resource type="PackedScene" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://bse5rqmmvsveq" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://2ugyr0acxr86" path="res://Graphics/Cave/MiningLaser.png" id="5"]
+[ext_resource type="TileSet" uid="uid://c7dmux1vdaraf" path="res://Resources/LakeTileSet.tres" id="5_qgrjc"]
 [ext_resource type="Texture2D" uid="uid://d3rio28i8fvon" path="res://Graphics/Icons/minerals.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://blid0ahf44j50" path="res://Graphics/Icons/money.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://djr3vvfm1mk3n" path="res://Graphics/Icons/stone.png" id="8"]
 [ext_resource type="PackedScene" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://767ld8exmq22" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://b5c0qyw16sug3" path="res://Graphics/Cave/Rover top down.png" id="11"]
-[ext_resource type="TileSet" path="res://Resources/CaveWalls.tres" id="12"]
+[ext_resource type="TileSet" uid="uid://c38qxbp5cjiy0" path="res://Resources/CaveWalls.tres" id="12"]
 [ext_resource type="Texture2D" uid="uid://cffbsjy7uoate" path="res://Graphics/Cave/Objects/exit.png" id="13"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="14"]
 [ext_resource type="Texture2D" uid="uid://dsd3wqp3n38nr" path="res://Graphics/Cave/minimap.png" id="15"]
@@ -31,7 +32,6 @@
 [ext_resource type="Texture2D" uid="uid://bjsgoqg3rjyni" path="res://Graphics/Stars/Star.png" id="31"]
 [ext_resource type="PackedScene" uid="uid://dhw427sv7cmr0" path="res://Scenes/Ship2Map.tscn" id="32"]
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="33"]
-[ext_resource type="Texture2D" uid="uid://dk5smla10oxe7" path="res://Graphics/Tiles/SoilSpritesheet.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://ddk0kt43phpa" path="res://Graphics/Cave/RE/armor_3.png" id="35"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 [ext_resource type="Shader" path="res://Shaders/Shine.gdshader" id="37"]
@@ -44,7 +44,7 @@
 [ext_resource type="Texture2D" uid="uid://dg2piv2h5j2op" path="res://Graphics/Tiles/Lava.png" id="44"]
 [ext_resource type="Texture2D" uid="uid://cne1t7q20uvb" path="res://Graphics/Misc/noise_combined.png" id="45"]
 [ext_resource type="Shader" path="res://Shaders/BCS.gdshader" id="46"]
-[ext_resource type="PackedScene" path="res://Scenes/KeyboardShortcuts.tscn" id="47"]
+[ext_resource type="PackedScene" uid="uid://bbykejbtwsdag" path="res://Scenes/KeyboardShortcuts.tscn" id="47"]
 
 [sub_resource type="ShaderMaterial" id="1"]
 shader = ExtResource("46")
@@ -70,12 +70,6 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="6"]
 shader = SubResource("5")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tsipy"]
-texture = ExtResource("34")
-
-[sub_resource type="TileSet" id="2"]
-sources/0 = SubResource("TileSetAtlasSource_tsipy")
-
 [sub_resource type="CapsuleShape2D" id="27"]
 radius = 23.3054
 height = 151.187
@@ -96,6 +90,8 @@ emission_sphere_radius = 1.0
 direction = Vector3(0, -1, 0)
 spread = 21.58
 gravity = Vector3(0, 0, 0)
+scale_min = 0.02
+scale_max = 0.04
 color_ramp = SubResource("24")
 
 [sub_resource type="Gradient" id="102"]
@@ -433,6 +429,30 @@ _data = {
 "Flash": SubResource("7")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fabes"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2lgmg"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
 [sub_resource type="Shader" id="151"]
 code = "shader_type canvas_item;
 
@@ -598,12 +618,20 @@ tile_set = SubResource("98")
 cell_quadrant_size = 100
 format = 2
 
-[node name="Ash" type="TileMap" parent="."]
+[node name="TileFeatures" type="TileMap" parent="."]
 z_index = -1022
 material = SubResource("6")
-tile_set = SubResource("2")
+tile_set = ExtResource("5_qgrjc")
 cell_quadrant_size = 100
 format = 2
+layer_0/name = "Ash"
+layer_1/name = "Lava"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
 
 [node name="Walls" type="TileMap" parent="."]
 tile_set = ExtResource("12")
@@ -635,6 +663,7 @@ shape = SubResource("3")
 disabled = true
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Exit"]
+emitting = false
 process_material = SubResource("25")
 texture = ExtResource("19")
 lifetime = 2.0
@@ -787,14 +816,6 @@ material = SubResource("22")
 position = Vector2(20, -48)
 scale = Vector2(7.6875, 7.6875)
 texture = ExtResource("18")
-
-[node name="Tween" type="Tween" parent="Rover"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-editor_description = ""
-script = null
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover"]
 libraries = {
@@ -978,12 +999,15 @@ size_flags_vertical = 8
 text = "Filter"
 
 [node name="Filters" type="PanelContainer" parent="UI2"]
-visible = false
-modulate = Color(1, 1, 1, 0)
-offset_left = 500.0
-offset_top = 602.0
-offset_right = 648.0
-offset_bottom = 662.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -184.0
+offset_top = -128.0
+offset_right = -36.0
+offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
@@ -991,7 +1015,7 @@ theme = ExtResource("29")
 
 [node name="Grid" type="GridContainer" parent="UI2/Filters"]
 layout_mode = 2
-columns = 10
+columns = 4
 
 [node name="money" parent="UI2/Filters/Grid" instance=ExtResource("3")]
 layout_mode = 2
@@ -1047,7 +1071,7 @@ offset_right = 40.0
 offset_bottom = 16.0
 texture = ExtResource("23")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI2/HP"]
 layout_mode = 0
@@ -1055,7 +1079,10 @@ offset_left = 48.0
 offset_top = 8.0
 offset_right = 216.0
 offset_bottom = 32.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "20 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Inventory" type="Panel" parent="UI2"]
 offset_left = 1052.0
@@ -1074,7 +1101,7 @@ offset_right = 40.0
 offset_bottom = 16.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Bar" type="TextureProgressBar" parent="UI2/Inventory"]
 layout_mode = 0
@@ -1103,7 +1130,10 @@ offset_left = 48.0
 offset_top = 8.0
 offset_right = 216.0
 offset_bottom = 32.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "0 / 4000 kg"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Panel" type="PanelContainer" parent="UI2"]
 visible = false
@@ -1122,28 +1152,23 @@ alignment = 1
 
 [node name="Timer" type="Timer" parent="UI2/Panel"]
 
-[node name="Tween" type="Tween" parent="UI2/Panel"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-editor_description = ""
-script = null
-
 [node name="CaveInfo" type="HBoxContainer" parent="UI2"]
-offset_right = 176.0
-offset_bottom = 33.0
+offset_right = 319.0
+offset_bottom = 27.0
+theme = ExtResource("29")
+theme_override_constants/separation = 0
 
 [node name="Floor" type="Label" parent="UI2/CaveInfo"]
 layout_mode = 2
 mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_fabes")
 text = "B1F"
 
 [node name="Difficulty" type="Label" parent="UI2/CaveInfo"]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
-theme = ExtResource("29")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Difficulty: 1"
 
 [node name="Modifiers" type="Label" parent="UI2/CaveInfo"]
@@ -1152,6 +1177,7 @@ layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
 theme = ExtResource("29")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Modifiers"
 
 [node name="AvgDmg" type="Label" parent="UI2/CaveInfo"]
@@ -1159,6 +1185,7 @@ layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
 theme = ExtResource("29")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Average enemy damage: 1"
 
 [node name="Relic" type="TextureRect" parent="UI2"]
@@ -1216,6 +1243,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="UI2/Ability"]
 visible = false
@@ -1236,14 +1265,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource("40")
-
-[node name="Tween" type="Tween" parent="UI2/HurtTexture"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-editor_description = ""
-script = null
+metadata/_edit_lock_ = true
 
 [node name="Burning" type="TextureRect" parent="UI2"]
 visible = false

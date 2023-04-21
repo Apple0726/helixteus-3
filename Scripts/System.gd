@@ -102,7 +102,7 @@ func refresh_planets():
 					planet_glow.modulate = Color(0, 1, 0, 1)
 				else:
 					planet_glow.modulate = Color(0.8, 1, 0, 1)
-			if game.element_overlay.toggle_btn.pressed:
+			if game.element_overlay.toggle_btn.button_pressed:
 				add_elements(p_i, v, sc)
 			else:
 				var tile_data:Array = tile_datas[p_i.l_id]
@@ -130,7 +130,7 @@ func refresh_planets():
 					grid.position.x = v.x - grid.size.x / 2.0 * sc * 2.5
 					grid.position.y = v.y - (grid.size.y + 50) * sc * 2.5
 		else:
-			if game.element_overlay.toggle_btn.pressed:
+			if game.element_overlay.toggle_btn.button_pressed:
 				add_elements(p_i, v, sc)
 			else:
 				var HX_count = preload("res://Scenes/EntityCount.tscn").instantiate()
@@ -702,7 +702,7 @@ func on_planet_click (id:int, l_id:int):
 						game.send_ships_panel.dest_p_id = l_id
 						game.toggle_panel(game.send_ships_panel)
 				else:
-					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
+					game.popup_window(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 	if game.is_ancestor_of(game.HUD):
 		game.HUD.refresh()
 

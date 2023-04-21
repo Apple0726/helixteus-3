@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=31 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" load_steps=33 format=3 uid="uid://cp2u1kgj60ic"]
 
 [ext_resource type="Texture2D" uid="uid://t65e8fjx015j" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
 [ext_resource type="Texture2D" uid="uid://0ax6os15k8lj" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
@@ -19,8 +19,12 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f856f"]
-bg_color = Color(0.254902, 0.254902, 0.254902, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ab6o6"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_width_left = 4
 border_width_top = 4
 border_color = Color(0.341176, 0.341176, 0.341176, 1)
@@ -42,6 +46,19 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tgbmf"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxevd"]
 content_margin_left = 5.0
 content_margin_top = 5.0
 content_margin_right = 5.0
@@ -184,6 +201,18 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8f2h"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.745098, 0.745098, 0.745098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.321569, 0.321569, 0.321569, 1)
+
 [sub_resource type="StyleBoxFlat" id="24"]
 bg_color = Color(0.462745, 0.682353, 0.682353, 1)
 border_width_left = 3
@@ -202,10 +231,10 @@ Button/colors/font_color_pressed = Color(1, 1, 1, 1)
 Button/constants/hseparation = 3
 Button/fonts/font = SubResource("SystemFont_ew3ep")
 Button/styles/disabled = SubResource("StyleBoxFlat_78575")
-Button/styles/focus = SubResource("StyleBoxFlat_f856f")
+Button/styles/focus = SubResource("StyleBoxFlat_ab6o6")
 Button/styles/hover = SubResource("StyleBoxFlat_ac0dv")
 Button/styles/normal = SubResource("StyleBoxFlat_tgbmf")
-Button/styles/pressed = SubResource("StyleBoxFlat_tgbmf")
+Button/styles/pressed = SubResource("StyleBoxFlat_cxevd")
 CheckBox/colors/font_color = Color(1, 1, 1, 1)
 CheckBox/colors/font_color_disabled = Color(0.321569, 0.321569, 0.321569, 1)
 CheckBox/colors/font_color_hover = Color(1, 1, 1, 1)
@@ -389,7 +418,7 @@ OptionButton/colors/font_color_disabled = Color(0.380392, 0.380392, 0.380392, 1)
 OptionButton/colors/font_color_hover = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/colors/font_color_pressed = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/constants/arrow_margin = 8
-OptionButton/constants/hseparation = 50
+OptionButton/constants/h_separation = 50
 OptionButton/fonts/font = SubResource("SystemFont_ew3ep")
 OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
@@ -423,45 +452,12 @@ RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
 ScrollContainer/styles/panel = SubResource("StyleBoxFlat_yplln")
 SpinBox/icons/updown = null
-TextEdit/colors/background_color = Color(0, 0, 0, 1)
-TextEdit/colors/bookmark_color = Color(0, 0, 0, 1)
-TextEdit/colors/brace_mismatch_color = Color(0, 0, 0, 1)
-TextEdit/colors/breakpoint_color = Color(0, 0, 0, 1)
-TextEdit/colors/caret_background_color = Color(0, 0, 0, 1)
+TextEdit/colors/caret_background_color = Color(1, 1, 1, 1)
 TextEdit/colors/caret_color = Color(0, 0, 0, 1)
-TextEdit/colors/code_folding_color = Color(0, 0, 0, 1)
-TextEdit/colors/completion_background_color = Color(0, 0, 0, 1)
-TextEdit/colors/completion_existing_color = Color(0, 0, 0, 1)
-TextEdit/colors/completion_font_color = Color(0, 0, 0, 1)
-TextEdit/colors/completion_scroll_color = Color(0, 0, 0, 1)
-TextEdit/colors/completion_selected_color = Color(0, 0, 0, 1)
-TextEdit/colors/current_line_color = Color(0, 0, 0, 1)
-TextEdit/colors/executing_line_color = Color(0, 0, 0, 1)
 TextEdit/colors/font_color = Color(0, 0, 0, 1)
-TextEdit/colors/font_color_readonly = Color(0, 0, 0, 1)
-TextEdit/colors/font_color_selected = Color(1, 1, 1, 1)
-TextEdit/colors/function_color = Color(0, 0, 0, 1)
-TextEdit/colors/line_number_color = Color(0, 0, 0, 1)
-TextEdit/colors/mark_color = Color(0, 0, 0, 1)
-TextEdit/colors/member_variable_color = Color(0, 0, 0, 1)
-TextEdit/colors/number_color = Color(0, 0, 0, 1)
-TextEdit/colors/safe_line_number_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_selected_color = Color(1, 1, 1, 1)
 TextEdit/colors/selection_color = Color(0, 0, 0, 1)
-TextEdit/colors/symbol_color = Color(0, 0, 0, 1)
-TextEdit/colors/word_highlighted_color = Color(0, 0, 0, 1)
-TextEdit/constants/completion_lines = 7
-TextEdit/constants/completion_max_width = 50
-TextEdit/constants/completion_scroll_width = 3
-TextEdit/constants/line_spacing = 4
-TextEdit/fonts/font = SubResource("SystemFont_ew3ep")
-TextEdit/icons/fold = null
-TextEdit/icons/folded = null
-TextEdit/icons/space = null
-TextEdit/icons/tab = null
-TextEdit/styles/completion = null
-TextEdit/styles/focus = null
-TextEdit/styles/normal = SubResource("19")
-TextEdit/styles/read_only = null
+TextEdit/styles/normal = SubResource("StyleBoxFlat_s8f2h")
 TooltipLabel/colors/font_color = Color(1, 1, 1, 1)
 TooltipLabel/colors/font_color_shadow = Color(1, 1, 1, 0)
 TooltipLabel/constants/shadow_offset_x = 1

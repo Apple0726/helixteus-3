@@ -51,28 +51,26 @@ func refresh():
 	probe_time_bars.clear()
 	for i in len(game.rover_data):
 		var rov = game.rover_data[i]
-		if not rov:
+		if rov == null:
 			continue
 		#if rov.c_p == game.c_p or rov.ready:
 		if rov.ready:
 			var rover = TextureButton.new()
-			rover.expand = true
+			rover.ignore_texture_size = true
 			rover.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-			rover.custom_minimum_size.x = 200
-			rover.custom_minimum_size.y = 200
+			rover.custom_minimum_size = Vector2.ONE * 200
 			if rov.get("MK", 1) == 2:
 				rover.texture_normal = preload("res://Graphics/Cave/Rover2.png")
 			elif rov.get("MK", 1) == 3:
 				rover.texture_normal = preload("res://Graphics/Cave/Rover3.png")
 			else:
 				rover.texture_normal = preload("res://Graphics/Cave/Rover.png")
-			rover.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 			hbox.add_child(rover)
 			rover.connect("mouse_entered",Callable(self,"on_rover_enter").bind(rov, i))
 			rover.connect("mouse_exited",Callable(self,"on_rover_exit"))
 			rover.connect("pressed",Callable(self,"on_rover_press").bind(rov, i))
 	for i in len(game.fighter_data):
-		if not game.fighter_data[i]:
+		if game.fighter_data[i] == null:
 			continue
 		var fighter_info = game.fighter_data[i]
 		var fighter = TextureButton.new()
@@ -80,13 +78,11 @@ func refresh():
 		fighter_num.text = "x %s" % [fighter_info.number]
 		fighter_num.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		fighter_num.position = Vector2(110, 40)
-		if not fighter_info.has("tier"):#Save migration
-			fighter_info.tier = 0
 		if fighter_info.tier == 0:
 			fighter.texture_normal = preload("res://Graphics/Ships/Fighter.png")
 		elif fighter_info.tier == 1:
 			fighter.texture_normal = preload("res://Graphics/Ships/Fighter2.png")
-		fighter.expand = true
+		fighter.ignore_texture_size = true
 		fighter.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		fighter.custom_minimum_size = Vector2(160, 60)
 		fighter.add_child(fighter_num)
@@ -96,7 +92,7 @@ func refresh():
 		fighter.connect("pressed",Callable(self,"on_fighter_press").bind(i))
 	var probe_num:int = 0
 	for i in len(game.probe_data):
-		if not game.probe_data[i]:
+		if game.probe_data[i] == null:
 			continue
 		probe_num += 1
 		var probe_info:Dictionary = game.probe_data[i]

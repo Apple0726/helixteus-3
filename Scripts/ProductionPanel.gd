@@ -14,11 +14,8 @@ var input_unit:String
 var output_unit:String
 
 func _ready():
-	set_polygon($Background.size)
+	set_polygon(size)
 	set_process(false)
-
-func _on_HSlider_value_changed(value):
-	refresh_values()
 
 func refresh_values():
 	$Control/HBox/AmountInStorage.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value, true), input_unit]
@@ -93,41 +90,6 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 			$Control/HBox/HSlider.value = rsrc
 			refresh_values()
 
-func _on_Start_pressed():
-	if tile.bldg.has("qty1"):
-		set_process(false)
-		$Control/Start.text = "%s (G)" % tr("START")
-		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
-		var prod_i = Helper.get_prod_info(tile)
-		var rsrc_to_add = {}
-		rsrc_to_add[input] = prod_i.qty_left
-		if not input_type in ["mats", "mets"]:
-			rsrc_to_add[input] = round(prod_i.qty_left)
-		rsrc_to_add[output] = prod_i.qty_made
-		if not output_type in ["mats", "mets"]:
-			rsrc_to_add[output] = round(prod_i.qty_made)
-		game.add_resources(rsrc_to_add)
-		tile.bldg.erase("qty1")
-		tile.bldg.erase("start_date")
-		tile.bldg.erase("ratio")
-		tile.bldg.erase("qty2")
-		_on_HSlider_value_changed($Control/HBox/HSlider.value)
-		refresh2(bldg_type, input, output, input_type, output_type)
-	elif $Control/HBox/HSlider.value > 0:
-		var rsrc = $Control/HBox/HSlider.value
-		var rsrc_to_deduct = {}
-		rsrc_to_deduct[input] = rsrc
-		game.deduct_resources(rsrc_to_deduct)
-		tile.bldg.qty1 = rsrc
-		tile.bldg.start_date = Time.get_unix_time_from_system()
-		tile.bldg.ratio = ratio
-		tile.bldg.qty2 = rsrc * ratio
-		set_process(true)
-		$Control/Start.text = "%s (G)" % tr("STOP")
-		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
-	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
-	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
-
 func _process(delta):
 	if tile == null or tile.is_empty():
 		_on_close_button_pressed()
@@ -147,3 +109,43 @@ func _process(delta):
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
+
+
+func _on_start_pressed():
+	if tile.bldg.has("qty1"):
+		set_process(false)
+		$Control/Start.text = "%s (G)" % tr("START")
+		$Control/Expected.text = "%s: " % [tr("EXPECTED_RESOURCES")]
+		var prod_i = Helper.get_prod_info(tile)
+		var rsrc_to_add = {}
+		rsrc_to_add[input] = prod_i.qty_left
+		if not input_type in ["mats", "mets"]:
+			rsrc_to_add[input] = round(prod_i.qty_left)
+		rsrc_to_add[output] = prod_i.qty_made
+		if not output_type in ["mats", "mets"]:
+			rsrc_to_add[output] = round(prod_i.qty_made)
+		game.add_resources(rsrc_to_add)
+		tile.bldg.erase("qty1")
+		tile.bldg.erase("start_date")
+		tile.bldg.erase("ratio")
+		tile.bldg.erase("qty2")
+		_on_h_slider_value_changed($Control/HBox/HSlider.value)
+		refresh2(bldg_type, input, output, input_type, output_type)
+	elif $Control/HBox/HSlider.value > 0:
+		var rsrc = $Control/HBox/HSlider.value
+		var rsrc_to_deduct = {}
+		rsrc_to_deduct[input] = rsrc
+		game.deduct_resources(rsrc_to_deduct)
+		tile.bldg.qty1 = rsrc
+		tile.bldg.start_date = Time.get_unix_time_from_system()
+		tile.bldg.ratio = ratio
+		tile.bldg.qty2 = rsrc * ratio
+		set_process(true)
+		$Control/Start.text = "%s (G)" % tr("STOP")
+		$Control/Expected.text = "%s: " % [tr("RESOURCES_PRODUCED")]
+	$Control/HBox/Remaining.visible = tile.bldg.has("qty1")
+	$Control/HBox/HSlider.visible = not tile.bldg.has("qty1")
+
+
+func _on_h_slider_value_changed(value):
+	refresh_values()

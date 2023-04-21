@@ -53,10 +53,10 @@ vertical_alignment = 1
 
 [node name="HBox" type="HBoxContainer" parent="Rovers"]
 layout_mode = 2
-offset_left = 50.0
-offset_top = 136.0
-offset_right = 50.0
-offset_bottom = 136.0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 16.0
+offset_bottom = 48.0
 alignment = 1
 
 [node name="Probes" type="Panel" parent="."]

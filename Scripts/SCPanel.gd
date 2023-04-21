@@ -15,7 +15,7 @@ var expected_rsrc:Dictionary
 var rsrc_nodes:Array
 
 func _ready():
-	set_polygon($Background.size)
+	set_polygon(size)
 
 func refresh():
 	tile = game.tile_data[c_t]
@@ -69,7 +69,34 @@ func refresh():
 	hslider.max_value = min(total_stone, tile.bldg.path_2_value)
 	hslider.min_value = 0
 
-func _on_Button_pressed():
+func _process(delta):
+	if not visible:
+		set_process(false)
+		return
+	var c_i = Helper.get_crush_info(tile)
+	CC_bar.value = 1 - c_i.progress
+	CC_stone.text = "%s kg" % [c_i.qty_left]
+	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd)
+	for hbox in rsrc_nodes:
+		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
+
+func _on_close_button_pressed():
+	game.toggle_panel(self)
+
+
+func _on_h_slider_value_changed(value):
+	refresh()
+
+
+func _on_h_slider_mouse_entered():
+	game.view.move_view = false
+
+
+func _on_h_slider_mouse_exited():
+	game.view.move_view = true
+
+
+func _on_button_pressed():
 	if not tile.bldg.has("stone"):
 		var stone_qty = Helper.get_sum_of_dict(stone_to_crush)
 		if stone_qty == 0:
@@ -101,26 +128,3 @@ func _on_Button_pressed():
 		game.popup(tr("RESOURCES_COLLECTED"), 1.5)
 	game.HUD.refresh()
 	refresh()
-
-func _process(delta):
-	if not visible:
-		set_process(false)
-		return
-	var c_i = Helper.get_crush_info(tile)
-	CC_bar.value = 1 - c_i.progress
-	CC_stone.text = "%s kg" % [c_i.qty_left]
-	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd)
-	for hbox in rsrc_nodes:
-		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
-
-func _on_HSlider_value_changed(value):
-	refresh()
-
-func _on_HSlider_mouse_entered():
-	game.view.move_view = false
-
-func _on_HSlider_mouse_exited():
-	game.view.move_view = true
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)

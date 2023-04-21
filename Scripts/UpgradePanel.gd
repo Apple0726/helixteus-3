@@ -115,7 +115,7 @@ func update(changing_paths:bool = false):
 	set_min_lv = true
 	next_lv.min_value = get_min_lv() + 1
 	set_min_lv = false
-	auto_speedup = $AutoSpeedup.is_pressed
+	auto_speedup = $AutoSpeedup.button_pressed
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
 	var same_lv = true
 	var first_tile:Dictionary

@@ -43,7 +43,7 @@ func on_down(key, mod_slot):
 func on_load(key, mod_slot):
 	var config = ConfigFile.new()
 	config.load("user://settings.cfg")
-	if mod_slot.get_node("Load").pressed:
+	if mod_slot.get_node("Load").button_pressed:
 		Mods.dont_load.erase(key)
 		config.set_value("mods", "dont_load", Mods.dont_load)
 	else:

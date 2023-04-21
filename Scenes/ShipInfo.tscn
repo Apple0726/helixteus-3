@@ -36,6 +36,7 @@ offset_left = 28.0
 offset_top = 56.0
 offset_right = 188.0
 offset_bottom = 140.0
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Bullet" type="Control" parent="."]
@@ -76,8 +77,10 @@ offset_bottom = 68.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
-stretch_margin_left = 9
-stretch_margin_right = 9
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
 texture_over = ExtResource("7")
 texture_progress = ExtResource("6")
 
@@ -89,15 +92,19 @@ offset_right = 516.0
 offset_bottom = 75.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Bullet"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
-offset_right = 559.0
-offset_bottom = 71.0
-scale = Vector2(0.7, 0.7)
+offset_top = 47.0
+offset_right = 460.0
+offset_bottom = 70.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
 text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Bullet"]
 layout_mode = 0
@@ -106,7 +113,7 @@ offset_top = 52.0
 offset_right = 220.0
 offset_bottom = 64.0
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Laser" type="Control" parent="."]
 anchors_preset = 0
@@ -146,8 +153,10 @@ offset_bottom = 64.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
-stretch_margin_left = 9
-stretch_margin_right = 9
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
 texture_over = ExtResource("7")
 texture_progress = ExtResource("6")
 
@@ -159,15 +168,19 @@ offset_right = 516.0
 offset_bottom = 71.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Laser"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 44.0
-offset_right = 559.0
-offset_bottom = 68.0
-scale = Vector2(0.7, 0.7)
+offset_top = 43.0
+offset_right = 460.0
+offset_bottom = 66.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
 text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Laser"]
 layout_mode = 0
@@ -176,7 +189,7 @@ offset_top = 44.0
 offset_right = 220.0
 offset_bottom = 64.0
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Bomb" type="Control" parent="."]
 anchors_preset = 0
@@ -216,8 +229,10 @@ offset_bottom = 68.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
-stretch_margin_left = 9
-stretch_margin_right = 9
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
 texture_over = ExtResource("7")
 texture_progress = ExtResource("6")
 
@@ -229,15 +244,19 @@ offset_right = 516.0
 offset_bottom = 75.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Bomb"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
-offset_right = 559.0
-offset_bottom = 72.0
-scale = Vector2(0.7, 0.7)
+offset_top = 47.0
+offset_right = 460.0
+offset_bottom = 70.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
 text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Bomb"]
 layout_mode = 0
@@ -246,16 +265,16 @@ offset_top = 48.0
 offset_right = 220.0
 offset_bottom = 68.0
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
-[node name="Light3D" type="Control" parent="."]
+[node name="Light" type="Control" parent="."]
 anchors_preset = 0
 offset_left = 12.0
 offset_top = 96.0
 offset_right = 52.0
 offset_bottom = 136.0
 
-[node name="ColorRect" type="ColorRect" parent="Light3D"]
+[node name="ColorRect" type="ColorRect" parent="Light"]
 layout_mode = 0
 offset_left = 228.0
 offset_top = 48.0
@@ -263,7 +282,7 @@ offset_right = 460.0
 offset_bottom = 68.0
 color = Color(0.51, 0.50796, 0.3876, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="Light3D"]
+[node name="TextureProgress2" type="TextureProgressBar" parent="Light"]
 modulate = Color(1, 1, 0.61, 1)
 layout_mode = 0
 offset_left = 228.0
@@ -276,7 +295,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("5")
 texture_progress = ExtResource("6")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Light3D"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Light"]
 modulate = Color(0.81, 0.81, 0.3645, 1)
 layout_mode = 0
 offset_left = 228.0
@@ -286,12 +305,14 @@ offset_bottom = 68.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
-stretch_margin_left = 9
-stretch_margin_right = 9
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
 texture_over = ExtResource("7")
 texture_progress = ExtResource("6")
 
-[node name="Label" type="Label" parent="Light3D"]
+[node name="Label" type="Label" parent="Light"]
 layout_mode = 0
 offset_left = 476.0
 offset_top = 44.0
@@ -299,24 +320,28 @@ offset_right = 516.0
 offset_bottom = 75.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
+vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Light3D"]
+[node name="Label2" type="Label" parent="Light"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
-offset_right = 559.0
-offset_bottom = 77.0
-scale = Vector2(0.7, 0.7)
+offset_top = 47.0
+offset_right = 460.0
+offset_bottom = 70.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
 text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Light3D"]
+[node name="TextureRect" type="TextureRect" parent="Light"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 48.0
 offset_right = 220.0
 offset_bottom = 68.0
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="XP" type="Control" parent="."]
 anchors_preset = 0
@@ -355,8 +380,10 @@ offset_bottom = 72.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
-stretch_margin_left = 9
-stretch_margin_right = 9
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
 texture_over = ExtResource("7")
 texture_progress = ExtResource("6")
 
@@ -368,15 +395,19 @@ offset_right = 516.0
 offset_bottom = 79.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="XP"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 52.0
-offset_right = 631.0
-offset_bottom = 81.0
-scale = Vector2(0.7, 0.7)
+offset_top = 51.0
+offset_right = 456.0
+offset_bottom = 74.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
 text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="XP"]
 layout_mode = 0
@@ -386,7 +417,7 @@ offset_right = 52.0
 offset_bottom = 76.0
 texture = ExtResource("4")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Lv" type="Label" parent="."]
 layout_mode = 0
@@ -395,8 +426,10 @@ offset_top = 20.0
 offset_right = 184.0
 offset_bottom = 44.0
 text = "Lv 5"
+horizontal_alignment = 1
 
 [node name="Stats" type="Control" parent="."]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -458,6 +491,7 @@ offset_top = 24.0
 offset_right = 444.0
 offset_bottom = 38.0
 text = "0"
+vertical_alignment = 1
 
 [node name="Atk" type="Label" parent="Stats"]
 layout_mode = 0
@@ -466,6 +500,7 @@ offset_top = 52.0
 offset_right = 444.0
 offset_bottom = 66.0
 text = "0"
+vertical_alignment = 1
 
 [node name="Def" type="Label" parent="Stats"]
 layout_mode = 0
@@ -474,6 +509,7 @@ offset_top = 80.0
 offset_right = 444.0
 offset_bottom = 94.0
 text = "0"
+vertical_alignment = 1
 
 [node name="Acc" type="Label" parent="Stats"]
 layout_mode = 0
@@ -482,6 +518,7 @@ offset_top = 108.0
 offset_right = 444.0
 offset_bottom = 122.0
 text = "0"
+vertical_alignment = 1
 
 [node name="Eva" type="Label" parent="Stats"]
 layout_mode = 0
@@ -490,6 +527,7 @@ offset_top = 136.0
 offset_right = 444.0
 offset_bottom = 150.0
 text = "0"
+vertical_alignment = 1
 
 [node name="TextEdit" type="TextEdit" parent="."]
 layout_mode = 0
@@ -497,6 +535,7 @@ offset_left = 24.0
 offset_top = 152.0
 offset_right = 200.0
 offset_bottom = 184.0
+scroll_fit_content_height = true
 
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
@@ -507,8 +546,8 @@ offset_bottom = 184.0
 [connection signal="mouse_exited" from="Laser/TextureRect" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Bomb/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["BOMB"]]
 [connection signal="mouse_exited" from="Bomb/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Light3D/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LIGHT"]]
-[connection signal="mouse_exited" from="Light3D/TextureRect" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Light/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LIGHT"]]
+[connection signal="mouse_exited" from="Light/TextureRect" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/HPIcon" to="." method="_on_icon_mouse_entered" binds= ["HEALTH_POINTS"]]
 [connection signal="mouse_exited" from="Stats/HPIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/AtkIcon" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=72 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://ba3vw76fhsf5t" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://blid0ahf44j50" path="res://Graphics/Icons/money.png" id="2"]
@@ -56,7 +56,13 @@ _data = {
 "BookmarkAnim": SubResource("1")
 }
 
+[sub_resource type="InputEventKey" id="InputEventKey_f1iy7"]
+device = -1
+physical_keycode = 66
+unicode = 98
+
 [sub_resource type="Shortcut" id="3"]
+events = [SubResource("InputEventKey_f1iy7")]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e2ib3"]
 content_margin_left = 5.0
@@ -91,19 +97,61 @@ shader_parameter/active = false
 shader_parameter/color = Color(1, 1, 1, 1)
 shader_parameter/speed = 1.0
 
+[sub_resource type="InputEventKey" id="InputEventKey_04cml"]
+device = -1
+physical_keycode = 89
+unicode = 121
+
 [sub_resource type="Shortcut" id="12"]
+events = [SubResource("InputEventKey_04cml")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_d0q5n"]
+device = -1
+physical_keycode = 86
+unicode = 118
 
 [sub_resource type="Shortcut" id="14"]
+events = [SubResource("InputEventKey_d0q5n")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_817r8"]
+device = -1
+physical_keycode = 84
+unicode = 116
 
 [sub_resource type="Shortcut" id="16"]
+events = [SubResource("InputEventKey_817r8")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_h1pgw"]
+device = -1
+physical_keycode = 69
+unicode = 101
 
 [sub_resource type="Shortcut" id="18"]
+events = [SubResource("InputEventKey_h1pgw")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_tj8tx"]
+device = -1
+physical_keycode = 82
+unicode = 114
 
 [sub_resource type="Shortcut" id="20"]
+events = [SubResource("InputEventKey_tj8tx")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_jk272"]
+device = -1
+physical_keycode = 85
+unicode = 117
 
 [sub_resource type="Shortcut" id="22"]
+events = [SubResource("InputEventKey_jk272")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_m2rrv"]
+device = -1
+physical_keycode = 73
+unicode = 105
 
 [sub_resource type="Shortcut" id="24"]
+events = [SubResource("InputEventKey_m2rrv")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_k5517"]
 device = -1

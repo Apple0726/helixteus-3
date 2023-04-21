@@ -1,23 +1,20 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://rkeuei54m30i"]
 
-[ext_resource path="res://Graphics/Buttons/IonDrive.png" type="Texture2D" id=3]
-[ext_resource path="res://Graphics/Buttons/ChemicalDrive.png" type="Texture2D" id=4]
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture2D" id=5]
-[ext_resource path="res://Scripts/DrivePanel.gd" type="Script" id=6]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
+[ext_resource type="Texture2D" uid="uid://cojucbsgdmmta" path="res://Graphics/Buttons/IonDrive.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cm2fju1iwykah" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="5"]
+[ext_resource type="Script" path="res://Scripts/DrivePanel.gd" id="6"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 
 [node name="Drives" type="Panel"]
 offset_top = 104.0
 offset_right = 1064.0
 offset_bottom = 600.0
-theme = ExtResource( 7 )
-script = ExtResource( 6 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+theme = ExtResource("7")
+script = ExtResource("6")
 
 [node name="Label5" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -27,10 +24,11 @@ offset_top = -220.0
 offset_right = 204.0
 offset_bottom = -188.0
 text = "CLICK_DRIVE_TO_USE"
-align = 1
-valign = 1
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -41,110 +39,87 @@ offset_right = 204.0
 offset_bottom = -40.0
 
 [node name="Drives" type="HBoxContainer" parent="Panel"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 398.0
-offset_bottom = 138.0
+layout_mode = 2
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CD" type="TextureButton" parent="Panel/Drives"]
-modulate = Color( 1, 1, 1, 0.501961 )
-offset_left = 64.0
-offset_right = 192.0
-offset_bottom = 128.0
-theme = ExtResource( 7 )
-texture_normal = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(1, 1, 1, 0.501961)
+layout_mode = 2
+theme = ExtResource("7")
+texture_normal = ExtResource("4")
 
 [node name="ID" type="TextureButton" parent="Panel/Drives"]
-modulate = Color( 1, 1, 1, 0.501961 )
-offset_left = 196.0
-offset_right = 324.0
-offset_bottom = 128.0
-theme = ExtResource( 7 )
-texture_normal = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(1, 1, 1, 0.501961)
+layout_mode = 2
+theme = ExtResource("7")
+texture_normal = ExtResource("3")
 
 [node name="Control" type="Control" parent="."]
-visible = false
+anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 1
 
 [node name="OptionButton" type="OptionButton" parent="Control"]
+layout_mode = 0
 offset_left = 460.0
 offset_top = 240.0
 offset_right = 669.0
 offset_bottom = 272.0
+alignment = 1
 expand_icon = true
 
 [node name="HSlider" type="HSlider" parent="Control"]
+layout_mode = 0
 offset_left = 392.0
 offset_top = 320.0
 offset_right = 548.0
 offset_bottom = 336.0
 step = 0.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 0
 offset_left = 564.0
 offset_top = 308.0
 offset_right = 596.0
 offset_bottom = 340.0
 grow_horizontal = 0
 grow_vertical = 2
-expand = true
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect2" type="TextureRect" parent="Control"]
+layout_mode = 0
 offset_left = 580.0
 offset_top = 376.0
 offset_right = 608.0
 offset_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
-texture = ExtResource( 5 )
-expand = true
+texture = ExtResource("5")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Control"]
-offset_left = 612.0
-offset_top = 309.0
-offset_right = 732.0
-offset_bottom = 341.0
+layout_mode = 0
+offset_left = 608.0
+offset_top = 312.0
+offset_right = 728.0
+offset_bottom = 344.0
 text = "0"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 620.0
 offset_top = 376.0
 offset_right = 740.0
 offset_bottom = 408.0
 text = "0"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
 [node name="Label3" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 324.0
 offset_top = 376.0
 offset_right = 544.0
@@ -152,13 +127,11 @@ offset_bottom = 408.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "TIME_REDUCTION"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Label4" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 332.0
 offset_top = 240.0
 offset_right = 436.0
@@ -166,21 +139,16 @@ offset_bottom = 272.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "FUEL"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Button" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 404.0
 offset_top = 444.0
 offset_right = 696.0
 offset_bottom = 480.0
 text = "SPEED_UP_SHIPS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
 [connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]

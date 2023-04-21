@@ -2,45 +2,58 @@
 
 [ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="2"]
-[ext_resource type="PackedScene" path="res://Scenes/PieGraph.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="Script" path="res://Scripts/SCPanel.gd" id="6"]
 [ext_resource type="Texture2D" uid="uid://djr3vvfm1mk3n" path="res://Graphics/Icons/stone.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="10"]
-[ext_resource type="PackedScene" path="res://Scenes/CloseButton.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="12"]
 
 [sub_resource type="Shortcut" id="2"]
 
-[node name="SCPanel" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 1067.0
-offset_bottom = 600.0
-pivot_offset = Vector2(533, 300)
-mouse_filter = 1
+[node name="SCPanel" type="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -532.0
+offset_top = -300.0
+offset_right = 532.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("5")
 script = ExtResource("6")
 
-[node name="Background" type="Panel" parent="."]
+[node name="CloseButton" parent="." instance=ExtResource("12")]
 layout_mode = 0
-offset_right = 1064.0
-offset_bottom = 600.0
-
-[node name="CloseButton" parent="Background" instance=ExtResource("12")]
-layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 1032.0
+offset_top = 8.0
+offset_right = 1056.0
+offset_bottom = 32.0
+grow_horizontal = 1
 
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_right = 1.0
-offset_bottom = 24.0
+offset_bottom = 38.0
+theme_override_font_sizes/font_size = 18
 text = "SC_NAME"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Desc" type="Label" parent="."]
 layout_mode = 0
 offset_top = 64.0
 offset_right = 1064.0
 offset_bottom = 100.0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0
@@ -83,10 +96,11 @@ custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("7")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Control/HBoxContainer"]
 layout_mode = 2
+vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control"]
 layout_mode = 0
@@ -114,6 +128,7 @@ offset_top = 552.0
 offset_right = 804.0
 offset_bottom = 576.0
 text = "00:00"
+vertical_alignment = 1
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Control/Control"]
 modulate = Color(0.505882, 0.505882, 0.505882, 1)
@@ -146,8 +161,13 @@ offset_left = 40.0
 offset_top = 552.0
 offset_right = 516.0
 offset_bottom = 576.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "1000 kg"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Control/Button" to="." method="_on_Button_pressed"]
-[connection signal="value_changed" from="Control/HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
+[connection signal="mouse_entered" from="Control/HBoxContainer/HSlider" to="." method="_on_h_slider_mouse_entered"]
+[connection signal="mouse_exited" from="Control/HBoxContainer/HSlider" to="." method="_on_h_slider_mouse_exited"]
+[connection signal="value_changed" from="Control/HBoxContainer/HSlider" to="." method="_on_h_slider_value_changed"]

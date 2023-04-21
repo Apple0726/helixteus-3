@@ -159,7 +159,7 @@ func generate_rock(new:bool):
 	tile_tween = create_tween()
 	tile_tween.tween_property(tile_sprite, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_OUT)
 	for met_sprite in metal_sprites:
-		met_sprite.queuefree()
+		met_sprite.queue_free()
 	metal_sprites = []
 	if not tile.has("contents") or new:
 		contents = Helper.generate_rock(tile, p_i).duplicate(true)
@@ -231,7 +231,7 @@ func pickaxe_hit():
 		game.generate_volcano(id, VEI, true)
 		game.switch_view("planet")
 		if game.help.has("artificial_volcano"):
-			game.long_popup(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))
+			game.popup_window(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))
 			game.help.erase("artificial_volcano")
 		else:
 			game.popup(tr("CREATED_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), 4.0)
@@ -314,7 +314,7 @@ func pickaxe_hit():
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
-		if $AutoReplace.pressed and game.check_enough(costs):
+		if $AutoReplace.button_pressed and game.check_enough(costs):
 			game.deduct_resources(costs)
 			game.pickaxe.durability = curr_pick_info.durability
 			update_pickaxe()
@@ -385,7 +385,7 @@ func _on_CheckBox_mouse_exited():
 	game.hide_tooltip()
 
 func _on_AutoReplace_pressed():
-	game.auto_replace = $AutoReplace.is_pressed
+	game.auto_replace = $AutoReplace.button_pressed
 
 
 func _on_AuroraMult_mouse_entered():
@@ -397,7 +397,6 @@ func _on_AuroraMult_mouse_exited():
 
 
 func _on_Grid_resized():
-	prints($ResourcesMined/Grid.size.x, $ResourcesMined.size.x)
 	if $ResourcesMined/Grid.size.x > $ResourcesMined.size.x:
 		$ResourcesMined.custom_minimum_size.x = $ResourcesMined/Grid.size.x + 40
 		$ResourcesMined.position.x = 892 - $ResourcesMined.custom_minimum_size.x / 2.0

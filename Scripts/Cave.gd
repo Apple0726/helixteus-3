@@ -24,8 +24,6 @@ var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 var purple_texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
 
 @onready var cave_BG = $TileMap
-@onready var lava_tiles = $Lava
-@onready var ash = $Ash
 @onready var cave_wall = $Walls
 @onready var minimap_cave = $UI/Minimap/TileMap
 @onready var minimap_rover = $UI/Rover
@@ -149,6 +147,7 @@ var treasure_mult:float = 1.0
 var debris_amount:float
 
 func _ready():
+	$Exit/GPUParticles2D.emitting = true
 	$UI2/Controls.center_position = Vector2(640, 160)
 	$UI2/Controls.add_key("WASD", "MOVE_ROVER")
 	$UI2/Controls.add_key(tr("SCROLL_WHEEL"), "CHANGE_ACTIVE_ITEM")
@@ -314,7 +313,7 @@ func _ready():
 	update_health_bar(total_HP)
 	$UI2/Inventory/Label.text = "%s / %s kg" % [Helper.format_num(round(weight)), Helper.format_num(weight_cap)]
 	if game.help.has("sprint_mode") and speed_mult > 1:
-		game.long_popup(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
+		game.popup_window(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
 		game.help.erase("sprint_mode")
 
 func add_filter(rsrc:String):
@@ -358,7 +357,8 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_laser.material["shader_parameter/outline_color"] = c * 4.0
 		var speed = Data.rover_mining[_inv.name].speed
 		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2))
-		mining_p.process_material.initial_velocity = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
+		mining_p.process_material.initial_velocity_min = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
+		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
 	else:
@@ -374,9 +374,9 @@ func remove_cave():
 	active_type = ""
 	cave_BG.clear()
 	cave_wall.clear()
-	lava_tiles.clear()
 	minimap_cave.clear()
 	big_debris.clear()
+	$TileFeatures.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 		enemy.free()
@@ -429,7 +429,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if enhancements.has("armor_12") and HP < total_HP * 0.2:
 		HP = total_HP * 0.2
 	set_avg_dmg()
-	ash.clear()
 	cave_darkness = cave_floor * 0.1
 	if rover_data.get("MK", 1) >= 2:#Save migration
 		cave_darkness /= 1.1
@@ -486,10 +485,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rng.set_seed(seeds[cave_floor - 1])
 		noise.seed = seeds[cave_floor - 1]
 		lava_noise.seed = seeds[cave_floor - 1] * 2
-	noise.octaves = 1
-	noise.period = tile.cave.period
-	lava_noise.octaves = 1
-	lava_noise.period = rng.randi_range(30, 120)
+	noise.fractal_octaves = 1
+	noise.frequency = 1.0 / tile.cave.period
+	lava_noise.fractal_octaves = 1
+	lava_noise.frequency = 1.0 / rng.randi_range(30, 120)
 	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
@@ -497,12 +496,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var top_of_the_tower = tower and cave_floor == num_floors
 	var seeking_proj = enhancements.has("laser_3")
 	var debris_height:int = -1020
+	var ash_tiles = []
+	var lava_tiles = []
+	var walls = []
 	#Generate cave
 	for i in cave_size:
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
-			cave_BG.set_cell(i, j, tile_type)
+			cave_BG.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
 			# Decorative pebbles
 #			for k in rng.randi_range(0, 2):
 #				var debris = Sprite2D.new()
@@ -517,7 +519,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			if rng.randf() < debris_amount / 2.0:
 				var debris = Sprite2D.new()
 				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
-				add_sibling($Lava, debris)
+				add_child(debris)
 				debris.z_index = -1021
 				debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 				debris.modulate.a = 1.0
@@ -555,12 +557,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 					else:
 						debris.add_to_group("debris")
 						debris.id = tile_id
-						add_sibling($Ash, debris)
+						add_child(debris)
 						big_debris[tile_id] = debris
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
-						ash.set_cell(i, j, 0)
-				minimap_cave.set_cell(i, j, tile_type)
+						ash_tiles.append(Vector2(i, j))
+				minimap_cave.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
@@ -611,7 +613,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node.MM_icon = enemy_icon
 					enemy_icon.add_to_group("enemy_icons")
 			else:
-				cave_wall.set_cell(i, j, 0)
+				walls.append(Vector2i(i, j))
 				var rand:float = rng.randf()
 				var rand2:float = rng.randf()
 				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
@@ -641,39 +643,37 @@ func generate_cave(first_floor:bool, going_up:bool):
 			if volcano_mult > 1.0:
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 1, 16, 0.8, 0.0), 0.0) * clamp(remap(volcano_mult, 8, 14, 1.0, 0.3), 0.0, 1.0):
-					lava_tiles.set_cell(i, j, 0)
+					lava_tiles.append(Vector2i(i, j))
 			elif cave_floor >= 12:
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
-					lava_tiles.set_cell(i, j, 0)
-	if not ash.get_used_cells().is_empty():
-		ash.modulate = star_mod * (1.0 - cave_darkness)
-		ash.modulate.a = 1.0
-		ash.update_bitmask_region()
-	if not lava_tiles.get_used_cells().is_empty():
-		lava_tiles.update_bitmask_region()
+					lava_tiles.append(Vector2i(i, j))
+	
+	$TileFeatures.set_cells_terrain_connect(0, ash_tiles, 0, 4)
+	$TileFeatures.set_cells_terrain_connect(0, lava_tiles, 0, 5)
+	$TileFeatures.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(i, -1, 1)
-		cave_wall.set_cell(i, -2, 1)
+		cave_wall.set_cell(0, Vector2i(i, -1), 1, Vector2i.ZERO)
+		cave_wall.set_cell(0, Vector2i(i, -2), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(i, cave_size, 1)
-		cave_wall.set_cell(i, cave_size + 1, 1)
+		cave_wall.set_cell(0, Vector2i(i, cave_size), 1, Vector2i.ZERO)
+		cave_wall.set_cell(0, Vector2i(i, cave_size + 1), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(-1, i, 1)
-		cave_wall.set_cell(-2, i, 1)
+		cave_wall.set_cell(0, Vector2i(-1, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(0, Vector2i(-2, i), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(cave_size, i, 1)
-		cave_wall.set_cell(cave_size + 1, i, 1)
+		cave_wall.set_cell(0, Vector2i(cave_size, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(0, Vector2i(cave_size + 1, i), 1, Vector2i.ZERO)
 	#tiles = cave_wall.get_used_cells(-1)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
-	var tiles_remaining = astar_node.get_points()
+	var tiles_remaining = astar_node.get_point_ids()
 	#Create rooms for logic that uses the size of rooms
-	while tiles_remaining != []:
+	while not tiles_remaining.is_empty():
 		var room = get_connected_tiles(tiles_remaining[0])
 		for tile_index in room:
-			tiles_remaining.erase(tile_index)
+			tiles_remaining.remove_at(tiles_remaining.find(tile_index))
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(Callable(self,"sort_size"))
 	#Generate treasure chests
@@ -715,15 +715,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if tiles_mined[cave_floor - 1].has(tile_id):
-				cave_BG.set_cell(i, j, tile_type)
-				minimap_cave.set_cell(i, j, tile_type)
+				cave_BG.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
+				minimap_cave.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
-				cave_wall.set_cell(i, j, -1)
+				cave_wall.erase(Vector2i(i, j))
 				if deposits.has(str(tile_id)):
 					deposits[str(tile_id)].queue_free()
 					deposits.erase(str(tile_id))
-	cave_wall.update_bitmask_region()
+	cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
 	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		var _id = get_tile_index(cave_BG.local_to_map(enemy.position))
@@ -831,98 +831,97 @@ func generate_cave(first_floor:bool, going_up:bool):
 		enable_light(wormhole)
 	else:
 		if is_instance_valid(wormhole):
-			remove_child(wormhole)
 			wormhole.free()
 	
-	if not boss_cave:
-		#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
-		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c == 0:
-			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
-				var part = object_scene.instantiate()
-				part.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/ShipPart.png")
-				part.get_node("Area2D").connect("body_entered",Callable(self,"on_ShipPart_entered"))
-				var part_tile = rooms[0].tiles[0]
-				part.position = cave_BG.map_to_local(get_tile_pos(part_tile)) + Vector2(100, 100)
-				part.add_to_group("misc_objects")
-				add_child(part)
-				enable_light(part)
-			if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
-				var map = object_scene.instantiate()
-				map.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Map.png")
-				map.get_node("Area2D").connect("body_entered",Callable(self,"on_map_entered"))
-				map.get_node("Area2D").connect("body_exited",Callable(self,"on_map_exited"))
-				var map_tile:Vector2
-				if game.third_ship_hints.map_found_at == -1:
-					map_tile = pos
-					if map_tile.x < 400:
-						map_tile.x += 400
-					elif map_tile.x > cave_size * 200 - 400:
-						map_tile.x -= 400
-					else:
-						map_tile.x += sign(randf_range(-1, 1)) * 400
-					if map_tile.y < 400:
-						map_tile.y += 400
-					elif map_tile.y > cave_size * 200 - 400:
-						map_tile.y -= 400
-					else:
-						map_tile.y += sign(randf_range(-1, 1)) * 400
-					game.third_ship_hints.map_found_at = id
-					game.third_ship_hints.map_pos = map_tile
-				else:
-					map_tile = game.third_ship_hints.map_pos
-				$UI2/Ship2Map.refresh()
-				map.position = map_tile
-				add_child(map)
-				enable_light(map)
-				map.add_to_group("misc_objects")
-				cave_BG.set_cellv(cave_BG.local_to_map(map_tile), tile_type)
-				cave_wall.set_cellv(cave_wall.local_to_map(map_tile), -1)
-				minimap_cave.set_cellv(minimap_cave.local_to_map(map_tile), tile_type)
-				cave_wall.update_bitmask_region()
-				var st = str(get_tile_index(cave_BG.local_to_map(map_tile)))
-				if deposits.has(st):
-					var deposit = deposits[st]
-					remove_child(deposit)
-					deposits.erase(st)
-					deposit.free()
-		elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
-			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id) and not game.fourth_ship_hints.emma_joined:
-				var op_grill:NPC = preload("res://Scenes/NPC.tscn").instantiate()
-				op_grill.NPC_id = 3
-				if game.fourth_ship_hints.op_grill_cave_spawn == -1:
-					op_grill.connect_events(1, $UI2/Dialogue)
-				elif not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
-					op_grill.connect_events(2, $UI2/Dialogue)
-				elif (game.mets.amethyst < 1000000 or game.mets.sapphire < 1000000 or game.mets.topaz < 1000000 or game.mets.quartz < 1000000 or game.mets.ruby < 1000000 or game.mets.emerald < 1000000) and not game.fourth_ship_hints.boss_rekt:
-					op_grill.connect_events(3, $UI2/Dialogue)
-				elif not game.fourth_ship_hints.boss_rekt:
-					op_grill.connect_events(4, $UI2/Dialogue)
-				elif not game.fourth_ship_hints.emma_free or not game.fourth_ship_hints.artifact_found:
-					op_grill.connect_events(5, $UI2/Dialogue)
-				else:
-					op_grill.connect_events(6, $UI2/Dialogue)
-				var part_tile = rooms[0].tiles[5]
-				op_grill.position = cave_BG.map_to_local(get_tile_pos(part_tile)) + Vector2(100, 100)
-				add_child(op_grill)
-				op_grill.name = "OPGrill"
-				op_grill.add_to_group("misc_objects")
-			elif game.fourth_ship_hints.op_grill_cave_spawn != -1 and game.fourth_ship_hints.op_grill_cave_spawn != id:
-				var gems = ["Amethyst", "Emerald", "Quartz", "Topaz", "Ruby", "Sapphire"]
-				for i in 6:
-					if cave_floor == i + 2 and not game.fourth_ship_hints.manipulators[i]:
-						var manip = object_scene.instantiate()
-						manip.get_node("Sprite2D").texture = load("res://Graphics/Cave/Objects/%sManipulator.png" % gems[i])
-						manip.get_node("Area2D").connect("body_entered",Callable(self,"on_Manipulator_entered").bind(i, gems[i]))
-						var manip_tile
-						if len(rooms) > 1:
-							manip_tile = rooms[1].tiles[0]
-						else:
-							manip_tile = rooms[0].tiles[5]
-						manip.position = cave_BG.map_to_local(get_tile_pos(manip_tile)) + Vector2(100, 100)
-						manip.add_to_group("misc_objects")
-						add_child(manip)
-						enable_light(manip)
-						break
+#	if not boss_cave:
+#		#A map is hidden on the first 8th floor of the cave you reach in a galaxy outside Milky Way
+#		if len(game.ship_data) == 2 and game.c_g_g != 0 and game.c_c == 0:
+#			if tile.cave.has("special_cave") and not game.third_ship_hints.parts[tile.cave.special_cave] and cave_floor == num_floors:
+#				var part = object_scene.instantiate()
+#				part.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/ShipPart.png")
+#				part.get_node("Area2D").connect("body_entered",Callable(self,"on_ShipPart_entered"))
+#				var part_tile = rooms[0].tiles[0]
+#				part.position = cave_BG.map_to_local(get_tile_pos(part_tile)) + Vector2(100, 100)
+#				part.add_to_group("misc_objects")
+#				add_child(part)
+#				enable_light(part)
+#			if game.third_ship_hints.has("map_found_at") and cave_floor == 8 and (game.third_ship_hints.map_found_at in [-1, id]) and game.third_ship_hints.spawn_galaxy == game.c_g:
+#				var map = object_scene.instantiate()
+#				map.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Map.png")
+#				map.get_node("Area2D").connect("body_entered",Callable(self,"on_map_entered"))
+#				map.get_node("Area2D").connect("body_exited",Callable(self,"on_map_exited"))
+#				var map_tile:Vector2
+#				if game.third_ship_hints.map_found_at == -1:
+#					map_tile = pos
+#					if map_tile.x < 400:
+#						map_tile.x += 400
+#					elif map_tile.x > cave_size * 200 - 400:
+#						map_tile.x -= 400
+#					else:
+#						map_tile.x += sign(randf_range(-1, 1)) * 400
+#					if map_tile.y < 400:
+#						map_tile.y += 400
+#					elif map_tile.y > cave_size * 200 - 400:
+#						map_tile.y -= 400
+#					else:
+#						map_tile.y += sign(randf_range(-1, 1)) * 400
+#					game.third_ship_hints.map_found_at = id
+#					game.third_ship_hints.map_pos = map_tile
+#				else:
+#					map_tile = game.third_ship_hints.map_pos
+#				$UI2/Ship2Map.refresh()
+#				map.position = map_tile
+#				add_child(map)
+#				enable_light(map)
+#				map.add_to_group("misc_objects")
+#				cave_BG.set_cellv(cave_BG.local_to_map(map_tile), tile_type)
+#				cave_wall.set_cellv(cave_wall.local_to_map(map_tile), -1)
+#				minimap_cave.set_cellv(minimap_cave.local_to_map(map_tile), tile_type)
+#				cave_wall.update_bitmask_region()
+#				var st = str(get_tile_index(cave_BG.local_to_map(map_tile)))
+#				if deposits.has(st):
+#					var deposit = deposits[st]
+#					remove_child(deposit)
+#					deposits.erase(st)
+#					deposit.free()
+#		elif game.c_p_g == game.fourth_ship_hints.op_grill_planet:
+#			if cave_floor == 3 and (game.fourth_ship_hints.op_grill_cave_spawn == -1 or game.fourth_ship_hints.op_grill_cave_spawn == id) and not game.fourth_ship_hints.emma_joined:
+#				var op_grill:NPC = preload("res://Scenes/NPC.tscn").instantiate()
+#				op_grill.NPC_id = 3
+#				if game.fourth_ship_hints.op_grill_cave_spawn == -1:
+#					op_grill.connect_events(1, $UI2/Dialogue)
+#				elif not (game.fourth_ship_hints.manipulators[0] and game.fourth_ship_hints.manipulators[1] and game.fourth_ship_hints.manipulators[2] and game.fourth_ship_hints.manipulators[3] and game.fourth_ship_hints.manipulators[4] and game.fourth_ship_hints.manipulators[5]):
+#					op_grill.connect_events(2, $UI2/Dialogue)
+#				elif (game.mets.amethyst < 1000000 or game.mets.sapphire < 1000000 or game.mets.topaz < 1000000 or game.mets.quartz < 1000000 or game.mets.ruby < 1000000 or game.mets.emerald < 1000000) and not game.fourth_ship_hints.boss_rekt:
+#					op_grill.connect_events(3, $UI2/Dialogue)
+#				elif not game.fourth_ship_hints.boss_rekt:
+#					op_grill.connect_events(4, $UI2/Dialogue)
+#				elif not game.fourth_ship_hints.emma_free or not game.fourth_ship_hints.artifact_found:
+#					op_grill.connect_events(5, $UI2/Dialogue)
+#				else:
+#					op_grill.connect_events(6, $UI2/Dialogue)
+#				var part_tile = rooms[0].tiles[5]
+#				op_grill.position = cave_BG.map_to_local(get_tile_pos(part_tile)) + Vector2(100, 100)
+#				add_child(op_grill)
+#				op_grill.name = "OPGrill"
+#				op_grill.add_to_group("misc_objects")
+#			elif game.fourth_ship_hints.op_grill_cave_spawn != -1 and game.fourth_ship_hints.op_grill_cave_spawn != id:
+#				var gems = ["Amethyst", "Emerald", "Quartz", "Topaz", "Ruby", "Sapphire"]
+#				for i in 6:
+#					if cave_floor == i + 2 and not game.fourth_ship_hints.manipulators[i]:
+#						var manip = object_scene.instantiate()
+#						manip.get_node("Sprite2D").texture = load("res://Graphics/Cave/Objects/%sManipulator.png" % gems[i])
+#						manip.get_node("Area2D").connect("body_entered",Callable(self,"on_Manipulator_entered").bind(i, gems[i]))
+#						var manip_tile
+#						if len(rooms) > 1:
+#							manip_tile = rooms[1].tiles[0]
+#						else:
+#							manip_tile = rooms[0].tiles[5]
+#						manip.position = cave_BG.map_to_local(get_tile_pos(manip_tile)) + Vector2(100, 100)
+#						manip.add_to_group("misc_objects")
+#						add_child(manip)
+#						enable_light(manip)
+#						break
 		
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
 	if first_time:
@@ -959,7 +958,7 @@ func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
 	drilled_hole.position = get_tile_pos(id) * 200 + Vector2(100, 100)
 	drilled_hole.add_to_group("drilled_holes")
-	add_sibling($Hole, drilled_hole)
+	add_child(drilled_hole)
 	drilled_hole.connect("area_entered",Callable(self,"_on_Hole_area_entered"))
 	drilled_hole.connect("area_exited",Callable(self,"_on_area_exited"))
 
@@ -1090,7 +1089,7 @@ func connect_points(tile:Vector2, bidir:bool = false):
 		var neighbor_tile_index = get_tile_index(neighbor_tile)
 		if not astar_node.has_point(neighbor_tile_index):
 			continue
-		if cave_wall.get_cellv(neighbor_tile) == -1:
+		if cave_wall.get_cell_tile_data(0, neighbor_tile) == null:
 			astar_node.connect_points(tile_index, neighbor_tile_index, bidir)
 
 var HP_tween
@@ -1118,7 +1117,7 @@ func update_ray():
 	if left_type == "rover_mining":
 		_inv = inventory[curr_slot]
 		_tile_highlight = tile_highlight_left
-		holding_click = use_item_node.pressed
+		holding_click = use_item_node.button_pressed
 	elif right_type == "rover_mining":
 		_inv = right_inventory[0]
 		_tile_highlight = tile_highlight_right
@@ -1153,7 +1152,7 @@ func update_ray():
 			var pos = ray.get_collision_point() + ray.target_position / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
 			tile_highlighted_for_mining = get_tile_index(cave_wall.local_to_map(pos))
-			var is_wall = coll is TileMap and cave_wall.get_cellv(cave_wall.local_to_map(pos)) == 0
+			var is_wall = coll is TileMap and cave_wall.get_cell_tile_data(0, cave_wall.local_to_map(pos))
 			mining_p.position = pos
 			if tile_highlighted_for_mining != -1 and is_wall:
 				_tile_highlight.visible = true
@@ -1386,7 +1385,7 @@ func _input(event):
 				for object in get_tree().get_nodes_in_group("misc_objects"):
 					object.remove_from_group("misc_objects")
 					object.free()
-				game.long_popup(tr("MAP_COLLECTED_DESC"), tr("MAP_COLLECTED"))
+				game.popup_window(tr("MAP_COLLECTED_DESC"), tr("MAP_COLLECTED"))
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.5
@@ -1504,7 +1503,7 @@ func _process(delta):
 	elif right_inventory[0].has("name") and right_inventory[0].name == "drill":
 		tile_highlight_right.position.x = floor(rover.position.x / 200) * 200 + 100
 		tile_highlight_right.position.y = floor(rover.position.y / 200) * 200 + 100
-	if not status_effects.has("stun") and use_item_node.pressed and inventory_ready[curr_slot] and not inventory[curr_slot].is_empty():
+	if not status_effects.has("stun") and use_item_node.button_pressed and inventory_ready[curr_slot] and not inventory[curr_slot].is_empty():
 		use_item(inventory[curr_slot], tile_highlight_left, delta)
 	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].is_empty():
 		use_item(right_inventory[0], tile_highlight_right, delta)
@@ -1814,15 +1813,16 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	var remainder:float = filter_and_add(rsrc)
 	if remainder != 0:
 		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
-	cave_wall.set_cellv(map_pos, -1)
-	minimap_cave.set_cellv(map_pos, tile_type)
-	cave_wall.update_bitmask_region()
+	var walls = cave_wall.get_used_cells_by_id(0, 0, Vector2i.ZERO)
+	walls.erase(map_pos)
+	cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
+	minimap_cave.set_cell(0, map_pos, tile_type)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st].bar.queue_free()
 		tiles_touched_by_laser.erase(st)
-	cave_BG.set_cellv(map_pos, tile_type)
+	cave_BG.set_cell(0, map_pos, tile_type)
 	tiles_mined[cave_floor - 1].append(tile_id)
 
 var inv_bar_tween
@@ -1870,9 +1870,8 @@ func add_weight_rsrc(r, rsrc_amount):
 	return max(diff, 0.0)
 
 func _on_Timer_timeout():
-	var tween = $UI2/Panel/Tween
-	tween.interpolate_property($UI2/Panel, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
-	tween.start()
+	var tween = create_tween()
+	tween.tween_property($UI2/Panel, "modulate", Color(1, 1, 1, 0), 0.5)
 	$UI2/Panel/Timer.stop()
 
 func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = false):
@@ -1945,7 +1944,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 		if game.op_cursor or randf() < 0.01:
 			st = st.replace("wrecked", "rekt")
 		call_deferred("exit_cave")
-		game.long_popup(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
+		game.popup_window(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
 	else:
 		set_avg_dmg()
 		if is_instance_valid(HP_tween):
@@ -1961,15 +1960,11 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 				rover.get_node("Burn").visible = true
 				$Rover/BurnTimer.start(1.0 / time_speed)
 				$Rover/Sprite2D.modulate = Color.ORANGE_RED
-	$UI2/HurtTexture/Tween.stop_all()
+	var tween = create_tween()
+	
 	var strength:float = min($UI2/HurtTexture.modulate.a + remap(damage / total_HP, 0.0, 0.5, 0.05, 0.5), 0.5)
-	$UI2/HurtTexture/Tween.reset_all()
-	$UI2/HurtTexture/Tween.interpolate_property($UI2/HurtTexture,
-	"modulate",
-	Color(1, 1, 1, strength),
-	Color(1, 1, 1, 0),
-	1.0)
-	$UI2/HurtTexture/Tween.start()
+	$UI2/HurtTexture.modulate.a = Color(1, 1, 1, strength)
+	tween.tween_property($UI2/HurtTexture, "modulate", Color(1, 1, 1, 0), 1.0)
 	if HP > 0:
 		Helper.show_dmg(round(damage), rover.position, self)
 
@@ -2084,8 +2079,6 @@ func _physics_process(delta):
 func reset_panel_anim():
 	var timer = $UI2/Panel/Timer
 	timer.stop()
-	var tween = $UI2/Panel/Tween
-	tween.stop_all()
 	$UI2/Panel.visible = false
 	$UI2/Panel.modulate.a = 1
 

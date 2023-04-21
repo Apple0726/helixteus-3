@@ -25,4 +25,4 @@ func change_color(color:Color):
 	if is_instance_valid(tween_color):
 		tween_color.kill()
 	tween_color = get_tree().create_tween()
-	tween_color.interpolate_property($Nebula.material, "shader_parameter/color", color, 3.0)
+	tween_color.tween_property($Nebula.material, "shader_parameter/color", color, 3.0)

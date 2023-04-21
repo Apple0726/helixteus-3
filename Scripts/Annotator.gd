@@ -84,7 +84,7 @@ func on_Icons_pressed(manual:bool = false):
 		if node.name != "Icons":
 			node.get_node("Button").button_pressed = false
 	mode = "icon"
-	if not manual and not $HBoxContainer/Icons/Button.pressed:
+	if not manual and not $HBoxContainer/Icons/Button.button_pressed:
 		$VBoxContainer.visible = not $VBoxContainer.visible
 	game.get_node("UI/Panel").visible = true
 	game.get_node("UI/Panel/AnimationPlayer").play("Fade")

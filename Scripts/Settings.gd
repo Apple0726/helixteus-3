@@ -298,5 +298,5 @@ func _on_OPCursor_mouse_exited():
 func _on_DisplayRes_item_selected(index):
 	var id:int = $TabContainer/GRAPHICS/DisplayRes.get_item_id(index)
 	Helper.set_resolution(id)
-	if not $TabContainer/GRAPHICS/KeepWindowSize.pressed and id != 0 and id < 9:
-		get_window().size = get_viewport().size
+#	if not $TabContainer/GRAPHICS/KeepWindowSize.button_pressed and id != 0 and id < 9:
+#		get_window().size = get_viewport().size

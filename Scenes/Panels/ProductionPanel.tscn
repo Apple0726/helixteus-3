@@ -1,177 +1,151 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://mkqstuts1rdm"]
 
-[ext_resource path="res://Graphics/Icons/Time.png" type="Texture2D" id=1]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/ProductionPanel.gd" type="Script" id=6]
-[ext_resource path="res://Graphics/Materials/sand.png" type="Texture2D" id=7]
-[ext_resource path="res://Graphics/Materials/glass.png" type="Texture2D" id=8]
+[ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="1"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
+[ext_resource type="Script" path="res://Scripts/ProductionPanel.gd" id="6"]
+[ext_resource type="Texture2D" uid="uid://6rk6bkonypjp" path="res://Graphics/Materials/sand.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bdfuen3axc77e" path="res://Graphics/Materials/glass.png" id="8"]
 
-[sub_resource type="InputEventAction" id=1]
-action = "G"
+[sub_resource type="Shortcut" id="2"]
 
-[sub_resource type="Shortcut" id=2]
-shortcut = SubResource( 1 )
-
-[node name="ProductionPanel" type="Control"]
-offset_right = 612.0
-offset_bottom = 216.0
-pivot_offset = Vector2( 533, 300 )
-mouse_filter = 1
-theme = ExtResource( 4 )
-script = ExtResource( 6 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 600.0 ],
-"_edit_use_anchors_": false
-}
-
-[node name="Background" type="Panel" parent="."]
-offset_right = 612.0
-offset_bottom = 216.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CloseButton" parent="Background" instance=ExtResource( 3 )]
+[node name="Background" type="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -306.0
+offset_top = -108.0
+offset_right = 306.0
+offset_bottom = 108.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4")
+script = ExtResource("6")
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-offset_bottom = 24.0
-custom_minimum_size = Vector2( 0, 38 )
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_bottom = 38.0
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" parent="." instance=ExtResource("3")]
+layout_mode = 1
+offset_left = -36.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 32.0
 
 [node name="NoRsrc" type="Label" parent="."]
 visible = false
+layout_mode = 0
 offset_top = 80.0
 offset_right = 612.0
-offset_bottom = 104.0
+offset_bottom = 106.0
 text = "NO_SAND"
-align = 1
 
 [node name="Control" type="Control" parent="."]
+anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Texture2D" type="TextureRect" parent="Control"]
+layout_mode = 0
 offset_left = 280.0
 offset_top = 124.0
 offset_right = 320.0
 offset_bottom = 160.0
-texture = ExtResource( 8 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TimeTexture" type="TextureRect" parent="Control"]
+layout_mode = 0
 offset_left = 288.0
 offset_top = 164.0
 offset_right = 312.0
 offset_bottom = 204.0
-texture = ExtResource( 1 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="AmountProduced" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 332.0
 offset_top = 132.0
 offset_right = 428.0
 offset_bottom = 156.0
 text = "0 kg"
+vertical_alignment = 1
 
 [node name="TimeRemaining" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 332.0
 offset_top = 172.0
 offset_right = 428.0
 offset_bottom = 196.0
 text = "00:00"
+vertical_alignment = 1
 
 [node name="Expected" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 44.0
 offset_top = 132.0
 offset_right = 284.0
 offset_bottom = 156.0
 
 [node name="Start" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 464.0
 offset_top = 176.0
 offset_right = 604.0
 offset_bottom = 212.0
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
 text = "START"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBox" type="HBoxContainer" parent="Control"]
+layout_mode = 0
 offset_left = 36.0
 offset_top = 72.0
 offset_right = 572.0
 offset_bottom = 112.0
-custom_constants/separation = 15
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HSlider" type="HSlider" parent="Control/HBox"]
-offset_top = 12.0
-offset_right = 338.0
-offset_bottom = 28.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control" type="Control" parent="Control/HBox"]
-offset_left = 353.0
-offset_right = 383.0
-offset_bottom = 40.0
-custom_minimum_size = Vector2( 30, 0 )
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
 
 [node name="Texture2D" type="TextureRect" parent="Control/HBox"]
-offset_left = 398.0
-offset_right = 438.0
-offset_bottom = 40.0
-custom_minimum_size = Vector2( 40, 0 )
-texture = ExtResource( 7 )
-expand = true
-stretch_mode = 6
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="AmountInStorage" type="Label" parent="Control/HBox"]
-offset_left = 453.0
-offset_top = 8.0
-offset_right = 491.0
-offset_bottom = 32.0
+layout_mode = 2
 text = "0 kg"
+vertical_alignment = 1
 
 [node name="Remaining" type="Label" parent="Control/HBox"]
 visible = false
-offset_left = 378.0
-offset_top = 8.0
-offset_right = 491.0
-offset_bottom = 32.0
+layout_mode = 2
 text = "REMAINING"
 
 [node name="Control2" type="Control" parent="Control/HBox"]
-offset_left = 506.0
-offset_right = 536.0
-offset_bottom = 40.0
-custom_minimum_size = Vector2( 30, 0 )
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Control/Start" to="." method="_on_Start_pressed"]
-[connection signal="value_changed" from="Control/HBox/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Control/Start" to="." method="_on_start_pressed"]
+[connection signal="value_changed" from="Control/HBox/HSlider" to="." method="_on_h_slider_value_changed"]

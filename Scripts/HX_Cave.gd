@@ -49,10 +49,10 @@ func on_tree_exited():
 	queue_free()
 
 func is_aggr():
-	return not aggressive_timer.is_stopped()
+	return aggressive_timer and not aggressive_timer.is_stopped()
 
 func is_not_aggr():
-	return aggressive_timer.is_stopped()
+	return not aggressive_timer or aggressive_timer.is_stopped()
 
 var move_path_v = []
 func move_HX():

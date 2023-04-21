@@ -21,7 +21,7 @@ func _ready():
 		else:
 			$Grid.get_node("Panel%s" % (i + 1)).visible = true
 			$Grid.get_node("Panel%s/XP/Label" % (i + 1)).text = "+ %s" % [XP]
-			for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 				get_node("Grid/Panel%s/%s/Label" % [i + 1, weapon]).text = "+ %s" % [round(weapon_XPs[i][weapon.to_lower()] * mult * diff_mult)]
 			$Grid.get_node("Panel%s" % (i + 1)).show_weapon_XPs = true
 			$Grid.get_node("Panel%s" % (i + 1)).refresh()
@@ -30,7 +30,7 @@ func _ready():
 
 func _process(delta):
 	for i in len(ship_data):
-		for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+		for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 			var node = get_node("Grid/Panel%s/%s/TextureProgress2" % [i + 1, weapon])
 			var text_node = get_node("Grid/Panel%s/%s/Label2" % [i + 1, weapon])
 			var XP_get = round(weapon_XPs[i][weapon.to_lower()] * mult * diff_mult)
@@ -91,7 +91,7 @@ func _on_close_button_pressed():
 		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	queue_free()
 	if not game.help.has("SP"):
-		game.long_popup(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
+		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help.SP = true
 	game.switch_view("system", {"dont_fade_anim":true})
 

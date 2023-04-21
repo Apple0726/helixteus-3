@@ -229,7 +229,7 @@ func add_stars(num:int, sc:float):
 	
 func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")
-	for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		get_node("UI/FightPanel/%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), ship_data[curr_sh][weapon.to_lower()].lv])
 	$UI/FightPanel/Ability.visible = false
 	if ship_data[curr_sh].ability != "none":
@@ -602,7 +602,7 @@ func _process(delta):
 		if hard_battle:
 			game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 		game.switch_view("system")
-		game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
+		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return
 	for i in len(HXs):
 		var HX = HXs[i]

@@ -1,7 +1,5 @@
 extends "res://Scripts/HX_Cave.gd"
 
-var tween:Tween
-
 func _ready():
 	shoot_timer = Timer.new()
 	add_child(shoot_timer)
@@ -18,8 +16,6 @@ func _ready():
 		special_attack_timer.start()
 		special_attack_timer.autostart = true
 		special_attack_timer.connect("timeout",Callable(self,"on_SA_time_out"))
-		tween = Tween.new()
-		add_child(tween)
 
 func set_rand():
 	pass
@@ -35,12 +31,11 @@ func on_time_out():
 func on_SA_time_out():
 	special_attack_timer.wait_time = 3.0 / cave_ref.time_speed / cave_ref.enemy_attack_rate
 	if sees_player or is_aggr():
-		tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 0), 0.5)
-		tween.start()
-		tween.connect("tween_all_completed",Callable(self,"teleport"))
+		var tween = create_tween()
+		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.5)
+		tween.tween_callback(Callable(self,"teleport")).set_delay(0.5)
 
 func teleport():
-	tween.disconnect("tween_all_completed",Callable(self,"teleport"))
 	var curr_tile:int = cave_ref.get_tile_index(cave_tm.local_to_map(position))
 	var target_tile:int = cave_ref.get_tile_index(cave_tm.local_to_map(cave_ref.rover.position))
 	var i = 0
@@ -55,5 +50,5 @@ func teleport():
 	cave_ref.HX_tiles.append(target_tile)
 	position.x = target_tile % cave_ref.cave_size * 200 + 100
 	position.y = target_tile / cave_ref.cave_size * 200 + 100
-	tween.interpolate_property(self, "modulate", null, Color(1, 1, 1, 1), 0.5)
-	tween.start()
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.5)

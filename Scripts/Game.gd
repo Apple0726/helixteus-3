@@ -76,7 +76,6 @@ var wiki:Panel
 var stats_panel:Panel
 var load_panel:Panel
 var tooltip
-@onready var YN_panel:ConfirmationDialog = $UI/ConfirmationDialog
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -458,7 +457,6 @@ var op_cursor:bool = false
 
 @onready var music_player = $MusicPlayer
 
-var dialog:AcceptDialog
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 var view_tween:Tween
@@ -567,7 +565,6 @@ func _ready():
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
-	YN_panel.connect("canceled",Callable(self,"popup_close"))
 	view = load("res://Scenes/Views/View.tscn").instantiate()
 	add_child(view)
 	#noob
@@ -589,7 +586,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
-			long_popup("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
+			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
 		cave_gen_info = config.get_value("game", "cave_gen_info", false)
@@ -697,7 +694,7 @@ func load_univ():
 				var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
 				for i in len(ship_data):
 					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
-					for weapon in ["Bullet", "Laser", "Bomb", "Light3D"]:
+					for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
@@ -1274,61 +1271,31 @@ func add_panels():
 	element_overlay.visible = false
 	$UI.add_child(element_overlay)
 
-func popup(txt, dur):
-	var node = $UI/Popup
-	node.text = txt
-	node.visible = true
-	node.modulate.a = 0
+func popup(txt, delay):
+	if $UI.has_node("Popup"):
+		$UI.get_node("Popup").free()
+	var popup = preload("res://Scenes/Popup.tscn").instantiate()
+	popup.delay = delay
+	popup.name = "Popup"
+	$UI.add_child(popup)
+	popup.text = txt
+	popup.modulate.a = 0
 	await get_tree().process_frame
-	node.size.x = 0
-	var x_pos = 640 - node.size.x / 2
-	node.position.x = x_pos
-	$UI/Popup/AnimationPlayer.play("Fade")
-	await $UI/Popup/AnimationPlayer.animation_finished
-	await get_tree().create_timer(dur).timeout
-	$UI/Popup/AnimationPlayer.play_backwards("Fade")
+	if is_instance_valid(popup):
+		popup.size.x = 0
+		var x_pos = 640 - popup.size.x / 2
+		popup.position.x = x_pos
 
 
-func long_popup(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
+func popup_window(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
 	hide_adv_tooltip()
 	hide_tooltip()
-	if dialog and $UI.is_ancestor_of(dialog):
-		dialog.queue_free()
-	dialog = AcceptDialog.new()
-	dialog.theme = preload("res://Resources/default_theme.tres")
-	dialog.exclusive = true
-	dialog.visible = false
-	$UI.add_child(dialog)
-	$UI/PopupBackground.visible = true
-	dialog.title = title
-#	dialog.get_label().autowrap_mode a= TextServer.AUTOWRAP_WORD_SMART
-#	var width = min(800, default_font.get_string_size(txt).x) + 40
-#	dialog.custom_minimum_size.x = width
-#	dialog.custom_minimum_size.y = 0
-#	dialog.size.y = 0
-#	dialog.size.x = width
-	dialog.dialog_text = txt
-	dialog.visible = true
-	dialog.popup_centered()
+	var popup = preload("res://Scenes/PopupWindow.tscn").instantiate()
+	$UI.add_child(popup)
+	popup.set_text(txt)
+	popup.set_OK_text(ok_txt)
 	for i in range(0, len(other_buttons)):
-		dialog.add_button(other_buttons[i], false, other_functions[i])
-		if other_functions[i] != "":
-			dialog.connect("custom_action",Callable(self,"popup_action"))
-	dialog.connect("confirmed",Callable(self,"popup_close"))
-	dialog.get_ok_button().text = ok_txt
-
-func popup_close():
-	$UI/PopupBackground.visible = false
-	if dialog:
-		dialog.visible = false
-		if dialog.is_connected("custom_action",Callable(self,"popup_action")):
-			dialog.disconnect("custom_action",Callable(self,"popup_action"))
-		if dialog.is_connected("popup_hide",Callable(self,"popup_close")):
-			dialog.disconnect("popup_hide",Callable(self,"popup_close"))
-
-func popup_action(action:String):
-	call(action)
-	popup_close()
+		popup.add_button(other_buttons[i], Callable(self, other_functions[i]))
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
@@ -1850,7 +1817,7 @@ func add_cluster():
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 	if len(ship_data) == 3 and u_i.lv >= 60:
-		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
 
 func add_galaxy():
@@ -1865,7 +1832,7 @@ func add_galaxy():
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
-		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
 
 func start_system_generation():
@@ -1889,7 +1856,7 @@ func add_system():
 	add_obj("system")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	if len(ship_data) == 1 and u_i.lv >= 20:
-		long_popup(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
 
 func add_planet():
@@ -3583,10 +3550,14 @@ var sub_panel
 
 func set_tooltip_position():
 	if op_cursor:
-		if Geometry2D.is_point_in_polygon(mouse_pos, quadrant_top_left) or Geometry2D.is_point_in_polygon(mouse_pos, quadrant_bottom_left):
-			tooltip.position = mouse_pos - Vector2(-9, tooltip.size.y + 9)
+		if mouse_pos.x < tooltip.size.x:
+			tooltip.position.x = mouse_pos.x + 9
 		else:
-			tooltip.position = mouse_pos - tooltip.size - Vector2(9, 9)
+			tooltip.position.x = mouse_pos.x - tooltip.size.x - 9
+		if mouse_pos.y > tooltip.size.y:
+			tooltip.position.y = mouse_pos.y - tooltip.size.y - 9
+		else:
+			tooltip.position.y = mouse_pos.y + 9
 	else:
 		if mouse_pos.x < (1262 if $UI/Panel.modulate.a == 0.0 else 800) - tooltip.size.x:
 			tooltip.position.x = mouse_pos.x + 9
@@ -3668,9 +3639,9 @@ func _input(event):
 	#F3 to toggle overlay
 	if Input.is_action_just_released("toggle"):
 		if is_instance_valid(overlay):
-			overlay.toggle_btn.button_pressed = not overlay.toggle_btn.pressed
+			overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
 		elif is_instance_valid(element_overlay):
-			element_overlay.toggle_btn.button_pressed = not element_overlay.toggle_btn.pressed
+			element_overlay.toggle_btn.button_pressed = not element_overlay.toggle_btn.button_pressed
 		
 	#J to hide help
 	if Input.is_action_just_released("J") and help_str != "":
@@ -4084,24 +4055,17 @@ func _on_Autosave_timeout():
 			if not viewing_dimension:
 				save_views(true)
 
-var YN_str:String = ""
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
-	$UI/PopupBackground.visible = true
-	var width = min(800, default_font.get_string_size(text).x) + 40
-	#YN_panel.custom_minimum_size.x = width
-	#YN_panel.custom_minimum_size.y = 0
-	YN_panel.size.y = 0
-	YN_panel.size.x = width
-	YN_panel.dialog_text = text
-	YN_panel.title = title
-	YN_panel.popup_centered()
-	YN_str = type
-	if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
-		if YN_panel.is_connected("confirmed",Callable(self,"%s_confirm" % type)):
-			YN_panel.disconnect("confirmed",Callable(self,"%s_confirm" % type))
-		YN_panel.connect("confirmed",Callable(self,"%s_confirm" % type).bind(args))
+	#var width = min(800, default_font.get_string_size(text).x) + 40
+	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
+	YN_panel.set_text(text)
+	YN_panel.set_OK_text(tr("NO"))
+	if args.is_empty():
+		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type))
 	else:
-		YN_panel.connect("confirmed",Callable(self,"%s_confirm" % type))
+		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bind(args))
+	$UI.add_child(YN_panel)
+	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
 func return_to_menu_confirm():
 	$UI/PopupBackground.visible = false
@@ -4136,17 +4100,14 @@ func generate_new_univ_confirm():
 	for el in PD_panel.bonuses.keys():
 		chemistry_bonus[el] = PD_panel.bonuses[el]
 	dimension.refresh_univs()
-	YN_panel.disconnect("confirmed",Callable(self,"generate_new_univ_confirm"))
 
 func destroy_tri_probe_confirm(probe_id:int):
 	probe_data.remove_at(probe_id)
 	vehicle_panel.probe_over_id = -1
 	vehicle_panel.refresh()
-	YN_panel.disconnect("confirmed",Callable(self,"destroy_tri_probe_confirm"))
 
 func discover_univ_confirm():
 	send_probes_panel.discover_univ()
-	YN_panel.disconnect("confirmed",Callable(self,"discover_univ_confirm"))
 
 func reset_dimension_confirm(DR_num:int):
 	c_u = -1
@@ -4162,38 +4123,31 @@ func reset_dimension_confirm(DR_num:int):
 		switch_music(null)
 	else:
 		dimension.refresh_univs(true)
-	YN_panel.disconnect("confirmed",Callable(self,"reset_dimension_confirm"))
 	stats_dim = Data.default_stats.duplicate(true)
 	fn_save_game()
 
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)
-	YN_panel.disconnect("confirmed",Callable(self,"buy_pickaxe_confirm"))
 
 func destroy_buildings_confirm(arr:Array):
 	for id in arr:
 		view.obj.destroy_bldg(id, true)
 	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
-	YN_panel.disconnect("confirmed",Callable(self,"destroy_buildings_confirm"))
 
 func destroy_building_confirm(tile_over:int):
 	view.obj.destroy_bldg(tile_over)
 	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
-	YN_panel.disconnect("confirmed",Callable(self,"destroy_building_confirm"))
 
 func send_ships_confirm():
 	send_ships_panel.send_ships()
-	YN_panel.disconnect("confirmed",Callable(self,"send_ships_confirm"))
 
 func new_game_confirm():
 	fade_out_title("new_game")
-	YN_panel.disconnect("confirmed",Callable(self,"new_game_confirm"))
 
 func op_galaxy_confirm(l_id:int, g_id:int):
 	switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, g_id]]})
-	YN_panel.disconnect("confirmed",Callable(self,"op_galaxy_confirm"))
 
 func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 	if energy >= energy_cost:
@@ -4258,11 +4212,6 @@ func _on_Ship_mouse_entered():
 func _on_mouse_exited():
 	hide_tooltip()
 
-func _on_ConfirmationDialog_popup_hide():
-	await get_tree().process_frame
-	if YN_panel.is_connected("confirmed",Callable(self,"%s_confirm" % YN_str)):
-		YN_panel.disconnect("confirmed",Callable(self,"%s_confirm" % YN_str))
-
 func mine_tile(tile_id:int = -1):
 	if pickaxe.has("name"):
 		if shop_panel.visible:
@@ -4273,7 +4222,7 @@ func mine_tile(tile_id:int = -1):
 			c_t = tile_id
 			switch_view("mining")
 	else:
-		long_popup(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
+		popup_window(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
 
 func game_fade(fn, args:Array = []):
 	game_tween = create_tween()

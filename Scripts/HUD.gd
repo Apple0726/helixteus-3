@@ -20,11 +20,7 @@ extends Control
 @onready var sc_tree = $Buttons/ScienceTree
 @onready var lv_txt = $Top/Lv/Label
 @onready var lv_progress = $Top/Lv/TextureProgressBar
-@onready var planet_grid = $Bookmarks/BookmarksList/Planets
 @onready var bookmark_btns = $Bookmarks/BookmarksList/Buttons/VBoxContainer
-@onready var system_grid = $Bookmarks/BookmarksList/Systems
-@onready var galaxy_grid = $Bookmarks/BookmarksList/Galaxies
-@onready var cluster_grid = $Bookmarks/BookmarksList/Clusters
 @onready var planet_b_btn = $Bookmarks/BookMarkButtons/Planets
 @onready var system_b_btn = $Bookmarks/BookMarkButtons/Systems
 @onready var galaxy_b_btn = $Bookmarks/BookMarkButtons/Galaxies
@@ -64,13 +60,18 @@ func refresh_visibility():
 	$Top/Resources/Cellulose.visible = game.science_unlocked.has("SA")
 
 func refresh_bookmarks():
-	if not game.bookmarks.is_empty():
+	for btn in bookmark_btns.get_children():
+		btn.queue_free()
+	if current_bookmark_type == "planet":
 		for p_b in game.bookmarks.planet.values():
 			add_p_b(p_b)
+	elif current_bookmark_type == "system":
 		for s_b in game.bookmarks.system.values():
 			add_s_b(s_b)
+	elif current_bookmark_type == "galaxy":
 		for g_b in game.bookmarks.galaxy.values():
 			add_g_b(g_b)
+	elif current_bookmark_type == "cluster":
 		for c_b in game.bookmarks.cluster.values():
 			add_c_b(c_b)
 
@@ -113,14 +114,14 @@ func update_XP():
 			game.objective.current += 1
 		if game.subjects.dimensional_power.lv == 0:
 			if game.u_i.lv == 28:
-				game.long_popup(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
+				game.popup_window(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
 			if game.u_i.lv == 32:
-				game.long_popup(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
+				game.popup_window(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 			if game.u_i.lv == 55:
-				game.long_popup(tr("LEVEL_55_REACHED"), "%s 55" % tr("LEVEL"))
+				game.popup_window(tr("LEVEL_55_REACHED"), "%s 55" % tr("LEVEL"))
 		if game.u_i.lv == 60:
 			game.new_bldgs.PCC = true
-			game.long_popup(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
+			game.popup_window(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
 	lv_txt.text = tr("LV") + " %s" % [game.u_i.lv]
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
@@ -372,6 +373,8 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		elif extra_arg_0 == "SP":
 			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP + game.autocollect.MS.SP) * SP_mult
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
+	if extra_arg_0 == "STONE" and tooltip == "Stone" and game.op_cursor:
+		tooltip = "Rok"
 	game.show_tooltip(tooltip)
 
 func _on_mouse_exited():
@@ -541,40 +544,32 @@ func _on_Planets_pressed():
 	system_b_btn.get_node("TextureRect").modulate.a = 0.5
 	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
 	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
-	for btn in bookmark_btns.get_children():
-		btn.queue_free()
-	for p_b in game.bookmarks.planet.keys():
-		add_p_b(p_b)
+	current_bookmark_type = "planet"
+	refresh_bookmarks()
 
 func _on_Systems_pressed():
 	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
 	system_b_btn.get_node("TextureRect").modulate.a = 1.0
 	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
 	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
-	for btn in bookmark_btns.get_children():
-		btn.queue_free()
-	for s_b in game.bookmarks.system.keys():
-		add_s_b(s_b)
+	current_bookmark_type = "system"
+	refresh_bookmarks()
 
 func _on_Galaxies_pressed():
 	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
 	system_b_btn.get_node("TextureRect").modulate.a = 0.5
 	galaxy_b_btn.get_node("TextureRect").modulate.a = 1.0
 	cluster_b_btn.get_node("TextureRect").modulate.a = 0.5
-	for btn in bookmark_btns.get_children():
-		btn.queue_free()
-	for g_b in game.bookmarks.galaxy.keys():
-		add_g_b(g_b)
+	current_bookmark_type = "galaxy"
+	refresh_bookmarks()
 
 func _on_Clusters_pressed():
 	planet_b_btn.get_node("TextureRect").modulate.a = 0.5
 	system_b_btn.get_node("TextureRect").modulate.a = 0.5
 	galaxy_b_btn.get_node("TextureRect").modulate.a = 0.5
 	cluster_b_btn.get_node("TextureRect").modulate.a = 1.0
-	for btn in bookmark_btns.get_children():
-		btn.queue_free()
-	for c_b in game.bookmarks.cluster.keys():
-		add_c_b(c_b)
+	current_bookmark_type = "cluster"
+	refresh_bookmarks()
 
 func _on_Bookmarked_pressed():
 	if game.c_v == "planet":
@@ -650,7 +645,7 @@ func _on_Bookmarked_pressed():
 			add_c_b(bookmark)
 
 func _on_Bookmarked_mouse_entered():
-	if $Bookmarks/Bookmarked.pressed:
+	if $Bookmarks/Bookmarked.button_pressed:
 		game.show_tooltip("%s (B)" % tr("REMOVE_FROM_BOOKMARKS"))
 	else:
 		game.show_tooltip("%s (B)" % tr("ADD_TO_BOOKMARKS"))

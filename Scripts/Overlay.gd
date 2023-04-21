@@ -42,7 +42,7 @@ func refresh_overlay():
 	if err == OK:
 		colorblind_btn.button_pressed = config.get_value("misc", "colorblind", false)
 		hide_obj_btn.button_pressed = config.get_value("misc", "hide_obj", false)
-		if colorblind_btn.pressed:
+		if colorblind_btn.button_pressed:
 			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
 			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
@@ -253,7 +253,7 @@ func _on_Overlay_visibility_changed():
 
 
 func _on_Colorblind_toggled(button_pressed):
-	if colorblind_btn.pressed and toggle_btn.pressed:
+	if colorblind_btn.button_pressed and toggle_btn.button_pressed:
 		game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
 	else:
 		if game.get_node("GrayscaleRect").modulate.a > 0:
@@ -269,7 +269,7 @@ func _on_Colorblind_toggled(button_pressed):
 
 
 func _on_CheckBox_toggled(button_pressed):
-	if colorblind_btn.pressed:
+	if colorblind_btn.button_pressed:
 		if button_pressed:
 			game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
 		else:

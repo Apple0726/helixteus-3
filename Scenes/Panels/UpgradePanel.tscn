@@ -1,75 +1,54 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://yyqlhh3cjdh6"]
 
-[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture2D" id=2]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Scripts/UpgradePanel.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
-
-[sub_resource type="StyleBoxFlat" id=1]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 0.0
-content_margin_bottom = 0.0
-bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
-border_width_top = 4
-border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
-border_blend = true
-shadow_size = 1
-shadow_offset = Vector2( 0, 4 )
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://cdtiu2f8f4j5i" path="res://Graphics/Icons/Arrow.png" id="2"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Script" path="res://Scripts/UpgradePanel.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 
 [node name="UpgradePanel" type="Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 256.0
-offset_top = 144.0
-offset_right = -256.0
-offset_bottom = -208.0
-custom_minimum_size = Vector2( 768, 368 )
+custom_minimum_size = Vector2(768, 368)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -184.0
+offset_right = 384.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
-theme = ExtResource( 3 )
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme = ExtResource("3")
+script = ExtResource("4")
 
 [node name="PathButtons" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 0
 anchor_right = 1.0
 offset_left = 8.0
 offset_top = 40.0
 offset_right = -8.0
 offset_bottom = 75.0
-custom_minimum_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
-custom_constants/separation = -2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_constants/separation = 0
 
-[node name="Path1" parent="PathButtons" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 252.0
-offset_bottom = 35.0
+[node name="Path1" parent="PathButtons" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Path2" parent="PathButtons" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 250.0
-offset_right = 502.0
-offset_bottom = 35.0
+[node name="Path2" parent="PathButtons" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Path3" parent="PathButtons" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 500.0
-offset_right = 752.0
-offset_bottom = 35.0
+[node name="Path3" parent="PathButtons" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Current" type="RichTextLabel" parent="."]
+clip_contents = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -77,16 +56,13 @@ anchor_bottom = 0.5
 offset_left = -384.0
 offset_bottom = 24.0
 grow_vertical = 2
-clip_contents = false
 size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Arrow" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0.635294 )
+modulate = Color(1, 1, 1, 0.635294)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -97,14 +73,13 @@ offset_right = 32.0
 offset_bottom = -24.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource( 2 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Next" type="RichTextLabel" parent="."]
+clip_contents = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -112,16 +87,13 @@ anchor_bottom = 0.5
 offset_right = 384.0
 offset_bottom = 24.0
 grow_vertical = 2
-clip_contents = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 scroll_active = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CurrentLv" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -131,13 +103,11 @@ offset_top = -64.0
 offset_right = -160.0
 offset_bottom = -32.0
 text = "Level 1"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CurrentLv2" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -147,13 +117,11 @@ offset_top = -64.0
 offset_right = 174.0
 offset_bottom = -32.0
 text = "LEVEL"
-align = 2
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="DivBy" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -162,9 +130,9 @@ offset_left = -376.0
 offset_top = 96.0
 offset_right = 200.0
 offset_bottom = 128.0
-align = 1
 
 [node name="NextLv" type="SpinBox" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -176,34 +144,28 @@ offset_bottom = -32.0
 value = 2.0
 rounded = true
 allow_greater = true
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+alignment = 1
+select_all_on_focus = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = -56.0
 offset_right = 584.0
 offset_bottom = -8.0
-custom_minimum_size = Vector2( 200, 40 )
-custom_styles/bg = SubResource( 1 )
-scroll_vertical_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_scroll_mode = 3
 
 [node name="Costs" type="HBoxContainer" parent="ScrollContainer"]
-offset_left = 10.0
-offset_right = 566.0
-offset_bottom = 48.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 20
 
 [node name="Upgrade" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -212,29 +174,30 @@ offset_left = -176.0
 offset_top = -56.0
 offset_right = -6.0
 offset_bottom = -8.0
-custom_minimum_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
-theme = ExtResource( 3 )
+theme = ExtResource("3")
 text = "UPGRADE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 24.0
-custom_minimum_size = Vector2( 0, 38 )
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 18
 text = "UPGRADE"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource( 5 )]
+[node name="CloseButton" parent="." instance=ExtResource("5")]
+layout_mode = 1
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 32.0
 
 [node name="AutoSpeedup" type="CheckBox" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -243,12 +206,8 @@ offset_left = -104.0
 offset_top = 56.0
 offset_right = 104.0
 offset_bottom = 84.0
-theme = ExtResource( 3 )
-pressed = true
+theme = ExtResource("3")
 text = "AUTO_SPEEDUP"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="pressed" from="PathButtons/Path1" to="." method="_on_Path1_pressed"]
 [connection signal="pressed" from="PathButtons/Path2" to="." method="_on_Path2_pressed"]

@@ -477,8 +477,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 		elif _bldg_to_construct in ["PC", "NC"]:
 			tile.bldg.planet_pressure = p_i.pressure
 		if _bldg_to_construct == "GH":
-			$Soil.set_cell(tile_id % wid, int(tile_id / wid), 0, Vector2(0, 0))
-			$Soil.update_bitmask_region()
+			var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
+			soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
+			$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 		tile.bldg.c_p_g = game.c_p_g
 		if _bldg_to_construct == "MM":
 			if not tile.has("depth"):
@@ -979,7 +980,7 @@ func _unhandled_input(event):
 			shortcuts.refresh()
 		view.move_view = true
 		view.scroll_view = true
-		if tile_over != -1 and not game.upgrade_panel.visible and not game.YN_panel.visible:
+		if tile_over != -1 and not game.upgrade_panel.visible:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
 	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
@@ -1170,7 +1171,7 @@ func _unhandled_input(event):
 					if game.show.has("SP"):
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)
 					elif not game.get_node("UI/PopupBackground").visible:
-						game.long_popup("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
+						game.popup_window("%s %s" % [tr("SHIP_CONTROL_FAIL"), tr("SHIP_CONTROL_HELP")], tr("RESEARCH_NEEDED"))
 			elif tile.has("wormhole"):
 				on_wormhole_click(tile, tile_id)
 			game.show_collect_info(items_collected)
@@ -1180,18 +1181,19 @@ func _unhandled_input(event):
 func on_wormhole_click(tile:Dictionary, tile_id:int):
 	if tile.wormhole.active:
 		if game.universe_data[game.c_u].lv < 18:
-			game.long_popup(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
+			game.popup_window(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
 			return
 		Helper.update_ship_travel()
 		if game.ships_travel_view != "-":
 			game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 			return
 		if Helper.ships_on_planet(p_id):
-			if game.view_tween.is_active():
+			if game.view_tween.is_running():
 				return
-			game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 0.0), 0.1)
+			game.view_tween = create_tween()
+			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.1)
 			game.view_tween.start()
-			await game.view_tween.tween_all_completed
+			await game.view_tween.finished
 			rsrcs.clear()
 			if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 				visible = false
@@ -1251,8 +1253,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.ships_c_g_coords.s = game.c_s_g
 			game.ships_dest_g_coords.s = game.c_s_g
 			game.switch_view("planet", {"dont_save_zooms":true, "dont_fade_anim":true})
-			game.view_tween.interpolate_property(game.view, "modulate", null, Color(1.0, 1.0, 1.0, 1.0), 0.2)
-			game.view_tween.start()
+			game.view_tween = create_tween()
+			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.2)
 		else:
 			game.send_ships_panel.dest_p_id = p_id
 			game.toggle_panel(game.send_ships_panel)
