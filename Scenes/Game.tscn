@@ -658,7 +658,7 @@ wait_time = 0.5
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="animation_finished" from="UI/Panel/AnimationPlayer" to="." method="_on_PanelAnimationPlayer_animation_finished"]
-[connection signal="gui_input" from="Tooltips/Command" to="." method="_on_Command_gui_input"]
+[connection signal="text_submitted" from="Tooltips/Command" to="." method="_on_command_text_submitted"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]

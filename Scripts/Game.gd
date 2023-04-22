@@ -456,6 +456,7 @@ var cave_gen_info:bool = false
 var op_cursor:bool = false
 
 @onready var music_player = $MusicPlayer
+@onready var cmd_node = $Tooltips/Command
 
 var metal_textures:Dictionary = {}
 var game_tween:Tween
@@ -559,7 +560,6 @@ func _ready():
 		var dir_str = "res://Graphics/Buildings/Unique/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
 			bldg_textures[bldg] = load(dir_str)
-	game_tween = get_tree().create_tween()
 	for metal in met_info:
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % [metal])
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
@@ -1828,7 +1828,7 @@ func add_galaxy():
 	if not galaxy_data[c_g].has("discovered"):
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
-		await start_system_generation
+		start_system_generation()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
@@ -1836,13 +1836,12 @@ func add_galaxy():
 		get_3rd_ship()
 
 func start_system_generation():
-	await get_tree().process_frame
 	add_loading()
 	reset_collisions()
 	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
-	await generate_system_part()
+	generate_system_part()
 	
 func add_system():
 	if obj_exists("Galaxies", c_g_g):
@@ -2243,7 +2242,7 @@ func systems_collision_detection(id:int, N_init:int):
 			if gc_stars_remaining == 0:
 				dist_from_center = randf_range(min_dist_from_center + radius, max_dist_from_center)
 			outer_radius = radius + dist_from_center
-			pos = Vector2.from_angle(randf_range(0, 2 * PI)) * min_dist_from_center + gc_center
+			pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center + gc_center
 			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
 			for star_shape in obj_shapes:
 				#if Geometry.is_point_in_circle(pos, star_shape.pos, radius + star_shape.radius):
@@ -2264,8 +2263,7 @@ func systems_collision_detection(id:int, N_init:int):
 							max_dist_from_center *= 1.2
 							radius_increase_counter = 0
 						break
-		if outer_radius > max_outer_radius:
-			max_outer_radius = outer_radius
+		max_outer_radius = max(outer_radius, max_outer_radius)
 		if gc_stars_remaining > 0:
 			gc_stars_remaining -= 1
 			gc_circles.append(circle)
@@ -3655,7 +3653,6 @@ func _input(event):
 		if $UI.has_node("BuildingShortcuts"):
 			$UI.get_node("BuildingShortcuts").queue_free()
 	
-	var cmd_node = $Tooltips/Command
 	#/ to type a command
 	if Input.is_action_just_released("command") and not cmd_node.visible and c_v != "":
 		cmd_node.visible = true
@@ -3667,112 +3664,6 @@ func _input(event):
 		hide_adv_tooltip()
 		hide_tooltip()
 		cmd_node.visible = false
-	
-	if Input.is_action_just_released("enter") and cmd_node.visible:
-		cmd_node.visible = false
-		cmd_history_index = -1
-		var arr:Array = cmd_node.text.substr(1).to_lower().split(" ")
-		var cmd:String = arr[0]
-		var fail:bool = false
-		match cmd:
-			"setmoney":
-				money = float(arr[1])
-			"setstone":
-				stone = {"Si":float(arr[1])}
-			"setmin":
-				minerals = float(arr[1])
-			"setmincap":
-				mineral_capacity = float(arr[1])
-			"setenergy":
-				energy = float(arr[1])
-			"setenergycap":
-				energy_capacity = float(arr[1])
-			"setsp":
-				SP = float(arr[1])
-			"setmat":
-				if mats.has(arr[1].to_lower()):
-					mats[arr[1].to_lower()] = float(arr[2])
-				else:
-					popup("No such material", 1.5)
-					return
-			"setmet":
-				if mets.has(arr[1].to_lower()):
-					mets[arr[1].to_lower()] = float(arr[2])
-				else:
-					popup("No such metal", 1.5)
-					return
-			"setatom":
-				if atoms.has(arr[1].capitalize()):
-					atoms[arr[1].capitalize()] = float(arr[2])
-				else:
-					popup("No such atom", 1.5)
-					return
-			"setpart":
-				if particles.has(arr[1].to_lower()):
-					particles[arr[1].to_lower()] = float(arr[2])
-				else:
-					popup("No such particle", 1.5)
-					return
-			"fc":
-				if c_v == "planet":
-					for tile in tile_data:
-						if tile:
-							if tile.has("bldg") and tile.bldg.has("is_constructing"):
-								var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - Time.get_unix_time_from_system()
-								tile.bldg.construction_length = 1
-								if tile.bldg.has("collect_date"):
-									tile.bldg.collect_date -= diff_time
-								if tile.bldg.has("start_date"):
-									tile.bldg.start_date -= diff_time
-								if tile.bldg.has("overclock_date"):
-									tile.bldg.overclock_date -= diff_time
-							elif tile.has("wormhole") and tile.wormhole.has("investigation_length"):
-								tile.wormhole.investigation_length = 1
-				for probe in probe_data:
-					if probe and probe.has("start_date"):
-						var diff_time = probe.start_date + probe.explore_length - Time.get_unix_time_from_system()
-						probe.start_date -= diff_time
-						probe.explore_length = 1
-			"setmulv":
-				MUs[arr[1].to_upper()] = int(arr[2])
-			"setlv":
-				universe_data[c_u].lv = int(arr[1])
-			"switchview":
-				if c_v == "cave":
-					cave.exit_cave()
-				else:
-					switch_view(arr[1])
-			"setunivprop":
-				if universe_data[c_u].has(arr[1]):
-					universe_data[c_u][arr[1]] = float(arr[2])
-				else:
-					popup("Universes do not have a property called \"%s\"" % arr[1], 2.5)
-					return
-			"get2ndship":
-				get_2nd_ship()
-			"get3rdship":
-				get_3rd_ship()
-			"get4thship":
-				get_4th_ship()
-			"addshipxp":#addshipxp 0 lv 10
-				if arr[2] == "xp":
-					Helper.add_ship_XP(int(arr[1]), float(arr[3]))
-				elif arr[2] in ["bullet", "laser", "bomb", "light"]:
-					Helper.add_weapon_XP(int(arr[1]), arr[2], float(arr[3]))
-				else:
-					popup("\"%s\" isn't a valid XP type" % arr[2], 2.0)
-					return
-			"fixshipdata":
-				for sh in ship_data:
-					sh.rage = 0
-			_:
-				fail = true
-		if not fail:
-			popup("Command executed", 1.5)
-		else:
-			popup("Command \"%s\" does not exist" % [cmd], 2)
-		cmd_history.push_front(cmd_node.text)
-		HUD.refresh()
 	
 	if Input.is_action_just_released("up") and len(cmd_history) > 0 and cmd_node.visible:
 		if cmd_history_index < len(cmd_history) - 1:
@@ -4270,10 +4161,6 @@ func get_4th_ship():
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
 
-
-func _on_Command_gui_input(event):
-	get_viewport().set_input_as_handled()
-
 func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instantiate()
 	ach.get_node("Panel/Type").text = type.capitalize()
@@ -4418,3 +4305,110 @@ func _on_MMTimer_timeout():
 func _on_PanelAnimationPlayer_animation_finished(anim_name):
 	if anim_name == "FadeOut":
 		$UI/Panel.visible = false
+
+
+func _on_command_text_submitted(new_text):
+	cmd_node.visible = false
+	cmd_history_index = -1
+	var arr:Array = new_text.substr(1).to_lower().split(" ")
+	var cmd:String = arr[0]
+	var fail:bool = false
+	match cmd:
+		"setmoney":
+			money = float(arr[1])
+		"setstone":
+			stone = {"Si":float(arr[1])}
+		"setmin":
+			minerals = float(arr[1])
+		"setmincap":
+			mineral_capacity = float(arr[1])
+		"setenergy":
+			energy = float(arr[1])
+		"setenergycap":
+			energy_capacity = float(arr[1])
+		"setsp":
+			SP = float(arr[1])
+		"setmat":
+			if mats.has(arr[1].to_lower()):
+				mats[arr[1].to_lower()] = float(arr[2])
+			else:
+				popup("No such material", 1.5)
+				return
+		"setmet":
+			if mets.has(arr[1].to_lower()):
+				mets[arr[1].to_lower()] = float(arr[2])
+			else:
+				popup("No such metal", 1.5)
+				return
+		"setatom":
+			if atoms.has(arr[1].capitalize()):
+				atoms[arr[1].capitalize()] = float(arr[2])
+			else:
+				popup("No such atom", 1.5)
+				return
+		"setpart":
+			if particles.has(arr[1].to_lower()):
+				particles[arr[1].to_lower()] = float(arr[2])
+			else:
+				popup("No such particle", 1.5)
+				return
+		"fc":
+			if c_v == "planet":
+				for tile in tile_data:
+					if tile:
+						if tile.has("bldg") and tile.bldg.has("is_constructing"):
+							var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - Time.get_unix_time_from_system()
+							tile.bldg.construction_length = 1
+							if tile.bldg.has("collect_date"):
+								tile.bldg.collect_date -= diff_time
+							if tile.bldg.has("start_date"):
+								tile.bldg.start_date -= diff_time
+							if tile.bldg.has("overclock_date"):
+								tile.bldg.overclock_date -= diff_time
+						elif tile.has("wormhole") and tile.wormhole.has("investigation_length"):
+							tile.wormhole.investigation_length = 1
+			for probe in probe_data:
+				if probe and probe.has("start_date"):
+					var diff_time = probe.start_date + probe.explore_length - Time.get_unix_time_from_system()
+					probe.start_date -= diff_time
+					probe.explore_length = 1
+		"setmulv":
+			MUs[arr[1].to_upper()] = int(arr[2])
+		"setlv":
+			universe_data[c_u].lv = int(arr[1])
+		"switchview":
+			if c_v == "cave":
+				cave.exit_cave()
+			else:
+				switch_view(arr[1])
+		"setunivprop":
+			if universe_data[c_u].has(arr[1]):
+				universe_data[c_u][arr[1]] = float(arr[2])
+			else:
+				popup("Universes do not have a property called \"%s\"" % arr[1], 2.5)
+				return
+		"get2ndship":
+			get_2nd_ship()
+		"get3rdship":
+			get_3rd_ship()
+		"get4thship":
+			get_4th_ship()
+		"addshipxp":#addshipxp 0 lv 10
+			if arr[2] == "xp":
+				Helper.add_ship_XP(int(arr[1]), float(arr[3]))
+			elif arr[2] in ["bullet", "laser", "bomb", "light"]:
+				Helper.add_weapon_XP(int(arr[1]), arr[2], float(arr[3]))
+			else:
+				popup("\"%s\" isn't a valid XP type" % arr[2], 2.0)
+				return
+		"fixshipdata":
+			for sh in ship_data:
+				sh.rage = 0
+		_:
+			fail = true
+	if not fail:
+		popup("Command executed", 1.5)
+	else:
+		popup("Command \"%s\" does not exist" % [cmd], 2)
+	cmd_history.push_front(new_text)
+	HUD.refresh()

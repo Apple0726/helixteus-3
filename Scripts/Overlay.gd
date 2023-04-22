@@ -118,7 +118,7 @@ func get_BSL_min_max():
 func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var min_max:Dictionary
-	$Reset.visible = false if not c_vl else c_vl.modified
+	$Reset.visible = false if c_vl == null else c_vl.modified
 	var unit:String = ""
 	match game.c_v:
 		"galaxy":
@@ -245,6 +245,8 @@ func _on_Reset_pressed():
 	game.hide_tooltip()
 
 func _on_Overlay_visibility_changed():
+	if not is_inside_tree():
+		return
 	if visible:
 		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self

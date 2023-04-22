@@ -86,25 +86,33 @@ gradient = SubResource("23")
 
 [sub_resource type="ParticleProcessMaterial" id="25"]
 emission_shape = 2
-emission_sphere_radius = 1.0
+emission_sphere_radius = 26.42
 direction = Vector3(0, -1, 0)
 spread = 21.58
 gravity = Vector3(0, 0, 0)
+initial_velocity_min = 25.0
+initial_velocity_max = 25.0
 scale_min = 0.02
 scale_max = 0.04
 color_ramp = SubResource("24")
 
-[sub_resource type="Gradient" id="102"]
+[sub_resource type="Gradient" id="Gradient_0vr4p"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="103"]
-gradient = SubResource("102")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dgtdf"]
+gradient = SubResource("Gradient_0vr4p")
 
 [sub_resource type="ParticleProcessMaterial" id="4"]
 direction = Vector3(0, 0, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("103")
+initial_velocity_min = 150.0
+initial_velocity_max = 150.0
+angle_min = -90.0
+angle_max = 90.0
+scale_min = 4.0
+scale_max = 4.0
+color_ramp = SubResource("GradientTexture1D_dgtdf")
 
 [sub_resource type="ParticleProcessMaterial" id="78"]
 emission_shape = 2
@@ -250,13 +258,13 @@ shader_parameter/energy = 8.0
 shader_parameter/roughness = 2
 shader_parameter/frequency = 10
 shader_parameter/speed = 1.0
-shader_parameter/thickness = 0.2
+shader_parameter/thickness = 0.193
 shader_parameter/outline_thickness = 0.0
 shader_parameter/beam_difference = 0.0
-shader_parameter/glow = 1.0
+shader_parameter/glow = 1.089
 shader_parameter/outline_glow = 1.059
-shader_parameter/color = Color(0.91, 1, 1, 1)
-shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
+shader_parameter/color = Color(0.909804, 1, 1, 1)
+shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
 shader_parameter/progress = 1.0
 shader_parameter/y_offset = 0.0
 shader_parameter/fixed_edge_size = 0.05
@@ -346,7 +354,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="86"]
-size = Vector2(64, 20)
+size = Vector2(130, 46)
 
 [sub_resource type="CircleShape2D" id="93"]
 radius = 12.0
@@ -368,20 +376,28 @@ particles_anim_h_frames = 6
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
-[sub_resource type="Gradient" id="88"]
-offsets = PackedFloat32Array(0, 0.875648)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+[sub_resource type="Gradient" id="Gradient_aht2i"]
+offsets = PackedFloat32Array(0, 0.757709, 1)
+colors = PackedColorArray(0.89059, 0.89059, 0.89059, 1, 0.830335, 0.830335, 0.830335, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="89"]
-gradient = SubResource("88")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8ir1m"]
+gradient = SubResource("Gradient_aht2i")
 
 [sub_resource type="ParticleProcessMaterial" id="90"]
 emission_shape = 1
 emission_sphere_radius = 15.1
+particle_flag_rotate_y = true
 direction = Vector3(0, 0, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("89")
+initial_velocity_min = 100.0
+initial_velocity_max = 150.0
+angular_velocity_min = -300.0
+angular_velocity_max = 300.0
+angle_min = -180.0
+angle_max = 180.0
+scale_min = 0.2
+color_ramp = SubResource("GradientTexture1D_8ir1m")
 
 [sub_resource type="CanvasItemMaterial" id="100"]
 
@@ -591,14 +607,15 @@ _data = {
 "RoverSprint": SubResource("18")
 }
 
-[sub_resource type="Environment" id="19"]
-background_mode = 4
-glow_enabled = true
-glow_levels/5 = 0.0
-glow_intensity = 0.3
-glow_blend_mode = 1
-glow_hdr_luminance_cap = 4.0
-adjustment_enabled = true
+[sub_resource type="Environment" id="Environment_n75r6"]
+background_mode = 3
+glow_levels/1 = 1.0
+glow_levels/2 = 1.0
+glow_intensity = 3.06
+glow_strength = 1.3
+glow_blend_mode = 0
+glow_hdr_threshold = 0.91
+glow_hdr_scale = 1.0
 
 [node name="Cave" type="Node2D"]
 script = ExtResource("2")
@@ -637,9 +654,17 @@ layer_1/tile_data = PackedInt32Array()
 tile_set = ExtResource("12")
 cell_quadrant_size = 100
 format = 2
+layer_0/name = "Walls"
+layer_1/name = "Impassable walls"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2.5, 2.5)
+position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 
 [node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
@@ -671,7 +696,6 @@ lifetime = 2.0
 [node name="Hole" parent="." instance=ExtResource("9")]
 
 [node name="MiningParticles" type="GPUParticles2D" parent="."]
-emitting = false
 amount = 25
 process_material = SubResource("4")
 lifetime = 0.2
@@ -767,6 +791,7 @@ position = Vector2(0, 32)
 shape = SubResource("87")
 
 [node name="Ray" type="RayCast2D" parent="Rover/RayOfDoom"]
+enabled = false
 target_position = Vector2(100, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover/RayOfDoom"]
@@ -884,6 +909,7 @@ emitting = false
 amount = 200
 process_material = SubResource("90")
 texture = ExtResource("39")
+lifetime = 0.5
 randomness = 1.0
 
 [node name="TileHighlightLeft" type="Sprite2D" parent="."]
@@ -919,6 +945,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
+metadata/_edit_lock_ = true
 
 [node name="MinimapBG" type="Sprite2D" parent="UI"]
 modulate = Color(0, 0, 0, 1)
@@ -963,6 +990,7 @@ range_layer_min = 1
 range_layer_max = 1
 range_item_cull_mask = -2147483647
 texture = ExtResource("15")
+metadata/_edit_lock_ = true
 
 [node name="UI2" type="CanvasLayer" parent="."]
 layer = 2
@@ -979,6 +1007,7 @@ offset_top = -104.0
 offset_right = 216.0
 mouse_filter = 2
 theme = ExtResource("29")
+theme_override_constants/separation = 0
 
 [node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft"]
 layout_mode = 2
@@ -999,6 +1028,7 @@ size_flags_vertical = 8
 text = "Filter"
 
 [node name="Filters" type="PanelContainer" parent="UI2"]
+visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -1050,6 +1080,7 @@ offset_left = -176.0
 offset_top = -12.0
 offset_right = -8.0
 offset_bottom = 12.0
+step = 0.0
 value = 20.0
 nine_patch_stretch = true
 stretch_margin_left = 10
@@ -1161,6 +1192,7 @@ theme_override_constants/separation = 0
 [node name="Floor" type="Label" parent="UI2/CaveInfo"]
 layout_mode = 2
 mouse_filter = 1
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_fabes")
 text = "B1F"
 
@@ -1187,6 +1219,14 @@ mouse_filter = 1
 theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Average enemy damage: 1"
+
+[node name="Ctrls" type="Label" parent="UI2/CaveInfo"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 1
+theme = ExtResource("29")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
+text = "CONTROLS"
 
 [node name="Relic" type="TextureRect" parent="UI2"]
 visible = false
@@ -1298,7 +1338,7 @@ libraries = {
 modulate = Color(0.705882, 1, 0.705882, 1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("19")
+environment = SubResource("Environment_n75r6")
 
 [node name="CheckAchievements" type="Timer" parent="."]
 
@@ -1332,6 +1372,8 @@ environment = SubResource("19")
 [connection signal="mouse_exited" from="UI2/CaveInfo/Difficulty" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Modifiers" to="." method="_on_Modifiers_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Modifiers" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="UI2/CaveInfo/Ctrls" to="." method="_on_ctrls_mouse_entered"]
+[connection signal="mouse_exited" from="UI2/CaveInfo/Ctrls" to="." method="_on_ctrls_mouse_exited"]
 [connection signal="dialogue_finished" from="UI2/Dialogue" to="." method="_on_dialogue_finished"]
 [connection signal="mouse_entered" from="UI2/Ability" to="." method="_on_Ability_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/Ability" to="." method="_on_mouse_exited"]

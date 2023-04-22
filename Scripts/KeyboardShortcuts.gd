@@ -28,6 +28,12 @@ func refresh():
 func add_key(_name:String, desc:String):
 	keys.append({"name":_name, "desc":desc})
 
+func remove_key(_name:String):
+	for i in len(keys):
+		if keys[i].name == _name:
+			keys.remove_at(i)
+			break
+
 func _on_Keys_resized():
 	$KeyInfo.position.x = $Keys.position.x + $Keys.size.x + 30
 	size.x = max($Keys.position.x + $Keys.size.x + $KeyInfo.size.x + 40, $Label.size.x)

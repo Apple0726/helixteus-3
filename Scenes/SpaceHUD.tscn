@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene load_steps=14 format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://bqsl32377fxnf" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
@@ -25,14 +25,29 @@ tracks/0/path = NodePath("VBoxContainer:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-51.8981, -0.25, 0, 0.05, 61.8981, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
+}
+
+[sub_resource type="Animation" id="Animation_wvq00"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-51.8981, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sslco"]
 _data = {
-"MoveButtons": SubResource("8")
+"MoveButtons": SubResource("8"),
+"RESET": SubResource("Animation_wvq00")
 }
 
 [node name="SpaceHUD" type="Control"]
@@ -49,7 +64,7 @@ script = ExtResource("2")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = -51.8981
-offset_right = -3.89813
+offset_right = -3.89812
 offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0

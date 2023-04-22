@@ -132,32 +132,44 @@ custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 1
 text = "MONEY"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Conquest" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "CONQUEST"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Construct" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "CONSTRUCT"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Exploration" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
 custom_minimum_size = Vector2(0, 192)
 layout_mode = 2
 text = "EXPLORATION"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Progression" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "PROGRESSION"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Random" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
 text = "RANDOM"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Slots" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox"]
 layout_mode = 2

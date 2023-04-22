@@ -134,6 +134,8 @@ func _on_Icons_mouse_entered():
 
 
 func _on_Annotator_visibility_changed():
+	if not is_inside_tree():
+		return
 	if visible:
 		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self

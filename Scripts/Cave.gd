@@ -147,14 +147,21 @@ var treasure_mult:float = 1.0
 var debris_amount:float
 
 func _ready():
+	camera.make_current()
 	$Exit/GPUParticles2D.emitting = true
 	$UI2/Controls.center_position = Vector2(640, 160)
 	$UI2/Controls.add_key("WASD", "MOVE_ROVER")
 	$UI2/Controls.add_key(tr("SCROLL_WHEEL"), "CHANGE_ACTIVE_ITEM")
 	$UI2/Controls.add_key(tr("HOLD_LEFT_RIGHT_CLICK"), "USE_ACTIVE_ITEM")
 	$UI2/Controls.add_key("M", "TOGGLE_MINIMAP")
-	$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
+	$UI2/Controls/Label.text = tr("CONTROLS")
+	if game.help.has("cave_controls"):
+		$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
+		$UI2/CaveInfo/Ctrls.visible = false
+		$UI2/Controls.visible = true
+		game.help_str = "cave_controls"
 	$UI2/Controls.refresh()
+	
 	if game.subjects.dimensional_power.lv >= 4:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:
@@ -199,7 +206,7 @@ func _ready():
 		$Rover/EnergyBallTimer.start(0.5 / time_speed)
 	elif enhancements.has("laser_4"):
 		$Rover/EnergyBallTimer.start(1.0 / time_speed)
-	$WorldEnvironment.environment.glow_enabled = game.enable_shaders
+	#$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random.has("clear_out_cave_floor"):
 		$CheckAchievements.start()
 	tile_brightness = game.tile_brightness[p_i.type - 3]
@@ -305,6 +312,7 @@ func _ready():
 		set_slot_info($UI2/RightClickSlot, right_inventory[0])
 	set_border(curr_slot)
 	$UI2/HP/Bar.max_value = total_HP
+	$UI2/HP/Bar.value = total_HP
 	$Rover/Bar.max_value = total_HP
 	$UI2/Inventory/Bar.max_value = weight_cap
 	$Rover/InvBar.max_value = weight_cap
@@ -437,11 +445,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var darkness_mod:float = modifiers.darkness if modifiers.has("darkness") else 1.0
 	cave_darkness *= darkness_mod
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
-	if game.help.has("cave_controls"):
-		$UI2/Controls.visible = true
-		$UI2/Controls/Label.text = tr("CONTROLS")
-		game.help_str = "cave_controls"
-		#$UI2/Controls.text = "%s\n%s" % [tr("CAVE_CONTROLS"), tr("HIDE_HELP")]
 	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
 		game.objective.current += 1
 	cave_BG.modulate = star_mod * (1.0 - cave_darkness)
@@ -489,7 +492,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	noise.frequency = 1.0 / tile.cave.period
 	lava_noise.fractal_octaves = 1
 	lava_noise.frequency = 1.0 / rng.randi_range(30, 120)
-	$Camera2D.zoom = Vector2.ONE * 2.5 * rover_size
+	camera.zoom = Vector2.ONE * rover_size / 2.5
 	$Rover.scale = Vector2.ONE * rover_size
 	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
 	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
@@ -637,7 +640,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						deposit.rsrc_name = met_spawned
 						deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
 						add_child(deposit)
-						deposit.position = cave_wall.map_to_local(Vector2(i, j))
+						deposit.position = cave_wall.map_to_local(Vector2(i, j)) - Vector2(100, 100)
 						deposit.modulate *= log(base_rarity) / 6.5 + 1.0
 						deposits[str(tile_id)] = deposit
 			if volcano_mult > 1.0:
@@ -654,17 +657,17 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$TileFeatures.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(0, Vector2i(i, -1), 1, Vector2i.ZERO)
-		cave_wall.set_cell(0, Vector2i(i, -2), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(i, -1), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(i, -2), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(0, Vector2i(i, cave_size), 1, Vector2i.ZERO)
-		cave_wall.set_cell(0, Vector2i(i, cave_size + 1), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(i, cave_size), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(i, cave_size + 1), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(0, Vector2i(-1, i), 1, Vector2i.ZERO)
-		cave_wall.set_cell(0, Vector2i(-2, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(-1, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(-2, i), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(0, Vector2i(cave_size, i), 1, Vector2i.ZERO)
-		cave_wall.set_cell(0, Vector2i(cave_size + 1, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(cave_size, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(1, Vector2i(cave_size + 1, i), 1, Vector2i.ZERO)
 	#tiles = cave_wall.get_used_cells(-1)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
@@ -707,7 +710,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					chest.get_node("Area2D").connect("area_entered",Callable(self,"on_chest_entered").bind(str(tile)))
 					chest.get_node("Area2D").connect("area_exited",Callable(self,"on_chest_exited"))
 					chest.scale *= 0.8
-					chest.position = cave_BG.map_to_local(get_tile_pos(tile)) + Vector2(100, 100)
+					chest.position = cave_BG.map_to_local(get_tile_pos(tile))
 					chests[str(tile)] = {"node":chest, "contents":contents, "tier":tier}
 					add_child(chest)
 	#Remove already-mined tiles
@@ -813,7 +816,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		relic.get_node("Area2D").connect("body_entered",Callable(self,"on_relic_entered"))
 		relic.get_node("Area2D").connect("body_exited",Callable(self,"on_relic_exited"))
 		var relic_tile = rooms[0].tiles[-1]
-		relic.position = cave_BG.map_to_local(get_tile_pos(relic_tile)) + Vector2(100, 100)
+		relic.position = cave_BG.map_to_local(get_tile_pos(relic_tile))
 		add_child(relic)
 		relic.add_to_group("misc_objects")
 	
@@ -826,7 +829,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		wormhole.get_node("Area2D").connect("area_entered",Callable(self,"on_WH_entered"))
 		wormhole.get_node("Area2D").connect("area_exited",Callable(self,"_on_area_exited"))
 		var wormhole_tile = rooms[0].tiles[1]
-		wormhole.position = cave_BG.map_to_local(get_tile_pos(wormhole_tile)) + Vector2(100, 100)
+		wormhole.position = cave_BG.map_to_local(get_tile_pos(wormhole_tile))
 		add_child(wormhole)
 		enable_light(wormhole)
 	else:
@@ -1152,7 +1155,7 @@ func update_ray():
 			var pos = ray.get_collision_point() + ray.target_position / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
 			tile_highlighted_for_mining = get_tile_index(cave_wall.local_to_map(pos))
-			var is_wall = coll is TileMap and cave_wall.get_cell_tile_data(0, cave_wall.local_to_map(pos))
+			var is_wall = coll is TileMap and cave_wall.get_cell_source_id(0, cave_wall.local_to_map(pos)) == 0
 			mining_p.position = pos
 			if tile_highlighted_for_mining != -1 and is_wall:
 				_tile_highlight.visible = true
@@ -1399,6 +1402,9 @@ func _input(event):
 			MM_exit.position *= 1.5
 		if Input.is_action_just_released("J"):
 			$UI2/Controls.visible = false
+			$UI2/Controls.remove_key("J")
+			$UI2/Controls.refresh()
+			$UI2/CaveInfo/Ctrls.visible = true
 		update_ray()
 
 func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
@@ -1637,7 +1643,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	else:
 		proj.scale *= rover_size
 		proj.collision_layer = 8
-		proj.collision_mask = 1# + 4
+		proj.collision_mask = 1 + 4
 		proj.add_to_group("player_projectiles")
 	proj.cave_ref = self
 	if other_data.has("energy_ball"):
@@ -1687,7 +1693,7 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 		tile.progress = 0
 		var sq_bar = sq_bar_scene.instantiate()
 		add_child(sq_bar)
-		sq_bar.position = cave_BG.map_to_local(get_tile_pos(tile_highlighted_for_mining))
+		sq_bar.position = cave_BG.map_to_local(get_tile_pos(tile_highlighted_for_mining)) - Vector2(100, 100)
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
@@ -1707,7 +1713,7 @@ func mine_debris(item:Dictionary, delta):
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.GREEN
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
-		circ_bar.update()
+		circ_bar.queue_redraw()
 		var prog = debris_touched_by_laser[mining_debris].progress
 		if prog >= 100:
 			mine_debris_complete(mining_debris)
@@ -1813,16 +1819,18 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	var remainder:float = filter_and_add(rsrc)
 	if remainder != 0:
 		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
-	var walls = cave_wall.get_used_cells_by_id(0, 0, Vector2i.ZERO)
+	var walls = cave_wall.get_used_cells(0)
 	walls.erase(map_pos)
+	
+	cave_wall.set_cell(0, map_pos)
 	cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
-	minimap_cave.set_cell(0, map_pos, tile_type)
+	minimap_cave.set_cell(0, map_pos, tile_type, Vector2i.ZERO)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st].bar.queue_free()
 		tiles_touched_by_laser.erase(st)
-	cave_BG.set_cell(0, map_pos, tile_type)
+	cave_BG.set_cell(0, map_pos, tile_type, Vector2i.ZERO)
 	tiles_mined[cave_floor - 1].append(tile_id)
 
 var inv_bar_tween
@@ -1963,7 +1971,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 	var tween = create_tween()
 	
 	var strength:float = min($UI2/HurtTexture.modulate.a + remap(damage / total_HP, 0.0, 0.5, 0.05, 0.5), 0.5)
-	$UI2/HurtTexture.modulate.a = Color(1, 1, 1, strength)
+	$UI2/HurtTexture.modulate.a = strength
 	tween.tween_property($UI2/HurtTexture, "modulate", Color(1, 1, 1, 0), 1.0)
 	if HP > 0:
 		Helper.show_dmg(round(damage), rover.position, self)
@@ -2071,8 +2079,8 @@ func _physics_process(delta):
 		var collision = rover.get_slide_collision(i)
 		if not collision:
 			continue
-		elif collision.collider is Projectile:
-			collision.collider.collide(collision)
+		elif collision.get_collider() is Projectile:
+			collision.get_collider().collide(collision)
 	camera.position = rover.position + shaking
 	MM.position = minimap_center - rover.position * minimap_zoom
 
@@ -2361,3 +2369,11 @@ func _on_BurningAnim_animation_finished(anim_name):
 				$Rover/LavaTimer.start(0.5)
 	else:
 		$UI2/Burning.visible = false
+
+
+func _on_ctrls_mouse_entered():
+	$UI2/Controls.visible = true
+
+
+func _on_ctrls_mouse_exited():
+	$UI2/Controls.visible = false

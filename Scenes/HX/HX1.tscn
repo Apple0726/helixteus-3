@@ -1,28 +1,29 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=48 format=3 uid="uid://cpjo82l86k61"]
 
-[ext_resource path="res://Graphics/Icons/atk.png" type="Texture2D" id=1]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
-[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture2D" id=3]
-[ext_resource path="res://Graphics/Decoratives/BulletHit.jpg" type="Texture2D" id=5]
-[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture2D" id=6]
-[ext_resource path="res://Shaders/Fire.gdshader" type="Shader" id=7]
-[ext_resource path="res://icon.png" type="Texture2D" id=8]
-[ext_resource path="res://Graphics/Icons/Fire.png" type="Texture2D" id=9]
-[ext_resource path="res://Graphics/Icons/Debris.png" type="Texture2D" id=10]
-[ext_resource path="res://Shaders/Laser.gdshader" type="Shader" id=11]
-[ext_resource path="res://Graphics/HX/Status effects/Stun.png" type="Texture2D" id=12]
-[ext_resource path="res://Graphics/Icons/Stun.png" type="Texture2D" id=13]
-[ext_resource path="res://Graphics/Effects/spotlight_1.png" type="Texture2D" id=14]
-[ext_resource path="res://Graphics/Icons/acc.png" type="Texture2D" id=15]
+[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c7nek4jwjja8y" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://2ipvjl0b0uwj" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
+[ext_resource type="Texture2D" uid="uid://c3aondk8vafoe" path="res://icon.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dofnulqgy5qsb" path="res://Graphics/Icons/Fire.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://in8ae72utpm6" path="res://Graphics/Icons/Debris.png" id="10"]
+[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
+[ext_resource type="Texture2D" uid="uid://767ld8exmq22" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://c4f1rxpmykit7" path="res://Graphics/Icons/Stun.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://s1i7vybkrcyo" path="res://Graphics/Effects/spotlight_1.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://b0l3bslpgrtw5" path="res://Graphics/Icons/acc.png" id="15"]
 
-[sub_resource type="CircleShape2D" id=24]
+[sub_resource type="CircleShape2D" id="24"]
 radius = 1252.0
 
-[sub_resource type="CapsuleShape2D" id=1]
-radius = 51.7997
-height = 96.3995
+[sub_resource type="CapsuleShape2D" id="1"]
+radius = 59.993
+height = 229.932
 
-[sub_resource type="Shader" id=29]
+[sub_resource type="Shader" id="29"]
 code = "shader_type canvas_item;
 uniform float amplitude = 5;
 uniform float frequency = 3.0;
@@ -40,318 +41,314 @@ void fragment() {
 	COLOR.rgb *= light;
 }"
 
-[sub_resource type="ShaderMaterial" id=2]
+[sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
-shader = SubResource( 29 )
-shader_param/amplitude = 6.0
-shader_param/frequency = 6.0
-shader_param/aurora = false
-shader_param/light = 1.0
+shader = SubResource("29")
+shader_parameter/amplitude = 6.0
+shader_parameter/frequency = 6.0
+shader_parameter/aurora = false
+shader_parameter/light = 1.0
 
-[sub_resource type="ShaderMaterial" id=3]
-shader = ExtResource( 7 )
-shader_param/color = Color( 1, 0, 0, 1 )
-shader_param/fog_size = 6.0
-shader_param/fog_mvt_spd = 1.0
-shader_param/OCTAVES = 4
+[sub_resource type="ShaderMaterial" id="3"]
+shader = ExtResource("7")
+shader_parameter/color = Color(1, 0, 0, 1)
+shader_parameter/fog_size = 6.0
+shader_parameter/fog_mvt_spd = 1.0
+shader_parameter/OCTAVES = 4
 
-[sub_resource type="ShaderMaterial" id=4]
-shader = ExtResource( 11 )
-shader_param/beams = 1
-shader_param/energy = 20.0
-shader_param/roughness = 3
-shader_param/frequency = 10
-shader_param/speed = 1.0
-shader_param/thickness = 0.021
-shader_param/outline_thickness = 0.044
-shader_param/beam_difference = 0.0
-shader_param/glow = 0.0
-shader_param/outline_glow = 0.0
-shader_param/color = Color( 0.91, 1.5, 1.5, 1 )
-shader_param/outline_color = Color( 0.501961, 1, 0.960784, 1 )
-shader_param/progress = 1.0
-shader_param/y_offset = 0.0
-shader_param/fixed_edge_size = 0.05
-shader_param/noise_scale = Vector2( 1, 1 )
+[sub_resource type="ShaderMaterial" id="4"]
+shader = ExtResource("11")
+shader_parameter/beams = 1
+shader_parameter/energy = 20.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.021
+shader_parameter/outline_thickness = 0.044
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
+shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
 
-[sub_resource type="ShaderMaterial" id=5]
-shader = ExtResource( 11 )
-shader_param/beams = 1
-shader_param/energy = 10.0
-shader_param/roughness = 8
-shader_param/frequency = 15
-shader_param/speed = 1.0
-shader_param/thickness = 0.012
-shader_param/outline_thickness = 0.043
-shader_param/beam_difference = 0.0
-shader_param/glow = 0.0
-shader_param/outline_glow = 0.0
-shader_param/color = Color( 0.91, 2, 2, 1 )
-shader_param/outline_color = Color( 0.5, 1, 0.96, 1 )
-shader_param/progress = 1.0
-shader_param/y_offset = 0.0
-shader_param/fixed_edge_size = 0.05
-shader_param/noise_scale = Vector2( 1, 1 )
+[sub_resource type="ShaderMaterial" id="5"]
+shader = ExtResource("11")
+shader_parameter/beams = 1
+shader_parameter/energy = 10.0
+shader_parameter/roughness = 8
+shader_parameter/frequency = 15
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.012
+shader_parameter/outline_thickness = 0.043
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 2, 2, 1)
+shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
 
-[sub_resource type="Gradient" id=26]
-offsets = PackedFloat32Array( 0, 0.518692, 1 )
-colors = PackedColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
+[sub_resource type="Gradient" id="26"]
+offsets = PackedFloat32Array(0, 0.518692, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id=30]
-gradient = SubResource( 26 )
+[sub_resource type="GradientTexture2D" id="30"]
+gradient = SubResource("26")
 
-[sub_resource type="ParticleProcessMaterial" id=28]
+[sub_resource type="ParticleProcessMaterial" id="28"]
 emission_shape = 2
-emission_box_extents = Vector3( 70, 1, 1 )
-flag_disable_z = true
-direction = Vector3( 0, -1, 0 )
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
 spread = 75.94
-gravity = Vector3( 0, 0, 0 )
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-linear_accel = 45.31
-linear_accel_random = 1.0
-tangential_accel = 15.63
-color = Color( 1, 0.603922, 0, 1 )
-color_ramp = SubResource( 30 )
-hue_variation = 0.33
-hue_variation_random = 0.51
+gravity = Vector3(0, 0, 0)
+color = Color(1, 0.603922, 0, 1)
+color_ramp = SubResource("30")
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id="6"]
 length = 0.5
 step = 0.05
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PackedFloat32Array( 0, 0.5 ),
-"transitions": PackedFloat32Array( 0.406126, 1 ),
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.406126, 1),
 "update": 0,
-"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4bina"]
+_data = {
+"Hurt": SubResource("6")
+}
+
+[sub_resource type="Animation" id="7"]
 length = 1.3
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.0513478, 54.5, 227.732, -0.25, 0, 0.25, 0, 0, -0.660033, -63.4014, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1.2 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.109635, 20.5, 153.083, -0.25, 0, 0.352036, -1.84743, 360, -0.641852, 2.10144, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1.3 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id="8"]
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.073354, 113.595, 221.596, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.073354, 70.8488, 119.182, -0.58229, -8.37245, 0.352036, -1.84743 ),
-"times": PackedFloat32Array( 0, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id="9"]
 step = 0.01
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.0513478, 54.5, 80, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.109635, 20.5, 15.7225, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id="10"]
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.0693889, -16.4901, -15, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Sprite2D:position:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.0416334, 23.0659, 23.9385, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
 tracks/2/path = NodePath("Sprite2D:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
 tracks/2/keys = {
-"points": PackedFloat32Array( 0, -0.25, 0, 0.0999201, 17.2517, 6.29962, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PackedFloat32Array( 0, 0.3, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rpr20"]
+_data = {
+"Big knockback": SubResource("7"),
+"Dead": SubResource("8"),
+"Knockback": SubResource("9"),
+"Small knockback": SubResource("10")
+}
+
+[sub_resource type="Animation" id="11"]
 resource_name = "Miss"
 length = 0.3
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Sprite2D:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PackedFloat32Array( 0, 0.1, 0.2, 0.3 ),
-"transitions": PackedFloat32Array( 1, 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Sprite2D:position")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PackedFloat32Array( 0, 0.1, 0.2, 0.3 ),
-"transitions": PackedFloat32Array( 1, 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [ Vector2( 0, 6.29962 ), Vector2( 0, -25 ), Vector2( 0, -25 ), Vector2( 0, 6.29962 ) ]
+"values": [Vector2(0, 6.29962), Vector2(0, -25), Vector2(0, -25), Vector2(0, 6.29962)]
 }
 
-[sub_resource type="Gradient" id=12]
-colors = PackedColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ml7on"]
+_data = {
+"Miss": SubResource("11")
+}
 
-[sub_resource type="GradientTexture2D" id=13]
-gradient = SubResource( 12 )
+[sub_resource type="Gradient" id="12"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="ParticleProcessMaterial" id=14]
-flag_align_y = true
-flag_disable_z = true
-direction = Vector3( -1, 0, 0 )
+[sub_resource type="GradientTexture2D" id="13"]
+gradient = SubResource("12")
+
+[sub_resource type="ParticleProcessMaterial" id="14"]
+direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 1000.0
-initial_velocity_random = 1.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-color_ramp = SubResource( 13 )
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("13")
 
-[sub_resource type="Gradient" id=15]
-offsets = PackedFloat32Array( 0, 0.293907, 0.594982, 0.985663, 1 )
-colors = PackedColorArray( 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0 )
+[sub_resource type="Gradient" id="15"]
+offsets = PackedFloat32Array(0, 0.293907, 0.594982, 0.985663, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id=16]
-gradient = SubResource( 15 )
+[sub_resource type="GradientTexture2D" id="16"]
+gradient = SubResource("15")
 
-[sub_resource type="Curve" id=17]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+[sub_resource type="Curve" id="17"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
-[sub_resource type="CurveTexture" id=18]
-curve = SubResource( 17 )
+[sub_resource type="CurveTexture" id="18"]
+curve = SubResource("17")
 
-[sub_resource type="ParticleProcessMaterial" id=19]
+[sub_resource type="ParticleProcessMaterial" id="19"]
 lifetime_randomness = 1.0
-flag_disable_z = true
-direction = Vector3( -1, 0, 0 )
+direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 300.0
-initial_velocity_random = 1.0
-angular_velocity = 129.69
-angular_velocity_random = 1.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-damping = 100.0
-damping_random = 1.0
-scale = 0.05
-scale_random = 0.2
-scale_curve = SubResource( 18 )
-color_ramp = SubResource( 16 )
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("18")
+color_ramp = SubResource("16")
 
-[sub_resource type="Gradient" id=20]
-offsets = PackedFloat32Array( 0, 0.308244, 1 )
-colors = PackedColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+[sub_resource type="Gradient" id="20"]
+offsets = PackedFloat32Array(0, 0.308244, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id=21]
-gradient = SubResource( 20 )
+[sub_resource type="GradientTexture2D" id="21"]
+gradient = SubResource("20")
 
-[sub_resource type="ParticleProcessMaterial" id=22]
+[sub_resource type="ParticleProcessMaterial" id="22"]
 lifetime_randomness = 1.0
-flag_disable_z = true
-direction = Vector3( -1, 0, 0 )
+direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 250.0
-initial_velocity_random = 0.27
-angular_velocity = 129.69
-angular_velocity_random = 1.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-damping = 100.0
-damping_random = 1.0
-scale = 0.1
-scale_random = 0.5
-color_ramp = SubResource( 21 )
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("21")
 
-[sub_resource type="Animation" id=23]
+[sub_resource type="Animation" id="23"]
 resource_name = "LabelAnim"
 length = 0.583
-loop = true
 step = 0.01
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Info/Label:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PackedFloat32Array( 0, 0.3, 0.58 ),
-"transitions": PackedFloat32Array( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.3, 0.58),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.662745 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.662745), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u6u7m"]
+_data = {
+"LabelAnim": SubResource("23")
 }
 
 [node name="HX" type="CharacterBody2D"]
@@ -366,241 +363,204 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SeekingProjSeekArea"]
-shape = SubResource( 24 )
+shape = SubResource("24")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
-shape = SubResource( 1 )
+shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-material = SubResource( 2 )
-position = Vector2( 0, 6.29962 )
+material = SubResource("2")
+texture = ExtResource("1_t5dxa")
 
 [node name="Fire" type="Sprite2D" parent="Sprite2D"]
 visible = false
-material = SubResource( 3 )
-position = Vector2( 48.8168, -97.6652 )
-scale = Vector2( 12, 12 )
-texture = ExtResource( 8 )
+material = SubResource("3")
+position = Vector2(48.8168, -97.6652)
+scale = Vector2(12, 12)
+texture = ExtResource("8")
 
 [node name="Stun" type="Node2D" parent="Sprite2D"]
 visible = false
-position = Vector2( 0, -6.29962 )
+position = Vector2(0, -6.29962)
 
 [node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun"]
-material = SubResource( 4 )
-position = Vector2( 47.1782, 64.5085 )
+material = SubResource("4")
+position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
-scale = Vector2( 2.36037, 2.36037 )
-texture = ExtResource( 12 )
-offset = Vector2( -21.4132, -17.9986 )
+scale = Vector2(2.36037, 2.36037)
+texture = ExtResource("12")
+offset = Vector2(-21.4132, -17.9986)
 
 [node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun"]
-material = SubResource( 5 )
-position = Vector2( 11.3541, 50.4711 )
+material = SubResource("5")
+position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
-scale = Vector2( 1.67193, 1.67193 )
-texture = ExtResource( 12 )
-offset = Vector2( -21.4132, -17.9986 )
+scale = Vector2(1.67193, 1.67193)
+texture = ExtResource("12")
+offset = Vector2(-21.4132, -17.9986)
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D"]
-modulate = Color( 2, 2, 2, 1 )
+modulate = Color(2, 2, 2, 1)
 emitting = false
 amount = 24
+process_material = SubResource("28")
+texture = ExtResource("14")
 lifetime = 2.0
-local_coords = false
-process_material = SubResource( 28 )
-texture = ExtResource( 14 )
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 collision_mask = 3
 
 [node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
 offset_left = -121.549
 offset_top = 92.7492
 offset_right = -19.5491
 offset_bottom = 118.749
-scale = Vector2( 2.5, 2.5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+scale = Vector2(2.5, 2.5)
 
 [node name="Icon" type="TextureRect" parent="Info"]
 visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
-custom_minimum_size = Vector2( 24, 24 )
-texture = ExtResource( 1 )
-expand = true
+texture = ExtResource("1")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Info"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -58.0
 offset_bottom = 24.0
-theme = ExtResource( 2 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
+theme = ExtResource("2")
 text = "15"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HP" type="TextureProgressBar" parent="Info"]
-modulate = Color( 0, 1, 0, 1 )
+modulate = Color(0, 1, 0, 1)
 light_mask = 0
+layout_mode = 0
 offset_left = 103.02
 offset_top = -5.09968
 offset_right = 167.02
 offset_bottom = -0.0996799
-rotation = -90.0
+rotation = -1.5708
 value = 50.0
-texture_under = ExtResource( 3 )
-texture_progress = ExtResource( 6 )
 nine_patch_stretch = true
+texture_under = ExtResource("3")
+texture_progress = ExtResource("6")
 
 [node name="Effects" type="HBoxContainer" parent="Info"]
+layout_mode = 0
 offset_left = -25.5284
 offset_top = -138.064
 offset_right = 123.472
 offset_bottom = -100.064
-theme = ExtResource( 2 )
+theme = ExtResource("2")
 alignment = 1
 
 [node name="Fire" type="TextureRect" parent="Info/Effects"]
 visible = false
-offset_left = 59.0
-offset_right = 89.0
-offset_bottom = 37.0
-custom_minimum_size = Vector2( 30, 0 )
-texture = ExtResource( 9 )
-expand = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("9")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="FireLabel" type="Label" parent="Info/Effects"]
 visible = false
-offset_left = 86.0
-offset_top = 6.0
-offset_right = 97.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "9"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stun" type="TextureRect" parent="Info/Effects"]
 visible = false
-offset_left = 84.0
-offset_right = 114.0
-offset_bottom = 37.0
-custom_minimum_size = Vector2( 30, 0 )
-texture = ExtResource( 13 )
-expand = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("13")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="StunLabel" type="Label" parent="Info/Effects"]
 visible = false
-offset_left = 110.0
-offset_top = 6.0
-offset_right = 121.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "9"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Acc" type="TextureRect" parent="Info/Effects"]
 visible = false
-offset_left = 52.0
-offset_right = 82.0
-offset_bottom = 37.0
-custom_minimum_size = Vector2( 30, 0 )
-texture = ExtResource( 15 )
-expand = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("15")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="AccLabel" type="Label" parent="Info/Effects"]
 visible = false
-offset_left = 69.0
-offset_top = 6.0
-offset_right = 80.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "9"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Atk" type="TextureRect" parent="Info/Effects"]
 visible = false
-offset_left = 52.0
-offset_right = 82.0
-offset_bottom = 37.0
-custom_minimum_size = Vector2( 30, 0 )
-texture = ExtResource( 1 )
-expand = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("1")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="AtkLabel" type="Label" parent="Info/Effects"]
 visible = false
-offset_left = 69.0
-offset_top = 6.0
-offset_right = 80.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "9"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
-anims/Hurt = SubResource( 6 )
+libraries = {
+"": SubResource("AnimationLibrary_4bina")
+}
 
 [node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
-"anims/Big knockback" = SubResource( 7 )
-anims/Dead = SubResource( 8 )
-anims/Knockback = SubResource( 9 )
-"anims/Small knockback" = SubResource( 10 )
+libraries = {
+"": SubResource("AnimationLibrary_rpr20")
+}
 
 [node name="MissAnimation" type="AnimationPlayer" parent="."]
-anims/Miss = SubResource( 11 )
+libraries = {
+"": SubResource("AnimationLibrary_ml7on")
+}
 
 [node name="BulletParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 30
+process_material = SubResource("14")
+texture = ExtResource("5")
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
-local_coords = false
-process_material = SubResource( 14 )
-texture = ExtResource( 5 )
 
 [node name="BombParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 150
+process_material = SubResource("19")
+texture = ExtResource("10")
 lifetime = 3.0
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
-local_coords = false
-process_material = SubResource( 19 )
-texture = ExtResource( 10 )
 
 [node name="LightParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 50
+process_material = SubResource("22")
+texture = ExtResource("14")
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
-local_coords = false
-process_material = SubResource( 22 )
-texture = ExtResource( 14 )
 
 [node name="LabelAnimation" type="AnimationPlayer" parent="."]
-anims/LabelAnim = SubResource( 23 )
+libraries = {
+"": SubResource("AnimationLibrary_u6u7m")
+}
 
 [node name="RoDTimer" type="Timer" parent="."]
 one_shot = true

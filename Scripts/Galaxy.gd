@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var game = get_node("/root/Game")
-var star_shader = preload("res://Shaders/Star.gdshader")
 
 var dimensions:float
 
@@ -32,7 +31,7 @@ func _ready():
 		var system = Sprite2D.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.modulate = get_star_modulate(star["class"]) * 1.5
+		star_btn.modulate = get_star_modulate(star["class"]) * 1.0
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)

@@ -59,7 +59,7 @@ func _physics_process(delta):
 				rotation = direction.angle()
 
 func collide(collision:KinematicCollision2D):
-	var body = collision.collider
+	var body = collision.get_collider()
 	if body is CharacterBody2D:#If the projectile collides with an entity (not walls)
 		if not enemy:#if the projectile comes from the player
 			if deflected:#No distance penalty for deflected projectiles

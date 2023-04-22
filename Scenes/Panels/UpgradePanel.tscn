@@ -130,6 +130,8 @@ offset_left = -376.0
 offset_top = 96.0
 offset_right = 200.0
 offset_bottom = 128.0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="NextLv" type="SpinBox" parent="."]
 layout_mode = 0
