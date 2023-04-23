@@ -1,7 +1,6 @@
 extends "Panel.gd"
 
 var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
-var save_to_delete:String = ""
 var save_to_export:String = ""
 
 func on_version_over_ok():
@@ -87,19 +86,13 @@ func on_load(sv:String):
 		game.fade_out_title("load_game")
 
 func on_delete(save_str:String):
-	$PopupBackground.visible = true
-	$ConfirmSaveDeletion.visible = true
-	$ConfirmSaveDeletion/Label2.text = tr("CONFIRM_DELETION_INFO") % save_str
-	save_to_delete = save_str
+	game.show_YN_panel("delete_save", tr("ARE_YOU_SURE"), [save_str])
 
 
-func _on_delete_save():
-	if $ConfirmSaveDeletion/LineEdit.text == save_to_delete:
-		$PopupBackground.visible = false
-		Helper.remove_recursive("user://%s" % save_to_delete)
-		$ConfirmSaveDeletion.visible = false
-		game.popup(tr("SAVE_DELETED"), 2.0)
-		refresh()
+func on_delete_confirm(save_str:String):
+	Helper.remove_recursive("user://%s" % save_str)
+	game.popup(tr("SAVE_DELETED"), 2.0)
+	refresh()
 
 
 func _on_ImportSave_pressed():

@@ -100,8 +100,8 @@ func refresh_univs(reset:bool = false):
 	if not reset:
 		game.PD_panel.calc_OP_points()
 	$TopInfo/Reset.disabled = true
-	$Subjects/Grid.visible = game.dim_num > 1
-	$DimBonusesInfo.visible = game.dim_num == 1
+	$DimBonusesInfo.visible = game.help.has("hide_dimension_stuff")
+	$Subjects/Grid.visible = not $DimBonusesInfo.visible
 	if len(game.universe_data) > 1:
 		for univ in game.universe_data:
 			if univ.lv >= 100:
@@ -153,7 +153,7 @@ func refresh_univs(reset:bool = false):
 		for univ_info in game.universe_data:
 			var univ = TextureButton.new()
 			univ.texture_normal = univ_icon
-			univ.expand = true
+			univ.ignore_texture_size = true
 			univ.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			univ.custom_minimum_size = Vector2.ONE * 260.0
 			var id = univ_info["id"]
@@ -191,7 +191,7 @@ func on_invest(subj_node):
 		while subject.DRs > subject.lv:
 			subject.lv += 1
 			subject.DRs -= subject.lv
-		if $ModifyDimension.get_node(subj_node.name).visible:
+		if $ModifyDimension.get_node(str(subj_node.name)).visible:
 			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_node.name.to_lower())
 		if subj_node.name == "Dimensional_Power":
 			set_grid()
@@ -274,6 +274,7 @@ func e(n, e):
 	return n * pow(10, e)
 
 func on_univ_press(id:int):
+	$UnivInfo/AnimationPlayer.play_backwards("Fade")
 	var u_i:Dictionary = game.universe_data[id]
 	if modulate.a == 1.0:
 		var tween = get_tree().create_tween()
@@ -284,7 +285,7 @@ func on_univ_press(id:int):
 		game.switch_view(game.c_v)
 	else:
 		game.remove_dimension()
-		game.new_game(false, id)
+		game.new_game(id, game.dim_num == 1, game.dim_num == 1)
 		game.HUD.dimension_btn.visible = true
 		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	game.HUD.refresh_visibility()
@@ -386,17 +387,16 @@ func calc_OP_points():
 	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.2)#Chance of ship hitting enemy
 	calc_math_points($ModifyDimension/Maths/Control/MMBSVR, 10, -40.0, 2)#Material metal buy/sell
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -20.0, 1.15)#Universe level XP
-
-	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.right(1)))
-	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.right(1)))
-	math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.right(1)))
-	math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.right(1)))
-	math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.right(1)))
-	math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.right(1)))
-	math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.right(1)))
-	math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.right(1)))
-	math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.right(1)))
-	math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.value, float(math_defaults.get_node("ULUGF").text.right(1)))
+	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.substr(1)))
+	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.substr(1)))
+	math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.substr(1)))
+	math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.substr(1)))
+	math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.substr(1)))
+	math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.substr(1)))
+	math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.substr(1)))
+	math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.substr(1)))
+	math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.substr(1)))
+	math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.value, float(math_defaults.get_node("ULUGF").text.substr(1)))
 	physics_OP_points = 0
 	if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
 		$ModifyDimension/Physics/Control/MVOUP["theme_override_colors/font_color"] = Color.RED
@@ -410,8 +410,8 @@ func calc_OP_points():
 	else:
 		$ModifyDimension/Physics/Control/BI["theme_override_colors/font_color"] = Color.BLACK
 		physics_OP_points += pow(max(0, 9.0 * ($ModifyDimension/Physics/Control/BI.value - 0.3)), 1.5)
-	physics_defaults.get_node("MVOUP").visible = not is_equal_approx($ModifyDimension/Physics/Control/MVOUP.value, float(physics_defaults.get_node("MVOUP").text.right(1)))
-	physics_defaults.get_node("BI").visible = not is_equal_approx($ModifyDimension/Physics/Control/BI.value, float(physics_defaults.get_node("BI").text.right(1)))
+	physics_defaults.get_node("MVOUP").visible = not is_equal_approx($ModifyDimension/Physics/Control/MVOUP.value, float(physics_defaults.get_node("MVOUP").text.substr(1)))
+	physics_defaults.get_node("BI").visible = not is_equal_approx($ModifyDimension/Physics/Control/BI.value, float(physics_defaults.get_node("BI").text.substr(1)))
 	for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 		if cost.value <= 0:
 			cost["theme_override_colors/font_color"] = Color.RED
@@ -423,7 +423,7 @@ func calc_OP_points():
 				physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
 			else:
 				physics_OP_points += pow(Data.univ_prop_weights[cost.name] / cost.value, 2) - 1.0
-		physics_defaults.get_node(NodePath(cost.name)).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(NodePath(cost.name)).text.right(1)))
+		physics_defaults.get_node(NodePath(cost.name)).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(NodePath(cost.name)).text.substr(1)))
 	
 	biology_OP_points = 0
 	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.8)
@@ -574,7 +574,7 @@ func _on_Table_mouse_entered(maths_bonus:String, level_1_value:float):
 	table.visible = false
 	game.get_node("Tooltips").add_child(table)
 	var q = $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).value
-	var q_default = float(math_defaults.get_node(maths_bonus).text.right(1))
+	var q_default = float(math_defaults.get_node(maths_bonus).text.substr(1))
 	table.get_node("GridContainer/Value").text = "%s (q=%s)" % [tr("VALUE"), $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).text]
 	table.get_node("GridContainer/Default").text = "%s (q=%s)" % [tr("DEFAULT"), q_default]
 	table.get_node("GridContainer/1Value").text = str(level_1_value)

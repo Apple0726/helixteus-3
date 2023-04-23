@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bx7irdxpbnhbb"]
+[gd_scene load_steps=12 format=3 uid="uid://bx7irdxpbnhbb"]
 
 [ext_resource type="Texture2D" uid="uid://bse5rqmmvsveq" path="res://Graphics/Misc/Bar.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
@@ -8,8 +8,18 @@
 [ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://cm16c10pt6j1e" path="res://Graphics/Misc/BarOver.png" id="7"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_epxrv"]
+draw_center = false
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.321569, 0.952941, 0, 1)
+border_blend = true
+
 [sub_resource type="Animation" id="2"]
 resource_name = "New Anim"
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -54,11 +64,11 @@ mouse_filter = 2
 script = ExtResource("3")
 
 [node name="Selected" type="Panel" parent="."]
-visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_epxrv")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Selected"]
 libraries = {
@@ -87,7 +97,7 @@ offset_bottom = -94.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -105,25 +115,33 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="DRProgress" type="Label" parent="HBox/Progress"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -18.0
-offset_right = 46.0
-offset_bottom = -1.0
-scale = Vector2(0.7, 0.7)
+offset_top = -17.5
+offset_right = -4.0
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
 text = "0 / 2"
+horizontal_alignment = 1
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="HBox/Progress"]
 modulate = Color(0.662745, 0.407843, 1, 1)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = 2.0
-offset_bottom = 6.0
+offset_top = 2.5
+offset_right = -4.0
+offset_bottom = 6.5
+grow_horizontal = 2
+grow_vertical = 2
 value = 50.0
 nine_patch_stretch = true
 texture_under = ExtResource("5")
@@ -147,14 +165,17 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 text = "Effects"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="EffectButton" type="Button" parent="Effects"]
 show_behind_parent = true
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -12.0
-offset_right = 12.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="OPMeter" type="TextureProgressBar" parent="."]
 visible = false

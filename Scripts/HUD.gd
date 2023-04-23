@@ -180,7 +180,6 @@ func refresh():
 			$Top/AutosaveLight.modulate.g = 0.3
 			set_process(false)
 		$Top/AutosaveLight.visible = autosave_light
-	$Emma.visible = game.fourth_ship_hints.emma_joined and len(game.ship_data) != 4
 	update_money_energy_SP()
 	update_minerals()
 	if $Top/Resources/Glass.visible:
@@ -430,16 +429,6 @@ func _input(event):
 	if Input.is_action_just_released("F2") and game.c_v in ["planet", "system", "galaxy", "cluster"]:
 		$Top/Name/Name.grab_focus()
 		$Top/Name/Name.select_all()
-	if Input.is_action_just_released("left_click"):
-		if emma_cave_shortcut and game.c_v == "planet":
-			for i in len(game.tile_data):
-				if game.tile_data[i] and game.tile_data[i].has("cave") and game.tile_data[i].cave == game.fourth_ship_hints.op_grill_cave_spawn:
-					game.toggle_panel(game.vehicle_panel)
-					game.vehicle_panel.tile_id = i
-					break
-		elif renaming:
-			if game.c_v == "planet":
-				pass
 	if event is InputEventMouseMotion:
 		if bookmark_shown and not Geometry2D.is_point_in_polygon(event.position, $MouseOut.polygon):
 			bookmark_shown = false
@@ -507,25 +496,6 @@ func _on_Vehicles_pressed():
 func _on_ObjectivesLabel_mouse_entered():
 	if game.objective.type == game.ObjectiveType.EMMA:
 		emma_cave_shortcut = true
-
-func _on_Emma_mouse_entered():
-	game.show_tooltip(tr("TALK_TO_OP_GRILL"))
-
-func _on_Emma_pressed():
-	game.objective.clear()
-	$Dialogue.visible = true
-	$Dialogue.NPC_id = 3
-	if game.c_c == 3:
-		if game.c_v == "cluster" or game.c_v == "galaxy" and game.c_g != game.fourth_ship_hints.dark_matter_spawn_galaxy:
-			$Dialogue.dialogue_id = 8
-		if game.c_g == game.fourth_ship_hints.dark_matter_spawn_galaxy:
-			if game.c_v in ["galaxy", "system"]:
-				$Dialogue.dialogue_id = 9
-			elif game.c_v == "planet" and game.c_s_g == game.fourth_ship_hints.dark_matter_spawn_system:
-				$Dialogue.dialogue_id = 10
-	else:
-		$Dialogue.dialogue_id = 7
-	$Dialogue.show_dialogue()
 
 
 func _on_Wiki_mouse_entered():

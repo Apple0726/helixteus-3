@@ -261,7 +261,9 @@ shader = ExtResource("31")
 shader_parameter/time_offset = 0.0
 shader_parameter/brightness_offset = 0.0
 shader_parameter/twinkle_speed = 1.0
-shader_parameter/amplitude = 0.15
+shader_parameter/amplitude = 0.08
+shader_parameter/modulate = 0.0
+shader_parameter/color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="19"]
 length = 0.001
@@ -629,8 +631,8 @@ stretch_mode = 5
 
 [node name="Sprite2D" type="Sprite2D" parent="Star"]
 material = SubResource("18")
-position = Vector2(1064.25, 171.865)
-scale = Vector2(0.725823, 0.725823)
+position = Vector2(1084, 183)
+scale = Vector2(0.506222, 0.506222)
 texture = ExtResource("32")
 
 [node name="Stars" type="CanvasLayer" parent="."]

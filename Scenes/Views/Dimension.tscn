@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://bg2sov0myafl8"]
+[gd_scene load_steps=48 format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://7vo0fnsc278i" path="res://Graphics/Misc/Physics.png" id="4"]
@@ -33,6 +33,19 @@
 [ext_resource type="Texture2D" uid="uid://tqhx24atn5iw" path="res://Graphics/Atoms/Ne.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://d0ofj5gsrilmf" path="res://Graphics/Atoms/Xe.png" id="34"]
 [ext_resource type="PackedScene" path="res://Scenes/Plotter.tscn" id="35"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ettq"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
 [sub_resource type="Animation" id="6"]
 resource_name = "FlashButton"
@@ -211,7 +224,10 @@ anchor_bottom = 1.0
 offset_top = 48.0
 offset_right = 248.0
 offset_bottom = 40.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_7ettq")
 text = "DISCOVERED_UNIVERSES"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SendProbes" type="Button" parent="Universes"]
 layout_mode = 0
@@ -328,15 +344,17 @@ offset_right = 480.0
 offset_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
+theme_override_font_sizes/font_size = 18
+text = "Dimension #1"
+vertical_alignment = 1
 
 [node name="DRs" parent="TopInfo" instance=ExtResource("12")]
 custom_minimum_size = Vector2(384, 0)
 layout_mode = 0
-anchor_right = 1.0
 offset_left = 448.0
-offset_top = 12.0
-offset_right = -448.0
-offset_bottom = 44.0
+offset_top = 16.0
+offset_right = 832.0
+offset_bottom = 48.0
 text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
 help_text = "DR_DESC"
 adv_help = true
@@ -370,6 +388,7 @@ offset_top = 104.0
 offset_right = 416.0
 offset_bottom = 172.0
 text = "DIM_JUST_RESET_INFO"
+autowrap_mode = 3
 
 [node name="DRsPerCilck" type="Label" parent="ModifyDimension/Reset"]
 layout_mode = 0
@@ -389,10 +408,10 @@ text = "1"
 
 [node name="Generate" type="Button" parent="ModifyDimension/Reset"]
 layout_mode = 0
-offset_left = 50.0
-offset_top = 268.0
-offset_right = 400.0
-offset_bottom = 302.0
+offset_left = 72.0
+offset_top = 272.0
+offset_right = 348.0
+offset_bottom = 306.0
 text = "GENERATE_STARTING_UNIVERSE"
 
 [node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
@@ -413,21 +432,21 @@ mouse_filter = 1
 
 [node name="CostGrowthFactors" type="Panel" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 7.0
-offset_right = 386.0
-offset_bottom = 759.0
+offset_left = 14.0
+offset_top = 86.0
+offset_right = 390.0
+offset_bottom = 788.0
 
 [node name="CostGrowthFactor" type="TextureRect" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 offset_left = 52.0
-offset_top = 74.0
+offset_top = 45.0
 offset_right = 356.0
-offset_bottom = 106.0
+offset_bottom = 77.0
 texture = ExtResource("15")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label4" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
@@ -440,42 +459,46 @@ text = "Cost growth factors"
 [node name="Label" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 138.0
+offset_top = 107.0
 offset_right = 338.0
-offset_bottom = 162.0
+offset_bottom = 131.0
 text = "BUILDING_COSTS"
 
 [node name="Label2" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 174.0
+offset_top = 143.0
 offset_right = 296.0
-offset_bottom = 206.0
+offset_bottom = 175.0
 text = "q = "
+vertical_alignment = 1
 
 [node name="Label5" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 290.0
+offset_top = 259.0
 offset_right = 296.0
-offset_bottom = 322.0
+offset_bottom = 291.0
 text = "q_MV = "
+vertical_alignment = 1
 
 [node name="Label6" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 339.0
+offset_top = 308.0
 offset_right = 296.0
-offset_bottom = 371.0
+offset_bottom = 340.0
 text = "q_MSMB = "
+vertical_alignment = 1
 
 [node name="Label7" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 386.0
+offset_top = 355.0
 offset_right = 296.0
-offset_bottom = 418.0
+offset_bottom = 387.0
 text = "q_AIE = "
+vertical_alignment = 1
 
 [node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
 layout_mode = 0
@@ -483,41 +506,41 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 64.0
-offset_top = 174.0
+offset_top = 143.0
 offset_right = 144.0
-offset_bottom = 206.0
+offset_bottom = 175.0
 step = 0.0
 
 [node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 254.0
+offset_top = 223.0
 offset_right = 344.0
-offset_bottom = 278.0
+offset_bottom = 247.0
 text = "MINERAL_UPGRADES"
 
 [node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 208.0
-offset_top = 293.0
+offset_top = 262.0
 offset_right = 248.0
-offset_bottom = 321.0
+offset_bottom = 290.0
 help_text = "MV_NAME"
 
 [node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 237.0
-offset_top = 342.0
+offset_top = 311.0
 offset_right = 276.0
-offset_bottom = 370.0
+offset_bottom = 339.0
 help_text = "MSMB_NAME"
 
 [node name="RichTextLabel3" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 208.0
-offset_top = 390.0
+offset_top = 359.0
 offset_right = 248.0
-offset_bottom = 418.0
+offset_bottom = 387.0
 help_text = "AIE_NAME"
 
 [node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
@@ -526,9 +549,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 104.0
-offset_top = 290.0
+offset_top = 259.0
 offset_right = 184.0
-offset_bottom = 322.0
+offset_bottom = 291.0
 step = 0.01
 
 [node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
@@ -537,9 +560,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 132.0
-offset_top = 339.0
+offset_top = 308.0
 offset_right = 212.0
-offset_bottom = 371.0
+offset_bottom = 340.0
 step = 0.01
 
 [node name="MUCGF_AIE" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
@@ -548,34 +571,35 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 104.0
-offset_top = 386.0
+offset_top = 355.0
 offset_right = 184.0
-offset_bottom = 418.0
+offset_bottom = 387.0
 step = 0.01
 
 [node name="Label9" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 466.0
+offset_top = 435.0
 offset_right = 344.0
-offset_bottom = 490.0
+offset_bottom = 459.0
 text = "SHIP_XP_REQ"
 
 [node name="Label12" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 557.0
+offset_top = 526.0
 offset_right = 344.0
-offset_bottom = 581.0
+offset_bottom = 550.0
 text = "SHIP_STATS"
 
 [node name="Label10" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 502.0
+offset_top = 471.0
 offset_right = 296.0
-offset_bottom = 534.0
+offset_bottom = 503.0
 text = "q = "
+vertical_alignment = 1
 
 [node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
 layout_mode = 0
@@ -583,18 +607,19 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 64.0
-offset_top = 502.0
+offset_top = 471.0
 offset_right = 144.0
-offset_bottom = 534.0
+offset_bottom = 503.0
 step = 0.001
 
 [node name="Label11" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 593.0
+offset_top = 562.0
 offset_right = 296.0
-offset_bottom = 625.0
+offset_bottom = 594.0
 text = "q = "
+vertical_alignment = 1
 
 [node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
 layout_mode = 0
@@ -602,26 +627,27 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 64.0
-offset_top = 593.0
+offset_top = 562.0
 offset_right = 144.0
-offset_bottom = 625.0
+offset_bottom = 594.0
 step = 0.001
 
 [node name="Label14" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 645.0
+offset_top = 614.0
 offset_right = 344.0
-offset_bottom = 669.0
+offset_bottom = 638.0
 text = "UNIV_XP_REQ"
 
 [node name="Label15" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 677.0
+offset_top = 646.0
 offset_right = 76.0
-offset_bottom = 705.0
+offset_bottom = 674.0
 text = "q = "
+vertical_alignment = 1
 
 [node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
 layout_mode = 0
@@ -629,85 +655,88 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 64.0
-offset_top = 676.0
+offset_top = 645.0
 offset_right = 144.0
-offset_bottom = 708.0
+offset_bottom = 677.0
 step = 0.001
 
 [node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 26.0
-offset_top = 787.0
+offset_top = 801.0
 offset_right = 346.0
-offset_bottom = 811.0
+offset_bottom = 825.0
 text = "IRM"
 
 [node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 28.0
-offset_top = 883.0
+offset_top = 897.0
 offset_right = 359.0
-offset_bottom = 907.0
+offset_bottom = 921.0
 text = "COSHEF"
 
 [node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 26.0
-offset_top = 1075.0
+offset_top = 1089.0
 offset_right = 346.0
-offset_bottom = 1099.0
+offset_bottom = 1113.0
 text = "MMBSVR"
 
 [node name="Label18" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 30.0
-offset_top = 823.0
+offset_top = 837.0
 offset_right = 123.0
-offset_bottom = 851.0
+offset_bottom = 865.0
 text = "IR_mult = "
+vertical_alignment = 1
 
 [node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 34.0
-offset_top = 999.0
+offset_top = 1013.0
 offset_right = 306.0
-offset_bottom = 1027.0
+offset_bottom = 1041.0
 text = "a = "
+vertical_alignment = 1
 
 [node name="Label19" type="Label" parent="ModifyDimension/Maths/Control"]
 layout_mode = 0
 offset_left = 34.0
-offset_top = 1107.0
+offset_top = 1121.0
 offset_right = 306.0
-offset_bottom = 1135.0
+offset_bottom = 1149.0
 text = "r = "
+vertical_alignment = 1
 
 [node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 234.0
-offset_top = 823.0
+offset_top = 837.0
 offset_right = 267.0
-offset_bottom = 851.0
+offset_bottom = 865.0
 help_text = "IR_MULT_HELP"
 
 [node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 178.0
-offset_top = 1109.0
+offset_top = 1123.0
 offset_right = 226.0
-offset_bottom = 1137.0
+offset_bottom = 1151.0
 help_text = "RATIO_HELP"
 
 [node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 offset_left = 36.0
-offset_top = 911.0
+offset_top = 925.0
 offset_right = 340.0
-offset_bottom = 983.0
+offset_bottom = 997.0
 texture = ExtResource("16")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="IRM" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
 layout_mode = 0
@@ -715,9 +744,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 134.0
-offset_top = 819.0
+offset_top = 833.0
 offset_right = 210.0
-offset_bottom = 851.0
+offset_bottom = 865.0
 step = 0.001
 
 [node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
@@ -726,9 +755,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 78.0
-offset_top = 995.0
+offset_top = 1009.0
 offset_right = 154.0
-offset_bottom = 1027.0
+offset_bottom = 1041.0
 
 [node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
 layout_mode = 0
@@ -736,9 +765,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 78.0
-offset_top = 1103.0
+offset_top = 1117.0
 offset_right = 154.0
-offset_bottom = 1135.0
+offset_bottom = 1149.0
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
 anchors_preset = 0
@@ -748,10 +777,11 @@ offset_bottom = 40.0
 [node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 186.0
-offset_top = 184.0
+offset_top = 232.0
 offset_right = 228.0
-offset_bottom = 208.0
+offset_bottom = 256.0
 text = "(1.3)"
+vertical_alignment = 1
 
 [node name="BUCGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/BUCGF"]
 layout_mode = 0
@@ -765,18 +795,18 @@ stretch_mode = 6
 [node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 258.296
-offset_top = 300.0
+offset_top = 348.0
 offset_right = 300.296
-offset_bottom = 324.0
-rotation = 0.70657
+offset_bottom = 372.0
 text = "(1.9)"
+vertical_alignment = 1
 
 [node name="MUCGF_MV_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MV"]
 layout_mode = 0
-offset_left = 53.7
-offset_top = -0.662292
-offset_right = 81.7
-offset_bottom = 25.3377
+offset_left = 53.704
+offset_top = -3.0
+offset_right = 81.704
+offset_bottom = 23.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -784,17 +814,18 @@ stretch_mode = 6
 [node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 286.296
-offset_top = 349.0
+offset_top = 397.0
 offset_right = 328.296
-offset_bottom = 373.0
+offset_bottom = 421.0
 text = "(1.6)"
+vertical_alignment = 1
 
 [node name="MUCGF_MSMB_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB"]
 layout_mode = 0
 offset_left = 54.704
-offset_top = -3.05176e-05
+offset_top = -3.0
 offset_right = 82.704
-offset_bottom = 26.0
+offset_bottom = 23.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -802,17 +833,18 @@ stretch_mode = 6
 [node name="MUCGF_AIE" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 262.296
-offset_top = 397.0
+offset_top = 445.0
 offset_right = 304.296
-offset_bottom = 421.0
+offset_bottom = 469.0
 text = "(2.3)"
+vertical_alignment = 1
 
 [node name="MUCGF_AIE_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE"]
 layout_mode = 0
 offset_left = 53.704
-offset_top = 2.0
+offset_top = -3.0
 offset_right = 81.704
-offset_bottom = 28.0
+offset_bottom = 23.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -820,24 +852,27 @@ stretch_mode = 6
 [node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 271.0
-offset_top = 823.0
+offset_top = 837.0
 offset_right = 313.0
-offset_bottom = 847.0
+offset_bottom = 861.0
 text = "(1.2)"
+vertical_alignment = 1
 
 [node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 182.0
-offset_top = 512.0
+offset_top = 560.0
 offset_right = 224.0
-offset_bottom = 536.0
+offset_bottom = 584.0
 text = "(1.3)"
+vertical_alignment = 1
 
 [node name="SLUGF_XP_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_XP"]
 layout_mode = 0
-offset_left = 56.0
-offset_right = 84.0
-offset_bottom = 26.0
+offset_left = 55.0
+offset_top = -2.0
+offset_right = 83.0
+offset_bottom = 24.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -845,16 +880,18 @@ stretch_mode = 6
 [node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 182.0
-offset_top = 604.0
+offset_top = 652.0
 offset_right = 235.0
-offset_bottom = 628.0
+offset_bottom = 676.0
 text = "(1.15)"
+vertical_alignment = 1
 
 [node name="SLUGF_Stats_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats"]
 layout_mode = 0
-offset_left = 64.0
-offset_right = 92.0
-offset_bottom = 26.0
+offset_left = 65.0
+offset_top = -2.0
+offset_right = 93.0
+offset_bottom = 24.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -862,32 +899,36 @@ stretch_mode = 6
 [node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 194.0
-offset_top = 999.0
+offset_top = 1013.0
 offset_right = 247.0
-offset_bottom = 1023.0
+offset_bottom = 1037.0
 text = "(1.5)"
+vertical_alignment = 1
 
 [node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 226.0
-offset_top = 1108.0
+offset_top = 1122.0
 offset_right = 279.0
-offset_bottom = 1132.0
+offset_bottom = 1146.0
 text = "(10)"
+vertical_alignment = 1
 
 [node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
 layout_mode = 0
 offset_left = 182.0
-offset_top = 688.0
+offset_top = 736.0
 offset_right = 224.0
-offset_bottom = 712.0
+offset_bottom = 760.0
 text = "(1.63)"
+vertical_alignment = 1
 
 [node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF"]
 layout_mode = 0
-offset_left = 52.0
-offset_right = 80.0
-offset_bottom = 26.0
+offset_left = 59.0
+offset_top = -3.0
+offset_right = 87.0
+offset_bottom = 23.0
 texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
@@ -981,7 +1022,7 @@ offset_left = 50.0
 offset_top = 461.0
 offset_right = 369.0
 offset_bottom = 485.0
-text = "M   K   G   F   A   B   O   Q   R   Z"
+text = "M    K    G    F    A    B    O    Q    R    Z"
 
 [node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
 layout_mode = 0
@@ -1055,6 +1096,7 @@ offset_left = 254.0
 offset_top = 683.0
 offset_right = 330.0
 offset_bottom = 1035.0
+theme_override_constants/separation = 8
 
 [node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
 layout_mode = 2
@@ -1107,6 +1149,7 @@ offset_left = 18.0
 offset_top = 683.0
 offset_right = 254.0
 offset_bottom = 1047.0
+theme_override_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
 anchors_preset = 0
@@ -1204,13 +1247,13 @@ text = "(15)"
 
 [node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
-offset_left = 114.0
-offset_top = 155.0
-offset_right = 154.0
-offset_bottom = 187.0
+offset_left = 118.0
+offset_top = 161.0
+offset_right = 138.0
+offset_bottom = 180.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="Chemistry" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -1238,13 +1281,13 @@ text = "EDIT_PHASE_DIAGRAMS"
 
 [node name="PDLabel" type="TextureRect" parent="ModifyDimension/Chemistry/Control"]
 layout_mode = 0
-offset_left = 266.0
-offset_top = 115.0
-offset_right = 298.0
-offset_bottom = 147.0
+offset_left = 270.0
+offset_top = 118.0
+offset_right = 286.0
+offset_bottom = 134.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="LakeButtons" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
 layout_mode = 0
@@ -1444,22 +1487,22 @@ min_value = 1.0
 [node name="PGSMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
 layout_mode = 0
 offset_left = 134.0
-offset_top = 159.0
-offset_right = 166.0
-offset_bottom = 191.0
+offset_top = 166.0
+offset_right = 150.0
+offset_bottom = 182.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="PYMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
 layout_mode = 0
 offset_left = 134.0
-offset_top = 255.0
-offset_right = 166.0
-offset_bottom = 287.0
+offset_top = 262.0
+offset_right = 150.0
+offset_bottom = 277.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Biology/Control"]
 layout_mode = 0
@@ -1697,9 +1740,10 @@ text = "EFFECTS"
 [node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
 offset_left = 42.0
-offset_top = 71.0
+offset_top = 74.0
 offset_right = 82.0
-offset_bottom = 579.0
+offset_bottom = 684.0
+theme_override_constants/separation = 72
 
 [node name="Label" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
 layout_mode = 2
@@ -1799,6 +1843,7 @@ offset_right = 386.0
 offset_bottom = 122.0
 mouse_filter = 1
 text = "QOL_PERKS"
+autowrap_mode = 3
 
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1808,6 +1853,7 @@ offset_right = 386.0
 offset_bottom = 218.0
 mouse_filter = 1
 text = "UNLOCK_PHY_CHEM_BIO"
+autowrap_mode = 3
 
 [node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1816,6 +1862,7 @@ offset_top = 259.0
 offset_right = 386.0
 offset_bottom = 310.0
 text = "MORE_OP_CAPACITY"
+autowrap_mode = 3
 
 [node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1825,6 +1872,7 @@ offset_right = 386.0
 offset_bottom = 402.0
 mouse_filter = 1
 text = "MODIFY_CAVE_BATTLE_TIME"
+autowrap_mode = 3
 
 [node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1833,6 +1881,7 @@ offset_top = 447.0
 offset_right = 386.0
 offset_bottom = 498.0
 text = "MORE_PP"
+autowrap_mode = 3
 
 [node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1841,6 +1890,7 @@ offset_top = 543.0
 offset_right = 386.0
 offset_bottom = 594.0
 text = "Coming soon™"
+autowrap_mode = 3
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
@@ -1849,16 +1899,17 @@ offset_top = 634.8
 offset_right = 386.0
 offset_bottom = 766.8
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
+autowrap_mode = 3
 
 [node name="EffectsHelp" type="TextureRect" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
-offset_left = 258.0
-offset_top = 19.0
-offset_right = 286.0
-offset_bottom = 43.0
+offset_left = 252.0
+offset_top = 20.0
+offset_right = 268.0
+offset_bottom = 36.0
 texture = ExtResource("25")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="OPMeter" type="Panel" parent="ModifyDimension"]
 visible = false
@@ -1910,6 +1961,8 @@ offset_top = -47.0
 offset_right = -23.0
 offset_bottom = -20.0
 text = "TOO_OP"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

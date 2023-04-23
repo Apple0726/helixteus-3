@@ -84,12 +84,6 @@ func update_info(first_time:bool = false):
 		upper_depth = p_i.crust_start_depth + 1
 		lower_depth = p_i.mantle_start_depth
 	elif tile.depth <= p_i.core_start_depth:
-		if tile.has("ship_part"):
-			tile.erase("ship_part")
-			if not game.objective.is_empty():
-				game.objective.current += 1
-			game.popup(tr("SHIP_PART_FOUND"), 2.5)
-			game.third_ship_hints.parts[4] = true
 		if layer != "mantle":
 			if first_time:
 				$SurfaceBG.modulate.a = 0
@@ -116,12 +110,6 @@ func update_info(first_time:bool = false):
 		lower_depth = floor(p_i.core_start_depth / 1000.0)
 		unit = "km"
 	else:
-		if tile.has("ship_part"):
-			tile.erase("ship_part")
-			if not game.objective.is_empty():
-				game.objective.current += 1
-			game.popup(tr("SHIP_PART_FOUND"), 2.5)
-			game.third_ship_hints.parts[4] = true
 		layer = "core"
 		upper_depth = floor(p_i.core_start_depth / 1000.0)
 		lower_depth = floor(p_i.size / 2.0)

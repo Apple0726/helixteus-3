@@ -179,9 +179,6 @@ var rover_data:Array
 var fighter_data:Array
 var probe_data:Array
 var ship_data:Array
-var second_ship_hints:Dictionary
-var third_ship_hints:Dictionary
-var fourth_ship_hints:Dictionary
 var ships_c_coords:Dictionary#Local coords of the planet that the ships are on
 var ships_c_g_coords:Dictionary#ship global coordinates (current)
 var ships_dest_coords:Dictionary#Local coords of the destination planet
@@ -513,6 +510,10 @@ func update_viewport_dimensions():
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
+	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
+	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
+	var star_tween = create_tween()
+	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 1.0, 2.0)
 	current_viewport_dimensions = get_viewport().size
 	get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
 	for key in Mods.added_mats:
@@ -831,7 +832,50 @@ func load_game():
 #		dir.remove(file_name)
 #		file_name = dir.get_next()
 
-func new_game(tut:bool, univ:int = 0, new_save:bool = false):
+func set_default_dim_bonuses():
+	maths_bonus = {
+		"BUCGF":1.3,
+		"MUCGF_MV":1.9,
+		"MUCGF_MSMB":1.6,
+		"MUCGF_AIE":2.3,
+		"IRM":1.2,
+		"SLUGF_XP":1.3,
+		"SLUGF_Stats":1.15,
+		"COSHEF":1.5,
+		"MMBSVR":10,
+		"ULUGF":1.63,
+	}
+	physics_bonus = Data.univ_prop_weights.duplicate()
+	physics_bonus.MVOUP = 0.5
+	physics_bonus.BI = 0.3
+	chemistry_bonus = {}
+	biology_bonus = {
+		"PGSM":1.0,
+		"PYM":1.0,
+		"H2O":1.0,
+		"CH4":1.0,
+		"CO2":1.0,
+		"NH3":1.0,
+		"H":0.0,
+		"He":1.0,
+		"O":1.0,
+		"Ne":1.0,
+		"Xe":0.0,
+	}
+	engineering_bonus = {
+		"BCM":1.0,
+		"PS":1.0,
+		"RSM":1.0,
+	}
+	subjects = {"maths":{"DRs":0, "lv":0},
+				"physics":{"DRs":0, "lv":0},
+				"chemistry":{"DRs":0, "lv":0},
+				"biology":{"DRs":0, "lv":0},
+				"philosophy":{"DRs":0, "lv":0},
+				"engineering":{"DRs":0, "lv":0},
+				"dimensional_power":{"DRs":0, "lv":0}}
+
+func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view_history.clear()
 	view_history_pos = -1
 	stats_univ = Data.default_stats.duplicate(true)
@@ -849,7 +893,8 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		save_created = Time.get_unix_time_from_system()
 		DRs = 0
 		dim_num = 1
-		help = Data.default_help.duplicate()
+		if not DR_advantage:
+			help = Data.default_help.duplicate()
 		for ach in achievements:
 			achievement_data[ach] = {}
 		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
@@ -863,47 +908,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		universe_data[0].difficulty = 1.0
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
-		maths_bonus = {
-			"BUCGF":1.3,
-			"MUCGF_MV":1.9,
-			"MUCGF_MSMB":1.6,
-			"MUCGF_AIE":2.3,
-			"IRM":1.2,
-			"SLUGF_XP":1.3,
-			"SLUGF_Stats":1.15,
-			"COSHEF":1.5,
-			"MMBSVR":10,
-			"ULUGF":1.63,
-		}
-		physics_bonus = Data.univ_prop_weights.duplicate()
-		physics_bonus.MVOUP = 0.5
-		physics_bonus.BI = 0.3
-		chemistry_bonus = {}
-		biology_bonus = {
-			"PGSM":1.0,
-			"PYM":1.0,
-			"H2O":1.0,
-			"CH4":1.0,
-			"CO2":1.0,
-			"NH3":1.0,
-			"H":0.0,
-			"He":1.0,
-			"O":1.0,
-			"Ne":1.0,
-			"Xe":0.0,
-		}
-		engineering_bonus = {
-			"BCM":1.0,
-			"PS":1.0,
-			"RSM":1.0,
-		}
-		subjects = {"maths":{"DRs":0, "lv":0},
-					"physics":{"DRs":0, "lv":0},
-					"chemistry":{"DRs":0, "lv":0},
-					"biology":{"DRs":0, "lv":0},
-					"philosophy":{"DRs":0, "lv":0},
-					"engineering":{"DRs":0, "lv":0},
-					"dimensional_power":{"DRs":0, "lv":0}}
+		set_default_dim_bonuses()
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -1032,8 +1037,6 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 			show[mat] = true
 		for met in met_info.keys():
 			show[met] = true
-	if not tut:
-		show.construct_button = true
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "modulate":Color.WHITE, "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
@@ -1048,25 +1051,7 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 	fighter_data = []
 	probe_data = []
 	ship_data = []
-	second_ship_hints = {"spawned_at":-1, "spawned_at_p":-1, "ship_locator":false}
-	third_ship_hints = {"spawn_galaxy":-1, "map_found_at":-1, "map_pos":Vector2.ZERO, "ship_sys_id":-1, "ship_part_id":-1, "ship_spawned_at_p":-1, "part_spawned_at_p":-1, "parts":[false, false, false, false, false]}
-	fourth_ship_hints = {	"ruins_spawned":false,
-							"hypergiant_system_spawn_galaxy":-1,
-							"dark_matter_spawn_galaxy":-1,
-							"hypergiant_system_spawn_system":-1,
-							"dark_matter_spawn_system":-1,
-							"SE_constructed":true,
-							"op_grill_planet":-1,
-							"op_grill_cave_spawn":-1,
-							"manipulators":[false, false, false, false, false, false],
-							"boss_planet":-1,
-							"barrier_broken":false,
-							"boss_rekt":false,
-							"emma_free":false,
-							"artifact_found":false,
-							"emma_joined":false,
-							"ship_spotted":false,
-	}
+
 	ships_c_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
 	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
 	ships_dest_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
@@ -1115,8 +1100,8 @@ func new_game(tut:bool, univ:int = 0, new_save:bool = false):
 		planet_data[2].pressure = 1
 		planet_data[2].lake_1 = {"element":"H2O"}
 		planet_data[2].erase("lake_2")
-		planet_data[2].liq_seed = 4
-		planet_data[2].liq_period = 100
+		planet_data[2].liq_seed = 7
+		planet_data[2].liq_period = 0.4
 		planet_data[2].crust_start_depth = Helper.rand_int(25, 30)
 		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
 		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
@@ -1458,6 +1443,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		save_views(true)
 	if viewing_dimension:
 		remove_dimension()
+		if not $UI.is_ancestor_of(HUD):
+			$UI.add_child(HUD)
 		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	else:
 		if not other_params.has("first_time"):
@@ -1873,8 +1860,6 @@ func add_planet():
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("enabled", true)
 
 func remove_dimension():
-	if not $UI.is_ancestor_of(HUD):
-		$UI.add_child(HUD)
 	viewing_dimension = false
 	dimension.visible = false
 	view.dragged = true
@@ -2319,8 +2304,6 @@ func generate_systems(id:int):
 		
 		var num_stars:int = max(-log(randf()/dark_matter)/1.5 + 1, 1)
 		var stars = []
-		var hypergiant_system:bool = c_c == 1 and fourth_ship_hints.hypergiant_system_spawn_galaxy == id and fourth_ship_hints.hypergiant_system_spawn_system == -1
-		var dark_matter_system:bool = c_c == 3 and fourth_ship_hints.dark_matter_spawn_galaxy == id and fourth_ship_hints.dark_matter_spawn_system == -1
 		for _j in range(0, num_stars):
 			var star = {}#Higher a: lower temperature (older) stars
 			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.get("age", 1.0), 0.25)
@@ -2503,8 +2486,6 @@ func generate_planets(id:int):#local id
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	system_data[id]["planets"].clear()
-	var hypergiant_system:bool = c_s_g == fourth_ship_hints.hypergiant_system_spawn_system
-	var dark_matter_system:bool = c_s_g == fourth_ship_hints.dark_matter_spawn_system
 	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
 		earn_achievement("exploration", "20_planet_system")
 	if not achievement_data.exploration.has("25_planet_system") and planet_num >= 25:
@@ -2537,8 +2518,6 @@ func generate_planets(id:int):#local id
 			p_i.angle = randf_range(PI/4, 3*PI/4)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * randf_range(240, 270)
-		if hypergiant_system:
-			p_i.distance *= 60
 		# 1 solar radius = 2.63 px = 0.0046 AU
 		# 569 px = 1 AU = 215.6 solar radii
 		max_distance = p_i["distance"]
@@ -2849,7 +2828,7 @@ func generate_tiles(id:int):
 	var total_VEI:float = 0.0
 	for i in wid:
 		for j in wid:
-			var level:float = noise.get_noise_2d(i / float(wid) * 512, j / float(wid) * 512)
+			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
 			if level > 0.5 and p_i.has("lake_1"):
 				if p_i.lake_1.state != "g":
@@ -3774,9 +3753,6 @@ func fn_save_game():
 		"fighter_data":fighter_data,
 		"probe_data":probe_data,
 		"ship_data":ship_data,
-		"second_ship_hints":second_ship_hints,
-		"third_ship_hints":third_ship_hints,
-		"fourth_ship_hints":fourth_ship_hints,
 		"ships_c_coords":ships_c_coords,
 		"ships_dest_coords":ships_dest_coords,
 		"ships_depart_pos":ships_depart_pos,
@@ -3918,6 +3894,7 @@ func fade_out_title(fn:String):
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.0, 0.5)
 	tween.tween_property($Star, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.5)
+	tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 0.0, 0.5)
 	await tween.finished
 	$Star.visible = false
 	$Title.visible = false
@@ -3925,14 +3902,35 @@ func fade_out_title(fn:String):
 	switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instantiate()
 	if fn == "new_game":
-		new_game(false, 0, true)
+		if DRs > 0:
+			switch_music(null)
+			viewing_dimension = true
+			set_default_dim_bonuses()
+			add_dimension()
+			dimension.refresh_univs(true)
+		else:
+			new_game(0, true)
 	else:
 		call(fn)
 		add_panels()
 		$Autosave.start()
 	
 func _on_NewGame_pressed():
-	fade_out_title("new_game")
+	if op_cursor and Input.is_action_pressed("ctrl"):
+		var popup_input = preload("res://Scenes/PopupInput.tscn").instantiate()
+		popup_input.label_text = "Enter the number of DRs to start the game with:"
+		popup_input.check_input = func(x): return int(x) >= 0
+		popup_input.error_text = "Input must be 0 or greater"
+		$UI.add_child(popup_input)
+		popup_input.connect("confirm", Callable(self, "fade_out_title").bind("new_game"))
+		var set_vars = func():
+			c_u = -1
+			DRs = int(popup_input.input.text)
+			help = Data.default_help.duplicate()
+			help.erase("hide_dimension_stuff")
+		popup_input.connect("confirm", set_vars)
+	else:
+		fade_out_title("new_game")
 
 func _on_LoadGame_pressed():
 	toggle_panel(load_panel)
@@ -3954,12 +3952,15 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	if args.is_empty():
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type))
 	else:
-		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bind(args))
+		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
 	$UI.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
+func delete_save_confirm(save_str):
+	load_panel.on_delete_confirm(save_str)
+
 func return_to_menu_confirm():
-	$UI/PopupBackground.visible = false
+	dim_num = 1
 	$Ship.visible = false
 	$Autosave.stop()
 	switch_view("")
@@ -4008,6 +4009,7 @@ func reset_dimension_confirm(DR_num:int):
 	if not achievement_data.progression.has("new_dimension"):
 		earn_achievement("progression", "new_dimension")
 	universe_data.clear()
+	help.erase("hide_dimension_stuff")
 	dim_num += 1
 	if not help.has("DR_reset"):
 		dimension.get_node("ColorRect").visible = true
@@ -4033,9 +4035,6 @@ func destroy_building_confirm(tile_over:int):
 
 func send_ships_confirm():
 	send_ships_panel.send_ships()
-
-func new_game_confirm():
-	fade_out_title("new_game")
 
 func op_galaxy_confirm(l_id:int, g_id:int):
 	switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, g_id]]})

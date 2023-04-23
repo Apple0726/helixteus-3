@@ -32,6 +32,7 @@ func calc_OP_points():
 			op_points[el] = 0.0
 
 func refresh():
+	set_process_input(true)
 	calc_OP_points()
 	for pt in get_tree().get_nodes_in_group("PD_points"):
 		pt.queue_free()
@@ -50,7 +51,7 @@ func refresh():
 	for i in 4:
 		var pt_default = TextureRect.new()
 		pt_default.texture = preload("res://Graphics/Icons/Circle.png")
-		pt_default.expand = true
+		pt_default.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pt_default.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		pt_default.size = Vector2(8, 8)
 		pt_default.position = default_l[i] + $Liquid.position - Vector2(4, 4)
@@ -60,7 +61,7 @@ func refresh():
 	for i in 4:
 		var pt = TextureButton.new()
 		pt.texture_normal = preload("res://Graphics/Icons/Circle.png")
-		pt.expand = true
+		pt.ignore_texture_size = true
 		pt.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		pt.size = Vector2(16, 16)
 		if editable:
@@ -109,6 +110,8 @@ func update_OP_points():
 	$Reset.visible = op_points[el] != 0 and editable
 
 func _input(event):
+	if not visible:
+		set_process_input(false)
 	if event is InputEventMouseMotion:
 		var pos:Vector2 = event.position - $Liquid.position - global_position
 		if moving_l_index != -1:

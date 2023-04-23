@@ -1151,22 +1151,6 @@ func _unhandled_input(event):
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						game.HUD.ships.visible = true
 						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-					elif len(game.ship_data) == 1:
-						game.tile_data[tile_id].erase("ship")
-						$Obstacles.set_cell(0, Vector2i(x_pos, y_pos))
-						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-						if not game.objective.is_empty() and game.objective.type in [game.ObjectiveType.DAVID, game.ObjectiveType.SIGNAL]:
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":35}
-						game.get_2nd_ship()
-					elif len(game.ship_data) == 2:
-						if game.third_ship_hints.parts[0] and game.third_ship_hints.parts[1] and game.third_ship_hints.parts[2] and game.third_ship_hints.parts[3] and game.third_ship_hints.parts[4]:
-							game.tile_data[tile_id].erase("ship")
-							$Obstacles.set_cell(0, Vector2i(x_pos, y_pos))
-							game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-							game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.universe_data[game.c_u].lv, "goal":50}
-							game.get_3rd_ship()
-						else:
-							game.popup(tr("MISSING_PARTS"), 2.5)
 				else:
 					if game.show.has("SP"):
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)

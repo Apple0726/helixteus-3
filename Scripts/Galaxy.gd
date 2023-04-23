@@ -31,7 +31,11 @@ func _ready():
 		var system = Sprite2D.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.modulate = get_star_modulate(star["class"]) * 1.0
+		if game.enable_shaders:
+			star_btn.material = ShaderMaterial.new()
+			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
+			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)

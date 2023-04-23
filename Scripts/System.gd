@@ -290,9 +290,7 @@ func refresh_stars():
 			star.material = ShaderMaterial.new()
 			star.material.shader = star_shader
 			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star.material.set_shader_parameter("brightness_offset", 2.0)
-			star.material.set_shader_parameter("twinkle_speed", 0.8)
-			star.material.set_shader_parameter("amplitude", 0.3)
+			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
 		if star_info.has("MS"):
 			var MS = Sprite2D.new()
 			if star_info.MS == "M_MB":

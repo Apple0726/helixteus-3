@@ -145,6 +145,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "MoveButtons"
 libraries = {
 "": SubResource("AnimationLibrary_qgp35")
 }

@@ -4,7 +4,6 @@ extends Control
 var on_button = false
 
 func _ready():
-	$AnimationPlayer.play("MoveButtons")
 	refresh()
 
 func is_one_element_true(dict:Dictionary):
@@ -16,7 +15,6 @@ func is_one_element_true(dict:Dictionary):
 	return res
 
 func refresh():
-	$VBoxContainer/Construct.visible = game.show.has("construct_button")
 	$VBoxContainer/Construct/New.visible = not game.new_bldgs.is_empty() and is_one_element_true(game.new_bldgs)
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.has("mining")

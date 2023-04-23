@@ -570,6 +570,7 @@ var default_help = {
 				"downgrade":true,
 				"artificial_volcano":true,
 				"flash_send_probe_btn":true,
+				"hide_dimension_stuff":true,
 		}
 
 var unique_bldg_icons = {

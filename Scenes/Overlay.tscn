@@ -1,15 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0yiufm0ffo3f"]
+[gd_scene load_steps=11 format=3 uid="uid://c0yiufm0ffo3f"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="2"]
 [ext_resource type="Gradient" path="res://Resources/ColorblindOverlay.tres" id="3"]
-[ext_resource type="PackedScene" path="res://Scenes/CloseButton.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://bgcqekpr8ng60" path="res://Graphics/Buttons/Reset.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cdtiu2f8f4j5i" path="res://Graphics/Icons/Arrow.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://ca0hkrufqi0yq" path="res://Graphics/Buttons/settings.png" id="9"]
 
 [sub_resource type="GradientTexture2D" id="1"]
 gradient = ExtResource("3")
+
+[sub_resource type="InputEventKey" id="InputEventKey_t2q5b"]
+device = -1
+keycode = 4194334
+
+[sub_resource type="Shortcut" id="Shortcut_ht0n8"]
+events = [SubResource("InputEventKey_t2q5b")]
 
 [node name="Overlay" type="Panel"]
 anchors_preset = 7
@@ -73,13 +80,16 @@ offset_left = -296.0
 offset_top = -100.0
 offset_right = 296.0
 offset_bottom = -68.0
+theme_override_constants/separation = 15
 
 [node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
+alignment = 1
 
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_ht0n8")
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
@@ -125,6 +135,14 @@ caret_blink_interval = 0.5
 
 [node name="CloseButton" parent="." instance=ExtResource("4")]
 layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 672.0
+offset_top = 4.0
+offset_right = 696.0
+offset_bottom = 28.0
+grow_horizontal = 1
 
 [node name="ClickToEdit" type="Control" parent="."]
 anchors_preset = 0
@@ -139,12 +157,15 @@ offset_bottom = 2.0
 
 [node name="TextureRect" type="TextureRect" parent="ClickToEdit"]
 modulate = Color(1, 1, 1, 0.572549)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -8.0
-offset_right = 32.0
-offset_bottom = 8.0
+offset_left = 11.0
+offset_top = -8.5
+offset_right = 43.0
+offset_bottom = 7.5
+grow_vertical = 2
 texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 6
@@ -152,54 +173,65 @@ flip_h = true
 
 [node name="TextureRect2" type="TextureRect" parent="ClickToEdit"]
 modulate = Color(1, 1, 1, 0.572549)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -33.2599
+offset_left = -48.0
 offset_top = -8.0
-offset_right = -1.25995
+offset_right = -16.0001
 offset_bottom = 8.0
+grow_horizontal = 0
+grow_vertical = 2
 texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Label" type="Label" parent="ClickToEdit"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 38.1838
-offset_top = -9.5
-offset_right = 191.184
-offset_bottom = 9.5
-grow_horizontal = 2
+offset_left = 49.1838
+offset_top = -10.0
+offset_right = 202.184
+offset_bottom = 12.0
+grow_vertical = 2
 text = "CLICK_TO_EDIT"
 
 [node name="Label2" type="Label" parent="ClickToEdit"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -194.2
+offset_left = -208.0
 offset_top = -9.5
-offset_right = -39.1995
-offset_bottom = 9.5
-grow_horizontal = 2
+offset_right = -52.9995
+offset_bottom = 12.5
+grow_horizontal = 0
+grow_vertical = 2
 text = "CLICK_TO_EDIT"
+horizontal_alignment = 2
 
 [node name="Reset" type="TextureButton" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -12.0
-offset_top = -28.0
+offset_top = -32.0
 offset_right = 12.0
-offset_bottom = -8.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
 texture_normal = ExtResource("5")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Settings" type="TextureButton" parent="."]
@@ -209,6 +241,7 @@ offset_top = 8.0
 offset_right = 32.0
 offset_bottom = 32.0
 texture_normal = ExtResource("9")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="SettingsPanel" type="PanelContainer" parent="."]
@@ -220,6 +253,7 @@ offset_bottom = -6.0
 
 [node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
 layout_mode = 2
+theme_override_constants/separation = 15
 
 [node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox"]
 layout_mode = 2
