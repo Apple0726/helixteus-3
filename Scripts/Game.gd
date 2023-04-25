@@ -1591,9 +1591,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				STM = STM_scene.instantiate()
 				add_child(STM)
 				if randf() < 0.5:
-					switch_music(preload("res://Audio/STM.mp3"))
+					switch_music(preload("res://Audio/STM.ogg"))
 				else:
-					switch_music(preload("res://Audio/hx3 minigame 2.ogg"))
+					switch_music(preload("res://Audio/STM2.ogg"))
 			"battle":
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):

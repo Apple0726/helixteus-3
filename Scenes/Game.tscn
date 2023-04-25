@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dkwpshcqk1eb6" path="res://Graphics/Title screen/Godot.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://c6ugjbqmwrbur" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="AudioStream" uid="uid://v4wb6pb6bn7q" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="AudioStream" uid="uid://01a2xijsnx71" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://osgmueey4qpn" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]

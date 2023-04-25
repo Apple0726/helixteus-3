@@ -1352,7 +1352,7 @@ func _input(event):
 				if cave_floor == 8:
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				elif cave_floor == 16:
-					game.switch_music(preload("res://Audio/cave3.mp3"), 0.95 if tile.has("aurora") else 1.0)
+					game.switch_music(preload("res://Audio/cave3.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				if volcano_mult > 1 and not artificial_volcano and aurora:
 					difficulty *= 2.5
 				elif volcano_mult > 1 and not artificial_volcano or aurora:
