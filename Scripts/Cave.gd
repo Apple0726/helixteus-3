@@ -69,7 +69,6 @@ var rover_data:Dictionary = {}
 var cave_data:Dictionary
 var modifiers:Dictionary = {}
 var cave_darkness:float = 0.0
-var dont_gen_anything:bool = false
 var wormhole
 var on_ash:bool = false
 var on_lava:bool = false
@@ -459,7 +458,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if game.enable_shaders:
 		$TileMap.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = cave_darkness * 1.4
+	rover_light.energy = 0.3#cave_darkness * 1.1
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
@@ -494,8 +493,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	lava_noise.frequency = 1.0 / rng.randi_range(30, 120)
 	camera.zoom = Vector2.ONE * rover_size / 2.5
 	$Rover.scale = Vector2.ONE * rover_size
-	dont_gen_anything = tile.cave.has("special_cave") and tile.cave.special_cave == 1
-	var boss_cave = game.c_p_g == game.fourth_ship_hints.boss_planet and cave_floor == 5
 	var top_of_the_tower = tower and cave_floor == num_floors
 	var seeking_proj = enhancements.has("laser_3")
 	var debris_height:int = -1020
@@ -680,39 +677,38 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(Callable(self,"sort_size"))
 	#Generate treasure chests
-	if not dont_gen_anything and not boss_cave and not top_of_the_tower:
-		for room in rooms:
-			var n = room.size
-			for tile in room.tiles:
-				var rand = rng.randf()
-				var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
-				if rand < formula:
-					var tier:int = min(-log(rand/formula) / 2.5 + 1, 5)
-					var contents:Dictionary = generate_treasure(tier, rng)
-					if contents.is_empty() or chests_looted[cave_floor - 1].has(int(tile)):
-						continue
-					if partially_looted_chests[cave_floor - 1].has(str(tile)):
-						contents = partially_looted_chests[cave_floor - 1][str(tile)].duplicate(true)
-					var chest = object_scene.instantiate()
-					if tier == 1:
-						chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
-					elif tier == 2:
-						chest.modulate = Color(0, 0.79, 0.0, 1.0)
-					elif tier == 3:
-						chest.modulate = Color(0, 0.5, 0.79, 1.0)
-					elif tier == 4:
-						chest.modulate = Color(0.7, 0, 0.79, 1.0)
-					elif tier == 5:
-						chest.modulate = Color(0.85, 1.0, 0, 1.0)
-					chest.modulate *= (1.0 - cave_darkness)
-					chest.modulate.a = 1
-					chest.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Chest.png")
-					chest.get_node("Area2D").connect("area_entered",Callable(self,"on_chest_entered").bind(str(tile)))
-					chest.get_node("Area2D").connect("area_exited",Callable(self,"on_chest_exited"))
-					chest.scale *= 0.8
-					chest.position = cave_BG.map_to_local(get_tile_pos(tile))
-					chests[str(tile)] = {"node":chest, "contents":contents, "tier":tier}
-					add_child(chest)
+	for room in rooms:
+		var n = room.size
+		for tile in room.tiles:
+			var rand = rng.randf()
+			var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
+			if rand < formula:
+				var tier:int = min(-log(rand/formula) / 2.5 + 1, 5)
+				var contents:Dictionary = generate_treasure(tier, rng)
+				if contents.is_empty() or chests_looted[cave_floor - 1].has(int(tile)):
+					continue
+				if partially_looted_chests[cave_floor - 1].has(str(tile)):
+					contents = partially_looted_chests[cave_floor - 1][str(tile)].duplicate(true)
+				var chest = object_scene.instantiate()
+				if tier == 1:
+					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
+				elif tier == 2:
+					chest.modulate = Color(0, 0.79, 0.0, 1.0)
+				elif tier == 3:
+					chest.modulate = Color(0, 0.5, 0.79, 1.0)
+				elif tier == 4:
+					chest.modulate = Color(0.7, 0, 0.79, 1.0)
+				elif tier == 5:
+					chest.modulate = Color(0.85, 1.0, 0, 1.0)
+				chest.modulate *= (1.0 - cave_darkness)
+				chest.modulate.a = 1
+				chest.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Chest.png")
+				chest.get_node("Area2D").connect("area_entered",Callable(self,"on_chest_entered").bind(str(tile)))
+				chest.get_node("Area2D").connect("area_exited",Callable(self,"on_chest_exited"))
+				chest.scale *= 0.8
+				chest.position = cave_BG.map_to_local(get_tile_pos(tile))
+				chests[str(tile)] = {"node":chest, "contents":contents, "tier":tier}
+				add_child(chest)
 	#Remove already-mined tiles
 	for i in cave_size:
 		for j in cave_size:
@@ -722,7 +718,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				minimap_cave.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
-				cave_wall.erase(Vector2i(i, j))
+				walls.erase(Vector2i(i, j))
 				if deposits.has(str(tile_id)):
 					deposits[str(tile_id)].queue_free()
 					deposits.erase(str(tile_id))
@@ -821,7 +817,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		relic.add_to_group("misc_objects")
 	
 	#Wormhole
-	if cave_floor == num_floors and not boss_cave:
+	if cave_floor == num_floors:
 		wormhole = object_scene.instantiate()
 		wormhole.get_node("Sprite2D").texture = null
 		var wormhole_texture = preload("res://Scenes/Wormhole.tscn").instantiate()
@@ -939,23 +935,28 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = hole_pos
 		camera.position = hole_pos
 	else:
-		if top_of_the_tower and len(game.ship_data) != 4:
-			pos = Vector2(500, 500)
-			MM_exit.position = pos * minimap_zoom
-			var ship = object_scene.instantiate()
-			ship.get_node("Sprite2D").texture = preload("res://Graphics/Ships/Ship3.png")
-			ship.get_node("Area2D").connect("body_entered",Callable(self,"on_Ship4_entered"))
-			add_child(ship)
-			ship.position = Vector2(1000, 1000)
-			if game.fourth_ship_hints.emma_joined and not game.fourth_ship_hints.ship_spotted:
-				$UI2/Dialogue.NPC_id = 3
-				$UI2/Dialogue.dialogue_id = 11
-				$UI2/Dialogue.show_dialogue()
 		rover.position = pos
 		camera.position = pos
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
+	if Discord_Activity.get_is_discord_working():
+		Discord_Activity.small_image = "rover"
+		var cave_adjective = ""
+		if num_floors >= 12:
+			cave_adjective = " large"
+		if num_floors >= 24:
+			cave_adjective = " huge"
+		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else ("illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
+		if cave_floor < 8:
+			Discord_Activity.details = "Exploring a{adjective}{volcanic} cave {aurora}".format(format_dict)
+		elif cave_floor < 16:
+			Discord_Activity.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
+		else:
+			Discord_Activity.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
+		Discord_Activity.state = "Floor %s / %s" % [cave_floor, num_floors]
+		Discord_Activity.small_image_text = "Rover HP: %s / %s" % [HP, total_HP]
+		Discord_Activity.refresh()
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
@@ -964,15 +965,6 @@ func add_hole(id:int):
 	add_child(drilled_hole)
 	drilled_hole.connect("area_entered",Callable(self,"_on_Hole_area_entered"))
 	drilled_hole.connect("area_exited",Callable(self,"_on_area_exited"))
-
-func on_Ship4_entered(_body):
-	if game.fourth_ship_hints.emma_joined:
-		$UI2/Dialogue.NPC_id = 3
-		$UI2/Dialogue.dialogue_id = 12
-	else:
-		$UI2/Dialogue.NPC_id = 5
-		$UI2/Dialogue.dialogue_id = 1
-	$UI2/Dialogue.show_dialogue()
 
 func enable_light(node):
 	node.get_node("PointLight2D").enabled = true
@@ -998,31 +990,6 @@ func on_chest_entered(_area, tile:String):
 	vbox.add_child(take_all)
 	$UI2/Panel.visible = true
 	$UI2/Panel.modulate.a = 1
-
-func on_relic_entered(_body):
-	$UI2/Relic.visible = true
-
-func on_ShipPart_entered(_body):
-	if not game.third_ship_hints.parts[tile.cave.special_cave]:
-		game.objective.current += 1
-		game.popup(tr("SHIP_PART_FOUND"), 2.5)
-		game.third_ship_hints.parts[tile.cave.special_cave] = true
-		for object in get_tree().get_nodes_in_group("misc_objects"):
-			object.visible = false
-
-func on_Manipulator_entered(_body, gem:int, gem_str:String):
-	if not game.fourth_ship_hints.manipulators[gem]:
-		game.objective.current += 1
-		game.popup(tr("MANIPULATOR_FOUND") % tr(gem_str.to_upper()), 2.5)
-		game.fourth_ship_hints.manipulators[gem] = true
-		for object in get_tree().get_nodes_in_group("misc_objects"):
-			object.visible = false
-
-func on_map_entered(_body):
-	$UI2/Ship2Map.visible = true
-	$UI2/Ship2Map/AnimationPlayer.play("Map fade")
-	active_type = "map"
-	show_right_info(tr("TAKE_ALL"))
 
 func on_chest_exited(area:Area2D):
 	call_deferred("hide_panel", true)
@@ -1382,13 +1349,6 @@ func _input(event):
 				else:
 					difficulty /= 2.0
 				generate_cave(true if cave_floor == 1 else false, true)
-			elif active_type == "map":
-				game.third_ship_hints.erase("map_found_at")
-				game.third_ship_hints.erase("map_pos")
-				for object in get_tree().get_nodes_in_group("misc_objects"):
-					object.remove_from_group("misc_objects")
-					object.free()
-				game.popup_window(tr("MAP_COLLECTED_DESC"), tr("MAP_COLLECTED"))
 			$UI2/Panel.visible = false
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.5
@@ -2154,27 +2114,6 @@ func _on_Difficulty_mouse_entered():
 		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
 	else:
 		game.show_tooltip(tooltip)
-
-func _on_dialogue_finished(_NPC_id:int, _dialogue_id:int):
-	if _NPC_id == 3:
-		if _dialogue_id == 1:
-			game.objective = {"type":game.ObjectiveType.MANIPULATORS, "id":12, "current":0, "goal":6}
-			game.fourth_ship_hints.op_grill_cave_spawn = id
-			get_node("OPGrill/Label").text = tr("NPC_3_NAME")
-			$UI2/Dialogue.dialogue_id = 2
-			get_node("OPGrill").connect_events(2, $UI2/Dialogue)
-		elif _dialogue_id == 5:
-			game.fourth_ship_hints.emma_free = true
-		elif _dialogue_id == 6:
-			game.fourth_ship_hints.emma_joined = true
-			remove_child(get_node("OPGrill"))
-			game.objective.clear()
-		elif _dialogue_id == 11:
-			game.fourth_ship_hints.ship_spotted = true
-			$UI2/Dialogue.NPC_id = -1
-		elif _dialogue_id == 12:
-			exit_cave()
-			game.get_4th_ship()
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:

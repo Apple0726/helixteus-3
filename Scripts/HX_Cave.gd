@@ -90,10 +90,10 @@ func _process(delta):
 	if not status_effects.has("stun"):
 		if state == MOVE:
 			if len(move_path_v) > 0:
-				var move_to = cave_tm.map_to_local(move_path_v[0]) + Vector2(100, 100)
+				var move_to = cave_tm.map_to_local(move_path_v[0])
 				position = position.move_toward(move_to, delta * move_speed)
 				if position == move_to:
-					move_path_v.remove(0)
+					move_path_v.remove_at(0)
 			else:
 				state = IDLE
 				move_timer.start()

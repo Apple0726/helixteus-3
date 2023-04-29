@@ -5,6 +5,7 @@ var counter:int = 0
 var SA_counter:int = 0
 
 func _ready():
+	super()
 	move_timer = Timer.new()
 	add_child(move_timer)
 	move_timer.start(3.0)

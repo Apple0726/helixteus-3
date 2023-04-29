@@ -1,12 +1,12 @@
 [gd_scene load_steps=12 format=3 uid="uid://bx7irdxpbnhbb"]
 
-[ext_resource type="Texture2D" uid="uid://bse5rqmmvsveq" path="res://Graphics/Misc/Bar.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
 [ext_resource type="Script" path="res://Scripts/DimensionType.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bvttom633p3hs" path="res://Graphics/Misc/BarUnder.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://cm16c10pt6j1e" path="res://Graphics/Misc/BarOver.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bgs6f5qatqerf" path="res://Graphics/Misc/BarUnder.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://kppvrm0ienms" path="res://Graphics/Misc/BarOver.png" id="7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_epxrv"]
 draw_center = false
@@ -56,9 +56,9 @@ _data = {
 
 [node name="Mathematics" type="Panel"]
 clip_contents = true
-custom_minimum_size = Vector2(250, 326)
+custom_minimum_size = Vector2(250, 320)
 offset_right = 255.0
-offset_bottom = 326.0
+offset_bottom = 320.0
 size_flags_horizontal = 3
 mouse_filter = 2
 script = ExtResource("3")

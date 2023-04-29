@@ -6,6 +6,7 @@ var SA_counter:int = 0
 var sgn:int = 1
 
 func _ready():
+	super()
 	move_timer = Timer.new()
 	add_child(move_timer)
 	move_timer.start(3.0)

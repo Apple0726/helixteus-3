@@ -42,6 +42,9 @@ func _ready():
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
+	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
+#	$Panel.visible = false
+#	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 	$Help.visible = game.help.has("mining")
 	circ.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
@@ -139,7 +142,6 @@ func update_pickaxe():
 
 func generate_rock(new:bool):
 	var tile_sprite = $Tile
-	var vbox = $Panel/VBoxContainer
 	contents = {}
 	tile_sprite.scale = Vector2.ONE * 0.3
 	if is_instance_valid(tile_tween):
@@ -168,9 +170,6 @@ func generate_rock(new:bool):
 			met_sprite.position.y = randf_range(half_size_in_px + 5, 195 - half_size_in_px)
 			metal_sprites.append(met_sprite)
 			tile_sprite.add_child(met_sprite)
-	Helper.put_rsrc(vbox, 42, contents)
-	$Panel.visible = false
-	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
 func _input(event):
 	if event is InputEventMouse:
@@ -283,6 +282,7 @@ func pickaxe_hit():
 			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
 			generate_rock(true)
+	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
 	tile.mining_progress = progress
 	if rock_gen:
 		$MiningSound.pitch_scale = randf_range(0.8, 1.2)

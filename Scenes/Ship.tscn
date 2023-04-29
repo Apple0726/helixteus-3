@@ -1,22 +1,22 @@
 [gd_scene load_steps=34 format=3 uid="uid://cxykmxd6r2wgm"]
 
-[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Ship.gd" id="2"]
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="3"]
-[ext_resource type="PackedScene" path="res://Scenes/Fire.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dofnulqgy5qsb" path="res://Graphics/Icons/Fire.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://767ld8exmq22" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://b0l3bslpgrtw5" path="res://Graphics/Icons/acc.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://s1i7vybkrcyo" path="res://Graphics/Effects/spotlight_1.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://c4f1rxpmykit7" path="res://Graphics/Icons/Stun.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://c3aondk8vafoe" path="res://icon.png" id="12"]
+[ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cvtq8jsdk062b" path="res://Graphics/Icons/Fire.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://b432q8ajmd5by" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://oo70uvbjv8xd" path="res://Graphics/Icons/acc.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bunjbkhc3svfd" path="res://Graphics/Effects/spotlight_1.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://tsxmo0idiepu" path="res://Graphics/Icons/Stun.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://neuhc3pteccv" path="res://icon.png" id="12"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="13"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
-[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://bsn7u5v3hjuuv" path="res://Cursor.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://cdshtmhti7ipf" path="res://Graphics/Icons/atk.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://bfrpgp6brsn5d" path="res://Cursor.png" id="17"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -31,6 +31,8 @@ emission_sphere_radius = 6.0
 direction = Vector3(-1, 0, 0)
 spread = 0.0
 gravity = Vector3(0, 0, 0)
+scale_min = 0.04
+scale_max = 0.06
 color_ramp = SubResource("2")
 
 [sub_resource type="Gradient" id="34"]
@@ -141,7 +143,6 @@ color = Color(1, 0.603922, 0, 1)
 color_ramp = SubResource("27")
 
 [node name="Ship" type="Area2D"]
-visible = false
 position = Vector2(-272, 144)
 collision_layer = 2
 collision_mask = 16
@@ -150,6 +151,7 @@ script = ExtResource("2")
 [node name="Fire" parent="." instance=ExtResource("4")]
 position = Vector2(-60, -4)
 process_material = SubResource("3")
+local_coords = true
 
 [node name="Charge" type="GPUParticles2D" parent="."]
 modulate = Color(1, 1, 0, 1)
@@ -192,7 +194,7 @@ offset_left = -112.0
 offset_top = 32.0
 offset_right = -48.0
 offset_bottom = 40.0
-rotation = -90.0
+rotation = -1.5708
 value = 50.0
 nine_patch_stretch = true
 texture_under = ExtResource("1")
@@ -204,7 +206,7 @@ offset_left = -99.875
 offset_top = 32.0
 offset_right = -35.875
 offset_bottom = 40.0
-rotation = -90.0
+rotation = -1.5708
 value = 50.0
 nine_patch_stretch = true
 texture_under = ExtResource("1")

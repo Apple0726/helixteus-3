@@ -2,17 +2,17 @@
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://nnhnywqb8dcf" path="res://Graphics/Icons/current.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://c5dt12wwrj5l7" path="res://Graphics/Icons/current.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://dd1km55c3fsi2" path="res://Graphics/Ships/Ship1.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dqgb7d45axjj" path="res://Graphics/Ships/Ship2.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c1jkbi5rhxxdl" path="res://Graphics/Ships/Ship1.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://c00s8fyr2rmpb" path="res://Graphics/Ships/Ship2.png" id="7"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="8"]
-[ext_resource type="Texture2D" uid="uid://d4hr6mh2xys1r" path="res://Graphics/Planets/BGs/9.png" id="9"]
-[ext_resource type="PackedScene" path="res://Scenes/Key.tscn" id="11"]
+[ext_resource type="Texture2D" uid="uid://ciaq2ex5udd81" path="res://Graphics/Planets/BGs/9.png" id="9"]
+[ext_resource type="PackedScene" uid="uid://cy1jwsk8ofoys" path="res://Scenes/Key.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Ship.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://c4y54yskrjds4" path="res://Graphics/Ships/Ship3.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://bwcakchueppui" path="res://Graphics/Icons/HX_icon.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://c88r36ixq5mvc" path="res://Graphics/Ships/Ship3.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://cb77ibqyg5i0o" path="res://Graphics/Icons/HX_icon.png" id="14"]
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="15"]
 
 [sub_resource type="ShaderMaterial" id="6"]
@@ -417,7 +417,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "            3"
 
-[node name="Light3D" type="Button" parent="UI/FightPanel"]
+[node name="Light" type="Button" parent="UI/FightPanel"]
 layout_mode = 0
 offset_left = 444.0
 offset_top = 12.0
@@ -426,7 +426,7 @@ offset_bottom = 52.0
 shortcut = SubResource("34")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light3D"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -441,7 +441,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="UI/FightPanel/Light3D"]
+[node name="Label" type="Label" parent="UI/FightPanel/Light"]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
@@ -775,9 +775,9 @@ libraries = {
 [connection signal="mouse_entered" from="UI/FightPanel/Bomb" to="." method="_on_weapon_mouse_entered" binds= ["bomb"]]
 [connection signal="mouse_exited" from="UI/FightPanel/Bomb" to="." method="_on_weapon_mouse_exited"]
 [connection signal="pressed" from="UI/FightPanel/Bomb" to="." method="_on_weapon_pressed" binds= ["bomb"]]
-[connection signal="mouse_entered" from="UI/FightPanel/Light3D" to="." method="_on_weapon_mouse_entered" binds= ["light"]]
-[connection signal="mouse_exited" from="UI/FightPanel/Light3D" to="." method="_on_weapon_mouse_exited"]
-[connection signal="pressed" from="UI/FightPanel/Light3D" to="." method="_on_weapon_pressed" binds= ["light"]]
+[connection signal="mouse_entered" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_entered" binds= ["light"]]
+[connection signal="mouse_exited" from="UI/FightPanel/Light" to="." method="_on_weapon_mouse_exited"]
+[connection signal="pressed" from="UI/FightPanel/Light" to="." method="_on_weapon_pressed" binds= ["light"]]
 [connection signal="pressed" from="UI/FightPanel/Ability" to="." method="_on_Ability_pressed"]
 [connection signal="pressed" from="UI/FightPanel/Superweapon" to="." method="_on_Superweapon_pressed"]
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]

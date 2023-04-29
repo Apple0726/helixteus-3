@@ -83,19 +83,19 @@ func add_p_b(p_b:Dictionary):
 
 func add_s_b(s_b:Dictionary):
 	var btn = Button.new()
-	btn.text = game.bookmarks.planet[str(s_b.c_s_g)].name
+	btn.text = game.bookmarks.system[str(s_b.c_s_g)].name
 	btn.connect("pressed",Callable(self,"on_bookmark_pressed").bind("system", s_b))
 	bookmark_btns.add_child(btn)
 
 func add_g_b(g_b:Dictionary):
 	var btn = Button.new()
-	btn.text = game.bookmarks.planet[str(g_b.c_g_g)].name
+	btn.text = game.bookmarks.galaxy[str(g_b.c_g_g)].name
 	btn.connect("pressed",Callable(self,"on_bookmark_pressed").bind("galaxy", g_b))
 	bookmark_btns.add_child(btn)
 
 func add_c_b(c_b:Dictionary):
 	var btn = Button.new()
-	btn.text = game.bookmarks.planet[str(c_b.c_c)].name
+	btn.text = game.bookmarks.cluster[str(c_b.c_c)].name
 	btn.connect("pressed",Callable(self,"on_bookmark_pressed").bind("cluster", c_b))
 	bookmark_btns.add_child(btn)
 
@@ -170,7 +170,7 @@ func refresh():
 		return
 	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
-	dimension_btn.visible = (len(game.universe_data) > 1 or game.dim_num > 1) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
+	dimension_btn.visible = (len(game.universe_data) > 1 or not game.help.has("hide_dimension_stuff")) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
@@ -421,7 +421,7 @@ func _on_Label_mouse_exited():
 var bookmark_shown:bool = false
 func _input(event):
 	if Input.is_action_just_released("H") and slot_over != -1:
-		game.hotbar.remove(slot_over)
+		game.hotbar.remove_at(slot_over)
 		game.hide_tooltip()
 		slot_over = -1
 		update_hotbar()
@@ -547,7 +547,6 @@ func _on_Bookmarked_pressed():
 		if p_i.has("bookmarked"):
 			game.bookmarks.planet.erase(str(game.c_p_g))
 			p_i.erase("bookmarked")
-			refresh_bookmarks()
 		else:
 			var bookmark:Dictionary = {
 				"type":p_i.type,
@@ -561,13 +560,11 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c}
 			p_i.bookmarked = true
 			game.bookmarks.planet[str(game.c_p_g)] = bookmark
-			add_p_b(bookmark)
 	elif game.c_v == "system":
 		var s_i:Dictionary = game.system_data[game.c_s]
 		if s_i.has("bookmarked"):
 			game.bookmarks.system.erase(str(game.c_s_g))
 			s_i.erase("bookmarked")
-			refresh_bookmarks()
 		else:
 			var star:Dictionary = s_i.stars[0]
 			for i in range(1, len(s_i.stars)):
@@ -583,13 +580,11 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c}
 			s_i.bookmarked = true
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
-			add_s_b(bookmark)
 	elif game.c_v == "galaxy":
 		var g_i:Dictionary = game.galaxy_data[game.c_g]
 		if g_i.has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
 			g_i.erase("bookmarked")
-			refresh_bookmarks()
 		else:
 			var bookmark:Dictionary = {
 				"type":g_i.type,
@@ -599,20 +594,18 @@ func _on_Bookmarked_pressed():
 				"c_c":game.c_c}
 			g_i.bookmarked = true
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
-			add_g_b(bookmark)
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]
 		if c_i.has("bookmarked"):
 			game.bookmarks.cluster.erase(str(game.c_c))
 			c_i.erase("bookmarked")
-			refresh_bookmarks()
 		else:
 			var bookmark:Dictionary = {
 				"name":c_i.name,
 				"c_c":game.c_c}
 			c_i.bookmarked = true
 			game.bookmarks.cluster[str(game.c_c)] = bookmark
-			add_c_b(bookmark)
+	refresh_bookmarks()
 
 func _on_Bookmarked_mouse_entered():
 	if $Bookmarks/Bookmarked.button_pressed:

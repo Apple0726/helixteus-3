@@ -52,7 +52,9 @@ func set_crack():
 func destroy_rock():
 	_on_Timer_timeout()
 	particle_amount = int(scale.x * 20)
-	$GPUParticles2D.process_material.damping = clamp(remap(scale.x, 1.2, 0.5, 800, 1500), 800, 1500)
+	var damping_max = clamp(remap(scale.x, 1.2, 0.5, 800, 1500), 800, 1500)
+	$GPUParticles2D.process_material.damping_min = damping_max * 0.8
+	$GPUParticles2D.process_material.damping_max = damping_max
 	$Sprite2D.visible = false
 	debris_collision_shape.disabled = true
 	$LightOccluder2D.light_mask = 0

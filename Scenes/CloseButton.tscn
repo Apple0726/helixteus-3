@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ddf2xjwcht77u"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
-[ext_resource type="Texture2D" uid="uid://cu2ddmu2v6ry8" path="res://Graphics/Buttons/CloseButton.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ds688feph6lc5" path="res://Graphics/Buttons/CloseButton.png" id="2"]
 [ext_resource type="Script" path="res://Scripts/CloseButton.gd" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_an3vt"]

@@ -510,6 +510,21 @@ func update_viewport_dimensions():
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
+	#await RenderingServer.frame_post_draw
+	Discord_Activity.app_id = 1101755847325003846 # Application ID
+	print("Discord working: " + str(Discord_Activity.get_is_discord_working())) # A boolean if everything worked
+	Discord_Activity.details = "In title screen"
+	Discord_Activity.state = ""
+	
+	Discord_Activity.large_image = "game" # Image key from "Art Assets"
+	Discord_Activity.large_image_text = "Helixteus 3"
+#	Discord_Activity.small_image = "boss" # Image key from "Art Assets"
+#	Discord_Activity.small_image_text = "Fighting the end boss! D:"
+#
+	Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system()) # "02:41 elapsed"
+	# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time
+
+	Discord_Activity.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -690,7 +705,7 @@ func load_univ():
 		if science_unlocked.has("CI3"):
 			stack_size = 128
 		if not autocollect.is_empty():
-			var time_elapsed = (Time.get_unix_time_from_system() - save_date)
+			var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
 			if autocollect.has("ship_XP"):
 				var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
 				for i in len(ship_data):
@@ -895,6 +910,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		dim_num = 1
 		if not DR_advantage:
 			help = Data.default_help.duplicate()
+			set_default_dim_bonuses()
 		for ach in achievements:
 			achievement_data[ach] = {}
 		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
@@ -908,7 +924,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		universe_data[0].difficulty = 1.0
 		universe_data[0].time_speed = 1.0
 		universe_data[0].antimatter = 0.0
-		set_default_dim_bonuses()
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -1325,6 +1340,7 @@ func fade_in_panel(panel:Control):
 	hide_adv_tooltip()
 
 func fade_out_panel(panel:Control):
+	#$ShaderExport/SubViewport.get_texture().get_image().save_png("user://universe.png")
 	var s = panel.size
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
@@ -1609,6 +1625,26 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = get_tree().create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
+	if Discord_Activity.get_is_discord_working():
+		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
+			Discord_Activity.small_image = c_v
+			if c_v in ["planet", "system"]:
+				Discord_Activity.details = "Managing planets"
+			if c_v == "planet":
+				Discord_Activity.small_image_text = "Viewing " + planet_data[c_p].name
+			elif c_v == "system":
+				Discord_Activity.small_image_text = "Viewing " + system_data[c_s].name
+			elif c_v == "galaxy":
+				Discord_Activity.details = "Observing the stars"
+				Discord_Activity.small_image_text = "Viewing " + galaxy_data[c_g].name
+			elif c_v == "cluster":
+				Discord_Activity.details = "Watching distant galaxies"
+				Discord_Activity.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
+			elif c_v == "universe":
+				Discord_Activity.details = "Navigating the universe"
+				Discord_Activity.small_image_text = "Viewing " + u_i.name
+			Discord_Activity.state = ""
+			Discord_Activity.refresh() 
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
@@ -3946,9 +3982,12 @@ func _on_Autosave_timeout():
 
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	#var width = min(800, default_font.get_string_size(text).x) + 40
+	if $UI.has_node("YN_panel"):
+		$UI.get_node("YN_panel").free()
 	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	YN_panel.set_text(text)
 	YN_panel.set_OK_text(tr("NO"))
+	YN_panel.name = "YN_panel"
 	if args.is_empty():
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type))
 	else:
@@ -3967,7 +4006,7 @@ func return_to_menu_confirm():
 	switch_music(load("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	var tween = create_tween()
-	tween.tween_property($Stars/Stars, "modulate", Color.WHITE, 0.5)
+	tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 1.0, 1.0)
 	$Title/Menu/VBoxContainer/NewGame.connect("pressed",Callable(self,"_on_NewGame_pressed"))
 	$Title.visible = true
 	$Star.visible = true

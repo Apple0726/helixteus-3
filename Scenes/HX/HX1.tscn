@@ -1,20 +1,21 @@
-[gd_scene load_steps=48 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=50 format=3 uid="uid://cpjo82l86k61"]
 
-[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://c7nek4jwjja8y" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
+[ext_resource type="Texture2D" uid="uid://cdshtmhti7ipf" path="res://Graphics/Icons/atk.png" id="1"]
+[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
+[ext_resource type="Texture2D" uid="uid://unvv66d8okyq" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://2ipvjl0b0uwj" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
-[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://brtgee3vlwvej" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
-[ext_resource type="Texture2D" uid="uid://c3aondk8vafoe" path="res://icon.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://dofnulqgy5qsb" path="res://Graphics/Icons/Fire.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://in8ae72utpm6" path="res://Graphics/Icons/Debris.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://neuhc3pteccv" path="res://icon.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://cvtq8jsdk062b" path="res://Graphics/Icons/Fire.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://ql1dhfxcxdxb" path="res://Graphics/Icons/Debris.png" id="10"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
-[ext_resource type="Texture2D" uid="uid://767ld8exmq22" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://c4f1rxpmykit7" path="res://Graphics/Icons/Stun.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://s1i7vybkrcyo" path="res://Graphics/Effects/spotlight_1.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://b0l3bslpgrtw5" path="res://Graphics/Icons/acc.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://b432q8ajmd5by" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://tsxmo0idiepu" path="res://Graphics/Icons/Stun.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bunjbkhc3svfd" path="res://Graphics/Effects/spotlight_1.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://oo70uvbjv8xd" path="res://Graphics/Icons/acc.png" id="15"]
 
 [sub_resource type="CircleShape2D" id="24"]
 radius = 1252.0
@@ -23,31 +24,14 @@ radius = 1252.0
 radius = 59.993
 height = 229.932
 
-[sub_resource type="Shader" id="29"]
-code = "shader_type canvas_item;
-uniform float amplitude = 5;
-uniform float frequency = 3.0;
-uniform bool aurora = false;
-uniform float light = 1.0;
-
-void vertex() {
-  VERTEX += vec2(0, amplitude * sin(frequency * TIME));
-}
-void fragment() {
-	COLOR = texture(TEXTURE, UV);
-	if (aurora) {
-		COLOR.rb += 0.3 * sin((UV.x + UV.y) * 6.0 + TIME * 10.0) + 0.3;
-	}
-	COLOR.rgb *= light;
-}"
-
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
-shader = SubResource("29")
+shader = ExtResource("1_bfi0c")
 shader_parameter/amplitude = 6.0
 shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="3"]
 shader = ExtResource("7")
@@ -116,19 +100,35 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(0.406126, 1),
+"times": PackedFloat32Array(0, 0.05, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_54dbw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4bina"]
 _data = {
-"Hurt": SubResource("6")
+"Hurt": SubResource("6"),
+"RESET": SubResource("Animation_54dbw")
 }
 
 [sub_resource type="Animation" id="7"]
@@ -140,9 +140,9 @@ tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(2, 2, 2, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.0666667, 0, 385.166, -0.0666667, 0, 0.0666667, 0, 385, -0.101375, 8.81121, 0.1, -8.69168, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.2, 0.4, 1.3)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -151,9 +151,9 @@ tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(2, 2, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.0666667, 0, 75.1429, -0.0343019, -43.7529, 0.1, 127.552, 360, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1.3)
 }
 
 [sub_resource type="Animation" id="8"]
@@ -164,9 +164,9 @@ tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.2, 248.756, 357, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -175,9 +175,9 @@ tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(360, -0.25, 0, 0.2, 104.886, 499.416, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
 }
 
 [sub_resource type="Animation" id="9"]
@@ -189,9 +189,9 @@ tracks/0/path = NodePath("Sprite2D:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(2, 2, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.08, 0.432311, 100.674, -0.0892783, -6.72562, 0.15, 11.3, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -200,9 +200,9 @@ tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(2, 2, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.07, 0.0467681, 28.8433, -0.0781124, -9.89989, 0.15, 19.0108, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1)
 }
 
 [sub_resource type="Animation" id="10"]
@@ -213,9 +213,9 @@ tracks/0/path = NodePath("Sprite2D:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.1, -0.508904, -11.4519, -0.1, 0.0690498, 0.25, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -224,9 +224,9 @@ tracks/1/path = NodePath("Sprite2D:position:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.1, -0.211617, 30.9805, -0.1, -0.891861, 0.25, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1)
 }
 tracks/2/type = "bezier"
 tracks/2/imported = false
@@ -235,9 +235,9 @@ tracks/2/path = NodePath("Sprite2D:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(6.29962, -0.25, 0, 0.1, -0.062973, 32.9805, -0.1, -14.4065, 0.25, 0, 6.29962, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 1)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rpr20"]
@@ -254,31 +254,47 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:modulate")
-tracks/0/interp = 1
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Vector2(0, 6.29962), Vector2(0, -25), Vector2(0, -25), Vector2(0, 6.29962)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:position")
-tracks/1/interp = 2
+tracks/1/path = NodePath("Sprite2D:material:shader_parameter/modulate")
+tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 6.29962), Vector2(0, -25), Vector2(0, -25), Vector2(0, 6.29962)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_fxxeq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 0, 0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ml7on"]
 _data = {
-"Miss": SubResource("11")
+"Miss": SubResource("11"),
+"RESET": SubResource("Animation_fxxeq")
 }
 
 [sub_resource type="Gradient" id="12"]
@@ -371,6 +387,8 @@ shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")
+position = Vector2(0, -67)
+rotation = 6.28319
 texture = ExtResource("1_t5dxa")
 
 [node name="Fire" type="Sprite2D" parent="Sprite2D"]

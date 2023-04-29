@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://ceo4hlq5libn3"]
 
-[ext_resource type="Texture2D" uid="uid://cdtiu2f8f4j5i" path="res://Graphics/Icons/Arrow.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cm6qrejg1itog" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
 [ext_resource type="Script" path="res://Scripts/BuySellPanel.gd" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
-[ext_resource type="Texture2D" uid="uid://30uqjivd5bxp" path="res://Graphics/Buttons/Switch.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://nl4obiwqipkw" path="res://Graphics/Buttons/Switch.png" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
 
 [sub_resource type="Animation" id="2"]
@@ -74,7 +74,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(0.420448, 2),
 "update": 0,
-"values": [0.0, 180.0]
+"values": [0.0, 3.14159]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jjrlt"]
@@ -133,6 +133,8 @@ ticks_on_borders = true
 [node name="Resource" parent="." instance=ExtResource("2")]
 layout_mode = 0
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 72.0
 offset_top = 88.0
 offset_right = -494.0
@@ -141,6 +143,8 @@ offset_bottom = -56.0
 [node name="Resource2" parent="." instance=ExtResource("2")]
 layout_mode = 0
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 496.0
 offset_top = 88.0
 offset_right = -70.0
@@ -160,6 +164,7 @@ offset_left = 304.0
 offset_top = 144.0
 offset_right = 336.0
 offset_bottom = 176.0
+rotation = 3.14159
 pivot_offset = Vector2(16, 16)
 texture_normal = ExtResource("5")
 ignore_texture_size = true
@@ -182,6 +187,8 @@ libraries = {
 "": SubResource("AnimationLibrary_jjrlt")
 }
 
+[connection signal="mouse_entered" from="HSlider" to="." method="_on_h_slider_mouse_entered"]
+[connection signal="mouse_exited" from="HSlider" to="." method="_on_h_slider_mouse_exited"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Buy" to="." method="_on_Button_pressed"]
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]

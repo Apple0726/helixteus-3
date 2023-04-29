@@ -1,15 +1,21 @@
-[gd_scene load_steps=10 format=3 uid="uid://cut1or30pxsib"]
+[gd_scene load_steps=11 format=3 uid="uid://cut1or30pxsib"]
 
-[ext_resource type="Texture2D" uid="uid://dcln73mfl4tpm" path="res://Graphics/Misc/BarUnder2.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://8vq1g5es7xc3" path="res://Graphics/Misc/Bar2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="2"]
 [ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="Script" path="res://Scripts/SCPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://djr3vvfm1mk3n" path="res://Graphics/Icons/stone.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://3f7a2kcsv1c4" path="res://Graphics/Icons/stone.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="10"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="12"]
 
+[sub_resource type="InputEventKey" id="InputEventKey_h3yc4"]
+device = -1
+physical_keycode = 71
+unicode = 103
+
 [sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_h3yc4")]
 
 [node name="SCPanel" type="Panel"]
 anchors_preset = 8

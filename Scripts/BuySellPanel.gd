@@ -115,3 +115,11 @@ func _on_TextureButton_mouse_entered():
 
 func _on_TextureButton_mouse_exited():
 	$AnimationPlayer2.play_backwards("Grow")
+
+
+func _on_h_slider_mouse_entered():
+	game.view.move_view = false
+
+
+func _on_h_slider_mouse_exited():
+	game.view.move_view = true

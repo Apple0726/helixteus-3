@@ -1,13 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://mkqstuts1rdm"]
+[gd_scene load_steps=9 format=3 uid="uid://mkqstuts1rdm"]
 
-[ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Script" path="res://Scripts/ProductionPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://6rk6bkonypjp" path="res://Graphics/Materials/sand.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bdfuen3axc77e" path="res://Graphics/Materials/glass.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://d1lcjgnoyv4b3" path="res://Graphics/Materials/sand.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cw7bav43mkurh" path="res://Graphics/Materials/glass.png" id="8"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_abv8r"]
+device = -1
+physical_keycode = 71
+unicode = 103
 
 [sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_abv8r")]
 
 [node name="Background" type="Panel"]
 anchors_preset = 8
@@ -47,6 +53,8 @@ offset_top = 80.0
 offset_right = 612.0
 offset_bottom = 106.0
 text = "NO_SAND"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0

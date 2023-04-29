@@ -27,6 +27,7 @@ buses/default_bus_layout="res://Resources/default_bus_layout.tres"
 Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
+discord_coreupdater="*res://addons/discord-sdk-gd/discord_coreupdater.gd"
 
 [debug]
 
@@ -43,7 +44,7 @@ mouse_cursor/tooltip_position_offset=Vector2(5, 5)
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
 
 [global]
 
@@ -457,7 +458,6 @@ limits/message_queue/max_size_kb=2048
 
 [rendering]
 
-renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation.mobile=0

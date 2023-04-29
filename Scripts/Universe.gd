@@ -22,9 +22,10 @@ func _ready():
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.diff))
-			var dist:Vector2 = cartesian2polar(c_i.pos.x, c_i.pos.y)
-			var hue:float = fmod(dist.x + 300, 1000.0) / 1000.0
-			var sat:float = pow(fmod(dist.y + PI, 10.0) / 10.0, 0.2)
+			var r:float = (c_i.pos.x + c_i.pos.y).length()
+			var th:float = atan2(c_i.pos.y, c_i.pos.x)
+			var hue:float = fmod(r + 300, 1000.0) / 1000.0
+			var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
 		self.add_child(cluster)
 		cluster.add_child(cluster_btn)
@@ -48,7 +49,7 @@ func on_cluster_over (id:int):
 	if c_i.has("name"):
 		_name = c_i.name
 	else:
-		if c_i.class == game.ClusterType.GROUP:
+		if c_i["class"] == game.ClusterType.GROUP:
 			_name = tr("GALAXY_GROUP") + " %s" % id
 		else:
 			_name = tr("GALAXY_CLUSTER") + " %s" % id

@@ -1,10 +1,10 @@
 [gd_scene load_steps=15 format=3 uid="uid://b4u80l6nm3dei"]
 
-[ext_resource type="Texture2D" uid="uid://cv5uo4bvqefcc" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cbumpy4jujr0o" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://coom6uj3cg1hn" path="res://Graphics/Icons/Notification.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://2pi3y8irvjbs" path="res://Graphics/Buttons/Mine.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dwrod6758e4tc" path="res://Graphics/Buttons/Terraform.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://lgk3fk8yaa2s" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bdn6cxgywgv1b" path="res://Graphics/Buttons/Mine.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cjfw8ws2v8skv" path="res://Graphics/Buttons/Terraform.png" id="7"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
 device = -1

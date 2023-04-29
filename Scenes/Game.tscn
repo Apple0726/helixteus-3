@@ -1,20 +1,20 @@
-[gd_scene load_steps=51 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=52 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://ca0hkrufqi0yq" path="res://Graphics/Buttons/settings.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://djts0kcqdqgy2" path="res://Graphics/Title screen/Background.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://dkwpshcqk1eb6" path="res://Graphics/Title screen/Godot.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://c6ugjbqmwrbur" path="res://Graphics/Title screen/GitHub.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ged6udc4esp6" path="res://Graphics/Buttons/settings.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://el8qh62fb6sg" path="res://Graphics/Title screen/Background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bmccgdmotwyq7" path="res://Graphics/Title screen/Godot.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bypjbm4jcgfr2" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="AudioStream" uid="uid://01a2xijsnx71" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="AudioStream" uid="uid://b8pdwholsqglg" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
-[ext_resource type="Texture2D" uid="uid://osgmueey4qpn" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://bgri7jjs84xoy" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
-[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="26"]
-[ext_resource type="BitMap" uid="uid://6wlgq4xn1hau" path="res://Graphics/Ships/Ship0CM.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
 [ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
-[ext_resource type="Texture2D" uid="uid://bbj2b187jybgd" path="res://Graphics/Effects/spotlight_4.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://bgyh5871ksd1j" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
@@ -301,6 +301,14 @@ _data = {
 "RESET": SubResource("19"),
 "StarFade": SubResource("20")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tvths"]
+shader = ExtResource("19_4v34t")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/fog_size = 50.0
+shader_parameter/fog_mvt_spd = 0.0
+shader_parameter/OCTAVES = 3
+shader_parameter/seed = 1
 
 [node name="Game" type="Node2D"]
 script = ExtResource("2")
@@ -604,7 +612,6 @@ offset_right = 68.0
 offset_bottom = 44.0
 pivot_offset = Vector2(34, 22)
 texture_normal = ExtResource("26")
-texture_click_mask = ExtResource("27")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -612,6 +619,7 @@ stretch_mode = 5
 show_behind_parent = true
 position = Vector2(8, 20)
 scale = Vector2(0.7, 0.7)
+local_coords = true
 
 [node name="Settings" type="CanvasLayer" parent="."]
 layer = 4
@@ -655,6 +663,21 @@ position = Vector2(640, 360)
 
 [node name="MMTimer" type="Timer" parent="."]
 wait_time = 0.5
+
+[node name="ShaderExport" type="SubViewportContainer" parent="."]
+visible = false
+offset_right = 512.0
+offset_bottom = 512.0
+
+[node name="SubViewport" type="SubViewport" parent="ShaderExport"]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 0
+
+[node name="ColorRect" type="ColorRect" parent="ShaderExport/SubViewport"]
+material = SubResource("ShaderMaterial_tvths")
+offset_right = 512.0
+offset_bottom = 512.0
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

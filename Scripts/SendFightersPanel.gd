@@ -222,7 +222,7 @@ func _on_Send_pressed():
 					var i:int = 0
 					while i < len(game.fighter_data):
 						if game.fighter_data[i].tier == 0 and game.fighter_data[i].c_g_g == game.c_g_g:
-							game.fighter_data.remove(i)
+							game.fighter_data.remove_at(i)
 						else:
 							i += 1
 					game.galaxy_data[game.c_g].conquer_start_date = curr_time
@@ -254,7 +254,7 @@ func _on_Send_pressed():
 					var i:int = 0
 					while i < len(game.fighter_data):
 						if game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
-							game.fighter_data.remove(i)
+							game.fighter_data.remove_at(i)
 						else:
 							i += 1
 					game.u_i.cluster_data[game.c_c].conquer_start_date = curr_time

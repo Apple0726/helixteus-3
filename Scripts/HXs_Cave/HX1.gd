@@ -3,7 +3,7 @@ extends "res://Scripts/HX_Cave.gd"
 var rand_rot:float = 0.0
 
 func _ready():
-	
+	super()
 	move_timer = Timer.new()
 	add_child(move_timer)
 	move_timer.start(3.0)

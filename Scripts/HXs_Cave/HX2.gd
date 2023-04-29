@@ -1,6 +1,7 @@
 extends "res://Scripts/HX_Cave.gd"
 
 func _ready():
+	super()
 	shoot_timer = Timer.new()
 	add_child(shoot_timer)
 	shoot_timer.wait_time = 0.2
