@@ -39,8 +39,9 @@ var zooming = ""
 var progress = 0
 var mouse_position = Vector2.ZERO
 
-var red_line:Line2D
-var green_line:Line2D
+var dep_pos = null
+var dest_pos = null
+var curr_pos = null
 
 #Scaling of objects based on zoom level
 var obj_scaled:bool = false
@@ -48,26 +49,11 @@ var changed:bool = false
 
 func _ready():
 	set_process(false)
-	red_line = Line2D.new()
-	add_child(red_line)
-	red_line.add_point(Vector2.ZERO)
-	red_line.add_point(Vector2.ZERO)
-	red_line.width = 0.1
-	red_line.default_color = Color.RED
-	red_line.antialiased = true
-	green_line = Line2D.new()
-	green_line.visible = false
-	add_child(green_line)
-	green_line.add_point(Vector2.ZERO)
-	green_line.add_point(Vector2.ZERO)
-	green_line.width = 0.1
-	green_line.default_color = Color.GREEN
-	green_line.antialiased = true
 	refresh()
 	annotate_icon = Sprite2D.new()
 	add_child(annotate_icon)
 	rect = Sprite2D.new()
-	rect.texture = load("res://Graphics/Tiles/Highlight.jpg")
+	rect.texture = preload("res://Graphics/Tiles/Highlight.jpg")
 	rect.visible = false
 	add_child(rect)
 
@@ -81,19 +67,18 @@ func _process(delta):
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
-		var dep_pos = game.ships_depart_pos * scale_mult
-		var dest_pos = game.ships_dest_pos * scale_mult
-		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
+		dep_pos = game.ships_depart_pos * scale_mult
+		dest_pos = game.ships_dest_pos * scale_mult
+		curr_pos = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		if game.ships_travel_view == "-":
-			green_line.visible = false
-			red_line.visible = false
+			dep_pos = null
+			dest_pos = null
 		else:
-			red_line.points[0] = dep_pos
-			red_line.points[1] = dest_pos
-			green_line.points[0] = dep_pos
-			green_line.points[1] = pos
-			ship.position = to_global(pos) - Vector2(32, 22)
+			ship.position = to_global(curr_pos) - Vector2(32, 22)
+		queue_redraw()
 	else:
+		dep_pos = null
+		dest_pos = null
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
@@ -169,6 +154,9 @@ func _process(delta):
 			$AnimationPlayer.play("Fade")
 
 func _draw():
+	if dest_pos != null and curr_pos != null:
+		draw_line(dep_pos, dest_pos, Color.RED)
+		draw_line(dep_pos, curr_pos, Color.GREEN)
 	if is_instance_valid(game.annotator):
 		for shape in shapes_data:
 			if shape.shape == "line":
@@ -241,8 +229,6 @@ func refresh():
 	elif game.c_v == "system":
 		show_ship = game.ships_c_g_coords.s == game.c_s_g
 	var show_lines = show_ship and game.ships_travel_view == game.c_v and game.ships_travel_view != ""
-	red_line.visible = show_lines
-	green_line.visible = show_lines
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
 	var progress = Helper.update_ship_travel()
@@ -251,18 +237,13 @@ func refresh():
 	else:
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_STOP
 	if show_lines:
-		move_child(red_line, get_child_count())
-		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
-		var dep_pos:Vector2 = game.ships_depart_pos * scale_mult
-		var dest_pos:Vector2 = game.ships_dest_pos * scale_mult
-		red_line.points[0] = dep_pos
-		green_line.points[0] = dep_pos
-		red_line.points[1] = dest_pos
-		green_line.points[1] = dest_pos
+		dep_pos = game.ships_depart_pos * scale_mult
+		dest_pos = game.ships_dest_pos * scale_mult
+		curr_pos = dest_pos
 		if dest_pos.x < dep_pos.x:
 			ship.scale.x = -1
 		else:
@@ -284,6 +265,7 @@ func refresh():
 				icon.position = shape.position
 				annotate_icons.append({"node":icon, "data":shapes_data[i]})
 				add_child(icon)
+	queue_redraw()
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	#scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
@@ -301,8 +283,6 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 		save_zooms(obj_str)
 	obj.set_process(false)
 	obj.queue_free()
-	red_line.visible = false
-	green_line.visible = false
 	annotate_icon.texture = null
 
 func save_zooms(obj_str:String):

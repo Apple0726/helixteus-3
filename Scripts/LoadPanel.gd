@@ -66,7 +66,7 @@ func refresh():
 
 func on_export(save_str:String):
 	save_to_export = save_str
-	if OS.get_name() == "HTML5":
+	if OS.get_name() == "Web":
 		export_game("user://%s.hx3" % save_str)
 		var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
 		var L = file.get_length()
@@ -76,7 +76,7 @@ func on_export(save_str:String):
 	else:
 		$PopupBackground.visible = true
 		$Export.current_file = save_str
-		$Export.window_title = tr("EXPORT_X") % save_str
+		$Export.title = tr("EXPORT_X") % save_str
 		$Export.popup_centered()
 
 func on_load(sv:String):
@@ -210,6 +210,7 @@ func _on_Import_file_selected(path):
 						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)
 			save_info_file.close()
 	importing_file.close()
+	$PopupBackground.visible = false
 	refresh()
 
 func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):

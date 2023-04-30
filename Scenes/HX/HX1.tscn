@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=49 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://cdshtmhti7ipf" path="res://Graphics/Icons/atk.png" id="1"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
@@ -179,6 +179,18 @@ tracks/1/keys = {
 "points": PackedFloat32Array(360, -0.25, 0, 0.2, 104.886, 499.416, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0, 1)
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
 [sub_resource type="Animation" id="9"]
 step = 0.01
@@ -203,6 +215,21 @@ tracks/1/keys = {
 "handle_modes": PackedInt32Array(2, 2, 0),
 "points": PackedFloat32Array(0, 0, 0, 0.07, 0.0467681, 28.8433, -0.0781124, -9.89989, 0.15, 19.0108, 0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0, 0.1, 1)
+}
+
+[sub_resource type="Animation" id="Animation_cahjy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="10"]
@@ -245,6 +272,7 @@ _data = {
 "Big knockback": SubResource("7"),
 "Dead": SubResource("8"),
 "Knockback": SubResource("9"),
+"RESET": SubResource("Animation_cahjy"),
 "Small knockback": SubResource("10")
 }
 
@@ -266,7 +294,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:material:shader_parameter/modulate")
+tracks/1/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -281,14 +309,14 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate")
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 0, 0, 1)]
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ml7on"]
@@ -297,53 +325,68 @@ _data = {
 "RESET": SubResource("Animation_fxxeq")
 }
 
-[sub_resource type="Gradient" id="12"]
+[sub_resource type="Gradient" id="Gradient_vwroj"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="13"]
-gradient = SubResource("12")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hnbg8"]
+gradient = SubResource("Gradient_vwroj")
 
 [sub_resource type="ParticleProcessMaterial" id="14"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
 direction = Vector3(-1, 0, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("13")
+initial_velocity_min = 250.0
+initial_velocity_max = 750.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+angle_max = 360.0
+scale_min = 0.5
+color_ramp = SubResource("GradientTexture1D_hnbg8")
 
-[sub_resource type="Gradient" id="15"]
-offsets = PackedFloat32Array(0, 0.293907, 0.594982, 0.985663, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0)
+[sub_resource type="Gradient" id="Gradient_0ylws"]
+offsets = PackedFloat32Array(0, 0.264317, 0.546256, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.458824, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0)
 
-[sub_resource type="GradientTexture2D" id="16"]
-gradient = SubResource("15")
-
-[sub_resource type="Curve" id="17"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="18"]
-curve = SubResource("17")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ly5ll"]
+gradient = SubResource("Gradient_0ylws")
 
 [sub_resource type="ParticleProcessMaterial" id="19"]
 lifetime_randomness = 1.0
+particle_flag_align_y = true
+particle_flag_disable_z = true
 direction = Vector3(-1, 0, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("18")
-color_ramp = SubResource("16")
+initial_velocity_min = 200.0
+initial_velocity_max = 500.0
+angular_velocity_max = 200.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 100.0
+damping_max = 200.0
+scale_min = 0.1
+scale_max = 0.5
+color_ramp = SubResource("GradientTexture1D_ly5ll")
 
-[sub_resource type="Gradient" id="20"]
-offsets = PackedFloat32Array(0, 0.308244, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+[sub_resource type="Gradient" id="Gradient_ywuum"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="21"]
-gradient = SubResource("20")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ihuwx"]
+gradient = SubResource("Gradient_ywuum")
 
 [sub_resource type="ParticleProcessMaterial" id="22"]
 lifetime_randomness = 1.0
+particle_flag_disable_z = true
 direction = Vector3(-1, 0, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("21")
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+color_ramp = SubResource("GradientTexture1D_ihuwx")
 
 [sub_resource type="Animation" id="23"]
 resource_name = "LabelAnim"
@@ -387,7 +430,7 @@ shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")
-position = Vector2(0, -67)
+position = Vector2(0, 6.29962)
 rotation = 6.28319
 texture = ExtResource("1_t5dxa")
 

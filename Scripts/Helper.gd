@@ -377,6 +377,8 @@ func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = fals
 			lb.text = "- %s" % format_num(dmg)
 	lb.position = pos - Vector2(0, 40)
 	lb.scale *= sc
+	lb["theme_override_font_sizes/font_size"] = 40
+	parent.add_child(lb)
 	var dur = 1.5 if crit else 1.0
 	if game:
 		dur /= game.u_i.time_speed
@@ -752,7 +754,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	elif tile.bldg.name == "MM":
 		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 		rsrc_text = "%s m/s" % format_num(prod, true)
-		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) / 1000.0 * prod, 1.0)
+		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) * prod, 1.0)
 	else:
 		if Mods.added_buildings.has(tile.bldg.name):
 			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)

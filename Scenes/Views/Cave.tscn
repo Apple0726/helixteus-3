@@ -51,6 +51,7 @@ shader = ExtResource("46")
 shader_parameter/brightness = 1.0
 shader_parameter/contrast = 1.0
 shader_parameter/saturation = 1.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_isgre"]
 texture = ExtResource("44")
@@ -1016,6 +1017,8 @@ alignment = 2
 
 [node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBox"]
 layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBox"]
 custom_minimum_size = Vector2(0, 50)
@@ -1112,6 +1115,7 @@ offset_top = 8.0
 offset_right = 216.0
 offset_bottom = 32.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
 text = "20 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1163,6 +1167,7 @@ offset_top = 8.0
 offset_right = 216.0
 offset_bottom = 32.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
 text = "0 / 4000 kg"
 horizontal_alignment = 1
 vertical_alignment = 1

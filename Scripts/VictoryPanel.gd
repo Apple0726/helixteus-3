@@ -39,7 +39,7 @@ func _process(delta):
 		var XP_node = $Grid.get_node("Panel%s/XP/TextureProgress2" % (i + 1))
 		var XP_text_node = $Grid.get_node("Panel%s/XP/Label2" % (i + 1))
 		XP_node.value = move_toward(XP_node.value, XP_node.value + XP, (XP + ship_data[i].XP - XP_node.value) * delta * 2)
-		XP_text_node.text = "%s / %s" % [round(XP_node.value), ship_data[i].XP_to_lv]
+		XP_text_node.text = "%s / %s" % [Helper.format_num(XP_node.value), Helper.format_num(ship_data[i].XP_to_lv)]
 
 func _input(event):
 	if Input.is_action_just_released("right_click"):
@@ -52,7 +52,7 @@ func _on_close_button_pressed():
 		for weapon in ["bullet", "laser", "bomb", "light"]:
 			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult * diff_mult))
 	var all_conquered = true
-	if not game.is_conquering_all:
+	if not game.is_conquering_all and not game.planet_data[p_id].has("conquered"):
 		game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 		game.stats_dim.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)
 		game.stats_global.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)

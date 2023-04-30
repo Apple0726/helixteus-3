@@ -1176,7 +1176,6 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				return
 			game.view_tween = create_tween()
 			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.1)
-			game.view_tween.start()
 			await game.view_tween.finished
 			rsrcs.clear()
 			if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole

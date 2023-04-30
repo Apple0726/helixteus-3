@@ -11,6 +11,7 @@ code = "shader_type canvas_item;
 
 uniform bool aurora = true;
 uniform float intensity: hint_range(1.0, 5.0);
+uniform vec4 modulate_color: source_color = vec4(1.0);
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
@@ -19,6 +20,7 @@ void fragment() {
 		COLOR.g += (0.05 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 4.0) + 0.05) * intensity;
 		COLOR.b += (0.05 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 10.0) + 0.15) * intensity;
 	}
+	COLOR *= modulate_color;
 }"
 
 [sub_resource type="ShaderMaterial" id="8"]
@@ -26,6 +28,7 @@ resource_local_to_scene = true
 shader = SubResource("7")
 shader_parameter/aurora = false
 shader_parameter/intensity = 1.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CanvasItemMaterial" id="4"]
 particles_animation = true

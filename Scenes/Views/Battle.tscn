@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene load_steps=46 format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -17,13 +17,53 @@
 
 [sub_resource type="ShaderMaterial" id="6"]
 
+[sub_resource type="InputEventKey" id="InputEventKey_w1ott"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
 [sub_resource type="Shortcut" id="28"]
+events = [SubResource("InputEventKey_w1ott")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_a5b8p"]
+device = -1
+physical_keycode = 50
+unicode = 50
 
 [sub_resource type="Shortcut" id="30"]
+events = [SubResource("InputEventKey_a5b8p")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_7jorv"]
+device = -1
+keycode = 51
+unicode = 51
 
 [sub_resource type="Shortcut" id="32"]
+events = [SubResource("InputEventKey_7jorv")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_hv1n0"]
+device = -1
+physical_keycode = 52
+unicode = 52
 
 [sub_resource type="Shortcut" id="34"]
+events = [SubResource("InputEventKey_hv1n0")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_3edyg"]
+device = -1
+physical_keycode = 53
+unicode = 53
+
+[sub_resource type="Shortcut" id="Shortcut_hsns0"]
+events = [SubResource("InputEventKey_3edyg")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_g50nk"]
+device = -1
+physical_keycode = 54
+unicode = 54
+
+[sub_resource type="Shortcut" id="Shortcut_xbt1f"]
+events = [SubResource("InputEventKey_g50nk")]
 
 [sub_resource type="Animation" id="40"]
 resource_name = "Glow"
@@ -267,12 +307,15 @@ texture = ExtResource("9")
 texture = ExtResource("3")
 
 [node name="Ship1" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("6")
 
 [node name="Ship2" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("7")
 
 [node name="Ship3" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("13")
 
 [node name="Timer" type="Timer" parent="."]
@@ -325,20 +368,24 @@ offset_right = 24.0
 offset_bottom = 13.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Bullet"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -18.0
-offset_right = -4.0
-offset_bottom = -2.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            1"
 
 [node name="Laser" type="Button" parent="UI/FightPanel"]
@@ -363,20 +410,24 @@ offset_right = 22.0
 offset_bottom = 17.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Laser"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            2"
 
 [node name="Bomb" type="Button" parent="UI/FightPanel"]
@@ -401,20 +452,24 @@ offset_right = 22.0
 offset_bottom = 14.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Bomb"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            3"
 
 [node name="Light" type="Button" parent="UI/FightPanel"]
@@ -439,20 +494,24 @@ offset_right = 22.0
 offset_bottom = 15.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Light"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            4"
 
 [node name="Ability" type="Button" parent="UI/FightPanel"]
@@ -461,7 +520,7 @@ offset_left = 572.0
 offset_top = 12.0
 offset_right = 644.0
 offset_bottom = 52.0
-shortcut = SubResource("34")
+shortcut = SubResource("Shortcut_hsns0")
 shortcut_in_tooltip = false
 
 [node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Ability"]
@@ -477,20 +536,24 @@ offset_right = 22.0
 offset_bottom = 15.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Ability"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            5"
 
 [node name="Superweapon" type="Button" parent="UI/FightPanel"]
@@ -499,7 +562,7 @@ offset_left = 704.0
 offset_top = 12.0
 offset_right = 776.0
 offset_bottom = 52.0
-shortcut = SubResource("34")
+shortcut = SubResource("Shortcut_xbt1f")
 shortcut_in_tooltip = false
 
 [node name="Glow" type="Polygon2D" parent="UI/FightPanel/Superweapon"]
@@ -525,20 +588,24 @@ offset_right = 22.0
 offset_bottom = 15.0
 size_flags_horizontal = 4
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="UI/FightPanel/Superweapon"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -66.0
+offset_top = -19.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme_override_font_sizes/font_size = 15
 text = "            6"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel"]
@@ -560,7 +627,7 @@ offset_right = 44.0
 offset_bottom = 34.0
 texture = ExtResource("14")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="BattleProgress" type="Label" parent="UI/FightPanel/Panel"]
 layout_mode = 0
@@ -568,6 +635,8 @@ offset_left = 52.0
 offset_right = 132.0
 offset_bottom = 34.0
 text = "99 / 99"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Help2" type="Panel" parent="UI"]
 visible = false
@@ -638,6 +707,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
+metadata/_edit_lock_ = true
 
 [node name="ControlKeyboard" type="Control" parent="UI"]
 visible = false

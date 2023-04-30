@@ -153,6 +153,8 @@ func _ready():
 	$UI2/Controls.add_key(tr("SCROLL_WHEEL"), "CHANGE_ACTIVE_ITEM")
 	$UI2/Controls.add_key(tr("HOLD_LEFT_RIGHT_CLICK"), "USE_ACTIVE_ITEM")
 	$UI2/Controls.add_key("M", "TOGGLE_MINIMAP")
+	if not game.help.has("sprint_mode"):
+		$UI2/Controls.add_key("E", "SPRINT_MODE")
 	$UI2/Controls/Label.text = tr("CONTROLS")
 	if game.help.has("cave_controls"):
 		$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
@@ -217,7 +219,7 @@ func _ready():
 			star_mod = Helper.get_star_modulate(star["class"])
 			if star_mod.get_luminance() < 0.2:
 				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
-			cave_BG.modulate = star_mod
+			cave_BG.material.set_shader_parameter("modulate_color", star_mod)
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
 				strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
@@ -446,8 +448,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
 	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
 		game.objective.current += 1
-	cave_BG.modulate = star_mod * (1.0 - cave_darkness)
-	cave_BG.modulate.a = 1.0
+	var BG_mod = star_mod * (1.0 - cave_darkness)
+	BG_mod.a = 1.0
+	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
 	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.WHITE)
@@ -458,7 +461,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if game.enable_shaders:
 		$TileMap.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = 0.3#cave_darkness * 1.1
+	rover_light.energy = cave_darkness * 0.3
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	if tower:
@@ -533,14 +536,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
 					debris.sprite_frame = rng.randi_range(0, 5)
 					debris.time_speed = time_speed
-					debris.self_modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
-					debris.self_modulate.a = 1.0
+					var debris_mod = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
+					debris_mod.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x:float
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < remap(cave_floor, 1, 16, 0.05, 1.0):
 						rand_scale_x = -log(rng.randf()) + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
-						debris.self_modulate = Color.WHITE * (0.9 + debris.lava_intensity / 10.0)
+						debris_mod = Color.WHITE * (0.9 + debris.lava_intensity / 10.0)
 						debris.get_node("Lava").range_z_min = debris_height
 						debris.get_node("Lava").range_z_max = debris_height
 					else:
@@ -550,7 +553,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if aurora and rng.randf() < 0.05:
-						debris.self_modulate = Color.WHITE
+						debris_mod = Color.WHITE
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
 					if debris_rekt[cave_floor - 1].has(tile_id):
 						debris.free()
@@ -559,6 +562,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						debris.id = tile_id
 						add_child(debris)
 						big_debris[tile_id] = debris
+					debris.get_node("Sprite2D").material.set_shader_parameter("modulate_color", debris_mod)
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
@@ -955,7 +959,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		else:
 			Discord_Activity.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
 		Discord_Activity.state = "Floor %s / %s" % [cave_floor, num_floors]
-		Discord_Activity.small_image_text = "Rover HP: %s / %s" % [HP, total_HP]
+		Discord_Activity.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
 		Discord_Activity.refresh()
 
 func add_hole(id:int):

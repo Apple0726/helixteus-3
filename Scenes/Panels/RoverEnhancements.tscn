@@ -1,45 +1,46 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=39 format=3 uid="uid://cpfr5s4frfko3"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/RESlot.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Graphics/Cave/RE/armor_0.png" type="Texture2D" id=4]
-[ext_resource path="res://Graphics/Cave/RE/armor_3.png" type="Texture2D" id=5]
-[ext_resource path="res://Graphics/Cave/RE/armor_2.png" type="Texture2D" id=6]
-[ext_resource path="res://Graphics/Cave/RE/armor_1.png" type="Texture2D" id=7]
-[ext_resource path="res://Graphics/Cave/RE/armor_6.png" type="Texture2D" id=8]
-[ext_resource path="res://Graphics/Cave/RE/armor_4.png" type="Texture2D" id=9]
-[ext_resource path="res://Graphics/Cave/RE/armor_5.png" type="Texture2D" id=10]
-[ext_resource path="res://Graphics/Cave/RE/armor_7.png" type="Texture2D" id=11]
-[ext_resource path="res://Graphics/Cave/RE/armor_8.png" type="Texture2D" id=12]
-[ext_resource path="res://Graphics/Cave/RE/wheels_2.png" type="Texture2D" id=13]
-[ext_resource path="res://Graphics/Cave/RE/wheels_1.png" type="Texture2D" id=14]
-[ext_resource path="res://Graphics/Cave/RE/wheels_3.png" type="Texture2D" id=15]
-[ext_resource path="res://Graphics/Cave/RE/wheels_4.png" type="Texture2D" id=16]
-[ext_resource path="res://Graphics/Cave/RE/wheels_0.png" type="Texture2D" id=17]
-[ext_resource path="res://Graphics/Cave/RE/wheels_5.png" type="Texture2D" id=18]
-[ext_resource path="res://Graphics/Cave/RE/CC_2.png" type="Texture2D" id=19]
-[ext_resource path="res://Graphics/Cave/RE/CC_0.png" type="Texture2D" id=20]
-[ext_resource path="res://Graphics/Cave/RE/CC_1.png" type="Texture2D" id=21]
-[ext_resource path="res://Graphics/Cave/RE/laser_2.png" type="Texture2D" id=22]
-[ext_resource path="res://Graphics/Cave/RE/laser_0.png" type="Texture2D" id=23]
-[ext_resource path="res://Graphics/Cave/RE/laser_1.png" type="Texture2D" id=24]
-[ext_resource path="res://Graphics/Cave/RE/laser_3.png" type="Texture2D" id=25]
-[ext_resource path="res://Graphics/Cave/RE/laser_4.png" type="Texture2D" id=26]
-[ext_resource path="res://Graphics/Cave/RE/laser_5.png" type="Texture2D" id=27]
-[ext_resource path="res://Graphics/Cave/RE/laser_8.png" type="Texture2D" id=28]
-[ext_resource path="res://Graphics/Cave/RE/laser_7.png" type="Texture2D" id=29]
-[ext_resource path="res://Graphics/Cave/RE/laser_6.png" type="Texture2D" id=30]
-[ext_resource path="res://Scripts/RoverEnhancements.gd" type="Script" id=31]
-[ext_resource path="res://Graphics/Cave/RE/armor_9.png" type="Texture2D" id=32]
-[ext_resource path="res://Graphics/Cave/RE/armor_11.png" type="Texture2D" id=33]
-[ext_resource path="res://Graphics/Cave/RE/armor_10.png" type="Texture2D" id=34]
-[ext_resource path="res://Graphics/Cave/RE/armor_12.png" type="Texture2D" id=35]
-[ext_resource path="res://Graphics/Cave/RE/wheels_7.png" type="Texture2D" id=36]
-[ext_resource path="res://Graphics/Cave/RE/wheels_6.png" type="Texture2D" id=37]
-[ext_resource path="res://Graphics/Cave/RE/wheels_8.png" type="Texture2D" id=38]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://Scenes/RESlot.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://qtw4i1m6tum3" path="res://Graphics/Cave/RE/armor_0.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://3bc0ujnw1qu2" path="res://Graphics/Cave/RE/armor_3.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c2m3s61fahq6" path="res://Graphics/Cave/RE/armor_2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dt4uthasytpfu" path="res://Graphics/Cave/RE/armor_1.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://2h2fe5msn77s" path="res://Graphics/Cave/RE/armor_6.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://cj01udb6fjpst" path="res://Graphics/Cave/RE/armor_4.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bmijmtyaxcjex" path="res://Graphics/Cave/RE/armor_5.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://d4gue0b7btuic" path="res://Graphics/Cave/RE/armor_7.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://bf6p46g0si8gu" path="res://Graphics/Cave/RE/armor_8.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://ctmv5oowcodbi" path="res://Graphics/Cave/RE/wheels_2.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://tv848lwo5kxc" path="res://Graphics/Cave/RE/wheels_1.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://da23chf00etmd" path="res://Graphics/Cave/RE/wheels_3.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://dw04qr7bbb08o" path="res://Graphics/Cave/RE/wheels_4.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://d4gvnrq3ea0pv" path="res://Graphics/Cave/RE/wheels_0.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://cdr0o50d88678" path="res://Graphics/Cave/RE/wheels_5.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://bevqcxv7axkt6" path="res://Graphics/Cave/RE/CC_2.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://sm3r8ltd5hfu" path="res://Graphics/Cave/RE/CC_0.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://bqupf3ssp3kun" path="res://Graphics/Cave/RE/CC_1.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://x1n70p7b8tfb" path="res://Graphics/Cave/RE/laser_2.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://1pto01kkyqbt" path="res://Graphics/Cave/RE/laser_0.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://bd5lka2e7okkg" path="res://Graphics/Cave/RE/laser_1.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://qtjdx0nk1bwl" path="res://Graphics/Cave/RE/laser_3.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://bw8t33x1xg0xg" path="res://Graphics/Cave/RE/laser_4.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://dtckfm5x3rmcj" path="res://Graphics/Cave/RE/laser_5.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://cumsbm73tdlhk" path="res://Graphics/Cave/RE/laser_8.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://bngc5cwi1gk2p" path="res://Graphics/Cave/RE/laser_7.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://du2ohjokhorp3" path="res://Graphics/Cave/RE/laser_6.png" id="30"]
+[ext_resource type="Script" path="res://Scripts/RoverEnhancements.gd" id="31"]
+[ext_resource type="Texture2D" uid="uid://bcsrplfblv5wp" path="res://Graphics/Cave/RE/armor_9.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://cck7gfnd45sen" path="res://Graphics/Cave/RE/armor_11.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://csck2shmj7wc3" path="res://Graphics/Cave/RE/armor_10.png" id="34"]
+[ext_resource type="Texture2D" uid="uid://bxy6vt58ibqpe" path="res://Graphics/Cave/RE/armor_12.png" id="35"]
+[ext_resource type="Texture2D" uid="uid://byr3lm8tu5b7" path="res://Graphics/Cave/RE/wheels_7.png" id="36"]
+[ext_resource type="Texture2D" uid="uid://dbeelsx5fraw6" path="res://Graphics/Cave/RE/wheels_6.png" id="37"]
+[ext_resource type="Texture2D" uid="uid://caqoxaj18reet" path="res://Graphics/Cave/RE/wheels_8.png" id="38"]
 
 [node name="Control" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -48,14 +49,12 @@ offset_left = -281.0
 offset_top = -159.0
 offset_right = 281.0
 offset_bottom = 159.0
-theme = ExtResource( 1 )
-script = ExtResource( 31 )
-__meta__ = {
-"_edit_lock_": true
-}
+theme = ExtResource("1")
+script = ExtResource("31")
 
 [node name="BlackBG" type="ColorRect" parent="."]
 show_behind_parent = true
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -64,23 +63,26 @@ offset_left = -640.0
 offset_top = -360.0
 offset_right = 640.0
 offset_bottom = 360.0
-color = Color( 0, 0, 0, 0.564706 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="TextureButton" parent="." instance=ExtResource( 2 )]
+color = Color(0, 0, 0, 0.564706)
 
 [node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 38.0
-custom_minimum_size = Vector2( 0, 38 )
-align = 1
-valign = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureButton" parent="." instance=ExtResource("2")]
+layout_mode = 1
+offset_left = -33.0
+offset_top = 7.0
+offset_right = -9.0
+offset_bottom = 31.0
 
 [node name="Armor" type="ScrollContainer" parent="."]
 visible = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -91,166 +93,177 @@ offset_right = 256.0
 offset_bottom = 120.0
 
 [node name="Control" type="Control" parent="Armor"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 460.0
-offset_bottom = 380.0
-custom_minimum_size = Vector2( 450, 370 )
+custom_minimum_size = Vector2(450, 370)
+layout_mode = 2
 
-[node name="armor_0" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_0" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 10.0
 offset_right = 82.0
 offset_bottom = 70.0
-texture = ExtResource( 4 )
+texture = ExtResource("4")
 
-[node name="armor_1" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_1" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 10.0
 offset_right = 194.0
 offset_bottom = 70.0
-texture = ExtResource( 7 )
+texture = ExtResource("7")
 
-[node name="armor_2" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_2" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 10.0
 offset_right = 306.0
 offset_bottom = 70.0
-texture = ExtResource( 6 )
+texture = ExtResource("6")
 
-[node name="armor_3" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_3" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 358.0
 offset_top = 10.0
 offset_right = 418.0
 offset_bottom = 70.0
-texture = ExtResource( 5 )
+texture = ExtResource("5")
 
-[node name="armor_4" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_4" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 150.0
 offset_right = 82.0
 offset_bottom = 210.0
-texture = ExtResource( 9 )
+texture = ExtResource("9")
 
-[node name="armor_5" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_5" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 106.0
 offset_right = 194.0
 offset_bottom = 166.0
-texture = ExtResource( 10 )
+texture = ExtResource("10")
 
-[node name="armor_6" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_6" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 106.0
 offset_right = 306.0
 offset_bottom = 166.0
-texture = ExtResource( 8 )
+texture = ExtResource("8")
 
-[node name="armor_7" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_7" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 202.0
 offset_right = 194.0
 offset_bottom = 262.0
-texture = ExtResource( 11 )
+texture = ExtResource("11")
 
-[node name="armor_8" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_8" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 202.0
 offset_right = 306.0
 offset_bottom = 262.0
-texture = ExtResource( 12 )
+texture = ExtResource("12")
 
 [node name="L_armor_0" type="Line2D" parent="Armor/Control"]
-position = Vector2( 6, -14 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(6, -14)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_1" type="Line2D" parent="Armor/Control"]
-position = Vector2( 118, -14 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(118, -14)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_2" type="Line2D" parent="Armor/Control"]
-position = Vector2( 230, -14 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(230, -14)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="armor_9" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_9" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 294.0
 offset_right = 82.0
 offset_bottom = 354.0
-texture = ExtResource( 32 )
+texture = ExtResource("32")
 
-[node name="armor_10" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_10" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 294.0
 offset_right = 194.0
 offset_bottom = 354.0
-texture = ExtResource( 34 )
+texture = ExtResource("34")
 
-[node name="armor_11" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_11" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 294.0
 offset_right = 306.0
 offset_bottom = 354.0
-texture = ExtResource( 33 )
+texture = ExtResource("33")
 
-[node name="armor_12" parent="Armor/Control" instance=ExtResource( 3 )]
+[node name="armor_12" parent="Armor/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 358.0
 offset_top = 294.0
 offset_right = 418.0
 offset_bottom = 354.0
-texture = ExtResource( 35 )
+texture = ExtResource("35")
 
 [node name="L_armor_9" type="Line2D" parent="Armor/Control"]
-position = Vector2( 6, 270 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(6, 270)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_10" type="Line2D" parent="Armor/Control"]
-position = Vector2( 118, 270 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(118, 270)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_11" type="Line2D" parent="Armor/Control"]
-position = Vector2( 230, 270 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(230, 270)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_4" type="Node2D" parent="Armor/Control"]
 
 [node name="Line2D4" type="Line2D" parent="Armor/Control/L_armor_4"]
-position = Vector2( 6, 146 )
-points = PackedVector2Array( 84, 36, 120, -8 )
+position = Vector2(6, 146)
+points = PackedVector2Array(84, 36, 120, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Line2D5" type="Line2D" parent="Armor/Control/L_armor_4"]
-position = Vector2( 6, 126 )
-points = PackedVector2Array( 84, 56, 120, 108 )
+position = Vector2(6, 126)
+points = PackedVector2Array(84, 56, 120, 108)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_5" type="Line2D" parent="Armor/Control"]
-position = Vector2( 118, 82 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(118, 82)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_armor_7" type="Line2D" parent="Armor/Control"]
-position = Vector2( 118, 178 )
-points = PackedVector2Array( 84, 56, 120, 56 )
+position = Vector2(118, 178)
+points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Wheels" type="ScrollContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -261,115 +274,122 @@ offset_right = 256.0
 offset_bottom = 120.0
 
 [node name="Control" type="Control" parent="Wheels"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 460.0
-offset_bottom = 460.0
-custom_minimum_size = Vector2( 450, 450 )
+custom_minimum_size = Vector2(450, 450)
+layout_mode = 2
 
-[node name="wheels_0" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_0" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 70.0
 offset_right = 82.0
 offset_bottom = 130.0
-texture = ExtResource( 17 )
+texture = ExtResource("17")
 
-[node name="wheels_1" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_1" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 10.0
 offset_right = 194.0
 offset_bottom = 70.0
-texture = ExtResource( 14 )
+texture = ExtResource("14")
 
-[node name="wheels_2" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_2" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 10.0
 offset_right = 306.0
 offset_bottom = 70.0
-texture = ExtResource( 13 )
+texture = ExtResource("13")
 
-[node name="wheels_3" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_3" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 134.0
 offset_right = 194.0
 offset_bottom = 194.0
-texture = ExtResource( 15 )
+texture = ExtResource("15")
 
-[node name="wheels_4" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_4" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 134.0
 offset_right = 306.0
 offset_bottom = 194.0
-texture = ExtResource( 16 )
+texture = ExtResource("16")
 
-[node name="wheels_5" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_5" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 358.0
 offset_top = 134.0
 offset_right = 418.0
 offset_bottom = 194.0
-texture = ExtResource( 18 )
+texture = ExtResource("18")
 
-[node name="wheels_6" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_6" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 246.0
 offset_right = 82.0
 offset_bottom = 306.0
-texture = ExtResource( 37 )
+texture = ExtResource("37")
 
-[node name="wheels_7" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_7" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 246.0
 offset_right = 194.0
 offset_bottom = 306.0
-texture = ExtResource( 36 )
+texture = ExtResource("36")
 
-[node name="wheels_8" parent="Wheels/Control" instance=ExtResource( 3 )]
+[node name="wheels_8" parent="Wheels/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 358.0
 offset_right = 82.0
 offset_bottom = 418.0
-texture = ExtResource( 38 )
+texture = ExtResource("38")
 
 [node name="L_wheels_0" type="Node2D" parent="Wheels/Control"]
 
 [node name="Line2D3" type="Line2D" parent="Wheels/Control/L_wheels_0"]
-position = Vector2( 10, 46 )
-points = PackedVector2Array( 80, 56, 116, -8 )
+position = Vector2(10, 46)
+points = PackedVector2Array(80, 56, 116, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Line2D5" type="Line2D" parent="Wheels/Control/L_wheels_0"]
-position = Vector2( 10, 46 )
-points = PackedVector2Array( 80, 56, 116, 120 )
+position = Vector2(10, 46)
+points = PackedVector2Array(80, 56, 116, 120)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_wheels_1" type="Line2D" parent="Wheels/Control"]
-position = Vector2( 10, 46 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(10, 46)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_wheels_3" type="Line2D" parent="Wheels/Control"]
-position = Vector2( 10, 174 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(10, 174)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_wheels_6" type="Line2D" parent="Wheels/Control"]
-position = Vector2( -102, 286 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(-102, 286)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_wheels_4" type="Line2D" parent="Wheels/Control"]
-position = Vector2( 122, 174 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(122, 174)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="CC" type="ScrollContainer" parent="."]
 visible = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -380,47 +400,48 @@ offset_right = 256.0
 offset_bottom = 120.0
 
 [node name="Control" type="Control" parent="CC"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 460.0
-offset_bottom = 210.0
-custom_minimum_size = Vector2( 450, 200 )
+custom_minimum_size = Vector2(450, 200)
+layout_mode = 2
 
-[node name="CC_0" parent="CC/Control" instance=ExtResource( 3 )]
+[node name="CC_0" parent="CC/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 70.0
 offset_right = 82.0
 offset_bottom = 130.0
-texture = ExtResource( 20 )
+texture = ExtResource("20")
 
-[node name="CC_1" parent="CC/Control" instance=ExtResource( 3 )]
+[node name="CC_1" parent="CC/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 134.0
 offset_top = 70.0
 offset_right = 194.0
 offset_bottom = 130.0
-texture = ExtResource( 21 )
+texture = ExtResource("21")
 
-[node name="CC_2" parent="CC/Control" instance=ExtResource( 3 )]
+[node name="CC_2" parent="CC/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 70.0
 offset_right = 306.0
 offset_bottom = 130.0
-texture = ExtResource( 19 )
+texture = ExtResource("19")
 
 [node name="L_CC_0" type="Line2D" parent="CC/Control"]
-position = Vector2( -102, 110 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(-102, 110)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_CC_1" type="Line2D" parent="CC/Control"]
-position = Vector2( 10, 110 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(10, 110)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Laser" type="ScrollContainer" parent="."]
 visible = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -431,113 +452,116 @@ offset_right = 256.0
 offset_bottom = 120.0
 
 [node name="Control" type="Control" parent="Laser"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 460.0
-offset_bottom = 310.0
-custom_minimum_size = Vector2( 450, 300 )
-__meta__ = {
-"_edit_lock_": true
-}
+custom_minimum_size = Vector2(450, 300)
+layout_mode = 2
 
-[node name="laser_0" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_0" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 22.0
 offset_right = 82.0
 offset_bottom = 82.0
-texture = ExtResource( 23 )
+texture = ExtResource("23")
 
-[node name="laser_1" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_1" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 138.0
 offset_top = 22.0
 offset_right = 198.0
 offset_bottom = 82.0
-texture = ExtResource( 24 )
+texture = ExtResource("24")
 
-[node name="laser_2" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_2" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 250.0
 offset_top = 22.0
 offset_right = 310.0
 offset_bottom = 82.0
-texture = ExtResource( 22 )
+texture = ExtResource("22")
 
 [node name="L_laser_0" type="Line2D" parent="Laser/Control"]
-position = Vector2( -98, 62 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(-98, 62)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_laser_1" type="Line2D" parent="Laser/Control"]
-position = Vector2( 14, 62 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(14, 62)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="laser_3" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_3" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 118.0
 offset_right = 82.0
 offset_bottom = 178.0
-texture = ExtResource( 25 )
+texture = ExtResource("25")
 
-[node name="laser_4" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_4" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 138.0
 offset_top = 118.0
 offset_right = 198.0
 offset_bottom = 178.0
-texture = ExtResource( 26 )
+texture = ExtResource("26")
 
-[node name="laser_5" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_5" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 250.0
 offset_top = 118.0
 offset_right = 310.0
 offset_bottom = 178.0
-texture = ExtResource( 27 )
+texture = ExtResource("27")
 
 [node name="L_laser_3" type="Line2D" parent="Laser/Control"]
-position = Vector2( -98, 158 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(-98, 158)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_laser_4" type="Line2D" parent="Laser/Control"]
-position = Vector2( 14, 158 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(14, 158)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="laser_6" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_6" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 22.0
 offset_top = 214.0
 offset_right = 82.0
 offset_bottom = 274.0
-texture = ExtResource( 30 )
+texture = ExtResource("30")
 
-[node name="laser_7" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_7" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 138.0
 offset_top = 214.0
 offset_right = 198.0
 offset_bottom = 274.0
-texture = ExtResource( 29 )
+texture = ExtResource("29")
 
-[node name="laser_8" parent="Laser/Control" instance=ExtResource( 3 )]
+[node name="laser_8" parent="Laser/Control" instance=ExtResource("3")]
+layout_mode = 0
 offset_left = 250.0
 offset_top = 214.0
 offset_right = 310.0
 offset_bottom = 274.0
-texture = ExtResource( 28 )
+texture = ExtResource("28")
 
 [node name="L_laser_6" type="Line2D" parent="Laser/Control"]
-position = Vector2( -98, 254 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(-98, 254)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="L_laser_7" type="Line2D" parent="Laser/Control"]
-position = Vector2( 14, 254 )
-points = PackedVector2Array( 192, -8, 228, -8 )
+position = Vector2(14, 254)
+points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
-default_color = Color( 0.4, 0.886275, 1, 1 )
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [connection signal="visibility_changed" from="." to="." method="_on_Control_visibility_changed"]
 [connection signal="close_button_pressed" from="TextureButton" to="." method="_on_TextureButton_close_button_pressed"]

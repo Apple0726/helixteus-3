@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cfaqrjc0xlrh4"]
 
-[ext_resource type="Texture2D" uid="uid://b04ygmy53qolw" path="res://Graphics/Tiles/Aurora.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyygsre5qdgxk" path="res://Graphics/Tiles/Aurora.png" id="1"]
 
 [sub_resource type="Gradient" id="Gradient_62gep"]
 offsets = PackedFloat32Array(0, 0.512, 1)
@@ -26,3 +26,4 @@ process_material = SubResource("ParticleProcessMaterial_o4got")
 texture = ExtResource("1")
 lifetime = 3.0
 preprocess = 5.0
+local_coords = true

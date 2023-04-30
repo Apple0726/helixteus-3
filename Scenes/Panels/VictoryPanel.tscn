@@ -1,34 +1,46 @@
 [gd_scene load_steps=6 format=3 uid="uid://cvlkphcaskboq"]
 
-[ext_resource type="PackedScene" path="res://Scenes/ShipInfo.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://gy6plqno7n0y" path="res://Scenes/ShipInfo.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
-[ext_resource type="PackedScene" path="res://Scenes/HelpText.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="5"]
 [ext_resource type="Script" path="res://Scripts/VictoryPanel.gd" id="11"]
-[ext_resource type="PackedScene" path="res://Scenes/CloseButton.tscn" id="13"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="13"]
 
-[node name="VictoryPanel" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 1067.0
-offset_bottom = 600.0
-pivot_offset = Vector2(533, 300)
+[node name="VictoryPanel" type="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -532.0
+offset_top = -300.0
+offset_right = 532.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("4")
 script = ExtResource("11")
-
-[node name="Background" type="Panel" parent="."]
-layout_mode = 0
-offset_right = 1064.0
-offset_bottom = 600.0
-
-[node name="CloseButton" parent="Background" instance=ExtResource("13")]
-layout_mode = 0
-shortcut_in_tooltip = false
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 0
 offset_right = 1064.0
-offset_bottom = 64.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 18
 text = "VICTORY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" parent="." instance=ExtResource("13")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 1028.0
+offset_top = 12.0
+offset_right = 1052.0
+offset_bottom = 36.0
+grow_horizontal = 1
+shortcut_in_tooltip = false
 
 [node name="Grid" type="GridContainer" parent="."]
 layout_mode = 0
@@ -59,8 +71,8 @@ id = 3
 layout_mode = 0
 offset_left = 28.0
 offset_top = 556.0
-offset_right = 68.0
-offset_bottom = 580.0
+offset_right = 71.0
+offset_bottom = 582.0
 text = "LOOT"
 
 [node name="Bonus" parent="." instance=ExtResource("5")]
@@ -77,4 +89,4 @@ offset_top = 548.0
 offset_right = 544.0
 offset_bottom = 588.0
 
-[connection signal="close_button_pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

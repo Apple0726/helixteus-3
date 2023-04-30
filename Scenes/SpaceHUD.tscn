@@ -1,12 +1,12 @@
 [gd_scene load_steps=14 format=3 uid="uid://cgbd1tgsqupqm"]
 
-[ext_resource type="Texture2D" uid="uid://bqsl32377fxnf" path="res://Graphics/Buttons/Overlay.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dcse6at72q64g" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://w1tpm8qjsx2w" path="res://Graphics/Buttons/Megastructures.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://cd6irvbek5dux" path="res://Graphics/Buttons/Annotate.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://fdrcuyuxv13v" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://b5al6qltymgbo" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bm5fxqakm1quo" path="res://Graphics/Buttons/Megastructures.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cxaw7b8538qb3" path="res://Graphics/Buttons/Annotate.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://b3bnepfxia8o7" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bpdelfrrpg4rk" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
 
 [sub_resource type="Shortcut" id="2"]
 
@@ -60,6 +60,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("3")
 script = ExtResource("2")
+metadata/_edit_vertical_guides_ = [280.0]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -122,25 +123,25 @@ stretch_mode = 5
 
 [node name="SendFighters" type="Button" parent="."]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 680.0
-offset_right = 376.0
+offset_left = 200.0
+offset_top = 688.0
+offset_right = 360.0
 offset_bottom = 720.0
 text = "SEND_FIGHTERS"
 
 [node name="ConquerAll" type="Button" parent="."]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 680.0
-offset_right = 376.0
+offset_left = 200.0
+offset_top = 688.0
+offset_right = 360.0
 offset_bottom = 720.0
 text = "CONQUER_ALL"
 
 [node name="SendProbes" type="Button" parent="."]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 680.0
-offset_right = 376.0
+offset_left = 200.0
+offset_top = 688.0
+offset_right = 360.0
 offset_bottom = 720.0
 text = "SEND_PROBES"
 

@@ -340,17 +340,17 @@ func _input(event):
 		for i in len(ship_data):
 			get_node("Ship%s/Icon" % i).visible = false
 			get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
-	if Input.is_action_just_pressed("battle_up"):
+	if Input.is_action_just_pressed("W"):
 		ship_dir = "left"
-	if Input.is_action_just_pressed("battle_down"):
+	if Input.is_action_just_pressed("S"):
 		ship_dir = "right"
-	if Input.is_action_just_released("battle_up") and Input.is_action_pressed("battle_down"):
+	if Input.is_action_just_released("W") and Input.is_action_pressed("S"):
 		ship_dir = "right"
-	elif Input.is_action_just_released("battle_up"):
+	elif Input.is_action_just_released("W"):
 		ship_dir = ""
-	if Input.is_action_just_released("battle_down") and Input.is_action_pressed("battle_up"):
+	if Input.is_action_just_released("S") and Input.is_action_pressed("W"):
 		ship_dir = "left"
-	elif Input.is_action_just_released("battle_down"):
+	elif Input.is_action_just_released("S"):
 		ship_dir = ""
 	if $Help.modulate.a == 1:
 		if game.help.has("battle") and event is InputEventKey:
@@ -409,7 +409,7 @@ var ship_dir:String = ""
 func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("Info/HP").value = HX_data[id].HP
-	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
+	Helper.show_dmg(round(dmg), HXs[id].position, self, 1.0, false, crit)
 	if HX_data[id].HP <= 0 and not HX_data[id].has("rekt"):
 		HXs_rekt += 1
 		HX_data[id].rekt = true
@@ -479,8 +479,10 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[i].get_node("LightParticles").lifetime = int_mult
 				HXs[i].get_node("LightParticles").speed_scale = time_speed
 				HXs[i].get_node("LightParticles").amount = int(50 * int_mult)
-				HXs[i].get_node("LightParticles").process_material.initial_velocity = 250.0 * int_mult
-				HXs[i].get_node("LightParticles").process_material.scale = 0.1 * int_mult
+				HXs[i].get_node("LightParticles").process_material.initial_velocity_min = 250.0 * int_mult
+				HXs[i].get_node("LightParticles").process_material.initial_velocity_max = 250.0 * int_mult
+				HXs[i].get_node("LightParticles").process_material.scale_min = 0.1 * int_mult
+				HXs[i].get_node("LightParticles").process_material.scale_max = 0.1 * int_mult
 				var debuff:float = -0.2 - weapon_lv * 0.1
 				if HX_c_d[HXs[i].name].has("acc"):
 					HX_c_d[HXs[i].name].acc = max(debuff, HX_c_d[HXs[i].name].acc + debuff)
@@ -520,7 +522,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				explosion.get_node("AnimationPlayer").connect("animation_finished",Callable(self,"on_explosion_finished").bind(explosion))
 				explosion.get_node("AnimationPlayer").play("Explosion", -1, time_speed)
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
-				HXs[t].get_node("BombParticles").process_material.initial_velocity = 200 + 100 * weapon_lv
+				HXs[t].get_node("BombParticles").process_material.initial_velocity_min = 200 + 100 * weapon_lv
+				HXs[t].get_node("BombParticles").process_material.initial_velocity_max = 200 + 100 * weapon_lv
 				HXs[t].get_node("BombParticles").emitting = true
 				HXs[t].get_node("BombParticles").speed_scale = time_speed
 				HX_c_d[HXs[t].name].burn = weapon_lv
@@ -609,8 +612,6 @@ func _process(delta):
 		if HX_data[i].HP <= 0 and HX.get_node("Sprite2D").modulate.a > 0:
 			if HX_data[i].lv >= max_lv_ship + 30 and not game.achievement_data.random.has("rekt_enemy_30_levels_higher"):
 				game.earn_achievement("random", "rekt_enemy_30_levels_higher")
-			HX.get_node("Sprite2D").modulate.a -= 0.02 * time_mult
-			HX.get_node("Info").modulate.a -= 0.02 * time_mult
 		var pos = HX_c_d[HX.name].position
 		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5 * game.u_i.time_speed)
 	if stage in [BattleStages.START, BattleStages.CHOOSING]:
@@ -874,8 +875,8 @@ func place_targets(attacking:bool = true):
 			target.position = HX.position
 			add_child(target)
 			target.get_node("TextureButton").shortcut = Shortcut.new()
-			target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
-			target.get_node("TextureButton").shortcut.shortcut.action = str((i % 4) + 1)
+			target.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
+			target.get_node("TextureButton").shortcut.events[0].physical_keycode = 49 + (i % 4)
 			target.get_node("TextureButton").connect("pressed",Callable(self,"on_target_pressed").bind(i))
 			target.get_node("TextureButton").connect("mouse_entered",Callable(self,"on_target_over").bind(i))
 			target.get_node("TextureButton").connect("mouse_exited",Callable(self,"on_target_out"))
@@ -1010,7 +1011,6 @@ func add_victory_panel():
 	victory_panel.HX_data = HX_data
 	victory_panel.ship_data = ship_data
 	victory_panel.weapon_XPs = weapon_XPs
-	victory_panel.position = Vector2(108, 60)
 	victory_panel.p_id = game.c_p
 	if hit_amount == 0:
 		victory_panel.mult = 1.5

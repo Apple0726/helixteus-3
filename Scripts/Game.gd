@@ -601,7 +601,7 @@ func _ready():
 		screen_shake = config.get_value("graphics", "screen_shake", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
-		if OS.get_name() == "HTML5" and not config.get_value("misc", "HTML5", false):
+		if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
 			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
@@ -1629,21 +1629,20 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
 			Discord_Activity.small_image = c_v
 			if c_v in ["planet", "system"]:
-				Discord_Activity.details = "Managing planets"
+				Discord_Activity.state = "Managing planets"
 			if c_v == "planet":
 				Discord_Activity.small_image_text = "Viewing " + planet_data[c_p].name
 			elif c_v == "system":
 				Discord_Activity.small_image_text = "Viewing " + system_data[c_s].name
 			elif c_v == "galaxy":
-				Discord_Activity.details = "Observing the stars"
+				Discord_Activity.state = "Observing the stars"
 				Discord_Activity.small_image_text = "Viewing " + galaxy_data[c_g].name
 			elif c_v == "cluster":
-				Discord_Activity.details = "Watching distant galaxies"
+				Discord_Activity.state = "Watching distant galaxies"
 				Discord_Activity.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
 			elif c_v == "universe":
-				Discord_Activity.details = "Navigating the universe"
+				Discord_Activity.state = "Navigating the universe"
 				Discord_Activity.small_image_text = "Viewing " + u_i.name
-			Discord_Activity.state = ""
 			Discord_Activity.refresh() 
 
 func add_science_tree():
@@ -2763,7 +2762,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 			if tile2 and tile2.has("lake"):
 				continue
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
-				tile_data[t_id2] = {} if not tile2 else tile2
+				tile_data[t_id2] = {} if tile2 == null else tile2
 				tile2 = tile_data[t_id2]
 				if tile2.has("ash"):
 					if not tile2.has("cave"):
@@ -2781,7 +2780,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 					earn_achievement("exploration", "volcano_cave")
 				if not achievement_data.exploration.has("volcano_aurora_cave") and tile2.has("cave") and tile2.has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
-	tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+	tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 	tile_data[t_id].volcano = {"VEI":VEI}
 
 func generate_tiles(id:int):
@@ -2868,20 +2867,20 @@ func generate_tiles(id:int):
 			var t_id = i % wid + j * wid
 			if level > 0.5 and p_i.has("lake_1"):
 				if p_i.lake_1.state != "g":
-					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 1
 					continue
 			if level < -0.5 and p_i.has("lake_2"):
 				if p_i.lake_2.state != "g":
-					tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 2
 					continue
 			if home_planet:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
-				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 				var floor_size:int = randf_range(25 * min(wid / 8.0, 1), 40 * randf_range(1, 1 + wid / 100.0))
 				var num_floors:int = Helper.rand_int(1, int(wid / 2.5)) + 2
 				var modifiers:Dictionary = {}
@@ -2932,7 +2931,7 @@ func generate_tiles(id:int):
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 15 / crater_size / pow(coldest_star_temp, 0.8):
-				tile_data[t_id] = {} if not tile_data[t_id] else tile_data[t_id]
+				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 				if tile_data[t_id].has("ash"):
 					continue
 				tile_data[t_id].crater = {}
@@ -3173,7 +3172,7 @@ func generate_tiles(id:int):
 	tile_data.clear()
 
 func erase_tile(tile:int):
-	if not tile_data[tile]:
+	if tile_data[tile] == null:
 		tile_data[tile] = {}
 	for key in tile_data[tile].keys():
 		if not key in ["aurora", "ash"]:
@@ -4297,7 +4296,7 @@ func _on_MMTimer_timeout():
 				return
 			for t_id in MM_data[p].tiles:
 				var tile = _tile_data[t_id]
-				if not tile or not tile.has("bldg"):
+				if tile == null or not tile.has("bldg"):
 					continue
 				var prod_mult = Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 				var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * prod_mult
