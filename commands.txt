@@ -24,6 +24,9 @@ Commands list:
 /setEnergy [value]
 - Sets your energy to [value]
 
+/setEnergyCap [value]
+- Sets your energy capacity to [value] (affected by infinite research)
+
 /setSP [value]
 - Sets your science points to [value]
 
