@@ -35,7 +35,6 @@ var on_button = false
 var config = ConfigFile.new()
 var ship2map
 var emma_cave_shortcut:bool = false
-var renaming:bool = false
 var current_bookmark_type:String = "planet"
 
 func _on_Button_pressed():
@@ -640,13 +639,6 @@ func _on_Clusters_mouse_entered():
 	game.show_tooltip(tr("CLUSTERS"))
 
 
-func _on_Name_mouse_entered():
-	renaming = true
-
-func _on_Name_mouse_exited():
-	renaming = false
-
-
 func _on_Name_text_entered(new_text):
 	$Top/Name/Name.release_focus()
 	if game.c_v == "planet":
@@ -667,6 +659,7 @@ func _on_Name_text_entered(new_text):
 			game.bookmarks.cluster[str(game.c_c)].name = new_text
 	elif game.c_v == "universe":
 		game.u_i.name = new_text
+	refresh_bookmarks()
 
 
 func _on_Dimension_pressed():
@@ -720,11 +713,6 @@ func _on_SwitchBtn_pressed():
 		"universe":
 			if game.show.has("dimensions") or not game.help.has("flash_send_probe_btn"):
 				game.switch_view("dimension")
-
-
-func _on_Name_gui_input(event):
-	get_viewport().set_input_as_handled()
-
 
 func _on_Stats_mouse_entered():
 	game.show_tooltip("%s & %s" % [tr("ACHIEVEMENTS"), tr("STATISTICS")])

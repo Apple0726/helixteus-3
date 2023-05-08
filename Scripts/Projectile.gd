@@ -64,7 +64,7 @@ func collide(collision:KinematicCollision2D):
 		if not enemy:#if the projectile comes from the player
 			if deflected:#No distance penalty for deflected projectiles
 				var dmg:float = damage / body.def
-				Helper.show_dmg(round(dmg), position, cave_ref)
+				Helper.show_dmg(round(dmg), position, cave_ref, 80)
 				body.hit(dmg)
 			else:
 				if body.spawn_tile in dont_hit_again:
@@ -72,7 +72,7 @@ func collide(collision:KinematicCollision2D):
 					return
 				var dmg_penalty:float = max(1, position.distance_to(cave_ref.rover.position) / 300.0)
 				var dmg:float = damage / dmg_penalty / body.def
-				Helper.show_dmg(round(dmg), position, cave_ref)
+				Helper.show_dmg(round(dmg), position, cave_ref, 80)
 				for effect in status_effects:
 					if not body.status_effects.has(effect):
 						body.status_effects[effect] = status_effects[effect]

@@ -1,7 +1,8 @@
-[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://dfiuyho24np11"]
+[gd_resource type="TileSet" load_steps=11 format=3 uid="uid://dfiuyho24np11"]
 
 [ext_resource type="Texture2D" uid="uid://lwhyuqd2ydv7" path="res://Graphics/Tiles/cave.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://lxfvljbp373f" path="res://Graphics/Tiles/Volcano.png" id="4_ro4qv"]
+[ext_resource type="Texture2D" uid="uid://cck1bhqwjmqd" path="res://Graphics/Tiles/Volcano2.png" id="5_yag5r"]
 [ext_resource type="Texture2D" uid="uid://ddw8qrk0peihm" path="res://Graphics/Tiles/abandoned_ship.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://bj5iam4v46a47" path="res://Graphics/Tiles/Hole.png" id="7"]
 
@@ -26,9 +27,15 @@ texture = ExtResource("4_ro4qv")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6qrt8"]
+texture = ExtResource("5_yag5r")
+texture_region_size = Vector2i(200, 200)
+0:0/0 = 0
+
 [resource]
 tile_size = Vector2i(200, 200)
 sources/0 = SubResource("TileSetAtlasSource_r3f7a")
 sources/1 = SubResource("TileSetAtlasSource_3nlp2")
 sources/3 = SubResource("TileSetAtlasSource_fj86i")
 sources/2 = SubResource("TileSetAtlasSource_vqnb4")
+sources/4 = SubResource("TileSetAtlasSource_6qrt8")

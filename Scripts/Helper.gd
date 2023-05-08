@@ -361,7 +361,7 @@ func get_rover_mining_name(_name:String):
 func set_back_btn(back_btn):
 	back_btn.text = "<- %s (%s)" % [tr("BACK"), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_Z))]
 
-func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = false, crit:bool = false):
+func show_dmg(dmg:float, pos:Vector2, parent, size:int = 40, missed:bool = false, crit:bool = false):
 	var lb:Label = Label.new()
 	#lb["custom_fonts/font"] = dmg_txt_rsrc
 	lb.light_mask = 0
@@ -376,8 +376,8 @@ func show_dmg(dmg:float, pos:Vector2, parent, sc:float = 1.0, missed:bool = fals
 		else:
 			lb.text = "- %s" % format_num(dmg)
 	lb.position = pos - Vector2(0, 40)
-	lb.scale *= sc
-	lb["theme_override_font_sizes/font_size"] = 40
+	#lb.scale *= sc
+	lb["theme_override_font_sizes/font_size"] = size
 	parent.add_child(lb)
 	var dur = 1.5 if crit else 1.0
 	if game:

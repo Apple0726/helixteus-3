@@ -192,6 +192,7 @@ func _on_Button_pressed():
 		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
 
 func refresh():
+	set_process_input(visible)
 	if game.science_unlocked.has("RMK2") and len(inventory) == 5:
 		inventory.append({})
 	if game.science_unlocked.has("RMK3") and len(inventory) == 6:
@@ -283,12 +284,12 @@ func refresh():
 	$Stats/DefText.text = Helper.format_num(round(def + def_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/CargoText.text = "%s kg" % [Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))] + "  [img]Graphics/Icons/help.png[/img]"
 	if engi_mult == 1.0:
-		$Stats/HPText.help_text = "(%s + %s) * %.2f = %s" % [HP, HP_bonus, mult, round((HP + HP_bonus) * mult * engi_mult)]
-		$Stats/AtkText.help_text = "(%s + %s) * %.2f = %s" % [atk, 0, mult, round(atk * mult * engi_mult)]
+		$Stats/HPText.help_text = "(%s + %s) * %.2f = %s" % [HP, HP_bonus, mult, Helper.format_num(round((HP + HP_bonus) * mult * engi_mult))]
+		$Stats/AtkText.help_text = "(%s + %s) * %.2f = %s" % [atk, 0, mult, Helper.format_num(round(atk * mult * engi_mult))]
 		$Stats/CargoText.help_text = "(%s + %s) * %.2f = %s kg" % [weight_cap, cargo_bonus, mult, Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))]
 	else:
-		$Stats/HPText.help_text = "(%s + %s) * %.2f * %s = %s" % [HP, HP_bonus, mult, engi_mult, round((HP + HP_bonus) * mult * engi_mult)]
-		$Stats/AtkText.help_text = "(%s + %s) * %.2f * %s = %s" % [atk, 0, mult, engi_mult, round(atk * mult * engi_mult)]
+		$Stats/HPText.help_text = "(%s + %s) * %.2f * %s = %s" % [HP, HP_bonus, mult, engi_mult, Helper.format_num(round((HP + HP_bonus) * mult * engi_mult))]
+		$Stats/AtkText.help_text = "(%s + %s) * %.2f * %s = %s" % [atk, 0, mult, engi_mult, Helper.format_num(round(atk * mult * engi_mult))]
 		$Stats/CargoText.help_text = "(%s + %s) * %.2f * %s = %s kg" % [weight_cap, cargo_bonus, mult, engi_mult, Helper.format_num(round((weight_cap + cargo_bonus) * mult * engi_mult))]
 	$Stats/DefText.help_text = "%s + %s = %s" % [def, def_bonus, round(def + def_bonus)]
 	$Stats/SpeedText.text = str(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
@@ -334,6 +335,7 @@ func _on_icon_mouse_exited():
 	game.hide_tooltip()
 
 func _input(event):
+	super(event)
 	if Input.is_action_just_released("X"):
 		if slot_over != -1:
 			var inv = inventory[slot_over]

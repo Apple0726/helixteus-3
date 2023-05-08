@@ -201,7 +201,7 @@ func show_part(_name:String):
 				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
 			else:
 				num = game.autocollect.particles[_name]
-		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(num, true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(num), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
@@ -247,7 +247,7 @@ func on_mouse_out():
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met) and not is_zero_approx(game.autocollect.mets[met]):
-		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mets[met]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func get_str(obj:String, desc:String = ""):

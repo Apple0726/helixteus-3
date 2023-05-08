@@ -89,6 +89,7 @@ offset_left = 112.0
 offset_top = 72.0
 offset_bottom = 136.0
 text = "asdf"
+autowrap_mode = 3
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
 layout_mode = 0
@@ -99,7 +100,7 @@ offset_top = -85.9996
 offset_right = 88.0
 offset_bottom = -13.9996
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

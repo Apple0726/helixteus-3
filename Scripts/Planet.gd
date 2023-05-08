@@ -46,25 +46,26 @@ var caves_data:Dictionary = {}
 func _ready():
 	shadows.resize(wid * wid)
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
-	$TileMap.material.shader = preload("res://Shaders/BCS.gdshader")
+	#$TileMap.material.shader = preload("res://Shaders/BCS.gdshader")
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
 		if star.luminosity > lum:
 			star_mod = Helper.get_star_modulate(star["class"])
-			if star_mod.get_luminance() < 0.2:
-				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
+			var mod_lum = star_mod.get_luminance()
+			if mod_lum < 0.2:
+				star_mod = star_mod.lightened(0.2 - mod_lum)
 			$TileMap.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
 				strength_mult = min(remap(p_i.temperature, 1000, 3000, 1.2, 1.5), 1.5)
 			else:
 				strength_mult = min(remap(p_i.temperature, -273, 1000, 0.3, 1.2), 1.2)
-			var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
-			var contrast:float = sqrt(brightness)
+			#var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
+			#var contrast:float = sqrt(brightness)
 			#$TileMap.material.set_shader_parameter("brightness", min(brightness, 2.0))
-			$TileMap.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
-			$TileMap.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
+			#$TileMap.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
+			#$TileMap.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
 			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)
@@ -159,7 +160,7 @@ func _ready():
 					caves_data[id2] = len(cave_data.seeds)
 				$Obstacles.set_cell(0, Vector2i(i, j), 0, Vector2(0, 0))
 			elif tile.has("volcano"):
-				$Obstacles.set_cell(0, Vector2i(i, j), 3, Vector2(0, 0))
+				$Obstacles.set_cell(0, Vector2i(i, j), 4, Vector2(0, 0))
 			elif tile.has("ship"):
 				if len(game.ship_data) == 0:
 					$Obstacles.set_cell(0, Vector2i(i, j), 1, Vector2(0, 0))
@@ -1222,7 +1223,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 				Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
 			else:
-				game.switch_view("", {"dont_fade_anim":true})
+				game.remove_planet()
+				game.c_v = ""
 				game.c_p = tile.wormhole.l_dest_p_id
 				game.c_p_g = tile.wormhole.g_dest_p_id
 				game.c_s = tile.wormhole.l_dest_s_id
@@ -1235,9 +1237,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.ships_dest_coords.s = game.c_s
 			game.ships_c_g_coords.s = game.c_s_g
 			game.ships_dest_g_coords.s = game.c_s_g
-			game.switch_view("planet", {"dont_save_zooms":true, "dont_fade_anim":true})
-			game.view_tween = create_tween()
-			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.2)
+			game.switch_view("planet", {"dont_save_zooms":true})
 		else:
 			game.send_ships_panel.dest_p_id = p_id
 			game.toggle_panel(game.send_ships_panel)

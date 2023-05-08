@@ -160,7 +160,7 @@ func hit(damage:float):
 
 func RoD_damage():
 	var dmg:float = cave_ref.laser_damage / def
-	Helper.show_dmg(round(dmg), position, cave_ref)
+	Helper.show_dmg(round(dmg), position, cave_ref, 80)
 	hit(dmg)
 
 func on_RoD_timeout():

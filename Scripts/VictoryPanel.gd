@@ -39,7 +39,7 @@ func _process(delta):
 		var XP_node = $Grid.get_node("Panel%s/XP/TextureProgress2" % (i + 1))
 		var XP_text_node = $Grid.get_node("Panel%s/XP/Label2" % (i + 1))
 		XP_node.value = move_toward(XP_node.value, XP_node.value + XP, (XP + ship_data[i].XP - XP_node.value) * delta * 2)
-		XP_text_node.text = "%s / %s" % [Helper.format_num(XP_node.value), Helper.format_num(ship_data[i].XP_to_lv)]
+		XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(round(ship_data[i].XP_to_lv))]
 
 func _input(event):
 	if Input.is_action_just_released("right_click"):

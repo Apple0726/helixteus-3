@@ -1,44 +1,44 @@
 [gd_scene load_steps=72 format=3 uid="uid://cahlkepfiewe4"]
 
-[ext_resource type="Texture2D" uid="uid://ba3vw76fhsf5t" path="res://Graphics/Buttons/Craft.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://blid0ahf44j50" path="res://Graphics/Icons/money.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://ceck4wkuen5lt" path="res://Graphics/Icons/energy.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://d3rio28i8fvon" path="res://Graphics/Icons/minerals.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dh8cjopfbnfcr" path="res://Graphics/Buttons/Craft.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cpkd0ce56vw62" path="res://Graphics/Icons/money.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dfov6sisin58e" path="res://Graphics/Icons/energy.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://caogp3ych2a60" path="res://Graphics/Icons/minerals.png" id="4"]
 [ext_resource type="Script" path="res://Scripts/HUD.gd" id="5"]
-[ext_resource type="Texture2D" uid="uid://bf8o6icjw1t16" path="res://Graphics/Buttons/MineralUpgrades.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://b40lfdnakph6r" path="res://Graphics/Buttons/MineralUpgrades.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="Texture2D" uid="uid://djr3vvfm1mk3n" path="res://Graphics/Icons/stone.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://byet7y7rro25g" path="res://Graphics/Buttons/Shop.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://xhpodriwjdgp" path="res://Graphics/Buttons/Inventory.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://bx8376l8hnopv" path="res://Graphics/Materials/soil.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://cxmjrghyso7gq" path="res://Graphics/Icons/SP.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://c4i11jdsp18hr" path="res://Graphics/Buttons/ScienceTree.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://7gla7ydyilri" path="res://Graphics/Buttons/MainMenu.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://c2maoc4l21rot" path="res://Graphics/Buttons/convert_minerals.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://bse5rqmmvsveq" path="res://Graphics/Misc/Bar.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://bo1oxu7ejdqcr" path="res://Graphics/Buttons/Ships.png" id="17"]
-[ext_resource type="Texture2D" uid="uid://cq7uyml3e0apa" path="res://Graphics/Misc/bullet.png" id="18"]
-[ext_resource type="Texture2D" uid="uid://bxdrfgyq3iwfa" path="res://Graphics/Items/Others/ship_locator.png" id="19"]
-[ext_resource type="Texture2D" uid="uid://8gy6bak8waxc" path="res://Graphics/Cave/Objects/Map.png" id="20"]
-[ext_resource type="Texture2D" uid="uid://b68x2m2oyct2h" path="res://Graphics/Misc/HUD.png" id="21"]
-[ext_resource type="Texture2D" uid="uid://e7ga6ys8ytym" path="res://Graphics/Buttons/Vehicles.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://3f7a2kcsv1c4" path="res://Graphics/Icons/stone.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bdwok6iuju7a4" path="res://Graphics/Buttons/Shop.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b6qk5k6h3fxfi" path="res://Graphics/Buttons/Inventory.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b4shy3a75qbjw" path="res://Graphics/Materials/soil.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://78ibnuwq78bj" path="res://Graphics/Icons/SP.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b63svvwgswlf7" path="res://Graphics/Buttons/ScienceTree.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://kxosxwc7kgtc" path="res://Graphics/Buttons/MainMenu.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://8xnlr3akp2dr" path="res://Graphics/Buttons/convert_minerals.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://bish12leyxwg1" path="res://Graphics/Buttons/Ships.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://b6fm4xy2j5o2v" path="res://Graphics/Misc/bullet.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://ce34f2u3ilm2l" path="res://Graphics/Items/Others/ship_locator.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://bvafdx2shij2o" path="res://Graphics/Cave/Objects/Map.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://dft5cl6ep4ubm" path="res://Graphics/Misc/HUD.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://cg6u434tso7ut" path="res://Graphics/Buttons/Vehicles.png" id="22"]
 [ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="23"]
-[ext_resource type="Texture2D" uid="uid://nufeikrlf70y" path="res://Graphics/NPCs/3_btn.png" id="24"]
-[ext_resource type="Texture2D" uid="uid://cs1sodxnmnmqk" path="res://Graphics/Buttons/Wiki.png" id="25"]
-[ext_resource type="Texture2D" uid="uid://bdfuen3axc77e" path="res://Graphics/Materials/glass.png" id="26"]
-[ext_resource type="Texture2D" uid="uid://d2fyi8ciftm4e" path="res://Graphics/Planets/3.png" id="27"]
-[ext_resource type="Texture2D" uid="uid://by8r33ery0cfc" path="res://Graphics/Effects/spotlight_5.png" id="28"]
-[ext_resource type="Texture2D" uid="uid://chyj1o3qaskp" path="res://Graphics/Galaxies/6.png" id="29"]
-[ext_resource type="Texture2D" uid="uid://yb83xa541a17" path="res://Graphics/Buttons/NotBookmarked.png" id="30"]
-[ext_resource type="Texture2D" uid="uid://cp3no3ibirvjb" path="res://Graphics/Clusters/0.png" id="31"]
-[ext_resource type="Texture2D" uid="uid://brs321fnvw3cx" path="res://Graphics/Buttons/Bookmarked.png" id="32"]
-[ext_resource type="Texture2D" uid="uid://dsws4pr0tetmp" path="res://Graphics/Buttons/DimensionView.png" id="33"]
-[ext_resource type="Texture2D" uid="uid://dtwrrluw6jo8x" path="res://Graphics/Materials/cellulose.png" id="34"]
-[ext_resource type="Texture2D" uid="uid://n3hs87vljusq" path="res://Graphics/Buttons/Stats.png" id="35"]
+[ext_resource type="Texture2D" uid="uid://ds6ovu0v0qybb" path="res://Graphics/NPCs/3_btn.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://ie0q7gvnk7iw" path="res://Graphics/Buttons/Wiki.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://cw7bav43mkurh" path="res://Graphics/Materials/glass.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://ckg1wp0kneqps" path="res://Graphics/Planets/3.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://byvlrrx33jsa0" path="res://Graphics/Effects/spotlight_5.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://mjgc4346ykk5" path="res://Graphics/Galaxies/6.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://dvx275pksv6d1" path="res://Graphics/Buttons/NotBookmarked.png" id="30"]
+[ext_resource type="Texture2D" uid="uid://gync3hfn5rsc" path="res://Graphics/Clusters/0.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://bul1xwg550qsq" path="res://Graphics/Buttons/Bookmarked.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://nkxaaipcbulq" path="res://Graphics/Buttons/DimensionView.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://cpbcy3l6bvxa8" path="res://Graphics/Materials/cellulose.png" id="34"]
+[ext_resource type="Texture2D" uid="uid://dbprykul0cbh7" path="res://Graphics/Buttons/Stats.png" id="35"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "BookmarkAnim"
-length = 0.3
+length = 0.2
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -46,9 +46,9 @@ tracks/0/path = NodePath("Bookmarks:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-126, -0.25, 0, 0.1, 156.884, 0, -0.2, 15, 0.25, 0),
-"times": PackedFloat32Array(0, 0.3)
+"handle_modes": PackedInt32Array(0, 2),
+"points": PackedFloat32Array(-126, -0.25, 0, 0.0313038, 89, 0, -0.0666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_awikt"]
@@ -387,7 +387,7 @@ mouse_filter = 1
 layout_mode = 0
 offset_left = 128.0
 offset_top = -28.0
-offset_right = 153.0
+offset_right = 158.0
 offset_bottom = -4.0
 toggle_mode = true
 shortcut = SubResource("3")
@@ -744,7 +744,9 @@ offset_bottom = 72.0
 [node name="Name" type="LineEdit" parent="Top/Name"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_aubol")
 theme_override_styles/focus = SubResource("StyleBoxFlat_aubol")
 expand_to_text_length = true
@@ -1088,9 +1090,6 @@ mouse_filter = 2
 [connection signal="mouse_exited" from="Top/Objectives/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="mouse_entered" from="Top/Lv/Label" to="." method="_on_Label_mouse_entered"]
 [connection signal="mouse_exited" from="Top/Lv/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="gui_input" from="Top/Name/Name" to="." method="_on_Name_gui_input"]
-[connection signal="mouse_entered" from="Top/Name/Name" to="." method="_on_Name_mouse_entered"]
-[connection signal="mouse_exited" from="Top/Name/Name" to="." method="_on_Name_mouse_exited"]
 [connection signal="text_submitted" from="Top/Name/Name" to="." method="_on_Name_text_entered"]
 [connection signal="mouse_entered" from="Top/Resources/Money/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["MONEY"]]
 [connection signal="mouse_exited" from="Top/Resources/Money/Texture2D" to="." method="_on_mouse_exited"]

@@ -52,19 +52,16 @@ func _ready():
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		if s_i.has("discovered"):
 			discovered_sys.append(s_i)
-	if game.galaxy_data[game.c_g].has("wormholes"):
-		for wh_data in game.galaxy_data[game.c_g].wormholes:
-			var blue_line = Line2D.new()
-			add_child(blue_line)
-			blue_line.add_point(game.system_data[wh_data.from].pos)
-			blue_line.add_point(game.system_data[wh_data.to].pos)
-			blue_line.width = 2
-			blue_line.default_color = Color(0.6, 0.4, 1.0, 1.0)
-			blue_line.antialiased = true
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 	if len(discovered_sys) > 0:
 		bldg_overlay_timer.start(0.05)
+	queue_redraw()
+
+func _draw():
+	if game.galaxy_data[game.c_g].has("wormholes"):
+		for wh_data in game.galaxy_data[game.c_g].wormholes:
+			draw_line(game.system_data[wh_data.from].pos, game.system_data[wh_data.to].pos, Color(0.6, 0.4, 1.0, 1.0))
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]

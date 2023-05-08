@@ -263,7 +263,7 @@ func _ready():
 			rover_size = modifiers.rover_size
 		if modifiers.has("minimap_disabled"):
 			$UI/Error.visible = true
-			$UI/Minimap.visible = false
+			MM.visible = false
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
 		var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ)
@@ -933,8 +933,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for id in hole_exits[cave_floor - 1].drilled_holes:
 			add_hole(id)
 	hole.position = hole_pos
-	MM_hole.position = hole_pos * minimap_zoom
-	MM_exit.position = pos * minimap_zoom
 	if going_up:
 		rover.position = hole_pos
 		camera.position = hole_pos
@@ -951,9 +949,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 			cave_adjective = " large"
 		if num_floors >= 24:
 			cave_adjective = " huge"
-		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else ("illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
+		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
 		if cave_floor < 8:
-			Discord_Activity.details = "Exploring a{adjective}{volcanic} cave {aurora}".format(format_dict)
+			Discord_Activity.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
 		elif cave_floor < 16:
 			Discord_Activity.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
 		else:
@@ -1233,9 +1231,8 @@ func _input(event):
 				$UI2/Ability/Panel/Num.text = str(ability_num)
 		if Input.is_action_just_released("M"):
 			if not $UI/Error.visible:
-				$UI/Minimap.visible = not $UI/Minimap.visible
+				MM.visible = not MM.visible
 			minimap_rover.visible = not minimap_rover.visible
-			$UI/MinimapBG.visible = not $UI/MinimapBG.visible
 		elif Input.is_action_just_released("1") and curr_slot != 0:
 			curr_slot = 0
 			set_border(curr_slot)
@@ -1482,7 +1479,9 @@ func _process(delta):
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
-			enemy.MM_icon.position = enemy.position * minimap_zoom
+			enemy.MM_icon.position = enemy.position * minimap_zoom + minimap_center - rover.position * minimap_zoom
+		MM_hole.position = hole.position * minimap_zoom + minimap_center - rover.position * minimap_zoom
+		MM_exit.position = exit.position * minimap_zoom + minimap_center - rover.position * minimap_zoom
 
 func use_item(item:Dictionary, _tile_highlight, delta):
 	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
@@ -1787,7 +1786,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	walls.erase(map_pos)
 	
 	cave_wall.set_cell(0, map_pos)
-	cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
+	#cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
 	minimap_cave.set_cell(0, map_pos, tile_type, Vector2i.ZERO)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
@@ -1938,7 +1937,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 	$UI2/HurtTexture.modulate.a = strength
 	tween.tween_property($UI2/HurtTexture, "modulate", Color(1, 1, 1, 0), 1.0)
 	if HP > 0:
-		Helper.show_dmg(round(damage), rover.position, self)
+		Helper.show_dmg(round(damage), rover.position, self, 80)
 
 var slots = []
 func set_border(i:int):
@@ -2046,7 +2045,7 @@ func _physics_process(delta):
 		elif collision.get_collider() is Projectile:
 			collision.get_collider().collide(collision)
 	camera.position = rover.position + shaking
-	MM.position = minimap_center - rover.position * minimap_zoom
+	minimap_cave.position = minimap_center - rover.position * minimap_zoom
 
 func reset_panel_anim():
 	var timer = $UI2/Panel/Timer

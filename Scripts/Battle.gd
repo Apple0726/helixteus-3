@@ -409,7 +409,7 @@ var ship_dir:String = ""
 func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("Info/HP").value = HX_data[id].HP
-	Helper.show_dmg(round(dmg), HXs[id].position, self, 1.0, false, crit)
+	Helper.show_dmg(round(dmg), HXs[id].position, self, 40, false, crit)
 	if HX_data[id].HP <= 0 and not HX_data[id].has("rekt"):
 		HXs_rekt += 1
 		HX_data[id].rekt = true
@@ -492,7 +492,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			else:
 				HXs[i].get_node("MissAnimation").stop()
 				HXs[i].get_node("MissAnimation").play("Miss", -1, time_speed)
-				Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
+				Helper.show_dmg(0, HXs[i].position, self, 30, true)
 		if light_hit:
 			weapon_XPs[sh].light += 1
 	else:
@@ -579,7 +579,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			w_c_d.has_hit = true
 			HXs[t].get_node("MissAnimation").stop()
 			HXs[t].get_node("MissAnimation").play("Miss", -1, time_speed)
-			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
+			Helper.show_dmg(0, HXs[t].position, self, 30, true)
 	$Timer.start(min(timer_delay, timer_delay / time_speed))
 	return remove_weapon_b
 
@@ -1528,11 +1528,11 @@ func _on_Ship_area_entered(area, ship_id:int):
 	var HX = HX_data[shooter]
 	if randf() < hit_formula(HX.acc * (1.0 + HX_c_d[HXs[shooter].name].acc if HX_c_d[HXs[shooter].name].has("acc") else 1.0), ship_data[ship_id].eva * ship_data[ship_id].eva_mult):
 		var dmg:int = HX_w_c_d[area.name].damage * HX.atk * (1.0 + HX_c_d[HXs[shooter].name].atk if HX_c_d[HXs[shooter].name].has("atk") else 1.0) / (ship_data[ship_id].def * ship_data[ship_id].def_mult)
-		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
+		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 30)
 		ship_data[ship_id].HP -= dmg
 		ship_data[ship_id].rage = min(ship_data[ship_id].rage + float(dmg) / float(ship_data[ship_id].total_HP) * 300, 100) #Add rage based on the percentage of health lost
 	else:
-		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 0.6, true)
+		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 30, true)
 	$ImmuneTimer.start()
 	hit_amount += 1
 	immune = true
@@ -1655,7 +1655,7 @@ func _on_Superweapon_pressed():
 				if HX_data[id].HP > 0:
 					HX_data[id].HP -= dmg / HX_data[id].def
 					HXs[id].get_node("Info/HP").value = HX_data[id].HP
-					Helper.show_dmg(dmg, HXs[id].position, self, 0.6, false)
+					Helper.show_dmg(dmg, HXs[id].position, self, 30, false)
 					HXs[id].get_node("HurtAnimation").stop()
 					HXs[id].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 					HXs[id].get_node("KnockbackAnimation").stop()

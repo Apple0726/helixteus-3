@@ -330,6 +330,9 @@ func _on_Upgrade_pressed():
 	update()
 	var bldg_info = Data[path_str][bldg]
 	var curr_time = Time.get_unix_time_from_system()
+	for cost in costs.keys():
+		if is_zero_approx(costs[cost]):
+			costs.erase(cost)
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		var cost_money = costs.money

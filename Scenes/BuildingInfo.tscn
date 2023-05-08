@@ -1,7 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://cun3ekabnch42"]
+[gd_scene load_steps=4 format=3 uid="uid://cun3ekabnch42"]
 
 [ext_resource type="Script" path="res://Scripts/BuildingInfo.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_dubjc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a82w2"]
+content_margin_left = 2.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
 [node name="BuildingInfo" type="Control"]
 layout_mode = 3
@@ -29,6 +42,7 @@ anchor_bottom = 1.0
 offset_right = -1232.0
 offset_bottom = -688.0
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a82w2")
 
 [node name="GridContainer" type="GridContainer" parent="PanelContainer"]
 layout_mode = 2
