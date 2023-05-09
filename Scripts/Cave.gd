@@ -385,7 +385,8 @@ func remove_cave():
 	cave_wall.clear()
 	minimap_cave.clear()
 	big_debris.clear()
-	$TileFeatures.clear()
+	$Ash.clear()
+	$Lava.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 		enemy.free()
@@ -653,9 +654,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
 					lava_tiles.append(Vector2i(i, j))
 	
-	$TileFeatures.set_cells_terrain_connect(0, ash_tiles, 0, 4)
-	$TileFeatures.set_cells_terrain_connect(0, lava_tiles, 0, 5)
-	$TileFeatures.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
+	$Ash.set_cells_terrain_connect(0, ash_tiles, 0, 4)
+	$Lava.set_cells_terrain_connect(0, lava_tiles, 0, 5)
+	$Ash.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
+	$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(1, Vector2i(i, -1), 1, Vector2i.ZERO)
@@ -2160,7 +2162,7 @@ func _on_FloorCollisionDetector_body_entered(body):
 			max_speed = 500
 		on_ash = true
 		if $UI2/Burning.visible:
-			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing())
+			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing() and $UI2/Burning.material["shader_parameter/alpha"] == 1.0)
 			if not $Rover/LavaTimer.is_stopped():
 				if enhancements.has("wheels_6"):
 					status_effects.burn = 5.0
@@ -2197,7 +2199,7 @@ func _on_FloorCollisionDetector_body_exited(body):
 			if not enhancements.has("wheels_8"):
 				max_speed = 500
 		if $UI2/Burning.visible:
-			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing())
+			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing() and $UI2/Burning.material["shader_parameter/alpha"] == 1.0)
 			if not $Rover/LavaTimer.is_stopped():
 				if enhancements.has("wheels_6"):
 					status_effects.burn = 5.0
@@ -2300,7 +2302,7 @@ func _on_LavaTimer_timeout():
 
 
 func _on_BurningAnim_animation_finished(anim_name):
-	if $UI2/Burning.modulate.a == 1.0:
+	if $UI2/Burning.material["shader_parameter/alpha"] == 1.0:
 		rover.get_node("Burn").visible = true
 		hit_player(total_HP / 10.0, {}, true)
 		$Rover/BurnTimer.stop()

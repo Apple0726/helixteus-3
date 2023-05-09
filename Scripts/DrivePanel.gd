@@ -50,21 +50,8 @@ func refresh():
 			speed = 8500000
 			unit = "mol"
 			type = "atoms"
-	refresh_costs()
 	$Control/HSlider.value = $Control/HSlider.max_value
 
-func refresh_costs():
-	if meta:
-		if game[type][meta] == 0:
-			$Control/HSlider.visible = false
-			$Control/HSlider.value = 0
-		else:
-			$Control/HSlider.visible = true
-			$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
-		cost = $Control/HSlider.value
-		$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
-	$Control/Label2.text = Helper.time_to_str(cost * speed)
-	
 func use_drive():
 	if game.ships_travel_view == "-":
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
@@ -72,7 +59,7 @@ func use_drive():
 		game.ships_travel_start_date -= cost * speed
 		game[type][meta] -= cost
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
-	refresh_costs()
+	refresh_h_slider()
 
 func _on_ChemicalDrive_pressed():
 	op.clear()
@@ -99,5 +86,18 @@ func _on_IonDrive_pressed():
 func _on_OptionButton_item_selected(index):
 	refresh()
 
-func _on_HSlider_value_changed(value):
-	refresh_costs()
+func _on_h_slider_value_changed(value):
+	refresh_h_slider()
+	cost = $Control/HSlider.value
+	$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
+	$Control/Label2.text = Helper.time_to_str(cost * speed)
+
+func refresh_h_slider():
+	if meta:
+		if game[type][meta] == 0:
+			$Control/HSlider.visible = false
+			$Control/HSlider.set_value_no_signal(0)
+		else:
+			$Control/HSlider.visible = true
+			$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
+	

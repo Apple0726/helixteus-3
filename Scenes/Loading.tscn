@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" path="res://Scripts/Loading.gd" id="1"]
 
-[node name="Loading" type="Node2D"]
+[node name="Loading" type="Control"]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1")
 
 [node name="Text" type="Label" parent="."]
@@ -11,15 +13,14 @@ offset_top = -8.0
 offset_right = 384.0
 offset_bottom = 21.0
 text = "Loading..."
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="."]
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 0
 offset_left = -256.0
-offset_top = 40.0
+offset_top = 32.0
 offset_right = 256.0
-offset_bottom = 56.0
-
-[node name="Bar" type="ColorRect" parent="."]
-offset_left = -256.0
-offset_top = 40.0
-offset_right = 256.0
-offset_bottom = 56.0
+offset_bottom = 59.0
+max_value = 1.0
+value = 0.5

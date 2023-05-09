@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://cf8ryoyfgym8g"]
 
-[ext_resource type="Texture2D" uid="uid://b0l3bslpgrtw5" path="res://Graphics/Icons/acc.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://c4usa0pcp5myt" path="res://Graphics/Icons/def.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://kadlona6cum" path="res://Graphics/Icons/eva.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://dync1wk0hbhni" path="res://Graphics/Icons/HP.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://oo70uvbjv8xd" path="res://Graphics/Icons/acc.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dfpf2uqr3odeg" path="res://Graphics/Icons/def.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cdshtmhti7ipf" path="res://Graphics/Icons/atk.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://l6xjotihk2mn" path="res://Graphics/Icons/eva.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cdq1lytxflb3d" path="res://Graphics/Icons/HP.png" id="5"]
 
 [node name="Control" type="HBoxContainer"]
 anchors_preset = 15

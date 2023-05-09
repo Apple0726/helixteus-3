@@ -1,56 +1,50 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=3 uid="uid://djyt5bkyhitwy"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/PlanetDetails.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Planets/3.png" type="Texture2D" id=3]
-[ext_resource path="res://Graphics/Planets/Other/mask.png" type="BitMap" id=4]
-[ext_resource path="res://Scenes/PieGraph.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Graphics/Misc/bullet.png" type="Texture2D" id=6]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" path="res://Scripts/PlanetDetails.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://ckg1wp0kneqps" path="res://Graphics/Planets/3.png" id="3"]
+[ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://b6fm4xy2j5o2v" path="res://Graphics/Misc/bullet.png" id="6"]
 
-[sub_resource type="InputEventAction" id=1]
-action = "Z"
+[sub_resource type="InputEventKey" id="InputEventKey_q4d4x"]
+device = -1
+keycode = 90
+unicode = 122
 
-[sub_resource type="Shortcut" id=2]
-shortcut = SubResource( 1 )
+[sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_q4d4x")]
 
-[sub_resource type="StyleBoxEmpty" id=3]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4q4fo"]
 
 [node name="Control" type="Control"]
+custom_minimum_size = Vector2(1280, 720)
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_minimum_size = Vector2( 1280, 720 )
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 372.999 ],
-"_edit_lock_": true,
-"_edit_use_anchors_": false,
-"_edit_vertical_guides_": [ 1110.12 ]
-}
+theme = ExtResource("1")
+script = ExtResource("2")
+metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 focus_mode = 1
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+color = Color(0, 0, 0, 1)
 
 [node name="Atmosphere" type="TextureButton" parent="."]
+layout_mode = 0
 offset_left = 224.0
 offset_top = 8.0
 offset_right = 1032.0
 offset_bottom = 719.0
-texture_normal = ExtResource( 6 )
-expand = true
+texture_normal = ExtResource("6")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Planet" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(640, 640)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -59,44 +53,36 @@ offset_left = -320.0
 offset_top = -320.0
 offset_right = 320.0
 offset_bottom = 320.0
-custom_minimum_size = Vector2( 640, 640 )
-scale = Vector2( 0.9, 0.9 )
-pivot_offset = Vector2( 320, 320 )
-texture_normal = ExtResource( 3 )
-texture_click_mask = ExtResource( 4 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+scale = Vector2(0.9, 0.9)
+pivot_offset = Vector2(320, 320)
+texture_normal = ExtResource("3")
 
 [node name="Back" type="Button" parent="."]
-offset_top = 680.0
+layout_mode = 0
+offset_top = 688.0
 offset_right = 128.0
 offset_bottom = 720.0
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
 text = "<- Back (Z)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Name" type="LineEdit" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -128.0
 offset_right = 128.0
 offset_bottom = 26.0
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 text = "Planet"
-align = 1
+placeholder_text = "ENTER_PLANET_NAME"
+alignment = 1
 clear_button_enabled = true
 shortcut_keys_enabled = false
-placeholder_text = "ENTER_PLANET_NAME"
 caret_blink = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Diameter" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -106,30 +92,25 @@ offset_top = -40.0001
 offset_right = 288.0
 offset_bottom = -16.0001
 text = "12000 km"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
 [node name="Arrow" type="Node2D" parent="."]
-position = Vector2( 0, 10 )
+position = Vector2(0, 10)
 
 [node name="Line2D" type="Line2D" parent="Arrow"]
-points = PackedVector2Array( 355, 657, 925, 657 )
+points = PackedVector2Array(355, 657, 925, 657)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="Arrow"]
-points = PackedVector2Array( 363, 648, 354, 657, 363, 666 )
+points = PackedVector2Array(363, 648, 354, 657, 363, 666)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D3" type="Line2D" parent="Arrow"]
-points = PackedVector2Array( 916, 648, 925, 657, 916, 666 )
+points = PackedVector2Array(916, 648, 925, 657, 916, 666)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -138,21 +119,15 @@ offset_left = -320.0
 offset_top = -360.0
 offset_bottom = 360.0
 grow_vertical = 2
-custom_styles/bg = SubResource( 3 )
-scroll_horizontal_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_styles/panel = SubResource("StyleBoxEmpty_4q4fo")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 5 )]
+[node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource("5")]
 visible = false
-offset_bottom = 328.0
+layout_mode = 2
 
 [connection signal="tree_exited" from="." to="." method="_on_Control_tree_exited"]
 [connection signal="mouse_entered" from="Atmosphere" to="." method="_on_Atmosphere_mouse_entered"]

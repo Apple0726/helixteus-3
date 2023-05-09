@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/ScienceUI.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://dt20fdb1x5n4d" path="res://Graphics/Icons/OtherBranches.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bi3q7w4xmbt7" path="res://Graphics/Icons/InfiniteResearch.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://cy8uwxmtpkihh" path="res://Graphics/Icons/MainBranch.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bxvaun5p1omcn" path="res://Graphics/Icons/OtherBranches.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://w8o8xysoogeo" path="res://Graphics/Icons/InfiniteResearch.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://pgbc7s6jm0ut" path="res://Graphics/Icons/MainBranch.png" id="5"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_ekqg7"]
 device = -1

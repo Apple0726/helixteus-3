@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://c0c7fycf77h4c" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="3"]
 
 [sub_resource type="Shortcut" id="2"]
 

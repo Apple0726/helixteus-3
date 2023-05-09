@@ -20,8 +20,9 @@ func _ready():
 		item.item_dir = "Icons/Megastructures"
 		item.item_desc = tr(MS + "_DESC")
 		item.costs = {}
+		item.use_expanded_texture = MS in ["M_DS", "M_SE"]
 		item.parent = "megastructures_panel"
-		item.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/%s.png" % MS)
+		#item.get_node("ItemTexture").texture = load("res://Graphics/Icons/Megastructures/%s.png" % MS)
 		grid.add_child(item)
 	buy_hbox.visible = false
 

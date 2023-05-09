@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dtk1md86gqsln"]
 
-[ext_resource type="Texture2D" uid="uid://bjsgoqg3rjyni" path="res://Graphics/Stars/Star.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c40cgiiy8o1o6" path="res://Graphics/Stars/Star.png" id="1"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)

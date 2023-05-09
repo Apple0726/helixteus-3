@@ -1,21 +1,21 @@
 [gd_scene load_steps=19 format=3 uid="uid://n0lnr888b50d"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://d3rio28i8fvon" path="res://Graphics/Icons/minerals.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://cxmjrghyso7gq" path="res://Graphics/Icons/SP.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ceck4wkuen5lt" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://caogp3ych2a60" path="res://Graphics/Icons/minerals.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://78ibnuwq78bj" path="res://Graphics/Icons/SP.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dfov6sisin58e" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
 [ext_resource type="Script" path="res://Scripts/TerraformPanel.gd" id="7"]
-[ext_resource type="Texture2D" uid="uid://cxnex4pncvixc" path="res://Graphics/Buildings/MS.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://cje7fr1hdlbwm" path="res://Graphics/Buildings/GH.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://dvy4omjml72x8" path="res://Graphics/Buildings/AMN.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://ct5u8f8umh8bg" path="res://Graphics/Buildings/SPR.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://nvhhc1n585ld" path="res://Graphics/Buildings/AE.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://cu5dj4fk5lu2y" path="res://Graphics/Buildings/MM.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://6suem58s03pn" path="res://Graphics/Buildings/NSF.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://cwrda4bfmj6sb" path="res://Graphics/Buildings/ESF.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://cnh78o7k263v7" path="res://Graphics/Buildings/B.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://bheduwihwbffl" path="res://Graphics/Buildings/MS.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://clki1li52asls" path="res://Graphics/Buildings/GH.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://ctfeyjhrf631j" path="res://Graphics/Buildings/AMN.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bcgloyiwpxqy" path="res://Graphics/Buildings/SPR.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://blmmrr44svfoj" path="res://Graphics/Buildings/AE.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://ke56ckutx0g0" path="res://Graphics/Buildings/MM.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://csxqgvajiuaqb" path="res://Graphics/Buildings/NSF.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cbwtsxkce7wlj" path="res://Graphics/Buildings/ESF.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://blqk2djbmtynb" path="res://Graphics/Buildings/B.png" id="16"]
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
@@ -73,6 +73,7 @@ offset_bottom = 112.0
 text = "TERRAFORM_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0
@@ -90,72 +91,84 @@ theme = SubResource("1")
 [node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "MINERAL_EXTRACTION"
 icon_texture = ExtResource("2")
 
 [node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "ENERGY_PRODUCTION"
 icon_texture = ExtResource("4")
 
 [node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "MINERAL_STORAGE"
 icon_texture = ExtResource("8")
 
 [node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "ENERGY_STORAGE"
 icon_texture = ExtResource("16")
 
 [node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "RESEARCH"
 icon_texture = ExtResource("3")
 
 [node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "ATMOSPHERE_EXTRACTION"
 icon_texture = ExtResource("12")
 
 [node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "MINING"
 icon_texture = ExtResource("13")
 
 [node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "SA_SC"
 icon_texture = ExtResource("9")
 
 [node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "ATM_SC"
 icon_texture = ExtResource("10")
 
 [node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "SAP_SC"
 icon_texture = ExtResource("11")
 
 [node name="NeutronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "NEUTRON_STORAGE"
 icon_texture = ExtResource("14")
 
 [node name="ElectronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+expand_icon = true
 button_text = "ELECTRON_STORAGE"
 icon_texture = ExtResource("15")
 

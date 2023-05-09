@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene load_steps=17 format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://dcse6at72q64g" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
@@ -8,11 +8,29 @@
 [ext_resource type="Texture2D" uid="uid://b3bnepfxia8o7" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://bpdelfrrpg4rk" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
 
+[sub_resource type="InputEventKey" id="InputEventKey_o6e2x"]
+device = -1
+keycode = 79
+unicode = 111
+
 [sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_o6e2x")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_t3ovf"]
+device = -1
+keycode = 78
+unicode = 110
 
 [sub_resource type="Shortcut" id="4"]
+events = [SubResource("InputEventKey_t3ovf")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
+device = -1
+physical_keycode = 67
+unicode = 99
 
 [sub_resource type="Shortcut" id="6"]
+events = [SubResource("InputEventKey_1bc5f")]
 
 [sub_resource type="Animation" id="8"]
 resource_name = "MoveButtons"

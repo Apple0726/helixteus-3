@@ -375,8 +375,9 @@ func show_dmg(dmg:float, pos:Vector2, parent, size:int = 40, missed:bool = false
 			lb.text = "%s\n- %s" % [tr("CRITICAL"), format_num(dmg)]
 		else:
 			lb.text = "- %s" % format_num(dmg)
+	lb["theme_override_colors/font_outline_color"] = Color.BLACK
+	lb["theme_override_constants/outline_size"] = 3
 	lb.position = pos - Vector2(0, 40)
-	#lb.scale *= sc
 	lb["theme_override_font_sizes/font_size"] = size
 	parent.add_child(lb)
 	var dur = 1.5 if crit else 1.0
@@ -793,7 +794,7 @@ func ships_on_planet(p_id:int):#local planet id
 	return game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
 
 func update_ship_travel():
-	if game.ships_travel_view == "-":
+	if game.ships_travel_view == "-" or game.ships_travel_length == NAN:
 		return 1
 	var progress:float = (Time.get_unix_time_from_system() - game.ships_travel_start_date) / float(game.ships_travel_length)
 	if progress >= 1:

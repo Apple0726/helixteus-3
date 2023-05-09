@@ -120,10 +120,10 @@ func _on_StarClasses_pressed():
 			vbox.add_child(label)
 			graph.add_child(vbox)
 	for vbox in graph.get_children():
-		vbox.get_node("ColorRect").theme_override_minimum_size.y *= 288.0 / max_num
+		vbox.get_node("ColorRect").custom_minimum_size.y *= 288.0 / max_num
 	max_label.text = str(max_num)
 	await get_tree().process_frame
-	$Statistics/ScrollContainer2/Control.theme_override_minimum_size.x = graph.size.x + 100
+	$Statistics/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
 
 func on_star_class_bar_entered(star_class:String, i:int):
 	game.show_tooltip("%s%s: %s" % [star_class, i, game["stats_%s" % stats_for].star_classes[star_class][i]])
@@ -158,8 +158,8 @@ func _on_StarTypes_pressed():
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.mouse_filter = Control.MOUSE_FILTER_PASS
 		vbox["theme_override_constants/separation"] = 0
-		vbox.theme_override_minimum_size.x = 100
-		bar.theme_override_minimum_size.y = star_num
+		vbox.custom_minimum_size.x = 100
+		bar.custom_minimum_size.y = star_num
 		bar.name = "ColorRect"
 		bar.size_flags_vertical = 10
 		label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
@@ -178,9 +178,9 @@ func _on_StarTypes_pressed():
 		graph.add_child(vbox)
 	max_label.text = str(max_num)
 	for vbox in graph.get_children():
-		vbox.get_node("ColorRect").theme_override_minimum_size.y *= 288.0 / max_num
+		vbox.get_node("ColorRect").custom_minimum_size.y *= 288.0 / max_num
 	await get_tree().process_frame
-	$Statistics/ScrollContainer2/Control.theme_override_minimum_size.x = graph.size.x + 100
+	$Statistics/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
 
 func _on_OptionButton_item_selected(index):
 	var id:int = $Statistics/HBox/OptionButton.get_item_id(index)

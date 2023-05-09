@@ -5,12 +5,16 @@ extends Panel
 var item_desc:String = ""
 var item_type:String = ""
 var item_dir:String = ""#Directory of the item sprite
+var use_expanded_texture:bool = false #True only for Dyson sphere and space elevator
 var costs:Dictionary
 var parent = ""
 
 func _ready():
 	if item_dir != "":
-		$ItemTexture.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
+		if use_expanded_texture:
+			$ItemTextureFull.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
+		else:
+			$ItemTexture.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
 
 func _on_ItemForSale_mouse_entered():
 	if not game[parent].locked:

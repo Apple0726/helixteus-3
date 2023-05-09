@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="2"]
 [ext_resource type="Gradient" path="res://Resources/ColorblindOverlay.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://bgcqekpr8ng60" path="res://Graphics/Buttons/Reset.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://cdtiu2f8f4j5i" path="res://Graphics/Icons/Arrow.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://ca0hkrufqi0yq" path="res://Graphics/Buttons/settings.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://dfnwi85gubj2g" path="res://Graphics/Buttons/Reset.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cm6qrejg1itog" path="res://Graphics/Icons/Arrow.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ged6udc4esp6" path="res://Graphics/Buttons/settings.png" id="9"]
 
 [sub_resource type="GradientTexture2D" id="1"]
 gradient = ExtResource("3")
@@ -56,6 +56,7 @@ offset_right = -244.0
 offset_bottom = -8.0
 mouse_filter = 1
 text = "YES"
+horizontal_alignment = 1
 
 [node name="No" type="Label" parent="."]
 layout_mode = 0
@@ -69,6 +70,7 @@ offset_right = 328.0
 offset_bottom = -8.0
 mouse_filter = 1
 text = "NO"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -90,6 +92,7 @@ alignment = 1
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
 layout_mode = 2
 shortcut = SubResource("Shortcut_ht0n8")
+shortcut_in_tooltip = false
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
@@ -104,31 +107,35 @@ tick_count = 20
 ticks_on_borders = true
 
 [node name="LeftNumEdit" type="LineEdit" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -324.0
+offset_left = -320.0
 offset_top = -36.0
-offset_right = -248.0
+offset_right = -256.0
 offset_bottom = -8.0
 grow_horizontal = 2
+grow_vertical = 0
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5
 
 [node name="RightNumEdit" type="LineEdit" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 248.0
+offset_left = 256.0
 offset_top = -36.0
-offset_right = 324.0
+offset_right = 320.0
 offset_bottom = -8.0
 grow_horizontal = 2
+grow_vertical = 0
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5

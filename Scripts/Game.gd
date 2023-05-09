@@ -187,7 +187,7 @@ var ships_depart_pos:Vector2#Depart position of system/galaxy/etc. depending on 
 var ships_dest_pos:Vector2#Destination position of system/galaxy/etc. depending on view
 var ships_travel_view:String#View in which ships travel
 var ships_travel_start_date:int
-var ships_travel_length:int
+var ships_travel_length:float
 var satellite_data:Array
 
 #Your inventory
@@ -513,18 +513,19 @@ func _ready():
 	#await RenderingServer.frame_post_draw
 	Discord_Activity.app_id = 1101755847325003846 # Application ID
 	print("Discord working: " + str(Discord_Activity.get_is_discord_working())) # A boolean if everything worked
-	Discord_Activity.details = "In title screen"
-	Discord_Activity.state = ""
-	
-	Discord_Activity.large_image = "game" # Image key from "Art Assets"
-	Discord_Activity.large_image_text = "Helixteus 3"
-#	Discord_Activity.small_image = "boss" # Image key from "Art Assets"
-#	Discord_Activity.small_image_text = "Fighting the end boss! D:"
-#
-	Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system()) # "02:41 elapsed"
-	# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time
+	if Discord_Activity.get_is_discord_working():
+		Discord_Activity.details = "In title screen"
+		Discord_Activity.state = ""
+		
+		Discord_Activity.large_image = "game" # Image key from "Art Assets"
+		Discord_Activity.large_image_text = "Helixteus 3"
+	#	Discord_Activity.small_image = "boss" # Image key from "Art Assets"
+	#	Discord_Activity.small_image_text = "Fighting the end boss! D:"
+	#
+		Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system()) # "02:41 elapsed"
+		# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time
 
-	Discord_Activity.refresh() # Always refresh after changing the values!
+		Discord_Activity.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -744,7 +745,7 @@ func load_univ():
 		tile_data = open_obj("Planets", c_p_g)
 		if c_v == "mining" or c_v == "cave":
 			c_v = "planet"
-		elif c_v == "science_tree":
+		elif c_v in ["science_tree", "STM", "planet_details"]:
 			c_v = l_v
 		elif c_v == "battle":
 			c_v = "system"
@@ -1075,7 +1076,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	ships_dest_pos = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
 	ships_travel_view = "-"#View in which ships travel
 	ships_travel_start_date = -1
-	ships_travel_length = -1
+	ships_travel_length = NAN
 	satellite_data = []
 
 	items = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
@@ -1468,8 +1469,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"planet":
 					remove_planet(not other_params.has("dont_save_zooms"))
 				"planet_details":
-					remove_child(planet_details)
-					planet_details = null
+					planet_details.queue_free()
 					$UI.add_child(HUD)
 				"system":
 					remove_system()
@@ -1502,7 +1502,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.add_child(HUD)
 					HUD.refresh()
 					battle.queue_free()
-			if c_v in  ["science_tree", "STM"]:
+			if c_v in  ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
 			elif new_view != "":
 				l_v = c_v
@@ -1576,7 +1576,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				add_planet()
 			"planet_details":
 				planet_details = planet_details_scene.instantiate()
-				add_child(planet_details)
+				$UI.add_child(planet_details)
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
 			"system":
@@ -1638,7 +1638,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				Discord_Activity.state = "Observing the stars"
 				Discord_Activity.small_image_text = "Viewing " + galaxy_data[c_g].name
 			elif c_v == "cluster":
-				Discord_Activity.state = "Watching distant galaxies"
+				Discord_Activity.state = "Watching galaxies in the distance"
 				Discord_Activity.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
 			elif c_v == "universe":
 				Discord_Activity.state = "Navigating the universe"
@@ -3571,7 +3571,7 @@ func set_tooltip_position():
 		else:
 			tooltip.position.y = mouse_pos.y + 9
 	else:
-		if mouse_pos.x < (1262 if $UI/Panel.modulate.a == 0.0 else 800) - tooltip.size.x:
+		if mouse_pos.x < (1262 if $UI/Panel.modulate.a == 0.0 else 900) - tooltip.size.x:
 			tooltip.position.x = mouse_pos.x + 9
 		else:
 			tooltip.position.x = mouse_pos.x - tooltip.size.x - 9
@@ -3649,10 +3649,10 @@ func _input(event):
 				hide_adv_tooltip()
 	
 	#F3 to toggle overlay
-	if Input.is_action_just_released("toggle"):
-		if is_instance_valid(overlay):
+	if Input.is_action_just_pressed("toggle"):
+		if is_instance_valid(overlay) and not overlay.visible:
 			overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
-		elif is_instance_valid(element_overlay):
+		elif c_v == "system" and not element_overlay.visible:
 			element_overlay.toggle_btn.button_pressed = not element_overlay.toggle_btn.button_pressed
 		
 	#J to hide help

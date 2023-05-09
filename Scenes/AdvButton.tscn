@@ -123,7 +123,7 @@ offset_top = -16.0
 offset_right = 36.0
 offset_bottom = 16.0
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

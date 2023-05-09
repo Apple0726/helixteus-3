@@ -75,6 +75,7 @@ offset_left = 44.0
 offset_top = 352.0
 offset_right = 329.0
 offset_bottom = 380.0
+button_pressed = true
 text = "LEAST_DIFFICULT_FIRST"
 
 [node name="CheckBox2" type="CheckBox" parent="Control"]
@@ -177,17 +178,18 @@ layout_mode = 0
 offset_left = 248.0
 offset_top = 236.0
 offset_right = 284.0
-offset_bottom = 272.0
+offset_bottom = 268.0
 texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TimeLeft" type="Label" parent="Control2"]
 layout_mode = 0
-offset_left = 304.0
-offset_top = 240.0
-offset_right = 468.0
-offset_bottom = 264.0
+offset_left = 294.0
+offset_top = 236.0
+offset_right = 458.0
+offset_bottom = 268.0
+vertical_alignment = 1
 
 [node name="TimeLeft2" type="Label" parent="Control2"]
 layout_mode = 0

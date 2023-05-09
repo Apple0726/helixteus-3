@@ -25,10 +25,10 @@ func refresh_energy():
 	total_energy_cost = base_travel_costs * slider_factor + planet_exit_costs
 	$Control/EnergyCost.text = Helper.format_num(total_energy_cost)
 	if fighter_type == 0:
-		time_for_one_obj = 2 * 1200.0 / slider_factor / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
+		time_for_one_obj = 2 * 1.2 / slider_factor / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
 		game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH_F1"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED_F1"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), obj_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_obj, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_obj * obj_num)], [Data.energy_icon, Data.time_icon], 19)
 	elif fighter_type == 1:
-		time_for_one_obj = 50 * 1200.0 / slider_factor / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
+		time_for_one_obj = 50 * 1.2 / slider_factor / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
 		game.add_text_icons(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s" % [tr("COMBINED_STRENGTH_F2"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED_F2"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_GAL_BEFORE_REKT"), obj_num, tr("NUMBER_OF_UNCONQUERED_GAL"), unconquered_obj, tr("TIME_TO_CONQUER_ALL_GAL"), Helper.time_to_str(time_for_one_obj * obj_num)], [Data.time_icon], 19)
 
 func refresh():

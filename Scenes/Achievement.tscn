@@ -24,7 +24,7 @@ offset_right = -6.0
 offset_bottom = -6.0
 mouse_filter = 2
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0

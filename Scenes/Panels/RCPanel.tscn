@@ -1,19 +1,20 @@
-[gd_scene load_steps=15 format=3 uid="uid://prhf201evhra"]
+[gd_scene load_steps=16 format=3 uid="uid://prhf201evhra"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
-[ext_resource type="PackedScene" path="res://Scenes/RoverSlot.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://brqwfhnskw7uj" path="res://Graphics/Icons/Inventory.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://b258lvr2yioyo" path="res://Graphics/Icons/REP.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://pbckpnc3olsx" path="res://Scenes/RoverSlot.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://js21ljkbgjb5" path="res://Graphics/Icons/Inventory.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ds2a3w8w0ff6g" path="res://Graphics/Icons/REP.png" id="4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
-[ext_resource type="Texture2D" uid="uid://bl3tgdude86ol" path="res://Graphics/Icons/atk.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://c4usa0pcp5myt" path="res://Graphics/Icons/def.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://dync1wk0hbhni" path="res://Graphics/Icons/HP.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://d3li5ykwuyxp0" path="res://Graphics/Cave/Rover.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cdshtmhti7ipf" path="res://Graphics/Icons/atk.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dfpf2uqr3odeg" path="res://Graphics/Icons/def.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cdq1lytxflb3d" path="res://Graphics/Icons/HP.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://b86jb74vqb6ng" path="res://Graphics/Cave/Rover.png" id="9"]
 [ext_resource type="Script" path="res://Scripts/RCPanel.gd" id="10"]
 [ext_resource type="PackedScene" path="res://Scenes/RESlot.tscn" id="11"]
-[ext_resource type="Texture2D" uid="uid://kadlona6cum" path="res://Graphics/Icons/eva.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://l6xjotihk2mn" path="res://Graphics/Icons/eva.png" id="12"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="13"]
-[ext_resource type="Texture2D" uid="uid://b6cjvhu36kiwb" path="res://Graphics/Icons/help.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bvp52vcrg8q4i" path="res://Graphics/Icons/help.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://1mk72voi5aj6" path="res://Graphics/Icons/craft.png" id="15_ku4oa"]
 
 [node name="RCPanel" type="Panel"]
 anchors_preset = 8
@@ -280,17 +281,32 @@ text = "COSTS"
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -195.0
-offset_top = -56.0
-offset_right = -15.0
+offset_left = -93.0
+offset_top = -60.0
+offset_right = -14.0
 offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
 theme = ExtResource("5")
-text = "CONSTRUCT"
+
+[node name="TextureRect" type="TextureRect" parent="Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_ku4oa")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0

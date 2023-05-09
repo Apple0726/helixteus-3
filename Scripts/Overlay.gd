@@ -235,6 +235,7 @@ func _on_HSlider_value_changed(value):
 
 func _on_close_button_pressed():
 	visible = false
+	game.block_scroll = false
 
 func _on_Reset_mouse_entered():
 	game.show_tooltip("RESET_TO_DEFAULT")

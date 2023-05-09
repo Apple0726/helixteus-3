@@ -85,7 +85,7 @@ func refresh():
 	elif $Drive.selected == 0:
 		$TotalEnergyCost2["theme_override_colors/font_color"] = Color.WHITE
 		$EnergyIcon3.texture = preload("res://Graphics/Icons/energy.png")
-		calc_costs()
+		_on_h_slider_value_changed($Panel/HSlider.value)
 		$EnergyCost2.adv_icons = [Data.energy_icon, Data.energy_icon, Data.energy_icon, Data.energy_icon]
 		var exit_mult_percentage = spaceport_exit_cost_reduction * (get_entry_exit_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
 		exit_mult_percentage = 100 - 100 * exit_mult_percentage
@@ -176,9 +176,6 @@ func send_ships2(_time):
 	game.ships_travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_length = time_cost
 	game.toggle_panel(self)
-	
-func _on_HSlider_value_changed(value):
-	calc_costs()
 
 func has_SE(p_i:Dictionary):
 	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing") and not p_i.has("repair_cost")
@@ -219,8 +216,30 @@ func get_travel_cost_multiplier(lv:int):
 	else:
 		return 0.75
 
-func calc_costs():
-	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 1)
+func _on_close_button_pressed():
+	game.toggle_panel(self)
+
+
+func _on_Drive_item_selected(index):
+	refresh()
+
+
+func _on_send_pressed():
+	if game.universe_data[game.c_u].lv < 40:
+		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
+			game.popup_window(tr("PLANET_PRESSURE_TOO_HIGH"), "")
+		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:
+			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
+		elif time_cost > 4 * 60 * 60:
+			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"))
+		else:
+			send_ships()
+	else:
+		send_ships()
+
+
+func _on_h_slider_value_changed(value):
+	var slider_factor = pow(10, value / 25.0 - 1)
 	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	spaceport_exit_cost_reduction = 1.0
@@ -252,24 +271,3 @@ func calc_costs():
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
 	$Panel/TimeCost.text = Helper.time_to_str(time_cost)
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)
-
-
-func _on_Drive_item_selected(index):
-	refresh()
-
-
-func _on_send_pressed():
-	if game.universe_data[game.c_u].lv < 40:
-		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
-			game.popup_window(tr("PLANET_PRESSURE_TOO_HIGH"), "")
-		elif not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 20:
-			game.show_YN_panel("send_ships", tr("HIGH_PRESSURE_PLANET"))
-		elif time_cost > 4 * 60 * 60:
-			game.show_YN_panel("send_ships", tr("LONG_TRAVEL"))
-		else:
-			send_ships()
-	else:
-		send_ships()

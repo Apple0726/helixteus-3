@@ -1,5 +1,5 @@
-extends Node2D
+extends Control
 
 func update_bar(progress:float, txt:String):
 	$Text.text = txt
-	$Bar.scale.x = progress
+	$ProgressBar.value = progress

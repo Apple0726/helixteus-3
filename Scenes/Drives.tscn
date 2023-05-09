@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://rkeuei54m30i"]
 
-[ext_resource type="Texture2D" uid="uid://cojucbsgdmmta" path="res://Graphics/Buttons/IonDrive.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cm2fju1iwykah" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://vr6iynt8aayj" path="res://Graphics/Icons/Time.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://3kkdy2cnonhm" path="res://Graphics/Buttons/IonDrive.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dfth8jqe6207d" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="5"]
 [ext_resource type="Script" path="res://Scripts/DrivePanel.gd" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 
@@ -153,5 +153,5 @@ text = "SPEED_UP_SHIPS"
 [connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
 [connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
 [connection signal="item_selected" from="Control/OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="value_changed" from="Control/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="pressed" from="Control/Button" to="." method="use_drive"]
