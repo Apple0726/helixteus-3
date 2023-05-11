@@ -516,15 +516,10 @@ func _ready():
 	if Discord_Activity.get_is_discord_working():
 		Discord_Activity.details = "In title screen"
 		Discord_Activity.state = ""
-		
-		Discord_Activity.large_image = "game" # Image key from "Art Assets"
+		Discord_Activity.large_image = "game"
 		Discord_Activity.large_image_text = "Helixteus 3"
-	#	Discord_Activity.small_image = "boss" # Image key from "Art Assets"
-	#	Discord_Activity.small_image_text = "Fighting the end boss! D:"
-	#
-		Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system()) # "02:41 elapsed"
-		# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time
-
+		Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system())
+		# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system())
 		Discord_Activity.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))

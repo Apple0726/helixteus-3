@@ -12,6 +12,7 @@ offset_right = 1064.0
 offset_bottom = 600.0
 theme = ExtResource("7")
 script = ExtResource("6")
+metadata/_edit_vertical_guides_ = [528.0]
 
 [node name="Label5" type="Label" parent="."]
 layout_mode = 0
@@ -62,9 +63,9 @@ mouse_filter = 1
 
 [node name="OptionButton" type="OptionButton" parent="Control"]
 layout_mode = 0
-offset_left = 460.0
+offset_left = 504.0
 offset_top = 240.0
-offset_right = 669.0
+offset_right = 668.0
 offset_bottom = 272.0
 alignment = 1
 expand_icon = true
@@ -72,30 +73,26 @@ expand_icon = true
 [node name="HSlider" type="HSlider" parent="Control"]
 layout_mode = 0
 offset_left = 392.0
-offset_top = 320.0
+offset_top = 316.0
 offset_right = 548.0
-offset_bottom = 336.0
+offset_bottom = 332.0
 step = 0.0
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 564.0
-offset_top = 308.0
+offset_top = 304.0
 offset_right = 596.0
-offset_bottom = 340.0
-grow_horizontal = 0
-grow_vertical = 2
+offset_bottom = 336.0
 expand_mode = 1
 stretch_mode = 6
 
 [node name="TextureRect2" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 580.0
-offset_top = 376.0
+offset_top = 372.0
 offset_right = 608.0
-offset_bottom = 408.0
-grow_horizontal = 0
-grow_vertical = 2
+offset_bottom = 404.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
@@ -103,18 +100,18 @@ stretch_mode = 6
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 608.0
-offset_top = 312.0
+offset_top = 308.0
 offset_right = 728.0
-offset_bottom = 344.0
+offset_bottom = 340.0
 text = "0"
 vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 620.0
-offset_top = 376.0
+offset_top = 372.0
 offset_right = 740.0
-offset_bottom = 408.0
+offset_bottom = 404.0
 text = "0"
 vertical_alignment = 1
 
@@ -132,12 +129,10 @@ vertical_alignment = 1
 
 [node name="Label4" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 332.0
+offset_left = 360.0
 offset_top = 240.0
-offset_right = 436.0
+offset_right = 464.0
 offset_bottom = 272.0
-grow_horizontal = 0
-grow_vertical = 2
 text = "FUEL"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -145,9 +140,9 @@ vertical_alignment = 1
 [node name="Button" type="Button" parent="Control"]
 layout_mode = 0
 offset_left = 404.0
-offset_top = 444.0
-offset_right = 696.0
-offset_bottom = 480.0
+offset_top = 440.0
+offset_right = 656.0
+offset_bottom = 476.0
 text = "SPEED_UP_SHIPS"
 
 [connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]

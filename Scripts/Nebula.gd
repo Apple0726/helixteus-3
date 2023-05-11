@@ -4,7 +4,6 @@ extends Node2D
 @export var fog_mvt_spd:float = 0.05
 @export var octaves:int = 5
 @export var color:Color = Color.WHITE
-var tween_color
 
 func _ready():
 	$Nebula.material.set_shader_parameter("color", color)
@@ -22,7 +21,4 @@ func fade_in():
 	visible = true
 
 func change_color(color:Color):
-	if is_instance_valid(tween_color):
-		tween_color.kill()
-	tween_color = get_tree().create_tween()
-	tween_color.tween_property($Nebula.material, "shader_parameter/color", color, 3.0)
+	$Nebula.material.set_shader_parameter("color", color)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c0yiufm0ffo3f"]
+[gd_scene load_steps=15 format=3 uid="uid://c0yiufm0ffo3f"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="2"]
@@ -17,6 +17,24 @@ keycode = 4194334
 
 [sub_resource type="Shortcut" id="Shortcut_ht0n8"]
 events = [SubResource("InputEventKey_t2q5b")]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qywem"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhuhg"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_165lm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_che1j"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 
 [node name="Overlay" type="Panel"]
 anchors_preset = 7
@@ -119,6 +137,11 @@ offset_right = -256.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qywem")
+theme_override_styles/focus = SubResource("StyleBoxFlat_jhuhg")
+text = "1"
+alignment = 1
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5
@@ -136,6 +159,11 @@ offset_right = 320.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_165lm")
+theme_override_styles/focus = SubResource("StyleBoxFlat_che1j")
+text = "2"
+alignment = 1
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5
@@ -146,9 +174,9 @@ anchors_preset = 0
 anchor_left = 0.0
 anchor_right = 0.0
 offset_left = 672.0
-offset_top = 4.0
+offset_top = 8.0
 offset_right = 696.0
-offset_bottom = 28.0
+offset_bottom = 32.0
 grow_horizontal = 1
 
 [node name="ClickToEdit" type="Control" parent="."]

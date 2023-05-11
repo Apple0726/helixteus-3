@@ -8,6 +8,7 @@ uniform float fog_size: hint_range(0.01, 50.0) = 7.2;
 uniform float fog_mvt_spd = 0.0;
 uniform int OCTAVES = 4;
 uniform int seed = 1;
+uniform float alpha:hint_range(0.0, 1.0) = 1.0;
 
 float rand(vec2 coord){
 	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
@@ -53,5 +54,5 @@ void fragment() {
 	COLOR.rgb += 2.5 * (pow(0.708 - distance(UV, vec2(0.5, 0.5)), 2.5));
 	//COLOR.rgb += pow(COLOR.a * 1.0, 1.0);
 	//COLOR.b += pow(COLOR.a * 1.0, 2.0);
-	COLOR.a = max(0.0, pow(COLOR.a * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), 0.3)));
+	COLOR.a = max(0.0, pow(COLOR.a * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), 0.3))) * alpha;
 }

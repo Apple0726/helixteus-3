@@ -563,7 +563,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						debris.id = tile_id
 						add_child(debris)
 						big_debris[tile_id] = debris
-					debris.get_node("Sprite2D").material.set_shader_parameter("modulate_color", debris_mod)
+						debris.get_node("Sprite2D").material.set_shader_parameter("modulate_color", debris_mod)
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
@@ -657,7 +657,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$Ash.set_cells_terrain_connect(0, ash_tiles, 0, 4)
 	$Lava.set_cells_terrain_connect(0, lava_tiles, 0, 5)
 	$Ash.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
-	$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
+	#$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(1, Vector2i(i, -1), 1, Vector2i.ZERO)
@@ -2152,7 +2152,7 @@ func _on_BurnTimer_timeout():
 func _on_Modifiers_mouse_entered():
 	var icons:Array = []
 	var tooltip:String = Helper.get_modifier_string(modifiers, "", icons)
-	#tooltip.erase(0, 1)
+	tooltip = tooltip.substr(1)
 	tooltip += "\n%s: %s" % [tr("TOTAL_TREASURE_MULT"), Helper.clever_round(treasure_mult)]
 	game.show_adv_tooltip(tooltip, icons)
 

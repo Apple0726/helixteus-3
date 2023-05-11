@@ -291,6 +291,7 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	$LeftNumEdit.release_focus()
 	game.help.overlay = true
 	$ClickToEdit.visible = false
 
@@ -301,6 +302,7 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	$RightNumEdit.release_focus()
 	game.help.overlay = true
 	$ClickToEdit.visible = false
 

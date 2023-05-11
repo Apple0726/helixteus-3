@@ -91,7 +91,7 @@ func collide(collision:KinematicCollision2D):
 			elif cave_ref.enhancements.has("armor_0"):
 				deflected = randf() < 0.15
 			if deflected:
-				direction = -direction.reflect(collision.normal)
+				direction = -direction.reflect(collision.get_normal())
 				speed *= 2.0
 				collision_layer = 8
 				collision_mask = 5
@@ -105,6 +105,6 @@ func collide(collision:KinematicCollision2D):
 				queue_free()
 	else:
 		if type == Data.ProjType.BUBBLE:#Bubble projectiles reflect off of walls
-			direction = -direction.reflect(collision.normal)
+			direction = -direction.reflect(collision.get_normal())
 		else:#Other projectiles get destroyed
 			queue_free()

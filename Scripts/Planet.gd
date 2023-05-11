@@ -1019,6 +1019,8 @@ func _unhandled_input(event):
 				hide_tooltip()
 				if not tiles_selected.is_empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
+				if tile_over >= len(game.tile_data):
+					return
 				var tile = game.tile_data[tile_over]
 				show_tooltip(tile, tile_over)
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene load_steps=48 format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -139,7 +139,13 @@ _data = {
 "FightPanelAnim": SubResource("18")
 }
 
+[sub_resource type="InputEventKey" id="InputEventKey_kutka"]
+device = -1
+physical_keycode = 90
+unicode = 122
+
 [sub_resource type="Shortcut" id="20"]
+events = [SubResource("InputEventKey_kutka")]
 
 [sub_resource type="ShaderMaterial" id="21"]
 shader = ExtResource("15")
@@ -194,12 +200,12 @@ shader_parameter/beams = 1
 shader_parameter/energy = 3.0
 shader_parameter/roughness = 3
 shader_parameter/frequency = 10
-shader_parameter/speed = 0.1
+shader_parameter/speed = 0.2
 shader_parameter/thickness = 0.006
 shader_parameter/outline_thickness = 0.034
 shader_parameter/beam_difference = 0.0
 shader_parameter/glow = 0.0
-shader_parameter/outline_glow = 1.0
+shader_parameter/outline_glow = 0.467
 shader_parameter/color = Color(1, 0.937255, 0.937255, 1)
 shader_parameter/outline_color = Color(1, 0, 0, 1)
 shader_parameter/progress = 1.0
@@ -208,21 +214,38 @@ shader_parameter/fixed_edge_size = 0.05
 shader_parameter/noise_scale = Vector2(1, 1)
 
 [sub_resource type="Animation" id="23"]
-tracks/0/type = "bezier"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Texture2D:material:shader_param/progress")
+tracks/0/path = NodePath("Texture2D:material:shader_parameter/progress")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_knbvn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Texture2D:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ry58s"]
 _data = {
-"LaserFade": SubResource("23")
+"LaserFade": SubResource("23"),
+"RESET": SubResource("Animation_knbvn")
 }
 
 [sub_resource type="Environment" id="24"]

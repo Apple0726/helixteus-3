@@ -309,6 +309,7 @@ shader_parameter/fog_size = 50.0
 shader_parameter/fog_mvt_spd = 0.0
 shader_parameter/OCTAVES = 3
 shader_parameter/seed = 1
+shader_parameter/alpha = 1.0
 
 [node name="Game" type="Node2D"]
 script = ExtResource("2")
@@ -414,8 +415,6 @@ libraries = {
 }
 
 [node name="ClusterBG" parent="." instance=ExtResource("35")]
-visible = false
-modulate = Color(1, 1, 1, 0)
 color = Color(0.686275, 0, 1, 1)
 
 [node name="GrayscaleRect" type="TextureRect" parent="."]

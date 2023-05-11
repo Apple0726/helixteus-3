@@ -147,11 +147,27 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
-	if game.c_v == "universe" and not changed:
+	if game.c_v == "universe" and not changed and not $AnimationPlayer.is_playing():
 		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
-			$AnimationPlayer.play("Fade")
+			fade_out_clusters()
 		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
-			$AnimationPlayer.play("Fade")
+			fade_out_clusters()
+
+func fade_out_clusters():
+	$AnimationPlayer.play("Fade")
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	for cluster in obj.btns:
+		if is_instance_valid(cluster):
+			tween.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.4)
+
+func fade_in_clusters():
+	$AnimationPlayer.play_backwards("Fade")
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	for cluster in obj.btns:
+		if is_instance_valid(cluster):
+			tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
 
 func _draw():
 	if dest_pos != null and curr_pos != null:
@@ -479,6 +495,6 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 			obj_scaled = false
 			obj.change_scale(0.1)
 		changed = true
-		$AnimationPlayer.play_backwards("Fade")
+		fade_in_clusters()
 	else:
 		changed = false
