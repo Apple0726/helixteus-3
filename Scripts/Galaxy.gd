@@ -17,6 +17,10 @@ var discovered_sys:Array
 
 func _ready():
 	discovered_sys = []
+	var galaxy_tween
+	if game.enable_shaders:
+		galaxy_tween = create_tween()
+		galaxy_tween.set_parallel(true)
 	for s_i in game.system_data:
 		var star:Dictionary = s_i.stars[0]
 		for i in range(1, len(s_i.stars)):
@@ -36,6 +40,8 @@ func _ready():
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
+			star_btn.material.set_shader_parameter("alpha", 0.0)
+			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)

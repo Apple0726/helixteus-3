@@ -262,7 +262,7 @@ shader_parameter/time_offset = 0.0
 shader_parameter/brightness_offset = 0.0
 shader_parameter/twinkle_speed = 1.0
 shader_parameter/amplitude = 0.08
-shader_parameter/modulate = 0.0
+shader_parameter/alpha = 0.0
 shader_parameter/color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="19"]

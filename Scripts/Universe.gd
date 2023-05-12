@@ -10,22 +10,29 @@ var btns = []
 
 func _ready():
 	btns.resize(len(game.u_i.cluster_data))
+	var cluster_tween
+	if game.enable_shaders:
+		cluster_tween = create_tween()
+		cluster_tween.set_parallel(true)
 	for i in len(game.u_i.cluster_data):
 		var c_i:Dictionary = game.u_i.cluster_data[i]
 		if not c_i.visible:
 			continue
 		var cluster_btn = TextureButton.new()
 		cluster_btn.texture_normal = preload("res://Graphics/Clusters/0.png")
+		var r:float = (c_i.pos + c_i.pos).length()
+		var th:float = atan2(c_i.pos.y, c_i.pos.x)
+		var hue:float = fmod(r + 300, 1000.0) / 1000.0
+		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
 		if game.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.diff))
-			cluster_btn.material.set_shader_parameter("alpha", 1.0)
-			var r:float = (c_i.pos + c_i.pos).length()
-			var th:float = atan2(c_i.pos.y, c_i.pos.x)
-			var hue:float = fmod(r + 300, 1000.0) / 1000.0
-			var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
+			cluster_btn.material.set_shader_parameter("alpha", 0.0)
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
+			cluster_tween.tween_property(cluster_btn.material, "shader_parameter/alpha", 1.0, 0.15)
+		else:
+			cluster_btn.modulate = Color.from_hsv(hue, sat, 1.0)
 		add_child(cluster_btn)
 		cluster_btn.connect("mouse_entered",Callable(self,"on_cluster_over").bind(c_i.id))
 		cluster_btn.connect("mouse_exited",Callable(self,"on_cluster_out"))
@@ -33,7 +40,7 @@ func _ready():
 		cluster_btn.position = c_i.pos + Vector2(-512 / 2, -512 / 2)
 		cluster_btn.pivot_offset = Vector2(512 / 2, 512 / 2)
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3)
-		if game.u_i.cluster_data[game.c_c].view.zoom > 1.5:
+		if game.universe_data[game.c_u].view.zoom > 1.0:
 			radius *= 0.1
 		cluster_btn.scale.x = radius
 		cluster_btn.scale.y = radius

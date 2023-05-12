@@ -524,7 +524,7 @@ func _ready():
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
-	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 1.0, 2.0)
+	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 2.0)
 	current_viewport_dimensions = get_viewport().size
 	get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
 	for key in Mods.added_mats:
@@ -1437,6 +1437,19 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = get_tree().create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
+		if is_instance_valid(view.obj) and enable_shaders:
+			if c_v == "galaxy":
+				var tween2 = create_tween()
+				tween2.set_parallel(true)
+				for galaxy in view.obj.obj_btns:
+					if is_instance_valid(galaxy):
+						tween2.tween_property(galaxy.material, "shader_parameter/alpha", 0.0, 0.15)
+			elif c_v == "universe":
+				var tween2 = create_tween()
+				tween2.set_parallel(true)
+				for cluster in view.obj.btns:
+					if is_instance_valid(cluster):
+						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
 			anim_player.play_backwards("MoveButtons")
@@ -1613,7 +1626,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				add_child(battle)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
-		if c_v == "universe" and HUD.dimension_btn.visible:
+		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
 			HUD.switch_btn.visible = false
 	if not other_params.has("first_time"):
 		fn_save_game()
@@ -3924,7 +3937,7 @@ func fade_out_title(fn:String):
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.0, 0.5)
 	tween.tween_property($Star, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 0.0, 0.5)
+	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
 	await tween.finished
 	$Star.visible = false
 	$Title.visible = false
@@ -4000,7 +4013,7 @@ func return_to_menu_confirm():
 	switch_music(load("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	var tween = create_tween()
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/modulate", 1.0, 1.0)
+	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 1.0)
 	$Title/Menu/VBoxContainer/NewGame.connect("pressed",Callable(self,"_on_NewGame_pressed"))
 	$Title.visible = true
 	$Star.visible = true
