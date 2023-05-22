@@ -123,7 +123,7 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [Helper.format_num(rov.HP), Helper.format_num(rov.atk), Helper.format_num(rov.def), Helper.format_num(rov.weight_cap), Helper.clever_round(rov.spd)]
 	if game.help.has("rover_shortcuts"):
 		rover_has_items = false
-		st += "\n%s\n%s" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY")]
+		st += "\n%s\n%s (%s)" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY", tr("NO_REFUNDS"))]
 		for inv in rov.inventory:
 			if not inv.is_empty() and inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				rover_has_items = true
@@ -137,7 +137,7 @@ func on_fighter_enter(fighter_info:Dictionary, fighter_id:int):
 	fighter_over_id = fighter_id
 	var st = "%s: %s" % [tr("FLEET_STRENGTH"), Helper.format_num(fighter_info.strength, true)]
 	if game.help.has("rover_shortcuts"):
-		st += "\n%s\n%s" % [tr("CLICK_TO_VIEW_GALAXY"), tr("PRESS_X_TO_DESTROY")]
+		st += "\n%s\n%s (%s)" % [tr("CLICK_TO_VIEW_GALAXY"), tr("PRESS_X_TO_DESTROY"), tr("NO_REFUNDS")]
 	game.show_tooltip(st)
 
 func on_probe_enter(tier:int, probe_id:int):

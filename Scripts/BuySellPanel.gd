@@ -108,6 +108,7 @@ func _on_close_button_pressed():
 	visible = false
 	game.sub_panel = null
 	game.view.move_view = true
+	game.view.scroll_view = true
 
 
 func _on_TextureButton_mouse_entered():
@@ -120,7 +121,9 @@ func _on_TextureButton_mouse_exited():
 
 func _on_h_slider_mouse_entered():
 	game.view.move_view = false
+	game.view.scroll_view = false
 
 
 func _on_h_slider_mouse_exited():
 	game.view.move_view = true
+	game.view.scroll_view = true
