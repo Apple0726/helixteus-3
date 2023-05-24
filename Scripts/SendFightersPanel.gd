@@ -67,8 +67,8 @@ func refresh():
 					strength_required += sys.diff
 					unconquered_obj += 1
 			for fighter in game.fighter_data:
-				if not fighter.has("tier"):#Save migration
-					fighter.tier = 0
+				if fighter == null:
+					continue
 				if fighter.tier == 0 and fighter.c_g_g == game.c_g_g:
 					var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], FileAccess.READ)
 					var planets_in_depart_system = file.get_var()
@@ -127,8 +127,8 @@ func refresh():
 					sys_num += gal.system_num
 					unconquered_obj += 1
 			for fighter in game.fighter_data:
-				if not fighter.has("tier"):#Save migration
-					fighter.tier = 0
+				if fighter == null:
+					continue
 				if fighter.tier == 1 and fighter.c_c == game.c_c:
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
@@ -221,7 +221,7 @@ func _on_Send_pressed():
 					var curr_time = Time.get_unix_time_from_system()
 					var i:int = 0
 					while i < len(game.fighter_data):
-						if game.fighter_data[i].tier == 0 and game.fighter_data[i].c_g_g == game.c_g_g:
+						if game.fighter_data[i] != null and game.fighter_data[i].tier == 0 and game.fighter_data[i].c_g_g == game.c_g_g:
 							game.fighter_data.remove_at(i)
 						else:
 							i += 1
@@ -253,7 +253,7 @@ func _on_Send_pressed():
 					var curr_time = Time.get_unix_time_from_system()
 					var i:int = 0
 					while i < len(game.fighter_data):
-						if game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
+						if game.fighter_data[i] != null and game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
 							game.fighter_data.remove_at(i)
 						else:
 							i += 1

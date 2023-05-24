@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene load_steps=54 format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -16,6 +16,65 @@
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="15"]
 
 [sub_resource type="ShaderMaterial" id="6"]
+
+[sub_resource type="Animation" id="Animation_lt2b8"]
+resource_name = "Fade"
+length = 0.5
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(324, -0.25, 0, 0.1, -12.7533, 307.765, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yyaea"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(324, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nv61m"]
+_data = {
+"Fade": SubResource("Animation_lt2b8"),
+"RESET": SubResource("Animation_yyaea")
+}
 
 [sub_resource type="InputEventKey" id="InputEventKey_w1ott"]
 device = -1
@@ -137,6 +196,65 @@ tracks/3/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wxx8k"]
 _data = {
 "FightPanelAnim": SubResource("18")
+}
+
+[sub_resource type="Animation" id="Animation_7qvvu"]
+resource_name = "Fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(248, -0.25, 0, 0.2, -20.7967, 221.763, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
+
+[sub_resource type="Animation" id="Animation_iymib"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(248, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3hocp"]
+_data = {
+"Fade": SubResource("Animation_7qvvu"),
+"RESET": SubResource("Animation_iymib")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_kutka"]
@@ -354,6 +472,13 @@ layout_mode = 0
 offset_top = 324.0
 offset_right = 1280.0
 offset_bottom = 348.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Help"]
+libraries = {
+"": SubResource("AnimationLibrary_nv61m")
+}
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -662,7 +787,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help2" type="Panel" parent="UI"]
-visible = false
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -672,15 +797,18 @@ offset_left = -192.0
 offset_top = -112.0
 offset_right = 192.0
 offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2")
 
 [node name="Label" type="Label" parent="UI/Help2"]
 layout_mode = 0
-offset_left = 12.0
-offset_top = 12.0
-offset_right = 372.0
-offset_bottom = 68.0
+offset_left = 8.0
+offset_top = 24.0
+offset_right = 376.0
+offset_bottom = 56.0
 text = "CHOOSE_DIFF"
+horizontal_alignment = 1
 
 [node name="Loot" type="Label" parent="UI/Help2"]
 layout_mode = 0
@@ -688,6 +816,7 @@ offset_left = 12.0
 offset_top = 132.0
 offset_right = 372.0
 offset_bottom = 156.0
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2"]
 layout_mode = 0
@@ -711,6 +840,11 @@ text = "NORMAL"
 layout_mode = 2
 size_flags_horizontal = 3
 text = "HARD"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Help2"]
+libraries = {
+"": SubResource("AnimationLibrary_3hocp")
+}
 
 [node name="Back" type="Button" parent="UI"]
 offset_top = 684.0
@@ -859,6 +993,7 @@ libraries = {
 [connection signal="area_entered" from="Ship3" to="." method="_on_Ship_area_entered" binds= [3]]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="ImmuneTimer" to="." method="_on_ImmuneTimer_timeout"]
+[connection signal="animation_finished" from="Help/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="mouse_entered" from="UI/FightPanel/Bullet" to="." method="_on_weapon_mouse_entered" binds= ["bullet"]]
 [connection signal="mouse_exited" from="UI/FightPanel/Bullet" to="." method="_on_weapon_mouse_exited"]
 [connection signal="pressed" from="UI/FightPanel/Bullet" to="." method="_on_weapon_pressed" binds= ["bullet"]]
@@ -882,6 +1017,7 @@ libraries = {
 [connection signal="mouse_entered" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
 [connection signal="mouse_exited" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_mouse_exited"]
 [connection signal="pressed" from="UI/Help2/HBoxContainer/Hard" to="." method="_on_diff_pressed" binds= [2]]
+[connection signal="animation_finished" from="UI/Help2/AnimationPlayer" to="." method="_on_help2_animation_player_animation_finished"]
 [connection signal="pressed" from="UI/Back" to="." method="_on_Back_pressed"]
 [connection signal="animation_finished" from="UI/ControlKeyboard/AnimationPlayer" to="." method="_on_ControlKeyboard_animation_finished"]
 [connection signal="animation_finished" from="UI/ControlMouse/AnimationPlayer" to="." method="_on_ControlMouse_animation_finished"]

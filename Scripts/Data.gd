@@ -539,6 +539,7 @@ var default_help = {
 				"STM":true,
 				"battle":true,
 				"battle2":true,
+				"battle3":true,
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,

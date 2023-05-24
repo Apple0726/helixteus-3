@@ -241,6 +241,7 @@ func on_entity_icon_over(txt:String):
 func on_entity_icon_out():
 	game.hide_tooltip()
 
+
 func refresh_stars():
 	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 	for star in get_tree().get_nodes_in_group("stars_system"):
@@ -251,6 +252,10 @@ func refresh_stars():
 		rsrc.node.queue_free()
 	star_time_bars.clear()
 	star_rsrcs.clear()
+	var star_tween
+	if game.enable_shaders:
+		star_tween = create_tween()
+		star_tween.set_parallel(true)
 	for i in len(stars_info):
 		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
@@ -264,6 +269,13 @@ func refresh_stars():
 		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
 		star.connect("mouse_exited",Callable(self,"on_btn_out"))
 		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
+		if game.enable_shaders:
+			star.material = ShaderMaterial.new()
+			star.material.shader = preload("res://Shaders/Star.gdshader")
+			star.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
+			star.material.set_shader_parameter("alpha", 0.0)
+			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if star_info.type.substr(0, 10) == "hypergiant" and not star_info.has("hypergiant"):
 			star_info.hypergiant = 1
@@ -288,11 +300,6 @@ func refresh_stars():
 		if not game.achievement_data.exploration.has("HG_L_star") and star_info.has("hypergiant") and star_info.hypergiant >= 50:
 			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars_system")
-		if game.enable_shaders:
-			star.material = ShaderMaterial.new()
-			star.material.shader = star_shader
-			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
 		if star_info.has("MS"):
 			var MS = Sprite2D.new()
 			if star_info.MS == "M_MB":
@@ -554,7 +561,7 @@ func _input(event):
 						rsrc_salvaged[rsrc] *= MS_constr_data.obj.size.size / 12000.0
 					elif MS_constr_data.obj.MS == "M_MME":
 						rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size.size / 13000.0, 2)
-					rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM)
+					rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
 					if rsrc == "stone":
 						MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
 						MS_repair_cost_energy += rsrc_salvaged[rsrc]
@@ -849,7 +856,8 @@ func on_star_over (id:int):
 					continue_upg(star)
 				elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
-		Helper.add_label(tr("PRESS_X_TO_DESTROY"))
+		if game.system_data[game.c_s].has("conquered"):
+			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 	game.show_tooltip(tooltip)
 
 func continue_upg(obj:Dictionary):

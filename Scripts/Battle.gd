@@ -355,23 +355,21 @@ func _input(event):
 	if $Help.modulate.a == 1:
 		if game.help.has("battle") and event is InputEventKey:
 			game.help.erase("battle")
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 		elif green_enemy != -1 and event is InputEventMouseButton:
-			game.help.battle2 = true
+			game.help.erase("battle")
+			game.help.erase("battle2")
 			green_enemy = -1
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 		elif purple_enemy != -1 and event is InputEventMouseButton:
-			game.help.battle3 = true
+			game.help.erase("battle")
+			game.help.erase("battle3")
 			purple_enemy = -1
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 
-func fade_help_out():
-	var tween = get_tree().create_tween()
-	tween.set_parallel(true)
-	tween.tween_property($Help, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($Help, "position", Vector2(0, 354), 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	enemy_attack()
-	
 func display_stats(type:String):
 	for i in len(HXs):
 		var HX = HXs[i]
@@ -523,7 +521,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				explosion.get_node("AnimationPlayer").play("Explosion", -1, time_speed)
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
 				HXs[t].get_node("BombParticles").process_material.initial_velocity_min = 200 + 100 * weapon_lv
-				HXs[t].get_node("BombParticles").process_material.initial_velocity_max = 200 + 100 * weapon_lv
+				HXs[t].get_node("BombParticles").process_material.initial_velocity_max = 200 + 240 * weapon_lv
 				HXs[t].get_node("BombParticles").emitting = true
 				HXs[t].get_node("BombParticles").speed_scale = time_speed
 				HX_c_d[HXs[t].name].burn = weapon_lv
@@ -926,7 +924,7 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 		var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 		$Laser.visible = true
 		$Laser.position = ship_pos
-		$Laser.rotation = rad_to_deg(atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x))
+		$Laser.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
 		$Laser.scale.x = (HX_pos.x - ship_pos.x) / 650.0
 		$Laser/Texture2D.material["shader_parameter/beams"] = weapon_data.lv + 1
 		$Laser/Texture2D.material["shader_parameter/outline_thickness"] = (weapon_data.lv + 1) * 0.01
@@ -1066,35 +1064,21 @@ func _on_Timer_timeout():
 			$UI/Current.visible = true
 			$UI/Back.visible = true
 
-var tween:Tween
 func enemy_attack():
-	if game:
-		if game.help.has("battle"):
-			var tween = get_tree().create_tween()
-			tween.set_parallel(true)
-			$UI/Help2.modulate.a = 0
-			$UI/Help2.visible = true
-			tween.tween_property($UI/Help2, "modulate", Color(1, 1, 1, 1), 0.5)
-			tween.tween_property($UI/Help2, "position", Vector2(448, 248), 0.5)
-			return
-		elif not game.help.has("battle2") and curr_en == green_enemy:
-			var tween = get_tree().create_tween()
-			tween.set_parallel(true)
-			$Help.text = tr("GREEN_ENEMY_HELP")
-			$Help.modulate.a = 0
-			$Help.visible = true
-			tween.tween_property($Help, "modulate", Color(1, 1, 1, 1), 0.5)
-			tween.tween_property($Help, "position", Vector2(0, 339), 0.5)
-			return
-		elif not game.help.has("battle3") and curr_en == purple_enemy:
-			var tween = get_tree().create_tween()
-			tween.set_parallel(true)
-			$Help.text = tr("PURPLE_ENEMY_HELP")
-			$Help.modulate.a = 0
-			$Help.visible = true
-			tween.tween_property($Help, "modulate", Color(1, 1, 1, 1), 0.5)
-			tween.tween_property($Help, "position", Vector2(0, 339), 0.5)
-			return
+	if game.help.has("battle"):
+		$UI/Help2/AnimationPlayer.play("Fade")
+		$UI/Help2.visible = true
+		return
+	if game.help.has("battle2") and curr_en == green_enemy:
+		$Help.text = tr("GREEN_ENEMY_HELP")
+		$Help/AnimationPlayer.play("Fade")
+		$Help.visible = true
+		return
+	elif game.help.has("battle3") and curr_en == purple_enemy:
+		$Help.text = tr("PURPLE_ENEMY_HELP")
+		$Help/AnimationPlayer.play("Fade")
+		$Help.visible = true
+		return
 	var last_id:int = min((wave + 1) * 4, len(HX_data))
 	self["ship%s_engine" % tgt_sh].emitting = false
 	if curr_en == last_id:
@@ -1600,14 +1584,9 @@ func _on_diff_pressed(diff:int):
 		config.set_value("game", "e_diff", diff)
 		config.save("user://settings.cfg")
 		e_diff = diff
-	$UI/Help2.visible = false
-	var tween = get_tree().create_tween()
-	tween.set_parallel(true)
-	$Help.modulate.a = 0
+	$UI/Help2/AnimationPlayer.play_backwards("Fade")
+	$Help/AnimationPlayer.play("Fade")
 	$Help.visible = true
-	tween.tween_property($Help, "modulate", Color(1, 1, 1, 1), 0.5)
-	tween.tween_property($Help, "position", Vector2(0, 339), 0.5)
-	tween.start()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	$Laser.visible = false
@@ -1686,4 +1665,13 @@ func _on_Superweapon_pressed():
 			if curr_sh == 4:
 				curr_sh = 0
 		$Timer.start(min(0.5, 0.5 / time_speed))
-	
+
+
+func _on_animation_player_animation_finished(anim_name):
+	if $Help.modulate.a == 0.0:
+		$Help.visible = false
+
+
+func _on_help2_animation_player_animation_finished(anim_name):
+	if $UI/Help2.modulate.a == 0.0:
+		$UI/Help2.visible = false

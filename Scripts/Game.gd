@@ -1438,6 +1438,12 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		view_tween = get_tree().create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		if is_instance_valid(view.obj) and enable_shaders:
+			if c_v == "system":
+				var tween2 = create_tween()
+				tween2.set_parallel(true)
+				for star in get_tree().get_nodes_in_group("stars_system"):
+					if is_instance_valid(star):
+						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
 			if c_v == "galaxy":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
@@ -1517,6 +1523,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				if new_view != "dimension":
 					c_v = new_view
 				else:
+					$Ship.visible = false
 					viewing_dimension = true
 					add_dimension()
 	if other_params.has("fn"):
@@ -1858,7 +1865,7 @@ func add_galaxy():
 	if not galaxy_data[c_g].has("discovered"):
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
-		start_system_generation()
+		await start_system_generation()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
@@ -1871,7 +1878,7 @@ func start_system_generation():
 	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
-	generate_system_part()
+	await generate_system_part()
 	
 func add_system():
 	if obj_exists("Galaxies", c_g_g):
@@ -2129,8 +2136,8 @@ func generate_system_part():
 		while N_progress < (N + N_init) / 2.0:#Arm #1
 			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, N_progress)
 			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
-			th += 0.4 - lerp(0, 0.33, progress)
-			r += (1 - lerp(0, 0.8, progress)) * 1280 * lerp(1.3, 4, inverse_lerp(5000, 20000, N))
+			th += 0.4 - lerp(0.0, 0.33, progress)
+			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
 			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
 			await get_tree().create_timer(0.0000000000001).timeout
 		th = init_th + PI
@@ -2138,8 +2145,8 @@ func generate_system_part():
 		while N_progress < N:#Arm #2
 			var progress:float = inverse_lerp((N + N_init) / 2.0, N, N_progress)
 			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
-			th += 0.4 - lerp(0, 0.33, progress)
-			r += (1 - lerp(0, 0.8, progress)) * 1280 * lerp(1.3, 4, inverse_lerp(5000, 20000, N))
+			th += 0.4 - lerp(0.0, 0.33, progress)
+			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
 			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
 			await get_tree().create_timer(0.0000000000001).timeout
 		for i in len(stars_failed):#Put stars that failed to pass the collision tests above
@@ -3422,6 +3429,8 @@ func get_star_class (temp):
 		cl = "R" + str(floor(10 - (temp - 120000) / 90000 * 10))
 	elif temp < 1000000:
 		cl = "Z" + str(max(floor(10 - (temp - 210000) / 790000 * 10), 0))
+	else:
+		cl = "Z0"
 	return cl
 
 #Checks if player has enough resources to buy/craft/build something

@@ -42,6 +42,8 @@ func _ready():
 			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
 			star_btn.material.set_shader_parameter("alpha", 0.0)
 			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
+		else:
+			star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
