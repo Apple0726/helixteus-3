@@ -103,7 +103,7 @@ func refresh():
 		probe.custom_minimum_size = Vector2(80, 80)
 		hbox3.add_child(probe)
 		probe.connect("mouse_entered",Callable(self,"on_probe_enter").bind(probe_info.tier, i))
-		probe.connect("mouse_exited",Callable(self,"on_fighter_exit"))
+		probe.connect("mouse_exited",Callable(self,"on_probe_exit"))
 		probe.connect("pressed",Callable(self,"on_probe_press").bind(probe_info.tier))
 		if probe_info.has("start_date"):
 			var time_bar:Control = game.time_scene.instantiate()
@@ -123,7 +123,7 @@ func on_rover_enter(rov:Dictionary, rov_id:int):
 	var st = "@i %s\n@i %s\n@i %s\n@i %s kg\n@i %s" % [Helper.format_num(rov.HP), Helper.format_num(rov.atk), Helper.format_num(rov.def), Helper.format_num(rov.weight_cap), Helper.clever_round(rov.spd)]
 	if game.help.has("rover_shortcuts"):
 		rover_has_items = false
-		st += "\n%s\n%s (%s)" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY", tr("NO_REFUNDS"))]
+		st += "\n%s\n%s (%s)" % [tr("CLICK_TO_USE_ROVER"), tr("PRESS_X_TO_DESTROY"), tr("NO_REFUNDS")]
 		for inv in rov.inventory:
 			if not inv.is_empty() and inv.type != "rover_weapons" and inv.type != "rover_mining" and inv.type != "":
 				rover_has_items = true
@@ -149,7 +149,12 @@ func on_probe_enter(tier:int, probe_id:int):
 	elif tier == 2:
 		game.show_tooltip(tr("CLICK_TO_SEE_DISCOVERED_U"))
 
+func on_probe_exit():
+	probe_over_id = -1
+	game.hide_tooltip()
+
 func on_fighter_exit():
+	fighter_over_id = -1
 	game.hide_tooltip()
 
 func on_fighter_press(i:int):

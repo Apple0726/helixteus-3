@@ -56,7 +56,7 @@ func destroy_rock():
 	$GPUParticles2D.process_material.damping_min = damping_max * 0.8
 	$GPUParticles2D.process_material.damping_max = damping_max
 	$Sprite2D.visible = false
-	debris_collision_shape.disabled = true
+	debris_collision_shape.call_deferred("set_disabled", true)
 	$LightOccluder2D.light_mask = 0
 	$GPUParticles2D.emitting = true
 	var timer = Timer.new()

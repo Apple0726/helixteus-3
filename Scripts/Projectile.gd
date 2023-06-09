@@ -91,7 +91,7 @@ func collide(collision:KinematicCollision2D):
 			elif cave_ref.enhancements.has("armor_0"):
 				deflected = randf() < 0.15
 			if deflected:
-				direction = -direction.reflect(collision.get_normal())
+				direction = -direction.reflect(Vector2.from_angle(collision.get_normal().angle() + PI/2))
 				speed *= 2.0
 				collision_layer = 8
 				collision_mask = 5
@@ -99,6 +99,7 @@ func collide(collision:KinematicCollision2D):
 				if cave_ref.enhancements.has("armor_1"):
 					damage *= 4.0
 				$DeflectedParticles.emitting = true
+				rotation = direction.angle()
 			else:
 				var dmg:float = damage / cave_ref.def / cave_ref.rover_size
 				cave_ref.hit_player(dmg, status_effects)

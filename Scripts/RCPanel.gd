@@ -79,6 +79,7 @@ func _on_REP_pressed(type:String):
 	game.sub_panel = RE_panel
 	RE_panel.get_node("Label").text = tr(type.to_upper())
 	RE_panel.visible = true
+	game.hide_tooltip()
 
 func _on_Slot_mouse_entered(type:String):
 	var txt:String = ""

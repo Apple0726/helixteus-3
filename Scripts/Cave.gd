@@ -264,6 +264,7 @@ func _ready():
 		if modifiers.has("minimap_disabled"):
 			$UI/Error.visible = true
 			MM.visible = false
+			$UI/MinimapBG.visible = true
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
 		var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ)
@@ -944,8 +945,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
-	if Discord_Activity.get_is_discord_working():
-		Discord_Activity.small_image = "rover"
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.small_image = "rover"
 		var cave_adjective = ""
 		if num_floors >= 12:
 			cave_adjective = " large"
@@ -953,14 +954,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 			cave_adjective = " huge"
 		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
 		if cave_floor < 8:
-			Discord_Activity.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
+			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
 		elif cave_floor < 16:
-			Discord_Activity.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
+			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
 		else:
-			Discord_Activity.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
-		Discord_Activity.state = "Floor %s / %s" % [cave_floor, num_floors]
-		Discord_Activity.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
-		Discord_Activity.refresh()
+			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
+		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
+		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
+		discord_sdk.refresh()
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
@@ -1100,8 +1101,7 @@ func update_ray():
 		var laser_reach = 9001.0
 		RoD.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 		RoDray.target_position.x = laser_reach
-		var coll = RoDray.get_collider()
-		if coll is TileMap:
+		if RoDray.is_colliding():
 			var pos = RoDray.get_collision_point()# + RoDray.target_position / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
 			RoD_effects.get_node("Sprite2D").visible = true
@@ -1221,7 +1221,7 @@ func _input(event):
 				elif ability == "laser_2":
 					RoDray.enabled = true
 					if game.screen_shake:
-						$Camera2D/Screenshake.start(1.5, 20, 12)
+						$Camera2D/Screenshake.start(10.0 / time_speed, 15, 4)
 					$Rover/RayOfDoom/Sprite2D.material.set_shader_parameter("outline_color", get_color(laser_name))
 					$Rover/RayOfDoom/AnimationPlayer.play("RayFade", -1, time_speed)
 					ability_timer.start(10.0 / time_speed)
@@ -2279,8 +2279,9 @@ func _on_BreakRocksWithDash_body_entered(body):
 		else:
 			$Rover/SuffocationTimer.start()
 	elif body.get_parent() is Debris:
-		if enhancements.has("wheels_5") and body.scale.x < 2.0:
-			mine_debris_complete(body.get_parent().id)
+		if enhancements.has("wheels_5"):
+			if body.get_parent().scale.x < 2.0:
+				mine_debris_complete(body.get_parent().id)
 		else:
 			$Rover/SuffocationTimer.start()
 

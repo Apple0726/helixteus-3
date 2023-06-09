@@ -33,7 +33,7 @@ func on_SA_time_out():
 	special_attack_timer.wait_time = 3.0 / cave_ref.time_speed / cave_ref.enemy_attack_rate
 	if sees_player or is_aggr():
 		var tween = create_tween()
-		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.5)
+		tween.tween_property($Sprite2D.material, "shader_parameter/modulate_color", Color(1, 1, 1, 0), 0.5)
 		tween.tween_callback(Callable(self,"teleport")).set_delay(0.5)
 
 func teleport():
@@ -52,4 +52,4 @@ func teleport():
 	position.x = target_tile % cave_ref.cave_size * 200 + 100
 	position.y = target_tile / cave_ref.cave_size * 200 + 100
 	var tween = create_tween()
-	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.5)
+	tween.tween_property($Sprite2D.material, "shader_parameter/modulate_color", Color(1, 1, 1, 1), 0.5)

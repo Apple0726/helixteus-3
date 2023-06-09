@@ -474,12 +474,12 @@ func show_planet_info(id:int, l_id:int):
 		if Data.MS_num_stages[p_i.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, Data.MS_num_stages[p_i.MS]]]
 		Helper.add_label(stage, -1, true, true)
+		MS_constr_data.obj = p_i
 		if p_i.has("repair_cost"):
 			if p_i.has("conquered"):
 				Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
-				MS_constr_data.obj = p_i
-				MS_constr_data.confirm = true
+				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":p_i.repair_cost, "time":0.2}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
 		else:
@@ -493,7 +493,7 @@ func show_planet_info(id:int, l_id:int):
 			if not p_i.bldg.has("is_constructing"):
 				if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 					MS_constr_data.obj = p_i
-					MS_constr_data.confirm = false
+					MS_constr_data.confirm_upgrade = false
 					Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
@@ -528,11 +528,11 @@ var current_MS_action = ""
 func _input(event):
 	if Input.is_action_just_released("F"):
 		if not MS_constr_data.is_empty():
-			if not MS_constr_data.confirm:
+			if MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
 				current_MS_action = "upgrading"
 				var MS:String = MS_constr_data.obj.MS
 				call("show_%s_costs" % MS, MS_constr_data.obj)
-				MS_constr_data.confirm = true
+				MS_constr_data.confirm_upgrade = true
 				Helper.add_label(tr("X_TO_CONFIRM") % "F")
 			elif current_MS_action == "upgrading":
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
@@ -541,52 +541,52 @@ func _input(event):
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
 			game.toggle_panel(game.upgrade_panel)
 	elif Input.is_action_just_released("X"):
-		if not MS_constr_data.is_empty():
-			if not MS_constr_data.confirm:
-				MS_constr_data.confirm = true
-				current_MS_action = "destroying"
-				var vbox = game.get_node("UI/Panel/VBox")
-				rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
-				rsrc_salvaged.erase("money")
-				rsrc_salvaged.erase("energy")
-				rsrc_salvaged.erase("time")
-				var MS_repair_cost_money = 0.0
-				var MS_repair_cost_energy = 0.0
-				for rsrc in rsrc_salvaged.keys():
-					if MS_constr_data.obj.MS == "M_DS":
-						rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
-					elif MS_constr_data.obj.MS == "M_CBS":
-						rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
-					elif MS_constr_data.obj.MS == "M_SE":
-						rsrc_salvaged[rsrc] *= MS_constr_data.obj.size.size / 12000.0
-					elif MS_constr_data.obj.MS == "M_MME":
-						rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size.size / 13000.0, 2)
-					rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
-					if rsrc == "stone":
-						MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
-						MS_repair_cost_energy += rsrc_salvaged[rsrc]
-					else:
-						MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
-						MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
-				rsrc_salvaged.erase("stone")
-				bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
-				Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-				Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
-				Helper.add_label(tr("DISMANTLING_COSTS"), 0)
-				Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
-				Helper.add_label(tr("X_TO_CONFIRM") % "X")
-			elif current_MS_action == "destroying":
-				if game.check_enough(bldg_costs):
-					game.deduct_resources(bldg_costs)
-					game.add_resources(rsrc_salvaged)
-					MS_constr_data.obj.erase("MS")
-					game.popup(tr("MS_REKT"), 2.0)
-					game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
-					MS_constr_data.clear()
-					refresh_planets()
-					refresh_stars()
+		if not MS_constr_data.has("confirm_destroy"):
+			MS_constr_data.confirm_destroy = true
+			current_MS_action = "destroying"
+			var vbox = game.get_node("UI/Panel/VBox")
+			rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
+			rsrc_salvaged.erase("money")
+			rsrc_salvaged.erase("energy")
+			rsrc_salvaged.erase("time")
+			var MS_repair_cost_money = 0.0
+			var MS_repair_cost_energy = 0.0
+			for rsrc in rsrc_salvaged.keys():
+				if MS_constr_data.obj.MS == "M_DS":
+					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
+				elif MS_constr_data.obj.MS == "M_CBS":
+					rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
+				elif MS_constr_data.obj.MS == "M_SE":
+					rsrc_salvaged[rsrc] *= MS_constr_data.obj.size.size / 12000.0
+				elif MS_constr_data.obj.MS == "M_MME":
+					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size.size / 13000.0, 2)
+				rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
+				if rsrc == "stone":
+					MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
+					MS_repair_cost_energy += rsrc_salvaged[rsrc]
 				else:
-					game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+					MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
+					MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
+			rsrc_salvaged.erase("stone")
+			bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
+			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+			Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
+			Helper.add_label(tr("DISMANTLING_COSTS"), 0)
+			Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
+			Helper.add_label(tr("X_TO_CONFIRM") % "X")
+		elif current_MS_action == "destroying":
+			if game.check_enough(bldg_costs):
+				game.deduct_resources(bldg_costs)
+				game.add_resources(rsrc_salvaged)
+				MS_constr_data.obj.erase("MS")
+				MS_constr_data.obj.erase("MS_lv")
+				game.popup(tr("MS_REKT"), 2.0)
+				game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+				MS_constr_data.clear()
+				refresh_planets()
+				refresh_stars()
+			else:
+				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func build_MS(obj:Dictionary, MS:String):
 	if bldg_costs.is_empty():
@@ -816,12 +816,12 @@ func on_star_over (id:int):
 		if Data.MS_num_stages[star.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)
+		MS_constr_data.obj = star
 		if star.has("repair_cost"):
 			if game.system_data[game.c_s].has("conquered"):
 				Helper.add_label(tr("REPAIR_COST"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
-				MS_constr_data.obj = star
-				MS_constr_data.confirm = true
+				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":star.repair_cost, "time":0.2}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
@@ -862,7 +862,7 @@ func on_star_over (id:int):
 
 func continue_upg(obj:Dictionary):
 	MS_constr_data.obj = obj
-	MS_constr_data.confirm = false
+	MS_constr_data.confirm_upgrade = false
 	Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 
 func on_star_pressed (id:int):

@@ -511,16 +511,16 @@ func update_viewport_dimensions():
 	
 func _ready():
 	#await RenderingServer.frame_post_draw
-	Discord_Activity.app_id = 1101755847325003846 # Application ID
-	print("Discord working: " + str(Discord_Activity.get_is_discord_working())) # A boolean if everything worked
-	if Discord_Activity.get_is_discord_working():
-		Discord_Activity.details = "In title screen"
-		Discord_Activity.state = ""
-		Discord_Activity.large_image = "game"
-		Discord_Activity.large_image_text = "Helixteus 3"
-		Discord_Activity.start_timestamp = int(Time.get_unix_time_from_system())
-		# Discord_Activity.end_timestamp = int(Time.get_unix_time_from_system())
-		Discord_Activity.refresh() # Always refresh after changing the values!
+	discord_sdk.app_id = 1101755847325003846 # Application ID
+	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.details = "In title screen"
+		discord_sdk.state = ""
+		discord_sdk.large_image = "game"
+		discord_sdk.large_image_text = "Helixteus 3"
+		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
+		discord_sdk.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -1640,25 +1640,25 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = get_tree().create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
-	if Discord_Activity.get_is_discord_working():
+	if discord_sdk.get_is_discord_working():
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
-			Discord_Activity.small_image = c_v
+			discord_sdk.small_image = c_v
 			if c_v in ["planet", "system"]:
-				Discord_Activity.state = "Managing planets"
+				discord_sdk.state = "Managing planets"
 			if c_v == "planet":
-				Discord_Activity.small_image_text = "Viewing " + planet_data[c_p].name
+				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
 			elif c_v == "system":
-				Discord_Activity.small_image_text = "Viewing " + system_data[c_s].name
+				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
 			elif c_v == "galaxy":
-				Discord_Activity.state = "Observing the stars"
-				Discord_Activity.small_image_text = "Viewing " + galaxy_data[c_g].name
+				discord_sdk.state = "Observing the stars"
+				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
 			elif c_v == "cluster":
-				Discord_Activity.state = "Watching galaxies in the distance"
-				Discord_Activity.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
+				discord_sdk.state = "Watching galaxies in the distance"
+				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
 			elif c_v == "universe":
-				Discord_Activity.state = "Navigating the universe"
-				Discord_Activity.small_image_text = "Viewing " + u_i.name
-			Discord_Activity.refresh() 
+				discord_sdk.state = "Navigating the universe"
+				discord_sdk.small_image_text = "Viewing " + u_i.name
+			discord_sdk.refresh() 
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
@@ -1717,7 +1717,7 @@ func open_obj(type:String, id:int):
 	
 func obj_exists(type:String, id:int):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
-	return DirAccess.open(file_path)
+	return FileAccess.open(file_path, FileAccess.READ)
 
 func add_obj(view_str):
 	match view_str:
@@ -2609,7 +2609,7 @@ func generate_planets(id:int):#local id
 		p_i.core_start_depth = round(randf_range(0.4, 0.46) * p_i.size * 1000)
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
-		p_i.liq_period = randf_range(60, 300)
+		p_i.liq_period = randf_range(0.1, 1)
 		if id + s_num == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
 				p_i.lake_1 = {"element":"H2O"}

@@ -1,36 +1,20 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://nywa0cmoqde0"]
 
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="FontFile" id=1]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="FontFile" id=2]
-[ext_resource path="res://Graphics/Agriculture/lead_seeds.png" type="Texture2D" id=3]
-
-
-[sub_resource type="FontFile" id=9]
-size = 25
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
-fallback/0 = ExtResource( 1 )
+[ext_resource type="Texture2D" uid="uid://w54uo3bqo3s6" path="res://Graphics/Agriculture/lead_seeds.png" id="3"]
 
 [node name="ItemCursor" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2( 64, 64 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
+position = Vector2(64, 64)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
-polygon = PackedVector2Array( 0, 0, 0, 48, 48, 0 )
+polygon = PackedVector2Array(0, 0, 0, 48, 48, 0)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 104.0
 offset_top = 96.0
 offset_right = 144.0
 offset_bottom = 125.0
-custom_fonts/font = SubResource( 9 )
 text = "x 1"
-__meta__ = {
-"_edit_use_anchors_": false
-}

@@ -8,6 +8,10 @@
 
 config_version=5
 
+[DiscordSDK]
+
+EditorPresence/enabled=true
+
 [application]
 
 config/name="Helixteus 3"
@@ -27,7 +31,7 @@ buses/default_bus_layout="res://Resources/default_bus_layout.tres"
 Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
-discord_coreupdater="*res://addons/discord-sdk-gd/discord_coreupdater.gd"
+DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [debug]
 
