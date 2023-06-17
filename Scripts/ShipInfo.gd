@@ -18,7 +18,7 @@ func _ready():
 func set_visibility():
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween()
+	tween = create_tween()
 	tween.set_parallel(true)
 	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	if show_weapon_XPs:

@@ -138,9 +138,9 @@ func _on_SpaceportTimer_timeout():
 			grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
 			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).modulate = Color.WHITE
 			var weapon_data = game.ship_data[i][weapon.to_lower()]
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property(grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
-			var tween2 = get_tree().create_tween()
+			var tween2 = create_tween()
 			tween2.tween_property(grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
 			grid.get_node("Panel%s/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv

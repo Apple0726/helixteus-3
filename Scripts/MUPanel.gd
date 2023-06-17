@@ -40,10 +40,10 @@ func _ready():
 		hbox.name = MU
 		hbox.add_child(btn)
 		if game.achievement_data.progression.has("new_universe"):
-			btn.custom_minimum_size.x = 178 - 45
+			btn.custom_minimum_size.x = 178 - 32
 			var btn_max = Button.new()
 			btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
-			btn_max.custom_minimum_size.x = 45
+			btn_max.custom_minimum_size.x = 32
 			btn_max.name = "UpgradeMax"
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")

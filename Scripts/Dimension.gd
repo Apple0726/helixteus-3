@@ -277,7 +277,7 @@ func on_univ_press(id:int):
 	$UnivInfo/AnimationPlayer.play_backwards("Fade")
 	var u_i:Dictionary = game.universe_data[id]
 	if modulate.a == 1.0:
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.2)
 	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
@@ -285,7 +285,7 @@ func on_univ_press(id:int):
 		game.switch_view(game.c_v)
 	else:
 		game.remove_dimension()
-		game.new_game(id, game.dim_num == 1, game.dim_num == 1)
+		game.new_game(id, game.dim_num == 1 and len(game.universe_data) == 1, game.dim_num == 1 and len(game.universe_data) == 1)
 		game.HUD.dimension_btn.visible = true
 		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	game.HUD.refresh_visibility()
@@ -545,6 +545,8 @@ func show_DR_help():
 		tween.tween_property($ColorRect/Label, "modulate", Color(1, 1, 1, 0), 0.5)
 		await tween.finished
 		DR_help_index += 1
+		if DR_help_index < 5:
+			tween = create_tween()
 	if DR_help_index == 5:
 		$ColorRect/AnimationPlayer.play("FadeOut")
 		game.help.DR_reset = true

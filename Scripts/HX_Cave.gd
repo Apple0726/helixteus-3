@@ -151,7 +151,7 @@ func hit(damage:float):
 	else:
 		chase_player()
 		$Info/HP.modulate = Color.RED
-		HP_tween = get_tree().create_tween()
+		HP_tween = create_tween()
 		HP_tween.set_parallel(true)
 		HP_tween.tween_property($Info/HP, "modulate", Color.GREEN, 0.3)
 		HP_tween.tween_property($Info/HP, "value", HP, 1.0).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)

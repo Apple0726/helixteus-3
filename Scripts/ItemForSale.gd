@@ -20,10 +20,10 @@ func _on_ItemForSale_mouse_entered():
 	if not game[parent].locked:
 		if parent == "construct_panel":
 			game.new_bldgs[item_name] = false
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property($New, "modulate", Color(1, 1, 1, 0), 0.2)
 		game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(game[parent].item_info, "modulate", Color(1, 1, 1, 1), 0.1)
 
 func _on_SmallButton_pressed():
@@ -51,7 +51,7 @@ func _on_SmallButton_mouse_exited():
 
 func _on_ItemForSale_mouse_exited():
 	if not game[parent].locked:
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(game[parent].item_info, "modulate", Color(1, 1, 1, 0), 0.1)
 
 func _on_LockItemInfo_toggled(button_pressed):

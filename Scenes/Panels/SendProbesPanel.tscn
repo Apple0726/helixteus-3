@@ -145,6 +145,7 @@ offset_top = 80.0
 offset_right = 864.0
 offset_bottom = 448.0
 theme = SubResource("2")
+theme_override_constants/separation = 10
 
 [node name="speed_of_light" type="HBoxContainer" parent="TP/VBox"]
 layout_mode = 2

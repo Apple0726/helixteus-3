@@ -1486,7 +1486,7 @@ func construct(st:String, costs:Dictionary):
 	finish_construct()
 	if game.get_node("UI").has_node("BuildingShortcuts"):
 		game.get_node("UI").get_node("BuildingShortcuts").close()
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18:
 		game.help_str = "mass_build"
@@ -1528,7 +1528,7 @@ func finish_construct():
 			if is_instance_valid(shadows[i]):
 				shadows[i].queue_free()
 		shadow_num = 0
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.WHITE, 0.2)
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 

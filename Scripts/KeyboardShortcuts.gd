@@ -6,7 +6,7 @@ var tween
 
 func _ready():
 	modulate.a = 0
-	tween = get_tree().create_tween()
+	tween = create_tween()
 	tween.tween_property(self, "modulate", Color.WHITE, 0.1)
 	refresh()
 
@@ -52,7 +52,7 @@ func _on_Panel_mouse_exited():
 func close():
 	name = "BuildingShortcutsClosing"
 	tween.kill()
-	tween = get_tree().create_tween()
+	tween = create_tween()
 	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.1)
 	await tween.finished
 	queue_free()

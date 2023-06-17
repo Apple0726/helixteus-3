@@ -545,14 +545,17 @@ func _input(event):
 			MS_constr_data.confirm_destroy = true
 			current_MS_action = "destroying"
 			var vbox = game.get_node("UI/Panel/VBox")
-			rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
+			if MS_constr_data.obj.MS == "M_MB":
+				rsrc_salvaged = Data.MS_costs["M_MB"].duplicate(true)
+			else:
+				rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
 			rsrc_salvaged.erase("money")
 			rsrc_salvaged.erase("energy")
 			rsrc_salvaged.erase("time")
 			var MS_repair_cost_money = 0.0
 			var MS_repair_cost_energy = 0.0
 			for rsrc in rsrc_salvaged.keys():
-				if MS_constr_data.obj.MS == "M_DS":
+				if MS_constr_data.obj.MS in ["M_DS", "M_MB"]:
 					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
 				elif MS_constr_data.obj.MS == "M_CBS":
 					rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0

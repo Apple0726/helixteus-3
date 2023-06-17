@@ -1379,46 +1379,55 @@ offset_bottom = 555.0
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="CH4" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="CO2" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="NH3" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="H" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="He" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="Ne" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="Xe" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -1987,6 +1996,7 @@ offset_top = -12.0
 offset_right = -288.0
 offset_bottom = 12.0
 text = "aw"
+horizontal_alignment = 1
 
 [connection signal="pressed" from="Universes/SendProbes" to="." method="_on_SendProbes_pressed"]
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]

@@ -74,7 +74,6 @@ func on_export(save_str:String):
 		file.close()
 		JavaScriptBridge.download_buffer(buffer, save_str + ".hx3")
 	else:
-		$PopupBackground.visible = true
 		$Export.current_file = save_str
 		$Export.title = tr("EXPORT_X") % save_str
 		$Export.popup_centered()
@@ -96,13 +95,7 @@ func on_delete_confirm(save_str:String):
 
 
 func _on_ImportSave_pressed():
-	$PopupBackground.visible = true
 	$Import.popup_centered()
-
-
-func _on_Import_popup_hide():
-	$PopupBackground.visible = false
-
 
 func _on_Export_file_selected(path):
 	export_game(path)
@@ -132,7 +125,6 @@ func export_game(path:String = "user://"):
 				if not error2:
 					file.store_var(save_dict)
 					game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
-					$PopupBackground.visible = false
 	file.close()
 	
 func export_univ(univ_str:String):
@@ -222,6 +214,9 @@ func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
 			file.close()
 
+func _on_export_visibility_changed():
+	$PopupBackground.visible = $Export.visible
 
-func _on_Export_popup_hide():
-	$PopupBackground.visible = false
+
+func _on_import_visibility_changed():
+	$PopupBackground.visible = $Import.visible

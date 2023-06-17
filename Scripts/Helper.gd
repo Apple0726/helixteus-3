@@ -383,7 +383,7 @@ func show_dmg(dmg:float, pos:Vector2, parent, size:int = 40, missed:bool = false
 	var dur = 1.5 if crit else 1.0
 	if game:
 		dur /= game.u_i.time_speed
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(lb, "modulate", Color(1, 1, 1, 0), dur)
 	tween.tween_property(lb, "position", pos - Vector2(0, 55), dur).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

@@ -29,7 +29,7 @@ func _ready():
 	else:
 		lv = 4
 	set_level()
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property($Level, "modulate", Color.WHITE, 0.5)
 
 	for i in 100: #number of stars to render

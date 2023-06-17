@@ -89,20 +89,20 @@ func on_system_over (l_id:int):
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), l_id]
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		if grid.name != "Grid_%s" % l_id:
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
 		if grid.name != "MSGrid_%s" % l_id:
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
 
 func on_system_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
 

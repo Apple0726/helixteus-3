@@ -13,7 +13,7 @@ func _ready():
 
 func _on_Back_pressed():
 	if modulate.a == 1.0:
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.set_parallel(true)
 		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.2)
 		tween.tween_property(game.get_node("ScienceTreeBG"), "modulate", Color(1, 1, 1, 0), 0.1)

@@ -179,7 +179,7 @@ func _on_Convert_pressed():
 			game.switch_view("cluster", {"fn":"delete_galaxy"})
 		else:
 			game.switch_view("cluster")
-		await game.view_tween.tween_all_completed
+		await game.view_tween.finished
 		for system in game.system_data:
 			if not system.has("discovered"):
 				continue

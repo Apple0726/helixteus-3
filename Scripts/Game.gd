@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = ""
+const DATE:String = "17 Jun 2023"
 const VERSION:String = "v0.27"
 const COMPATIBLE_SAVES = ["v0.27"]
 const SYS_NUM:int = 400
@@ -510,17 +510,16 @@ func update_viewport_dimensions():
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
-	#await RenderingServer.frame_post_draw
-	discord_sdk.app_id = 1101755847325003846 # Application ID
-	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
-	if discord_sdk.get_is_discord_working():
-		discord_sdk.details = "In title screen"
-		discord_sdk.state = ""
-		discord_sdk.large_image = "game"
-		discord_sdk.large_image_text = "Helixteus 3"
-		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
-		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
-		discord_sdk.refresh() # Always refresh after changing the values!
+#	discord_sdk.app_id = 1101755847325003846 # Application ID
+#	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
+#	if discord_sdk.get_is_discord_working():
+#		discord_sdk.details = "In title screen"
+#		discord_sdk.state = ""
+#		discord_sdk.large_image = "game"
+#		discord_sdk.large_image_text = "Helixteus 3"
+#		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+#		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
+#		discord_sdk.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -598,7 +597,7 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		autosave_interval = 10
 		if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
-			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand")
+			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
 			config.set_value("misc", "HTML5", true)
 		autosell = config.get_value("game", "autosell", true)
 		cave_gen_info = config.get_value("game", "cave_gen_info", false)
@@ -632,7 +631,7 @@ func _ready():
 		main.phase_2()
 
 func animate_title_buttons():
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.set_parallel(true)
 	$TitleBackground.modulate.a = 0.0
 	$Title.modulate.a = 0.0
@@ -890,7 +889,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view_history.clear()
 	view_history_pos = -1
 	stats_univ = Data.default_stats.duplicate(true)
-	var save_dir
+	var save_dir = DirAccess.open("user://")
 	if new_save:
 		stats_global = stats_univ.duplicate(true)
 		stats_dim = stats_univ.duplicate(true)
@@ -899,7 +898,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		while DirAccess.open("user://%s" % c_sv):
 			sv_id += 1
 			c_sv = "Save%s" % sv_id
-		save_dir = DirAccess.open("user://")
 		save_dir.make_dir(str(c_sv))
 		save_created = Time.get_unix_time_from_system()
 		DRs = 0
@@ -1283,11 +1281,12 @@ func popup(txt, delay):
 		popup.position.x = x_pos
 
 
-func popup_window(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK"):
+func popup_window(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK", align:int = 1):
 	hide_adv_tooltip()
 	hide_tooltip()
 	var popup = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	$UI.add_child(popup)
+	popup.set_align(align)
 	popup.set_text(txt)
 	popup.set_OK_text(ok_txt)
 	for i in range(0, len(other_buttons)):
@@ -1323,7 +1322,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
-	panel.tween = get_tree().create_tween()
+	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
 	var s = panel.size
@@ -1340,7 +1339,7 @@ func fade_out_panel(panel:Control):
 	var s = panel.size
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
-	panel.tween = get_tree().create_tween()
+	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 0), 0.1)
 	panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 0.0, 0.2)
@@ -1435,7 +1434,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if is_instance_valid(view_tween) and view_tween.is_running():
 		return
 	if not other_params.has("dont_fade_anim"):
-		view_tween = get_tree().create_tween()
+		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		if is_instance_valid(view.obj) and enable_shaders:
 			if c_v == "system":
@@ -1638,31 +1637,31 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("first_time"):
 		fn_save_game()
 	if not other_params.has("dont_fade_anim"):
-		view_tween = get_tree().create_tween()
+		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
-	if discord_sdk.get_is_discord_working():
-		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
-			discord_sdk.small_image = c_v
-			if c_v in ["planet", "system"]:
-				discord_sdk.state = "Managing planets"
-			if c_v == "planet":
-				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
-			elif c_v == "system":
-				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
-			elif c_v == "galaxy":
-				discord_sdk.state = "Observing the stars"
-				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
-			elif c_v == "cluster":
-				discord_sdk.state = "Watching galaxies in the distance"
-				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
-			elif c_v == "universe":
-				discord_sdk.state = "Navigating the universe"
-				discord_sdk.small_image_text = "Viewing " + u_i.name
-			discord_sdk.refresh() 
+#	if discord_sdk.get_is_discord_working():
+#		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
+#			discord_sdk.small_image = c_v
+#			if c_v in ["planet", "system"]:
+#				discord_sdk.state = "Managing planets"
+#			if c_v == "planet":
+#				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
+#			elif c_v == "system":
+#				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
+#			elif c_v == "galaxy":
+#				discord_sdk.state = "Observing the stars"
+#				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
+#			elif c_v == "cluster":
+#				discord_sdk.state = "Watching galaxies in the distance"
+#				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
+#			elif c_v == "universe":
+#				discord_sdk.state = "Navigating the universe"
+#				discord_sdk.small_image_text = "Viewing " + u_i.name
+#			discord_sdk.refresh() 
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property($ScienceTreeBG, "modulate", Color.WHITE, 0.5)
 	$ClusterBG.visible = false
 	HUD.get_node("Buttons").visible = false
@@ -1751,7 +1750,7 @@ func add_obj(view_str):
 			sc_UI.sc_tree = view.obj
 			view.obj.modulate.a = 0.0
 			sc_UI.name = "ScienceUI"
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.set_parallel(true)
 			tween.tween_property(sc_UI, "modulate", Color.WHITE, 0.2).set_delay(0.1)
 			tween.tween_property(view.obj, "modulate", Color.WHITE, 0.2).set_delay(0.1)
@@ -1818,7 +1817,7 @@ func add_dimension():
 		dimension = preload("res://Scenes/Views/Dimension.tscn").instantiate()
 		dimension.modulate.a = 0.0
 		add_child(dimension)
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
 
 func add_universe():
@@ -1896,7 +1895,7 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet():
-	stars_tween = get_tree().create_tween()
+	stars_tween = create_tween()
 	stars_tween.tween_property($Stars/Stars, "modulate", Color.WHITE, 0.3)
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
@@ -1939,7 +1938,7 @@ func remove_planet(save_zooms:bool = true):
 		fade_out_panel(active_panel)
 	if is_instance_valid(stars_tween):
 		stars_tween.kill()
-	stars_tween = get_tree().create_tween()
+	stars_tween = create_tween()
 	stars_tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.2)
 	view.remove_obj("planet", save_zooms)
 	vehicle_panel.tile_id = -1
@@ -3312,7 +3311,7 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	add_text_icons(tooltip, txt, imgs, size, true)
 	await get_tree().create_timer(0.01).timeout
 	set_tooltip_position()
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
 
 func show_tooltip(txt:String, hide:bool = true):
@@ -3326,7 +3325,7 @@ func show_tooltip(txt:String, hide:bool = true):
 		tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
 		tooltip.size.x = 400
 	set_tooltip_position()
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
 
 func hide_tooltip():
@@ -3652,14 +3651,16 @@ func _input(event):
 			if is_instance_valid(sub_panel):
 				sub_panel.visible = false
 				sub_panel = null
+				view.move_view = true
+				view.scroll_view = true
 			elif is_instance_valid(active_panel):
 				if c_v != "":
-					if is_instance_valid(sub_panel):
-						sub_panel.visible = false
-						sub_panel = null
-					else:
-						fade_out_panel(active_panel)
-						active_panel = null
+#					if is_instance_valid(sub_panel):
+#						sub_panel.visible = false
+#						sub_panel = null
+#					else:
+					fade_out_panel(active_panel)
+					active_panel = null
 				else:
 					toggle_panel(active_panel)
 				hide_tooltip()
@@ -3939,7 +3940,7 @@ func _on_CloseButton_close_button_out():
 
 func fade_out_title(fn:String):
 	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property($Title, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($TitleBackground, "modulate", Color(1, 1, 1, 0), 0.5)

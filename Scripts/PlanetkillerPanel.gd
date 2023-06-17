@@ -74,10 +74,10 @@ func on_mouse_exit():
 
 func refresh_planet_info():
 	var value = $Control/HSlider.value
-	var energy_cost = pow(target.size / 10000.0, 3) * 10000000000000000.0
-	var time_base = energy_cost / star.luminosity / 1000000000.0
+	var energy_cost = pow(target.size / 10000.0, 3) * 1e16
+	var time_base = energy_cost / star.luminosity / 1e12
 	charging_time = time_base * (1 - value)
-	additional_energy = time_base * star.luminosity * value * 1000000000000.0
+	additional_energy = time_base * star.luminosity * value * 1e15
 	$Control.visible = true
 	$StartCharging.visible = true
 	$Control/EnergyCost.text = Helper.format_num(additional_energy)

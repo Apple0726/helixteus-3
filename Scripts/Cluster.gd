@@ -48,15 +48,17 @@ func _ready():
 			var rsrc_mult:float = 1.0
 			match g_i.GS:
 				"ME":
-					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
+					rsrc_mult = Helper.get_IR_mult("ME") * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i.l_id, radius * 10.0)
 				"PP":
-					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
+					rsrc_mult = Helper.get_IR_mult("PP") * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i.l_id, radius * 10.0)
 				"RL":
-					rsrc_mult = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
+					rsrc_mult = Helper.get_IR_mult("RL") * game.u_i.time_speed
 					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
-			if rsrc:
+				_:
+					rsrc = null
+			if is_instance_valid(rsrc):
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
 		if g_i.has("discovered") and not g_i.has("GS"):
 			discovered_gal.append(g_i)
@@ -154,7 +156,7 @@ func on_galaxy_over (id:int):
 			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME") * game.u_i.time_speed)
 		elif g_i.GS == "PP":
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
+			tooltip += Data.path_1.PP.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
 		elif g_i.GS == "RL":
 			icons = [Data.SP_icon]
 			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
@@ -162,12 +164,12 @@ func on_galaxy_over (id:int):
 		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		if grid.name != "Grid_%s" % g_i.l_id:
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 			#grid.visible = false
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
 		if grid.name != "MSGrid_%s" % g_i.l_id:
-			var tween = get_tree().create_tween()
+			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 			#grid.visible = false
 	game.show_adv_tooltip(tooltip, icons)
@@ -175,11 +177,11 @@ func on_galaxy_over (id:int):
 func on_galaxy_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		#grid.visible = true
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
 		#grid.visible = true
-		var tween = get_tree().create_tween()
+		var tween = create_tween()
 		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
 

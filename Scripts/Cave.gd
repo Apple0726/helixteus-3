@@ -945,23 +945,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
-	if discord_sdk.get_is_discord_working():
-		discord_sdk.small_image = "rover"
-		var cave_adjective = ""
-		if num_floors >= 12:
-			cave_adjective = " large"
-		if num_floors >= 24:
-			cave_adjective = " huge"
-		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
-		if cave_floor < 8:
-			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
-		elif cave_floor < 16:
-			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
-		else:
-			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
-		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
-		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
-		discord_sdk.refresh()
+#	if discord_sdk.get_is_discord_working():
+#		discord_sdk.small_image = "rover"
+#		var cave_adjective = ""
+#		if num_floors >= 12:
+#			cave_adjective = " large"
+#		if num_floors >= 24:
+#			cave_adjective = " huge"
+#		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
+#		if cave_floor < 8:
+#			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
+#		elif cave_floor < 16:
+#			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
+#		else:
+#			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
+#		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
+#		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
+#		discord_sdk.refresh()
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()

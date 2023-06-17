@@ -8,10 +8,6 @@
 
 config_version=5
 
-[DiscordSDK]
-
-EditorPresence/enabled=true
-
 [application]
 
 config/name="Helixteus 3"
@@ -31,7 +27,6 @@ buses/default_bus_layout="res://Resources/default_bus_layout.tres"
 Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
-DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [debug]
 
@@ -45,10 +40,6 @@ window/energy_saving/keep_screen_on=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 mouse_cursor/tooltip_position_offset=Vector2(5, 5)
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
 
 [global]
 
